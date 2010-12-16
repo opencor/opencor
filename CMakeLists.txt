@@ -1,0 +1,69 @@
+cmake_minimum_required(VERSION 2.8)
+
+project(OpenCOR)
+
+# Version of OpenCOR
+
+set(${PROJECT_NAME}_VERSION_MAJOR 0 CACHE STRING "${PROJECT_NAME} major version number")
+set(${PROJECT_NAME}_VERSION_MINOR 1 CACHE STRING "${PROJECT_NAME} minor version number")
+set(${PROJECT_NAME}_VERSION_BUILD 1 CACHE STRING "${PROJECT_NAME} build version number")
+set(${PROJECT_NAME}_VERSION"${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD}")
+
+mark_as_advanced(${PROJECT_NAME}_VERSION_MAJOR)
+mark_as_advanced(${PROJECT_NAME}_VERSION_MINOR)
+mark_as_advanced(${PROJECT_NAME}_VERSION_BUILD)
+
+# Files that make up OpenCOR
+
+set(${PROJECT_NAME}_SOURCES
+   src/main.cpp
+   src/mainwindow.cpp
+)
+
+set(${PROJECT_NAME}_HEADERS
+)
+
+set(${PROJECT_NAME}_HEADERS_MOC
+   src/mainwindow.h
+)
+
+set(${PROJECT_NAME}_UIS
+   src/mainwindow.ui
+)
+
+set(${PROJECT_NAME}_RESOURCES
+)
+
+# Qt specific
+
+find_package(Qt4 4.7.0 REQUIRED)
+
+if(WIN32)
+   set(QT_USE_QTMAIN TRUE)
+   # Note: this ensures that winmain@16 is available on Windows
+endif(WIN32)
+
+include(${QT_USE_FILE})
+
+qt4_wrap_cpp(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
+qt4_wrap_ui(${PROJECT_NAME}_SOURCES_UIS ${${PROJECT_NAME}_UIS})
+qt4_add_resources(${PROJECT_NAME}_SOURCES_RCS ${${PROJECT_NAME}_RESOURCES})
+
+# Rules to build OpenCOR itself
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+if(APPLE)
+   set(MACOSX_BUNDLE_ICON_FILE res/${PROJECT_NAME}.icns) 
+   set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+   set(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.icns)
+endif(APPLE)
+
+add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
+   ${${PROJECT_NAME}_SOURCES}
+   ${${PROJECT_NAME}_SOURCES_MOC}
+   ${${PROJECT_NAME}_SOURCES_UIS}
+   ${${PROJECT_NAME}_SOURCES_RCS}
+)
+
+target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES})
