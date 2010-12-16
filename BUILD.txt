@@ -6,13 +6,12 @@ To build OpenCOR, you need the following tools:
     - ssh://<username>@opencor.git.sourceforge.net/gitroot/opencor/opencor (read/write).
    Note: Git is supported by Qt Creator, but needs to be configured by selecting the Tools|Options... menu, then the Version Control section, and finally the Git tab. Alternatively, you can always use Git from the command line or, on Windows, TortoiseGit (http://code.google.com/p/tortoisegit/).
 
-Once your development environment is set up, do the following:
+Once the above tools are installed and you have downloaded cloned a copy of OpenCOR, please follow the below instructions to build and run OpenCOR:
  - Start Qt Creator;
  - Open the CMakeLists.txt file which is located in the root directory of the OpenCOR project (by selecting the "File"|"Open File or Project..." menu or by pressing Ctrl+O);
  - Specify [OpenCOR]/build as the build directory;
  - Select MinGW as the generator;
  - Click on the "Run CMake" button;
- - Click on the "Finish" button; and
- - Select "OpenCOR" as the run target (by selecting the "Build"|"Open Build/Run Target Seclector..." menu or by pressing Ctrl+T).
-
-At this stage, to select the "Build"|"Run" menu or press Ctrl+R should build and run OpenCOR.
+ - Click on the "Finish" button;
+ - Select "OpenCOR" as the run target (by selecting the "Build"|"Open Build/Run Target Seclector..." menu or by pressing Ctrl+T); and
+ - Build and run OpenCOR (by selecting the "Build"|"Run" menu or by pressing Ctrl+R).
