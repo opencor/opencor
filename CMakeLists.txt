@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
-
 project(OpenCOR)
+
+cmake_minimum_required(VERSION 2.8)
 
 # Version of OpenCOR
 
@@ -36,7 +36,7 @@ set(${PROJECT_NAME}_RESOURCES
 
 # Qt specific
 
-find_package(Qt4 4.7.0 REQUIRED)
+find_package(Qt4 4.7 REQUIRED)
 
 if(WIN32)
    set(QT_USE_QTMAIN TRUE)
