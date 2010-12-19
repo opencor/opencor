@@ -2,7 +2,7 @@
 
 @CD build
 
-@cmake -G "MinGW Makefiles" .. 1> NUL 2> NUL
-@mingw32-make -j 1> NUL 2> NUL
+@cmake -G "MinGW Makefiles" ..
+@mingw32-make -j
 
 @CD ..
