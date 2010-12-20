@@ -14,7 +14,7 @@ then
    make -j clean
 fi
 
-rm -fr *ake* src
+rm -fr *OpenCOR* *ake* src
 
 cd ..
 
