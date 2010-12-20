@@ -1,0 +1,27 @@
+#!/bin/sh
+
+OS=`uname -s`
+
+if [ $OS = "Linux" ]
+then
+   echo "\033[44;37;1mBuilding OpenCOR...\033[0m"
+fi
+
+cd build
+
+cmake ..
+
+if [ $OS = "Linux" ]
+then
+   make -j
+else
+   xcodebuild
+fi
+
+cd ..
+
+if [ $OS = "Linux" ]
+then
+   echo "\033[42;37;1mAll done!\033[0m"
+fi
+
