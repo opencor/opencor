@@ -5,6 +5,6 @@
 @mingw32-make -j clean
 
 @DEL /F *Make* 1> NUL 2> NUL
-@RMDIR /S /Q CMakeFiles Src 1> NUL 2> NUL
+@RMDIR /S /Q CMakeFiles src 1> NUL 2> NUL
 
 @CD ..
