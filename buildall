@@ -10,13 +10,7 @@ fi
 cd build
 
 cmake ..
-
-if [ $OS = "Linux" ]
-then
-   make -j
-else
-   xcodebuild
-fi
+make -j
 
 cd ..
 

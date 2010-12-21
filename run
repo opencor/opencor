@@ -10,6 +10,8 @@ fi
 if [ $OS = "Linux" ]
 then
    build/OpenCOR
+else
+   open build/OpenCOR.app
 fi
 
 if [ $OS = "Linux" ]
