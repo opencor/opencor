@@ -4,7 +4,7 @@ OS=`uname -s`
 
 if [ $OS = "Linux" ]
 then
-   echo "\033[44;37;1mCleaning up the OpenCOR environment...\033[0m"
+   echo "\033[44;37;1mCleaning the OpenCOR environment...\033[0m"
 fi
 
 cd build
