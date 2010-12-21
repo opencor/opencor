@@ -1,3 +1,5 @@
-@TITLE Running OpenCOR...
+@ECHO OFF
 
-@build\OpenCOR
+TITLE Running OpenCOR...
+
+build\OpenCOR

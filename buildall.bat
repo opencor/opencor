@@ -1,8 +1,10 @@
-@TITLE Building OpenCOR...
+@ECHO OFF
 
-@CD build
+TITLE Building OpenCOR...
 
-@cmake -G "MinGW Makefiles" ..
-@mingw32-make -j
+CD build
 
-@CD ..
+cmake -G "MinGW Makefiles" ..
+mingw32-make -j
+
+CD ..

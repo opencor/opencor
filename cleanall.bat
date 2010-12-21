@@ -1,10 +1,12 @@
-@TITLE Cleaning the OpenCOR environment...
+@ECHO OFF
 
-@CD build
+TITLE Cleaning the OpenCOR environment...
 
-@mingw32-make -j clean
+CD build
 
-@DEL /F *Make* 1> NUL 2> NUL
-@RMDIR /S /Q CMakeFiles src 1> NUL 2> NUL
+mingw32-make -j clean
 
-@CD ..
+DEL /F *Make* 1> NUL 2> NUL
+RMDIR /S /Q CMakeFiles src 1> NUL 2> NUL
+
+CD ..

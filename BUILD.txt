@@ -1,4 +1,4 @@
-OpenCOR is being developed, and therefore built and tested, on Windows 7, Linux Ubuntu 10.10 (Maverick Meerkat) and Mac OS X 10.6 (Snow Leopard). The following instructions therefore assume that you are using one of those three operating systems (the 32-bit version in the case of Linux).
+OpenCOR is being developed, and therefore built and tested, on Windows 7, Linux Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit) and Mac OS X 10.6 (Snow Leopard). The following instructions therefore assume that you are using one of those three operating systems.
 
 In order to build OpenCOR, you need the following tools:
  - Git (http://git-scm.com/ or the git package on Linux): this is the distributed version control system used to keep track of OpenCOR's source code. A copy of OpenCOR's source code can be cloned using either:

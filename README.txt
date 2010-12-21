@@ -1,1 +1,1 @@
-OpenCOR is an open source project (see LICENSE.txt) based on Qt/C++ (http://qt.nokia.com/) and which relies on CellML (http://www.cellml.org/). For instructions on how to build OpenCOR from its source code, please check BUILD.txt.
+OpenCOR is an open source project based on Qt/C++ (http://qt.nokia.com/) which relies on CellML (http://www.cellml.org/).
