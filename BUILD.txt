@@ -1,11 +1,11 @@
 OpenCOR is being developed, and therefore built and tested, on Windows 7, Linux Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit) and Mac OS X 10.6 (Snow Leopard). The following instructions therefore assume that you are using one of those three operating systems.
 
 In order to build OpenCOR, you need the following tools:
- - Git (http://git-scm.com/ or the git package on Linux): this is the distributed version control system used to keep track of OpenCOR's source code. A copy of OpenCOR's source code can be cloned using either:
+ - Git (http://git-scm.com/ or the "git" package on Linux): this is the distributed version control system used to keep track of OpenCOR's source code. A copy of OpenCOR's source code can be cloned using either:
     - Read only: git clone git://opencor.git.sourceforge.net/gitroot/opencor/opencor
     - Read/write: git clone ssh://<username>@opencor.git.sourceforge.net/gitroot/opencor/opencor
- - CMake (http://www.cmake.org/ or the cmake package on Linux): this is the cross-platform build system used to build OpenCOR (note: Qt Creator comes with qmake, however CMake is to be preferred in OpenCOR's case, since OpenCOR relies on a few third party libraries, something that CMake handles better than qmake. Also, CMake is perfectly supported by Qt Creator...); and
- - Qt Creator (http://qt.nokia.com/ or the qtcreator package on Linux): this is the cross-platform environment used to develop OpenCOR as a Qt application.
+ - CMake (http://www.cmake.org/ or the "cmake" package on Linux): this is the cross-platform build system used to build OpenCOR (note: Qt Creator comes with qmake, however CMake is to be preferred in OpenCOR's case, since OpenCOR relies on a few third party libraries, something that CMake handles better than qmake. Also, CMake is perfectly supported by Qt Creator...); and
+ - Qt Creator (http://qt.nokia.com/ or the "qtcreator" package on Linux): this is the cross-platform environment used to develop OpenCOR as a Qt application.
    Note: Git is supported by Qt Creator, but may need to be configured by selecting the "Tools"|"Options..." menu, then the "Version Control" section, and finally the "Git" tab. Alternatively, you can always use Git from the command line or, on Windows, TortoiseGit (http://code.google.com/p/tortoisegit/).
 
 Once the above tools are installed and you have cloned a copy of OpenCOR, you can follow the instructions below to build and run OpenCOR from Qt Creator:
@@ -19,3 +19,5 @@ Once the above tools are installed and you have cloned a copy of OpenCOR, you ca
  - Build and run OpenCOR (by selecting the "Build"|"Run" menu or by pressing Ctrl+R).
 
 Alternatively, you can use the batch/shell files to clean the project (using cleanall.bat on Windows or cleanall on Linux/Mac OS X), build it (using buildall.bat on Windows or buildall on Linux/Mac OS X) and run it (using run.bat on Windows or run on Linux/Mac OS X). Note that these batch/shell files require access to CMake, MinGW/g++/Xcode (for Windows, Linux and Mac OS X, respectively) and Qt.
+
+Packaging of OpenCOR is currently done from the command line using packageall.bat on Windows and packageall on Linux/Mac OS X.
