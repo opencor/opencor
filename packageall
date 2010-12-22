@@ -20,4 +20,3 @@ if [ $OS = "Linux" ]
 then
    echo "\033[42;37;1mAll done!\033[0m"
 fi
-

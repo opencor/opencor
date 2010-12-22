@@ -14,7 +14,7 @@ then
    make -j clean
 fi
 
-rm -fr *OpenCOR* *ake* src
+rm -fr *OpenCOR* *ake* src _CPack_Packages install_manifest.txt
 
 cd ..
 
@@ -22,4 +22,3 @@ if [ $OS = "Linux" ]
 then
    echo "\033[42;37;1mAll done!\033[0m"
 fi
-
