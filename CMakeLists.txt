@@ -37,7 +37,12 @@ SET(${PROJECT_NAME}_UIS
 SET(${PROJECT_NAME}_RESOURCES
 )
 
+# Compiler options
+
+ADD_DEFINITIONS(-Wall)
+
 # Set the application icon for Mac OS X
+#---GRY--- SOMETHING NEEDS TO BE DONE ABOUT Windows AND Linux...
 
 IF(APPLE)
    SET(MACOSX_BUNDLE_ICON_FILE ${PROJECT_NAME}.icns)
@@ -75,7 +80,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
    ${QT_LIBRARIES}
 )
 
-# Packaging rules
+# Packaging rules (using CPack)
 
 INCLUDE(InstallRequiredSystemLibraries)
 
@@ -90,25 +95,60 @@ SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}" "${PROJECT_NAME}")
 
 IF(WIN32)
+   # Select NSIS as the packager
+
    SET(CPACK_GENERATOR NSIS)
+
+   # OpenCOR itself
+
+   INSTALL(TARGETS ${PROJECT_NAME} DESTINATION .)
+
+   # MinGW files required by OpenCOR
+
+   FOREACH(DLL mingwm10 libgcc_s_dw2-1)
+      INSTALL(FILES "${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll" DESTINATION .)
+   ENDFOREACH()
+
+   # Qt files required by OpenCOR
+
+   FOREACH(DLL QtCore QtGui)
+      INSTALL(FILES "${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll" DESTINATION .)
+   ENDFOREACH()
 ELSEIF(APPLE)
+   # Select PackageMaker as the packager
+
    SET(CPACK_GENERATOR PackageMaker)
+
+   INSTALL(TARGETS ${PROJECT_NAME} DESTINATION .)
+
+#---GRY--- THIS NEEDS TO BE COMPLETED...
 ELSE()
+   # Select TGZ as the packager
+
    SET(CPACK_GENERATOR TGZ)
-ENDIF()
 
-INSTALL(TARGETS ${PROJECT_NAME} DESTINATION bin)
+   # OpenCOR itself
 
-IF(WIN32)
-   # MinGW files required by OpenCOR on Windows
+   INSTALL(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
-   INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/mingwm10.dll DESTINATION bin)
-   INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/libgcc_s_dw2-1.dll DESTINATION bin)
+   # Qt files required by OpenCOR
 
-   # Qt files required by OpenCOR on Windows
+   FOREACH(LIB QtCore QtGui)
+      INSTALL(FILES
+         "${QT_LIBRARY_DIR}/lib${LIB}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}"
+         RENAME "lib${LIB}.so.${QT_VERSION_MAJOR}"
+         DESTINATION lib
+      )
+   ENDFOREACH()
 
-   INSTALL(FILES ${QT_BINARY_DIR}/QtCore4.dll DESTINATION bin)
-   INSTALL(FILES ${QT_BINARY_DIR}/QtGui4.dll DESTINATION bin)
+#---GRY--- TO GET ACCESS TO THE SHARED LIBRARIES, ONE MIGHT NORMALLY WANT TO
+#          USE RPATH, BUT I GET THE FEELING THIS WOULD REQUIRE A PROPER
+#          INSTALLATION PROGRAM WHICH WE DON'T HAVE HERE, SO ANOTHER SOLUTION
+#          WOULD BE TO HAVE A SHELL SCRIPT THAT READS SOMETHING LIKE:
+#
+#          #!/bin/sh
+#          export LD_LIBRARY_PATH=`pwd`/lib
+#          bin/OpenCOR
 ENDIF()
 
 INCLUDE(CPack)
