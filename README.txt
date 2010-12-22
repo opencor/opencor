@@ -1,1 +1,1 @@
-OpenCOR is an open source project based on Qt/C++ (http://qt.nokia.com/) which relies on CellML (http://www.cellml.org/).
+Open CO[omputational] physiology R[esource] is a cross-platform CellML-based modelling environment written in C++, using the Qt framework (http://qt.nokia.com/). For more information on CellML, please have a look at http://www.cellml.org/.
