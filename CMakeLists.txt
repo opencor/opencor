@@ -106,13 +106,13 @@ IF(WIN32)
    # MinGW files required by OpenCOR
 
    FOREACH(DLL mingwm10 libgcc_s_dw2-1)
-      INSTALL(FILES "${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll" DESTINATION .)
+      INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll DESTINATION .)
    ENDFOREACH()
 
    # Qt files required by OpenCOR
 
    FOREACH(DLL QtCore QtGui)
-      INSTALL(FILES "${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll" DESTINATION .)
+      INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION .)
    ENDFOREACH()
 ELSEIF(APPLE)
    # Select PackageMaker as the packager
@@ -135,8 +135,8 @@ ELSE()
 
    FOREACH(LIB QtCore QtGui)
       INSTALL(FILES
-         "${QT_LIBRARY_DIR}/lib${LIB}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}"
-         RENAME "lib${LIB}.so.${QT_VERSION_MAJOR}"
+         ${QT_LIBRARY_DIR}/lib${LIB}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
+         RENAME lib${LIB}.so.${QT_VERSION_MAJOR}
          DESTINATION lib
       )
    ENDFOREACH()
@@ -150,5 +150,9 @@ ELSE()
 #          export LD_LIBRARY_PATH=`pwd`/lib
 #          bin/OpenCOR
 ENDIF()
+
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt DESTINATION .)
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LicenseLGPLv2.1.txt DESTINATION .)
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.txt DESTINATION .)
 
 INCLUDE(CPack)
