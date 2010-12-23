@@ -39,7 +39,7 @@ SET(${PROJECT_NAME}_RESOURCES
 
 # Compiler options
 
-ADD_DEFINITIONS(-Wall)
+ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 
 # Set the application icon for Mac OS X
 #---GRY--- SOMETHING NEEDS TO BE DONE ABOUT Windows AND Linux...
