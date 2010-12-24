@@ -101,18 +101,18 @@ IF(WIN32)
 
    # OpenCOR itself
 
-   INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION .)
+   INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
    # MinGW files required by OpenCOR
 
    FOREACH(DLL mingwm10 libgcc_s_dw2-1)
-      INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll DESTINATION .)
+      INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll DESTINATION bin)
    ENDFOREACH()
 
    # Qt files required by OpenCOR
 
    FOREACH(DLL QtCore QtGui)
-      INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION .)
+      INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION bin)
    ENDFOREACH()
 ELSEIF(APPLE)
    # Select PackageMaker as the packager
