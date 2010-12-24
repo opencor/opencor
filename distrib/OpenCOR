@@ -2,4 +2,4 @@
 
 export LD_LIBRARY_PATH=`pwd`/lib
 
-bin/OpenCOR
+bin/$0
