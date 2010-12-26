@@ -1,0 +1,5 @@
+Welcome to the OpenCOR installer!
+
+This program is going to guide you through the installation of OpenCOR on your Mac OS X computer. Just follow the instructions and you should be fine.
+
+The OpenCOR team.
