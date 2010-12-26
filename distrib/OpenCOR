@@ -1,5 +1,7 @@
 #!/bin/sh
 
+OS=`uname -s`
+
 if [ $OS = "Linux" ]
 then
    # Linux
