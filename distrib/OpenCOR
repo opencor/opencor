@@ -1,5 +1,14 @@
 #!/bin/sh
 
-export LD_LIBRARY_PATH=`pwd`/lib
+if [ $OS = "Linux" ]
+then
+   # Linux
 
-bin/OpenCOR
+   export LD_LIBRARY_PATH=`pwd`/lib
+
+   bin/OpenCOR
+else
+   # Mac OS X
+
+   open OpenCOR.app
+fi

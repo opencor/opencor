@@ -95,9 +95,9 @@ SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}" "${PROJECT_NAME}")
 
 IF(WIN32)
-   # Select NSIS as the packager
+   # Select NSIS and ZIP as the packagers on Windows
 
-   SET(CPACK_GENERATOR NSIS)
+   SET(CPACK_GENERATOR NSIS ZIP)
 
    # OpenCOR itself
 
@@ -114,10 +114,15 @@ IF(WIN32)
    FOREACH(DLL QtCore QtGui)
       INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION bin)
    ENDFOREACH()
-ELSEIF(APPLE)
-   # Select PackageMaker as the packager
 
-   SET(CPACK_GENERATOR PackageMaker)
+   # VBScript file to run OpenCOR (useful when downloading a ZIPped version of
+   # OpenCOR)
+
+   INSTALL(FILES distrib/OpenCOR.vbs DESTINATION .)
+ELSEIF(APPLE)
+   # Select PackageMaker and ZIP as the packagers on Mac OS X
+
+   SET(CPACK_GENERATOR PackageMaker ZIP)
 
    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/distrib/WelcomeForMacOSXInstaller.txt")
    SET(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
@@ -129,8 +134,13 @@ ELSEIF(APPLE)
    SET(CMAKE_INSTALL_PREFIX ${${PROJECT_NAME}_INSTALL_DIR})
 
    INSTALL(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${${PROJECT_NAME}_INSTALL_DIR})
+
+   # Shell script to run OpenCOR (useful when downloading a ZIPped version of
+   # OpenCOR)
+
+   INSTALL(FILES distrib/OpenCOR DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
-   # Select TGZ as the packager
+   # Select TGZ as the only packager on Linux
 
    SET(CPACK_GENERATOR TGZ)
 

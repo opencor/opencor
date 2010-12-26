@@ -18,6 +18,6 @@ Once the above tools are installed and you have cloned a copy of OpenCOR, follow
  - Select "OpenCOR" as the run target (by selecting the "Build"|"Open Build/Run Target Seclector..." menu or by pressing Ctrl+T); and
  - Build and run OpenCOR (by selecting the "Build"|"Run" menu or by pressing Ctrl+R).
 
-Alternatively, you can use the batch/shell files to clean the project (using cleanall.bat on Windows or cleanall on Linux/Mac), build it (using buildall.bat on Windows or buildall on Linux/Mac) and run it (using run.bat on Windows or run on Linux/Mac). Note that these batch/shell files require access to CMake, MinGW/g++/Xcode (for Windows, Linux and Mac, respectively) and Qt from the command line. This should be the case on Linux and Mac, but on Windows the "PATH" environment variable might need updating.
+Alternatively, you can use the batch/shell files to clean the project (using cleanall.bat on Windows or cleanall on Linux/Mac), build it (using buildall.bat on Windows or buildall on Linux/Mac) and run it (using run.vbs on Windows or run on Linux/Mac). Note that these batch/shell files require access to CMake, MinGW/g++/Xcode (for Windows, Linux and Mac, respectively) and Qt from the command line. This should be the case on Linux and Mac, but on Windows the "PATH" environment variable might need updating.
 
 Packaging of OpenCOR is done from the command line using packageall.bat on Windows and packageall on Linux/Mac. Note that this requires NSIS on Windows (http://nsis.sourceforge.net/).
