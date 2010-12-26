@@ -12,6 +12,14 @@ cd build
 cmake ..
 make -j
 
+if [ $OS == "Darwin" ]
+then
+   # Make sure that OpenCOR can be used on any Mac OS X machine that doesn't
+   # have Qt
+
+   macdeployqt OpenCOR.app
+fi
+
 cd ..
 
 if [ $OS = "Linux" ]
