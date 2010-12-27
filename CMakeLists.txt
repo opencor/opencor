@@ -151,14 +151,21 @@ ELSE()
    INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
    # Qt files required by OpenCOR
+   # Note: by default, OpenCOR only requires QtCore and QtGui, but QtGui
+   #       requires QtDBus which itself requires QtXml, so...
 
-   FOREACH(LIB QtCore QtGui)
+   FOREACH(LIB QtCore QtDBus QtGui QtXml)
       INSTALL(FILES
          ${QT_LIBRARY_DIR}/lib${LIB}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
          RENAME lib${LIB}.so.${QT_VERSION_MAJOR}
          DESTINATION lib
       )
    ENDFOREACH()
+
+   # QtGui seems to require libaudio.so.2.4 (to be packaged as libaudio.so.2)
+   # which is not available on a 'blank' version of Ubuntu, so...
+
+   INSTALL(FILES /usr/lib/libaudio.so.2.4 RENAME libaudio.so.2 DESTINATION lib)
 
    # Shell script to run OpenCOR
 
