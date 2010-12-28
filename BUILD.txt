@@ -21,3 +21,5 @@ Once the above tools are installed and you have cloned a copy of OpenCOR, follow
 Alternatively, you can use the batch/shell files to clean the project (using cleanall.bat on Windows or cleanall on Linux/Mac), build it (using buildall.bat on Windows or buildall on Linux/Mac) and run it (using run.vbs on Windows or run on Linux/Mac). Note that these batch/shell files require access to CMake, MinGW/g++/Xcode (for Windows, Linux and Mac, respectively) and Qt from the command line. This should be the case on Linux and Mac, but on Windows the "PATH" environment variable might need updating.
 
 Packaging of OpenCOR is done from the command line using packageall.bat on Windows and packageall on Linux/Mac. Note that this requires NSIS on Windows (http://nsis.sourceforge.net/).
+
+Note that though the Linux package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other Linux distributions though additional libraries may be required (e.g. libpng12.so.0 is required to get OpenCOR to work on a 'fresh' openSUSE 11.3, something which can be 'fixed' by installing the "libpng12-0" package).
