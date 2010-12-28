@@ -2,23 +2,20 @@
 
 OS=`uname -s`
 
-if [ $OS = "Linux" ]
-then
-   echo "\033[44;37;1mCleaning the OpenCOR environment...\033[0m"
+if [ $OS = "Linux" ]; then
+    echo "\033[44;37;1mCleaning the OpenCOR environment...\033[0m"
 fi
 
 cd build
 
-if [ -f Makefile ] 
-then
-   make -j clean
+if [ -f Makefile ]; then
+    make -j clean
 fi
 
 rm -fr *OpenCOR* *ake* src _CPack_Packages install_manifest.txt
 
 cd ..
 
-if [ $OS = "Linux" ]
-then
-   echo "\033[42;37;1mAll done!\033[0m"
+if [ $OS = "Linux" ]; then
+    echo "\033[42;37;1mAll done!\033[0m"
 fi

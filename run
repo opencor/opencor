@@ -2,19 +2,16 @@
 
 OS=`uname -s`
 
-if [ $OS = "Linux" ]
-then
-   echo "\033[44;37;1mRunning OpenCOR...\033[0m"
+if [ $OS = "Linux" ]; then
+    echo "\033[44;37;1mRunning OpenCOR...\033[0m"
 fi
 
-if [ $OS = "Linux" ]
-then
-   build/OpenCOR
+if [ $OS = "Linux" ]; then
+    build/OpenCOR
 else
-   open build/OpenCOR.app
+    open build/OpenCOR.app
 fi
 
-if [ $OS = "Linux" ]
-then
-   echo "\033[42;37;1mAll done!\033[0m"
+if [ $OS = "Linux" ]; then
+    echo "\033[42;37;1mAll done!\033[0m"
 fi

@@ -2,15 +2,14 @@
 
 OS=`uname -s`
 
-if [ $OS = "Linux" ]
-then
-   # Linux
+if [ $OS = "Linux" ]; then
+    # Linux
 
-   export LD_LIBRARY_PATH=`pwd`/lib
+    export LD_LIBRARY_PATH=`pwd`/lib
 
-   bin/OpenCOR
+    bin/OpenCOR
 else
-   # Mac OS X
+    # Mac OS X
 
-   open OpenCOR.app
+    open OpenCOR.app
 fi
