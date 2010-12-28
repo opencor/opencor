@@ -19,35 +19,46 @@ SET(${PROJECT_NAME}_VERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_
 # Files that make up OpenCOR
 
 SET(${PROJECT_NAME}_SOURCES
-   src/main.cpp
-   src/mainwindow.cpp
+    src/main.cpp
+    src/mainwindow.cpp
 )
 
 SET(${PROJECT_NAME}_HEADERS
 )
 
 SET(${PROJECT_NAME}_HEADERS_MOC
-   src/mainwindow.h
+    src/mainwindow.h
 )
 
 SET(${PROJECT_NAME}_UIS
-   src/mainwindow.ui
+    src/mainwindow.ui
 )
 
 SET(${PROJECT_NAME}_RESOURCES
+    res/${PROJECT_NAME}.qrc
 )
 
 # Compiler options
 
 ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 
-# Set the application icon for Mac OS X
-#---GRY--- SOMETHING NEEDS TO BE DONE ABOUT Windows AND Linux...
+# Set the application icon, but only for Windows and Mac OS X, since in the
+# case of Linux, it's done through res/OpenCOR.qrc
 
-IF(APPLE)
-   SET(MACOSX_BUNDLE_ICON_FILE ${PROJECT_NAME}.icns)
-   SET_SOURCE_FILES_PROPERTIES(res/${PROJECT_NAME}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-   SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} res/${PROJECT_NAME}.icns)
+IF(WIN32)
+    IF(MINGW)
+        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
+                             COMMAND windres -I ${CMAKE_CURRENT_SOURCE_DIR} -i ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}.rc 
+                                             -o ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
+                            )
+        SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o)
+    ELSE()
+        SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} res/${PROJECT_NAME}.rc)
+    ENDIF()
+ELSEIF(APPLE)
+    SET(MACOSX_BUNDLE_ICON_FILE ${PROJECT_NAME}.icns)
+    SET_SOURCE_FILES_PROPERTIES(res/${PROJECT_NAME}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} res/${PROJECT_NAME}.icns)
 ENDIF()
 
 # Qt specific
@@ -55,8 +66,8 @@ ENDIF()
 FIND_PACKAGE(Qt4 4.7 REQUIRED)
 
 IF(WIN32)
-   SET(QT_USE_QTMAIN TRUE)
-   # Note: the above ensures that winmain@16 is available on Windows
+    SET(QT_USE_QTMAIN TRUE)
+    # Note: the above ensures that winmain@16 is available on Windows
 ENDIF()
 
 INCLUDE(${QT_USE_FILE})
@@ -70,14 +81,14 @@ QT4_ADD_RESOURCES(${PROJECT_NAME}_SOURCES_RCS ${${PROJECT_NAME}_RESOURCES})
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
-   ${${PROJECT_NAME}_SOURCES}
-   ${${PROJECT_NAME}_SOURCES_MOC}
-   ${${PROJECT_NAME}_SOURCES_UIS}
-   ${${PROJECT_NAME}_SOURCES_RCS}
+    ${${PROJECT_NAME}_SOURCES}
+    ${${PROJECT_NAME}_SOURCES_MOC}
+    ${${PROJECT_NAME}_SOURCES_UIS}
+    ${${PROJECT_NAME}_SOURCES_RCS}
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-   ${QT_LIBRARIES}
+    ${QT_LIBRARIES}
 )
 
 # Packaging rules (using CPack)
@@ -95,81 +106,83 @@ SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}" "${PROJECT_NAME}")
 
 IF(WIN32)
-   # Select NSIS and ZIP as the packagers on Windows
+    # Select NSIS and ZIP as the packagers on Windows
 
-   SET(CPACK_GENERATOR NSIS ZIP)
+    SET(CPACK_GENERATOR NSIS ZIP)
 
-   SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LicenseLGPLv2.1.txt")
+    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LicenseLGPLv2.1.txt")
 
-   # OpenCOR itself
+    # OpenCOR itself
 
-   INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+    INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
-   # MinGW files required by OpenCOR
+    IF(MINGW)
+        # MinGW files required by OpenCOR
 
-   FOREACH(DLL mingwm10 libgcc_s_dw2-1)
-      INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll DESTINATION bin)
-   ENDFOREACH()
+        FOREACH(DLL mingwm10 libgcc_s_dw2-1)
+            INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll DESTINATION bin)
+        ENDFOREACH()
+    ENDIF()
 
-   # Qt files required by OpenCOR
+    # Qt files required by OpenCOR
 
-   FOREACH(DLL QtCore QtGui)
-      INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION bin)
-   ENDFOREACH()
+    FOREACH(DLL QtCore QtGui)
+       INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION bin)
+    ENDFOREACH()
 
-   # VBScript file to run OpenCOR (useful when downloading a ZIPped version of
-   # OpenCOR)
+    # VBScript file to run OpenCOR (useful when downloading a ZIPped version of
+    # OpenCOR)
 
-   INSTALL(FILES distrib/OpenCOR.vbs DESTINATION .)
+    INSTALL(FILES distrib/${PROJECT_NAME}.vbs DESTINATION .)
 ELSEIF(APPLE)
-   # Select PackageMaker and ZIP as the packagers on Mac OS X
+    # Select PackageMaker and ZIP as the packagers on Mac OS X
 
-   SET(CPACK_GENERATOR PackageMaker ZIP)
+    SET(CPACK_GENERATOR PackageMaker ZIP)
 
-   SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/distrib/WelcomeForMacOSXInstaller.txt")
-   SET(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
-   SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LicenseLGPLv2.1.txt")
+    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/distrib/WelcomeForMacOSXInstaller.txt")
+    SET(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
+    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LicenseLGPLv2.1.txt")
 
-   SET(${PROJECT_NAME}_INSTALL_DIR "/Applications/${PROJECT_NAME}")
+    SET(${PROJECT_NAME}_INSTALL_DIR "/Applications/${PROJECT_NAME}")
 
-   SET(CPACK_SET_DESTDIR TRUE)
-   SET(CMAKE_INSTALL_PREFIX ${${PROJECT_NAME}_INSTALL_DIR})
+    SET(CPACK_SET_DESTDIR TRUE)
+    SET(CMAKE_INSTALL_PREFIX ${${PROJECT_NAME}_INSTALL_DIR})
 
-   INSTALL(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${${PROJECT_NAME}_INSTALL_DIR})
+    INSTALL(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${${PROJECT_NAME}_INSTALL_DIR})
 
-   # Shell script to run OpenCOR (useful when downloading a ZIPped version of
-   # OpenCOR)
+    # Shell script to run OpenCOR (useful when downloading a ZIPped version of
+    # OpenCOR)
 
-   INSTALL(FILES distrib/OpenCOR DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    INSTALL(FILES distrib/${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
-   # Select TGZ as the only packager on Linux
+    # Select TGZ as the only packager on Linux
 
-   SET(CPACK_GENERATOR TGZ)
+    SET(CPACK_GENERATOR TGZ)
 
-   # OpenCOR itself
+    # OpenCOR itself
 
-   INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+    INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
-   # Qt files required by OpenCOR
-   # Note: by default, OpenCOR only requires QtCore and QtGui, but QtGui
-   #       requires QtDBus which itself requires QtXml, so...
+    # Qt files required by OpenCOR
+    # Note: by default, OpenCOR only requires QtCore and QtGui, but QtGui
+    #       requires QtDBus which itself requires QtXml, so...
 
-   FOREACH(LIB QtCore QtDBus QtGui QtXml)
-      INSTALL(FILES
-         ${QT_LIBRARY_DIR}/lib${LIB}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
-         RENAME lib${LIB}.so.${QT_VERSION_MAJOR}
-         DESTINATION lib
-      )
-   ENDFOREACH()
+    FOREACH(LIB QtCore QtDBus QtGui QtXml)
+        INSTALL(FILES
+            ${QT_LIBRARY_DIR}/lib${LIB}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
+            RENAME lib${LIB}.so.${QT_VERSION_MAJOR}
+            DESTINATION lib
+        )
+    ENDFOREACH()
 
-   # QtGui seems to require libaudio.so.2.4 (to be packaged as libaudio.so.2)
-   # which is not available on a 'blank' version of Ubuntu, so...
+    # QtGui seems to require libaudio.so.2.4 (to be packaged as libaudio.so.2)
+    # which is not available on a 'blank' version of Ubuntu, so...
 
-   INSTALL(FILES /usr/lib/libaudio.so.2.4 RENAME libaudio.so.2 DESTINATION lib)
+    INSTALL(FILES /usr/lib/libaudio.so.2.4 RENAME libaudio.so.2 DESTINATION lib)
 
-   # Shell script to run OpenCOR
+    # Shell script to run OpenCOR
 
-   INSTALL(FILES distrib/OpenCOR DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    INSTALL(FILES distrib/${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ENDIF()
 
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt DESTINATION .)
