@@ -12,22 +12,13 @@ SET(CMAKE_BUILD_TYPE Release)
 
 SET(${PROJECT_NAME}_SOURCES
     qtlocalpeer.cpp
-    qtlockedfile.cpp
     qtsingleapplication.cpp
-    qtsinglecoreapplication.cpp
 )
 
 SET(${PROJECT_NAME}_HEADERS_MOC
     qtlocalpeer.h
     qtsingleapplication.h
-    qtsinglecoreapplication.h
 )
-
-IF(WIN32)
-    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} qtlockedfile_win.cpp)
-ELSE()
-    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} qtlockedfile_unix.cpp)
-ENDIF()
 
 # Compiler options
 
@@ -43,7 +34,15 @@ QT4_WRAP_CPP(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
 
 # Rules to build QtSingleApplication itself
 
-ADD_LIBRARY(${PROJECT_NAME} STATIC
+ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${${PROJECT_NAME}_SOURCES}
     ${${PROJECT_NAME}_SOURCES_MOC}
 )
+
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
+)
+
+INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
