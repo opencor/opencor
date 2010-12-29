@@ -50,8 +50,8 @@ SET(${PROJECT_NAME}_RESOURCES
 # OpenCOR requires the following third-party libraries:
 #  - QtSingleApplication (http://qt.gitorious.org/qt-solutions): BSD license
 
-ADD_SUBDIRECTORY(extra/qtsingleapplication)
-INCLUDE_DIRECTORIES(extra/qtsingleapplication)
+ADD_SUBDIRECTORY(3rdparty/qtsingleapplication)
+INCLUDE_DIRECTORIES(3rdparty/qtsingleapplication)
 ADD_DEFINITIONS(-DQT_QTSINGLEAPPLICATION_IMPORT)
 
 # Set the application icon, but only for Windows and Mac OS X, since in the
