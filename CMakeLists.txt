@@ -50,9 +50,11 @@ SET(${PROJECT_NAME}_RESOURCES
 # OpenCOR requires the following third-party libraries:
 #  - QtSingleApplication (http://qt.gitorious.org/qt-solutions): BSD license
 
-ADD_SUBDIRECTORY(3rdparty/qtsingleapplication)
-INCLUDE_DIRECTORIES(3rdparty/qtsingleapplication)
-ADD_DEFINITIONS(-DQT_QTSINGLEAPPLICATION_IMPORT)
+FOREACH(3RDPARTYLIB qtsingleapplication)
+    SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})
+    INCLUDE(${3RDPARTYLIB_DIR}/CMakeLists.txt)
+    INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR})
+ENDFOREACH()
 
 # Set the application icon, but only for Windows and Mac OS X, since in the
 # case of Linux, it's done through res/OpenCOR.qrc
@@ -88,8 +90,9 @@ QT4_WRAP_CPP(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
 QT4_WRAP_UI(${PROJECT_NAME}_SOURCES_UIS ${${PROJECT_NAME}_UIS})
 QT4_ADD_RESOURCES(${PROJECT_NAME}_SOURCES_RCS ${${PROJECT_NAME}_RESOURCES})
 
-# Rules to build OpenCOR itself
+# Rules to build OpenCOR
 
+#SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
@@ -102,12 +105,10 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
-    QtSingleApplication
+    ${QT_QTNETWORK_LIBRARY}
 )
 
-# Packaging rules (using CPack)
-
-INCLUDE(InstallRequiredSystemLibraries)
+# Rules to package OpenCOR (using CPack)
 
 SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_VENDOR "Alan Garny")
