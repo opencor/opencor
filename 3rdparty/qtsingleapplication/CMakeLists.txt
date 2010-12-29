@@ -32,7 +32,7 @@ INCLUDE(${QT_USE_FILE})
 
 QT4_WRAP_CPP(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
 
-# Rules to build QtSingleApplication itself
+# Rules to build QtSingleApplication
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${${PROJECT_NAME}_SOURCES}
@@ -44,5 +44,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
 )
+
+# Rules to package QtSingleApplication
 
 INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)

@@ -88,7 +88,7 @@ QT4_WRAP_CPP(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
 QT4_WRAP_UI(${PROJECT_NAME}_SOURCES_UIS ${${PROJECT_NAME}_UIS})
 QT4_ADD_RESOURCES(${PROJECT_NAME}_SOURCES_RCS ${${PROJECT_NAME}_RESOURCES})
 
-# Rules to build OpenCOR itself
+# Rules to build OpenCOR
 
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -105,7 +105,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     QtSingleApplication
 )
 
-# Packaging rules (using CPack)
+# Rules to package OpenCOR (using CPack)
 
 INCLUDE(InstallRequiredSystemLibraries)
 
