@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+public slots:
+    void singleAppMsgRcvd(const QString&);
 };
 
 #endif // MAINWINDOW_H

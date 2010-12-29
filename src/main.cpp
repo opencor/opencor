@@ -1,18 +1,23 @@
-#include <qtsingleapplication.h>
-
 #include "mainwindow.h"
+
+#include <qtsingleapplication.h>
 
 int main(int argc, char *argv[])
 {
     QtSingleApplication app(argc, argv);
 
-    // Try to send a message (containing the arguments that were passed to this
-    // instance of OpenCOR) to the 'official' instance of OpenCOR. If there is
-    // no 'official' instance, then just carry on as normal, otherwise exit
-    // since we only want one instance of OpenCOR at any given time
+    // Send a message (containing the arguments that were passed to this
+    // instance of OpenCOR) to the 'official' instance of OpenCOR, should there
+    // be one. If there is no 'official' instance of OpenCOR, then just carry
+    // on as normal, otherwise exit since we only want one instance of OpenCOR
+    // at any given time
 
-    if (app.sendMessage(app.arguments().join(" ")))
+    if (app.isRunning())
+    {
+        app.sendMessage(app.arguments().join(" "));
+
         return 0;
+    }
 
     // Create the main window
 
@@ -33,8 +38,8 @@ int main(int argc, char *argv[])
 
     app.setActivationWindow(&win);
 
-    // Make sure that OpenCOR can respond to the empty message (see above)
-    // 'asking' it to bring itself to the foreground
+    // Make sure that OpenCOR can handle the message sent by another instance
+    // of itself
 
     QObject::connect(&app, SIGNAL(messageReceived(const QString&)),
                      &win, SLOT(singleAppMsgRcvd(const QString&)));
