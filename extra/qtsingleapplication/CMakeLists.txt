@@ -31,7 +31,7 @@ ENDIF()
 
 # Compiler options
 
-ADD_DEFINITIONS(-Wall -O2 -ffast-math)
+ADD_DEFINITIONS(-w -O2 -ffast-math -DQT_QTSINGLEAPPLICATION_EXPORT)
 
 # Qt specific
 

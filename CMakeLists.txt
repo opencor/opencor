@@ -6,7 +6,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # Type of build
 
-SET(CMAKE_BUILD_TYPE Release)
+#SET(CMAKE_BUILD_TYPE Release)
 
 # Version of OpenCOR
 
@@ -15,6 +15,15 @@ SET(${PROJECT_NAME}_VERSION_MINOR 1)
 SET(${PROJECT_NAME}_VERSION_PATCH 0)
 
 SET(${PROJECT_NAME}_VERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_PATCH}")
+
+# Compiler options
+
+ADD_DEFINITIONS(-Wall -O2 -ffast-math)
+
+IF(${CMAKE_BUILD_TYPE} MATCHES "Release")
+    ADD_DEFINITIONS(-DNDEBUG)
+    ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
+ENDIF()
 
 # Files that make up OpenCOR
 
@@ -38,9 +47,12 @@ SET(${PROJECT_NAME}_RESOURCES
     res/${PROJECT_NAME}.qrc
 )
 
-# Compiler options
+# OpenCOR requires the following third-party libraries:
+#  - QtSingleApplication (http://qt.gitorious.org/qt-solutions): BSD license
 
-ADD_DEFINITIONS(-Wall -O2 -ffast-math)
+ADD_SUBDIRECTORY(extra/qtsingleapplication)
+INCLUDE_DIRECTORIES(extra/qtsingleapplication)
+ADD_DEFINITIONS(-DQT_QTSINGLEAPPLICATION_IMPORT)
 
 # Set the application icon, but only for Windows and Mac OS X, since in the
 # case of Linux, it's done through res/OpenCOR.qrc
@@ -89,6 +101,7 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_LIBRARIES}
+    QtSingleApplication
 )
 
 # Packaging rules (using CPack)
