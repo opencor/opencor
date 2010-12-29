@@ -1,0 +1,82 @@
+diff --git a/3rdparty/qtsingleapplication/qtlocalpeer.cpp b/3rdparty/qtsingleapplication/qtlocalpeer.cpp
+index 382d182..89b9c93 100644
+--- a/3rdparty/qtsingleapplication/qtlocalpeer.cpp
++++ b/3rdparty/qtsingleapplication/qtlocalpeer.cpp
+@@ -52,14 +52,12 @@ static PProcessIdToSessionId pProcessIdToSessionId = 0;
+ #include <time.h>
+ #endif
+ 
+-namespace QtLP_Private {
+ #include "qtlockedfile.cpp"
+ #if defined(Q_OS_WIN)
+ #include "qtlockedfile_win.cpp"
+ #else
+ #include "qtlockedfile_unix.cpp"
+ #endif
+-}
+ 
+ const char* QtLocalPeer::ack = "ack";
+ 
+@@ -111,7 +109,7 @@ bool QtLocalPeer::isClient()
+     if (lockFile.isLocked())
+         return false;
+ 
+-    if (!lockFile.lock(QtLP_Private::QtLockedFile::WriteLock, false))
++    if (!lockFile.lock(QtLockedFile::WriteLock, false))
+         return true;
+ 
+     bool res = server->listen(socketName);
+diff --git a/3rdparty/qtsingleapplication/qtlocalpeer.h b/3rdparty/qtsingleapplication/qtlocalpeer.h
+index 869af2a..dc1e09e 100644
+--- a/3rdparty/qtsingleapplication/qtlocalpeer.h
++++ b/3rdparty/qtsingleapplication/qtlocalpeer.h
+@@ -65,7 +65,7 @@ protected:
+     QString id;
+     QString socketName;
+     QLocalServer* server;
+-    QtLP_Private::QtLockedFile lockFile;
++    QtLockedFile lockFile;
+ 
+ private:
+     static const char* ack;
+diff --git a/3rdparty/qtsingleapplication/qtlockedfile.h b/3rdparty/qtsingleapplication/qtlockedfile.h
+index 07a42bf..b65c06a 100644
+--- a/3rdparty/qtsingleapplication/qtlockedfile.h
++++ b/3rdparty/qtsingleapplication/qtlockedfile.h
+@@ -61,8 +61,6 @@
+ #  define QT_QTLOCKEDFILE_EXPORT
+ #endif
+ 
+-namespace QtLP_Private {
+-
+ class QT_QTLOCKEDFILE_EXPORT QtLockedFile : public QFile
+ {
+ public:
+@@ -92,5 +90,4 @@ private:
+ #endif
+     LockMode m_lock_mode;
+ };
+-}
+ #endif
+diff --git a/3rdparty/qtsingleapplication/qtlockedfile_win.cpp b/3rdparty/qtsingleapplication/qtlockedfile_win.cpp
+index 4cd2003..9e6b34f 100644
+--- a/3rdparty/qtsingleapplication/qtlockedfile_win.cpp
++++ b/3rdparty/qtsingleapplication/qtlockedfile_win.cpp
+@@ -58,7 +58,7 @@ Qt::HANDLE QtLockedFile::getMutexHandle(int idx, bool doCreate)
+ 
+     Qt::HANDLE mutex;
+     if (doCreate) {
+-        QT_WA( { mutex = CreateMutexW(NULL, FALSE, (TCHAR*)mname.utf16()); },
++        QT_WA( { mutex = CreateMutexW(NULL, FALSE, (WCHAR*)mname.utf16()); },
+                { mutex = CreateMutexA(NULL, FALSE, mname.toLocal8Bit().constData()); } );
+         if (!mutex) {
+             qErrnoWarning("QtLockedFile::lock(): CreateMutex failed");
+@@ -66,7 +66,7 @@ Qt::HANDLE QtLockedFile::getMutexHandle(int idx, bool doCreate)
+         }
+     }
+     else {
+-        QT_WA( { mutex = OpenMutexW(SYNCHRONIZE | MUTEX_MODIFY_STATE, FALSE, (TCHAR*)mname.utf16()); },
++        QT_WA( { mutex = OpenMutexW(SYNCHRONIZE | MUTEX_MODIFY_STATE, FALSE, (WCHAR*)mname.utf16()); },
+                { mutex = OpenMutexA(SYNCHRONIZE | MUTEX_MODIFY_STATE, FALSE, mname.toLocal8Bit().constData()); } );
+         if (!mutex) {
+             if (GetLastError() != ERROR_FILE_NOT_FOUND)
