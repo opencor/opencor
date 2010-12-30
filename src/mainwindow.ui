@@ -76,6 +76,9 @@
    <property name="statusTip">
     <string>Exit OpenCOR</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionEnglish">
    <property name="checkable">
@@ -94,6 +97,9 @@
    <property name="statusTip">
     <string>Select English as the language used by OpenCOR</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionFrench">
    <property name="checkable">
@@ -109,6 +115,9 @@
    <property name="statusTip">
     <string>Select French as the language used by OpenCOR</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionHelp">
    <property name="icon">
@@ -123,6 +132,9 @@
    </property>
    <property name="shortcut">
     <string>F1</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionHomePage">
