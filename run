@@ -15,7 +15,7 @@ if [ $OS = "Linux" ]; then
         echo $WMsg
     fi
 else
-    if [ -f build/OpenCOR.app ]; then
+    if [ -d build/OpenCOR.app ]; then
         open build/OpenCOR.app
     else
         echo $WMsg
