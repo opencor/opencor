@@ -164,7 +164,7 @@
     <string>&amp;About</string>
    </property>
    <property name="statusTip">
-    <string>Some general information about OpenCOR, CellML, third-party components and your machine</string>
+    <string>Some general information about OpenCOR</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>

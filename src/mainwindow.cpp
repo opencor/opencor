@@ -10,6 +10,8 @@
 #include <QSettings>
 #include <QUrl>
 
+#define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
+
 #define SETTINGS_INSTITUTION "World"
 #define SETTINGS_LOCALE "Locale"
 #define SETTINGS_GEOMETRY "Geometry"
@@ -197,10 +199,11 @@ void MainWindow::on_actionHomepage_triggered()
 {
     // Look up the OpenCOR home page
 
-    QDesktopServices::openUrl(QUrl("http://opencor.sourceforge.net/"));
+    QDesktopServices::openUrl(QUrl(OPENCOR_HOMEPAGE));
 }
 
 void MainWindow::on_actionAbout_triggered()
 {
-    notYetImplemented("MainWindow::on_actionAbout_triggered");
+    QMessageBox::about(this, qApp->applicationName(),
+                       "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">OpenCOR</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>. It can be used to organise, edit, simulate and analyse CellML files."));
 }
