@@ -76,6 +76,9 @@
    <property name="statusTip">
     <string>Exit OpenCOR</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>

@@ -18,8 +18,18 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    void notYetImplemented(const QString& message);
+
 public slots:
     void singleAppMsgRcvd(const QString&);
+
+private slots:
+    void on_actionAbout_triggered();
+    void on_actionHomePage_triggered();
+    void on_actionHelp_triggered();
+    void on_actionFrench_triggered();
+    void on_actionEnglish_triggered();
+    void on_actionExit_triggered();
 };
 
 #endif // MAINWINDOW_H
