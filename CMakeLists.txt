@@ -141,7 +141,7 @@ IF(WIN32)
 
     # Qt files required by OpenCOR
 
-    FOREACH(DLL QtCore QtGui)
+    FOREACH(DLL QtCore QtGui QtNetwork)
        INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION bin)
     ENDFOREACH()
 
@@ -179,10 +179,8 @@ ELSE()
     INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
     # Qt files required by OpenCOR
-    # Note: by default, OpenCOR only requires QtCore and QtGui, but QtGui
-    #       requires QtDBus which itself requires QtXml, so...
 
-    FOREACH(LIB QtCore QtDBus QtGui QtXml)
+    FOREACH(LIB QtCore QtDBus QtGui QtNetwork QtXml)
         INSTALL(FILES
             ${QT_LIBRARY_DIR}/lib${LIB}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
             RENAME lib${LIB}.so.${QT_VERSION_MAJOR}
