@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file alias="appIcon">OpenCOR.png</file>
+        <file>en.png</file>
+        <file>exit.png</file>
+        <file>fr.png</file>
+        <file>help.png</file>
     </qresource>
 </RCC>
