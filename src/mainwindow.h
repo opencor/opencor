@@ -18,6 +18,13 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    QString locale;
+
+    void loadSettings();
+    void saveSettings();
+
+    void setLocale(const QString& newLocale);
+
     void notYetImplemented(const QString& message);
 
 public slots:
@@ -25,7 +32,7 @@ public slots:
 
 private slots:
     void on_actionAbout_triggered();
-    void on_actionHomePage_triggered();
+    void on_actionHomepage_triggered();
     void on_actionHelp_triggered();
     void on_actionFrench_triggered();
     void on_actionEnglish_triggered();

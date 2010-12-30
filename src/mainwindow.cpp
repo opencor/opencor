@@ -5,9 +5,14 @@
     #include <windows.h>
 #endif
 
-#include <QMessageBox>
 #include <QDesktopServices>
+#include <QMessageBox>
+#include <QSettings>
 #include <QUrl>
+
+#define SETTINGS_INSTITUTION "World"
+#define SETTINGS_LOCALE "Locale"
+#define SETTINGS_GEOMETRY "Geometry"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -16,10 +21,18 @@ MainWindow::MainWindow(QWidget *parent)
     // Set up the GUI
 
     ui->setupUi(this);
+
+    // Retrieve our default settings
+
+    loadSettings();
 }
 
 MainWindow::~MainWindow()
 {
+    // Keep track of our default settings
+
+    saveSettings();
+
     // Delete the GUI
 
     delete ui;
@@ -93,6 +106,58 @@ void MainWindow::singleAppMsgRcvd(const QString&)
     // TODO: handle the arguments passed to the 'official' instance of OpenCOR
 }
 
+void MainWindow::loadSettings()
+{
+    QSettings settings(SETTINGS_INSTITUTION, qApp->applicationName());
+
+    // Retrieve the geometry of the main window
+
+    restoreGeometry(settings.value(SETTINGS_GEOMETRY).toByteArray());
+
+    // Retrieve the language to be used by OpenCOR, which by default is based
+    // on the system's locale
+
+    setLocale(settings.value(SETTINGS_LOCALE, QLocale::system().name()).toString());
+}
+
+void MainWindow::saveSettings()
+{
+    QSettings settings(SETTINGS_INSTITUTION, qApp->applicationName());
+
+    // Keep track of the geometry of the main window
+
+    settings.setValue(SETTINGS_GEOMETRY, saveGeometry());
+
+    // Keep track of the language to be used by OpenCOR
+
+    settings.setValue(SETTINGS_LOCALE, locale);
+}
+
+void MainWindow::setLocale(const QString& newLocale)
+{
+    if (newLocale != locale)
+    {
+        locale = newLocale;
+
+        // Specify the language to be used by OpenCOR
+
+//        qApp->removeTranslator(qtTranslator);
+//        qtTranslator->load("qt_"+newLocale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+//        qApp->installTranslator(qtTranslator);
+
+//        qApp->removeTranslator(appTranslator);
+//        appTranslator->load(":app_"+newLocale);
+//        qApp->installTranslator(appTranslator);
+    }
+
+    // Update the checked menu item
+    // Note: it has to be done every single time, since selecting a menu item
+    //       will automatically toggle its checked status, so...
+
+    ui->actionEnglish->setChecked(newLocale.startsWith("en"));
+    ui->actionFrench->setChecked(newLocale.startsWith("fr"));
+}
+
 void MainWindow::notYetImplemented(const QString& message)
 {
     // Display a warning message about a particular feature having not yet been
@@ -111,12 +176,16 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionEnglish_triggered()
 {
-    notYetImplemented("MainWindow::on_actionEnglish_triggered");
+    // Select English as the language used by OpenCOR
+
+    setLocale("en");
 }
 
 void MainWindow::on_actionFrench_triggered()
 {
-    notYetImplemented("MainWindow::on_actionFrench_triggered");
+    // Select French as the language used by OpenCOR
+
+    setLocale("fr");
 }
 
 void MainWindow::on_actionHelp_triggered()
@@ -124,7 +193,7 @@ void MainWindow::on_actionHelp_triggered()
     notYetImplemented("MainWindow::on_actionHelp_triggered");
 }
 
-void MainWindow::on_actionHomePage_triggered()
+void MainWindow::on_actionHomepage_triggered()
 {
     // Look up the OpenCOR home page
 

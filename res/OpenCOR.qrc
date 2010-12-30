@@ -2,8 +2,10 @@
     <qresource prefix="/">
         <file alias="appIcon">OpenCOR.png</file>
         <file>en.png</file>
-        <file>exit.png</file>
         <file>fr.png</file>
+        <file>about.png</file>
+        <file>exit.png</file>
         <file>help.png</file>
+        <file>homepage.png</file>
     </qresource>
 </RCC>
