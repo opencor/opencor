@@ -6,10 +6,20 @@ if [ $OS = "Linux" ]; then
     echo "\033[44;37;1mRunning OpenCOR...\033[0m"
 fi
 
+WMsg="Warning: OpenCOR must first be built before being run."
+
 if [ $OS = "Linux" ]; then
-    build/OpenCOR
+    if [ -f build/OpenCOR ]; then
+        build/OpenCOR
+    else
+        echo $WMsg
+    fi
 else
-    open build/OpenCOR.app
+    if [ -f build/OpenCOR.app ]; then
+        open build/OpenCOR.app
+    else
+        echo $WMsg
+    fi
 fi
 
 if [ $OS = "Linux" ]; then
