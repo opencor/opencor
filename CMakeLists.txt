@@ -30,9 +30,11 @@ ENDIF()
 SET(${PROJECT_NAME}_SOURCES
     src/main.cpp
     src/mainwindow.cpp
+    src/utils.cpp
 )
 
 SET(${PROJECT_NAME}_HEADERS
+    src/utils.h
 )
 
 SET(${PROJECT_NAME}_HEADERS_MOC

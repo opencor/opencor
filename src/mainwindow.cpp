@@ -1,11 +1,16 @@
 #include "mainwindow.h"
+#include "utils.h"
+
 #include "ui_mainwindow.h"
 
 #ifdef Q_WS_WIN
     #include <windows.h>
 #endif
 
+#include <QApplication>
+#include <QDebug>
 #include <QDesktopServices>
+#include <QFileInfo>
 #include <QMessageBox>
 #include <QSettings>
 #include <QUrl>
@@ -27,6 +32,39 @@ MainWindow::MainWindow(QWidget *parent)
     // Retrieve our default settings
 
     loadSettings();
+
+    // Retrieve the name of the operating system
+
+    osName = getOsName();
+
+    // Retrieve the name of the application
+
+    appName = QFileInfo(qApp->applicationFilePath()).baseName();
+    // Note: normally, one would probably use something like:
+    //
+    //           appName = qApp->applicationName();
+    //
+    //       but this will return an empty string (probably as a result of our
+    //       use of CMake as opposed to QMake and therefore a .pro file), so...
+
+    // Retrieve the version of the application
+
+    QFile versionFile(":version");
+
+    versionFile.open(QIODevice::ReadOnly);
+
+    appVersion = QString(versionFile.readLine()).trimmed();
+
+    if (appVersion.endsWith(".0"))
+        // There is no actual patch information, so trim it
+
+        appVersion.truncate(appVersion.length()-2);
+
+    versionFile.close();
+
+    // Set the name of the main window to that of the application
+
+    setWindowTitle(appName);
 }
 
 MainWindow::~MainWindow()
@@ -110,7 +148,7 @@ void MainWindow::singleAppMsgRcvd(const QString&)
 
 void MainWindow::loadSettings()
 {
-    QSettings settings(SETTINGS_INSTITUTION, qApp->applicationName());
+    QSettings settings(SETTINGS_INSTITUTION, appName);
 
     // Retrieve the geometry of the main window
 
@@ -124,7 +162,7 @@ void MainWindow::loadSettings()
 
 void MainWindow::saveSettings()
 {
-    QSettings settings(SETTINGS_INSTITUTION, qApp->applicationName());
+    QSettings settings(SETTINGS_INSTITUTION, appName);
 
     // Keep track of the geometry of the main window
 
@@ -165,7 +203,7 @@ void MainWindow::notYetImplemented(const QString& message)
     // Display a warning message about a particular feature having not yet been
     // implemented
 
-    QMessageBox::warning(this, "OpenCOR", message+tr(" has not yet been implemented..."),
+    QMessageBox::warning(this, appName, message+tr(" has not yet been implemented..."),
                          QMessageBox::Ok, QMessageBox::Ok);
 }
 
@@ -204,6 +242,11 @@ void MainWindow::on_actionHomepage_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, qApp->applicationName(),
-                       "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">OpenCOR</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>. It can be used to organise, edit, simulate and analyse CellML files."));
+    QMessageBox::about(this, appName,
+                       QString("")+
+                       "<CENTER>"+
+                           "<H1><B>"+appName+" "+appVersion+"</B></H1>"+
+                           "<B><I>("+osName+")</I></B>"+
+                       "</CENTER><BR>"+
+                       "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+appName+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>. It can be used to organise, edit, simulate and analyse CellML files."));
 }

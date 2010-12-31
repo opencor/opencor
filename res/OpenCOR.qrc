@@ -7,5 +7,6 @@
         <file>exit.png</file>
         <file>help.png</file>
         <file>homepage.png</file>
+        <file alias="version">../VERSION.txt</file>
     </qresource>
 </RCC>

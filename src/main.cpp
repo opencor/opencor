@@ -30,10 +30,6 @@ int main(int argc, char *argv[])
     win.setWindowIcon(QIcon(QString(":appIcon")));
 #endif
 
-    // Set the name of the main window to OpenCOR
-
-    win.setWindowTitle("OpenCOR");
-
     // Keep track of the main window (useful for QtSingleApplication)
 
     app.setActivationWindow(&win);

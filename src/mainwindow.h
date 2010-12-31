@@ -18,6 +18,11 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    QString osName;
+
+    QString appName;
+    QString appVersion;
+
     QString locale;
 
     void loadSettings();
