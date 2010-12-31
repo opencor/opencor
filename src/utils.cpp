@@ -3,7 +3,7 @@
 #include <QProcess>
 #include <QSysInfo>
 
-QString execProg(const QString& prog, const QString& args)
+QString exec(const QString& prog, const QString& args)
 {
     QProcess process;
 

@@ -3,7 +3,7 @@
 
 #include <QString>
 
-QString execProc(const QString& prog, const QString& args);
+QString exec(const QString& prog, const QString& args);
 
 QString getOsName();
 
