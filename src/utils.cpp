@@ -33,23 +33,25 @@ QString getOsName()
         default:
             return "Microsoft Windows";
     }
-#elif Q_WS_MAC
-    switch(QSysInfo::windowsVersion())
-    {
-        case QSysInfo::MV_10_3:
-            return "Mac OS X 10.3 (Jaguar)";
-        case QSysInfo::MV_10_4:
-            return "Mac OS X 10.4 (Panther)";
-        case QSysInfo::MV_10_5:
-            return "Mac OS X 10.5 (Leopard)";
-        case QSysInfo::MV_10_6:
-            return "Mac OS X 10.6 (Snow Leopard)";
-        default:
-            return "Mac OS X";
-    }
 #else
-    // Linux
+    #ifdef Q_WS_MAC
+        switch(QSysInfo::windowsVersion())
+        {
+            case QSysInfo::MV_10_3:
+                return "Mac OS X 10.3 (Jaguar)";
+            case QSysInfo::MV_10_4:
+                return "Mac OS X 10.4 (Panther)";
+            case QSysInfo::MV_10_5:
+                return "Mac OS X 10.5 (Leopard)";
+            case QSysInfo::MV_10_6:
+                return "Mac OS X 10.6 (Snow Leopard)";
+            default:
+                return "Mac OS X";
+        }
+    #else
+        // Linux
 
-    return exec("uname", "-o")+" "+exec("uname", "-r");
+        return exec("uname", "-o")+" "+exec("uname", "-r");
+    #endif
 #endif
 }
