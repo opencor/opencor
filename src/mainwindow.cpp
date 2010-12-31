@@ -25,14 +25,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow)
 {
-    // Set up the GUI
-
-    ui->setupUi(this);
-
-    // Retrieve our default settings
-
-    loadSettings();
-
     // Retrieve the name of the operating system
 
     osName = getOsName();
@@ -61,6 +53,14 @@ MainWindow::MainWindow(QWidget *parent)
         appVersion.truncate(appVersion.length()-2);
 
     versionFile.close();
+
+    // Set up the GUI
+
+    ui->setupUi(this);
+
+    // Retrieve our default settings
+
+    loadSettings();
 
     // Set the name of the main window to that of the application
 
