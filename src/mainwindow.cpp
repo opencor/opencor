@@ -246,7 +246,8 @@ void MainWindow::on_actionAbout_triggered()
                        QString("")+
                        "<CENTER>"+
                            "<H1><B>"+appName+" "+appVersion+"</B></H1>"+
-                           "<B><I>("+osName+")</I></B>"+
-                       "</CENTER><BR>"+
+                           "<H3><I>"+osName+"</I></H3>"+
+                       "</CENTER>"+
+                       "<BR>"+
                        "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+appName+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>. It can be used to organise, edit, simulate and analyse CellML files."));
 }

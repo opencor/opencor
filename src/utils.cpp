@@ -16,7 +16,7 @@ QString exec(const QString& prog, const QString& args)
 QString getOsName()
 {
 #ifdef Q_WS_WIN
-    switch(QSysInfo::windowsVersion())
+    switch(QSysInfo::WindowsVersion)
     {
         case QSysInfo::WV_NT:
             return "Microsoft Windows NT";
@@ -35,7 +35,7 @@ QString getOsName()
     }
 #else
     #ifdef Q_WS_MAC
-        switch(QSysInfo::windowsVersion())
+        switch(QSysInfo::MacintoshVersion)
         {
             case QSysInfo::MV_10_3:
                 return "Mac OS X 10.3 (Jaguar)";
