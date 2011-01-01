@@ -50,8 +50,9 @@
 
 #include "assistant.h"
 
-Assistant::Assistant()
-    : proc(0)
+Assistant::Assistant(const QString& aQhcFileName)
+    : qhcFileName(aQhcFileName),
+      proc(0)
 {
 }
 
@@ -74,6 +75,7 @@ void Assistant::showDocumentation(const QString &page)
 
     QByteArray ba("SetSource ");
     ba.append("qthelp://com.trolltech.examples.simpletextviewer/doc/");
+//    ba.append("qthelp://world.opencor/doc/");
     
     proc->write(ba + page.toLocal8Bit() + '\n');
 }
@@ -95,8 +97,7 @@ bool Assistant::startAssistant()
 
         QStringList args;
         args << QLatin1String("-collectionFile")
-            << QLibraryInfo::location(QLibraryInfo::ExamplesPath)
-            + QLatin1String("/help/simpletextviewer/documentation/simpletextviewer.qhc")
+            << qhcFileName
             << QLatin1String("-enableRemoteControl");
 
         proc->start(app, args);

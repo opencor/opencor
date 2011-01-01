@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Assistan
 
-    assistant = new Assistant;
+    assistant = new Assistant(qhcFileName);
 
     // Set up the GUI
 

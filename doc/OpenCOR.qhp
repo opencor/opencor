@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <QtHelpProject version="1.0">
-   <namespace>world.opencor</namespace>
-   <virtualFolder>doc</virtualFolder>
-   <filterSection>
-      <files>
-         <file>intro.html</file>
-         <file>res/LicenseLGPLv2.1.txt</file>
-         <file>res/stylesheet.css</file>
-      </files>
-   </filterSection>
+    <namespace>world.opencor</namespace>
+    <virtualFolder>doc</virtualFolder>
+    <filterSection>
+        <files>
+            <file>index.html</file>
+            <file>res/LicenseLGPLv2.1.txt</file>
+            <file>res/stylesheet.css</file>
+        </files>
+    </filterSection>
 </QtHelpProject>

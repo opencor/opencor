@@ -50,11 +50,12 @@ QT_END_NAMESPACE
 class Assistant
 {
 public:
-    Assistant();
+    Assistant(const QString& aQhcFileName);
     ~Assistant();
     void showDocumentation(const QString &file);
     
 private:
+    QString qhcFileName;
     bool startAssistant();
     QProcess *proc;
 };
