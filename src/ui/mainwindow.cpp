@@ -10,9 +10,11 @@
 #include <QApplication>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QDir>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QSettings>
+#include <QTemporaryFile>
 #include <QUrl>
 
 #define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
@@ -54,7 +56,26 @@ MainWindow::MainWindow(QWidget *parent)
 
     versionFile.close();
 
-    // Assistant
+    // Extract the help files
+
+    QTemporaryFile tempDir;
+
+    tempDir.open();    // Note: this is required to get a 'valid' temporary
+    tempDir.close();   //       directory name...
+
+    tempDirName = tempDir.fileName().append(".dir");
+
+    QDir().mkdir(tempDirName);
+
+    QString applicationBaseName(QFileInfo(qApp->applicationFilePath()).baseName());
+
+    qchFileName = tempDirName+QDir::separator()+applicationBaseName+".qch";
+    qhcFileName = tempDirName+QDir::separator()+applicationBaseName+".qhc";
+
+    saveResourceAs(":qchFile", qchFileName);
+    saveResourceAs(":qhcFile", qhcFileName);
+
+    // Assistan
 
     assistant = new Assistant;
 
@@ -84,6 +105,13 @@ MainWindow::~MainWindow()
     // Assistant
 
     delete assistant;
+
+    // Delete the help files
+
+    QFile(qchFileName).remove();
+    QFile(qhcFileName).remove();
+
+    QDir().rmdir(tempDirName);
 }
 
 void MainWindow::singleAppMsgRcvd(const QString&)

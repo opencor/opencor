@@ -1,6 +1,8 @@
 #include "utils.h"
 
+#include <QFile>
 #include <QProcess>
+#include <QResource>
 #include <QSysInfo>
 
 QString exec(const QString& prog, const QString& args)
@@ -54,4 +56,20 @@ QString getOsName()
         return exec("uname", "-o")+" "+exec("uname", "-r");
     #endif
 #endif
+}
+
+void saveResourceAs(const QString& resourceName, const QString& fileName)
+{
+    QFile file(fileName);
+
+    file.open(QIODevice::ReadWrite);
+
+    QResource resource(resourceName);
+
+    if (resource.isCompressed())
+        file.write(qUncompress((const uchar*) resource.data(), resource.size()));
+    else
+        file.write((const char*) resource.data(), resource.size());
+
+    file.close();
 }

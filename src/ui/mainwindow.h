@@ -29,6 +29,9 @@ private:
 
     Assistant *assistant;
 
+    QString tempDirName;
+    QString qchFileName, qhcFileName;
+
     void loadSettings();
     void saveSettings();
 
