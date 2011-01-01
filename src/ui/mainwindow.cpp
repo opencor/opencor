@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "utils.h"
+#include "../misc/utils.h"
 
 #include "ui_mainwindow.h"
 

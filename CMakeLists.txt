@@ -34,20 +34,20 @@ ENDIF()
 
 SET(${PROJECT_NAME}_SOURCES
     src/main.cpp
-    src/mainwindow.cpp
-    src/utils.cpp
+    src/misc/utils.cpp
+    src/ui/mainwindow.cpp
 )
 
 SET(${PROJECT_NAME}_HEADERS
-    src/utils.h
+    src/misc/utils.h
 )
 
 SET(${PROJECT_NAME}_HEADERS_MOC
-    src/mainwindow.h
+    src/ui/mainwindow.h
 )
 
 SET(${PROJECT_NAME}_UIS
-    src/mainwindow.ui
+    src/ui/mainwindow.ui
 )
 
 SET(${PROJECT_NAME}_RESOURCES
