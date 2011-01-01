@@ -1,0 +1,17 @@
+#!/bin/sh
+
+OS=`uname -s`
+
+if [ $OS = "Linux" ]; then
+    echo "\033[44;37;1mBuilding OpenCOR's help...\033[0m"
+fi
+
+cd doc
+
+qcollectiongenerator OpenCOR.qhcp -o ../res/OpenCOR.qhc
+
+cd ..
+
+if [ $OS = "Linux" ]; then
+    echo "\033[42;37;1mAll done!\033[0m"
+fi

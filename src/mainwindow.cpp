@@ -249,5 +249,6 @@ void MainWindow::on_actionAbout_triggered()
                            "<H3><I>"+osName+"</I></H3>"+
                        "</CENTER>"+
                        "<BR>"+
-                       "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+appName+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>. It can be used to organise, edit, simulate and analyse CellML files."));
+                       "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+appName+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.")+"<BR><BR>"+
+                       appName+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A> and is released under the <A HREF = \"http://www.opensource.org/licenses/lgpl-2.1.php\">LGPLv2.1 license</A>."));
 }

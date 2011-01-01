@@ -1,0 +1,32 @@
+BODY
+{
+   Background-Color: #000033;
+   Color: #CCCCCC;
+   Font-Family: Arial, Sans-Serif;
+   Font-Size: 11pt;
+   Text-Align: Justify;
+   -KHTML-User-Select: None;   /* Prevent selection within a webkit-based */
+                               /* browser                                 */
+}
+
+A
+{
+   Color: #CCCCCC;
+}
+
+A:Visited
+{
+   Color: #CCCCCC;
+}
+
+A:Hover
+{
+   Background-Color: #CCCCCC;
+   Color: #000033;
+   Text-Decoration: None;
+}
+
+SPAN.Bold
+{
+   Font-Weight: Bold;
+}
