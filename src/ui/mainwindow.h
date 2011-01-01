@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "../misc/assistant.h"
+
 #include <QMainWindow>
 
 namespace Ui {
@@ -24,6 +26,8 @@ private:
     QString appVersion;
 
     QString locale;
+
+    Assistant *assistant;
 
     void loadSettings();
     void saveSettings();

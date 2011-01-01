@@ -54,6 +54,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     versionFile.close();
 
+    // Assistant
+
+    assistant = new Assistant;
+
     // Set up the GUI
 
     ui->setupUi(this);
@@ -76,6 +80,10 @@ MainWindow::~MainWindow()
     // Delete the GUI
 
     delete ui;
+
+    // Assistant
+
+    delete assistant;
 }
 
 void MainWindow::singleAppMsgRcvd(const QString&)
@@ -230,7 +238,7 @@ void MainWindow::on_actionFrench_triggered()
 
 void MainWindow::on_actionHelp_triggered()
 {
-    notYetImplemented("MainWindow::on_actionHelp_triggered");
+    assistant->showDocumentation("index.html");
 }
 
 void MainWindow::on_actionHomepage_triggered()

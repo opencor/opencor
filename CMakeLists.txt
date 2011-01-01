@@ -34,11 +34,13 @@ ENDIF()
 
 SET(${PROJECT_NAME}_SOURCES
     src/main.cpp
+    src/misc/assistant.cpp
     src/misc/utils.cpp
     src/ui/mainwindow.cpp
 )
 
 SET(${PROJECT_NAME}_HEADERS
+    src/misc/assistant.h
     src/misc/utils.h
 )
 
