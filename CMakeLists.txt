@@ -56,14 +56,17 @@ SET(${PROJECT_NAME}_RESOURCES
     res/${PROJECT_NAME}.qrc
 )
 
-# OpenCOR requires the following third-party libraries:
-#  - QtSingleApplication (http://qt.gitorious.org/qt-solutions): BSD license
+# Build the the third-party libraries used by OpenCOR
 
-FOREACH(3RDPARTYLIB qtsingleapplication)
+SET(3RDPARTYLIBS qtsingleapplication)
+
+FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
     SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})
-    INCLUDE(${3RDPARTYLIB_DIR}/CMakeLists.txt)
+    ADD_SUBDIRECTORY(${3RDPARTYLIB_DIR})
     INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR})
 ENDFOREACH()
+
+ADD_DEFINITIONS(-DQT_QTSINGLEAPPLICATION_IMPORT)
 
 # Set the application icon, but only for Windows and Mac OS X, since in the
 # case of Linux, it's done through res/OpenCOR.qrc
@@ -114,7 +117,7 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
+    ${3RDPARTYLIBS}
 )
 
 # Rules to package OpenCOR (using CPack)
