@@ -58,7 +58,7 @@ SET(${PROJECT_NAME}_RESOURCES
 
 # Build the the third-party libraries used by OpenCOR
 
-SET(3RDPARTYLIBS qtsingleapplication)
+SET(3RDPARTYLIBS QtSingleApplication)
 
 FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
     SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})

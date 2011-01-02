@@ -1,4 +1,4 @@
-PROJECT(qtsingleapplication)
+PROJECT(QtSingleApplication)
 
 # Minimum version of CMake required
 
