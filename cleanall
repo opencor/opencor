@@ -12,7 +12,7 @@ if [ -f Makefile ]; then
     make -j clean
 fi
 
-rm -fr 3rdparty *ake* _CPack_Packages install_manifest.txt *OpenCOR* src
+rm -fr 3rdparty *ake* _CPack_Packages install_manifest.txt lib *OpenCOR* src
 
 cd ..
 
