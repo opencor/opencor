@@ -149,7 +149,7 @@
     <string>Home&amp;page</string>
    </property>
    <property name="statusTip">
-    <string>Look up the OpenCell homepage</string>
+    <string>Look up the OpenCOR homepage</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
