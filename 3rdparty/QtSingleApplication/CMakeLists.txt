@@ -1,13 +1,5 @@
 PROJECT(QtSingleApplication)
 
-# Minimum version of CMake required
-
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-
-# Type of build
-
-SET(CMAKE_BUILD_TYPE Release)
-
 # Files that make up QtSingleApplication
 
 SET(${PROJECT_NAME}_SOURCES
@@ -22,7 +14,7 @@ SET(${PROJECT_NAME}_HEADERS_MOC
 
 # Compiler options
 
-ADD_DEFINITIONS(-w -O2 -ffast-math -DQT_QTSINGLEAPPLICATION_EXPORT)
+ADD_DEFINITIONS(-DQT_QTSINGLEAPPLICATION_EXPORT)
 
 # Qt specific
 

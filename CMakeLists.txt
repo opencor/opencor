@@ -56,7 +56,7 @@ SET(${PROJECT_NAME}_RESOURCES
     res/${PROJECT_NAME}.qrc
 )
 
-# Build the the third-party libraries used by OpenCOR
+# Build the third-party libraries used by OpenCOR
 
 SET(3RDPARTYLIBS QtSingleApplication)
 
@@ -104,7 +104,7 @@ QT4_ADD_RESOURCES(${PROJECT_NAME}_SOURCES_RCS ${${PROJECT_NAME}_RESOURCES})
 
 # Rules to build OpenCOR
 
-#SET(CMAKE_VERBOSE_MAKEFILE ON)
+SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
