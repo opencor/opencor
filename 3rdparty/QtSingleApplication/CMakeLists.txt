@@ -12,10 +12,6 @@ SET(${PROJECT_NAME}_HEADERS_MOC
     qtsingleapplication.h
 )
 
-# Compiler options
-
-ADD_DEFINITIONS(-DQT_QTSINGLEAPPLICATION_EXPORT)
-
 # Qt specific
 
 FIND_PACKAGE(Qt4 4.6 REQUIRED)
