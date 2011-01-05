@@ -1,1 +1,1 @@
-OpenCOR is released under the GPLv2 license (or later), a copy of which can be found in the same directory as this file, as well as at http://www.opensource.org/licenses/gpl-2.0.
+OpenCOR is not currently released under any specific license, but this is going to change in the future.

@@ -74,8 +74,7 @@ void Assistant::showDocumentation(const QString &page)
         return;
 
     QByteArray ba("SetSource ");
-    ba.append("qthelp://com.trolltech.examples.simpletextviewer/doc/");
-//    ba.append("qthelp://world.opencor/doc/");
+    ba.append("qthelp://world.opencor/doc/");
     
     proc->write(ba + page.toLocal8Bit() + '\n');
 }
@@ -103,7 +102,7 @@ bool Assistant::startAssistant()
         proc->start(app, args);
 
         if (!proc->waitForStarted()) {
-            QMessageBox::critical(0, QObject::tr("Simple Text Viewer"),
+            QMessageBox::critical(0, QObject::tr("OpenCOR"),
                 QObject::tr("Unable to launch Qt Assistant (%1)").arg(app));
             return false;
         }    

@@ -286,5 +286,5 @@ void MainWindow::on_actionAbout_triggered()
                        "</CENTER>"+
                        "<BR>"+
                        "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+appName+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.")+"<BR><BR>"+
-                       appName+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A> and is released under the <A HREF = \"http://www.opensource.org/licenses/gpl-2.0\">GPLv2 license</A> (or later)."));
+                       appName+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any specific license, but this is going to change in the future."));
 }
