@@ -8,7 +8,7 @@
         <file>help.png</file>
         <file>homepage.png</file>
         <file alias="version">../VERSION.txt</file>
-        <file alias="qchFile">OpenCOR.qch</file>
-        <file alias="qhcFile">OpenCOR.qhc</file>
+        <file alias="qchFile">../build/OpenCOR.qch</file>
+        <file alias="qhcFile">../build/OpenCOR.qhc</file>
     </qresource>
 </RCC>

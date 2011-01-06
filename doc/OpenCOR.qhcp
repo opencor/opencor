@@ -12,11 +12,11 @@
         <generate>
             <file>
                 <input>OpenCOR.qhp</input>
-                <output>../res/OpenCOR.qch</output>
+                <output>../build/OpenCOR.qch</output>
             </file>
         </generate>
         <register>
-            <file>../res/OpenCOR.qch</file>
+            <file>../build/OpenCOR.qch</file>
         </register>
     </docFiles>
 </QHelpCollectionProject>
