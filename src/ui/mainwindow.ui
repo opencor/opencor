@@ -54,7 +54,6 @@
     <addaction name="separator"/>
     <addaction name="actionHomepage"/>
     <addaction name="separator"/>
-    <addaction name="actionAboutQt"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
@@ -176,14 +175,6 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
-   </property>
-  </action>
-  <action name="actionAboutQt">
-   <property name="text">
-    <string>About &amp;Qt...</string>
-   </property>
-   <property name="statusTip">
-    <string>Some general information about the version of Qt used by OpenCOR</string>
    </property>
   </action>
  </widget>
