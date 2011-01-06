@@ -276,6 +276,11 @@ void MainWindow::on_actionHomepage_triggered()
     QDesktopServices::openUrl(QUrl(OPENCOR_HOMEPAGE));
 }
 
+void MainWindow::on_actionAboutQt_triggered()
+{
+    qApp->aboutQt();
+}
+
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this, appName,

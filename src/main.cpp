@@ -23,12 +23,14 @@ int main(int argc, char *argv[])
 
     MainWindow win;
 
-    // Set the application icon, but only for Linux, since in the case of
-    // Windows and Mac, it's done through CMake (see CMakeLists.txt)
+    // Set the application icon
+    // Note: normally, this would only be required for Linux, since in the case
+    //       of Windows and Mac, it's done through CMake (see CMakeLists.txt).
+    //       Yet, we do it for all three platforms, since it associates an icon
+    //       to OpenCOR, which can then be used in, for example, the about box,
+    //       so...
 
-#ifdef Q_WS_X11
     win.setWindowIcon(QIcon(QString(":appIcon")));
-#endif
 
     // Keep track of the main window (useful for QtSingleApplication)
 

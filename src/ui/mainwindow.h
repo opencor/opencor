@@ -43,6 +43,7 @@ public slots:
     void singleAppMsgRcvd(const QString&);
 
 private slots:
+    void on_actionAboutQt_triggered();
     void on_actionAbout_triggered();
     void on_actionHomepage_triggered();
     void on_actionHelp_triggered();
