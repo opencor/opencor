@@ -1,5 +1,6 @@
 #include "mainwindow.h"
-#include "../misc/utils.h"
+#include "helpwindow.h"
+#include "utils.h"
 
 #include "ui_mainwindow.h"
 
@@ -10,8 +11,10 @@
 #include <QApplication>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QDesktopWidget>
 #include <QDir>
 #include <QFileInfo>
+#include <QHelpEngine>
 #include <QMessageBox>
 #include <QSettings>
 #include <QTemporaryFile>
@@ -22,10 +25,12 @@
 #define SETTINGS_INSTITUTION "World"
 #define SETTINGS_LOCALE "Locale"
 #define SETTINGS_GEOMETRY "Geometry"
+#define SETTINGS_STATE "State"
+#define SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER "HelpWindow\\TextSizeMultiplier"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),
-      ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
     // Retrieve the name of the operating system
 
@@ -56,6 +61,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     versionFile.close();
 
+    // Set up the GUI
+
+    ui->setupUi(this);
+
     // Extract the help files
 
     QTemporaryFile tempDir;
@@ -75,13 +84,39 @@ MainWindow::MainWindow(QWidget *parent)
     saveResourceAs(":qchFile", qchFileName);
     saveResourceAs(":qhcFile", qhcFileName);
 
-    // Assistan
+    // Set up the help engine
 
-    assistant = new Assistant(qhcFileName);
+    helpEngine = new QHelpEngine(qhcFileName);
 
-    // Set up the GUI
+    helpEngine->setupData();
 
-    ui->setupUi(this);
+    // Help window
+
+    helpWindow = new HelpWindow(helpEngine, QUrl("qthelp://world.opencor/doc/index.html"));
+
+    connect(helpWindow, SIGNAL(visibilityChanged(bool)), this, SLOT(showHideHelp(bool)));
+
+    // Default size and position of both the main and help windows
+
+    const double mainRatio = 3.0/5.0;
+    const double helpRatio = 1.0/3.0;
+    const double spaceRatio = 1.0/45.0;
+    const double horizSpace = spaceRatio*qApp->desktop()->width();
+    const double vertSpace  = 2.0*spaceRatio*qApp->desktop()->height();
+
+    resize(QSize(mainRatio*qApp->desktop()->width(), mainRatio*qApp->desktop()->height()));
+    helpWindow->resize(helpRatio*qApp->desktop()->width(), size().height());
+
+    move(QPoint(horizSpace, vertSpace));
+    helpWindow->move(QPoint(qApp->desktop()->width()-helpWindow->size().width()-horizSpace, vertSpace));
+
+    addDockWidget(Qt::RightDockWidgetArea, helpWindow);
+    // Note: the above is only required so that the help window can then be
+    //       docked to the main window, should the user want to do that.
+    //       Indeed, to make the help window float is not sufficient, so...
+
+    helpWindow->setFloating(true);
+    helpWindow->hide();   // By default
 
     // Retrieve our default settings
 
@@ -98,13 +133,10 @@ MainWindow::~MainWindow()
 
     saveSettings();
 
-    // Delete the GUI
+    // Delete some internal objects
 
+    delete helpEngine;
     delete ui;
-
-    // Assistant
-
-    delete assistant;
 
     // Delete the help files
 
@@ -186,27 +218,43 @@ void MainWindow::loadSettings()
 {
     QSettings settings(SETTINGS_INSTITUTION, appName);
 
-    // Retrieve the geometry of the main window
-
-    restoreGeometry(settings.value(SETTINGS_GEOMETRY).toByteArray());
-
     // Retrieve the language to be used by OpenCOR, which by default is based
     // on the system's locale
 
     setLocale(settings.value(SETTINGS_LOCALE, QLocale::system().name()).toString());
+
+    // Retrieve the geometry of the main window
+
+    restoreGeometry(settings.value(SETTINGS_GEOMETRY).toByteArray());
+
+    // Retrieve the state of the main window
+
+    restoreState(settings.value(SETTINGS_STATE).toByteArray());
+
+    // Retrieve the various help widget settings
+
+    helpWindow->setHelpWidgetTextSizeMultiplier(settings.value(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, helpWindow->helpWidgetTextSizeMultiplier()).toDouble());
 }
 
 void MainWindow::saveSettings()
 {
     QSettings settings(SETTINGS_INSTITUTION, appName);
 
+    // Keep track of the language to be used by OpenCOR
+
+    settings.setValue(SETTINGS_LOCALE, locale);
+
     // Keep track of the geometry of the main window
 
     settings.setValue(SETTINGS_GEOMETRY, saveGeometry());
 
-    // Keep track of the language to be used by OpenCOR
+    // Keep track of the state of the main window
 
-    settings.setValue(SETTINGS_LOCALE, locale);
+    settings.setValue(SETTINGS_STATE, saveState());
+
+    // Keep track of various help widget settings
+
+    settings.setValue(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, helpWindow->helpWidgetTextSizeMultiplier());
 }
 
 void MainWindow::setLocale(const QString& newLocale)
@@ -264,9 +312,19 @@ void MainWindow::on_actionFrench_triggered()
     setLocale("fr");
 }
 
+void MainWindow::showHideHelp(const bool& show)
+{
+    if (show)
+        helpWindow->show();
+    else
+        helpWindow->hide();
+
+    ui->actionHelp->setChecked(show);
+}
+
 void MainWindow::on_actionHelp_triggered()
 {
-    assistant->showDocumentation("index.html");
+    showHideHelp(ui->actionHelp->isChecked());
 }
 
 void MainWindow::on_actionHomepage_triggered()

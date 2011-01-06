@@ -1,13 +1,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "../misc/assistant.h"
-
 #include <QMainWindow>
 
 namespace Ui {
     class MainWindow;
 }
+
+class HelpWindow;
+
+class QHelpEngine;
+class QSettings;
 
 class MainWindow : public QMainWindow
 {
@@ -27,7 +30,8 @@ private:
 
     QString locale;
 
-    Assistant *assistant;
+    QHelpEngine *helpEngine;
+    HelpWindow *helpWindow;
 
     QString tempDirName;
     QString qchFileName, qhcFileName;
@@ -43,6 +47,8 @@ public slots:
     void singleAppMsgRcvd(const QString&);
 
 private slots:
+    void showHideHelp(const bool& show);
+
     void on_actionAboutQt_triggered();
     void on_actionAbout_triggered();
     void on_actionHomepage_triggered();

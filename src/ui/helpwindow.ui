@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HelpWindow</class>
+ <widget class="QDockWidget" name="HelpWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../res/OpenCOR.qrc">
+    <normaloff>:/help.png</normaloff>:/help.png</iconset>
+  </property>
+  <property name="windowTitle">
+   <string>OpenCOR Help</string>
+  </property>
+ </widget>
+ <resources>
+  <include location="../../res/OpenCOR.qrc"/>
+ </resources>
+ <connections/>
+</ui>

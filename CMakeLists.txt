@@ -21,27 +21,36 @@ STRING(REGEX REPLACE "[0-9]+\\." "" ${PROJECT_NAME}_VERSION_PATCH "${${PROJECT_N
 
 SET(${PROJECT_NAME}_SOURCES
     src/main.cpp
-    src/misc/assistant.cpp
     src/misc/utils.cpp
     src/ui/mainwindow.cpp
+    src/ui/helpwindow.cpp
+    src/widget/helpwidget.cpp
 )
 
 SET(${PROJECT_NAME}_HEADERS
-    src/misc/assistant.h
     src/misc/utils.h
 )
 
 SET(${PROJECT_NAME}_HEADERS_MOC
     src/ui/mainwindow.h
+    src/ui/helpwindow.h
+    src/widget/helpwidget.h
 )
 
 SET(${PROJECT_NAME}_UIS
     src/ui/mainwindow.ui
+    src/ui/helpwindow.ui
 )
 
 SET(${PROJECT_NAME}_RESOURCES
     res/${PROJECT_NAME}.qrc
 )
+
+# Various include directories
+
+INCLUDE_DIRECTORIES(src/misc)
+INCLUDE_DIRECTORIES(src/ui)
+INCLUDE_DIRECTORIES(src/widget)
 
 # Build the third-party libraries used by OpenCOR
 
@@ -81,6 +90,10 @@ IF(WIN32)
     # Note: the above ensures that winmain@16 is available on Windows
 ENDIF()
 
+SET(QT_USE_QTHELP TRUE)
+SET(QT_USE_QTNETWORK TRUE)
+SET(QT_USE_QTWEBKIT TRUE)
+
 INCLUDE(${QT_USE_FILE})
 
 QT4_WRAP_CPP(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
@@ -102,6 +115,9 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
+    ${QT_QTHELP_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
+    ${QT_QTWEBKIT_LIBRARY}
     ${3RDPARTYLIBS}
 )
 
