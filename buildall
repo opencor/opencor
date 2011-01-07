@@ -6,11 +6,7 @@ if [ $OS = "Linux" ]; then
     echo "\033[44;37;1mBuilding OpenCOR...\033[0m"
 fi
 
-cd doc
-
-qcollectiongenerator OpenCOR.qhcp -o ../build/OpenCOR.qhc
-
-cd ../build
+cd build
 
 cmake ..
 make -j
