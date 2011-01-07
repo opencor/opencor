@@ -47,14 +47,15 @@ public slots:
     void singleAppMsgRcvd(const QString&);
 
 private slots:
-    void showHideHelp(const bool& show);
-
+    void on_actionResetAll_triggered();
     void on_actionAbout_triggered();
     void on_actionHomepage_triggered();
     void on_actionHelp_triggered();
     void on_actionFrench_triggered();
     void on_actionEnglish_triggered();
     void on_actionExit_triggered();
+
+    void showHideHelp(const bool& show);
 };
 
 #endif // MAINWINDOW_H

@@ -96,27 +96,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(helpWindow, SIGNAL(visibilityChanged(bool)), this, SLOT(showHideHelp(bool)));
 
-    // Default size and position of both the main and help windows
+    // Default user settings
 
-    const double mainRatio = 3.0/5.0;
-    const double helpRatio = 1.0/3.0;
-    const double spaceRatio = 1.0/45.0;
-    const double horizSpace = spaceRatio*qApp->desktop()->width();
-    const double vertSpace  = 2.0*spaceRatio*qApp->desktop()->height();
-
-    resize(QSize(mainRatio*qApp->desktop()->width(), mainRatio*qApp->desktop()->height()));
-    helpWindow->resize(helpRatio*qApp->desktop()->width(), size().height());
-
-    move(QPoint(horizSpace, vertSpace));
-    helpWindow->move(QPoint(qApp->desktop()->width()-helpWindow->size().width()-horizSpace, vertSpace));
-
-    addDockWidget(Qt::RightDockWidgetArea, helpWindow);
-    // Note: the above is only required so that the help window can then be
-    //       docked to the main window, should the user want to do that.
-    //       Indeed, to make the help window float is not sufficient, so...
-
-    helpWindow->setFloating(true);
-    helpWindow->hide();   // By default
+    on_actionResetAll_triggered();
 
     // Retrieve our default settings
 
@@ -345,4 +327,29 @@ void MainWindow::on_actionAbout_triggered()
                        "<BR>"+
                        "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+appName+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.")+"<BR><BR>"+
                        appName+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any particular license, but this is going to change in the future."));
+}
+
+void MainWindow::on_actionResetAll_triggered()
+{
+    // Default size and position of both the main and help windows
+
+    const double mainRatio = 3.0/5.0;
+    const double helpRatio = 1.0/3.0;
+    const double spaceRatio = 1.0/45.0;
+    const double horizSpace = spaceRatio*qApp->desktop()->width();
+    const double vertSpace  = 2.0*spaceRatio*qApp->desktop()->height();
+
+    resize(QSize(mainRatio*qApp->desktop()->width(), mainRatio*qApp->desktop()->height()));
+    helpWindow->resize(helpRatio*qApp->desktop()->width(), size().height());
+
+    move(QPoint(horizSpace, vertSpace));
+    helpWindow->move(QPoint(qApp->desktop()->width()-helpWindow->size().width()-horizSpace, vertSpace));
+
+    addDockWidget(Qt::RightDockWidgetArea, helpWindow);
+    // Note: the above is only required so that the help window can then be
+    //       docked to the main window, should the user want to do that.
+    //       Indeed, to make the help window float is not sufficient, so...
+
+    helpWindow->setFloating(true);
+    helpWindow->hide();   // By default
 }

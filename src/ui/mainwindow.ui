@@ -45,6 +45,8 @@
      <addaction name="actionFrench"/>
     </widget>
     <addaction name="menuLanguage"/>
+    <addaction name="separator"/>
+    <addaction name="actionResetAll"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -175,6 +177,14 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionResetAll">
+   <property name="text">
+    <string>&amp;Reset All</string>
+   </property>
+   <property name="statusTip">
+    <string>Reset all the user settings</string>
    </property>
   </action>
  </widget>
