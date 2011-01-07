@@ -200,8 +200,7 @@ void MainWindow::loadSettings()
 {
     QSettings settings(SETTINGS_INSTITUTION, appName);
 
-    // Retrieve the language to be used by OpenCOR, which by default is based
-    // on the system's locale
+    // Retrieve the language to be used by OpenCOR, with a default just in case
 
     setLocale(settings.value(SETTINGS_GENERAL_LOCALE, QLocale::system().name()).toString());
 
@@ -213,7 +212,8 @@ void MainWindow::loadSettings()
 
     restoreState(settings.value(SETTINGS_GENERAL_STATE).toByteArray());
 
-    // Retrieve the various help widget settings
+    // Retrieve the text size multiplier for the help widget, with a default
+    // value just in case
 
     helpWindow->setHelpWidgetTextSizeMultiplier(settings.value(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, helpWindow->helpWidgetTextSizeMultiplier()).toDouble());
 }
@@ -234,7 +234,7 @@ void MainWindow::saveSettings()
 
     settings.setValue(SETTINGS_GENERAL_STATE, saveState());
 
-    // Keep track of various help widget settings
+    // Keep track of the text size multiplier for the help widget
 
     settings.setValue(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, helpWindow->helpWidgetTextSizeMultiplier());
 }
@@ -339,17 +339,26 @@ void MainWindow::on_actionResetAll_triggered()
     const double horizSpace = spaceRatio*qApp->desktop()->width();
     const double vertSpace  = 2.0*spaceRatio*qApp->desktop()->height();
 
-    resize(QSize(mainRatio*qApp->desktop()->width(), mainRatio*qApp->desktop()->height()));
-    helpWindow->resize(helpRatio*qApp->desktop()->width(), size().height());
-
-    move(QPoint(horizSpace, vertSpace));
-    helpWindow->move(QPoint(qApp->desktop()->width()-helpWindow->size().width()-horizSpace, vertSpace));
-
     addDockWidget(Qt::RightDockWidgetArea, helpWindow);
     // Note: the above is only required so that the help window can then be
     //       docked to the main window, should the user want to do that.
     //       Indeed, to make the help window float is not sufficient, so...
 
     helpWindow->setFloating(true);
+
+    resize(QSize(mainRatio*qApp->desktop()->width(), mainRatio*qApp->desktop()->height()));
+    helpWindow->resize(helpRatio*qApp->desktop()->width(), size().height());
+
+    move(QPoint(horizSpace, vertSpace));
+    helpWindow->move(QPoint(qApp->desktop()->width()-helpWindow->size().width()-horizSpace, vertSpace));
+
     helpWindow->hide();   // By default
+
+    // Default language to be used by OpenCOR
+
+    setLocale(QLocale::system().name());
+
+    // Default text size multiplier for the help widget
+
+    helpWindow->setHelpWidgetTextSizeMultiplier(1.0);
 }
