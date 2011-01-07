@@ -105,8 +105,9 @@ QT4_ADD_RESOURCES(${PROJECT_NAME}_SOURCES_RCS ${${PROJECT_NAME}_RESOURCES})
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-EXECUTE_PROCESS(COMMAND qcollectiongenerator ${CMAKE_CURRENT_SOURCE_DIR}/doc/OpenCOR.qhcp -o ${CMAKE_CURRENT_SOURCE_DIR}/build/OpenCOR.qhc)
-# Note: the above generates the help files
+EXECUTE_PROCESS(COMMAND qcollectiongenerator ${CMAKE_CURRENT_SOURCE_DIR}/doc/OpenCOR.qhcp
+                                          -o ${CMAKE_CURRENT_SOURCE_DIR}/build/OpenCOR.qhc)
+# Note: the above command generates the help files
 
 ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${${PROJECT_NAME}_SOURCES}
