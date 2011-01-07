@@ -23,10 +23,10 @@
 #define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
 
 #define SETTINGS_INSTITUTION "World"
-#define SETTINGS_LOCALE "Locale"
-#define SETTINGS_GEOMETRY "Geometry"
-#define SETTINGS_STATE "State"
-#define SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER "HelpWindow\\TextSizeMultiplier"
+#define SETTINGS_GENERAL_LOCALE "General_Locale"
+#define SETTINGS_GENERAL_GEOMETRY "General_Geometry"
+#define SETTINGS_GENERAL_STATE "General_State"
+#define SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER "HelpWindow_TextSizeMultiplier"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -221,15 +221,15 @@ void MainWindow::loadSettings()
     // Retrieve the language to be used by OpenCOR, which by default is based
     // on the system's locale
 
-    setLocale(settings.value(SETTINGS_LOCALE, QLocale::system().name()).toString());
+    setLocale(settings.value(SETTINGS_GENERAL_LOCALE, QLocale::system().name()).toString());
 
     // Retrieve the geometry of the main window
 
-    restoreGeometry(settings.value(SETTINGS_GEOMETRY).toByteArray());
+    restoreGeometry(settings.value(SETTINGS_GENERAL_GEOMETRY).toByteArray());
 
     // Retrieve the state of the main window
 
-    restoreState(settings.value(SETTINGS_STATE).toByteArray());
+    restoreState(settings.value(SETTINGS_GENERAL_STATE).toByteArray());
 
     // Retrieve the various help widget settings
 
@@ -242,15 +242,15 @@ void MainWindow::saveSettings()
 
     // Keep track of the language to be used by OpenCOR
 
-    settings.setValue(SETTINGS_LOCALE, locale);
+    settings.setValue(SETTINGS_GENERAL_LOCALE, locale);
 
     // Keep track of the geometry of the main window
 
-    settings.setValue(SETTINGS_GEOMETRY, saveGeometry());
+    settings.setValue(SETTINGS_GENERAL_GEOMETRY, saveGeometry());
 
     // Keep track of the state of the main window
 
-    settings.setValue(SETTINGS_STATE, saveState());
+    settings.setValue(SETTINGS_GENERAL_STATE, saveState());
 
     // Keep track of various help widget settings
 
