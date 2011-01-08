@@ -229,7 +229,7 @@ ELSEIF(APPLE)
 ELSE()
     # Select DEB and TGZ as the packagers on Linux
 
-    SET(CPACK_GENERATOR DEB TGZ)
+    SET(CPACK_GENERATOR TGZ)
 
     # OpenCOR itself
 
