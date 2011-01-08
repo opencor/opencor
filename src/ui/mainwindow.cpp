@@ -111,10 +111,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    // Keep track of our default settings
-
-    saveSettings();
-
     // Delete some internal objects
 
     delete helpEngine;
@@ -127,6 +123,16 @@ MainWindow::~MainWindow()
 
     QDir().rmdir(tempDirName);
 }
+
+void MainWindow::closeEvent(QCloseEvent*)
+{
+    // Keep track of our default settings
+    // Note: it must be done here, as opposed to the destructor, otherwise some
+    //       settings (e.g. docked windows) won't be properly saved
+
+    saveSettings();
+}
+
 
 void MainWindow::singleAppMsgRcvd(const QString&)
 {
@@ -344,6 +350,10 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionResetAll_triggered()
 {
+    // Default language to be used by OpenCOR
+
+    setLocale(QLocale::system().name());
+
     // Default size and position of both the main and help windows
 
     const double mainRatio = 3.0/5.0;
@@ -366,10 +376,6 @@ void MainWindow::on_actionResetAll_triggered()
 
     move(QPoint(horizSpace, vertSpace));
     helpWindow->move(QPoint(qApp->desktop()->width()-helpWindow->size().width()-horizSpace, vertSpace));
-
-    // Default language to be used by OpenCOR
-
-    setLocale(QLocale::system().name());
 
     // Default text size multiplier for the help widget
 

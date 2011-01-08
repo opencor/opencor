@@ -20,6 +20,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    virtual void closeEvent(QCloseEvent*);
+
 private:
     Ui::MainWindow *ui;
 
