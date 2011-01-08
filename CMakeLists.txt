@@ -179,6 +179,8 @@ IF(WIN32)
        INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION bin)
     ENDFOREACH()
 
+    INSTALL(FILES ${QT_BINARY_DIR}/../plugins/sqldrivers/qsqlite${QT_VERSION_MAJOR}.dll DESTINATION bin/sqldrivers)
+
     # VBScript file to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
