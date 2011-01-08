@@ -146,16 +146,14 @@ ENDIF()
 # used on any Mac OS X machine that doesn't have Qt
 
 IF(APPLE)
-    # Use macdeployqt to have all the Qt libraries required by OpenCOR added
-    # to the bundle
+    # Use macdeployqt to have all the Qt files required by OpenCOR added to the
+    # bundle
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${QT_BINARY_DIR}/macdeployqt ${PROJECT_NAME}.app
                        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-    # Add libsqlite.dylib to the bundle (this is required if we want to see the
-    # help file, and sadly this is not something that is automatically done by
-    # macdeployqt, so...)
+    # Add the SQLite plugin to the bundle (required to see the help file)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND mkdir -p ${PROJECT_NAME}.app/Contents/plugins/sqldrivers
@@ -196,9 +194,11 @@ IF(WIN32)
 
     # Qt files required by OpenCOR
 
-    FOREACH(DLL phonon QtCLucene QtCore QtGui QtHelp QtNetwork QtSql QtWebkit QtXml)
-       INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION bin)
+    FOREACH(DLL phonon QtCLucene QtCore QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
+        INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION bin)
     ENDFOREACH()
+
+    # SQLite plugin (required to see the help file)
 
     INSTALL(FILES ${QT_BINARY_DIR}/../plugins/sqldrivers/qsqlite${QT_VERSION_MAJOR}.dll DESTINATION bin/sqldrivers)
 
@@ -237,7 +237,7 @@ ELSE()
 
     # Qt files required by OpenCOR
 
-    FOREACH(LIB QtCore QtDBus QtGui QtNetwork QtXml)
+    FOREACH(LIB QtCLucene QtCore QtDBus QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
         INSTALL(FILES
             ${QT_LIBRARY_DIR}/lib${LIB}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
             RENAME lib${LIB}.so.${QT_VERSION_MAJOR}
@@ -245,10 +245,19 @@ ELSE()
         )
     ENDFOREACH()
 
-    # QtGui seems to require libaudio.so.2.4 (to be packaged as libaudio.so.2)
-    # which is not available on a 'blank' version of Ubuntu, so...
+    # Additional files required by Qt, but not available on a 'blank' version
+    # of Ubuntu
 
     INSTALL(FILES /usr/lib/libaudio.so.2.4 RENAME libaudio.so.2 DESTINATION lib)
+    INSTALL(FILES /usr/lib/libphonon.so.4.4.0 RENAME libphonon.so.4 DESTINATION lib)
+
+    # Qt configuration file to tell OpenCOR where to look for plugins
+
+    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/distrib/qt.conf DESTINATION bin)
+
+    # SQLite plugin (required to see the help file)
+
+    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.so DESTINATION plugins/sqldrivers)
 
     # Shell script to run OpenCOR
 
