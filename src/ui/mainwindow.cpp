@@ -222,19 +222,6 @@ void MainWindow::loadSettings()
     // value just in case
 
     helpWindow->setHelpWidgetTextSizeMultiplier(settings.value(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, 1.0).toDouble());
-
-#ifdef Q_WS_X11
-    // On Linux (Ubuntu 10.10 at least), there are some strange behaviours that
-    // seem to require special treatment to be fixed, so...
-
-    // Really hide the help window, if it is to be hidden upon starting OpenCOR
-
-    if (helpWindow->isHidden())
-    {
-        helpWindow->show();
-        helpWindow->hide();
-    }
-#endif
 }
 
 void MainWindow::saveSettings()
