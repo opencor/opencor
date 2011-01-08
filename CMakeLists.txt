@@ -142,6 +142,27 @@ IF(MINGW)
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,--enable-auto-import") 
 ENDIF()
 
+# Some post-processing specific to Mac OS X which ensures that OpenCOR can be
+# used on any Mac OS X machine that doesn't have Qt
+
+IF(APPLE)
+    # Use macdeployqt to have all the Qt libraries required by OpenCOR added
+    # to the bundle
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${QT_BINARY_DIR}/macdeployqt ${PROJECT_NAME}.app
+                       WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+    # Add libsqlite.dylib to the bundle (this is required if we want to see the
+    # help file, and sadly this is not something that is automatically done by
+    # macdeployqt, so...)
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND mkdir -p ${PROJECT_NAME}.app/Contents/plugins/sqldrivers
+                       COMMAND cp ${QT_BINARY_DIR}/../../Applications/Qt/plugins/sqldrivers/libqsqlite.dylib ${PROJECT_NAME}.app/Contents/plugins/sqldrivers
+                       WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+ENDIF()
+
 # Rules to package OpenCOR (using CPack)
 
 SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
