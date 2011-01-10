@@ -70,6 +70,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
+#ifdef Q_WS_MAC
+    // Make the application look more like a Mac OS X application
+
+    setUnifiedTitleAndToolBarOnMac(true);
+#endif
+
     // Some basic signals/events for some actions
 
     connect(ui->actionExit, SIGNAL(triggered(bool)),
