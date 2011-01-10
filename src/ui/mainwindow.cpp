@@ -74,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->actionExit, SIGNAL(triggered(bool)),
             this, SLOT(close()));
+    connect(ui->actionResetAll, SIGNAL(triggered(bool)),
+            this, SLOT(resetAll()));
 
     // Signals/events for showing/hiding the various toolbars
 
@@ -118,7 +120,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Default user settings
 
-    on_actionResetAll_triggered();
+    resetAll(false);
 
     // Retrieve our default settings
 
@@ -343,7 +345,7 @@ void MainWindow::on_actionAbout_triggered()
                        appName+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any particular license, but this is going to change in the future."));
 }
 
-void MainWindow::on_actionResetAll_triggered()
+void MainWindow::resetAll(const bool& clearUserSettings)
 {
     // Default language to be used by OpenCOR
 
@@ -381,4 +383,9 @@ void MainWindow::on_actionResetAll_triggered()
     this->addToolBar(Qt::TopToolBarArea, ui->helpToolbar);
 
     ui->helpToolbar->setVisible(true);
+
+    // Clear all the user settings, if required
+
+    if (clearUserSettings)
+        QSettings(SETTINGS_INSTITUTION, appName).clear();
 }

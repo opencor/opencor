@@ -51,8 +51,9 @@ private:
 public slots:
     void singleAppMsgRcvd(const QString&);
 
+    void resetAll(const bool& clearUserSettings = true);
+
 private slots:
-    void on_actionResetAll_triggered();
     void on_actionAbout_triggered();
     void on_actionHomepage_triggered();
     void on_actionFrench_triggered();
