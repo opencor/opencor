@@ -9,6 +9,7 @@
 #endif
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QDebug>
 #include <QDesktopServices>
 #include <QDesktopWidget>
@@ -46,6 +47,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //       but this will return an empty string (probably as a result of our
     //       use of CMake as opposed to QMake and therefore a .pro file), so...
 
+    // Set the name of the main window to that of the application
+
+    setWindowTitle(appName);
+
     // Retrieve the version of the application
 
     QFile versionFile(":version");
@@ -64,6 +69,18 @@ MainWindow::MainWindow(QWidget *parent) :
     // Set up the GUI
 
     ui->setupUi(this);
+
+    // Some basic signals/events for some actions
+
+    connect(ui->actionExit, SIGNAL(triggered(bool)),
+            this, SLOT(close()));
+
+    // Signals/events for showing/hiding the various toolbars
+
+    connect(ui->actionHelpToolbar, SIGNAL(triggered(bool)),
+            ui->helpToolbar, SLOT(setVisible(bool)));
+    connect(ui->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
+            ui->actionHelpToolbar, SLOT(setChecked(bool)));
 
     // Extract the help files
 
@@ -94,7 +111,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     helpWindow = new HelpWindow(helpEngine, QUrl("qthelp://world.opencor/doc/index.html"));
 
-    connect(helpWindow, SIGNAL(visibilityChanged(bool)), this, SLOT(showHideHelp(bool)));
+    connect(ui->actionHelp, SIGNAL(triggered(bool)),
+            helpWindow, SLOT(setVisible(bool)));
+    connect(helpWindow, SIGNAL(visibilityChanged(bool)),
+            ui->actionHelp, SLOT(setChecked(bool)));
 
     // Default user settings
 
@@ -104,9 +124,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadSettings();
 
-    // Set the name of the main window to that of the application
+    // Update the GUI, which may have changed (e.g. hidden toolbar) as a result
+    // of loading OpenCOR's settings
 
-    setWindowTitle(appName);
+    updateGUI();
 }
 
 MainWindow::~MainWindow()
@@ -124,13 +145,15 @@ MainWindow::~MainWindow()
     QDir().rmdir(tempDirName);
 }
 
-void MainWindow::closeEvent(QCloseEvent*)
+void MainWindow::closeEvent(QCloseEvent *event)
 {
     // Keep track of our default settings
     // Note: it must be done here, as opposed to the destructor, otherwise some
     //       settings (e.g. docked windows) won't be properly saved
 
     saveSettings();
+
+    event->accept();
 }
 
 
@@ -279,13 +302,6 @@ void MainWindow::notYetImplemented(const QString& message)
                          QMessageBox::Ok, QMessageBox::Ok);
 }
 
-void MainWindow::on_actionExit_triggered()
-{
-    // Exit OpenCOR
-
-    close();
-}
-
 void MainWindow::on_actionEnglish_triggered()
 {
     // Select English as the language used by OpenCOR
@@ -300,19 +316,11 @@ void MainWindow::on_actionFrench_triggered()
     setLocale("fr");
 }
 
-void MainWindow::showHideHelp(const bool& show)
+void MainWindow::updateGUI()
 {
-    if (show)
-        helpWindow->show();
-    else
-        helpWindow->hide();
+    // Update the checked status of the toolbars menu items
 
-    ui->actionHelp->setChecked(show);
-}
-
-void MainWindow::on_actionHelp_triggered()
-{
-    showHideHelp(ui->actionHelp->isChecked());
+    ui->actionHelpToolbar->setChecked(ui->helpToolbar->isVisible());
 }
 
 void MainWindow::on_actionHomepage_triggered()
@@ -349,7 +357,7 @@ void MainWindow::on_actionResetAll_triggered()
     const double horizSpace = spaceRatio*qApp->desktop()->width();
     const double vertSpace  = 2.0*spaceRatio*qApp->desktop()->height();
 
-    helpWindow->hide();   // By default
+    helpWindow->setVisible(false);   // By default
 
     addDockWidget(Qt::RightDockWidgetArea, helpWindow);
     // Note: the above is only required so that the help window can then be
@@ -367,4 +375,10 @@ void MainWindow::on_actionResetAll_triggered()
     // Default text size multiplier for the help widget
 
     helpWindow->setHelpWidgetTextSizeMultiplier(1.0);
+
+    // Default visibility and location of the various toolbars
+
+    this->addToolBar(Qt::TopToolBarArea, ui->helpToolbar);
+
+    ui->helpToolbar->setVisible(true);
 }

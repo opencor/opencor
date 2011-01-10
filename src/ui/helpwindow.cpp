@@ -3,8 +3,6 @@
 
 #include "ui_helpwindow.h"
 
-#include <QLayout>
-
 HelpWindow::HelpWindow(QHelpEngine *helpEngine, const QUrl& homepage,
                        QDockWidget *parent) :
     QDockWidget(parent),

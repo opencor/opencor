@@ -21,7 +21,7 @@ public:
     ~MainWindow();
 
 protected:
-    virtual void closeEvent(QCloseEvent*);
+    virtual void closeEvent(QCloseEvent *event);
 
 private:
     Ui::MainWindow *ui;
@@ -46,6 +46,8 @@ private:
 
     void notYetImplemented(const QString& message);
 
+    void updateGUI();
+
 public slots:
     void singleAppMsgRcvd(const QString&);
 
@@ -53,12 +55,8 @@ private slots:
     void on_actionResetAll_triggered();
     void on_actionAbout_triggered();
     void on_actionHomepage_triggered();
-    void on_actionHelp_triggered();
     void on_actionFrench_triggered();
     void on_actionEnglish_triggered();
-    void on_actionExit_triggered();
-
-    void showHideHelp(const bool& show);
 };
 
 #endif // MAINWINDOW_H
