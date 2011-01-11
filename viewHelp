@@ -1,0 +1,19 @@
+#!/bin/sh
+
+OS=`uname -s`
+
+if [ $OS = "Linux" ]; then
+    echo "\033[44;37;1mViewing the OpenCOR help...\033[0m"
+fi
+
+WMsg="Warning: OpenCOR must first be built before seeing its help."
+
+if [ -f build/OpenCOR.qhc -a -f build/OpenCOR.qch ]; then
+    assistant -collectionFile build/OpenCOR.qhc
+else
+    echo $WMsg
+fi
+
+if [ $OS = "Linux" ]; then
+    echo "\033[42;37;1mAll done!\033[0m"
+fi
