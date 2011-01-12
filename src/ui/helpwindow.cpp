@@ -14,12 +14,17 @@ HelpWindow::HelpWindow(QHelpEngine *helpEngine, const QUrl& homepage,
 
     this->setWidget(helpWidget);
 
-    helpWidget->load(homepage);
+    setHomepage(homepage);
 }
 
 HelpWindow::~HelpWindow()
 {
     delete ui;
+}
+
+void HelpWindow::setHomepage(const QUrl& homepage)
+{
+    helpWidget->load(homepage);
 }
 
 void HelpWindow::setHelpWidgetTextSizeMultiplier(const double& value)

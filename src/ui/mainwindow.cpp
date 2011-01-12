@@ -23,6 +23,8 @@
 
 #define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
 
+#define OPENCOR_HELP_HOMEPAGE QUrl("qthelp://world.opencor/doc/contents.html")
+
 #define SETTINGS_INSTITUTION "World"
 #define SETTINGS_GENERAL_LOCALE "General_Locale"
 #define SETTINGS_GENERAL_GEOMETRY "General_Geometry"
@@ -117,7 +119,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Help window
 
-    helpWindow = new HelpWindow(helpEngine, QUrl("qthelp://world.opencor/doc/index.html"));
+    helpWindow = new HelpWindow(helpEngine, OPENCOR_HELP_HOMEPAGE);
 
     connect(ui->actionHelp, SIGNAL(triggered(bool)),
             helpWindow, SLOT(setVisible(bool)));
@@ -348,7 +350,7 @@ void MainWindow::on_actionAbout_triggered()
                        "</CENTER>"+
                        "<BR>"+
                        "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+appName+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.")+"<BR><BR>"+
-                       appName+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any particular license, but this is going to change in the future."));
+                       appName+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any particular license, but this is due to change in the future."));
 }
 
 void MainWindow::resetAll(const bool& clearUserSettings)
@@ -380,8 +382,9 @@ void MainWindow::resetAll(const bool& clearUserSettings)
     move(QPoint(horizSpace, vertSpace));
     helpWindow->move(QPoint(qApp->desktop()->width()-helpWindow->size().width()-horizSpace, vertSpace));
 
-    // Default text size multiplier for the help widget
+    // Default settings for the help widget
 
+    helpWindow->setHomepage(OPENCOR_HELP_HOMEPAGE);
     helpWindow->setHelpWidgetTextSizeMultiplier(1.0);
 
     // Default visibility and location of the various toolbars

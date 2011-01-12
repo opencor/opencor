@@ -1,32 +1,59 @@
 BODY
 {
-   Background-Color: #000033;
-   Color: #CCCCCC;
-   Font-Family: Arial, Sans-Serif;
-   Font-Size: 11pt;
-   Text-Align: Justify;
-   -KHTML-User-Select: None;   /* Prevent selection within a webkit-based */
-                               /* browser                                 */
+    Font-Family: Arial, Sans-Serif;
+    Font-Size: 10pt;
+    -KHTML-User-Select: None;   /* Prevent selection within a webkit-based */
+                                /* browser                                 */
 }
 
 A
 {
-   Color: #CCCCCC;
+   Color: #333377;
 }
 
 A:Visited
 {
-   Color: #CCCCCC;
+   Color: #333377;
 }
 
 A:Hover
 {
-   Background-Color: #CCCCCC;
-   Color: #000033;
+   Background-Color: #333377;
+   Color: #FFFFFF;
    Text-Decoration: None;
 }
 
-SPAN.Bold
+.HeaderBackground
 {
-   Font-Weight: Bold;
+    Background: #333377;
+    Padding: 3px 3px 3px 3px;
+    Margin: -3px -3px 13px -3px;
+}
+
+SPAN.HeaderFont
+{
+    Font-Size: 15pt;
+    Font-Weight: Bold;
+    Color: #FFFFFF;
+}
+
+SPAN.SectionFont
+{
+    Font-Size: 13pt;
+    Font-Weight: Bold;
+    Color: #333377;
+}
+
+.CopyrightBackground
+{
+ text-align: center;
+ background: #e4e4e4;
+ margin: 20px 0px 0px 0px;
+}
+
+SPAN.CopyrightFont
+{
+ font-size: 9pt;
+ font-family: 'Verdana', 'Geneva', sans-serif;
+ color: #808080;
 }

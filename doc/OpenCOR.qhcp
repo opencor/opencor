@@ -3,7 +3,7 @@
     <assistant>
         <title>OpenCOR Help</title>
         <applicationIcon>res/help.png</applicationIcon>
-        <startPage>qthelp://world.opencor/doc/index.html</startPage>
+        <startPage>qthelp://world.opencor/doc/contents.html</startPage>
         <enableDocumentationManager>false</enableDocumentationManager>
         <enableAddressBar>false</enableAddressBar>
         <enableFilterFunctionality>false</enableFilterFunctionality>

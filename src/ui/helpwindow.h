@@ -20,6 +20,8 @@ public:
     explicit HelpWindow(QHelpEngine *engine, const QUrl& homepage, QDockWidget *parent = 0);
     ~HelpWindow();
 
+    void setHomepage(const QUrl& homepage);
+
     void setHelpWidgetTextSizeMultiplier(const double& value);
     double helpWidgetTextSizeMultiplier();
 

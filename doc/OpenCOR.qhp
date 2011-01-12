@@ -3,8 +3,15 @@
     <namespace>world.opencor</namespace>
     <virtualFolder>doc</virtualFolder>
     <filterSection>
+        <toc>
+            <section title="Contents" ref="contents.html"/>
+            <section title="Introduction" ref="introduction.html"/>
+            <section title="License" ref="license.html"/>
+        </toc>
         <files>
-            <file>index.html</file>
+            <file>contents.html</file>
+            <file>introduction.html</file>
+            <file>license.html</file>
             <file>res/stylesheet.css</file>
         </files>
     </filterSection>
