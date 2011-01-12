@@ -14,7 +14,6 @@
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDir>
-#include <QFileInfo>
 #include <QHelpEngine>
 #include <QMessageBox>
 #include <QSettings>
@@ -35,42 +34,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    // Retrieve the name of the operating system
-
-    osName = getOsName();
-
-    // Retrieve the name of the application
-
-    appName = QFileInfo(qApp->applicationFilePath()).baseName();
-    // Note: normally, one would probably use something like:
-    //
-    //           appName = qApp->applicationName();
-    //
-    //       but this will return an empty string (probably as a result of our
-    //       use of CMake as opposed to QMake and therefore a .pro file), so...
-
-    // Set the name of the main window to that of the application
-
-    setWindowTitle(appName);
-
-    // Retrieve the version of the application
-
-    QFile versionFile(":version");
-
-    versionFile.open(QIODevice::ReadOnly);
-
-    appVersion = QString(versionFile.readLine()).trimmed();
-
-    if (appVersion.endsWith(".0"))
-        // There is no actual patch information, so trim it
-
-        appVersion.truncate(appVersion.length()-2);
-
-    versionFile.close();
-
     // Set up the GUI
 
     ui->setupUi(this);
+
+    // Set the name of the main window to that of the application
+
+    setWindowTitle(qApp->applicationName());
 
 #ifdef Q_WS_MAC
     // Make the application look more like a Mac OS X application
@@ -237,7 +207,7 @@ void MainWindow::singleAppMsgRcvd(const QString&)
 
 void MainWindow::loadSettings()
 {
-    QSettings settings(SETTINGS_INSTITUTION, appName);
+    QSettings settings(SETTINGS_INSTITUTION, qApp->applicationName());
 
     // Retrieve the language to be used by OpenCOR, with a default just in case
 
@@ -259,7 +229,7 @@ void MainWindow::loadSettings()
 
 void MainWindow::saveSettings()
 {
-    QSettings settings(SETTINGS_INSTITUTION, appName);
+    QSettings settings(SETTINGS_INSTITUTION, qApp->applicationName());
 
     // Keep track of the language to be used by OpenCOR
 
@@ -308,7 +278,7 @@ void MainWindow::notYetImplemented(const QString& message)
     // Display a warning message about a particular feature having not yet been
     // implemented
 
-    QMessageBox::warning(this, appName, message+tr(" has not yet been implemented..."),
+    QMessageBox::warning(this, qApp->applicationName(), message+tr(" has not yet been implemented..."),
                          QMessageBox::Ok, QMessageBox::Ok);
 }
 
@@ -342,15 +312,15 @@ void MainWindow::on_actionHomepage_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, appName,
+    QMessageBox::about(this, qApp->applicationName(),
                        QString("")+
                        "<CENTER>"+
-                           "<H1><B>"+appName+" "+appVersion+"</B></H1>"+
-                           "<H3><I>"+osName+"</I></H3>"+
+                           "<H1><B>"+qApp->applicationName()+" "+qApp->applicationVersion()+"</B></H1>"+
+                           "<H3><I>"+getOsName()+"</I></H3>"+
                        "</CENTER>"+
                        "<BR>"+
-                       "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+appName+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.")+"<BR><BR>"+
-                       appName+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any particular license, but this is due to change in the future."));
+                       "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+qApp->applicationName()+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.")+"<BR><BR>"+
+                       qApp->applicationName()+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any particular license, but this is due to change in the future."));
 }
 
 void MainWindow::resetAll(const bool& clearUserSettings)
@@ -396,5 +366,5 @@ void MainWindow::resetAll(const bool& clearUserSettings)
     // Clear all the user settings, if required
 
     if (clearUserSettings)
-        QSettings(SETTINGS_INSTITUTION, appName).clear();
+        QSettings(SETTINGS_INSTITUTION, qApp->applicationName()).clear();
 }

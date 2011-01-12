@@ -1,6 +1,7 @@
 #include "ui/mainwindow.h"
 
 #include <QtSingleApplication>
+#include <QFileInfo>
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +19,27 @@ int main(int argc, char *argv[])
 
         return 0;
     }
+
+    // Set the name of the application
+
+    app.setApplicationName(QFileInfo(app.applicationFilePath()).baseName());
+
+    // Retrieve and set the version of the application
+
+    QFile versionFile(":version");
+
+    versionFile.open(QIODevice::ReadOnly);
+
+    QString version = QString(versionFile.readLine()).trimmed();
+
+    if (version.endsWith(".0"))
+        // There is no actual patch information, so trim it
+
+        version.truncate(version.length()-2);
+
+    versionFile.close();
+
+    app.setApplicationVersion(version);
 
     // Create the main window
 

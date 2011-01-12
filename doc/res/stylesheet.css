@@ -2,8 +2,8 @@ BODY
 {
     Font-Family: Arial, Sans-Serif;
     Font-Size: 10pt;
-    -KHTML-User-Select: None;   /* Prevent selection within a webkit-based */
-                                /* browser                                 */
+    -webkit-User-Select: None;   /* Prevent selection within a webkit-based */
+                                 /* browser                                 */
 }
 
 A

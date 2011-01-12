@@ -26,11 +26,6 @@ protected:
 private:
     Ui::MainWindow *ui;
 
-    QString osName;
-
-    QString appName;
-    QString appVersion;
-
     QString locale;
 
     QHelpEngine *helpEngine;
