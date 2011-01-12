@@ -12,8 +12,7 @@ HelpWindow::HelpWindow(QHelpEngine *helpEngine, const QUrl& homepage,
 
     helpWidget = new HelpWidget(helpEngine);
 
-    this->setWidget(helpWidget);
-
+    setWidget(helpWidget);
     setHomepage(homepage);
 }
 
