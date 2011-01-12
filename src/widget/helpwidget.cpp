@@ -2,14 +2,12 @@
 //       Assistant
 
 #include "helpwidget.h"
-#include "mainwindow.h"
 
-#include <QDir>
-#include <QTimer>
-#include <QKeyEvent>
 #include <QDesktopServices>
 #include <QHelpEngine>
-#include <QNetworkReply>
+#include <QTimer>
+#include <QWebPage>
+#include <QWheelEvent>
 
 HelpNetworkReply::HelpNetworkReply(const QNetworkRequest& request,
                                    const QByteArray& fileData,
@@ -22,7 +20,6 @@ HelpNetworkReply::HelpNetworkReply(const QNetworkRequest& request,
     setHeader(QNetworkRequest::ContentTypeHeader, mimeType);
     setHeader(QNetworkRequest::ContentLengthHeader, QByteArray::number(origLen));
 
-    QTimer::singleShot(0, this, SIGNAL(metaDataChanged()));
     QTimer::singleShot(0, this, SIGNAL(readyRead()));
 }
 
@@ -56,95 +53,30 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
     QUrl url = request.url();
     QString mimeType = url.toString();
 
-    if (mimeType.endsWith(".svg") || mimeType.endsWith(".svgz"))
-        mimeType = "image/svg+xml";
-    else if (mimeType.endsWith(".css"))
-        mimeType = "text/css";
-    else if (mimeType.endsWith(".js"))
-        mimeType = "text/javascript";
-    else if (mimeType.endsWith(".txt"))
+    if (mimeType.endsWith(".txt"))
         mimeType = "text/plain";
     else
         mimeType = "text/html";
 
-    QByteArray data = helpEngine->findFile(url).isValid()?
-                          helpEngine->fileData(url):
-                          QByteArray("File not found!");
+    QByteArray data;
+
+    if (url.scheme() == "qthelp")
+        data = helpEngine->findFile(url).isValid()?
+                   helpEngine->fileData(url):
+                   QByteArray("Help file not found! ["+url.toString().toLatin1()+"]");
+    else
+        data = QByteArray("External address... working on getting it to load...");
 
     return new HelpNetworkReply(request, data, mimeType);
 }
 
-HelpPage::HelpPage(QHelpEngine *engine, QObject *parent) :
-    QWebPage(parent),
-    helpEngine(engine)
-{
-}
-
-static bool isLocalUrl(const QUrl& url)
-{
-    const QString scheme = url.scheme();
-
-    return  scheme.isEmpty()    || (scheme == "file") ||
-           (scheme == "qrc")    || (scheme == "data") ||
-           (scheme == "qthelp") || (scheme == "about");
-}
-
-bool HelpPage::acceptNavigationRequest(QWebFrame*,
-                                       const QNetworkRequest& request,
-                                       QWebPage::NavigationType)
-{
-    QUrl url = request.url();
-
-    if (isLocalUrl(url))
-    {
-        QString path = url.path();
-
-        if (path.endsWith(".pdf"))
-        {
-            int lastDash = path.lastIndexOf('/');
-            QString fileName = QDir::tempPath()+QDir::separator();
-
-            if (lastDash < 0)
-                fileName += path;
-            else
-                fileName += path.mid(lastDash+1, path.length());
-
-            QFile file(QDir::cleanPath(fileName));
-
-            if (file.open(QIODevice::ReadWrite))
-            {
-                file.write(helpEngine->fileData(url));
-
-                file.close();
-            }
-
-            QDesktopServices::openUrl(QUrl(file.fileName()));
-
-            return false;
-        }
-
-        return true;
-    }
-
-    QDesktopServices::openUrl(url);
-
-    return false;
-}
-
-HelpWidget::HelpWidget(QHelpEngine *engine, MainWindow *parent) :
+HelpWidget::HelpWidget(QHelpEngine *engine, QWidget *parent) :
     QWebView(parent),
     helpEngine(engine)
 {
     setAcceptDrops(false);
 
-    setPage(new HelpPage(helpEngine, this));
-
     page()->setNetworkAccessManager(new HelpNetworkAccessManager(engine, this));
-
-    connect(pageAction(QWebPage::Back), SIGNAL(changed()), this, SLOT(actionChanged()));
-    connect(pageAction(QWebPage::Forward), SIGNAL(changed()), this, SLOT(actionChanged()));
-
-    installEventFilter(this);
 
     setContextMenuPolicy(Qt::NoContextMenu);
 }
@@ -174,35 +106,4 @@ void HelpWidget::mouseReleaseEvent(QMouseEvent *event)
         triggerPageAction(QWebPage::Forward);
     else
         QWebView::mouseReleaseEvent(event);
-}
-
-bool HelpWidget::eventFilter(QObject *object, QEvent *event)
-{
-    if (event->type() == QEvent::KeyPress)
-        switch (static_cast<QKeyEvent*>(event)->key())
-        {
-            case Qt::Key_Backspace:
-                if (isBackwardAvailable() && !hasFocus())
-                {
-                    backward();
-
-                    return true;
-                }
-
-                break;
-            default:
-                return QWidget::eventFilter(object, event);
-        }
-
-    return QWidget::eventFilter(object, event);
-}
-
-void HelpWidget::actionChanged()
-{
-    QAction *action = qobject_cast<QAction *>(sender());
-
-    if (action == pageAction(QWebPage::Back))
-        emit backwardAvailable(action->isEnabled());
-    else if (action == pageAction(QWebPage::Forward))
-        emit forwardAvailable(action->isEnabled());
 }

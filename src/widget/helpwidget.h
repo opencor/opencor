@@ -1,12 +1,9 @@
 #ifndef HELPWIDGET_H
 #define HELPWIDGET_H
 
-#include <QUrl>
-#include <QAction>
-#include <QWebView>
 #include <QNetworkReply>
+#include <QWebView>
 
-class MainWindow;
 class HelpWidget;
 
 class QHelpEngine;
@@ -45,42 +42,17 @@ private:
     QHelpEngine *helpEngine;
 };
 
-class HelpPage : public QWebPage
-{
-public:
-    HelpPage(QHelpEngine *engine, QObject *parent);
-
-protected:
-    virtual bool acceptNavigationRequest(QWebFrame *frame,
-                                         const QNetworkRequest& request,
-                                         NavigationType type);
-
-private:
-    QHelpEngine *helpEngine;
-
-    friend class HelpWidget;
-};
-
 class HelpWidget : public QWebView
 {
     Q_OBJECT
 
 public:
-    HelpWidget(QHelpEngine *engine, MainWindow *parent = 0);
+    HelpWidget(QHelpEngine *engine, QWidget *parent = 0);
 
-    inline void resetZoom()
-        { setTextSizeMultiplier(1.0); }
     inline void zoomIn(qreal range = 1.0)
         { setTextSizeMultiplier(textSizeMultiplier()+0.1*range); }
-    inline void zoomOut(qreal range = 1)
+    inline void zoomOut(qreal range = 1.0)
         { setTextSizeMultiplier(qMax(0.0, textSizeMultiplier()-0.1*range)); }
-
-    inline bool isForwardAvailable() const
-        { return pageAction(QWebPage::Forward)->isEnabled(); }
-    inline bool isBackwardAvailable() const
-        { return pageAction(QWebPage::Back)->isEnabled(); }
-    inline qreal zoom() const
-        { return textSizeMultiplier(); }
 
 protected:
     virtual void wheelEvent(QWheelEvent*);
@@ -89,19 +61,6 @@ protected:
 
 private:
     QHelpEngine *helpEngine;
-
-    bool eventFilter(QObject *object, QEvent *event);
-
-public Q_SLOTS:
-    inline void backward()
-        { back(); }
-
-private Q_SLOTS:
-    void actionChanged();
-
-signals:
-    void forwardAvailable(bool available);
-    void backwardAvailable(bool available);
 };
 
 #endif
