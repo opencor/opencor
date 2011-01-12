@@ -86,7 +86,6 @@ protected:
     virtual void wheelEvent(QWheelEvent*);
 
     void mouseReleaseEvent(QMouseEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
     QHelpEngine *helpEngine;
@@ -103,8 +102,6 @@ private Q_SLOTS:
 signals:
     void forwardAvailable(bool available);
     void backwardAvailable(bool available);
-
-    void mouseDoubleClick(QMouseEvent *event);
 };
 
 #endif

@@ -176,11 +176,6 @@ void HelpWidget::mouseReleaseEvent(QMouseEvent *event)
         QWebView::mouseReleaseEvent(event);
 }
 
-void HelpWidget::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    emit mouseDoubleClick(event);
-}
-
 bool HelpWidget::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress)
@@ -188,9 +183,11 @@ bool HelpWidget::eventFilter(QObject *object, QEvent *event)
         {
             case Qt::Key_Backspace:
                 if (isBackwardAvailable() && !hasFocus())
+                {
                     backward();
 
                     return true;
+                }
 
                 break;
             default:
