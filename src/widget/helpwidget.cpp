@@ -29,12 +29,16 @@ HelpNetworkReply::HelpNetworkReply(const QNetworkRequest& request,
 qint64 HelpNetworkReply::readData(char *buffer, qint64 maxlen)
 {
     qint64 len = qMin(qint64(data.length()), maxlen);
-    if (len) {
+
+    if (len)
+    {
         qMemCopy(buffer, data.constData(), len);
         data.remove(0, len);
     }
+
     if (!data.length())
         QTimer::singleShot(0, this, SIGNAL(finished()));
+
     return len;
 }
 
@@ -103,7 +107,7 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
             if (lastDash < 0)
                 fileName += path;
             else
-                fileName += path.mid(lastDash + 1, path.length());
+                fileName += path.mid(lastDash+1, path.length());
 
             QFile file(QDir::cleanPath(fileName));
 
@@ -141,12 +145,14 @@ HelpWidget::HelpWidget(QHelpEngine *engine, MainWindow *parent) :
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()), this, SLOT(actionChanged()));
 
     installEventFilter(this);
+
     setContextMenuPolicy(Qt::NoContextMenu);
 }
 
 void HelpWidget::wheelEvent(QWheelEvent *event)
 {
-    if (event->modifiers() & Qt::ControlModifier) {
+    if (event->modifiers() & Qt::ControlModifier)
+    {
         int delta = event->delta();
 
         if (delta > 0)
@@ -155,30 +161,19 @@ void HelpWidget::wheelEvent(QWheelEvent *event)
             zoomOut(-0.01*delta);
 
         event->accept();
-
-        return;
     }
-
-    QWebView::wheelEvent(event);
+    else
+        QWebView::wheelEvent(event);
 }
 
 void HelpWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::XButton1)
-    {
         triggerPageAction(QWebPage::Back);
-
-        return;
-    }
-
-    if (event->button() == Qt::XButton2)
-    {
+    else if (event->button() == Qt::XButton2)
         triggerPageAction(QWebPage::Forward);
-
-        return;
-    }
-
-    QWebView::mouseReleaseEvent(event);
+    else
+        QWebView::mouseReleaseEvent(event);
 }
 
 void HelpWidget::mouseDoubleClickEvent(QMouseEvent *event)
