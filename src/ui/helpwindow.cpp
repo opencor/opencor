@@ -12,7 +12,7 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 
     mHelpWidget = new HelpWidget(pHelpEngine, pHomepage);
 
-    setWidget(mHelpWidget);
+    mUi->verticalLayout->addWidget(mHelpWidget);
 }
 
 HelpWindow::~HelpWindow()

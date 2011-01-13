@@ -17,6 +17,16 @@
   <property name="windowTitle">
    <string>OpenCOR Help</string>
   </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+   </layout>
+  </widget>
  </widget>
  <resources>
   <include location="../../res/OpenCOR.qrc"/>
