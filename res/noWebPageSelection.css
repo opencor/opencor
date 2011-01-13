@@ -1,0 +1,5 @@
+BODY
+{
+    -webkit-User-Select: None;   /* Prevent selection within a webkit-based */
+                                 /* browser                                 */
+}
