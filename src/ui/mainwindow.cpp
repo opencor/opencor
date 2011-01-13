@@ -314,7 +314,7 @@ void MainWindow::on_actionAbout_triggered()
                        "</CENTER>"+
                        "<BR>"+
                        "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+qApp->applicationName()+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.")+"<BR><BR>"+
-                       qApp->applicationName()+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any particular license, but this is due to change in the future."));
+                       qApp->applicationName()+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any particular license, but this is due to change in the near future."));
 }
 
 void MainWindow::resetAll(const bool& pClearUserSettings)
