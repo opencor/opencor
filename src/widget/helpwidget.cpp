@@ -97,7 +97,7 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
     {
         data = mHelpEngine->findFile(url).isValid()?
                    mHelpEngine->fileData(url):
-                   QByteArray(errorMsg(tr("The following help file could not be found")+": <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
+                   QByteArray(errorMsg(tr("The following help file could not be found:")+" <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
 
         return new HelpNetworkReply(pRequest, data, mimeType);
     }
