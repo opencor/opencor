@@ -119,6 +119,15 @@ void HelpWidget::resetAll()
     history()->clear();
 
     setTextSizeMultiplier(1.0);
+
+    // One would expect the history()->clear(); call to clear all of the
+    //  history, but for some reason it sometimes still leaves one visited
+    // page, so...
+
+    int maximumItemCount = history()->maximumItemCount();
+
+    history()->setMaximumItemCount(0);
+    history()->setMaximumItemCount(maximumItemCount);
 }
 
 void HelpWidget::gotoHomepage()
