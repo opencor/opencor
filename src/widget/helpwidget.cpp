@@ -5,6 +5,7 @@
 
 #include "helpwidget.h"
 
+#include <QAction>
 #include <QDesktopServices>
 #include <QFile>
 #include <QHelpEngine>
@@ -117,6 +118,11 @@ HelpWidget::HelpWidget(QHelpEngine *engine, const QUrl& pHomepage,
     installEventFilter(this);
 
     setContextMenuPolicy(Qt::NoContextMenu);
+
+    connect(pageAction(QWebPage::Back), SIGNAL(changed()),
+            this, SLOT(actionChanged()));
+    connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
+            this, SLOT(actionChanged()));
 
     // Load the homepage
 
@@ -240,4 +246,14 @@ bool HelpWidget::eventFilter(QObject *pObject, QEvent *pEvent)
     }
 
     return QWidget::eventFilter(pObject, pEvent);
+}
+
+void HelpWidget::actionChanged()
+{
+    QAction *action = qobject_cast<QAction *>(sender());
+
+    if (action == pageAction(QWebPage::Back))
+        emit backwardAvailable(action->isEnabled());
+    else if (action == pageAction(QWebPage::Forward))
+        emit forwardAvailable(action->isEnabled());
 }

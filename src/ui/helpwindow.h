@@ -32,7 +32,7 @@ private:
 
     HelpWidget *mHelpWidget;
 
-private slots:
+private Q_SLOTS:
     void on_homepageButton_clicked();
     void on_backwardButton_clicked();
     void on_forwardButton_clicked();

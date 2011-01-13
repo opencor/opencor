@@ -43,12 +43,12 @@ private:
 
     void updateGUI();
 
-public slots:
+public Q_SLOTS:
     void singleAppMsgRcvd(const QString&);
 
     void resetAll(const bool& pClearUserSettings = true);
 
-private slots:
+private Q_SLOTS:
     void on_actionAbout_triggered();
     void on_actionHomepage_triggered();
     void on_actionFrench_triggered();

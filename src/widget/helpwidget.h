@@ -70,6 +70,13 @@ private:
     QUrl mHomepage;
 
     bool eventFilter(QObject *pObject, QEvent *pEvent);
+
+private Q_SLOTS:
+    void actionChanged();
+
+Q_SIGNALS:
+    void backwardAvailable(bool pAvailable);
+    void forwardAvailable(bool pAvailable);
 };
 
 #endif

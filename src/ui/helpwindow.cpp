@@ -13,6 +13,11 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
     mHelpWidget = new HelpWidget(pHelpEngine, pHomepage);
 
     mUi->verticalLayout->addWidget(mHelpWidget);
+
+    connect(mHelpWidget, SIGNAL(backwardAvailable(bool)),
+            mUi->backwardButton, SLOT(setEnabled(bool)));
+    connect(mHelpWidget, SIGNAL(forwardAvailable(bool)),
+            mUi->forwardButton, SLOT(setEnabled(bool)));
 }
 
 HelpWindow::~HelpWindow()
