@@ -3,35 +3,35 @@
 
 #include "ui_helpwindow.h"
 
-HelpWindow::HelpWindow(QHelpEngine *helpEngine, const QUrl& homepage,
-                       QDockWidget *parent) :
-    QDockWidget(parent),
-    ui(new Ui::HelpWindow)
+HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
+                       QDockWidget *pParent) :
+    QDockWidget(pParent),
+    mUi(new Ui::HelpWindow)
 {
-    ui->setupUi(this);
+    mUi->setupUi(this);
 
-    helpWidget = new HelpWidget(helpEngine);
+    mHelpWidget = new HelpWidget(pHelpEngine);
 
-    setWidget(helpWidget);
-    setHomepage(homepage);
+    setWidget(mHelpWidget);
+    setHomepage(pHomepage);
 }
 
 HelpWindow::~HelpWindow()
 {
-    delete ui;
+    delete mUi;
 }
 
-void HelpWindow::setHomepage(const QUrl& homepage)
+void HelpWindow::setHomepage(const QUrl& pHomepage)
 {
-    helpWidget->load(homepage);
+    mHelpWidget->load(pHomepage);
 }
 
-void HelpWindow::setHelpWidgetTextSizeMultiplier(const double& value)
+void HelpWindow::setHelpWidgetTextSizeMultiplier(const double& pHelpWidgetTextSizeMultiplier)
 {
-    helpWidget->setTextSizeMultiplier(value);
+    mHelpWidget->setTextSizeMultiplier(pHelpWidgetTextSizeMultiplier);
 }
 
 double HelpWindow::helpWidgetTextSizeMultiplier()
 {
-    return helpWidget->textSizeMultiplier();
+    return mHelpWidget->textSizeMultiplier();
 }

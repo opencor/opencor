@@ -3,9 +3,9 @@
 #include <QtSingleApplication>
 #include <QFileInfo>
 
-int main(int argc, char *argv[])
+int main(int pArgc, char *pArgv[])
 {
-    QtSingleApplication app(argc, argv);
+    QtSingleApplication app(pArgc, pArgv);
 
     // Send a message (containing the arguments that were passed to this
     // instance of OpenCOR) to the 'official' instance of OpenCOR, should there

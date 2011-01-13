@@ -10,31 +10,32 @@
 #include <QWebPage>
 #include <QWheelEvent>
 
-HelpNetworkReply::HelpNetworkReply(const QNetworkRequest& request,
-                                   const QByteArray& fileData,
-                                   const QString& mimeType) :
-    data(fileData),
-    origLen(fileData.length())
+HelpNetworkReply::HelpNetworkReply(const QNetworkRequest& pRequest,
+                                   const QByteArray& pFileData,
+                                   const QString& pMimeType) :
+    mData(pFileData),
+    mOrigLen(pFileData.length())
 {
-    setRequest(request);
+    setRequest(pRequest);
     setOpenMode(QIODevice::ReadOnly);
-    setHeader(QNetworkRequest::ContentTypeHeader, mimeType);
-    setHeader(QNetworkRequest::ContentLengthHeader, QByteArray::number(origLen));
+    setHeader(QNetworkRequest::ContentTypeHeader, pMimeType);
+    setHeader(QNetworkRequest::ContentLengthHeader, QByteArray::number(mOrigLen));
 
     QTimer::singleShot(0, this, SIGNAL(readyRead()));
 }
 
-qint64 HelpNetworkReply::readData(char *buffer, qint64 maxlen)
+qint64 HelpNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
 {
-    qint64 len = qMin(qint64(data.length()), maxlen);
+    qint64 len = qMin(qint64(mData.length()), pMaxlen);
 
     if (len)
     {
-        qMemCopy(buffer, data.constData(), len);
-        data.remove(0, len);
+        qMemCopy(pBuffer, mData.constData(), len);
+
+        mData.remove(0, len);
     }
 
-    if (!data.length())
+    if (!mData.length())
         QTimer::singleShot(0, this, SIGNAL(finished()));
 
     return len;
@@ -90,8 +91,8 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
     return new HelpNetworkReply(pRequest, data, mimeType);
 }
 
-HelpWidget::HelpWidget(QHelpEngine *engine, QWidget *parent) :
-    QWebView(parent)
+HelpWidget::HelpWidget(QHelpEngine *engine, QWidget *pParent) :
+    QWebView(pParent)
 {
     setAcceptDrops(false);
 
@@ -100,29 +101,29 @@ HelpWidget::HelpWidget(QHelpEngine *engine, QWidget *parent) :
     setContextMenuPolicy(Qt::NoContextMenu);
 }
 
-void HelpWidget::wheelEvent(QWheelEvent *event)
+void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
-    if (event->modifiers() & Qt::ControlModifier)
+    if (pEvent->button() == Qt::XButton1)
+        triggerPageAction(QWebPage::Back);
+    else if (pEvent->button() == Qt::XButton2)
+        triggerPageAction(QWebPage::Forward);
+    else
+        QWebView::mouseReleaseEvent(pEvent);
+}
+
+void HelpWidget::wheelEvent(QWheelEvent *pEvent)
+{
+    if (pEvent->modifiers() & Qt::ControlModifier)
     {
-        int delta = event->delta();
+        int delta = pEvent->delta();
 
         if (delta > 0)
             zoomIn(0.01*delta);
         else if (delta < 0)
             zoomOut(-0.01*delta);
 
-        event->accept();
+        pEvent->accept();
     }
     else
-        QWebView::wheelEvent(event);
-}
-
-void HelpWidget::mouseReleaseEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::XButton1)
-        triggerPageAction(QWebPage::Back);
-    else if (event->button() == Qt::XButton2)
-        triggerPageAction(QWebPage::Forward);
-    else
-        QWebView::mouseReleaseEvent(event);
+        QWebView::wheelEvent(pEvent);
 }

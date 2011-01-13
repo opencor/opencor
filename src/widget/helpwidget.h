@@ -11,21 +11,21 @@ class QHelpEngine;
 class HelpNetworkReply : public QNetworkReply
 {
 public:
-    HelpNetworkReply(const QNetworkRequest& request,
-                     const QByteArray& fileData,
-                     const QString& mimeType);
+    HelpNetworkReply(const QNetworkRequest& pRequest,
+                     const QByteArray& pFileData,
+                     const QString& pMimeType);
 
     inline virtual void abort()
         { /* Nothing to do... */ }
     virtual qint64 bytesAvailable() const
-        { return data.length()+QNetworkReply::bytesAvailable(); }
+        { return mData.length()+QNetworkReply::bytesAvailable(); }
 
 protected:
-    virtual qint64 readData(char *data, qint64 maxlen);
+    virtual qint64 readData(char *pData, qint64 pMaxlen);
 
 private:
-    QByteArray data;
-    qint64 origLen;
+    QByteArray mData;
+    qint64 mOrigLen;
 };
 
 class HelpNetworkAccessManager : public QNetworkAccessManager
@@ -50,17 +50,16 @@ class HelpWidget : public QWebView
     Q_OBJECT
 
 public:
-    HelpWidget(QHelpEngine *engine, QWidget *parent = 0);
+    HelpWidget(QHelpEngine *pEngine, QWidget *pParent = 0);
 
-    inline void zoomIn(qreal range = 1.0)
-        { setTextSizeMultiplier(textSizeMultiplier()+0.1*range); }
-    inline void zoomOut(qreal range = 1.0)
-        { setTextSizeMultiplier(qMax(0.0, textSizeMultiplier()-0.1*range)); }
+    inline void zoomIn(const qreal& pRange = 1.0)
+        { setTextSizeMultiplier(textSizeMultiplier()+0.1*pRange); }
+    inline void zoomOut(const qreal& pRange = 1.0)
+        { setTextSizeMultiplier(qMax(0.0, textSizeMultiplier()-0.1*pRange)); }
 
 protected:
-    virtual void wheelEvent(QWheelEvent*);
-
-    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *pEvent);
+    void wheelEvent(QWheelEvent *pEvent);
 };
 
 #endif

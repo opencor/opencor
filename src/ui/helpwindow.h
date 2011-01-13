@@ -17,18 +17,18 @@ class HelpWindow : public QDockWidget
     Q_OBJECT
 
 public:
-    explicit HelpWindow(QHelpEngine *engine, const QUrl& homepage, QDockWidget *parent = 0);
+    explicit HelpWindow(QHelpEngine *pEngine, const QUrl& pHomepage, QDockWidget *pParent = 0);
     ~HelpWindow();
 
-    void setHomepage(const QUrl& homepage);
+    void setHomepage(const QUrl& pHomepage);
 
-    void setHelpWidgetTextSizeMultiplier(const double& value);
+    void setHelpWidgetTextSizeMultiplier(const double& pHelpWidgetTextSizeMultiplier);
     double helpWidgetTextSizeMultiplier();
 
 private:
-    Ui::HelpWindow *ui;
+    Ui::HelpWindow *mUi;
 
-    HelpWidget *helpWidget;
+    HelpWidget *mHelpWidget;
 };
 
 #endif // HELPWINDOW_H

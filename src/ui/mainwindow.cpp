@@ -30,13 +30,13 @@
 #define SETTINGS_GENERAL_STATE "General_State"
 #define SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER "HelpWindow_TextSizeMultiplier"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *pParent) :
+    QMainWindow(pParent),
+    mUi(new Ui::MainWindow)
 {
     // Set up the GUI
 
-    ui->setupUi(this);
+    mUi->setupUi(this);
 
     // Set the name of the main window to that of the application
 
@@ -50,17 +50,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Some basic signals/events for some actions
 
-    connect(ui->actionExit, SIGNAL(triggered(bool)),
+    connect(mUi->actionExit, SIGNAL(triggered(bool)),
             this, SLOT(close()));
-    connect(ui->actionResetAll, SIGNAL(triggered(bool)),
+    connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
     // Signals/events for showing/hiding the various toolbars
 
-    connect(ui->actionHelpToolbar, SIGNAL(triggered(bool)),
-            ui->helpToolbar, SLOT(setVisible(bool)));
-    connect(ui->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-            ui->actionHelpToolbar, SLOT(setChecked(bool)));
+    connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
+            mUi->helpToolbar, SLOT(setVisible(bool)));
+    connect(mUi->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
+            mUi->actionHelpToolbar, SLOT(setChecked(bool)));
 
     // Extract the help files
 
@@ -69,32 +69,32 @@ MainWindow::MainWindow(QWidget *parent) :
     tempDir.open();    // Note: this is required to get a 'valid' temporary
     tempDir.close();   //       directory name...
 
-    tempDirName = tempDir.fileName().append(".dir");
+    mTempDirName = tempDir.fileName().append(".dir");
 
-    QDir().mkdir(tempDirName);
+    QDir().mkdir(mTempDirName);
 
     QString applicationBaseName(QFileInfo(qApp->applicationFilePath()).baseName());
 
-    qchFileName = tempDirName+QDir::separator()+applicationBaseName+".qch";
-    qhcFileName = tempDirName+QDir::separator()+applicationBaseName+".qhc";
+    mQchFileName = mTempDirName+QDir::separator()+applicationBaseName+".qch";
+    mQhcFileName = mTempDirName+QDir::separator()+applicationBaseName+".qhc";
 
-    saveResourceAs(":qchFile", qchFileName);
-    saveResourceAs(":qhcFile", qhcFileName);
+    saveResourceAs(":qchFile", mQchFileName);
+    saveResourceAs(":qhcFile", mQhcFileName);
 
     // Set up the help engine
 
-    helpEngine = new QHelpEngine(qhcFileName);
+    mHelpEngine = new QHelpEngine(mQhcFileName);
 
-    helpEngine->setupData();
+    mHelpEngine->setupData();
 
     // Help window
 
-    helpWindow = new HelpWindow(helpEngine, OPENCOR_HELP_HOMEPAGE);
+    mHelpWindow = new HelpWindow(mHelpEngine, OPENCOR_HELP_HOMEPAGE);
 
-    connect(ui->actionHelp, SIGNAL(triggered(bool)),
-            helpWindow, SLOT(setVisible(bool)));
-    connect(helpWindow, SIGNAL(visibilityChanged(bool)),
-            ui->actionHelp, SLOT(setChecked(bool)));
+    connect(mUi->actionHelp, SIGNAL(triggered(bool)),
+            mHelpWindow, SLOT(setVisible(bool)));
+    connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
+            mUi->actionHelp, SLOT(setChecked(bool)));
 
     // Default user settings
 
@@ -114,18 +114,18 @@ MainWindow::~MainWindow()
 {
     // Delete some internal objects
 
-    delete helpEngine;
-    delete ui;
+    delete mHelpEngine;
+    delete mUi;
 
     // Delete the help files
 
-    QFile(qchFileName).remove();
-    QFile(qhcFileName).remove();
+    QFile(mQchFileName).remove();
+    QFile(mQhcFileName).remove();
 
-    QDir().rmdir(tempDirName);
+    QDir().rmdir(mTempDirName);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
     // Keep track of our default settings
     // Note: it must be done here, as opposed to the destructor, otherwise some
@@ -133,7 +133,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
     saveSettings();
 
-    event->accept();
+    pEvent->accept();
 }
 
 
@@ -224,7 +224,7 @@ void MainWindow::loadSettings()
     // Retrieve the text size multiplier for the help widget, with a default
     // value just in case
 
-    helpWindow->setHelpWidgetTextSizeMultiplier(settings.value(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, 1.0).toDouble());
+    mHelpWindow->setHelpWidgetTextSizeMultiplier(settings.value(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, 1.0).toDouble());
 }
 
 void MainWindow::saveSettings()
@@ -233,7 +233,7 @@ void MainWindow::saveSettings()
 
     // Keep track of the language to be used by OpenCOR
 
-    settings.setValue(SETTINGS_GENERAL_LOCALE, locale);
+    settings.setValue(SETTINGS_GENERAL_LOCALE, mLocale);
 
     // Keep track of the geometry of the main window
 
@@ -245,23 +245,23 @@ void MainWindow::saveSettings()
 
     // Keep track of the text size multiplier for the help widget
 
-    settings.setValue(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, helpWindow->helpWidgetTextSizeMultiplier());
+    settings.setValue(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, mHelpWindow->helpWidgetTextSizeMultiplier());
 }
 
-void MainWindow::setLocale(const QString& newLocale)
+void MainWindow::setLocale(const QString& pLocale)
 {
-    if (newLocale != locale)
+    if (pLocale != mLocale)
     {
-        locale = newLocale;
+        mLocale = pLocale;
 
         // Specify the language to be used by OpenCOR
 
 //        qApp->removeTranslator(qtTranslator);
-//        qtTranslator->load("qt_"+newLocale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+//        qtTranslator->load("qt_"+pLocale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 //        qApp->installTranslator(qtTranslator);
 
 //        qApp->removeTranslator(appTranslator);
-//        appTranslator->load(":app_"+newLocale);
+//        appTranslator->load(":app_"+pLocale);
 //        qApp->installTranslator(appTranslator);
     }
 
@@ -269,16 +269,16 @@ void MainWindow::setLocale(const QString& newLocale)
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status, so...
 
-    ui->actionEnglish->setChecked(newLocale.startsWith("en"));
-    ui->actionFrench->setChecked(newLocale.startsWith("fr"));
+    mUi->actionEnglish->setChecked(pLocale.startsWith("en"));
+    mUi->actionFrench->setChecked(pLocale.startsWith("fr"));
 }
 
-void MainWindow::notYetImplemented(const QString& message)
+void MainWindow::notYetImplemented(const QString& pMsg)
 {
     // Display a warning message about a particular feature having not yet been
     // implemented
 
-    QMessageBox::warning(this, qApp->applicationName(), message+tr(" has not yet been implemented..."),
+    QMessageBox::warning(this, qApp->applicationName(), pMsg+tr(" has not yet been implemented..."),
                          QMessageBox::Ok, QMessageBox::Ok);
 }
 
@@ -300,7 +300,7 @@ void MainWindow::updateGUI()
 {
     // Update the checked status of the toolbars menu items
 
-    ui->actionHelpToolbar->setChecked(ui->helpToolbar->isVisible());
+    mUi->actionHelpToolbar->setChecked(mUi->helpToolbar->isVisible());
 }
 
 void MainWindow::on_actionHomepage_triggered()
@@ -323,7 +323,7 @@ void MainWindow::on_actionAbout_triggered()
                        qApp->applicationName()+" "+tr("is written in C++, using the <A HREF = \"http://qt.nokia.com/\">Qt framework</A>, and is not currently released under any particular license, but this is due to change in the future."));
 }
 
-void MainWindow::resetAll(const bool& clearUserSettings)
+void MainWindow::resetAll(const bool& pClearUserSettings)
 {
     // Default language to be used by OpenCOR
 
@@ -337,34 +337,34 @@ void MainWindow::resetAll(const bool& clearUserSettings)
     const double horizSpace = spaceRatio*qApp->desktop()->width();
     const double vertSpace  = 2.0*spaceRatio*qApp->desktop()->height();
 
-    helpWindow->setVisible(false);   // By default
+    mHelpWindow->setVisible(false);   // By default
 
-    addDockWidget(Qt::RightDockWidgetArea, helpWindow);
+    addDockWidget(Qt::RightDockWidgetArea, mHelpWindow);
     // Note: the above is only required so that the help window can then be
     //       docked to the main window, should the user want to do that.
     //       Indeed, to make the help window float is not sufficient, so...
 
-    helpWindow->setFloating(true);
+    mHelpWindow->setFloating(true);
 
     resize(QSize(mainRatio*qApp->desktop()->width(), mainRatio*qApp->desktop()->height()));
-    helpWindow->resize(helpRatio*qApp->desktop()->width(), size().height());
+    mHelpWindow->resize(helpRatio*qApp->desktop()->width(), size().height());
 
     move(QPoint(horizSpace, vertSpace));
-    helpWindow->move(QPoint(qApp->desktop()->width()-helpWindow->size().width()-horizSpace, vertSpace));
+    mHelpWindow->move(QPoint(qApp->desktop()->width()-mHelpWindow->size().width()-horizSpace, vertSpace));
 
     // Default settings for the help widget
 
-    helpWindow->setHomepage(OPENCOR_HELP_HOMEPAGE);
-    helpWindow->setHelpWidgetTextSizeMultiplier(1.0);
+    mHelpWindow->setHomepage(OPENCOR_HELP_HOMEPAGE);
+    mHelpWindow->setHelpWidgetTextSizeMultiplier(1.0);
 
     // Default visibility and location of the various toolbars
 
-    this->addToolBar(Qt::TopToolBarArea, ui->helpToolbar);
+    this->addToolBar(Qt::TopToolBarArea, mUi->helpToolbar);
 
-    ui->helpToolbar->setVisible(true);
+    mUi->helpToolbar->setVisible(true);
 
     // Clear all the user settings, if required
 
-    if (clearUserSettings)
+    if (pClearUserSettings)
         QSettings(SETTINGS_INSTITUTION, qApp->applicationName()).clear();
 }

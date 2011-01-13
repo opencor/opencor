@@ -17,36 +17,36 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *pParent = 0);
     ~MainWindow();
 
 protected:
-    virtual void closeEvent(QCloseEvent *event);
+    virtual void closeEvent(QCloseEvent *pEvent);
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *mUi;
 
-    QString locale;
+    QString mLocale;
 
-    QHelpEngine *helpEngine;
-    HelpWindow *helpWindow;
+    QHelpEngine *mHelpEngine;
+    HelpWindow *mHelpWindow;
 
-    QString tempDirName;
-    QString qchFileName, qhcFileName;
+    QString mTempDirName;
+    QString mQchFileName, mQhcFileName;
 
     void loadSettings();
     void saveSettings();
 
-    void setLocale(const QString& newLocale);
+    void setLocale(const QString& pLocale);
 
-    void notYetImplemented(const QString& message);
+    void notYetImplemented(const QString& pMsg);
 
     void updateGUI();
 
 public slots:
     void singleAppMsgRcvd(const QString&);
 
-    void resetAll(const bool& clearUserSettings = true);
+    void resetAll(const bool& pClearUserSettings = true);
 
 private slots:
     void on_actionAbout_triggered();
