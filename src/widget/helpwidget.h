@@ -36,7 +36,7 @@ public:
 protected:
     virtual QNetworkReply *createRequest(Operation pOperation,
                                          const QNetworkRequest& pRequest,
-                                         QIODevice *pOutgoingData = 0);
+                                         QIODevice *pOutgoingData = NULL);
 
 private:
     QHelpEngine *mHelpEngine;
@@ -50,18 +50,23 @@ class HelpWidget : public QWebView
     Q_OBJECT
 
 public:
-    HelpWidget(QHelpEngine *pEngine, QWidget *pParent = 0);
+    HelpWidget(QHelpEngine *pEngine, const QUrl& pHomepage,
+               QWidget *pParent = 0);
 
-    inline void zoomIn(const qreal& pRange = 1.0)
-        { setTextSizeMultiplier(textSizeMultiplier()+0.1*pRange); }
-    inline void zoomOut(const qreal& pRange = 1.0)
-        { setTextSizeMultiplier(qMax(0.0, textSizeMultiplier()-0.1*pRange)); }
+    void resetAll();
+
+    void gotoHomepage();
+
+    void zoomIn(const qreal& pRange = 1.0);
+    void zoomOut(const qreal& pRange = 1.0);
 
 protected:
     void mouseReleaseEvent(QMouseEvent *pEvent);
     void wheelEvent(QWheelEvent *pEvent);
 
 private:
+    QUrl mHomepage;
+
     bool eventFilter(QObject *pObject, QEvent *pEvent);
 };
 

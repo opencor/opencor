@@ -42,12 +42,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     setWindowTitle(qApp->applicationName());
 
-#ifdef Q_WS_MAC
-    // Make the application look more like a Mac OS X application
-
-    setUnifiedTitleAndToolBarOnMac(true);
-#endif
-
     // Some basic signals/events for some actions
 
     connect(mUi->actionExit, SIGNAL(triggered(bool)),
@@ -354,8 +348,7 @@ void MainWindow::resetAll(const bool& pClearUserSettings)
 
     // Default settings for the help widget
 
-    mHelpWindow->setHomepage(OPENCOR_HELP_HOMEPAGE);
-    mHelpWindow->setHelpWidgetTextSizeMultiplier(1.0);
+    mHelpWindow->resetAll();
 
     // Default visibility and location of the various toolbars
 

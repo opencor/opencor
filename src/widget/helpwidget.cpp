@@ -1,3 +1,5 @@
+#include <QMessageBox>
+
 // Note: the HelpWidget class is result of some refactored code taken from Qt
 //       Assistant
 
@@ -7,6 +9,7 @@
 #include <QFile>
 #include <QHelpEngine>
 #include <QTimer>
+#include <QWebHistory>
 #include <QWebPage>
 #include <QWheelEvent>
 
@@ -91,8 +94,10 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
     return new HelpNetworkReply(pRequest, data, mimeType);
 }
 
-HelpWidget::HelpWidget(QHelpEngine *engine, QWidget *pParent) :
-    QWebView(pParent)
+HelpWidget::HelpWidget(QHelpEngine *engine, const QUrl& pHomepage,
+                       QWidget *pParent) :
+    QWebView(pParent),
+    mHomepage(pHomepage)
 {
     setAcceptDrops(false);
 
@@ -101,6 +106,34 @@ HelpWidget::HelpWidget(QHelpEngine *engine, QWidget *pParent) :
     installEventFilter(this);
 
     setContextMenuPolicy(Qt::NoContextMenu);
+
+    // Load the homepage
+
+    load(mHomepage);
+}
+
+void HelpWidget::resetAll()
+{
+    gotoHomepage();
+
+    history()->clear();
+
+    setTextSizeMultiplier(1.0);
+}
+
+void HelpWidget::gotoHomepage()
+{
+    load(mHomepage);
+}
+
+void HelpWidget::zoomIn(const qreal& pRange)
+{
+    setTextSizeMultiplier(textSizeMultiplier()+0.1*pRange);
+}
+
+void HelpWidget::zoomOut(const qreal& pRange)
+{
+    setTextSizeMultiplier(qMax(0.0, textSizeMultiplier()-0.1*pRange));
 }
 
 void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
@@ -138,8 +171,31 @@ bool HelpWidget::eventFilter(QObject *pObject, QEvent *pEvent)
 
         switch (keyEvent->key())
         {
+#ifndef Q_WS_MAC
+            case Qt::Key_Home:
+                gotoHomepage();
+
+                return true;
+#endif
+            case Qt::Key_Up:
+#ifdef Q_WS_MAC
+                if (keyEvent->modifiers() & Qt::ControlModifier)
+#else
+                if (keyEvent->modifiers() & Qt::AltModifier)
+#endif
+                {
+                    gotoHomepage();
+
+                    return true;
+                }
+
+                break;
             case Qt::Key_Left:
-                if (keyEvent->modifiers() == Qt::AltModifier)
+#ifdef Q_WS_MAC
+                if (keyEvent->modifiers() & Qt::ControlModifier)
+#else
+                if (keyEvent->modifiers() & Qt::AltModifier)
+#endif
                 {
                     back();
 
@@ -148,7 +204,11 @@ bool HelpWidget::eventFilter(QObject *pObject, QEvent *pEvent)
 
                 break;
             case Qt::Key_Right:
-                if (keyEvent->modifiers() == Qt::AltModifier)
+#ifdef Q_WS_MAC
+                if (keyEvent->modifiers() & Qt::ControlModifier)
+#else
+                if (keyEvent->modifiers() & Qt::AltModifier)
+#endif
                 {
                     forward();
 

@@ -10,10 +10,9 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 {
     mUi->setupUi(this);
 
-    mHelpWidget = new HelpWidget(pHelpEngine);
+    mHelpWidget = new HelpWidget(pHelpEngine, pHomepage);
 
     setWidget(mHelpWidget);
-    setHomepage(pHomepage);
 }
 
 HelpWindow::~HelpWindow()
@@ -21,9 +20,14 @@ HelpWindow::~HelpWindow()
     delete mUi;
 }
 
-void HelpWindow::setHomepage(const QUrl& pHomepage)
+void HelpWindow::resetAll()
 {
-    mHelpWidget->load(pHomepage);
+    mHelpWidget->resetAll();
+}
+
+void HelpWindow::gotoHomepage()
+{
+    mHelpWidget->gotoHomepage();
 }
 
 void HelpWindow::setHelpWidgetTextSizeMultiplier(const double& pHelpWidgetTextSizeMultiplier)
