@@ -31,15 +31,18 @@ private:
 class HelpNetworkAccessManager : public QNetworkAccessManager
 {
 public:
-    HelpNetworkAccessManager(QHelpEngine *engine, QObject *parent);
+    HelpNetworkAccessManager(QHelpEngine *pEngine, QObject *pParent);
 
 protected:
-    virtual QNetworkReply *createRequest(Operation operation,
-                                         const QNetworkRequest& request,
-                                         QIODevice *outgoingData = 0);
+    virtual QNetworkReply *createRequest(Operation pOperation,
+                                         const QNetworkRequest& pRequest,
+                                         QIODevice *pOutgoingData = 0);
 
 private:
-    QHelpEngine *helpEngine;
+    QHelpEngine *mHelpEngine;
+    QString mErrorMsg;
+
+    QString errorMsg(const QString& pErrorMsg);
 };
 
 class HelpWidget : public QWebView
@@ -58,9 +61,6 @@ protected:
     virtual void wheelEvent(QWheelEvent*);
 
     void mouseReleaseEvent(QMouseEvent *event);
-
-private:
-    QHelpEngine *helpEngine;
 };
 
 #endif

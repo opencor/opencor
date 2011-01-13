@@ -4,6 +4,7 @@
 #include "helpwidget.h"
 
 #include <QDesktopServices>
+#include <QFile>
 #include <QHelpEngine>
 #include <QTimer>
 #include <QWebPage>
@@ -39,18 +40,37 @@ qint64 HelpNetworkReply::readData(char *buffer, qint64 maxlen)
     return len;
 }
 
-HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *engine,
-                                                   QObject *parent) :
-    QNetworkAccessManager(parent),
-    helpEngine(engine)
+HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pEngine,
+                                                   QObject *pParent) :
+    QNetworkAccessManager(pParent),
+    mHelpEngine(pEngine)
 {
+    // Retrieve the error message template
+
+    QFile helpWidgetErrorFile(":helpWidgetError");
+
+    helpWidgetErrorFile.open(QIODevice::ReadOnly);
+
+    mErrorMsg = QString(helpWidgetErrorFile.readAll()).trimmed();
+
+    helpWidgetErrorFile.close();
+}
+
+QString HelpNetworkAccessManager::errorMsg(const QString& pErrorMsg)
+{
+    QString title = tr("OpenCOR Help Error");
+    QString description = tr("Description");
+    QString copyright = tr("Copyright");
+    QString contact = tr("Please use our <A HREF = \"http://sourceforge.net/projects/opencor/support\">support page</A> to tell us about this error.");
+
+    return mErrorMsg.arg(title, title, description, pErrorMsg, contact, copyright);
 }
 
 QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
-                                                       const QNetworkRequest& request,
+                                                       const QNetworkRequest& pRequest,
                                                        QIODevice*)
 {
-    QUrl url = request.url();
+    QUrl url = pRequest.url();
     QString mimeType = url.toString();
 
     if (mimeType.endsWith(".txt"))
@@ -61,18 +81,17 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
     QByteArray data;
 
     if (url.scheme() == "qthelp")
-        data = helpEngine->findFile(url).isValid()?
-                   helpEngine->fileData(url):
-                   QByteArray("Help file not found! ["+url.toString().toLatin1()+"]");
+        data = mHelpEngine->findFile(url).isValid()?
+                   mHelpEngine->fileData(url):
+                   QByteArray(errorMsg(tr("The following help file could not be found")+": <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
     else
-        data = QByteArray("External address... working on getting it to load...");
+        data = QByteArray(errorMsg(tr("You tried to open an external link. This is not yet possible to do this through this help viewer, but we are working on it...")).toLatin1());
 
-    return new HelpNetworkReply(request, data, mimeType);
+    return new HelpNetworkReply(pRequest, data, mimeType);
 }
 
 HelpWidget::HelpWidget(QHelpEngine *engine, QWidget *parent) :
-    QWebView(parent),
-    helpEngine(engine)
+    QWebView(parent)
 {
     setAcceptDrops(false);
 
