@@ -11,8 +11,7 @@ class QHelpEngine;
 class HelpNetworkReply : public QNetworkReply
 {
 public:
-    HelpNetworkReply(const QNetworkRequest& pRequest,
-                     const QByteArray& pFileData,
+    HelpNetworkReply(const QNetworkRequest& pRequest, const QByteArray& pData,
                      const QString& pMimeType);
 
     inline virtual void abort()
@@ -32,6 +31,7 @@ class HelpNetworkAccessManager : public QNetworkAccessManager
 {
 public:
     HelpNetworkAccessManager(QHelpEngine *pEngine, QObject *pParent);
+    ~HelpNetworkAccessManager();
 
 protected:
     virtual QNetworkReply *createRequest(Operation pOperation,
@@ -39,6 +39,8 @@ protected:
                                          QIODevice *pOutgoingData = NULL);
 
 private:
+    QNetworkAccessManager *mDefaultNetworkAccessManager;
+
     QHelpEngine *mHelpEngine;
     QString mErrorMsg;
 

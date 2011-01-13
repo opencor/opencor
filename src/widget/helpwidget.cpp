@@ -14,10 +14,10 @@
 #include <QWheelEvent>
 
 HelpNetworkReply::HelpNetworkReply(const QNetworkRequest& pRequest,
-                                   const QByteArray& pFileData,
+                                   const QByteArray& pData,
                                    const QString& pMimeType) :
-    mData(pFileData),
-    mOrigLen(pFileData.length())
+    mData(pData),
+    mOrigLen(pData.length())
 {
     setRequest(pRequest);
     setOpenMode(QIODevice::ReadOnly);
@@ -58,6 +58,15 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pEngine,
     mErrorMsg = QString(helpWidgetErrorFile.readAll()).trimmed();
 
     helpWidgetErrorFile.close();
+
+    // Default network access manager (to be used to retrieved external pages)
+
+    mDefaultNetworkAccessManager = new QNetworkAccessManager(this);
+}
+
+HelpNetworkAccessManager::~HelpNetworkAccessManager()
+{
+    delete mDefaultNetworkAccessManager;
 }
 
 QString HelpNetworkAccessManager::errorMsg(const QString& pErrorMsg)
@@ -85,13 +94,15 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
     QByteArray data;
 
     if (url.scheme() == "qthelp")
+    {
         data = mHelpEngine->findFile(url).isValid()?
                    mHelpEngine->fileData(url):
                    QByteArray(errorMsg(tr("The following help file could not be found")+": <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
-    else
-        data = QByteArray(errorMsg(tr("You tried to open an external link. This is not yet possible to do this through this help viewer, but we are working on it...")).toLatin1());
 
-    return new HelpNetworkReply(pRequest, data, mimeType);
+        return new HelpNetworkReply(pRequest, data, mimeType);
+    }
+    else
+        return mDefaultNetworkAccessManager->get(QNetworkRequest(url));
 }
 
 HelpWidget::HelpWidget(QHelpEngine *engine, const QUrl& pHomepage,
