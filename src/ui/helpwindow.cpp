@@ -39,3 +39,18 @@ double HelpWindow::helpWidgetTextSizeMultiplier()
 {
     return mHelpWidget->textSizeMultiplier();
 }
+
+void HelpWindow::on_homepageButton_clicked()
+{
+    mHelpWidget->gotoHomepage();
+}
+
+void HelpWindow::on_backwardButton_clicked()
+{
+    mHelpWidget->back();
+}
+
+void HelpWindow::on_forwardButton_clicked()
+{
+    mHelpWidget->forward();
+}

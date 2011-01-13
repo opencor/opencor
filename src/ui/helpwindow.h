@@ -31,6 +31,11 @@ private:
     Ui::HelpWindow *mUi;
 
     HelpWidget *mHelpWidget;
+
+private slots:
+    void on_homepageButton_clicked();
+    void on_backwardButton_clicked();
+    void on_forwardButton_clicked();
 };
 
 #endif // HELPWINDOW_H
