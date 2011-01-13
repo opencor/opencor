@@ -60,6 +60,9 @@ public:
 protected:
     void mouseReleaseEvent(QMouseEvent *pEvent);
     void wheelEvent(QWheelEvent *pEvent);
+
+private:
+    bool eventFilter(QObject *pObject, QEvent *pEvent);
 };
 
 #endif

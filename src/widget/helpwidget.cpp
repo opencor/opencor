@@ -98,6 +98,8 @@ HelpWidget::HelpWidget(QHelpEngine *engine, QWidget *pParent) :
 
     page()->setNetworkAccessManager(new HelpNetworkAccessManager(engine, this));
 
+    installEventFilter(this);
+
     setContextMenuPolicy(Qt::NoContextMenu);
 }
 
@@ -126,4 +128,36 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
     }
     else
         QWebView::wheelEvent(pEvent);
+}
+
+bool HelpWidget::eventFilter(QObject *pObject, QEvent *pEvent)
+{
+    if (pEvent->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(pEvent);
+
+        switch (keyEvent->key())
+        {
+            case Qt::Key_Left:
+                if (keyEvent->modifiers() == Qt::AltModifier)
+                {
+                    back();
+
+                    return true;
+                }
+
+                break;
+            case Qt::Key_Right:
+                if (keyEvent->modifiers() == Qt::AltModifier)
+                {
+                    forward();
+
+                    return true;
+                }
+
+                break;
+        }
+    }
+
+    return QWidget::eventFilter(pObject, pEvent);
 }
