@@ -124,6 +124,10 @@ HelpWidget::HelpWidget(QHelpEngine *engine, const QUrl& pHomepage,
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
             this, SLOT(actionChanged()));
 
+    // Prevent the text selection of any web page
+
+    page()->settings()->setUserStyleSheetUrl(QUrl::fromLocalFile(":noWebPageTextSelection"));
+
     // Load the homepage
 
     load(mHomepage);
