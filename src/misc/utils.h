@@ -3,10 +3,10 @@
 
 #include <QString>
 
-QString exec(const QString& prog, const QString& args);
+QString exec(const QString& pProg, const QString& pArgs);
 
 QString getOsName();
 
-void saveResourceAs(const QString& resourceName, const QString& fileName);
+void saveResourceAs(const QString& pResource, const QString& pFilename);
 
 #endif // UTILS_H

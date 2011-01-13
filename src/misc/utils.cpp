@@ -5,11 +5,11 @@
 #include <QResource>
 #include <QSysInfo>
 
-QString exec(const QString& prog, const QString& args)
+QString exec(const QString& pProg, const QString& pArgs)
 {
     QProcess process;
 
-    process.start(prog,  QStringList() << args);
+    process.start(pProg,  QStringList() << pArgs);
     process.waitForFinished();
 
     return process.readAll().trimmed();
@@ -58,13 +58,13 @@ QString getOsName()
 #endif
 }
 
-void saveResourceAs(const QString& resourceName, const QString& fileName)
+void saveResourceAs(const QString& pResource, const QString& pFilename)
 {
-    QFile file(fileName);
+    QFile file(pFilename);
 
     file.open(QIODevice::ReadWrite);
 
-    QResource resource(resourceName);
+    QResource resource(pResource);
 
     if (resource.isCompressed())
         file.write(qUncompress((const uchar*) resource.data(), resource.size()));
