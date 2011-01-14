@@ -12,7 +12,7 @@
         <file>normalSize.png</file>
         <file>zoomIn.png</file>
         <file>zoomOut.png</file>
-        <file alias="version">../VERSION.txt</file>
+        <file alias="version">../build/version.txt</file>
         <file alias="qchFile">../build/OpenCOR.qch</file>
         <file alias="qhcFile">../build/OpenCOR.qhc</file>
         <file alias="helpWidgetError">helpWidgetError.html</file>
