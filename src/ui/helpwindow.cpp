@@ -1,3 +1,5 @@
+#include <QMessageBox>
+
 #include "helpwindow.h"
 #include "helpwidget.h"
 
@@ -15,8 +17,12 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
     mUi->verticalLayout->addWidget(mHelpWidget);
 
     mUi->contentsButton->setDefaultAction(mUi->actionContents);
+
     mUi->backButton->setDefaultAction(mUi->actionBack);
     mUi->forwardButton->setDefaultAction(mUi->actionForward);
+
+    mUi->zoomInButton->setDefaultAction(mUi->actionZoomIn);
+    mUi->zoomOutButton->setDefaultAction(mUi->actionZoomOut);
 
     connect(mHelpWidget, SIGNAL(backAvailable(bool)),
             mUi->backButton, SLOT(setEnabled(bool)));
@@ -62,4 +68,14 @@ void HelpWindow::on_actionBack_triggered()
 void HelpWindow::on_actionForward_triggered()
 {
     mHelpWidget->forward();
+}
+
+void HelpWindow::on_actionZoomIn_triggered()
+{
+    mHelpWidget->zoomIn();
+}
+
+void HelpWindow::on_actionZoomOut_triggered()
+{
+    mHelpWidget->zoomOut();
 }

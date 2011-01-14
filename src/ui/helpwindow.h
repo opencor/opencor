@@ -34,6 +34,8 @@ private:
     HelpWidget *mHelpWidget;
 
 private Q_SLOTS:
+    void on_actionZoomOut_triggered();
+    void on_actionZoomIn_triggered();
     void on_actionForward_triggered();
     void on_actionBack_triggered();
     void on_actionContents_triggered();
