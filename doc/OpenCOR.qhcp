@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <QHelpCollectionProject version="1.0">
-    <assistant>
-        <title>OpenCOR Help</title>
-        <applicationIcon>res/help.png</applicationIcon>
-        <startPage>qthelp://world.opencor/doc/contents.html</startPage>
-        <enableDocumentationManager>false</enableDocumentationManager>
-        <enableAddressBar>false</enableAddressBar>
-        <enableFilterFunctionality>false</enableFilterFunctionality>
-    </assistant>
     <docFiles>
         <generate>
             <file>

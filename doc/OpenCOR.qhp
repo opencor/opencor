@@ -3,12 +3,6 @@
     <namespace>world.opencor</namespace>
     <virtualFolder>doc</virtualFolder>
     <filterSection>
-        <toc>
-            <section title="Contents" ref="contents.html"/>
-            <section title="Introduction" ref="introduction.html"/>
-            <section title="Known issues" ref="knownIssues.html"/>
-            <section title="Licensing" ref="licensing.html"/>
-        </toc>
         <files>
             <file>contents.html</file>
             <file>introduction.html</file>
