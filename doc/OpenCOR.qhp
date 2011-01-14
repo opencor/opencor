@@ -4,10 +4,12 @@
     <virtualFolder>doc</virtualFolder>
     <filterSection>
         <files>
-            <file>contents.html</file>
+            <file>index.html</file>
             <file>introduction.html</file>
             <file>knownIssues.html</file>
             <file>licensing.html</file>
+            <file>authors.html</file>
+            <file>contactUs.html</file>
             <file>res/stylesheet.css</file>
         </files>
     </filterSection>

@@ -22,7 +22,7 @@
 
 #define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
 
-#define OPENCOR_HELP_HOMEPAGE QUrl("qthelp://world.opencor/doc/contents.html")
+#define OPENCOR_HELP_HOMEPAGE QUrl("qthelp://world.opencor/doc/index.html")
 
 #define SETTINGS_INSTITUTION "World"
 #define SETTINGS_GENERAL_LOCALE "General_Locale"
