@@ -21,6 +21,8 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
     mUi->backButton->setDefaultAction(mUi->actionBack);
     mUi->forwardButton->setDefaultAction(mUi->actionForward);
 
+    mUi->normalSizeButton->setDefaultAction(mUi->actionNormalSize);
+
     mUi->zoomInButton->setDefaultAction(mUi->actionZoomIn);
     mUi->zoomOutButton->setDefaultAction(mUi->actionZoomOut);
 
@@ -78,4 +80,9 @@ void HelpWindow::on_actionZoomIn_triggered()
 void HelpWindow::on_actionZoomOut_triggered()
 {
     mHelpWidget->zoomOut();
+}
+
+void HelpWindow::on_actionNormalSize_triggered()
+{
+    mHelpWidget->setZoomFactor(1.0);
 }

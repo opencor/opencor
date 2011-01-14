@@ -111,6 +111,38 @@
        </spacer>
       </item>
       <item>
+       <widget class="QToolButton" name="normalSizeButton">
+        <property name="text">
+         <string>Normal Size</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="fixedSpacer3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>7</width>
+          <height>0</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <widget class="QToolButton" name="zoomInButton">
         <property name="text">
          <string>Zoom In</string>
@@ -238,6 +270,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="actionNormalSize">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/normalSize.png</normaloff>:/normalSize.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Normal Size</string>
+   </property>
+   <property name="statusTip">
+    <string>Reset the zoom for the contents of the help page</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+0</string>
    </property>
   </action>
  </widget>

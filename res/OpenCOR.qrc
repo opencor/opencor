@@ -9,6 +9,7 @@
         <file>homepage.png</file>
         <file>back.png</file>
         <file>forward.png</file>
+        <file>normalSize.png</file>
         <file>zoomIn.png</file>
         <file>zoomOut.png</file>
         <file alias="version">../VERSION.txt</file>

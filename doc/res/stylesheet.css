@@ -6,24 +6,24 @@ BODY
 
 A
 {
-    Color: #333377;
+    Color: #366092;
 }
 
 A:Visited
 {
-    Color: #333377;
+    Color: #366092;
 }
 
 A:Hover
 {
-    Background-Color: #333377;
+    Background-Color: #366092;
     Color: #FFFFFF;
     Text-Decoration: None;
 }
 
 .TitleBackground
 {
-    Background: #333377;
+    Background: #366092;
     Padding: 3px 3px 3px 3px;
     Margin: -3px -3px 13px -3px;
 }
@@ -39,18 +39,42 @@ SPAN.SectionFont
 {
     Font-Size: 13pt;
     Font-Weight: Bold;
-    Color: #333377;
+    Color: #366092;
+}
+
+.CodeBackground
+{
+    Background: #DBE5F1;
+    Border: 1px dashed #366092;
+    Padding: 3px;
+    Margin: 3px 13px 3px 13px;
+}
+
+SPAN.CodeFont
+{
+    Font-Family: Courier;
+    Font-Size: 11pt;
+}
+
+SPAN.Bold
+{
+    Font-Weight: Bold;
+}
+
+SPAN.Italic
+{
+    Font-Style: Italic;
 }
 
 .CopyrightBackground
 {
     Text-Align: Center;
-    Background: #E3E3E3;
+    Background: #D8D8D8;
     Margin: 13px 0px 0px 0px;
 }
 
 SPAN.CopyrightFont
 {
     Font-Size: 9pt;
-    Color: #808080;
+    Color: #7F7F7F;
 }
