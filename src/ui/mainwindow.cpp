@@ -28,7 +28,7 @@
 #define SETTINGS_GENERAL_LOCALE "General_Locale"
 #define SETTINGS_GENERAL_GEOMETRY "General_Geometry"
 #define SETTINGS_GENERAL_STATE "General_State"
-#define SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER "HelpWindow_TextSizeMultiplier"
+#define SETTINGS_HELPWINDOW_ZOOMFACTOR "HelpWindow_ZoomFactor"
 
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
@@ -218,7 +218,7 @@ void MainWindow::loadSettings()
     // Retrieve the text size multiplier for the help widget, with a default
     // value just in case
 
-    mHelpWindow->setHelpWidgetTextSizeMultiplier(settings.value(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, 1.0).toDouble());
+    mHelpWindow->setZoomFactor(settings.value(SETTINGS_HELPWINDOW_ZOOMFACTOR, 1.0).toDouble());
 }
 
 void MainWindow::saveSettings()
@@ -239,7 +239,7 @@ void MainWindow::saveSettings()
 
     // Keep track of the text size multiplier for the help widget
 
-    settings.setValue(SETTINGS_HELPWINDOW_TEXTSIZEMULTIPLIER, mHelpWindow->helpWidgetTextSizeMultiplier());
+    settings.setValue(SETTINGS_HELPWINDOW_ZOOMFACTOR, mHelpWindow->zoomFactor());
 }
 
 void MainWindow::setLocale(const QString& pLocale)

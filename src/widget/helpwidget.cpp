@@ -139,7 +139,7 @@ void HelpWidget::resetAll()
 
     history()->clear();
 
-    setTextSizeMultiplier(1.0);
+    setZoomFactor(1.0);
 
     // One would expect the history()->clear(); call to clear all of the
     //  history, but for some reason it sometimes still leaves one visited
@@ -158,12 +158,12 @@ void HelpWidget::gotoHomepage()
 
 void HelpWidget::zoomIn(const qreal& pRange)
 {
-    setTextSizeMultiplier(textSizeMultiplier()+0.1*pRange);
+    setZoomFactor(zoomFactor()+0.1*pRange);
 }
 
 void HelpWidget::zoomOut(const qreal& pRange)
 {
-    setTextSizeMultiplier(qMax(0.0, textSizeMultiplier()-0.1*pRange));
+    setZoomFactor(qMax(0.1, zoomFactor()-0.1*pRange));
 }
 
 void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)

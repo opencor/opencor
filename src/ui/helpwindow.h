@@ -24,8 +24,8 @@ public:
 
     void gotoHomepage();
 
-    void setHelpWidgetTextSizeMultiplier(const double& pHelpWidgetTextSizeMultiplier);
-    double helpWidgetTextSizeMultiplier();
+    void setZoomFactor(const double& pZoomFactor);
+    double zoomFactor();
 
 private:
     Ui::HelpWindow *mUi;

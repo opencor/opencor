@@ -35,14 +35,14 @@ void HelpWindow::gotoHomepage()
     mHelpWidget->gotoHomepage();
 }
 
-void HelpWindow::setHelpWidgetTextSizeMultiplier(const double& pHelpWidgetTextSizeMultiplier)
+void HelpWindow::setZoomFactor(const double& pZoomFactor)
 {
-    mHelpWidget->setTextSizeMultiplier(pHelpWidgetTextSizeMultiplier);
+    mHelpWidget->setZoomFactor(pZoomFactor);
 }
 
-double HelpWindow::helpWidgetTextSizeMultiplier()
+double HelpWindow::zoomFactor()
 {
-    return mHelpWidget->textSizeMultiplier();
+    return mHelpWidget->zoomFactor();
 }
 
 void HelpWindow::on_homepageButton_clicked()
