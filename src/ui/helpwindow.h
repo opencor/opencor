@@ -34,9 +34,9 @@ private:
     HelpWidget *mHelpWidget;
 
 private Q_SLOTS:
-    void on_homepageButton_clicked();
-    void on_backwardButton_clicked();
-    void on_forwardButton_clicked();
+    void on_actionForward_triggered();
+    void on_actionBack_triggered();
+    void on_actionContents_triggered();
 };
 
 #endif // HELPWINDOW_H

@@ -14,8 +14,12 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 
     mUi->verticalLayout->addWidget(mHelpWidget);
 
-    connect(mHelpWidget, SIGNAL(backwardAvailable(bool)),
-            mUi->backwardButton, SLOT(setEnabled(bool)));
+    mUi->contentsButton->setDefaultAction(mUi->actionContents);
+    mUi->backButton->setDefaultAction(mUi->actionBack);
+    mUi->forwardButton->setDefaultAction(mUi->actionForward);
+
+    connect(mHelpWidget, SIGNAL(backAvailable(bool)),
+            mUi->backButton, SLOT(setEnabled(bool)));
     connect(mHelpWidget, SIGNAL(forwardAvailable(bool)),
             mUi->forwardButton, SLOT(setEnabled(bool)));
 }
@@ -45,17 +49,17 @@ double HelpWindow::zoomFactor()
     return mHelpWidget->zoomFactor();
 }
 
-void HelpWindow::on_homepageButton_clicked()
+void HelpWindow::on_actionContents_triggered()
 {
     mHelpWidget->gotoHomepage();
 }
 
-void HelpWindow::on_backwardButton_clicked()
+void HelpWindow::on_actionBack_triggered()
 {
     mHelpWidget->back();
 }
 
-void HelpWindow::on_forwardButton_clicked()
+void HelpWindow::on_actionForward_triggered()
 {
     mHelpWidget->forward();
 }

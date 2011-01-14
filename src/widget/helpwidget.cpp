@@ -121,18 +121,12 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 
     page()->setNetworkAccessManager(new HelpNetworkAccessManager(pHelpEngine, this));
 
-    installEventFilter(this);
-
     setContextMenuPolicy(Qt::NoContextMenu);
 
     connect(pageAction(QWebPage::Back), SIGNAL(changed()),
             this, SLOT(actionChanged()));
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
             this, SLOT(actionChanged()));
-
-    // Load the homepage
-
-    load(mHomepage);
 }
 
 void HelpWidget::resetAll()
@@ -195,71 +189,12 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
         QWebView::wheelEvent(pEvent);
 }
 
-bool HelpWidget::eventFilter(QObject *pObject, QEvent *pEvent)
-{
-    if (pEvent->type() == QEvent::KeyPress)
-    {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(pEvent);
-
-        switch (keyEvent->key())
-        {
-#ifndef Q_WS_MAC
-            case Qt::Key_Home:
-                gotoHomepage();
-
-                return true;
-#endif
-            case Qt::Key_Up:
-#ifdef Q_WS_MAC
-                if (keyEvent->modifiers() & Qt::ControlModifier)
-#else
-                if (keyEvent->modifiers() & Qt::AltModifier)
-#endif
-                {
-                    gotoHomepage();
-
-                    return true;
-                }
-
-                break;
-            case Qt::Key_Left:
-#ifdef Q_WS_MAC
-                if (keyEvent->modifiers() & Qt::ControlModifier)
-#else
-                if (keyEvent->modifiers() & Qt::AltModifier)
-#endif
-                {
-                    back();
-
-                    return true;
-                }
-
-                break;
-            case Qt::Key_Right:
-#ifdef Q_WS_MAC
-                if (keyEvent->modifiers() & Qt::ControlModifier)
-#else
-                if (keyEvent->modifiers() & Qt::AltModifier)
-#endif
-                {
-                    forward();
-
-                    return true;
-                }
-
-                break;
-        }
-    }
-
-    return QWidget::eventFilter(pObject, pEvent);
-}
-
 void HelpWidget::actionChanged()
 {
     QAction *action = qobject_cast<QAction *>(sender());
 
     if (action == pageAction(QWebPage::Back))
-        emit backwardAvailable(action->isEnabled());
+        emit backAvailable(action->isEnabled());
     else if (action == pageAction(QWebPage::Forward))
         emit forwardAvailable(action->isEnabled());
 }
