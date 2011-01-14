@@ -207,9 +207,6 @@
    </property>
   </action>
   <action name="actionBack">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
      <normaloff>:/back.png</normaloff>:/back.png</iconset>
@@ -225,9 +222,6 @@
    </property>
   </action>
   <action name="actionForward">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
      <normaloff>:/forward.png</normaloff>:/forward.png</iconset>

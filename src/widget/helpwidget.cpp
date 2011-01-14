@@ -145,6 +145,12 @@ void HelpWidget::resetAll()
 
     history()->setMaximumItemCount(0);
     history()->setMaximumItemCount(maximumItemCount);
+
+    // Make sure we let whatever user of the widget know that we cannot go
+    // back or forward
+
+    emit backAvailable(false);
+    emit forwardAvailable(false);
 }
 
 void HelpWidget::gotoHomepage()
