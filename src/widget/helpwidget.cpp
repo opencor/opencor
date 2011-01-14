@@ -135,7 +135,7 @@ void HelpWidget::resetAll()
 
     history()->clear();
 
-    setZoomFactor(1.0);
+    resetZoom();
 
     // One would expect the history()->clear(); call to clear all of the
     //  history, but for some reason it sometimes still leaves one visited
@@ -152,14 +152,43 @@ void HelpWidget::gotoHomepage()
     load(mHomepage);
 }
 
-void HelpWidget::zoomIn(const qreal& pRange)
+int HelpWidget::minimumZoomLevel()
 {
-    setZoomFactor(zoomFactor()+0.1*pRange);
+    return 1;
 }
 
-void HelpWidget::zoomOut(const qreal& pRange)
+int HelpWidget::defaultZoomLevel()
 {
-    setZoomFactor(qMax(0.1, zoomFactor()-0.1*pRange));
+    return 10;
+}
+
+void HelpWidget::resetZoom()
+{
+    setZoomLevel(defaultZoomLevel());
+}
+
+void HelpWidget::zoomIn()
+{
+    setZoomLevel(++mZoomLevel);
+}
+
+void HelpWidget::zoomOut()
+{
+    setZoomLevel(qMax(minimumZoomLevel(), --mZoomLevel));
+}
+
+void HelpWidget::setZoomLevel(const int& pZoomLevel)
+{
+    mZoomLevel = pZoomLevel;
+
+    setZoomFactor(0.1*mZoomLevel);
+
+    emit zoomLevelChanged(mZoomLevel);
+}
+
+int HelpWidget::zoomLevel()
+{
+    return mZoomLevel;
 }
 
 void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
@@ -179,9 +208,9 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
         int delta = pEvent->delta();
 
         if (delta > 0)
-            zoomIn(0.01*delta);
+            zoomIn();
         else if (delta < 0)
-            zoomOut(-0.01*delta);
+            zoomOut();
 
         pEvent->accept();
     }

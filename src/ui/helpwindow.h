@@ -25,8 +25,10 @@ public:
 
     void gotoHomepage();
 
-    void setZoomFactor(const double& pZoomFactor);
-    double zoomFactor();
+    int defaultZoomLevel();
+
+    void setZoomLevel(const int& pZoomLevel);
+    int zoomLevel();
 
 private:
     Ui::HelpWindow *mUi;
@@ -40,6 +42,8 @@ private Q_SLOTS:
     void on_actionForward_triggered();
     void on_actionBack_triggered();
     void on_actionContents_triggered();
+
+    void checkNewZoomLevel(int pNewZoomLevel);
 };
 
 #endif // HELPWINDOW_H

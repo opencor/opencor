@@ -72,8 +72,16 @@ public:
 
     void gotoHomepage();
 
-    void zoomIn(const qreal& pRange = 1.0);
-    void zoomOut(const qreal& pRange = 1.0);
+    int minimumZoomLevel();
+    int defaultZoomLevel();
+
+    void resetZoom();
+
+    void zoomIn();
+    void zoomOut();
+
+    void setZoomLevel(const int& pZoomLevel);
+    int zoomLevel();
 
 protected:
     void mouseReleaseEvent(QMouseEvent *pEvent);
@@ -82,12 +90,16 @@ protected:
 private:
     QUrl mHomepage;
 
+    int mZoomLevel;
+
 private Q_SLOTS:
     void actionChanged();
 
 Q_SIGNALS:
     void backAvailable(bool pAvailable);
     void forwardAvailable(bool pAvailable);
+
+    void zoomLevelChanged(int pZoomLevel);
 };
 
 #endif

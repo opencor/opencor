@@ -1,5 +1,3 @@
-#include <QMessageBox>
-
 #include "helpwindow.h"
 #include "helpwidget.h"
 
@@ -30,6 +28,9 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
             mUi->backButton, SLOT(setEnabled(bool)));
     connect(mHelpWidget, SIGNAL(forwardAvailable(bool)),
             mUi->forwardButton, SLOT(setEnabled(bool)));
+
+    connect(mHelpWidget, SIGNAL(zoomLevelChanged(int)),
+            this, SLOT(checkNewZoomLevel(int)));
 }
 
 HelpWindow::~HelpWindow()
@@ -47,14 +48,19 @@ void HelpWindow::gotoHomepage()
     mHelpWidget->gotoHomepage();
 }
 
-void HelpWindow::setZoomFactor(const double& pZoomFactor)
+int HelpWindow::defaultZoomLevel()
 {
-    mHelpWidget->setZoomFactor(pZoomFactor);
+    return mHelpWidget->defaultZoomLevel();
 }
 
-double HelpWindow::zoomFactor()
+void HelpWindow::setZoomLevel(const int& pZoomLevel)
 {
-    return mHelpWidget->zoomFactor();
+    mHelpWidget->setZoomLevel(pZoomLevel);
+}
+
+int HelpWindow::zoomLevel()
+{
+    return mHelpWidget->zoomLevel();
 }
 
 void HelpWindow::on_actionContents_triggered()
@@ -72,6 +78,13 @@ void HelpWindow::on_actionForward_triggered()
     mHelpWidget->forward();
 }
 
+void HelpWindow::checkNewZoomLevel(int pNewZoomLevel)
+{
+    mUi->actionNormalSize->setEnabled(pNewZoomLevel != mHelpWidget->defaultZoomLevel());
+
+    mUi->actionZoomOut->setEnabled(pNewZoomLevel != mHelpWidget->minimumZoomLevel());
+}
+
 void HelpWindow::on_actionZoomIn_triggered()
 {
     mHelpWidget->zoomIn();
@@ -84,5 +97,5 @@ void HelpWindow::on_actionZoomOut_triggered()
 
 void HelpWindow::on_actionNormalSize_triggered()
 {
-    mHelpWidget->setZoomFactor(1.0);
+    mHelpWidget->resetZoom();
 }
