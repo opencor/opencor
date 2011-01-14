@@ -17,7 +17,8 @@ class HelpWindow : public QDockWidget
     Q_OBJECT
 
 public:
-    explicit HelpWindow(QHelpEngine *pEngine, const QUrl& pHomepage, QDockWidget *pParent = 0);
+    explicit HelpWindow(QHelpEngine *pEngine, const QUrl& pHomepage,
+                        QDockWidget *pParent = 0);
     ~HelpWindow();
 
     void resetAll();

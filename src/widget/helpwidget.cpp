@@ -1,5 +1,3 @@
-#include <QMessageBox>
-
 // Note: the HelpWidget class is result of some refactored code taken from Qt
 //       Assistant
 
@@ -45,10 +43,10 @@ qint64 HelpNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
     return len;
 }
 
-HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pEngine,
+HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
                                                    QObject *pParent) :
     QNetworkAccessManager(pParent),
-    mHelpEngine(pEngine)
+    mHelpEngine(pHelpEngine)
 {
     // Retrieve the error message template
 
@@ -56,18 +54,9 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pEngine,
 
     helpWidgetErrorFile.open(QIODevice::ReadOnly);
 
-    mErrorMsg = QString(helpWidgetErrorFile.readAll()).trimmed();
+    mErrorMsgTemplate = QString(helpWidgetErrorFile.readAll()).trimmed();
 
     helpWidgetErrorFile.close();
-
-    // Default network access manager (to be used to retrieved external pages)
-
-    mDefaultNetworkAccessManager = new QNetworkAccessManager(this);
-}
-
-HelpNetworkAccessManager::~HelpNetworkAccessManager()
-{
-    delete mDefaultNetworkAccessManager;
 }
 
 QString HelpNetworkAccessManager::errorMsg(const QString& pErrorMsg)
@@ -77,7 +66,7 @@ QString HelpNetworkAccessManager::errorMsg(const QString& pErrorMsg)
     QString copyright = tr("Copyright");
     QString contact = tr("Please use our <A HREF = \"http://sourceforge.net/projects/opencor/support\">support page</A> to tell us about this error.");
 
-    return mErrorMsg.arg(title, title, description, pErrorMsg, contact, copyright);
+    return mErrorMsgTemplate.arg(title, title, description, pErrorMsg, contact, copyright);
 }
 
 QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
@@ -92,28 +81,45 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
     else
         mimeType = "text/html";
 
-    QByteArray data;
+    QByteArray data = mHelpEngine->findFile(url).isValid()?
+                          mHelpEngine->fileData(url):
+                          QByteArray(errorMsg(tr("The following help file could not be found:")+" <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
 
-    if (url.scheme() == "qthelp")
-    {
-        data = mHelpEngine->findFile(url).isValid()?
-                   mHelpEngine->fileData(url):
-                   QByteArray(errorMsg(tr("The following help file could not be found:")+" <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
-
-        return new HelpNetworkReply(pRequest, data, mimeType);
-    }
-    else
-        return mDefaultNetworkAccessManager->get(QNetworkRequest(url));
+    return new HelpNetworkReply(pRequest, data, mimeType);
 }
 
-HelpWidget::HelpWidget(QHelpEngine *engine, const QUrl& pHomepage,
+HelpPage::HelpPage(QHelpEngine *pHelpEngine, QObject *pParent) :
+    QWebPage(pParent),
+    mHelpEngine(pHelpEngine)
+{
+}
+
+bool HelpPage::acceptNavigationRequest(QWebFrame*,
+                                       const QNetworkRequest& pRequest,
+                                       QWebPage::NavigationType)
+{
+    QUrl url = pRequest.url();
+
+    if (url.scheme() == "qthelp")
+        return true;
+    else
+    {
+        QDesktopServices::openUrl(url);
+
+        return false;
+    }
+}
+
+HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
                        QWidget *pParent) :
     QWebView(pParent),
     mHomepage(pHomepage)
 {
     setAcceptDrops(false);
 
-    page()->setNetworkAccessManager(new HelpNetworkAccessManager(engine, this));
+    setPage(new HelpPage(pHelpEngine, this));
+
+    page()->setNetworkAccessManager(new HelpNetworkAccessManager(pHelpEngine, this));
 
     installEventFilter(this);
 
@@ -123,10 +129,6 @@ HelpWidget::HelpWidget(QHelpEngine *engine, const QUrl& pHomepage,
             this, SLOT(actionChanged()));
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
             this, SLOT(actionChanged()));
-
-    // Prevent the text selection of any web page
-
-    page()->settings()->setUserStyleSheetUrl(QUrl::fromLocalFile(":noWebPageTextSelection"));
 
     // Load the homepage
 

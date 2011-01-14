@@ -30,21 +30,34 @@ private:
 class HelpNetworkAccessManager : public QNetworkAccessManager
 {
 public:
-    HelpNetworkAccessManager(QHelpEngine *pEngine, QObject *pParent);
-    ~HelpNetworkAccessManager();
+    HelpNetworkAccessManager(QHelpEngine *pHelpEngine, QObject *pParent);
 
 protected:
     virtual QNetworkReply *createRequest(Operation pOperation,
                                          const QNetworkRequest& pRequest,
-                                         QIODevice *pOutgoingData = NULL);
+                                         QIODevice *pOutgoingData = 0);
 
 private:
-    QNetworkAccessManager *mDefaultNetworkAccessManager;
-
     QHelpEngine *mHelpEngine;
-    QString mErrorMsg;
+    QString mErrorMsgTemplate;
 
     QString errorMsg(const QString& pErrorMsg);
+};
+
+class HelpPage : public QWebPage
+{
+public:
+    HelpPage(QHelpEngine *pHelpEngine, QObject *pParent);
+
+protected:
+    virtual bool acceptNavigationRequest(QWebFrame*,
+                                         const QNetworkRequest& pRequest,
+                                         QWebPage::NavigationType);
+
+private:
+    QHelpEngine *mHelpEngine;
+
+    friend class HelpWidget;
 };
 
 class HelpWidget : public QWebView
@@ -52,7 +65,7 @@ class HelpWidget : public QWebView
     Q_OBJECT
 
 public:
-    HelpWidget(QHelpEngine *pEngine, const QUrl& pHomepage,
+    HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
                QWidget *pParent = 0);
 
     void resetAll();
