@@ -30,6 +30,9 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 
     // Some connections
 
+    connect(mHelpWidget, SIGNAL(urlChanged(const QUrl&)),
+            this, SLOT(checkUrlChanged(const QUrl&)));
+
     connect(mHelpWidget, SIGNAL(backAvailable(bool)),
             mUi->backButton, SLOT(setEnabled(bool)));
     connect(mHelpWidget, SIGNAL(forwardAvailable(bool)),
@@ -82,6 +85,11 @@ void HelpWindow::on_actionBack_triggered()
 void HelpWindow::on_actionForward_triggered()
 {
     mHelpWidget->forward();
+}
+
+void HelpWindow::checkUrlChanged(const QUrl& pNewUrl)
+{
+    mUi->contentsButton->setEnabled(pNewUrl != mHelpWidget->homepage());
 }
 
 void HelpWindow::checkNewZoomLevel(int pNewZoomLevel)

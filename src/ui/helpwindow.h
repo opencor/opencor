@@ -43,6 +43,7 @@ private Q_SLOTS:
     void on_actionBack_triggered();
     void on_actionContents_triggered();
 
+    void checkUrlChanged(const QUrl& pNewUrl);
     void checkNewZoomLevel(int pNewZoomLevel);
 };
 

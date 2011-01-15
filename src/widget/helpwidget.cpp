@@ -153,6 +153,11 @@ void HelpWidget::resetAll()
     emit forwardAvailable(false);
 }
 
+QUrl HelpWidget::homepage()
+{
+    return mHomepage;
+}
+
 void HelpWidget::gotoHomepage()
 {
     load(mHomepage);

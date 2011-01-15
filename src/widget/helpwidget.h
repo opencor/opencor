@@ -70,6 +70,7 @@ public:
 
     void resetAll();
 
+    QUrl homepage();
     void gotoHomepage();
 
     int minimumZoomLevel();
