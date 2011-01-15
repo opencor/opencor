@@ -10,9 +10,7 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 {
     mUi->setupUi(this);
 
-    mHelpWidget = new HelpWidget(pHelpEngine, pHomepage);
-
-    mUi->verticalLayout->addWidget(mHelpWidget);
+    // Assign an action to the different 'toolbar' buttons
 
     mUi->contentsButton->setDefaultAction(mUi->actionContents);
 
@@ -23,6 +21,18 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 
     mUi->zoomInButton->setDefaultAction(mUi->actionZoomIn);
     mUi->zoomOutButton->setDefaultAction(mUi->actionZoomOut);
+
+    // Add a tiny bit of space between the 'toolbar' and the help widget
+
+    mUi->verticalLayout->addSpacing(1);
+
+    // Help widget
+
+    mHelpWidget = new HelpWidget(pHelpEngine, pHomepage);
+
+    mUi->verticalLayout->addWidget(mHelpWidget);
+
+    // Some connections
 
     connect(mHelpWidget, SIGNAL(backAvailable(bool)),
             mUi->backButton, SLOT(setEnabled(bool)));
