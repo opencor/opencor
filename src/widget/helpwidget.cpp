@@ -116,12 +116,11 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
     mHomepage(pHomepage)
 {
     setAcceptDrops(false);
+    setContextMenuPolicy(Qt::NoContextMenu);
 
     setPage(new HelpPage(pHelpEngine, this));
 
     page()->setNetworkAccessManager(new HelpNetworkAccessManager(pHelpEngine, this));
-
-    setContextMenuPolicy(Qt::NoContextMenu);
 
     connect(pageAction(QWebPage::Back), SIGNAL(changed()),
             this, SLOT(actionChanged()));

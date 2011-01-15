@@ -12,7 +12,7 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 
     // Assign an action to the different 'toolbar' buttons
 
-    mUi->contentsButton->setDefaultAction(mUi->actionContents);
+    mUi->homepageButton->setDefaultAction(mUi->actionHomepage);
 
     mUi->backButton->setDefaultAction(mUi->actionBack);
     mUi->forwardButton->setDefaultAction(mUi->actionForward);
@@ -72,7 +72,7 @@ int HelpWindow::zoomLevel()
     return mHelpWidget->zoomLevel();
 }
 
-void HelpWindow::on_actionContents_triggered()
+void HelpWindow::on_actionHomepage_triggered()
 {
     mHelpWidget->gotoHomepage();
 }
@@ -89,7 +89,7 @@ void HelpWindow::on_actionForward_triggered()
 
 void HelpWindow::checkUrlChanged(const QUrl& pNewUrl)
 {
-    mUi->contentsButton->setEnabled(pNewUrl != mHelpWidget->homepage());
+    mUi->homepageButton->setEnabled(pNewUrl != mHelpWidget->homepage());
 }
 
 void HelpWindow::checkNewZoomLevel(int pNewZoomLevel)
