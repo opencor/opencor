@@ -22,10 +22,6 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
     mUi->zoomInButton->setDefaultAction(mUi->actionZoomIn);
     mUi->zoomOutButton->setDefaultAction(mUi->actionZoomOut);
 
-    // Add a tiny bit of space between the 'toolbar' and the help widget
-
-    mUi->verticalLayout->addSpacing(1);
-
     // Help widget
 
     mHelpWidget = new HelpWidget(pHelpEngine, pHomepage);

@@ -330,7 +330,8 @@ void MainWindow::resetAll(const bool& pClearUserSettings)
     const double horizSpace = spaceRatio*qApp->desktop()->width();
     const double vertSpace  = 2.0*spaceRatio*qApp->desktop()->height();
 
-    mHelpWindow->setVisible(false);   // By default
+    mHelpWindow->setVisible(false);   // So we can set things up without any
+                                      // flashing of the screen
 
     addDockWidget(Qt::RightDockWidgetArea, mHelpWindow);
     // Note: the above is only required so that the help window can then be
@@ -345,9 +346,9 @@ void MainWindow::resetAll(const bool& pClearUserSettings)
     move(QPoint(horizSpace, vertSpace));
     mHelpWindow->move(QPoint(qApp->desktop()->width()-mHelpWindow->size().width()-horizSpace, vertSpace));
 
-    // Default settings for the help widget
-
     mHelpWindow->resetAll();
+
+    mHelpWindow->setVisible(true);   // Default visibility of the help window
 
     // Default visibility and location of the various toolbars
 
