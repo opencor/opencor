@@ -110,10 +110,10 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
     }
 }
 
-HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
+HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomePage,
                        QWidget *pParent) :
     QWebView(pParent),
-    mHomepage(pHomepage)
+    mHomePage(pHomePage)
 {
     setAcceptDrops(false);
     setContextMenuPolicy(Qt::NoContextMenu);
@@ -130,7 +130,7 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 
 void HelpWidget::resetAll()
 {
-    gotoHomepage();
+    gotoHomePage();
 
     history()->clear();
 
@@ -152,14 +152,14 @@ void HelpWidget::resetAll()
     emit forwardAvailable(false);
 }
 
-QUrl HelpWidget::homepage()
+QUrl HelpWidget::homePage()
 {
-    return mHomepage;
+    return mHomePage;
 }
 
-void HelpWidget::gotoHomepage()
+void HelpWidget::gotoHomePage()
 {
-    load(mHomepage);
+    load(mHomePage);
 }
 
 int HelpWidget::minimumZoomLevel()

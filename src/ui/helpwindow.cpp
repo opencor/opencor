@@ -3,7 +3,7 @@
 
 #include "ui_helpwindow.h"
 
-HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
+HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomePage,
                        QDockWidget *pParent) :
     QDockWidget(pParent),
     mUi(new Ui::HelpWindow)
@@ -12,7 +12,7 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 
     // Assign an action to the different 'toolbar' buttons
 
-    mUi->homepageButton->setDefaultAction(mUi->actionHomepage);
+    mUi->homeButton->setDefaultAction(mUi->actionHome);
 
     mUi->backButton->setDefaultAction(mUi->actionBack);
     mUi->forwardButton->setDefaultAction(mUi->actionForward);
@@ -24,7 +24,7 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
 
     // Help widget
 
-    mHelpWidget = new HelpWidget(pHelpEngine, pHomepage);
+    mHelpWidget = new HelpWidget(pHelpEngine, pHomePage);
 
     mUi->verticalLayout->addWidget(mHelpWidget);
 
@@ -52,9 +52,9 @@ void HelpWindow::resetAll()
     mHelpWidget->resetAll();
 }
 
-void HelpWindow::gotoHomepage()
+void HelpWindow::gotoHomePage()
 {
-    mHelpWidget->gotoHomepage();
+    mHelpWidget->gotoHomePage();
 }
 
 int HelpWindow::defaultZoomLevel()
@@ -72,9 +72,9 @@ int HelpWindow::zoomLevel()
     return mHelpWidget->zoomLevel();
 }
 
-void HelpWindow::on_actionHomepage_triggered()
+void HelpWindow::on_actionHome_triggered()
 {
-    mHelpWidget->gotoHomepage();
+    mHelpWidget->gotoHomePage();
 }
 
 void HelpWindow::on_actionBack_triggered()
@@ -89,7 +89,7 @@ void HelpWindow::on_actionForward_triggered()
 
 void HelpWindow::checkUrlChanged(const QUrl& pNewUrl)
 {
-    mUi->homepageButton->setEnabled(pNewUrl != mHelpWidget->homepage());
+    mUi->homeButton->setEnabled(pNewUrl != mHelpWidget->homePage());
 }
 
 void HelpWindow::checkNewZoomLevel(int pNewZoomLevel)
