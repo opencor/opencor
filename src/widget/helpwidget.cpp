@@ -75,19 +75,16 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
                                                        const QNetworkRequest& pRequest,
                                                        QIODevice*)
 {
-    QUrl url = pRequest.url();
-    QString mimeType = url.toString();
-
-    if (mimeType.endsWith(".txt"))
-        mimeType = "text/plain";
-    else
-        mimeType = "text/html";
+    QUrl url = pRequest.url().toString();
+    // Note: the conversion to a string shouldn't be necessary, but for some
+    //       reason it's required if we want the help engine to find the URL
+    //      (?!), so...
 
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
                           QByteArray(errorMsg(tr("The following help file could not be found:")+" <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
 
-    return new HelpNetworkReply(pRequest, data, mimeType);
+    return new HelpNetworkReply(pRequest, data, "text/html");
 }
 
 HelpPage::HelpPage(QHelpEngine *pHelpEngine, QObject *pParent) :
@@ -128,6 +125,10 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
             this, SLOT(actionChanged()));
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
             this, SLOT(actionChanged()));
+
+    // Prevent text selection
+
+    page()->settings()->setUserStyleSheetUrl(QUrl::fromLocalFile(":noTextSelection"));
 }
 
 void HelpWidget::defaultSettings()

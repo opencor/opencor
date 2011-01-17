@@ -16,5 +16,6 @@
         <file alias="qchFile">../build/OpenCOR.qch</file>
         <file alias="qhcFile">../build/OpenCOR.qhc</file>
         <file alias="helpWidgetError">helpWidgetError.html</file>
+        <file alias="noTextSelection">noTextSelection.css</file>
     </qresource>
 </RCC>
