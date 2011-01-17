@@ -4,7 +4,9 @@
 #include "helpwidget.h"
 
 #include <QAction>
+#include <QApplication>
 #include <QDesktopServices>
+#include <QDesktopWidget>
 #include <QFile>
 #include <QHelpEngine>
 #include <QTimer>
@@ -136,9 +138,8 @@ void HelpWidget::resetAll()
 
     resetZoom();
 
-    // One would expect the history()->clear(); call to clear all of the
-    //  history, but for some reason it sometimes still leaves one visited
-    // page, so...
+    // One would expect history()->clear(); to clear all of the history, but
+    // for some reason it sometimes still leaves one visited page, so...
 
     int maximumItemCount = history()->maximumItemCount();
 
@@ -226,6 +227,14 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
     }
     else
         QWebView::wheelEvent(pEvent);
+}
+
+QSize HelpWidget::sizeHint() const
+{
+    const double spaceRatio = 1.0/7.0;
+    const QRect desktopGeometry = qApp->desktop()->availableGeometry();
+
+    return QSize(spaceRatio*desktopGeometry.width(), spaceRatio*desktopGeometry.height());
 }
 
 void HelpWidget::actionChanged()

@@ -88,6 +88,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *pEvent);
     void wheelEvent(QWheelEvent *pEvent);
 
+    QSize sizeHint() const;
+
 private:
     QUrl mHomepage;
 
