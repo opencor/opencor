@@ -69,7 +69,7 @@ MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
     tempDir.open();    // Note: this is required to get a 'valid' temporary
     tempDir.close();   //       directory name...
 
-    mTempDirName = tempDir.fileName().append(".dir");
+    mTempDirName = tempDir.fileName().append("."+qApp->applicationName());
 
     QDir().mkdir(mTempDirName);
 
