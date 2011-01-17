@@ -21,7 +21,7 @@ public:
                         QDockWidget *pParent = 0);
     ~HelpWindow();
 
-    void resetAll();
+    void defaultSettings();
 
     void gotoHomepage();
 

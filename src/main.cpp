@@ -5,66 +5,74 @@
 
 int main(int pArgc, char *pArgv[])
 {
-    QtSingleApplication app(pArgc, pArgv);
+    int res;
+    bool restart = false;
 
-    // Send a message (containing the arguments that were passed to this
-    // instance of OpenCOR) to the 'official' instance of OpenCOR, should there
-    // be one. If there is no 'official' instance of OpenCOR, then just carry
-    // on as normal, otherwise exit since we only want one instance of OpenCOR
-    // at any given time
-
-    if (app.isRunning())
+    do
     {
-        app.sendMessage(app.arguments().join(" "));
+        QtSingleApplication app(pArgc, pArgv);
 
-        return 0;
-    }
+        // Send a message (containing the arguments that were passed to this
+        // instance of OpenCOR) to the 'official' instance of OpenCOR, should
+        // there be one. If there is no 'official' instance of OpenCOR, then
+        // just carry on as normal, otherwise exit since we only want one
+        // instance of OpenCOR at any given time
 
-    // Set the name of the application
+        if (app.isRunning())
+        {
+            app.sendMessage(app.arguments().join(" "));
 
-    app.setApplicationName(QFileInfo(app.applicationFilePath()).baseName());
+            return 0;
+        }
 
-    // Retrieve and set the version of the application
+        // Set the name of the application
 
-    QFile versionFile(":version");
+        app.setApplicationName(QFileInfo(app.applicationFilePath()).baseName());
 
-    versionFile.open(QIODevice::ReadOnly);
+        // Retrieve and set the version of the application
 
-    QString version = QString(versionFile.readLine()).trimmed();
+        QFile versionFile(":version");
 
-    if (version.endsWith(".0"))
-        // There is no actual patch information, so trim it
+        versionFile.open(QIODevice::ReadOnly);
 
-        version.truncate(version.length()-2);
+        QString version = QString(versionFile.readLine()).trimmed();
 
-    versionFile.close();
+        if (version.endsWith(".0"))
+            // There is no actual patch information, so trim it
 
-    app.setApplicationVersion(version);
+            version.truncate(version.length()-2);
 
-    // Create the main window
+        versionFile.close();
 
-    MainWindow win;
-    // Note: the application icon (which is useful for Linux, since in the case
-    //       of Windows and Mac, it's set through CMake (see CMakeLists.txt))
-    //       is set within the UI file. Otherwise, it's good to have it set for
-    //       all three platforms, since it can then be used in, for example,
-    //       the about box...
+        app.setApplicationVersion(version);
 
-    // Keep track of the main window (useful for QtSingleApplication)
+        // Create the main window
 
-    app.setActivationWindow(&win);
+        MainWindow win(&restart);
+        // Note: the application icon (which is useful for Linux, since in the
+        //       case of Windows and Mac, it's set through CMake (see
+        //       CMakeLists.txt)) is set within the UI file. Otherwise, it's
+        //       good to have it set for all three platforms, since it can then
+        //       be used in, for example, the about box...
 
-    // Make sure that OpenCOR can handle the message sent by another instance
-    // of itself
+        // Keep track of the main window (useful for QtSingleApplication)
 
-    QObject::connect(&app, SIGNAL(messageReceived(const QString&)),
-                     &win, SLOT(singleAppMsgRcvd(const QString&)));
+        app.setActivationWindow(&win);
 
-    // Show the main window
+        // Make sure that OpenCOR can handle the message sent by another
+        // instance of itself
 
-    win.show();
+        QObject::connect(&app, SIGNAL(messageReceived(const QString&)),
+                         &win, SLOT(singleAppMsgRcvd(const QString&)));
 
-    // Execute the application
+        // Show the main window
 
-    return app.exec();
+        win.show();
+
+        // Execute the application
+
+        res = app.exec();
+    } while (restart);
+
+    return res;
 }

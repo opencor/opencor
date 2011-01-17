@@ -68,7 +68,7 @@ public:
     HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
                QWidget *pParent = 0);
 
-    void resetAll();
+    void defaultSettings();
 
     QUrl homepage();
     void gotoHomepage();

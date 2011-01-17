@@ -130,7 +130,7 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
             this, SLOT(actionChanged()));
 }
 
-void HelpWidget::resetAll()
+void HelpWidget::defaultSettings()
 {
     gotoHomepage();
 

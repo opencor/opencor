@@ -30,13 +30,19 @@
 #define SETTINGS_GENERAL_STATE "General_State"
 #define SETTINGS_HELPWINDOW_ZOOMLEVEL "HelpWindow_ZoomLevel"
 
-MainWindow::MainWindow(QWidget *pParent) :
+MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
     QMainWindow(pParent),
-    mUi(new Ui::MainWindow)
+    mUi(new Ui::MainWindow),
+    mRestart(pRestart)
 {
     // Set up the GUI
 
     mUi->setupUi(this);
+
+    // By default, we don't want OpenCOR to restart automatically upon exiting
+    // it
+
+    *mRestart = false;
 
     // Set the name of the main window to that of the application
 
@@ -90,9 +96,10 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionHelp, SLOT(setChecked(bool)));
 
-    // Default user settings
+    // Default user settings (useful the very first time we start OpenCOR or
+    // after a reset all)
 
-    resetAll(false);
+    defaultSettings();
 
     // Retrieve our default settings
 
@@ -121,13 +128,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
-    // Keep track of our default settings
+    // Keep track of our default settings, but only if we don't want to restart
+    // OpenCOR (i.e. as a result of a reset all)
     // Note: it must be done here, as opposed to the destructor, otherwise some
     //       settings (e.g. docked windows) won't be properly saved
 
-    saveSettings();
+    if (!*mRestart)
+    {
+        saveSettings();
 
-    pEvent->accept();
+        pEvent->accept();
+    }
 }
 
 
@@ -197,6 +208,52 @@ void MainWindow::singleAppMsgRcvd(const QString&)
     // Now, we must handle the arguments that were passed to us
 
     // TODO: handle the arguments passed to the 'official' instance of OpenCOR
+}
+
+void MainWindow::resetAll()
+{
+    // Clear all the user settings and asked for OpenCOR to be restarted
+    // (indeed, a restart will ensure that all the docked windows are properly
+    // reset with regards to their dimensions)
+
+    QSettings(SETTINGS_INSTITUTION, qApp->applicationName()).clear();
+
+    *mRestart = true;
+
+    close();
+}
+
+void MainWindow::defaultSettings()
+{
+    // Default language to be used by OpenCOR
+
+    setLocale(QLocale::system().name());
+
+    // Default size and position of the main window
+
+    const double spaceRatio = 1.0/13.0;
+    const QRect desktopGeometry = qApp->desktop()->availableGeometry();
+    const int horizSpace = spaceRatio*desktopGeometry.width();
+    const int vertSpace  = spaceRatio*desktopGeometry.height();
+
+    setGeometry(desktopGeometry.left()+horizSpace, desktopGeometry.top()+vertSpace, desktopGeometry.width()-2*horizSpace, desktopGeometry.height()-2*vertSpace);
+
+    // Default size and position of the help window
+
+    mHelpWindow->setVisible(false);   // So we can set things up without having
+                                      // the screen flashing
+
+    addDockWidget(Qt::RightDockWidgetArea, mHelpWindow);
+
+    mHelpWindow->defaultSettings();
+
+    mHelpWindow->setVisible(true);
+
+    // Default visibility and location of the various toolbars
+
+    addToolBar(Qt::TopToolBarArea, mUi->helpToolbar);
+
+    mUi->helpToolbar->setVisible(true);
 }
 
 void MainWindow::loadSettings()
@@ -314,50 +371,4 @@ void MainWindow::on_actionAbout_triggered()
                        "</CENTER>"+
                        "<BR>"+
                        "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+qApp->applicationName()+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
-}
-
-void MainWindow::resetAll(const bool& pClearUserSettings)
-{
-    // Default language to be used by OpenCOR
-
-    setLocale(QLocale::system().name());
-
-    // Default size and position of both the main and help windows
-
-    const double mainRatio = 3.0/5.0;
-    const double helpRatio = 1.0/3.0;
-    const double spaceRatio = 1.0/45.0;
-    const double horizSpace = spaceRatio*qApp->desktop()->width();
-    const double vertSpace  = 2.0*spaceRatio*qApp->desktop()->height();
-
-    mHelpWindow->setVisible(false);   // So we can set things up without any
-                                      // flashing of the screen
-
-    addDockWidget(Qt::RightDockWidgetArea, mHelpWindow);
-    // Note: the above is only required so that the help window can then be
-    //       docked to the main window, should the user want to do that.
-    //       Indeed, to make the help window float is not sufficient, so...
-
-    mHelpWindow->setFloating(true);
-
-    resize(QSize(mainRatio*qApp->desktop()->width(), mainRatio*qApp->desktop()->height()));
-    mHelpWindow->resize(helpRatio*qApp->desktop()->width(), size().height());
-
-    move(QPoint(horizSpace, vertSpace));
-    mHelpWindow->move(QPoint(qApp->desktop()->width()-mHelpWindow->size().width()-horizSpace, vertSpace));
-
-    mHelpWindow->resetAll();
-
-    mHelpWindow->setVisible(true);   // Default visibility of the help window
-
-    // Default visibility and location of the various toolbars
-
-    this->addToolBar(Qt::TopToolBarArea, mUi->helpToolbar);
-
-    mUi->helpToolbar->setVisible(true);
-
-    // Clear all the user settings, if required
-
-    if (pClearUserSettings)
-        QSettings(SETTINGS_INSTITUTION, qApp->applicationName()).clear();
 }

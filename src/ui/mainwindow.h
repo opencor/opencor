@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *pParent = 0);
+    explicit MainWindow(bool *pRestart, QWidget *pParent = 0);
     ~MainWindow();
 
 protected:
@@ -26,6 +26,8 @@ protected:
 private:
     Ui::MainWindow *mUi;
 
+    bool *mRestart;
+
     QString mLocale;
 
     QHelpEngine *mHelpEngine;
@@ -33,6 +35,8 @@ private:
 
     QString mTempDirName;
     QString mQchFileName, mQhcFileName;
+
+    void defaultSettings();
 
     void loadSettings();
     void saveSettings();
@@ -46,7 +50,7 @@ private:
 public Q_SLOTS:
     void singleAppMsgRcvd(const QString&);
 
-    void resetAll(const bool& pClearUserSettings = true);
+    void resetAll();
 
 private Q_SLOTS:
     void on_actionAbout_triggered();

@@ -47,9 +47,9 @@ HelpWindow::~HelpWindow()
     delete mUi;
 }
 
-void HelpWindow::resetAll()
+void HelpWindow::defaultSettings()
 {
-    mHelpWidget->resetAll();
+    mHelpWidget->defaultSettings();
 }
 
 void HelpWindow::gotoHomepage()
