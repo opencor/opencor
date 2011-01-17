@@ -54,7 +54,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void on_actionAbout_triggered();
-    void on_actionHomepage_triggered();
+    void on_actionHomePage_triggered();
     void on_actionFrench_triggered();
     void on_actionEnglish_triggered();
 };

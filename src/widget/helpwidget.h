@@ -65,13 +65,13 @@ class HelpWidget : public QWebView
     Q_OBJECT
 
 public:
-    HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomepage,
+    HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomePage,
                QWidget *pParent = 0);
 
     void defaultSettings();
 
-    QUrl homepage();
-    void gotoHomepage();
+    QUrl homePage();
+    void gotoHomePage();
 
     int minimumZoomLevel();
     int defaultZoomLevel();
@@ -91,7 +91,7 @@ protected:
     QSize sizeHint() const;
 
 private:
-    QUrl mHomepage;
+    QUrl mHomePage;
 
     int mZoomLevel;
 

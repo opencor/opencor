@@ -28,12 +28,12 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QToolButton" name="homepageButton">
+       <widget class="QToolButton" name="homeButton">
         <property name="focusPolicy">
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="text">
-         <string>Homepage</string>
+         <string>Home</string>
         </property>
         <property name="iconSize">
          <size>
@@ -191,16 +191,16 @@
     </item>
    </layout>
   </widget>
-  <action name="actionHomepage">
+  <action name="actionHome">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/homepage.png</normaloff>:/homepage.png</iconset>
+     <normaloff>:/home.png</normaloff>:/home.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Homepage</string>
+    <string>&amp;Home</string>
    </property>
    <property name="statusTip">
-    <string>Go to the homepage</string>
+    <string>Go to the home page</string>
    </property>
    <property name="shortcut">
     <string>Home</string>

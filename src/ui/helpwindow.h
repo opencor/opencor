@@ -17,13 +17,13 @@ class HelpWindow : public QDockWidget
     Q_OBJECT
 
 public:
-    explicit HelpWindow(QHelpEngine *pEngine, const QUrl& pHomepage,
+    explicit HelpWindow(QHelpEngine *pEngine, const QUrl& pHomePage,
                         QDockWidget *pParent = 0);
     ~HelpWindow();
 
     void defaultSettings();
 
-    void gotoHomepage();
+    void gotoHomePage();
 
     int defaultZoomLevel();
 
@@ -41,7 +41,7 @@ private Q_SLOTS:
     void on_actionZoomIn_triggered();
     void on_actionForward_triggered();
     void on_actionBack_triggered();
-    void on_actionHomepage_triggered();
+    void on_actionHome_triggered();
 
     void checkUrlChanged(const QUrl& pNewUrl);
     void checkNewZoomLevel(int pNewZoomLevel);

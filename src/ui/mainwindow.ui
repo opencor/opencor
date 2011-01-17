@@ -54,7 +54,7 @@
     </property>
     <addaction name="actionHelp"/>
     <addaction name="separator"/>
-    <addaction name="actionHomepage"/>
+    <addaction name="actionHomePage"/>
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
@@ -163,16 +163,16 @@
     <bool>true</bool>
    </property>
   </action>
-  <action name="actionHomepage">
+  <action name="actionHomePage">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/homepage.png</normaloff>:/homepage.png</iconset>
+     <normaloff>:/home.png</normaloff>:/home.png</iconset>
    </property>
    <property name="text">
-    <string>Home&amp;page</string>
+    <string>Home &amp;Page</string>
    </property>
    <property name="statusTip">
-    <string>Look up the OpenCOR homepage</string>
+    <string>Look up the OpenCOR home page</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>

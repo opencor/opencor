@@ -354,7 +354,7 @@ void MainWindow::updateGUI()
     mUi->actionHelpToolbar->setChecked(mUi->helpToolbar->isVisible());
 }
 
-void MainWindow::on_actionHomepage_triggered()
+void MainWindow::on_actionHomePage_triggered()
 {
     // Look up the OpenCOR home page
 
