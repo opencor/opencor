@@ -109,6 +109,13 @@ MainWindow::MainWindow(bool *pRestart, QTranslator *pQtTranslator,
     // of loading OpenCOR's settings
 
     updateGUI();
+
+    // Bring ourselves to the foreground (this is required when we come here as
+    // a result of a reset all on Mac OS X)
+
+#ifdef Q_WS_MAC
+    raise();
+#endif
 }
 
 MainWindow::~MainWindow()

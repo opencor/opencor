@@ -79,16 +79,16 @@ SET(${PROJECT_NAME}_LANGUAGES
     fr
 )
 
-FOREACH(LANG_FILE ${${PROJECT_NAME}_LANGUAGES})
+FOREACH(LANGUAGE ${${PROJECT_NAME}_LANGUAGES})
     EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} ${${PROJECT_NAME}_SOURCES}
                                                      ${${PROJECT_NAME}_HEADERS}
                                                      ${${PROJECT_NAME}_HEADERS_MOC}
                                                      ${${PROJECT_NAME}_UIS}
-                                                 -ts i18n/${PROJECT_NAME}_${LANG_FILE}.ts
+                                                 -ts i18n/${PROJECT_NAME}_${LANGUAGE}.ts
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-    EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} i18n/${PROJECT_NAME}_${LANG_FILE}.ts
-                                                  -qm build/${PROJECT_NAME}_${LANG_FILE}.qm
+    EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} i18n/${PROJECT_NAME}_${LANGUAGE}.ts
+                                                  -qm build/${PROJECT_NAME}_${LANGUAGE}.qm
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 ENDFOREACH()
 
