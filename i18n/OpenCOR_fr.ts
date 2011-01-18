@@ -5,15 +5,15 @@
     <name>HelpNetworkAccessManager</name>
     <message>
         <source>OpenCOR Help Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur Aide OpenCOR</translation>
     </message>
     <message>
         <source>Description</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Please use our &lt;A HREF = &quot;http://sourceforge.net/projects/opencor/support&quot;&gt;support page&lt;/A&gt; to tell us about this error.</source>
@@ -21,14 +21,14 @@
     </message>
     <message>
         <source>The following help file could not be found:</source>
-        <translation type="unfinished"></translation>
+        <translation>Le fichier d&apos;aide suivant n&apos;a pu être trouvé :</translation>
     </message>
 </context>
 <context>
     <name>HelpWindow</name>
     <message>
         <source>OpenCOR Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Aide OpenCOR</translation>
     </message>
     <message>
         <source>Home</source>
@@ -72,7 +72,7 @@
     </message>
     <message>
         <source>Alt+Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+Gauche</translation>
     </message>
     <message>
         <source>&amp;Forward</source>
@@ -84,7 +84,7 @@
     </message>
     <message>
         <source>Alt+Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+Droit</translation>
     </message>
     <message>
         <source>Zoom &amp;In</source>
@@ -96,7 +96,7 @@
     </message>
     <message>
         <source>Ctrl++</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Zoom &amp;Out</source>
@@ -108,7 +108,7 @@
     </message>
     <message>
         <source>Ctrl+-</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Normal Size</source>
@@ -120,106 +120,98 @@
     </message>
     <message>
         <source>Ctrl+0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>MainWindow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Fichier</translation>
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Ou&amp;tils</translation>
     </message>
     <message>
         <source>&amp;Language</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Langage</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;?</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Voir</translation>
     </message>
     <message>
         <source>&amp;Toolbars</source>
-        <translation type="unfinished"></translation>
+        <translation>Barres d&apos;Ou&amp;tils</translation>
     </message>
     <message>
         <source>&amp;Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Quitter</translation>
     </message>
     <message>
         <source>Exit OpenCOR</source>
-        <translation type="unfinished"></translation>
+        <translation>Quitter OpenCOR</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;English</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Anglais</translation>
     </message>
     <message>
         <source>Select English as the language used by OpenCOR</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner l&apos;anglais comme langue utilisée par OpenCOR</translation>
     </message>
     <message>
         <source>&amp;French</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Français</translation>
     </message>
     <message>
         <source>Select French as the language used by OpenCOR</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner le français comme langue utilisée par OpenCOR</translation>
     </message>
     <message>
         <source>Look up the OpenCOR help</source>
-        <translation type="unfinished"></translation>
+        <translation>Consulter l&apos;aide d&apos;OpenCOR</translation>
     </message>
     <message>
         <source>F1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Home &amp;Page</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Page d&apos;Accueil</translation>
     </message>
     <message>
         <source>Look up the OpenCOR home page</source>
-        <translation type="unfinished"></translation>
+        <translation>Consulter la page d&apos;accueil d&apos;OpenCOR</translation>
     </message>
     <message>
         <source>&amp;About...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;A Propos</translation>
     </message>
     <message>
         <source>Some general information about OpenCOR</source>
-        <translation type="unfinished"></translation>
+        <translation>Quelques informations générales sur OpenCOR</translation>
     </message>
     <message>
         <source>&amp;Reset All</source>
-        <translation type="unfinished"></translation>
+        <translation>Tout &amp;Réinitialiser</translation>
     </message>
     <message>
         <source>Reset all the user settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Réinitialiser tous les paramètres utilisateurs</translation>
     </message>
     <message>
         <source>Show/hide the Help toolbar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> has not yet been implemented...</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer/cacher la barre d&apos;outil d&apos;aide</translation>
     </message>
     <message>
         <source>is a cross-platform &lt;A HREF = &quot;http://www.cellml.org/&quot;&gt;CellML&lt;/A&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>

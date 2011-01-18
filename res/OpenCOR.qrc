@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file alias="appIcon">OpenCOR.png</file>
+        <file alias="app_fr">../build/OpenCOR_fr.qm</file>
         <file>en.png</file>
         <file>fr.png</file>
         <file>about.png</file>

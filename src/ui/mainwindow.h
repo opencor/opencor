@@ -11,13 +11,15 @@ class HelpWindow;
 
 class QHelpEngine;
 class QSettings;
+class QTranslator;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(bool *pRestart, QWidget *pParent = 0);
+    explicit MainWindow(bool *pRestart, QTranslator *pQtTranslator,
+                        QTranslator *pAppTranslator, QWidget *pParent = 0);
     ~MainWindow();
 
 protected:
@@ -29,6 +31,9 @@ private:
     bool *mRestart;
 
     QString mLocale;
+
+    QTranslator *mQtTranslator;
+    QTranslator *mAppTranslator;
 
     QHelpEngine *mHelpEngine;
     HelpWindow *mHelpWindow;
@@ -42,8 +47,6 @@ private:
     void saveSettings();
 
     void setLocale(const QString& pLocale);
-
-    void notYetImplemented(const QString& pMsg);
 
     void updateGUI();
 

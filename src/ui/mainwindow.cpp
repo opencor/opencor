@@ -15,9 +15,11 @@
 #include <QDesktopWidget>
 #include <QDir>
 #include <QHelpEngine>
+#include <QLibraryInfo>
 #include <QMessageBox>
 #include <QSettings>
 #include <QTemporaryFile>
+#include <QTranslator>
 #include <QUrl>
 
 #define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
@@ -30,10 +32,13 @@
 #define SETTINGS_GENERAL_STATE "General_State"
 #define SETTINGS_HELPWINDOW_ZOOMLEVEL "HelpWindow_ZoomLevel"
 
-MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
+MainWindow::MainWindow(bool *pRestart, QTranslator *pQtTranslator,
+                       QTranslator *pAppTranslator, QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
-    mRestart(pRestart)
+    mRestart(pRestart),
+    mQtTranslator(pQtTranslator),
+    mAppTranslator(pAppTranslator)
 {
     // Set up the GUI
 
@@ -253,7 +258,7 @@ void MainWindow::loadSettings()
 {
     QSettings settings(SETTINGS_INSTITUTION, qApp->applicationName());
 
-    // Retrieve the language to be used by OpenCOR, with a default just in case
+    // Retrieve the language to be used by OpenCOR
 
     setLocale(settings.value(SETTINGS_GENERAL_LOCALE, QLocale::system().name()).toString());
 
@@ -265,8 +270,7 @@ void MainWindow::loadSettings()
 
     restoreState(settings.value(SETTINGS_GENERAL_STATE).toByteArray());
 
-    // Retrieve the zoom level for the help widget, with a default value just
-    // in case
+    // Retrieve the zoom level for the help widget
 
     mHelpWindow->setZoomLevel(settings.value(SETTINGS_HELPWINDOW_ZOOMLEVEL, mHelpWindow->defaultZoomLevel()).toInt());
 }
@@ -296,34 +300,25 @@ void MainWindow::setLocale(const QString& pLocale)
 {
     if (pLocale != mLocale)
     {
-        mLocale = pLocale;
+        mLocale = pLocale.left(2);
 
         // Specify the language to be used by OpenCOR
 
-//        qApp->removeTranslator(qtTranslator);
-//        qtTranslator->load("qt_"+pLocale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-//        qApp->installTranslator(qtTranslator);
+        qApp->removeTranslator(mQtTranslator);
+        mQtTranslator->load("qt_"+mLocale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+        qApp->installTranslator(mQtTranslator);
 
-//        qApp->removeTranslator(appTranslator);
-//        appTranslator->load(":app_"+pLocale);
-//        qApp->installTranslator(appTranslator);
+        qApp->removeTranslator(mAppTranslator);
+        mAppTranslator->load(":app_"+mLocale);
+        qApp->installTranslator(mAppTranslator);
     }
 
     // Update the checked menu item
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status, so...
 
-    mUi->actionEnglish->setChecked(pLocale.startsWith("en"));
-    mUi->actionFrench->setChecked(pLocale.startsWith("fr"));
-}
-
-void MainWindow::notYetImplemented(const QString& pMsg)
-{
-    // Display a warning message about a particular feature having not yet been
-    // implemented
-
-    QMessageBox::warning(this, qApp->applicationName(), pMsg+tr(" has not yet been implemented..."),
-                         QMessageBox::Ok, QMessageBox::Ok);
+    mUi->actionEnglish->setChecked(mLocale == "en");
+    mUi->actionFrench->setChecked(mLocale == "fr");
 }
 
 void MainWindow::on_actionEnglish_triggered()

@@ -43,10 +43,6 @@ SET(${PROJECT_NAME}_RESOURCES
     res/${PROJECT_NAME}.qrc
 )
 
-SET(${PROJECT_NAME}_LANGUAGES
-    i18n/OpenCOR_fr.ts
-)
-
 # Various include directories
 
 INCLUDE_DIRECTORIES(src/misc)
@@ -73,18 +69,26 @@ INCLUDE(${QT_USE_FILE})
 
 # Generate the help files
 
-EXECUTE_PROCESS(COMMAND qcollectiongenerator doc/OpenCOR.qhcp
-                                          -o build/OpenCOR.qhc
+EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} doc/${PROJECT_NAME}.qhcp
+                                                           -o build/${PROJECT_NAME}.qhc
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-# Update the translation files
+# Update the translation (.ts) files and generate the language (.qm) files
+
+SET(${PROJECT_NAME}_LANGUAGES
+    fr
+)
 
 FOREACH(LANG_FILE ${${PROJECT_NAME}_LANGUAGES})
-    EXECUTE_PROCESS(COMMAND lupdate ${${PROJECT_NAME}_SOURCES}
-                                    ${${PROJECT_NAME}_HEADERS}
-                                    ${${PROJECT_NAME}_HEADERS_MOC}
-                                    ${${PROJECT_NAME}_UIS}
-                                -ts ${LANG_FILE}
+    EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} ${${PROJECT_NAME}_SOURCES}
+                                                     ${${PROJECT_NAME}_HEADERS}
+                                                     ${${PROJECT_NAME}_HEADERS_MOC}
+                                                     ${${PROJECT_NAME}_UIS}
+                                                 -ts i18n/${PROJECT_NAME}_${LANG_FILE}.ts
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+    EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} i18n/${PROJECT_NAME}_${LANG_FILE}.ts
+                                                  -qm build/${PROJECT_NAME}_${LANG_FILE}.qm
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 ENDFOREACH()
 
@@ -93,9 +97,9 @@ ENDFOREACH()
 
 IF(WIN32)
     ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
-                         COMMAND windres -I ${CMAKE_CURRENT_SOURCE_DIR} -i ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}.rc
-                                         -o ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
-                        )
+                       COMMAND windres -I ${CMAKE_CURRENT_SOURCE_DIR} -i ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}.rc
+                                       -o ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
+                      )
     SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o)
 ELSEIF(APPLE)
     SET(MACOSX_BUNDLE_ICON_FILE ${PROJECT_NAME}.icns)
@@ -121,14 +125,12 @@ SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 QT4_WRAP_CPP(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
 QT4_WRAP_UI(${PROJECT_NAME}_SOURCES_UIS ${${PROJECT_NAME}_UIS})
 QT4_ADD_RESOURCES(${PROJECT_NAME}_SOURCES_RCS ${${PROJECT_NAME}_RESOURCES})
-QT4_ADD_TRANSLATION(${PROJECT_NAME}_SOURCES_LNG ${${PROJECT_NAME}_LANGUAGES})
 
 ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${${PROJECT_NAME}_SOURCES}
     ${${PROJECT_NAME}_SOURCES_MOC}
     ${${PROJECT_NAME}_SOURCES_UIS}
     ${${PROJECT_NAME}_SOURCES_RCS}
-    ${${PROJECT_NAME}_SOURCES_LNG}
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
@@ -239,7 +241,7 @@ ELSEIF(APPLE)
 
     INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/distrib/${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
-    # Select DEB and TGZ as the packagers on Linux
+    # Select TGZ as the packager on Linux
 
     SET(CPACK_GENERATOR TGZ)
 

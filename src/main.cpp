@@ -3,8 +3,7 @@
 #include <QtSingleApplication>
 #include <QFileInfo>
 #include <QProcess>
-
-#include <QMessageBox>
+#include <QTranslator>
 
 int main(int pArgc, char *pArgv[])
 {
@@ -44,11 +43,16 @@ int main(int pArgc, char *pArgv[])
 
     app.setApplicationVersion(version);
 
+    // Translators to be passed to the main window
+
+    QTranslator qtTranslator;
+    QTranslator appTranslator;
+
     // Create the main window
 
     bool restart = false;
 
-    MainWindow win(&restart);
+    MainWindow win(&restart, &qtTranslator, &appTranslator);
     // Note: the application icon (which is useful for Linux, since in the case
     //       of Windows and Mac, it's set through CMake (see CMakeLists.txt))
     //       is set within the UI file. Otherwise, it's good to have it set for
