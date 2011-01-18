@@ -42,30 +42,6 @@ SPAN.SectionFont
     Color: #366092;
 }
 
-.CodeBackground
-{
-    Background: #DBE5F1;
-    Border: 1px dashed #366092;
-    Padding: 3px;
-    Margin: 3px 13px 3px 13px;
-}
-
-SPAN.CodeFont
-{
-    Font-Family: Courier;
-    Font-Size: 11pt;
-}
-
-SPAN.Bold
-{
-    Font-Weight: Bold;
-}
-
-SPAN.Italic
-{
-    Font-Style: Italic;
-}
-
 .CopyrightBackground
 {
     Text-Align: Center;

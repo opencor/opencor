@@ -6,8 +6,10 @@
         <files>
             <file>index.html</file>
             <file>introduction.html</file>
-            <file>programming.html</file>
-            <file>knownIssues.html</file>
+            <file>users/knownIssues.html</file>
+            <file>users/res/stylesheet.css</file>
+            <file>developers/programming.html</file>
+            <file>developers/res/stylesheet.css</file>
             <file>licensing.html</file>
             <file>authors.html</file>
             <file>contactUs.html</file>

@@ -1,0 +1,48 @@
+A
+{
+    Color: #31859B;
+}
+
+A:Visited
+{
+    Color: #31859B;
+}
+
+A:Hover
+{
+    Background-Color: #31859B;
+}
+
+.TitleBackground
+{
+    Background: #31859B;
+}
+
+SPAN.SectionFont
+{
+    Color: #31859B;
+}
+
+.CodeBackground
+{
+    Background: #DBEEF3;
+    Border: 1px dashed #31859B;
+    Padding: 3px;
+    Margin: 3px 13px 3px 13px;
+}
+
+SPAN.CodeFont
+{
+    Font-Family: Courier;
+    Font-Size: 11pt;
+}
+
+SPAN.Bold
+{
+    Font-Weight: Bold;
+}
+
+SPAN.Italic
+{
+    Font-Style: Italic;
+}
