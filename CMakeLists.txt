@@ -53,38 +53,9 @@ INCLUDE_DIRECTORIES(src/misc)
 INCLUDE_DIRECTORIES(src/ui)
 INCLUDE_DIRECTORIES(src/widget)
 
-# Build the third-party libraries used by OpenCOR
-
-SET(3RDPARTYLIBS QtSingleApplication)
-
-FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
-    SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})
-    ADD_SUBDIRECTORY(${3RDPARTYLIB_DIR})
-    INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR})
-ENDFOREACH()
-
-# Set the application icon, but only for Windows and Mac OS X, since in the
-# case of Linux, it's done through res/OpenCOR.qrc
-
-IF(WIN32)
-    IF(MINGW)
-        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
-                             COMMAND windres -I ${CMAKE_CURRENT_SOURCE_DIR} -i ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}.rc 
-                                             -o ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
-                            )
-        SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o)
-    ELSE()
-        SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} res/${PROJECT_NAME}.rc)
-    ENDIF()
-ELSEIF(APPLE)
-    SET(MACOSX_BUNDLE_ICON_FILE ${PROJECT_NAME}.icns)
-    SET_SOURCE_FILES_PROPERTIES(res/${PROJECT_NAME}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} res/${PROJECT_NAME}.icns)
-ENDIF()
-
 # Qt specific
 
-FIND_PACKAGE(Qt4 4.6 REQUIRED)
+FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
 
 IF(WIN32)
     SET(QT_USE_QTMAIN TRUE)
@@ -100,19 +71,57 @@ SET(QT_USE_QTXML TRUE)
 
 INCLUDE(${QT_USE_FILE})
 
-QT4_WRAP_CPP(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
-QT4_WRAP_UI(${PROJECT_NAME}_SOURCES_UIS ${${PROJECT_NAME}_UIS})
-QT4_ADD_RESOURCES(${PROJECT_NAME}_SOURCES_RCS ${${PROJECT_NAME}_RESOURCES})
-QT4_ADD_TRANSLATION(${PROJECT_NAME}_SOURCES_LNG ${${PROJECT_NAME}_LANGUAGES})
+# Generate the help files
+
+EXECUTE_PROCESS(COMMAND qcollectiongenerator doc/OpenCOR.qhcp
+                                          -o build/OpenCOR.qhc
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Update the translation files
+
+FOREACH(LANG_FILE ${${PROJECT_NAME}_LANGUAGES})
+    EXECUTE_PROCESS(COMMAND lupdate ${${PROJECT_NAME}_SOURCES}
+                                    ${${PROJECT_NAME}_HEADERS}
+                                    ${${PROJECT_NAME}_HEADERS_MOC}
+                                    ${${PROJECT_NAME}_UIS}
+                                -ts ${LANG_FILE}
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+ENDFOREACH()
+
+# Set the application icon, but only for Windows and Mac OS X, since in the
+# case of Linux, it's done through res/OpenCOR.qrc
+
+IF(WIN32)
+    ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
+                         COMMAND windres -I ${CMAKE_CURRENT_SOURCE_DIR} -i ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}.rc
+                                         -o ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
+                        )
+    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o)
+ELSEIF(APPLE)
+    SET(MACOSX_BUNDLE_ICON_FILE ${PROJECT_NAME}.icns)
+    SET_SOURCE_FILES_PROPERTIES(res/${PROJECT_NAME}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} res/${PROJECT_NAME}.icns)
+ENDIF()
+
+# Build the third-party libraries used by OpenCOR
+
+SET(3RDPARTYLIBS QtSingleApplication)
+
+FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
+    SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})
+    ADD_SUBDIRECTORY(${3RDPARTYLIB_DIR})
+    INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR})
+ENDFOREACH()
 
 # Rules to build OpenCOR
 
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-EXECUTE_PROCESS(COMMAND qcollectiongenerator ${CMAKE_CURRENT_SOURCE_DIR}/doc/OpenCOR.qhcp
-                                          -o ${CMAKE_CURRENT_SOURCE_DIR}/build/OpenCOR.qhc)
-# Note: the above command generates the help files
+QT4_WRAP_CPP(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
+QT4_WRAP_UI(${PROJECT_NAME}_SOURCES_UIS ${${PROJECT_NAME}_UIS})
+QT4_ADD_RESOURCES(${PROJECT_NAME}_SOURCES_RCS ${${PROJECT_NAME}_RESOURCES})
+QT4_ADD_TRANSLATION(${PROJECT_NAME}_SOURCES_LNG ${${PROJECT_NAME}_LANGUAGES})
 
 ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${${PROJECT_NAME}_SOURCES}
