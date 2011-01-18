@@ -39,11 +39,6 @@ MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
 
     mUi->setupUi(this);
 
-    // By default, we don't want OpenCOR to restart automatically upon exiting
-    // it
-
-    *mRestart = false;
-
     // Set the name of the main window to that of the application
 
     setWindowTitle(qApp->applicationName());
@@ -134,11 +129,9 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     //       settings (e.g. docked windows) won't be properly saved
 
     if (!*mRestart)
-    {
         saveSettings();
 
-        pEvent->accept();
-    }
+    pEvent->accept();
 }
 
 
