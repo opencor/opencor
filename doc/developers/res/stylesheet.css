@@ -11,6 +11,7 @@ A:Visited
 A:Hover
 {
     Background-Color: #31859B;
+    Color: #FFFFFF;
 }
 
 .TitleBackground
@@ -23,18 +24,12 @@ SPAN.SectionFont
     Color: #31859B;
 }
 
-.CodeBackground
+PRE
 {
     Background: #DBEEF3;
     Border: 1px dashed #31859B;
     Padding: 3px;
     Margin: 3px 13px 3px 13px;
-}
-
-SPAN.CodeFont
-{
-    Font-Family: Courier;
-    Font-Size: 11pt;
 }
 
 SPAN.Bold
