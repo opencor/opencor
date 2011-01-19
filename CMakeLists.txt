@@ -76,7 +76,7 @@ EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} doc/${PROJECT_NAME
 # Update the translation (.ts) files and generate the language (.qm) files
 
 SET(${PROJECT_NAME}_LANGUAGES
-    fr
+    ${PROJECT_NAME}_Fr
 )
 
 FOREACH(LANGUAGE ${${PROJECT_NAME}_LANGUAGES})
@@ -84,11 +84,11 @@ FOREACH(LANGUAGE ${${PROJECT_NAME}_LANGUAGES})
                                                      ${${PROJECT_NAME}_HEADERS}
                                                      ${${PROJECT_NAME}_HEADERS_MOC}
                                                      ${${PROJECT_NAME}_UIS}
-                                                 -ts i18n/${PROJECT_NAME}_${LANGUAGE}.ts
+                                                 -ts i18n/${LANGUAGE}.ts
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-    EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} i18n/${PROJECT_NAME}_${LANGUAGE}.ts
-                                                  -qm build/${PROJECT_NAME}_${LANGUAGE}.qm
+    EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} i18n/${LANGUAGE}.ts
+                                                  -qm build/${LANGUAGE}.qm
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 ENDFOREACH()
 
@@ -96,15 +96,17 @@ ENDFOREACH()
 # case of Linux, it's done through res/OpenCOR.qrc
 
 IF(WIN32)
-    ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
+    SET(IconObjectFile ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_Icon.o)
+    ADD_CUSTOM_COMMAND(OUTPUT ${IconObjectFile}
                        COMMAND windres -I ${CMAKE_CURRENT_SOURCE_DIR} -i ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}.rc
-                                       -o ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o
+                                       -o ${IconObjectFile}
                       )
-    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Icon.o)
+    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} ${IconObjectFile})
 ELSEIF(APPLE)
-    SET(MACOSX_BUNDLE_ICON_FILE ${PROJECT_NAME}.icns)
-    SET_SOURCE_FILES_PROPERTIES(res/${PROJECT_NAME}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} res/${PROJECT_NAME}.icns)
+    SET(IconFile ${PROJECT_NAME}.icns)
+    SET(MACOSX_BUNDLE_ICON_FILE ${IconFile})
+    SET_SOURCE_FILES_PROPERTIES(res/${IconFile} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES} res/${IconFile})
 ENDIF()
 
 # Build the third-party libraries used by OpenCOR

@@ -32,6 +32,9 @@
 #define SETTINGS_GENERAL_STATE "General_State"
 #define SETTINGS_HELPWINDOW_ZOOMLEVEL "HelpWindow_ZoomLevel"
 
+#define ENGLISH_LOCALE "En"
+#define FRENCH_LOCALE  "Fr"
+
 MainWindow::MainWindow(bool *pRestart, QTranslator *pQtTranslator,
                        QTranslator *pAppTranslator, QWidget *pParent) :
     QMainWindow(pParent),
@@ -232,7 +235,7 @@ void MainWindow::defaultSettings()
 {
     // Default language to be used by OpenCOR
 
-    setLocale(QLocale::system().name());
+    setLocale(ENGLISH_LOCALE);
 
     // Default size and position of the main window
 
@@ -267,7 +270,7 @@ void MainWindow::loadSettings()
 
     // Retrieve the language to be used by OpenCOR
 
-    setLocale(settings.value(SETTINGS_GENERAL_LOCALE, QLocale::system().name()).toString());
+    setLocale(settings.value(SETTINGS_GENERAL_LOCALE, ENGLISH_LOCALE).toString());
 
     // Retrieve the geometry of the main window
 
@@ -307,7 +310,7 @@ void MainWindow::setLocale(const QString& pLocale)
 {
     if (pLocale != mLocale)
     {
-        mLocale = pLocale.left(2);
+        mLocale = pLocale;
 
         // Specify the language to be used by OpenCOR
 
@@ -324,22 +327,22 @@ void MainWindow::setLocale(const QString& pLocale)
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status, so...
 
-    mUi->actionEnglish->setChecked(mLocale == "en");
-    mUi->actionFrench->setChecked(mLocale == "fr");
+    mUi->actionEnglish->setChecked(mLocale == ENGLISH_LOCALE);
+    mUi->actionFrench->setChecked(mLocale == FRENCH_LOCALE);
 }
 
 void MainWindow::on_actionEnglish_triggered()
 {
     // Select English as the language used by OpenCOR
 
-    setLocale("en");
+    setLocale(ENGLISH_LOCALE);
 }
 
 void MainWindow::on_actionFrench_triggered()
 {
     // Select French as the language used by OpenCOR
 
-    setLocale("fr");
+    setLocale(FRENCH_LOCALE);
 }
 
 void MainWindow::updateGUI()
