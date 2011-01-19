@@ -23,8 +23,7 @@
 #include <QUrl>
 
 #define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
-
-#define OPENCOR_HELP_HOMEPAGE QUrl("qthelp://world.opencor/doc/index.html")
+#define OPENCOR_HELP_HOMEPAGE "qthelp://world.opencor/doc/index.html"
 
 #define SETTINGS_INSTITUTION "World"
 #define SETTINGS_GENERAL_LOCALE "General_Locale"
@@ -92,7 +91,7 @@ MainWindow::MainWindow(bool *pRestart, QTranslator *pQtTranslator,
 
     // Help window
 
-    mHelpWindow = new HelpWindow(mHelpEngine, OPENCOR_HELP_HOMEPAGE);
+    mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OPENCOR_HELP_HOMEPAGE));
 
     connect(mUi->actionHelp, SIGNAL(triggered(bool)),
             mHelpWindow, SLOT(setVisible(bool)));
@@ -134,6 +133,16 @@ MainWindow::~MainWindow()
     QFile(mQhcFileName).remove();
 
     QDir().rmdir(mTempDirName);
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    QMainWindow::changeEvent(event);
+
+    // Translate the whole GUI, should the language have changed
+
+    if (event->type() == QEvent::LanguageChange)
+        mUi->retranslateUi(this);
 }
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)

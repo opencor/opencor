@@ -23,7 +23,8 @@ public:
     ~MainWindow();
 
 protected:
-    virtual void closeEvent(QCloseEvent *pEvent);
+    void changeEvent(QEvent *event);
+    void closeEvent(QCloseEvent *pEvent);
 
 private:
     Ui::MainWindow *mUi;
