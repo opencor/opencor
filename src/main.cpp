@@ -2,7 +2,6 @@
 
 #include <QFileInfo>
 #include <QProcess>
-#include <QTranslator>
 
 #include <QtSingleApplication>
 
@@ -44,16 +43,11 @@ int main(int pArgc, char *pArgv[])
 
     app.setApplicationVersion(version);
 
-    // Translators to be passed to the main window
-
-    QTranslator qtTranslator;
-    QTranslator appTranslator;
-
     // Create the main window
 
     bool restart = false;
 
-    MainWindow win(&restart, &qtTranslator, &appTranslator);
+    MainWindow win(&restart);
     // Note: the application icon (which is useful for Linux, since in the case
     //       of Windows and Mac, it's set through CMake (see CMakeLists.txt))
     //       is set within the UI file. Otherwise, it's good to have it set for

@@ -34,13 +34,10 @@
 #define ENGLISH_LOCALE "en"
 #define FRENCH_LOCALE  "fr"
 
-MainWindow::MainWindow(bool *pRestart, QTranslator *pQtTranslator,
-                       QTranslator *pAppTranslator, QWidget *pParent) :
+MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
-    mRestart(pRestart),
-    mQtTranslator(pQtTranslator),
-    mAppTranslator(pAppTranslator)
+    mRestart(pRestart)
 {
     // Set up the GUI
 
@@ -323,13 +320,13 @@ void MainWindow::setLocale(const QString& pLocale)
 
         // Specify the language to be used by OpenCOR
 
-        qApp->removeTranslator(mQtTranslator);
-        mQtTranslator->load("qt_"+mLocale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-        qApp->installTranslator(mQtTranslator);
+        qApp->removeTranslator(&mQtTranslator);
+        mQtTranslator.load("qt_"+mLocale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+        qApp->installTranslator(&mQtTranslator);
 
-        qApp->removeTranslator(mAppTranslator);
-        mAppTranslator->load(":app_"+mLocale);
-        qApp->installTranslator(mAppTranslator);
+        qApp->removeTranslator(&mAppTranslator);
+        mAppTranslator.load(":app_"+mLocale);
+        qApp->installTranslator(&mAppTranslator);
     }
 
     // Update the checked menu item

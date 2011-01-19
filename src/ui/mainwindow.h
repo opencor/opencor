@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTranslator>
 
 namespace Ui {
     class MainWindow;
@@ -11,15 +12,13 @@ class HelpWindow;
 
 class QHelpEngine;
 class QSettings;
-class QTranslator;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(bool *pRestart, QTranslator *pQtTranslator,
-                        QTranslator *pAppTranslator, QWidget *pParent = 0);
+    explicit MainWindow(bool *pRestart, QWidget *pParent = 0);
     ~MainWindow();
 
 protected:
@@ -33,8 +32,8 @@ private:
 
     QString mLocale;
 
-    QTranslator *mQtTranslator;
-    QTranslator *mAppTranslator;
+    QTranslator mQtTranslator;
+    QTranslator mAppTranslator;
 
     QHelpEngine *mHelpEngine;
     HelpWindow *mHelpWindow;
