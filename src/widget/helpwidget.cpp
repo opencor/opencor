@@ -61,16 +61,6 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
     helpWidgetErrorFile.close();
 }
 
-QString HelpNetworkAccessManager::errorMsg(const QString& pErrorMsg)
-{
-    QString title = tr("OpenCOR Help Error");
-    QString description = tr("Description");
-    QString copyright = tr("Copyright");
-    QString contact = tr("Please use our <A HREF = \"http://sourceforge.net/projects/opencor/support\">support page</A> to tell us about this error.");
-
-    return mErrorMsgTemplate.arg(title, title, description, pErrorMsg, contact, copyright);
-}
-
 QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
                                                        const QNetworkRequest& pRequest,
                                                        QIODevice*)
@@ -82,7 +72,7 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
 
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
-                          QByteArray(errorMsg(tr("The following help file could not be found:")+" <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
+                          QByteArray(mErrorMsgTemplate.arg("The following help file could not be found: <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
 
     return new HelpNetworkReply(pRequest, data, "text/html");
 }

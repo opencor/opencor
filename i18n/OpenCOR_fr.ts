@@ -2,29 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>HelpNetworkAccessManager</name>
-    <message>
-        <source>OpenCOR Help Error</source>
-        <translation>Erreur Aide OpenCOR</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Copyright</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Please use our &lt;A HREF = &quot;http://sourceforge.net/projects/opencor/support&quot;&gt;support page&lt;/A&gt; to tell us about this error.</source>
-        <translation>Veuillez utiliser notre &lt;A HREF = &quot;http://sourceforge.net/projects/opencor/support&quot;&gt;page de support&lt;/A&gt; pour nous faire part de cette erreur.</translation>
-    </message>
-    <message>
-        <source>The following help file could not be found:</source>
-        <translation>Le fichier d&apos;aide suivant n&apos;a pu être trouvé :</translation>
-    </message>
-</context>
-<context>
     <name>HelpWindow</name>
     <message>
         <source>OpenCOR Help</source>

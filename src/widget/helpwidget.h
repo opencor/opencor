@@ -29,8 +29,6 @@ private:
 
 class HelpNetworkAccessManager : public QNetworkAccessManager
 {
-    Q_OBJECT
-
 public:
     HelpNetworkAccessManager(QHelpEngine *pHelpEngine, QObject *pParent);
 
@@ -42,8 +40,6 @@ protected:
 private:
     QHelpEngine *mHelpEngine;
     QString mErrorMsgTemplate;
-
-    QString errorMsg(const QString& pErrorMsg);
 };
 
 class HelpPage : public QWebPage
