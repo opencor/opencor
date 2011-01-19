@@ -187,7 +187,7 @@ ENDIF()
 # Rules to package OpenCOR (using CPack)
 
 SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
-SET(CPACK_PACKAGE_CONTACT "Alan Garny (agarny@hellix.com)")
+SET(CPACK_PACKAGE_CONTACT "Alan Garny (alan.garny@dpag.ox.ac.uk)")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A cross-platform CellML-based modelling environment")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/distrib/readMe.txt")
 SET(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")

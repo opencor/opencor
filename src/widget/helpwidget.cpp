@@ -232,8 +232,8 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
 
 QSize HelpWidget::sizeHint() const
 {
-    const double spaceRatio = 1.0/5.0;
-    const QRect desktopGeometry = qApp->desktop()->availableGeometry();
+    double spaceRatio = 1.0/5.0;
+    QRect desktopGeometry = qApp->desktop()->availableGeometry();
 
     return QSize(spaceRatio*desktopGeometry.width(), spaceRatio*desktopGeometry.height());
 }

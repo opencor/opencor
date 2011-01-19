@@ -239,10 +239,10 @@ void MainWindow::defaultSettings()
 
     // Default size and position of the main window
 
-    const double spaceRatio = 1.0/13.0;
-    const QRect desktopGeometry = qApp->desktop()->availableGeometry();
-    const int horizSpace = spaceRatio*desktopGeometry.width();
-    const int vertSpace  = spaceRatio*desktopGeometry.height();
+    double spaceRatio = 1.0/13.0;
+    QRect desktopGeometry = qApp->desktop()->availableGeometry();
+    int horizSpace = spaceRatio*desktopGeometry.width();
+    int vertSpace  = spaceRatio*desktopGeometry.height();
 
     setGeometry(desktopGeometry.left()+horizSpace, desktopGeometry.top()+vertSpace, desktopGeometry.width()-2*horizSpace, desktopGeometry.height()-2*vertSpace);
 
