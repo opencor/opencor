@@ -245,7 +245,7 @@
     <string>Zoom &amp;In</string>
    </property>
    <property name="statusTip">
-    <string>Zoom in the contents of the help page</string>
+    <string>Zoom in the help page contents</string>
    </property>
    <property name="shortcut">
     <string>Ctrl++</string>
@@ -260,7 +260,7 @@
     <string>Zoom &amp;Out</string>
    </property>
    <property name="statusTip">
-    <string>Zoom out the contents of the help page</string>
+    <string>Zoom out the help page contents</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+-</string>
@@ -275,7 +275,7 @@
     <string>&amp;Normal Size</string>
    </property>
    <property name="statusTip">
-    <string>Reset the zoom for the contents of the help page</string>
+    <string>Reset the size of the help page contents</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+0</string>

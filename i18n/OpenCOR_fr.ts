@@ -91,20 +91,12 @@
         <translation>Aggrand&amp;ir</translation>
     </message>
     <message>
-        <source>Zoom in the contents of the help page</source>
-        <translation>Aggrandir le contenu de la page d&apos;aide</translation>
-    </message>
-    <message>
         <source>Ctrl++</source>
         <translation></translation>
     </message>
     <message>
         <source>Zoom &amp;Out</source>
         <translation>Ré&amp;duire</translation>
-    </message>
-    <message>
-        <source>Zoom out the contents of the help page</source>
-        <translation>Réduire le contenu de la page d&apos;aide</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -115,12 +107,20 @@
         <translation>Taille &amp;Normale</translation>
     </message>
     <message>
-        <source>Reset the zoom for the contents of the help page</source>
-        <translation>Réinitialiser le zoom pour le contenu de la page d&apos;aide</translation>
-    </message>
-    <message>
         <source>Ctrl+0</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Zoom in the help page contents</source>
+        <translation>Aggrandir le contenu de la page d&apos;aide</translation>
+    </message>
+    <message>
+        <source>Zoom out the help page contents</source>
+        <translation>Réduire le contenu de la page d&apos;aide</translation>
+    </message>
+    <message>
+        <source>Reset the size of the help page contents</source>
+        <translation>Réinitialiser la taille du contenu de la page d&apos;aide</translation>
     </message>
 </context>
 <context>
