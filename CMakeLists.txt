@@ -70,13 +70,15 @@ SET(QT_USE_QTXML TRUE)
 
 INCLUDE(${QT_USE_FILE})
 
-# Generate the help files
+# Generate the help files which will be embedded in the executable as a
+# resource
 
 EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} doc/${PROJECT_NAME}.qhcp
                                                            -o build/${PROJECT_NAME}.qhc
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Update the translation (.ts) files and generate the language (.qm) files
+# which will be embedded in the executable as resources
 
 SET(LANGUAGE_FILES
     ${PROJECT_NAME}_Fr
