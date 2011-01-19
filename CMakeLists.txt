@@ -83,7 +83,7 @@ EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} doc/${PROJECT_NAME
 # which will be embedded in the executable as resources
 
 SET(LANGUAGE_FILES
-    ${PROJECT_NAME}_Fr
+    ${PROJECT_NAME}_fr
 )
 
 FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
@@ -101,16 +101,22 @@ ENDFOREACH()
 # case of Linux, it's done through res/OpenCOR.qrc
 
 IF(WIN32)
-    SET(IconObjectFile ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_Icon.o)
+    SET(IconObjectFile ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_icon.o)
+
+
     ADD_CUSTOM_COMMAND(OUTPUT ${IconObjectFile}
                        COMMAND windres -I ${CMAKE_CURRENT_SOURCE_DIR} -i ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}.rc
                                        -o ${IconObjectFile}
                       )
+
     SET(SOURCES ${SOURCES} ${IconObjectFile})
 ELSEIF(APPLE)
     SET(IconFile ${PROJECT_NAME}.icns)
+
     SET(MACOSX_BUNDLE_ICON_FILE ${IconFile})
+
     SET_SOURCE_FILES_PROPERTIES(res/${IconFile} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
     SET(SOURCES ${SOURCES} res/${IconFile})
 ENDIF()
 
@@ -120,7 +126,9 @@ SET(3RDPARTYLIBS QtSingleApplication)
 
 FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
     SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})
+
     ADD_SUBDIRECTORY(${3RDPARTYLIB_DIR})
+
     INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR})
 ENDFOREACH()
 
@@ -169,6 +177,7 @@ ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 
 IF(WIN32)
     ADD_DEFINITIONS(-enable-auto-import)
+
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,--enable-auto-import") 
 ENDIF()
 

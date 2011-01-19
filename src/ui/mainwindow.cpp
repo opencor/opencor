@@ -32,8 +32,8 @@
 #define SETTINGS_GENERAL_STATE "General_State"
 #define SETTINGS_HELPWINDOW_ZOOMLEVEL "HelpWindow_ZoomLevel"
 
-#define ENGLISH_LOCALE "En"
-#define FRENCH_LOCALE  "Fr"
+#define ENGLISH_LOCALE "en"
+#define FRENCH_LOCALE  "fr"
 
 MainWindow::MainWindow(bool *pRestart, QTranslator *pQtTranslator,
                        QTranslator *pAppTranslator, QWidget *pParent) :
