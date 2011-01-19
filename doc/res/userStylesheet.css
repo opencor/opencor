@@ -1,0 +1,25 @@
+A
+{
+    Color: #366092;
+}
+
+A:Visited
+{
+    Color: #366092;
+}
+
+A:Hover
+{
+    Background-Color: #366092;
+    Color: #FFFFFF;
+}
+
+.TitleBackground
+{
+    Background: #366092;
+}
+
+SPAN.SectionFont
+{
+    Color: #366092;
+}

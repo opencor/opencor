@@ -1,1 +1,3 @@
-Open the doc/index.html file in your favourite web browser to get access to various information about OpenCOR.
+Two sets of information can be found in the doc folder:
+ - userIndex.html: user-specific information; and
+ - developerIndex.html: developer-specific information.

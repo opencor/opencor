@@ -4,42 +4,29 @@ BODY
     Font-Size: 10pt;
 }
 
-A
-{
-    Color: #366092;
-}
-
-A:Visited
-{
-    Color: #366092;
-}
-
 A:Hover
 {
-    Background-Color: #366092;
     Color: #FFFFFF;
     Text-Decoration: None;
 }
 
 .TitleBackground
 {
-    Background: #366092;
     Padding: 3px 3px 3px 3px;
     Margin: -3px -3px 13px -3px;
 }
 
 SPAN.TitleFont
 {
+    Color: #FFFFFF;
     Font-Size: 15pt;
     Font-Weight: Bold;
-    Color: #FFFFFF;
 }
 
 SPAN.SectionFont
 {
     Font-Size: 13pt;
     Font-Weight: Bold;
-    Color: #366092;
 }
 
 .CopyrightBackground
@@ -51,6 +38,6 @@ SPAN.SectionFont
 
 SPAN.CopyrightFont
 {
-    Font-Size: 9pt;
     Color: #7F7F7F;
+    Font-Size: 9pt;
 }
