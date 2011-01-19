@@ -58,7 +58,10 @@ IF(WIN32)
     # Note: the above ensures that winmain@16 is available on Windows
 ENDIF()
 
-SET(QT_USE_PHONON TRUE)
+IF(WIN32 OR APPLE)
+    SET(QT_USE_PHONON TRUE)
+ENDIF()
+
 SET(QT_USE_QTHELP TRUE)
 SET(QT_USE_QTNETWORK TRUE)
 SET(QT_USE_QTSQL TRUE)
@@ -136,7 +139,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
 
-    ${QT_PHONON_LIBRARY}
     ${QT_QTHELP_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTSQL_LIBRARY}
@@ -146,11 +148,17 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${3RDPARTYLIBS}
 )
 
+IF(WIN32 OR APPLE)
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+        ${QT_PHONON_LIBRARY}
+    )
+ENDIF()
+
 # Compiler and linker options
 
 ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 
-IF(MINGW)
+IF(WIN32)
     ADD_DEFINITIONS(-enable-auto-import)
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,--enable-auto-import") 
 ENDIF()
@@ -197,13 +205,11 @@ IF(WIN32)
 
     INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
-    IF(MINGW)
-        # MinGW files required by OpenCOR
+    # MinGW files required by OpenCOR
 
-        FOREACH(DLL mingwm10 libgcc_s_dw2-1)
-            INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll DESTINATION bin)
-        ENDFOREACH()
-    ENDIF()
+    FOREACH(DLL mingwm10 libgcc_s_dw2-1)
+        INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll DESTINATION bin)
+    ENDFOREACH()
 
     # Qt files required by OpenCOR
 
