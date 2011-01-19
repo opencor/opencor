@@ -109,12 +109,14 @@ MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
 
     updateGUI();
 
-    // Bring ourselves to the foreground (this is required when we come here as
-    // a result of a reset all on Mac OS X)
+    // Bring ourselves to the foreground. Indeed, when restarting OpenCOR as a
+    // result of a result all, OpenCOR will on Mac OS X be behind the other
+    // applications. This behaviour has, on occasions, also been observed on
+    // Windows, so... rather than making the following Mac OS X, we may as well
+    // make it cross-platform, since it doesn't have any adverse effect on any
+    // of the operating system on which we use OpenCOR.
 
-#ifdef Q_WS_MAC
     raise();
-#endif
 }
 
 MainWindow::~MainWindow()
