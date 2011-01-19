@@ -1,9 +1,10 @@
 #include "ui/mainwindow.h"
 
-#include <QtSingleApplication>
 #include <QFileInfo>
 #include <QProcess>
 #include <QTranslator>
+
+#include <QtSingleApplication>
 
 int main(int pArgc, char *pArgv[])
 {
