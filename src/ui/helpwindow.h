@@ -18,8 +18,10 @@ class HelpWindow : public QDockWidget
 
 public:
     explicit HelpWindow(QHelpEngine *pEngine, const QUrl& pHomePage,
-                        QDockWidget *pParent = 0);
+                        QWidget *pParent = 0);
     ~HelpWindow();
+
+    void retranslateUi();
 
     void defaultSettings();
 

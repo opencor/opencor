@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>Home</source>
-        <translation>Maison</translation>
+        <translation>Page Principale</translation>
     </message>
     <message>
         <source>Back</source>
@@ -40,35 +40,35 @@
     </message>
     <message>
         <source>Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>En avant</translation>
     </message>
     <message>
         <source>Normal Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille Normale</translation>
     </message>
     <message>
         <source>Zoom In</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggrandir</translation>
     </message>
     <message>
         <source>Zoom Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Réduire</translation>
     </message>
     <message>
         <source>&amp;Home</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Page Principale</translation>
     </message>
     <message>
         <source>Go to the home page</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller à la page principale</translation>
     </message>
     <message>
         <source>&amp;Back</source>
-        <translation type="unfinished"></translation>
+        <translation>En A&amp;rrière</translation>
     </message>
     <message>
         <source>Go back</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller en arrière</translation>
     </message>
     <message>
         <source>Alt+Left</source>
@@ -76,11 +76,11 @@
     </message>
     <message>
         <source>&amp;Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>En A&amp;vant</translation>
     </message>
     <message>
         <source>Go forward</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller en avant</translation>
     </message>
     <message>
         <source>Alt+Right</source>
@@ -88,11 +88,11 @@
     </message>
     <message>
         <source>Zoom &amp;In</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggrand&amp;ir</translation>
     </message>
     <message>
         <source>Zoom in the contents of the help page</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggrandir le contenu de la page d&apos;aide</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -100,11 +100,11 @@
     </message>
     <message>
         <source>Zoom &amp;Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Ré&amp;duire</translation>
     </message>
     <message>
         <source>Zoom out the contents of the help page</source>
-        <translation type="unfinished"></translation>
+        <translation>Réduire le contenu de la page d&apos;aide</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -112,11 +112,11 @@
     </message>
     <message>
         <source>&amp;Normal Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille &amp;Normale</translation>
     </message>
     <message>
         <source>Reset the zoom for the contents of the help page</source>
-        <translation type="unfinished"></translation>
+        <translation>Réinitialiser le zoom pour le contenu de la page d&apos;aide</translation>
     </message>
     <message>
         <source>Ctrl+0</source>

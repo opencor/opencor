@@ -4,7 +4,7 @@
 #include "ui_helpwindow.h"
 
 HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomePage,
-                       QDockWidget *pParent) :
+                       QWidget *pParent) :
     QDockWidget(pParent),
     mUi(new Ui::HelpWindow)
 {
@@ -45,6 +45,11 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomePage,
 HelpWindow::~HelpWindow()
 {
     delete mUi;
+}
+
+void HelpWindow::retranslateUi()
+{
+    mUi->retranslateUi(this);
 }
 
 void HelpWindow::defaultSettings()

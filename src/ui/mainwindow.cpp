@@ -132,16 +132,6 @@ MainWindow::~MainWindow()
     QDir().rmdir(mTempDirName);
 }
 
-void MainWindow::changeEvent(QEvent *event)
-{
-    QMainWindow::changeEvent(event);
-
-    // Translate the whole GUI, should the language have changed
-
-    if (event->type() == QEvent::LanguageChange)
-        mUi->retranslateUi(this);
-}
-
 void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
     // Keep track of our default settings, but only if we don't want to restart
@@ -327,6 +317,13 @@ void MainWindow::setLocale(const QString& pLocale)
         qApp->removeTranslator(&mAppTranslator);
         mAppTranslator.load(":app_"+mLocale);
         qApp->installTranslator(&mAppTranslator);
+
+        // Translate the whole GUI (including any 'child' window), should the
+        // language have changed
+
+        mUi->retranslateUi(this);
+
+        mHelpWindow->retranslateUi();
     }
 
     // Update the checked menu item

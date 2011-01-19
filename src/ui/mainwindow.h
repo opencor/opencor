@@ -22,7 +22,6 @@ public:
     ~MainWindow();
 
 protected:
-    void changeEvent(QEvent *event);
     void closeEvent(QCloseEvent *pEvent);
 
 private:
