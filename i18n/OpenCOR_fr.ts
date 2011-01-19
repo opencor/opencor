@@ -17,7 +17,7 @@
     </message>
     <message>
         <source>Please use our &lt;A HREF = &quot;http://sourceforge.net/projects/opencor/support&quot;&gt;support page&lt;/A&gt; to tell us about this error.</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez utiliser notre &lt;A HREF = &quot;http://sourceforge.net/projects/opencor/support&quot;&gt;page de support&lt;/A&gt; pour nous faire part de cette erreur.</translation>
     </message>
     <message>
         <source>The following help file could not be found:</source>
@@ -32,11 +32,11 @@
     </message>
     <message>
         <source>Home</source>
-        <translation type="unfinished"></translation>
+        <translation>Maison</translation>
     </message>
     <message>
         <source>Back</source>
-        <translation type="unfinished"></translation>
+        <translation>En arrière</translation>
     </message>
     <message>
         <source>Forward</source>
@@ -139,7 +139,7 @@
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;?</translation>
+        <translation>&amp;Aide</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -195,7 +195,7 @@
     </message>
     <message>
         <source>&amp;About...</source>
-        <translation>&amp;A Propos</translation>
+        <translation>&amp;A Propos...</translation>
     </message>
     <message>
         <source>Some general information about OpenCOR</source>
