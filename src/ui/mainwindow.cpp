@@ -321,12 +321,14 @@ void MainWindow::setLocale(const QString& pLocale)
         qApp->removeTranslator(mAppTranslator);
         mAppTranslator->load(":app_"+mLocale);
         qApp->installTranslator(mAppTranslator);
-
-        // Update the checked menu item
-
-        mUi->actionEnglish->setChecked(mLocale == ENGLISH_LOCALE);
-        mUi->actionFrench->setChecked(mLocale == FRENCH_LOCALE);
     }
+
+    // Update the checked menu item
+    // Note: it has to be done every single time, since selecting a menu item
+    //       will automatically toggle its checked status, so...
+
+    mUi->actionEnglish->setChecked(mLocale == ENGLISH_LOCALE);
+    mUi->actionFrench->setChecked(mLocale == FRENCH_LOCALE);
 }
 
 void MainWindow::on_actionEnglish_triggered()

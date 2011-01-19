@@ -104,9 +104,6 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
      <normaloff>:/en.png</normaloff>:/en.png</iconset>
