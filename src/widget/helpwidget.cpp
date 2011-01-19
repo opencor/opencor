@@ -164,6 +164,16 @@ void HelpWidget::gotoHomePage()
     load(mHomePage);
 }
 
+bool HelpWidget::isBackAvailable()
+{
+    return mBackAvailable;
+}
+
+bool HelpWidget::isForwardAvailable()
+{
+    return mForwardAvailable;
+}
+
 int HelpWidget::minimumZoomLevel()
 {
     return 1;
@@ -243,7 +253,15 @@ void HelpWidget::actionChanged()
     QAction *action = qobject_cast<QAction *>(sender());
 
     if (action == pageAction(QWebPage::Back))
-        emit backAvailable(action->isEnabled());
+    {
+        mBackAvailable = action->isEnabled();
+
+        emit backAvailable(mBackAvailable);
+    }
     else if (action == pageAction(QWebPage::Forward))
-        emit forwardAvailable(action->isEnabled());
+    {
+        mForwardAvailable = action->isEnabled();
+
+        emit forwardAvailable(mForwardAvailable);
+    }
 }

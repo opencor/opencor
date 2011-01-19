@@ -50,6 +50,19 @@ HelpWindow::~HelpWindow()
 void HelpWindow::retranslateUi()
 {
     mUi->retranslateUi(this);
+
+    // Make sure that the enabled state of the various actions is correct
+    // (indeed, to translate everything messes things up in that respect,
+    // so...)
+
+    mUi->actionHome->setEnabled(mHelpWidget->url() != mHelpWidget->homePage());
+
+    mUi->actionBack->setEnabled(mHelpWidget->isBackAvailable());
+    mUi->actionForward->setEnabled(mHelpWidget->isForwardAvailable());
+
+    mUi->actionNormalSize->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->defaultZoomLevel());
+
+    mUi->actionZoomOut->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->minimumZoomLevel());
 }
 
 void HelpWindow::defaultSettings()

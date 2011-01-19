@@ -75,6 +75,9 @@ public:
     QUrl homePage();
     void gotoHomePage();
 
+    bool isBackAvailable();
+    bool isForwardAvailable();
+
     int minimumZoomLevel();
     int defaultZoomLevel();
 
@@ -94,6 +97,9 @@ protected:
 
 private:
     QUrl mHomePage;
+
+    bool mBackAvailable;
+    bool mForwardAvailable;
 
     int mZoomLevel;
 
