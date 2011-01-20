@@ -125,6 +125,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     // on Windows or Linux
 
     activateWindow();
+
     raise();   // Just to be on the safe side
 }
 
@@ -324,6 +325,7 @@ void MainWindow::singleAppMsgRcvd(const QString&)
     // Do what one should normally do
 
     activateWindow();
+
     raise();   // Just to be on the safe side
     // Note: raise() never seems to be required on Mac OS X, but to use
     //       activateWindow() under Linux may or not give the expected result,
