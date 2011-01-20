@@ -14,10 +14,8 @@ public:
     HelpNetworkReply(const QNetworkRequest& pRequest, const QByteArray& pData,
                      const QString& pMimeType);
 
-    inline virtual void abort()
-        { /* Nothing to do... */ }
-    virtual qint64 bytesAvailable() const
-        { return mData.length()+QNetworkReply::bytesAvailable(); }
+    virtual void abort();
+    virtual qint64 bytesAvailable() const;
 
 protected:
     virtual qint64 readData(char *pData, qint64 pMaxlen);
@@ -39,6 +37,7 @@ protected:
 
 private:
     QHelpEngine *mHelpEngine;
+
     QString mErrorMsgTemplate;
 };
 
@@ -54,8 +53,6 @@ protected:
 
 private:
     QHelpEngine *mHelpEngine;
-
-    friend class HelpWidget;
 };
 
 class HelpWidget : public QWebView
@@ -86,10 +83,10 @@ public:
     int zoomLevel();
 
 protected:
-    void mouseReleaseEvent(QMouseEvent *pEvent);
-    void wheelEvent(QWheelEvent *pEvent);
+    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
+    virtual void wheelEvent(QWheelEvent *pEvent);
 
-    QSize sizeHint() const;
+    virtual QSize sizeHint() const;
 
 private:
     QUrl mHomePage;
@@ -99,14 +96,14 @@ private:
 
     int mZoomLevel;
 
-private Q_SLOTS:
-    void actionChanged();
-
 Q_SIGNALS:
     void backAvailable(bool pAvailable);
     void forwardAvailable(bool pAvailable);
 
     void zoomLevelChanged(int pZoomLevel);
+
+private Q_SLOTS:
+    void webPageChanged();
 };
 
 #endif

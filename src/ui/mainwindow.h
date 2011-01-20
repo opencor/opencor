@@ -18,16 +18,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(bool *pRestart, QWidget *pParent = 0);
+    explicit MainWindow(QWidget *pParent = 0);
     ~MainWindow();
 
 protected:
-    void closeEvent(QCloseEvent *pEvent);
+    virtual void closeEvent(QCloseEvent *pEvent);
 
 private:
     Ui::MainWindow *mUi;
-
-    bool *mRestart;
 
     QString mLocale;
 
@@ -52,13 +50,13 @@ private:
 public Q_SLOTS:
     void singleAppMsgRcvd(const QString&);
 
-    void resetAll();
-
 private Q_SLOTS:
-    void on_actionAbout_triggered();
-    void on_actionHomePage_triggered();
-    void on_actionFrench_triggered();
     void on_actionEnglish_triggered();
+    void on_actionFrench_triggered();
+    void on_actionHomePage_triggered();
+    void on_actionAbout_triggered();
+
+    void resetAll();
 };
 
 #endif // MAINWINDOW_H

@@ -99,6 +99,38 @@
         <source>Reset the size of the help page contents</source>
         <translation>Réinitialiser la taille du contenu de la page d&apos;aide</translation>
     </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Copier</translation>
+    </message>
+    <message>
+        <source>Ctrl+C</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Copy the selection to the clipboard</source>
+        <translation>Copier la sélection dans le presse-papier</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation>Imprimer</translation>
+    </message>
+    <message>
+        <source>&amp;Print</source>
+        <translation>Im&amp;primer</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Print this help page</source>
+        <translation>Imprimer cette page d&apos;aide</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

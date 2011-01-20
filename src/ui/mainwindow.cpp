@@ -8,7 +8,7 @@
     #include <windows.h>
 #endif
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QCloseEvent>
 #include <QDebug>
 #include <QDesktopServices>
@@ -17,6 +17,7 @@
 #include <QHelpEngine>
 #include <QLibraryInfo>
 #include <QMessageBox>
+#include <QProcess>
 #include <QSettings>
 #include <QTemporaryFile>
 #include <QTranslator>
@@ -34,34 +35,27 @@
 #define ENGLISH_LOCALE "en"
 #define FRENCH_LOCALE  "fr"
 
-MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
+MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
-    mRestart(pRestart)
+    mLocale("")   // This will ensure that the locale is properly set the first
+                  // time setLocale is called
 {
-    // Set up the GUI
+    // Set up the UI
 
     mUi->setupUi(this);
+    // Note: the application icon (which needs to be set in the case of Linux,
+    //       unlike in the case of Windows and Mac OS X, since it's set through
+    //       CMake in those cases (see CMakeLists.txt)) is set within the UI
+    //       file. Otherwise, it's good to have it set for all three platforms,
+    //       since it can then be used in, for example, the about box...
+
 
     // Set the name of the main window to that of the application
 
     setWindowTitle(qApp->applicationName());
 
-    // Some basic signals/events for some actions
-
-    connect(mUi->actionExit, SIGNAL(triggered(bool)),
-            this, SLOT(close()));
-    connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
-            this, SLOT(resetAll()));
-
-    // Signals/events for showing/hiding the various toolbars
-
-    connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
-            mUi->helpToolbar, SLOT(setVisible(bool)));
-    connect(mUi->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-            mUi->actionHelpToolbar, SLOT(setChecked(bool)));
-
-    // Extract the help files
+    // Create a temporary directory where to put OpenCOR's resources
 
     QTemporaryFile tempDir;
 
@@ -71,6 +65,8 @@ MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
     mTempDirName = tempDir.fileName().append("."+qApp->applicationName());
 
     QDir().mkdir(mTempDirName);
+
+    // Extract the help files
 
     QString applicationBaseName(QFileInfo(qApp->applicationFilePath()).baseName());
 
@@ -86,9 +82,21 @@ MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
 
     mHelpEngine->setupData();
 
-    // Help window
+    // Create the help window
 
     mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OPENCOR_HELP_HOMEPAGE));
+
+    // Some connections
+
+    connect(mUi->actionExit, SIGNAL(triggered(bool)),
+            this, SLOT(close()));
+    connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
+            this, SLOT(resetAll()));
+
+    connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
+            mUi->helpToolbar, SLOT(setVisible(bool)));
+    connect(mUi->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
+            mUi->actionHelpToolbar, SLOT(setChecked(bool)));
 
     connect(mUi->actionHelp, SIGNAL(triggered(bool)),
             mHelpWindow, SLOT(setVisible(bool)));
@@ -109,14 +117,15 @@ MainWindow::MainWindow(bool *pRestart, QWidget *pParent) :
 
     updateGUI();
 
-    // Bring ourselves to the foreground. Indeed, when restarting OpenCOR as a
-    // result of a result all, OpenCOR will on Mac OS X be behind the other
+    // Bring ourselves to the foreground. Indeed, when restarting OpenCOR (as a
+    // result of a reset all), OpenCOR will on Mac OS X be behind other
     // applications. This behaviour has, on occasions, also been observed on
-    // Windows, so... rather than making the following Mac OS X, we may as well
-    // make it cross-platform, since it doesn't have any adverse effect on any
-    // of the operating system on which we use OpenCOR.
+    // Windows, so... rather than making the following code Mac OS X specific,
+    // we may as well make it general, since it doesn't have any adverse effect
+    // on Windows or Linux
 
-    raise();
+    activateWindow();
+    raise();   // Just to be on the safe side
 }
 
 MainWindow::~MainWindow()
@@ -131,102 +140,22 @@ MainWindow::~MainWindow()
     QFile(mQchFileName).remove();
     QFile(mQhcFileName).remove();
 
+    // Delete the temporary directory
+
     QDir().rmdir(mTempDirName);
 }
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
-    // Keep track of our default settings, but only if we don't want to restart
-    // OpenCOR (i.e. as a result of a reset all)
+    // Keep track of our default settings
     // Note: it must be done here, as opposed to the destructor, otherwise some
     //       settings (e.g. docked windows) won't be properly saved
 
-    if (!*mRestart)
-        saveSettings();
+    saveSettings();
+
+    // Accept the event
 
     pEvent->accept();
-}
-
-
-void MainWindow::singleAppMsgRcvd(const QString&)
-{
-    // We have just received a message from another instance of OpenCOR, so
-    // bring ourselves to the foreground
-    // Note: one would normally use activateWindow(), but depending on the
-    //       operating system it may or not bring OpenCOR to the foreground,
-    //       so... instead we do what follows, depending on the operating
-    //       system...
-
-#ifdef Q_WS_WIN
-    // Retrieve OpenCOR's window Id
-
-    WId mwWinId = winId();
-
-    // Restore OpenCOR, should it be minimized
-
-    if (IsIconic(mwWinId))
-        SendMessage(mwWinId, WM_SYSCOMMAND, SC_RESTORE, 0);
-
-    // Bring OpenCOR to the foreground
-
-    DWORD foregroundThreadPId = GetWindowThreadProcessId(GetForegroundWindow(), NULL);
-    DWORD mwThreadPId         = GetWindowThreadProcessId(mwWinId, NULL);
-
-    if (foregroundThreadPId != mwThreadPId)
-    {
-        // OpenCOR's thread process Id is not that of the foreground window, so
-        // attach the foreground thread to OpenCOR's, set OpenCOR to the
-        // foreground, and detach the foreground thread from OpenCOR's
-
-        AttachThreadInput(foregroundThreadPId, mwThreadPId, true);
-
-        SetForegroundWindow(mwWinId);
-
-        AttachThreadInput(foregroundThreadPId, mwThreadPId, false);
-    }
-    else
-        // OpenCOR's thread process Id is that of the foreground window, so
-        // just set OpenCOR to the foreground
-
-        SetForegroundWindow(mwWinId);
-
-    // Note: under Windows, to use activateWindow() will only highlight the
-    //       application in the taskbar, since under Windows no application
-    //       should be allowed to bring itself to the foreground when another
-    //       application is already in the foreground. Fair enough, but it
-    //       happens that, here, the user wants OpenCOR to be brought to the
-    //       foreground, hence the above code to get the effect we are after...
-#else
-    // Do what one should normally do and which works fine under Mac OS X
-
-    activateWindow();
-
-    #ifdef Q_WS_X11
-        raise();
-        // Note: under Linux, to use activateWindow() may or not give the
-        //       expected result. The above code is supposed to make sure that
-        //       OpenCOR gets brought to the foreground, but that itsn't the
-        //       case under Ubuntu at least (it works when you want to open a
-        //       second instance of OpenCOR, but not thereafter!)...
-    #endif
-#endif
-
-    // Now, we must handle the arguments that were passed to us
-
-    // TODO: handle the arguments passed to the 'official' instance of OpenCOR
-}
-
-void MainWindow::resetAll()
-{
-    // Clear all the user settings and asked for OpenCOR to be restarted
-    // (indeed, a restart will ensure that all the docked windows are properly
-    // reset with regards to their dimensions)
-
-    QSettings(SETTINGS_INSTITUTION, qApp->applicationName()).clear();
-
-    *mRestart = true;
-
-    close();
 }
 
 void MainWindow::defaultSettings()
@@ -244,6 +173,12 @@ void MainWindow::defaultSettings()
 
     setGeometry(desktopGeometry.left()+horizSpace, desktopGeometry.top()+vertSpace, desktopGeometry.width()-2*horizSpace, desktopGeometry.height()-2*vertSpace);
 
+    // Default visibility and location of the various toolbars
+
+    addToolBar(Qt::TopToolBarArea, mUi->helpToolbar);
+
+    mUi->helpToolbar->setVisible(true);
+
     // Default size and position of the help window
 
     mHelpWindow->setVisible(false);   // So we can set things up without having
@@ -254,12 +189,6 @@ void MainWindow::defaultSettings()
     mHelpWindow->defaultSettings();
 
     mHelpWindow->setVisible(true);
-
-    // Default visibility and location of the various toolbars
-
-    addToolBar(Qt::TopToolBarArea, mUi->helpToolbar);
-
-    mUi->helpToolbar->setVisible(true);
 }
 
 void MainWindow::loadSettings()
@@ -336,6 +265,76 @@ void MainWindow::setLocale(const QString& pLocale)
     mUi->actionFrench->setChecked(mLocale == FRENCH_LOCALE);
 }
 
+void MainWindow::updateGUI()
+{
+    // Update the checked status of the toolbars menu items
+
+    mUi->actionHelpToolbar->setChecked(mUi->helpToolbar->isVisible());
+}
+
+void MainWindow::singleAppMsgRcvd(const QString&)
+{
+    // We have just received a message from another instance of OpenCOR, so
+    // bring ourselves to the foreground
+    // Note: one would normally use activateWindow(), but depending on the
+    //       operating system it may or not bring OpenCOR to the foreground,
+    //       so... instead we do what follows, depending on the operating
+    //       system...
+
+#ifdef Q_WS_WIN
+    // Retrieve OpenCOR's window Id
+
+    WId mwWinId = winId();
+
+    // Restore OpenCOR, should it be minimized
+
+    if (IsIconic(mwWinId))
+        SendMessage(mwWinId, WM_SYSCOMMAND, SC_RESTORE, 0);
+
+    // Bring OpenCOR to the foreground
+
+    DWORD foregroundThreadPId = GetWindowThreadProcessId(GetForegroundWindow(), NULL);
+    DWORD mwThreadPId         = GetWindowThreadProcessId(mwWinId, NULL);
+
+    if (foregroundThreadPId != mwThreadPId)
+    {
+        // OpenCOR's thread process Id is not that of the foreground window, so
+        // attach the foreground thread to OpenCOR's, set OpenCOR to the
+        // foreground, and detach the foreground thread from OpenCOR's
+
+        AttachThreadInput(foregroundThreadPId, mwThreadPId, true);
+
+        SetForegroundWindow(mwWinId);
+
+        AttachThreadInput(foregroundThreadPId, mwThreadPId, false);
+    }
+    else
+        // OpenCOR's thread process Id is that of the foreground window, so
+        // just set OpenCOR to the foreground
+
+        SetForegroundWindow(mwWinId);
+
+    // Note: under Windows, to use activateWindow() will only highlight the
+    //       application in the taskbar, since under Windows no application
+    //       should be allowed to bring itself to the foreground when another
+    //       application is already in the foreground. Fair enough, but it
+    //       happens that, here, the user wants OpenCOR to be brought to the
+    //       foreground, hence the above code to get the effect we are after...
+#else
+    // Do what one should normally do
+
+    activateWindow();
+    raise();   // Just to be on the safe side
+    // Note: raise() never seems to be required on Mac OS X, but to use
+    //       activateWindow() under Linux may or not give the expected result,
+    //       so...
+#endif
+
+    // Now, we must handle the arguments that were passed to OpenCOR
+
+    // TODO: handle the arguments passed to the 'official' instance of OpenCOR
+}
+
 void MainWindow::on_actionEnglish_triggered()
 {
     // Select English as the language used by OpenCOR
@@ -350,16 +349,9 @@ void MainWindow::on_actionFrench_triggered()
     setLocale(FRENCH_LOCALE);
 }
 
-void MainWindow::updateGUI()
-{
-    // Update the checked status of the toolbars menu items
-
-    mUi->actionHelpToolbar->setChecked(mUi->helpToolbar->isVisible());
-}
-
 void MainWindow::on_actionHomePage_triggered()
 {
-    // Look up the OpenCOR home page
+    // Look up OpenCOR's home page
 
     QDesktopServices::openUrl(QUrl(OPENCOR_HOMEPAGE));
 }
@@ -374,4 +366,24 @@ void MainWindow::on_actionAbout_triggered()
                        "</CENTER>"+
                        "<BR>"+
                        "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+qApp->applicationName()+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
+}
+
+void MainWindow::resetAll()
+{
+    // Clear all the user settings and restart OpenCOR (indeed, a restart will
+    // ensure that all the docked windows are, for instance, properly
+    // reset with regards to their dimensions)
+
+    QSettings(SETTINGS_INSTITUTION, qApp->applicationName()).clear();
+
+    // Restart OpenCOR, but without providing any of the argument with which
+    // OpenCOR was originally started, since we indeed want to reset everything
+
+    QProcess::startDetached(qApp->applicationFilePath(), QStringList(), qApp->applicationDirPath());
+
+    // Quit OpenCOR
+    // Note: the closeEvent method won't get called and this is exactly what we
+    //       want, since we don't want to save OpenCOR's settings
+
+    qApp->quit();
 }

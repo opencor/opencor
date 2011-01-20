@@ -1,7 +1,6 @@
 #include "ui/mainwindow.h"
 
 #include <QFileInfo>
-#include <QProcess>
 
 #include <QtSingleApplication>
 
@@ -45,14 +44,7 @@ int main(int pArgc, char *pArgv[])
 
     // Create the main window
 
-    bool restart = false;
-
-    MainWindow win(&restart);
-    // Note: the application icon (which is useful for Linux, since in the case
-    //       of Windows and Mac, it's set through CMake (see CMakeLists.txt))
-    //       is set within the UI file. Otherwise, it's good to have it set for
-    //       all three platforms, since it can then be used in, for example,
-    //       the about box...
+    MainWindow win;
 
     // Keep track of the main window (useful for QtSingleApplication)
 
@@ -70,13 +62,5 @@ int main(int pArgc, char *pArgv[])
 
     // Execute the application
 
-    int res = app.exec();
-
-    if (restart)
-        QProcess::startDetached(app.applicationFilePath(), QStringList(), app.applicationDirPath());
-        // Note: because we are restarting as a result of a result all, we must
-        //       not provide OpenCOR with any argument, even if it was provided
-        //       with some in the first place
-
-    return res;
+    return app.exec();
 }

@@ -38,15 +38,20 @@ private:
     HelpWidget *mHelpWidget;
 
 private Q_SLOTS:
-    void on_actionNormalSize_triggered();
-    void on_actionZoomOut_triggered();
-    void on_actionZoomIn_triggered();
-    void on_actionForward_triggered();
-    void on_actionBack_triggered();
     void on_actionHome_triggered();
+    void on_actionBack_triggered();
+    void on_actionForward_triggered();
+    void on_actionCopy_triggered();
+    void on_actionNormalSize_triggered();
+    void on_actionZoomIn_triggered();
+    void on_actionZoomOut_triggered();
+    void on_actionPrint_triggered();
 
-    void checkUrlChanged(const QUrl& pNewUrl);
-    void checkNewZoomLevel(int pNewZoomLevel);
+    void customContextMenu(const QPoint& pPos);
+
+    void newUrl(const QUrl& pNewUrl);
+    void newSelection();
+    void newZoomLevel(int pNewZoomLevel);
 };
 
 #endif // HELPWINDOW_H
