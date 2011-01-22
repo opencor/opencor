@@ -24,44 +24,48 @@
 
         <P>
             In order to develop, build, test and/or package OpenCOR, you need the following tools:
+        </P>
 
-            <UL>
-                <LI><A HREF = "http://git-scm.com/">Git</A> (the <A HREF = "http://packages.ubuntu.com/maverick/git">git</A> package on Ubuntu): the distributed version control system used to keep track of OpenCOR's source code. You can get a copy of the source code by cloning our Git repository in <SPAN CLASS = "Italic">read only</SPAN> mode:</LI>
+        <UL>
+            <LI>
+                <A HREF = "http://git-scm.com/">Git</A> (the <A HREF = "http://packages.ubuntu.com/maverick/git">git</A> package on Ubuntu): the distributed version control system used to keep track of OpenCOR's source code. You can get a copy of the source code by cloning our Git repository in <SPAN CLASS = "Italic">read only</SPAN> mode:
                     <PRE>$ git clone git://opencor.git.sourceforge.net/gitroot/opencor/opencor</PRE>
-                <LI><A HREF = "http://www.cmake.org/">CMake</A> 2.8+ (the <A HREF = "http://packages.ubuntu.com/maverick/cmake">cmake</A> package on Ubuntu): the cross-platform build system used to build OpenCOR;</LI>
-                <LI><A HREF = "http://qt.nokia.com/products/developer-tools">Qt Creator</A> (the <A HREF = "http://packages.ubuntu.com/maverick/qtcreator">qtcreator</A> package on Ubuntu): the cross-platform environment used to develop OpenCOR as a <A HREF = "http://qt.nokia.com/">Qt</A> 4.7+ application; and</LI>
+            </LI>
+            <LI><A HREF = "http://www.cmake.org/">CMake</A> 2.8+ (the <A HREF = "http://packages.ubuntu.com/maverick/cmake">cmake</A> package on Ubuntu): the cross-platform build system used to build OpenCOR;</LI>
+            <LI>
+                <A HREF = "http://qt.nokia.com/products/developer-tools">Qt Creator</A> (the <A HREF = "http://packages.ubuntu.com/maverick/qtcreator">qtcreator</A> package on Ubuntu): the cross-platform environment used to develop OpenCOR as a <A HREF = "http://qt.nokia.com/">Qt</A> 4.7+ application; and
                     <UL>
                         <LI><SPAN CLASS = "Bold">Note #1:</SPAN> both CMake and Git are supported by Qt Creator, but Git might need configuring by selecting the <SPAN CLASS = "Italic">Tools</SPAN>|<SPAN CLASS = "Italic">Options...</SPAN> menu, then the <SPAN CLASS = "Italic">Version Control</SPAN> section, and finally the <SPAN CLASS = "Italic">Git</SPAN> tab. Alternatively, you can always use Git from the command line or, on Windows, with <A HREF = "http://code.google.com/p/tortoisegit/">TortoiseGit</A>.</LI>
                         <LI><SPAN CLASS = "Bold">Note #2:</SPAN> on Ubuntu, you will also need the <A HREF = "http://packages.ubuntu.com/maverick/g++">g++</A> package, while <A HREF = "http://developer.apple.com/technologies/tools/xcode.html">Xcode</A> on Mac OS X.</LI>
                         <LI><SPAN CLASS = "Bold">Note #3:</SPAN> OpenCOR is developed using the latest version of Qt Creator (currently 2.0.1) which is based on Qt 4.7.0 (even though the latest version of Qt is currently 4.7.1). However, it happens that OpenCOR can also be built using Qt 4.6. For this reason, our CMake script requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.</LI>
                     </UL>
-                <LI><A HREF = "http://nsis.sourceforge.net/">NSIS</A> (Windows only): one the solutions used to package OpenCOR on Windows.</LI>
-            </UL>
-        </P>
+            </LI>
+            <LI><A HREF = "http://nsis.sourceforge.net/">NSIS</A> (Windows only): one the solutions used to package OpenCOR on Windows.</LI>
+        </UL>
 
-        <P>
-            <SPAN CLASS = "SectionFont">Develop</SPAN>
-        </P>
+        <SPAN CLASS = "SectionFont">Develop</SPAN>
 
         <P>
             Except for the <A HREF = "../user/authors.html">authors</A>, OpenCOR is not currently opened for development. This will change as soon as OpenCOR gets officially released.
         </P>
 
-        <P>
-            <SPAN CLASS = "SectionFont"><A NAME = "buildAndTest">Build and Test</A></SPAN>
-        </P>
+        <SPAN CLASS = "SectionFont"><A NAME = "buildAndTest">Build and Test</A></SPAN>
 
         <P>
             OpenCOR can be built in two different ways:
+        </P>
 
-            <UL>
-                <LI><SPAN CLASS = "Bold">Command line:</SPAN> various batch and VBScript files (<SPAN CLASS = "Italic">.bat</SPAN> and <SPAN CLASS = "Italic">.vbs</SPAN> files) on Windows and shell scripts on Ubuntu/Mac OS X are available: (Note that these command line tools require access to CMake, MinGW/g++/Xcode (for Windows, Ubuntu and Mac OS X, respectively) and Qt from the command line. This should be the case on Ubuntu and Mac OS X, but on Windows your <SPAN CLASS = "Italic">PATH</SPAN> environment variable might need updating.)</LI>
+        <UL>
+            <LI>
+                <SPAN CLASS = "Bold">Command line:</SPAN> various batch and VBScript files (<SPAN CLASS = "Italic">.bat</SPAN> and <SPAN CLASS = "Italic">.vbs</SPAN> files) on Windows and shell scripts on Ubuntu/Mac OS X are available: (Note that these command line tools require access to CMake, MinGW/g++/Xcode (for Windows, Ubuntu and Mac OS X, respectively) and Qt from the command line. This should be the case on Ubuntu and Mac OS X, but on Windows your <SPAN CLASS = "Italic">PATH</SPAN> environment variable might need updating.)
                     <UL>
                         <LI><SPAN CLASS = "Bold">clean[.bat]:</SPAN> cleans the OpenCOR environment;</LI>
                         <LI><SPAN CLASS = "Bold">buildall[.bat]:</SPAN> builds everything that is required get a binary version of OpenCOR; and</LI>
                         <LI><SPAN CLASS = "Bold">run[.vbs]:</SPAN> runs OpenCOR.</LI>
                     </UL>
-                <LI><SPAN CLASS = "Bold">Using Qt Creator:</SPAN></LI>
+            </LI>
+            <LI>
+                <SPAN CLASS = "Bold">Using Qt Creator:</SPAN>
                     <UL>
                         <LI>Start Qt Creator;</LI>
                         <LI>Open <SPAN CLASS = "Italic">[OpenCOR]/CMakeLists.txt</SPAN> (by selecting the <SPAN CLASS = "Italic">File</SPAN>|<SPAN CLASS = "Italic">Open File or Project...</SPAN> menu or by pressing <SPAN CLASS = "Italic">Ctrl+O</SPAN>);</LI>
@@ -72,12 +76,10 @@
                         <LI>Select <SPAN CLASS = "Italic">OpenCOR</SPAN> as the run target (by selecting the <SPAN CLASS = "Italic">Build</SPAN>|<SPAN CLASS = "Italic">Open Build/Run Target Seclector...</SPAN> menu or by pressing <SPAN CLASS = "Italic">Ctrl+T</SPAN>); and</LI>
                         <LI>Build and test OpenCOR (by selecting the <SPAN CLASS = "Italic">Build</SPAN>|<SPAN CLASS = "Italic">Run</SPAN> menu or by pressing <SPAN CLASS = "Italic">Ctrl+R</SPAN>).</LI>
                     </UL>
-            </UL>
-        </P>
+            </LI>
+        </UL>
 
-        <P>
-            <SPAN CLASS = "SectionFont">Package</SPAN>
-        </P>
+        <SPAN CLASS = "SectionFont">Package</SPAN>
 
         <P>
             The packaging of OpenCOR can only be done from the command line, using <SPAN CLASS = "Italic">packageall.bat</SPAN> on Windows and <SPAN CLASS = "Italic">packageall</SPAN> on Ubuntu/Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in the latter case.
