@@ -10,13 +10,13 @@ WMsg="Information: OpenCOR must first be built before being run."
 
 if [ $OS = "Linux" ]; then
     if [ -f build/OpenCOR ]; then
-        build/OpenCOR
+        build/OpenCOR $*
     else
         echo $WMsg
     fi
 else
     if [ -d build/OpenCOR.app ]; then
-        open build/OpenCOR.app
+        build/OpenCOR.app/Contents/MacOS/OpenCOR $*
     else
         echo $WMsg
     fi
