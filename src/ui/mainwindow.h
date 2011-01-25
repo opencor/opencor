@@ -13,6 +13,8 @@ class HelpWindow;
 class QHelpEngine;
 class QSettings;
 
+class QxtTemporaryDir;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -35,7 +37,7 @@ private:
     QHelpEngine *mHelpEngine;
     HelpWindow *mHelpWindow;
 
-    QString mTempDirName;
+    QxtTemporaryDir *mTempDir;
     QString mQchFileName, mQhcFileName;
 
     void defaultSettings();

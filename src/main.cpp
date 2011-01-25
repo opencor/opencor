@@ -2,8 +2,9 @@
 
 #include <QFileInfo>
 
-#include <QxtCommandOptions>
 #include <QtSingleApplication>
+
+#include <QxtCommandOptions>
 
 int main(int pArgc, char *pArgv[])
 {

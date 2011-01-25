@@ -23,6 +23,8 @@
 #include <QTranslator>
 #include <QUrl>
 
+#include <QxtTemporaryDir>
+
 #define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
 #define OPENCOR_HELP_HOMEPAGE "qthelp://world.opencor/doc/userIndex.html"
 
@@ -57,21 +59,16 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create a temporary directory where to put OpenCOR's resources
 
-    QTemporaryFile tempDir;
+    mTempDir = new QxtTemporaryDir();
 
-    tempDir.open();    // Note: this is required to get a 'valid' temporary
-    tempDir.close();   //       directory name...
-
-    mTempDirName = tempDir.fileName().append("."+qApp->applicationName());
-
-    QDir().mkdir(mTempDirName);
+setWindowTitle(mTempDir->path());
 
     // Extract the help files
 
     QString applicationBaseName(QFileInfo(qApp->applicationFilePath()).baseName());
 
-    mQchFileName = mTempDirName+QDir::separator()+applicationBaseName+".qch";
-    mQhcFileName = mTempDirName+QDir::separator()+applicationBaseName+".qhc";
+    mQchFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qch";
+    mQhcFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qhc";
 
     saveResourceAs(":qchFile", mQchFileName);
     saveResourceAs(":qhcFile", mQhcFileName);
@@ -136,14 +133,13 @@ MainWindow::~MainWindow()
     delete mHelpEngine;
     delete mUi;
 
-    // Delete the help files
+    // Delete the help files and then temporary directory by deleting the
+    // temporary directory object
 
     QFile(mQchFileName).remove();
     QFile(mQhcFileName).remove();
 
-    // Delete the temporary directory
-
-    QDir().rmdir(mTempDirName);
+    delete mTempDir;
 }
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
