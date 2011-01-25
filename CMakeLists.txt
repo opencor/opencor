@@ -123,14 +123,27 @@ ENDIF()
 
 # Build the third-party libraries used by OpenCOR
 
-SET(3RDPARTYLIBS QtSingleApplication)
+SET(3RDPARTYLIBS LibQxt QtSingleApplication)
 
 FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
     SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})
+    SET(3RDPARTYLIB_SUBDIRS)
 
     ADD_SUBDIRECTORY(${3RDPARTYLIB_DIR})
 
-    INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR})
+    IF("${3RDPARTYLIB_SUBDIRS}" STRGREATER "")
+        # The third-party library has at least one sub-directory, so add
+        # it/them
+
+        FOREACH(3RDPARTYLIB_SUBDIR ${3RDPARTYLIB_SUBDIRS})
+            INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR}/${3RDPARTYLIB_SUBDIR})
+        ENDFOREACH()
+    ELSE()
+        # The third-party library doesn't have any sub-directory, so just add
+        # the third-party library directory and that's it
+
+        INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR})
+    ENDIF()
 ENDFOREACH()
 
 # Rules to build OpenCOR
@@ -179,7 +192,7 @@ ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 IF(WIN32)
     ADD_DEFINITIONS(-enable-auto-import)
 
-    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,--enable-auto-import") 
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,--enable-auto-import")
 ENDIF()
 
 # Some post-processing specific to Mac OS X which ensures that OpenCOR can be
