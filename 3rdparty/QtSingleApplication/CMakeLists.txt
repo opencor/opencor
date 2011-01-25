@@ -3,14 +3,21 @@ PROJECT(QtSingleApplication)
 # Files that make up QtSingleApplication
 
 SET(SOURCES
-    qtlocalpeer.cpp
-    qtsingleapplication.cpp
+    src/qtlocalpeer.cpp
+    src/qtsingleapplication.cpp
 )
 
 SET(HEADERS_MOC
-    qtlocalpeer.h
-    qtsingleapplication.h
+    src/qtlocalpeer.h
+    src/qtsingleapplication.h
 )
+
+# Various include directories
+
+SET(LOCAL_3RDPARTYLIB_SUBDIRS src)
+SET(3RDPARTYLIB_SUBDIRS ${LOCAL_3RDPARTYLIB_SUBDIRS} PARENT_SCOPE)
+
+INCLUDE_DIRECTORIES(${LOCAL_3RDPARTYLIB_SUBDIRS})
 
 # Qt specific
 

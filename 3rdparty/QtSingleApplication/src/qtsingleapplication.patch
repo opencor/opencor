@@ -1,7 +1,7 @@
-diff --git a/3rdparty/qtsingleapplication/qtlocalpeer.cpp b/3rdparty/qtsingleapplication/qtlocalpeer.cpp
+diff --git a/3rdparty/QtSingleApplication/src/qtlocalpeer.cpp b/3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
 index 382d182..89b9c93 100644
---- a/3rdparty/qtsingleapplication/qtlocalpeer.cpp
-+++ b/3rdparty/qtsingleapplication/qtlocalpeer.cpp
+--- a/3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
++++ b/3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
 @@ -52,14 +52,12 @@ static PProcessIdToSessionId pProcessIdToSessionId = 0;
  #include <time.h>
  #endif
@@ -26,10 +26,10 @@ index 382d182..89b9c93 100644
          return true;
  
      bool res = server->listen(socketName);
-diff --git a/3rdparty/qtsingleapplication/qtlocalpeer.h b/3rdparty/qtsingleapplication/qtlocalpeer.h
+diff --git a/3rdparty/QtSingleApplication/src/qtlocalpeer.h b/3rdparty/QtSingleApplication/src/qtlocalpeer.h
 index 869af2a..dc1e09e 100644
---- a/3rdparty/qtsingleapplication/qtlocalpeer.h
-+++ b/3rdparty/qtsingleapplication/qtlocalpeer.h
+--- a/3rdparty/QtSingleApplication/src/qtlocalpeer.h
++++ b/3rdparty/QtSingleApplication/src/qtlocalpeer.h
 @@ -65,7 +65,7 @@ protected:
      QString id;
      QString socketName;
@@ -39,10 +39,10 @@ index 869af2a..dc1e09e 100644
  
  private:
      static const char* ack;
-diff --git a/3rdparty/qtsingleapplication/qtlockedfile.h b/3rdparty/qtsingleapplication/qtlockedfile.h
+diff --git a/3rdparty/QtSingleApplication/src/qtlockedfile.h b/3rdparty/QtSingleApplication/src/qtlockedfile.h
 index 07a42bf..b65c06a 100644
---- a/3rdparty/qtsingleapplication/qtlockedfile.h
-+++ b/3rdparty/qtsingleapplication/qtlockedfile.h
+--- a/3rdparty/QtSingleApplication/src/qtlockedfile.h
++++ b/3rdparty/QtSingleApplication/src/qtlockedfile.h
 @@ -61,8 +61,6 @@
  #  define QT_QTLOCKEDFILE_EXPORT
  #endif
@@ -58,10 +58,10 @@ index 07a42bf..b65c06a 100644
  };
 -}
  #endif
-diff --git a/3rdparty/qtsingleapplication/qtlockedfile_win.cpp b/3rdparty/qtsingleapplication/qtlockedfile_win.cpp
+diff --git a/3rdparty/QtSingleApplication/src/qtlockedfile_win.cpp b/3rdparty/QtSingleApplication/src/qtlockedfile_win.cpp
 index 4cd2003..9e6b34f 100644
---- a/3rdparty/qtsingleapplication/qtlockedfile_win.cpp
-+++ b/3rdparty/qtsingleapplication/qtlockedfile_win.cpp
+--- a/3rdparty/QtSingleApplication/src/qtlockedfile_win.cpp
++++ b/3rdparty/QtSingleApplication/src/qtlockedfile_win.cpp
 @@ -58,7 +58,7 @@ Qt::HANDLE QtLockedFile::getMutexHandle(int idx, bool doCreate)
  
      Qt::HANDLE mutex;
