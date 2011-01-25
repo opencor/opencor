@@ -28,7 +28,6 @@
 #define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
 #define OPENCOR_HELP_HOMEPAGE "qthelp://world.opencor/doc/userIndex.html"
 
-#define SETTINGS_INSTITUTION "World"
 #define SETTINGS_GENERAL_LOCALE "General_Locale"
 #define SETTINGS_GENERAL_GEOMETRY "General_Geometry"
 #define SETTINGS_GENERAL_STATE "General_State"
@@ -60,8 +59,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     // Create a temporary directory where to put OpenCOR's resources
 
     mTempDir = new QxtTemporaryDir();
-
-setWindowTitle(mTempDir->path());
 
     // Extract the help files
 
@@ -190,7 +187,7 @@ void MainWindow::defaultSettings()
 
 void MainWindow::loadSettings()
 {
-    QSettings settings(SETTINGS_INSTITUTION, qApp->applicationName());
+    QSettings settings(qApp->organizationName(), qApp->applicationName());
 
     // Retrieve the language to be used by OpenCOR
 
@@ -211,7 +208,7 @@ void MainWindow::loadSettings()
 
 void MainWindow::saveSettings()
 {
-    QSettings settings(SETTINGS_INSTITUTION, qApp->applicationName());
+    QSettings settings(qApp->organizationName(), qApp->applicationName());
 
     // Keep track of the language to be used by OpenCOR
 
@@ -372,7 +369,7 @@ void MainWindow::resetAll()
     // ensure that all the docked windows are, for instance, properly
     // reset with regards to their dimensions)
 
-    QSettings(SETTINGS_INSTITUTION, qApp->applicationName()).clear();
+    QSettings(qApp->organizationName(), qApp->applicationName()).clear();
 
     // Restart OpenCOR, but without providing any of the argument with which
     // OpenCOR was originally started, since we indeed want to reset everything

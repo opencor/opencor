@@ -23,6 +23,10 @@ int main(int pArgc, char *pArgv[])
         return 0;
     }
 
+    // Set the name of the organization
+
+    app.setOrganizationName("World");
+
     // Set the name of the application
 
     app.setApplicationName(QFileInfo(app.applicationFilePath()).baseName());
