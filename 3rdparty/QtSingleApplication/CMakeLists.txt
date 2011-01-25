@@ -2,12 +2,12 @@ PROJECT(QtSingleApplication)
 
 # Files that make up QtSingleApplication
 
-SET(${PROJECT_NAME}_SOURCES
+SET(SOURCES
     qtlocalpeer.cpp
     qtsingleapplication.cpp
 )
 
-SET(${PROJECT_NAME}_HEADERS_MOC
+SET(HEADERS_MOC
     qtlocalpeer.h
     qtsingleapplication.h
 )
@@ -18,7 +18,7 @@ FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
 
 INCLUDE(${QT_USE_FILE})
 
-QT4_WRAP_CPP(${PROJECT_NAME}_SOURCES_MOC ${${PROJECT_NAME}_HEADERS_MOC})
+QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
 
 # Rules to build QtSingleApplication
 
@@ -31,8 +31,8 @@ ENDIF()
 #       first having to package everything
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
-    ${${PROJECT_NAME}_SOURCES}
-    ${${PROJECT_NAME}_SOURCES_MOC}
+    ${SOURCES}
+    ${SOURCES_MOC}
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
