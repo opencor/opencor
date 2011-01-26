@@ -1,4 +1,4 @@
-#include "ui/mainwindow.h"
+#include "mainwindow.h"
 
 #include <QFileInfo>
 
