@@ -14,7 +14,7 @@ SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 FILE(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/build/version.txt ${VERSION})
 
-# Files that make up OpenCOR
+# Files that make up the GUI version of OpenCOR
 
 SET(SOURCES
     src/main.cpp
@@ -131,7 +131,7 @@ ELSEIF(APPLE)
     SET(SOURCES ${SOURCES} res/${IconFile})
 ENDIF()
 
-# Build the third-party libraries used by OpenCOR
+# Build the third-party libraries used by the GUI version of OpenCOR
 
 SET(3RDPARTYLIBS LibQxt QtSingleApplication)
 
@@ -156,7 +156,7 @@ FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
     ENDIF()
 ENDFOREACH()
 
-# Rules to build OpenCOR
+# Rules to build the GUI version of OpenCOR
 
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)

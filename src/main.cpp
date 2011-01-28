@@ -20,8 +20,8 @@ int main(int pArgc, char *pArgv[])
     //       arguments that require a command line treatment, then the GUI
     //       version of OpenCOR will be launched. This is, unfortunately, the
     //       only way to have OpenCOR behave as both a command line and GUI
-    //       application on Windows, hence the mainWinCmdLine.cpp file which is
-    //       used to generate the command line version of OpenCOR...
+    //       application on Windows, hence the ../winCmdLine/main.cpp file
+    //       which is used to generate the command line version of OpenCOR...
 
     int res;
 
