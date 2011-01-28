@@ -247,6 +247,10 @@ IF(WIN32)
 
     INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
+    # The console version of OpenCOR
+
+    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/build/${PROJECT_NAME}.com DESTINATION bin)
+    
     # MinGW files required by OpenCOR
 
     FOREACH(DLL mingwm10 libgcc_s_dw2-1)
@@ -263,9 +267,10 @@ IF(WIN32)
 
     INSTALL(FILES ${QT_BINARY_DIR}/../plugins/sqldrivers/qsqlite${QT_VERSION_MAJOR}.dll DESTINATION bin/sqldrivers)
 
-    # VBScript file to run OpenCOR (useful when downloading a ZIPped version of
-    # OpenCOR)
+    # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
+    # version of OpenCOR)
 
+    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/distrib/${PROJECT_NAME}.bat DESTINATION .)
     INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/distrib/${PROJECT_NAME}.vbs DESTINATION .)
 ELSEIF(APPLE)
     # Select PackageMaker and ZIP as the packagers on Mac OS X
