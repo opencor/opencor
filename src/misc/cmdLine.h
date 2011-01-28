@@ -3,6 +3,6 @@
 
 class QCoreApplication;
 
-bool cmdLineApplication(const QCoreApplication& pApp, bool& pRes);
+bool cmdLineApplication(const QCoreApplication& pApp, int& pRes);
 
 #endif

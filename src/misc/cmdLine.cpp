@@ -19,7 +19,7 @@ void usage(const QString& pAppBasename)
 //    std::cout << "for any corresponding short options." << std::endl;
 }
 
-bool cmdLineApplication(const QCoreApplication& pApp, bool& pRes)
+bool cmdLineApplication(const QCoreApplication& pApp, int& pRes)
 {
     pRes = 0;   // By default, everything is fine
 

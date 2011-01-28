@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "cmdLine.h"
 
 #include <QFileInfo>
 
