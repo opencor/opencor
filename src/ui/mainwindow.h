@@ -61,4 +61,4 @@ private Q_SLOTS:
     void resetAll();
 };
 
-#endif // MAINWINDOW_H
+#endif

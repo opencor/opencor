@@ -9,4 +9,4 @@ QString getOsName();
 
 void saveResourceAs(const QString& pResource, const QString& pFilename);
 
-#endif // UTILS_H
+#endif

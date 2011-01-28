@@ -54,4 +54,4 @@ private Q_SLOTS:
     void newZoomLevel(int pNewZoomLevel);
 };
 
-#endif // HELPWINDOW_H
+#endif
