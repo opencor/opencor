@@ -26,6 +26,9 @@ FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
 SET(QT_USE_QTMAIN TRUE)
 # Note: the above ensures that winmain@16 is available on Windows
 
+SET(QT_DONT_USE_QTGUI TRUE)
+# Note: since we want a command line application...
+
 INCLUDE(${QT_USE_FILE})
 
 # Build the third-party libraries used by the command line version of OpenCOR
@@ -72,4 +75,5 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
 
 ADD_DEFINITIONS(-Wall -O2 -ffast-math -enable-auto-import)
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,--enable-auto-import")
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,-subsystem,console,--enable-auto-import")
+Note: -subsystem,console ensures that we end up with a command line application
