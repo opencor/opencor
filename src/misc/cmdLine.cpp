@@ -10,13 +10,13 @@
 
 void usage(const QString& pAppBasename)
 {
-//    std::cout << "Usage: " << pAppBasename.toAscii().constData() << " [OPTION...]" << std::endl;
-    std::cout << "Usage: " << pAppBasename.toAscii().constData() << " [OPTION]" << std::endl;
+    std::cout << "Usage: " << pAppBasename.toAscii().constData() << " [OPTION]... [FILE]..." << std::endl;
+    std::cout << "Start " << pAppBasename.toAscii().constData() << " and open the FILE(s) passed as argument(s)." << std::endl;
     std::cout << std::endl;
     std::cout << " -h, --help   Display this help message and exit" << std::endl;
-//    std::cout << std::endl;
-//    std::cout << "Mandatory or optional arguments to long options are also mandatory or optional" << std::endl;
-//    std::cout << "for any corresponding short options." << std::endl;
+    std::cout << std::endl;
+    std::cout << "Mandatory or optional arguments to long options are also mandatory or optional" << std::endl;
+    std::cout << "for any corresponding short options." << std::endl;
 }
 
 bool cmdLineApplication(const QCoreApplication& pApp, int& pRes)
