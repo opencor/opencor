@@ -10,23 +10,22 @@ int main(int pArgc, char *pArgv[])
     QtSingleApplication app(pArgc, pArgv);
 
 #ifndef Q_WS_WIN
-    // Try to run OpenCOR as a command line application
+    // Try to run OpenCOR as a console application
     // Note: in the case of Windows, we have two binaries (.com and .exe which
-    //       are for the pure command line and GUI versions of OpenCOR, resp.).
-    //       This means that when a console window is open, to enter something
-    //       like:
+    //       are for the pure console and GUI versions of OpenCOR, resp.). This
+    //       means that when a console window is open, to enter something like:
     //           C:\>OpenCOR
     //       will effectively call OpenCOR.com. From there, should there be no
-    //       arguments that require a command line treatment, then the GUI
-    //       version of OpenCOR will be launched. This is, unfortunately, the
-    //       only way to have OpenCOR behave as both a command line and GUI
-    //       application on Windows, hence the ../winCmdLine/main.cpp file
-    //       which is used to generate the command line version of OpenCOR...
+    //       arguments that require a console treatment, then the GUI version
+    //       of OpenCOR will be launched. This is, unfortunately, the only way
+    //       to have OpenCOR behave as both a console and GUI application on
+    //       Windows, hence the ../winCmdLine/main.cpp file which is used to
+    //       generate the console version of OpenCOR...
 
     int res;
 
-    if (cmdLineApplication(app, res))
-        // OpenCOR was run as a proper command line application, so...
+    if (consoleApplication(app, res))
+        // OpenCOR was run as a proper console application, so...
 
         return res;
 #endif

@@ -2,11 +2,11 @@
 
 TITLE Building OpenCOR...
 
-ECHO --------------------------------------------
-ECHO Building the command line version of OpenCOR
-ECHO --------------------------------------------
+ECHO ---------------------------------------
+ECHO Building the console version of OpenCOR
+ECHO ---------------------------------------
 
-CD winCmdLine\build
+CD winConsole\build
 
 cmake -G "MinGW Makefiles" ..
 mingw32-make -j

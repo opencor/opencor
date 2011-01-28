@@ -2,11 +2,11 @@
 
 TITLE Cleaning the OpenCOR environment...
 
-ECHO --------------------------------------------
-ECHO Cleaning the command line version of OpenCOR
-ECHO --------------------------------------------
+ECHO ---------------------------------------
+ECHO Cleaning the console version of OpenCOR
+ECHO ---------------------------------------
 
-CD winCmdLine\build
+CD winConsole\build
 
 mingw32-make -j clean
 

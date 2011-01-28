@@ -10,14 +10,14 @@ int main(int pArgc, char *pArgv[])
 
     int res;
 
-    if (cmdLineApplication(app, res))
-        // OpenCOR was run as a proper command line application, so...
+    if (consoleApplication(app, res))
+        // OpenCOR was run as a proper console application, so...
 
         return res;
     else
     {
-        // OpenCOR wasn't run as a proper command line application, so start
-        // the GUI version of OpenCOR
+        // OpenCOR wasn't run as a proper console application, so start the GUI
+        // version of OpenCOR
 
         QProcess().startDetached(app.applicationDirPath()+"/"+QFileInfo(app.applicationFilePath()).baseName()+".exe",
                                  app.arguments(), QProcess().workingDirectory());

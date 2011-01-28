@@ -1,4 +1,4 @@
-#include "cmdLine.h"
+#include "console.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>
@@ -19,7 +19,7 @@ void usage(const QString& pAppBasename)
     std::cout << "for any corresponding short options." << std::endl;
 }
 
-bool cmdLineApplication(const QCoreApplication& pApp, int& pRes)
+bool consoleApplication(const QCoreApplication& pApp, int& pRes)
 {
     pRes = 0;   // By default, everything is fine
 
@@ -48,8 +48,7 @@ bool cmdLineApplication(const QCoreApplication& pApp, int& pRes)
 
     if (cmdLineOptions.count("help"))
     {
-        // The user wants to know how to use OpenCOR from the command line,
-        // so...
+        // The user wants to know how to use OpenCOR from the console, so...
 
         usage(appBasename);
 
@@ -67,7 +66,7 @@ bool cmdLineApplication(const QCoreApplication& pApp, int& pRes)
     }
     else
         // The user didn't provide any command line options that requires
-        // running OpenCOR as a command line tool, so...
+        // running OpenCOR as a console application, so...
 
         return false;
 }
