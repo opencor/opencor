@@ -11,9 +11,6 @@ CD winConsole\build
 cmake -G "MinGW Makefiles" ..
 mingw32-make -j
 
-COPY /Y OpenCOR.exe ..\..\build
-RENAME ..\..\build\OpenCOR.exe OpenCOR.com
-
 ECHO -----------------------------------
 ECHO Building the GUI version of OpenCOR
 ECHO -----------------------------------
