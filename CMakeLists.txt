@@ -45,11 +45,11 @@ SET(RESOURCES
 
 IF(NOT WIN32)
     SET(SOURCES ${SOURCES}
-        src/misc/cmdLine.cpp
+        src/misc/console.cpp
     )
 
     SET(HEADERS ${SOURCES}
-        src/misc/cmdLine.h
+        src/misc/console.h
     )
 ENDIF()
 

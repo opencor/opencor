@@ -8,11 +8,11 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 SET(SOURCES
     src/main.cpp
-    ../src/misc/cmdLine.cpp
+    ../src/misc/console.cpp
 )
 
 SET(HEADERS
-    ../src/misc/cmdLine.h
+    ../src/misc/console.h
 )
 
 # Various include directories

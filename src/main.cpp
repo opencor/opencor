@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "cmdLine.h"
+#include "console.h"
 
 #include <QFileInfo>
 
@@ -19,7 +19,7 @@ int main(int pArgc, char *pArgv[])
     //       arguments that require a console treatment, then the GUI version
     //       of OpenCOR will be launched. This is, unfortunately, the only way
     //       to have OpenCOR behave as both a console and GUI application on
-    //       Windows, hence the ../winCmdLine/main.cpp file which is used to
+    //       Windows, hence the ../winConsole/main.cpp file which is used to
     //       generate the console version of OpenCOR...
 
     int res;
