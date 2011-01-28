@@ -43,6 +43,16 @@ SET(RESOURCES
     res/${PROJECT_NAME}.qrc
 )
 
+IF(NOT WIN32)
+    SET(SOURCES ${SOURCES}
+        src/misc/cmdLine.cpp
+    )
+
+    SET(HEADERS ${SOURCES}
+        src/misc/cmdLine.h
+    )
+ENDIF()
+
 # Various include directories
 
 INCLUDE_DIRECTORIES(src/misc)
