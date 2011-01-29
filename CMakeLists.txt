@@ -63,11 +63,6 @@ INCLUDE_DIRECTORIES(src/widget)
 
 FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
 
-IF(WIN32)
-    SET(QT_USE_QTMAIN TRUE)
-    # Note: the above ensures that winmain@16 is available on Windows
-ENDIF()
-
 SET(QT_USE_QTHELP TRUE)
 SET(QT_USE_QTNETWORK TRUE)
 SET(QT_USE_QTSQL TRUE)
@@ -202,7 +197,8 @@ ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 IF(WIN32)
     ADD_DEFINITIONS(-enable-auto-import)
 
-    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,--enable-auto-import")
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
+                          "-Wl,--enable-auto-import")
 ENDIF()
 
 # Some post-processing specific to Mac OS X which ensures that OpenCOR can be
