@@ -12,7 +12,7 @@ SET(VERSION_PATCH 1)
 
 SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
-FILE(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/build/version.txt ${VERSION})
+FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -87,7 +87,7 @@ INCLUDE(${QT_USE_FILE})
 
 EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} doc/${PROJECT_NAME}.qhcp
                                                            -o build/${PROJECT_NAME}.qhc
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Update the translation (.ts) files and generate the language (.qm) files
 # which will be embedded in the executable as resources
@@ -102,21 +102,21 @@ FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
     EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} -no-obsolete
                                                      ${SOURCES} ${HEADERS} ${HEADERS_MOC} ${UIS}
                                                  -ts ${TS_FILE}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
     EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${TS_FILE}
                                                   -qm build/${LANGUAGE_FILE}.qm
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 ENDFOREACH()
 
 # Set the application icon, but only for Windows and Mac OS X, since in the
 # case of Linux, it's done through res/OpenCOR.qrc
 
 IF(WIN32)
-    SET(IconObjectFile ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_icon.o)
+    SET(IconObjectFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_icon.o)
 
 
     ADD_CUSTOM_COMMAND(OUTPUT ${IconObjectFile}
-                       COMMAND windres -I ${CMAKE_CURRENT_SOURCE_DIR} -i ${CMAKE_CURRENT_SOURCE_DIR}/res/${PROJECT_NAME}.rc
+                       COMMAND windres -I ${CMAKE_SOURCE_DIR} -i ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc
                                        -o ${IconObjectFile}
                       )
 
@@ -214,14 +214,14 @@ IF(APPLE)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${QT_BINARY_DIR}/macdeployqt ${PROJECT_NAME}.app
-                       WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
     # Add the SQLite plugin to the bundle (required to see the help file)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND mkdir -p ${PROJECT_NAME}.app/Contents/plugins/sqldrivers
                        COMMAND cp ${QT_BINARY_DIR}/../../Applications/Qt/plugins/sqldrivers/libqsqlite.dylib ${PROJECT_NAME}.app/Contents/plugins/sqldrivers
-                       WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 ENDIF()
 
 # Rules to package OpenCOR (using CPack)
@@ -229,7 +229,7 @@ ENDIF()
 SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_CONTACT "Alan Garny (alan.garny@dpag.ox.ac.uk)")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A cross-platform CellML-based modelling environment")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/distrib/readMe.txt")
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
 SET(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
 SET(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
 SET(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
@@ -241,7 +241,7 @@ IF(WIN32)
 
     SET(CPACK_GENERATOR NSIS ZIP)
 
-    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/distrib/licensing.txt")
+    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
 
     # OpenCOR itself
 
@@ -249,7 +249,7 @@ IF(WIN32)
 
     # The console version of OpenCOR
 
-    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/build/${PROJECT_NAME}.com DESTINATION bin)
+    INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.com DESTINATION bin)
     
     # MinGW files required by OpenCOR
 
@@ -270,16 +270,16 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/distrib/${PROJECT_NAME}.bat DESTINATION .)
-    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/distrib/${PROJECT_NAME}.vbs DESTINATION .)
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME}.bat DESTINATION .)
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME}.vbs DESTINATION .)
 ELSEIF(APPLE)
     # Select PackageMaker and ZIP as the packagers on Mac OS X
 
     SET(CPACK_GENERATOR PackageMaker ZIP)
 
-    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/distrib/welcomeForMacOSXInstaller.txt")
-    SET(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/distrib/readMe.txt")
-    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/distrib/licensing.txt")
+    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/welcomeForMacOSXInstaller.txt")
+    SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
+    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
 
     SET(INSTALL_DIR "/Applications/${PROJECT_NAME}")
 
@@ -291,7 +291,7 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/distrib/${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
     # Select TGZ as the packager on Linux
 
@@ -319,7 +319,7 @@ ELSE()
 
     # Qt configuration file to tell OpenCOR where to look for plugins
 
-    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/distrib/qt.conf DESTINATION bin)
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/qt.conf DESTINATION bin)
 
     # SQLite plugin (required to see the help file)
 
@@ -327,7 +327,7 @@ ELSE()
 
     # Shell script to run OpenCOR
 
-    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/distrib/${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ENDIF()
 
 INCLUDE(CPack)
