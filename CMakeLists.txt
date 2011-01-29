@@ -198,7 +198,7 @@ IF(WIN32)
     ADD_DEFINITIONS(-enable-auto-import)
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
-                          "-Wl,--enable-auto-import")
+                          "-Wl,-enable-auto-import")
 ENDIF()
 
 # Some post-processing specific to Mac OS X which ensures that OpenCOR can be

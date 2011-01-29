@@ -73,8 +73,9 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
 ADD_DEFINITIONS(-Wall -O2 -ffast-math -enable-auto-import)
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
-                      "-Wl,-subsystem,console,--enable-auto-import")
-# Note: -subsystem,console ensures that we end up with a console application
+                      "-Wl,-subsystem,console -Wl,-enable-auto-import")
+# Note: -Wl,-subsystem,console ensures that we end up with a console
+#       application
 
 # Move the console version of OpenCOR to the main build folder
 

@@ -3,7 +3,7 @@
 OS=`uname -s`
 
 if [ $OS = "Linux" ]; then
-    echo "\033[44;37;1mBuilding OpenCOR...\033[0m"
+    echo "\033[44;37;1mMaking OpenCOR...\033[0m"
 fi
 
 cd build
