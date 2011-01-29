@@ -12,5 +12,6 @@ GOTO End
 :Information
 
 ECHO Information: OpenCOR must first be built before being run.
+ECHO.
 
 :End

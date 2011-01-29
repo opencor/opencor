@@ -6,15 +6,7 @@ if [ $OS = "Linux" ]; then
     echo "\033[44;37;1mCleaning the OpenCOR environment...\033[0m"
 fi
 
-cd build
-
-if [ -f Makefile ]; then
-    make -j clean
-fi
-
-rm -fr 3rdparty *ake* _CPack_Packages install_manifest.txt lib *OpenCOR* src version.txt
-
-cd ..
+rm -fr build/*
 
 if [ $OS = "Linux" ]; then
     echo "\033[42;37;1mAll done!\033[0m"
