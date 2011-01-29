@@ -1,7 +1,7 @@
 @ECHO OFF
 
 CALL cleanall
-CALL buildall
+CALL makeall
 
 TITLE Packaging OpenCOR...
 
