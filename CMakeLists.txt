@@ -48,7 +48,7 @@ IF(NOT WIN32)
         src/misc/console.cpp
     )
 
-    SET(HEADERS ${SOURCES}
+    SET(HEADERS ${HEADERS}
         src/misc/console.h
     )
 ENDIF()
