@@ -195,10 +195,9 @@ ENDIF()
 ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 
 IF(WIN32)
-    ADD_DEFINITIONS(-enable-auto-import)
-
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
                           "-Wl,-enable-auto-import")
+    # Note: -Wl,-enable-auto-import ensures that we can use QtSingleApplication
 ENDIF()
 
 # Some post-processing specific to Mac OS X which ensures that OpenCOR can be
