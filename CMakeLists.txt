@@ -201,7 +201,7 @@ IF(NOT APPLE)
     # Note #2: the above linking option has become obsolete on Mac OS X, so...
 ENDIF()
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS ${LINK_FLAGS_PROPERTIES})
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
 # Some post-processing specific to Mac OS X which ensures that OpenCOR can be
 # used on any Mac OS X machine that doesn't have Qt
