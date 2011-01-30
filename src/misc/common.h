@@ -5,6 +5,6 @@ class QCoreApplication;
 
 void initApplication(QCoreApplication& pApp);
 
-bool consoleApplication(QCoreApplication& pApp, int& pRes);
+bool consoleApplication(const QCoreApplication& pApp, int& pRes);
 
 #endif
