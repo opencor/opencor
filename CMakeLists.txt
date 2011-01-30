@@ -18,6 +18,7 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 
 SET(SOURCES
     src/main.cpp
+    src/misc/common.cpp
     src/misc/utils.cpp
     src/ui/mainwindow.cpp
     src/ui/helpwindow.cpp
@@ -25,6 +26,7 @@ SET(SOURCES
 )
 
 SET(HEADERS
+    src/misc/common.h
     src/misc/utils.h
 )
 
@@ -42,16 +44,6 @@ SET(UIS
 SET(RESOURCES
     res/${PROJECT_NAME}.qrc
 )
-
-IF(NOT WIN32)
-    SET(SOURCES ${SOURCES}
-        src/misc/common.cpp
-    )
-
-    SET(HEADERS ${HEADERS}
-        src/misc/common.h
-    )
-ENDIF()
 
 # Various include directories
 

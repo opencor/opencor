@@ -9,6 +9,10 @@ int main(int pArgc, char *pArgv[])
 {
     QtSingleApplication app(pArgc, pArgv);
 
+    // Some general initialisations
+
+    initApplication(app);
+
 #ifndef Q_WS_WIN
     // Try to run OpenCOR as a console application
     // Note: in the case of Windows, we have two binaries (.com and .exe which

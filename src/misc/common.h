@@ -3,6 +3,8 @@
 
 class QCoreApplication;
 
+void initApplication(QCoreApplication& pApp);
+
 bool consoleApplication(QCoreApplication& pApp, int& pRes);
 
 #endif

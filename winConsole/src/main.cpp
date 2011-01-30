@@ -10,6 +10,12 @@ int main(int pArgc, char *pArgv[])
 
     int res;
 
+    // Some general initialisations
+
+    initApplication(app);
+
+    // Try to run OpenCOR as a console application
+
     if (consoleApplication(app, res))
         // OpenCOR was run as a proper console application, so...
 
