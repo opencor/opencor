@@ -2,7 +2,7 @@
 #include <QFileInfo>
 #include <QProcess>
 
-#include "console.h"
+#include "common.h"
 
 int main(int pArgc, char *pArgv[])
 {

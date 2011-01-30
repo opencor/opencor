@@ -8,11 +8,15 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 SET(SOURCES
     src/main.cpp
-    ../src/misc/console.cpp
+    ../src/misc/common.cpp
 )
 
 SET(HEADERS
-    ../src/misc/console.h
+    ../src/misc/common.h
+)
+
+SET(RESOURCES
+    res/${PROJECT_NAME}.qrc
 )
 
 # Various include directories
@@ -58,8 +62,11 @@ ENDFOREACH()
 #SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+
 ADD_EXECUTABLE(${PROJECT_NAME} WIN32
     ${SOURCES}
+    ${SOURCES_RCS}
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}

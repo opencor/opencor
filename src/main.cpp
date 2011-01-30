@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "console.h"
+#include "common.h"
 
 #include <QFileInfo>
 
@@ -42,31 +42,6 @@ int main(int pArgc, char *pArgv[])
 
         return 0;
     }
-
-    // Set the name of the organization
-
-    app.setOrganizationName("World");
-
-    // Set the name of the application
-
-    app.setApplicationName(QFileInfo(app.applicationFilePath()).baseName());
-
-    // Retrieve and set the version of the application
-
-    QFile versionFile(":version");
-
-    versionFile.open(QIODevice::ReadOnly);
-
-    QString version = QString(versionFile.readLine()).trimmed();
-
-    if (version.endsWith(".0"))
-        // There is no actual patch information, so trim it
-
-        version.truncate(version.length()-2);
-
-    versionFile.close();
-
-    app.setApplicationVersion(version);
 
     // Create the main window
 
