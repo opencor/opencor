@@ -71,9 +71,11 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
 # Compiler and linker options
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
-                      "-Wl,-subsystem,console")
-# Note: -Wl,-subsystem,console ensures that we end up with a console
-#       application
+                      "-Wl,-subsystem,console -Wl,-s")
+# Note #1: -Wl,-subsystem,console makes sure that we end up with a console
+#          application
+# Note #2: -Wl,-s strips all the symbols, thus reducing the final size of our
+#          console application
 
 # Move the console version of OpenCOR to the main build folder
 

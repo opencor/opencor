@@ -194,10 +194,15 @@ ENDIF()
 
 ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
+                      "-Wl,-s")
+# Note: -Wl,-s strips all the symbols, thus reducing the final size of OpenCOR
+
 IF(WIN32)
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
                           "-Wl,-enable-auto-import")
-    # Note: -Wl,-enable-auto-import ensures that we can use QtSingleApplication
+    # Note: -Wl,-enable-auto-import makes it possible for us to use
+    #       QtSingleApplication
 ENDIF()
 
 # Some post-processing specific to Mac OS X which ensures that OpenCOR can be
@@ -245,7 +250,7 @@ IF(WIN32)
     # The console version of OpenCOR
 
     INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.com DESTINATION bin)
-    
+
     # MinGW files required by OpenCOR
 
     FOREACH(DLL mingwm10 libgcc_s_dw2-1)
