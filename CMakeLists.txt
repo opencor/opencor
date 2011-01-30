@@ -194,9 +194,12 @@ ENDIF()
 
 ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
-                      "-Wl,-s")
-# Note: -Wl,-s strips all the symbols, thus reducing the final size of OpenCOR
+IF(NOT APPLE)
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
+                          "-Wl,-s")
+    # Note: -Wl,-s strips all the symbols, thus reducing the final size of
+    #       OpenCOR
+ENDIF()
 
 IF(WIN32)
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
