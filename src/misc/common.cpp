@@ -25,6 +25,13 @@ void version(const QCoreApplication& pApp)
     std::cout << pApp.applicationName().toAscii().constData() << " " << pApp.applicationVersion().toAscii().constData() << std::endl;
 }
 
+void error(const QCoreApplication& pApp, const QString& pMsg)
+{
+    version(pApp);
+
+    std::cout << "Error: " << pMsg.toAscii().constData() << std::endl;
+}
+
 void initApplication(QCoreApplication& pApp)
 {
     // Set the name of the organization

@@ -2,6 +2,9 @@
 #define CONSOLE_H
 
 class QCoreApplication;
+class QString;
+
+void error(const QCoreApplication& pApp, const QString& pMsg);
 
 void initApplication(QCoreApplication& pApp);
 
