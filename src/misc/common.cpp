@@ -1,4 +1,5 @@
 #include "common.h"
+#include "utils.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>
@@ -13,7 +14,8 @@ void usage(const QCoreApplication& pApp)
     std::cout << "Usage: " << pApp.applicationName().toAscii().constData() << " [OPTION]... [FILE]..." << std::endl;
     std::cout << "Start " << pApp.applicationName().toAscii().constData() << " and open the FILE(s) passed as argument(s)." << std::endl;
     std::cout << std::endl;
-    std::cout << " -h, --help      Display this information" << std::endl;
+    std::cout << " -a, --about     Display OpenCOR about information" << std::endl;
+    std::cout << " -h, --help      Display this help information" << std::endl;
     std::cout << " -v, --version   Display OpenCOR version information" << std::endl;
     std::cout << std::endl;
     std::cout << "Mandatory or optional arguments to long options are also mandatory or optional" << std::endl;
@@ -23,6 +25,16 @@ void usage(const QCoreApplication& pApp)
 void version(const QCoreApplication& pApp)
 {
     std::cout << pApp.applicationName().toAscii().constData() << " " << pApp.applicationVersion().toAscii().constData() << std::endl;
+}
+
+void about(const QCoreApplication& pApp)
+{
+    version(pApp);
+
+    std::cout << getOsName().toAscii().constData() << std::endl;
+    std::cout << std::endl;
+    std::cout << pApp.applicationName().toAscii().constData() << " is a cross-platform CellML-based modelling environment which can be" << std::endl;
+    std::cout << "used to organise, edit, simulate and analyse CellML files." << std::endl;
 }
 
 void error(const QCoreApplication& pApp, const QString& pMsg)
@@ -77,6 +89,9 @@ bool consoleApplication(const QCoreApplication& pApp, int& pRes)
     cmdLineOptions.add("help");
     cmdLineOptions.alias("help", "h");
 
+    cmdLineOptions.add("about");
+    cmdLineOptions.alias("about", "a");
+
     cmdLineOptions.add("version");
     cmdLineOptions.alias("version", "v");
 
@@ -91,6 +106,14 @@ bool consoleApplication(const QCoreApplication& pApp, int& pRes)
         // The user wants to know how to use OpenCOR from the console, so...
 
         usage(pApp);
+
+        return true;
+    }
+    else if (cmdLineOptions.count("about"))
+    {
+        // The user wants to know how to use OpenCOR from the console, so...
+
+        about(pApp);
 
         return true;
     }

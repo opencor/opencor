@@ -9,10 +9,12 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 SET(SOURCES
     src/main.cpp
     ../src/misc/common.cpp
+    ../src/misc/utils.cpp
 )
 
 SET(HEADERS
     ../src/misc/common.h
+    ../src/misc/utils.h
 )
 
 SET(RESOURCES
