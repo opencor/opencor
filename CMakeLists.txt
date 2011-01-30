@@ -194,18 +194,19 @@ ENDIF()
 
 ADD_DEFINITIONS(-Wall -O2 -ffast-math)
 
-IF(NOT APPLE)
-    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
-                          "-Wl,-s")
-    # Note: -Wl,-s strips all the symbols, thus reducing the final size of
-    #       OpenCOR
-ENDIF()
-
 IF(WIN32)
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
                           "-Wl,-enable-auto-import")
     # Note: -Wl,-enable-auto-import makes it possible for us to use
     #       QtSingleApplication
+ENDIF()
+
+IF(NOT APPLE)
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS
+                          "-Wl,-s")
+    # Note #1: -Wl,-s strips all the symbols, thus reducing the final size of
+    #          OpenCOR
+    # Note #2: the above linking option has become obsolete on Mac OS X, so...
 ENDIF()
 
 # Some post-processing specific to Mac OS X which ensures that OpenCOR can be
