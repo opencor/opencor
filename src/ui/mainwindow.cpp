@@ -187,7 +187,7 @@ void MainWindow::defaultSettings()
 
 void MainWindow::loadSettings()
 {
-    QSettings settings(qApp->organizationName(), qApp->applicationName());
+    QSettings settings(qApp->applicationName());
 
     // Retrieve the language to be used by OpenCOR
 
@@ -208,7 +208,7 @@ void MainWindow::loadSettings()
 
 void MainWindow::saveSettings()
 {
-    QSettings settings(qApp->organizationName(), qApp->applicationName());
+    QSettings settings(qApp->applicationName());
 
     // Keep track of the language to be used by OpenCOR
 
@@ -236,7 +236,7 @@ void MainWindow::setLocale(const QString& pLocale)
         // Specify the language to be used by OpenCOR
 
         qApp->removeTranslator(&mQtTranslator);
-        mQtTranslator.load("qt_"+mLocale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+        mQtTranslator.load(":qt_"+mLocale);
         qApp->installTranslator(&mQtTranslator);
 
         qApp->removeTranslator(&mAppTranslator);
@@ -369,7 +369,7 @@ void MainWindow::resetAll()
     // ensure that all the docked windows are, for instance, properly
     // reset with regards to their dimensions)
 
-    QSettings(qApp->organizationName(), qApp->applicationName()).clear();
+    QSettings(qApp->applicationName()).clear();
 
     // Restart OpenCOR, but without providing any of the argument with which
     // OpenCOR was originally started, since we indeed want to reset everything

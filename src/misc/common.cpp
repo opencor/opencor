@@ -46,10 +46,6 @@ void error(const QCoreApplication& pApp, const QString& pMsg)
 
 void initApplication(QCoreApplication& pApp)
 {
-    // Set the name of the organization
-
-    pApp.setOrganizationName("World");
-
     // Set the name of the application
 
     pApp.setApplicationName(QFileInfo(pApp.applicationFilePath()).baseName());
