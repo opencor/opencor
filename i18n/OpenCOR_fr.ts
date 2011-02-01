@@ -234,5 +234,85 @@
         <source>Select the system&apos;s language as the language used by OpenCOR</source>
         <translation>Sélectionner la langue du système comme langue utilisée par OpenCOR</translation>
     </message>
+    <message>
+        <source>New</source>
+        <translation>Nouveau</translation>
+    </message>
+    <message>
+        <source>CellML 1.0 File</source>
+        <translation>Fichier CellML 1.0</translation>
+    </message>
+    <message>
+        <source>Create a new CellML 1.0 file</source>
+        <translation>Créer un nouveau fichier CellML 1.0</translation>
+    </message>
+    <message>
+        <source>CellML 1.1 File</source>
+        <translation>Fichier CellML 1.1</translation>
+    </message>
+    <message>
+        <source>Create a new CellML 1.1 file</source>
+        <translation>Créer un nouveau fichier CellML 1.1</translation>
+    </message>
+    <message>
+        <source>&amp;Open...</source>
+        <translation>&amp;Ouvrir...</translation>
+    </message>
+    <message>
+        <source>Open a file</source>
+        <translation>Ouvrir un fichier</translation>
+    </message>
+    <message>
+        <source>Ctrl+O</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Reopen</source>
+        <translation>&amp;Réouvrir</translation>
+    </message>
+    <message>
+        <source>Reopen a file</source>
+        <translation>Réouvrir un fichier</translation>
+    </message>
+    <message>
+        <source>Close the current file</source>
+        <translation>Fermer le fichier actuel</translation>
+    </message>
+    <message>
+        <source>Close All</source>
+        <translation>Tout Fermer</translation>
+    </message>
+    <message>
+        <source>Close all the files</source>
+        <translation>Fermer tous les fichiers</translation>
+    </message>
+    <message>
+        <source>Clos&amp;e</source>
+        <translation>F&amp;ermer</translation>
+    </message>
+    <message>
+        <source>&amp;Save</source>
+        <translation>&amp;Sauvegarder</translation>
+    </message>
+    <message>
+        <source>Save the current file</source>
+        <translation>Sauvegarder le fichier actuel</translation>
+    </message>
+    <message>
+        <source>Save the current file under a different name</source>
+        <translation>Sauvegarder le fichier actuel sous un nom différent</translation>
+    </message>
+    <message>
+        <source>Save All</source>
+        <translation>Sauvegader Tout</translation>
+    </message>
+    <message>
+        <source>Save all the files</source>
+        <translation>Sauvegader tous les fichiers</translation>
+    </message>
+    <message>
+        <source>Save &amp;As...</source>
+        <translation>S&amp;auvegarder Sous...</translation>
+    </message>
 </context>
 </TS>

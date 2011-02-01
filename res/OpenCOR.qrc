@@ -1,24 +1,28 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="appIcon">OpenCOR.png</file>
-        <file>en.png</file>
-        <file>fr.png</file>
         <file>about.png</file>
-        <file>exit.png</file>
-        <file>help.png</file>
-        <file>home.png</file>
         <file>back.png</file>
-        <file>forward.png</file>
         <file>copy.png</file>
+        <file>en.png</file>
+        <file>exit.png</file>
+        <file>forward.png</file>
+        <file>fr.png</file>
+        <file>help.png</file>
+        <file alias="helpWidgetError">helpWidgetError.html</file>
+        <file>home.png</file>
+        <file>new.png</file>
         <file>normalSize.png</file>
+        <file>open.png</file>
+        <file alias="appIcon">OpenCOR.png</file>
+        <file>print.png</file>
+        <file alias="qt_fr">qt_fr.qm</file>
+        <file>save.png</file>
+        <file>saveAs.png</file>
         <file>zoomIn.png</file>
         <file>zoomOut.png</file>
-        <file>print.png</file>
-        <file alias="version">../build/version.txt</file>
-        <file alias="qt_fr">qt_fr.qm</file>
-        <file alias="app_fr">../build/OpenCOR_fr.qm</file>
         <file alias="qchFile">../build/OpenCOR.qch</file>
         <file alias="qhcFile">../build/OpenCOR.qhc</file>
-        <file alias="helpWidgetError">helpWidgetError.html</file>
+        <file alias="app_fr">../build/OpenCOR_fr.qm</file>
+        <file alias="version">../build/version.txt</file>
     </qresource>
 </RCC>
