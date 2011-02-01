@@ -46,7 +46,7 @@ private:
     void loadSettings();
     void saveSettings();
 
-    void setLocale(const QString& pLocale, const bool& pForce = false);
+    void setLocale(const QString& pLocale);
 
     void updateGUI();
 

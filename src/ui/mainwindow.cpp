@@ -145,12 +145,12 @@ void MainWindow::changeEvent(QEvent *pEvent)
 
     switch (pEvent->type())
     {
-        case QEvent::LanguageChange:
-            // The system's language has been changed, so update OpenCOR's
-            // language in case we want to use the system's language
+        case QEvent::LocaleChange:
+            // The system's locale has changed, so update OpenCOR's locale in
+            // case we want to use the system's locale
 
             if (mUi->actionSystem->isChecked())
-                setLocale(SYSTEM_LOCALE, true);
+                setLocale(SYSTEM_LOCALE);
 
             break;
         default:
@@ -175,7 +175,7 @@ void MainWindow::defaultSettings()
 {
     // Default language to be used by OpenCOR
 
-    setLocale(SYSTEM_LOCALE, true);
+    setLocale(SYSTEM_LOCALE);
 
     // Default size and position of the main window
 
@@ -246,12 +246,12 @@ void MainWindow::saveSettings()
     settings.setValue(SETTINGS_HELPWINDOW_ZOOMLEVEL, mHelpWindow->zoomLevel());
 }
 
-void MainWindow::setLocale(const QString& pLocale, const bool& pForce)
+void MainWindow::setLocale(const QString& pLocale)
 {
-    QString realLocale = (pLocale == SYSTEM_LOCALE)?QLocale::system().name().left(2):pLocale;
-
-    if ((pLocale != mLocale) || pForce)
+    if ((pLocale != mLocale) || (pLocale == SYSTEM_LOCALE))
     {
+        QString realLocale = (pLocale == SYSTEM_LOCALE)?QLocale::system().name().left(2):pLocale;
+
         mLocale = pLocale;
 
         // Specify the language to be used by OpenCOR
