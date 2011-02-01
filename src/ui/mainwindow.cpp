@@ -33,14 +33,14 @@
 #define SETTINGS_GENERAL_STATE "General_State"
 #define SETTINGS_HELPWINDOW_ZOOMLEVEL "HelpWindow_ZoomLevel"
 
+#define SYSTEM_LOCALE ""
 #define ENGLISH_LOCALE "en"
 #define FRENCH_LOCALE  "fr"
 
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
-    mLocale("")   // This will ensure that the locale is properly set the first
-                  // time setLocale is called
+    mLocale(SYSTEM_LOCALE)
 {
     // Set up the UI
 
@@ -139,6 +139,25 @@ MainWindow::~MainWindow()
     delete mTempDir;
 }
 
+void MainWindow::changeEvent(QEvent *pEvent)
+{
+    QMainWindow::changeEvent(pEvent);
+
+    switch (pEvent->type())
+    {
+        case QEvent::LanguageChange:
+            // The system's language has been changed, so update OpenCOR's
+            // language in case we want to use the system's language
+
+            if (mUi->actionSystem->isChecked())
+                setLocale(SYSTEM_LOCALE, true);
+
+            break;
+        default:
+            break;
+    }
+}
+
 void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
     // Keep track of our default settings
@@ -156,7 +175,7 @@ void MainWindow::defaultSettings()
 {
     // Default language to be used by OpenCOR
 
-    setLocale(ENGLISH_LOCALE);
+    setLocale(SYSTEM_LOCALE, true);
 
     // Default size and position of the main window
 
@@ -191,7 +210,7 @@ void MainWindow::loadSettings()
 
     // Retrieve the language to be used by OpenCOR
 
-    setLocale(settings.value(SETTINGS_GENERAL_LOCALE, ENGLISH_LOCALE).toString());
+    setLocale(settings.value(SETTINGS_GENERAL_LOCALE, SYSTEM_LOCALE).toString());
 
     // Retrieve the geometry of the main window
 
@@ -227,20 +246,22 @@ void MainWindow::saveSettings()
     settings.setValue(SETTINGS_HELPWINDOW_ZOOMLEVEL, mHelpWindow->zoomLevel());
 }
 
-void MainWindow::setLocale(const QString& pLocale)
+void MainWindow::setLocale(const QString& pLocale, const bool& pForce)
 {
-    if (pLocale != mLocale)
+    QString realLocale = (pLocale == SYSTEM_LOCALE)?QLocale::system().name().left(2):pLocale;
+
+    if ((pLocale != mLocale) || pForce)
     {
         mLocale = pLocale;
 
         // Specify the language to be used by OpenCOR
 
         qApp->removeTranslator(&mQtTranslator);
-        mQtTranslator.load(":qt_"+mLocale);
+        mQtTranslator.load(":qt_"+realLocale);
         qApp->installTranslator(&mQtTranslator);
 
         qApp->removeTranslator(&mAppTranslator);
-        mAppTranslator.load(":app_"+mLocale);
+        mAppTranslator.load(":app_"+realLocale);
         qApp->installTranslator(&mAppTranslator);
 
         // Translate the whole GUI (including any 'child' window), should the
@@ -254,6 +275,8 @@ void MainWindow::setLocale(const QString& pLocale)
     // Update the checked menu item
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status, so...
+
+    mUi->actionSystem->setChecked(mLocale == SYSTEM_LOCALE);
 
     mUi->actionEnglish->setChecked(mLocale == ENGLISH_LOCALE);
     mUi->actionFrench->setChecked(mLocale == FRENCH_LOCALE);
@@ -328,6 +351,13 @@ void MainWindow::singleAppMsgRcvd(const QString&)
     // Now, we must handle the arguments that were passed to OpenCOR
 
     // TODO: handle the arguments passed to the 'official' instance of OpenCOR
+}
+
+void MainWindow::on_actionSystem_triggered()
+{
+    // Select the system's language as the language used by OpenCOR
+
+    setLocale(SYSTEM_LOCALE);
 }
 
 void MainWindow::on_actionEnglish_triggered()

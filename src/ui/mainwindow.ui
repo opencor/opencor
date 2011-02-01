@@ -38,6 +38,8 @@
      <property name="title">
       <string>&amp;Language</string>
      </property>
+     <addaction name="actionSystem"/>
+     <addaction name="separator"/>
      <addaction name="actionEnglish"/>
      <addaction name="actionFrench"/>
     </widget>
@@ -207,6 +209,17 @@
    </property>
    <property name="statusTip">
     <string>Show/hide the Help toolbar</string>
+   </property>
+  </action>
+  <action name="actionSystem">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;System</string>
+   </property>
+   <property name="statusTip">
+    <string>Select the system's language as the language used by OpenCOR</string>
    </property>
   </action>
  </widget>

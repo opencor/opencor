@@ -24,6 +24,7 @@ public:
     ~MainWindow();
 
 protected:
+    virtual void changeEvent(QEvent *pEvent);
     virtual void closeEvent(QCloseEvent *pEvent);
 
 private:
@@ -45,7 +46,7 @@ private:
     void loadSettings();
     void saveSettings();
 
-    void setLocale(const QString& pLocale);
+    void setLocale(const QString& pLocale, const bool& pForce = false);
 
     void updateGUI();
 
@@ -53,6 +54,7 @@ public Q_SLOTS:
     void singleAppMsgRcvd(const QString&);
 
 private Q_SLOTS:
+    void on_actionSystem_triggered();
     void on_actionEnglish_triggered();
     void on_actionFrench_triggered();
     void on_actionHomePage_triggered();

@@ -226,5 +226,13 @@
         <source>is a cross-platform &lt;A HREF = &quot;http://www.cellml.org/&quot;&gt;CellML&lt;/A&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
         <translation>est un environnement de modélisation &lt;A HREF = &quot;http://www.cellml.org/&quot;&gt;CellML&lt;/A&gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
     </message>
+    <message>
+        <source>&amp;System</source>
+        <translation>&amp;Système</translation>
+    </message>
+    <message>
+        <source>Select the system&apos;s language as the language used by OpenCOR</source>
+        <translation>Sélectionner la langue du système comme langue utilisée par OpenCOR</translation>
+    </message>
 </context>
 </TS>
