@@ -275,6 +275,9 @@
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionReopen">
    <property name="text">
@@ -311,6 +314,9 @@
    <property name="statusTip">
     <string>Save the current file</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionSaveAs">
    <property name="icon">
@@ -322,6 +328,9 @@
    </property>
    <property name="statusTip">
     <string>Save the current file under a different name</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionSaveAll">
