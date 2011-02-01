@@ -8,7 +8,7 @@
             <file>res/stylesheet.css</file>
             <file>res/userStylesheet.css</file>
             <file>user/introduction.html</file>
-            <file>user/knownIssues.html</file>
+            <file>user/knownIssuesAndLimitations.html</file>
             <file>user/licensing.html</file>
             <file>user/authors.html</file>
             <file>user/contactUs.html</file>
