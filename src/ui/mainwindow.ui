@@ -118,6 +118,10 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionHelp"/>
+   <addaction name="separator"/>
+   <addaction name="actionHomePage"/>
+   <addaction name="separator"/>
+   <addaction name="actionAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
