@@ -1,0 +1,148 @@
+PROJECT(QScintilla)
+
+# Files that make up QScintilla
+
+SET(SOURCES
+    Qt4/ListBoxQt.cpp
+    Qt4/PlatQt.cpp
+    Qt4/qsciabstractapis.cpp
+    Qt4/qsciapis.cpp
+    Qt4/qscicommand.cpp
+    Qt4/qscicommandset.cpp
+    Qt4/qscidocument.cpp
+    Qt4/qscilexer.cpp
+    Qt4/qscilexercpp.cpp
+    Qt4/qscilexerhtml.cpp
+    Qt4/qscilexerjavascript.cpp
+    Qt4/qscilexerpython.cpp
+    Qt4/qscilexerxml.cpp
+    Qt4/qsciscintilla.cpp
+    Qt4/qsciscintillabase.cpp
+    Qt4/qscistyle.cpp
+    Qt4/qscistyledtext.cpp
+    Qt4/SciClasses.cpp
+    Qt4/ScintillaQt.cpp
+    src/AutoComplete.cpp
+    src/CallTip.cpp
+    src/CellBuffer.cpp
+    src/CharClassify.cpp
+    src/ContractionState.cpp
+    src/Decoration.cpp
+    src/Document.cpp
+    src/DocumentAccessor.cpp
+    src/Editor.cpp
+    src/Indicator.cpp
+    src/KeyMap.cpp
+    src/KeyWords.cpp
+    src/LineMarker.cpp
+    src/PerLine.cpp
+    src/PositionCache.cpp
+    src/PropSet.cpp
+    src/RESearch.cpp
+    src/RunStyles.cpp
+    src/ScintillaBase.cpp
+    src/Style.cpp
+    src/ViewStyle.cpp
+    src/XPM.cpp
+)
+
+SET(HEADERS
+    include/Accessor.h
+    include/KeyWords.h
+    include/Platform.h
+    include/PropSet.h
+    include/SciLexer.h
+    include/Scintilla.h
+    include/SString.h
+    Qt4/ListBoxQt.h
+    Qt4/ScintillaQt.h
+    Qt4/Qsci/qscicommand.h
+    Qt4/Qsci/qscicommandset.h
+    Qt4/Qsci/qscidocument.h
+    Qt4/Qsci/qsciglobal.h
+    Qt4/Qsci/qscistyle.h
+    Qt4/Qsci/qscistyledtext.h
+    src/Autocomplete.h
+    src/CallTip.h
+    src/CellBuffer.h
+    src/CharClassify.h
+    src/ContractionState.h
+    src/Decoration.h
+    src/Document.h
+    src/DocumentAccessor.h
+    src/Editor.h
+    src/Indicator.h
+    src/KeyMap.h
+    src/KeyWords.h
+    src/LineMarker.h
+    src/Partitioning.h
+    src/PerLine.h
+    src/PositionCache.h
+    src/RESearch.h
+    src/RunStyles.h
+    src/ScintillaBase.h
+    src/SplitVector.h
+    src/Style.h
+    src/SVector.h
+    src/ViewStyle.h
+    src/XPM.h
+)
+
+SET(HEADERS_MOC
+    Qt4/Qsci/qsciabstractapis.h
+    Qt4/Qsci/qsciapis.h
+    Qt4/Qsci/qscilexer.h
+    Qt4/Qsci/qscilexercpp.h
+    Qt4/Qsci/qscilexerhtml.h
+    Qt4/Qsci/qscilexerjavascript.h
+    Qt4/Qsci/qscilexerpython.h
+    Qt4/Qsci/qscilexerxml.h
+    Qt4/Qsci/qsciscintilla.h
+    Qt4/Qsci/qsciscintillabase.h
+    Qt4/SciClasses.h
+)
+
+# Various include directories
+
+SET(LOCAL_3RDPARTYLIB_SUBDIRS include Qt4 Qt4/Qsci src)
+SET(3RDPARTYLIB_SUBDIRS ${LOCAL_3RDPARTYLIB_SUBDIRS} PARENT_SCOPE)
+
+INCLUDE_DIRECTORIES(${LOCAL_3RDPARTYLIB_SUBDIRS})
+
+# Qt specific
+
+FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
+
+INCLUDE(${QT_USE_FILE})
+
+# Rules to build QScintilla
+
+ADD_DEFINITIONS(-DQT -DSCI_LEXER)
+
+QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
+
+IF(APPLE)
+    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
+ELSE()
+    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+ENDIF()
+# Note: the above is only required so that we can quickly test OpenCOR without
+#       first having to package everything
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED
+    ${SOURCES}
+    ${SOURCES_MOC}
+)
+
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
+)
+
+# Rules to package QScintilla
+
+IF(WIN32)
+    INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+ELSEIF(NOT APPLE)
+    INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
+ENDIF()

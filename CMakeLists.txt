@@ -120,7 +120,7 @@ ENDIF()
 
 # Build the third-party libraries used by the GUI version of OpenCOR
 
-SET(3RDPARTYLIBS LibQxt QtSingleApplication)
+SET(3RDPARTYLIBS LibQxt QScintilla QtSingleApplication)
 
 FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
     SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})
