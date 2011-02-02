@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>CentralWidget</class>
- <widget class="QWidget" name="CentralWidget">
-  <property name="autoFillBackground">
-   <bool>true</bool>
-  </property>
- </widget>
+ <widget class="QWidget" name="CentralWidget"/>
  <resources/>
  <connections/>
 </ui>
