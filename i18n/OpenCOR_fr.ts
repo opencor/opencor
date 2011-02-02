@@ -235,10 +235,6 @@
         <translation>Sélectionner la langue du système comme langue utilisée par OpenCOR</translation>
     </message>
     <message>
-        <source>New</source>
-        <translation>Nouveau</translation>
-    </message>
-    <message>
         <source>CellML 1.0 File</source>
         <translation>Fichier CellML 1.0</translation>
     </message>
@@ -313,6 +309,14 @@
     <message>
         <source>Save &amp;As...</source>
         <translation>S&amp;auvegarder Sous...</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Nouveau</translation>
+    </message>
+    <message>
+        <source>Create a new file</source>
+        <translation>Créer un nouveau fichier</translation>
     </message>
 </context>
 </TS>

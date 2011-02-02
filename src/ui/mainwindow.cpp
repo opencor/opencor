@@ -52,6 +52,21 @@ MainWindow::MainWindow(QWidget *pParent) :
     //       since it can then be used in, for example, the about box...
 
 
+    // Set the New toolbar button with its dropdown menu using our custom-made
+    // action (actionNew)
+    // Note: ideally, this would be done using the GUI designer in QtCreator,
+    //       but it's not quite clear to me how this can be achieved, so...
+
+    QMenu *actionNewMenu = new QMenu;
+
+    mUi->actionNew->setMenu(actionNewMenu);
+
+    actionNewMenu->addAction(mUi->actionCellML10File);
+    actionNewMenu->addAction(mUi->actionCellML11File);
+
+    mUi->fileToolbar->insertAction(mUi->actionOpen, mUi->actionNew);
+    mUi->fileToolbar->insertSeparator(mUi->actionOpen);
+
     // Set the name of the main window to that of the application
 
     setWindowTitle(qApp->applicationName());
@@ -86,6 +101,11 @@ MainWindow::MainWindow(QWidget *pParent) :
             this, SLOT(close()));
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
+
+    connect(mUi->actionFileToolbar, SIGNAL(triggered(bool)),
+            mUi->fileToolbar, SLOT(setVisible(bool)));
+    connect(mUi->fileToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
+            mUi->actionFileToolbar, SLOT(setChecked(bool)));
 
     connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
             mUi->helpToolbar, SLOT(setVisible(bool)));
@@ -139,6 +159,11 @@ MainWindow::~MainWindow()
     delete mTempDir;
 }
 
+void MainWindow::notYetImplemented(const QString& method)
+{
+    QMessageBox::information(this, qApp->applicationName()+" Information", "Sorry, but the '"+method+"' has not yet been implemented.");
+}
+
 void MainWindow::changeEvent(QEvent *pEvent)
 {
     QMainWindow::changeEvent(pEvent);
@@ -188,8 +213,10 @@ void MainWindow::defaultSettings()
 
     // Default visibility and location of the various toolbars
 
+    addToolBar(Qt::TopToolBarArea, mUi->fileToolbar);
     addToolBar(Qt::TopToolBarArea, mUi->helpToolbar);
 
+    mUi->fileToolbar->setVisible(true);
     mUi->helpToolbar->setVisible(true);
 
     // Default size and position of the help window
@@ -286,6 +313,7 @@ void MainWindow::updateGUI()
 {
     // Update the checked status of the toolbars menu items
 
+    mUi->actionFileToolbar->setChecked(mUi->fileToolbar->isVisible());
     mUi->actionHelpToolbar->setChecked(mUi->helpToolbar->isVisible());
 }
 
@@ -383,6 +411,8 @@ void MainWindow::on_actionHomePage_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
+    // Display some information about OpenCOR
+
     QMessageBox::about(this, qApp->applicationName(),
                        QString("")+
                        "<CENTER>"+
@@ -411,4 +441,54 @@ void MainWindow::resetAll()
     //       want, since we don't want to save OpenCOR's settings
 
     qApp->quit();
+}
+
+void MainWindow::on_actionNew_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionNew_triggered()");
+}
+
+void MainWindow::on_actionCellML10File_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionCellML10File_triggered()");
+}
+
+void MainWindow::on_actionCellML11File_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionCellML11File_triggered()");
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionOpen_triggered()");
+}
+
+void MainWindow::on_actionReopen_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionReopen_triggered()");
+}
+
+void MainWindow::on_actionClose_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionClose_triggered()");
+}
+
+void MainWindow::on_actionCloseAll_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionCloseAll_triggered()");
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionSave_triggered()");
+}
+
+void MainWindow::on_actionSaveAs_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionSaveAs_triggered()");
+}
+
+void MainWindow::on_actionSaveAll_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionSaveAll_triggered()");
 }
