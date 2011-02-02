@@ -220,7 +220,7 @@
     </message>
     <message>
         <source>Show/hide the Help toolbar</source>
-        <translation>Montrer/cacher la barre d&apos;outil d&apos;aide</translation>
+        <translation>Montrer/cacher la barre d&apos;outils Aide</translation>
     </message>
     <message>
         <source>is a cross-platform &lt;A HREF = &quot;http://www.cellml.org/&quot;&gt;CellML&lt;/A&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
@@ -317,6 +317,10 @@
     <message>
         <source>Create a new file</source>
         <translation>Créer un nouveau fichier</translation>
+    </message>
+    <message>
+        <source>Show/hide the File toolbar</source>
+        <translation>Montrer/cacher la barre d&apos;outils Fichier</translation>
     </message>
 </context>
 </TS>
