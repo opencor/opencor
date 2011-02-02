@@ -8,6 +8,7 @@ namespace Ui {
     class MainWindow;
 }
 
+class CentralWidget;
 class HelpWindow;
 
 class QHelpEngine;
@@ -29,6 +30,8 @@ protected:
 
 private:
     Ui::MainWindow *mUi;
+
+    CentralWidget *mCentralWidget;
 
     QString mLocale;
 

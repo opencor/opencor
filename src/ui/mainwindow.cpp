@@ -1,3 +1,4 @@
+#include "centralwidget.h"
 #include "mainwindow.h"
 #include "helpwindow.h"
 #include "utils.h"
@@ -42,6 +43,10 @@ MainWindow::MainWindow(QWidget *pParent) :
     mUi(new Ui::MainWindow),
     mLocale(SYSTEM_LOCALE)
 {
+    // Set the name of the main window to that of the application
+
+    setWindowTitle(qApp->applicationName());
+
     // Set up the UI
 
     mUi->setupUi(this);
@@ -67,9 +72,11 @@ MainWindow::MainWindow(QWidget *pParent) :
     mUi->fileToolbar->insertAction(mUi->actionOpen, mUi->actionNew);
     mUi->fileToolbar->insertSeparator(mUi->actionOpen);
 
-    // Set the name of the main window to that of the application
+    // Set the central widget
 
-    setWindowTitle(qApp->applicationName());
+    mCentralWidget = new CentralWidget(this);
+
+    setCentralWidget(mCentralWidget);
 
     // Create a temporary directory where to put OpenCOR's resources
 

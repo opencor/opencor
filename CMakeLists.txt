@@ -20,6 +20,7 @@ SET(SOURCES
     src/main.cpp
     src/misc/common.cpp
     src/misc/utils.cpp
+    src/ui/centralwidget.cpp
     src/ui/mainwindow.cpp
     src/ui/helpwindow.cpp
     src/widget/helpwidget.cpp
@@ -31,12 +32,14 @@ SET(HEADERS
 )
 
 SET(HEADERS_MOC
+    src/ui/centralwidget.h
     src/ui/mainwindow.h
     src/ui/helpwindow.h
     src/widget/helpwidget.h
 )
 
 SET(UIS
+    src/ui/centralwidget.ui
     src/ui/mainwindow.ui
     src/ui/helpwindow.ui
 )
