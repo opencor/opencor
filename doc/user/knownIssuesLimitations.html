@@ -2,7 +2,7 @@
 <HTML>
     <HEAD>
         <TITLE>
-            Known Issues and Limitations
+            Known Issues/Limitations
         </TITLE>
 
         <META HTTP-EQUIV = "Content-Type" CONTENT = "Text/HTML; Charset=ISO-8859-1">
@@ -12,9 +12,13 @@
     </HEAD>
     <BODY>
         <P CLASS = "TitleBackground">
-            <SPAN CLASS = "TitleFont">Known Issues and Limitations</SPAN>
+            <SPAN CLASS = "TitleFont">Known Issues/Limitations</SPAN>
         </P>
 
+        <P>
+            Please note that the following known issues/limitations have been observed on <A HREF = "http://www.microsoft.com/windows/windows-7/">Windows 7</A>, <A HREF = "http://www.ubuntu.com/">Ubuntu</A> 10.10 (Maverick Meerkat; both 32-bit and 64-bit) and <A HREF = "http://www.apple.com/macosx/">Mac OS X</A> 10.6 (Snow Leopard). So, if you use a different operating system, these issues/limitations may or not be relevant to you.
+        </P>
+        
         <SPAN CLASS = "SectionFont">Windows, Linux and Mac OS X</SPAN>
 
         <P>
@@ -24,7 +28,7 @@
         <SPAN CLASS = "SectionFont">Linux</SPAN>
 
         <P>
-            Depending on your window manager (e.g. <A HREF = "http://www.compiz.org/">Compiz</A>), OpenCOR may experience one of the following glitches (none of which affect the good functioning of the software itself):
+            Depending on your window manager (e.g. <A HREF = "http://www.compiz.org/">Compiz</A>), OpenCOR may or not experience one of the following issues/limitations (none of which affect the good functioning of the software itself):
         </P>
 
         <UL>
@@ -37,10 +41,14 @@
         </P>
 
         <P>
-            Another non window manager related glitch is that:
+            Other non window manager related issues/limitations are:
         </P>
 
         <UL>
+            <LI>
+                Menu items that have sub-menus will not, by default, display their icon (should they have one). This has nothing to do with OpenCOR, but is instead the expected behaviour on <A HREF = "http://www.ubuntu.com/">Ubuntu</A>. As mentioned <A HREF = "">here</A>, all you need to do to change this behaviour is to enter the following at the command line:
+                    <PRE>$ gconftool-2 --type Boolean --set /desktop/gnome/interface/menus_have_icons True</PRE>
+            </LI>
             <LI>In the help window, the icon used for one of the toolbar buttons may have a slightly reddish background. The background will, however, be reset when clicking anywhere on the help text.</LI>
         </UL>
 

@@ -23,3 +23,11 @@ SPAN.SectionFont
 {
     Color: #366092;
 }
+
+PRE
+{
+    Background: #DBE5F1;
+    Border: 1px dashed #366092;
+    Padding: 3px;
+    Margin: 3px 13px 3px 13px;
+}
