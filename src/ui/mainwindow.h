@@ -59,6 +59,7 @@ public Q_SLOTS:
     void singleAppMsgRcvd(const QString&);
 
 private Q_SLOTS:
+    void on_actionFullScreen_triggered();
     void on_actionNew_triggered();
     void on_actionSaveAll_triggered();
     void on_actionSaveAs_triggered();

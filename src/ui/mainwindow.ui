@@ -92,6 +92,8 @@
      <addaction name="actionHelpToolbar"/>
     </widget>
     <addaction name="menuToolbars"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullScreen"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -190,7 +192,7 @@
     <string>&amp;Help</string>
    </property>
    <property name="statusTip">
-    <string>Look up the OpenCOR help</string>
+    <string>Show/hide the OpenCOR help</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
@@ -311,6 +313,9 @@
    <property name="statusTip">
     <string>Close the current file</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
   </action>
   <action name="actionCloseAll">
    <property name="text">
@@ -330,6 +335,9 @@
    </property>
    <property name="statusTip">
     <string>Save the current file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -382,6 +390,24 @@
    </property>
    <property name="statusTip">
     <string>Show/hide the File toolbar</string>
+   </property>
+  </action>
+  <action name="actionFullScreen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/fullScreen.png</normaloff>:/fullScreen.png</iconset>
+   </property>
+   <property name="text">
+    <string>Full Screen</string>
+   </property>
+   <property name="statusTip">
+    <string>Switch to / back from full screen mode</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
    </property>
   </action>
  </widget>

@@ -8,6 +8,7 @@
         <file>exit.png</file>
         <file>forward.png</file>
         <file>fr.png</file>
+        <file>fullScreen.png</file>
         <file>help.png</file>
         <file alias="helpWidgetError">helpWidgetError.html</file>
         <file>home.png</file>

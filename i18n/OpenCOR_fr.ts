@@ -187,10 +187,6 @@
         <translation>Sélectionner le français comme langue utilisée par OpenCOR</translation>
     </message>
     <message>
-        <source>Look up the OpenCOR help</source>
-        <translation>Consulter l&apos;aide d&apos;OpenCOR</translation>
-    </message>
-    <message>
         <source>F1</source>
         <translation></translation>
     </message>
@@ -321,6 +317,30 @@
     <message>
         <source>Show/hide the File toolbar</source>
         <translation>Montrer/cacher la barre d&apos;outils Fichier</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ctrl+S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>F11</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Full Screen</source>
+        <translation>Plein Ecran</translation>
+    </message>
+    <message>
+        <source>Show/hide the OpenCOR help</source>
+        <translation>Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
+    </message>
+    <message>
+        <source>Switch to / back from full screen mode</source>
+        <translation>Passer au / revenir du mode plein écran</translation>
     </message>
 </context>
 </TS>

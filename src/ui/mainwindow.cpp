@@ -499,3 +499,13 @@ void MainWindow::on_actionSaveAll_triggered()
 {
     notYetImplemented("void MainWindow::on_actionSaveAll_triggered()");
 }
+
+void MainWindow::on_actionFullScreen_triggered()
+{
+    // Switch to / back from full screen mode
+
+    if (mUi->actionFullScreen->isChecked())
+        showFullScreen();
+    else
+        showNormal();
+}
