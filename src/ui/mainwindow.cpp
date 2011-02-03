@@ -32,6 +32,7 @@
 #define SETTINGS_GENERAL_LOCALE "General_Locale"
 #define SETTINGS_GENERAL_GEOMETRY "General_Geometry"
 #define SETTINGS_GENERAL_STATE "General_State"
+#define SETTINGS_MAINWINDOW_STATUSBARVISIBILITY "MainWindow_StatusBarVisibility"
 #define SETTINGS_HELPWINDOW_ZOOMLEVEL "HelpWindow_ZoomLevel"
 
 #define SYSTEM_LOCALE ""
@@ -124,6 +125,11 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionHelp, SLOT(setChecked(bool)));
 
+    connect(mUi->actionStatusBar, SIGNAL(triggered(bool)),
+            statusBar(), SLOT(setVisible(bool)));
+    connect(statusBar(), SIGNAL(visibilityChanged(bool)),
+            mUi->actionStatusBar, SLOT(setChecked(bool)));
+
     // Default user settings (useful the very first time we start OpenCOR or
     // after a reset all)
 
@@ -132,11 +138,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     // Retrieve our default settings
 
     loadSettings();
-
-    // Update the GUI, which may have changed (e.g. hidden toolbar) as a result
-    // of loading OpenCOR's settings
-
-    updateGUI();
 
     // Bring ourselves to the foreground. Indeed, when restarting OpenCOR (as a
     // result of a reset all), OpenCOR will on Mac OS X be behind other
@@ -188,6 +189,32 @@ void MainWindow::changeEvent(QEvent *pEvent)
         default:
             break;
     }
+}
+
+void MainWindow::showEvent(QShowEvent *pEvent)
+{
+    static bool firstTime = true;
+
+    if (firstTime)
+    {
+        firstTime = false;
+
+        // The first time we show OpenCOR, we want to make sure that its menu
+        // is fine (i.e. it respects OpenCOR's settings that were loaded in the
+        // constructor)
+        // Note: we must do this here (as opposed to, say, the constructor),
+        //       because we need everything to be visible before deciding what
+        //       needs to be done with the menus (e.g. we can't, within the
+        //       constructor, tell whether the status bar is visible)
+
+        updateMenuStatus();
+
+        // Accept the event
+
+        pEvent->accept();
+    }
+    else
+        pEvent->ignore();
 }
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
@@ -254,6 +281,10 @@ void MainWindow::loadSettings()
 
     restoreState(settings.value(SETTINGS_GENERAL_STATE).toByteArray());
 
+    // Retrieve whether the status bar is to be shown
+
+    mUi->statusBar->setVisible(settings.value(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY, true).toBool());
+
     // Retrieve the zoom level for the help widget
 
     mHelpWindow->setZoomLevel(settings.value(SETTINGS_HELPWINDOW_ZOOMLEVEL, mHelpWindow->defaultZoomLevel()).toInt());
@@ -274,6 +305,10 @@ void MainWindow::saveSettings()
     // Keep track of the state of the main window
 
     settings.setValue(SETTINGS_GENERAL_STATE, saveState());
+
+    // Keep track of whether the status bar is to be shown
+
+    settings.setValue(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY, mUi->statusBar->isVisible());
 
     // Keep track of the text size multiplier for the help widget
 
@@ -316,12 +351,16 @@ void MainWindow::setLocale(const QString& pLocale)
     mUi->actionFrench->setChecked(mLocale == FRENCH_LOCALE);
 }
 
-void MainWindow::updateGUI()
+void MainWindow::updateMenuStatus()
 {
     // Update the checked status of the toolbars menu items
 
     mUi->actionFileToolbar->setChecked(mUi->fileToolbar->isVisible());
     mUi->actionHelpToolbar->setChecked(mUi->helpToolbar->isVisible());
+
+    // Update the checked status of the status bar menu item
+
+    mUi->actionStatusBar->setChecked(mUi->statusBar->isVisible());
 }
 
 void MainWindow::singleAppMsgRcvd(const QString&)

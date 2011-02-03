@@ -26,6 +26,7 @@ public:
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
+    virtual void showEvent(QShowEvent *pEvent);
     virtual void closeEvent(QCloseEvent *pEvent);
 
 private:
@@ -53,7 +54,7 @@ private:
 
     void setLocale(const QString& pLocale);
 
-    void updateGUI();
+    void updateMenuStatus();
 
 public Q_SLOTS:
     void singleAppMsgRcvd(const QString&);

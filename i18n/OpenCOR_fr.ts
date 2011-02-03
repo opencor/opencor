@@ -331,8 +331,8 @@
         <translation></translation>
     </message>
     <message>
-        <source>Full Screen</source>
-        <translation>Plein Ecran</translation>
+        <source>&amp;Full Screen</source>
+        <translation>&amp;Plein Ecran</translation>
     </message>
     <message>
         <source>Show/hide the OpenCOR help</source>
@@ -341,6 +341,14 @@
     <message>
         <source>Switch to / back from full screen mode</source>
         <translation>Passer au / revenir du mode plein écran</translation>
+    </message>
+    <message>
+        <source>Status &amp;Bar</source>
+        <translation>&amp;Barre d&apos;Etat</translation>
+    </message>
+    <message>
+        <source>Show/hide the status bar</source>
+        <translation>Montrer/cacher la barre d&apos;état</translation>
     </message>
 </context>
 </TS>

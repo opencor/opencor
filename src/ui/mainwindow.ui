@@ -92,6 +92,7 @@
      <addaction name="actionHelpToolbar"/>
     </widget>
     <addaction name="menuToolbars"/>
+    <addaction name="actionStatusBar"/>
     <addaction name="separator"/>
     <addaction name="actionFullScreen"/>
    </widget>
@@ -401,13 +402,27 @@
      <normaloff>:/fullScreen.png</normaloff>:/fullScreen.png</iconset>
    </property>
    <property name="text">
-    <string>Full Screen</string>
+    <string>&amp;Full Screen</string>
    </property>
    <property name="statusTip">
     <string>Switch to / back from full screen mode</string>
    </property>
    <property name="shortcut">
     <string>F11</string>
+   </property>
+  </action>
+  <action name="actionStatusBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Status &amp;Bar</string>
+   </property>
+   <property name="statusTip">
+    <string>Show/hide the status bar</string>
    </property>
   </action>
  </widget>
