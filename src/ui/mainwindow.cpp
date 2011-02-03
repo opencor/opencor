@@ -127,8 +127,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     connect(mUi->actionStatusBar, SIGNAL(triggered(bool)),
             statusBar(), SLOT(setVisible(bool)));
-    connect(statusBar(), SIGNAL(visibilityChanged(bool)),
-            mUi->actionStatusBar, SLOT(setChecked(bool)));
 
     // Default user settings (useful the very first time we start OpenCOR or
     // after a reset all)
