@@ -218,10 +218,13 @@ IF(APPLE)
                        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
     # Add the SQLite plugin to the bundle (required to see the help file)
+    # Note: this would, ideally, be done as part of the packaging, but we do it
+    #       here, because it then allows us to test things as if Qt wasn't
+    #       installed on our development machine
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND mkdir -p ${PROJECT_NAME}.app/Contents/plugins/sqldrivers
-                       COMMAND cp ${QT_BINARY_DIR}/../../Applications/Qt/plugins/sqldrivers/libqsqlite.dylib ${PROJECT_NAME}.app/Contents/plugins/sqldrivers
+                       COMMAND mkdir -p ${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
+                       COMMAND cp ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib ${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
                        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 ENDIF()
 
@@ -266,7 +269,7 @@ IF(WIN32)
 
     # SQLite plugin (required to see the help file)
 
-    INSTALL(FILES ${QT_BINARY_DIR}/../plugins/sqldrivers/qsqlite${QT_VERSION_MAJOR}.dll DESTINATION bin/sqldrivers)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/qsqlite${QT_VERSION_MAJOR}.dll DESTINATION bin/sqldrivers)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
