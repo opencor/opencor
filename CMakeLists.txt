@@ -219,8 +219,10 @@ IF(APPLE)
 
     # Add the SQLite plugin to the bundle (required to see the help file)
     # Note: this would, ideally, be done as part of the packaging, but we do it
-    #       here, because it then allows us to test things as if Qt wasn't
-    #       installed on our development machine
+    #       here, since it allows us to test things as if Qt wasn't installed
+    #       on our development Mac OS X machine (which is useful since we
+    #       cannot have a virtual machine with a 'blank' Mac OS X system on it
+    #       unlike with Windows and Linux)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND mkdir -p ${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
