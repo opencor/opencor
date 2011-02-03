@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>about.png</file>
         <file>back.png</file>
+        <file alias="cellMLLogo">cellML.png</file>
         <file>copy.png</file>
         <file>en.png</file>
         <file>exit.png</file>
