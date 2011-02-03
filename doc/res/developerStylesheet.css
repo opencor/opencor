@@ -27,9 +27,10 @@ SPAN.SectionFont
 PRE
 {
     Background: #DBEEF3;
-    Border: 1px dashed #31859B;
+    Border: 1px Dashed #31859B;
     Padding: 3px;
     Margin: 3px 13px 3px 13px;
+    White-Space: Pre-Wrap;
 }
 
 SPAN.Bold
