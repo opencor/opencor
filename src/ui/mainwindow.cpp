@@ -27,7 +27,7 @@
 #include <QxtTemporaryDir>
 
 #define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
-#define OPENCOR_HELP_HOMEPAGE "qthelp://world.opencor/doc/userIndex.html"
+#define OPENCOR_HELP_HOMEPAGE "qthelp://opencor/doc/userIndex.html"
 
 #define SETTINGS_GENERAL_LOCALE "General_Locale"
 #define SETTINGS_GENERAL_GEOMETRY "General_Geometry"

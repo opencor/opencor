@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <QtHelpProject version="1.0">
-    <namespace>world.opencor</namespace>
+    <namespace>opencor</namespace>
     <virtualFolder>doc</virtualFolder>
     <filterSection>
         <files>
