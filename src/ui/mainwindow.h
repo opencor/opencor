@@ -29,6 +29,9 @@ protected:
     virtual void showEvent(QShowEvent *pEvent);
     virtual void closeEvent(QCloseEvent *pEvent);
 
+    virtual void dragEnterEvent(QDragEnterEvent *pEvent);
+    virtual void dropEvent(QDropEvent *pEvent);
+
 private:
     Ui::MainWindow *mUi;
 

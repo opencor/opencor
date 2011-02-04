@@ -79,6 +79,10 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     setCentralWidget(mCentralWidget);
 
+    // Allow for things to be dropped on us
+
+    setAcceptDrops(true);
+
     // Create a temporary directory where to put OpenCOR's resources
 
     mTempDir = new QxtTemporaryDir();
@@ -226,6 +230,30 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Accept the event
 
     pEvent->accept();
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
+{
+    // Accept the proposed action for the event, but only if we are dropping
+    // URLs
+
+    if (pEvent->mimeData()->hasUrls())
+        pEvent->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *pEvent)
+{
+    QList<QUrl> urlList = pEvent->mimeData()->urls();
+    QString urls;
+
+    for (int i = 0; i < urlList.size(); i++)
+        urls += "<LI>"+urlList.at(i).path()+"</LI>";
+
+    QMessageBox::information(this, qApp->applicationName(), "You have just dropped the following files: <UL>"+urls+"</UL>");
+
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
 }
 
 void MainWindow::defaultSettings()
