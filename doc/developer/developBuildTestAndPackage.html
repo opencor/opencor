@@ -60,12 +60,12 @@
             <LI>
                 <SPAN CLASS = "Bold">Command line:</SPAN> various batch and VBScript files (<SPAN CLASS = "Italic">.bat</SPAN> and <SPAN CLASS = "Italic">.vbs</SPAN> files) on Windows and shell scripts on Ubuntu/Mac OS X are available: (Note that these command line tools require access to CMake, MinGW/g++/Xcode (for Windows, Ubuntu and Mac OS X, respectively) and Qt from the command line. This should be the case on Ubuntu and Mac OS X, but on Windows your <SPAN CLASS = "Italic">PATH</SPAN> environment variable might need updating.)
                     <UL>
-                        <LI><SPAN CLASS = "Bold">clean[.bat]:</SPAN> cleans the OpenCOR environment;</LI>
-                        <LI><SPAN CLASS = "Bold">makeall[.bat]:</SPAN> compiles and links everything that is required to get a binary version of OpenCOR; and</LI>
+                        <LI><SPAN CLASS = "Bold">cleanproj[.bat]:</SPAN> cleans the OpenCOR environment;</LI>
+                        <LI><SPAN CLASS = "Bold">makeproj[.bat]:</SPAN> compiles and links everything that is required to get a binary version of OpenCOR; and</LI>
                         <LI>
-                            <SPAN CLASS = "Bold">run[.bat|.vbs]:</SPAN> runs OpenCOR.
+                            <SPAN CLASS = "Bold">runproj[.bat|.vbs]:</SPAN> runs OpenCOR.
                                 <UL>
-                                    <LI><SPAN CLASS = "Bold">Note:</SPAN> on Windows, if you were to run OpenCOR from a console window by just entering <SPAN CLASS = "Italic">run</SPAN>, then the <SPAN CLASS = "Italic">run.bat</SPAN> file would be executed (rather than the <SPAN = CLASS ="Italic">run.vbs</SPAN> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking the <SPAN CLASS = "Italic">run.bat</SPAN> file from within <SPAN CLASS = "Italic">Windows Explorer</SPAN>, then a console window will quickly appear and disappear. To avoid this, you should double click on the <SPAN = CLASS ="Italic">run.vbs</SPAN> file.</LI>
+                                    <LI><SPAN CLASS = "Bold">Note:</SPAN> on Windows, if you were to run OpenCOR from a console window by just entering <SPAN CLASS = "Italic">runproj</SPAN>, then the <SPAN CLASS = "Italic">runproj.bat</SPAN> file would be executed (rather than the <SPAN = CLASS ="Italic">runproj.vbs</SPAN> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking the <SPAN CLASS = "Italic">runproj.bat</SPAN> file from within <SPAN CLASS = "Italic">Windows Explorer</SPAN>, then a console window will quickly appear and disappear. To avoid this, you should double click on the <SPAN = CLASS ="Italic">runproj.vbs</SPAN> file.</LI>
                                 </UL>
                         </LI>
                     </UL>
@@ -111,7 +111,7 @@ $</PRE>
         <SPAN CLASS = "SectionFont">Package</SPAN>
 
         <P>
-            The packaging of OpenCOR can only be done from the command line, using <SPAN CLASS = "Italic">packageall.bat</SPAN> on Windows and <SPAN CLASS = "Italic">packageall</SPAN> on Ubuntu/Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in the latter case.
+            The packaging of OpenCOR can only be done from the command line, using <SPAN CLASS = "Italic">packageproj.bat</SPAN> on Windows and <SPAN CLASS = "Italic">packageproj</SPAN> on Ubuntu / Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in the latter case.
         </P>
 
         <P CLASS = "CopyrightBackground">
