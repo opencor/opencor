@@ -1,7 +1,7 @@
 #!/bin/sh
 
-./cleanall
-./makeall
+./cleanprojall
+./makeproj
 
 OS=`uname -s`
 
