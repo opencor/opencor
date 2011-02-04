@@ -6,7 +6,7 @@ if [ $OS = "Linux" ]; then
     echo "\033[44;37;1mCleaning all of the OpenCOR environment...\033[0m"
 fi
 
-rm -fr 3rdparty/build/* build/*
+rm -fr build/* > /dev/null 2>&1
 
 if [ $OS = "Linux" ]; then
     echo "\033[42;37;1mAll done!\033[0m"
