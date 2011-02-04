@@ -209,7 +209,7 @@ ENDIF()
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
 # Some post-processing specific to Mac OS X which ensures that OpenCOR can be
-# used on any Mac OS X machine that doesn't have Qt
+# used on any Mac OS X machine that doesn't have Qt and the SQLite plugin
 
 IF(APPLE)
     # Use macdeployqt to have all the Qt files required by OpenCOR added to the
@@ -228,8 +228,20 @@ IF(APPLE)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND mkdir -p ${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
-                       COMMAND cp ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib ${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
+                       COMMAND cp ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib
+                                  ${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
                        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+
+    # Make sure that the SQLite plugin refers to our embedded version of QtCore
+    # and QtSql which it needs
+
+    FOREACH(LIB QtCore QtSql)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND install_name_tool -change ${LIB}.framework/Versions/${QT_VERSION_MAJOR}/${LIB}
+                                                             @executable_path/../Frameworks/${LIB}.framework/Versions/${QT_VERSION_MAJOR}/${LIB}
+                                                             ../PlugIns/sqldrivers/libqsqlite.dylib
+                           WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks)
+    ENDFOREACH()
 ENDIF()
 
 # Rules to package OpenCOR (using CPack)
