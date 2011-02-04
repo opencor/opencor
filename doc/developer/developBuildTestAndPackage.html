@@ -84,29 +84,6 @@
                         <LI>Build and test OpenCOR (by selecting the <SPAN CLASS = "Italic">Build</SPAN>|<SPAN CLASS = "Italic">Run</SPAN> menu or by pressing <SPAN CLASS = "Italic">Ctrl+R</SPAN>).</LI>
                     </UL>
             </LI>
-            <LI>
-                <LI>
-                    <SPAN CLASS = "Bold">Note:</SPAN> to run OpenCOR on Mac OS X will most likely result in a series of messages, as shown below. Having currently no 'blank' Mac OS X machine on which to test OpenCOR, it is impossible to tell whether these messages would also be generated on a user's computer. Also, if the user was to have Qt installed, then s/he would most likely get these messages too. Otherwise, as for the reason of these messages, OpenCOR was tested after exporting <SPAN CLASS = "Italic">DYLD_PRINT_LIBRARIES=1</SPAN> and it seemed like the 'problem' might be with the SQLite plugin (which is required to show the help). This was confirmed by 'disabling' the SQLite plugin which resulted in these messages not being generated.
-                        <PRE>$ ./OpenCOR
-QObject::moveToThread: Current thread (0x102c012a0) is not the object's thread (0x102cadcd0).
-Cannot move to target thread (0x102c012a0)
-
-On Mac OS X, you might be loading two sets of Qt binaries into the same process. Check that all plugins are compiled against the right Qt binaries. Export DYLD_PRINT_LIBRARIES=1 and check that only one set of binaries are being loaded.
-QObject::moveToThread: Current thread (0x102c012a0) is not the object's thread (0x102cadcd0).
-Cannot move to target thread (0x102c012a0)
-
-On Mac OS X, you might be loading two sets of Qt binaries into the same process. Check that all plugins are compiled against the right Qt binaries. Export DYLD_PRINT_LIBRARIES=1 and check that only one set of binaries are being loaded.
-QObject::moveToThread: Current thread (0x102cab2b0) is not the object's thread (0x102cadcd0).
-Cannot move to target thread (0x102c012a0)
-
-On Mac OS X, you might be loading two sets of Qt binaries into the same process. Check that all plugins are compiled against the right Qt binaries. Export DYLD_PRINT_LIBRARIES=1 and check that only one set of binaries are being loaded.
-QObject::moveToThread: Current thread (0x102caba50) is not the object's thread (0x102cadcd0).
-Cannot move to target thread (0x102c012a0)
-
-On Mac OS X, you might be loading two sets of Qt binaries into the same process. Check that all plugins are compiled against the right Qt binaries. Export DYLD_PRINT_LIBRARIES=1 and check that only one set of binaries are being loaded.
-$</PRE>
-                </LI>
-            </LI>
         </UL>
 
         <SPAN CLASS = "SectionFont">Package</SPAN>
