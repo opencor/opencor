@@ -128,6 +128,8 @@ SET(3RDPARTYLIBS LibQxt QScintilla QtSingleApplication)
 FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
     SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})
     SET(3RDPARTYLIB_SUBDIRS)
+    # Note: the above variable is only defined here while actually set when
+    #       processing the CMakeLists.txt file of the third-party library
 
     ADD_SUBDIRECTORY(${3RDPARTYLIB_DIR})
 
