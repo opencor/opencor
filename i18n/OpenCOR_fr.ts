@@ -350,5 +350,13 @@
         <source>Show/hide the status bar</source>
         <translation>Montrer/cacher la barre d&apos;état</translation>
     </message>
+    <message>
+        <source>File Toolbar</source>
+        <translation>Barre d&apos;Outils Fichier</translation>
+    </message>
+    <message>
+        <source>Help Toolbar</source>
+        <translation>Barre d&apos;Outils Aide</translation>
+    </message>
 </context>
 </TS>
