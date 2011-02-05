@@ -20,12 +20,14 @@
 }
 
 QToolButton:Hover {
-    Border: 1px Solid #8F8F91;
-    Border-Radius: 3px;
+    Border: 1px Solid #A8A8A8;
+    Border-Radius: 5px;
+    Background-Color: qLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #F5F5F5, stop: 0.42999 #E8E8E8, stop: 0.43 #DADADA, stop: 1 #F0F0F0);
 }
  
 QToolButton:Pressed {
-    Background-Color: qLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #DADBDE, stop: 1 #F6F7FA);
+    Border: 1px Solid #545454;
+    Background-Color: qLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #B4B4B4, stop: 1 #E6E6E6);
 }</string>
   </property>
   <property name="windowTitle">
