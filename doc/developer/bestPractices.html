@@ -16,7 +16,40 @@
         </P>
 
         <P>
-            To be done...
+            <SPAN CLASS = "SectionFont">File Structure</SPAN>
+        </P>
+
+        <P>
+            The <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree">file structure</A> used in OpenCOR, together with its description, is as follows:
+                <PRE><A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty;h=1a5e4b1f83ae8baa7413ab1fd01f987021b59579;hb=HEAD">3rdparty</A>                    <SPAN CLASS = "Italic">// Various <A HREF = "thirdPartyLibraries.html">third-party libraries</A> used by OpenCOR</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/LibQxt;h=f47589e9783147b30b53b358df49a43617190a13;hb=HEAD">LibQxt</A>                      <SPAN CLASS = "Italic">// The <A HREF = "http://libqxt.org/">LibQxt</A> library</A></SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/QScintilla;h=804e286d198d20e5b9c95232d8e48e31b5bd2616;hb=HEAD">QScintilla</A>                  <SPAN CLASS = "Italic">// The <A HREF = "http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</A> library</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/QtSingleApplication;h=ac6f50ca5aeec552afe6afcd33b01f98168799ff;hb=HEAD">QtSingleApplication</A>         <SPAN CLASS = "Italic">// The <A HREF = "http://qt.gitorious.org/qt-solutions/">QtSingleApplication</A> library</SPAN>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=build;h=0fdd52995b5301ea8e028222ae7d7e7578a9f8e8;hb=HEAD">build</A>                       <SPAN CLASS = "Italic">// Where OpenCOR-related build files are generated</SPAN>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=distrib;h=6939b7b39925c1717ace7377ca51ba9e88628465;hb=HEAD">distrib</A>                     <SPAN CLASS = "Italic">// Various files used for the packaging of OpenCOR</SPAN>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc;h=6c3c00380180376c7a4c15381ae0f311849ac336;hb=HEAD">doc</A>                         <SPAN CLASS = "Italic">// User and developer documentation</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc/developer;h=383f7becc5d4021b3469e2dfffd6b9bfefe79a4a;hb=HEAD">developer</A>                   <SPAN CLASS = "Italic">// Developer-specific documentation</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc/res;h=6225d01d21bea1de8b179352f8eebaa6e046e44d;hb=HEAD">res</A>                         <SPAN CLASS = "Italic">// Various resource files used by the documentation</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc/user;h=0597b48bf4f00404dae949f046d94b61bcc4cf59;hb=HEAD">user</A>                        <SPAN CLASS = "Italic">// User-specific documentation</SPAN>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=i18n;h=8ae5ae5e7112a5cf897e8c5de02e31aed149e1e2;hb=HEAD">i18n</A>                        <SPAN CLASS = "Italic">// Internationalisation files</SPAN>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=res;h=6f33dddce45ab69ecaee35bfdc6f9fb919d6d47a;hb=HEAD">res</A>                         <SPAN CLASS = "Italic">// Various resource files used by OpenCOR</SPAN>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src;h=b11ecf33d667b70914086e8a27d3a815b82d2160;hb=HEAD">src</A>                         <SPAN CLASS = "Italic">// Source code files for OpenCOR</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src/misc;h=f5c036aa2a99598514972851515fbc2184feab75;hb=HEAD">misc</A>                        <SPAN CLASS = "Italic">// Files that do not fit anywhere else</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src/ui;h=cf183e6a61b477da60b6e4b9b664945ad781b136;hb=HEAD">ui</A>                          <SPAN CLASS = "Italic">// User interface files</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src/widget;h=a4f7d1765e32d7cd6b6627e61a280ae8d77dab2a;hb=HEAD">widget</A>                      <SPAN CLASS = "Italic">// Widget files</SPAN>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole;h=08d7aab5d4b92c86f12915d10ce3e8acf76b0884;hb=HEAD">winConsole</A>                  <SPAN CLASS = "Italic">// Console version of OpenCOR (Windows only)</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole/build;h=0fdd52995b5301ea8e028222ae7d7e7578a9f8e8;hb=HEAD">build</A>                       <SPAN CLASS = "Italic">// Where the build files are generated</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole/res;h=af95d134c5f4f9fa51c288e6ccd403af7bec26dd;hb=HEAD">res</A>                         <SPAN CLASS = "Italic">// Various resource files</SPAN>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole/src;h=852d65ea490074d35a51981f2d96c5d3f7a51d6d;hb=HEAD">src</A>                         <SPAN CLASS = "Italic">// Source code files</SPAN></PRE>
+            It goes without saying that any new (set of) file(s) should be added in the right place in the above file structure.
+        </P>
+
+        <P>
+            <SPAN CLASS = "SectionFont">Coding Style</SPAN>
+        </P>
+
+        <P>
+            To be completed, but it will most likely be based on the <A HREF = "http://qt.gitorious.org/+qtuitest/qt-creator/qt-creator-qttest/blobs/master/doc/coding-style.qdoc">coding style</A> used by the developers of <A HREF = "http://qt.nokia.com/products/developer-tools">Qt Creator</A>.
         </P>
 
         <P CLASS = "CopyrightBackground">
