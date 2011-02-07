@@ -48,8 +48,21 @@
         </P>
 
         <P>
-            To be completed, but it will most likely be based on the <A HREF = "http://qt.gitorious.org/+qtuitest/qt-creator/qt-creator-qttest/blobs/master/doc/coding-style.qdoc">coding style</A> used by the developers of <A HREF = "http://qt.nokia.com/products/developer-tools">Qt Creator</A>.
+            No matter how great an application is, if its source code is difficult to understand and/or to maintain, it will have a limited life expectancy. This document therefore provides some simple rules which, as much as possible, ought to be respected when working on OpenCOR. These rules were taken (paraphrased, if not simply copied/pasted) from the <A HREF = "http://qt.gitorious.org/+qtuitest/qt-creator/qt-creator-qttest/blobs/master/doc/coding-style.qdoc">coding style document</A> written by the developers of <A HREF = "http://qt.nokia.com/products/developer-tools">Qt Creator</A>:
         </P>
+
+        <UL>
+            <LI>
+                <SPAN CLASS = "Bold">General:</SPAN>
+                    <UL>
+                        <LI>The most important rule first: the <A HREF = "http://en.wikipedia.org/wiki/KISS_principle">KISS principle</A>, i.e.  <SPAN CLASS = "Italic">keep it simple, stupid!</SPAN> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
+                        <LI>Write good C++ code: readable, well commented when necessary, and taking advantage of the object-oriented model.</LI>
+                        <LI>Adapt the code to the structures already existing in OpenCOR, or in the case that you have better ideas, discuss them with <A HREF = "../user/authors.html">other developers</A> before writing the code.</LI>
+                        <LI>Take advantage of Qt. Don't re-invent the wheel. Think about what parts of your code are generic enough that they might be incorporated into Qt proper.</LI>
+                        <LI>Document interfaces (using <A HREF = "http://www.stack.nl/~dimitri/doxygen/">doxygen</A>).</LI>
+                    </UL>
+            </LI>
+        </UL>
 
         <P CLASS = "CopyrightBackground">
             <SPAN CLASS = "CopyrightFont">Copyright ©2011</SPAN>
