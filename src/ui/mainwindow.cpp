@@ -57,7 +57,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     //       file. Otherwise, it's good to have it set for all three platforms,
     //       since it can then be used in, for example, the about box...
 
-
     // Set the New toolbar button with its dropdown menu using our custom-made
     // action (actionNew)
     // Note: ideally, this would be done using the GUI designer in QtCreator,
