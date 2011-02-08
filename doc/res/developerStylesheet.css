@@ -33,6 +33,18 @@ PRE
     White-Space: Pre-Wrap;
 }
 
+PRE.Good
+{
+    Background: #EBF1DD;
+    Border: 1px Dashed #76923C;
+}
+
+PRE.Bad
+{
+    Background: #F2DCDB;
+    Border: 1px Dashed #953734;
+}
+
 SPAN.Bold
 {
     Font-Weight: Bold;

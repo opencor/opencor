@@ -58,8 +58,54 @@
                         <LI>The most important rule first: the <A HREF = "http://en.wikipedia.org/wiki/KISS_principle">KISS principle</A>, i.e.  <SPAN CLASS = "Italic">keep it simple, stupid!</SPAN> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
                         <LI>Write good C++ code: readable, well commented when necessary, and taking advantage of the object-oriented model.</LI>
                         <LI>Adapt the code to the structures already existing in OpenCOR, or in the case that you have better ideas, discuss them with <A HREF = "../user/authors.html">other developers</A> before writing the code.</LI>
-                        <LI>Take advantage of Qt. Don't re-invent the wheel. Think about what parts of your code are generic enough that they might be incorporated into Qt proper.</LI>
+                        <LI>Take advantage of Qt. Think about what parts of your code are generic enough that they might be incorporated into Qt proper.</LI>
                         <LI>Document interfaces (using <A HREF = "http://www.stack.nl/~dimitri/doxygen/">doxygen</A>).</LI>
+                    </UL>
+            </LI>
+            <LI>
+                <SPAN CLASS = "Bold">Code constructs:</SPAN> the following guidelines exist to make the code faster, clearer, and/or to take advantage of the strong type checking in C++.
+                    <UL>
+                        <LI>Declaration of variables should wait as long as possible. The rule is: <SPAN CLASS = "Italic">Don't declare it until you need it.</SPAN> In C++, there are a lot of user defined types, and these can very often be expensive to initialise.</LI>
+                        <LI>Make the scope of a variable as small as possible.</LI>
+                        <LI>
+                            Prefer pre-increment to post-increment whenever possible. Pre-increment has potential of being faster than post-increment. This rule applies to decrement too.
+                                <PRE CLASS = "Good">++i;
+--j;</PRE>
+                                <PRE CLASS = "Bad">i++;
+j--;</PRE>
+                        </LI>
+                        <LI>
+                            Try to minimise evaluation of the same code over and over. This is aimed especially at loops.
+                                <PRE CLASS = "Good">Container::iterator end = large.end();
+
+for (Container::iterator iter = large.begin(); iter != end; ++iter) {
+    ...;
+}</PRE>
+                                <PRE CLASS = "Bad">for (Container::iterator iter = large.begin(); iter != large.end(); ++iter) {
+    ...;
+}</PRE>
+                        </LI>
+                        <LI>
+                            To use Qt's <SPAN CLASS = "Italic">foreach</SPAN> is ok in non-time critical code when using a QTL container. It is a nice way to keep line noise down and to give the loop variable a proper name:
+                                <PRE CLASS = "Good">foreach (QWidget *widget, container)
+    doSomething(widget);</PRE>
+                                <PRE CLASS = "Bad">Container::iterator end = container.end();
+
+for (Container::iterator iter = container.begin(); iter != end; ++iter)
+    doSomething(*iter);</PRE>
+                            If the loop variable can be made <SPAN CLASS = "Italic">const</SPAN>, then do so. This can prevent unnecessary detaching of shared data in some cases.
+                                <PRE CLASS = "Good">foreach (const QString &name, someListOfNames)
+    doSomething(name);</PRE>
+                                <PRE CLASS = "Bad">foreach (QString name, someListOfNames)
+    doSomething(name);</PRE>
+                        </LI>
+                    </UL>
+            </LI>
+            <LI>
+                <SPAN CLASS = "Bold">Miscellaneous:</SPAN>
+                    <UL>
+                        <LI>Put the body of a function in a <SPAN CLASS = "Italic">.cpp</SPAN> file, not in its header file. There is both a <SPAN CLASS = "Italic">.cpp</SPAN> file and a <SPAN CLASS = "Italic">.h</SPAN> file for a reason.</LI>
+                        <LI>Do not use inline functions. Nowadays, compilers are good at optimising one's code.</LI>
                     </UL>
             </LI>
         </UL>

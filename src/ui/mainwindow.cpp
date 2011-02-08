@@ -246,7 +246,7 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
     QList<QUrl> urlList = pEvent->mimeData()->urls();
     QString urls;
 
-    for (int i = 0; i < urlList.size(); i++)
+    for (int i = 0; i < urlList.size(); ++i)
         urls += "<LI>"+urlList.at(i).path()+"</LI>";
 
     QMessageBox::information(this, qApp->applicationName(), "You have just dropped the following files: <UL>"+urls+"</UL>");
