@@ -104,8 +104,36 @@ for (Container::iterator iter = container.begin(); iter != end; ++iter)
             <LI>
                 <SPAN CLASS = "Bold">Formatting</SPAN>
                     <UL>
+                        <LI>Indentation: 4 spaces, no tabulations.</LI>
                         <LI>
-                            Declarations: Only one declaration on each line.
+                            Naming rules:
+                                <UL>
+                                    <LI>Use descriptive, simple and short names.</LI>
+                                    <LI>Single character variable names are only okay for counters and temporaries where the purpose of the variable is obvious.</LI>
+                                    <LI>
+                                        Class names are capitalised, and function names lower-cased. Enums are named like Classes, values are in lower-case.
+                                            <PRE CLASS = "Good">class MainWindow : public QMainWindow
+{
+    ...
+    void defaultSettings();
+    ...
+}</PRE>
+                                            <PRE CLASS = "Bad">class mainWindow : public QMainWindow
+{
+    ...
+    void DefaultSettings();
+    ...
+}</PRE>
+                                    </LI>
+                                    <LI>
+                                        Parameters passed to a function should start with a lower-case <SPAN CLASS = "Italic">p</SPAN>.
+                                            <PRE CLASS = "Good">int main(int pArgc, char *pArgv[])</PRE>
+                                            <PRE CLASS = "Bad">int main(int argc, char *argv[])</PRE>
+                                    </LI>
+                                </UL>
+                        </LI>
+                        <LI>
+                            Declarations: use only one declaration per line and wait with declaring a variable until it is needed.
                                 <PRE CLASS = "Good">int a;
 int b;</PRE>
                                 <PRE CLASS = "Bad">int a, b;</PRE>
@@ -121,7 +149,7 @@ QString b = "Foo";</PRE>
 char &c = *p;</PRE>
                                 <PRE CLASS = "Bad">char* p = "flop";
 char & c = *p;</PRE>
-                            This is simply in line with the official Qt guide lines. Also note that we will have:
+                            Also, we will have:
                                 <PRE CLASS = "Good">const char *p;</PRE>
                                 <PRE CLASS = "Bad">char const * p;</PRE>
                             Using a plain <SPAN CLASS = "Italic">0</SPAN> for <SPAN CLASS = "Italic">NULL</SPAN> pointer constants is always correct and least effort to type. So:
@@ -130,6 +158,17 @@ char & c = *p;</PRE>
 void *p = '\0';
 void *p = 42-7*6;</PRE>
                             <SPAN CLASS = "Bold">Note:</SPAN> as an exception, imported third-party code, as well as code interfacing with the <SPAN CLASS = "Italic">native</SPAN> APIs (<SPAN CLASS = "Italic">src/support/os_*</SPAN>), can use <SPAN CLASS = "Italic">NULL</SPAN>.
+                        </LI>
+                        <LI>
+                            Operator names and parentheses
+                                <PRE CLASS = "Good">operator==(type)</PRE>
+                                <PRE CLASS = "Bad">operator == (type)</PRE>
+                            The <SPAN CLASS = "Italic">==</SPAN> is part of the function name, separating it makes the declaration look like an expression.
+                        </LI>
+                        <LI>
+                            Function names and parentheses
+                                <PRE CLASS = "Good">void mangle()</PRE>
+                                <PRE CLASS = "Bad">void mangle ()</PRE>
                         </LI>
                     </UL>
             </LI>
