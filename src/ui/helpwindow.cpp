@@ -10,7 +10,7 @@
 #include <QPrintDialog>
 #include <QPrinter>
 
-HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl& pHomePage,
+HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                        QWidget *pParent) :
     QDockWidget(pParent),
     mUi(new Ui::HelpWindow)
@@ -121,7 +121,7 @@ int HelpWindow::defaultZoomLevel()
     return mHelpWidget->defaultZoomLevel();
 }
 
-void HelpWindow::setZoomLevel(const int& pZoomLevel)
+void HelpWindow::setZoomLevel(const int &pZoomLevel)
 {
     // Set the zoom level for the help widget
 
@@ -197,7 +197,7 @@ void HelpWindow::on_actionPrint_triggered()
           mHelpWidget->print(&printer);
 }
 
-void HelpWindow::customContextMenu(const QPoint& pPos)
+void HelpWindow::customContextMenu(const QPoint &pPos)
 {
     // Create a custom context menu which items match the contents of our
     // 'toolbar'
@@ -221,7 +221,7 @@ void HelpWindow::customContextMenu(const QPoint& pPos)
     menu->exec(mapToGlobal(pPos));
 }
 
-void HelpWindow::newUrl(const QUrl& pNewUrl)
+void HelpWindow::newUrl(const QUrl &pNewUrl)
 {
     // The help page contents has changed, so determine whether the home action
     // should now be enabled or not

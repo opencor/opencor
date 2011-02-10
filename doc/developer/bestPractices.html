@@ -53,7 +53,7 @@
 
         <UL>
             <LI>
-                <SPAN CLASS = "Bold">General:</SPAN>
+                <SPAN CLASS = "Bold">General</SPAN>
                     <UL>
                         <LI>The most important rule first: the <A HREF = "http://en.wikipedia.org/wiki/KISS_principle">KISS principle</A>, i.e.  <SPAN CLASS = "Italic">keep it simple, stupid!</SPAN> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
                         <LI>Write good C++ code: readable, well commented when necessary, and taking advantage of the object-oriented model.</LI>
@@ -86,7 +86,7 @@ for (Container::iterator iter = large.begin(); iter != end; ++iter) {
 }</PRE>
                         </LI>
                         <LI>
-                            To use Qt's <SPAN CLASS = "Italic">foreach</SPAN> is ok in non-time critical code when using a QTL container. It is a nice way to keep line noise down and to give the loop variable a proper name:
+                            To use Qt's <SPAN CLASS = "Italic">foreach</SPAN> is ok in non-time critical code when using a QTL container. It is a nice way to keep line noise down and to give the loop variable a proper name.
                                 <PRE CLASS = "Good">foreach (QWidget *widget, container)
     doSomething(widget);</PRE>
                                 <PRE CLASS = "Bad">Container::iterator end = container.end();
@@ -102,10 +102,47 @@ for (Container::iterator iter = container.begin(); iter != end; ++iter)
                     </UL>
             </LI>
             <LI>
-                <SPAN CLASS = "Bold">Miscellaneous:</SPAN>
+                <SPAN CLASS = "Bold">Formatting</SPAN>
+                    <UL>
+                        <LI>
+                            Declarations: Only one declaration on each line.
+                                <PRE CLASS = "Good">int a;
+int b;</PRE>
+                                <PRE CLASS = "Bad">int a, b;</PRE>
+                            This is especially important when initialisation is done at the same time.
+                                <PRE CLASS = "Good">QString a = "Joe";
+QString b = "Foo";</PRE>
+                                <PRE CLASS = "Bad">QString a = "Joe", b = "Foo";</PRE>
+                            <SPAN CLASS = "Bold">Note:</SPAN> <SPAN CLASS = "Italic">QString a = "Joe";</SPAN> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <SPAN CLASS = "Italic">QString a("joe")</SPAN>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <SPAN CLASS = "Italic">=</SPAN> idiom as it is in line with the traditional C-style initialisation, <SPAN CLASS = "Italic">and</SPAN> cannot be mistaken as a function declaration, <SPAN CLASS = "Italic">and</SPAN> reduces the level of nested parantheses in more initialisations.
+                        </LI>
+                        <LI>
+                            Pointers and references.
+                                <PRE CLASS = "Good">char *p = "flop";
+char &c = *p;</PRE>
+                                <PRE CLASS = "Bad">char* p = "flop";
+char & c = *p;</PRE>
+                            This is simply in line with the official Qt guide lines. Also note that we will have:
+                                <PRE CLASS = "Good">const char *p;</PRE>
+                                <PRE CLASS = "Bad">char const * p;</PRE>
+                            Using a plain <SPAN CLASS = "Italic">0</SPAN> for <SPAN CLASS = "Italic">NULL</SPAN> pointer constants is always correct and least effort to type. So:
+                                <PRE CLASS = "Good">void *p = 0;</PRE>
+                                <PRE CLASS = "Bad">void *p = NULL;
+void *p = '\0';
+void *p = 42-7*6;</PRE>
+                            <SPAN CLASS = "Bold">Note:</SPAN> as an exception, imported third-party code, as well as code interfacing with the <SPAN CLASS = "Italic">native</SPAN> APIs (<SPAN CLASS = "Italic">src/support/os_*</SPAN>), can use <SPAN CLASS = "Italic">NULL</SPAN>.
+                        </LI>
+                    </UL>
+            </LI>
+            <LI>
+                <SPAN CLASS = "Bold">Miscellaneous</SPAN>
                     <UL>
                         <LI>Put the body of a function in a <SPAN CLASS = "Italic">.cpp</SPAN> file, not in its header file. There is both a <SPAN CLASS = "Italic">.cpp</SPAN> file and a <SPAN CLASS = "Italic">.h</SPAN> file for a reason.</LI>
-                        <LI>Do not use inline functions. Nowadays, compilers are good at optimising one's code.</LI>
+                        <LI>Do not use inline functions. It is better to rely on the compiler to optimise the code, not to mention that, if badly used, inline functions can result in slower code.</LI>
+                        <LI>
+                            Replace divisions by multiplications if possible:
+                                <PRE CLASS = "Good">a = 0.5*b;</PRE>
+                                <PRE CLASS = "Bad">a = b/2;</PRE>
+                        </LI>
                     </UL>
             </LI>
         </UL>

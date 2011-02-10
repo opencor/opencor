@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-void usage(const QCoreApplication& pApp)
+void usage(const QCoreApplication &pApp)
 {
     std::cout << "Usage: " << pApp.applicationName().toAscii().constData() << " [OPTION]... [FILE]..." << std::endl;
     std::cout << "Start " << pApp.applicationName().toAscii().constData() << " and open the FILE(s) passed as argument(s)." << std::endl;
@@ -22,12 +22,12 @@ void usage(const QCoreApplication& pApp)
     std::cout << "for any corresponding short options." << std::endl;
 }
 
-void version(const QCoreApplication& pApp)
+void version(const QCoreApplication &pApp)
 {
     std::cout << pApp.applicationName().toAscii().constData() << " " << pApp.applicationVersion().toAscii().constData() << std::endl;
 }
 
-void about(const QCoreApplication& pApp)
+void about(const QCoreApplication &pApp)
 {
     version(pApp);
 
@@ -37,14 +37,14 @@ void about(const QCoreApplication& pApp)
     std::cout << "used to organise, edit, simulate and analyse CellML files." << std::endl;
 }
 
-void error(const QCoreApplication& pApp, const QString& pMsg)
+void error(const QCoreApplication &pApp, const QString &pMsg)
 {
     version(pApp);
 
     std::cout << "Error: " << pMsg.toAscii().constData() << std::endl;
 }
 
-void initApplication(QCoreApplication& pApp)
+void initApplication(QCoreApplication &pApp)
 {
     // Set the name of the application
 
@@ -68,7 +68,7 @@ void initApplication(QCoreApplication& pApp)
     pApp.setApplicationVersion(version);
 }
 
-bool consoleApplication(const QCoreApplication& pApp, int& pRes)
+bool consoleApplication(const QCoreApplication &pApp, int &pRes)
 {
     pRes = 0;   // By default, everything is fine
 

@@ -48,14 +48,14 @@ private:
     QxtTemporaryDir *mTempDir;
     QString mQchFileName, mQhcFileName;
 
-    void notYetImplemented(const QString& method);
+    void notYetImplemented(const QString &method);
 
     void defaultSettings();
 
     void loadSettings();
     void saveSettings();
 
-    void setLocale(const QString& pLocale);
+    void setLocale(const QString &pLocale);
 
     void updateMenuStatus();
 

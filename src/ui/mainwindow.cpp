@@ -168,7 +168,7 @@ MainWindow::~MainWindow()
     delete mTempDir;
 }
 
-void MainWindow::notYetImplemented(const QString& method)
+void MainWindow::notYetImplemented(const QString &method)
 {
     QMessageBox::information(this, qApp->applicationName()+" Information", "Sorry, but the '"+method+"' method has not yet been implemented.");
 }
@@ -340,7 +340,7 @@ void MainWindow::saveSettings()
     settings.setValue(SETTINGS_HELPWINDOW_ZOOMLEVEL, mHelpWindow->zoomLevel());
 }
 
-void MainWindow::setLocale(const QString& pLocale)
+void MainWindow::setLocale(const QString &pLocale)
 {
     if ((pLocale != mLocale) || (pLocale == SYSTEM_LOCALE))
     {

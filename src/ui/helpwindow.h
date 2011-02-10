@@ -17,7 +17,7 @@ class HelpWindow : public QDockWidget
     Q_OBJECT
 
 public:
-    explicit HelpWindow(QHelpEngine *pEngine, const QUrl& pHomePage,
+    explicit HelpWindow(QHelpEngine *pEngine, const QUrl &pHomePage,
                         QWidget *pParent = 0);
     ~HelpWindow();
 
@@ -29,7 +29,7 @@ public:
 
     int defaultZoomLevel();
 
-    void setZoomLevel(const int& pZoomLevel);
+    void setZoomLevel(const int &pZoomLevel);
     int zoomLevel();
 
 private:
@@ -47,9 +47,9 @@ private Q_SLOTS:
     void on_actionZoomOut_triggered();
     void on_actionPrint_triggered();
 
-    void customContextMenu(const QPoint& pPos);
+    void customContextMenu(const QPoint &pPos);
 
-    void newUrl(const QUrl& pNewUrl);
+    void newUrl(const QUrl &pNewUrl);
     void newSelection();
     void newZoomLevel(int pNewZoomLevel);
 };

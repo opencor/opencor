@@ -12,9 +12,9 @@
 #include <QWebPage>
 #include <QWheelEvent>
 
-HelpNetworkReply::HelpNetworkReply(const QNetworkRequest& pRequest,
-                                   const QByteArray& pData,
-                                   const QString& pMimeType) :
+HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
+                                   const QByteArray &pData,
+                                   const QString &pMimeType) :
     mData(pData),
     mOrigLen(pData.length())
 {
@@ -85,7 +85,7 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
 }
 
 QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
-                                                       const QNetworkRequest& pRequest,
+                                                       const QNetworkRequest &pRequest,
                                                        QIODevice*)
 {
     // Reqested URL
@@ -113,7 +113,7 @@ HelpPage::HelpPage(QHelpEngine *pHelpEngine, QObject *pParent) :
 }
 
 bool HelpPage::acceptNavigationRequest(QWebFrame*,
-                                       const QNetworkRequest& pRequest,
+                                       const QNetworkRequest &pRequest,
                                        QWebPage::NavigationType)
 {
     // Requested URL
@@ -138,7 +138,7 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
     }
 }
 
-HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomePage,
+HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                        QWidget *pParent) :
     QWebView(pParent),
     mHomePage(pHomePage),
@@ -252,7 +252,7 @@ void HelpWidget::zoomOut()
     setZoomLevel(qMax(minimumZoomLevel(), --mZoomLevel));
 }
 
-void HelpWidget::setZoomLevel(const int& pZoomLevel)
+void HelpWidget::setZoomLevel(const int &pZoomLevel)
 {
     // Set the zoom level of the help page contents to a particular value
 

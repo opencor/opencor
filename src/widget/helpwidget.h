@@ -11,8 +11,8 @@ class QHelpEngine;
 class HelpNetworkReply : public QNetworkReply
 {
 public:
-    HelpNetworkReply(const QNetworkRequest& pRequest, const QByteArray& pData,
-                     const QString& pMimeType);
+    HelpNetworkReply(const QNetworkRequest &pRequest, const QByteArray &pData,
+                     const QString &pMimeType);
 
     virtual void abort();
     virtual qint64 bytesAvailable() const;
@@ -32,7 +32,7 @@ public:
 
 protected:
     virtual QNetworkReply *createRequest(Operation pOperation,
-                                         const QNetworkRequest& pRequest,
+                                         const QNetworkRequest &pRequest,
                                          QIODevice *pOutgoingData = 0);
 
 private:
@@ -48,7 +48,7 @@ public:
 
 protected:
     virtual bool acceptNavigationRequest(QWebFrame*,
-                                         const QNetworkRequest& pRequest,
+                                         const QNetworkRequest &pRequest,
                                          QWebPage::NavigationType);
 
 private:
@@ -60,7 +60,7 @@ class HelpWidget : public QWebView
     Q_OBJECT
 
 public:
-    HelpWidget(QHelpEngine *pHelpEngine, const QUrl& pHomePage,
+    HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                QWidget *pParent = 0);
 
     void defaultSettings();
@@ -79,7 +79,7 @@ public:
     void zoomIn();
     void zoomOut();
 
-    void setZoomLevel(const int& pZoomLevel);
+    void setZoomLevel(const int &pZoomLevel);
     int zoomLevel();
 
 protected:

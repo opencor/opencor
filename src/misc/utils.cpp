@@ -5,7 +5,7 @@
 #include <QResource>
 #include <QSysInfo>
 
-QString exec(const QString& pProg, const QString& pArgs)
+QString exec(const QString &pProg, const QString &pArgs)
 {
     QProcess process;
 
@@ -58,7 +58,7 @@ QString getOsName()
 #endif
 }
 
-void saveResourceAs(const QString& pResource, const QString& pFilename)
+void saveResourceAs(const QString &pResource, const QString &pFilename)
 {
     QFile file(pFilename);
 
