@@ -345,14 +345,65 @@ else {
                 </UL>
             </LI>
             <LI>
-                <SPAN CLASS = "Bold">Miscellaneous</SPAN>
+                <SPAN CLASS = "Bold">Patterns and practices</SPAN>
                 <UL>
-                    <LI>Put the body of a function in a <CODE>.cpp</CODE> file, not in its header file. There is both a <CODE>.cpp</CODE> file and a <CODE>.h</CODE> file for a reason.</LI>
-                    <LI>Do not use inline functions. It is better to rely on the compiler to optimise the code, not to mention that, if badly used, inline functions can result in slower code.</LI>
                     <LI>
-                        Replace divisions by multiplications if possible:
+                        <SPAN CLASS = "Bold">C++ Features:</SPAN>
+                        <UL>
+                            <LI>Do not use exceptions, unless you know what you do.</LI>
+                            <LI>Do not use RTTI (Run-Time Type Information, i.e. the <CODE>typeinfo struct</CODE>, the <CODE>dynamic_cast</CODE> or the <CODE>typeid</CODE> operators, including throwing
+            exceptions), unless you know what you do.</LI>
+                            <LI>
+                                Use templates wisely, not just because you can.<BR/>
+                                <SPAN CLASS = "Bold">Hint:</SPAN> use the compile autotest to see whether a C++ feature is supported by all compilers in the test farm.
+                            </LI>
+                            <LI>
+                                All code is ASCII only (7-bit characters only, run <CODE>man ascii</CODE> if unsure). For strings, use <CODE>\\nnn</CODE> (where <CODE>nnn</CODE> is the octal representation of whatever locale you want your string in) or <CODE>\xnn</CODE> (where <CODE>nn</CODE> is hexadecimal).
+                                <PRE>QString s = QString::fromUtf8("\\213\\005");</PRE>
+                            </LI>
+                            <LI>Use static keywords instead of anonymous namespaces whenever possible. A name localised to the compilation unit with static is guaranteed to have internal linkage. For names declared in anonymous namespaces, the C++ standard unfortunately mandates external linkage (ISO/IEC 14882, 7.1.1/6, or see various discussions about this on the gcc mailing lists).</LI>
+                        </UL>
+                    </LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Using <CODE>QObject</CODE>:</SPAN>
+                        <UL>
+                            <LI>Every <CODE>QObject</CODE> subclass must have a <CODE>Q_OBJECT</CODE> macro, even if it does not have signals or slots, if it is intended to be used with <CODE>qobject_cast<></CODE>.</LI>
+                            <LI>Normalise the arguments for signals and slots (see <A HREF = "http://doc.qt.nokia.com/4.7/qmetaobject.html#normalizedSignature"><CODE>QMetaObject::normalizedSignature</CODE></A>) inside connect statements to safely make signal and slot lookup a few cycles faster. You can use <CODE>[Qt]/util/normalize</CODE> to normalise existing code.</LI>
+                        </UL>
+                    </LI>
+                </UL>
+            </LI>
+            <LI>
+                <SPAN CLASS = "Bold">Miscellaneous:</SPAN>
+                <UL>
+                    <LI>Put the body of a function in a <CODE>.cpp</CODE> file, not in its corresponding header file. There is a reason for having both a <CODE>.cpp</CODE> file and a <CODE>.h</CODE> file.</LI>
+                    <LI>Do not use <CODE>inline</CODE> functions. It is better to rely on the compiler to optimise the code, if necessary, not to mention that, if badly used, <CODE>inline</CODE> functions can result in slower code.</LI>
+                    <LI>
+                        Divisions are costly, so replace them by multiplications wherever possible:
                         <PRE CLASS = "Good">a = 0.5*b;</PRE>
                         <PRE CLASS = "Bad">a = b/2;</PRE>
+                    </LI>
+                    <LI>
+                        Use a reference rather than a pointer to pass a variable to a function, if you want that variable to be changed:
+                        <PRE CLASS = "Good">void myFunction(int &pMyVar)
+{
+    pMyVar = 3;
+}</PRE>
+                        <PRE CLASS = "Bad">void myFunction(int *pMyVar)
+{
+    *pMyVar = 3;
+}</PRE>
+                    </LI>
+                    <LI>
+                        Use a constant reference to pass a variable to a function, if you do not intend to modify that variable:
+                        <PRE CLASS = "Good">int myFunction(const int &pMyVar)
+{
+    return 3*pMyVar;
+}</PRE>
+                        <PRE CLASS = "Bad">void myFunction(int pMyVar)
+{
+    return 3*pMyVar;
+}</PRE>
                     </LI>
                 </UL>
             </LI>

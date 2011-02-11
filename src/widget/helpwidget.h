@@ -97,10 +97,10 @@ private:
     int mZoomLevel;
 
 Q_SIGNALS:
-    void backAvailable(bool pAvailable);
-    void forwardAvailable(bool pAvailable);
+    void backAvailable(const bool &pAvailable);
+    void forwardAvailable(const bool &pAvailable);
 
-    void zoomLevelChanged(int pZoomLevel);
+    void zoomLevelChanged(const int &pZoomLevel);
 
 private Q_SLOTS:
     void webPageChanged();

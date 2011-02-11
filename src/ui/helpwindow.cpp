@@ -237,7 +237,7 @@ void HelpWindow::newSelection()
     mUi->actionCopy->setEnabled(!mHelpWidget->selectedText().isEmpty());
 }
 
-void HelpWindow::newZoomLevel(int pNewZoomLevel)
+void HelpWindow::newZoomLevel(const int &pNewZoomLevel)
 {
     // The help page contents has been zoomed in/out or reset, so update the
     // relevant actions

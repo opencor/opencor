@@ -51,7 +51,7 @@ private Q_SLOTS:
 
     void newUrl(const QUrl &pNewUrl);
     void newSelection();
-    void newZoomLevel(int pNewZoomLevel);
+    void newZoomLevel(const int &pNewZoomLevel);
 };
 
 #endif
