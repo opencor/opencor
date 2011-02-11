@@ -10,19 +10,13 @@
 #endif
 
 #include <QCoreApplication>
-#include <QCloseEvent>
-#include <QDebug>
 #include <QDesktopServices>
 #include <QDesktopWidget>
-#include <QDir>
 #include <QHelpEngine>
-#include <QLibraryInfo>
 #include <QMessageBox>
 #include <QProcess>
 #include <QSettings>
-#include <QTemporaryFile>
-#include <QTranslator>
-#include <QUrl>
+#include <QShowEvent>
 
 #include <QxtTemporaryDir>
 

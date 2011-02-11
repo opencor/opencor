@@ -6,10 +6,8 @@
 #include <QDesktopWidget>
 #include <QFile>
 #include <QHelpEngine>
-#include <QNetworkReply>
 #include <QTimer>
 #include <QWebHistory>
-#include <QWebPage>
 #include <QWheelEvent>
 
 HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,

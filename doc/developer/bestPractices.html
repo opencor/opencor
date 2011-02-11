@@ -348,17 +348,16 @@ else {
                 <SPAN CLASS = "Bold">Patterns and practices</SPAN>
                 <UL>
                     <LI>
-                        <SPAN CLASS = "Bold">C++ Features:</SPAN>
+                        <SPAN CLASS = "Bold">C++ features:</SPAN>
                         <UL>
-                            <LI>Do not use exceptions, unless you know what you do.</LI>
-                            <LI>Do not use RTTI (Run-Time Type Information, i.e. the <CODE>typeinfo struct</CODE>, the <CODE>dynamic_cast</CODE> or the <CODE>typeid</CODE> operators, including throwing
-            exceptions), unless you know what you do.</LI>
+                            <LI>Do not use exceptions, unless you know what you are doing.</LI>
+                            <LI>Do not use RTTI (Run-Time Type Information, i.e. the <CODE>typeinfo struct</CODE>, the <CODE>dynamic_cast</CODE> or the <CODE>typeid</CODE> operators, including throwing exceptions), unless you know what you are doing.</LI>
                             <LI>
                                 Use templates wisely, not just because you can.<BR/>
                                 <SPAN CLASS = "Bold">Hint:</SPAN> use the compile autotest to see whether a C++ feature is supported by all compilers in the test farm.
                             </LI>
                             <LI>
-                                All code is ASCII only (7-bit characters only, run <CODE>man ascii</CODE> if unsure). For strings, use <CODE>\\nnn</CODE> (where <CODE>nnn</CODE> is the octal representation of whatever locale you want your string in) or <CODE>\xnn</CODE> (where <CODE>nn</CODE> is hexadecimal).
+                                All code is ASCII only (7-bit characters only, run <CODE>man ascii</CODE> if unsure). For strings, use <CODE>\\nnn</CODE> (where <CODE>nnn</CODE> is the octal representation of whatever locale you want your string in) or <CODE>\xnn</CODE> (where <CODE>nn</CODE> is hexadecimal):
                                 <PRE>QString s = QString::fromUtf8("\\213\\005");</PRE>
                             </LI>
                             <LI>Use static keywords instead of anonymous namespaces whenever possible. A name localised to the compilation unit with static is guaranteed to have internal linkage. For names declared in anonymous namespaces, the C++ standard unfortunately mandates external linkage (ISO/IEC 14882, 7.1.1/6, or see various discussions about this on the gcc mailing lists).</LI>
@@ -371,12 +370,150 @@ else {
                             <LI>Normalise the arguments for signals and slots (see <A HREF = "http://doc.qt.nokia.com/4.7/qmetaobject.html#normalizedSignature"><CODE>QMetaObject::normalizedSignature</CODE></A>) inside connect statements to safely make signal and slot lookup a few cycles faster. You can use <CODE>[Qt]/util/normalize</CODE> to normalise existing code.</LI>
                         </UL>
                     </LI>
+                    <LI>File headers: if you create a new file, the top of the file should include a header comment equal to the one found in other source files of OpenCOR.</LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Including headers:</SPAN>
+                        <UL>
+                            <LI>
+                                Arrange headers in alphabetic order within a block:
+                                <PRE CLASS = "Good">#include &lt;QCoreApplication&gt;
+#include &lt;QMessageBox&gt;
+#include &lt;QSettings&gt;</PRE>
+                                <PRE CLASS = "Bad">#include &lt;QSettings&gt;
+#include &lt;QCoreApplication&gt;
+#include &lt;QMessageBox&gt;</PRE>
+                            </LI>
+                            <LI>
+                                Arrange includes in an order that goes from specific to generic to ensure that the headers are self-contained. For example:
+                                <PRE>#include "common.h"
+#include "utils.h"
+
+#include &lt;QCoreApplication&gt;
+#include &lt;QFileInfo&gt;
+
+#include &lt;QxtCommandOptions&gt;
+
+#include &lt;iostream&gt;</PRE>
+                            </LI>
+                            <LI>
+                                Enclose headers from other plugins in <CODE>&lt;&gt;</CODE> rather than <CODE>""</CODE> to make it easier to spot external dependencies in the sources.
+                                <PRE CLASS = "Good">#include &lt;QxtCommandOptions&gt;</PRE>
+                                <PRE CLASS = "Bad">#include "QxtCommandOptions"</PRE>
+                            </LI>
+                            <LI>
+                                Prefer direct includes whenever possible:
+                                <PRE CLASS = "Good">#include &lt;QFileInfo&gt;</PRE>
+                                <PRE CLASS = "Bad">#include &lt;QCore/QFileInfo&gt;</PRE>
+                            </LI>
+                        </UL>
+                    </LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Casting:</SPAN>
+                        <UL>
+                            <LI>Avoid C casts, prefer C++ casts (<CODE>static_cast</CODE>, <CODE>const_cast</CODE>, <CODE>reinterpret_cast</CODE>) Both <CODE>reinterpret_cast</CODE> and C-style casts are dangerous, but at least <CODE>reinterpret_cast</CODE> will not remove the const modifier.</LI>
+                            <LI>Do not use <CODE>dynamic_cast</CODE>, use <CODE>qobject_cast</CODE> for <CODE>QObject</CODE>, or refactor your design, for example by introducing a <CODE>type()</CODE> method (see <A HREF = "http://doc.qt.nokia.com/latest/qlistwidgetitem.html"><CODE>QListWidgetItem</CODE></A>), unless you know what you are doing.</LI>
+                        </UL>
+                    </LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Compiler and platform-specific issues:</SPAN>
+                        <UL>
+                            <LI>
+                                Be extremely careful when using the question mark operator. If the returned types are not identical, some compilers generate code that crashes at runtime (you will not even get a compiler warning):
+                                <PRE>QString s;
+
+return condition?s:"nothing";   // crash at runtime - QString <SPAN CLASS = "Italic">vs</SPAN> const char *</PRE>
+                            </LI>
+                            <LI>
+                                Be extremely careful about alignment. Whenever a pointer is cast such that the required alignment of the target is increased, the resulting code might crash at runtime on some architectures. For example, if a <CODE>const char *</CODE> is cast to a <CODE>const int *</CODE>, it will crash on machines where integers have to be             aligned at two-byte or four-byte boundaries. Use a union to force the compiler to align variables correctly. In the example below, you can be sure that all instances of <CODE>AlignHelper</CODE> are aligned at integer-boundaries:
+                                <PRE>union AlignHelper
+{
+    char c;
+    int i;
+};</PRE>
+                            </LI>
+                            <LI>
+                                Anything that has a constructor or needs to run code to be initialised cannot be used as global object in library code, since it is undefined when that constructor or code will be run (on first usage, on library load, before <CODE>main()</CODE> or not at all). Even if the execution time of the initialiser is defined for shared libraries, you will get into trouble when moving that code in a plugin or if the library is compiled statically:
+                                <PRE CLASS = "Bad">// The default constructor needs to be run to initialize x
+
+static const QString x;
+
+// The constructor that takes a const char * has to be run
+
+static const QString y = "Hello";
+
+// The call time of foo() is undefined and might not be called at all
+
+static const int i = foo();</PRE>
+                                Things you can do:
+                                <PRE CLASS = "Good">// No constructor must be run, x is set at compile time
+
+static const char x[] = "someText";
+
+// y will be set at compile time
+
+static int y = 7;
+
+// s will be initialised statically, i.e. no code is run
+
+static MyStruct s = {1, 2, 3};
+
+// Pointers to objects are OK, no code needs to be run to initialise ptr
+
+static QString *ptr = 0;
+
+// Use Q_GLOBAL_STATIC to create static global objects instead
+
+Q_STATIC_GLOBAL(QString, s)
+
+void foo()
+{
+    s()->append("moo");
+}</PRE>
+                                <SPAN CLASS = "Bold">Note:</SPAN> static objects in function scope are not a problem. The constructor will be run the first time the function is entered. The code is not re-entrant, though.
+                            </LI>
+                            <LI>
+                                A <CODE>char</CODE> is signed or unsigned dependent on the architecture. Use signed <CODE>char</CODE> or <CODE>uchar</CODE> if you explicitely want a signed or unsigned char. The following code will break on PowerPC, for example:
+                                <PRE>// The Condition is always true on platforms where the default is unsigned
+
+if (c >= 0) {
+    ...
+}</PRE>
+                            </LI>
+                            <LI>Avoid 64-bit enum values. The AAPCS (Procedure Call Standard for the ARM Architecture) embedded ABI hard codes all enum values to a 32-bit integer.</LI>
+                            <LI>
+                                Do not mix <CODE>const</CODE> and non-<CODE>const</CODE> iterators. This will silently crash on broken compilers.
+                                <PRE CLASS = "Good">for (Container::const_iterator it = c.constBegin(); it != c.constEnd(); ++it)</PRE>
+                                <PRE CLASS = "Bad">for (Container::const_iterator it = c.begin(); it != c.end(); ++it)</PRE>
+                            </LI>
+                        </UL>
+                    </LI>
+                    <LI>
+                        Inheriting from template or tool classes: this has the following potential pitfalls:
+                        <UL>
+                            <LI>The destructors are not virtual, which can lead to memory leaks.</LI>
+                            <LI>The symbols are not exported (and mostly inline), which can lead to symbol clashes.</LI>
+                        </UL>
+                        For example, library <CODE>A</CODE> has class <CODE>Q_EXPORT X: public QList&lt;QVariant&gt; {};</CODE> and library <CODE>B</CODE> has class <CODE>Q_EXPORT Y: public QList<QVariant> {};</CODE>. Suddenly, <CODE>QList</CODE> symbols are exported from two libraries which results in a clash.
+                    </LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Namespacing:</SPAN>
+                        <UL>
+                            <LI>Put the body of a function in a <CODE>.cpp</CODE> file, not in its corresponding header file. There is a reason for having both a <CODE>.cpp</CODE> file and a <CODE>.h</CODE> file.</LI>
+                            <LI>Prefer <CODE>enum</CODE> to define constants over <CODE>static const int</CODE> or <CODE>#define</CODE>. Enumeration values will be replaced by the compiler at compile time, resulting in faster code. Also, defines are not namespace safe.</LI>
+                        </UL>
+                    </LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Aestethics:</SPAN>
+                        <UL>
+                            <LI>Put the body of a function in a <CODE>.cpp</CODE> file, not in its corresponding header file. There is a reason for having both a <CODE>.cpp</CODE> file and a <CODE>.h</CODE> file.</LI>
+                            <LI>Prefer <CODE>enum</CODE> to define constants over <CODE>static const int</CODE> or <CODE>#define</CODE>. Enumeration values will be replaced by the compiler at compile time, resulting in faster code. Also, defines are not namespace safe.</LI>
+                        </UL>
+                    </LI>
                 </UL>
             </LI>
             <LI>
                 <SPAN CLASS = "Bold">Miscellaneous:</SPAN>
                 <UL>
-                    <LI>Put the body of a function in a <CODE>.cpp</CODE> file, not in its corresponding header file. There is a reason for having both a <CODE>.cpp</CODE> file and a <CODE>.h</CODE> file.</LI>
                     <LI>Do not use <CODE>inline</CODE> functions. It is better to rely on the compiler to optimise the code, if necessary, not to mention that, if badly used, <CODE>inline</CODE> functions can result in slower code.</LI>
                     <LI>
                         Divisions are costly, so replace them by multiplications wherever possible:

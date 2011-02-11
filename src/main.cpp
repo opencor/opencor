@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "common.h"
 
-#include <QFileInfo>
-
 #include <QtSingleApplication>
 
 int main(int pArgc, char *pArgv[])

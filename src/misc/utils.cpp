@@ -3,7 +3,6 @@
 #include <QFile>
 #include <QProcess>
 #include <QResource>
-#include <QSysInfo>
 
 QString exec(const QString &pProg, const QString &pArgs)
 {
