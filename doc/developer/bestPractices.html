@@ -48,7 +48,7 @@
         </P>
 
         <P>
-            No matter how great an application is, if its source code is difficult to understand and/or to maintain, it will have a limited life expectancy. This document therefore provides some simple rules which, as much as possible, ought to be respected when working on OpenCOR. These rules were taken (paraphrased, if not simply copied/pasted) from the <A HREF = "http://qt.gitorious.org/+qtuitest/qt-creator/qt-creator-qttest/blobs/master/doc/coding-style.qdoc">coding style document</A> written by the developers of <A HREF = "http://qt.nokia.com/products/developer-tools">Qt Creator</A>:
+            No matter how great an application is, if its source code is difficult to understand and/or to maintain, it will have a limited life expectancy. This document therefore provides some simple rules which, as much as possible, ought to be respected when working on OpenCOR. These rules were taken (paraphrased, if not simply copied/pasted) from the <A HREF = "http://qt.gitorious.org/qt-creator/qt-creator/blobs/master/doc/api/coding-style.qdoc">coding style document</A> written by the developers of <A HREF = "http://qt.nokia.com/products/developer-tools">Qt Creator</A>:
         </P>
 
         <UL>
@@ -109,26 +109,47 @@ for (Container::iterator iter = container.begin(); iter != end; ++iter)
                             Naming rules:
                                 <UL>
                                     <LI>Use descriptive, simple and short names.</LI>
-                                    <LI>Single character variable names are only okay for counters and temporaries where the purpose of the variable is obvious.</LI>
                                     <LI>
-                                        Class names are capitalised, and function names lower-cased. Enums are named like Classes, values are in lower-case.
+                                        Single character variable names are only okay for counters and temporaries where the purpose of the variable is obvious.
+                                            <PRE CLASS = "Good">int width;
+int height;
+char *nameOfThis;
+char *nameOfThat;</PRE>
+                                            <PRE CLASS = "Bad">int a, b;
+char *c, *d;</PRE>
+                                    </LI>
+                                    <LI>
+                                        Class names and enums start with an upper-case letter while variables and functions start with a lower-case letter. Each consecutive word in a name starts with an upper-case letter.
                                             <PRE CLASS = "Good">class MainWindow : public QMainWindow
 {
     ...
-    void defaultSettings();
+    int mMyVariable;
+    ...
+    void myFunction();
     ...
 }</PRE>
                                             <PRE CLASS = "Bad">class mainWindow : public QMainWindow
 {
     ...
-    void DefaultSettings();
+    int Myvariable;
+    ...
+    void My_function();
     ...
 }</PRE>
+                                        <SPAN CLASS = "Bold">Note:</SPAN> class variables start with a lower-case <SPAN CLASS = "Italic">m</SPAN>.
                                     </LI>
                                     <LI>
-                                        Parameters passed to a function should start with a lower-case <SPAN CLASS = "Italic">p</SPAN>.
-                                            <PRE CLASS = "Good">int main(int pArgc, char *pArgv[])</PRE>
-                                            <PRE CLASS = "Bad">int main(int argc, char *argv[])</PRE>
+                                        Parameters passed to a function start with a lower-case <SPAN CLASS = "Italic">p</SPAN>, but not local variables.
+                                            <PRE CLASS = "Good">int main(int pArgc, char *pArgv[])
+{
+    int someVariable;
+    ...
+}</PRE>
+                                            <PRE CLASS = "Bad">int main(int argc, char *argv[])
+{
+    int pSomeVariable;
+    ...
+}</PRE>
                                     </LI>
                                 </UL>
                         </LI>
@@ -169,6 +190,28 @@ void *p = 42-7*6;</PRE>
                             Function names and parentheses
                                 <PRE CLASS = "Good">void mangle()</PRE>
                                 <PRE CLASS = "Bad">void mangle ()</PRE>
+                        </LI>
+                        <LI>
+                            Whitespace:
+                            <UL>
+                                <LI>Use blank lines to group statements together where suited.</LI>
+                                <LI>Always use only one blank line.</LI>
+                                <LI>
+                                    Always use a single space after a keyword, and before a curly brace.
+                                        <PRE CLASS = "Good">if (foo) {
+}</PRE>
+                                        <PRE CLASS = "Bad">if(foo){
+}</PRE>
+                                </LI>
+                                <LI>For pointers or references, always use a single space before <SPAN CLASS = "Italic">*</SPAN> or <SPAN CLASS = "Italic">&</SPAN>, but never after.</LI>
+                                <LI>
+                                    Avoid C-style casts when possible.
+                                        <PRE CLASS = "Good">char *blockOfMemory = (char *)malloc(data.size());
+char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</PRE>
+                                        <PRE CLASS = "Bad">char* blockOfMemory = (char* ) malloc(data.size());</PRE>
+                                    Of course, in this particulare case, using <SPAN CLASS = "Italic">new</SPAN> might be an even better option.
+                                </LI>
+                            </UL>
                         </LI>
                     </UL>
             </LI>
