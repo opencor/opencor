@@ -12,7 +12,6 @@ A:Hover
 
 .TitleBackground
 {
-    Border-Radius: 5px;
     Padding: 3px 3px 3px 3px;
     Margin: -3px -3px 13px -3px;
 }
@@ -32,7 +31,6 @@ SPAN.SectionFont
 
 PRE
 {
-    Border-Radius: 5px;
     Padding: 3px;
     Margin: 3px 13px 3px 13px;
     White-Space: Pre-Wrap;
@@ -42,7 +40,6 @@ PRE
 {
     Text-Align: Center;
     Background: #D8D8D8;
-    Border-Radius: 5px;
     Margin: 13px 0px 0px 0px;
 }
 
