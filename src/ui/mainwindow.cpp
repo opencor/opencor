@@ -196,8 +196,7 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 {
     static bool firstTime = true;
 
-    if (firstTime)
-    {
+    if (firstTime) {
         firstTime = false;
 
         // The first time we show OpenCOR, we want to make sure that its menu
@@ -213,9 +212,11 @@ void MainWindow::showEvent(QShowEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    }
-    else
+    } else {
+        // Nothing to do, so...
+
         pEvent->ignore();
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
@@ -342,8 +343,7 @@ void MainWindow::saveSettings()
 
 void MainWindow::setLocale(const QString &pLocale)
 {
-    if ((pLocale != mLocale) || (pLocale == SYSTEM_LOCALE))
-    {
+    if ((pLocale != mLocale) || (pLocale == SYSTEM_LOCALE)) {
         QString realLocale = (pLocale == SYSTEM_LOCALE)?QLocale::system().name().left(2):pLocale;
 
         mLocale = pLocale;
@@ -412,8 +412,7 @@ void MainWindow::singleAppMsgRcvd(const QString&)
     DWORD foregroundThreadPId = GetWindowThreadProcessId(GetForegroundWindow(), NULL);
     DWORD mwThreadPId         = GetWindowThreadProcessId(mwWinId, NULL);
 
-    if (foregroundThreadPId != mwThreadPId)
-    {
+    if (foregroundThreadPId != mwThreadPId) {
         // OpenCOR's thread process Id is not that of the foreground window, so
         // attach the foreground thread to OpenCOR's, set OpenCOR to the
         // foreground, and detach the foreground thread from OpenCOR's
@@ -423,12 +422,12 @@ void MainWindow::singleAppMsgRcvd(const QString&)
         SetForegroundWindow(mwWinId);
 
         AttachThreadInput(foregroundThreadPId, mwThreadPId, false);
-    }
-    else
+    } else {
         // OpenCOR's thread process Id is that of the foreground window, so
         // just set OpenCOR to the foreground
 
         SetForegroundWindow(mwWinId);
+    }
 
     // Note: under Windows, to use activateWindow() will only highlight the
     //       application in the taskbar, since under Windows no application

@@ -97,32 +97,26 @@ bool consoleApplication(const QCoreApplication &pApp, int &pRes)
 
     // See what needs doing with the command line options, if anything
 
-    if (cmdLineOptions.count("help"))
-    {
+    if (cmdLineOptions.count("help")) {
         // The user wants to know how to use OpenCOR from the console, so...
 
         usage(pApp);
 
         return true;
     }
-    else if (cmdLineOptions.count("about"))
-    {
+    else if (cmdLineOptions.count("about")) {
         // The user wants to know how to use OpenCOR from the console, so...
 
         about(pApp);
 
         return true;
-    }
-    else if (cmdLineOptions.count("version"))
-    {
+    } else if (cmdLineOptions.count("version")) {
         // The user wants to know the version of OpenCOR this is, so...
 
         version(pApp);
 
         return true;
-    }
-    else if (cmdLineOptions.getUnrecognizedWarning().count())
-    {
+    } else if (cmdLineOptions.getUnrecognizedWarning().count()) {
         // The user provided OpenCOR with wrong command line options, so...
 
         usage(pApp);
@@ -130,10 +124,10 @@ bool consoleApplication(const QCoreApplication &pApp, int &pRes)
         pRes = -1;
 
         return true;
-    }
-    else
+    } else {
         // The user didn't provide any command line options that requires
         // running OpenCOR as a console application, so...
 
         return false;
+    }
 }

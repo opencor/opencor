@@ -50,8 +50,7 @@ qint64 HelpNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
 
     // Read the data, should there be some to read
 
-    if (len)
-    {
+    if (len) {
         qMemCopy(pBuffer, mData.constData(), len);
 
         mData.remove(0, len);
@@ -123,12 +122,11 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
     // Determine whether the URL refers to an OpenCOR help page or an external
     // link of sorts
 
-    if (url.scheme() == "qthelp")
+    if (url.scheme() == "qthelp") {
         // This an OpenCOR help page, so we are happy to handle the request
 
         return true;
-    else
-    {
+    } else {
         // This is an external link of sorts, so we leave it to the user's
         // default web browser to handle the request
 
@@ -293,8 +291,7 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
 {
     // Handle the wheel mouse button for zooming in/out the help page contents
 
-    if (pEvent->modifiers() & Qt::ControlModifier)
-    {
+    if (pEvent->modifiers() & Qt::ControlModifier) {
         // The user has pressed the Ctrl key (on Windows and Linux) or the Alt
         // key (on Mac OS X)
 
@@ -312,11 +309,11 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    }
-    else
+    } else {
         // Something else
 
         QWebView::wheelEvent(pEvent);
+    }
 }
 
 QSize HelpWidget::sizeHint() const
@@ -338,8 +335,7 @@ void HelpWidget::webPageChanged()
 
     QAction *action = qobject_cast<QAction *>(sender());
 
-    if (action == pageAction(QWebPage::Back))
-    {
+    if (action == pageAction(QWebPage::Back)) {
         // The current action is to tell us whether the previous help page is
         // available or not
 
@@ -349,9 +345,7 @@ void HelpWidget::webPageChanged()
         // help page
 
         emit backAvailable(mBackAvailable);
-    }
-    else if (action == pageAction(QWebPage::Forward))
-    {
+    } else if (action == pageAction(QWebPage::Forward)) {
         // The current action is to tell us whether the next help page is
         // available or not
 

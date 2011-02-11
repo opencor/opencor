@@ -40,8 +40,7 @@ int main(int pArgc, char *pArgv[])
     // on as normal, otherwise exit since we only want one instance of OpenCOR
     // at any given time
 
-    if (app.isRunning())
-    {
+    if (app.isRunning()) {
         app.sendMessage(app.arguments().join(" "));
 
         return 0;

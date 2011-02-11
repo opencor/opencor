@@ -79,10 +79,10 @@ j--;</PRE>
                                 <PRE CLASS = "Good">Container::iterator end = large.end();
 
 for (Container::iterator iter = large.begin(); iter != end; ++iter) {
-    ...;
+    ...
 }</PRE>
                                 <PRE CLASS = "Bad">for (Container::iterator iter = large.begin(); iter != large.end(); ++iter) {
-    ...;
+    ...
 }</PRE>
                         </LI>
                         <LI>
@@ -166,7 +166,7 @@ QString b = "Foo";</PRE>
                             <SPAN CLASS = "Bold">Note:</SPAN> <CODE>QString a = "Joe";</CODE> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <CODE>QString a("joe")</CODE>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <CODE>=</CODE> idiom as it is in line with the traditional C-style initialisation, <SPAN CLASS = "Italic">and</SPAN> cannot be mistaken as a function declaration, <SPAN CLASS = "Italic">and</SPAN> reduces the level of nested parantheses in more initialisations.
                         </LI>
                         <LI>
-                            Pointers and references.
+                            Pointers and references
                                 <PRE CLASS = "Good">char *p = "flop";
 char &c = *p;</PRE>
                                 <PRE CLASS = "Bad">char* p = "flop";
@@ -182,21 +182,20 @@ void *p = 42-7*6;</PRE>
                             <SPAN CLASS = "Bold">Note:</SPAN> as an exception, imported third-party code, as well as code interfacing with the <SPAN CLASS = "Italic">native</SPAN> APIs (<CODE>src/support/os_*</CODE>), can use <CODE>NULL</CODE>.
                         </LI>
                         <LI>
-                            Operator names and parentheses
-                                <PRE CLASS = "Good">operator==(type)</PRE>
-                                <PRE CLASS = "Bad">operator == (type)</PRE>
-                            The <CODE>==</CODE> is part of the function name, separating it makes the declaration look like an expression.
-                        </LI>
-                        <LI>
-                            Function names and parentheses
-                                <PRE CLASS = "Good">void mangle()</PRE>
-                                <PRE CLASS = "Bad">void mangle ()</PRE>
-                        </LI>
-                        <LI>
                             Whitespace:
                             <UL>
                                 <LI>Use blank lines to group statements together where suited.</LI>
                                 <LI>Always use only one blank line.</LI>
+                                <LI>
+                                    Operator names and parentheses: do not use spaces between operator names and function names. The <CODE>==</CODE> is part of the function name, and therefore, spaces make the declaration look like an expression:
+                                        <PRE CLASS = "Good">operator==(type)</PRE>
+                                        <PRE CLASS = "Bad">operator == (type)</PRE>
+                                </LI>
+                                <LI>
+                                    Function names and parentheses: do not use spaces between function names and parentheses:
+                                        <PRE CLASS = "Good">void mangle()</PRE>
+                                        <PRE CLASS = "Bad">void mangle ()</PRE>
+                                </LI>
                                 <LI>
                                     Always use a single space after a keyword, and before a curly brace.
                                         <PRE CLASS = "Good">if (foo) {
@@ -206,13 +205,128 @@ void *p = 42-7*6;</PRE>
                                 </LI>
                                 <LI>For pointers or references, always use a single space before <CODE>*</CODE> or <CODE>&</CODE>, but never after.</LI>
                                 <LI>
-                                    Avoid C-style casts when possible.
+                                    Avoid C-style casts when possible:
                                         <PRE CLASS = "Good">char *blockOfMemory = (char *)malloc(data.size());
 char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</PRE>
                                         <PRE CLASS = "Bad">char* blockOfMemory = (char* ) malloc(data.size());</PRE>
                                     Of course, in this particulare case, using <CODE>new</CODE> might be an even better option.
                                 </LI>
                             </UL>
+                        </LI>
+                        <LI>
+                            Braces:
+                                <UL>
+                                    <LI>
+                                        As a base rule, place the left curly brace on the same line as the start of the statement:
+                                            <PRE CLASS = "Good">if (codec) {
+}</PRE>
+                                            <PRE CLASS = "Bad">if (codec)
+{
+}</PRE>
+                                        <SPAN CLASS = "Bold">Exception:</SPAN> function implementations and class declarations always have the left brace in the beginning of a line:
+                                            <PRE CLASS = "Good">static void foo(int g)
+{
+    qDebug("foo: %i", g);
+}</PRE>
+                                            <PRE CLASS = "Bad">static void foo(int g) {
+    qDebug("foo: %i", g);
+}</PRE>
+                                            <PRE CLASS = "Good">class Moo
+{
+};</PRE>
+                                <PRE CLASS = "Bad">class Moo {
+};</PRE>
+                                    </LI>
+                                    <LI>
+                                        Use curly braces when the body of a conditional statement contains more than one line, and also if a single line statement is somewhat complex. Otherwise, omit them:
+                                            <PRE CLASS = "Good">if (address.isEmpty())
+    return false;</PRE>
+                                            <PRE CLASS = "Bad">if (address.isEmpty()) {
+    return false;
+}</PRE>
+                                            <PRE CLASS = "Good">for (int i = 0; i < 10; ++i)
+    qDebug("%i", i);</PRE>
+                                            <PRE CLASS = "Bad">for (int i = 0; i < 10; ++i) {
+    qDebug("%i", i);
+}</PRE>
+                                        <SPAN CLASS = "Bold">Exception #1:</SPAN> use braces also if the parent statement covers several lines or if it wraps:
+                                            <PRE>if (   address.isEmpty()
+    || !isValid()
+    || !codec)
+    return false;</PRE>
+                                        <SPAN CLASS = "Bold">Note:</SPAN> this could be re-written as:
+                                            <PRE CLASS = "Good">if (address.isEmpty())
+    return false;
+
+if (!isValid())
+    return false;
+
+if (!codec)
+    return false;</PRE>
+                                        <SPAN CLASS = "Bold">Exception #2:</SPAN> use braces also in <CODE>if-then-else</CODE> blocks where either the <CODE>if</CODE> code or the <CODE>else</CODE> code covers several lines:
+                                            <PRE CLASS = "Good">if (address.isEmpty()) {
+    --it;
+} else {
+    qDebug("%s", qPrintable(address));
+    ++it;
+}</PRE>
+                                            <PRE CLASS = "Bad">if (address.isEmpty())
+    --it;
+else {
+    qDebug("%s", qPrintable(address));
+    ++it;
+}</PRE>
+                                            <PRE CLASS = "Good">if (a) {
+    if (b)
+        ...
+    else
+        ...
+}</PRE>
+                                            <PRE CLASS = "Bad">if (a)
+    if (b)
+        ...
+    else
+        ...</PRE>
+                                    </LI>
+                                    <LI>
+                                        Use curly braces when the body of a conditional statement is empty:
+                                            <PRE CLASS = "Good">while (a) {}</PRE>
+                                            <PRE CLASS = "Bad">while (a);</PRE>
+                                    </LI>
+                                </UL>
+                        </LI>
+                        <LI>
+                            Parentheses: use parentheses to group expressions:
+                                <PRE CLASS = "Good">if ((a && b) || c)</PRE>
+                                <PRE CLASS = "Bad">if (a && b || c)</PRE>
+                                <PRE CLASS = "Good">(a + b) & c</PRE>
+                                <PRE CLASS = "Bad">a + b & c</PRE>
+                        </LI>
+                        <LI>
+                            Line Breaks:
+                                <UL>
+                                    <LI>Keep lines shorter than 100 characters.</LI>
+                                    <LI>Insert line breaks if necessary.</LI>
+                                    <LI>Commas go at the end of a broken line.</LI>
+                                    <LI>
+                                        Operators start at the beginning of the new line.
+                                            <PRE CLASS = "Good">if (   longExpression
+    || otherLongExpression
+    || otherOtherLongExpression) {
+}</PRE>
+                                            <PRE CLASS = "Bad">if (longExpression ||
+    otherLongExpression ||
+    otherOtherLongExpression) {
+}</PRE>
+                                    </LI>
+                                </UL>
+                        </LI>
+                        <LI>
+                            Declarations:
+                                <UL>
+                                    <LI>Use this order for the access sections of your class: <CODE>public</CODE>, <CODE>protected</CODE> and <CODE>private</CODE>. The <CODE>public</CODE> section is interesting for every user of the class. The <CODE>private</CODE> section is only of interest for the implementors of the class (you).</LI>
+                                    <LI>Avoid declaring global objects in the declaration file of the class. If the same variable is used for all objects, use a <CODE>static</CODE> member.</LI>
+                                </UL>
                         </LI>
                     </UL>
             </LI>
