@@ -95,7 +95,7 @@ for (Container::iterator iter = large.begin(); iter != end; ++iter) {
 for (Container::iterator iter = container.begin(); iter != end; ++iter)
     doSomething(*iter);</PRE>
                             Make the loop variable <CODE>const</CODE>, if possible. This might prevent unnecessary detaching of shared data.
-                                <PRE CLASS = "Good">foreach (const QString &name, someListOfNames)
+                                <PRE CLASS = "Good">foreach (const QString &amp;name, someListOfNames)
     doSomething(name);</PRE>
                                 <PRE CLASS = "Bad">foreach (QString name, someListOfNames)
     doSomething(name);</PRE>
@@ -155,22 +155,37 @@ char *c, *d;</PRE>
                                 </UL>
                         </LI>
                         <LI>
-                            Declarations: use only one declaration per line and wait with declaring a variable until it is needed.
-                                <PRE CLASS = "Good">int a;
+                            Declarations:
+                                <UL>
+                                    <LI>Use this order for the access sections of your class: <CODE>public</CODE>, <CODE>protected</CODE> and <CODE>private</CODE>. The <CODE>public</CODE> section is interesting for every user of the class. The <CODE>private</CODE> section is only of interest for the implementors of the class (you).</LI>
+                                    <LI>Avoid declaring global objects in the declaration file of the class. If the same variable is used for all objects, use a <CODE>static</CODE> member.</LI>
+                                    <LI>
+                                        Declaring Variables:
+                                            <UL>
+                                                <LI>Avoid global or static variables.</LI>
+                                                <LI>Avoid short names (such as <CODE>a</CODE>, <CODE>rbarr</CODE>, <CODE>nughdeget</CODE>) whenever possible. Use single-character variable names only for counters and temporaries where the purpose of the variable is obvious.</LI>
+                                                <LI>
+                                                    Use only one declaration per line:
+                                                        <PRE CLASS = "Good">int a;
 int b;</PRE>
-                                <PRE CLASS = "Bad">int a, b;</PRE>
-                            This is especially important when initialisation is done at the same time.
-                                <PRE CLASS = "Good">QString a = "Joe";
+                                                        <PRE CLASS = "Bad">int a, b;</PRE>
+                                                    This is especially important when initialisation is done at the same time:
+                                                        <PRE CLASS = "Good">QString a = "Joe";
 QString b = "Foo";</PRE>
-                                <PRE CLASS = "Bad">QString a = "Joe", b = "Foo";</PRE>
-                            <SPAN CLASS = "Bold">Note:</SPAN> <CODE>QString a = "Joe";</CODE> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <CODE>QString a("joe")</CODE>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <CODE>=</CODE> idiom as it is in line with the traditional C-style initialisation, <SPAN CLASS = "Italic">and</SPAN> cannot be mistaken as a function declaration, <SPAN CLASS = "Italic">and</SPAN> reduces the level of nested parantheses in more initialisations.
+                                                        <PRE CLASS = "Bad">QString a = "Joe", b = "Foo";</PRE>
+                                                    <SPAN CLASS = "Bold">Note:</SPAN> <CODE>QString a = "Joe";</CODE> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <CODE>QString a("joe")</CODE>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <CODE>=</CODE> idiom as it is in line with the traditional C-style initialisation, <SPAN CLASS = "Italic">and</SPAN> cannot be mistaken as a function declaration, <SPAN CLASS = "Italic">and</SPAN> reduces the level of nested parantheses in more initialisations.
+                                                </LI>
+                                                <LI>Wait with declaring a variable until it is needed. This is especially important when initialization is done at the same time.</LI>
+                                            </UL>
+                                    </LI>
+                                </UL>
                         </LI>
                         <LI>
-                            Pointers and references
+                            Pointers and references:
                                 <PRE CLASS = "Good">char *p = "flop";
-char &c = *p;</PRE>
+char &amp;c = *p;</PRE>
                                 <PRE CLASS = "Bad">char* p = "flop";
-char & c = *p;</PRE>
+char &amp; c = *p;</PRE>
                             Also, we will have:
                                 <PRE CLASS = "Good">const char *p;</PRE>
                                 <PRE CLASS = "Bad">char const * p;</PRE>
@@ -197,13 +212,19 @@ void *p = 42-7*6;</PRE>
                                         <PRE CLASS = "Bad">void mangle ()</PRE>
                                 </LI>
                                 <LI>
-                                    Always use a single space after a keyword, and before a curly brace.
+                                    Always use a single space after a keyword, and before a curly brace:
                                         <PRE CLASS = "Good">if (foo) {
 }</PRE>
                                         <PRE CLASS = "Bad">if(foo){
 }</PRE>
                                 </LI>
-                                <LI>For pointers or references, always use a single space before <CODE>*</CODE> or <CODE>&</CODE>, but never after.</LI>
+                                <LI>
+                                    For pointers or references, always use a single space before <CODE>*</CODE> or <CODE>&amp;</CODE>, but never after.
+                                        <PRE CLASS = "Good">int *a;
+int &amp;b;</PRE>
+                                        <PRE CLASS = "Bad">int* a;
+int&amp; b;</PRE>
+                                </LI>
                                 <LI>
                                     Avoid C-style casts when possible:
                                         <PRE CLASS = "Good">char *blockOfMemory = (char *)malloc(data.size());
@@ -297,10 +318,10 @@ else {
                         </LI>
                         <LI>
                             Parentheses: use parentheses to group expressions:
-                                <PRE CLASS = "Good">if ((a && b) || c)</PRE>
-                                <PRE CLASS = "Bad">if (a && b || c)</PRE>
-                                <PRE CLASS = "Good">(a + b) & c</PRE>
-                                <PRE CLASS = "Bad">a + b & c</PRE>
+                                <PRE CLASS = "Good">if ((a &amp;&amp; b) || c)</PRE>
+                                <PRE CLASS = "Bad">if (a &amp;&amp; b || c)</PRE>
+                                <PRE CLASS = "Good">(a + b) &amp; c</PRE>
+                                <PRE CLASS = "Bad">a + b &amp; c</PRE>
                         </LI>
                         <LI>
                             Line Breaks:
@@ -319,13 +340,6 @@ else {
     otherOtherLongExpression) {
 }</PRE>
                                     </LI>
-                                </UL>
-                        </LI>
-                        <LI>
-                            Declarations:
-                                <UL>
-                                    <LI>Use this order for the access sections of your class: <CODE>public</CODE>, <CODE>protected</CODE> and <CODE>private</CODE>. The <CODE>public</CODE> section is interesting for every user of the class. The <CODE>private</CODE> section is only of interest for the implementors of the class (you).</LI>
-                                    <LI>Avoid declaring global objects in the declaration file of the class. If the same variable is used for all objects, use a <CODE>static</CODE> member.</LI>
                                 </UL>
                         </LI>
                     </UL>
