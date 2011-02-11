@@ -24,9 +24,9 @@
         <UL>
             <LI>
                 For various reasons (test suites, parameter sweep, etc.), it would be good for OpenCOR to also work as a command line tool, and have it run all the simulations (or whatever is required of it), and then exit. This might require an input file of sorts, which may or not prove practical. For example:
-                    <PRE>$ ./OpenCOR -i myInputFile</PRE>
+                <PRE>$ ./OpenCOR -i myInputFile</PRE>
                 Indeed, in some cases, it would probably be more convenient if one could just pass some arguments to OpenCOR to, say, change the default value of this or that parameter (rather than having to write another input file). In that context, maybe one could have some XML file that describes a particular set of command line options (together with corresponding actions, using some kind of a scripting language?) which would be passed together with the 'normal' command line options. For example, we could have something like:
-                    <PRE>$ ./OpenCOR -s mySyntaxFile -a -c 1 -o myOutputFile</PRE>
+                <PRE>$ ./OpenCOR -s mySyntaxFile -a -c 1 -o myOutputFile</PRE>
                 where <CODE>mySyntaxFile</CODE> would be the aforementioned XML file and the rest various flags/options. The downside with this approach is that it might be quite tricky to implement. In the end, it might be reasonable to have an input file and have model users write a script that would accept the kind of flags/options they are after, and then generate a temporary input file that would be passed to OpenCOR? With regards to the input file itself, <A HREF = "http://www.biomodels.net/sed-ml/">SED-ML</A> would be an obvious candidate, but this would not tackle the multi-cellular capabilities of OpenCOR (see below)...
             </LI>
             <LI>

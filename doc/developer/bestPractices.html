@@ -21,7 +21,7 @@
 
         <P>
             Source code files are, in OpenCOR, organised within a very specific <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree">file structure</A>, as shown below. Any new (set of) file(s) is therefore expected to be added to the right folder.
-                <PRE><A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty;h=1a5e4b1f83ae8baa7413ab1fd01f987021b59579;hb=HEAD">3rdparty</A>                    <SPAN CLASS = "Italic">// Various <A HREF = "thirdPartyLibraries.html">third-party libraries</A> used by OpenCOR</SPAN>
+            <PRE><A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty;h=1a5e4b1f83ae8baa7413ab1fd01f987021b59579;hb=HEAD">3rdparty</A>                    <SPAN CLASS = "Italic">// Various <A HREF = "thirdPartyLibraries.html">third-party libraries</A> used by OpenCOR</SPAN>
     <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/LibQxt;h=f47589e9783147b30b53b358df49a43617190a13;hb=HEAD">LibQxt</A>                      <SPAN CLASS = "Italic">// The <A HREF = "http://libqxt.org/">LibQxt</A> library</A></SPAN>
     <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/QScintilla;h=804e286d198d20e5b9c95232d8e48e31b5bd2616;hb=HEAD">QScintilla</A>                  <SPAN CLASS = "Italic">// The <A HREF = "http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</A> library</SPAN>
     <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/QtSingleApplication;h=ac6f50ca5aeec552afe6afcd33b01f98168799ff;hb=HEAD">QtSingleApplication</A>         <SPAN CLASS = "Italic">// The <A HREF = "http://qt.gitorious.org/qt-solutions/">QtSingleApplication</A> library</SPAN>
@@ -53,75 +53,75 @@
 
         <UL>
             <LI>
-                <SPAN CLASS = "Bold">General</SPAN>
-                    <UL>
-                        <LI>The most important rule first: the <A HREF = "http://en.wikipedia.org/wiki/KISS_principle">KISS principle</A>, i.e.  <SPAN CLASS = "Italic">keep it simple, stupid!</SPAN> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
-                        <LI>Write good C++ code: readable, well commented when necessary, and taking advantage of the object-oriented model.</LI>
-                        <LI>Adapt the code to the structures already existing in OpenCOR, or in the case that you have better ideas, discuss them with <A HREF = "../user/authors.html">other developers</A> before writing the code.</LI>
-                        <LI>Take advantage of Qt. Think about what parts of your code are generic enough that they might be incorporated into Qt proper.</LI>
-                        <LI>Document interfaces (using <A HREF = "http://www.stack.nl/~dimitri/doxygen/">doxygen</A>).</LI>
-                    </UL>
+                <SPAN CLASS = "Bold">General:</SPAN>
+                <UL>
+                    <LI>The most important rule first: the <A HREF = "http://en.wikipedia.org/wiki/KISS_principle">KISS principle</A>, i.e.  <SPAN CLASS = "Italic">keep it simple, stupid!</SPAN> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
+                    <LI>Write good C++ code: readable, well commented when necessary, and taking advantage of the object-oriented model.</LI>
+                    <LI>Adapt the code to the structures already existing in OpenCOR, or in the case that you have better ideas, discuss them with <A HREF = "../user/authors.html">other developers</A> before writing the code.</LI>
+                    <LI>Take advantage of Qt. Think about what parts of your code are generic enough that they might be incorporated into Qt proper.</LI>
+                    <LI>Document interfaces (using <A HREF = "http://www.stack.nl/~dimitri/doxygen/">doxygen</A>).</LI>
+                </UL>
             </LI>
             <LI>
                 <SPAN CLASS = "Bold">Code constructs:</SPAN> the following guidelines exist to make the code faster, clearer, and/or to take advantage of the strong type checking in C++.
-                    <UL>
-                        <LI>Declaration of variables should wait as long as possible. The rule is: <SPAN CLASS = "Italic">Don't declare it until you need it.</SPAN> In C++, there are a lot of user defined types, and these can very often be expensive to initialise.</LI>
-                        <LI>Make the scope of a variable as small as possible.</LI>
-                        <LI>
-                            Prefer pre-increment to post-increment whenever possible. Pre-increment has potential of being faster than post-increment. This rule applies to decrement too.
-                                <PRE CLASS = "Good">++i;
+                <UL>
+                    <LI>Declaration of variables should wait as long as possible. The rule is: <SPAN CLASS = "Italic">Don't declare it until you need it.</SPAN> In C++, there are a lot of user defined types, and these can very often be expensive to initialise.</LI>
+                    <LI>Make the scope of a variable as small as possible.</LI>
+                    <LI>
+                        Prefer pre-increment to post-increment whenever possible. Pre-increment has potential of being faster than post-increment. This rule applies to decrement too.
+                        <PRE CLASS = "Good">++i;
 --j;</PRE>
-                                <PRE CLASS = "Bad">i++;
+                        <PRE CLASS = "Bad">i++;
 j--;</PRE>
-                        </LI>
-                        <LI>
-                            Try to minimise evaluation of the same code over and over. This is aimed especially at loops:
-                                <PRE CLASS = "Good">Container::iterator end = large.end();
+                    </LI>
+                    <LI>
+                        Try to minimise evaluation of the same code over and over. This is aimed especially at loops:
+                        <PRE CLASS = "Good">Container::iterator end = large.end();
 
 for (Container::iterator iter = large.begin(); iter != end; ++iter) {
-    ...
+...
 }</PRE>
-                                <PRE CLASS = "Bad">for (Container::iterator iter = large.begin(); iter != large.end(); ++iter) {
-    ...
+                        <PRE CLASS = "Bad">for (Container::iterator iter = large.begin(); iter != large.end(); ++iter) {
+...
 }</PRE>
-                        </LI>
-                        <LI>
-                            You can use the Qt <CODE>foreach</CODE> loop in non-time-critical code with a Qt
-            container. It is a nice way to keep line noise down and to give the loop variable a proper name:
-                                <PRE CLASS = "Good">foreach (QWidget *widget, container)
-    doSomething(widget);</PRE>
-                                <PRE CLASS = "Bad">Container::iterator end = container.end();
+                    </LI>
+                    <LI>
+                        You can use the Qt <CODE>foreach</CODE> loop in non-time-critical code with a Qt
+        container. It is a nice way to keep line noise down and to give the loop variable a proper name:
+                        <PRE CLASS = "Good">foreach (QWidget *widget, container)
+doSomething(widget);</PRE>
+                        <PRE CLASS = "Bad">Container::iterator end = container.end();
 
 for (Container::iterator iter = container.begin(); iter != end; ++iter)
-    doSomething(*iter);</PRE>
-                            Make the loop variable <CODE>const</CODE>, if possible. This might prevent unnecessary detaching of shared data.
-                                <PRE CLASS = "Good">foreach (const QString &amp;name, someListOfNames)
-    doSomething(name);</PRE>
-                                <PRE CLASS = "Bad">foreach (QString name, someListOfNames)
-    doSomething(name);</PRE>
-                        </LI>
-                    </UL>
+doSomething(*iter);</PRE>
+                        Make the loop variable <CODE>const</CODE>, if possible. This might prevent unnecessary detaching of shared data.
+                        <PRE CLASS = "Good">foreach (const QString &amp;name, someListOfNames)
+doSomething(name);</PRE>
+                        <PRE CLASS = "Bad">foreach (QString name, someListOfNames)
+doSomething(name);</PRE>
+                    </LI>
+                </UL>
             </LI>
             <LI>
-                <SPAN CLASS = "Bold">Formatting</SPAN>
-                    <UL>
-                        <LI>Indentation: 4 spaces, no tabulations.</LI>
-                        <LI>
-                            Naming rules:
-                                <UL>
-                                    <LI>Use descriptive, simple and short names.</LI>
-                                    <LI>
-                                        Single character variable names are only okay for counters and temporaries where the purpose of the variable is obvious.
-                                            <PRE CLASS = "Good">int width;
+                <SPAN CLASS = "Bold">Formatting:</SPAN>
+                <UL>
+                    <LI>Indentation: 4 spaces, no tabulations.</LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Naming rules:</SPAN>
+                        <UL>
+                            <LI>Use descriptive, simple and short names.</LI>
+                            <LI>
+                                Single character variable names are only okay for counters and temporaries where the purpose of the variable is obvious.
+                                <PRE CLASS = "Good">int width;
 int height;
 char *nameOfThis;
 char *nameOfThat;</PRE>
-                                            <PRE CLASS = "Bad">int a, b;
+                                <PRE CLASS = "Bad">int a, b;
 char *c, *d;</PRE>
-                                    </LI>
-                                    <LI>
-                                        Class names and enums start with an upper-case letter while variables and functions start with a lower-case letter. Each consecutive word in a name starts with an upper-case letter.
-                                            <PRE CLASS = "Good">class MainWindow : public QMainWindow
+                            </LI>
+                            <LI>
+                                Class names and enums start with an upper-case letter while variables and functions start with a lower-case letter. Each consecutive word in a name starts with an upper-case letter.
+                                <PRE CLASS = "Good">class MainWindow : public QMainWindow
 {
     ...
     int mMyVariable;
@@ -129,7 +129,7 @@ char *c, *d;</PRE>
     void myFunction();
     ...
 }</PRE>
-                                            <PRE CLASS = "Bad">class mainWindow : public QMainWindow
+                                <PRE CLASS = "Bad">class mainWindow : public QMainWindow
 {
     ...
     int Myvariable;
@@ -137,146 +137,146 @@ char *c, *d;</PRE>
     void My_function();
     ...
 }</PRE>
-                                        <SPAN CLASS = "Bold">Note:</SPAN> class variables start with a lower-case <CODE>m</CODE>.
-                                    </LI>
-                                    <LI>
-                                        Parameters passed to a function start with a lower-case <CODE>p</CODE>, but not local variables.
-                                            <PRE CLASS = "Good">int main(int pArgc, char *pArgv[])
+                                <SPAN CLASS = "Bold">Note:</SPAN> class variables start with a lower-case <CODE>m</CODE>.
+                            </LI>
+                            <LI>
+                                Parameters passed to a function start with a lower-case <CODE>p</CODE>, but not local variables.
+                                <PRE CLASS = "Good">int main(int pArgc, char *pArgv[])
 {
     int someVariable;
     ...
 }</PRE>
-                                            <PRE CLASS = "Bad">int main(int argc, char *argv[])
+                                <PRE CLASS = "Bad">int main(int argc, char *argv[])
 {
     int pSomeVariable;
     ...
 }</PRE>
-                                    </LI>
-                                </UL>
-                        </LI>
-                        <LI>
-                            Declarations:
+                            </LI>
+                        </UL>
+                    </LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Declarations:</SPAN>
+                        <UL>
+                            <LI>Use this order for the access sections of your class: <CODE>public</CODE>, <CODE>protected</CODE> and <CODE>private</CODE>. The <CODE>public</CODE> section is interesting for every user of the class. The <CODE>private</CODE> section is only of interest for the implementors of the class (you).</LI>
+                            <LI>Avoid declaring global objects in the declaration file of the class. If the same variable is used for all objects, use a <CODE>static</CODE> member.</LI>
+                            <LI>
+                                <SPAN CLASS = "Bold">Declaring Variables:</SPAN>
                                 <UL>
-                                    <LI>Use this order for the access sections of your class: <CODE>public</CODE>, <CODE>protected</CODE> and <CODE>private</CODE>. The <CODE>public</CODE> section is interesting for every user of the class. The <CODE>private</CODE> section is only of interest for the implementors of the class (you).</LI>
-                                    <LI>Avoid declaring global objects in the declaration file of the class. If the same variable is used for all objects, use a <CODE>static</CODE> member.</LI>
+                                    <LI>Avoid global or static variables.</LI>
+                                    <LI>Avoid short names (such as <CODE>a</CODE>, <CODE>rbarr</CODE>, <CODE>nughdeget</CODE>) whenever possible. Use single-character variable names only for counters and temporaries where the purpose of the variable is obvious.</LI>
                                     <LI>
-                                        Declaring Variables:
-                                            <UL>
-                                                <LI>Avoid global or static variables.</LI>
-                                                <LI>Avoid short names (such as <CODE>a</CODE>, <CODE>rbarr</CODE>, <CODE>nughdeget</CODE>) whenever possible. Use single-character variable names only for counters and temporaries where the purpose of the variable is obvious.</LI>
-                                                <LI>
-                                                    Use only one declaration per line:
-                                                        <PRE CLASS = "Good">int a;
+                                        Use only one declaration per line:
+                                        <PRE CLASS = "Good">int a;
 int b;</PRE>
-                                                        <PRE CLASS = "Bad">int a, b;</PRE>
-                                                    This is especially important when initialisation is done at the same time:
-                                                        <PRE CLASS = "Good">QString a = "Joe";
+                                        <PRE CLASS = "Bad">int a, b;</PRE>
+                                        This is especially important when initialisation is done at the same time:
+                                        <PRE CLASS = "Good">QString a = "Joe";
 QString b = "Foo";</PRE>
-                                                        <PRE CLASS = "Bad">QString a = "Joe", b = "Foo";</PRE>
-                                                    <SPAN CLASS = "Bold">Note:</SPAN> <CODE>QString a = "Joe";</CODE> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <CODE>QString a("joe")</CODE>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <CODE>=</CODE> idiom as it is in line with the traditional C-style initialisation, <SPAN CLASS = "Italic">and</SPAN> cannot be mistaken as a function declaration, <SPAN CLASS = "Italic">and</SPAN> reduces the level of nested parantheses in more initialisations.
-                                                </LI>
-                                                <LI>Wait with declaring a variable until it is needed. This is especially important when initialization is done at the same time.</LI>
-                                            </UL>
+                                        <PRE CLASS = "Bad">QString a = "Joe", b = "Foo";</PRE>
+                                        <SPAN CLASS = "Bold">Note:</SPAN> <CODE>QString a = "Joe";</CODE> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <CODE>QString a("joe")</CODE>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <CODE>=</CODE> idiom as it is in line with the traditional C-style initialisation, <SPAN CLASS = "Italic">and</SPAN> cannot be mistaken as a function declaration, <SPAN CLASS = "Italic">and</SPAN> reduces the level of nested parantheses in more initialisations.
                                     </LI>
+                                    <LI>Wait with declaring a variable until it is needed. This is especially important when initialization is done at the same time.</LI>
                                 </UL>
-                        </LI>
-                        <LI>
-                            Pointers and references:
-                                <PRE CLASS = "Good">char *p = "flop";
+                            </LI>
+                        </UL>
+                    </LI>
+                    <LI>
+                        Pointers and references:
+                        <PRE CLASS = "Good">char *p = "flop";
 char &amp;c = *p;</PRE>
-                                <PRE CLASS = "Bad">char* p = "flop";
+                            <PRE CLASS = "Bad">char* p = "flop";
 char &amp; c = *p;</PRE>
-                            Also, we will have:
-                                <PRE CLASS = "Good">const char *p;</PRE>
-                                <PRE CLASS = "Bad">char const * p;</PRE>
-                            Using a plain <CODE>0</CODE> for <CODE>NULL</CODE> pointer constants is always correct and least effort to type. So:
-                                <PRE CLASS = "Good">void *p = 0;</PRE>
-                                <PRE CLASS = "Bad">void *p = NULL;
+                        Also, we will have:
+                        <PRE CLASS = "Good">const char *p;</PRE>
+                        <PRE CLASS = "Bad">char const * p;</PRE>
+                        Using a plain <CODE>0</CODE> for <CODE>NULL</CODE> pointer constants is always correct and least effort to type. So:
+                        <PRE CLASS = "Good">void *p = 0;</PRE>
+                        <PRE CLASS = "Bad">void *p = NULL;
 void *p = '\0';
 void *p = 42-7*6;</PRE>
-                            <SPAN CLASS = "Bold">Note:</SPAN> as an exception, imported third-party code, as well as code interfacing with the <SPAN CLASS = "Italic">native</SPAN> APIs (<CODE>src/support/os_*</CODE>), can use <CODE>NULL</CODE>.
-                        </LI>
-                        <LI>
-                            Whitespace:
-                            <UL>
-                                <LI>Use blank lines to group statements together where suited.</LI>
-                                <LI>Always use only one blank line.</LI>
-                                <LI>
-                                    Operator names and parentheses: do not use spaces between operator names and function names. The <CODE>==</CODE> is part of the function name, and therefore, spaces make the declaration look like an expression:
-                                        <PRE CLASS = "Good">operator==(type)</PRE>
-                                        <PRE CLASS = "Bad">operator == (type)</PRE>
-                                </LI>
-                                <LI>
-                                    Function names and parentheses: do not use spaces between function names and parentheses:
-                                        <PRE CLASS = "Good">void mangle()</PRE>
-                                        <PRE CLASS = "Bad">void mangle ()</PRE>
-                                </LI>
-                                <LI>
-                                    Always use a single space after a keyword, and before a curly brace:
-                                        <PRE CLASS = "Good">if (foo) {
+                        <SPAN CLASS = "Bold">Note:</SPAN> as an exception, imported third-party code, as well as code interfacing with the <SPAN CLASS = "Italic">native</SPAN> APIs (<CODE>src/support/os_*</CODE>), can use <CODE>NULL</CODE>.
+                    </LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Whitespace:</SPAN>
+                        <UL>
+                            <LI>Use blank lines to group statements together where suited.</LI>
+                            <LI>Always use only one blank line.</LI>
+                            <LI>
+                                Operator names and parentheses: do not use spaces between operator names and function names. The <CODE>==</CODE> is part of the function name, and therefore, spaces make the declaration look like an expression:
+                                <PRE CLASS = "Good">operator==(type)</PRE>
+                                <PRE CLASS = "Bad">operator == (type)</PRE>
+                            </LI>
+                            <LI>
+                                Function names and parentheses: do not use spaces between function names and parentheses:
+                                <PRE CLASS = "Good">void mangle()</PRE>
+                                <PRE CLASS = "Bad">void mangle ()</PRE>
+                            </LI>
+                            <LI>
+                                Always use a single space after a keyword, and before a curly brace:
+                                <PRE CLASS = "Good">if (foo) {
 }</PRE>
-                                        <PRE CLASS = "Bad">if(foo){
+                                <PRE CLASS = "Bad">if(foo){
 }</PRE>
-                                </LI>
-                                <LI>
-                                    For pointers or references, always use a single space before <CODE>*</CODE> or <CODE>&amp;</CODE>, but never after.
-                                        <PRE CLASS = "Good">int *a;
+                            </LI>
+                            <LI>
+                                For pointers or references, always use a single space before <CODE>*</CODE> or <CODE>&amp;</CODE>, but never after.
+                                <PRE CLASS = "Good">int *a;
 int &amp;b;</PRE>
-                                        <PRE CLASS = "Bad">int* a;
+                                <PRE CLASS = "Bad">int* a;
 int&amp; b;</PRE>
-                                </LI>
-                                <LI>
-                                    Avoid C-style casts when possible:
-                                        <PRE CLASS = "Good">char *blockOfMemory = (char *)malloc(data.size());
+                            </LI>
+                            <LI>
+                                Avoid C-style casts when possible:
+                                <PRE CLASS = "Good">char *blockOfMemory = (char *)malloc(data.size());
 char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</PRE>
-                                        <PRE CLASS = "Bad">char* blockOfMemory = (char* ) malloc(data.size());</PRE>
-                                    Of course, in this particulare case, using <CODE>new</CODE> might be an even better option.
-                                </LI>
-                            </UL>
-                        </LI>
-                        <LI>
-                            Braces:
-                                <UL>
-                                    <LI>
-                                        As a base rule, place the left curly brace on the same line as the start of the statement:
-                                            <PRE CLASS = "Good">if (codec) {
+                                <PRE CLASS = "Bad">char* blockOfMemory = (char* ) malloc(data.size());</PRE>
+                                Of course, in this particulare case, using <CODE>new</CODE> might be an even better option.
+                            </LI>
+                        </UL>
+                    </LI>
+                    <LI>
+                        <SPAN CLASS = "Bold">Braces:</SPAN>
+                        <UL>
+                            <LI>
+                                As a base rule, place the left curly brace on the same line as the start of the statement:
+                                <PRE CLASS = "Good">if (codec) {
 }</PRE>
-                                            <PRE CLASS = "Bad">if (codec)
+                                <PRE CLASS = "Bad">if (codec)
 {
 }</PRE>
-                                        <SPAN CLASS = "Bold">Exception:</SPAN> function implementations and class declarations always have the left brace in the beginning of a line:
-                                            <PRE CLASS = "Good">static void foo(int g)
+                                <SPAN CLASS = "Bold">Exception:</SPAN> function implementations and class declarations always have the left brace in the beginning of a line:
+                                <PRE CLASS = "Good">static void foo(int g)
 {
     qDebug("foo: %i", g);
 }</PRE>
-                                            <PRE CLASS = "Bad">static void foo(int g) {
+                                <PRE CLASS = "Bad">static void foo(int g) {
     qDebug("foo: %i", g);
 }</PRE>
-                                            <PRE CLASS = "Good">class Moo
+                                <PRE CLASS = "Good">class Moo
 {
 };</PRE>
                                 <PRE CLASS = "Bad">class Moo {
 };</PRE>
-                                    </LI>
-                                    <LI>
-                                        Use curly braces when the body of a conditional statement contains more than one line, and also if a single line statement is somewhat complex. Otherwise, omit them:
-                                            <PRE CLASS = "Good">if (address.isEmpty())
+                            </LI>
+                            <LI>
+                                Use curly braces when the body of a conditional statement contains more than one line, and also if a single line statement is somewhat complex. Otherwise, omit them:
+                                <PRE CLASS = "Good">if (address.isEmpty())
     return false;</PRE>
-                                            <PRE CLASS = "Bad">if (address.isEmpty()) {
+                                <PRE CLASS = "Bad">if (address.isEmpty()) {
     return false;
 }</PRE>
-                                            <PRE CLASS = "Good">for (int i = 0; i < 10; ++i)
+                                <PRE CLASS = "Good">for (int i = 0; i < 10; ++i)
     qDebug("%i", i);</PRE>
-                                            <PRE CLASS = "Bad">for (int i = 0; i < 10; ++i) {
+                                <PRE CLASS = "Bad">for (int i = 0; i < 10; ++i) {
     qDebug("%i", i);
 }</PRE>
-                                        <SPAN CLASS = "Bold">Exception #1:</SPAN> use braces also if the parent statement covers several lines or if it wraps:
-                                            <PRE>if (   address.isEmpty()
+                                <SPAN CLASS = "Bold">Exception #1:</SPAN> use braces also if the parent statement covers several lines or if it wraps:
+                                <PRE>if (   address.isEmpty()
     || !isValid()
     || !codec)
     return false;</PRE>
-                                        <SPAN CLASS = "Bold">Note:</SPAN> this could be re-written as:
-                                            <PRE CLASS = "Good">if (address.isEmpty())
+                                <SPAN CLASS = "Bold">Note:</SPAN> this could be re-written as:
+                                <PRE CLASS = "Good">if (address.isEmpty())
     return false;
 
 if (!isValid())
@@ -284,77 +284,77 @@ if (!isValid())
 
 if (!codec)
     return false;</PRE>
-                                        <SPAN CLASS = "Bold">Exception #2:</SPAN> use braces also in <CODE>if-then-else</CODE> blocks where either the <CODE>if</CODE> code or the <CODE>else</CODE> code covers several lines:
-                                            <PRE CLASS = "Good">if (address.isEmpty()) {
+                                <SPAN CLASS = "Bold">Exception #2:</SPAN> use braces also in <CODE>if-then-else</CODE> blocks where either the <CODE>if</CODE> code or the <CODE>else</CODE> code covers several lines:
+                                <PRE CLASS = "Good">if (address.isEmpty()) {
     --it;
 } else {
     qDebug("%s", qPrintable(address));
     ++it;
 }</PRE>
-                                            <PRE CLASS = "Bad">if (address.isEmpty())
+                                <PRE CLASS = "Bad">if (address.isEmpty())
     --it;
 else {
     qDebug("%s", qPrintable(address));
     ++it;
 }</PRE>
-                                            <PRE CLASS = "Good">if (a) {
+                                <PRE CLASS = "Good">if (a) {
     if (b)
         ...
     else
         ...
 }</PRE>
-                                            <PRE CLASS = "Bad">if (a)
+                                <PRE CLASS = "Bad">if (a)
     if (b)
         ...
     else
         ...</PRE>
-                                    </LI>
-                                    <LI>
-                                        Use curly braces when the body of a conditional statement is empty:
-                                            <PRE CLASS = "Good">while (a) {}</PRE>
-                                            <PRE CLASS = "Bad">while (a);</PRE>
-                                    </LI>
-                                </UL>
-                        </LI>
-                        <LI>
-                            Parentheses: use parentheses to group expressions:
-                                <PRE CLASS = "Good">if ((a &amp;&amp; b) || c)</PRE>
-                                <PRE CLASS = "Bad">if (a &amp;&amp; b || c)</PRE>
-                                <PRE CLASS = "Good">(a + b) &amp; c</PRE>
-                                <PRE CLASS = "Bad">a + b &amp; c</PRE>
-                        </LI>
-                        <LI>
-                            Line Breaks:
-                                <UL>
-                                    <LI>Keep lines shorter than 100 characters.</LI>
-                                    <LI>Insert line breaks if necessary.</LI>
-                                    <LI>Commas go at the end of a broken line.</LI>
-                                    <LI>
-                                        Operators start at the beginning of the new line.
-                                            <PRE CLASS = "Good">if (   longExpression
+                            </LI>
+                            <LI>
+                                Use curly braces when the body of a conditional statement is empty:
+                                <PRE CLASS = "Good">while (a) {}</PRE>
+                                <PRE CLASS = "Bad">while (a);</PRE>
+                            </LI>
+                        </UL>
+                    </LI>
+                    <LI>
+                        Parentheses: use parentheses to group expressions:
+                        <PRE CLASS = "Good">if ((a &amp;&amp; b) || c)</PRE>
+                        <PRE CLASS = "Bad">if (a &amp;&amp; b || c)</PRE>
+                        <PRE CLASS = "Good">(a + b) &amp; c</PRE>
+                        <PRE CLASS = "Bad">a + b &amp; c</PRE>
+                    </LI>
+                    <LI>
+                        Line Breaks:
+                        <UL>
+                            <LI>Keep lines shorter than 100 characters.</LI>
+                            <LI>Insert line breaks if necessary.</LI>
+                            <LI>Commas go at the end of a broken line.</LI>
+                            <LI>
+                                Operators start at the beginning of the new line.
+                                <PRE CLASS = "Good">if (   longExpression
     || otherLongExpression
     || otherOtherLongExpression) {
 }</PRE>
-                                            <PRE CLASS = "Bad">if (longExpression ||
+                                <PRE CLASS = "Bad">if (longExpression ||
     otherLongExpression ||
     otherOtherLongExpression) {
 }</PRE>
-                                    </LI>
-                                </UL>
-                        </LI>
-                    </UL>
+                            </LI>
+                        </UL>
+                    </LI>
+                </UL>
             </LI>
             <LI>
                 <SPAN CLASS = "Bold">Miscellaneous</SPAN>
-                    <UL>
-                        <LI>Put the body of a function in a <CODE>.cpp</CODE> file, not in its header file. There is both a <CODE>.cpp</CODE> file and a <CODE>.h</CODE> file for a reason.</LI>
-                        <LI>Do not use inline functions. It is better to rely on the compiler to optimise the code, not to mention that, if badly used, inline functions can result in slower code.</LI>
-                        <LI>
-                            Replace divisions by multiplications if possible:
-                                <PRE CLASS = "Good">a = 0.5*b;</PRE>
-                                <PRE CLASS = "Bad">a = b/2;</PRE>
-                        </LI>
-                    </UL>
+                <UL>
+                    <LI>Put the body of a function in a <CODE>.cpp</CODE> file, not in its header file. There is both a <CODE>.cpp</CODE> file and a <CODE>.h</CODE> file for a reason.</LI>
+                    <LI>Do not use inline functions. It is better to rely on the compiler to optimise the code, not to mention that, if badly used, inline functions can result in slower code.</LI>
+                    <LI>
+                        Replace divisions by multiplications if possible:
+                        <PRE CLASS = "Good">a = 0.5*b;</PRE>
+                        <PRE CLASS = "Bad">a = b/2;</PRE>
+                    </LI>
+                </UL>
             </LI>
         </UL>
 
