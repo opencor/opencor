@@ -1,43 +1,40 @@
-A
-{
-    Color: #31859B;
+a {
+    color: #31859b;
 }
 
-A:Visited
-{
-    Color: #31859B;
+a:visited {
+    color: #31859b;
 }
 
-A:Hover
-{
-    Background-Color: #31859B;
-    Color: #FFFFFF;
+a:hover {
+    background-color: #31859b;
+    color: #ffffff;
 }
 
-.TitleBackground
-{
-    Background: #31859B;
+a.sectionAnchor:hover {
+    background-color: #ffffff;
+    color: #31859b;
 }
 
-SPAN.SectionFont
-{
-    Color: #31859B;
+.titleBackground {
+    background: #31859b;
 }
 
-PRE
-{
-    Background: #DBEEF3;
-    Border: 1px Dashed #31859B;
+span.sectionFont {
+    color: #31859b;
 }
 
-PRE.Good
-{
-    Background: #EBF1DD;
-    Border: 1px Dashed #76923C;
+pre {
+    background: #dbeef3;
+    border: 1px dashed #31859b;
 }
 
-PRE.Bad
-{
-    Background: #F2DCDB;
-    Border: 1px Dashed #953734;
+pre.good {
+    background: #ebf1dd;
+    border: 1px dashed #76923c;
+}
+
+pre.bad {
+    background: #f2dcdb;
+    border: 1px dashed #953734;
 }

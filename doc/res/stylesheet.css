@@ -1,50 +1,46 @@
-BODY
-{
-    Font-Family: Arial, Sans-Serif;
-    Font-Size: 10pt;
+body {
+    font-family: arial, sans-serif;
+    font-size: 10pt;
 }
 
-A:Hover
-{
-    Color: #FFFFFF;
-    Text-Decoration: None;
+a:hover {
+    color: #ffffff;
+    text-decoration: none;
 }
 
-.TitleBackground
-{
-    Padding: 3px 3px 3px 3px;
-    Margin: -3px -3px 13px -3px;
+.titleBackground {
+    padding: 3px 3px 3px 3px;
+    margin: -3px -3px 13px -3px;
 }
 
-SPAN.TitleFont
-{
-    Color: #FFFFFF;
-    Font-Size: 15pt;
-    Font-Weight: Bold;
+span.titleFont {
+    color: #ffffff;
+    font-size: 15pt;
+    font-weight: bold;
 }
 
-SPAN.SectionFont
-{
-    Font-Size: 13pt;
-    Font-Weight: Bold;
+span.sectionFont {
+    font-size: 13pt;
+    font-weight: bold;
 }
 
-PRE
-{
-    Padding: 3px;
-    Margin: 3px 13px 3px 13px;
-    White-Space: Pre-Wrap;
+li {
+    list-style-type: square;
 }
 
-.CopyrightBackground
-{
-    Text-Align: Center;
-    Background: #D8D8D8;
-    Margin: 13px -3px -3px -3px;
+pre {
+    padding: 3px;
+    margin: 3px 13px 3px 13px;
+    white-space: pre-wrap;
 }
 
-SPAN.CopyrightFont
-{
-    Color: #7F7F7F;
-    Font-Size: 9pt;
+.copyrightBackground {
+    text-align: center;
+    background: #d8d8d8;
+    margin: 13px -3px -3px -3px;
+}
+
+span.copyrightFont {
+    color: #7f7f7f;
+    font-size: 9pt;
 }

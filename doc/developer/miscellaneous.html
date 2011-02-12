@@ -1,41 +1,41 @@
-<!DOCTYPE HTML>
-<HTML>
-    <HEAD>
-        <TITLE>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
             Miscellaneous
-        </TITLE>
+        </title>
 
-        <META HTTP-EQUIV = "Content-Type" CONTENT = "Text/HTML; Charset=ISO-8859-1">
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 
-        <LINK HREF = "../res/stylesheet.css" REL = "Stylesheet" TYPE = "Text/CSS">
-        <LINK HREF = "../res/developerStylesheet.css" REL = "Stylesheet" TYPE = "Text/CSS">
-    </HEAD>
-    <BODY>
-        <P CLASS = "TitleBackground">
-            <SPAN CLASS = "TitleFont">Miscellaneous</SPAN>
-        </P>
+        <link href="../res/stylesheet.css" rel="stylesheet" type="text/css" />
+        <link href="../res/developerStylesheet.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <p class="titleBackground">
+            <span class="titleFont">Miscellaneous</span>
+        </p>
 
-        <SPAN CLASS = "SectionFont">Ideas Worth Exploring/Implementing</SPAN>
+        <span class="sectionFont">Ideas Worth Exploring/Implementing</span>
 
-        <P>
-            Should any of the ideas below ever get implemented, then they should then be documented and put somewhere under the <A HREF = "../userIndex.html">user documentation</A>.
-        </P>
+        <p>
+            Should any of the ideas below ever get implemented, then they should then be documented and put somewhere under the <a href="../userIndex.html">user documentation</a>.
+        </p>
 
-        <UL>
-            <LI>
+        <ul>
+            <li>
                 For various reasons (test suites, parameter sweep, etc.), it would be good for OpenCOR to also work as a command line tool, and have it run all the simulations (or whatever is required of it), and then exit. This might require an input file of sorts, which may or not prove practical. For example:
-                <PRE>$ ./OpenCOR -i myInputFile</PRE>
+                <pre>$ ./OpenCOR -i myInputFile</pre>
                 Indeed, in some cases, it would probably be more convenient if one could just pass some arguments to OpenCOR to, say, change the default value of this or that parameter (rather than having to write another input file). In that context, maybe one could have some XML file that describes a particular set of command line options (together with corresponding actions, using some kind of a scripting language?) which would be passed together with the 'normal' command line options. For example, we could have something like:
-                <PRE>$ ./OpenCOR -s mySyntaxFile -a -c 1 -o myOutputFile</PRE>
-                where <CODE>mySyntaxFile</CODE> would be the aforementioned XML file and the rest various flags/options. The downside with this approach is that it might be quite tricky to implement. In the end, it might be reasonable to have an input file and have model users write a script that would accept the kind of flags/options they are after, and then generate a temporary input file that would be passed to OpenCOR? With regards to the input file itself, <A HREF = "http://www.biomodels.net/sed-ml/">SED-ML</A> would be an obvious candidate, but this would not tackle the multi-cellular capabilities of OpenCOR (see below)...
-            </LI>
-            <LI>
-                OpenCOR is aimed at organising, editing, simulating and analysing CellML files, i.e. focussing on 'cellular' modelling. However, 'multi-cellular' modelling is something that should be of interest to many users. In fact, several <A HREF = "http://cor.physiol.ox.ac.uk/>">COR</A> users have already asked for such a feature. The idea would, here, be to take advantage of existing multi-cellular libraries, e.g. <A HREF = "http://www.opencmiss.org/">OpenCMISS</A> and <A HREF = "http://www.comlab.ox.ac.uk/chaste/">Chaste</A>, i.e. in the same way that we are taking advantage of the <A HREF = "http://www.cellml.org/tools/api/">CellML API</A> developed by people at the <A HREF = "http://www.abi.auckland.ac.nz/uoa/">Auckland Bioengineering Institute</A>.
-            </LI>
-        </UL>
+                <pre>$ ./OpenCOR -s mySyntaxFile -a -c 1 -o myOutputFile</pre>
+                where <code>mySyntaxFile</code> would be the aforementioned XML file and the rest various flags/options. The downside with this approach is that it might be quite tricky to implement. In the end, it might be reasonable to have an input file and have model users write a script that would accept the kind of flags/options they are after, and then generate a temporary input file that would be passed to OpenCOR? With regards to the input file itself, <a href="http://www.biomodels.net/sed-ml/">SED-ML</a> would be an obvious candidate, but this would not tackle the multi-cellular capabilities of OpenCOR (see below)...
+            </li>
+            <li>
+                OpenCOR is aimed at organising, editing, simulating and analysing CellML files, i.e. focussing on 'cellular' modelling. However, 'multi-cellular' modelling is something that should be of interest to many users. In fact, several <a href="http://cor.physiol.ox.ac.uk/>">COR</a> users have already asked for such a feature. The idea would, here, be to take advantage of existing multi-cellular libraries, e.g. <a href="http://www.opencmiss.org/">OpenCMISS</a> and <a href="http://www.comlab.ox.ac.uk/chaste/">Chaste</a>, i.e. in the same way that we are taking advantage of the <a href="http://www.cellml.org/tools/api/">CellML API</a> developed by people at the <a href="http://www.abi.auckland.ac.nz/uoa/">Auckland Bioengineering Institute</a>.
+            </li>
+        </ul>
 
-        <P CLASS = "CopyrightBackground">
-            <SPAN CLASS = "CopyrightFont">Copyright ©2011</SPAN>
-        </P>
-    </BODY>
-</HTML>
+        <p class="copyrightBackground">
+            <span class="copyrightFont">Copyright ©2011</span>
+        </p>
+    </body>
+</html>

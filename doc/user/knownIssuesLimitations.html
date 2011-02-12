@@ -1,58 +1,58 @@
-<!DOCTYPE HTML>
-<HTML>
-    <HEAD>
-        <TITLE>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
             Known Issues/Limitations
-        </TITLE>
+        </title>
 
-        <META HTTP-EQUIV = "Content-Type" CONTENT = "Text/HTML; Charset=ISO-8859-1">
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 
-        <LINK HREF = "../res/stylesheet.css" REL = "Stylesheet" TYPE = "Text/CSS">
-        <LINK HREF = "../res/userStylesheet.css" REL = "Stylesheet" TYPE = "Text/CSS">
-    </HEAD>
-    <BODY>
-        <P CLASS = "TitleBackground">
-            <SPAN CLASS = "TitleFont">Known Issues/Limitations</SPAN>
-        </P>
+        <link href="../res/stylesheet.css" rel="stylesheet" type="text/css" />
+        <link href="../res/userStylesheet.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <p class="titleBackground">
+            <span class="titleFont">Known Issues/Limitations</span>
+        </p>
 
-        <P>
-            Please note that the following known issues/limitations have been observed on <A HREF = "http://www.microsoft.com/windows/windows-7/">Windows 7</A>, <A HREF = "http://www.ubuntu.com/">Ubuntu</A> 10.10 (Maverick Meerkat; both 32-bit and 64-bit) and <A HREF = "http://www.apple.com/macosx/">Mac OS X</A> 10.6 (Snow Leopard). So, if you use a different operating system, these issues/limitations may or not be relevant to you.
-        </P>
+        <p>
+            Please note that the following known issues/limitations have been observed on <a href="http://www.microsoft.com/windows/windows-7/">Windows 7</a>, <a href="http://www.ubuntu.com/">Ubuntu</a> 10.10 (Maverick Meerkat; both 32-bit and 64-bit) and <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.6 (Snow Leopard). So, if you use a different operating system, these issues/limitations may or not be relevant to you.
+        </p>
         
-        <SPAN CLASS = "SectionFont">Windows, Linux and Mac OS X</SPAN>
+        <span class="sectionFont">Windows, Linux and Mac OS X</span>
 
-        <P>
-            By default, OpenCOR uses your system's language for menus, dialog boxes, etc., as long as it is either English or French (please <A HREF = "user/contactUs.html">contact us</A> if you would like another language to be added). If your system uses another language, then OpenCOR will default to English. Otherwise, if you specifically specify English or French as the language to be used by OpenCOR, then please be aware that system messages, dialog boxes, etc. will be displayed in your system's language.
-        </P>
+        <p>
+            By default, OpenCOR uses your system's language for menus, dialog boxes, etc., as long as it is either English or French (please <a href="user/contactUs.html">contact us</a> if you would like another language to be added). If your system uses another language, then OpenCOR will default to English. Otherwise, if you specifically specify English or French as the language to be used by OpenCOR, then please be aware that system messages, dialog boxes, etc. will be displayed in your system's language.
+        </p>
 
-        <SPAN CLASS = "SectionFont">Linux</SPAN>
+        <span class="sectionFont">Linux</span>
 
-        <P>
-            Depending on your window manager (e.g. <A HREF = "http://www.compiz.org/">Compiz</A>), OpenCOR may or not experience one of the following issues/limitations (none of which affect the good functioning of the software itself):
-        </P>
+        <p>
+            Depending on your window manager (e.g. <a href="http://www.compiz.org/">Compiz</a>), OpenCOR may or not experience one of the following issues/limitations (none of which affect the good functioning of the software itself):
+        </p>
 
-        <UL>
-            <LI>Upon starting OpenCOR, the software will try to retrieve your previous session's settings which may result in the main window showing up lower down the screen than it should; and</LI>
-            <LI>To show the help window by pressing the F1 key may, if the help window is to be floating (as opposed to being docked to the main window), result in OpenCOR not being the active application anymore. This means that if you were to press the F1 key one more time, the help window will remain visible while it should have disappeared.</LI>
-        </UL>
+        <ul>
+            <li>Upon starting OpenCOR, the software will try to retrieve your previous session's settings which may result in the main window showing up lower down the screen than it should; and</li>
+            <li>To show the help window by pressing the F1 key may, if the help window is to be floating (as opposed to being docked to the main window), result in OpenCOR not being the active application anymore. This means that if you were to press the F1 key one more time, the help window will remain visible while it should have disappeared.</li>
+        </ul>
 
-        <P>
+        <p>
             Note that the above issues have nothing to do with OpenCOR itself (everything works fine on both Windows and Mac OS X), but with the window manager that you use. Indeed, there is a lack of compliancy between the various window managers, so something that works with one window manager may or not work with another, as is unfortunately the case with OpenCOR.
-        </P>
+        </p>
 
-        <P>
+        <p>
             Another non window manager related issue/limitation is:
-        </P>
+        </p>
 
-        <UL>
-            <LI>
-                Menu items that have sub-menus will not, by default, display their icon (should they have one). This has nothing to do with OpenCOR, but is instead the expected behaviour on <A HREF = "http://www.ubuntu.com/">Ubuntu</A>. As mentioned <A HREF = "">here</A>, all you need to do to change this behaviour is to enter the following at the command line:
-                <PRE>$ gconftool-2 --type Boolean --set /desktop/gnome/interface/menus_have_icons True</PRE>
-            </LI>
-        </UL>
+        <ul>
+            <li>
+                Menu items that have sub-menus will not, by default, display their icon (should they have one). This has nothing to do with OpenCOR, but is instead the expected behaviour on <a href="http://www.ubuntu.com/">Ubuntu</a>. As mentioned <a href="">here</a>, all you need to do to change this behaviour is to enter the following at the command line:
+                <pre>$ gconftool-2 --type Boolean --set /desktop/gnome/interface/menus_have_icons True</pre>
+            </li>
+        </ul>
 
-        <P CLASS = "CopyrightBackground">
-            <SPAN CLASS = "CopyrightFont">Copyright ©2011</SPAN>
-        </P>
-    </BODY>
-</HTML>
+        <p class="copyrightBackground">
+            <span class="copyrightFont">Copyright ©2011</span>
+        </p>
+    </body>
+</html>

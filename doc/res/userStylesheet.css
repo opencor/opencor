@@ -1,31 +1,25 @@
-A
-{
-    Color: #366092;
+a {
+    color: #366092;
 }
 
-A:Visited
-{
-    Color: #366092;
+a:visited {
+    color: #366092;
 }
 
-A:Hover
-{
-    Background-Color: #366092;
-    Color: #FFFFFF;
+a:hover {
+    background-color: #366092;
+    color: #ffffff;
 }
 
-.TitleBackground
-{
-    Background: #366092;
+.titleBackground {
+    background: #366092;
 }
 
-SPAN.SectionFont
-{
-    Color: #366092;
+span.sectionFont {
+    color: #366092;
 }
 
-PRE
-{
-    Background: #DBE5F1;
-    Border: 1px Dashed #366092;
+pre {
+    background: #dbe5f1;
+    border: 1px dashed #366092;
 }

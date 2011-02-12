@@ -1,103 +1,103 @@
-<!DOCTYPE HTML>
-<HTML>
-    <HEAD>
-        <TITLE>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
             Develop, build, test and package
-        </TITLE>
+        </title>
 
-        <META HTTP-EQUIV = "Content-Type" CONTENT = "Text/HTML; Charset=ISO-8859-1">
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 
-        <LINK HREF = "../res/stylesheet.css" REL = "Stylesheet" TYPE = "Text/CSS">
-        <LINK HREF = "../res/developerStylesheet.css" REL = "Stylesheet" TYPE = "Text/CSS">
-    </HEAD>
-    <BODY>
-        <P CLASS = "TitleBackground">
-            <SPAN CLASS = "TitleFont">Develop, build, test and package</SPAN>
-        </P>
+        <link href="../res/stylesheet.css" rel="stylesheet" type="text/css" />
+        <link href="../res/developerStylesheet.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <p class="titleBackground">
+            <span class="titleFont">Develop, build, test and package</span>
+        </p>
 
-        <P>
-            OpenCOR is developed, built, tested and packaged on <A HREF = "http://www.microsoft.com/windows/windows-7/">Windows 7</A>, <A HREF = "http://www.ubuntu.com/">Ubuntu</A> 10.10 (Maverick Meerkat; both 32-bit and 64-bit) and <A HREF = "http://www.apple.com/macosx/">Mac OS X</A> 10.6 (Snow Leopard). The information which follows assumes that you are using one of these operating systems.
-        </P>
+        <p>
+            OpenCOR is developed, built, tested and packaged on <a href="http://www.microsoft.com/windows/windows-7/">Windows 7</a>, <a href="http://www.ubuntu.com/">Ubuntu</a> 10.10 (Maverick Meerkat; both 32-bit and 64-bit) and <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.6 (Snow Leopard). The information which follows assumes that you are using one of these operating systems.
+        </p>
 
-        <P>
-            <SPAN CLASS = "SectionFont">Pre-Requirements</SPAN>
-        </P>
+        <p>
+            <span class="sectionFont">Pre-Requirements</span>
+        </p>
 
-        <P>
+        <p>
             In order to develop, build, test and/or package OpenCOR, you need the following tools:
-        </P>
+        </p>
 
-        <UL>
-            <LI>
-                <A HREF = "http://git-scm.com/">Git</A> (the <A HREF = "http://packages.ubuntu.com/maverick/git">git</A> package on Ubuntu): the distributed version control system used to keep track of OpenCOR's source code. You can get a copy of the source code by cloning our <A HREF ="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;hb=HEAD">Git repository</A> in <EM>read only</EM> mode:
-                <PRE>$ git clone git://opencor.git.sourceforge.net/gitroot/opencor/opencor</PRE>
-            </LI>
-            <LI><A HREF = "http://www.cmake.org/">CMake</A> 2.8+ (the <A HREF = "http://packages.ubuntu.com/maverick/cmake">cmake</A> package on Ubuntu): the cross-platform build system used to build OpenCOR;</LI>
-            <LI>
-                <A HREF = "http://qt.nokia.com/products/developer-tools">Qt Creator</A> (the <A HREF = "http://packages.ubuntu.com/maverick/qtcreator">qtcreator</A> package on Ubuntu): the cross-platform environment used to develop OpenCOR as a <A HREF = "http://qt.nokia.com/">Qt</A> 4.7+ application; and
-                <DIV>
-                    <STRONG>Note #1:</STRONG> both CMake and Git are supported by Qt Creator, but Git might need configuring by selecting the <CODE>Tools|Options...</CODE> menu, then the <CODE>Version Control</CODE> section, and finally the <CODE>Git</CODE> tab. Alternatively, you can always use Git from the command line or, on Windows, with <A HREF = "http://code.google.com/p/tortoisegit/">TortoiseGit</A>.
-                </DIV>
-                <DIV>
-                    <STRONG>Note #2:</STRONG> on Ubuntu, you will also need the <A HREF = "http://packages.ubuntu.com/maverick/g++">g++</A> package, while <A HREF = "http://developer.apple.com/technologies/tools/xcode.html">Xcode</A> on Mac OS X.
-                </DIV>
-                <DIV>
-                    <STRONG>Note #3:</STRONG> OpenCOR is developed using the latest version of Qt Creator (currently 2.0.1) which is based on Qt 4.7.0 (even though the latest version of Qt is currently 4.7.1). However, it happens that OpenCOR can also be built using Qt 4.6. For this reason, our CMake script requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.
-                </DIV>
-            </LI>
-            <LI><A HREF = "http://nsis.sourceforge.net/">NSIS</A> (Windows only): one the solutions used to package OpenCOR on Windows.</LI>
-        </UL>
+        <ul>
+            <li>
+                <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/maverick/git">git</a> package on Ubuntu): the distributed version control system used to keep track of OpenCOR's source code. You can get a copy of the source code by cloning our <A HREF ="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;hb=HEAD">Git repository</a> in <em>read only</em> mode:
+                <pre>$ git clone git://opencor.git.sourceforge.net/gitroot/opencor/opencor</pre>
+            </li>
+            <li><a href="http://www.cmake.org/">CMake</a> 2.8+ (the <a href="http://packages.ubuntu.com/maverick/cmake">cmake</a> package on Ubuntu): the cross-platform build system used to build OpenCOR;</li>
+            <li>
+                <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a> (the <a href="http://packages.ubuntu.com/maverick/qtcreator">qtcreator</a> package on Ubuntu): the cross-platform environment used to develop OpenCOR as a <a href="http://qt.nokia.com/">Qt</a> 4.7+ application; and
+                <div>
+                    <strong>Note #1:</strong> both CMake and Git are supported by Qt Creator, but Git might need configuring by selecting the <code>Tools|Options...</code> menu, then the <code>Version Control</code> section, and finally the <code>Git</code> tab. Alternatively, you can always use Git from the command line or, on Windows, with <a href="http://code.google.com/p/tortoisegit/">TortoiseGit</a>.
+                </div>
+                <div>
+                    <strong>Note #2:</strong> on Ubuntu, you will also need the <a href="http://packages.ubuntu.com/maverick/g++">g++</a> package, while <a href="http://developer.apple.com/technologies/tools/xcode.html">Xcode</a> on Mac OS X.
+                </div>
+                <div>
+                    <strong>Note #3:</strong> OpenCOR is developed using the latest version of Qt Creator (currently 2.0.1) which is based on Qt 4.7.0 (even though the latest version of Qt is currently 4.7.1). However, it happens that OpenCOR can also be built using Qt 4.6. For this reason, our CMake script requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.
+                </div>
+            </li>
+            <li><a href="http://nsis.sourceforge.net/">NSIS</a> (Windows only): one the solutions used to package OpenCOR on Windows.</li>
+        </ul>
 
-        <SPAN CLASS = "SectionFont">Develop</SPAN>
+        <span class="sectionFont">Develop</span>
 
-        <P>
-            Except for the <A HREF = "../user/authors.html">authors</A>, OpenCOR is not currently opened for development. This will change as soon as OpenCOR gets officially released.
-        </P>
+        <p>
+            Except for the <a href="../user/authors.html">authors</a>, OpenCOR is not currently opened for development. This will change as soon as OpenCOR gets officially released.
+        </p>
 
-        <SPAN CLASS = "SectionFont"><A NAME = "buildAndTest">Build and Test</A></SPAN>
+        <span class="sectionFont"><a name="buildAndTest" class="sectionAnchor">Build and Test</a></span>
 
-        <P>
+        <p>
             OpenCOR can be built in two different ways:
-        </P>
+        </p>
 
-        <UL>
-            <LI>
-                <STRONG>Command line:</STRONG> various batch and VBScript files (<CODE>.bat</CODE> and <CODE>.vbs</CODE> files) on Windows and shell scripts on Ubuntu/Mac OS X are available: (Note that these command line tools require access to CMake, MinGW/g++/Xcode (for Windows, Ubuntu and Mac OS X, respectively) and Qt from the command line. This should be the case on Ubuntu and Mac OS X, but on Windows your <CODE>PATH</CODE> environment variable might need updating.)
-                <UL>
-                    <LI><CODE>cleanproj[.bat]</CODE>: cleans the OpenCOR environment;</LI>
-                    <LI><CODE>cleanprojall[.bat]</CODE>: cleans all of the OpenCOR environment (i.e. including <A HREF = "thirdPartyLibraries.html">third-party libraries</A>);</LI>
-                    <LI><CODE>makeproj[.bat]</CODE>: compiles and links everything that is required to get a binary version of OpenCOR; and</LI>
-                    <LI>
-                        <CODE>runproj[.bat|.vbs]</CODE>: runs OpenCOR.
-                        <DIV>
-                            <STRONG>Note:</STRONG> on Windows, if you were to run OpenCOR from a console window by just entering <CODE>runproj</CODE>, then the <CODE>runproj.bat</CODE> file would be executed (rather than the <CODE>runproj.vbs</CODE> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking the <CODE>runproj.bat</CODE> file from within Windows Explorer, then a console window will quickly appear and disappear. To avoid this, you should double click on the <CODE>runproj.vbs</CODE> file.
-                        </DIV>
-                    </LI>
-                </UL>
-            </LI>
-            <LI>
-                <STRONG>Using Qt Creator:</STRONG>
-                    <UL>
-                        <LI>Start Qt Creator;</LI>
-                        <LI>Open <CODE>[OpenCOR]/CMakeLists.txt</CODE> (by selecting the <CODE>File|Open File or Project...</CODE> menu or by pressing <CODE>Ctrl+O</CODE>);</LI>
-                        <LI>Specify <CODE>[OpenCOR]/build</CODE> as the build directory;</LI>
-                        <LI>Select <CODE>MinGW</CODE> as the generator (Windows only);</LI>
-                        <LI>Click on the <CODE>Run CMake</CODE> button;</LI>
-                        <LI>Click on the <CODE>Finish</CODE> button;</LI>
-                        <LI>Select <CODE>OpenCOR</CODE> as the run target (by selecting the <CODE>Build|Open Build/Run Target Seclector...</CODE> menu or by pressing <CODE>Ctrl+T</CODE>); and</LI>
-                        <LI>Build and test OpenCOR (by selecting the <CODE>Build|Run</CODE> menu or by pressing <CODE>Ctrl+R</CODE>).</LI>
-                    </UL>
-            </LI>
-        </UL>
+        <ul>
+            <li>
+                <strong>Command line:</strong> various batch and VBScript files (<code>.bat</code> and <code>.vbs</code> files) on Windows and shell scripts on Ubuntu/Mac OS X are available: (Note that these command line tools require access to CMake, MinGW/g++/Xcode (for Windows, Ubuntu and Mac OS X, respectively) and Qt from the command line. This should be the case on Ubuntu and Mac OS X, but on Windows your <code>PATH</code> environment variable might need updating.)
+                <ul>
+                    <li><code>cleanproj[.bat]</code>: cleans the OpenCOR environment;</li>
+                    <li><code>cleanprojall[.bat]</code>: cleans all of the OpenCOR environment (i.e. including <a href="thirdPartyLibraries.html">third-party libraries</a>);</li>
+                    <li><code>makeproj[.bat]</code>: compiles and links everything that is required to get a binary version of OpenCOR; and</li>
+                    <li>
+                        <code>runproj[.bat|.vbs]</code>: runs OpenCOR.
+                        <div>
+                            <strong>Note:</strong> on Windows, if you were to run OpenCOR from a console window by just entering <code>runproj</code>, then the <code>runproj.bat</code> file would be executed (rather than the <code>runproj.vbs</code> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking the <code>runproj.bat</code> file from within Windows Explorer, then a console window will quickly appear and disappear. To avoid this, you should double click on the <code>runproj.vbs</code> file.
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <strong>Using Qt Creator:</strong>
+                    <ul>
+                        <li>Start Qt Creator;</li>
+                        <li>Open <code>[OpenCOR]/CMakeLists.txt</code> (by selecting the <code>File|Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
+                        <li>Specify <code>[OpenCOR]/build</code> as the build directory;</li>
+                        <li>Select <code>MinGW</code> as the generator (Windows only);</li>
+                        <li>Click on the <code>Run CMake</code> button;</li>
+                        <li>Click on the <code>Finish</code> button;</li>
+                        <li>Select <code>OpenCOR</code> as the run target (by selecting the <code>Build|Open Build/Run Target Seclector...</code> menu or by pressing <code>Ctrl+T</code>); and</li>
+                        <li>Build and test OpenCOR (by selecting the <code>Build|Run</code> menu or by pressing <code>Ctrl+R</code>).</li>
+                    </ul>
+            </li>
+        </ul>
 
-        <SPAN CLASS = "SectionFont">Package</SPAN>
+        <span class="sectionFont">Package</span>
 
-        <P>
-            The packaging of OpenCOR can only be done from the command line, using <CODE>packageproj.bat</CODE> on Windows and <CODE>packageproj</CODE> on Ubuntu / Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in the latter case.
-        </P>
+        <p>
+            The packaging of OpenCOR can only be done from the command line, using <code>packageproj.bat</code> on Windows and <code>packageproj</code> on Ubuntu / Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in the latter case.
+        </p>
 
-        <P CLASS = "CopyrightBackground">
-            <SPAN CLASS = "CopyrightFont">Copyright ©2011</SPAN>
-        </P>
-    </BODY>
-</HTML>
+        <p class="copyrightBackground">
+            <span class="copyrightFont">Copyright ©2011</span>
+        </p>
+    </body>
+</html>
