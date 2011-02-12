@@ -53,7 +53,7 @@
 
         <UL>
             <LI>
-                <SPAN CLASS = "Bold">General:</SPAN>
+                <STRONG>General:</STRONG>
                 <UL>
                     <LI>The most important rule first: the <A HREF = "http://en.wikipedia.org/wiki/KISS_principle">KISS principle</A>, i.e.  <EM>keep it simple, stupid!</EM> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
                     <LI>Write good C++ code: readable, well commented when necessary, and taking advantage of the object-oriented model.</LI>
@@ -63,7 +63,7 @@
                 </UL>
             </LI>
             <LI>
-                <SPAN CLASS = "Bold">Code constructs:</SPAN> the following guidelines exist to make the code faster, clearer, and/or to take advantage of the strong type checking in C++.
+                <STRONG>Code constructs:</STRONG> the following guidelines exist to make the code faster, clearer, and/or to take advantage of the strong type checking in C++.
                 <UL>
                     <LI>Declaration of variables should wait as long as possible. The rule is: <EM>Don't declare it until you need it.</EM> In C++, there are a lot of user defined types, and these can very often be expensive to initialise.</LI>
                     <LI>Make the scope of a variable as small as possible.</LI>
@@ -103,11 +103,11 @@ doSomething(name);</PRE>
                 </UL>
             </LI>
             <LI>
-                <SPAN CLASS = "Bold">Formatting:</SPAN>
+                <STRONG>Formatting:</STRONG>
                 <UL>
                     <LI>Indentation: 4 spaces, no tabulations.</LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Naming rules:</SPAN>
+                        <STRONG>Naming rules:</STRONG>
                         <UL>
                             <LI>Use descriptive, simple and short names.</LI>
                             <LI>
@@ -137,7 +137,7 @@ char *c, *d;</PRE>
     void My_function();
     ...
 }</PRE>
-                                <SPAN CLASS = "Bold">Note:</SPAN> class variables start with a lower-case <CODE>m</CODE>.
+                                <STRONG>Note:</STRONG> class variables start with a lower-case <CODE>m</CODE>.
                             </LI>
                             <LI>
                                 Parameters passed to a function start with a lower-case <CODE>p</CODE>, but not local variables.
@@ -155,12 +155,12 @@ char *c, *d;</PRE>
                         </UL>
                     </LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Declarations:</SPAN>
+                        <STRONG>Declarations:</STRONG>
                         <UL>
                             <LI>Use this order for the access sections of your class: <CODE>public</CODE>, <CODE>protected</CODE> and <CODE>private</CODE>. The <CODE>public</CODE> section is interesting for every user of the class. The <CODE>private</CODE> section is only of interest for the implementors of the class (you).</LI>
                             <LI>Avoid declaring global objects in the declaration file of the class. If the same variable is used for all objects, use a <CODE>static</CODE> member.</LI>
                             <LI>
-                                <SPAN CLASS = "Bold">Declaring Variables:</SPAN>
+                                <STRONG>Declaring Variables:</STRONG>
                                 <UL>
                                     <LI>Avoid global or static variables.</LI>
                                     <LI>Avoid short names (such as <CODE>a</CODE>, <CODE>rbarr</CODE>, <CODE>nughdeget</CODE>) whenever possible. Use single-character variable names only for counters and temporaries where the purpose of the variable is obvious.</LI>
@@ -173,7 +173,7 @@ int b;</PRE>
                                         <PRE CLASS = "Good">QString a = "Joe";
 QString b = "Foo";</PRE>
                                         <PRE CLASS = "Bad">QString a = "Joe", b = "Foo";</PRE>
-                                        <SPAN CLASS = "Bold">Note:</SPAN> <CODE>QString a = "Joe";</CODE> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <CODE>QString a("joe")</CODE>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <CODE>=</CODE> idiom as it is in line with the traditional C-style initialisation, <EM>and</EM> cannot be mistaken as a function declaration, <EM>and</EM> reduces the level of nested parantheses in more initialisations.
+                                        <STRONG>Note:</STRONG> <CODE>QString a = "Joe";</CODE> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <CODE>QString a("joe")</CODE>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <CODE>=</CODE> idiom as it is in line with the traditional C-style initialisation, <EM>and</EM> cannot be mistaken as a function declaration, <EM>and</EM> reduces the level of nested parantheses in more initialisations.
                                     </LI>
                                     <LI>Wait with declaring a variable until it is needed. This is especially important when initialization is done at the same time.</LI>
                                 </UL>
@@ -194,10 +194,10 @@ char &amp; c = *p;</PRE>
                         <PRE CLASS = "Bad">void *p = NULL;
 void *p = '\0';
 void *p = 42-7*6;</PRE>
-                        <SPAN CLASS = "Bold">Note:</SPAN> as an exception, imported third-party code, as well as code interfacing with the <EM>native</EM> APIs (<CODE>src/support/os_*</CODE>), can use <CODE>NULL</CODE>.
+                        <STRONG>Note:</STRONG> as an exception, imported third-party code, as well as code interfacing with the <EM>native</EM> APIs (<CODE>src/support/os_*</CODE>), can use <CODE>NULL</CODE>.
                     </LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Whitespace:</SPAN>
+                        <STRONG>Whitespace:</STRONG>
                         <UL>
                             <LI>Use blank lines to group statements together where suited.</LI>
                             <LI>Always use only one blank line.</LI>
@@ -235,7 +235,7 @@ char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</PRE>
                         </UL>
                     </LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Braces:</SPAN>
+                        <STRONG>Braces:</STRONG>
                         <UL>
                             <LI>
                                 As a base rule, place the left curly brace on the same line as the start of the statement:
@@ -244,7 +244,7 @@ char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</PRE>
                                 <PRE CLASS = "Bad">if (codec)
 {
 }</PRE>
-                                <SPAN CLASS = "Bold">Exception:</SPAN> function implementations and class declarations always have the left brace in the beginning of a line:
+                                <STRONG>Exception:</STRONG> function implementations and class declarations always have the left brace in the beginning of a line:
                                 <PRE CLASS = "Good">static void foo(int g)
 {
     qDebug("foo: %i", g);
@@ -270,12 +270,12 @@ char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</PRE>
                                 <PRE CLASS = "Bad">for (int i = 0; i < 10; ++i) {
     qDebug("%i", i);
 }</PRE>
-                                <SPAN CLASS = "Bold">Exception #1:</SPAN> use braces also if the parent statement covers several lines or if it wraps:
+                                <STRONG>Exception #1:</STRONG> use braces also if the parent statement covers several lines or if it wraps:
                                 <PRE>if (   address.isEmpty()
     || !isValid()
     || !codec)
     return false;</PRE>
-                                <SPAN CLASS = "Bold">Note:</SPAN> this could be re-written as:
+                                <STRONG>Note:</STRONG> this could be re-written as:
                                 <PRE CLASS = "Good">if (address.isEmpty())
     return false;
 
@@ -284,7 +284,7 @@ if (!isValid())
 
 if (!codec)
     return false;</PRE>
-                                <SPAN CLASS = "Bold">Exception #2:</SPAN> use braces also in <CODE>if-then-else</CODE> blocks where either the <CODE>if</CODE> code or the <CODE>else</CODE> code covers several lines:
+                                <STRONG>Exception #2:</STRONG> use braces also in <CODE>if-then-else</CODE> blocks where either the <CODE>if</CODE> code or the <CODE>else</CODE> code covers several lines:
                                 <PRE CLASS = "Good">if (address.isEmpty()) {
     --it;
 } else {
@@ -345,16 +345,16 @@ else {
                 </UL>
             </LI>
             <LI>
-                <SPAN CLASS = "Bold">Patterns and practices</SPAN>
+                <STRONG>Patterns and practices</STRONG>
                 <UL>
                     <LI>
-                        <SPAN CLASS = "Bold">C++ features:</SPAN>
+                        <STRONG>C++ features:</STRONG>
                         <UL>
                             <LI>Do not use exceptions, unless you know what you are doing.</LI>
                             <LI>Do not use RTTI (Run-Time Type Information, i.e. the <CODE>typeinfo struct</CODE>, the <CODE>dynamic_cast</CODE> or the <CODE>typeid</CODE> operators, including throwing exceptions), unless you know what you are doing.</LI>
                             <LI>
                                 Use templates wisely, not just because you can.<BR/>
-                                <SPAN CLASS = "Bold">Hint:</SPAN> use the compile autotest to see whether a C++ feature is supported by all compilers in the test farm.
+                                <STRONG>Hint:</STRONG> use the compile autotest to see whether a C++ feature is supported by all compilers in the test farm.
                             </LI>
                             <LI>
                                 All code is ASCII only (7-bit characters only, run <CODE>man ascii</CODE> if unsure). For strings, use <CODE>\\nnn</CODE> (where <CODE>nnn</CODE> is the octal representation of whatever locale you want your string in) or <CODE>\xnn</CODE> (where <CODE>nn</CODE> is hexadecimal):
@@ -364,7 +364,7 @@ else {
                         </UL>
                     </LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Using <CODE>QObject</CODE>:</SPAN>
+                        <STRONG>Using <CODE>QObject</CODE>:</STRONG>
                         <UL>
                             <LI>Every <CODE>QObject</CODE> subclass must have a <CODE>Q_OBJECT</CODE> macro, even if it does not have signals or slots, if it is intended to be used with <CODE>qobject_cast<></CODE>.</LI>
                             <LI>Normalise the arguments for signals and slots (see <A HREF = "http://doc.qt.nokia.com/4.7/qmetaobject.html#normalizedSignature"><CODE>QMetaObject::normalizedSignature</CODE></A>) inside connect statements to safely make signal and slot lookup a few cycles faster. You can use <CODE>[Qt]/util/normalize</CODE> to normalise existing code.</LI>
@@ -372,7 +372,7 @@ else {
                     </LI>
                     <LI>File headers: if you create a new file, the top of the file should include a header comment equal to the one found in other source files of OpenCOR.</LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Including headers:</SPAN>
+                        <STRONG>Including headers:</STRONG>
                         <UL>
                             <LI>
                                 Arrange headers in alphabetic order within a block:
@@ -408,14 +408,14 @@ else {
                         </UL>
                     </LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Casting:</SPAN>
+                        <STRONG>Casting:</STRONG>
                         <UL>
                             <LI>Avoid C casts, prefer C++ casts (<CODE>static_cast</CODE>, <CODE>const_cast</CODE>, <CODE>reinterpret_cast</CODE>) Both <CODE>reinterpret_cast</CODE> and C-style casts are dangerous, but at least <CODE>reinterpret_cast</CODE> will not remove the const modifier.</LI>
                             <LI>Do not use <CODE>dynamic_cast</CODE>, use <CODE>qobject_cast</CODE> for <CODE>QObject</CODE>, or refactor your design, for example by introducing a <CODE>type()</CODE> method (see <A HREF = "http://doc.qt.nokia.com/latest/qlistwidgetitem.html"><CODE>QListWidgetItem</CODE></A>), unless you know what you are doing.</LI>
                         </UL>
                     </LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Compiler and platform-specific issues:</SPAN>
+                        <STRONG>Compiler and platform-specific issues:</STRONG>
                         <UL>
                             <LI>
                                 Be extremely careful when using the question mark operator. If the returned types are not identical, some compilers generate code that crashes at runtime (you will not even get a compiler warning):
@@ -469,7 +469,7 @@ void foo()
 {
     s()->append("moo");
 }</PRE>
-                                <SPAN CLASS = "Bold">Note:</SPAN> static objects in function scope are not a problem. The constructor will be run the first time the function is entered. The code is not re-entrant, though.
+                                <STRONG>Note:</STRONG> static objects in function scope are not a problem. The constructor will be run the first time the function is entered. The code is not re-entrant, though.
                             </LI>
                             <LI>
                                 A <CODE>char</CODE> is signed or unsigned dependent on the architecture. Use signed <CODE>char</CODE> or <CODE>uchar</CODE> if you explicitely want a signed or unsigned char. The following code will break on PowerPC, for example:
@@ -496,14 +496,14 @@ if (c >= 0) {
                         For example, library <CODE>A</CODE> has class <CODE>Q_EXPORT X: public QList&lt;QVariant&gt; {};</CODE> and library <CODE>B</CODE> has class <CODE>Q_EXPORT Y: public QList<QVariant> {};</CODE>. Suddenly, <CODE>QList</CODE> symbols are exported from two libraries which results in a clash.
                     </LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Namespacing:</SPAN>
+                        <STRONG>Namespacing:</STRONG>
                         <UL>
                             <LI>Put the body of a function in a <CODE>.cpp</CODE> file, not in its corresponding header file. There is a reason for having both a <CODE>.cpp</CODE> file and a <CODE>.h</CODE> file.</LI>
                             <LI>Prefer <CODE>enum</CODE> to define constants over <CODE>static const int</CODE> or <CODE>#define</CODE>. Enumeration values will be replaced by the compiler at compile time, resulting in faster code. Also, defines are not namespace safe.</LI>
                         </UL>
                     </LI>
                     <LI>
-                        <SPAN CLASS = "Bold">Aestethics:</SPAN>
+                        <STRONG>Aestethics:</STRONG>
                         <UL>
                             <LI>Put the body of a function in a <CODE>.cpp</CODE> file, not in its corresponding header file. There is a reason for having both a <CODE>.cpp</CODE> file and a <CODE>.h</CODE> file.</LI>
                             <LI>Prefer <CODE>enum</CODE> to define constants over <CODE>static const int</CODE> or <CODE>#define</CODE>. Enumeration values will be replaced by the compiler at compile time, resulting in faster code. Also, defines are not namespace safe.</LI>
@@ -512,7 +512,7 @@ if (c >= 0) {
                 </UL>
             </LI>
             <LI>
-                <SPAN CLASS = "Bold">Miscellaneous:</SPAN>
+                <STRONG>Miscellaneous:</STRONG>
                 <UL>
                     <LI>Do not use <CODE>inline</CODE> functions. It is better to rely on the compiler to optimise the code, if necessary, not to mention that, if badly used, <CODE>inline</CODE> functions can result in slower code.</LI>
                     <LI>
