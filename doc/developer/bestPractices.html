@@ -353,8 +353,10 @@ else {
                             <LI>Do not use exceptions, unless you know what you are doing.</LI>
                             <LI>Do not use RTTI (Run-Time Type Information, i.e. the <CODE>typeinfo struct</CODE>, the <CODE>dynamic_cast</CODE> or the <CODE>typeid</CODE> operators, including throwing exceptions), unless you know what you are doing.</LI>
                             <LI>
-                                Use templates wisely, not just because you can.<BR/>
-                                <STRONG>Hint:</STRONG> use the compile autotest to see whether a C++ feature is supported by all compilers in the test farm.
+                                Use templates wisely, not just because you can.
+                                <DIV>
+                                    <STRONG>Hint:</STRONG> use the compile autotest to see whether a C++ feature is supported by all compilers in the test farm.
+                                </DIV>
                             </LI>
                             <LI>
                                 All code is ASCII only (7-bit characters only, run <CODE>man ascii</CODE> if unsure). For strings, use <CODE>\\nnn</CODE> (where <CODE>nnn</CODE> is the octal representation of whatever locale you want your string in) or <CODE>\xnn</CODE> (where <CODE>nn</CODE> is hexadecimal):
