@@ -21,26 +21,26 @@
 
         <P>
             Source code files are, in OpenCOR, organised within a very specific <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree">file structure</A>, as shown below. Any new (set of) file(s) is therefore expected to be added to the right folder.
-            <PRE><A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty;h=1a5e4b1f83ae8baa7413ab1fd01f987021b59579;hb=HEAD">3rdparty</A>                    <SPAN CLASS = "Italic">// Various <A HREF = "thirdPartyLibraries.html">third-party libraries</A> used by OpenCOR</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/LibQxt;h=f47589e9783147b30b53b358df49a43617190a13;hb=HEAD">LibQxt</A>                      <SPAN CLASS = "Italic">// The <A HREF = "http://libqxt.org/">LibQxt</A> library</A></SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/QScintilla;h=804e286d198d20e5b9c95232d8e48e31b5bd2616;hb=HEAD">QScintilla</A>                  <SPAN CLASS = "Italic">// The <A HREF = "http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</A> library</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/QtSingleApplication;h=ac6f50ca5aeec552afe6afcd33b01f98168799ff;hb=HEAD">QtSingleApplication</A>         <SPAN CLASS = "Italic">// The <A HREF = "http://qt.gitorious.org/qt-solutions/">QtSingleApplication</A> library</SPAN>
-<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=build;h=0fdd52995b5301ea8e028222ae7d7e7578a9f8e8;hb=HEAD">build</A>                       <SPAN CLASS = "Italic">// Where OpenCOR-related build files are generated</SPAN>
-<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=distrib;h=6939b7b39925c1717ace7377ca51ba9e88628465;hb=HEAD">distrib</A>                     <SPAN CLASS = "Italic">// Various files used for the packaging of OpenCOR</SPAN>
-<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc;h=6c3c00380180376c7a4c15381ae0f311849ac336;hb=HEAD">doc</A>                         <SPAN CLASS = "Italic">// User and developer documentation</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc/developer;h=383f7becc5d4021b3469e2dfffd6b9bfefe79a4a;hb=HEAD">developer</A>                   <SPAN CLASS = "Italic">// Developer-specific documentation</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc/res;h=6225d01d21bea1de8b179352f8eebaa6e046e44d;hb=HEAD">res</A>                         <SPAN CLASS = "Italic">// Various resource files used by the documentation</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc/user;h=0597b48bf4f00404dae949f046d94b61bcc4cf59;hb=HEAD">user</A>                        <SPAN CLASS = "Italic">// User-specific documentation</SPAN>
-<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=i18n;h=8ae5ae5e7112a5cf897e8c5de02e31aed149e1e2;hb=HEAD">i18n</A>                        <SPAN CLASS = "Italic">// Internationalisation files</SPAN>
-<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=res;h=6f33dddce45ab69ecaee35bfdc6f9fb919d6d47a;hb=HEAD">res</A>                         <SPAN CLASS = "Italic">// Various resource files used by OpenCOR</SPAN>
-<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src;h=b11ecf33d667b70914086e8a27d3a815b82d2160;hb=HEAD">src</A>                         <SPAN CLASS = "Italic">// Source code files for OpenCOR</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src/misc;h=f5c036aa2a99598514972851515fbc2184feab75;hb=HEAD">misc</A>                        <SPAN CLASS = "Italic">// Files that do not fit anywhere else</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src/ui;h=cf183e6a61b477da60b6e4b9b664945ad781b136;hb=HEAD">ui</A>                          <SPAN CLASS = "Italic">// User interface files</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src/widget;h=a4f7d1765e32d7cd6b6627e61a280ae8d77dab2a;hb=HEAD">widget</A>                      <SPAN CLASS = "Italic">// Widget files</SPAN>
-<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole;h=08d7aab5d4b92c86f12915d10ce3e8acf76b0884;hb=HEAD">winConsole</A>                  <SPAN CLASS = "Italic">// Console version of OpenCOR (Windows only)</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole/build;h=0fdd52995b5301ea8e028222ae7d7e7578a9f8e8;hb=HEAD">build</A>                       <SPAN CLASS = "Italic">// Where the build files are generated</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole/res;h=af95d134c5f4f9fa51c288e6ccd403af7bec26dd;hb=HEAD">res</A>                         <SPAN CLASS = "Italic">// Various resource files</SPAN>
-    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole/src;h=852d65ea490074d35a51981f2d96c5d3f7a51d6d;hb=HEAD">src</A>                         <SPAN CLASS = "Italic">// Source code files</SPAN></PRE>
+            <PRE><A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty;h=1a5e4b1f83ae8baa7413ab1fd01f987021b59579;hb=HEAD">3rdparty</A>                    <EM>// Various <A HREF = "thirdPartyLibraries.html">third-party libraries</A> used by OpenCOR</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/LibQxt;h=f47589e9783147b30b53b358df49a43617190a13;hb=HEAD">LibQxt</A>                      <EM>// The <A HREF = "http://libqxt.org/">LibQxt</A> library</A></EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/QScintilla;h=804e286d198d20e5b9c95232d8e48e31b5bd2616;hb=HEAD">QScintilla</A>                  <EM>// The <A HREF = "http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</A> library</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=3rdparty/QtSingleApplication;h=ac6f50ca5aeec552afe6afcd33b01f98168799ff;hb=HEAD">QtSingleApplication</A>         <EM>// The <A HREF = "http://qt.gitorious.org/qt-solutions/">QtSingleApplication</A> library</EM>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=build;h=0fdd52995b5301ea8e028222ae7d7e7578a9f8e8;hb=HEAD">build</A>                       <EM>// Where OpenCOR-related build files are generated</EM>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=distrib;h=6939b7b39925c1717ace7377ca51ba9e88628465;hb=HEAD">distrib</A>                     <EM>// Various files used for the packaging of OpenCOR</EM>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc;h=6c3c00380180376c7a4c15381ae0f311849ac336;hb=HEAD">doc</A>                         <EM>// User and developer documentation</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc/developer;h=383f7becc5d4021b3469e2dfffd6b9bfefe79a4a;hb=HEAD">developer</A>                   <EM>// Developer-specific documentation</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc/res;h=6225d01d21bea1de8b179352f8eebaa6e046e44d;hb=HEAD">res</A>                         <EM>// Various resource files used by the documentation</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=doc/user;h=0597b48bf4f00404dae949f046d94b61bcc4cf59;hb=HEAD">user</A>                        <EM>// User-specific documentation</EM>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=i18n;h=8ae5ae5e7112a5cf897e8c5de02e31aed149e1e2;hb=HEAD">i18n</A>                        <EM>// Internationalisation files</EM>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=res;h=6f33dddce45ab69ecaee35bfdc6f9fb919d6d47a;hb=HEAD">res</A>                         <EM>// Various resource files used by OpenCOR</EM>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src;h=b11ecf33d667b70914086e8a27d3a815b82d2160;hb=HEAD">src</A>                         <EM>// Source code files for OpenCOR</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src/misc;h=f5c036aa2a99598514972851515fbc2184feab75;hb=HEAD">misc</A>                        <EM>// Files that do not fit anywhere else</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src/ui;h=cf183e6a61b477da60b6e4b9b664945ad781b136;hb=HEAD">ui</A>                          <EM>// User interface files</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=src/widget;h=a4f7d1765e32d7cd6b6627e61a280ae8d77dab2a;hb=HEAD">widget</A>                      <EM>// Widget files</EM>
+<A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole;h=08d7aab5d4b92c86f12915d10ce3e8acf76b0884;hb=HEAD">winConsole</A>                  <EM>// Console version of OpenCOR (Windows only)</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole/build;h=0fdd52995b5301ea8e028222ae7d7e7578a9f8e8;hb=HEAD">build</A>                       <EM>// Where the build files are generated</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole/res;h=af95d134c5f4f9fa51c288e6ccd403af7bec26dd;hb=HEAD">res</A>                         <EM>// Various resource files</EM>
+    <A HREF = "http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=winConsole/src;h=852d65ea490074d35a51981f2d96c5d3f7a51d6d;hb=HEAD">src</A>                         <EM>// Source code files</EM></PRE>
         </P>
 
         <P>
@@ -55,7 +55,7 @@
             <LI>
                 <SPAN CLASS = "Bold">General:</SPAN>
                 <UL>
-                    <LI>The most important rule first: the <A HREF = "http://en.wikipedia.org/wiki/KISS_principle">KISS principle</A>, i.e.  <SPAN CLASS = "Italic">keep it simple, stupid!</SPAN> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
+                    <LI>The most important rule first: the <A HREF = "http://en.wikipedia.org/wiki/KISS_principle">KISS principle</A>, i.e.  <EM>keep it simple, stupid!</EM> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
                     <LI>Write good C++ code: readable, well commented when necessary, and taking advantage of the object-oriented model.</LI>
                     <LI>Adapt the code to the structures already existing in OpenCOR, or in the case that you have better ideas, discuss them with <A HREF = "../user/authors.html">other developers</A> before writing the code.</LI>
                     <LI>Take advantage of Qt. Think about what parts of your code are generic enough that they might be incorporated into Qt proper.</LI>
@@ -65,7 +65,7 @@
             <LI>
                 <SPAN CLASS = "Bold">Code constructs:</SPAN> the following guidelines exist to make the code faster, clearer, and/or to take advantage of the strong type checking in C++.
                 <UL>
-                    <LI>Declaration of variables should wait as long as possible. The rule is: <SPAN CLASS = "Italic">Don't declare it until you need it.</SPAN> In C++, there are a lot of user defined types, and these can very often be expensive to initialise.</LI>
+                    <LI>Declaration of variables should wait as long as possible. The rule is: <EM>Don't declare it until you need it.</EM> In C++, there are a lot of user defined types, and these can very often be expensive to initialise.</LI>
                     <LI>Make the scope of a variable as small as possible.</LI>
                     <LI>
                         Prefer pre-increment to post-increment whenever possible. Pre-increment has potential of being faster than post-increment. This rule applies to decrement too.
@@ -173,7 +173,7 @@ int b;</PRE>
                                         <PRE CLASS = "Good">QString a = "Joe";
 QString b = "Foo";</PRE>
                                         <PRE CLASS = "Bad">QString a = "Joe", b = "Foo";</PRE>
-                                        <SPAN CLASS = "Bold">Note:</SPAN> <CODE>QString a = "Joe";</CODE> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <CODE>QString a("joe")</CODE>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <CODE>=</CODE> idiom as it is in line with the traditional C-style initialisation, <SPAN CLASS = "Italic">and</SPAN> cannot be mistaken as a function declaration, <SPAN CLASS = "Italic">and</SPAN> reduces the level of nested parantheses in more initialisations.
+                                        <SPAN CLASS = "Bold">Note:</SPAN> <CODE>QString a = "Joe";</CODE> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <CODE>QString a("joe")</CODE>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <CODE>=</CODE> idiom as it is in line with the traditional C-style initialisation, <EM>and</EM> cannot be mistaken as a function declaration, <EM>and</EM> reduces the level of nested parantheses in more initialisations.
                                     </LI>
                                     <LI>Wait with declaring a variable until it is needed. This is especially important when initialization is done at the same time.</LI>
                                 </UL>
@@ -194,7 +194,7 @@ char &amp; c = *p;</PRE>
                         <PRE CLASS = "Bad">void *p = NULL;
 void *p = '\0';
 void *p = 42-7*6;</PRE>
-                        <SPAN CLASS = "Bold">Note:</SPAN> as an exception, imported third-party code, as well as code interfacing with the <SPAN CLASS = "Italic">native</SPAN> APIs (<CODE>src/support/os_*</CODE>), can use <CODE>NULL</CODE>.
+                        <SPAN CLASS = "Bold">Note:</SPAN> as an exception, imported third-party code, as well as code interfacing with the <EM>native</EM> APIs (<CODE>src/support/os_*</CODE>), can use <CODE>NULL</CODE>.
                     </LI>
                     <LI>
                         <SPAN CLASS = "Bold">Whitespace:</SPAN>
@@ -421,7 +421,7 @@ else {
                                 Be extremely careful when using the question mark operator. If the returned types are not identical, some compilers generate code that crashes at runtime (you will not even get a compiler warning):
                                 <PRE>QString s;
 
-return condition?s:"nothing";   // crash at runtime - QString <SPAN CLASS = "Italic">vs</SPAN> const char *</PRE>
+return condition?s:"nothing";   // crash at runtime - QString <EM>vs</EM> const char *</PRE>
                             </LI>
                             <LI>
                                 Be extremely careful about alignment. Whenever a pointer is cast such that the required alignment of the target is increased, the resulting code might crash at runtime on some architectures. For example, if a <CODE>const char *</CODE> is cast to a <CODE>const int *</CODE>, it will crash on machines where integers have to be             aligned at two-byte or four-byte boundaries. Use a union to force the compiler to align variables correctly. In the example below, you can be sure that all instances of <CODE>AlignHelper</CODE> are aligned at integer-boundaries:
