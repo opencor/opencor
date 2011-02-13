@@ -1,40 +1,45 @@
 a {
-    color: #31859b;
+    color: rgb(49, 133, 155);
 }
 
 a:visited {
-    color: #31859b;
+    color: rgb(49, 133, 155);
 }
 
 a:hover {
-    background-color: #31859b;
-    color: #ffffff;
+    background-color: rgb(49, 133, 155);
+    color: rgb(255, 255, 255);
+    /* Note: ideally, 'color' would be specified in stylesheet.css, but then */
+    /*        local links wouldn't look fine, so... (!?)                     */
 }
 
 a.sectionAnchor:hover {
-    background-color: #ffffff;
-    color: #31859b;
+    /* This is to prevent sections that have an anchor from looking like */
+    /* a link                                                            */
+
+    background-color: rgb(255, 255, 255);
+    color: rgb(49, 133, 155);
 }
 
-.titleBackground {
-    background: #31859b;
+p.titleBackground {
+    background: rgb(49, 133, 155);
 }
 
 span.sectionFont {
-    color: #31859b;
+    color: rgb(49, 133, 155);
 }
 
 pre {
-    background: #dbeef3;
-    border: 1px dashed #31859b;
+    background: rgb(219, 238, 243);
+    border: 1px dashed rgb(49, 133, 155);
 }
 
 pre.good {
-    background: #ebf1dd;
-    border: 1px dashed #76923c;
+    background: rgb(235, 241, 221);
+    border: 1px dashed rgb(118, 146, 60);
 }
 
 pre.bad {
-    background: #f2dcdb;
-    border: 1px dashed #953734;
+    background: rgb(242, 220, 219);
+    border: 1px dashed rgb(149, 55, 52);
 }

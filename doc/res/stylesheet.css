@@ -4,17 +4,16 @@ body {
 }
 
 a:hover {
-    color: #ffffff;
     text-decoration: none;
 }
 
-.titleBackground {
+p.titleBackground {
     padding: 3px 3px 3px 3px;
     margin: -3px -3px 13px -3px;
 }
 
 span.titleFont {
-    color: #ffffff;
+    color: rgb(255, 255, 255);
     font-size: 15pt;
     font-weight: bold;
 }
@@ -36,11 +35,11 @@ pre {
 
 .copyrightBackground {
     text-align: center;
-    background: #d8d8d8;
+    background: rgb(216, 216, 216);
     margin: 13px -3px -3px -3px;
 }
 
 span.copyrightFont {
-    color: #7f7f7f;
+    color: rgb(127, 127, 127);
     font-size: 9pt;
 }

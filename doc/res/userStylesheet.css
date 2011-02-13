@@ -1,25 +1,27 @@
 a {
-    color: #366092;
+    color: rgb(54, 96, 146);
 }
 
 a:visited {
-    color: #366092;
+    color: rgb(54, 96, 146);
 }
 
 a:hover {
-    background-color: #366092;
-    color: #ffffff;
+    background-color: rgb(54, 96, 146);
+    color: rgb(255, 255, 255);
+    /* Note: ideally, 'color' would be specified in stylesheet.css, but then */
+    /*        local links wouldn't look fine, so... (!?)                     */
 }
 
-.titleBackground {
-    background: #366092;
+p.titleBackground {
+    background: rgb(54, 96, 146);
 }
 
 span.sectionFont {
-    color: #366092;
+    color: rgb(54, 96, 146);
 }
 
 pre {
-    background: #dbe5f1;
-    border: 1px dashed #366092;
+    background: rgb(219, 229, 241);
+    border: 1px dashed rgb(54, 96, 146);
 }
