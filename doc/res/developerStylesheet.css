@@ -10,7 +10,7 @@ a:hover {
     background-color: rgb(49, 133, 155);
     color: rgb(255, 255, 255);
     /* Note: ideally, 'color' would be specified in stylesheet.css, but then */
-    /*        local links wouldn't look fine, so... (!?)                     */
+    /*       local links wouldn't look fine, so... (!?)                      */
 }
 
 a.sectionAnchor:hover {
