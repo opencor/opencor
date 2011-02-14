@@ -23,7 +23,10 @@ SET(SOURCES
     src/ui/centralwidget.cpp
     src/ui/mainwindow.cpp
     src/ui/helpwindow.cpp
+    src/widget/filebrowserwidget.cpp
+    src/widget/fileorganiserwidget.cpp
     src/widget/helpwidget.cpp
+    src/widget/physiomemodelrepositoryclientwidget.cpp
 )
 
 SET(HEADERS
@@ -35,7 +38,10 @@ SET(HEADERS_MOC
     src/ui/centralwidget.h
     src/ui/mainwindow.h
     src/ui/helpwindow.h
+    src/widget/filebrowserwidget.h
+    src/widget/fileorganiserwidget.h
     src/widget/helpwidget.h
+    src/widget/physiomemodelrepositoryclientwidget.h
 )
 
 SET(UIS

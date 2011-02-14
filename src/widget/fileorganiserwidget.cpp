@@ -1,0 +1,1 @@
+#include "fileorganiserwidget.h"
