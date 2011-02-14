@@ -1,0 +1,55 @@
+PROJECT(QtMmlWidget)
+
+# Files that make up QtMmlWidget
+
+SET(SOURCES
+    src/qtmmlwidget.cpp
+)
+
+SET(HEADERS_MOC
+    src/qtmmlwidget.h
+)
+
+# Various include directories
+
+SET(LOCAL_3RDPARTYLIB_SUBDIRS include src)
+SET(3RDPARTYLIB_SUBDIRS ${LOCAL_3RDPARTYLIB_SUBDIRS} PARENT_SCOPE)
+
+INCLUDE_DIRECTORIES(${LOCAL_3RDPARTYLIB_SUBDIRS})
+
+# Qt specific
+
+FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
+
+INCLUDE(${QT_USE_FILE})
+
+# Rules to build QtMmlWidget
+
+QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
+
+IF(APPLE)
+    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
+ELSE()
+    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+ENDIF()
+# Note: the above is only required so that we can quickly test OpenCOR without
+#       first having to package everything
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED
+    ${SOURCES}
+    ${SOURCES_MOC}
+)
+
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+)
+
+# Rules to package QtMmlWidget
+
+IF(WIN32)
+    INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+ELSEIF(NOT APPLE)
+    INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
+ENDIF()
