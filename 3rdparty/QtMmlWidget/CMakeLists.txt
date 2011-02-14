@@ -6,7 +6,7 @@ SET(SOURCES
     src/qtmmlwidget.cpp
 )
 
-SET(HEADERS_MOC
+SET(HEADERS
     src/qtmmlwidget.h
 )
 
@@ -25,8 +25,6 @@ INCLUDE(${QT_USE_FILE})
 
 # Rules to build QtMmlWidget
 
-QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
-
 IF(APPLE)
     SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 ELSE()
@@ -37,7 +35,6 @@ ENDIF()
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${SOURCES}
-    ${SOURCES_MOC}
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
