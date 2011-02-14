@@ -490,7 +490,7 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::resetAll()
 {
     if( QMessageBox::question(this, qApp->applicationName(),
-                              tr("You are about to reset all the user settings. Are you sure about this?"),
+                              tr("You are about to reset all your user settings. Are you sure that this is what you want?"),
                               QMessageBox::Yes|QMessageBox::No, QMessageBox::Yes) == QMessageBox::Yes ) {
         // Clear all the user settings and restart OpenCOR (indeed, a restart
         // will ensure that all the docked windows are, for instance, properly

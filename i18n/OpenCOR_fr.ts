@@ -373,8 +373,8 @@
         <translation>Barre d&apos;Outils Aide</translation>
     </message>
     <message>
-        <source>You are about to reset all the user settings. Are you sure about this?</source>
-        <translation>Vous êtes sur le point de réinitialiser tous les paramètres utilisateurs. Etes-vous sûr ?</translation>
+        <source>You are about to reset all your user settings. Are you sure that this is what you want?</source>
+        <translation>Vous êtes sur le point de réinitialiser tous vos paramètres utilisateurs. Etes-vous sûr que c&apos;est ce que vous voulez ?</translation>
     </message>
 </context>
 <context>
