@@ -1,5 +1,3 @@
-#include <QMessageBox>
-
 #include "helpwindow.h"
 #include "helpwidget.h"
 
