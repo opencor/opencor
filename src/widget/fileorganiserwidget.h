@@ -6,6 +6,9 @@
 class FileOrganiserWidget : public QWidget
 {
     Q_OBJECT
+
+public:
+    void defaultSettings();
 };
 
 #endif

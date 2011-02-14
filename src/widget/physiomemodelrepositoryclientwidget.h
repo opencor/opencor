@@ -6,6 +6,9 @@
 class PhysiomeModelRepositoryClientWidget : public QWidget
 {
     Q_OBJECT
+
+public:
+    void defaultSettings();
 };
 
 #endif

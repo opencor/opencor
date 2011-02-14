@@ -6,6 +6,9 @@
 class FileBrowserWidget : public QWidget
 {
     Q_OBJECT
+
+public:
+    void defaultSettings();
 };
 
 #endif

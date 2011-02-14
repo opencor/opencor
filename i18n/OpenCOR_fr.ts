@@ -2,6 +2,20 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>FileBrowserWindow</name>
+    <message>
+        <source>File Browser</source>
+        <translation>Gestionnaire de Fichiers</translation>
+    </message>
+</context>
+<context>
+    <name>FileOrganiserWindow</name>
+    <message>
+        <source>File Organiser</source>
+        <translation>Organisateur de Fichiers</translation>
+    </message>
+</context>
+<context>
     <name>HelpWindow</name>
     <message>
         <source>OpenCOR Help</source>
@@ -361,6 +375,13 @@
     <message>
         <source>You are about to reset all the user settings. Are you sure about this?</source>
         <translation>Vous êtes sur le point de réinitialiser tous les paramètres utilisateurs. Etes-vous sûr ?</translation>
+    </message>
+</context>
+<context>
+    <name>PhysiomeModelRepositoryClientWindow</name>
+    <message>
+        <source>Physiome Model Repository Client</source>
+        <translation>Client pour le Répertoire de Modèles Physiome</translation>
     </message>
 </context>
 </TS>
