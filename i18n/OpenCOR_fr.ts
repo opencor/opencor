@@ -358,5 +358,9 @@
         <source>Help Toolbar</source>
         <translation>Barre d&apos;Outils Aide</translation>
     </message>
+    <message>
+        <source>You are about to reset all the user settings. Are you sure about this?</source>
+        <translation>Vous êtes sur le point de réinitialiser tous les paramètres utilisateurs. Etes-vous sûr ?</translation>
+    </message>
 </context>
 </TS>

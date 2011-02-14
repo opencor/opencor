@@ -489,22 +489,27 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::resetAll()
 {
-    // Clear all the user settings and restart OpenCOR (indeed, a restart will
-    // ensure that all the docked windows are, for instance, properly
-    // reset with regards to their dimensions)
+    if( QMessageBox::question(this, qApp->applicationName(),
+                              tr("You are about to reset all the user settings. Are you sure about this?"),
+                              QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes ) {
+        // Clear all the user settings and restart OpenCOR (indeed, a restart
+        // will ensure that all the docked windows are, for instance, properly
+        // reset with regards to their dimensions)
 
-    QSettings(qApp->applicationName()).clear();
+        QSettings(qApp->applicationName()).clear();
 
-    // Restart OpenCOR, but without providing any of the argument with which
-    // OpenCOR was originally started, since we indeed want to reset everything
+        // Restart OpenCOR, but without providing any of the argument with
+        // which OpenCOR was originally started, since we indeed want to reset
+        // everything
 
-    QProcess::startDetached(qApp->applicationFilePath(), QStringList(), qApp->applicationDirPath());
+        QProcess::startDetached(qApp->applicationFilePath(), QStringList(), qApp->applicationDirPath());
 
-    // Quit OpenCOR
-    // Note: the closeEvent method won't get called and this is exactly what we
-    //       want, since we don't want to save OpenCOR's settings
+        // Quit OpenCOR
+        // Note: the closeEvent method won't get called and this is exactly
+        //       what we want, since we don't want to save OpenCOR's settings
 
-    qApp->quit();
+        qApp->quit();
+    }
 }
 
 void MainWindow::on_actionNew_triggered()
