@@ -16,18 +16,18 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QToolButton {
-	Border-Style: None;
+    border-style: none;
 }
 
-QToolButton:Hover {
-    Border: 1px Solid #A8A8A8;
-    Border-Radius: 5px;
-    Background-Color: qLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #F5F5F5, stop: 0.42999 #E8E8E8, stop: 0.43 #DADADA, stop: 1 #F0F0F0);
+QToolButton:hover {
+    border: 1px solid rgb(168, 168, 168);
+    border-radius: 5px;
+    background-color: qLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(245, 245, 245), stop: 0.42999 rgb(232, 232, 232), stop: 0.43 rgb(218, 218, 218), stop: 1 rgb(240, 240, 240));
 }
  
-QToolButton:Pressed {
-    Border: 1px Solid #545454;
-    Background-Color: qLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #B4B4B4, stop: 1 #E6E6E6);
+QToolButton:pressed {
+    border: 1px solid rgb(84, 84, 84);
+    background-color: qLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(180, 180, 180), stop: 1 rgb(230, 230, 230));
 }</string>
   </property>
   <property name="windowTitle">
