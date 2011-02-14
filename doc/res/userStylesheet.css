@@ -13,11 +13,11 @@ a:hover {
     /*       local links wouldn't look fine, so... (!?)                      */
 }
 
-p.titleBackground {
+h1 {
     background: rgb(54, 96, 146);
 }
 
-span.sectionFont {
+h2 {
     color: rgb(54, 96, 146);
 }
 

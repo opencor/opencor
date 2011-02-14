@@ -13,19 +13,18 @@ a:hover {
     /*       local links wouldn't look fine, so... (!?)                      */
 }
 
-a.sectionAnchor:hover {
-    /* This is to prevent sections that have an anchor from looking like */
-    /* a link                                                            */
-
-    background-color: rgb(255, 255, 255);
-    color: rgb(49, 133, 155);
-}
-
-p.titleBackground {
+h1 {
     background: rgb(49, 133, 155);
 }
 
-span.sectionFont {
+h2 {
+    color: rgb(49, 133, 155);
+}
+
+h2 a:hover {
+    /* This is to prevent h2s that have an anchor from looking like a link */
+
+    background-color: rgb(255, 255, 255);
     color: rgb(49, 133, 155);
 }
 
