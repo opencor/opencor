@@ -21,11 +21,11 @@ SET(SOURCES
     src/misc/common.cpp
     src/misc/utils.cpp
     src/ui/centralwidget.cpp
-    src/ui/filebrowserwindow.cpp
-    src/ui/fileorganiserwindow.cpp
     src/ui/helpwindow.cpp
     src/ui/mainwindow.cpp
-    src/ui/physiomemodelrepositoryclientwindow.cpp
+    src/ui/organise/filebrowserwindow.cpp
+    src/ui/organise/fileorganiserwindow.cpp
+    src/ui/organise/physiomemodelrepositoryclientwindow.cpp
     src/widget/filebrowserwidget.cpp
     src/widget/fileorganiserwidget.cpp
     src/widget/helpwidget.cpp
@@ -39,11 +39,11 @@ SET(HEADERS
 
 SET(HEADERS_MOC
     src/ui/centralwidget.h
-    src/ui/filebrowserwindow.h
-    src/ui/fileorganiserwindow.h
     src/ui/helpwindow.h
     src/ui/mainwindow.h
-    src/ui/physiomemodelrepositoryclientwindow.h
+    src/ui/organise/filebrowserwindow.h
+    src/ui/organise/fileorganiserwindow.h
+    src/ui/organise/physiomemodelrepositoryclientwindow.h
     src/widget/filebrowserwidget.h
     src/widget/fileorganiserwidget.h
     src/widget/helpwidget.h
@@ -52,11 +52,11 @@ SET(HEADERS_MOC
 
 SET(UIS
     src/ui/centralwidget.ui
-    src/ui/filebrowserwindow.ui
-    src/ui/fileorganiserwindow.ui
     src/ui/helpwindow.ui
     src/ui/mainwindow.ui
-    src/ui/physiomemodelrepositoryclientwindow.ui
+    src/ui/organise/filebrowserwindow.ui
+    src/ui/organise/fileorganiserwindow.ui
+    src/ui/organise/physiomemodelrepositoryclientwindow.ui
 )
 
 SET(RESOURCES
