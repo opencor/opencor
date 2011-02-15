@@ -7,9 +7,6 @@ class QString;
 
 class CommonWidget
 {
-protected:
-    virtual QSize defaultSize(const double &pRatio) const;
-
 public:
     virtual void retranslateUi() = 0;
 
@@ -17,6 +14,9 @@ public:
     
     virtual void loadSettings(const QSettings &pSettings, const QString &pKey) = 0;
     virtual void saveSettings(QSettings &pSettings, const QString &pKey) = 0;
+
+protected:
+    virtual QSize defaultSize(const double &pRatio) const;
 };
 
 #endif
