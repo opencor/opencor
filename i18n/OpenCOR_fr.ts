@@ -376,12 +376,28 @@
         <source>You are about to reset all your user settings. Are you sure that this is what you want?</source>
         <translation>Vous êtes sur le point de réinitialiser tous vos paramètres utilisateurs. Etes-vous sûr que c&apos;est ce que vous voulez ?</translation>
     </message>
+    <message>
+        <source>&amp;Organise</source>
+        <translation>&amp;Organiser</translation>
+    </message>
+    <message>
+        <source>File &amp;Organiser</source>
+        <translation>&amp;Organisateur de Fichiers</translation>
+    </message>
+    <message>
+        <source>&amp;PMR Explorer</source>
+        <translation>Explorateur &amp;PMR</translation>
+    </message>
+    <message>
+        <source>&amp;File Browser</source>
+        <translation>Gestionnaire de &amp;Fichiers</translation>
+    </message>
 </context>
 <context>
-    <name>PhysiomeModelRepositoryClientWindow</name>
+    <name>PmrExplorerWindow</name>
     <message>
-        <source>Physiome Model Repository Client</source>
-        <translation>Client pour le Répertoire de Modèles Physiome</translation>
+        <source>PMR Explorer</source>
+        <translation>Explorateur PMR</translation>
     </message>
 </context>
 </TS>

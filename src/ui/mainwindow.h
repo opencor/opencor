@@ -9,6 +9,9 @@ namespace Ui {
 }
 
 class CentralWidget;
+class PmrExplorerWindow;
+class FileBrowserWindow;
+class FileOrganiserWindow;
 class HelpWindow;
 
 class QHelpEngine;
@@ -42,6 +45,10 @@ private:
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
 
+    PmrExplorerWindow *mPMRClientWindow;
+    FileBrowserWindow *mFileBrowserWindow;
+    FileOrganiserWindow *mFileOrganiserWindow;
+
     QHelpEngine *mHelpEngine;
     HelpWindow *mHelpWindow;
 
@@ -50,6 +57,7 @@ private:
 
     void notYetImplemented(const QString &method);
 
+    void defaultSettingsForDockWindow(QDockWidget *pDockWindow, const Qt::DockWidgetArea &pDockArea);
     void defaultSettings();
 
     void loadSettings();

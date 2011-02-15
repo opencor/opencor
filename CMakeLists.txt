@@ -25,11 +25,11 @@ SET(SOURCES
     src/ui/mainwindow.cpp
     src/ui/organise/filebrowserwindow.cpp
     src/ui/organise/fileorganiserwindow.cpp
-    src/ui/organise/physiomemodelrepositoryclientwindow.cpp
+    src/ui/organise/pmrexplorerwindow.cpp
     src/widget/filebrowserwidget.cpp
     src/widget/fileorganiserwidget.cpp
     src/widget/helpwidget.cpp
-    src/widget/physiomemodelrepositoryclientwidget.cpp
+    src/widget/pmrexplorerwidget.cpp
 )
 
 SET(HEADERS
@@ -43,11 +43,11 @@ SET(HEADERS_MOC
     src/ui/mainwindow.h
     src/ui/organise/filebrowserwindow.h
     src/ui/organise/fileorganiserwindow.h
-    src/ui/organise/physiomemodelrepositoryclientwindow.h
+    src/ui/organise/pmrexplorerwindow.h
     src/widget/filebrowserwidget.h
     src/widget/fileorganiserwidget.h
     src/widget/helpwidget.h
-    src/widget/physiomemodelrepositoryclientwidget.h
+    src/widget/pmrexplorerwidget.h
 )
 
 SET(UIS
@@ -56,7 +56,7 @@ SET(UIS
     src/ui/mainwindow.ui
     src/ui/organise/filebrowserwindow.ui
     src/ui/organise/fileorganiserwindow.ui
-    src/ui/organise/physiomemodelrepositoryclientwindow.ui
+    src/ui/organise/pmrexplorerwindow.ui
 )
 
 SET(RESOURCES
@@ -67,6 +67,7 @@ SET(RESOURCES
 
 INCLUDE_DIRECTORIES(src/misc)
 INCLUDE_DIRECTORIES(src/ui)
+INCLUDE_DIRECTORIES(src/ui/organise)
 INCLUDE_DIRECTORIES(src/widget)
 
 # Qt specific

@@ -91,8 +91,18 @@
      <addaction name="actionFileToolbar"/>
      <addaction name="actionHelpToolbar"/>
     </widget>
+    <widget class="QMenu" name="menu_Organise">
+     <property name="title">
+      <string>&amp;Organise</string>
+     </property>
+     <addaction name="actionPMRExplorer"/>
+     <addaction name="actionFileBrowser"/>
+     <addaction name="actionFileOrganiser"/>
+    </widget>
     <addaction name="menuToolbars"/>
     <addaction name="actionStatusBar"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Organise"/>
     <addaction name="separator"/>
     <addaction name="actionFullScreen"/>
    </widget>
@@ -429,6 +439,39 @@
    </property>
    <property name="statusTip">
     <string>Show/hide the status bar</string>
+   </property>
+  </action>
+  <action name="actionPMRExplorer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;PMR Explorer</string>
+   </property>
+  </action>
+  <action name="actionFileBrowser">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;File Browser</string>
+   </property>
+  </action>
+  <action name="actionFileOrganiser">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>File &amp;Organiser</string>
    </property>
   </action>
  </widget>

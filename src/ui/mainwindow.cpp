@@ -1,6 +1,9 @@
 #include "centralwidget.h"
 #include "mainwindow.h"
+#include "filebrowserwindow.h"
+#include "fileorganiserwindow.h"
 #include "helpwindow.h"
+#include "pmrexplorerwindow.h"
 #include "utils.h"
 
 #include "ui_mainwindow.h"
@@ -96,7 +99,11 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mHelpEngine->setupData();
 
-    // Create the help window
+    // Create the various dock windows
+
+    mPMRClientWindow = new PmrExplorerWindow();
+    mFileBrowserWindow = new FileBrowserWindow();
+    mFileOrganiserWindow = new FileOrganiserWindow();
 
     mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OPENCOR_HELP_HOMEPAGE));
 
@@ -124,7 +131,22 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
-    // Some connections to handle various docked windows
+    // Some connections to handle various dock windows
+
+    connect(mUi->actionPMRExplorer, SIGNAL(triggered(bool)),
+            mPMRClientWindow, SLOT(setVisible(bool)));
+    connect(mPMRClientWindow, SIGNAL(visibilityChanged(bool)),
+            mUi->actionPMRExplorer, SLOT(setChecked(bool)));
+
+    connect(mUi->actionFileBrowser, SIGNAL(triggered(bool)),
+            mFileBrowserWindow, SLOT(setVisible(bool)));
+    connect(mFileBrowserWindow, SIGNAL(visibilityChanged(bool)),
+            mUi->actionFileBrowser, SLOT(setChecked(bool)));
+
+    connect(mUi->actionFileOrganiser, SIGNAL(triggered(bool)),
+            mFileOrganiserWindow, SLOT(setVisible(bool)));
+    connect(mFileOrganiserWindow, SIGNAL(visibilityChanged(bool)),
+            mUi->actionFileOrganiser, SLOT(setChecked(bool)));
 
     connect(mUi->actionHelp, SIGNAL(triggered(bool)),
             mHelpWindow, SLOT(setVisible(bool)));
@@ -223,7 +245,7 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
     // Keep track of our default settings
     // Note: it must be done here, as opposed to the destructor, otherwise some
-    //       settings (e.g. docked windows) won't be properly saved
+    //       settings (e.g. dock windows) won't be properly saved
 
     saveSettings();
 
@@ -256,6 +278,27 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
     pEvent->acceptProposedAction();
 }
 
+void MainWindow::defaultSettingsForDockWindow(QDockWidget *pDockWindow,
+                                              const Qt::DockWidgetArea &pDockArea)
+{
+    // Hide the dock window, so that we can set things up without having the
+    // screen flashing
+
+    pDockWindow->setVisible(false);
+
+    // Position the dock window to its default location
+
+    addDockWidget(pDockArea, pDockWindow);
+
+    // Apply the dock window's default settings
+
+//    pDockWindow->defaultSettings();
+
+    // Make the dock window visible
+
+    pDockWindow->setVisible(true);
+}
+
 void MainWindow::defaultSettings()
 {
     // Default language to be used by OpenCOR
@@ -279,16 +322,13 @@ void MainWindow::defaultSettings()
     mUi->fileToolbar->setVisible(true);
     mUi->helpToolbar->setVisible(true);
 
-    // Default size and position of the help window
+    // Default size and position of the various dock windows
 
-    mHelpWindow->setVisible(false);   // So we can set things up without having
-                                      // the screen flashing
+    defaultSettingsForDockWindow(mPMRClientWindow, Qt::LeftDockWidgetArea);
+    defaultSettingsForDockWindow(mFileBrowserWindow, Qt::LeftDockWidgetArea);
+    defaultSettingsForDockWindow(mFileOrganiserWindow, Qt::LeftDockWidgetArea);
 
-    addDockWidget(Qt::RightDockWidgetArea, mHelpWindow);
-
-    mHelpWindow->defaultSettings();
-
-    mHelpWindow->setVisible(true);
+    defaultSettingsForDockWindow(mHelpWindow, Qt::RightDockWidgetArea);
 }
 
 void MainWindow::loadSettings()
@@ -362,6 +402,10 @@ void MainWindow::setLocale(const QString &pLocale)
         // language have changed
 
         mUi->retranslateUi(this);
+
+        mPMRClientWindow->retranslateUi();
+        mFileBrowserWindow->retranslateUi();
+        mFileOrganiserWindow->retranslateUi();
 
         mHelpWindow->retranslateUi();
     }
@@ -499,8 +543,8 @@ void MainWindow::resetAll()
                               tr("You are about to reset all your user settings. Are you sure that this is what you want?"),
                               QMessageBox::Yes|QMessageBox::No, QMessageBox::Yes) == QMessageBox::Yes ) {
         // Clear all the user settings and restart OpenCOR (indeed, a restart
-        // will ensure that all the docked windows are, for instance, properly
-        // reset with regards to their dimensions)
+        // will ensure that the various dock windows are, for instance,
+        // properly reset with regards to their dimensions)
 
         QSettings(qApp->applicationName()).clear();
 
