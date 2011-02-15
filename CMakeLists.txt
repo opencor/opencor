@@ -19,6 +19,7 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 SET(SOURCES
     src/main.cpp
     src/misc/common.cpp
+    src/misc/commonwidget.cpp
     src/misc/utils.cpp
     src/ui/centralwidget.cpp
     src/ui/helpwindow.cpp

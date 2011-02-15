@@ -1,9 +1,7 @@
 #include "helpwidget.h"
 
 #include <QAction>
-#include <QApplication>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QFile>
 #include <QHelpEngine>
 #include <QSettings>
@@ -342,10 +340,7 @@ QSize HelpWidget::sizeHint() const
     // Note: this is critical if we want a docked widget, with a help widget
     //       on it, to have a decent size when docked to the main window
 
-    double spaceRatio = 1.0/5.0;
-    QRect desktopGeometry = qApp->desktop()->availableGeometry();
-
-    return QSize(spaceRatio*desktopGeometry.width(), spaceRatio*desktopGeometry.height());
+    return defaultSize();
 }
 
 void HelpWidget::webPageChanged()

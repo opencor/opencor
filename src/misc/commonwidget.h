@@ -2,10 +2,14 @@
 #define COMMONWIDGET_H
 
 class QSettings;
+class QSize;
 class QString;
 
 class CommonWidget
 {
+protected:
+    virtual QSize defaultSize(const double &pRatio = 0.2) const;
+
 public:
     virtual void retranslateUi() = 0;
 
