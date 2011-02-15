@@ -10,10 +10,6 @@
     <height>240</height>
    </rect>
   </property>
-  <property name="windowIcon">
-   <iconset resource="../../res/OpenCOR.qrc">
-    <normaloff>:/help.png</normaloff>:/help.png</iconset>
-  </property>
   <property name="styleSheet">
    <string notr="true">QToolButton {
     border-style: none;

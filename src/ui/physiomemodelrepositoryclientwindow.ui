@@ -10,10 +10,6 @@
     <height>240</height>
    </rect>
   </property>
-  <property name="windowIcon">
-   <iconset resource="../../res/OpenCOR.qrc">
-    <normaloff>:/appIcon</normaloff>:/appIcon</iconset>
-  </property>
   <property name="windowTitle">
    <string>Physiome Model Repository Client</string>
   </property>
@@ -31,8 +27,6 @@
    </layout>
   </widget>
  </widget>
- <resources>
-  <include location="../../res/OpenCOR.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
