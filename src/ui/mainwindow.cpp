@@ -100,12 +100,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OPENCOR_HELP_HOMEPAGE));
 
-    // Some connections
-
-    connect(mUi->actionExit, SIGNAL(triggered(bool)),
-            this, SLOT(close()));
-    connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
-            this, SLOT(resetAll()));
+    // Some connections to handle the various toolbars
 
     connect(mUi->actionFileToolbar, SIGNAL(triggered(bool)),
             mUi->fileToolbar, SLOT(setVisible(bool)));
@@ -117,13 +112,24 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
             mUi->actionHelpToolbar, SLOT(setChecked(bool)));
 
+    // A connection to handle the status bar
+
+    connect(mUi->actionStatusBar, SIGNAL(triggered(bool)),
+            statusBar(), SLOT(setVisible(bool)));
+
+    // Some connections to handle various menu items
+
+    connect(mUi->actionExit, SIGNAL(triggered(bool)),
+            this, SLOT(close()));
+    connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
+            this, SLOT(resetAll()));
+
+    // Some connections to handle various docked windows
+
     connect(mUi->actionHelp, SIGNAL(triggered(bool)),
             mHelpWindow, SLOT(setVisible(bool)));
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionHelp, SLOT(setChecked(bool)));
-
-    connect(mUi->actionStatusBar, SIGNAL(triggered(bool)),
-            statusBar(), SLOT(setVisible(bool)));
 
     // Default user settings (useful the very first time we start OpenCOR or
     // after a reset all)
