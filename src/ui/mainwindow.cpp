@@ -1,4 +1,5 @@
 #include "centralwidget.h"
+#include "commonwidget.h"
 #include "mainwindow.h"
 #include "filebrowserwindow.h"
 #include "fileorganiserwindow.h"
@@ -281,22 +282,29 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
 void MainWindow::defaultSettingsForDockWindow(QDockWidget *pDockWindow,
                                               const Qt::DockWidgetArea &pDockArea)
 {
-    // Hide the dock window, so that we can set things up without having the
-    // screen flashing
+    CommonWidget *commonWidget = dynamic_cast<CommonWidget *>(pDockWindow);
 
-    pDockWindow->setVisible(false);
+    if (commonWidget) {
+        // The dynamic casting was successful, so we are really dealing with
+        // the right kind of dock window and can therefore go ahead
 
-    // Position the dock window to its default location
+        // Hide the dock window, so that we can set things up without having the
+        // screen flashing
 
-    addDockWidget(pDockArea, pDockWindow);
+        pDockWindow->setVisible(false);
 
-    // Apply the dock window's default settings
+        // Position the dock window to its default location
 
-//    pDockWindow->defaultSettings();
+        addDockWidget(pDockArea, pDockWindow);
 
-    // Make the dock window visible
+        // Apply the dock window's default settings
 
-    pDockWindow->setVisible(true);
+        dynamic_cast<CommonWidget *>(pDockWindow)->defaultSettings();
+
+        // Make the dock window visible
+
+        pDockWindow->setVisible(true);
+    }
 }
 
 void MainWindow::defaultSettings()

@@ -1,6 +1,8 @@
 #ifndef FILEORGANISERWINDOW_H
 #define FILEORGANISERWINDOW_H
 
+#include "commonwidget.h"
+
 #include <QDockWidget>
 
 namespace Ui {
@@ -9,7 +11,7 @@ namespace Ui {
 
 class FileOrganiserWidget;
 
-class FileOrganiserWindow : public QDockWidget
+class FileOrganiserWindow : public QDockWidget, public CommonWidget
 {
     Q_OBJECT
 
@@ -17,9 +19,9 @@ public:
     explicit FileOrganiserWindow(QWidget *pParent = 0);
     ~FileOrganiserWindow();
 
-    void retranslateUi();
+    virtual void retranslateUi();
 
-    void defaultSettings();
+    virtual void defaultSettings();
 
 private:
     Ui::FileOrganiserWindow *mUi;

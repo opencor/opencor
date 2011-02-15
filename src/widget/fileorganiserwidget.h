@@ -1,14 +1,18 @@
 #ifndef FILEORGANISERWIDGET_H
 #define FILEORGANISERWIDGET_H
 
+#include "commonwidget.h"
+
 #include <QWidget>
 
-class FileOrganiserWidget : public QWidget
+class FileOrganiserWidget : public QWidget, public CommonWidget
 {
     Q_OBJECT
 
 public:
-    void defaultSettings();
+    virtual void retranslateUi();
+
+    virtual void defaultSettings();
 };
 
 #endif

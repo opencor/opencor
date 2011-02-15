@@ -34,6 +34,10 @@ void PmrExplorerWindow::retranslateUi()
     // Translate the whole window
 
     mUi->retranslateUi(this);
+
+    // Retranslate the PMR explorer widget
+
+    mPmrExplorerWidget->retranslateUi();
 }
 
 void PmrExplorerWindow::defaultSettings()

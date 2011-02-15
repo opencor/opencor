@@ -1,6 +1,8 @@
 #ifndef HELPWIDGET_H
 #define HELPWIDGET_H
 
+#include "commonwidget.h"
+
 #include <QNetworkReply>
 #include <QWebView>
 
@@ -55,7 +57,7 @@ private:
     QHelpEngine *mHelpEngine;
 };
 
-class HelpWidget : public QWebView
+class HelpWidget : public QWebView, public CommonWidget
 {
     Q_OBJECT
 
@@ -63,7 +65,9 @@ public:
     HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                QWidget *pParent = 0);
 
-    void defaultSettings();
+    virtual void retranslateUi();
+
+    virtual void defaultSettings();
 
     QUrl homePage();
     void gotoHomePage();

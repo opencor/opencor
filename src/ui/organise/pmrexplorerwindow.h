@@ -1,6 +1,8 @@
 #ifndef PMREXPLORERWINDOW_H
 #define PMREXPLORERWINDOW_H
 
+#include "commonwidget.h"
+
 #include <QDockWidget>
 
 namespace Ui {
@@ -9,7 +11,7 @@ namespace Ui {
 
 class PmrExplorerWidget;
 
-class PmrExplorerWindow : public QDockWidget
+class PmrExplorerWindow : public QDockWidget, public CommonWidget
 {
     Q_OBJECT
 
@@ -17,9 +19,9 @@ public:
     explicit PmrExplorerWindow(QWidget *pParent = 0);
     ~PmrExplorerWindow();
 
-    void retranslateUi();
+    virtual void retranslateUi();
 
-    void defaultSettings();
+    virtual void defaultSettings();
 
 private:
     Ui::PmrExplorerWindow *mUi;

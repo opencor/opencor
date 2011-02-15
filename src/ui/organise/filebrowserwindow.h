@@ -1,6 +1,8 @@
 #ifndef FILEBROWSERWINDOW_H
 #define FILEBROWSERWINDOW_H
 
+#include "commonwidget.h"
+
 #include <QDockWidget>
 
 namespace Ui {
@@ -9,7 +11,7 @@ namespace Ui {
 
 class FileBrowserWidget;
 
-class FileBrowserWindow : public QDockWidget
+class FileBrowserWindow : public QDockWidget, public CommonWidget
 {
     Q_OBJECT
 
@@ -17,9 +19,9 @@ public:
     explicit FileBrowserWindow(QWidget *pParent = 0);
     ~FileBrowserWindow();
 
-    void retranslateUi();
+    virtual void retranslateUi();
 
-    void defaultSettings();
+    virtual void defaultSettings();
 
 private:
     Ui::FileBrowserWindow *mUi;

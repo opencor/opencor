@@ -34,6 +34,10 @@ void FileOrganiserWindow::retranslateUi()
     // Translate the whole window
 
     mUi->retranslateUi(this);
+
+    // Retranslate the file organiser widget
+
+    mFileOrganiserWidget->retranslateUi();
 }
 
 void FileOrganiserWindow::defaultSettings()

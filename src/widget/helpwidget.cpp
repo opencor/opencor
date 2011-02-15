@@ -156,6 +156,11 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
             this, SLOT(webPageChanged()));
 }
 
+void HelpWidget::retranslateUi()
+{
+    // Nothing to do for now...
+}
+
 void HelpWidget::defaultSettings()
 {
     // Go to the home page

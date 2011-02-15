@@ -96,6 +96,10 @@ void HelpWindow::retranslateUi()
     mUi->actionNormalSize->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->defaultZoomLevel());
 
     mUi->actionZoomOut->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->minimumZoomLevel());
+
+    // Retranslate the help widget
+
+    mHelpWidget->retranslateUi();
 }
 
 void HelpWindow::defaultSettings()

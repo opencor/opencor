@@ -1,6 +1,8 @@
 #ifndef HELPWINDOW_H
 #define HELPWINDOW_H
 
+#include "commonwidget.h"
+
 #include <QDockWidget>
 
 namespace Ui {
@@ -12,7 +14,7 @@ class HelpWidget;
 class QHelpEngine;
 class QUrl;
 
-class HelpWindow : public QDockWidget
+class HelpWindow : public QDockWidget, public CommonWidget
 {
     Q_OBJECT
 
@@ -21,9 +23,9 @@ public:
                         QWidget *pParent = 0);
     ~HelpWindow();
 
-    void retranslateUi();
+    virtual void defaultSettings();
 
-    void defaultSettings();
+    virtual void retranslateUi();
 
     void gotoHomePage();
 

@@ -34,6 +34,7 @@ SET(SOURCES
 
 SET(HEADERS
     src/misc/common.h
+    src/misc/commonwidget.h
     src/misc/utils.h
 )
 

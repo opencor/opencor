@@ -34,6 +34,10 @@ void FileBrowserWindow::retranslateUi()
     // Translate the whole window
 
     mUi->retranslateUi(this);
+
+    // Retranslate the file browser widget
+
+    mFileBrowserWidget->retranslateUi();
 }
 
 void FileBrowserWindow::defaultSettings()
