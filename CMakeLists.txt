@@ -26,10 +26,10 @@ SET(SOURCES
     src/ui/organise/filebrowserwindow.cpp
     src/ui/organise/fileorganiserwindow.cpp
     src/ui/organise/pmrexplorerwindow.cpp
-    src/widget/filebrowserwidget.cpp
-    src/widget/fileorganiserwidget.cpp
     src/widget/helpwidget.cpp
-    src/widget/pmrexplorerwidget.cpp
+    src/widget/organise/filebrowserwidget.cpp
+    src/widget/organise/fileorganiserwidget.cpp
+    src/widget/organise/pmrexplorerwidget.cpp
 )
 
 SET(HEADERS
@@ -45,10 +45,10 @@ SET(HEADERS_MOC
     src/ui/organise/filebrowserwindow.h
     src/ui/organise/fileorganiserwindow.h
     src/ui/organise/pmrexplorerwindow.h
-    src/widget/filebrowserwidget.h
-    src/widget/fileorganiserwidget.h
     src/widget/helpwidget.h
-    src/widget/pmrexplorerwidget.h
+    src/widget/organise/filebrowserwidget.h
+    src/widget/organise/fileorganiserwidget.h
+    src/widget/organise/pmrexplorerwidget.h
 )
 
 SET(UIS
@@ -70,6 +70,7 @@ INCLUDE_DIRECTORIES(src/misc)
 INCLUDE_DIRECTORIES(src/ui)
 INCLUDE_DIRECTORIES(src/ui/organise)
 INCLUDE_DIRECTORIES(src/widget)
+INCLUDE_DIRECTORIES(src/widget/organise)
 
 # Qt specific
 
