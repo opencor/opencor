@@ -3,6 +3,8 @@
 
 #include "ui_fileorganiserwindow.h"
 
+#define SETTINGS_FILEORGANISERWINDOW "FileOrganiserWindow"
+
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     QDockWidget(pParent),
     mUi(new Ui::FileOrganiserWindow)
@@ -45,4 +47,19 @@ void FileOrganiserWindow::defaultSettings()
     // Set the default settings for the file organiser widget
 
     mFileOrganiserWidget->defaultSettings();
+}
+
+void FileOrganiserWindow::loadSettings(const QSettings &pSettings,
+                                       const QString &)
+{
+    // Retrieve the settings of the file organiser widget
+
+    mFileOrganiserWidget->loadSettings(pSettings, SETTINGS_FILEORGANISERWINDOW);
+}
+
+void FileOrganiserWindow::saveSettings(QSettings &pSettings, const QString &)
+{
+    // Keep track of the settings of the file organiser widget
+
+    mFileOrganiserWidget->saveSettings(pSettings, SETTINGS_FILEORGANISERWINDOW);
 }

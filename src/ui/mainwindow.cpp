@@ -30,8 +30,10 @@
 #define SETTINGS_GENERAL_LOCALE "General_Locale"
 #define SETTINGS_GENERAL_GEOMETRY "General_Geometry"
 #define SETTINGS_GENERAL_STATE "General_State"
+
 #define SETTINGS_MAINWINDOW_STATUSBARVISIBILITY "MainWindow_StatusBarVisibility"
-#define SETTINGS_HELPWINDOW_ZOOMLEVEL "HelpWindow_ZoomLevel"
+
+#define SETTINGS_NONE ""
 
 #define SYSTEM_LOCALE ""
 #define ENGLISH_LOCALE "en"
@@ -359,9 +361,13 @@ void MainWindow::loadSettings()
 
     mUi->statusBar->setVisible(settings.value(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY, true).toBool());
 
-    // Retrieve the zoom level for the help widget
+    // Retrieve the settings of the various dock windows
 
-    mHelpWindow->setZoomLevel(settings.value(SETTINGS_HELPWINDOW_ZOOMLEVEL, mHelpWindow->defaultZoomLevel()).toInt());
+    mPMRClientWindow->loadSettings(settings, SETTINGS_NONE);
+    mFileBrowserWindow->loadSettings(settings, SETTINGS_NONE);
+    mFileOrganiserWindow->loadSettings(settings, SETTINGS_NONE);
+
+    mHelpWindow->loadSettings(settings, SETTINGS_NONE);
 }
 
 void MainWindow::saveSettings()
@@ -384,9 +390,13 @@ void MainWindow::saveSettings()
 
     settings.setValue(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY, mUi->statusBar->isVisible());
 
-    // Keep track of the text size multiplier for the help widget
+    // Keep track of the settings of the various dock windows
 
-    settings.setValue(SETTINGS_HELPWINDOW_ZOOMLEVEL, mHelpWindow->zoomLevel());
+    mPMRClientWindow->saveSettings(settings, SETTINGS_NONE);
+    mFileBrowserWindow->saveSettings(settings, SETTINGS_NONE);
+    mFileOrganiserWindow->saveSettings(settings, SETTINGS_NONE);
+
+    mHelpWindow->saveSettings(settings, "");
 }
 
 void MainWindow::setLocale(const QString &pLocale)

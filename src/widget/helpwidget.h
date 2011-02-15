@@ -69,6 +69,9 @@ public:
 
     virtual void defaultSettings();
 
+    virtual void loadSettings(const QSettings &pSettings, const QString &pKey);
+    virtual void saveSettings(QSettings &pSettings, const QString &pKey);
+
     QUrl homePage();
     void gotoHomePage();
 

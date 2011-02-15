@@ -6,9 +6,12 @@
 #include <QDesktopWidget>
 #include <QFile>
 #include <QHelpEngine>
+#include <QSettings>
 #include <QTimer>
 #include <QWebHistory>
 #include <QWheelEvent>
+
+#define SETTINGS_ZOOMLEVEL "_ZoomLevel"
 
 HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
                                    const QByteArray &pData,
@@ -188,6 +191,20 @@ void HelpWidget::defaultSettings()
     // Reset the zoom level
 
     resetZoom();
+}
+
+void HelpWidget::loadSettings(const QSettings &pSettings, const QString &pKey)
+{
+    // Retrieve the zoom level
+
+    setZoomLevel(pSettings.value(pKey+SETTINGS_ZOOMLEVEL, defaultZoomLevel()).toInt());
+}
+
+void HelpWidget::saveSettings(QSettings &pSettings, const QString &pKey)
+{
+    // Keep track of the text size multiplier
+
+    pSettings.setValue(pKey+SETTINGS_ZOOMLEVEL, zoomLevel());
 }
 
 QUrl HelpWidget::homePage()

@@ -8,6 +8,8 @@
 #include <QPrintDialog>
 #include <QPrinter>
 
+#define SETTINGS_HELPWINDOW "HelpWindow"
+
 HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                        QWidget *pParent) :
     QDockWidget(pParent),
@@ -107,6 +109,20 @@ void HelpWindow::defaultSettings()
     // Set the default settings for the help widget
 
     mHelpWidget->defaultSettings();
+}
+
+void HelpWindow::loadSettings(const QSettings &pSettings, const QString &)
+{
+    // Retrieve the settings of the help widget
+
+    mHelpWidget->loadSettings(pSettings, SETTINGS_HELPWINDOW);
+}
+
+void HelpWindow::saveSettings(QSettings &pSettings, const QString &)
+{
+    // Keep track of the settings of the help widget
+
+    mHelpWidget->saveSettings(pSettings, SETTINGS_HELPWINDOW);
 }
 
 void HelpWindow::gotoHomePage()

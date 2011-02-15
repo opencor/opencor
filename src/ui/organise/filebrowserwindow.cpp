@@ -3,6 +3,8 @@
 
 #include "ui_filebrowserwindow.h"
 
+#define SETTINGS_FILEBROWSERWINDOW "FileBrowserWindow"
+
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     QDockWidget(pParent),
     mUi(new Ui::FileBrowserWindow)
@@ -45,4 +47,19 @@ void FileBrowserWindow::defaultSettings()
     // Set the default settings for the file browser widget
 
     mFileBrowserWidget->defaultSettings();
+}
+
+void FileBrowserWindow::loadSettings(const QSettings &pSettings,
+                                     const QString &)
+{
+    // Retrieve the settings of the file browser widget
+
+    mFileBrowserWidget->loadSettings(pSettings, SETTINGS_FILEBROWSERWINDOW);
+}
+
+void FileBrowserWindow::saveSettings(QSettings &pSettings, const QString &)
+{
+    // Keep track of the settings of the file browser widget
+
+    mFileBrowserWidget->saveSettings(pSettings, SETTINGS_FILEBROWSERWINDOW);
 }

@@ -23,9 +23,12 @@ public:
                         QWidget *pParent = 0);
     ~HelpWindow();
 
+    virtual void retranslateUi();
+
     virtual void defaultSettings();
 
-    virtual void retranslateUi();
+    virtual void loadSettings(const QSettings &pSettings, const QString &);
+    virtual void saveSettings(QSettings &pSettings, const QString &);
 
     void gotoHomePage();
 
