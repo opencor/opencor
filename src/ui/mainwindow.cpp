@@ -103,6 +103,13 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mHelpEngine->setupData();
 
+    // Specify some general docking settings
+
+    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
+    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
     // Create the various dock windows
 
     mPmrExplorerWindow = new PmrExplorerWindow();
