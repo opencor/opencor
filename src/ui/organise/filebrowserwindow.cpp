@@ -19,9 +19,9 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mUi->verticalLayout->addWidget(mFileBrowserWidget);
 
-    // Prevent objects from being dropped on the file browser widget
+    // Prevent objects from being dropped on the window
 
-    mFileBrowserWidget->setAcceptDrops(false);
+    setAcceptDrops(false);
 }
 
 FileBrowserWindow::~FileBrowserWindow()

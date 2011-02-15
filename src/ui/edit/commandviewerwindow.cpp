@@ -19,9 +19,9 @@ CommandViewerWindow::CommandViewerWindow(QWidget *pParent) :
 
     mUi->verticalLayout->addWidget(mCommandViewerWidget);
 
-    // Prevent objects from being dropped on the command viewer widget
+    // Prevent objects from being dropped on the window
 
-    mCommandViewerWidget->setAcceptDrops(false);
+    setAcceptDrops(false);
 }
 
 CommandViewerWindow::~CommandViewerWindow()

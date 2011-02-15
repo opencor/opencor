@@ -3,13 +3,15 @@
 
 #include "commonwidget.h"
 
-#include <QWidget>
+#include <QtMmlWidget>
 
-class CommandViewerWidget : public QWidget, public CommonWidget
+class CommandViewerWidget : public QtMmlWidget, public CommonWidget
 {
     Q_OBJECT
 
 public:
+    CommandViewerWidget(QWidget *pParent = 0);
+
     virtual void retranslateUi();
 
     virtual void defaultSettings();
