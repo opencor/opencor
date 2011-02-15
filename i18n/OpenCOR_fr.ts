@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>CommandViewerWindow</name>
+    <message>
+        <source>Command Viewer</source>
+        <translation>Visionneur de Commandes</translation>
+    </message>
+</context>
+<context>
     <name>FileBrowserWindow</name>
     <message>
         <source>File Browser</source>
@@ -391,6 +398,14 @@
     <message>
         <source>&amp;File Browser</source>
         <translation>Gestionnaire de &amp;Fichiers</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Editer</translation>
+    </message>
+    <message>
+        <source>&amp;Command Viewer</source>
+        <translation>Visionneur de &amp;Commandes</translation>
     </message>
 </context>
 <context>

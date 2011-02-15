@@ -91,7 +91,7 @@
      <addaction name="actionFileToolbar"/>
      <addaction name="actionHelpToolbar"/>
     </widget>
-    <widget class="QMenu" name="menu_Organise">
+    <widget class="QMenu" name="menuOrganise">
      <property name="title">
       <string>&amp;Organise</string>
      </property>
@@ -99,10 +99,17 @@
      <addaction name="actionFileBrowser"/>
      <addaction name="actionFileOrganiser"/>
     </widget>
+    <widget class="QMenu" name="menu_Edit">
+     <property name="title">
+      <string>&amp;Edit</string>
+     </property>
+     <addaction name="actionCommandViewer"/>
+    </widget>
     <addaction name="menuToolbars"/>
     <addaction name="actionStatusBar"/>
     <addaction name="separator"/>
-    <addaction name="menu_Organise"/>
+    <addaction name="menuOrganise"/>
+    <addaction name="menu_Edit"/>
     <addaction name="separator"/>
     <addaction name="actionFullScreen"/>
    </widget>
@@ -472,6 +479,17 @@
    </property>
    <property name="text">
     <string>File &amp;Organiser</string>
+   </property>
+  </action>
+  <action name="actionCommandViewer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Command Viewer</string>
    </property>
   </action>
  </widget>

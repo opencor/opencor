@@ -24,10 +24,12 @@ SET(SOURCES
     src/ui/centralwidget.cpp
     src/ui/helpwindow.cpp
     src/ui/mainwindow.cpp
+    src/ui/edit/commandviewerwindow.cpp
     src/ui/organise/filebrowserwindow.cpp
     src/ui/organise/fileorganiserwindow.cpp
     src/ui/organise/pmrexplorerwindow.cpp
     src/widget/helpwidget.cpp
+    src/widget/edit/commandviewerwidget.cpp
     src/widget/organise/filebrowserwidget.cpp
     src/widget/organise/fileorganiserwidget.cpp
     src/widget/organise/pmrexplorerwidget.cpp
@@ -43,10 +45,12 @@ SET(HEADERS_MOC
     src/ui/centralwidget.h
     src/ui/helpwindow.h
     src/ui/mainwindow.h
+    src/ui/edit/commandviewerwindow.h
     src/ui/organise/filebrowserwindow.h
     src/ui/organise/fileorganiserwindow.h
     src/ui/organise/pmrexplorerwindow.h
     src/widget/helpwidget.h
+    src/widget/edit/commandviewerwidget.h
     src/widget/organise/filebrowserwidget.h
     src/widget/organise/fileorganiserwidget.h
     src/widget/organise/pmrexplorerwidget.h
@@ -56,6 +60,7 @@ SET(UIS
     src/ui/centralwidget.ui
     src/ui/helpwindow.ui
     src/ui/mainwindow.ui
+    src/ui/edit/commandviewerwindow.ui
     src/ui/organise/filebrowserwindow.ui
     src/ui/organise/fileorganiserwindow.ui
     src/ui/organise/pmrexplorerwindow.ui
@@ -69,8 +74,10 @@ SET(RESOURCES
 
 INCLUDE_DIRECTORIES(src/misc)
 INCLUDE_DIRECTORIES(src/ui)
+INCLUDE_DIRECTORIES(src/ui/edit)
 INCLUDE_DIRECTORIES(src/ui/organise)
 INCLUDE_DIRECTORIES(src/widget)
+INCLUDE_DIRECTORIES(src/widget/edit)
 INCLUDE_DIRECTORIES(src/widget/organise)
 
 # Qt specific

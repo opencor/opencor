@@ -1,4 +1,5 @@
 #include "centralwidget.h"
+#include "commandviewerwindow.h"
 #include "commonwidget.h"
 #include "mainwindow.h"
 #include "filebrowserwindow.h"
@@ -104,9 +105,11 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create the various dock windows
 
-    mPMRClientWindow = new PmrExplorerWindow();
+    mPmrExplorerWindow = new PmrExplorerWindow();
     mFileBrowserWindow = new FileBrowserWindow();
     mFileOrganiserWindow = new FileOrganiserWindow();
+
+    mCommandViewerWindow = new CommandViewerWindow();
 
     mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OPENCOR_HELP_HOMEPAGE));
 
@@ -137,8 +140,8 @@ MainWindow::MainWindow(QWidget *pParent) :
     // Some connections to handle various dock windows
 
     connect(mUi->actionPMRExplorer, SIGNAL(triggered(bool)),
-            mPMRClientWindow, SLOT(setVisible(bool)));
-    connect(mPMRClientWindow, SIGNAL(visibilityChanged(bool)),
+            mPmrExplorerWindow, SLOT(setVisible(bool)));
+    connect(mPmrExplorerWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionPMRExplorer, SLOT(setChecked(bool)));
 
     connect(mUi->actionFileBrowser, SIGNAL(triggered(bool)),
@@ -150,6 +153,11 @@ MainWindow::MainWindow(QWidget *pParent) :
             mFileOrganiserWindow, SLOT(setVisible(bool)));
     connect(mFileOrganiserWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionFileOrganiser, SLOT(setChecked(bool)));
+
+    connect(mUi->actionCommandViewer, SIGNAL(triggered(bool)),
+            mCommandViewerWindow, SLOT(setVisible(bool)));
+    connect(mCommandViewerWindow, SIGNAL(visibilityChanged(bool)),
+            mUi->actionCommandViewer, SLOT(setChecked(bool)));
 
     connect(mUi->actionHelp, SIGNAL(triggered(bool)),
             mHelpWindow, SLOT(setVisible(bool)));
@@ -334,9 +342,11 @@ void MainWindow::defaultSettings()
 
     // Default size and position of the various dock windows
 
-    defaultSettingsForDockWindow(mPMRClientWindow, Qt::LeftDockWidgetArea);
+    defaultSettingsForDockWindow(mPmrExplorerWindow, Qt::LeftDockWidgetArea);
     defaultSettingsForDockWindow(mFileBrowserWindow, Qt::LeftDockWidgetArea);
     defaultSettingsForDockWindow(mFileOrganiserWindow, Qt::LeftDockWidgetArea);
+
+    defaultSettingsForDockWindow(mCommandViewerWindow, Qt::TopDockWidgetArea);
 
     defaultSettingsForDockWindow(mHelpWindow, Qt::RightDockWidgetArea);
 }
@@ -363,9 +373,11 @@ void MainWindow::loadSettings()
 
     // Retrieve the settings of the various dock windows
 
-    mPMRClientWindow->loadSettings(settings, SETTINGS_NONE);
+    mPmrExplorerWindow->loadSettings(settings, SETTINGS_NONE);
     mFileBrowserWindow->loadSettings(settings, SETTINGS_NONE);
     mFileOrganiserWindow->loadSettings(settings, SETTINGS_NONE);
+
+    mCommandViewerWindow->loadSettings(settings, SETTINGS_NONE);
 
     mHelpWindow->loadSettings(settings, SETTINGS_NONE);
 }
@@ -392,9 +404,11 @@ void MainWindow::saveSettings()
 
     // Keep track of the settings of the various dock windows
 
-    mPMRClientWindow->saveSettings(settings, SETTINGS_NONE);
+    mPmrExplorerWindow->saveSettings(settings, SETTINGS_NONE);
     mFileBrowserWindow->saveSettings(settings, SETTINGS_NONE);
     mFileOrganiserWindow->saveSettings(settings, SETTINGS_NONE);
+
+    mCommandViewerWindow->saveSettings(settings, SETTINGS_NONE);
 
     mHelpWindow->saveSettings(settings, "");
 }
@@ -421,9 +435,11 @@ void MainWindow::setLocale(const QString &pLocale)
 
         mUi->retranslateUi(this);
 
-        mPMRClientWindow->retranslateUi();
+        mPmrExplorerWindow->retranslateUi();
         mFileBrowserWindow->retranslateUi();
         mFileOrganiserWindow->retranslateUi();
+
+        mCommandViewerWindow->retranslateUi();
 
         mHelpWindow->retranslateUi();
     }

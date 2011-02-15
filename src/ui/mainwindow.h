@@ -12,6 +12,7 @@ class CentralWidget;
 class PmrExplorerWindow;
 class FileBrowserWindow;
 class FileOrganiserWindow;
+class CommandViewerWindow;
 class HelpWindow;
 
 class QHelpEngine;
@@ -45,9 +46,11 @@ private:
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
 
-    PmrExplorerWindow *mPMRClientWindow;
+    PmrExplorerWindow *mPmrExplorerWindow;
     FileBrowserWindow *mFileBrowserWindow;
     FileOrganiserWindow *mFileOrganiserWindow;
+
+    CommandViewerWindow *mCommandViewerWindow;
 
     QHelpEngine *mHelpEngine;
     HelpWindow *mHelpWindow;

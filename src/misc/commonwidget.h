@@ -8,7 +8,7 @@ class QString;
 class CommonWidget
 {
 protected:
-    virtual QSize defaultSize(const double &pRatio = 0.2) const;
+    virtual QSize defaultSize(const double &pRatio) const;
 
 public:
     virtual void retranslateUi() = 0;
