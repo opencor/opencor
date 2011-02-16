@@ -15,7 +15,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     // Create and add the file browser widget
 
-    mFileBrowserWidget = new FileBrowserWidget();
+    mFileBrowserWidget = new FileBrowserWidget(this);
 
     setWidget(mFileBrowserWidget);
 

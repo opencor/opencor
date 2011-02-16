@@ -15,7 +15,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     // Create and add the file organiser widget
 
-    mFileOrganiserWidget = new FileOrganiserWidget();
+    mFileOrganiserWidget = new FileOrganiserWidget(this);
 
     setWidget(mFileOrganiserWidget);
 

@@ -1,7 +1,8 @@
 #include "mmlviewerwidget.h"
 
 MmlViewerWidget::MmlViewerWidget(QWidget *pParent) :
-    QtMmlWidget(pParent)
+    QtMmlWidget(pParent),
+    CommonWidget(pParent)
 {
     // Set the background to white
 
@@ -48,4 +49,13 @@ QSize MmlViewerWidget::sizeHint() const
     //       widget on it, to have a decent size when docked to the main window
 
     return defaultSize(0.1);
+}
+
+void MmlViewerWidget::paintEvent(QPaintEvent *pEvent)
+{
+    QtMmlWidget::paintEvent(pEvent);
+
+    // Draw a border in case we are docked
+
+    drawBorderIfDocked();
 }

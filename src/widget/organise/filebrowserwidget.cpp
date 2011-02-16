@@ -1,5 +1,11 @@
 #include "filebrowserwidget.h"
 
+FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
+    QWidget(pParent),
+    CommonWidget(pParent)
+{
+}
+
 void FileBrowserWidget::retranslateUi()
 {
     // Nothing to do for now...
@@ -27,4 +33,13 @@ QSize FileBrowserWidget::sizeHint() const
     //       widget on it, to have a decent size when docked to the main window
 
     return defaultSize(0.15);
+}
+
+void FileBrowserWidget::paintEvent(QPaintEvent *pEvent)
+{
+    QWidget::paintEvent(pEvent);
+
+    // Draw a border in case we are docked
+
+    drawBorderIfDocked();
 }

@@ -15,7 +15,7 @@ PmrExplorerWindow::PmrExplorerWindow(QWidget *pParent) :
 
     // Create and add the PMR explorer widget
 
-    mPmrExplorerWidget = new PmrExplorerWidget();
+    mPmrExplorerWidget = new PmrExplorerWidget(this);
 
     setWidget(mPmrExplorerWidget);
 

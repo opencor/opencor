@@ -15,7 +15,7 @@ ViewerWindow::ViewerWindow(QWidget *pParent) :
 
     // Create and add the viewer widget
 
-    mMmlViewerWidget = new MmlViewerWidget();
+    mMmlViewerWidget = new MmlViewerWidget(this);
 
     setWidget(mMmlViewerWidget);
 

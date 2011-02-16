@@ -37,7 +37,7 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     // Create and add the help widget
 
-    mHelpWidget = new HelpWidget(pHelpEngine, pHomePage);
+    mHelpWidget = new HelpWidget(pHelpEngine, pHomePage, this);
 
     mUi->verticalLayout->addWidget(mHelpWidget);
 

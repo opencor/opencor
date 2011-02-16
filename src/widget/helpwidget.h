@@ -95,6 +95,8 @@ protected:
 
     virtual QSize sizeHint() const;
 
+    virtual void paintEvent(QPaintEvent *pEvent);
+
 private:
     QUrl mHomePage;
 

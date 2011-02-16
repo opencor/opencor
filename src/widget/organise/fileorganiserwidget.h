@@ -10,6 +10,8 @@ class FileOrganiserWidget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
+    FileOrganiserWidget(QWidget *pParent = 0);
+
     virtual void retranslateUi();
 
     virtual void defaultSettings();
@@ -19,6 +21,8 @@ public:
 
 protected:
     virtual QSize sizeHint() const;
+
+    virtual void paintEvent(QPaintEvent *pEvent);
 };
 
 #endif

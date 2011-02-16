@@ -138,6 +138,7 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
 HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                        QWidget *pParent) :
     QWebView(pParent),
+    CommonWidget(pParent),
     mHomePage(pHomePage),
     mBackAvailable(false),
     mForwardAvailable(false),
@@ -341,6 +342,15 @@ QSize HelpWidget::sizeHint() const
     //       on it, to have a decent size when docked to the main window
 
     return defaultSize(0.2);
+}
+
+void HelpWidget::paintEvent(QPaintEvent *pEvent)
+{
+    QWebView::paintEvent(pEvent);
+
+    // Draw a border in case we are docked
+
+    drawBorderIfDocked();
 }
 
 void HelpWidget::webPageChanged()
