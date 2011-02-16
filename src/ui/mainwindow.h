@@ -12,7 +12,7 @@ class CentralWidget;
 class PmrExplorerWindow;
 class FileBrowserWindow;
 class FileOrganiserWindow;
-class CommandViewerWindow;
+class ViewerWindow;
 class HelpWindow;
 
 class QHelpEngine;
@@ -50,7 +50,7 @@ private:
     FileBrowserWindow *mFileBrowserWindow;
     FileOrganiserWindow *mFileOrganiserWindow;
 
-    CommandViewerWindow *mCommandViewerWindow;
+    ViewerWindow *mViewerWindow;
 
     QHelpEngine *mHelpEngine;
     HelpWindow *mHelpWindow;

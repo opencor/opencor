@@ -1,16 +1,16 @@
-#ifndef COMMANDVIEWERWIDGET_H
-#define COMMANDVIEWERWIDGET_H
+#ifndef MMLVIEWERWIDGET_H
+#define MMLVIEWERWIDGET_H
 
 #include "commonwidget.h"
 
 #include <QtMmlWidget>
 
-class CommandViewerWidget : public QtMmlWidget, public CommonWidget
+class MmlViewerWidget : public QtMmlWidget, public CommonWidget
 {
     Q_OBJECT
 
 public:
-    CommandViewerWidget(QWidget *pParent = 0);
+    MmlViewerWidget(QWidget *pParent = 0);
 
     virtual void retranslateUi();
 

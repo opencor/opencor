@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CommandViewerWindow</name>
-    <message>
-        <source>Command Viewer</source>
-        <translation>Visionneur de Commandes</translation>
-    </message>
-</context>
-<context>
     <name>FileBrowserWindow</name>
     <message>
         <source>File Browser</source>
@@ -404,8 +397,8 @@
         <translation>&amp;Editer</translation>
     </message>
     <message>
-        <source>&amp;Command Viewer</source>
-        <translation>Visionneur de &amp;Commandes</translation>
+        <source>&amp;Viewer</source>
+        <translation>&amp;Visionneur</translation>
     </message>
 </context>
 <context>
@@ -413,6 +406,13 @@
     <message>
         <source>PMR Explorer</source>
         <translation>Explorateur PMR</translation>
+    </message>
+</context>
+<context>
+    <name>ViewerWindow</name>
+    <message>
+        <source>Viewer</source>
+        <translation>Visionneur</translation>
     </message>
 </context>
 </TS>

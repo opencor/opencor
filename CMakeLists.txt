@@ -24,12 +24,12 @@ SET(SOURCES
     src/ui/centralwidget.cpp
     src/ui/helpwindow.cpp
     src/ui/mainwindow.cpp
-    src/ui/edit/commandviewerwindow.cpp
+    src/ui/edit/viewerwindow.cpp
     src/ui/organise/filebrowserwindow.cpp
     src/ui/organise/fileorganiserwindow.cpp
     src/ui/organise/pmrexplorerwindow.cpp
     src/widget/helpwidget.cpp
-    src/widget/edit/commandviewerwidget.cpp
+    src/widget/edit/mmlviewerwidget.cpp
     src/widget/organise/filebrowserwidget.cpp
     src/widget/organise/fileorganiserwidget.cpp
     src/widget/organise/pmrexplorerwidget.cpp
@@ -45,12 +45,12 @@ SET(HEADERS_MOC
     src/ui/centralwidget.h
     src/ui/helpwindow.h
     src/ui/mainwindow.h
-    src/ui/edit/commandviewerwindow.h
+    src/ui/edit/viewerwindow.h
     src/ui/organise/filebrowserwindow.h
     src/ui/organise/fileorganiserwindow.h
     src/ui/organise/pmrexplorerwindow.h
     src/widget/helpwidget.h
-    src/widget/edit/commandviewerwidget.h
+    src/widget/edit/mmlviewerwidget.h
     src/widget/organise/filebrowserwidget.h
     src/widget/organise/fileorganiserwidget.h
     src/widget/organise/pmrexplorerwidget.h
@@ -60,7 +60,7 @@ SET(UIS
     src/ui/centralwidget.ui
     src/ui/helpwindow.ui
     src/ui/mainwindow.ui
-    src/ui/edit/commandviewerwindow.ui
+    src/ui/edit/viewerwindow.ui
     src/ui/organise/filebrowserwindow.ui
     src/ui/organise/fileorganiserwindow.ui
     src/ui/organise/pmrexplorerwindow.ui

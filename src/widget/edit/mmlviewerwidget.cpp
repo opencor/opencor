@@ -1,6 +1,6 @@
-#include "commandviewerwidget.h"
+#include "mmlviewerwidget.h"
 
-CommandViewerWidget::CommandViewerWidget(QWidget *pParent) :
+MmlViewerWidget::MmlViewerWidget(QWidget *pParent) :
     QtMmlWidget(pParent)
 {
     // Set the background to white
@@ -21,27 +21,27 @@ CommandViewerWidget::CommandViewerWidget(QWidget *pParent) :
 setContent("<math><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mrow><mn>4</mn><mo></mo><mi>x</mi></mrow><mo>+</mo><mn>4</mn></mrow></math>");
 }
 
-void CommandViewerWidget::retranslateUi()
+void MmlViewerWidget::retranslateUi()
 {
     // Nothing to do for now...
 }
 
-void CommandViewerWidget::defaultSettings()
+void MmlViewerWidget::defaultSettings()
 {
     // Nothing to do for now...
 }
 
-void CommandViewerWidget::loadSettings(const QSettings &, const QString &)
+void MmlViewerWidget::loadSettings(const QSettings &, const QString &)
 {
     // Nothing to do for now...
 }
 
-void CommandViewerWidget::saveSettings(QSettings &, const QString &)
+void MmlViewerWidget::saveSettings(QSettings &, const QString &)
 {
     // Nothing to do for now...
 }
 
-QSize CommandViewerWidget::sizeHint() const
+QSize MmlViewerWidget::sizeHint() const
 {
     // Suggest a default size for the file browser widget
     // Note: this is critical if we want a docked widget, with a file browser

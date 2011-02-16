@@ -1,5 +1,5 @@
 #include "centralwidget.h"
-#include "commandviewerwindow.h"
+#include "viewerwindow.h"
 #include "commonwidget.h"
 #include "mainwindow.h"
 #include "filebrowserwindow.h"
@@ -116,7 +116,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     mFileBrowserWindow = new FileBrowserWindow();
     mFileOrganiserWindow = new FileOrganiserWindow();
 
-    mCommandViewerWindow = new CommandViewerWindow();
+    mViewerWindow = new ViewerWindow();
 
     mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OPENCOR_HELP_HOMEPAGE));
 
@@ -161,10 +161,10 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mFileOrganiserWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionFileOrganiser, SLOT(setChecked(bool)));
 
-    connect(mUi->actionCommandViewer, SIGNAL(triggered(bool)),
-            mCommandViewerWindow, SLOT(setVisible(bool)));
-    connect(mCommandViewerWindow, SIGNAL(visibilityChanged(bool)),
-            mUi->actionCommandViewer, SLOT(setChecked(bool)));
+    connect(mUi->actionViewer, SIGNAL(triggered(bool)),
+            mViewerWindow, SLOT(setVisible(bool)));
+    connect(mViewerWindow, SIGNAL(visibilityChanged(bool)),
+            mUi->actionViewer, SLOT(setChecked(bool)));
 
     connect(mUi->actionHelp, SIGNAL(triggered(bool)),
             mHelpWindow, SLOT(setVisible(bool)));
@@ -353,7 +353,7 @@ void MainWindow::defaultSettings()
     defaultSettingsForDockWindow(mFileBrowserWindow, Qt::LeftDockWidgetArea);
     defaultSettingsForDockWindow(mFileOrganiserWindow, Qt::LeftDockWidgetArea);
 
-    defaultSettingsForDockWindow(mCommandViewerWindow, Qt::TopDockWidgetArea);
+    defaultSettingsForDockWindow(mViewerWindow, Qt::TopDockWidgetArea);
 
     defaultSettingsForDockWindow(mHelpWindow, Qt::RightDockWidgetArea);
 }
@@ -384,7 +384,7 @@ void MainWindow::loadSettings()
     mFileBrowserWindow->loadSettings(settings, SETTINGS_NONE);
     mFileOrganiserWindow->loadSettings(settings, SETTINGS_NONE);
 
-    mCommandViewerWindow->loadSettings(settings, SETTINGS_NONE);
+    mViewerWindow->loadSettings(settings, SETTINGS_NONE);
 
     mHelpWindow->loadSettings(settings, SETTINGS_NONE);
 }
@@ -415,7 +415,7 @@ void MainWindow::saveSettings()
     mFileBrowserWindow->saveSettings(settings, SETTINGS_NONE);
     mFileOrganiserWindow->saveSettings(settings, SETTINGS_NONE);
 
-    mCommandViewerWindow->saveSettings(settings, SETTINGS_NONE);
+    mViewerWindow->saveSettings(settings, SETTINGS_NONE);
 
     mHelpWindow->saveSettings(settings, "");
 }
@@ -446,7 +446,7 @@ void MainWindow::setLocale(const QString &pLocale)
         mFileBrowserWindow->retranslateUi();
         mFileOrganiserWindow->retranslateUi();
 
-        mCommandViewerWindow->retranslateUi();
+        mViewerWindow->retranslateUi();
 
         mHelpWindow->retranslateUi();
     }
