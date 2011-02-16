@@ -21,9 +21,6 @@
     <property name="margin">
      <number>0</number>
     </property>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout"/>
-    </item>
    </layout>
   </widget>
  </widget>

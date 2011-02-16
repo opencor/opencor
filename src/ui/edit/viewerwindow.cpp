@@ -17,7 +17,7 @@ ViewerWindow::ViewerWindow(QWidget *pParent) :
 
     mMmlViewerWidget = new MmlViewerWidget();
 
-    mUi->verticalLayout->addWidget(mMmlViewerWidget);
+    setWidget(mMmlViewerWidget);
 
     // Prevent objects from being dropped on the window
 

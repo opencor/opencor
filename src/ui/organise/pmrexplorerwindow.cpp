@@ -17,7 +17,7 @@ PmrExplorerWindow::PmrExplorerWindow(QWidget *pParent) :
 
     mPmrExplorerWidget = new PmrExplorerWidget();
 
-    mUi->verticalLayout->addWidget(mPmrExplorerWidget);
+    setWidget(mPmrExplorerWidget);
 
     // Prevent objects from being dropped on the window
 

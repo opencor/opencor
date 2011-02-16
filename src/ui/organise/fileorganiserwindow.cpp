@@ -17,7 +17,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     mFileOrganiserWidget = new FileOrganiserWidget();
 
-    mUi->verticalLayout->addWidget(mFileOrganiserWidget);
+    setWidget(mFileOrganiserWidget);
 
     // Prevent objects from being dropped on the window
 
