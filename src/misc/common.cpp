@@ -10,8 +10,8 @@
 
 void usage(const QCoreApplication &pApp)
 {
-    std::cout << "Usage: " << pApp.applicationName().toAscii().constData() << " [OPTION]... [FILE]..." << std::endl;
-    std::cout << "Start " << pApp.applicationName().toAscii().constData() << " and open the FILE(s) passed as argument(s)." << std::endl;
+    std::cout << "Usage: " << pApp.applicationName().toLatin1().constData() << " [OPTION]... [FILE]..." << std::endl;
+    std::cout << "Start " << pApp.applicationName().toLatin1().constData() << " and open the FILE(s) passed as argument(s)." << std::endl;
     std::cout << std::endl;
     std::cout << " -a, --about     Display OpenCOR about information" << std::endl;
     std::cout << " -h, --help      Display this help information" << std::endl;
@@ -23,16 +23,16 @@ void usage(const QCoreApplication &pApp)
 
 void version(const QCoreApplication &pApp)
 {
-    std::cout << pApp.applicationName().toAscii().constData() << " " << pApp.applicationVersion().toAscii().constData() << std::endl;
+    std::cout << pApp.applicationName().toLatin1().constData() << " " << pApp.applicationVersion().toLatin1().constData() << std::endl;
 }
 
 void about(const QCoreApplication &pApp)
 {
     version(pApp);
 
-    std::cout << getOsName().toAscii().constData() << std::endl;
+    std::cout << getOsName().toLatin1().constData() << std::endl;
     std::cout << std::endl;
-    std::cout << pApp.applicationName().toAscii().constData() << " is a cross-platform CellML-based modelling environment which can be" << std::endl;
+    std::cout << pApp.applicationName().toLatin1().constData() << " is a cross-platform CellML-based modelling environment which can be" << std::endl;
     std::cout << "used to organise, edit, simulate and analyse CellML files." << std::endl;
 }
 
@@ -40,7 +40,7 @@ void error(const QCoreApplication &pApp, const QString &pMsg)
 {
     version(pApp);
 
-    std::cout << "Error: " << pMsg.toAscii().constData() << std::endl;
+    std::cout << "Error: " << pMsg.toLatin1().constData() << std::endl;
 }
 
 void initApplication(QCoreApplication &pApp)
