@@ -1,9 +1,20 @@
 #include "mmlviewerwidget.h"
 
+#include <QPaintEvent>
+#include <QResizeEvent>
+
 MmlViewerWidget::MmlViewerWidget(QWidget *pParent) :
     QtMmlWidget(pParent),
     CommonWidget(pParent)
 {
+    // Create a test MathML widget and set its base font point size to 100, so
+    // that we can use that as a benchmark for what the 'ideal' dimensions of
+    // the MathML widget should be (see resizeEvent below)
+
+    testMmlWidget = new QtMmlWidget;
+
+    testMmlWidget->setBaseFontPointSize(100);
+
     // Set the background to white
 
     QPalette pal = palette();
@@ -20,6 +31,11 @@ MmlViewerWidget::MmlViewerWidget(QWidget *pParent) :
 //---GRY--- Just for testing...
 
 setContent("<math><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mrow><mn>4</mn><mo></mo><mi>x</mi></mrow><mo>+</mo><mn>4</mn></mrow></math>");
+}
+
+MmlViewerWidget::~MmlViewerWidget()
+{
+    delete testMmlWidget;
 }
 
 void MmlViewerWidget::retranslateUi()
@@ -42,6 +58,16 @@ void MmlViewerWidget::saveSettings(QSettings &, const QString &)
     // Nothing to do for now...
 }
 
+bool MmlViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
+                                 int *pErrorLine, int *pErrorColumn)
+{
+    // Set the MathML equation
+
+    testMmlWidget->setContent(pContent);
+
+    return QtMmlWidget::setContent(pContent, pErrorMsg, pErrorLine, pErrorColumn);
+}
+
 QSize MmlViewerWidget::sizeHint() const
 {
     // Suggest a default size for the file browser widget
@@ -58,4 +84,24 @@ void MmlViewerWidget::paintEvent(QPaintEvent *pEvent)
     // Draw a border in case we are docked
 
     drawBorderIfDocked();
+
+    pEvent->accept();
+}
+
+void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
+{
+    QtMmlWidget::resizeEvent(pEvent);
+
+    // Render an optimal version (with regards to dimensions) of the MathML
+    // equation
+
+    QSize testMmlWidgetSize = testMmlWidget->sizeHint();
+
+    setBaseFontPointSize(round(93*fmin((double) width()/testMmlWidgetSize.width(),
+                                       (double) height()/testMmlWidgetSize.height())));
+    // Note: to go for 100% of the 'optimal' size may result in the edges of
+    //       the equation being clipped, hence we go for 93% of the 'optimal'
+    //       size...
+
+    pEvent->accept();
 }

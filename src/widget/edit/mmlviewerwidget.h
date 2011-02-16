@@ -11,6 +11,7 @@ class MmlViewerWidget : public QtMmlWidget, public CommonWidget
 
 public:
     MmlViewerWidget(QWidget *pParent = 0);
+    ~MmlViewerWidget();
 
     virtual void retranslateUi();
 
@@ -19,10 +20,16 @@ public:
     virtual void loadSettings(const QSettings &, const QString &);
     virtual void saveSettings(QSettings &, const QString &);
 
+    bool setContent(const QString &pContent, QString *pErrorMsg = 0, int *pErrorLine = 0, int *pErrorColumn = 0);
+
 protected:
     virtual QSize sizeHint() const;
 
     virtual void paintEvent(QPaintEvent *pEvent);
+    virtual void resizeEvent(QResizeEvent *pEvent);
+
+private:
+    QtMmlWidget *testMmlWidget;
 };
 
 #endif
