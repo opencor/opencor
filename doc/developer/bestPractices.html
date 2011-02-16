@@ -517,8 +517,9 @@ if (c >= 0) {
                 </ul>
             </li>
             <li>
-                <strong>Miscellaneous:</strong>
+                <strong>OpenCOR-specific:</strong>
                 <ul>
+                    <li>To make your code easier to read, have it fit within 80 columns whenever possible. (<a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a> can be configured to display a right margin.)</li>
                     <li>Do not use <code>inline</code> functions. It is better to rely on the compiler to optimise the code, if necessary, not to mention that, if badly used, <code>inline</code> functions can result in slower code.</li>
                     <li>
                         Divisions are costly, so replace them by multiplications wherever possible:

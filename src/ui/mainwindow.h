@@ -60,7 +60,8 @@ private:
 
     void notYetImplemented(const QString &method);
 
-    void defaultSettingsForDockWindow(QDockWidget *pDockWindow, const Qt::DockWidgetArea &pDockArea);
+    void defaultSettingsForDockWindow(QDockWidget *pDockWindow,
+                                      const Qt::DockWidgetArea &pDockArea);
     void defaultSettings();
 
     void loadSettings();

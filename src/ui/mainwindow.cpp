@@ -210,7 +210,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::notYetImplemented(const QString &method)
 {
-    QMessageBox::information(this, qApp->applicationName()+" Information", "Sorry, but the '"+method+"' method has not yet been implemented.");
+    QMessageBox::information(this, qApp->applicationName()+" Information",
+                             "Sorry, but the '"+method+"' method has not yet been implemented.");
 }
 
 void MainWindow::changeEvent(QEvent *pEvent)
@@ -339,7 +340,10 @@ void MainWindow::defaultSettings()
     int horizSpace = ratio*desktopGeometry.width();
     int vertSpace  = ratio*desktopGeometry.height();
 
-    setGeometry(desktopGeometry.left()+horizSpace, desktopGeometry.top()+vertSpace, desktopGeometry.width()-2*horizSpace, desktopGeometry.height()-2*vertSpace);
+    setGeometry(desktopGeometry.left()+horizSpace,
+                desktopGeometry.top()+vertSpace,
+                desktopGeometry.width()-2*horizSpace,
+                desktopGeometry.height()-2*vertSpace);
 
     // Default visibility and location of the various toolbars
 
@@ -378,7 +382,8 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the status bar is to be shown
 
-    mUi->statusBar->setVisible(settings.value(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY, true).toBool());
+    mUi->statusBar->setVisible(settings.value(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY,
+                                              true).toBool());
 
     // Retrieve the settings of the various dock windows
 
@@ -409,7 +414,8 @@ void MainWindow::saveSettings()
 
     // Keep track of whether the status bar is to be shown
 
-    settings.setValue(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY, mUi->statusBar->isVisible());
+    settings.setValue(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY,
+                      mUi->statusBar->isVisible());
 
     // Keep track of the settings of the various dock windows
 
@@ -425,7 +431,9 @@ void MainWindow::saveSettings()
 void MainWindow::setLocale(const QString &pLocale)
 {
     if ((pLocale != mLocale) || (pLocale == SYSTEM_LOCALE)) {
-        QString realLocale = (pLocale == SYSTEM_LOCALE)?QLocale::system().name().left(2):pLocale;
+        QString realLocale = (pLocale == SYSTEM_LOCALE)?
+                                 QLocale::system().name().left(2):
+                                 pLocale;
 
         mLocale = pLocale;
 
@@ -484,7 +492,8 @@ void MainWindow::singleAppMsgRcvd(const QString&)
 
     // Bring OpenCOR to the foreground
 
-    DWORD foregroundThreadPId = GetWindowThreadProcessId(GetForegroundWindow(), NULL);
+    DWORD foregroundThreadPId = GetWindowThreadProcessId(GetForegroundWindow(),
+                                                         NULL);
     DWORD mwThreadPId         = GetWindowThreadProcessId(mwWinId, NULL);
 
     if (foregroundThreadPId != mwThreadPId) {
@@ -572,7 +581,8 @@ void MainWindow::resetAll()
 {
     if( QMessageBox::question(this, qApp->applicationName(),
                               tr("You are about to reset all your user settings. Are you sure that this is what you want?"),
-                              QMessageBox::Yes|QMessageBox::No, QMessageBox::Yes) == QMessageBox::Yes ) {
+                              QMessageBox::Yes|QMessageBox::No,
+                              QMessageBox::Yes) == QMessageBox::Yes ) {
         // Clear all the user settings and restart OpenCOR (indeed, a restart
         // will ensure that the various dock windows are, for instance,
         // properly reset with regards to their dimensions)
@@ -583,7 +593,8 @@ void MainWindow::resetAll()
         // which OpenCOR was originally started, since we indeed want to reset
         // everything
 
-        QProcess::startDetached(qApp->applicationFilePath(), QStringList(), qApp->applicationDirPath());
+        QProcess::startDetached(qApp->applicationFilePath(), QStringList(),
+                                qApp->applicationDirPath());
 
         // Quit OpenCOR
         // Note: the closeEvent method won't get called and this is exactly

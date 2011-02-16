@@ -10,20 +10,26 @@
 
 void usage(const QCoreApplication &pApp)
 {
-    std::cout << "Usage: " << pApp.applicationName().toLatin1().constData() << " [OPTION]... [FILE]..." << std::endl;
-    std::cout << "Start " << pApp.applicationName().toLatin1().constData() << " and open the FILE(s) passed as argument(s)." << std::endl;
+    std::cout << "Usage: " << pApp.applicationName().toLatin1().constData()
+              << " [OPTION]... [FILE]..." << std::endl;
+    std::cout << "Start " << pApp.applicationName().toLatin1().constData()
+              << " and open the FILE(s) passed as argument(s)." << std::endl;
     std::cout << std::endl;
-    std::cout << " -a, --about     Display OpenCOR about information" << std::endl;
+    std::cout << " -a, --about     Display OpenCOR about information"
+              << std::endl;
     std::cout << " -h, --help      Display this help information" << std::endl;
-    std::cout << " -v, --version   Display OpenCOR version information" << std::endl;
+    std::cout << " -v, --version   Display OpenCOR version information"
+              << std::endl;
     std::cout << std::endl;
-    std::cout << "Mandatory or optional arguments to long options are also mandatory or optional" << std::endl;
+    std::cout << "Mandatory or optional arguments to long options are "
+              << "also mandatory or optional" << std::endl;
     std::cout << "for any corresponding short options." << std::endl;
 }
 
 void version(const QCoreApplication &pApp)
 {
-    std::cout << pApp.applicationName().toLatin1().constData() << " " << pApp.applicationVersion().toLatin1().constData() << std::endl;
+    std::cout << pApp.applicationName().toLatin1().constData() << " "
+              << pApp.applicationVersion().toLatin1().constData() << std::endl;
 }
 
 void about(const QCoreApplication &pApp)
@@ -32,8 +38,11 @@ void about(const QCoreApplication &pApp)
 
     std::cout << getOsName().toLatin1().constData() << std::endl;
     std::cout << std::endl;
-    std::cout << pApp.applicationName().toLatin1().constData() << " is a cross-platform CellML-based modelling environment which can be" << std::endl;
-    std::cout << "used to organise, edit, simulate and analyse CellML files." << std::endl;
+    std::cout << pApp.applicationName().toLatin1().constData()
+              << " is a cross-platform CellML-based modelling environment"
+              << " which can be" << std::endl;
+    std::cout << "used to organise, edit, simulate and analyse CellML files."
+              << std::endl;
 }
 
 void error(const QCoreApplication &pApp, const QString &pMsg)

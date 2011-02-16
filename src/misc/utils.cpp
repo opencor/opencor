@@ -66,7 +66,8 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
     QResource resource(pResource);
 
     if (resource.isCompressed())
-        file.write(qUncompress((const uchar*) resource.data(), resource.size()));
+        file.write(qUncompress((const uchar*) resource.data(),
+                               resource.size()));
     else
         file.write((const char*) resource.data(), resource.size());
 

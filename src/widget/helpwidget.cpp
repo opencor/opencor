@@ -22,7 +22,8 @@ HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
     setRequest(pRequest);
     setOpenMode(QIODevice::ReadOnly);
     setHeader(QNetworkRequest::ContentTypeHeader, pMimeType);
-    setHeader(QNetworkRequest::ContentLengthHeader, QByteArray::number(mOrigLen));
+    setHeader(QNetworkRequest::ContentLengthHeader,
+              QByteArray::number(mOrigLen));
 
     // Let ourselves know immediately that data is available for reading
 
@@ -148,7 +149,8 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     setPage(new HelpPage(pHelpEngine, this));
 
-    page()->setNetworkAccessManager(new HelpNetworkAccessManager(pHelpEngine, this));
+    page()->setNetworkAccessManager(new HelpNetworkAccessManager(pHelpEngine,
+                                                                 this));
 
     // Some connections
 
@@ -196,7 +198,8 @@ void HelpWidget::loadSettings(const QSettings &pSettings, const QString &pKey)
 {
     // Retrieve the zoom level
 
-    setZoomLevel(pSettings.value(pKey+SETTINGS_ZOOMLEVEL, defaultZoomLevel()).toInt());
+    setZoomLevel(pSettings.value(pKey+SETTINGS_ZOOMLEVEL,
+                                 defaultZoomLevel()).toInt());
 }
 
 void HelpWidget::saveSettings(QSettings &pSettings, const QString &pKey)
@@ -350,7 +353,7 @@ void HelpWidget::paintEvent(QPaintEvent *pEvent)
 
     // Draw a border in case we are docked
 
-    drawBorderIfDocked();
+    drawBorderIfDocked(true, true, false, false, false);
 }
 
 void HelpWidget::webPageChanged()
