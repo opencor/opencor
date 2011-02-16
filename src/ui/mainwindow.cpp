@@ -241,13 +241,15 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 
         // The first time we show OpenCOR, we want to make sure that its menu
         // is fine (i.e. it respects OpenCOR's settings that were loaded in the
-        // constructor)
-        // Note: we must do this here (as opposed to, say, the constructor),
-        //       because we need everything to be visible before deciding what
-        //       needs to be done with the menus (e.g. we can't, within the
-        //       constructor, tell whether the status bar is visible)
+        // constructor). Various connections (set in the constructor) take care
+        // of this, but there still remains one menu item (to specify whether
+        // the status bar is to be shown or not) for which no connection can be
+        // set. So, we have to 'manually' set the status of that menu item here
+        // (as opposed to, say, the constructor), since we need all of OpenCOR
+        // to be visible in order to be able to determine whether the status
+        // bar is visible or not
 
-        updateMenuStatus();
+        mUi->actionStatusBar->setChecked(statusBar()->isVisible());
 
         // Accept the event
 
@@ -332,10 +334,10 @@ void MainWindow::defaultSettings()
 
     // Default size and position of the main window
 
-    double spaceRatio = 1.0/13.0;
+    double ratio = 1.0/13.0;
     QRect desktopGeometry = qApp->desktop()->availableGeometry();
-    int horizSpace = spaceRatio*desktopGeometry.width();
-    int vertSpace  = spaceRatio*desktopGeometry.height();
+    int horizSpace = ratio*desktopGeometry.width();
+    int vertSpace  = ratio*desktopGeometry.height();
 
     setGeometry(desktopGeometry.left()+horizSpace, desktopGeometry.top()+vertSpace, desktopGeometry.width()-2*horizSpace, desktopGeometry.height()-2*vertSpace);
 
@@ -417,7 +419,7 @@ void MainWindow::saveSettings()
 
     mViewerWindow->saveSettings(settings, SETTINGS_NONE);
 
-    mHelpWindow->saveSettings(settings, "");
+    mHelpWindow->saveSettings(settings, SETTINGS_NONE);
 }
 
 void MainWindow::setLocale(const QString &pLocale)
@@ -459,18 +461,6 @@ void MainWindow::setLocale(const QString &pLocale)
 
     mUi->actionEnglish->setChecked(mLocale == ENGLISH_LOCALE);
     mUi->actionFrench->setChecked(mLocale == FRENCH_LOCALE);
-}
-
-void MainWindow::updateMenuStatus()
-{
-    // Update the checked status of the toolbars menu items
-
-    mUi->actionFileToolbar->setChecked(mUi->fileToolbar->isVisible());
-    mUi->actionHelpToolbar->setChecked(mUi->helpToolbar->isVisible());
-
-    // Update the checked status of the status bar menu item
-
-    mUi->actionStatusBar->setChecked(mUi->statusBar->isVisible());
 }
 
 void MainWindow::singleAppMsgRcvd(const QString&)

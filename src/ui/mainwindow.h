@@ -68,8 +68,6 @@ private:
 
     void setLocale(const QString &pLocale);
 
-    void updateMenuStatus();
-
 public Q_SLOTS:
     void singleAppMsgRcvd(const QString&);
 
