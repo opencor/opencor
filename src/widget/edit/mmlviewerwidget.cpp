@@ -92,8 +92,13 @@ void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
 {
     QtMmlWidget::resizeEvent(pEvent);
 
-    // Render an optimal version (with regards to dimensions) of the MathML
-    // equation
+    // Retrieve the 'optimal' dimensions of the MathML equation (which was
+    // rendered using our testMmlWidget object)
+    // Note: to skip the testMmlWidget object (to save a bit of memory) and use
+    //       the current object to compute the 'optimal' dimensions is not good
+    //       enough. For having tried it, this worked fine when resizing the
+    //       object vertically (the equation would resize accordingly), but not
+    //       horizontally (the equation would just not resize), so...
 
     QSize testMmlWidgetSize = testMmlWidget->sizeHint();
 
