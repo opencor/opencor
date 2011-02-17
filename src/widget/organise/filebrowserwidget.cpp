@@ -17,7 +17,7 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
 
     // We want acces to the full file system
 
-    mFileSystemModel->setRootPath(QDir::rootPath());
+    mFileSystemModel->setRootPath("");
 
     // Set some properties for the file browser widget itself
 
