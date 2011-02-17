@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDockWidget>
+#include <QObject>
 #include <QPainter>
 #include <QPen>
 #include <QWidget>
@@ -36,7 +37,7 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
 
     // Draw a border, but only if we are docked
 
-    QDockWidget *dockWidget = dynamic_cast<QDockWidget *>(mParent);
+    QDockWidget *dockWidget = qobject_cast<QDockWidget *>(mParent);
     QWidget *widget = dynamic_cast<QWidget *>(this);
 
 #ifdef Q_WS_MAC
@@ -44,8 +45,8 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
 #else
     if (dockWidget && widget && (pForceDrawing || !dockWidget->isFloating())) {
 #endif
-        // The dynamic castings were successful, so our parent is really a
-        // QDockWidget, we are really a QWidget, and to top it all our parent
+        // The QObject/dynamic castings were successful, so our parent is really
+        // a QDockWidget, we are really a QWidget, and to top it all our parent
         // is floating (or we want to force the drawing), so let's go ahead...
 
         QRect border = widget->rect();
