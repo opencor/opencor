@@ -30,7 +30,7 @@ protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
-    QtMmlWidget *testMmlWidget;
+    QtMmlWidget *mTestMmlWidget;
 };
 
 #endif

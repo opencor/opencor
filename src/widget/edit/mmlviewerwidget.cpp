@@ -11,9 +11,9 @@ MmlViewerWidget::MmlViewerWidget(QWidget *pParent) :
     // that we can use that as a benchmark for what the 'ideal' dimensions of
     // the MathML widget should be (see resizeEvent below)
 
-    testMmlWidget = new QtMmlWidget;
+    mTestMmlWidget = new QtMmlWidget;
 
-    testMmlWidget->setBaseFontPointSize(100);
+    mTestMmlWidget->setBaseFontPointSize(100);
 
     // Set the background to white
 
@@ -35,7 +35,7 @@ setContent("<math><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mrow><mn>4</
 
 MmlViewerWidget::~MmlViewerWidget()
 {
-    delete testMmlWidget;
+    delete mTestMmlWidget;
 }
 
 void MmlViewerWidget::retranslateUi()
@@ -63,7 +63,7 @@ bool MmlViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
 {
     // Set the MathML equation
 
-    testMmlWidget->setContent(pContent);
+    mTestMmlWidget->setContent(pContent);
 
     return QtMmlWidget::setContent(pContent, pErrorMsg, pErrorLine, pErrorColumn);
 }
@@ -93,14 +93,14 @@ void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
     QtMmlWidget::resizeEvent(pEvent);
 
     // Retrieve the 'optimal' dimensions of the MathML equation (which was
-    // rendered using our testMmlWidget object)
-    // Note: to skip the testMmlWidget object (to save a bit of memory) and use
+    // rendered using our mTestMmlWidget object)
+    // Note: to skip the mTestMmlWidget object (to save a bit of memory) and use
     //       the current object to compute the 'optimal' dimensions is not good
     //       enough. For having tried it, this worked fine when resizing the
     //       object vertically (the equation would resize accordingly), but not
     //       horizontally (the equation would just not resize), so...
 
-    QSize testMmlWidgetSize = testMmlWidget->sizeHint();
+    QSize testMmlWidgetSize = mTestMmlWidget->sizeHint();
 
     setBaseFontPointSize(round(93*fmin((double) width()/testMmlWidgetSize.width(),
                                        (double) height()/testMmlWidgetSize.height())));
