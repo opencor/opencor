@@ -27,10 +27,6 @@ MmlViewerWidget::MmlViewerWidget(QWidget *pParent) :
     // Set a font that we know works on Windows, Linux and Mac OS X
 
     setFontName(NormalFont, "Times New Roman");
-
-//---GRY--- Just for testing...
-
-setContent("<math><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mrow><mn>4</mn><mo></mo><mi>x</mi></mrow><mo>+</mo><mn>4</mn></mrow></math>");
 }
 
 MmlViewerWidget::~MmlViewerWidget()
