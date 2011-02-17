@@ -300,7 +300,8 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
 }
 
 void MainWindow::defaultSettingsForDockWindow(QDockWidget *pDockWindow,
-                                              const Qt::DockWidgetArea &pDockArea)
+                                              const Qt::DockWidgetArea &pDockArea,
+                                              QDockWidget *pDockWidget)
 {
     CommonWidget *commonWidget = dynamic_cast<CommonWidget *>(pDockWindow);
 
@@ -315,11 +316,14 @@ void MainWindow::defaultSettingsForDockWindow(QDockWidget *pDockWindow,
 
         // Position the dock window to its default location
 
-        addDockWidget(pDockArea, pDockWindow);
+        if (pDockWidget)
+            tabifyDockWidget(pDockWidget, pDockWindow);
+        else
+            addDockWidget(pDockArea, pDockWindow);
 
         // Apply the dock window's default settings
 
-        dynamic_cast<CommonWidget *>(pDockWindow)->defaultSettings();
+        commonWidget->defaultSettings();
 
         // Make the dock window visible
 
@@ -357,7 +361,7 @@ void MainWindow::defaultSettings()
 
     defaultSettingsForDockWindow(mPmrExplorerWindow, Qt::LeftDockWidgetArea);
     defaultSettingsForDockWindow(mFileBrowserWindow, Qt::LeftDockWidgetArea);
-    defaultSettingsForDockWindow(mFileOrganiserWindow, Qt::LeftDockWidgetArea);
+    defaultSettingsForDockWindow(mFileOrganiserWindow, Qt::NoDockWidgetArea, mFileBrowserWindow);
 
     defaultSettingsForDockWindow(mViewerWindow, Qt::TopDockWidgetArea);
 
