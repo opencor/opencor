@@ -233,10 +233,6 @@
         <translation>Montrer/cacher la barre d&apos;outils Aide</translation>
     </message>
     <message>
-        <source>is a cross-platform &lt;A HREF = &quot;http://www.cellml.org/&quot;&gt;CellML&lt;/A&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
-        <translation>est un environnement de modélisation &lt;A HREF = &quot;http://www.cellml.org/&quot;&gt;CellML&lt;/A&gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
-    </message>
-    <message>
         <source>&amp;System</source>
         <translation>&amp;Système</translation>
     </message>
@@ -373,10 +369,6 @@
         <translation>Barre d&apos;Outils Aide</translation>
     </message>
     <message>
-        <source>You are about to reset all your user settings. Are you sure that this is what you want?</source>
-        <translation>Vous êtes sur le point de réinitialiser tous vos paramètres utilisateurs. Etes-vous sûr que c&apos;est ce que vous voulez ?</translation>
-    </message>
-    <message>
         <source>&amp;Organise</source>
         <translation>&amp;Organiser</translation>
     </message>
@@ -399,6 +391,14 @@
     <message>
         <source>&amp;Viewer</source>
         <translation>&amp;Visionneur</translation>
+    </message>
+    <message>
+        <source>is a cross-platform &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
+        <translation>est un environnement de modélisation &amp;lt;a href=&amp;quot;http://www.cellml.org/&amp;quot;&amp;gt;CellML&amp;lt;/a&amp;gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
+    </message>
+    <message>
+        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
+        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Etes-vous sûr que c&amp;apos;est ce que vous voulez ?</translation>
     </message>
 </context>
 <context>

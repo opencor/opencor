@@ -569,18 +569,18 @@ void MainWindow::on_actionAbout_triggered()
 
     QMessageBox::about(this, qApp->applicationName(),
                        QString("")+
-                       "<CENTER>"+
-                           "<H1><B>"+qApp->applicationName()+" "+qApp->applicationVersion()+"</B></H1>"+
-                           "<H3><I>"+getOsName()+"</I></H3>"+
-                       "</CENTER>"+
-                       "<BR>"+
-                       "<A HREF = \""+QString(OPENCOR_HOMEPAGE)+"\">"+qApp->applicationName()+"</A> "+tr("is a cross-platform <A HREF = \"http://www.cellml.org/\">CellML</A>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
+                       "<center>"+
+                           "<h1><b>"+qApp->applicationName()+" "+qApp->applicationVersion()+"</b></h1>"+
+                           "<h3><em>"+getOsName()+"</em></h3>"+
+                       "</center>"+
+                       "<br />"+
+                       "<a href=\""+QString(OPENCOR_HOMEPAGE)+"\">"+qApp->applicationName()+"</a> "+tr("is a cross-platform <a href=\"http://www.cellml.org/\">CellML</a>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
 }
 
 void MainWindow::resetAll()
 {
     if( QMessageBox::question(this, qApp->applicationName(),
-                              tr("You are about to reset all your user settings. Are you sure that this is what you want?"),
+                              tr("You are about to reset <strong>all</strong> of your user settings. Are you sure that this is what you want?"),
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes ) {
         // Clear all the user settings and restart OpenCOR (indeed, a restart
