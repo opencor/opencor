@@ -3,14 +3,17 @@
 
 #include "commonwidget.h"
 
-#include <QWidget>
+#include <QTreeView>
 
-class FileBrowserWidget : public QWidget, public CommonWidget
+class QFileSystemModel;
+
+class FileBrowserWidget : public QTreeView, public CommonWidget
 {
     Q_OBJECT
 
 public:
     FileBrowserWidget(QWidget *pParent = 0);
+    ~FileBrowserWidget();
 
     virtual void retranslateUi();
 
@@ -23,6 +26,9 @@ protected:
     virtual QSize sizeHint() const;
 
     virtual void paintEvent(QPaintEvent *pEvent);
+
+private:
+    QFileSystemModel *mFileSystemModel;
 };
 
 #endif
