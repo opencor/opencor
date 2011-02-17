@@ -363,25 +363,29 @@ void HelpWidget::webPageChanged()
 
     QAction *action = qobject_cast<QAction *>(sender());
 
-    if (action == pageAction(QWebPage::Back)) {
-        // The current action is to tell us whether the previous help page is
-        // available or not
+    if (action) {
+        // The QObject casting was successful, so we can carry on
 
-        mBackAvailable = action->isEnabled();
+        if (action == pageAction(QWebPage::Back)) {
+            // The current action is to tell us whether the previous help page
+            // is available or not
 
-        // Send a signal to let the user know of the new status of the previous
-        // help page
+            mBackAvailable = action->isEnabled();
 
-        emit backAvailable(mBackAvailable);
-    } else if (action == pageAction(QWebPage::Forward)) {
-        // The current action is to tell us whether the next help page is
-        // available or not
+            // Send a signal to let the user know of the new status of the
+            // previous help page
 
-        mForwardAvailable = action->isEnabled();
+            emit backAvailable(mBackAvailable);
+        } else if (action == pageAction(QWebPage::Forward)) {
+            // The current action is to tell us whether the next help page is
+            // available or not
 
-        // Send a signal to let the user know of the new status of the next
-        // help page
+            mForwardAvailable = action->isEnabled();
 
-        emit forwardAvailable(mForwardAvailable);
+            // Send a signal to let the user know of the new status of the next
+            // help page
+
+            emit forwardAvailable(mForwardAvailable);
+        }
     }
 }
