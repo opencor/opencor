@@ -15,14 +15,17 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
 {
     mFileSystemModel = new QFileSystemModel;
 
-    mFileSystemModel->setRootPath("");
+    // We want acces to the full file system
+
+    mFileSystemModel->setRootPath(QDir::rootPath());
 
     // Set some properties for the file browser widget itself
 
     setModel(mFileSystemModel);   // Associate ourselves to mFileSystemModel
     setSortingEnabled(true);      // Allow sorting
-    setUniformRowHeights(true);   // They ought to be of the same height, so set
-                                  // it to true to speed things up (can't harm!)
+    setUniformRowHeights(true);   // Everything ought to be of the same height,
+                                  // so set this property to true since it can
+                                  // only speed things up which can't harm!
 }
 
 FileBrowserWidget::~FileBrowserWidget()
