@@ -31,8 +31,11 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
     // Have the columns resize themselves automatically, based on their contents
 //---GRY--- IS IT REALLY WHAT WE WANT?! IDEALLY, IT WOULD BE AUTOMATICALLY
 //          RESIZED THE FIRST TIME WE SHOW THE WIDGET (AS A RESULT OF THE CALL
-//          TO DefaultSettings), BUT THEN IT WOULD BE UP TO THE USER TO RESIZE
-//          THEM IF HE SO DESIRES
+//          TO DefaultSettings), AND THEN IT WOULD BE UP TO THE USER TO RESIZE
+//          THEM IF HE SO DESIRES. HOWEVER, TO DO THIS, WE NEED THE WIDGET TO BE
+//          VISIBLE, SO ONE MIGHT THINK THAT OVERRIDING paintEvent WOULD DO THE
+//          TRICK, BUT NO... (FROM A GOOGLE SEARCH, IT WOULD SEEM THAT OTHERS
+//          HAVE THE SAME PROBLEM) SO, FOR NOW, WE LEAVE THINGS AS THEY ARE
 
     header()->setResizeMode(QHeaderView::ResizeToContents);
 }
@@ -115,6 +118,13 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
         setCurrentIndex(currentPathIndex);
         scrollTo(currentPathIndex);
     }
+
+//---GRY--- scrollTo REQUIRES THE WIDGET TO BE PAINTED TO WORK PROPERLY (ESP.
+//          WHEN THE NODE TO SCROLL TO IS REALLY DOWN THE TREE). HOWEVER, EVEN
+//          BY OVERRIDING paintEvent, I WAS STILL NOT ABLE TO GET THINGS TO WORK
+//          AND IT WOULD SEEM (FROM A GOOGLE SEARCH) THAT I AM NOT THE ONLY ONE
+//          IN THIS SITUATION... SO, FOR NOW, WE SHALL LEAVE THINGS AS THEY ARE
+//          WHICH IS REALLY NOT GREAT, BUT...
 }
 
 void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
