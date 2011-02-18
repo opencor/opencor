@@ -4,7 +4,6 @@
 
 #include <QDesktopServices>
 #include <QHeaderView>
-#include <QPaintEvent>
 #include <QSettings>
 
 #define SETTINGS_SORTCOLUMN "_SortColumn"
@@ -70,19 +69,4 @@ QSize FileBrowserWidget::sizeHint() const
     //       widget on it, to have a decent size when docked to the main window
 
     return defaultSize(0.15);
-}
-
-void FileBrowserWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QTreeView::paintEvent(pEvent);
-
-    // Draw a border in case we are docked
-
-    drawBorderIfDocked();
-
-    // Accept the event
-
-    pEvent->accept();
 }
