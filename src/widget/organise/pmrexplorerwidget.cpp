@@ -1,5 +1,7 @@
 #include "pmrexplorerwidget.h"
 
+#include <QPaintEvent>
+
 PmrExplorerWidget::PmrExplorerWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent)
@@ -37,9 +39,15 @@ QSize PmrExplorerWidget::sizeHint() const
 
 void PmrExplorerWidget::paintEvent(QPaintEvent *pEvent)
 {
+    // Default handling of the event
+
     QWidget::paintEvent(pEvent);
 
     // Draw a border in case we are docked
 
     drawBorderIfDocked();
+
+    // Accept the event
+
+    pEvent->accept();
 }

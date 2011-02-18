@@ -1,5 +1,7 @@
 #include "fileorganiserwidget.h"
 
+#include <QPaintEvent>
+
 FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent)
@@ -37,9 +39,15 @@ QSize FileOrganiserWidget::sizeHint() const
 
 void FileOrganiserWidget::paintEvent(QPaintEvent *pEvent)
 {
+    // Default handling of the event
+
     QWidget::paintEvent(pEvent);
 
     // Draw a border in case we are docked
 
     drawBorderIfDocked();
+
+    // Accept the event
+
+    pEvent->accept();
 }

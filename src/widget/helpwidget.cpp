@@ -4,10 +4,10 @@
 #include <QDesktopServices>
 #include <QFile>
 #include <QHelpEngine>
+#include <QPaintEvent>
 #include <QSettings>
 #include <QTimer>
 #include <QWebHistory>
-#include <QWheelEvent>
 
 #define SETTINGS_ZOOMLEVEL "_ZoomLevel"
 
@@ -304,9 +304,13 @@ void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         triggerPageAction(QWebPage::Forward);
     else
-        // Something else
+        // Something else, so use the default handling of the event
 
         QWebView::mouseReleaseEvent(pEvent);
+
+    // Accept the event
+
+    pEvent->accept();
 }
 
 void HelpWidget::wheelEvent(QWheelEvent *pEvent)
@@ -327,15 +331,15 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
             // We are going 'down' which means zooming out
 
             zoomOut();
-
-        // Accept the event
-
-        pEvent->accept();
     } else {
-        // Something else
+        // Something else, so use the default handling of the event
 
         QWebView::wheelEvent(pEvent);
     }
+
+    // Accept the event
+
+    pEvent->accept();
 }
 
 QSize HelpWidget::sizeHint() const
@@ -349,11 +353,17 @@ QSize HelpWidget::sizeHint() const
 
 void HelpWidget::paintEvent(QPaintEvent *pEvent)
 {
+    // Default handling of the event
+
     QWebView::paintEvent(pEvent);
 
     // Draw a border in case we are docked
 
     drawBorderIfDocked(true, true, false, false, false);
+
+    // Accept the event
+
+    pEvent->accept();
 }
 
 void HelpWidget::webPageChanged()

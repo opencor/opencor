@@ -548,6 +548,25 @@ if (c >= 0) {
     return 3*pMyVar;
 }</pre>
                     </li>
+                    <li>
+                        Whenever overriding an event, make sure to call <code>accept()</code> and/or <code>ignore()</code>. This will set or clear the <em>accept</em> flag, respectively, which <a href="http://doc.qt.nokia.com/latest/qevent.html#details">is set by default, but don't rely on this as subclasses may choose to clear it in their constructor</a>.
+                        <pre class="good">void MyClass::paintEvent(QPaintEvent *pEvent)
+{
+    if (/* Some condition for painting */) {
+        ...
+
+        pEvent->accept();
+    } else {
+        pEvent->ignore();
+    }
+}</pre>
+                        <pre class="bad">void MyClass::paintEvent(QPaintEvent *pEvent)
+{
+    if (/* Some condition for painting */) {
+        ...
+    }
+}</pre>
+                    </li>
                 </ul>
             </li>
         </ul>

@@ -216,50 +216,49 @@ void MainWindow::notYetImplemented(const QString &method)
 
 void MainWindow::changeEvent(QEvent *pEvent)
 {
+    // Default handling of the event
+
     QMainWindow::changeEvent(pEvent);
 
-    switch (pEvent->type())
-    {
-        case QEvent::LocaleChange:
-            // The system's locale has changed, so update OpenCOR's locale in
-            // case we want to use the system's locale
+    // If the system's locale has changed, then update OpenCOR's locale in case
+    // the user wants to use the system's locale
 
-            if (mUi->actionSystem->isChecked())
-                setLocale(SYSTEM_LOCALE);
+    if (   (pEvent->type() == QEvent::LocaleChange)
+        && (mUi->actionSystem->isChecked()))
+        setLocale(SYSTEM_LOCALE);
 
-            break;
-        default:
-            break;
-    }
+    // Accept the event
+
+    pEvent->accept();
 }
 
 void MainWindow::showEvent(QShowEvent *pEvent)
 {
+    // Default handling of the event
+
+    QMainWindow::showEvent(pEvent);
+
+    // The first time we show OpenCOR, we want to make sure that its menu is
+    // fine (i.e. it respects OpenCOR's settings that were loaded in the
+    // constructor). Various connections (set in the constructor) take care of
+    // this, but there still remains one menu item (which specifies whether the
+    // status bar is to be shown or not) for which no connection can be set. So,
+    // we have to 'manually' set the status of that menu item here (as opposed
+    // to, say, the constructor), since we may need (on Windows at least) all of
+    // OpenCOR to be visible in order to be able to determine whether the status
+    // bar is visible or not
+
     static bool firstTime = true;
 
     if (firstTime) {
         firstTime = false;
 
-        // The first time we show OpenCOR, we want to make sure that its menu
-        // is fine (i.e. it respects OpenCOR's settings that were loaded in the
-        // constructor). Various connections (set in the constructor) take care
-        // of this, but there still remains one menu item (to specify whether
-        // the status bar is to be shown or not) for which no connection can be
-        // set. So, we have to 'manually' set the status of that menu item here
-        // (as opposed to, say, the constructor), since we may need (on Windows
-        // at least) all of OpenCOR to be visible in order to be able to
-        // determine whether the status bar is visible or not
-
         mUi->actionStatusBar->setChecked(statusBar()->isVisible());
-
-        // Accept the event
-
-        pEvent->accept();
-    } else {
-        // Nothing to do, so...
-
-        pEvent->ignore();
     }
+
+    // Accept the event
+
+    pEvent->accept();
 }
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
@@ -273,6 +272,10 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Accept the event
 
     pEvent->accept();
+
+    // Default handling of the event
+
+    QMainWindow::closeEvent(pEvent);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
@@ -282,6 +285,8 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
 
     if (pEvent->mimeData()->hasUrls())
         pEvent->acceptProposedAction();
+    else
+        pEvent->ignore();
 }
 
 void MainWindow::dropEvent(QDropEvent *pEvent)
@@ -290,9 +295,10 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
     QString urls;
 
     for (int i = 0; i < urlList.size(); ++i)
-        urls += "<LI>"+urlList.at(i).path()+"</LI>";
+        urls += "<li>"+urlList.at(i).path()+"</li>";
 
-    QMessageBox::information(this, qApp->applicationName(), "You have just dropped the following files: <UL>"+urls+"</UL>");
+    QMessageBox::information(this, qApp->applicationName(),
+                             "You have just dropped the following files: <ul>"+urls+"</ul>");
 
     // Accept the proposed action for the event
 
@@ -588,21 +594,21 @@ void MainWindow::resetAll()
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes ) {
         // Clear all the user settings and restart OpenCOR (indeed, a restart
-        // will ensure that the various dock windows are, for instance,
-        // properly reset with regards to their dimensions)
+        // will ensure that the various dock windows are, for instance, properly
+        // reset with regards to their dimensions)
 
         QSettings(qApp->applicationName()).clear();
 
-        // Restart OpenCOR, but without providing any of the argument with
-        // which OpenCOR was originally started, since we indeed want to reset
+        // Restart OpenCOR, but without providing any of the argument with which
+        // OpenCOR was originally started, since we indeed want to reset
         // everything
 
         QProcess::startDetached(qApp->applicationFilePath(), QStringList(),
                                 qApp->applicationDirPath());
 
         // Quit OpenCOR
-        // Note: the closeEvent method won't get called and this is exactly
-        //       what we want, since we don't want to save OpenCOR's settings
+        // Note: the closeEvent method won't get called and this is exactly what
+        //       we want, since we don't want to save OpenCOR's settings
 
         qApp->quit();
     }

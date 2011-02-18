@@ -3,6 +3,7 @@
 #include "ui_centralwidget.h"
 
 #include <QPainter>
+#include <QPaintEvent>
 
 CentralWidget::CentralWidget(QWidget *parent) :
     QWidget(parent),
@@ -38,4 +39,8 @@ void CentralWidget::paintEvent(QPaintEvent *pEvent)
     // Have the rest of the painting done by the parent
 
     QWidget::paintEvent(pEvent);
+
+    // Accept the event
+
+    pEvent->accept();
 }

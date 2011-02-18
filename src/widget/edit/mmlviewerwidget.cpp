@@ -1,7 +1,6 @@
 #include "mmlviewerwidget.h"
 
 #include <QPaintEvent>
-#include <QResizeEvent>
 
 MmlViewerWidget::MmlViewerWidget(QWidget *pParent) :
     QtMmlWidget(pParent),
@@ -75,17 +74,23 @@ QSize MmlViewerWidget::sizeHint() const
 
 void MmlViewerWidget::paintEvent(QPaintEvent *pEvent)
 {
+    // Default handling of the event
+
     QtMmlWidget::paintEvent(pEvent);
 
     // Draw a border in case we are docked
 
     drawBorderIfDocked();
 
+    // Accept the event
+
     pEvent->accept();
 }
 
 void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
 {
+    // Default handling of the event
+
     QtMmlWidget::resizeEvent(pEvent);
 
     // Retrieve the 'optimal' dimensions of the MathML equation (which was
@@ -103,6 +108,8 @@ void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
     // Note: to go for 100% of the 'optimal' size may result in the edges of
     //       the equation being clipped, hence we go for 93% of the 'optimal'
     //       size...
+
+    // Accept the event
 
     pEvent->accept();
 }
