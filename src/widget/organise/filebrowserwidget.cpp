@@ -6,8 +6,9 @@
 #include <QHeaderView>
 #include <QSettings>
 
-#define SETTINGS_SORTCOLUMN "_SortColumn"
-#define SETTINGS_SORTORDER  "_SortOrder"
+#define SETTINGS_SORTCOLUMN  "_SortColumn"
+#define SETTINGS_SORTORDER   "_SortOrder"
+#define SETTINGS_CURRENTPATH "_CurrentPath"
 
 FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
     QTreeView(pParent),
@@ -68,6 +69,52 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
     sortByColumn(pSettings.value(pKey+SETTINGS_SORTCOLUMN, 0).toInt(),
                  Qt::SortOrder(pSettings.value(pKey+SETTINGS_SORTORDER,
                                                Qt::AscendingOrder).toInt()));
+
+    // Retrieve the current path and make it visible to the user
+
+    QString currentPath = pSettings.value(pKey+SETTINGS_CURRENTPATH,
+                                          QDir::homePath()).toString();
+    QString currentPathDir = currentPath;
+    QFileInfo currentPathInfo = currentPath;
+    bool currentPathIsDir = currentPathInfo.isDir();
+
+    if (!currentPathIsDir) {
+        // The current path is not that of a directory, but that of a file (or
+        // it doesn't exist), so retrieve the name of the parent folder
+        // Note: indeed, to directly set the current index to that of a file
+        //       won't give us the expected behaviour (i.e. the parent folder
+        //       being open and expanded, and the file selected), so instead one
+        //       must set the current index to that of the parent folder and
+        //       then select the file
+
+        QDir filePathUp = currentPath;
+
+        filePathUp.cdUp();
+
+        currentPathDir = filePathUp.path();
+
+        // If the parent folder doesn't exist, then we give up and go for the
+        // home path
+
+        if (!QFileInfo(currentPathDir).exists())
+            currentPathDir = QDir::homePath();
+    }
+
+    QModelIndex currentPathModelIndex = mFileSystemModel->index(currentPathDir);
+
+    setCurrentIndex(currentPathModelIndex);
+    scrollTo(currentPathModelIndex);
+
+    if (!currentPathIsDir && currentPathInfo.exists())
+    {
+        // The current path is that of a file and it exists, so select it (see
+        // the above note for the reasoning behind this)
+
+        QModelIndex currentPathIndex = mFileSystemModel->index(currentPath);
+
+        setCurrentIndex(currentPathIndex);
+        scrollTo(currentPathIndex);
+    }
 }
 
 void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
@@ -77,6 +124,12 @@ void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
     pSettings.setValue(pKey+SETTINGS_SORTCOLUMN,
                        header()->sortIndicatorSection());
     pSettings.setValue(pKey+SETTINGS_SORTORDER, header()->sortIndicatorOrder());
+
+    // Keep track of the current folder/file path
+
+    QString currentPath = mFileSystemModel->filePath(currentIndex());
+
+    pSettings.setValue(pKey+SETTINGS_CURRENTPATH, currentPath);
 }
 
 QSize FileBrowserWidget::sizeHint() const
