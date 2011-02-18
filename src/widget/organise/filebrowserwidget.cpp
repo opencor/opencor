@@ -106,6 +106,11 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
     QModelIndex currentPathModelIndex = mFileSystemModel->index(currentPathDir);
 
     setCurrentIndex(currentPathModelIndex);
+    setExpanded(currentPathModelIndex, true);
+    // Note: setExpanded shouldn't be required because of our call to scrollTo
+    //       below, but as the BIG note mentions below, scrollTo is ineffective
+    //       here (but we still leave it in for the sake of it, for now at
+    //       least), so...
     scrollTo(currentPathModelIndex);
 
     if (!currentPathIsDir && currentPathInfo.exists())
