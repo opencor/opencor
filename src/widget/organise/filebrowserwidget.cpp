@@ -66,14 +66,16 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
     // Retrieve the sorting information
 
     sortByColumn(pSettings.value(pKey+SETTINGS_SORTCOLUMN, 0).toInt(),
-                 Qt::SortOrder(pSettings.value(pKey+SETTINGS_SORTORDER, Qt::AscendingOrder).toInt()));
+                 Qt::SortOrder(pSettings.value(pKey+SETTINGS_SORTORDER,
+                                               Qt::AscendingOrder).toInt()));
 }
 
 void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
 {
     // Keep track of the sorting information
 
-    pSettings.setValue(pKey+SETTINGS_SORTCOLUMN, header()->sortIndicatorSection());
+    pSettings.setValue(pKey+SETTINGS_SORTCOLUMN,
+                       header()->sortIndicatorSection());
     pSettings.setValue(pKey+SETTINGS_SORTORDER, header()->sortIndicatorOrder());
 }
 
