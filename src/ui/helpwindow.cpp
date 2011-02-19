@@ -39,6 +39,9 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     mHelpWidget = new HelpWidget(pHelpEngine, pHomePage, this);
 
+    mUi->verticalLayout->addSpacing(1);
+    // Note: check the constructor for FileBrowserWindow for an explanation of
+    //       the above
     mUi->verticalLayout->addWidget(mHelpWidget);
 
     // Prevent objects from being dropped on the help widget

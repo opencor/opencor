@@ -10,22 +10,6 @@
     <height>240</height>
    </rect>
   </property>
-  <property name="styleSheet">
-   <string notr="true">QToolButton {
-    border-style: none;
-}
-
-QToolButton:hover {
-    border: 1px solid rgb(168, 168, 168);
-    border-radius: 5px;
-    background-color: qLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(245, 245, 245), stop: 0.42999 rgb(232, 232, 232), stop: 0.43 rgb(218, 218, 218), stop: 1 rgb(240, 240, 240));
-}
- 
-QToolButton:pressed {
-    border: 1px solid rgb(84, 84, 84);
-    background-color: qLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(180, 180, 180), stop: 1 rgb(230, 230, 230));
-}</string>
-  </property>
   <property name="windowTitle">
    <string>OpenCOR Help</string>
   </property>
@@ -49,8 +33,8 @@ QToolButton:pressed {
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="autoRaise">
@@ -68,7 +52,7 @@ QToolButton:pressed {
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>7</width>
+          <width>3</width>
           <height>0</height>
          </size>
         </property>
@@ -81,8 +65,8 @@ QToolButton:pressed {
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="autoRaise">
@@ -97,8 +81,8 @@ QToolButton:pressed {
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="autoRaise">
@@ -116,7 +100,7 @@ QToolButton:pressed {
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>7</width>
+          <width>3</width>
           <height>0</height>
          </size>
         </property>
@@ -129,8 +113,8 @@ QToolButton:pressed {
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="autoRaise">
@@ -148,7 +132,7 @@ QToolButton:pressed {
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>7</width>
+          <width>3</width>
           <height>0</height>
          </size>
         </property>
@@ -161,8 +145,8 @@ QToolButton:pressed {
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="autoRaise">
@@ -180,7 +164,7 @@ QToolButton:pressed {
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>7</width>
+          <width>3</width>
           <height>0</height>
          </size>
         </property>
@@ -193,8 +177,8 @@ QToolButton:pressed {
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="autoRaise">
@@ -209,8 +193,8 @@ QToolButton:pressed {
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="autoRaise">
@@ -228,7 +212,7 @@ QToolButton:pressed {
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>7</width>
+          <width>3</width>
           <height>0</height>
          </size>
         </property>
@@ -241,8 +225,8 @@ QToolButton:pressed {
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="autoRaise">
@@ -279,7 +263,7 @@ QToolButton:pressed {
     <string>Go to the home page</string>
    </property>
    <property name="shortcut">
-    <string>Home</string>
+    <string>Alt+Home</string>
    </property>
   </action>
   <action name="actionBack">
@@ -324,7 +308,7 @@ QToolButton:pressed {
     <string>Zoom in the help page contents</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl++</string>
+    <string>Alt++</string>
    </property>
   </action>
   <action name="actionZoomOut">
@@ -339,7 +323,7 @@ QToolButton:pressed {
     <string>Zoom out the help page contents</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+-</string>
+    <string>Alt+-</string>
    </property>
   </action>
   <action name="actionNormalSize">
@@ -354,7 +338,7 @@ QToolButton:pressed {
     <string>Reset the size of the help page contents</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+0</string>
+    <string>Alt+0</string>
    </property>
   </action>
   <action name="actionCopy">
@@ -369,7 +353,7 @@ QToolButton:pressed {
     <string>Copy the selection to the clipboard</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+C</string>
+    <string>Alt+C</string>
    </property>
   </action>
   <action name="actionPrint">
@@ -384,7 +368,7 @@ QToolButton:pressed {
     <string>Print this help page</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+P</string>
+    <string>Alt+P</string>
    </property>
   </action>
  </widget>

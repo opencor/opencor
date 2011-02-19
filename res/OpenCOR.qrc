@@ -15,11 +15,13 @@
         <file>new.png</file>
         <file>normalSize.png</file>
         <file>open.png</file>
+        <file alias="appStyleSheet">OpenCOR.css</file>
         <file alias="appIcon">OpenCOR.png</file>
         <file>print.png</file>
         <file alias="qt_fr">qt_fr.qm</file>
         <file>save.png</file>
         <file>saveAs.png</file>
+        <file>up.png</file>
         <file>zoomIn.png</file>
         <file>zoomOut.png</file>
         <file alias="qchFile">../build/OpenCOR.qch</file>

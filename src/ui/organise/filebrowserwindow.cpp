@@ -13,11 +13,27 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mUi->setupUi(this);
 
+    // Assign an action to the different 'toolbar' buttons
+
+    mUi->homeButton->setDefaultAction(mUi->actionHome);
+
+    mUi->upButton->setDefaultAction(mUi->actionUp);
+
+    mUi->backButton->setDefaultAction(mUi->actionBack);
+    mUi->forwardButton->setDefaultAction(mUi->actionForward);
+
     // Create and add the file browser widget
 
     mFileBrowserWidget = new FileBrowserWidget(this);
 
-    setWidget(mFileBrowserWidget);
+    mUi->verticalLayout->addSpacing(1);
+    // Note: the above spacing is only used so that there is a tiny gap between
+    //       the toolbar buttons and the file browser widget. The same could
+    //       have been achieved using a style sheet on QToolButton (the margin
+    //       style), but that would have had the undesired side effect of the
+    //       image of the buttons not getting shifted to the bottom right when
+    //       pressed, so...
+    mUi->verticalLayout->addWidget(mFileBrowserWidget);
 
     // Prevent objects from being dropped on the window
 

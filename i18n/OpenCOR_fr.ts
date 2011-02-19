@@ -7,6 +7,70 @@
         <source>File Browser</source>
         <translation>Gestionnaire de Fichiers</translation>
     </message>
+    <message>
+        <source>Home</source>
+        <translation>Répertoire Principal</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation>Haut</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>En arrière</translation>
+    </message>
+    <message>
+        <source>Forward</source>
+        <translation>En avant</translation>
+    </message>
+    <message>
+        <source>&amp;Home</source>
+        <translation>Ré&amp;pertoire Principal</translation>
+    </message>
+    <message>
+        <source>&amp;Back</source>
+        <translation>En A&amp;rrière</translation>
+    </message>
+    <message>
+        <source>Go back</source>
+        <translation>Aller en arrière</translation>
+    </message>
+    <message>
+        <source>&amp;Forward</source>
+        <translation>En A&amp;vant</translation>
+    </message>
+    <message>
+        <source>Go forward</source>
+        <translation>Aller en avant</translation>
+    </message>
+    <message>
+        <source>&amp;Up</source>
+        <translation>&amp;Haut</translation>
+    </message>
+    <message>
+        <source>Go to the home directory</source>
+        <translation>Aller à au répertoire principal</translation>
+    </message>
+    <message>
+        <source>Go to the parent directory</source>
+        <translation>Aller au répertoire parent</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+Home</source>
+        <translation>Ctrl+Alt+Début</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+Left</source>
+        <translation>Ctrl+Alt+Gauche</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+Right</source>
+        <translation>Ctrl+Alt+Droit</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+Up</source>
+        <translation>Ctrl+Alt+Haut</translation>
+    </message>
 </context>
 <context>
     <name>FileOrganiserWindow</name>
@@ -82,24 +146,12 @@
         <translation>Aggrand&amp;ir</translation>
     </message>
     <message>
-        <source>Ctrl++</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Zoom &amp;Out</source>
         <translation>Ré&amp;duire</translation>
     </message>
     <message>
-        <source>Ctrl+-</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>&amp;Normal Size</source>
         <translation>Taille &amp;Normale</translation>
-    </message>
-    <message>
-        <source>Ctrl+0</source>
-        <translation></translation>
     </message>
     <message>
         <source>Zoom in the help page contents</source>
@@ -122,10 +174,6 @@
         <translation>&amp;Copier</translation>
     </message>
     <message>
-        <source>Ctrl+C</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Copy the selection to the clipboard</source>
         <translation>Copier la sélection dans le presse-papier</translation>
     </message>
@@ -138,12 +186,32 @@
         <translation>Im&amp;primer</translation>
     </message>
     <message>
-        <source>Ctrl+P</source>
+        <source>Print this help page</source>
+        <translation>Imprimer cette page d&apos;aide</translation>
+    </message>
+    <message>
+        <source>Alt+Home</source>
+        <translation>Alt+Début</translation>
+    </message>
+    <message>
+        <source>Alt++</source>
         <translation></translation>
     </message>
     <message>
-        <source>Print this help page</source>
-        <translation>Imprimer cette page d&apos;aide</translation>
+        <source>Alt+-</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+C</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation></translation>
     </message>
 </context>
 <context>
