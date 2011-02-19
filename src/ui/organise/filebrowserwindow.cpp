@@ -26,7 +26,13 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mFileBrowserWidget = new FileBrowserWidget(this);
 
+#ifndef Q_WS_MAC
     mUi->verticalLayout->addSpacing(1);
+#else
+    mUi->verticalLayout->addSpacing(3);
+    // Note: a bit more for Mac OS X because of the blue focus border around
+    //       QTreeView (not neat, I know...)
+#endif
     // Note: the above spacing is only used so that there is a tiny gap between
     //       the toolbar buttons and the file browser widget. The same could
     //       have been achieved using a style sheet on QToolButton (the margin
