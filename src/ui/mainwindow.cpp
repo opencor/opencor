@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     // Note: ideally, this would be done using the GUI designer in QtCreator,
     //       but it's not quite clear to me how this can be achieved, so...
 
-    QMenu *actionNewMenu = new QMenu;
+    QMenu *actionNewMenu = new QMenu(this);
 
     mUi->actionNew->setMenu(actionNewMenu);
 
@@ -93,7 +93,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Extract the help files
 
-    QString applicationBaseName(QFileInfo(qApp->applicationFilePath()).baseName());
+    QString applicationBaseName = QFileInfo(qApp->applicationFilePath()).baseName();
 
     mQchFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qch";
     mQhcFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qhc";
@@ -116,13 +116,13 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create the various dock windows
 
-    mPmrExplorerWindow = new PmrExplorerWindow();
-    mFileBrowserWindow = new FileBrowserWindow();
-    mFileOrganiserWindow = new FileOrganiserWindow();
+    mPmrExplorerWindow = new PmrExplorerWindow(this);
+    mFileBrowserWindow = new FileBrowserWindow(this);
+    mFileOrganiserWindow = new FileOrganiserWindow(this);
 
-    mViewerWindow = new ViewerWindow();
+    mViewerWindow = new ViewerWindow(this);
 
-    mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OPENCOR_HELP_HOMEPAGE));
+    mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OPENCOR_HELP_HOMEPAGE), this);
 
     // Some connections to handle the various toolbars
 
