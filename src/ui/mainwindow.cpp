@@ -180,7 +180,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     defaultSettings();
 
-    // Retrieve our default settings
+    // Retrieve the user settings from the previous session
 
     loadSettings();
 
