@@ -189,7 +189,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     // applications. This behaviour has, on occasions, also been observed on
     // Windows, so... rather than making the following code Mac OS X specific,
     // we may as well make it general, since it doesn't have any adverse effect
-    // on Windows or Linux
+    // on either Windows or Linux
 
     activateWindow();
 
