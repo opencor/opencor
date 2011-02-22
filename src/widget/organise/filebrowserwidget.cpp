@@ -28,14 +28,16 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
                                   // so set this property to true since it can
                                   // only speed things up which can't harm!
 
-    // Have the columns resize themselves automatically, based on their contents
+    // Have the columns resize themselves automatically, based on their
+    // contents
 //---GRY--- IS IT REALLY WHAT WE WANT?! IDEALLY, IT WOULD BE AUTOMATICALLY
 //          RESIZED THE FIRST TIME WE SHOW THE WIDGET (AS A RESULT OF THE CALL
-//          TO DefaultSettings), AND THEN IT WOULD BE UP TO THE USER TO RESIZE
-//          THEM IF HE SO DESIRES. HOWEVER, TO DO THIS, WE NEED THE WIDGET TO BE
-//          VISIBLE, SO ONE MIGHT THINK THAT OVERRIDING paintEvent WOULD DO THE
-//          TRICK, BUT NO... (FROM A GOOGLE SEARCH, IT WOULD SEEM THAT OTHERS
-//          HAVE THE SAME PROBLEM) SO, FOR NOW, WE LEAVE THINGS AS THEY ARE
+//          TO loadSettings), AND THEN IT WOULD BE UP TO THE USER TO RESIZE
+//          THEM THEM IF HE SO DESIRES. HOWEVER, TO DO THIS, WE NEED THE WIDGET
+//          TO BE VISIBLE, SO ONE MIGHT THINK THAT OVERRIDING paintEvent WOULD
+//          DO THE TRICK, BUT NO... (FROM A GOOGLE SEARCH, IT WOULD SEEM THAT
+//          OTHERS HAVE THE SAME PROBLEM) SO, FOR NOW, WE LEAVE THINGS AS THEY
+//          ARE
 
     header()->setResizeMode(QHeaderView::ResizeToContents);
 }
@@ -48,20 +50,6 @@ FileBrowserWidget::~FileBrowserWidget()
 void FileBrowserWidget::retranslateUi()
 {
     // Nothing to do for now...
-}
-
-void FileBrowserWidget::defaultSettings()
-{
-    // Sort by ascending drive letters / paths
-
-    sortByColumn(0, Qt::AscendingOrder);
-
-    // Start in the user's home directory and expand it
-
-    QModelIndex homePathModelIndex = mFileSystemModel->index(QDir::homePath());
-
-    setCurrentIndex(homePathModelIndex);
-    setExpanded(homePathModelIndex, true);
 }
 
 void FileBrowserWidget::loadSettings(const QSettings &pSettings,

@@ -42,13 +42,6 @@ void ViewerWindow::retranslateUi()
     mMmlViewerWidget->retranslateUi();
 }
 
-void ViewerWindow::defaultSettings()
-{
-    // Set the default settings for the viewer widget
-
-    mMmlViewerWidget->defaultSettings();
-}
-
 void ViewerWindow::loadSettings(const QSettings &pSettings, const QString &)
 {
     // Retrieve the settings of the viewer widget

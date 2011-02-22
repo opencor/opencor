@@ -42,13 +42,6 @@ void FileOrganiserWindow::retranslateUi()
     mFileOrganiserWidget->retranslateUi();
 }
 
-void FileOrganiserWindow::defaultSettings()
-{
-    // Set the default settings for the file organiser widget
-
-    mFileOrganiserWidget->defaultSettings();
-}
-
 void FileOrganiserWindow::loadSettings(const QSettings &pSettings,
                                        const QString &)
 {

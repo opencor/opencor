@@ -60,11 +60,11 @@ private:
 
     void notYetImplemented(const QString &method);
 
-    void defaultSettingsForDockWindow(QDockWidget *pDockWindow,
-                                      const Qt::DockWidgetArea &pDockArea,
-                                      QDockWidget *pDockWidget = 0);
-    void defaultSettings();
-
+    void loadDockWindowSettings(QDockWidget *pDockWindow,
+                                const bool &pNeedDefaultSettings,
+                                const QSettings &pSettings,
+                                const Qt::DockWidgetArea &pDockArea,
+                                QDockWidget *pDockWidget = 0);
     void loadSettings();
     void saveSettings();
 

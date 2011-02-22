@@ -64,13 +64,6 @@ void FileBrowserWindow::retranslateUi()
     mFileBrowserWidget->retranslateUi();
 }
 
-void FileBrowserWindow::defaultSettings()
-{
-    // Set the default settings for the file browser widget
-
-    mFileBrowserWidget->defaultSettings();
-}
-
 void FileBrowserWindow::loadSettings(const QSettings &pSettings,
                                      const QString &)
 {

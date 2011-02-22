@@ -42,13 +42,6 @@ void PmrExplorerWindow::retranslateUi()
     mPmrExplorerWidget->retranslateUi();
 }
 
-void PmrExplorerWindow::defaultSettings()
-{
-    // Set the default settings for the PMR explorer widget
-
-    mPmrExplorerWidget->defaultSettings();
-}
-
 void PmrExplorerWindow::loadSettings(const QSettings &pSettings,
                                      const QString &)
 {

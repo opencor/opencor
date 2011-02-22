@@ -38,11 +38,6 @@ void MmlViewerWidget::retranslateUi()
     // Nothing to do for now...
 }
 
-void MmlViewerWidget::defaultSettings()
-{
-    // Nothing to do for now...
-}
-
 void MmlViewerWidget::loadSettings(const QSettings &, const QString &)
 {
     // Nothing to do for now...

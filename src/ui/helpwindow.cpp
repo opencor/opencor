@@ -107,13 +107,6 @@ void HelpWindow::retranslateUi()
     mHelpWidget->retranslateUi();
 }
 
-void HelpWindow::defaultSettings()
-{
-    // Set the default settings for the help widget
-
-    mHelpWidget->defaultSettings();
-}
-
 void HelpWindow::loadSettings(const QSettings &pSettings, const QString &)
 {
     // Retrieve the settings of the help widget

@@ -17,8 +17,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void defaultSettings();
-
     virtual void loadSettings(const QSettings &, const QString &);
     virtual void saveSettings(QSettings &, const QString &);
 

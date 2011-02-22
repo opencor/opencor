@@ -158,40 +158,15 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
             this, SLOT(webPageChanged()));
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
             this, SLOT(webPageChanged()));
+
+    // Go to the home page
+
+    gotoHomePage();
 }
 
 void HelpWidget::retranslateUi()
 {
     // Nothing to do for now...
-}
-
-void HelpWidget::defaultSettings()
-{
-    // Go to the home page
-
-    gotoHomePage();
-
-    // Clear the browsing history
-
-    history()->clear();
-
-    // One would expect history()->clear(); to clear all of the browsing
-    // history, but for some reason it sometimes still leaves one visited
-    // (but non-existent!) page, so...
-
-    int maximumItemCount = history()->maximumItemCount();
-
-    history()->setMaximumItemCount(0);
-    history()->setMaximumItemCount(maximumItemCount);
-
-    // Let whatever user of the widget know that we cannot go back or forward
-
-    emit backAvailable(false);
-    emit forwardAvailable(false);
-
-    // Reset the zoom level
-
-    resetZoom();
 }
 
 void HelpWidget::loadSettings(const QSettings &pSettings, const QString &pKey)

@@ -175,12 +175,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionHelp, SLOT(setChecked(bool)));
 
-    // Default user settings (useful the very first time we start OpenCOR or
-    // after a reset all)
-
-    defaultSettings();
-
-    // Retrieve the user settings from the previous session
+    // Retrieve the user settings from the previous session, if any
 
     loadSettings();
 
@@ -309,9 +304,11 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
     pEvent->acceptProposedAction();
 }
 
-void MainWindow::defaultSettingsForDockWindow(QDockWidget *pDockWindow,
-                                              const Qt::DockWidgetArea &pDockArea,
-                                              QDockWidget *pDockWidget)
+void MainWindow::loadDockWindowSettings(QDockWidget *pDockWindow,
+                                        const bool &pNeedDefaultSettings,
+                                        const QSettings &pSettings,
+                                        const Qt::DockWidgetArea &pDockArea,
+                                        QDockWidget *pDockWidget)
 {
     CommonWidget *commonWidget = dynamic_cast<CommonWidget *>(pDockWindow);
 
@@ -319,63 +316,29 @@ void MainWindow::defaultSettingsForDockWindow(QDockWidget *pDockWindow,
         // The dynamic casting was successful, so we are really dealing with
         // the right kind of dock window and can therefore go ahead
 
-        // Hide the dock window, so that we can set things up without having the
-        // screen flashing
+        if (pNeedDefaultSettings) {
+            // Hide the dock window, so that we can set things up without having the
+            // screen flashing
 
-        pDockWindow->setVisible(false);
+            pDockWindow->setVisible(false);
 
-        // Position the dock window to its default location
+            // Position the dock window to its default location
 
-        if (pDockWidget)
-            tabifyDockWidget(pDockWidget, pDockWindow);
-        else
-            addDockWidget(pDockArea, pDockWindow);
+            if (pDockWidget)
+                tabifyDockWidget(pDockWidget, pDockWindow);
+            else
+                addDockWidget(pDockArea, pDockWindow);
+        }
 
-        // Apply the dock window's default settings
+        // Load the dock window's settings
 
-        commonWidget->defaultSettings();
+        commonWidget->loadSettings(pSettings, SETTINGS_NONE);
 
-        // Make the dock window visible
+        if (pNeedDefaultSettings)
+            // Make the dock window visible
 
-        pDockWindow->setVisible(true);
+            pDockWindow->setVisible(true);
     }
-}
-
-void MainWindow::defaultSettings()
-{
-    // Default language to be used by OpenCOR
-
-    setLocale(SYSTEM_LOCALE);
-
-    // Default size and position of the main window
-
-    double ratio = 1.0/13.0;
-    QRect desktopGeometry = qApp->desktop()->availableGeometry();
-    int horizSpace = ratio*desktopGeometry.width();
-    int vertSpace  = ratio*desktopGeometry.height();
-
-    setGeometry(desktopGeometry.left()+horizSpace,
-                desktopGeometry.top()+vertSpace,
-                desktopGeometry.width()-2*horizSpace,
-                desktopGeometry.height()-2*vertSpace);
-
-    // Default visibility and location of the various toolbars
-
-    addToolBar(Qt::TopToolBarArea, mUi->fileToolbar);
-    addToolBar(Qt::TopToolBarArea, mUi->helpToolbar);
-
-    mUi->fileToolbar->setVisible(true);
-    mUi->helpToolbar->setVisible(true);
-
-    // Default size and position of the various dock windows
-
-    defaultSettingsForDockWindow(mPmrExplorerWindow, Qt::LeftDockWidgetArea);
-    defaultSettingsForDockWindow(mFileBrowserWindow, Qt::LeftDockWidgetArea);
-    defaultSettingsForDockWindow(mFileOrganiserWindow, Qt::NoDockWidgetArea, mFileBrowserWindow);
-
-    defaultSettingsForDockWindow(mViewerWindow, Qt::TopDockWidgetArea);
-
-    defaultSettingsForDockWindow(mHelpWindow, Qt::RightDockWidgetArea);
 }
 
 void MainWindow::loadSettings()
@@ -386,28 +349,53 @@ void MainWindow::loadSettings()
 
     setLocale(settings.value(SETTINGS_GENERAL_LOCALE, SYSTEM_LOCALE).toString());
 
-    // Retrieve the geometry of the main window
+    // Retrieve the geometry and state of the main window
 
-    restoreGeometry(settings.value(SETTINGS_GENERAL_GEOMETRY).toByteArray());
+    bool needDefaultSettings =    !restoreGeometry(settings.value(SETTINGS_GENERAL_GEOMETRY).toByteArray())
+                               || !restoreState(settings.value(SETTINGS_GENERAL_STATE).toByteArray());
 
-    // Retrieve the state of the main window
+    if (needDefaultSettings) {
+        // The geometry and/or state of the main window couldn't be retrieved,
+        // so go with some default settins
 
-    restoreState(settings.value(SETTINGS_GENERAL_STATE).toByteArray());
+        // Default size and position of the main window
 
-    // Retrieve whether the status bar is to be shown
+        double ratio = 1.0/13.0;
+        QRect desktopGeometry = qApp->desktop()->availableGeometry();
+        int horizSpace = ratio*desktopGeometry.width();
+        int vertSpace  = ratio*desktopGeometry.height();
 
-    mUi->statusBar->setVisible(settings.value(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY,
-                                              true).toBool());
+        setGeometry(desktopGeometry.left()+horizSpace,
+                    desktopGeometry.top()+vertSpace,
+                    desktopGeometry.width()-2*horizSpace,
+                    desktopGeometry.height()-2*vertSpace);
+
+        // Default visibility and location of the various toolbars
+
+        addToolBar(Qt::TopToolBarArea, mUi->fileToolbar);
+        addToolBar(Qt::TopToolBarArea, mUi->helpToolbar);
+
+        mUi->fileToolbar->setVisible(true);
+        mUi->helpToolbar->setVisible(true);
+    } else {
+        // The geometry and state of the main window could be retrieved, so
+        // carry on with the loading of the settings
+
+        // Retrieve whether the status bar is to be shown
+
+        mUi->statusBar->setVisible(settings.value(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY,
+                                                  true).toBool());
+    }
 
     // Retrieve the settings of the various dock windows
 
-    mPmrExplorerWindow->loadSettings(settings, SETTINGS_NONE);
-    mFileBrowserWindow->loadSettings(settings, SETTINGS_NONE);
-    mFileOrganiserWindow->loadSettings(settings, SETTINGS_NONE);
+    loadDockWindowSettings(mPmrExplorerWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
+    loadDockWindowSettings(mFileBrowserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
+    loadDockWindowSettings(mFileOrganiserWindow, needDefaultSettings, settings, Qt::NoDockWidgetArea, mFileBrowserWindow);
 
-    mViewerWindow->loadSettings(settings, SETTINGS_NONE);
+    loadDockWindowSettings(mViewerWindow, needDefaultSettings, settings, Qt::TopDockWidgetArea);
 
-    mHelpWindow->loadSettings(settings, SETTINGS_NONE);
+    loadDockWindowSettings(mHelpWindow, needDefaultSettings, settings, Qt::RightDockWidgetArea);
 }
 
 void MainWindow::saveSettings()
