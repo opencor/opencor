@@ -369,14 +369,6 @@ void MainWindow::loadSettings()
                     desktopGeometry.top()+vertSpace,
                     desktopGeometry.width()-2*horizSpace,
                     desktopGeometry.height()-2*vertSpace);
-
-        // Default visibility and location of the various toolbars
-
-        addToolBar(Qt::TopToolBarArea, mUi->fileToolbar);
-        addToolBar(Qt::TopToolBarArea, mUi->helpToolbar);
-
-        mUi->fileToolbar->setVisible(true);
-        mUi->helpToolbar->setVisible(true);
     } else {
         // The geometry and state of the main window could be retrieved, so
         // carry on with the loading of the settings
