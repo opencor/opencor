@@ -157,9 +157,8 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
             || (!mCurrentPath.isEmpty() && mCurrentPath.contains(pPath)))) {
         // mFileSystemModel is still loading the current path, so we try to
         // expand it and scroll to it, but first we process any pending event
-        // (indeed, Windows doesn't need this, but Linux definitely does and it
-        // can't harm having it for both environments, so...)
-        //---GRY--- DOUBLE CHECK ON MAC OS X...
+        // (indeed, Windows doesn't need this, but Linux and Mac OS X definitely
+        // do and it can't harm having it for all three environments, so...)
 
         qApp->processEvents();
 
