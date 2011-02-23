@@ -59,9 +59,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="upButton">
+       <widget class="QToolButton" name="parentButton">
         <property name="text">
-         <string>Up</string>
+         <string>Parent</string>
         </property>
         <property name="iconSize">
          <size>
@@ -91,9 +91,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="backButton">
+       <widget class="QToolButton" name="previousButton">
         <property name="text">
-         <string>Back</string>
+         <string>Previous</string>
         </property>
         <property name="iconSize">
          <size>
@@ -107,9 +107,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="forwardButton">
+       <widget class="QToolButton" name="nextButton">
         <property name="text">
-         <string>Forward</string>
+         <string>Next</string>
         </property>
         <property name="iconSize">
          <size>
@@ -186,13 +186,13 @@
     <string>Ctrl+Alt+Home</string>
    </property>
   </action>
-  <action name="actionBack">
+  <action name="actionPrevious">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
      <normaloff>:/back.png</normaloff>:/back.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Back</string>
+    <string>&amp;Previous</string>
    </property>
    <property name="statusTip">
     <string>Go to the previous folder</string>
@@ -201,13 +201,13 @@
     <string>Ctrl+Alt+Left</string>
    </property>
   </action>
-  <action name="actionForward">
+  <action name="actionNext">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
      <normaloff>:/forward.png</normaloff>:/forward.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Forward</string>
+    <string>&amp;Next</string>
    </property>
    <property name="statusTip">
     <string>Go to the next folder</string>
@@ -216,16 +216,13 @@
     <string>Ctrl+Alt+Right</string>
    </property>
   </action>
-  <action name="actionUp">
+  <action name="actionParent">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
      <normaloff>:/up.png</normaloff>:/up.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Up</string>
-   </property>
-   <property name="toolTip">
-    <string>Up</string>
+    <string>&amp;Parent</string>
    </property>
    <property name="statusTip">
     <string>Go to the parent folder</string>
@@ -241,9 +238,6 @@
    </property>
    <property name="text">
     <string>&amp;New</string>
-   </property>
-   <property name="toolTip">
-    <string>New</string>
    </property>
    <property name="statusTip">
     <string>Create a new empty folder</string>

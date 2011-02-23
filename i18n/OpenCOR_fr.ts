@@ -9,35 +9,11 @@
     </message>
     <message>
         <source>Home</source>
-        <translation>Répertoire Principal</translation>
-    </message>
-    <message>
-        <source>Up</source>
-        <translation>Haut</translation>
-    </message>
-    <message>
-        <source>Back</source>
-        <translation>En arrière</translation>
-    </message>
-    <message>
-        <source>Forward</source>
-        <translation>En avant</translation>
+        <translation>Principal</translation>
     </message>
     <message>
         <source>&amp;Home</source>
-        <translation>Ré&amp;pertoire Principal</translation>
-    </message>
-    <message>
-        <source>&amp;Back</source>
-        <translation>En A&amp;rrière</translation>
-    </message>
-    <message>
-        <source>&amp;Forward</source>
-        <translation>En A&amp;vant</translation>
-    </message>
-    <message>
-        <source>&amp;Up</source>
-        <translation>&amp;Haut</translation>
+        <translation>&amp;Principal</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Home</source>
@@ -85,6 +61,30 @@
     </message>
     <message>
         <source>Ctrl+Alt+N</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Parent</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Previous</source>
+        <translation>Précédent</translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation>Suivant</translation>
+    </message>
+    <message>
+        <source>&amp;Previous</source>
+        <translation>&amp;Précédent</translation>
+    </message>
+    <message>
+        <source>&amp;Next</source>
+        <translation>Suiva&amp;nt</translation>
+    </message>
+    <message>
+        <source>&amp;Parent</source>
         <translation></translation>
     </message>
 </context>

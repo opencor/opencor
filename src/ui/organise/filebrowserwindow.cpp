@@ -17,10 +17,10 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mUi->homeButton->setDefaultAction(mUi->actionHome);
 
-    mUi->upButton->setDefaultAction(mUi->actionUp);
+    mUi->parentButton->setDefaultAction(mUi->actionParent);
 
-    mUi->backButton->setDefaultAction(mUi->actionBack);
-    mUi->forwardButton->setDefaultAction(mUi->actionForward);
+    mUi->previousButton->setDefaultAction(mUi->actionPrevious);
+    mUi->nextButton->setDefaultAction(mUi->actionNext);
 
     mUi->newButton->setDefaultAction(mUi->actionNew);
 
