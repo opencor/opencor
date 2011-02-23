@@ -1,5 +1,6 @@
 #include "filebrowserwidget.h"
 
+#include <QApplication>
 #include <QDesktopServices>
 #include <QFileSystemModel>
 #include <QHeaderView>
@@ -145,7 +146,12 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
         && (   ( mCurrentPath.isEmpty() && mCurrentPathDir.contains(pPath))
             || (!mCurrentPath.isEmpty() && mCurrentPath.contains(pPath)))) {
         // mFileSystemModel is still loading the current path, so we try to
-        // expand it and scroll to it
+        // expand it and scroll to it, but first we process any pending event
+        // (indeed, Windows doesn't need this, but Linux definitely does and it
+        // can't harm having it for both environments, so...)
+        //---GRY--- DOUBLE CHECK ON MAC OS X...
+
+        qApp->processEvents();
 
         QModelIndex currentPathDirModelIndex = mFileSystemModel->index(mCurrentPathDir);
 
