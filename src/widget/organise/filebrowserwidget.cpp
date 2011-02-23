@@ -1,8 +1,7 @@
 #include "filebrowserwidget.h"
 
-#include <QFileSystemModel>
-
 #include <QDesktopServices>
+#include <QFileSystemModel>
 #include <QHeaderView>
 #include <QSettings>
 
@@ -40,6 +39,12 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
 //          ARE
 
     header()->setResizeMode(QHeaderView::ResizeToContents);
+
+    // Connection to keep track of the directory loading progress of
+    // mFileSystemModel
+
+    connect(mFileSystemModel, SIGNAL(directoryLoaded(const QString &)),
+            this, SLOT(directoryLoaded(const QString &)));
 }
 
 FileBrowserWidget::~FileBrowserWidget()
@@ -61,63 +66,52 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
                  Qt::SortOrder(pSettings.value(pKey+SETTINGS_SORTORDER,
                                                Qt::AscendingOrder).toInt()));
 
-    // Retrieve the current path and make it visible to the user
+    // Retrieve the current path
 
-    QString currentPath = pSettings.value(pKey+SETTINGS_CURRENTPATH,
-                                          QDir::homePath()).toString();
-    QString currentPathDir = currentPath;
-    QFileInfo currentPathInfo = currentPath;
-    bool currentPathIsDir = currentPathInfo.isDir();
+    mCurrentPath = pSettings.value(pKey+SETTINGS_CURRENTPATH,
+                                   QDir::homePath()).toString();
+    QFileInfo currentPathFileInfo = mCurrentPath;
 
-    if (!currentPathIsDir) {
-        // The current path is not that of a directory, but that of a file (or
-        // it doesn't exist), so retrieve the name of the parent folder
-        // Note: indeed, to directly set the current index to that of a file
-        //       won't give us the expected behaviour (i.e. the parent folder
-        //       being open and expanded, and the file selected), so instead one
-        //       must set the current index to that of the parent folder and
-        //       then select the file
+    if (!currentPathFileInfo.exists()) {
+        // The current path doesn't exist, so just revert to the home path
 
-        QDir filePathUp = currentPath;
+        mCurrentPathDir = QDir::homePath();
+        mCurrentPath    = "";
+    } else {
+        // The current path exists, so retrieve some information about the
+        // folder and/or file (depending on whether the current path refers to
+        // a file or not)
+        // Note: indeed, should mCurrentPath refer to a file, then to directly
+        //       set the current index of the tree view to that of a file won't
+        //       give us the expected behaviour (i.e. the parent folder being
+        //       open and expanded, and the file selected), so instead one must
+        //       set the current index to that of the parent folder and then
+        //       select the file
 
-        filePathUp.cdUp();
+        if (currentPathFileInfo.isDir()) {
+            // We are dealing with a folder, so...
 
-        currentPathDir = filePathUp.path();
+            mCurrentPathDir = currentPathFileInfo.canonicalFilePath();
+            mCurrentPath    = "";
+        } else {
+            // We are dealing with a file, so...
 
-        // If the parent folder doesn't exist, then we give up and go for the
-        // home path
-
-        if (!QFileInfo(currentPathDir).exists())
-            currentPathDir = QDir::homePath();
+            mCurrentPathDir = currentPathFileInfo.canonicalPath();
+            mCurrentPath    = currentPathFileInfo.canonicalFilePath();
+        }
     }
 
-    QModelIndex currentPathModelIndex = mFileSystemModel->index(currentPathDir);
+    // Set the current index to that of the folder (and file, if it exists) we
+    // are interested in
+    // Note: this will result in the directoryLoaded signal to be emitted and,
+    //       us, to take advantage of it to scroll to the right directory/file
 
-    setCurrentIndex(currentPathModelIndex);
-    setExpanded(currentPathModelIndex, true);
-    // Note: setExpanded shouldn't be required because of our call to scrollTo
-    //       below, but as the BIG note mentions below, scrollTo is ineffective
-    //       here (but we still leave it in for the sake of it, for now at
-    //       least), so...
-    scrollTo(currentPathModelIndex);
+    setCurrentIndex(mFileSystemModel->index(mCurrentPathDir));
 
-    if (!currentPathIsDir && currentPathInfo.exists())
-    {
-        // The current path is that of a file and it exists, so select it (see
-        // the above note for the reasoning behind this)
+    if (!mCurrentPath.isEmpty())
+        // The current path is that of a file, so...
 
-        QModelIndex currentPathIndex = mFileSystemModel->index(currentPath);
-
-        setCurrentIndex(currentPathIndex);
-        scrollTo(currentPathIndex);
-    }
-
-//---GRY--- scrollTo REQUIRES THE WIDGET TO BE PAINTED TO WORK PROPERLY (ESP.
-//          WHEN THE NODE TO SCROLL TO IS REALLY DOWN THE TREE). HOWEVER, EVEN
-//          BY OVERRIDING paintEvent, I WAS STILL NOT ABLE TO GET THINGS TO WORK
-//          AND IT WOULD SEEM (FROM A GOOGLE SEARCH) THAT I AM NOT THE ONLY ONE
-//          IN THIS SITUATION... SO, FOR NOW, WE SHALL LEAVE THINGS AS THEY ARE
-//          WHICH IS REALLY NOT GREAT, BUT...
+        setCurrentIndex(mFileSystemModel->index(mCurrentPath));
 }
 
 void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
@@ -130,9 +124,8 @@ void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
 
     // Keep track of the current folder/file path
 
-    QString currentPath = mFileSystemModel->filePath(currentIndex());
-
-    pSettings.setValue(pKey+SETTINGS_CURRENTPATH, currentPath);
+    pSettings.setValue(pKey+SETTINGS_CURRENTPATH,
+                       mFileSystemModel->filePath(currentIndex()));
 }
 
 QSize FileBrowserWidget::sizeHint() const
@@ -142,4 +135,34 @@ QSize FileBrowserWidget::sizeHint() const
     //       widget on it, to have a decent size when docked to the main window
 
     return defaultSize(0.15);
+}
+
+void FileBrowserWidget::directoryLoaded(const QString &pPath)
+{
+    static bool needInitializing = true;
+
+    if (needInitializing
+        && (   ( mCurrentPath.isEmpty() && mCurrentPathDir.contains(pPath))
+            || (!mCurrentPath.isEmpty() && mCurrentPath.contains(pPath)))) {
+        // mFileSystemModel is still loading the current path, so we try to
+        // expand it and scroll to it
+
+        QModelIndex currentPathDirModelIndex = mFileSystemModel->index(mCurrentPathDir);
+
+        setExpanded(currentPathDirModelIndex, true);
+        scrollTo(currentPathDirModelIndex);
+
+        if (!mCurrentPath.isEmpty()) {
+            // The current path is that of a file and it exists, so select it
+
+            QModelIndex currentPathModelIndex = mFileSystemModel->index(mCurrentPath);
+
+            setExpanded(currentPathModelIndex, true);
+            scrollTo(currentPathModelIndex);
+        }
+    } else {
+        // We are done initializing, so...
+
+        needInitializing = false;
+    }
 }

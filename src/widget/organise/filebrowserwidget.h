@@ -25,6 +25,12 @@ protected:
 
 private:
     QFileSystemModel *mFileSystemModel;
+
+    QString mCurrentPathDir;
+    QString mCurrentPath;
+
+private Q_SLOTS:
+    void directoryLoaded(const QString &pPath);
 };
 
 #endif
