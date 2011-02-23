@@ -478,7 +478,7 @@
     </message>
     <message>
         <source>is a cross-platform &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
-        <translation>est un environnement de modélisation &amp;lt;a href=&amp;quot;http://www.cellml.org/&amp;quot;&amp;gt;CellML&amp;lt;/a&amp;gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
+        <translation>est un environnement de modélisation &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
     </message>
     <message>
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
