@@ -6,9 +6,10 @@
 #include <QHeaderView>
 #include <QSettings>
 
+#define SETTINGS_COLUMNWIDTH "_ColumnWidth"
+#define SETTINGS_CURRENTPATH "_CurrentPath"
 #define SETTINGS_SORTCOLUMN  "_SortColumn"
 #define SETTINGS_SORTORDER   "_SortOrder"
-#define SETTINGS_CURRENTPATH "_CurrentPath"
 
 FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
     QTreeView(pParent),
@@ -27,19 +28,6 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
     setUniformRowHeights(true);   // Everything ought to be of the same height,
                                   // so set this property to true since it can
                                   // only speed things up which can't harm!
-
-    // Have the columns resize themselves automatically, based on their
-    // contents
-//---GRY--- IS IT REALLY WHAT WE WANT?! IDEALLY, IT WOULD BE AUTOMATICALLY
-//          RESIZED THE FIRST TIME WE SHOW THE WIDGET (AS A RESULT OF THE CALL
-//          TO loadSettings), AND THEN IT WOULD BE UP TO THE USER TO RESIZE
-//          THEM THEM IF HE SO DESIRES. HOWEVER, TO DO THIS, WE NEED THE WIDGET
-//          TO BE VISIBLE, SO ONE MIGHT THINK THAT OVERRIDING paintEvent WOULD
-//          DO THE TRICK, BUT NO... (FROM A GOOGLE SEARCH, IT WOULD SEEM THAT
-//          OTHERS HAVE THE SAME PROBLEM) SO, FOR NOW, WE LEAVE THINGS AS THEY
-//          ARE
-
-    header()->setResizeMode(QHeaderView::ResizeToContents);
 
     // Connection to keep track of the directory loading progress of
     // mFileSystemModel
@@ -61,6 +49,22 @@ void FileBrowserWidget::retranslateUi()
 void FileBrowserWidget::loadSettings(const QSettings &pSettings,
                                      const QString &pKey)
 {
+    // Retrieve the width of each column
+
+    mNeedDefaultColumnWidth = true;
+
+    QString columnWidthKey;
+
+    for (int i = 0; i < header()->count(); ++i) {
+        columnWidthKey = pKey+SETTINGS_COLUMNWIDTH+QString::number(i);
+
+        mNeedDefaultColumnWidth =     mNeedDefaultColumnWidth
+                                  && !pSettings.contains(columnWidthKey);
+
+        setColumnWidth(i, pSettings.value(columnWidthKey,
+                                          columnWidth(i)).toInt());
+    }
+
     // Retrieve the sorting information
 
     sortByColumn(pSettings.value(pKey+SETTINGS_SORTCOLUMN, 0).toInt(),
@@ -117,6 +121,12 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
 
 void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
 {
+    // Retrieve the width of each column
+
+    for (int i = 0; i < header()->count(); ++i)
+        pSettings.setValue(pKey+SETTINGS_COLUMNWIDTH+QString::number(i),
+                           columnWidth(i));
+
     // Keep track of the sorting information
 
     pSettings.setValue(pKey+SETTINGS_SORTCOLUMN,
@@ -165,6 +175,17 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
             setExpanded(currentPathModelIndex, true);
             scrollTo(currentPathModelIndex);
+        }
+
+        // Set the default width of the columns so that it fits their contents
+
+        if (mNeedDefaultColumnWidth) {
+            header()->setResizeMode(QHeaderView::ResizeToContents);
+
+            qApp->processEvents();
+            // Note: this ensures that the columns actually get resized
+
+            header()->setResizeMode(QHeaderView::Interactive);
         }
     } else {
         // We are done initializing, so...

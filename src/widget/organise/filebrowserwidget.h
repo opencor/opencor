@@ -26,6 +26,8 @@ protected:
 private:
     QFileSystemModel *mFileSystemModel;
 
+    bool mNeedDefaultColumnWidth;
+
     QString mCurrentPathDir;
     QString mCurrentPath;
 
