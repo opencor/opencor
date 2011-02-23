@@ -116,8 +116,8 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create the various dock windows
 
-    mPmrExplorerWindow = new PmrExplorerWindow(this);
-    mFileBrowserWindow = new FileBrowserWindow(this);
+    mPmrExplorerWindow   = new PmrExplorerWindow(this);
+    mFileBrowserWindow   = new FileBrowserWindow(this);
     mFileOrganiserWindow = new FileOrganiserWindow(this);
 
     mViewerWindow = new ViewerWindow(this);
@@ -383,7 +383,7 @@ void MainWindow::loadSettings()
 
     loadDockWindowSettings(mPmrExplorerWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
     loadDockWindowSettings(mFileBrowserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
-    loadDockWindowSettings(mFileOrganiserWindow, needDefaultSettings, settings, Qt::NoDockWidgetArea, mFileBrowserWindow);
+    loadDockWindowSettings(mFileOrganiserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
 
     loadDockWindowSettings(mViewerWindow, needDefaultSettings, settings, Qt::TopDockWidgetArea);
 
