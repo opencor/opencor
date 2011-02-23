@@ -43,20 +43,20 @@
        </widget>
       </item>
       <item>
-       <spacer name="fixedSpacer1">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
+       <widget class="Line" name="line1">
+        <property name="minimumSize">
          <size>
-          <width>3</width>
+          <width>5</width>
           <height>0</height>
          </size>
         </property>
-       </spacer>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QToolButton" name="upButton">
@@ -75,20 +75,20 @@
        </widget>
       </item>
       <item>
-       <spacer name="fixedSpacer2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
+       <widget class="Line" name="line2">
+        <property name="minimumSize">
          <size>
-          <width>3</width>
+          <width>5</width>
           <height>0</height>
          </size>
         </property>
-       </spacer>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QToolButton" name="backButton">
