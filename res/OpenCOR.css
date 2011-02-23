@@ -22,17 +22,10 @@
                                       stop: 1 rgb(230, 230, 230));
 }
 
-#FileBrowserWindow QFrame,
-#HelpWindow QFrame {
-    /* For the line separators in the secondary toolbars */
+#FileBrowserWindow .QFrame,
+#HelpWindow .QFrame {
+    /* For the line separators in the secondary toolbars (we only target */
+    /* QFrame objects, not objects that inherit from QFrame)             */
 
-    color: lightgrey;
-}
-
-#FileBrowserWindow QTreeView,
-#FileBrowserWindow QHeaderView {
-    /* This is to override the about QFrame rule, since QTreeView and */
-    /* QHeaderView indirectly inherit from it                         */
-
-    color: default;
+    color: lightGrey;
 }
