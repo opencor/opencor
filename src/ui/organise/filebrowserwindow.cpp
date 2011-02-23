@@ -22,6 +22,8 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     mUi->backButton->setDefaultAction(mUi->actionBack);
     mUi->forwardButton->setDefaultAction(mUi->actionForward);
 
+    mUi->newButton->setDefaultAction(mUi->actionNew);
+
     // Create and add the file browser widget
 
     mFileBrowserWidget = new FileBrowserWidget(this);

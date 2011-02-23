@@ -32,28 +32,12 @@
         <translation>En A&amp;rrière</translation>
     </message>
     <message>
-        <source>Go back</source>
-        <translation>Aller en arrière</translation>
-    </message>
-    <message>
         <source>&amp;Forward</source>
         <translation>En A&amp;vant</translation>
     </message>
     <message>
-        <source>Go forward</source>
-        <translation>Aller en avant</translation>
-    </message>
-    <message>
         <source>&amp;Up</source>
         <translation>&amp;Haut</translation>
-    </message>
-    <message>
-        <source>Go to the home directory</source>
-        <translation>Aller à au répertoire principal</translation>
-    </message>
-    <message>
-        <source>Go to the parent directory</source>
-        <translation>Aller au répertoire parent</translation>
     </message>
     <message>
         <source>Ctrl+Alt+Home</source>
@@ -70,6 +54,38 @@
     <message>
         <source>Ctrl+Alt+Up</source>
         <translation>Ctrl+Alt+Haut</translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation>Nouveau</translation>
+    </message>
+    <message>
+        <source>Go to the home folder</source>
+        <translation>Aller au répertoire principal</translation>
+    </message>
+    <message>
+        <source>Go to the previous folder</source>
+        <translation>Aller au répertoire précédent</translation>
+    </message>
+    <message>
+        <source>Go to the next folder</source>
+        <translation>Aller au répertoire suivant</translation>
+    </message>
+    <message>
+        <source>Go to the parent folder</source>
+        <translation>Aller au répertoire parent</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Nouveau</translation>
+    </message>
+    <message>
+        <source>Create a new empty folder</source>
+        <translation>Créer un nouveau répertoire vide</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+N</source>
+        <translation></translation>
     </message>
 </context>
 <context>

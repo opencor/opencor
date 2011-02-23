@@ -123,6 +123,38 @@
        </widget>
       </item>
       <item>
+       <widget class="Line" name="line3">
+        <property name="minimumSize">
+         <size>
+          <width>5</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="newButton">
+        <property name="text">
+         <string>New</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="expandingSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -148,7 +180,7 @@
     <string>&amp;Home</string>
    </property>
    <property name="statusTip">
-    <string>Go to the home directory</string>
+    <string>Go to the home folder</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+Home</string>
@@ -163,7 +195,7 @@
     <string>&amp;Back</string>
    </property>
    <property name="statusTip">
-    <string>Go back</string>
+    <string>Go to the previous folder</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+Left</string>
@@ -178,7 +210,7 @@
     <string>&amp;Forward</string>
    </property>
    <property name="statusTip">
-    <string>Go forward</string>
+    <string>Go to the next folder</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+Right</string>
@@ -196,10 +228,28 @@
     <string>Up</string>
    </property>
    <property name="statusTip">
-    <string>Go to the parent directory</string>
+    <string>Go to the parent folder</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+Up</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="../../../res/OpenCOR.qrc">
+     <normaloff>:/add.png</normaloff>:/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="toolTip">
+    <string>New</string>
+   </property>
+   <property name="statusTip">
+    <string>Create a new empty folder</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+N</string>
    </property>
   </action>
  </widget>
