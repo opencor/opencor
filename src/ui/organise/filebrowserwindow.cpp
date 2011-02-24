@@ -1,3 +1,4 @@
+#include "docktoolbar.h"
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
 
@@ -15,55 +16,38 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mUi->setupUi(this);
 
-    // Assign an action to the different 'toolbar' buttons
-
-    mUi->homeButton->setDefaultAction(mUi->actionHome);
-
-    mUi->parentButton->setDefaultAction(mUi->actionParent);
-
-    mUi->previousButton->setDefaultAction(mUi->actionPrevious);
-    mUi->nextButton->setDefaultAction(mUi->actionNext);
-
-    mUi->deleteButton->setDefaultAction(mUi->actionDelete);
-
-    // Set the New toolbar button with its dropdown menu using our custom-made
-    // action (actionNew)
+    // Create a dropdown menu for the New action
 
     QMenu *actionNewMenu = new QMenu(this);
-
-    mUi->actionNew->setMenu(actionNewMenu);
 
     actionNewMenu->addAction(mUi->actionFolder);
     actionNewMenu->addSeparator();
     actionNewMenu->addAction(mUi->actionCellML10File);
     actionNewMenu->addAction(mUi->actionCellML11File);
 
-    QToolButton *newButton = new QToolButton(this);
+    mUi->actionNew->setMenu(actionNewMenu);
 
-    newButton->setAutoRaise(true);
-    newButton->setDefaultAction(mUi->actionNew);
-    newButton->setIconSize(QSize(20, 20));
+    // Create a toolbar with different buttons
+    // Note: this sadly can't be done using the design mode, so...
 
-    mUi->horizontalLayout->insertWidget(mUi->horizontalLayout->indexOf(mUi->deleteButton),
-                                        newButton);
+    DockToolBar *toolbar = new DockToolBar(this);
+
+    toolbar->addAction(mUi->actionHome);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionParent);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionPrevious);
+    toolbar->addAction(mUi->actionNext);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionNew);
+    toolbar->addAction(mUi->actionDelete);
+
+    mUi->verticalLayout->addWidget(toolbar);
 
     // Create and add the file browser widget
 
     mFileBrowserWidget = new FileBrowserWidget(this);
 
-#ifndef Q_WS_MAC
-    mUi->verticalLayout->addSpacing(1);
-#else
-    mUi->verticalLayout->addSpacing(3);
-    // Note: a bit more for Mac OS X because of the blue focus border around
-    //       QTreeView (not neat, I know...)
-#endif
-    // Note: the above spacing is only used so that there is a tiny gap between
-    //       the toolbar buttons and the file browser widget. The same could
-    //       have been achieved using a style sheet on QToolButton (the margin
-    //       style), but that would have had the undesired side effect of the
-    //       image of the buttons not getting shifted to the bottom right when
-    //       pressed, so...
     mUi->verticalLayout->addWidget(mFileBrowserWidget);
 
     // Prevent objects from being dropped on the window

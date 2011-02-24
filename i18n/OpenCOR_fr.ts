@@ -8,10 +8,6 @@
         <translation>Gestionnaire de Fichiers</translation>
     </message>
     <message>
-        <source>Home</source>
-        <translation>Principal</translation>
-    </message>
-    <message>
         <source>&amp;Home</source>
         <translation>&amp;Principal</translation>
     </message>
@@ -56,18 +52,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Parent</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Previous</source>
-        <translation>Précédent</translation>
-    </message>
-    <message>
-        <source>Next</source>
-        <translation>Suivant</translation>
-    </message>
-    <message>
         <source>&amp;Previous</source>
         <translation>&amp;Précédent</translation>
     </message>
@@ -78,10 +62,6 @@
     <message>
         <source>&amp;Parent</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>Supprimer</translation>
     </message>
     <message>
         <source>&amp;Delete</source>

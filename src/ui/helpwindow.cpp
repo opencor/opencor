@@ -1,3 +1,4 @@
+#include "docktoolbar.h"
 #include "helpwindow.h"
 #include "helpwidget.h"
 
@@ -19,21 +20,26 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     mUi->setupUi(this);
 
-    // Assign an action to the different toolbar buttons
+    // Create a toolbar with different buttons
+    // Note: this sadly can't be done using the design mode, so...
 
-    mUi->homeButton->setDefaultAction(mUi->actionHome);
+    DockToolBar *toolbar = new DockToolBar(this);
 
-    mUi->backButton->setDefaultAction(mUi->actionBack);
-    mUi->forwardButton->setDefaultAction(mUi->actionForward);
+    toolbar->addAction(mUi->actionHome);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionBack);
+    toolbar->addAction(mUi->actionForward);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionCopy);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionNormalSize);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionZoomIn);
+    toolbar->addAction(mUi->actionZoomOut);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionPrint);
 
-    mUi->copyButton->setDefaultAction(mUi->actionCopy);
-
-    mUi->normalSizeButton->setDefaultAction(mUi->actionNormalSize);
-
-    mUi->zoomInButton->setDefaultAction(mUi->actionZoomIn);
-    mUi->zoomOutButton->setDefaultAction(mUi->actionZoomOut);
-
-    mUi->printButton->setDefaultAction(mUi->actionPrint);
+    mUi->verticalLayout->addWidget(toolbar);
 
     // Create and add the help widget
 
