@@ -464,6 +464,30 @@
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Etes-vous sûr que c&amp;apos;est ce que vous voulez ?</translation>
     </message>
+    <message>
+        <source>Look up the CellML home page</source>
+        <translation>Consulter la page d&apos;accueil de CellML</translation>
+    </message>
+    <message>
+        <source>Look up the CellML Model Repository home page</source>
+        <translation>Consulter la page d&apos;accueil du Répertoire de Modèles CellML</translation>
+    </message>
+    <message>
+        <source>CellML</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>CellML Model Repository</source>
+        <translation>Répertoire de Modèles CellML</translation>
+    </message>
+    <message>
+        <source>&amp;Updates</source>
+        <translation>Mises à Jo&amp;ur</translation>
+    </message>
+    <message>
+        <source>Check for updates</source>
+        <translation>Vérifier les mises à jour</translation>
+    </message>
 </context>
 <context>
     <name>PmrExplorerWindow</name>

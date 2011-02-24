@@ -26,8 +26,10 @@
 
 #include <QxtTemporaryDir>
 
-#define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
 #define OPENCOR_HELP_HOMEPAGE "qthelp://opencor/doc/userIndex.html"
+#define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
+#define CELLML_HOMEPAGE "http://www.cellml.org/"
+#define CELLML_MODEL_REPOSITORY_HOMEPAGE "http://models.cellml.org/"
 
 #define SETTINGS_GENERAL_LOCALE "General_Locale"
 #define SETTINGS_GENERAL_GEOMETRY "General_Geometry"
@@ -549,9 +551,28 @@ void MainWindow::on_actionFrench_triggered()
 
 void MainWindow::on_actionHomePage_triggered()
 {
-    // Look up OpenCOR's home page
+    // Look up OpenCOR home page
 
     QDesktopServices::openUrl(QUrl(OPENCOR_HOMEPAGE));
+}
+
+void MainWindow::on_actionCellML_triggered()
+{
+    // Look up CellML home page
+
+    QDesktopServices::openUrl(QUrl(CELLML_HOMEPAGE));
+}
+
+void MainWindow::on_actionCellMLModelRepository_triggered()
+{
+    // Look up the CellML Model Repository home page
+
+    QDesktopServices::openUrl(QUrl(CELLML_MODEL_REPOSITORY_HOMEPAGE));
+}
+
+void MainWindow::on_actionUpdates_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionUpdates_triggered()");
 }
 
 void MainWindow::on_actionAbout_triggered()

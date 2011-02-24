@@ -21,7 +21,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -77,6 +77,11 @@
     <addaction name="actionHelp"/>
     <addaction name="separator"/>
     <addaction name="actionHomePage"/>
+    <addaction name="separator"/>
+    <addaction name="actionCellML"/>
+    <addaction name="actionCellMLModelRepository"/>
+    <addaction name="separator"/>
+    <addaction name="actionUpdates"/>
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
@@ -481,6 +486,30 @@
    </property>
    <property name="text">
     <string>&amp;Viewer</string>
+   </property>
+  </action>
+  <action name="actionCellML">
+   <property name="text">
+    <string>CellML</string>
+   </property>
+   <property name="statusTip">
+    <string>Look up the CellML home page</string>
+   </property>
+  </action>
+  <action name="actionCellMLModelRepository">
+   <property name="text">
+    <string>CellML Model Repository</string>
+   </property>
+   <property name="statusTip">
+    <string>Look up the CellML Model Repository home page</string>
+   </property>
+  </action>
+  <action name="actionUpdates">
+   <property name="text">
+    <string>&amp;Updates</string>
+   </property>
+   <property name="statusTip">
+    <string>Check for updates</string>
    </property>
   </action>
  </widget>
