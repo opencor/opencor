@@ -23,5 +23,5 @@ h2 {
 
 pre {
     background: rgb(219, 229, 241);
-    border: 1px dashed rgb(54, 96, 146);
+    border-color: rgb(54, 96, 146);
 }

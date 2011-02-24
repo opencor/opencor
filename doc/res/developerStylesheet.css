@@ -33,12 +33,17 @@ pre {
     border: 1px dashed rgb(49, 133, 155);
 }
 
+pre.code {
+    background: rgb(244, 250, 251);
+    border-color: rgb(119, 193, 206);
+}
+
 pre.good {
-    background: rgb(235, 241, 221);
-    border: 1px dashed rgb(118, 146, 60);
+    background: rgb(249, 251, 244);
+    border-color: rgb(182, 206, 119);
 }
 
 pre.bad {
-    background: rgb(242, 220, 219);
-    border: 1px dashed rgb(149, 55, 52);
+    background: rgb(251, 244, 244);
+    border-color: rgb(206, 119, 119);
 }
