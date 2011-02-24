@@ -8,7 +8,7 @@ DockToolBar::DockToolBar(QWidget *pParent) :
 
     setStyleSheet("QToolBar { border: 0px }");
 
-    // Set the dimension of the icons to 83% of their default size
+    // Set the size of the icons to 20 by 20 pixels
 
-    setIconSize(0.83*iconSize());
+    setIconSize(QSize(20, 20));
 }

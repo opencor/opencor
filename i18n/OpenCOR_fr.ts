@@ -114,30 +114,6 @@
         <translation>Aide OpenCOR</translation>
     </message>
     <message>
-        <source>Home</source>
-        <translation>Page Principale</translation>
-    </message>
-    <message>
-        <source>Back</source>
-        <translation>En arrière</translation>
-    </message>
-    <message>
-        <source>Forward</source>
-        <translation>En avant</translation>
-    </message>
-    <message>
-        <source>Normal Size</source>
-        <translation>Taille Normale</translation>
-    </message>
-    <message>
-        <source>Zoom In</source>
-        <translation>Aggrandir</translation>
-    </message>
-    <message>
-        <source>Zoom Out</source>
-        <translation>Réduire</translation>
-    </message>
-    <message>
         <source>&amp;Home</source>
         <translation>&amp;Page Principale</translation>
     </message>
@@ -194,20 +170,12 @@
         <translation>Réinitialiser la taille du contenu de la page d&apos;aide</translation>
     </message>
     <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
-    </message>
-    <message>
         <source>&amp;Copy</source>
         <translation>&amp;Copier</translation>
     </message>
     <message>
         <source>Copy the selection to the clipboard</source>
         <translation>Copier la sélection dans le presse-papier</translation>
-    </message>
-    <message>
-        <source>Print</source>
-        <translation>Imprimer</translation>
     </message>
     <message>
         <source>&amp;Print</source>
