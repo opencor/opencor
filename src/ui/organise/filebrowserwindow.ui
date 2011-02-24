@@ -155,6 +155,22 @@
        </widget>
       </item>
       <item>
+       <widget class="QToolButton" name="deleteButton">
+        <property name="text">
+         <string>Delete</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="expandingSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -240,10 +256,25 @@
     <string>&amp;New</string>
    </property>
    <property name="statusTip">
-    <string>Create a new empty folder</string>
+    <string>Create a new folder or CellML file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+N</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="icon">
+    <iconset resource="../../../res/OpenCOR.qrc">
+     <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Delete</string>
+   </property>
+   <property name="statusTip">
+    <string>Delete the current folder or file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+D</string>
    </property>
   </action>
  </widget>

@@ -56,10 +56,6 @@
         <translation>&amp;Nouveau</translation>
     </message>
     <message>
-        <source>Create a new empty folder</source>
-        <translation>Créer un nouveau répertoire vide</translation>
-    </message>
-    <message>
         <source>Ctrl+Alt+N</source>
         <translation></translation>
     </message>
@@ -86,6 +82,26 @@
     <message>
         <source>&amp;Parent</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Supprimer</translation>
+    </message>
+    <message>
+        <source>Delete the current folder or file</source>
+        <translation>Supprimer le répertoire ou fichier actuel</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+D</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Create a new folder or CellML file</source>
+        <translation>Créer un nouveau répertoire ou fichier CellML</translation>
     </message>
 </context>
 <context>

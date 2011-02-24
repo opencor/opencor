@@ -23,6 +23,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     mUi->nextButton->setDefaultAction(mUi->actionNext);
 
     mUi->newButton->setDefaultAction(mUi->actionNew);
+    mUi->deleteButton->setDefaultAction(mUi->actionDelete);
 
     // Create and add the file browser widget
 
