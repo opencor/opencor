@@ -19,7 +19,7 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     mUi->setupUi(this);
 
-    // Assign an action to the different 'toolbar' buttons
+    // Assign an action to the different toolbar buttons
 
     mUi->homeButton->setDefaultAction(mUi->actionHome);
 
@@ -50,7 +50,7 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
-    // that we have in our 'toolbar', so...)
+    // that we have in our toolbar, so...)
 
     mHelpWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -214,7 +214,7 @@ void HelpWindow::on_actionPrint_triggered()
 void HelpWindow::customContextMenu(const QPoint &pPos)
 {
     // Create a custom context menu which items match the contents of our
-    // 'toolbar'
+    // toolbar
 
     QMenu *menu = new QMenu;
 

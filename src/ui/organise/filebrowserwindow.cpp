@@ -3,6 +3,8 @@
 
 #include "ui_filebrowserwindow.h"
 
+#include <QMenu>
+
 #define SETTINGS_FILEBROWSERWINDOW "FileBrowserWindow"
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
@@ -22,8 +24,28 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     mUi->previousButton->setDefaultAction(mUi->actionPrevious);
     mUi->nextButton->setDefaultAction(mUi->actionNext);
 
-    mUi->newButton->setDefaultAction(mUi->actionNew);
     mUi->deleteButton->setDefaultAction(mUi->actionDelete);
+
+    // Set the New toolbar button with its dropdown menu using our custom-made
+    // action (actionNew)
+
+    QMenu *actionNewMenu = new QMenu(this);
+
+    mUi->actionNew->setMenu(actionNewMenu);
+
+    actionNewMenu->addAction(mUi->actionFolder);
+    actionNewMenu->addSeparator();
+    actionNewMenu->addAction(mUi->actionCellML10File);
+    actionNewMenu->addAction(mUi->actionCellML11File);
+
+    QToolButton *newButton = new QToolButton(this);
+
+    newButton->setAutoRaise(true);
+    newButton->setDefaultAction(mUi->actionNew);
+    newButton->setIconSize(QSize(20, 20));
+
+    mUi->horizontalLayout->insertWidget(mUi->horizontalLayout->indexOf(mUi->deleteButton),
+                                        newButton);
 
     // Create and add the file browser widget
 

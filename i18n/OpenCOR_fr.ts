@@ -32,10 +32,6 @@
         <translation>Ctrl+Alt+Haut</translation>
     </message>
     <message>
-        <source>New</source>
-        <translation>Nouveau</translation>
-    </message>
-    <message>
         <source>Go to the home folder</source>
         <translation>Aller au répertoire principal</translation>
     </message>
@@ -100,8 +96,28 @@
         <translation></translation>
     </message>
     <message>
-        <source>Create a new folder or CellML file</source>
-        <translation>Créer un nouveau répertoire ou fichier CellML</translation>
+        <source>Create a new folder</source>
+        <translation>Créer un nouveau répertoire</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Répertoire</translation>
+    </message>
+    <message>
+        <source>CellML 1.0 File</source>
+        <translation>Fichier CellML 1.0</translation>
+    </message>
+    <message>
+        <source>Create a new CellML 1.0 file</source>
+        <translation>Créer un nouveau fichier CellML 1.0</translation>
+    </message>
+    <message>
+        <source>CellML 1.1 File</source>
+        <translation>Fichier CellML 1.1</translation>
+    </message>
+    <message>
+        <source>Create a new CellML 1.1 file</source>
+        <translation>Créer un nouveau fichier CellML 1.1</translation>
     </message>
 </context>
 <context>

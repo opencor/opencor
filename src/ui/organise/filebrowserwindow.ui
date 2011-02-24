@@ -139,22 +139,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="newButton">
-        <property name="text">
-         <string>New</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="autoRaise">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QToolButton" name="deleteButton">
         <property name="text">
          <string>Delete</string>
@@ -256,10 +240,34 @@
     <string>&amp;New</string>
    </property>
    <property name="statusTip">
-    <string>Create a new folder or CellML file</string>
+    <string>Create a new folder</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+N</string>
+   </property>
+  </action>
+  <action name="actionFolder">
+   <property name="text">
+    <string>Folder</string>
+   </property>
+   <property name="statusTip">
+    <string>Create a new folder</string>
+   </property>
+  </action>
+  <action name="actionCellML10File">
+   <property name="text">
+    <string>CellML 1.0 File</string>
+   </property>
+   <property name="statusTip">
+    <string>Create a new CellML 1.0 file</string>
+   </property>
+  </action>
+  <action name="actionCellML11File">
+   <property name="text">
+    <string>CellML 1.1 File</string>
+   </property>
+   <property name="statusTip">
+    <string>Create a new CellML 1.1 file</string>
    </property>
   </action>
   <action name="actionDelete">
