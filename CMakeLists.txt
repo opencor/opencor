@@ -29,6 +29,7 @@ SET(SOURCES
     src/ui/organise/fileorganiserwindow.cpp
     src/ui/organise/pmrexplorerwindow.cpp
     src/widget/docktoolbar.cpp
+    src/widget/dockwidget.cpp
     src/widget/helpwidget.cpp
     src/widget/edit/mmlviewerwidget.cpp
     src/widget/organise/filebrowserwidget.cpp
@@ -40,7 +41,6 @@ SET(HEADERS
     src/misc/common.h
     src/misc/commonwidget.h
     src/misc/utils.h
-    src/widget/docktoolbar.h
 )
 
 SET(HEADERS_MOC
@@ -51,6 +51,8 @@ SET(HEADERS_MOC
     src/ui/organise/filebrowserwindow.h
     src/ui/organise/fileorganiserwindow.h
     src/ui/organise/pmrexplorerwindow.h
+    src/widget/docktoolbar.h
+    src/widget/dockwidget.h
     src/widget/helpwidget.h
     src/widget/edit/mmlviewerwidget.h
     src/widget/organise/filebrowserwidget.h

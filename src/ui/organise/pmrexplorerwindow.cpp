@@ -6,7 +6,7 @@
 #define SETTINGS_PMREXPLORERWINDOW "PmrExplorerWindow"
 
 PmrExplorerWindow::PmrExplorerWindow(QWidget *pParent) :
-    QDockWidget(pParent),
+    DockWidget(pParent),
     mUi(new Ui::PmrExplorerWindow)
 {
     // Set up the UI

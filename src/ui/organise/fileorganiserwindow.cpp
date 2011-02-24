@@ -6,7 +6,7 @@
 #define SETTINGS_FILEORGANISERWINDOW "FileOrganiserWindow"
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
-    QDockWidget(pParent),
+    DockWidget(pParent),
     mUi(new Ui::FileOrganiserWindow)
 {
     // Set up the UI

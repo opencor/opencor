@@ -2,8 +2,7 @@
 #define PMREXPLORERWINDOW_H
 
 #include "commonwidget.h"
-
-#include <QDockWidget>
+#include "dockwidget.h"
 
 namespace Ui {
     class PmrExplorerWindow;
@@ -11,7 +10,7 @@ namespace Ui {
 
 class PmrExplorerWidget;
 
-class PmrExplorerWindow : public QDockWidget, public CommonWidget
+class PmrExplorerWindow : public DockWidget, public CommonWidget
 {
     Q_OBJECT
 

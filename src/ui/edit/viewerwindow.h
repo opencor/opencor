@@ -2,8 +2,7 @@
 #define VIEWERWINDOW_H
 
 #include "commonwidget.h"
-
-#include <QDockWidget>
+#include "dockwidget.h"
 
 namespace Ui {
     class ViewerWindow;
@@ -11,7 +10,7 @@ namespace Ui {
 
 class MmlViewerWidget;
 
-class ViewerWindow : public QDockWidget, public CommonWidget
+class ViewerWindow : public DockWidget, public CommonWidget
 {
     Q_OBJECT
 

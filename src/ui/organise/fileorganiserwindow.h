@@ -2,8 +2,7 @@
 #define FILEORGANISERWINDOW_H
 
 #include "commonwidget.h"
-
-#include <QDockWidget>
+#include "dockwidget.h"
 
 namespace Ui {
     class FileOrganiserWindow;
@@ -11,7 +10,7 @@ namespace Ui {
 
 class FileOrganiserWidget;
 
-class FileOrganiserWindow : public QDockWidget, public CommonWidget
+class FileOrganiserWindow : public DockWidget, public CommonWidget
 {
     Q_OBJECT
 

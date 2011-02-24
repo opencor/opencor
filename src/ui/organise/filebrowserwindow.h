@@ -2,8 +2,7 @@
 #define FILEBROWSERWINDOW_H
 
 #include "commonwidget.h"
-
-#include <QDockWidget>
+#include "dockwidget.h"
 
 namespace Ui {
     class FileBrowserWindow;
@@ -11,7 +10,7 @@ namespace Ui {
 
 class FileBrowserWidget;
 
-class FileBrowserWindow : public QDockWidget, public CommonWidget
+class FileBrowserWindow : public DockWidget, public CommonWidget
 {
     Q_OBJECT
 

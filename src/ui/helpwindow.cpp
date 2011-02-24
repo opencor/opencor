@@ -13,7 +13,7 @@
 
 HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                        QWidget *pParent) :
-    QDockWidget(pParent),
+    DockWidget(pParent),
     mUi(new Ui::HelpWindow)
 {
     // Set up the UI

@@ -9,7 +9,7 @@
 #define SETTINGS_FILEBROWSERWINDOW "FileBrowserWindow"
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
-    QDockWidget(pParent),
+    DockWidget(pParent),
     mUi(new Ui::FileBrowserWindow)
 {
     // Set up the UI

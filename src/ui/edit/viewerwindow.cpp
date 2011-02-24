@@ -6,7 +6,7 @@
 #define SETTINGS_VIEWERWINDOW "ViewerWindow"
 
 ViewerWindow::ViewerWindow(QWidget *pParent) :
-    QDockWidget(pParent),
+    DockWidget(pParent),
     mUi(new Ui::ViewerWindow)
 {
     // Set up the UI

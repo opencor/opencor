@@ -1,6 +1,7 @@
 #include "centralwidget.h"
 #include "viewerwindow.h"
 #include "commonwidget.h"
+#include "dockwidget.h"
 #include "mainwindow.h"
 #include "filebrowserwindow.h"
 #include "fileorganiserwindow.h"
@@ -300,11 +301,11 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
     pEvent->acceptProposedAction();
 }
 
-void MainWindow::loadDockWindowSettings(QDockWidget *pDockWindow,
+void MainWindow::loadDockWindowSettings(DockWidget *pDockWindow,
                                         const bool &pNeedDefaultSettings,
                                         const QSettings &pSettings,
                                         const Qt::DockWidgetArea &pDockArea,
-                                        QDockWidget *pDockWidget)
+                                        DockWidget *pDockWidget)
 {
     CommonWidget *commonWidget = dynamic_cast<CommonWidget *>(pDockWindow);
 

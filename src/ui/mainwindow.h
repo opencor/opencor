@@ -9,6 +9,7 @@ namespace Ui {
 }
 
 class CentralWidget;
+class DockWidget;
 class PmrExplorerWindow;
 class FileBrowserWindow;
 class FileOrganiserWindow;
@@ -60,11 +61,11 @@ private:
 
     void notYetImplemented(const QString &method);
 
-    void loadDockWindowSettings(QDockWidget *pDockWindow,
+    void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,
                                 const QSettings &pSettings,
                                 const Qt::DockWidgetArea &pDockArea,
-                                QDockWidget *pDockWidget = 0);
+                                DockWidget *pDockWidget = 0);
     void loadSettings();
     void saveSettings();
 
