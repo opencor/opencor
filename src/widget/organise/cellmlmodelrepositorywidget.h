@@ -1,16 +1,16 @@
-#ifndef PMREXPLORERWIDGET_H
-#define PMREXPLORERWIDGET_H
+#ifndef CELLMLMODELREPOSITORYWIDGET_H
+#define CELLMLMODELREPOSITORYWIDGET_H
 
 #include "commonwidget.h"
 
 #include <QWebView>
 
-class PmrExplorerWidget : public QWebView, public CommonWidget
+class CellmlModelRepositoryWidget : public QWebView, public CommonWidget
 {
     Q_OBJECT
 
 public:
-    PmrExplorerWidget(QWidget *pParent = 0);
+    CellmlModelRepositoryWidget(QWidget *pParent = 0);
 
     virtual void retranslateUi();
 
@@ -19,6 +19,8 @@ public:
 
 protected:
     virtual QSize sizeHint() const;
+
+    virtual void paintEvent(QPaintEvent *pEvent);
 };
 
 #endif

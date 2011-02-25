@@ -6,7 +6,7 @@
 #include "filebrowserwindow.h"
 #include "fileorganiserwindow.h"
 #include "helpwindow.h"
-#include "pmrexplorerwindow.h"
+#include "cellmlmodelrepositorywindow.h"
 #include "utils.h"
 
 #include "ui_mainwindow.h"
@@ -114,7 +114,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create the various dock windows
 
-    mPmrExplorerWindow   = new PmrExplorerWindow(this);
+    mCellmlModelRepositoryWindow   = new CellmlModelRepositoryWindow(this);
     mFileBrowserWindow   = new FileBrowserWindow(this);
     mFileOrganiserWindow = new FileOrganiserWindow(this);
 
@@ -148,10 +148,10 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Some connections to handle various dock windows
 
-    connect(mUi->actionPMRExplorer, SIGNAL(triggered(bool)),
-            mPmrExplorerWindow, SLOT(setVisible(bool)));
-    connect(mPmrExplorerWindow, SIGNAL(visibilityChanged(bool)),
-            mUi->actionPMRExplorer, SLOT(setChecked(bool)));
+    connect(mUi->actionCellmlModelRepository, SIGNAL(triggered(bool)),
+            mCellmlModelRepositoryWindow, SLOT(setVisible(bool)));
+    connect(mCellmlModelRepositoryWindow, SIGNAL(visibilityChanged(bool)),
+            mUi->actionCellmlModelRepository, SLOT(setChecked(bool)));
 
     connect(mUi->actionFileBrowser, SIGNAL(triggered(bool)),
             mFileBrowserWindow, SLOT(setVisible(bool)));
@@ -379,7 +379,7 @@ void MainWindow::loadSettings()
 
     // Retrieve the settings of the various dock windows
 
-    loadDockWindowSettings(mPmrExplorerWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
+    loadDockWindowSettings(mCellmlModelRepositoryWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
     loadDockWindowSettings(mFileBrowserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
     loadDockWindowSettings(mFileOrganiserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
 
@@ -411,7 +411,7 @@ void MainWindow::saveSettings()
 
     // Keep track of the settings of the various dock windows
 
-    mPmrExplorerWindow->saveSettings(settings, SETTINGS_NONE);
+    mCellmlModelRepositoryWindow->saveSettings(settings, SETTINGS_NONE);
     mFileBrowserWindow->saveSettings(settings, SETTINGS_NONE);
     mFileOrganiserWindow->saveSettings(settings, SETTINGS_NONE);
 
@@ -444,7 +444,7 @@ void MainWindow::setLocale(const QString &pLocale)
 
         mUi->retranslateUi(this);
 
-        mPmrExplorerWindow->retranslateUi();
+        mCellmlModelRepositoryWindow->retranslateUi();
         mFileBrowserWindow->retranslateUi();
         mFileOrganiserWindow->retranslateUi();
 

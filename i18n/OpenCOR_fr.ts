@@ -441,8 +441,8 @@
         <translation>&amp;Organisateur de Fichiers</translation>
     </message>
     <message>
-        <source>&amp;PMR Explorer</source>
-        <translation>Explorateur &amp;PMR</translation>
+        <source>&amp;CellML Model Repository</source>
+        <translation>Répertoire de Modèles &amp;CellML</translation>
     </message>
     <message>
         <source>&amp;File Browser</source>
@@ -482,10 +482,10 @@
     </message>
 </context>
 <context>
-    <name>PmrExplorerWindow</name>
+    <name>CellmlModelRepositoryWindow</name>
     <message>
-        <source>PMR Explorer</source>
-        <translation>Explorateur PMR</translation>
+        <source>CellML Model Repository</source>
+        <translation>Répertoire de Modèles CellML</translation>
     </message>
 </context>
 <context>

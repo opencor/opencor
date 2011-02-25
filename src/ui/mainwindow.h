@@ -10,7 +10,7 @@ namespace Ui {
 
 class CentralWidget;
 class DockWidget;
-class PmrExplorerWindow;
+class CellmlModelRepositoryWindow;
 class FileBrowserWindow;
 class FileOrganiserWindow;
 class ViewerWindow;
@@ -47,7 +47,7 @@ private:
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
 
-    PmrExplorerWindow *mPmrExplorerWindow;
+    CellmlModelRepositoryWindow *mCellmlModelRepositoryWindow;
     FileBrowserWindow *mFileBrowserWindow;
     FileOrganiserWindow *mFileOrganiserWindow;
 

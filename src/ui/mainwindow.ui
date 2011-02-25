@@ -98,7 +98,7 @@
      <property name="title">
       <string>&amp;Organise</string>
      </property>
-     <addaction name="actionPMRExplorer"/>
+     <addaction name="actionCellmlModelRepository"/>
      <addaction name="actionFileBrowser"/>
      <addaction name="actionFileOrganiser"/>
     </widget>
@@ -454,12 +454,12 @@
     <string>Show/hide the status bar</string>
    </property>
   </action>
-  <action name="actionPMRExplorer">
+  <action name="actionCellmlModelRepository">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;PMR Explorer</string>
+    <string>&amp;CellML Model Repository</string>
    </property>
   </action>
   <action name="actionFileBrowser">
