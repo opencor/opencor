@@ -36,7 +36,7 @@ private:
 private Q_SLOTS:
     void on_actionHome_triggered();
 
-    void customContextMenu(const QPoint &pPos);
+    void customContextMenu(const QPoint &);
 
     void needUpdateActions();
 };

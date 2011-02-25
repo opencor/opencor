@@ -221,28 +221,28 @@ void HelpWindow::on_actionPrint_triggered()
           mHelpWidget->print(&printer);
 }
 
-void HelpWindow::customContextMenu(const QPoint &pPos)
+void HelpWindow::customContextMenu(const QPoint &)
 {
     // Create a custom context menu which items match the contents of our
     // toolbar
 
-    QMenu *menu = new QMenu;
+    QMenu menu;
 
-    menu->addAction(mUi->actionHome);
-    menu->addSeparator();
-    menu->addAction(mUi->actionBack);
-    menu->addAction(mUi->actionForward);
-    menu->addSeparator();
-    menu->addAction(mUi->actionCopy);
-    menu->addSeparator();
-    menu->addAction(mUi->actionNormalSize);
-    menu->addSeparator();
-    menu->addAction(mUi->actionZoomIn);
-    menu->addAction(mUi->actionZoomOut);
-    menu->addSeparator();
-    menu->addAction(mUi->actionPrint);
+    menu.addAction(mUi->actionHome);
+    menu.addSeparator();
+    menu.addAction(mUi->actionBack);
+    menu.addAction(mUi->actionForward);
+    menu.addSeparator();
+    menu.addAction(mUi->actionCopy);
+    menu.addSeparator();
+    menu.addAction(mUi->actionNormalSize);
+    menu.addSeparator();
+    menu.addAction(mUi->actionZoomIn);
+    menu.addAction(mUi->actionZoomOut);
+    menu.addSeparator();
+    menu.addAction(mUi->actionPrint);
 
-    menu->exec(mapToGlobal(pPos));
+    menu.exec(QCursor::pos());
 }
 
 void HelpWindow::needUpdateActions()

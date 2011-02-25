@@ -129,24 +129,24 @@ void FileBrowserWindow::saveSettings(QSettings &pSettings, const QString &)
     mFileBrowserWidget->saveSettings(pSettings, SETTINGS_FILEBROWSERWINDOW);
 }
 
-void FileBrowserWindow::customContextMenu(const QPoint &pPos)
+void FileBrowserWindow::customContextMenu(const QPoint &)
 {
     // Create a custom context menu which items match the contents of our
     // toolbar
 
-    QMenu *menu = new QMenu;
+    QMenu menu;
 
-    menu->addAction(mUi->actionHome);
-    menu->addSeparator();
-    menu->addAction(mUi->actionParent);
-    menu->addSeparator();
-    menu->addAction(mUi->actionPrevious);
-    menu->addAction(mUi->actionNext);
-    menu->addSeparator();
-    menu->addAction(mUi->actionNew);
-    menu->addAction(mUi->actionDelete);
+    menu.addAction(mUi->actionHome);
+    menu.addSeparator();
+    menu.addAction(mUi->actionParent);
+    menu.addSeparator();
+    menu.addAction(mUi->actionPrevious);
+    menu.addAction(mUi->actionNext);
+    menu.addSeparator();
+    menu.addAction(mUi->actionNew);
+    menu.addAction(mUi->actionDelete);
 
-    menu->exec(mapToGlobal(pPos));
+    menu.exec(QCursor::pos());
 }
 
 void FileBrowserWindow::needUpdateActions()
