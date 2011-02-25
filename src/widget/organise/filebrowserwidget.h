@@ -29,6 +29,8 @@ public:
 protected:
     virtual QSize sizeHint() const;
 
+    virtual void mousePressEvent(QMouseEvent *pEvent);
+
 private:
     QFileSystemModel *mFileSystemModel;
 

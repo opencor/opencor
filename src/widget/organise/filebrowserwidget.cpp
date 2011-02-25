@@ -4,6 +4,7 @@
 #include <QDesktopServices>
 #include <QFileSystemModel>
 #include <QHeaderView>
+#include <QMouseEvent>
 #include <QSettings>
 
 #define SETTINGS_COLUMNWIDTH "_ColumnWidth"
@@ -150,6 +151,21 @@ QSize FileBrowserWidget::sizeHint() const
     //       widget on it, to have a decent size when docked to the main window
 
     return defaultSize(0.15);
+}
+
+void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    if (pEvent->button() == Qt::RightButton)
+        // We are pressing the right mouse button which may be used to display a
+        // context menu and we don't want the row beneath the mouse to be
+        // selected (in case it isn't already), so...
+
+        return;
+    else
+        // We are not pressing the right mouse button, so carry on with the
+        // default handling of the event
+
+        QTreeView::mousePressEvent(pEvent);
 }
 
 void FileBrowserWidget::directoryLoaded(const QString &pPath)
