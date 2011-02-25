@@ -45,10 +45,16 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     mUi->verticalLayout->addWidget(toolbar);
 
     // Create and add the file browser widget
+    // Note: we let the widget know that we want our own custom context menu
 
     mFileBrowserWidget = new FileBrowserWidget(this);
 
+    mFileBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
     mUi->verticalLayout->addWidget(mFileBrowserWidget);
+
+    connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
+            this, SLOT(customContextMenu(const QPoint&)));
 
     // Prevent objects from being dropped on the window
 
@@ -86,4 +92,24 @@ void FileBrowserWindow::saveSettings(QSettings &pSettings, const QString &)
     // Keep track of the settings of the file browser widget
 
     mFileBrowserWidget->saveSettings(pSettings, SETTINGS_FILEBROWSERWINDOW);
+}
+
+void FileBrowserWindow::customContextMenu(const QPoint &pPos)
+{
+    // Create a custom context menu which items match the contents of our
+    // toolbar
+
+    QMenu *menu = new QMenu;
+
+    menu->addAction(mUi->actionHome);
+    menu->addSeparator();
+    menu->addAction(mUi->actionParent);
+    menu->addSeparator();
+    menu->addAction(mUi->actionPrevious);
+    menu->addAction(mUi->actionNext);
+    menu->addSeparator();
+    menu->addAction(mUi->actionNew);
+    menu->addAction(mUi->actionDelete);
+
+    menu->exec(mapToGlobal(pPos));
 }

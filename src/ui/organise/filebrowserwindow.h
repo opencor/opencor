@@ -27,6 +27,9 @@ private:
     Ui::FileBrowserWindow *mUi;
 
     FileBrowserWidget *mFileBrowserWidget;
+
+private Q_SLOTS:
+    void customContextMenu(const QPoint &pPos);
 };
 
 #endif
