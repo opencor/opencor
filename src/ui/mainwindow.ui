@@ -77,9 +77,7 @@
     <addaction name="actionHelp"/>
     <addaction name="separator"/>
     <addaction name="actionHomePage"/>
-    <addaction name="separator"/>
-    <addaction name="actionCellML"/>
-    <addaction name="actionCellMLModelRepository"/>
+    <addaction name="actionCellMLHomePage"/>
     <addaction name="separator"/>
     <addaction name="actionUpdates"/>
     <addaction name="separator"/>
@@ -263,7 +261,7 @@
      <normaloff>:/about.png</normaloff>:/about.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;About...</string>
+    <string>&amp;About</string>
    </property>
    <property name="statusTip">
     <string>Some general information about OpenCOR</string>
@@ -488,20 +486,12 @@
     <string>&amp;Viewer</string>
    </property>
   </action>
-  <action name="actionCellML">
+  <action name="actionCellMLHomePage">
    <property name="text">
-    <string>CellML</string>
+    <string>CellML Home Page</string>
    </property>
    <property name="statusTip">
     <string>Look up the CellML home page</string>
-   </property>
-  </action>
-  <action name="actionCellMLModelRepository">
-   <property name="text">
-    <string>CellML Model Repository</string>
-   </property>
-   <property name="statusTip">
-    <string>Look up the CellML Model Repository home page</string>
    </property>
   </action>
   <action name="actionUpdates">

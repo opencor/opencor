@@ -277,8 +277,8 @@
         <translation>Consulter la page d&apos;accueil d&apos;OpenCOR</translation>
     </message>
     <message>
-        <source>&amp;About...</source>
-        <translation>&amp;A Propos...</translation>
+        <source>&amp;About</source>
+        <translation>&amp;A Propos</translation>
     </message>
     <message>
         <source>Some general information about OpenCOR</source>
@@ -469,16 +469,8 @@
         <translation>Consulter la page d&apos;accueil de CellML</translation>
     </message>
     <message>
-        <source>Look up the CellML Model Repository home page</source>
-        <translation>Consulter la page d&apos;accueil du Répertoire de Modèles CellML</translation>
-    </message>
-    <message>
-        <source>CellML</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>CellML Model Repository</source>
-        <translation>Répertoire de Modèles CellML</translation>
+        <source>CellML Home Page</source>
+        <translation>Page d&apos;Accueil de CellML</translation>
     </message>
     <message>
         <source>&amp;Updates</source>

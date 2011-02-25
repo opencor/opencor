@@ -90,8 +90,7 @@ private Q_SLOTS:
     void on_actionEnglish_triggered();
     void on_actionFrench_triggered();
     void on_actionHomePage_triggered();
-    void on_actionCellML_triggered();
-    void on_actionCellMLModelRepository_triggered();
+    void on_actionCellMLHomePage_triggered();
     void on_actionUpdates_triggered();
     void on_actionAbout_triggered();
 
