@@ -34,6 +34,9 @@ public:
     void setZoomLevel(const int &pZoomLevel);
     int zoomLevel();
 
+protected:
+    virtual void updateActions();
+
 private:
     Ui::HelpWindow *mUi;
 
@@ -51,9 +54,7 @@ private Q_SLOTS:
 
     void customContextMenu(const QPoint &pPos);
 
-    void newUrl(const QUrl &pNewUrl);
-    void newSelection();
-    void newZoomLevel(const int &pNewZoomLevel);
+    void needUpdateActions();
 };
 
 #endif

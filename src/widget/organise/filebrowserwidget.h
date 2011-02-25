@@ -20,6 +20,12 @@ public:
     virtual void loadSettings(const QSettings &, const QString &);
     virtual void saveSettings(QSettings &, const QString &);
 
+    QString homeFolder();
+    void gotoHomeFolder();
+
+    QString currentPath();
+    bool currentPathVisible();
+
 protected:
     virtual QSize sizeHint() const;
 

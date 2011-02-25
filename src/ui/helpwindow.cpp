@@ -45,9 +45,6 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     mHelpWidget = new HelpWidget(pHelpEngine, pHomePage, this);
 
-    mUi->verticalLayout->addSpacing(1);
-    // Note: check the constructor for FileBrowserWindow for an explanation of
-    //       the above
     mUi->verticalLayout->addWidget(mHelpWidget);
 
     // Prevent objects from being dropped on the help widget
@@ -62,11 +59,11 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     // Some connections
 
-    connect(mHelpWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
-            this, SLOT(customContextMenu(const QPoint&)));
+    connect(mHelpWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(customContextMenu(const QPoint &)));
 
-    connect(mHelpWidget, SIGNAL(urlChanged(const QUrl&)),
-            this, SLOT(newUrl(const QUrl&)));
+    connect(mHelpWidget, SIGNAL(urlChanged(const QUrl &)),
+            this, SLOT(needUpdateActions()));
 
     connect(mHelpWidget, SIGNAL(backAvailable(bool)),
             mUi->actionBack, SLOT(setEnabled(bool)));
@@ -74,10 +71,10 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
             mUi->actionForward, SLOT(setEnabled(bool)));
 
     connect(mHelpWidget->page(), SIGNAL(selectionChanged()),
-            this, SLOT(newSelection()));
+            this, SLOT(needUpdateActions()));
 
     connect(mHelpWidget, SIGNAL(zoomLevelChanged(int)),
-            this, SLOT(newZoomLevel(int)));
+            this, SLOT(needUpdateActions()));
 }
 
 HelpWindow::~HelpWindow()
@@ -85,6 +82,22 @@ HelpWindow::~HelpWindow()
     // Delete the UI
 
     delete mUi;
+}
+
+void HelpWindow::updateActions()
+{
+    // Make sure that the various actions are properly enabled/disabled
+
+    mUi->actionHome->setEnabled(mHelpWidget->url() != mHelpWidget->homePage());
+
+    mUi->actionBack->setEnabled(mHelpWidget->isBackAvailable());
+    mUi->actionForward->setEnabled(mHelpWidget->isForwardAvailable());
+
+    mUi->actionCopy->setEnabled(!mHelpWidget->selectedText().isEmpty());
+
+    mUi->actionNormalSize->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->defaultZoomLevel());
+
+    mUi->actionZoomOut->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->minimumZoomLevel());
 }
 
 void HelpWindow::retranslateUi()
@@ -97,16 +110,7 @@ void HelpWindow::retranslateUi()
     // (indeed, to translate everything messes things up in that respect,
     // so...)
 
-    mUi->actionHome->setEnabled(mHelpWidget->url() != mHelpWidget->homePage());
-
-    mUi->actionBack->setEnabled(mHelpWidget->isBackAvailable());
-    mUi->actionForward->setEnabled(mHelpWidget->isForwardAvailable());
-
-    mUi->actionCopy->setEnabled(!mHelpWidget->selectedText().isEmpty());
-
-    mUi->actionNormalSize->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->defaultZoomLevel());
-
-    mUi->actionZoomOut->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->minimumZoomLevel());
+    updateActions();
 
     // Retranslate the help widget
 
@@ -241,28 +245,9 @@ void HelpWindow::customContextMenu(const QPoint &pPos)
     menu->exec(mapToGlobal(pPos));
 }
 
-void HelpWindow::newUrl(const QUrl &pNewUrl)
+void HelpWindow::needUpdateActions()
 {
-    // The help page contents has changed, so determine whether the home action
-    // should now be enabled or not
+    // Something related to the help widget requires the actions to be udpated
 
-    mUi->actionHome->setEnabled(pNewUrl != mHelpWidget->homePage());
-}
-
-void HelpWindow::newSelection()
-{
-    // The selection in the help widget has changed, so determine whether the
-    // copy action should now be enabled or not
-
-    mUi->actionCopy->setEnabled(!mHelpWidget->selectedText().isEmpty());
-}
-
-void HelpWindow::newZoomLevel(const int &pNewZoomLevel)
-{
-    // The help page contents has been zoomed in/out or reset, so update the
-    // relevant actions
-
-    mUi->actionNormalSize->setEnabled(pNewZoomLevel != mHelpWidget->defaultZoomLevel());
-
-    mUi->actionZoomOut->setEnabled(pNewZoomLevel != mHelpWidget->minimumZoomLevel());
+    updateActions();
 }

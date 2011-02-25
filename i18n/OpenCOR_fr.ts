@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>CellmlModelRepositoryWindow</name>
+    <message>
+        <source>CellML Model Repository</source>
+        <translation>Répertoire de Modèles CellML</translation>
+    </message>
+</context>
+<context>
     <name>FileBrowserWindow</name>
     <message>
         <source>File Browser</source>
@@ -479,13 +486,6 @@
     <message>
         <source>Check for updates</source>
         <translation>Vérifier les mises à jour</translation>
-    </message>
-</context>
-<context>
-    <name>CellmlModelRepositoryWindow</name>
-    <message>
-        <source>CellML Model Repository</source>
-        <translation>Répertoire de Modèles CellML</translation>
     </message>
 </context>
 <context>

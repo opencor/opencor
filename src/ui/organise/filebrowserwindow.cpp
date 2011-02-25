@@ -5,6 +5,7 @@
 #include "ui_filebrowserwindow.h"
 
 #include <QMenu>
+#include <QItemSelectionModel>
 
 #define SETTINGS_FILEBROWSERWINDOW "FileBrowserWindow"
 
@@ -49,16 +50,27 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mFileBrowserWidget = new FileBrowserWidget(this);
 
-    mFileBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-
     mUi->verticalLayout->addWidget(mFileBrowserWidget);
 
-    connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
-            this, SLOT(customContextMenu(const QPoint&)));
+    // We want our own context menu for the file browser widget
 
-    // Prevent objects from being dropped on the window
+    mFileBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    setAcceptDrops(false);
+    // Prevent objects from being dropped on the file browser widget
+
+    mFileBrowserWidget->setAcceptDrops(false);
+
+    // Some connections
+
+    connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(customContextMenu(const QPoint &)));
+
+    connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(needUpdateActions()));
+    connect(mFileBrowserWidget, SIGNAL(expanded(const QModelIndex &)),
+            this, SLOT(needUpdateActions()));
+    connect(mFileBrowserWidget, SIGNAL(collapsed(const QModelIndex &)),
+            this, SLOT(needUpdateActions()));
 }
 
 FileBrowserWindow::~FileBrowserWindow()
@@ -68,11 +80,34 @@ FileBrowserWindow::~FileBrowserWindow()
     delete mUi;
 }
 
+void FileBrowserWindow::updateActions()
+{
+    // Make sure that the various actions are properly enabled/disabled
+
+    mUi->actionHome->setEnabled(   (mFileBrowserWidget->currentPath() != mFileBrowserWidget->homeFolder())
+                                || (   (mFileBrowserWidget->currentPath() == mFileBrowserWidget->homeFolder())
+                                    && !mFileBrowserWidget->currentPathVisible()));
+
+    mUi->actionParent->setEnabled(false);
+
+    mUi->actionPrevious->setEnabled(false);
+    mUi->actionNext->setEnabled(false);
+
+    mUi->actionNew->setEnabled(false);
+    mUi->actionDelete->setEnabled(false);
+}
+
 void FileBrowserWindow::retranslateUi()
 {
     // Translate the whole window
 
     mUi->retranslateUi(this);
+
+    // Make sure that the enabled state of the various actions is correct
+    // (indeed, to translate everything messes things up in that respect,
+    // so...)
+
+    updateActions();
 
     // Retranslate the file browser widget
 
@@ -112,4 +147,18 @@ void FileBrowserWindow::customContextMenu(const QPoint &pPos)
     menu->addAction(mUi->actionDelete);
 
     menu->exec(mapToGlobal(pPos));
+}
+
+void FileBrowserWindow::needUpdateActions()
+{
+    // Something related to the help widget requires the actions to be udpated
+
+    updateActions();
+}
+
+void FileBrowserWindow::on_actionHome_triggered()
+{
+    // Go to the home folder
+
+    mFileBrowserWidget->gotoHomeFolder();
 }

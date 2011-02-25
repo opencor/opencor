@@ -10,6 +10,8 @@ namespace Ui {
 
 class FileBrowserWidget;
 
+class QModelIndex;
+
 class FileBrowserWindow : public DockWidget, public CommonWidget
 {
     Q_OBJECT
@@ -23,13 +25,20 @@ public:
     virtual void loadSettings(const QSettings &pSettings, const QString &);
     virtual void saveSettings(QSettings &pSettings, const QString &);
 
+protected:
+    virtual void updateActions();
+
 private:
     Ui::FileBrowserWindow *mUi;
 
     FileBrowserWidget *mFileBrowserWidget;
 
 private Q_SLOTS:
+    void on_actionHome_triggered();
+
     void customContextMenu(const QPoint &pPos);
+
+    void needUpdateActions();
 };
 
 #endif

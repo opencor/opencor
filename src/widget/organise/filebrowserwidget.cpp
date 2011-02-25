@@ -196,3 +196,49 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
         needInitializing = false;
     }
 }
+
+QString FileBrowserWidget::homeFolder()
+{
+    // Return the path to the home folder
+
+    return QDir::homePath();
+}
+
+void FileBrowserWidget::gotoHomeFolder()
+{
+    // Set the current index to that of the home folder and expand the folder
+
+    QModelIndex homePathModelIndex = mFileSystemModel->index(homeFolder());
+
+    setCurrentIndex(homePathModelIndex);
+    setExpanded(homePathModelIndex, true);
+    scrollTo(homePathModelIndex);
+}
+
+QString FileBrowserWidget::currentPath()
+{
+    // Return the current path
+
+    return mFileSystemModel->filePath(currentIndex());
+}
+
+bool FileBrowserWidget::currentPathVisible()
+{
+    // Return whether the current path is visible or not, i.e. whether all of
+    // the parent nodes are expanded or not
+
+    bool result = true;
+    QModelIndex crtIndex = currentIndex();
+
+    while (result && (crtIndex.parent() != QModelIndex())) {
+        crtIndex = crtIndex.parent();
+
+        if (!isExpanded(crtIndex))
+            // The current parent is not expanded, so the current path cannot be
+            // visible, so...
+
+            result = false;
+    }
+
+    return result;
+}

@@ -23,6 +23,11 @@ QSize CommonWidget::defaultSize(const double &pRatio) const
                  pRatio*desktopGeometry.height());
 }
 
+void CommonWidget::updateActions()
+{
+    // Do nothing...
+}
+
 void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
                                       const bool &pTop, const bool &pLeft,
                                       const bool &pBottom, const bool &pRight)

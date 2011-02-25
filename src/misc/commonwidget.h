@@ -19,6 +19,8 @@ public:
 protected:
     virtual QSize defaultSize(const double &pRatio) const;
 
+    virtual void updateActions();
+
     void drawBorderIfDocked(const bool &pForceDrawing = false,
                             const bool &pTop = true, const bool &pLeft = true,
                             const bool &pBottom = true, const bool &pRight = true);
