@@ -54,11 +54,22 @@ MainWindow::MainWindow(QWidget *pParent) :
     // Set up the UI
 
     mUi->setupUi(this);
-    // Note: the application icon (which needs to be set in the case of Linux,
-    //       unlike in the case of Windows and Mac OS X, since it's set through
-    //       CMake in those cases (see CMakeLists.txt)) is set within the UI
-    //       file. Otherwise, it's good to have it set for all three platforms,
-    //       since it can then be used in, for example, the about box...
+    // Note: the application icon (which needs to be set for Linux, but neither
+    //       for Windows nor Mac OS X, since it's set through CMake in those
+    //       cases (see CMakeLists.txt)) is set within the UI file. This being
+    //       said, it's good to have it set for all three platforms, since it
+    //       can then be used in, for example, the about box, so...
+
+//---GRY--- THE BELOW CODE WOULD BE GOOD TO HAVE, BUT THERE IS A KNOWN BUG (SEE
+//          http://bugreports.qt.nokia.com/browse/QTBUG-3116) WHICH MAKES THAT
+//          CODE TO CAUSE PROBLEMS WITH THE LOADING/RESTORING OF THE APPLICATION
+//          GEOMETRY, SO...
+
+//#ifdef Q_WS_MAC
+//    // Make the application look more like a Mac OS X application
+
+//    setUnifiedTitleAndToolBarOnMac(true);
+//#endif
 
     // Set the New toolbar button with its dropdown menu using our custom-made
     // action (actionNew)
