@@ -55,8 +55,8 @@ int main(int pArgc, char *pArgv[])
     // Make sure that OpenCOR can handle the message sent by another
     // instance of itself
 
-    QObject::connect(&app, SIGNAL(messageReceived(const QString&)),
-                     &win, SLOT(singleAppMsgRcvd(const QString&)));
+    QObject::connect(&app, SIGNAL(messageReceived(const QString &)),
+                     &win, SLOT(singleAppMsgRcvd(const QString &)));
 
     // Show the main window
 

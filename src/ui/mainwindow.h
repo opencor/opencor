@@ -72,7 +72,7 @@ private:
     void setLocale(const QString &pLocale);
 
 public Q_SLOTS:
-    void singleAppMsgRcvd(const QString&);
+    void singleAppMsgRcvd(const QString &);
 
 private Q_SLOTS:
     void on_actionNew_triggered();

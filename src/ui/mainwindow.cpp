@@ -463,7 +463,7 @@ void MainWindow::setLocale(const QString &pLocale)
     mUi->actionFrench->setChecked(mLocale == FRENCH_LOCALE);
 }
 
-void MainWindow::singleAppMsgRcvd(const QString&)
+void MainWindow::singleAppMsgRcvd(const QString &)
 {
     // We have just received a message from another instance of OpenCOR, so
     // bring ourselves to the foreground

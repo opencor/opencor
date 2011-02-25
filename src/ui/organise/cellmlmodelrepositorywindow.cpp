@@ -19,9 +19,9 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     setWidget(mCellmlModelRepositoryWidget);
 
-    // Prevent objects from being dropped on the window
+    // Prevent objects from being dropped on the CellML Model Repository widget
 
-    setAcceptDrops(false);
+    mCellmlModelRepositoryWidget->setAcceptDrops(false);
 }
 
 CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
