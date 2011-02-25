@@ -1,11 +1,12 @@
 #include "pmrexplorerwidget.h"
 
-#include <QPaintEvent>
-
 PmrExplorerWidget::PmrExplorerWidget(QWidget *pParent) :
-    QWidget(pParent),
+    QWebView(pParent),
     CommonWidget(pParent)
 {
+    // Load the CellML Model Repository page
+
+    setUrl(QUrl("http://models.cellml.org/"));
 }
 
 void PmrExplorerWidget::retranslateUi()
@@ -30,19 +31,4 @@ QSize PmrExplorerWidget::sizeHint() const
     //       widget on it, to have a decent size when docked to the main window
 
     return defaultSize(0.15);
-}
-
-void PmrExplorerWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWidget::paintEvent(pEvent);
-
-    // Draw a border in case we are docked
-
-    drawBorderIfDocked();
-
-    // Accept the event
-
-    pEvent->accept();
 }

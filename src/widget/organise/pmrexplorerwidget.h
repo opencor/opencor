@@ -3,9 +3,9 @@
 
 #include "commonwidget.h"
 
-#include <QWidget>
+#include <QWebView>
 
-class PmrExplorerWidget : public QWidget, public CommonWidget
+class PmrExplorerWidget : public QWebView, public CommonWidget
 {
     Q_OBJECT
 
@@ -19,8 +19,6 @@ public:
 
 protected:
     virtual QSize sizeHint() const;
-
-    virtual void paintEvent(QPaintEvent *pEvent);
 };
 
 #endif
