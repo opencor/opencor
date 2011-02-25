@@ -83,16 +83,21 @@
             </li>
             <li>
                 <strong>Using Qt Creator:</strong>
-                    <ul>
-                        <li>Start Qt Creator;</li>
-                        <li>Open <code>[OpenCOR]/CMakeLists.txt</code> (by selecting the <code>File|Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
-                        <li>Specify <code>[OpenCOR]/build</code> as the build directory;</li>
-                        <li>Select <code>MinGW</code> as the generator (Windows only);</li>
-                        <li>Click on the <code>Run CMake</code> button;</li>
-                        <li>Click on the <code>Finish</code> button;</li>
-                        <li>Select <code>OpenCOR</code> as the run target (by selecting the <code>Build|Open Build/Run Target Seclector...</code> menu or by pressing <code>Ctrl+T</code>); and</li>
-                        <li>Build and test OpenCOR (by selecting the <code>Build|Run</code> menu or by pressing <code>Ctrl+R</code>).</li>
-                    </ul>
+                <ul>
+                    <li>Start Qt Creator;</li>
+                    <li>Open <code>[OpenCOR]/CMakeLists.txt</code> (by selecting the <code>File|Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
+                    <li>Specify <code>[OpenCOR]/build</code> as the build directory;</li>
+                    <li>Select <code>MinGW</code> as the generator (Windows only);</li>
+                    <li>Click on the <code>Run CMake</code> button;</li>
+                    <li>Click on the <code>Finish</code> button;</li>
+                    <li>Select <code>OpenCOR</code> as the run target (by selecting the <code>Build|Open Build/Run Target Seclector...</code> menu or by pressing <code>Ctrl+T</code>); and</li>
+                    <li>
+                        Build and test OpenCOR (by selecting the <code>Build|Run</code> menu or by pressing <code>Ctrl+R</code>).
+                        <div>
+                            <strong>Note:</strong> should new translations be required (e.g. as a result of adding a new action), then <code>[OpenCOR]/CMakeLists.txt</code> must be recompiled for the translation file(s) (<code>[OpenCOR]/i18n/OpenCOR_xx.ts</code>) to be updated (and then the translations added using Qt Linguist (it comes with Qt Creator).
+                        </div>
+                    </li>
+                </ul>
             </li>
         </ul>
 
