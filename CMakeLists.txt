@@ -19,7 +19,6 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 SET(SOURCES
     src/main.cpp
     src/misc/common.cpp
-    src/misc/commonwidget.cpp
     src/misc/utils.cpp
     src/ui/centralwidget.cpp
     src/ui/helpwindow.cpp
@@ -32,6 +31,7 @@ SET(SOURCES
     src/widget/dockwidget.cpp
     src/widget/helpwidget.cpp
     src/widget/edit/mmlviewerwidget.cpp
+    src/widget/misc/commonwidget.cpp
     src/widget/organise/filebrowserwidget.cpp
     src/widget/organise/fileorganiserwidget.cpp
     src/widget/organise/cellmlmodelrepositorywidget.cpp
@@ -39,8 +39,8 @@ SET(SOURCES
 
 SET(HEADERS
     src/misc/common.h
-    src/misc/commonwidget.h
     src/misc/utils.h
+    src/widget/misc/commonwidget.h
 )
 
 SET(HEADERS_MOC
@@ -82,6 +82,7 @@ INCLUDE_DIRECTORIES(src/ui/edit)
 INCLUDE_DIRECTORIES(src/ui/organise)
 INCLUDE_DIRECTORIES(src/widget)
 INCLUDE_DIRECTORIES(src/widget/edit)
+INCLUDE_DIRECTORIES(src/widget/misc)
 INCLUDE_DIRECTORIES(src/widget/organise)
 
 # Qt specific
