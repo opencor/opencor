@@ -277,7 +277,7 @@ char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</pre>
     qDebug("%i", i);
 }</pre>
                                 <strong>Exception #1:</strong> use braces also if the parent statement covers several lines or if it wraps:
-                                <pre class="code prettyprint">if (   address.isEmpty()
+                                <pre class="prettyprint">if (   address.isEmpty()
     || !isValid()
     || !codec)
     return false;</pre>
@@ -366,7 +366,7 @@ else {
                             </li>
                             <li>
                                 All code is ASCII only (7-bit characters only, run <code>man ascii</code> if unsure). For strings, use <code>\\nnn</code> (where <code>nnn</code> is the octal representation of whatever locale you want your string in) or <code>\xnn</code> (where <code>nn</code> is hexadecimal):
-                                <pre class="code prettyprint">QString s = QString::fromUtf8("\\213\\005");</pre>
+                                <pre class="prettyprint">QString s = QString::fromUtf8("\\213\\005");</pre>
                             </li>
                             <li>Use static keywords instead of anonymous namespaces whenever possible. A name localised to the compilation unit with static is guaranteed to have internal linkage. For names declared in anonymous namespaces, the C++ standard unfortunately mandates external linkage (ISO/IEC 14882, 7.1.1/6, or see various discussions about this on the gcc mailing lists).</li>
                         </ul>
@@ -393,7 +393,7 @@ else {
                             </li>
                             <li>
                                 Arrange includes in an order that goes from specific to generic to ensure that the headers are self-contained. For example:
-                                <pre class="code prettyprint">#include "common.h"
+                                <pre class="prettyprint">#include "common.h"
 #include "utils.h"
 
 #include &lt;QCoreApplication&gt;
@@ -427,13 +427,13 @@ else {
                         <ul>
                             <li>
                                 Be extremely careful when using the question mark operator. If the returned types are not identical, some compilers generate code that crashes at runtime (you will not even get a compiler warning):
-                                <pre class="code prettyprint">QString s;
+                                <pre class="prettyprint">QString s;
 
 return condition?s:"nothing";   // crash at runtime - QString <em>vs</em> const char *</pre>
                             </li>
                             <li>
                                 Be extremely careful about alignment. Whenever a pointer is cast such that the required alignment of the target is increased, the resulting code might crash at runtime on some architectures. For example, if a <code>const char *</code> is cast to a <code>const int *</code>, it will crash on machines where integers have to be aligned at two-byte or four-byte boundaries. Use a union to force the compiler to align variables correctly. In the example below, you can be sure that all instances of <code>AlignHelper</code> are aligned at integer-boundaries:
-                                <pre class="code prettyprint">union AlignHelper
+                                <pre class="prettyprint">union AlignHelper
 {
     char c;
     int i;
@@ -481,7 +481,7 @@ void foo()
                             </li>
                             <li>
                                 A <code>char</code> is signed or unsigned dependent on the architecture. Use signed <code>char</code> or <code>uchar</code> if you explicitely want a signed or unsigned char. The following code will break on PowerPC, for example:
-                                <pre class="code prettyprint">// The Condition is always true on platforms where the default is unsigned
+                                <pre class="prettyprint">// The Condition is always true on platforms where the default is unsigned
 
 if (c >= 0) {
     ...

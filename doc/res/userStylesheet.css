@@ -1,27 +1,27 @@
 a {
-    color: rgb(54, 96, 146);
+    color: rgba(54, 96, 146, 1);
 }
 
 a:visited {
-    color: rgb(54, 96, 146);
+    color: rgba(54, 96, 146, 1);
 }
 
 a:hover {
-    background-color: rgb(54, 96, 146);
+    background-color: rgba(54, 96, 146, 1);
     color: rgb(255, 255, 255);
     /* Note: ideally, 'color' would be specified in stylesheet.css, but then */
     /*       local links wouldn't look fine, so... (!?)                      */
 }
 
 h1 {
-    background: rgb(54, 96, 146);
+    background: rgba(54, 96, 146, 1);
 }
 
 h2 {
-    color: rgb(54, 96, 146);
+    color: rgba(54, 96, 146, 1);
 }
 
 pre {
-    background: rgb(219, 229, 241);
-    border-color: rgb(54, 96, 146);
+    background: rgba(54, 96, 146, 0.07);
+    border: 1px dashed rgba(54, 96, 146, 0.49);
 }
