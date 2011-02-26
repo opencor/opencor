@@ -7,8 +7,8 @@ a:visited {
 }
 
 a:hover {
-    background-color: rgba(49, 133, 155, 1);
-    color: rgb(255, 255, 255);
+    background-color: rgba(49, 133, 155, 0.13);
+    color: rgba(49, 133, 155, 1);
     /* Note: ideally, 'color' would be specified in stylesheet.css, but then */
     /*       local links wouldn't look fine, so... (!?)                      */
 }
