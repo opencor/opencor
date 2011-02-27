@@ -511,7 +511,6 @@ if (c >= 0) {
                     <li>
                         <strong>Namespacing:</strong>
                         <ul>
-                            <li>Put the body of a function in a <code>.cpp</code> file, not in its corresponding header file. There is a reason for having both a <code>.cpp</code> file and a <code>.h</code> file.</li>
                             <li>Prefer <code>enum</code> to define constants over <code>static const int</code> or <code>#define</code>. Enumeration values will be replaced by the compiler at compile time, resulting in faster code. Also, defines are not namespace safe.</li>
                         </ul>
                     </li>
@@ -527,20 +526,13 @@ if (c >= 0) {
             <li>
                 <strong>OpenCOR-specific:</strong>
                 <ul>
-                    <li>To make your code easier to read, have it fit within 80 columns whenever possible. (<a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a> can be configured to display a right margin.)</li>
                     <li>
-                        Do not use <code>inline</code> functions unless their contents is very straightforward (i.e. one line, no variable declaration, etc.). For anything else, it is probably better to rely on the compiler to optimise the code, if necessary, not to mention that, if badly used, <code>inline</code> functions can result in slower code. A couple of good resources on the topic can be found <a href="http://www.parashift.com/c++-faq-lite/inline-functions.html">here</a> and <a href="http://yosefk.com/c++fqa/inline.html">here</a>.
-                        <pre class="good prettyprint">inline int myInlineFunction(const int &pMyVar)
-{
-    return 3*pMyVar;
-}</pre>
-                        <pre class="bad prettyprint">inline int myInlineFunction(const int &pMyVar)
-{
-    const int myConst = 3;
-
-    return myConst3*pMyVar;
-}</pre>
+                        To make your code easier to read, have it fit within 80 columns whenever possible.
+                        <div>
+                            <strong>Note:</strong> <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a> can be configured to display a right margin by selecting the <code>Tools|Options...</code> menu, then the <code>Text Editor</code> section, and finally the <code>Display</code> tab under the <code>Text Wrapping</code> group box.
+                        </div>
                     </li>
+                    <li>Do not use <code>inline</code> functions. I	t is probably better to rely on the compiler to optimise the code, if necessary, not to mention that, if badly used, <code>inline</code> functions can result in slower code. A couple of good resources on the topic can be found <a href="http://www.parashift.com/c++-faq-lite/inline-functions.html">here</a> and <a href="http://yosefk.com/c++fqa/inline.html">here</a>.</li>
                     <li>
                         Divisions are costly, so replace them by multiplications wherever possible:
                         <pre class="good prettyprint">a = 0.5*b;</pre>
