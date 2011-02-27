@@ -23,9 +23,24 @@ QSize CommonWidget::defaultSize(const double &pRatio) const
                  pRatio*desktopGeometry.height());
 }
 
+void CommonWidget::retranslateUi()
+{
+    // Nothing to do by default...
+}
+
+void CommonWidget::loadSettings(const QSettings &, const QString &)
+{
+    // Nothing to do by default...
+}
+
+void CommonWidget::saveSettings(QSettings &, const QString &)
+{
+    // Nothing to do by default...
+}
+
 void CommonWidget::updateActions()
 {
-    // Do nothing...
+    // Nothing to do by default...
 }
 
 void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,

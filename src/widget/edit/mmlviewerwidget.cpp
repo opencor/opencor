@@ -33,21 +33,6 @@ MmlViewerWidget::~MmlViewerWidget()
     delete mTestMmlWidget;
 }
 
-void MmlViewerWidget::retranslateUi()
-{
-    // Nothing to do for now...
-}
-
-void MmlViewerWidget::loadSettings(const QSettings &, const QString &)
-{
-    // Nothing to do for now...
-}
-
-void MmlViewerWidget::saveSettings(QSettings &, const QString &)
-{
-    // Nothing to do for now...
-}
-
 bool MmlViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
                                  int *pErrorLine, int *pErrorColumn)
 {

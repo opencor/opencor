@@ -11,13 +11,13 @@ class CommonWidget
 public:
     CommonWidget(QWidget *pParent = 0);
 
-    virtual void retranslateUi() = 0;
+    virtual void retranslateUi();
 
-    virtual void loadSettings(const QSettings &pSettings, const QString &pKey) = 0;
-    virtual void saveSettings(QSettings &pSettings, const QString &pKey) = 0;
+    virtual void loadSettings(const QSettings &pSettings, const QString &pKey);
+    virtual void saveSettings(QSettings &pSettings, const QString &pKey);
 
 protected:
-    virtual QSize defaultSize(const double &pRatio) const;
+    QSize defaultSize(const double &pRatio) const;
 
     virtual void updateActions();
 

@@ -11,21 +11,6 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
     setUrl(QUrl("http://models.cellml.org/"));
 }
 
-void CellmlModelRepositoryWidget::retranslateUi()
-{
-    // Nothing to do for now...
-}
-
-void CellmlModelRepositoryWidget::loadSettings(const QSettings &, const QString &)
-{
-    // Nothing to do for now...
-}
-
-void CellmlModelRepositoryWidget::saveSettings(QSettings &, const QString &)
-{
-    // Nothing to do for now...
-}
-
 QSize CellmlModelRepositoryWidget::sizeHint() const
 {
     // Suggest a default size for the PMR explorer widget

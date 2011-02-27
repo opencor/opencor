@@ -15,8 +15,6 @@ public:
     FileBrowserWidget(QWidget *pParent = 0);
     ~FileBrowserWidget();
 
-    virtual void retranslateUi();
-
     virtual void loadSettings(const QSettings &, const QString &);
     virtual void saveSettings(QSettings &, const QString &);
 

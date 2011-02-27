@@ -46,11 +46,6 @@ FileBrowserWidget::~FileBrowserWidget()
     delete mFileSystemModel;
 }
 
-void FileBrowserWidget::retranslateUi()
-{
-    // Nothing to do for now...
-}
-
 void FileBrowserWidget::loadSettings(const QSettings &pSettings,
                                      const QString &pKey)
 {

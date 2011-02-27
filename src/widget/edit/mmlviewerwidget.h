@@ -13,11 +13,6 @@ public:
     MmlViewerWidget(QWidget *pParent = 0);
     ~MmlViewerWidget();
 
-    virtual void retranslateUi();
-
-    virtual void loadSettings(const QSettings &, const QString &);
-    virtual void saveSettings(QSettings &, const QString &);
-
     bool setContent(const QString &pContent, QString *pErrorMsg = 0,
                     int *pErrorLine = 0, int *pErrorColumn = 0);
 

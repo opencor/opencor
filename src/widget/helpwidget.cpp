@@ -32,7 +32,7 @@ HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
 
 void HelpNetworkReply::abort()
 {
-    // Do nothing...
+    // Do nothing on purpose...
 }
 
 qint64 HelpNetworkReply::bytesAvailable() const
@@ -170,11 +170,6 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
     // Go to the home page
 
     gotoHomePage();
-}
-
-void HelpWidget::retranslateUi()
-{
-    // Nothing to do for now...
 }
 
 void HelpWidget::loadSettings(const QSettings &pSettings, const QString &pKey)
