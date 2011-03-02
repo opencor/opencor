@@ -220,8 +220,7 @@ ENDIF()
 
 # Compiler and linker options
 
-ADD_DEFINITIONS(-Wall -O2 -ffast-math)
-
+SET(CMAKE_CXX_FLAGS "-Wall -O2 -ffast-math")
 SET(LINK_FLAGS_PROPERTIES)
 
 IF(WIN32)
