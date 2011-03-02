@@ -43,6 +43,14 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTXML_LIBRARY}
 )
 
+# Compiler and linker options
+
+SET(CMAKE_CXX_FLAGS "-O2 -ffast-math")
+
+IF(NOT APPLE)
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,-s")
+ENDIF()
+
 # Rules to package QtMmlWidget
 
 IF(WIN32)
