@@ -121,15 +121,17 @@ void FileBrowserWindow::loadSettings(const QSettings &pSettings,
                                      const QString &)
 {
     // Retrieve the settings of the file browser widget
+    // Note: we must make sure that we don't keep track of the previous folder
+
+    mKeepTrackOfPrevFolder = false;
 
     mFileBrowserWidget->loadSettings(pSettings, SETTINGS_FILEBROWSERWINDOW);
 
-    // Make sure that the list of previous folders is empty
-    // Note: indeed, as a result of loading our settings, we may change folders,
-    //       thus resulting in the the list of previous folders being populated
-    //       (see currentItemChanged)
+    mKeepTrackOfPrevFolder = true;
 
-    mPrevFolders.clear();
+    // Initialise the previous folder information
+
+    mPrevFolder = mFileBrowserWidget->currentPath();
 }
 
 void FileBrowserWindow::saveSettings(QSettings &pSettings, const QString &)
