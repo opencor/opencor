@@ -8,7 +8,7 @@
 #include <QSettings>
 
 #define SETTINGS_COLUMNWIDTH "_ColumnWidth"
-#define SETTINGS_CURRENTPATH "_CurrentPath"
+#define SETTINGS_INITIALPATH "_InitialPath"
 #define SETTINGS_SORTCOLUMN  "_SortColumn"
 #define SETTINGS_SORTORDER   "_SortOrder"
 
@@ -71,38 +71,38 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
                  Qt::SortOrder(pSettings.value(pKey+SETTINGS_SORTORDER,
                                                Qt::AscendingOrder).toInt()));
 
-    // Retrieve the current path
+    // Retrieve the initial path
 
-    mInitPath = pSettings.value(pKey+SETTINGS_CURRENTPATH,
-                                QDir::homePath()).toString();
-    QFileInfo currentPathFileInfo = mInitPath;
+    mInitialPath = pSettings.value(pKey+SETTINGS_INITIALPATH,
+                                   QDir::homePath()).toString();
+    QFileInfo initialPathFileInfo = mInitialPath;
 
-    if (!currentPathFileInfo.exists()) {
-        // The current path doesn't exist, so just revert to the home path
+    if (!initialPathFileInfo.exists()) {
+        // The initial path doesn't exist, so just revert to the home path
 
-        mInitPathDir = QDir::homePath();
-        mInitPath    = "";
+        mInitialPathDir = QDir::homePath();
+        mInitialPath    = "";
     } else {
-        // The current path exists, so retrieve some information about the
-        // folder and/or file (depending on whether the current path refers to
+        // The initial path exists, so retrieve some information about the
+        // folder and/or file (depending on whether the initial path refers to
         // a file or not)
-        // Note: indeed, should mInitPath refer to a file, then to directly set
-        //       the current index of the tree view to that of a file won't give
-        //       us the expected behaviour (i.e. the parent folder being open
-        //       and expanded, and the file selected), so instead one must set
-        //       the current index to that of the parent folder and then select
-        //       the file
+        // Note: indeed, should mInitialPath refer to a file, then to directly
+        //       set the current index of the tree view to that of a file won't
+        //       give us the expected behaviour (i.e. the parent folder being
+        //       open and expanded, and the file selected), so instead one must
+        //       set the current index to that of the parent folder and then
+        //       select the file
 
-        if (currentPathFileInfo.isDir()) {
+        if (initialPathFileInfo.isDir()) {
             // We are dealing with a folder, so...
 
-            mInitPathDir = currentPathFileInfo.canonicalFilePath();
-            mInitPath    = "";
+            mInitialPathDir = initialPathFileInfo.canonicalFilePath();
+            mInitialPath    = "";
         } else {
             // We are dealing with a file, so...
 
-            mInitPathDir = currentPathFileInfo.canonicalPath();
-            mInitPath    = currentPathFileInfo.canonicalFilePath();
+            mInitialPathDir = initialPathFileInfo.canonicalPath();
+            mInitialPath    = initialPathFileInfo.canonicalFilePath();
         }
     }
 
@@ -111,12 +111,12 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
     // Note: this will result in the directoryLoaded signal to be emitted and,
     //       us, to take advantage of it to scroll to the right directory/file
 
-    setCurrentIndex(mFileSystemModel->index(mInitPathDir));
+    setCurrentIndex(mFileSystemModel->index(mInitialPathDir));
 
-    if (!mInitPath.isEmpty())
-        // The current path is that of a file, so...
+    if (!mInitialPath.isEmpty())
+        // The initial path is that of a file, so...
 
-        setCurrentIndex(mFileSystemModel->index(mInitPath));
+        setCurrentIndex(mFileSystemModel->index(mInitialPath));
 }
 
 void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
@@ -133,9 +133,9 @@ void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
                        header()->sortIndicatorSection());
     pSettings.setValue(pKey+SETTINGS_SORTORDER, header()->sortIndicatorOrder());
 
-    // Keep track of the current folder/file path
+    // Keep track of what will be our future initial folder/file path
 
-    pSettings.setValue(pKey+SETTINGS_CURRENTPATH,
+    pSettings.setValue(pKey+SETTINGS_INITIALPATH,
                        mFileSystemModel->filePath(currentIndex()));
 }
 
@@ -168,27 +168,27 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
     static bool needInitializing = true;
 
     if (needInitializing
-        && (   ( mInitPath.isEmpty() && mInitPathDir.contains(pPath))
-            || (!mInitPath.isEmpty() && mInitPath.contains(pPath)))) {
-        // mFileSystemModel is still loading the current path, so we try to
+        && (   ( mInitialPath.isEmpty() && mInitialPathDir.contains(pPath))
+            || (!mInitialPath.isEmpty() && mInitialPath.contains(pPath)))) {
+        // mFileSystemModel is still loading the initial path, so we try to
         // expand it and scroll to it, but first we process any pending event
         // (indeed, Windows doesn't need this, but Linux and Mac OS X definitely
         // do and it can't harm having it for all three environments, so...)
 
         qApp->processEvents();
 
-        QModelIndex currentPathDirModelIndex = mFileSystemModel->index(mInitPathDir);
+        QModelIndex initialPathDirModelIndex = mFileSystemModel->index(mInitialPathDir);
 
-        setExpanded(currentPathDirModelIndex, true);
-        scrollTo(currentPathDirModelIndex);
+        setExpanded(initialPathDirModelIndex, true);
+        scrollTo(initialPathDirModelIndex);
 
-        if (!mInitPath.isEmpty()) {
-            // The current path is that of a file and it exists, so select it
+        if (!mInitialPath.isEmpty()) {
+            // The initial path is that of a file and it exists, so select it
 
-            QModelIndex currentPathModelIndex = mFileSystemModel->index(mInitPath);
+            QModelIndex initialPathModelIndex = mFileSystemModel->index(mInitialPath);
 
-            setExpanded(currentPathModelIndex, true);
-            scrollTo(currentPathModelIndex);
+            setExpanded(initialPathModelIndex, true);
+            scrollTo(initialPathModelIndex);
         }
 
         // Set the default width of the columns so that it fits their contents
@@ -208,6 +208,30 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
     }
 }
 
+bool FileBrowserWidget::gotoFolder(const QString &pFolder, const bool &pExpand)
+{
+    // Set the current index to that of the home folder and expand the folder
+
+    QModelIndex folderModelIndex = mFileSystemModel->index(pFolder);
+
+    if (folderModelIndex != QModelIndex()) {
+        // The folder exists, so we can go to it
+
+        setCurrentIndex(folderModelIndex);
+
+        if (pExpand)
+            setExpanded(folderModelIndex, true);
+
+        scrollTo(folderModelIndex);
+
+        return true;
+    } else {
+        // The folder doesn't exist, so...
+
+        return false;
+    }
+}
+
 QString FileBrowserWidget::homeFolder()
 {
     // Return the path to the home folder
@@ -215,15 +239,11 @@ QString FileBrowserWidget::homeFolder()
     return QDir::homePath();
 }
 
-void FileBrowserWidget::gotoHomeFolder()
+void FileBrowserWidget::gotoHomeFolder(const bool &pExpand)
 {
-    // Set the current index to that of the home folder and expand the folder
+    // Go to the home folder
 
-    QModelIndex homePathModelIndex = mFileSystemModel->index(homeFolder());
-
-    setCurrentIndex(homePathModelIndex);
-    setExpanded(homePathModelIndex, true);
-    scrollTo(homePathModelIndex);
+    gotoFolder(homeFolder(), pExpand);
 }
 
 QString FileBrowserWidget::path(const QModelIndex &pIndex)
@@ -252,8 +272,8 @@ bool FileBrowserWidget::currentPathVisible()
         crtIndex = crtIndex.parent();
 
         if (!isExpanded(crtIndex))
-            // The current parent is not expanded, so the current path cannot be
-            // visible, so...
+            // The current parent is not expanded, meaning the current path
+            // cannot be visible, so...
 
             result = false;
     }

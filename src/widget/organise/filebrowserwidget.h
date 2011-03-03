@@ -18,8 +18,10 @@ public:
     virtual void loadSettings(const QSettings &, const QString &);
     virtual void saveSettings(QSettings &, const QString &);
 
+    bool gotoFolder(const QString &pFolder, const bool &pExpand = false);
+
     QString homeFolder();
-    void gotoHomeFolder();
+    void gotoHomeFolder(const bool &pExpand = false);
 
     QString path(const QModelIndex &pIndex);
     QString currentPath();
@@ -35,8 +37,8 @@ private:
 
     bool mNeedDefaultColumnWidth;
 
-    QString mInitPathDir;
-    QString mInitPath;
+    QString mInitialPathDir;
+    QString mInitialPath;
 
 private Q_SLOTS:
     void directoryLoaded(const QString &pPath);

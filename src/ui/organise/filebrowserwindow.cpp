@@ -13,7 +13,8 @@
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
     mUi(new Ui::FileBrowserWindow),
-    mPrevFolder()
+    mPreviousFolder(),
+    mKeepTrackOfPreviousFolder(true)
 {
     // Set up the UI
 
@@ -92,7 +93,7 @@ void FileBrowserWindow::updateActions()
 
     mUi->actionParent->setEnabled(false);
 
-    mUi->actionPrevious->setEnabled(mPrevFolders.count());
+    mUi->actionPrevious->setEnabled(mPreviousFolders.count());
     mUi->actionNext->setEnabled(mNextFolders.count());
 
     mUi->actionNew->setEnabled(false);
@@ -128,7 +129,7 @@ void FileBrowserWindow::loadSettings(const QSettings &pSettings,
     //       thus resulting in the the list of previous folders being populated
     //       (see currentItemChanged)
 
-    mPrevFolders.clear();
+    mPreviousFolders.clear();
 }
 
 void FileBrowserWindow::saveSettings(QSettings &pSettings, const QString &)
@@ -165,15 +166,20 @@ void FileBrowserWindow::needUpdateActions()
     updateActions();
 }
 
-void FileBrowserWindow::currentItemChanged(const QModelIndex &pCrtItem,
+void FileBrowserWindow::currentItemChanged(const QModelIndex &pCurrentItem,
                                            const QModelIndex &)
 {
+    if (!mKeepTrackOfPreviousFolder)
+        // We don't want to keep track of the previous folder, so...
+
+        return;
+
     // A new item has been selected, so we need to keep track of the old one in
     // case we want to go back to it
 
     // Retrieve the full path to the folder where the current item is located
 
-    QString crtItemPath  = mFileBrowserWidget->path(pCrtItem);
+    QString crtItemPath  = mFileBrowserWidget->path(pCurrentItem);
     QFileInfo crtItemFileInfo  = QFileInfo(crtItemPath);
     QString crtItemDir  = crtItemFileInfo.isDir()?
                               crtItemPath:
@@ -182,11 +188,14 @@ void FileBrowserWindow::currentItemChanged(const QModelIndex &pCrtItem,
     // Add (and update) the information about the previous folder to our list of
     // previous folders in case the folder of the current item is different from
     // the information about the previous fodler
+    // Note: we cannot rely on the previous item (i.e. the second parameter to
+    //       this function), since both the current and previous items might
+    //       perfectly be located in the same folder, so...
 
-    if (crtItemDir != mPrevFolder) {
-        mPrevFolders.append(mPrevFolder);
+    if (crtItemDir != mPreviousFolder) {
+        mPreviousFolders.append(mPreviousFolder);
 
-        mPrevFolder = crtItemDir;
+        mPreviousFolder = crtItemDir;
     }
 
     // Reset the list of next folders since that list doesn't make sense anymore
@@ -200,9 +209,9 @@ void FileBrowserWindow::currentItemChanged(const QModelIndex &pCrtItem,
 
 void FileBrowserWindow::on_actionHome_triggered()
 {
-    // Go to the home folder
+    // Go to the home folder (and ask for it to be expanded)
 
-    mFileBrowserWidget->gotoHomeFolder();
+    mFileBrowserWidget->gotoHomeFolder(true);
 }
 
 void FileBrowserWindow::on_actionParent_triggered()
@@ -212,12 +221,44 @@ void FileBrowserWindow::on_actionParent_triggered()
 
 void FileBrowserWindow::on_actionPrevious_triggered()
 {
+    // Go to the previous folder and move the last item from our list of
+    // previous folders to our list of next folders
+    // Note: we make sure that we don't keep track of the previous folder
 
+    mNextFolders.append(mFileBrowserWidget->currentPath());
+
+    mKeepTrackOfPreviousFolder = false;
+
+    mFileBrowserWidget->gotoFolder(mPreviousFolders.last());
+
+    mKeepTrackOfPreviousFolder = true;
+
+    mPreviousFolders.removeLast();
+
+    // Going to the previous folder may have changed some actions, so...
+
+    updateActions();
 }
 
 void FileBrowserWindow::on_actionNext_triggered()
 {
+    // Go to the next folder and move the last item from our list of next
+    // folders to our list of previous folders
+    // Note: we make sure that we don't keep track of the previous folder
 
+    mPreviousFolders.append(mFileBrowserWidget->currentPath());
+
+    mKeepTrackOfPreviousFolder = false;
+
+    mFileBrowserWidget->gotoFolder(mNextFolders.last());
+
+    mKeepTrackOfPreviousFolder = true;
+
+    mNextFolders.removeLast();
+
+    // Going to the next folder may have changed some actions, so...
+
+    updateActions();
 }
 
 void FileBrowserWindow::on_actionNew_triggered()

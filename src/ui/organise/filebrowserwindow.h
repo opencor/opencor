@@ -33,10 +33,12 @@ private:
 
     FileBrowserWidget *mFileBrowserWidget;
 
-    QStringList mPrevFolders;
+    QStringList mPreviousFolders;
     QStringList mNextFolders;
 
-    QString mPrevFolder;
+    QString mPreviousFolder;
+
+    bool mKeepTrackOfPreviousFolder;
 
 private Q_SLOTS:
     void on_actionHome_triggered();
@@ -52,7 +54,8 @@ private Q_SLOTS:
     void customContextMenu(const QPoint &);
 
     void needUpdateActions();
-    void currentItemChanged(const QModelIndex &pCrtItem, const QModelIndex &);
+    void currentItemChanged(const QModelIndex &pCurrentItem,
+                            const QModelIndex &);
 };
 
 #endif
