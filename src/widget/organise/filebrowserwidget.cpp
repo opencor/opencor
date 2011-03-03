@@ -14,7 +14,8 @@
 
 FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
     QTreeView(pParent),
-    CommonWidget(pParent)
+    CommonWidget(pParent),
+    mNeedDefColWidth(true)
 {
     mFileSystemModel = new QFileSystemModel;
 
@@ -51,15 +52,13 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
 {
     // Retrieve the width of each column
 
-    mNeedDefaultColumnWidth = true;
-
     QString columnWidthKey;
 
     for (int i = 0; i < header()->count(); ++i) {
         columnWidthKey = pKey+SETTINGS_COLUMNWIDTH+QString::number(i);
 
-        mNeedDefaultColumnWidth =     mNeedDefaultColumnWidth
-                                  && !pSettings.contains(columnWidthKey);
+        mNeedDefColWidth =     mNeedDefColWidth
+                           && !pSettings.contains(columnWidthKey);
 
         setColumnWidth(i, pSettings.value(columnWidthKey,
                                           columnWidth(i)).toInt());
@@ -73,36 +72,37 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
 
     // Retrieve the initial path
 
-    mInitialPath = pSettings.value(pKey+SETTINGS_INITIALPATH,
-                                   QDir::homePath()).toString();
-    QFileInfo initialPathFileInfo = mInitialPath;
+    mInitPath = pSettings.value(pKey+SETTINGS_INITIALPATH,
+                                QDir::homePath()).toString();
 
-    if (!initialPathFileInfo.exists()) {
+    QFileInfo initPathFileInfo = mInitPath;
+
+    if (!initPathFileInfo.exists()) {
         // The initial path doesn't exist, so just revert to the home path
 
-        mInitialPathDir = QDir::homePath();
-        mInitialPath    = "";
+        mInitPathDir = QDir::homePath();
+        mInitPath    = "";
     } else {
         // The initial path exists, so retrieve some information about the
         // folder and/or file (depending on whether the initial path refers to
         // a file or not)
-        // Note: indeed, should mInitialPath refer to a file, then to directly
-        //       set the current index of the tree view to that of a file won't
-        //       give us the expected behaviour (i.e. the parent folder being
-        //       open and expanded, and the file selected), so instead one must
-        //       set the current index to that of the parent folder and then
-        //       select the file
+        // Note: indeed, should mInitPath refer to a file, then to directly set
+        //       the current index of the tree view to that of a file won't give
+        //       us the expected behaviour (i.e. the parent folder being open
+        //       and expanded, and the file selected), so instead one must set
+        //       the current index to that of the parent folder and then select
+        //       the file
 
-        if (initialPathFileInfo.isDir()) {
+        if (initPathFileInfo.isDir()) {
             // We are dealing with a folder, so...
 
-            mInitialPathDir = initialPathFileInfo.canonicalFilePath();
-            mInitialPath    = "";
+            mInitPathDir = initPathFileInfo.canonicalFilePath();
+            mInitPath    = "";
         } else {
             // We are dealing with a file, so...
 
-            mInitialPathDir = initialPathFileInfo.canonicalPath();
-            mInitialPath    = initialPathFileInfo.canonicalFilePath();
+            mInitPathDir = initPathFileInfo.canonicalPath();
+            mInitPath    = initPathFileInfo.canonicalFilePath();
         }
     }
 
@@ -111,12 +111,12 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
     // Note: this will result in the directoryLoaded signal to be emitted and,
     //       us, to take advantage of it to scroll to the right directory/file
 
-    setCurrentIndex(mFileSystemModel->index(mInitialPathDir));
+    setCurrentIndex(mFileSystemModel->index(mInitPathDir));
 
-    if (!mInitialPath.isEmpty())
+    if (!mInitPath.isEmpty())
         // The initial path is that of a file, so...
 
-        setCurrentIndex(mFileSystemModel->index(mInitialPath));
+        setCurrentIndex(mFileSystemModel->index(mInitPath));
 }
 
 void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
@@ -168,8 +168,8 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
     static bool needInitializing = true;
 
     if (needInitializing
-        && (   ( mInitialPath.isEmpty() && mInitialPathDir.contains(pPath))
-            || (!mInitialPath.isEmpty() && mInitialPath.contains(pPath)))) {
+        && (   ( mInitPath.isEmpty() && mInitPathDir.contains(pPath))
+            || (!mInitPath.isEmpty() && mInitPath.contains(pPath)))) {
         // mFileSystemModel is still loading the initial path, so we try to
         // expand it and scroll to it, but first we process any pending event
         // (indeed, Windows doesn't need this, but Linux and Mac OS X definitely
@@ -177,23 +177,23 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
         qApp->processEvents();
 
-        QModelIndex initialPathDirModelIndex = mFileSystemModel->index(mInitialPathDir);
+        QModelIndex initPathDirModelIndex = mFileSystemModel->index(mInitPathDir);
 
-        setExpanded(initialPathDirModelIndex, true);
-        scrollTo(initialPathDirModelIndex);
+        setExpanded(initPathDirModelIndex, true);
+        scrollTo(initPathDirModelIndex);
 
-        if (!mInitialPath.isEmpty()) {
+        if (!mInitPath.isEmpty()) {
             // The initial path is that of a file and it exists, so select it
 
-            QModelIndex initialPathModelIndex = mFileSystemModel->index(mInitialPath);
+            QModelIndex initPathModelIndex = mFileSystemModel->index(mInitPath);
 
-            setExpanded(initialPathModelIndex, true);
-            scrollTo(initialPathModelIndex);
+            setExpanded(initPathModelIndex, true);
+            scrollTo(initPathModelIndex);
         }
 
         // Set the default width of the columns so that it fits their contents
 
-        if (mNeedDefaultColumnWidth) {
+        if (mNeedDefColWidth) {
             header()->setResizeMode(QHeaderView::ResizeToContents);
 
             qApp->processEvents();
@@ -260,7 +260,18 @@ QString FileBrowserWidget::currentPath()
     return mFileSystemModel->filePath(currentIndex());
 }
 
-bool FileBrowserWidget::currentPathVisible()
+QString FileBrowserWidget::currentPathParent()
+{
+    // Return the current path parent, if any
+
+    QModelIndex crtIndexParent = currentIndex().parent();
+
+    return (crtIndexParent != QModelIndex())?
+               mFileSystemModel->filePath(crtIndexParent):
+               "";
+}
+
+bool FileBrowserWidget::isCurrentPathVisible()
 {
     // Return whether the current path is visible or not, i.e. whether all of
     // the parent nodes are expanded or not

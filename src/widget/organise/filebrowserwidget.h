@@ -25,7 +25,8 @@ public:
 
     QString path(const QModelIndex &pIndex);
     QString currentPath();
-    bool currentPathVisible();
+    QString currentPathParent();
+    bool isCurrentPathVisible();
 
 protected:
     virtual QSize sizeHint() const;
@@ -35,10 +36,10 @@ protected:
 private:
     QFileSystemModel *mFileSystemModel;
 
-    bool mNeedDefaultColumnWidth;
+    bool mNeedDefColWidth;
 
-    QString mInitialPathDir;
-    QString mInitialPath;
+    QString mInitPathDir;
+    QString mInitPath;
 
 private Q_SLOTS:
     void directoryLoaded(const QString &pPath);

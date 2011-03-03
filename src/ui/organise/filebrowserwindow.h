@@ -33,12 +33,12 @@ private:
 
     FileBrowserWidget *mFileBrowserWidget;
 
-    QStringList mPreviousFolders;
+    QStringList mPrevFolders;
     QStringList mNextFolders;
 
-    QString mPreviousFolder;
+    QString mPrevFolder;
 
-    bool mKeepTrackOfPreviousFolder;
+    bool mKeepTrackOfPrevFolder;
 
 private Q_SLOTS:
     void on_actionHome_triggered();
