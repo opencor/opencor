@@ -33,12 +33,26 @@ private:
 
     FileBrowserWidget *mFileBrowserWidget;
 
+    QStringList mPrevFolders;
+    QStringList mNextFolders;
+
+    QString mPrevFolder;
+
 private Q_SLOTS:
     void on_actionHome_triggered();
+    void on_actionParent_triggered();
+    void on_actionPrevious_triggered();
+    void on_actionNext_triggered();
+    void on_actionNew_triggered();
+    void on_actionFolder_triggered();
+    void on_actionCellML10File_triggered();
+    void on_actionCellML11File_triggered();
+    void on_actionDelete_triggered();
 
     void customContextMenu(const QPoint &);
 
     void needUpdateActions();
+    void currentItemChanged(const QModelIndex &pCrtItem, const QModelIndex &);
 };
 
 #endif

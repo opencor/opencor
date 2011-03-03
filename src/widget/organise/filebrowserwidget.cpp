@@ -73,36 +73,36 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
 
     // Retrieve the current path
 
-    mCurrentPath = pSettings.value(pKey+SETTINGS_CURRENTPATH,
-                                   QDir::homePath()).toString();
-    QFileInfo currentPathFileInfo = mCurrentPath;
+    mInitPath = pSettings.value(pKey+SETTINGS_CURRENTPATH,
+                                QDir::homePath()).toString();
+    QFileInfo currentPathFileInfo = mInitPath;
 
     if (!currentPathFileInfo.exists()) {
         // The current path doesn't exist, so just revert to the home path
 
-        mCurrentPathDir = QDir::homePath();
-        mCurrentPath    = "";
+        mInitPathDir = QDir::homePath();
+        mInitPath    = "";
     } else {
         // The current path exists, so retrieve some information about the
         // folder and/or file (depending on whether the current path refers to
         // a file or not)
-        // Note: indeed, should mCurrentPath refer to a file, then to directly
-        //       set the current index of the tree view to that of a file won't
-        //       give us the expected behaviour (i.e. the parent folder being
-        //       open and expanded, and the file selected), so instead one must
-        //       set the current index to that of the parent folder and then
-        //       select the file
+        // Note: indeed, should mInitPath refer to a file, then to directly set
+        //       the current index of the tree view to that of a file won't give
+        //       us the expected behaviour (i.e. the parent folder being open
+        //       and expanded, and the file selected), so instead one must set
+        //       the current index to that of the parent folder and then select
+        //       the file
 
         if (currentPathFileInfo.isDir()) {
             // We are dealing with a folder, so...
 
-            mCurrentPathDir = currentPathFileInfo.canonicalFilePath();
-            mCurrentPath    = "";
+            mInitPathDir = currentPathFileInfo.canonicalFilePath();
+            mInitPath    = "";
         } else {
             // We are dealing with a file, so...
 
-            mCurrentPathDir = currentPathFileInfo.canonicalPath();
-            mCurrentPath    = currentPathFileInfo.canonicalFilePath();
+            mInitPathDir = currentPathFileInfo.canonicalPath();
+            mInitPath    = currentPathFileInfo.canonicalFilePath();
         }
     }
 
@@ -111,12 +111,12 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
     // Note: this will result in the directoryLoaded signal to be emitted and,
     //       us, to take advantage of it to scroll to the right directory/file
 
-    setCurrentIndex(mFileSystemModel->index(mCurrentPathDir));
+    setCurrentIndex(mFileSystemModel->index(mInitPathDir));
 
-    if (!mCurrentPath.isEmpty())
+    if (!mInitPath.isEmpty())
         // The current path is that of a file, so...
 
-        setCurrentIndex(mFileSystemModel->index(mCurrentPath));
+        setCurrentIndex(mFileSystemModel->index(mInitPath));
 }
 
 void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
@@ -168,8 +168,8 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
     static bool needInitializing = true;
 
     if (needInitializing
-        && (   ( mCurrentPath.isEmpty() && mCurrentPathDir.contains(pPath))
-            || (!mCurrentPath.isEmpty() && mCurrentPath.contains(pPath)))) {
+        && (   ( mInitPath.isEmpty() && mInitPathDir.contains(pPath))
+            || (!mInitPath.isEmpty() && mInitPath.contains(pPath)))) {
         // mFileSystemModel is still loading the current path, so we try to
         // expand it and scroll to it, but first we process any pending event
         // (indeed, Windows doesn't need this, but Linux and Mac OS X definitely
@@ -177,15 +177,15 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
         qApp->processEvents();
 
-        QModelIndex currentPathDirModelIndex = mFileSystemModel->index(mCurrentPathDir);
+        QModelIndex currentPathDirModelIndex = mFileSystemModel->index(mInitPathDir);
 
         setExpanded(currentPathDirModelIndex, true);
         scrollTo(currentPathDirModelIndex);
 
-        if (!mCurrentPath.isEmpty()) {
+        if (!mInitPath.isEmpty()) {
             // The current path is that of a file and it exists, so select it
 
-            QModelIndex currentPathModelIndex = mFileSystemModel->index(mCurrentPath);
+            QModelIndex currentPathModelIndex = mFileSystemModel->index(mInitPath);
 
             setExpanded(currentPathModelIndex, true);
             scrollTo(currentPathModelIndex);
@@ -224,6 +224,13 @@ void FileBrowserWidget::gotoHomeFolder()
     setCurrentIndex(homePathModelIndex);
     setExpanded(homePathModelIndex, true);
     scrollTo(homePathModelIndex);
+}
+
+QString FileBrowserWidget::path(const QModelIndex &pIndex)
+{
+    // Return the path for the given index
+
+    return mFileSystemModel->filePath(pIndex);
 }
 
 QString FileBrowserWidget::currentPath()

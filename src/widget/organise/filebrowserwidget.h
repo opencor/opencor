@@ -21,6 +21,7 @@ public:
     QString homeFolder();
     void gotoHomeFolder();
 
+    QString path(const QModelIndex &pIndex);
     QString currentPath();
     bool currentPathVisible();
 
@@ -34,8 +35,8 @@ private:
 
     bool mNeedDefaultColumnWidth;
 
-    QString mCurrentPathDir;
-    QString mCurrentPath;
+    QString mInitPathDir;
+    QString mInitPath;
 
 private Q_SLOTS:
     void directoryLoaded(const QString &pPath);

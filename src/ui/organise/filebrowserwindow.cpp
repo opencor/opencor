@@ -4,14 +4,16 @@
 
 #include "ui_filebrowserwindow.h"
 
+#include <QDir>
+#include <QFileInfo>
 #include <QMenu>
-#include <QItemSelectionModel>
 
 #define SETTINGS_FILEBROWSERWINDOW "FileBrowserWindow"
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
-    mUi(new Ui::FileBrowserWindow)
+    mUi(new Ui::FileBrowserWindow),
+    mPrevFolder()
 {
     // Set up the UI
 
@@ -66,7 +68,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
             this, SLOT(customContextMenu(const QPoint &)));
 
     connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(needUpdateActions()));
+            this, SLOT(currentItemChanged(const QModelIndex &, const QModelIndex &)));
     connect(mFileBrowserWidget, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(needUpdateActions()));
     connect(mFileBrowserWidget, SIGNAL(collapsed(const QModelIndex &)),
@@ -90,8 +92,8 @@ void FileBrowserWindow::updateActions()
 
     mUi->actionParent->setEnabled(false);
 
-    mUi->actionPrevious->setEnabled(false);
-    mUi->actionNext->setEnabled(false);
+    mUi->actionPrevious->setEnabled(mPrevFolders.count());
+    mUi->actionNext->setEnabled(mNextFolders.count());
 
     mUi->actionNew->setEnabled(false);
     mUi->actionDelete->setEnabled(false);
@@ -120,6 +122,13 @@ void FileBrowserWindow::loadSettings(const QSettings &pSettings,
     // Retrieve the settings of the file browser widget
 
     mFileBrowserWidget->loadSettings(pSettings, SETTINGS_FILEBROWSERWINDOW);
+
+    // Make sure that the list of previous folders is empty
+    // Note: indeed, as a result of loading our settings, we may change folders,
+    //       thus resulting in the the list of previous folders being populated
+    //       (see currentItemChanged)
+
+    mPrevFolders.clear();
 }
 
 void FileBrowserWindow::saveSettings(QSettings &pSettings, const QString &)
@@ -156,9 +165,82 @@ void FileBrowserWindow::needUpdateActions()
     updateActions();
 }
 
+void FileBrowserWindow::currentItemChanged(const QModelIndex &pCrtItem,
+                                           const QModelIndex &)
+{
+    // A new item has been selected, so we need to keep track of the old one in
+    // case we want to go back to it
+
+    // Retrieve the full path to the folder where the current item is located
+
+    QString crtItemPath  = mFileBrowserWidget->path(pCrtItem);
+    QFileInfo crtItemFileInfo  = QFileInfo(crtItemPath);
+    QString crtItemDir  = crtItemFileInfo.isDir()?
+                              crtItemPath:
+                              crtItemFileInfo.dir().canonicalPath();
+
+    // Add (and update) the information about the previous folder to our list of
+    // previous folders in case the folder of the current item is different from
+    // the information about the previous fodler
+
+    if (crtItemDir != mPrevFolder) {
+        mPrevFolders.append(mPrevFolder);
+
+        mPrevFolder = crtItemDir;
+    }
+
+    // Reset the list of next folders since that list doesn't make sense anymore
+
+    mNextFolders.clear();
+
+    // Since a new item has been selected, we must update the actions
+
+    updateActions();
+}
+
 void FileBrowserWindow::on_actionHome_triggered()
 {
     // Go to the home folder
 
     mFileBrowserWidget->gotoHomeFolder();
+}
+
+void FileBrowserWindow::on_actionParent_triggered()
+{
+
+}
+
+void FileBrowserWindow::on_actionPrevious_triggered()
+{
+
+}
+
+void FileBrowserWindow::on_actionNext_triggered()
+{
+
+}
+
+void FileBrowserWindow::on_actionNew_triggered()
+{
+
+}
+
+void FileBrowserWindow::on_actionFolder_triggered()
+{
+
+}
+
+void FileBrowserWindow::on_actionCellML10File_triggered()
+{
+
+}
+
+void FileBrowserWindow::on_actionCellML11File_triggered()
+{
+
+}
+
+void FileBrowserWindow::on_actionDelete_triggered()
+{
+
 }
