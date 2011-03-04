@@ -96,7 +96,7 @@ void FileBrowserWindow::updateActions()
     mUi->actionPrevious->setEnabled(mPrevFolders.count());
     mUi->actionNext->setEnabled(mNextFolders.count());
 
-    mUi->actionNew->setEnabled(false);
+    mUi->actionNew->setEnabled(mFileBrowserWidget->isCurrentPathDirWritable());
     mUi->actionDelete->setEnabled(false);
 }
 
@@ -189,11 +189,7 @@ void FileBrowserWindow::currentItemChanged(const QModelIndex &pCurrentItem,
 
     // Retrieve the full path to the folder where the current item is located
 
-    QString crtItemPath  = mFileBrowserWidget->path(pCurrentItem);
-    QFileInfo crtItemFileInfo  = QFileInfo(crtItemPath);
-    QString crtItemDir  = crtItemFileInfo.isDir()?
-                              crtItemPath:
-                              crtItemFileInfo.dir().canonicalPath();
+    QString crtItemDir  = mFileBrowserWidget->currentPathDir();
 
     // Check whether there is a previous folder to keep track of
     // Note: to do so, we cannot rely on the previous item (i.e. the second

@@ -243,14 +243,7 @@ void FileBrowserWidget::gotoHomeFolder(const bool &pExpand)
 {
     // Go to the home folder
 
-    gotoFolder(homeFolder(), pExpand);
-}
-
-QString FileBrowserWidget::path(const QModelIndex &pIndex)
-{
-    // Return the path for the given index
-
-    return mFileSystemModel->filePath(pIndex);
+    gotoFolder(QDir::homePath(), pExpand);
 }
 
 QString FileBrowserWidget::currentPath()
@@ -258,6 +251,18 @@ QString FileBrowserWidget::currentPath()
     // Return the current path
 
     return mFileSystemModel->filePath(currentIndex());
+}
+
+QString FileBrowserWidget::currentPathDir()
+{
+    // Return the directory of the current path
+
+    QString crtIndexPath  = mFileSystemModel->filePath(currentIndex());
+    QFileInfo crtIndexFileInfo  = crtIndexPath;
+
+    return crtIndexFileInfo.isDir()?
+               crtIndexPath:
+               crtIndexFileInfo.dir().canonicalPath();
 }
 
 QString FileBrowserWidget::currentPathParent()
@@ -290,4 +295,11 @@ bool FileBrowserWidget::isCurrentPathVisible()
     }
 
     return result;
+}
+
+bool FileBrowserWidget::isCurrentPathDirWritable()
+{
+    // Return whether the directory of the current path is writable or not
+
+    return QFileInfo(currentPathDir()).isWritable();
 }

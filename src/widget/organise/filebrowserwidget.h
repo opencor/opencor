@@ -23,10 +23,11 @@ public:
     QString homeFolder();
     void gotoHomeFolder(const bool &pExpand = false);
 
-    QString path(const QModelIndex &pIndex);
     QString currentPath();
+    QString currentPathDir();
     QString currentPathParent();
     bool isCurrentPathVisible();
+    bool isCurrentPathDirWritable();
 
 protected:
     virtual QSize sizeHint() const;
