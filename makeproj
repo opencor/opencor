@@ -9,7 +9,7 @@ fi
 cd build
 
 cmake ..
-make -j
+make -j $1
 
 cd ..
 

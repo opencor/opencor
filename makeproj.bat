@@ -11,7 +11,7 @@ ECHO.
 CD build
 
 cmake -G "MinGW Makefiles" ..
-mingw32-make -j
+mingw32-make -j %1
 
 ECHO.
 ECHO -------------------------------------
