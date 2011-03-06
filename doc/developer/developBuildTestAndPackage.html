@@ -24,30 +24,83 @@
         </h2>
 
         <p>
-            In order to develop, build, test and/or package OpenCOR, you need the following tools:
+            The following tools are required in order to develop, build, test and/or package OpenCOR:
         </p>
 
         <ul>
             <li>
-                <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/maverick/git">git</a> package on Ubuntu): the distributed version control system used to keep track of OpenCOR's source code. You can get a copy of the source code by cloning our <A HREF ="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;hb=HEAD">Git repository</a> either in <em>read-only</em> mode:
+                <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/maverick/git">git</a> package on Ubuntu): a distributed version control system. You can get a copy of OpenCOR's source code by cloning our <A HREF ="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;hb=HEAD">Git repository</a> either in <em>read-only</em> mode:
                 <pre>$ git clone git://opencor.git.sourceforge.net/gitroot/opencor/opencor</pre>
                 or in <em>read-write</em> mode:
                 <pre>$ git clone ssh://<strong>login</strong>@opencor.git.sourceforge.net/gitroot/opencor/opencor</pre>
             </li>
-            <li><a href="http://www.cmake.org/">CMake</a> 2.8+ (the <a href="http://packages.ubuntu.com/maverick/cmake">cmake</a> package on Ubuntu): the cross-platform build system used to build OpenCOR;</li>
+            <li><a href="http://www.cmake.org/">CMake</a> 2.8+ (the <a href="http://packages.ubuntu.com/maverick/cmake">cmake</a> package on Ubuntu): a cross-platform build system;</li>
             <li>
-                <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a> (the <a href="http://packages.ubuntu.com/maverick/qtcreator">qtcreator</a> package on Ubuntu): the cross-platform environment used to develop OpenCOR as a <a href="http://qt.nokia.com/">Qt</a> 4.7+ application; and
+                C++ toolchain: a set of C++ tools. The toolchain is different depending on the platform you are using:
+                <ul>
+                    <li>
+                        Windows: <a href="http://get.qt.nokia.com/misc/MinGW-gcc440_1.zip">MinGW</a> 4.4.0;
+                        <div>
+                            <strong>Note:</strong> MinGW also comes with Qt Creator (see below), but is needed to install Qt (see below), so either skip MinGW, install Qt Creator and then Qt, or unzip the contents of <a href="http://get.qt.nokia.com/misc/MinGW-gcc440_1.zip"><code>MinGW-gcc440_1.zip</code></a> somewhere (e.g. <code>C:\Qt\MinGW\</code>).
+                        </div>
+                    </li>
+                    <li>Ubuntu: the <a href="http://packages.ubuntu.com/maverick/g++">g++</a> package; and</li>
+                    <li>Mac OS X: <a href="http://developer.apple.com/technologies/tools/xcode.html">Xcode</a>.</li>
+                </ul>
+            </li>
+            <li>
+                <a href="http://qt.nokia.com/">Qt</a> 4.7.2: a cross-platform application and UI framework:
+                <ul>
+                    <li>
+                        <a href="http://qt.nokia.com/downloads/windows-cpp">Windows</a>;
+                        <div>
+                            <strong>Note:</strong> you need to specify where MinGW is located and this will depend on the order in which you want to install MinGW, Qt and Qt Creator (see the MinGW section above).
+                        </div>
+                    </li>
+                    <li>
+                        <a href="http://qt.nokia.com/downloads/linux-x11-cpp">Linux</a>; and
+                        <div>
+                            <strong>Note:</strong> Qt has to be built from its source code which requires some <a href="http://doc.qt.nokia.com/latest/requirements-x11.html">development packages</a> to be installed (<a href="http://packages.ubuntu.com/maverick/libxrender-dev">libxrender-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxrandr-dev">libxrandr-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxcursor-dev">libxcursor-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxfixes-dev">libxfixes-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxinerama-dev">libxinerama-dev</a>, <a href="http://packages.ubuntu.com/maverick/libfontconfig1-dev">libfontconfig1-dev</a>, <a href="http://packages.ubuntu.com/maverick/libfreetype6-dev">libfreetype6-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxi-dev">libxi-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxt-dev">libxt-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxext-dev">libxext-dev</a>, <a href="http://packages.ubuntu.com/maverick/libx11-dev">libx11-dev</a>, <a href="http://packages.ubuntu.com/maverick/libsm-dev">libsm-dev</a>, <a href="http://packages.ubuntu.com/maverick/libice-dev">libice-dev</a>, <a href="http://packages.ubuntu.com/maverick/libglib2.0-dev">libglib2.0-dev</a> and <a href="http://packages.ubuntu.com/maverick/libpthread-stubs0-dev">libpthread-stubs0-dev</a>). Though not mentioned on the list of required development packages, <a href="http://packages.ubuntu.com/maverick/libdbus-1-dev">libdbus-1-dev</a> is also needed (to build the <a href="http://doc.qt.nokia.com/qtdbus.html">QtDBus</a> module). Once these development packages are installed, you can build the Qt library by doing the following from the command line:
+                            <pre>$ cd [Qt4.7.2]
+$ ./configure
+$ make
+$ sudo make install
+$ cd ..
+$ rm -fr [Qt4.7.2]</pre>
+                            <code>make</code> will take quite some time, so be (very) patient...
+                        </div>
+                    </li>
+                    <li><a href = "http://qt.nokia.com/downloads/qt-for-open-source-cpp-development-on-mac-os-x">Mac OS X</a>.</li>
+                </ul>
                 <div>
-                    <strong>Note #1:</strong> you must, on Ubuntu, install the <a href="http://packages.ubuntu.com/maverick/g++">g++</a> package, while <a href="http://developer.apple.com/technologies/tools/xcode.html">Xcode</a> on Mac OS X, before installing Qt Creator.
+                    <strong>Note:</strong> Qt and Qt Creator (see below) can be installed as part of the Qt SDK, but we would still recommend installing Qt and Qt Creator individually (this is indeed the safest way to ensure that everything is going to work as expected).
                 </div>
+            </li>
+            <li>
+                <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a> 2.1.0: a cross-platform environment for Qt:
+                <ul>
+                    <li>
+                        <a href="http://qt.nokia.com/downloads/qt-creator-binary-for-windows">Windows</a>;
+                        <div>
+                            <strong>Note:</strong> dependening on the order in which you want to install MinGW, Qt and Qt Creator (see the MinGW section above), you might want to select or unselect MinGW when installing Qt Creator.
+                        </div>
+                    </li>
+                    <li>
+                        Linux <a href="http://qt.nokia.com/downloads/qt-creator-binary-for-linux-x11-32-bit">32-bit</a>/<a href="http://qt.nokia.com/downloads/qt-creator-binary-for-linux-x11-64-bit">64-bit</a>; and
+                        <div>
+                            <strong>Note:</strong> Qt and Qt Creator can be installed from the <a href="http://packages.ubuntu.com/maverick/qtcreator">qtcreator</a> package, but their version is not the most recent.
+                        </div>
+                    </li>
+                    <li><a href = "http://qt.nokia.com/downloads/qt-creator-binary-for-mac">Mac OS X</a>.</li>
+                </ul>
                 <div>
                     <strong>Note #2:</strong> both CMake and Git are supported by Qt Creator, but Git might need configuring. This can be done by selecting the <code>Tools|Options...</code> menu, then the <code>Version Control</code> section, and finally the <code>Git</code> tab. Alternatively, you might want to use Git from the command line, or with <a href="http://code.google.com/p/tortoisegit/">TortoiseGit</a>, <a href="http://sourceforge.net/projects/qgit/">QGit</a> or <a href="http://gitx.frim.nl/">GitX</a> on Windows, Ubuntu and Mac OS X, respectively.
                 </div>
                 <div>
-                    <strong>Note #3:</strong> OpenCOR is currently being developed using Qt Creator 2.1.0 and Qt 4.7.2 (incl. on Ubuntu, i.e. we don't use the versions of Qt Creator and Qt that come with Ubuntu since we want to be 100% compatible on all three platforms). However, it happens that OpenCOR can also be built using Qt 4.6. For this reason, our <a href="../../CMakeLists.txt">CMake script</a> requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.
+                    <strong>Note #3:</strong> though OpenCOR is currently being developed using Qt Creator 2.1.0 and Qt 4.7.2, it happens that it can also be built using Qt 4.6. For this reason, our <a href="../../CMakeLists.txt">CMake script</a> requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.
                 </div>
             </li>
-            <li><a href="http://nsis.sourceforge.net/">NSIS</a> (Windows only): one the solutions used to package OpenCOR on Windows.</li>
+            <li><a href="http://nsis.sourceforge.net/">NSIS</a> (Windows only): a program for creating Windows installers.</li>
         </ul>
 
         <h2>
@@ -87,10 +140,10 @@
                     <li>Start Qt Creator;</li>
                     <li>Open <code>[OpenCOR]/CMakeLists.txt</code> (by selecting the <code>File|Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
                     <li>Specify <code>[OpenCOR]/build</code> as the build directory;</li>
-                    <li>Select <code>MinGW</code> as the generator (Windows only);</li>
+                    <li>Select <code>MinGW</code> as the generator (Windows only), if necessary;</li>
                     <li>Click on the <code>Run CMake</code> button;</li>
                     <li>Click on the <code>Finish</code> button;</li>
-                    <li>Depending on your version of Qt Creator, you may have to select <code>OpenCOR</code> as the run target (by selecting the <code>Build|Open Build/Run Target Seclector...</code> menu or by pressing <code>Ctrl+T</code>); and</li>
+                    <li>Select <code>OpenCOR</code> as the run target (by selecting the <code>Build|Open Build/Run Target Seclector...</code> menu or by pressing <code>Ctrl+T</code>), if necessary; and</li>
                     <li>
                         Build and test OpenCOR (by selecting the <code>Build|Run</code> menu or by pressing <code>Ctrl+R</code>).
                         <div>
