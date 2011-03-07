@@ -88,7 +88,8 @@ $ rm -fr [Qt4.7.2]</pre>
                     <li>
                         Linux <a href="http://qt.nokia.com/downloads/qt-creator-binary-for-linux-x11-32-bit">32-bit</a>/<a href="http://qt.nokia.com/downloads/qt-creator-binary-for-linux-x11-64-bit">64-bit</a>; and
                         <div>
-                            <strong>Note:</strong> Qt and Qt Creator can be installed from the <a href="http://packages.ubuntu.com/maverick/qtcreator">qtcreator</a> package, but their version is not the most recent.
+                            <strong>Note:</strong> once installed, you might want to check that Qt Creator does have access to Qt. To do so, select the <code>Tools|Options...</code> menu, then the <code>Qt4</code> section, and finally the <code>Qt Versions</code> tab. Under the <code>Auto-detected</code> section, there should be an entry called <code>Qt in PATH</code> and most likely it reads <code>&lt;Not found&gt;</code>. A generic solution is to <code>sudo</code> edit <code>/etc/environment</code> by adding the path to Qt to it:
+                            <pre>PATH="<strong>/usr/local/Trolltech/Qt-4.7.2/bin:/opt/qtcreator-2.1.0/bin:</strong>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"</pre>
                         </div>
                     </li>
                     <li><a href = "http://qt.nokia.com/downloads/qt-creator-binary-for-mac">Mac OS X</a>.</li>
