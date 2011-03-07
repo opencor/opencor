@@ -3,8 +3,12 @@ body {
     font-size: 10pt;
 }
 
-a:hover {
+a {
     text-decoration: none;
+}
+
+a:hover {
+    margin: -1px;
 }
 
 h1 {

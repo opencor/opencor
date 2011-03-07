@@ -7,10 +7,11 @@ a:visited {
 }
 
 a:hover {
-    background-color: rgba(49, 133, 155, 0.13);
+    background-color: rgba(49, 133, 155, 0.07);
     color: rgba(49, 133, 155, 1);
     /* Note: ideally, 'color' would be specified in stylesheet.css, but then */
     /*       local links wouldn't look fine, so... (!?)                      */
+    border: 1px dotted rgba(49, 133, 155, 0.49);
 }
 
 h1 {
@@ -26,6 +27,8 @@ h2 a:hover {
 
     background-color: rgb(255, 255, 255);
     color: rgba(49, 133, 155, 1);
+    border: none;
+    margin: 0px;
 }
 
 pre {

@@ -94,14 +94,18 @@ $ rm -fr [Qt4.7.2]</pre>
                     <li><a href = "http://qt.nokia.com/downloads/qt-creator-binary-for-mac">Mac OS X</a>.</li>
                 </ul>
                 <div>
-                    <strong>Note #2:</strong> both CMake and Git are supported by Qt Creator, but Git might need configuring. This can be done by selecting the <code>Tools|Options...</code> menu, then the <code>Version Control</code> section, and finally the <code>Git</code> tab. Alternatively, you might want to use Git from the command line, or with <a href="http://code.google.com/p/tortoisegit/">TortoiseGit</a>, <a href="http://sourceforge.net/projects/qgit/">QGit</a> or <a href="http://gitx.frim.nl/">GitX</a> on Windows, Ubuntu and Mac OS X, respectively.
+                    <strong>Note #1:</strong> both CMake and Git are supported by Qt Creator, but Git might need configuring. This can be done by selecting the <code>Tools|Options...</code> menu, then the <code>Version Control</code> section, and finally the <code>Git</code> tab. Alternatively, you might want to use Git from the command line, or with <a href="http://code.google.com/p/tortoisegit/">TortoiseGit</a>, <a href="http://sourceforge.net/projects/qgit/">QGit</a> or <a href="http://gitx.frim.nl/">GitX</a> on Windows, Ubuntu and Mac OS X, respectively.
                 </div>
                 <div>
-                    <strong>Note #3:</strong> though OpenCOR is currently being developed using Qt Creator 2.1.0 and Qt 4.7.2, it happens that it can also be built using Qt 4.6. For this reason, our <a href="../../CMakeLists.txt">CMake script</a> requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.
+                    <strong>Note #2:</strong> though OpenCOR is currently being developed using Qt 4.7.2 and Qt Creator 2.1.0, it happens that it can also be built using Qt 4.6. For this reason, our <a href="../../CMakeLists.txt">CMake script</a> requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.
                 </div>
             </li>
             <li><a href="http://nsis.sourceforge.net/">NSIS</a> (Windows only): a program for creating Windows installers.</li>
         </ul>
+
+        <p>
+            Please note that the above pre-requirements are meant for someone who wants to develop, build, test and package OpenCOR in the exact same way as it is done by the <a href="../user/authors.html">OpenCOR team</a>. However, when it comes to Qt and Qt Creator, older versions may also work (e.g. on Ubuntu, you might just want to install the <a href="http://packages.ubuntu.com/maverick/qtcreator">qtcreator</a> package).
+        </p>
 
         <h2>
             Develop
