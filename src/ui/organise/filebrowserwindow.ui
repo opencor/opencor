@@ -98,7 +98,7 @@
     <string>Ctrl+Alt+N</string>
    </property>
   </action>
-  <action name="actionFolder">
+  <action name="actionNewFolder">
    <property name="text">
     <string>Folder</string>
    </property>
@@ -106,7 +106,7 @@
     <string>Create a new folder</string>
    </property>
   </action>
-  <action name="actionCellML10File">
+  <action name="actionNewCellML10File">
    <property name="text">
     <string>CellML 1.0 File</string>
    </property>
@@ -114,7 +114,7 @@
     <string>Create a new CellML 1.0 file</string>
    </property>
   </action>
-  <action name="actionCellML11File">
+  <action name="actionNewCellML11File">
    <property name="text">
     <string>CellML 1.1 File</string>
    </property>

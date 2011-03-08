@@ -25,10 +25,10 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     QMenu *actionNewMenu = new QMenu(this);
 
-    actionNewMenu->addAction(mUi->actionFolder);
+    actionNewMenu->addAction(mUi->actionNewFolder);
     actionNewMenu->addSeparator();
-    actionNewMenu->addAction(mUi->actionCellML10File);
-    actionNewMenu->addAction(mUi->actionCellML11File);
+    actionNewMenu->addAction(mUi->actionNewCellML10File);
+    actionNewMenu->addAction(mUi->actionNewCellML11File);
 
     mUi->actionNew->setMenu(actionNewMenu);
 
@@ -279,22 +279,24 @@ void FileBrowserWindow::on_actionNext_triggered()
 
 void FileBrowserWindow::on_actionNew_triggered()
 {
-    notYetImplemented("void FileBrowserWindow::on_actionNew_triggered()");
+    // The default new action is about creating a new folder, so...
+
+    on_actionNewFolder_triggered();
 }
 
-void FileBrowserWindow::on_actionFolder_triggered()
+void FileBrowserWindow::on_actionNewFolder_triggered()
 {
-    notYetImplemented("void FileBrowserWindow::on_actionFolder_triggered()");
+    notYetImplemented("void FileBrowserWindow::on_actionNewFolder_triggered()");
 }
 
-void FileBrowserWindow::on_actionCellML10File_triggered()
+void FileBrowserWindow::on_actionNewCellML10File_triggered()
 {
-    notYetImplemented("void FileBrowserWindow::on_actionCellML10File_triggered()");
+    notYetImplemented("void FileBrowserWindow::on_actionNewCellML10File_triggered()");
 }
 
-void FileBrowserWindow::on_actionCellML11File_triggered()
+void FileBrowserWindow::on_actionNewCellML11File_triggered()
 {
-    notYetImplemented("void FileBrowserWindow::on_actionCellML11File_triggered()");
+    notYetImplemented("void FileBrowserWindow::on_actionNewCellML11File_triggered()");
 }
 
 void FileBrowserWindow::on_actionDelete_triggered()

@@ -46,9 +46,9 @@ private Q_SLOTS:
     void on_actionPrevious_triggered();
     void on_actionNext_triggered();
     void on_actionNew_triggered();
-    void on_actionFolder_triggered();
-    void on_actionCellML10File_triggered();
-    void on_actionCellML11File_triggered();
+    void on_actionNewFolder_triggered();
+    void on_actionNewCellML10File_triggered();
+    void on_actionNewCellML11File_triggered();
     void on_actionDelete_triggered();
 
     void customContextMenu(const QPoint &);
