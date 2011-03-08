@@ -1,6 +1,7 @@
 #include "docktoolbar.h"
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
+#include "onefieldwindow.h"
 #include "utils.h"
 
 #include "ui_filebrowserwindow.h"
@@ -8,6 +9,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QMenu>
+#include <QMessageBox>
 
 #define SETTINGS_FILEBROWSERWINDOW "FileBrowserWindow"
 
@@ -286,7 +288,29 @@ void FileBrowserWindow::on_actionNew_triggered()
 
 void FileBrowserWindow::on_actionNewFolder_triggered()
 {
-    notYetImplemented("void FileBrowserWindow::on_actionNewFolder_triggered()");
+    // Get the name of the new folder
+
+    OneFieldWindow oneFieldWindow(tr("New Folder"), tr("Folder name:"),
+                                  tr("Please provide a name for the new folder."),
+                                  this);
+
+    oneFieldWindow.exec();
+
+    // Create the new folder in the currently selected folder unless the user
+    // cancelled the action
+
+    if (oneFieldWindow.result() == QDialog::Accepted) {
+        if (QDir(mFileBrowserWidget->currentPathDir()).mkdir(oneFieldWindow.fieldValue()))
+            // The folder was created, so select it
+
+            mFileBrowserWidget->gotoFolder(mFileBrowserWidget->currentPathDir()+QDir::separator()+oneFieldWindow.fieldValue(),
+                                           true);
+        else
+            // The folder couldn't be created, so...
+
+            QMessageBox::information(this, qApp->applicationName(),
+                                     tr("Sorry, but the folder could not be created."));
+    }
 }
 
 void FileBrowserWindow::on_actionNewCellML10File_triggered()

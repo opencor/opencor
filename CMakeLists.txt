@@ -24,17 +24,18 @@ SET(SOURCES
     src/ui/helpwindow.cpp
     src/ui/mainwindow.cpp
     src/ui/edit/viewerwindow.cpp
+    src/ui/organise/cellmlmodelrepositorywindow.cpp
     src/ui/organise/filebrowserwindow.cpp
     src/ui/organise/fileorganiserwindow.cpp
-    src/ui/organise/cellmlmodelrepositorywindow.cpp
+    src/ui/organise/onefieldwindow.cpp
     src/widget/docktoolbar.cpp
     src/widget/dockwidget.cpp
     src/widget/helpwidget.cpp
     src/widget/edit/mmlviewerwidget.cpp
     src/widget/misc/commonwidget.cpp
+    src/widget/organise/cellmlmodelrepositorywidget.cpp
     src/widget/organise/filebrowserwidget.cpp
     src/widget/organise/fileorganiserwidget.cpp
-    src/widget/organise/cellmlmodelrepositorywidget.cpp
 )
 
 SET(HEADERS
@@ -48,16 +49,17 @@ SET(HEADERS_MOC
     src/ui/helpwindow.h
     src/ui/mainwindow.h
     src/ui/edit/viewerwindow.h
+    src/ui/organise/cellmlmodelrepositorywindow.h
     src/ui/organise/filebrowserwindow.h
     src/ui/organise/fileorganiserwindow.h
-    src/ui/organise/cellmlmodelrepositorywindow.h
+    src/ui/organise/onefieldwindow.h
     src/widget/docktoolbar.h
     src/widget/dockwidget.h
     src/widget/helpwidget.h
     src/widget/edit/mmlviewerwidget.h
+    src/widget/organise/cellmlmodelrepositorywidget.h
     src/widget/organise/filebrowserwidget.h
     src/widget/organise/fileorganiserwidget.h
-    src/widget/organise/cellmlmodelrepositorywidget.h
 )
 
 SET(UIS
@@ -65,9 +67,10 @@ SET(UIS
     src/ui/helpwindow.ui
     src/ui/mainwindow.ui
     src/ui/edit/viewerwindow.ui
+    src/ui/organise/cellmlmodelrepositorywindow.ui
     src/ui/organise/filebrowserwindow.ui
     src/ui/organise/fileorganiserwindow.ui
-    src/ui/organise/cellmlmodelrepositorywindow.ui
+    src/ui/organise/onefieldwindow.ui
 )
 
 SET(RESOURCES

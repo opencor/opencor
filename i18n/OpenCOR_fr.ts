@@ -106,6 +106,22 @@
         <source>Create a new CellML 1.1 file</source>
         <translation>Créer un nouveau fichier CellML 1.1</translation>
     </message>
+    <message>
+        <source>New Folder</source>
+        <translation>Nouveau Répertoire</translation>
+    </message>
+    <message>
+        <source>Folder name:</source>
+        <translation>Nom du répertoire :</translation>
+    </message>
+    <message>
+        <source>Please provide a name for the new folder.</source>
+        <translation>Veuillez donner un nom pour le nouveau répertoire.</translation>
+    </message>
+    <message>
+        <source>Sorry, but the folder could not be created.</source>
+        <translation>Désolé, mais le répertoire n&apos;a pas pu être créé.</translation>
+    </message>
 </context>
 <context>
     <name>FileOrganiserWindow</name>
