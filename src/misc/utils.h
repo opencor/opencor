@@ -10,4 +10,6 @@ QString getOsName();
 QByteArray resourceAsByteArray(const QString &pResource);
 void saveResourceAs(const QString &pResource, const QString &pFilename);
 
+void notYetImplemented(const QString &method);
+
 #endif

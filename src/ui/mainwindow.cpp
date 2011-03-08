@@ -216,12 +216,6 @@ MainWindow::~MainWindow()
     delete mTempDir;
 }
 
-void MainWindow::notYetImplemented(const QString &method)
-{
-    QMessageBox::information(this, qApp->applicationName()+" Information",
-                             "Sorry, but the '"+method+"' method has not yet been implemented.");
-}
-
 void MainWindow::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event

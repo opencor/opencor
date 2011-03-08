@@ -1,6 +1,7 @@
 #include "docktoolbar.h"
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
+#include "utils.h"
 
 #include "ui_filebrowserwindow.h"
 
@@ -278,25 +279,25 @@ void FileBrowserWindow::on_actionNext_triggered()
 
 void FileBrowserWindow::on_actionNew_triggered()
 {
-
+    notYetImplemented("void FileBrowserWindow::on_actionNew_triggered()");
 }
 
 void FileBrowserWindow::on_actionFolder_triggered()
 {
-
+    notYetImplemented("void FileBrowserWindow::on_actionFolder_triggered()");
 }
 
 void FileBrowserWindow::on_actionCellML10File_triggered()
 {
-
+    notYetImplemented("void FileBrowserWindow::on_actionCellML10File_triggered()");
 }
 
 void FileBrowserWindow::on_actionCellML11File_triggered()
 {
-
+    notYetImplemented("void FileBrowserWindow::on_actionCellML11File_triggered()");
 }
 
 void FileBrowserWindow::on_actionDelete_triggered()
 {
-
+    notYetImplemented("void FileBrowserWindow::on_actionDelete_triggered()");
 }

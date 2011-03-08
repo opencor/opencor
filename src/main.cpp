@@ -18,8 +18,8 @@ int main(int pArgc, char *pArgv[])
     //       means that when a console window is open, to enter something like:
     //           C:\>OpenCOR
     //       will effectively call OpenCOR.com. From there, should there be no
-    //       arguments that require a console treatment, then the GUI version
-    //       of OpenCOR will be launched. This is, unfortunately, the only way
+    //       argument that requires console treatment, the GUI version of
+    //       OpenCOR will then be launched. This is, unfortunately, the only way
     //       to have OpenCOR behave as both a console and GUI application on
     //       Windows, hence the ../winConsole/main.cpp file which is used to
     //       generate the console version of OpenCOR...

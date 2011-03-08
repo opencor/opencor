@@ -59,8 +59,6 @@ private:
     QxtTemporaryDir *mTempDir;
     QString mQchFileName, mQhcFileName;
 
-    void notYetImplemented(const QString &method);
-
     void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,
                                 const QSettings &pSettings,

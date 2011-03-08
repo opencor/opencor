@@ -1,6 +1,8 @@
 #include "utils.h"
 
+#include <QApplication>
 #include <QFile>
+#include <QMessageBox>
 #include <QProcess>
 #include <QResource>
 
@@ -87,4 +89,10 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
     file.open(QIODevice::ReadWrite);
     file.write(resourceAsByteArray(pResource));
     file.close();
+}
+
+void notYetImplemented(const QString &method)
+{
+    QMessageBox::information(0, qApp->applicationName()+" Information",
+                             "Sorry, but the '"+method+"' method has not yet been implemented.");
 }
