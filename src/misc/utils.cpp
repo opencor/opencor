@@ -1,11 +1,9 @@
 #include "utils.h"
 
-#include <QApplication>
 #include <QDir>
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
-#include <QMessageBox>
 #include <QProcess>
 #include <QResource>
 
@@ -155,8 +153,13 @@ bool removePath(const QString &pPath, const bool &pRecursive)
     }
 }
 
+#ifdef QT_GUI_LIB
+#include <QApplication>
+#include <QMessageBox>
+
 void notYetImplemented(const QString &method)
 {
     QMessageBox::information(0, qApp->applicationName()+" Information",
                              "Sorry, but the '"+method+"' method has not yet been implemented.");
 }
+#endif
