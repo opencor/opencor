@@ -272,23 +272,28 @@ void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     // Handle some special mouse buttons for navigating the help
 
-    if (pEvent->button() == Qt::XButton1)
+    if (pEvent->button() == Qt::XButton1) {
         // Special mouse button #1 which is used to go to the previous help
         // page
 
         triggerPageAction(QWebPage::Back);
-    else if (pEvent->button() == Qt::XButton2)
+
+        // Accept the event
+
+        pEvent->accept();
+    } else if (pEvent->button() == Qt::XButton2) {
         // Special mouse button #2 which is used to go to the next help page
 
         triggerPageAction(QWebPage::Forward);
-    else
+
+        // Accept the event
+
+        pEvent->accept();
+    } else {
         // Something else, so use the default handling of the event
 
         QWebView::mouseReleaseEvent(pEvent);
-
-    // Accept the event
-
-    pEvent->accept();
+    }
 }
 
 void HelpWidget::wheelEvent(QWheelEvent *pEvent)
@@ -309,15 +314,15 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
             // We are going 'down' which means zooming out
 
             zoomOut();
+
+        // Accept the event
+
+        pEvent->accept();
     } else {
         // Something else, so use the default handling of the event
 
         QWebView::wheelEvent(pEvent);
     }
-
-    // Accept the event
-
-    pEvent->accept();
 }
 
 QSize HelpWidget::sizeHint() const
@@ -338,10 +343,6 @@ void HelpWidget::paintEvent(QPaintEvent *pEvent)
     // Draw a border in case we are docked
 
     drawBorderIfDocked(true, true, false, false, false);
-
-    // Accept the event
-
-    pEvent->accept();
 }
 
 void HelpWidget::webPageChanged()

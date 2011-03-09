@@ -100,7 +100,7 @@ void FileBrowserWindow::updateActions()
     mUi->actionNext->setEnabled(mNextFolders.count());
 
     mUi->actionNew->setEnabled(mFileBrowserWidget->isCurrentPathDirWritable());
-    mUi->actionDelete->setEnabled(false);
+    mUi->actionDelete->setEnabled(mFileBrowserWidget->isCurrentPathWritable());
 }
 
 void FileBrowserWindow::retranslateUi()
@@ -134,7 +134,7 @@ void FileBrowserWindow::loadSettings(const QSettings &pSettings,
 
     // Initialise the previous folder information
 
-    mPrevFolder = mFileBrowserWidget->currentPath();
+    mPrevFolder = mFileBrowserWidget->currentPathDir();
 
     // Make sure that the current path is expanded
     // Note: this is important in case the current path is that of the C:\ drive
@@ -179,7 +179,7 @@ void FileBrowserWindow::needUpdateActions()
     updateActions();
 }
 
-void FileBrowserWindow::currentItemChanged(const QModelIndex &pCurrentItem,
+void FileBrowserWindow::currentItemChanged(const QModelIndex &,
                                            const QModelIndex &)
 {
     if (!mKeepTrackOfPrevFolder)
@@ -230,7 +230,7 @@ void FileBrowserWindow::on_actionParent_triggered()
 {
     // Go to the parent folder
 
-    mFileBrowserWidget->gotoFolder(mFileBrowserWidget->currentPathParent());
+    mFileBrowserWidget->gotoPath(mFileBrowserWidget->currentPathParent());
 
     // Going to the parent folder may have changed some actions, so...
 
@@ -247,7 +247,7 @@ void FileBrowserWindow::on_actionPrevious_triggered()
 
     mKeepTrackOfPrevFolder = false;
 
-    mFileBrowserWidget->gotoFolder(mPrevFolders.last());
+    mFileBrowserWidget->gotoPath(mPrevFolders.last());
 
     mKeepTrackOfPrevFolder = true;
 
@@ -268,7 +268,7 @@ void FileBrowserWindow::on_actionNext_triggered()
 
     mKeepTrackOfPrevFolder = false;
 
-    mFileBrowserWidget->gotoFolder(mNextFolders.last());
+    mFileBrowserWidget->gotoPath(mNextFolders.last());
 
     mKeepTrackOfPrevFolder = true;
 
@@ -303,13 +303,13 @@ void FileBrowserWindow::on_actionNewFolder_triggered()
         if (QDir(mFileBrowserWidget->currentPathDir()).mkdir(oneFieldWindow.fieldValue()))
             // The folder was created, so select it
 
-            mFileBrowserWidget->gotoFolder(mFileBrowserWidget->currentPathDir()+QDir::separator()+oneFieldWindow.fieldValue(),
-                                           true);
+            mFileBrowserWidget->gotoPath(mFileBrowserWidget->currentPathDir()+QDir::separator()+oneFieldWindow.fieldValue(),
+                                         true);
         else
             // The folder couldn't be created, so...
 
             QMessageBox::information(this, qApp->applicationName(),
-                                     tr("Sorry, but the folder could not be created."));
+                                     tr("Sorry, but the <strong>%1</strong> folder could not be created.").arg(oneFieldWindow.fieldValue()));
     }
 }
 
@@ -325,5 +325,43 @@ void FileBrowserWindow::on_actionNewCellML11File_triggered()
 
 void FileBrowserWindow::on_actionDelete_triggered()
 {
-    notYetImplemented("void FileBrowserWindow::on_actionDelete_triggered()");
+    // Delete the current folder/file
+
+    QString path = mFileBrowserWidget->currentPath();
+    QFileInfo pathFileInfo = path;
+    QString pathFileName = pathFileInfo.fileName();
+
+    if (!pathFileName.isEmpty()) {
+        // We are not at the root of the file system, so we can ask to delete
+        // the folder/file
+
+        bool isPathDir = pathFileInfo.isDir();
+
+        if( QMessageBox::question(this, qApp->applicationName(),
+                                  isPathDir?
+                                      tr("Do you really want to delete the <strong>%1</strong> folder?").arg(pathFileName):
+                                      tr("Do you really want to delete the <strong>%1</strong> file?").arg(pathFileName),
+                                  QMessageBox::Yes|QMessageBox::No,
+                                  QMessageBox::Yes) == QMessageBox::Yes ) {
+            // The user really wants to delete the folder/file, so...
+
+            if (removePath(path))
+                // The folder/file has been removed, so now make sure that the
+                // newly selected entry is visible
+
+                mFileBrowserWidget->gotoPath(mFileBrowserWidget->currentPath());
+            else
+                // The folder/file couldn't be removed, so let the user know
+                // about it
+                // Note: we should never reach this point in the case of a file,
+                //       since the action is only triggerable if the file is
+                //       writable (and therefore deletable), but still... better
+                //       be safe than 'sorry'...
+
+                QMessageBox::information(this, qApp->applicationName(),
+                                         isPathDir?
+                                             tr("Sorry, but the <strong>%1</strong> folder could not be deleted.").arg(pathFileName):
+                                             tr("Sorry, but the <strong>%1</strong> file could not be deleted.").arg(pathFileName));
+        }
+    }
 }

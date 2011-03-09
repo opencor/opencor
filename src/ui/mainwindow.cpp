@@ -228,10 +228,6 @@ void MainWindow::changeEvent(QEvent *pEvent)
     if (   (pEvent->type() == QEvent::LocaleChange)
         && (mUi->actionSystem->isChecked()))
         setLocale(SYSTEM_LOCALE);
-
-    // Accept the event
-
-    pEvent->accept();
 }
 
 void MainWindow::showEvent(QShowEvent *pEvent)
@@ -257,10 +253,6 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 
         mUi->actionStatusBar->setChecked(statusBar()->isVisible());
     }
-
-    // Accept the event
-
-    pEvent->accept();
 }
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
@@ -270,10 +262,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     //       settings (e.g. dock windows) won't be properly saved
 
     saveSettings();
-
-    // Accept the event
-
-    pEvent->accept();
 
     // Default handling of the event
 

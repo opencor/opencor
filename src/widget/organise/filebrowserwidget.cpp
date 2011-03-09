@@ -19,9 +19,10 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
 {
     mFileSystemModel = new QFileSystemModel;
 
-    // We want acces to the full file system
+    // We want acces to the full, but filtered, file system
 
     mFileSystemModel->setRootPath("");
+    mFileSystemModel->setFilter(QDir::AllEntries|QDir::NoDotAndDotDot|QDir::NoSymLinks);
 
     // Set some properties for the file browser widget itself
 
@@ -148,6 +149,23 @@ QSize FileBrowserWidget::sizeHint() const
     return defaultSize(0.15);
 }
 
+bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
+{
+    if (pEvent->type() == QEvent::ToolTip) {
+        // We need to show a tool tip, so make sure that it's up to date by
+        // setting it to the file path of the current item
+
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
+
+        setToolTip(QDir::toNativeSeparators(mFileSystemModel->filePath(indexAt(QPoint(helpEvent->x(),
+                                                                                      helpEvent->y())))));
+    }
+
+    // Default handling of the event
+
+    return QTreeView::viewportEvent(pEvent);
+}
+
 void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     if (pEvent->button() == Qt::RightButton)
@@ -155,7 +173,7 @@ void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
         // context menu and we don't want the row beneath the mouse to be
         // selected (in case it isn't already), so...
 
-        return;
+        pEvent->accept();
     else
         // We are not pressing the right mouse button, so carry on with the
         // default handling of the event
@@ -208,25 +226,25 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
     }
 }
 
-bool FileBrowserWidget::gotoFolder(const QString &pFolder, const bool &pExpand)
+bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
 {
-    // Set the current index to that of the home folder and expand the folder
+    // Set the current index to that of the provided path
 
-    QModelIndex folderModelIndex = mFileSystemModel->index(pFolder);
+    QModelIndex pathModelIndex = mFileSystemModel->index(pPath);
 
-    if (folderModelIndex != QModelIndex()) {
-        // The folder exists, so we can go to it
+    if (pathModelIndex != QModelIndex()) {
+        // The path exists, so we can go to it
 
-        setCurrentIndex(folderModelIndex);
+        setCurrentIndex(pathModelIndex);
 
         if (pExpand)
-            setExpanded(folderModelIndex, true);
+            setExpanded(pathModelIndex, true);
 
-        scrollTo(folderModelIndex);
+        scrollTo(pathModelIndex);
 
         return true;
     } else {
-        // The folder doesn't exist, so...
+        // The path doesn't exist, so...
 
         return false;
     }
@@ -243,7 +261,7 @@ void FileBrowserWidget::gotoHomeFolder(const bool &pExpand)
 {
     // Go to the home folder
 
-    gotoFolder(QDir::homePath(), pExpand);
+    gotoPath(QDir::homePath(), pExpand);
 }
 
 QString FileBrowserWidget::currentPath()
@@ -302,4 +320,11 @@ bool FileBrowserWidget::isCurrentPathDirWritable()
     // Return whether the directory of the current path is writable or not
 
     return QFileInfo(currentPathDir()).isWritable();
+}
+
+bool FileBrowserWidget::isCurrentPathWritable()
+{
+    // Return whether the current path is writable or not
+
+    return QFileInfo(currentPath()).isWritable();
 }

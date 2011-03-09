@@ -119,8 +119,24 @@
         <translation>Veuillez donner un nom pour le nouveau répertoire.</translation>
     </message>
     <message>
-        <source>Sorry, but the folder could not be created.</source>
-        <translation>Désolé, mais le répertoire n&apos;a pas pu être créé.</translation>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; folder could not be created.</source>
+        <translation>Désolé, mais le répertoire &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être créé.</translation>
+    </message>
+    <message>
+        <source>Do you really want to delete the &lt;strong&gt;%1&lt;/strong&gt; folder?</source>
+        <translation>Voulez-vous vraiment supprimer le répertoire &lt;strong&gt;%1&lt;/strong&gt; ?</translation>
+    </message>
+    <message>
+        <source>Do you really want to delete the &lt;strong&gt;%1&lt;/strong&gt; file?</source>
+        <translation>Voulez-vous vraiment supprimer le fichier &lt;strong&gt;%1&lt;/strong&gt; ?</translation>
+    </message>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; folder could not be deleted.</source>
+        <translation>Désolé, mais le répertoire &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être supprimé.</translation>
+    </message>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; file could not be deleted.</source>
+        <translation>Désolé, mais le fichier &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être supprimé.</translation>
     </message>
 </context>
 <context>

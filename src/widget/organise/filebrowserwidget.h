@@ -18,7 +18,7 @@ public:
     virtual void loadSettings(const QSettings &, const QString &);
     virtual void saveSettings(QSettings &, const QString &);
 
-    bool gotoFolder(const QString &pFolder, const bool &pExpand = false);
+    bool gotoPath(const QString &pPath, const bool &pExpand = false);
 
     QString homeFolder();
     void gotoHomeFolder(const bool &pExpand = false);
@@ -28,10 +28,12 @@ public:
     QString currentPathParent();
     bool isCurrentPathVisible();
     bool isCurrentPathDirWritable();
+    bool isCurrentPathWritable();
 
 protected:
     virtual QSize sizeHint() const;
 
+    virtual bool viewportEvent(QEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
 private:

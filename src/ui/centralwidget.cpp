@@ -39,8 +39,4 @@ void CentralWidget::paintEvent(QPaintEvent *pEvent)
     // Have the rest of the painting done by the parent
 
     QWidget::paintEvent(pEvent);
-
-    // Accept the event
-
-    pEvent->accept();
 }

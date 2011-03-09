@@ -26,8 +26,4 @@ void FileOrganiserWidget::paintEvent(QPaintEvent *pEvent)
     // Draw a border in case we are docked
 
     drawBorderIfDocked();
-
-    // Accept the event
-
-    pEvent->accept();
 }

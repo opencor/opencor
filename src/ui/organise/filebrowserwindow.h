@@ -54,8 +54,7 @@ private Q_SLOTS:
     void customContextMenu(const QPoint &);
 
     void needUpdateActions();
-    void currentItemChanged(const QModelIndex &pCurrentItem,
-                            const QModelIndex &);
+    void currentItemChanged(const QModelIndex &, const QModelIndex &);
 };
 
 #endif

@@ -61,10 +61,6 @@ void MmlViewerWidget::paintEvent(QPaintEvent *pEvent)
     // Draw a border in case we are docked
 
     drawBorderIfDocked();
-
-    // Accept the event
-
-    pEvent->accept();
 }
 
 void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
@@ -88,8 +84,4 @@ void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
     // Note: to go for 100% of the 'optimal' size may result in the edges of
     //       the equation being clipped, hence we go for 93% of the 'optimal'
     //       size...
-
-    // Accept the event
-
-    pEvent->accept();
 }
