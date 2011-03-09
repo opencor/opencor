@@ -5,7 +5,8 @@
 #include <QMessageBox>
 
 OneFieldWindow::OneFieldWindow(const QString &pTitle, const QString &pFieldName,
-                               const QString &pInfoMsg, QWidget *pParent) :
+                               const QString &pInfoMsg, const QString &pRegExp,
+                               QWidget *pParent) :
     QDialog(pParent),
     mUi(new Ui::OneFieldWindow),
     mInfoMsg(pInfoMsg)
@@ -19,6 +20,12 @@ OneFieldWindow::OneFieldWindow(const QString &pTitle, const QString &pFieldName,
     setWindowTitle(pTitle);
 
     mUi->fieldLabel->setText(pFieldName);
+
+    // Specify the regular expression, if any, that is to be used to validate
+    // the field value
+
+    if (!pRegExp.isEmpty())
+        mUi->fieldValue->setValidator(new QRegExpValidator(QRegExp(pRegExp), this));
 
     // Set the focus on the field value
 

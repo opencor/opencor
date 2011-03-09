@@ -125,9 +125,9 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create the various dock windows
 
-    mCellmlModelRepositoryWindow   = new CellmlModelRepositoryWindow(this);
-    mFileBrowserWindow   = new FileBrowserWindow(this);
-    mFileOrganiserWindow = new FileOrganiserWindow(this);
+    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindow(this);
+    mFileBrowserWindow           = new FileBrowserWindow(this);
+    mFileOrganiserWindow         = new FileOrganiserWindow(this);
 
     mViewerWindow = new ViewerWindow(this);
 

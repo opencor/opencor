@@ -292,7 +292,7 @@ void FileBrowserWindow::on_actionNewFolder_triggered()
 
     OneFieldWindow oneFieldWindow(tr("New Folder"), tr("Folder name:"),
                                   tr("Please provide a name for the new folder."),
-                                  this);
+                                  "[^\\/:*?\"<>|\r\n]+", this);
 
     oneFieldWindow.exec();
 

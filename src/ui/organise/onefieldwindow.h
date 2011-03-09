@@ -13,7 +13,9 @@ class OneFieldWindow : public QDialog
 
 public:
     explicit OneFieldWindow(const QString &pTitle, const QString &pFieldName,
-                            const QString &pInfoMsg, QWidget *pParent = 0);
+                            const QString &pInfoMsg,
+                            const QString &pRegExp = QString(),
+                            QWidget *pParent = 0);
     ~OneFieldWindow();
 
     QString fieldValue();
