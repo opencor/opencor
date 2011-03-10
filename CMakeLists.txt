@@ -6,13 +6,13 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # Version of OpenCOR
 
-SET(VERSION_MAJOR 0)
-SET(VERSION_MINOR 1)
-SET(VERSION_PATCH 0)
+SET(PROJECT_VERSION_MAJOR 0)
+SET(PROJECT_VERSION_MINOR 1)
+SET(PROJECT_VERSION_PATCH 0)
 
-SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+SET(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
-FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
+FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${PROJECT_VERSION})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -240,10 +240,16 @@ ENDIF()
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
-# Some post-processing specific to Mac OS X which ensures that OpenCOR can be
-# used on any Mac OS X machine that doesn't have Qt and the SQLite plugin
+# Some Mac OS X specific information and post-processing
+# Note: the post-processing ensures that OpenCOR can be used on any Mac OS X
+#       machine that doesn't have Qt and the SQLite plugin
 
 IF(APPLE)
+	# Specify the name of the bundle
+
+	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
+	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
+
     # Use macdeployqt to have all the Qt files required by OpenCOR added to the
     # bundle
 
