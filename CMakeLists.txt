@@ -240,7 +240,7 @@ ENDIF()
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
-# Some Mac OS X specific information and post-processing
+# Some Mac OS X specific information, as well as some pre- and post-processing
 # Note: the post-processing ensures that OpenCOR can be used on any Mac OS X
 #       machine that doesn't have Qt and the SQLite plugin
 
@@ -249,6 +249,13 @@ IF(APPLE)
 
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
+
+    # Remove any qt.conf file left from a previous build
+    # Note: this prevents us from getting a warning when everything is actually OK
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
+                       COMMAND rm -f ${PROJECT_NAME}.app/Contents/Resources/qt.conf
+                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
     # Use macdeployqt to have all the Qt files required by OpenCOR added to the
     # bundle
