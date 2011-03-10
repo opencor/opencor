@@ -324,6 +324,22 @@ IF(WIN32)
 
     INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME}.bat DESTINATION .)
     INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME}.vbs DESTINATION .)
+
+    # File type association
+    # Note: the calls to SHChangeNotify are to ensure that Windows refreshes 
+    #       file icons (so that it is clear to the user that an extension has
+    #       been (un)registered...
+
+    SET(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}/distrib\\\\FileAssociation.nsh")
+
+    SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+        \\\${RegisterExtension} \\\"\\\$INSTDIR\\\\bin\\\\${PROJECT_NAME}.exe\\\" \\\".cellml\\\" \\\"CellML File\\\"
+        System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
+    ")
+    SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+        \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
+        System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
+    ")
 ELSEIF(APPLE)
     # Select PackageMaker and ZIP as the packagers on Mac OS X
 
