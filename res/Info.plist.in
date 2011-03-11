@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleTypeIconFile</key>
+            <string>${PROJECT_NAME}.icns</string>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>cellml</string>
+            </array>
+            <key>CFBundleTypeName</key>
+            <string>CellML File</string>
+        </dict>
+    </array>
+    <key>NSHumanReadableCopyright</key>
+    <string>(C) 2011</string>
+    <key>CFBundleIconFile</key>
+    <string>${PROJECT_NAME}.icns</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleExecutable</key>
+    <string>${PROJECT_NAME}</string>
+    <key>CFBundleIdentifier</key>
+    <string></string>
+    <key>CFBundleVersion</key>
+    <string>${VERSION}</string>
+    <key>CFBundleShortVersionString</key>
+    <string>${VERSION}</string>
+</dict>
+</plist>

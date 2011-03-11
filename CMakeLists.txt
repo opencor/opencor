@@ -245,10 +245,16 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPER
 #       machine that doesn't have Qt and the SQLite plugin
 
 IF(APPLE)
-    # Specify the name of the bundle
+    # Configure and use our own Info.plist file
+    # Note: the reason for using our own Info.plist file is that it contains
+    #       some information about associating .cellml files to OpenCOR,
+    #       something which can't be done using CMake (or so it seems)...
 
-    SET(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
-    SET(MACOSX_BUNDLE_BUNDLE_VERSION "${VERSION}")
+    SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
+
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/Info.plist.in ${InfoPlistFile})
+
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile})
 
     # Remove any qt.conf file left from a previous build
     # Note: this prevents us from getting a warning when everything is actually OK
