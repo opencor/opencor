@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "documentmanager.h"
+
 #include <QMainWindow>
 #include <QTranslator>
 
@@ -58,6 +60,8 @@ private:
 
     QxtTemporaryDir *mTempDir;
     QString mQchFileName, mQhcFileName;
+
+    DocumentManager *mDocumentManager;
 
     void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,

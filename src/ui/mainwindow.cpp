@@ -116,6 +116,10 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mHelpEngine->setupData();
 
+    // Create our document manager
+
+    mDocumentManager = new DocumentManager();
+
     // Specify some general docking settings
 
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
@@ -204,6 +208,7 @@ MainWindow::~MainWindow()
 {
     // Delete some internal objects
 
+    delete mDocumentManager;
     delete mHelpEngine;
     delete mUi;
 
