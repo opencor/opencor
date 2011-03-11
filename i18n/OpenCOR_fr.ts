@@ -138,6 +138,30 @@
         <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; file could not be deleted.</source>
         <translation>Désolé, mais le fichier &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être supprimé.</translation>
     </message>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; folder already exists.</source>
+        <translation>Désolé, mais le répertoire &lt;strong&gt;%1&lt;/strong&gt; existe déjà.</translation>
+    </message>
+    <message>
+        <source>New CellML %1 File</source>
+        <translation>Nouveau fichier CellML %1</translation>
+    </message>
+    <message>
+        <source>Model name:</source>
+        <translation>Nom du modèle :</translation>
+    </message>
+    <message>
+        <source>Please provide a name for the new CellML %1 model.</source>
+        <translation>Veuillez donner un nom pour le nouveau fichier CellML %1.</translation>
+    </message>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; file already exists.</source>
+        <translation>Désolé, mais le fichier &lt;strong&gt;%1&lt;/strong&gt; existe déjà.</translation>
+    </message>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; file could not be created.</source>
+        <translation>Désolé, mais le fichier &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être créé.</translation>
+    </message>
 </context>
 <context>
     <name>FileOrganiserWindow</name>

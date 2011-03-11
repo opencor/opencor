@@ -28,7 +28,7 @@ void CentralWidget::paintEvent(QPaintEvent *pEvent)
 
     QPixmap pixmap;
 
-    pixmap.load(":cellMLLogo");
+    pixmap.load(":cellmlLogo");
 
     QPainter paint(this);
 

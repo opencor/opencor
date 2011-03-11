@@ -1,6 +1,8 @@
 #include "docktoolbar.h"
+#include "documentmanager.h"
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
+#include "mainwindow.h"
 #include "onefieldwindow.h"
 #include "utils.h"
 
@@ -11,9 +13,9 @@
 #include <QMenu>
 #include <QMessageBox>
 
-#define SETTINGS_FILEBROWSERWINDOW "FileBrowserWindow"
+static const QString SettingsFileBrowserWindow = "FileBrowserWindow";
 
-FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
+FileBrowserWindow::FileBrowserWindow(MainWindow *pParent) :
     DockWidget(pParent),
     mUi(new Ui::FileBrowserWindow),
     mPrevFolder(),
@@ -22,6 +24,10 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     // Set up the UI
 
     mUi->setupUi(this);
+
+    // Retrieve the document manager from our parent which is the main window
+
+    mDocumentManager = pParent->documentManager();
 
     // Create a dropdown menu for the New action
 
@@ -128,7 +134,7 @@ void FileBrowserWindow::loadSettings(const QSettings &pSettings,
 
     mKeepTrackOfPrevFolder = false;
 
-    mFileBrowserWidget->loadSettings(pSettings, SETTINGS_FILEBROWSERWINDOW);
+    mFileBrowserWidget->loadSettings(pSettings, SettingsFileBrowserWindow);
 
     mKeepTrackOfPrevFolder = true;
 
@@ -149,7 +155,7 @@ void FileBrowserWindow::saveSettings(QSettings &pSettings, const QString &)
 {
     // Keep track of the settings of the file browser widget
 
-    mFileBrowserWidget->saveSettings(pSettings, SETTINGS_FILEBROWSERWINDOW);
+    mFileBrowserWidget->saveSettings(pSettings, SettingsFileBrowserWindow);
 }
 
 void FileBrowserWindow::customContextMenu(const QPoint &)
@@ -286,36 +292,91 @@ void FileBrowserWindow::on_actionNew_triggered()
     on_actionNewFolder_triggered();
 }
 
+static QString FolderFileNameRegExp = "[^\\/:*?\"<>|]+";
+
 void FileBrowserWindow::on_actionNewFolder_triggered()
 {
     // Get the name of the new folder
 
     OneFieldWindow oneFieldWindow(tr("New Folder"), tr("Folder name:"),
                                   tr("Please provide a name for the new folder."),
-                                  "[^\\/:*?\"<>|\r\n]+", this);
+                                  FolderFileNameRegExp, this);
 
     oneFieldWindow.exec();
 
-    // Create the new folder in the currently selected folder unless the user
-    // cancelled the action
+    // Create the new folder in the current folder unless the user cancelled the
+    // action
 
     if (oneFieldWindow.result() == QDialog::Accepted) {
-        if (QDir(mFileBrowserWidget->currentPathDir()).mkdir(oneFieldWindow.fieldValue()))
-            // The folder was created, so select it
+        QString folderName =  mFileBrowserWidget->currentPathDir()
+                             +QDir::separator()+oneFieldWindow.fieldValue();
 
-            mFileBrowserWidget->gotoPath(mFileBrowserWidget->currentPathDir()+QDir::separator()+oneFieldWindow.fieldValue(),
-                                         true);
-        else
-            // The folder couldn't be created, so...
+        if (QDir(folderName).exists()) {
+            // The folder already exists, so...
 
             QMessageBox::information(this, qApp->applicationName(),
-                                     tr("Sorry, but the <strong>%1</strong> folder could not be created.").arg(oneFieldWindow.fieldValue()));
+                                     tr("Sorry, but the <strong>%1</strong> folder already exists.").arg(oneFieldWindow.fieldValue()));
+        } else {
+            // The folder doesn't already exist, so try to create it
+
+            if (QDir(mFileBrowserWidget->currentPathDir()).mkdir(oneFieldWindow.fieldValue()))
+                // The folder was created, so select it
+
+                mFileBrowserWidget->gotoPath(folderName, true);
+            else
+                // The folder couldn't be created, so...
+
+                QMessageBox::information(this, qApp->applicationName(),
+                                         tr("Sorry, but the <strong>%1</strong> folder could not be created.").arg(oneFieldWindow.fieldValue()));
+        }
     }
 }
 
 void FileBrowserWindow::newCellmlFile(const CellmlVersion &pCellmlVersion)
 {
-    notYetImplemented("void FileBrowserWindow::newCellmlFile(const CellmlVersion &pCellmlVersion)");
+    // Get the name of the new CellML file
+
+    QString cellmlVersion = cellmlVersionString(pCellmlVersion);
+
+    OneFieldWindow oneFieldWindow(tr("New CellML %1 File").arg(cellmlVersion), tr("Model name:"),
+                                  tr("Please provide a name for the new CellML %1 model.").arg(cellmlVersion),
+                                  FolderFileNameRegExp, this);
+
+    oneFieldWindow.exec();
+
+    // Create the new CellML file in the current folder unless the user
+    // cancelled the action
+
+    if (oneFieldWindow.result() == QDialog::Accepted) {
+        QString cellmlFileName =  mFileBrowserWidget->currentPathDir()
+                                 +QDir::separator()+oneFieldWindow.fieldValue()
+                                 +CellmlFileExtension;
+
+        if (QFileInfo(cellmlFileName).exists()) {
+            // The CellML file already exists, so...
+
+            QMessageBox::information(this, qApp->applicationName(),
+                                     tr("Sorry, but the <strong>%1</strong> file already exists.").arg(oneFieldWindow.fieldValue()));
+        } else {
+            // The CellML file doesn't already exist, so try to create it
+
+            if (::newCellmlFile(cellmlFileName, oneFieldWindow.fieldValue(),
+                                pCellmlVersion)) {
+                // The CellML file was created, so select it
+
+                mFileBrowserWidget->gotoPath(cellmlFileName, true);
+
+                // Have the new CellML file managed
+
+                mDocumentManager->manage(cellmlFileName);
+            } else {
+                // The CellML file couldn't be created, so...
+
+                QMessageBox::information(this, qApp->applicationName(),
+                                         tr("Sorry, but the <strong>%1</strong> file could not be created.").arg(oneFieldWindow.fieldValue()));
+            }
+        }
+    }
 }
 
 void FileBrowserWindow::on_actionNewCellML10File_triggered()

@@ -1,5 +1,6 @@
 #include "centralwidget.h"
 #include "viewerwindow.h"
+#include "common.h"
 #include "commonwidget.h"
 #include "dockwidget.h"
 #include "mainwindow.h"

@@ -3,7 +3,7 @@
         <file>about.png</file>
         <file>add.png</file>
         <file>back.png</file>
-        <file alias="cellMLLogo">cellML.png</file>
+        <file alias="cellmlLogo">cellML.png</file>
         <file>copy.png</file>
         <file>delete.png</file>
         <file>en.png</file>
@@ -22,6 +22,7 @@
         <file alias="qt_fr">qt_fr.qm</file>
         <file>save.png</file>
         <file>saveAs.png</file>
+        <file alias="cellmlTemplate">template.cellml</file>
         <file>up.png</file>
         <file>zoomIn.png</file>
         <file>zoomOut.png</file>
