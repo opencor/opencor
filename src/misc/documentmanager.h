@@ -19,6 +19,7 @@ class DocumentManager
 {
     enum Status
     {
+        DoesNotExist,
         Added,
         AlreadyManaged,
         Removed,

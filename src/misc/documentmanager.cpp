@@ -1,5 +1,7 @@
 #include "documentmanager.h"
 
+#include <QFileInfo>
+
 Document::Document(const QString &pFileName) :
     mFileName(pFileName)
 {
@@ -22,37 +24,53 @@ DocumentManager::~DocumentManager()
 
 DocumentManager::Status DocumentManager::manage(const QString &pFileName)
 {
-    if (isManaged(pFileName)) {
-        // The document is already managed, so...
+    QFileInfo fileInfo = pFileName;
 
-        return AlreadyManaged;
+    if (fileInfo.exists()) {
+        if (isManaged(fileInfo.canonicalFilePath())) {
+            // The document is already managed, so...
+
+            return AlreadyManaged;
+        } else {
+            // The document isn't already managed, so add it to our list of
+            // managed documents
+
+            mDocuments.append(new Document(fileInfo.canonicalFilePath()));
+
+            return Added;
+        }
     } else {
-        // The document isn't already managed, so add it to our list of managed
-        // documents
+        // The document doesn't exist, so...
 
-        mDocuments.append(new Document(pFileName));
-
-        return Added;
+        return DoesNotExist;
     }
 }
 
 DocumentManager::Status DocumentManager::unmanage(const QString &pFileName)
 {
-    Document *document = isManaged(pFileName);
+    QFileInfo fileInfo = pFileName;
 
-    if (document) {
-        // The document is managed, so we can remove it
+    if (fileInfo.exists()) {
+        Document *document = isManaged(fileInfo.canonicalFilePath());
 
-        mDocuments.removeAt(mDocuments.indexOf(document));
+        if (document) {
+            // The document is managed, so we can remove it
+
+            mDocuments.removeAt(mDocuments.indexOf(document));
+
+            return Removed;
+        } else {
+            // The document isn't managed, so...
+
+            return NotManaged;
+        }
 
         return Removed;
     } else {
-        // The document isn't managed, so...
+        // The document doesn't exist, so...
 
-        return NotManaged;
+        return DoesNotExist;
     }
-
-    return Removed;
 }
 
 Document *DocumentManager::isManaged(const QString &pFileName)
