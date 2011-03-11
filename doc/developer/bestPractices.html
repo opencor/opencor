@@ -100,7 +100,7 @@ for (Container::iterator iter = large.begin(); iter != end; ++iter) {
                         You can use the Qt <code>foreach</code> loop in non-time-critical code with a Qt
         container. It is a nice way to keep line noise down and to give the loop variable a proper name:
                         <pre class="good prettyprint">foreach (QWidget *widget, container)
-doSomething(widget);</pre>
+    doSomething(widget);</pre>
                         <pre class="bad prettyprint">Container::iterator end = container.end();
 
 for (Container::iterator iter = container.begin(); iter != end; ++iter)

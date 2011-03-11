@@ -286,14 +286,12 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
 
 void MainWindow::dropEvent(QDropEvent *pEvent)
 {
+    // Manage the dropped documents
+
     QList<QUrl> urlList = pEvent->mimeData()->urls();
-    QString urls;
 
     for (int i = 0; i < urlList.size(); ++i)
-        urls += "<li>"+urlList.at(i).path()+"</li>";
-
-    QMessageBox::information(this, qApp->applicationName(),
-                             "You have just dropped the following files: <ul>"+urls+"</ul>");
+        mDocumentManager->manage(urlList.at(i).path());
 
     // Accept the proposed action for the event
 
