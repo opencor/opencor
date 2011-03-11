@@ -3,7 +3,7 @@
 
 #include "ui_cellmlmodelrepositorywindow.h"
 
-#define SETTINGS_CELLMLMODELREPOSITORYWINDOW "CellmlModelRepositoryWindow"
+static const QString SettingsCellmlModelRepositoryWindow = "CellmlModelRepositoryWindow";
 
 CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -47,12 +47,12 @@ void CellmlModelRepositoryWindow::loadSettings(const QSettings &pSettings,
 {
     // Retrieve the settings of the PMR explorer widget
 
-    mCellmlModelRepositoryWidget->loadSettings(pSettings, SETTINGS_CELLMLMODELREPOSITORYWINDOW);
+    mCellmlModelRepositoryWidget->loadSettings(pSettings, SettingsCellmlModelRepositoryWindow);
 }
 
 void CellmlModelRepositoryWindow::saveSettings(QSettings &pSettings, const QString &)
 {
     // Keep track of the settings of the PMR explorer widget
 
-    mCellmlModelRepositoryWidget->saveSettings(pSettings, SETTINGS_CELLMLMODELREPOSITORYWINDOW);
+    mCellmlModelRepositoryWidget->saveSettings(pSettings, SettingsCellmlModelRepositoryWindow);
 }

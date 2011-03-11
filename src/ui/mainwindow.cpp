@@ -26,26 +26,24 @@
 
 #include <QxtTemporaryDir>
 
-#define OPENCOR_HELP_HOMEPAGE "qthelp://opencor/doc/userIndex.html"
-#define OPENCOR_HOMEPAGE "http://opencor.sourceforge.net/"
-#define CELLML_HOMEPAGE "http://www.cellml.org/"
+static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/userIndex.html";
 
-#define SETTINGS_GENERAL_LOCALE "General_Locale"
-#define SETTINGS_GENERAL_GEOMETRY "General_Geometry"
-#define SETTINGS_GENERAL_STATE "General_State"
+static const QString SettingsGeneralLocale   = "General_Locale";
+static const QString SettingsGeneralGeometry = "General_Geometry";
+static const QString SettingsGeneralState    = "General_State";
 
-#define SETTINGS_MAINWINDOW_STATUSBARVISIBILITY "MainWindow_StatusBarVisibility"
+static const QString SettingsMainWindowStatusBarVisibility = "MainWindow_StatusBarVisibility";
 
-#define SETTINGS_NONE ""
+static const QString SettingsNone = "";
 
-#define SYSTEM_LOCALE ""
-#define ENGLISH_LOCALE "en"
-#define FRENCH_LOCALE  "fr"
+static const QString SystemLocale  = "";
+static const QString EnglishLocale = "en";
+static const QString FrenchLocale  = "fr";
 
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
-    mLocale(SYSTEM_LOCALE)
+    mLocale(SystemLocale)
 {
     // Set the name of the main window to that of the application
 
@@ -135,7 +133,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mViewerWindow = new ViewerWindow(this);
 
-    mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OPENCOR_HELP_HOMEPAGE), this);
+    mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OpencorHelpHomepageUrl), this);
 
     // Some connections to handle the various toolbars
 
@@ -221,6 +219,13 @@ MainWindow::~MainWindow()
     delete mTempDir;
 }
 
+DocumentManager *MainWindow::documentManager()
+{
+    // Return our document manager
+
+    return mDocumentManager;
+}
+
 void MainWindow::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
@@ -232,7 +237,7 @@ void MainWindow::changeEvent(QEvent *pEvent)
 
     if (   (pEvent->type() == QEvent::LocaleChange)
         && (mUi->actionSystem->isChecked()))
-        setLocale(SYSTEM_LOCALE);
+        setLocale(SystemLocale);
 }
 
 void MainWindow::showEvent(QShowEvent *pEvent)
@@ -326,7 +331,7 @@ void MainWindow::loadDockWindowSettings(DockWidget *pDockWindow,
 
         // Load the dock window's settings
 
-        commonWidget->loadSettings(pSettings, SETTINGS_NONE);
+        commonWidget->loadSettings(pSettings, SettingsNone);
 
         if (pNeedDefaultSettings)
             // Make the dock window visible
@@ -341,12 +346,12 @@ void MainWindow::loadSettings()
 
     // Retrieve the language to be used by OpenCOR
 
-    setLocale(settings.value(SETTINGS_GENERAL_LOCALE, SYSTEM_LOCALE).toString());
+    setLocale(settings.value(SettingsGeneralLocale, SystemLocale).toString());
 
     // Retrieve the geometry and state of the main window
 
-    bool needDefaultSettings =    !restoreGeometry(settings.value(SETTINGS_GENERAL_GEOMETRY).toByteArray())
-                               || !restoreState(settings.value(SETTINGS_GENERAL_STATE).toByteArray());
+    bool needDefaultSettings =    !restoreGeometry(settings.value(SettingsGeneralGeometry).toByteArray())
+                               || !restoreState(settings.value(SettingsGeneralState).toByteArray());
 
     if (needDefaultSettings) {
         // The geometry and/or state of the main window couldn't be retrieved,
@@ -369,7 +374,7 @@ void MainWindow::loadSettings()
 
         // Retrieve whether the status bar is to be shown
 
-        mUi->statusBar->setVisible(settings.value(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY,
+        mUi->statusBar->setVisible(settings.value(SettingsMainWindowStatusBarVisibility,
                                                   true).toBool());
     }
 
@@ -390,36 +395,36 @@ void MainWindow::saveSettings()
 
     // Keep track of the language to be used by OpenCOR
 
-    settings.setValue(SETTINGS_GENERAL_LOCALE, mLocale);
+    settings.setValue(SettingsGeneralLocale, mLocale);
 
     // Keep track of the geometry of the main window
 
-    settings.setValue(SETTINGS_GENERAL_GEOMETRY, saveGeometry());
+    settings.setValue(SettingsGeneralGeometry, saveGeometry());
 
     // Keep track of the state of the main window
 
-    settings.setValue(SETTINGS_GENERAL_STATE, saveState());
+    settings.setValue(SettingsGeneralState, saveState());
 
     // Keep track of whether the status bar is to be shown
 
-    settings.setValue(SETTINGS_MAINWINDOW_STATUSBARVISIBILITY,
+    settings.setValue(SettingsMainWindowStatusBarVisibility,
                       mUi->statusBar->isVisible());
 
     // Keep track of the settings of the various dock windows
 
-    mCellmlModelRepositoryWindow->saveSettings(settings, SETTINGS_NONE);
-    mFileBrowserWindow->saveSettings(settings, SETTINGS_NONE);
-    mFileOrganiserWindow->saveSettings(settings, SETTINGS_NONE);
+    mCellmlModelRepositoryWindow->saveSettings(settings, SettingsNone);
+    mFileBrowserWindow->saveSettings(settings, SettingsNone);
+    mFileOrganiserWindow->saveSettings(settings, SettingsNone);
 
-    mViewerWindow->saveSettings(settings, SETTINGS_NONE);
+    mViewerWindow->saveSettings(settings, SettingsNone);
 
-    mHelpWindow->saveSettings(settings, SETTINGS_NONE);
+    mHelpWindow->saveSettings(settings, SettingsNone);
 }
 
 void MainWindow::setLocale(const QString &pLocale)
 {
-    if ((pLocale != mLocale) || (pLocale == SYSTEM_LOCALE)) {
-        QString realLocale = (pLocale == SYSTEM_LOCALE)?
+    if ((pLocale != mLocale) || (pLocale == SystemLocale)) {
+        QString realLocale = (pLocale == SystemLocale)?
                                  QLocale::system().name().left(2):
                                  pLocale;
 
@@ -453,10 +458,10 @@ void MainWindow::setLocale(const QString &pLocale)
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status, so...
 
-    mUi->actionSystem->setChecked(mLocale == SYSTEM_LOCALE);
+    mUi->actionSystem->setChecked(mLocale == SystemLocale);
 
-    mUi->actionEnglish->setChecked(mLocale == ENGLISH_LOCALE);
-    mUi->actionFrench->setChecked(mLocale == FRENCH_LOCALE);
+    mUi->actionEnglish->setChecked(mLocale == EnglishLocale);
+    mUi->actionFrench->setChecked(mLocale == FrenchLocale);
 }
 
 void MainWindow::singleAppMsgRcvd(const QString &)
@@ -527,35 +532,35 @@ void MainWindow::on_actionSystem_triggered()
 {
     // Select the system's language as the language used by OpenCOR
 
-    setLocale(SYSTEM_LOCALE);
+    setLocale(SystemLocale);
 }
 
 void MainWindow::on_actionEnglish_triggered()
 {
     // Select English as the language used by OpenCOR
 
-    setLocale(ENGLISH_LOCALE);
+    setLocale(EnglishLocale);
 }
 
 void MainWindow::on_actionFrench_triggered()
 {
     // Select French as the language used by OpenCOR
 
-    setLocale(FRENCH_LOCALE);
+    setLocale(FrenchLocale);
 }
 
 void MainWindow::on_actionHomePage_triggered()
 {
     // Look up OpenCOR home page
 
-    QDesktopServices::openUrl(QUrl(OPENCOR_HOMEPAGE));
+    QDesktopServices::openUrl(QUrl(OpencorHomepageUrl));
 }
 
 void MainWindow::on_actionCellMLHomePage_triggered()
 {
     // Look up CellML home page
 
-    QDesktopServices::openUrl(QUrl(CELLML_HOMEPAGE));
+    QDesktopServices::openUrl(QUrl(CellmlHomepageUrl));
 }
 
 void MainWindow::on_actionUpdates_triggered()
@@ -574,7 +579,7 @@ void MainWindow::on_actionAbout_triggered()
                            "<h3><em>"+getOsName()+"</em></h3>"+
                        "</center>"+
                        "<br />"+
-                       "<a href=\""+QString(OPENCOR_HOMEPAGE)+"\">"+qApp->applicationName()+"</a> "+tr("is a cross-platform <a href=\"http://www.cellml.org/\">CellML</a>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
+                       "<a href=\""+QString(OpencorHomepageUrl)+"\">"+qApp->applicationName()+"</a> "+tr("is a cross-platform <a href=\"http://www.cellml.org/\">CellML</a>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
 }
 
 void MainWindow::resetAll()

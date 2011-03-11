@@ -3,7 +3,7 @@
 
 #include "ui_fileorganiserwindow.h"
 
-#define SETTINGS_FILEORGANISERWINDOW "FileOrganiserWindow"
+static const QString SettingsFileOrganiserWindow = "FileOrganiserWindow";
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -47,12 +47,12 @@ void FileOrganiserWindow::loadSettings(const QSettings &pSettings,
 {
     // Retrieve the settings of the file organiser widget
 
-    mFileOrganiserWidget->loadSettings(pSettings, SETTINGS_FILEORGANISERWINDOW);
+    mFileOrganiserWidget->loadSettings(pSettings, SettingsFileOrganiserWindow);
 }
 
 void FileOrganiserWindow::saveSettings(QSettings &pSettings, const QString &)
 {
     // Keep track of the settings of the file organiser widget
 
-    mFileOrganiserWidget->saveSettings(pSettings, SETTINGS_FILEORGANISERWINDOW);
+    mFileOrganiserWidget->saveSettings(pSettings, SettingsFileOrganiserWindow);
 }

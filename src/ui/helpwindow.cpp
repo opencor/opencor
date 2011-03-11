@@ -9,7 +9,7 @@
 #include <QPrintDialog>
 #include <QPrinter>
 
-#define SETTINGS_HELPWINDOW "HelpWindow"
+static const QString SettingsHelpWindow = "HelpWindow";
 
 HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                        QWidget *pParent) :
@@ -121,14 +121,14 @@ void HelpWindow::loadSettings(const QSettings &pSettings, const QString &)
 {
     // Retrieve the settings of the help widget
 
-    mHelpWidget->loadSettings(pSettings, SETTINGS_HELPWINDOW);
+    mHelpWidget->loadSettings(pSettings, SettingsHelpWindow);
 }
 
 void HelpWindow::saveSettings(QSettings &pSettings, const QString &)
 {
     // Keep track of the settings of the help widget
 
-    mHelpWidget->saveSettings(pSettings, SETTINGS_HELPWINDOW);
+    mHelpWidget->saveSettings(pSettings, SettingsHelpWindow);
 }
 
 void HelpWindow::gotoHomePage()

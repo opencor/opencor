@@ -3,7 +3,7 @@
 
 #include "ui_viewerwindow.h"
 
-#define SETTINGS_VIEWERWINDOW "ViewerWindow"
+static const QString SettingsViewerWindow = "ViewerWindow";
 
 ViewerWindow::ViewerWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -46,12 +46,12 @@ void ViewerWindow::loadSettings(const QSettings &pSettings, const QString &)
 {
     // Retrieve the settings of the viewer widget
 
-    mMmlViewerWidget->loadSettings(pSettings, SETTINGS_VIEWERWINDOW);
+    mMmlViewerWidget->loadSettings(pSettings, SettingsViewerWindow);
 }
 
 void ViewerWindow::saveSettings(QSettings &pSettings, const QString &)
 {
     // Keep track of the settings of the viewer widget
 
-    mMmlViewerWidget->saveSettings(pSettings, SETTINGS_VIEWERWINDOW);
+    mMmlViewerWidget->saveSettings(pSettings, SettingsViewerWindow);
 }

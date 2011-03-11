@@ -9,7 +9,7 @@
 #include <QTimer>
 #include <QWebHistory>
 
-#define SETTINGS_ZOOMLEVEL "_ZoomLevel"
+static const QString SettingsZoomLevel = "_ZoomLevel";
 
 HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
                                    const QByteArray &pData,
@@ -176,7 +176,7 @@ void HelpWidget::loadSettings(const QSettings &pSettings, const QString &pKey)
 {
     // Retrieve the zoom level
 
-    setZoomLevel(pSettings.value(pKey+SETTINGS_ZOOMLEVEL,
+    setZoomLevel(pSettings.value(pKey+SettingsZoomLevel,
                                  defaultZoomLevel()).toInt());
 }
 
@@ -184,7 +184,7 @@ void HelpWidget::saveSettings(QSettings &pSettings, const QString &pKey)
 {
     // Keep track of the text size multiplier
 
-    pSettings.setValue(pKey+SETTINGS_ZOOMLEVEL, zoomLevel());
+    pSettings.setValue(pKey+SettingsZoomLevel, zoomLevel());
 }
 
 QUrl HelpWidget::homePage()

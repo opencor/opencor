@@ -7,10 +7,10 @@
 #include <QMouseEvent>
 #include <QSettings>
 
-#define SETTINGS_COLUMNWIDTH "_ColumnWidth"
-#define SETTINGS_INITIALPATH "_InitialPath"
-#define SETTINGS_SORTCOLUMN  "_SortColumn"
-#define SETTINGS_SORTORDER   "_SortOrder"
+static const QString SettingsColumnWidth = "_ColumnWidth";
+static const QString SettingsInitialPath = "_InitialPath";
+static const QString SettingsSortColumn  = "_SortColumn";
+static const QString SettingsSortOrder   = "_SortOrder";
 
 FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
     QTreeView(pParent),
@@ -56,7 +56,7 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
     QString columnWidthKey;
 
     for (int i = 0; i < header()->count(); ++i) {
-        columnWidthKey = pKey+SETTINGS_COLUMNWIDTH+QString::number(i);
+        columnWidthKey = pKey+SettingsColumnWidth+QString::number(i);
 
         mNeedDefColWidth =     mNeedDefColWidth
                            && !pSettings.contains(columnWidthKey);
@@ -67,13 +67,13 @@ void FileBrowserWidget::loadSettings(const QSettings &pSettings,
 
     // Retrieve the sorting information
 
-    sortByColumn(pSettings.value(pKey+SETTINGS_SORTCOLUMN, 0).toInt(),
-                 Qt::SortOrder(pSettings.value(pKey+SETTINGS_SORTORDER,
+    sortByColumn(pSettings.value(pKey+SettingsSortColumn, 0).toInt(),
+                 Qt::SortOrder(pSettings.value(pKey+SettingsSortOrder,
                                                Qt::AscendingOrder).toInt()));
 
     // Retrieve the initial path
 
-    mInitPath = pSettings.value(pKey+SETTINGS_INITIALPATH,
+    mInitPath = pSettings.value(pKey+SettingsInitialPath,
                                 QDir::homePath()).toString();
 
     QFileInfo initPathFileInfo = mInitPath;
@@ -125,18 +125,18 @@ void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
     // Retrieve the width of each column
 
     for (int i = 0; i < header()->count(); ++i)
-        pSettings.setValue(pKey+SETTINGS_COLUMNWIDTH+QString::number(i),
+        pSettings.setValue(pKey+SettingsColumnWidth+QString::number(i),
                            columnWidth(i));
 
     // Keep track of the sorting information
 
-    pSettings.setValue(pKey+SETTINGS_SORTCOLUMN,
+    pSettings.setValue(pKey+SettingsSortColumn,
                        header()->sortIndicatorSection());
-    pSettings.setValue(pKey+SETTINGS_SORTORDER, header()->sortIndicatorOrder());
+    pSettings.setValue(pKey+SettingsSortOrder, header()->sortIndicatorOrder());
 
     // Keep track of what will be our future initial folder/file path
 
-    pSettings.setValue(pKey+SETTINGS_INITIALPATH,
+    pSettings.setValue(pKey+SettingsInitialPath,
                        mFileSystemModel->filePath(currentIndex()));
 }
 
