@@ -308,10 +308,10 @@ void FileBrowserWindow::on_actionNewFolder_triggered()
     // action
 
     if (oneFieldWindow.result() == QDialog::Accepted) {
-        QString folderName =  mFileBrowserWidget->currentPathDir()
+        QString folderPath =  mFileBrowserWidget->currentPathDir()
                              +QDir::separator()+oneFieldWindow.fieldValue();
 
-        if (QDir(folderName).exists()) {
+        if (QDir(folderPath).exists()) {
             // The folder already exists, so...
 
             QMessageBox::information(this, qApp->applicationName(),
@@ -322,7 +322,7 @@ void FileBrowserWindow::on_actionNewFolder_triggered()
             if (QDir(mFileBrowserWidget->currentPathDir()).mkdir(oneFieldWindow.fieldValue()))
                 // The folder was created, so select it
 
-                mFileBrowserWidget->gotoPath(folderName, true);
+                mFileBrowserWidget->gotoPath(folderPath, true);
             else
                 // The folder couldn't be created, so...
 
@@ -348,32 +348,33 @@ void FileBrowserWindow::newCellmlFile(const CellmlVersion &pCellmlVersion)
     // cancelled the action
 
     if (oneFieldWindow.result() == QDialog::Accepted) {
-        QString cellmlFileName =  mFileBrowserWidget->currentPathDir()
-                                 +QDir::separator()+oneFieldWindow.fieldValue()
+        QString cellmlFileName =  oneFieldWindow.fieldValue()
                                  +CellmlFileExtension;
+        QString cellmlFilePath = mFileBrowserWidget->currentPathDir()
+                                 +QDir::separator()+cellmlFileName;
 
-        if (QFileInfo(cellmlFileName).exists()) {
+        if (QFileInfo(cellmlFilePath).exists()) {
             // The CellML file already exists, so...
 
             QMessageBox::information(this, qApp->applicationName(),
-                                     tr("Sorry, but the <strong>%1</strong> file already exists.").arg(oneFieldWindow.fieldValue()));
+                                     tr("Sorry, but the <strong>%1</strong> file already exists.").arg(cellmlFileName));
         } else {
             // The CellML file doesn't already exist, so try to create it
 
-            if (::newCellmlFile(cellmlFileName, oneFieldWindow.fieldValue(),
+            if (::newCellmlFile(cellmlFilePath, oneFieldWindow.fieldValue(),
                                 pCellmlVersion)) {
                 // The CellML file was created, so select it
 
-                mFileBrowserWidget->gotoPath(cellmlFileName, true);
+                mFileBrowserWidget->gotoPath(cellmlFilePath, true);
 
                 // Have the new CellML file managed
 
-                mDocumentManager->manage(cellmlFileName);
+                mDocumentManager->manage(cellmlFilePath);
             } else {
                 // The CellML file couldn't be created, so...
 
                 QMessageBox::information(this, qApp->applicationName(),
-                                         tr("Sorry, but the <strong>%1</strong> file could not be created.").arg(oneFieldWindow.fieldValue()));
+                                         tr("Sorry, but the <strong>%1</strong> file could not be created.").arg(cellmlFileName));
             }
         }
     }
