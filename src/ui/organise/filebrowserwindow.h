@@ -1,6 +1,7 @@
 #ifndef FILEBROWSERWINDOW_H
 #define FILEBROWSERWINDOW_H
 
+#include "cellml.h"
 #include "commonwidget.h"
 #include "dockwidget.h"
 
@@ -39,6 +40,8 @@ private:
     QString mPrevFolder;
 
     bool mKeepTrackOfPrevFolder;
+
+    void newCellmlFile(const CellmlVersion &pCellmlVersion);
 
 private Q_SLOTS:
     void on_actionHome_triggered();

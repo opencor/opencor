@@ -313,14 +313,19 @@ void FileBrowserWindow::on_actionNewFolder_triggered()
     }
 }
 
+void FileBrowserWindow::newCellmlFile(const CellmlVersion &pCellmlVersion)
+{
+    notYetImplemented("void FileBrowserWindow::newCellmlFile(const CellmlVersion &pCellmlVersion)");
+}
+
 void FileBrowserWindow::on_actionNewCellML10File_triggered()
 {
-    notYetImplemented("void FileBrowserWindow::on_actionNewCellML10File_triggered()");
+    newCellmlFile(Cellml_1_0);
 }
 
 void FileBrowserWindow::on_actionNewCellML11File_triggered()
 {
-    notYetImplemented("void FileBrowserWindow::on_actionNewCellML11File_triggered()");
+    newCellmlFile(Cellml_1_1);
 }
 
 void FileBrowserWindow::on_actionDelete_triggered()

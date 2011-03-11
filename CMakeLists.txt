@@ -18,6 +18,7 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 
 SET(SOURCES
     src/main.cpp
+    src/misc/cellml.cpp
     src/misc/common.cpp
     src/misc/utils.cpp
     src/ui/centralwidget.cpp
@@ -39,6 +40,7 @@ SET(SOURCES
 )
 
 SET(HEADERS
+    src/misc/cellml.h
     src/misc/common.h
     src/misc/utils.h
     src/widget/misc/commonwidget.h
@@ -345,7 +347,7 @@ IF(WIN32)
     INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME}.vbs DESTINATION .)
 
     # File type association
-    # Note: the calls to SHChangeNotify are to ensure that Windows refreshes 
+    # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
     #       file icons (so that it is clear to the user that an extension has
     #       been (un)registered...
 
