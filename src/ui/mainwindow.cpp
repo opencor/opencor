@@ -477,35 +477,38 @@ void MainWindow::singleAppMsgRcvd(const QString &)
 #ifdef Q_WS_WIN
     // Retrieve OpenCOR's window Id
 
-    WId mwWinId = winId();
-
-    // Restore OpenCOR, should it be minimized
-
-    if (IsIconic(mwWinId))
-        SendMessage(mwWinId, WM_SYSCOMMAND, SC_RESTORE, 0);
+    WId mainWinId = winId();
 
     // Bring OpenCOR to the foreground
 
-    DWORD foregroundThreadPId = GetWindowThreadProcessId(GetForegroundWindow(),
-                                                         NULL);
-    DWORD mwThreadPId         = GetWindowThreadProcessId(mwWinId, NULL);
+    DWORD foregroundThreadProcId = GetWindowThreadProcessId(GetForegroundWindow(),
+                                                            NULL);
+    DWORD mainThreadProcId = GetWindowThreadProcessId(mainWinId, NULL);
 
-    if (foregroundThreadPId != mwThreadPId) {
+    if (foregroundThreadProcId != mainThreadProcId) {
         // OpenCOR's thread process Id is not that of the foreground window, so
         // attach the foreground thread to OpenCOR's, set OpenCOR to the
         // foreground, and detach the foreground thread from OpenCOR's
 
-        AttachThreadInput(foregroundThreadPId, mwThreadPId, true);
+        AttachThreadInput(foregroundThreadProcId, mainThreadProcId, true);
 
-        SetForegroundWindow(mwWinId);
+        SetForegroundWindow(mainWinId);
+        SetFocus(mainWinId);
 
-        AttachThreadInput(foregroundThreadPId, mwThreadPId, false);
+        AttachThreadInput(foregroundThreadProcId, mainThreadProcId, false);
     } else {
         // OpenCOR's thread process Id is that of the foreground window, so
         // just set OpenCOR to the foreground
 
-        SetForegroundWindow(mwWinId);
+        SetForegroundWindow(mainWinId);
     }
+
+    // Show/restore OpenCOR, depending on its current state
+
+    if (IsIconic(mainWinId))
+        ShowWindow(mainWinId, SW_RESTORE);
+    else
+        ShowWindow(mainWinId, SW_SHOW);
 
     // Note: under Windows, to use activateWindow() will only highlight the
     //       application in the taskbar, since under Windows no application
