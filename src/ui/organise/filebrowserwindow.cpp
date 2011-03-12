@@ -390,6 +390,41 @@ void FileBrowserWindow::on_actionNewCellML11File_triggered()
     newCellmlFile(Cellml_1_1);
 }
 
+void FileBrowserWindow::updateFolders(const QString &pFolderName,
+                                      QStringList &pFolders)
+{
+    // Remove any instance of pFolderName in pFolders
+
+    pFolders.removeAll(pFolderName);
+
+    // Because of the above, we may have two or more consective identital
+    // folders in the list, so we must reduce that to one
+
+    if (pFolders.count() > 1) {
+        QStringList newFolders;
+        QString prevFolder = pFolders.at(0);
+
+        newFolders.append(prevFolder);
+
+        for (int i = 1; i < pFolders.count(); ++i) {
+            QString crtFolder = pFolders.at(i);
+
+            if (crtFolder != prevFolder) {
+                // The current and previous folders are different, so we want to
+                // keep track of it and add it to our new list
+
+                newFolders.append(crtFolder);
+
+                prevFolder = crtFolder;
+            }
+        }
+
+        // Update the old list of folders with our new one
+
+        pFolders = newFolders;
+    }
+}
+
 void FileBrowserWindow::on_actionDelete_triggered()
 {
     // Delete the current folder/file
@@ -412,12 +447,38 @@ void FileBrowserWindow::on_actionDelete_triggered()
                                   QMessageBox::Yes) == QMessageBox::Yes ) {
             // The user really wants to delete the folder/file, so...
 
-            if (removePath(path))
+            if (removePath(path)) {
                 // The folder/file has been removed, so now make sure that the
                 // newly selected entry is visible
 
                 mFileBrowserWidget->gotoPath(mFileBrowserWidget->currentPath());
-            else
+
+                // In the case of a folder, we need to update our list of
+                // previous and next folders
+
+                if (isPathDir) {
+                    // Update the lists of previous and next folders, as well as
+                    // mPrevFolder
+
+                    updateFolders(path, mPrevFolders);
+                    updateFolders(path, mNextFolders);
+
+                    mPrevFolder = mFileBrowserWidget->currentPathDir();
+
+                    if (mPrevFolders.last() == mPrevFolder)
+                        // After deleting, we have to reset mPrevFolder the path
+                        // directory of the newly selected entry which means
+                        // that the last folder in mPrevFolders cannot be that
+                        // path directory, but it is here, so...
+
+                        mPrevFolders.removeLast();
+
+                    // Since we have updated the two lists, we must update the
+                    // actions
+
+                    updateActions();
+                }
+            } else {
                 // The folder/file couldn't be removed, so let the user know
                 // about it
                 // Note: we should never reach this point in the case of a file,
@@ -429,6 +490,7 @@ void FileBrowserWindow::on_actionDelete_triggered()
                                          isPathDir?
                                              tr("Sorry, but the <strong>%1</strong> folder could not be deleted.").arg(pathFileName):
                                              tr("Sorry, but the <strong>%1</strong> file could not be deleted.").arg(pathFileName));
+            }
         }
     }
 }

@@ -47,6 +47,8 @@ private:
 
     void newCellmlFile(const CellmlVersion &pCellmlVersion);
 
+    void updateFolders(const QString &pFolderName, QStringList &pFolders);
+
 private Q_SLOTS:
     void on_actionHome_triggered();
     void on_actionParent_triggered();
