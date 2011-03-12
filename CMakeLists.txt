@@ -388,9 +388,9 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.in ${ShellFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.sh.in ${ShellFile})
 
     INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
