@@ -226,6 +226,13 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
     }
 }
 
+void FileBrowserWidget::showCurrentPath()
+{
+    // Show the current path by scrolling to it
+
+    scrollTo(currentIndex());
+}
+
 bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
 {
     // Set the current index to that of the provided path

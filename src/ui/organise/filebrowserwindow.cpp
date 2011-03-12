@@ -322,7 +322,7 @@ void FileBrowserWindow::on_actionNewFolder_triggered()
             if (QDir(mFileBrowserWidget->currentPathDir()).mkdir(oneFieldWindow.fieldValue()))
                 // The folder was created, so select it
 
-                mFileBrowserWidget->gotoPath(folderPath, true);
+                mFileBrowserWidget->gotoPath(folderPath);
             else
                 // The folder couldn't be created, so...
 
@@ -365,7 +365,7 @@ void FileBrowserWindow::newCellmlFile(const CellmlVersion &pCellmlVersion)
                                 pCellmlVersion)) {
                 // The CellML file was created, so select it
 
-                mFileBrowserWidget->gotoPath(cellmlFilePath, true);
+                mFileBrowserWidget->gotoPath(cellmlFilePath);
 
                 // Have the new CellML file managed
 
@@ -451,7 +451,7 @@ void FileBrowserWindow::on_actionDelete_triggered()
                 // The folder/file has been removed, so now make sure that the
                 // newly selected entry is visible
 
-                mFileBrowserWidget->gotoPath(mFileBrowserWidget->currentPath());
+                mFileBrowserWidget->showCurrentPath();
 
                 // In the case of a folder, we need to update our list of
                 // previous and next folders
