@@ -9,9 +9,7 @@ namespace Ui {
     class FileBrowserWindow;
 }
 
-class DocumentManager;
 class FileBrowserWidget;
-class MainWindow;
 
 class QModelIndex;
 
@@ -20,13 +18,17 @@ class FileBrowserWindow : public DockWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    explicit FileBrowserWindow(MainWindow *pParent);
+    explicit FileBrowserWindow(QWidget *pParent = 0);
     ~FileBrowserWindow();
 
     virtual void retranslateUi();
 
     virtual void loadSettings(const QSettings &pSettings, const QString &);
     virtual void saveSettings(QSettings &pSettings, const QString &);
+
+Q_SIGNALS:
+    void folderCreated(const QString &pFolderName);
+    void cellmlFileCreated(const QString &pCellmlFileName);
 
 protected:
     virtual void updateActions();
@@ -42,8 +44,6 @@ private:
     QString mPrevFolder;
 
     bool mKeepTrackOfPrevFolder;
-
-    DocumentManager *mDocumentManager;
 
     void newCellmlFile(const CellmlVersion &pCellmlVersion);
 

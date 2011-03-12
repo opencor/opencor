@@ -160,7 +160,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
-    // Some connections to handle various dock windows
+    // Some connections to handle the visibility of our various dock windows
 
     connect(mUi->actionCellmlModelRepository, SIGNAL(triggered(bool)),
             mCellmlModelRepositoryWindow, SLOT(setVisible(bool)));
@@ -186,6 +186,11 @@ MainWindow::MainWindow(QWidget *pParent) :
             mHelpWindow, SLOT(setVisible(bool)));
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionHelp, SLOT(setChecked(bool)));
+
+    // A connection to handle our file browser window
+
+    connect(mFileBrowserWindow, SIGNAL(cellmlFileCreated(const QString &)),
+            this, SLOT(cellmlFileCreated(const QString &)));
 
     // Retrieve the user settings from the previous session, if any
 
@@ -611,6 +616,17 @@ void MainWindow::resetAll()
 
         qApp->quit();
     }
+}
+
+void MainWindow::cellmlFileCreated(const QString &cellmlFileName)
+{
+    // A new CellML file has been created, so manage it
+
+    mDocumentManager->manage(cellmlFileName);
+
+//---GRY--- SHOULD ALSO ADD THE FILE TO OUR FILE ORGANISER WINDOW... MAYBE USING
+//          A SIGNAL (FROM THE FILE BROWSER WINDOW) AND A SLOT (FROM THE FILE
+//          ORGANISER WINDOW)?
 }
 
 void MainWindow::on_actionNew_triggered()

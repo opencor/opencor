@@ -1,5 +1,4 @@
 #include "docktoolbar.h"
-#include "documentmanager.h"
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
 #include "mainwindow.h"
@@ -15,7 +14,7 @@
 
 static const QString SettingsFileBrowserWindow = "FileBrowserWindow";
 
-FileBrowserWindow::FileBrowserWindow(MainWindow *pParent) :
+FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
     mUi(new Ui::FileBrowserWindow),
     mPrevFolder(),
@@ -24,10 +23,6 @@ FileBrowserWindow::FileBrowserWindow(MainWindow *pParent) :
     // Set up the UI
 
     mUi->setupUi(this);
-
-    // Retrieve the document manager from our parent which is the main window
-
-    mDocumentManager = pParent->documentManager();
 
     // Create a dropdown menu for the New action
 
@@ -319,15 +314,20 @@ void FileBrowserWindow::on_actionNewFolder_triggered()
         } else {
             // The folder doesn't already exist, so try to create it
 
-            if (QDir(mFileBrowserWidget->currentPathDir()).mkdir(oneFieldWindow.fieldValue()))
+            if (QDir(mFileBrowserWidget->currentPathDir()).mkdir(oneFieldWindow.fieldValue())) {
                 // The folder was created, so select it
 
                 mFileBrowserWidget->gotoPath(folderPath);
-            else
+
+                // Let people know that a new CellML file has been created
+
+                emit folderCreated(folderPath);
+            } else {
                 // The folder couldn't be created, so...
 
                 QMessageBox::information(this, qApp->applicationName(),
                                          tr("Sorry, but the <strong>%1</strong> folder could not be created.").arg(oneFieldWindow.fieldValue()));
+            }
         }
     }
 }
@@ -367,9 +367,9 @@ void FileBrowserWindow::newCellmlFile(const CellmlVersion &pCellmlVersion)
 
                 mFileBrowserWidget->gotoPath(cellmlFilePath);
 
-                // Have the new CellML file managed
+                // Let people know that a new CellML file has been created
 
-                mDocumentManager->manage(cellmlFilePath);
+                emit cellmlFileCreated(cellmlFilePath);
             } else {
                 // The CellML file couldn't be created, so...
 
