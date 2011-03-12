@@ -345,8 +345,14 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME}.bat DESTINATION .)
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME}.vbs DESTINATION .)
+    SET(BatFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat)
+    SET(VbsFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs)
+
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.bat.in ${BatFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.vbs.in ${VbsFile})
+
+    INSTALL(FILES ${BatFile} DESTINATION .)
+    INSTALL(FILES ${BatFile} DESTINATION .)
 
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
@@ -382,7 +388,11 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.in ${ShellFile})
+
+    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
     # Select TGZ as the packager on Linux
 
@@ -418,7 +428,11 @@ ELSE()
 
     # Shell script to run OpenCOR
 
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.sh.in ${ShellFile})
+
+    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ENDIF()
 
 # Some files common to all three platforms

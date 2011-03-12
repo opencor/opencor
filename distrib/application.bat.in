@@ -1,0 +1,9 @@
+@ECHO OFF
+
+TITLE Running the ${PROJECT_NAME} environment...
+
+CD bin
+
+${PROJECT_NAME} %*
+
+CD ..

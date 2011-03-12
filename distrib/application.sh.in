@@ -7,9 +7,9 @@ if [ $OS = "Linux" ]; then
 
     export LD_LIBRARY_PATH=`pwd`/lib
 
-    bin/OpenCOR $*
+    bin/${PROJECT_NAME} $*
 else
     # Mac OS X
 
-    OpenCOR.app/Contents/MacOS/OpenCOR $*
+    ${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME} $*
 fi

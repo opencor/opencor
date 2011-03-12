@@ -4,4 +4,4 @@ For Each arg in WScript.Arguments
     args = args&" "&arg
 Next
 
-CreateObject("WScript.Shell").Run "bin\OpenCOR.exe"&args, 1, False
+CreateObject("WScript.Shell").Run "bin\${PROJECT_NAME}.exe"&args, 1, False
