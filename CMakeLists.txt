@@ -352,7 +352,7 @@ IF(WIN32)
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.vbs.in ${VbsFile})
 
     INSTALL(FILES ${BatFile} DESTINATION .)
-    INSTALL(FILES ${BatFile} DESTINATION .)
+    INSTALL(FILES ${VbsFile} DESTINATION .)
 
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
