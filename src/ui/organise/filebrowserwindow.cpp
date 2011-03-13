@@ -231,7 +231,7 @@ void FileBrowserWindow::on_actionParent_triggered()
 {
     // Go to the parent folder
 
-    mFileBrowserWidget->gotoPath(mFileBrowserWidget->currentPathParent());
+    mFileBrowserWidget->setCurrentIndex(mFileBrowserWidget->currentIndex().parent());
 
     // Going to the parent folder may have changed some actions, so...
 
