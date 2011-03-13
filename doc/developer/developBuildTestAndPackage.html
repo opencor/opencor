@@ -67,7 +67,7 @@ $ make
 $ sudo make install
 $ cd ..
 $ rm -fr [Qt4.7.2]</pre>
-                            <code>make</code> will take quite some time, so be (very) patient...
+                            Please be aware that <code>make</code> will take quite some time to complete, so be (very) patient.
                         </div>
                     </li>
                     <li><a href = "http://qt.nokia.com/downloads/qt-for-open-source-cpp-development-on-mac-os-x">Mac OS X</a>.</li>
@@ -161,7 +161,7 @@ $ rm -fr [Qt4.7.2]</pre>
                             <strong>Note #1:</strong> should new translations be required (e.g. as a result of adding a new action), then <code>[OpenCOR]/CMakeLists.txt</code> must be recompiled for the translation file(s) (<code>[OpenCOR]/i18n/OpenCOR_xx.ts</code>) to be updated (and then the translations added using Qt Linguist (it comes with Qt Creator).
                         </div>
                         <div>
-                            <strong>Note #2:</strong> by default, Qt Creator will compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button under the <code>Build Steps</code>. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> with <code>n</code> the number of processors that you want to use (if no number of processors is provided, then Qt Creator will try to use as many processors as possible).
+                            <strong>Note #2:</strong> by default, Qt Creator will compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button under the <code>Build Steps</code>. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> where <code>n</code> is the number of jobs to be run simultaneously (if <code>n</node> is not provided, then Qt Creator will try to run as many jobs simultaneously as possible).
                         </div>
                     </li>
                 </ul>
