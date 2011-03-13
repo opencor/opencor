@@ -19,10 +19,9 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
 {
     mFileSystemModel = new QFileSystemModel;
 
-    // We want acces to the full, but filtered, file system
+    // We want acces to the full file system
 
     mFileSystemModel->setRootPath("");
-    mFileSystemModel->setFilter(QDir::AllEntries|QDir::NoDotAndDotDot|QDir::NoSymLinks);
 
     // Set some properties for the file browser widget itself
 
