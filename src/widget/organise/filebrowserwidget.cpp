@@ -9,7 +9,7 @@
 
 FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     QTreeView(pParent),
-    CommonWidget(pName, pParent),
+    CommonWidget(pName, this, pParent),
     mNeedDefColWidth(true)
 {
     // Create an instance of the file system model that we want to view

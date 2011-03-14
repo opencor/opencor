@@ -5,7 +5,7 @@
 CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
                                                          QWidget *pParent) :
     QWebView(pParent),
-    CommonWidget(pName, pParent)
+    CommonWidget(pName, this, pParent)
 {
     // Load the CellML Model Repository page
 

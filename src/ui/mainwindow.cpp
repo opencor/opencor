@@ -117,7 +117,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
-    // Create the various dock windows
+    // Create our various dock windows
 
     mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindow(this);
     mFileBrowserWindow           = new FileBrowserWindow(this);

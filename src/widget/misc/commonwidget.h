@@ -10,7 +10,8 @@ class CommonWidget
 {
 public:
     explicit CommonWidget(QWidget *pParent);
-    explicit CommonWidget(const QString &pName, QWidget *pParent);
+    explicit CommonWidget(const QString &pName, QWidget *pWidget,
+                          QWidget *pParent);
 
     virtual void retranslateUi();
 

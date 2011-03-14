@@ -13,12 +13,13 @@ CommonWidget::CommonWidget(QWidget *pParent) :
 {
 }
 
-CommonWidget::CommonWidget(const QString &pName, QWidget *pParent) :
+CommonWidget::CommonWidget(const QString &pName, QWidget *pWidget,
+                           QWidget *pParent) :
     mParent(pParent)
 {
-    // Set the name of the object
+    // Set the name of the widget
 
-    mParent->setObjectName(pName);
+    pWidget->setObjectName(pName);
 }
 
 QSize CommonWidget::defaultSize(const double &pRatio) const

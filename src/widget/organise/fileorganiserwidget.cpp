@@ -5,7 +5,7 @@
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
                                          QWidget *pParent) :
     QWidget(pParent),
-    CommonWidget(pName, pParent)
+    CommonWidget(pName, this, pParent)
 {
 }
 

@@ -137,7 +137,7 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
 HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
                        const QUrl &pHomePage, QWidget *pParent) :
     QWebView(pParent),
-    CommonWidget(pName, pParent),
+    CommonWidget(pName, this, pParent),
     mHomePage(pHomePage),
     mBackAvailable(false),
     mForwardAvailable(false),
