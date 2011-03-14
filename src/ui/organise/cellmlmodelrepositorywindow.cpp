@@ -7,7 +7,6 @@
 
 CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     DockWidget(pParent),
-    CommonWidget(pParent),
     mUi(new Ui::CellmlModelRepositoryWindow)
 {
     // Set up the UI

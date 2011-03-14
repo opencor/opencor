@@ -1,7 +1,6 @@
 #ifndef CELLMLMODELREPOSITORYWINDOW_H
 #define CELLMLMODELREPOSITORYWINDOW_H
 
-#include "commonwidget.h"
 #include "dockwidget.h"
 
 namespace Ui {
@@ -10,7 +9,7 @@ namespace Ui {
 
 class CellmlModelRepositoryWidget;
 
-class CellmlModelRepositoryWindow : public DockWidget, public CommonWidget
+class CellmlModelRepositoryWindow : public DockWidget
 {
     Q_OBJECT
 

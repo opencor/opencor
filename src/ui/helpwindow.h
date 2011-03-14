@@ -1,7 +1,6 @@
 #ifndef HELPWINDOW_H
 #define HELPWINDOW_H
 
-#include "commonwidget.h"
 #include "dockwidget.h"
 
 namespace Ui {
@@ -13,7 +12,7 @@ class HelpWidget;
 class QHelpEngine;
 class QUrl;
 
-class HelpWindow : public DockWidget, public CommonWidget
+class HelpWindow : public DockWidget
 {
     Q_OBJECT
 

@@ -1,7 +1,6 @@
 #include "centralwidget.h"
 #include "viewerwindow.h"
 #include "common.h"
-#include "commonwidget.h"
 #include "dockwidget.h"
 #include "mainwindow.h"
 #include "filebrowserwindow.h"
@@ -35,7 +34,6 @@ static const QString FrenchLocale  = "fr";
 
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
-    CommonWidget(pParent),
     mUi(new Ui::MainWindow),
     mLocale(SystemLocale)
 {

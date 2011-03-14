@@ -1,7 +1,6 @@
 #ifndef FILEORGANISERWINDOW_H
 #define FILEORGANISERWINDOW_H
 
-#include "commonwidget.h"
 #include "dockwidget.h"
 
 namespace Ui {
@@ -10,7 +9,7 @@ namespace Ui {
 
 class FileOrganiserWidget;
 
-class FileOrganiserWindow : public DockWidget, public CommonWidget
+class FileOrganiserWindow : public DockWidget
 {
     Q_OBJECT
 

@@ -7,7 +7,6 @@
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     DockWidget(pParent),
-    CommonWidget(pParent),
     mUi(new Ui::FileOrganiserWindow)
 {
     // Set up the UI

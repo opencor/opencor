@@ -5,7 +5,6 @@
 
 ViewerWindow::ViewerWindow(QWidget *pParent) :
     DockWidget(pParent),
-    CommonWidget(pParent),
     mUi(new Ui::ViewerWindow)
 {
     // Set up the UI

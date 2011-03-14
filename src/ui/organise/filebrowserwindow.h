@@ -2,7 +2,6 @@
 #define FILEBROWSERWINDOW_H
 
 #include "cellml.h"
-#include "commonwidget.h"
 #include "dockwidget.h"
 
 namespace Ui {
@@ -13,7 +12,7 @@ class FileBrowserWidget;
 
 class QModelIndex;
 
-class FileBrowserWindow : public DockWidget, public CommonWidget
+class FileBrowserWindow : public DockWidget
 {
     Q_OBJECT
 

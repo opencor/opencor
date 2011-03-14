@@ -14,7 +14,6 @@
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
-    CommonWidget(pParent),
     mUi(new Ui::FileBrowserWindow),
     mPrevFolder(),
     mKeepTrackOfPrevFolder(true)

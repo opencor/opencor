@@ -1,7 +1,6 @@
 #ifndef VIEWERWINDOW_H
 #define VIEWERWINDOW_H
 
-#include "commonwidget.h"
 #include "dockwidget.h"
 
 namespace Ui {
@@ -10,7 +9,7 @@ namespace Ui {
 
 class MmlViewerWidget;
 
-class ViewerWindow : public DockWidget, public CommonWidget
+class ViewerWindow : public DockWidget
 {
     Q_OBJECT
 
