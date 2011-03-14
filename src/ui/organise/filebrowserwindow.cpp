@@ -2,7 +2,6 @@
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
 #include "mainwindow.h"
-#include "onefieldwindow.h"
 #include "utils.h"
 
 #include "ui_filebrowserwindow.h"
@@ -24,17 +23,6 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mUi->setupUi(this);
 
-    // Create a dropdown menu for the New action
-
-    QMenu *actionNewMenu = new QMenu(this);
-
-    actionNewMenu->addAction(mUi->actionNewFolder);
-    actionNewMenu->addSeparator();
-    actionNewMenu->addAction(mUi->actionNewCellML10File);
-    actionNewMenu->addAction(mUi->actionNewCellML11File);
-
-    mUi->actionNew->setMenu(actionNewMenu);
-
     // Create a toolbar with different buttons
     // Note: this sadly can't be done using the design mode, so...
 
@@ -46,9 +34,6 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     toolbar->addSeparator();
     toolbar->addAction(mUi->actionPrevious);
     toolbar->addAction(mUi->actionNext);
-    toolbar->addSeparator();
-    toolbar->addAction(mUi->actionNew);
-    toolbar->addAction(mUi->actionDelete);
 
     mUi->verticalLayout->addWidget(toolbar);
 
@@ -61,16 +46,13 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     // We want our own context menu for the file browser widget
 
-    mFileBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+//    mFileBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     // Prevent objects from being dropped on the file browser widget
 
     mFileBrowserWidget->setAcceptDrops(false);
 
     // Some connections
-
-    connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(customContextMenu(const QPoint &)));
 
     connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(currentItemChanged(const QModelIndex &, const QModelIndex &)));
@@ -99,9 +81,6 @@ void FileBrowserWindow::updateActions()
 
     mUi->actionPrevious->setEnabled(mPrevFolders.count());
     mUi->actionNext->setEnabled(mNextFolders.count());
-
-    mUi->actionNew->setEnabled(mFileBrowserWidget->isCurrentPathDirWritable());
-    mUi->actionDelete->setEnabled(mFileBrowserWidget->isCurrentPathWritable());
 }
 
 void FileBrowserWindow::retranslateUi()
@@ -151,26 +130,6 @@ void FileBrowserWindow::saveSettings(QSettings &pSettings, const QString &)
     // Keep track of the settings of the file browser widget
 
     mFileBrowserWidget->saveSettings(pSettings, SettingsFileBrowserWindow);
-}
-
-void FileBrowserWindow::customContextMenu(const QPoint &)
-{
-    // Create a custom context menu which items match the contents of our
-    // toolbar
-
-    QMenu menu;
-
-    menu.addAction(mUi->actionHome);
-    menu.addSeparator();
-    menu.addAction(mUi->actionParent);
-    menu.addSeparator();
-    menu.addAction(mUi->actionPrevious);
-    menu.addAction(mUi->actionNext);
-    menu.addSeparator();
-    menu.addAction(mUi->actionNew);
-    menu.addAction(mUi->actionDelete);
-
-    menu.exec(QCursor::pos());
 }
 
 void FileBrowserWindow::needUpdateActions()
@@ -280,116 +239,6 @@ void FileBrowserWindow::on_actionNext_triggered()
     updateActions();
 }
 
-void FileBrowserWindow::on_actionNew_triggered()
-{
-    // The default new action is about creating a new folder, so...
-
-    on_actionNewFolder_triggered();
-}
-
-static QString FolderFileNameRegExp = "[^\\/:*?\"<>|]+";
-
-void FileBrowserWindow::on_actionNewFolder_triggered()
-{
-    // Get the name of the new folder
-
-    OneFieldWindow oneFieldWindow(tr("New Folder"), tr("Folder name:"),
-                                  tr("Please provide a name for the new folder."),
-                                  FolderFileNameRegExp, this);
-
-    oneFieldWindow.exec();
-
-    // Create the new folder in the current folder unless the user cancelled the
-    // action
-
-    if (oneFieldWindow.result() == QDialog::Accepted) {
-        QString folderPath =  mFileBrowserWidget->currentPathDir()
-                             +QDir::separator()+oneFieldWindow.fieldValue();
-
-        if (QDir(folderPath).exists()) {
-            // The folder already exists, so...
-
-            QMessageBox::information(this, qApp->applicationName(),
-                                     tr("Sorry, but the <strong>%1</strong> folder already exists.").arg(oneFieldWindow.fieldValue()));
-        } else {
-            // The folder doesn't already exist, so try to create it
-
-            if (QDir(mFileBrowserWidget->currentPathDir()).mkdir(oneFieldWindow.fieldValue())) {
-                // The folder was created, so select it
-
-                mFileBrowserWidget->gotoPath(folderPath);
-
-                // Let people know that a new CellML file has been created
-
-                emit folderCreated(folderPath);
-            } else {
-                // The folder couldn't be created, so...
-
-                QMessageBox::information(this, qApp->applicationName(),
-                                         tr("Sorry, but the <strong>%1</strong> folder could not be created.").arg(oneFieldWindow.fieldValue()));
-            }
-        }
-    }
-}
-
-void FileBrowserWindow::newCellmlFile(const CellmlVersion &pCellmlVersion)
-{
-    // Get the name of the new CellML file
-
-    QString cellmlVersion = cellmlVersionString(pCellmlVersion);
-
-    OneFieldWindow oneFieldWindow(tr("New CellML %1 File").arg(cellmlVersion), tr("Model name:"),
-                                  tr("Please provide a name for the new CellML %1 model.").arg(cellmlVersion),
-                                  FolderFileNameRegExp, this);
-
-    oneFieldWindow.exec();
-
-    // Create the new CellML file in the current folder unless the user
-    // cancelled the action
-
-    if (oneFieldWindow.result() == QDialog::Accepted) {
-        QString cellmlFileName =  oneFieldWindow.fieldValue()
-                                 +CellmlFileExtension;
-        QString cellmlFilePath = mFileBrowserWidget->currentPathDir()
-                                 +QDir::separator()+cellmlFileName;
-
-        if (QFileInfo(cellmlFilePath).exists()) {
-            // The CellML file already exists, so...
-
-            QMessageBox::information(this, qApp->applicationName(),
-                                     tr("Sorry, but the <strong>%1</strong> file already exists.").arg(cellmlFileName));
-        } else {
-            // The CellML file doesn't already exist, so try to create it
-
-            if (::newCellmlFile(cellmlFilePath, oneFieldWindow.fieldValue(),
-                                pCellmlVersion)) {
-                // The CellML file was created, so select it
-
-                mFileBrowserWidget->gotoPath(cellmlFilePath);
-
-                // Let people know that a new CellML file has been created
-
-                emit cellmlFileCreated(cellmlFilePath);
-            } else {
-                // The CellML file couldn't be created, so...
-
-                QMessageBox::information(this, qApp->applicationName(),
-                                         tr("Sorry, but the <strong>%1</strong> file could not be created.").arg(cellmlFileName));
-            }
-        }
-    }
-}
-
-void FileBrowserWindow::on_actionNewCellML10File_triggered()
-{
-    newCellmlFile(Cellml_1_0);
-}
-
-void FileBrowserWindow::on_actionNewCellML11File_triggered()
-{
-    newCellmlFile(Cellml_1_1);
-}
-
 void FileBrowserWindow::updateFolders(const QString &pFolderName,
                                       QStringList &pFolders)
 {
@@ -422,75 +271,5 @@ void FileBrowserWindow::updateFolders(const QString &pFolderName,
         // Update the old list of folders with our new one
 
         pFolders = newFolders;
-    }
-}
-
-void FileBrowserWindow::on_actionDelete_triggered()
-{
-    // Delete the current folder/file
-
-    QString path = mFileBrowserWidget->currentPath();
-    QFileInfo pathFileInfo = path;
-    QString pathFileName = pathFileInfo.fileName();
-
-    if (!pathFileName.isEmpty()) {
-        // We are not at the root of the file system, so we can ask to delete
-        // the folder/file
-
-        bool isPathDir = pathFileInfo.isDir();
-
-        if( QMessageBox::question(this, qApp->applicationName(),
-                                  isPathDir?
-                                      tr("Do you really want to delete the <strong>%1</strong> folder?").arg(pathFileName):
-                                      tr("Do you really want to delete the <strong>%1</strong> file?").arg(pathFileName),
-                                  QMessageBox::Yes|QMessageBox::No,
-                                  QMessageBox::Yes) == QMessageBox::Yes ) {
-            // The user really wants to delete the folder/file, so...
-
-            if (removePath(path)) {
-                // The folder/file has been removed, so now make sure that the
-                // newly selected entry is visible
-
-                mFileBrowserWidget->showCurrentPath();
-
-                // In the case of a folder, we need to update our list of
-                // previous and next folders
-
-                if (isPathDir) {
-                    // Update the lists of previous and next folders, as well as
-                    // mPrevFolder
-
-                    updateFolders(path, mPrevFolders);
-                    updateFolders(path, mNextFolders);
-
-                    mPrevFolder = mFileBrowserWidget->currentPathDir();
-
-                    if (mPrevFolders.last() == mPrevFolder)
-                        // After deleting, we have to reset mPrevFolder the path
-                        // directory of the newly selected entry which means
-                        // that the last folder in mPrevFolders cannot be that
-                        // path directory, but it is here, so...
-
-                        mPrevFolders.removeLast();
-
-                    // Since we have updated the two lists, we must update the
-                    // actions
-
-                    updateActions();
-                }
-            } else {
-                // The folder/file couldn't be removed, so let the user know
-                // about it
-                // Note: we should never reach this point in the case of a file,
-                //       since the action is only triggerable if the file is
-                //       writable (and therefore deletable), but still... better
-                //       be safe than 'sorry'...
-
-                QMessageBox::information(this, qApp->applicationName(),
-                                         isPathDir?
-                                             tr("Sorry, but the <strong>%1</strong> folder could not be deleted.").arg(pathFileName):
-                                             tr("Sorry, but the <strong>%1</strong> file could not be deleted.").arg(pathFileName));
-            }
-        }
     }
 }

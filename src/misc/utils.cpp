@@ -109,50 +109,6 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
     }
 }
 
-bool removePath(const QString &pPath, const bool &pRecursive)
-{
-    QFileInfo pathFileInfo = pPath;
-
-    if (pathFileInfo.exists()) {
-        // The path exists, so we can try to remove it
-
-        if (pathFileInfo.isDir()) {
-            // We want to remove a folder
-
-            bool res = true;
-
-            if (pRecursive) {
-                // We want to recursively remove the contents of the current
-                // folder
-
-                QFileInfoList entries = QDir(pPath).entryInfoList(QDir::Dirs|QDir::Files|QDir::NoDotAndDotDot);
-
-                for (int i = 0; i < entries.count(); ++i) {
-                    QFileInfo entryFileInfo = entries[i];
-
-                    // Remove the current path
-
-                    res =    removePath(entryFileInfo.canonicalFilePath(), pRecursive)
-                          && res;
-                }
-            }
-
-            // Remove the current folder
-
-            return    QDir(pathFileInfo.dir().canonicalPath()).rmdir(pathFileInfo.fileName())
-                   && res;
-        } else {
-            // We want to remove a file
-
-            return QDir(pathFileInfo.dir().canonicalPath()).remove(pathFileInfo.fileName());
-        }
-    } else {
-        // The path doesn't exist, so...
-
-        return false;
-    }
-}
-
 #ifdef QT_GUI_LIB
 #include <QApplication>
 #include <QMessageBox>

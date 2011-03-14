@@ -83,60 +83,6 @@
     <string>Ctrl+Alt+Up</string>
    </property>
   </action>
-  <action name="actionNew">
-   <property name="icon">
-    <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/add.png</normaloff>:/add.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;New</string>
-   </property>
-   <property name="statusTip">
-    <string>Create a new folder</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+N</string>
-   </property>
-  </action>
-  <action name="actionNewFolder">
-   <property name="text">
-    <string>Folder</string>
-   </property>
-   <property name="statusTip">
-    <string>Create a new folder</string>
-   </property>
-  </action>
-  <action name="actionNewCellML10File">
-   <property name="text">
-    <string>CellML 1.0 File</string>
-   </property>
-   <property name="statusTip">
-    <string>Create a new CellML 1.0 file</string>
-   </property>
-  </action>
-  <action name="actionNewCellML11File">
-   <property name="text">
-    <string>CellML 1.1 File</string>
-   </property>
-   <property name="statusTip">
-    <string>Create a new CellML 1.1 file</string>
-   </property>
-  </action>
-  <action name="actionDelete">
-   <property name="icon">
-    <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Delete</string>
-   </property>
-   <property name="statusTip">
-    <string>Delete the current folder or file</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+D</string>
-   </property>
-  </action>
  </widget>
  <resources>
   <include location="../../../res/OpenCOR.qrc"/>

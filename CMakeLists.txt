@@ -29,7 +29,6 @@ SET(SOURCES
     src/ui/organise/cellmlmodelrepositorywindow.cpp
     src/ui/organise/filebrowserwindow.cpp
     src/ui/organise/fileorganiserwindow.cpp
-    src/ui/organise/onefieldwindow.cpp
     src/widget/docktoolbar.cpp
     src/widget/dockwidget.cpp
     src/widget/helpwidget.cpp
@@ -56,7 +55,6 @@ SET(HEADERS_MOC
     src/ui/organise/cellmlmodelrepositorywindow.h
     src/ui/organise/filebrowserwindow.h
     src/ui/organise/fileorganiserwindow.h
-    src/ui/organise/onefieldwindow.h
     src/widget/docktoolbar.h
     src/widget/dockwidget.h
     src/widget/helpwidget.h
@@ -74,7 +72,6 @@ SET(UIS
     src/ui/organise/cellmlmodelrepositorywindow.ui
     src/ui/organise/filebrowserwindow.ui
     src/ui/organise/fileorganiserwindow.ui
-    src/ui/organise/onefieldwindow.ui
 )
 
 SET(RESOURCES

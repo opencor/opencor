@@ -51,14 +51,6 @@
         <translation>Aller au répertoire parent</translation>
     </message>
     <message>
-        <source>&amp;New</source>
-        <translation>&amp;Nouveau</translation>
-    </message>
-    <message>
-        <source>Ctrl+Alt+N</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>&amp;Previous</source>
         <translation>&amp;Précédent</translation>
     </message>
@@ -69,98 +61,6 @@
     <message>
         <source>&amp;Parent</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Supprimer</translation>
-    </message>
-    <message>
-        <source>Delete the current folder or file</source>
-        <translation>Supprimer le répertoire ou fichier actuel</translation>
-    </message>
-    <message>
-        <source>Ctrl+Alt+D</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Create a new folder</source>
-        <translation>Créer un nouveau répertoire</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Répertoire</translation>
-    </message>
-    <message>
-        <source>CellML 1.0 File</source>
-        <translation>Fichier CellML 1.0</translation>
-    </message>
-    <message>
-        <source>Create a new CellML 1.0 file</source>
-        <translation>Créer un nouveau fichier CellML 1.0</translation>
-    </message>
-    <message>
-        <source>CellML 1.1 File</source>
-        <translation>Fichier CellML 1.1</translation>
-    </message>
-    <message>
-        <source>Create a new CellML 1.1 file</source>
-        <translation>Créer un nouveau fichier CellML 1.1</translation>
-    </message>
-    <message>
-        <source>New Folder</source>
-        <translation>Nouveau Répertoire</translation>
-    </message>
-    <message>
-        <source>Folder name:</source>
-        <translation>Nom du répertoire :</translation>
-    </message>
-    <message>
-        <source>Please provide a name for the new folder.</source>
-        <translation>Veuillez donner un nom pour le nouveau répertoire.</translation>
-    </message>
-    <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; folder could not be created.</source>
-        <translation>Désolé, mais le répertoire &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être créé.</translation>
-    </message>
-    <message>
-        <source>Do you really want to delete the &lt;strong&gt;%1&lt;/strong&gt; folder?</source>
-        <translation>Voulez-vous vraiment supprimer le répertoire &lt;strong&gt;%1&lt;/strong&gt; ?</translation>
-    </message>
-    <message>
-        <source>Do you really want to delete the &lt;strong&gt;%1&lt;/strong&gt; file?</source>
-        <translation>Voulez-vous vraiment supprimer le fichier &lt;strong&gt;%1&lt;/strong&gt; ?</translation>
-    </message>
-    <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; folder could not be deleted.</source>
-        <translation>Désolé, mais le répertoire &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être supprimé.</translation>
-    </message>
-    <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; file could not be deleted.</source>
-        <translation>Désolé, mais le fichier &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être supprimé.</translation>
-    </message>
-    <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; folder already exists.</source>
-        <translation>Désolé, mais le répertoire &lt;strong&gt;%1&lt;/strong&gt; existe déjà.</translation>
-    </message>
-    <message>
-        <source>New CellML %1 File</source>
-        <translation>Nouveau fichier CellML %1</translation>
-    </message>
-    <message>
-        <source>Model name:</source>
-        <translation>Nom du modèle :</translation>
-    </message>
-    <message>
-        <source>Please provide a name for the new CellML %1 model.</source>
-        <translation>Veuillez donner un nom pour le nouveau fichier CellML %1.</translation>
-    </message>
-    <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; file already exists.</source>
-        <translation>Désolé, mais le fichier &lt;strong&gt;%1&lt;/strong&gt; existe déjà.</translation>
-    </message>
-    <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; file could not be created.</source>
-        <translation>Désolé, mais le fichier &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être créé.</translation>
     </message>
 </context>
 <context>
