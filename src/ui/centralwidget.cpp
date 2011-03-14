@@ -5,8 +5,9 @@
 #include <QPainter>
 #include <QPaintEvent>
 
-CentralWidget::CentralWidget(QWidget *parent) :
-    QWidget(parent),
+CentralWidget::CentralWidget(QWidget *pParent) :
+    QWidget(pParent),
+    CommonWidget(pParent),
     mUi(new Ui::CentralWidget)
 {
     // Set up the UI

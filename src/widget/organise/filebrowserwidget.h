@@ -12,11 +12,11 @@ class FileBrowserWidget : public QTreeView, public CommonWidget
     Q_OBJECT
 
 public:
-    FileBrowserWidget(QWidget *pParent = 0);
+    explicit FileBrowserWidget(const QString &pName, QWidget *pParent);
     ~FileBrowserWidget();
 
-    virtual void loadSettings(const QSettings &, const QString &);
-    virtual void saveSettings(QSettings &, const QString &);
+    virtual void loadSettings(QSettings &pSettings);
+    virtual void saveSettings(QSettings &pSettings);
 
     void showCurrentPath();
 

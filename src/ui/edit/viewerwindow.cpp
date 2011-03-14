@@ -3,10 +3,9 @@
 
 #include "ui_viewerwindow.h"
 
-static const QString SettingsViewerWindow = "ViewerWindow";
-
 ViewerWindow::ViewerWindow(QWidget *pParent) :
     DockWidget(pParent),
+    CommonWidget(pParent),
     mUi(new Ui::ViewerWindow)
 {
     // Set up the UI
@@ -15,7 +14,7 @@ ViewerWindow::ViewerWindow(QWidget *pParent) :
 
     // Create and add the viewer widget
 
-    mMmlViewerWidget = new MmlViewerWidget(this);
+    mMmlViewerWidget = new MmlViewerWidget("MmlViewerWidget", this);
 
     setWidget(mMmlViewerWidget);
 
@@ -42,16 +41,20 @@ void ViewerWindow::retranslateUi()
     mMmlViewerWidget->retranslateUi();
 }
 
-void ViewerWindow::loadSettings(const QSettings &pSettings, const QString &)
+void ViewerWindow::loadSettings(QSettings &pSettings)
 {
-    // Retrieve the settings of the viewer widget
+    pSettings.beginGroup(objectName());
+        // Retrieve the settings of the viewer widget
 
-    mMmlViewerWidget->loadSettings(pSettings, SettingsViewerWindow);
+        mMmlViewerWidget->loadSettings(pSettings);
+    pSettings.endGroup();
 }
 
-void ViewerWindow::saveSettings(QSettings &pSettings, const QString &)
+void ViewerWindow::saveSettings(QSettings &pSettings)
 {
-    // Keep track of the settings of the viewer widget
+    pSettings.beginGroup(objectName());
+        // Keep track of the settings of the viewer widget
 
-    mMmlViewerWidget->saveSettings(pSettings, SettingsViewerWindow);
+        mMmlViewerWidget->saveSettings(pSettings);
+    pSettings.endGroup();
 }

@@ -10,11 +10,11 @@
 #include <QFileInfo>
 #include <QMenu>
 #include <QMessageBox>
-
-static const QString SettingsFileBrowserWindow = "FileBrowserWindow";
+#include <QSettings>
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
+    CommonWidget(pParent),
     mUi(new Ui::FileBrowserWindow),
     mPrevFolder(),
     mKeepTrackOfPrevFolder(true)
@@ -38,15 +38,10 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     mUi->verticalLayout->addWidget(toolbar);
 
     // Create and add the file browser widget
-    // Note: we let the widget know that we want our own custom context menu
 
-    mFileBrowserWidget = new FileBrowserWidget(this);
+    mFileBrowserWidget = new FileBrowserWidget("FileBrowserWidget", this);
 
     mUi->verticalLayout->addWidget(mFileBrowserWidget);
-
-    // We want our own context menu for the file browser widget
-
-//    mFileBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     // Prevent objects from being dropped on the file browser widget
 
@@ -100,36 +95,42 @@ void FileBrowserWindow::retranslateUi()
     mFileBrowserWidget->retranslateUi();
 }
 
-void FileBrowserWindow::loadSettings(const QSettings &pSettings,
-                                     const QString &)
+void FileBrowserWindow::loadSettings(QSettings &pSettings)
 {
-    // Retrieve the settings of the file browser widget
-    // Note: we must make sure that we don't keep track of the previous folder
+    pSettings.beginGroup(objectName());
+        // Retrieve the settings of the file browser widget
+        // Note: we must make sure that we don't keep track of the previous
+        //       folder
 
-    mKeepTrackOfPrevFolder = false;
+        mKeepTrackOfPrevFolder = false;
 
-    mFileBrowserWidget->loadSettings(pSettings, SettingsFileBrowserWindow);
+        mFileBrowserWidget->loadSettings(pSettings);
 
-    mKeepTrackOfPrevFolder = true;
+        mKeepTrackOfPrevFolder = true;
 
-    // Initialise the previous folder information
+        // Initialise the previous folder information
 
-    mPrevFolder = mFileBrowserWidget->currentPathDir();
+        mPrevFolder = mFileBrowserWidget->currentPathDir();
 
-    // Make sure that the current path is expanded
-    // Note: this is important in case the current path is that of the C:\ drive
-    //       or the root of the file system which during the loadSettings above
-    //       won't trigger a directoryLoaded signal in the file browser widget
+        // Make sure that the current path is expanded
+        // Note: this is important in case the current path is that of the C:
+        //       drive or the root of the file system which during the
+        //       loadSettings above won't trigger a directoryLoaded signal in
+        //       the file browser widget
 
-    if (!mFileBrowserWidget->isExpanded(mFileBrowserWidget->currentIndex()))
-        mFileBrowserWidget->setExpanded(mFileBrowserWidget->currentIndex(), true);
+        if (!mFileBrowserWidget->isExpanded(mFileBrowserWidget->currentIndex()))
+            mFileBrowserWidget->setExpanded(mFileBrowserWidget->currentIndex(),
+                                            true);
+    pSettings.endGroup();
 }
 
-void FileBrowserWindow::saveSettings(QSettings &pSettings, const QString &)
+void FileBrowserWindow::saveSettings(QSettings &pSettings)
 {
-    // Keep track of the settings of the file browser widget
+    pSettings.beginGroup(objectName());
+        // Keep track of the settings of the file browser widget
 
-    mFileBrowserWidget->saveSettings(pSettings, SettingsFileBrowserWindow);
+        mFileBrowserWidget->saveSettings(pSettings);
+    pSettings.endGroup();
 }
 
 void FileBrowserWindow::needUpdateActions()

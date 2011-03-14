@@ -2,9 +2,10 @@
 
 #include <QPaintEvent>
 
-FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
+FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
+                                         QWidget *pParent) :
     QWidget(pParent),
-    CommonWidget(pParent)
+    CommonWidget(pName, pParent)
 {
 }
 

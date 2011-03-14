@@ -8,7 +8,7 @@ class DockWidget : public QDockWidget
     Q_OBJECT
 
 public:
-    DockWidget(QWidget *pParent = 0);
+    DockWidget(QWidget *pParent);
 };
 
 #endif

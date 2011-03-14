@@ -2,9 +2,9 @@
 
 #include <QPaintEvent>
 
-MmlViewerWidget::MmlViewerWidget(QWidget *pParent) :
+MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
     QtMmlWidget(pParent),
-    CommonWidget(pParent)
+    CommonWidget(pName, pParent)
 {
     // Create a test MathML widget and set its base font point size to 100, so
     // that we can use that as a benchmark for what the 'ideal' dimensions of

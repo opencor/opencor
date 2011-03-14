@@ -8,12 +8,12 @@
 #include <QMenu>
 #include <QPrintDialog>
 #include <QPrinter>
-
-static const QString SettingsHelpWindow = "HelpWindow";
+#include <QSettings>
 
 HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                        QWidget *pParent) :
     DockWidget(pParent),
+    CommonWidget(pParent),
     mUi(new Ui::HelpWindow)
 {
     // Set up the UI
@@ -43,7 +43,7 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     // Create and add the help widget
 
-    mHelpWidget = new HelpWidget(pHelpEngine, pHomePage, this);
+    mHelpWidget = new HelpWidget("HelpWidget", pHelpEngine, pHomePage, this);
 
     mUi->verticalLayout->addWidget(mHelpWidget);
 
@@ -117,18 +117,22 @@ void HelpWindow::retranslateUi()
     mHelpWidget->retranslateUi();
 }
 
-void HelpWindow::loadSettings(const QSettings &pSettings, const QString &)
+void HelpWindow::loadSettings(QSettings &pSettings)
 {
-    // Retrieve the settings of the help widget
+    pSettings.beginGroup(objectName());
+        // Retrieve the settings of the help widget
 
-    mHelpWidget->loadSettings(pSettings, SettingsHelpWindow);
+        mHelpWidget->loadSettings(pSettings);
+    pSettings.endGroup();
 }
 
-void HelpWindow::saveSettings(QSettings &pSettings, const QString &)
+void HelpWindow::saveSettings(QSettings &pSettings)
 {
-    // Keep track of the settings of the help widget
+    pSettings.beginGroup(objectName());
+        // Keep track of the settings of the help widget
 
-    mHelpWidget->saveSettings(pSettings, SettingsHelpWindow);
+        mHelpWidget->saveSettings(pSettings);
+    pSettings.endGroup();
 }
 
 void HelpWindow::gotoHomePage()

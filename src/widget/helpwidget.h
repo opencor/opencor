@@ -62,11 +62,11 @@ class HelpWidget : public QWebView, public CommonWidget
     Q_OBJECT
 
 public:
-    HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
-               QWidget *pParent = 0);
+    HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
+               const QUrl &pHomePage, QWidget *pParent);
 
-    virtual void loadSettings(const QSettings &pSettings, const QString &pKey);
-    virtual void saveSettings(QSettings &pSettings, const QString &pKey);
+    virtual void loadSettings(QSettings &pSettings);
+    virtual void saveSettings(QSettings &pSettings);
 
     QUrl homePage();
     void gotoHomePage();

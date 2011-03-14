@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "commonwidget.h"
 #include "documentmanager.h"
 
 #include <QMainWindow>
@@ -23,7 +24,7 @@ class QSettings;
 
 class QxtTemporaryDir;
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow, public CommonWidget
 {
     Q_OBJECT
 
@@ -67,11 +68,11 @@ private:
 
     void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,
-                                const QSettings &pSettings,
+                                QSettings &pSettings,
                                 const Qt::DockWidgetArea &pDockArea,
                                 DockWidget *pDockWidget = 0);
-    void loadSettings();
-    void saveSettings();
+    virtual void loadSettings();
+    virtual void saveSettings();
 
     void setLocale(const QString &pLocale);
 

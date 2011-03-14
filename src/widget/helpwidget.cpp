@@ -9,8 +9,6 @@
 #include <QTimer>
 #include <QWebHistory>
 
-static const QString SettingsZoomLevel = "_ZoomLevel";
-
 HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
                                    const QByteArray &pData,
                                    const QString &pMimeType) :
@@ -136,10 +134,10 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
     }
 }
 
-HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
-                       QWidget *pParent) :
+HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
+                       const QUrl &pHomePage, QWidget *pParent) :
     QWebView(pParent),
-    CommonWidget(pParent),
+    CommonWidget(pName, pParent),
     mHomePage(pHomePage),
     mBackAvailable(false),
     mForwardAvailable(false),
@@ -172,19 +170,25 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
     gotoHomePage();
 }
 
-void HelpWidget::loadSettings(const QSettings &pSettings, const QString &pKey)
-{
-    // Retrieve the zoom level
+static const QString SettingsZoomLevel = "ZoomLevel";
 
-    setZoomLevel(pSettings.value(pKey+SettingsZoomLevel,
-                                 defaultZoomLevel()).toInt());
+void HelpWidget::loadSettings(QSettings &pSettings)
+{
+    pSettings.beginGroup(objectName());
+        // Retrieve the zoom level
+
+        setZoomLevel(pSettings.value(SettingsZoomLevel,
+                                     defaultZoomLevel()).toInt());
+    pSettings.endGroup();
 }
 
-void HelpWidget::saveSettings(QSettings &pSettings, const QString &pKey)
+void HelpWidget::saveSettings(QSettings &pSettings)
 {
-    // Keep track of the text size multiplier
+    pSettings.beginGroup(objectName());
+        // Keep track of the text size multiplier
 
-    pSettings.setValue(pKey+SettingsZoomLevel, zoomLevel());
+        pSettings.setValue(SettingsZoomLevel, zoomLevel());
+    pSettings.endGroup();
 }
 
 QUrl HelpWidget::homePage()

@@ -20,8 +20,8 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(const QSettings &pSettings, const QString &);
-    virtual void saveSettings(QSettings &pSettings, const QString &);
+    virtual void loadSettings(QSettings &pSettings);
+    virtual void saveSettings(QSettings &pSettings);
 
 private:
     Ui::CellmlModelRepositoryWindow *mUi;

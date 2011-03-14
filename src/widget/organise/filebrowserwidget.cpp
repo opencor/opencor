@@ -7,16 +7,13 @@
 #include <QMouseEvent>
 #include <QSettings>
 
-static const QString SettingsColumnWidth = "_ColumnWidth";
-static const QString SettingsInitialPath = "_InitialPath";
-static const QString SettingsSortColumn  = "_SortColumn";
-static const QString SettingsSortOrder   = "_SortOrder";
-
-FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
+FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     QTreeView(pParent),
-    CommonWidget(pParent),
+    CommonWidget(pName, pParent),
     mNeedDefColWidth(true)
 {
+    // Create an instance of the file system model that we want to view
+
     mFileSystemModel = new QFileSystemModel;
 
     // We want acces to the full file system
@@ -47,96 +44,105 @@ FileBrowserWidget::~FileBrowserWidget()
     delete mFileSystemModel;
 }
 
-void FileBrowserWidget::loadSettings(const QSettings &pSettings,
-                                     const QString &pKey)
+static const QString SettingsColumnWidth = "ColumnWidth";
+static const QString SettingsInitialPath = "InitialPath";
+static const QString SettingsSortColumn  = "SortColumn";
+static const QString SettingsSortOrder   = "SortOrder";
+
+void FileBrowserWidget::loadSettings(QSettings &pSettings)
 {
-    // Retrieve the width of each column
+    pSettings.beginGroup(objectName());
+        // Retrieve the width of each column
 
-    QString columnWidthKey;
+        QString columnWidthKey;
 
-    for (int i = 0; i < header()->count(); ++i) {
-        columnWidthKey = pKey+SettingsColumnWidth+QString::number(i);
+        for (int i = 0; i < header()->count(); ++i) {
+            columnWidthKey = SettingsColumnWidth+QString::number(i);
 
-        mNeedDefColWidth =     mNeedDefColWidth
-                           && !pSettings.contains(columnWidthKey);
+            mNeedDefColWidth =     mNeedDefColWidth
+                               && !pSettings.contains(columnWidthKey);
 
-        setColumnWidth(i, pSettings.value(columnWidthKey,
-                                          columnWidth(i)).toInt());
-    }
+            setColumnWidth(i, pSettings.value(columnWidthKey,
+                                              columnWidth(i)).toInt());
+        }
 
-    // Retrieve the sorting information
+        // Retrieve the sorting information
 
-    sortByColumn(pSettings.value(pKey+SettingsSortColumn, 0).toInt(),
-                 Qt::SortOrder(pSettings.value(pKey+SettingsSortOrder,
-                                               Qt::AscendingOrder).toInt()));
+        sortByColumn(pSettings.value(SettingsSortColumn, 0).toInt(),
+                     Qt::SortOrder(pSettings.value(SettingsSortOrder,
+                                                   Qt::AscendingOrder).toInt()));
 
-    // Retrieve the initial path
+        // Retrieve the initial path
 
-    mInitPath = pSettings.value(pKey+SettingsInitialPath,
-                                QDir::homePath()).toString();
+        mInitPath = pSettings.value(SettingsInitialPath,
+                                    QDir::homePath()).toString();
 
-    QFileInfo initPathFileInfo = mInitPath;
+        QFileInfo initPathFileInfo = mInitPath;
 
-    if (!initPathFileInfo.exists()) {
-        // The initial path doesn't exist, so just revert to the home path
+        if (!initPathFileInfo.exists()) {
+            // The initial path doesn't exist, so just revert to the home path
 
-        mInitPathDir = QDir::homePath();
-        mInitPath    = "";
-    } else {
-        // The initial path exists, so retrieve some information about the
-        // folder and/or file (depending on whether the initial path refers to
-        // a file or not)
-        // Note: indeed, should mInitPath refer to a file, then to directly set
-        //       the current index of the tree view to that of a file won't give
-        //       us the expected behaviour (i.e. the parent folder being open
-        //       and expanded, and the file selected), so instead one must set
-        //       the current index to that of the parent folder and then select
-        //       the file
-
-        if (initPathFileInfo.isDir()) {
-            // We are dealing with a folder, so...
-
-            mInitPathDir = initPathFileInfo.canonicalFilePath();
+            mInitPathDir = QDir::homePath();
             mInitPath    = "";
         } else {
-            // We are dealing with a file, so...
+            // The initial path exists, so retrieve some information about the
+            // folder and/or file (depending on whether the initial path refers
+            // to a file or not)
+            // Note: indeed, should mInitPath refer to a file, then to directly
+            //       set the current index of the tree view to that of a file
+            //       won't give us the expected behaviour (i.e. the parent
+            //       folder being open and expanded, and the file selected), so
+            //       instead one must set the current index to that of the
+            //       parent folder and then select the file
 
-            mInitPathDir = initPathFileInfo.canonicalPath();
-            mInitPath    = initPathFileInfo.canonicalFilePath();
+            if (initPathFileInfo.isDir()) {
+                // We are dealing with a folder, so...
+
+                mInitPathDir = initPathFileInfo.canonicalFilePath();
+                mInitPath    = "";
+            } else {
+                // We are dealing with a file, so...
+
+                mInitPathDir = initPathFileInfo.canonicalPath();
+                mInitPath    = initPathFileInfo.canonicalFilePath();
+            }
         }
-    }
 
-    // Set the current index to that of the folder (and file, if it exists) we
-    // are interested in
-    // Note: this will result in the directoryLoaded signal to be emitted and,
-    //       us, to take advantage of it to scroll to the right directory/file
+        // Set the current index to that of the folder (and file, if it exists)
+        // we are interested in
+        // Note: this will result in the directoryLoaded signal to be emitted
+        //       and, us, to take advantage of it to scroll to the right
+        //       directory/file
 
-    setCurrentIndex(mFileSystemModel->index(mInitPathDir));
+        setCurrentIndex(mFileSystemModel->index(mInitPathDir));
 
-    if (!mInitPath.isEmpty())
-        // The initial path is that of a file, so...
+        if (!mInitPath.isEmpty())
+            // The initial path is that of a file, so...
 
-        setCurrentIndex(mFileSystemModel->index(mInitPath));
+            setCurrentIndex(mFileSystemModel->index(mInitPath));
+    pSettings.endGroup();
 }
 
-void FileBrowserWidget::saveSettings(QSettings &pSettings, const QString &pKey)
+void FileBrowserWidget::saveSettings(QSettings &pSettings)
 {
-    // Retrieve the width of each column
+    pSettings.beginGroup(objectName());
+        // Retrieve the width of each column
 
-    for (int i = 0; i < header()->count(); ++i)
-        pSettings.setValue(pKey+SettingsColumnWidth+QString::number(i),
-                           columnWidth(i));
+        for (int i = 0; i < header()->count(); ++i)
+            pSettings.setValue(SettingsColumnWidth+QString::number(i),
+                               columnWidth(i));
 
-    // Keep track of the sorting information
+        // Keep track of the sorting information
 
-    pSettings.setValue(pKey+SettingsSortColumn,
-                       header()->sortIndicatorSection());
-    pSettings.setValue(pKey+SettingsSortOrder, header()->sortIndicatorOrder());
+        pSettings.setValue(SettingsSortColumn,
+                           header()->sortIndicatorSection());
+        pSettings.setValue(SettingsSortOrder, header()->sortIndicatorOrder());
 
-    // Keep track of what will be our future initial folder/file path
+        // Keep track of what will be our future initial folder/file path
 
-    pSettings.setValue(pKey+SettingsInitialPath,
-                       mFileSystemModel->filePath(currentIndex()));
+        pSettings.setValue(SettingsInitialPath,
+                           mFileSystemModel->filePath(currentIndex()));
+    pSettings.endGroup();
 }
 
 QSize FileBrowserWidget::sizeHint() const

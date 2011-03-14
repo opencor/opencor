@@ -2,9 +2,10 @@
 
 #include <QPaintEvent>
 
-CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
+CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
+                                                         QWidget *pParent) :
     QWebView(pParent),
-    CommonWidget(pParent)
+    CommonWidget(pName, pParent)
 {
     // Load the CellML Model Repository page
 

@@ -13,6 +13,14 @@ CommonWidget::CommonWidget(QWidget *pParent) :
 {
 }
 
+CommonWidget::CommonWidget(const QString &pName, QWidget *pParent) :
+    mParent(pParent)
+{
+    // Set the name of the object
+
+    mParent->setObjectName(pName);
+}
+
 QSize CommonWidget::defaultSize(const double &pRatio) const
 {
     // The default size of a widget is one fifth of the available geometry
@@ -28,12 +36,12 @@ void CommonWidget::retranslateUi()
     // Nothing to do by default...
 }
 
-void CommonWidget::loadSettings(const QSettings &, const QString &)
+void CommonWidget::loadSettings(QSettings &)
 {
     // Nothing to do by default...
 }
 
-void CommonWidget::saveSettings(QSettings &, const QString &)
+void CommonWidget::saveSettings(QSettings &)
 {
     // Nothing to do by default...
 }

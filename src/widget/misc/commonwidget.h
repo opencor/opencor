@@ -9,12 +9,13 @@ class QWidget;
 class CommonWidget
 {
 public:
-    CommonWidget(QWidget *pParent = 0);
+    explicit CommonWidget(QWidget *pParent);
+    explicit CommonWidget(const QString &pName, QWidget *pParent);
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(const QSettings &pSettings, const QString &pKey);
-    virtual void saveSettings(QSettings &pSettings, const QString &pKey);
+    virtual void loadSettings(QSettings &pSettings);
+    virtual void saveSettings(QSettings &pSettings);
 
 protected:
     QSize defaultSize(const double &pRatio) const;

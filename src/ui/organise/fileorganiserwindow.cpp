@@ -3,10 +3,11 @@
 
 #include "ui_fileorganiserwindow.h"
 
-static const QString SettingsFileOrganiserWindow = "FileOrganiserWindow";
+#include <QSettings>
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     DockWidget(pParent),
+    CommonWidget(pParent),
     mUi(new Ui::FileOrganiserWindow)
 {
     // Set up the UI
@@ -15,7 +16,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     // Create and add the file organiser widget
 
-    mFileOrganiserWidget = new FileOrganiserWidget(this);
+    mFileOrganiserWidget = new FileOrganiserWidget("FileOrganiserWidget", this);
 
     setWidget(mFileOrganiserWidget);
 
@@ -42,17 +43,20 @@ void FileOrganiserWindow::retranslateUi()
     mFileOrganiserWidget->retranslateUi();
 }
 
-void FileOrganiserWindow::loadSettings(const QSettings &pSettings,
-                                       const QString &)
+void FileOrganiserWindow::loadSettings(QSettings &pSettings)
 {
-    // Retrieve the settings of the file organiser widget
+    pSettings.beginGroup(objectName());
+        // Retrieve the settings of the file organiser widget
 
-    mFileOrganiserWidget->loadSettings(pSettings, SettingsFileOrganiserWindow);
+        mFileOrganiserWidget->loadSettings(pSettings);
+    pSettings.endGroup();
 }
 
-void FileOrganiserWindow::saveSettings(QSettings &pSettings, const QString &)
+void FileOrganiserWindow::saveSettings(QSettings &pSettings)
 {
-    // Keep track of the settings of the file organiser widget
+    pSettings.beginGroup(objectName());
+        // Keep track of the settings of the file organiser widget
 
-    mFileOrganiserWidget->saveSettings(pSettings, SettingsFileOrganiserWindow);
+        mFileOrganiserWidget->saveSettings(pSettings);
+    pSettings.endGroup();
 }

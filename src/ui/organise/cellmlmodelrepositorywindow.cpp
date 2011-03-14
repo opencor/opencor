@@ -3,10 +3,11 @@
 
 #include "ui_cellmlmodelrepositorywindow.h"
 
-static const QString SettingsCellmlModelRepositoryWindow = "CellmlModelRepositoryWindow";
+#include <QSettings>
 
 CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     DockWidget(pParent),
+    CommonWidget(pParent),
     mUi(new Ui::CellmlModelRepositoryWindow)
 {
     // Set up the UI
@@ -15,7 +16,8 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     // Create and add the PMR explorer widget
 
-    mCellmlModelRepositoryWidget = new CellmlModelRepositoryWidget(this);
+    mCellmlModelRepositoryWidget = new CellmlModelRepositoryWidget("CellmlModelRepositoryWidget",
+                                                                   this);
 
     setWidget(mCellmlModelRepositoryWidget);
 
@@ -42,17 +44,20 @@ void CellmlModelRepositoryWindow::retranslateUi()
     mCellmlModelRepositoryWidget->retranslateUi();
 }
 
-void CellmlModelRepositoryWindow::loadSettings(const QSettings &pSettings,
-                                               const QString &)
+void CellmlModelRepositoryWindow::loadSettings(QSettings &pSettings)
 {
-    // Retrieve the settings of the PMR explorer widget
+    pSettings.beginGroup(objectName());
+        // Retrieve the settings of the PMR explorer widget
 
-    mCellmlModelRepositoryWidget->loadSettings(pSettings, SettingsCellmlModelRepositoryWindow);
+        mCellmlModelRepositoryWidget->loadSettings(pSettings);
+    pSettings.endGroup();
 }
 
-void CellmlModelRepositoryWindow::saveSettings(QSettings &pSettings, const QString &)
+void CellmlModelRepositoryWindow::saveSettings(QSettings &pSettings)
 {
-    // Keep track of the settings of the PMR explorer widget
+    pSettings.beginGroup(objectName());
+        // Keep track of the settings of the PMR explorer widget
 
-    mCellmlModelRepositoryWidget->saveSettings(pSettings, SettingsCellmlModelRepositoryWindow);
+        mCellmlModelRepositoryWidget->saveSettings(pSettings);
+    pSettings.endGroup();
 }

@@ -29,20 +29,13 @@
 
 static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/userIndex.html";
 
-static const QString SettingsGeneralLocale   = "General_Locale";
-static const QString SettingsGeneralGeometry = "General_Geometry";
-static const QString SettingsGeneralState    = "General_State";
-
-static const QString SettingsMainWindowStatusBarVisibility = "MainWindow_StatusBarVisibility";
-
-static const QString SettingsNone = "";
-
 static const QString SystemLocale  = "";
 static const QString EnglishLocale = "en";
 static const QString FrenchLocale  = "fr";
 
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
+    CommonWidget(pParent),
     mUi(new Ui::MainWindow),
     mLocale(SystemLocale)
 {
@@ -311,7 +304,7 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
 
 void MainWindow::loadDockWindowSettings(DockWidget *pDockWindow,
                                         const bool &pNeedDefaultSettings,
-                                        const QSettings &pSettings,
+                                        QSettings &pSettings,
                                         const Qt::DockWidgetArea &pDockArea,
                                         DockWidget *pDockWidget)
 {
@@ -322,8 +315,8 @@ void MainWindow::loadDockWindowSettings(DockWidget *pDockWindow,
         // the right kind of dock window and can therefore go ahead
 
         if (pNeedDefaultSettings) {
-            // Hide the dock window, so that we can set things up without having the
-            // screen flashing
+            // Hide the dock window, so that we can set things up without having
+            // the screen flashing
 
             pDockWindow->setVisible(false);
 
@@ -337,7 +330,7 @@ void MainWindow::loadDockWindowSettings(DockWidget *pDockWindow,
 
         // Load the dock window's settings
 
-        commonWidget->loadSettings(pSettings, SettingsNone);
+        commonWidget->loadSettings(pSettings);
 
         if (pNeedDefaultSettings)
             // Make the dock window visible
@@ -346,85 +339,94 @@ void MainWindow::loadDockWindowSettings(DockWidget *pDockWindow,
     }
 }
 
+static const QString SettingsLocale              = "Locale";
+static const QString SettingsGeometry            = "Geometry";
+static const QString SettingsState               = "State";
+static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
+
 void MainWindow::loadSettings()
 {
     QSettings settings(qApp->applicationName());
 
-    // Retrieve the language to be used by OpenCOR
+    settings.beginGroup(objectName());
+        // Retrieve the language to be used by OpenCOR
 
-    setLocale(settings.value(SettingsGeneralLocale, SystemLocale).toString());
+        setLocale(settings.value(SettingsLocale, SystemLocale).toString());
 
-    // Retrieve the geometry and state of the main window
+        // Retrieve the geometry and state of the main window
 
-    bool needDefaultSettings =    !restoreGeometry(settings.value(SettingsGeneralGeometry).toByteArray())
-                               || !restoreState(settings.value(SettingsGeneralState).toByteArray());
+        bool needDefaultSettings =    !restoreGeometry(settings.value(SettingsGeometry).toByteArray())
+                                   || !restoreState(settings.value(SettingsState).toByteArray());
 
-    if (needDefaultSettings) {
-        // The geometry and/or state of the main window couldn't be retrieved,
-        // so go with some default settins
+        if (needDefaultSettings) {
+            // The geometry and/or state of the main window couldn't be
+            // retrieved, so go with some default settins
 
-        // Default size and position of the main window
+            // Default size and position of the main window
 
-        double ratio = 1.0/13.0;
-        QRect desktopGeometry = qApp->desktop()->availableGeometry();
-        int horizSpace = ratio*desktopGeometry.width();
-        int vertSpace  = ratio*desktopGeometry.height();
+            double ratio = 1.0/13.0;
+            QRect desktopGeometry = qApp->desktop()->availableGeometry();
+            int horizSpace = ratio*desktopGeometry.width();
+            int vertSpace  = ratio*desktopGeometry.height();
 
-        setGeometry(desktopGeometry.left()+horizSpace,
-                    desktopGeometry.top()+vertSpace,
-                    desktopGeometry.width()-2*horizSpace,
-                    desktopGeometry.height()-2*vertSpace);
-    } else {
-        // The geometry and state of the main window could be retrieved, so
-        // carry on with the loading of the settings
+            setGeometry(desktopGeometry.left()+horizSpace,
+                        desktopGeometry.top()+vertSpace,
+                        desktopGeometry.width()-2*horizSpace,
+                        desktopGeometry.height()-2*vertSpace);
+        } else {
+            // The geometry and state of the main window could be retrieved, so
+            // carry on with the loading of the settings
 
-        // Retrieve whether the status bar is to be shown
+            // Retrieve whether the status bar is to be shown
 
-        mUi->statusBar->setVisible(settings.value(SettingsMainWindowStatusBarVisibility,
-                                                  true).toBool());
-    }
+            mUi->statusBar->setVisible(settings.value(SettingsStatusBarVisibility,
+                                                      true).toBool());
+        }
 
-    // Retrieve the settings of the various dock windows
+        // Retrieve the settings of the various dock windows
 
-    loadDockWindowSettings(mCellmlModelRepositoryWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
-    loadDockWindowSettings(mFileBrowserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
-    loadDockWindowSettings(mFileOrganiserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
+        loadDockWindowSettings(mCellmlModelRepositoryWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
+        loadDockWindowSettings(mFileBrowserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
+        loadDockWindowSettings(mFileOrganiserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
 
-    loadDockWindowSettings(mViewerWindow, needDefaultSettings, settings, Qt::TopDockWidgetArea);
+        loadDockWindowSettings(mViewerWindow, needDefaultSettings, settings, Qt::TopDockWidgetArea);
 
-    loadDockWindowSettings(mHelpWindow, needDefaultSettings, settings, Qt::RightDockWidgetArea);
+        loadDockWindowSettings(mHelpWindow, needDefaultSettings, settings, Qt::RightDockWidgetArea);
+    settings.endGroup();
 }
 
 void MainWindow::saveSettings()
 {
     QSettings settings(qApp->applicationName());
 
-    // Keep track of the language to be used by OpenCOR
+    settings.beginGroup(objectName());
+        // Keep track of the language to be used by OpenCOR
 
-    settings.setValue(SettingsGeneralLocale, mLocale);
+        settings.setValue(SettingsLocale, mLocale);
 
-    // Keep track of the geometry of the main window
+        // Keep track of the geometry of the main window
 
-    settings.setValue(SettingsGeneralGeometry, saveGeometry());
+        settings.setValue(SettingsGeometry, saveGeometry());
 
-    // Keep track of the state of the main window
+        // Keep track of the state of the main window
 
-    settings.setValue(SettingsGeneralState, saveState());
+        settings.setValue(SettingsState, saveState());
 
-    // Keep track of whether the status bar is to be shown
+        // Keep track of whether the status bar is to be shown
 
-    settings.setValue(SettingsMainWindowStatusBarVisibility,
-                      mUi->statusBar->isVisible());
+        settings.setValue(SettingsStatusBarVisibility,
+                          mUi->statusBar->isVisible());
 
-    // Keep track of the settings of the various dock windows
+        // Keep track of the settings of the various dock windows
 
-    mCellmlModelRepositoryWindow->saveSettings(settings, SettingsNone);
-    mFileBrowserWindow->saveSettings(settings, SettingsNone);
-    mFileOrganiserWindow->saveSettings(settings, SettingsNone);
+        mCellmlModelRepositoryWindow->saveSettings(settings);
+        mFileBrowserWindow->saveSettings(settings);
+        mFileOrganiserWindow->saveSettings(settings);
 
-    mViewerWindow->saveSettings(settings, SettingsNone);
+        mViewerWindow->saveSettings(settings);
 
-    mHelpWindow->saveSettings(settings, SettingsNone);
+        mHelpWindow->saveSettings(settings);
+    settings.endGroup();
 }
 
 void MainWindow::setLocale(const QString &pLocale)

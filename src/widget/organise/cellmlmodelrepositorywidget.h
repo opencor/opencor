@@ -10,7 +10,8 @@ class CellmlModelRepositoryWidget : public QWebView, public CommonWidget
     Q_OBJECT
 
 public:
-    CellmlModelRepositoryWidget(QWidget *pParent = 0);
+    explicit CellmlModelRepositoryWidget(const QString &pName,
+                                         QWidget *pParent);
 
 protected:
     virtual QSize sizeHint() const;

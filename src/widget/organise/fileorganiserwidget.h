@@ -10,7 +10,7 @@ class FileOrganiserWidget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    FileOrganiserWidget(QWidget *pParent = 0);
+    FileOrganiserWidget(const QString &pName, QWidget *pParent);
 
 protected:
     virtual QSize sizeHint() const;
