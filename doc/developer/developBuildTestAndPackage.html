@@ -128,17 +128,17 @@ $ rm -fr [Qt4.7.2]</pre>
             <li>
                 <strong>Command line:</strong> various batch and VBScript files (<code>.bat</code> and <code>.vbs</code> files) on Windows and shell scripts on Ubuntu/Mac OS X are available: (Note that these command line tools require access to CMake, MinGW/g++/Xcode (for Windows, Ubuntu and Mac OS X, respectively) and Qt from the command line. So, make sure that this is the case by updating your <code>PATH</code> environment variable, if necessary.)
                 <ul>
-                    <li><code>cleanproj[.bat]</code>: cleans the OpenCOR environment;</li>
-                    <li><code>cleanprojall[.bat]</code>: cleans all of the OpenCOR environment (i.e. including <a href="thirdPartyLibraries.html">third-party libraries</a>);</li>
+                    <li><code><a href="../../cleanproj">cleanproj</a>[<a href="../../cleanproj.bat">.bat</a>]</code>: cleans the OpenCOR environment;</li>
+                    <li><code><a href="../../cleanprojall">cleanprojall</a>[<a href="../../cleanprojall.bat">.bat</a>]</code>: cleans all of the OpenCOR environment (i.e. including <a href="thirdPartyLibraries.html">third-party libraries</a>);</li>
                     <li>
-                        <code>makeproj[.bat]</code>: compiles and links everything that is required to get a binary version of OpenCOR; and
+                        <code><a href="../../makeproj">makeproj</a>[<a href="../../makeproj.bat">.bat</a>]</code>: compiles and links everything that is required to get a binary version of OpenCOR; and
                         <div>
                             <strong>Note:</strong> <code>makeproj[.bat]</code> does, by default, compile OpenCOR in parallel. You can, however, specify the number of processors to be used, thus making it possible to compile OpenCOR sequentially, if needed:
                             <pre>$ ./makeproj 1</pre>
                         </div>
                     </li>
                     <li>
-                        <code>runproj[.bat|.vbs]</code>: runs OpenCOR.
+                        <code><a href="../../runproj">runproj</a>[<a href="../../runproj.bat">.bat</a>|<a href="../../runproj.vbs">.vbs</a>]</code>: runs OpenCOR.
                         <div>
                             <strong>Note:</strong> on Windows, if you were to run OpenCOR from a console window by just entering <code>runproj</code>, then the <code>runproj.bat</code> file would be executed (rather than the <code>runproj.vbs</code> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking the <code>runproj.bat</code> file from within Windows Explorer, then a console window will quickly appear and disappear. To avoid this, you should double click on the <code>runproj.vbs</code> file.
                         </div>
@@ -149,8 +149,8 @@ $ rm -fr [Qt4.7.2]</pre>
                 <strong>Using Qt Creator:</strong>
                 <ul>
                     <li>Start Qt Creator;</li>
-                    <li>Open <code>[OpenCOR]/CMakeLists.txt</code> (by selecting the <code>File|Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
-                    <li>Specify <code>[OpenCOR]/build</code> as the build directory;</li>
+                    <li>Open <a href="../../CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File|Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
+                    <li>Specify <a href="../../build"><code>[OpenCOR]/build</code></a> as the build directory;</li>
                     <li>Select <code>MinGW</code> as the generator (Windows only), if necessary;</li>
                     <li>Click on the <code>Run CMake</code> button;</li>
                     <li>Click on the <code>Finish</code> button;</li>
@@ -173,7 +173,7 @@ $ rm -fr [Qt4.7.2]</pre>
         </h2>
 
         <p>
-            The packaging of OpenCOR can only be done from the command line, using <code>packageproj.bat</code> on Windows and <code>packageproj</code> on Ubuntu / Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in the latter case.
+            The packaging of OpenCOR can only be done from the command line, using <a href="../../packageproj.bat"><code>packageproj.bat</code></a> on Windows and <a href="../../packageproj"><code>packageproj</code></a> on Ubuntu / Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in the latter case.
         </p>
 
         <div class="copyright">
