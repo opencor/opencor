@@ -4,7 +4,7 @@
 
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
                                          QWidget *pParent) :
-    QWidget(pParent),
+    QTreeView(pParent),
     CommonWidget(pName, this, pParent)
 {
 }
@@ -16,15 +16,4 @@ QSize FileOrganiserWidget::sizeHint() const
     //       widget on it, to have a decent size when docked to the main window
 
     return defaultSize(0.15);
-}
-
-void FileOrganiserWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWidget::paintEvent(pEvent);
-
-    // Draw a border in case we are docked
-
-    drawBorderIfDocked();
 }

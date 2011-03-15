@@ -47,7 +47,7 @@
     <string>&amp;Previous</string>
    </property>
    <property name="statusTip">
-    <string>Go to the previous folder/file</string>
+    <string>Go to the previous folder or file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+Left</string>
@@ -62,7 +62,7 @@
     <string>&amp;Next</string>
    </property>
    <property name="statusTip">
-    <string>Go to the next folder/file</string>
+    <string>Go to the next folder or file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+Right</string>

@@ -1,9 +1,11 @@
+#include "docktoolbar.h"
 #include "fileorganiserwindow.h"
 #include "fileorganiserwidget.h"
 
 #include "ui_fileorganiserwindow.h"
 
 #include <QSettings>
+#include <QWidget>
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -13,15 +15,32 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     mUi->setupUi(this);
 
+    // Create a toolbar with different buttons
+    // Note: this sadly can't be done using the design mode, so...
+
+    DockToolBar *toolbar = new DockToolBar(this);
+
+    QWidget *spacer = new QWidget(toolbar);
+    QHBoxLayout *spacerLayout = new QHBoxLayout(spacer);
+
+    spacerLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding));
+    spacer->setLayout(spacerLayout);
+
+    toolbar->addAction(mUi->actionNew);
+    toolbar->addWidget(spacer);
+    toolbar->addAction(mUi->actionDelete);
+
+    mUi->verticalLayout->addWidget(toolbar);
+
     // Create and add the file organiser widget
 
     mFileOrganiserWidget = new FileOrganiserWidget("FileOrganiserWidget", this);
 
-    setWidget(mFileOrganiserWidget);
+    mUi->verticalLayout->addWidget(mFileOrganiserWidget);
 
-    // Prevent objects from being dropped on the window
+    // Prevent objects from being dropped on the file organiser widget
 
-    setAcceptDrops(false);
+    mFileOrganiserWidget->setAcceptDrops(false);
 }
 
 FileOrganiserWindow::~FileOrganiserWindow()

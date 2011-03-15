@@ -39,12 +39,12 @@
         <translation>Aller au répertoire principal</translation>
     </message>
     <message>
-        <source>Go to the previous folder/file</source>
-        <translation>Aller au répertoire/fichier précédent</translation>
+        <source>Go to the previous folder or file</source>
+        <translation>Aller au répertoire ou fichier précédent</translation>
     </message>
     <message>
-        <source>Go to the next folder/file</source>
-        <translation>Aller au répertoire/fichier suivant</translation>
+        <source>Go to the next folder or file</source>
+        <translation>Aller au répertoire ou fichier suivant</translation>
     </message>
     <message>
         <source>Go to the parent folder</source>
@@ -68,6 +68,30 @@
     <message>
         <source>File Organiser</source>
         <translation>Organisateur de Fichiers</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Nouveau</translation>
+    </message>
+    <message>
+        <source>Create a new folder</source>
+        <translation>Créer un nouveau répertoire</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+N</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Supprimer</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+D</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Delete the current folder(s) and/or link(s) to the current file(s)</source>
+        <translation>Supprimer le(s) répertoire(s) et/ou le(s) lien(s) vers fichier(s) courant(s)</translation>
     </message>
 </context>
 <context>
@@ -372,8 +396,8 @@
         <translation>&amp;Plein Ecran</translation>
     </message>
     <message>
-        <source>Show/hide the OpenCOR help</source>
-        <translation>Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
+        <source>Show or hide the OpenCOR help</source>
+        <translation>Montrer ou cacher l&apos;aide d&apos;OpenCOR</translation>
     </message>
     <message>
         <source>Switch to / back from full screen mode</source>

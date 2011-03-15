@@ -3,9 +3,9 @@
 
 #include "commonwidget.h"
 
-#include <QWidget>
+#include <QTreeView>
 
-class FileOrganiserWidget : public QWidget, public CommonWidget
+class FileOrganiserWidget : public QTreeView, public CommonWidget
 {
     Q_OBJECT
 
@@ -14,8 +14,6 @@ public:
 
 protected:
     virtual QSize sizeHint() const;
-
-    virtual void paintEvent(QPaintEvent *pEvent);
 };
 
 #endif

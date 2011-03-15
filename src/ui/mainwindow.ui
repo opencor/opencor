@@ -231,7 +231,7 @@
     <string>&amp;Help</string>
    </property>
    <property name="statusTip">
-    <string>Show/hide the OpenCOR help</string>
+    <string>Show or hide the OpenCOR help</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
