@@ -99,7 +99,6 @@ private Q_SLOTS:
     void on_actionAbout_triggered();
 
     void resetAll();
-    void cellmlFileCreated(const QString &cellmlFileName);
 };
 
 #endif

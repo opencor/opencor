@@ -15,7 +15,7 @@
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
     mUi(new Ui::FileBrowserWindow),
-    mKeepTrackOfPrevFolder(true)
+    mKeepTrackOfPrevItem(true)
 {
     // Set up the UI
 
@@ -72,8 +72,8 @@ void FileBrowserWindow::updateActions()
 
     mUi->actionParent->setEnabled(mFileBrowserWidget->currentPathParent() != "");
 
-    mUi->actionPrevious->setEnabled(mPrevFolders.count());
-    mUi->actionNext->setEnabled(mNextFolders.count());
+    mUi->actionPrevious->setEnabled(mPrevItems.count());
+    mUi->actionNext->setEnabled(mNextItems.count());
 }
 
 void FileBrowserWindow::retranslateUi()
@@ -97,14 +97,13 @@ void FileBrowserWindow::loadSettings(QSettings &pSettings)
 {
     pSettings.beginGroup(objectName());
         // Retrieve the settings of the file browser widget
-        // Note: we must make sure that we don't keep track of the previous
-        //       folder
+        // Note: we must make sure that we don't keep track of the previous item
 
-        mKeepTrackOfPrevFolder = false;
+        mKeepTrackOfPrevItem = false;
 
         mFileBrowserWidget->loadSettings(pSettings);
 
-        mKeepTrackOfPrevFolder = true;
+        mKeepTrackOfPrevItem = true;
 
         // Make sure that the current path is expanded
         // Note: this is important in case the current path is that of the C:
@@ -137,20 +136,19 @@ void FileBrowserWindow::needUpdateActions()
 void FileBrowserWindow::currentItemChanged(const QModelIndex &,
                                            const QModelIndex &pPrevItem)
 {
-    if (!mKeepTrackOfPrevFolder)
-        // We don't want to keep track of the previous folder, so...
+    if (!mKeepTrackOfPrevItem)
+        // We don't want to keep track of the previous item, so...
 
         return;
 
     // A new item has been selected, so we need to keep track of the old one in
     // case we want to go back to it
 
-    mPrevFolders.append(mFileBrowserWidget->pathOf(pPrevItem));
+    mPrevItems.append(mFileBrowserWidget->pathOf(pPrevItem));
 
-    // Reset the list of next folders since that list doesn't make sense
-    // anymore
+    // Reset the list of next items since that list doesn't make sense anymore
 
-    mNextFolders.clear();
+    mNextItems.clear();
 
     // Since a new item has been selected, we must update the actions
 
@@ -166,90 +164,128 @@ void FileBrowserWindow::on_actionHome_triggered()
 
 void FileBrowserWindow::on_actionParent_triggered()
 {
-    // Go to the parent folder
+    // Go to the parent item
 
     mFileBrowserWidget->gotoPath(mFileBrowserWidget->currentPathParent());
 
-    // Going to the parent folder may have changed some actions, so...
+    // Going to the parent item may have changed some actions, so...
+
+    updateActions();
+}
+
+void FileBrowserWindow::gotoOtherItem(QStringList &pItems,
+                                      QStringList &pOtherItems)
+{
+    // Go to the previous/next item and move the last item from our list of
+    // items to our list of other items
+    // Note: we must make sure that we don't keep track of the previous item
+    //       when doing this
+
+    mKeepTrackOfPrevItem = false;
+        QString crtPath = mFileBrowserWidget->currentPath();
+
+        pOtherItems.append(crtPath);
+
+        QString newItemPath = pItems.last();
+
+        while (   !pItems.isEmpty()
+               && !QFileInfo(newItemPath).exists()) {
+            // The new item doesn't exist anymore, so remove it from our list of
+            // items and other items
+
+            updateItems(newItemPath, pItems);
+            updateItems(newItemPath, pOtherItems);
+
+            // Try with the next new item
+
+            if (!pItems.isEmpty()) {
+                // The list is not empty, so make the last item our next new
+                // item
+
+                newItemPath = pItems.last();
+
+                // The next new item cannot, however, be the same as the current
+                // path
+
+                while (!pItems.isEmpty() && (newItemPath == crtPath)) {
+                    pItems.removeLast();
+
+                    if (!pItems.isEmpty())
+                        newItemPath = pItems.last();
+                    else
+                        newItemPath = "";
+                }
+            } else {
+                // The list is empty, so...
+
+                newItemPath = "";
+            }
+        }
+
+        if (!newItemPath.isEmpty()) {
+            // We have a valid new item, so go to its path and remove it from
+            // our list of items
+
+            mFileBrowserWidget->gotoPath(newItemPath);
+
+            pItems.removeLast();
+        }
+    mKeepTrackOfPrevItem = true;
+
+    // Going to the previous item may have changed some actions, so...
 
     updateActions();
 }
 
 void FileBrowserWindow::on_actionPrevious_triggered()
 {
-    // Go to the previous folder and move the last item from our list of
-    // previous folders to our list of next folders
-    // Note: we must make sure that we don't keep track of the previous folder
-    //       when doing this
-
-    mNextFolders.append(mFileBrowserWidget->currentPath());
-
-    mKeepTrackOfPrevFolder = false;
-
-    mFileBrowserWidget->gotoPath(mPrevFolders.last());
-
-    mKeepTrackOfPrevFolder = true;
-
-    mPrevFolders.removeLast();
-
-    // Going to the previous folder may have changed some actions, so...
-
-    updateActions();
+    gotoOtherItem(mPrevItems, mNextItems);
 }
 
 void FileBrowserWindow::on_actionNext_triggered()
 {
-    // Go to the next folder and move the last item from our list of next
-    // folders to our list of previous folders
-    // Note: we must make sure that we don't keep track of the previous folder
-    //       when doing this
-
-    mPrevFolders.append(mFileBrowserWidget->currentPath());
-
-    mKeepTrackOfPrevFolder = false;
-
-    mFileBrowserWidget->gotoPath(mNextFolders.last());
-
-    mKeepTrackOfPrevFolder = true;
-
-    mNextFolders.removeLast();
-
-    // Going to the next folder may have changed some actions, so...
-
-    updateActions();
+    gotoOtherItem(mNextItems, mPrevItems);
 }
 
-void FileBrowserWindow::updateFolders(const QString &pFolderName,
-                                      QStringList &pFolders)
+void FileBrowserWindow::updateItems(const QString &pItemPath,
+                                    QStringList &pItems)
 {
-    // Remove any instance of pFolderName in pFolders
+    // Remove any instance of pItemPath in pItems
 
-    pFolders.removeAll(pFolderName);
+    pItems.removeAll(pItemPath);
 
-    // Because of the above, we may have two or more consective identital
-    // folders in the list, so we must reduce that to one
+    // Because of the above, we may have two or more consective identital items
+    // in the list, so we must reduce that to one
 
-    if (pFolders.count() > 1) {
-        QStringList newFolders;
-        QString prevFolder = pFolders.at(0);
+    if (pItems.count() > 1) {
+        QStringList newItems;
+        QString prevItem = pItems.at(0);
 
-        newFolders.append(prevFolder);
+        newItems.append(prevItem);
 
-        for (int i = 1; i < pFolders.count(); ++i) {
-            QString crtFolder = pFolders.at(i);
+        for (int i = 1; i < pItems.count(); ++i) {
+            QString crtItem = pItems.at(i);
 
-            if (crtFolder != prevFolder) {
-                // The current and previous folders are different, so we want to
+            if (crtItem != prevItem) {
+                // The current and previous items are different, so we want to
                 // keep track of it and add it to our new list
 
-                newFolders.append(crtFolder);
+                newItems.append(crtItem);
 
-                prevFolder = crtFolder;
+                prevItem = crtItem;
             }
         }
 
-        // Update the old list of folders with our new one
+        // Update the old list of items with our new one
 
-        pFolders = newFolders;
+        pItems = newItems;
     }
+
+    // Now that the list has been reduced, we must check the special case where
+    // only one item is left and it happens to that of the current path, in
+    // which case the list should empty
+
+    if (   (pItems.count() == 1)
+        && (pItems.first() == mFileBrowserWidget->currentPath()))
+        pItems.clear();
 }

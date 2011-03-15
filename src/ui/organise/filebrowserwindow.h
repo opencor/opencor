@@ -25,10 +25,6 @@ public:
     virtual void loadSettings(QSettings &pSettings);
     virtual void saveSettings(QSettings &pSettings);
 
-Q_SIGNALS:
-    void folderCreated(const QString &pFolderName);
-    void cellmlFileCreated(const QString &pCellmlFileName);
-
 protected:
     virtual void updateActions();
 
@@ -37,12 +33,13 @@ private:
 
     FileBrowserWidget *mFileBrowserWidget;
 
-    QStringList mPrevFolders;
-    QStringList mNextFolders;
+    QStringList mPrevItems;
+    QStringList mNextItems;
 
-    bool mKeepTrackOfPrevFolder;
+    bool mKeepTrackOfPrevItem;
 
-    void updateFolders(const QString &pFolderName, QStringList &pFolders);
+    void gotoOtherItem(QStringList &pItems, QStringList &pOtherItems);
+    void updateItems(const QString &pItemPath, QStringList &pItems);
 
 private Q_SLOTS:
     void on_actionHome_triggered();

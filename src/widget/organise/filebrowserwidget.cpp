@@ -110,7 +110,7 @@ void FileBrowserWidget::loadSettings(QSettings &pSettings)
 
         // Set the current index to that of the folder (and file, if it exists)
         // we are interested in
-        // Note: this will result in the directoryLoaded signal to be emitted
+        // Note: this will result in the directoryLoaded signal being emitted
         //       and, us, to take advantage of it to scroll to the right
         //       directory/file
 
