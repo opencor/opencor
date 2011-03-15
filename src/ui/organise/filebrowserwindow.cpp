@@ -1,15 +1,10 @@
 #include "docktoolbar.h"
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
-#include "mainwindow.h"
-#include "utils.h"
 
 #include "ui_filebrowserwindow.h"
 
-#include <QDir>
 #include <QFileInfo>
-#include <QMenu>
-#include <QMessageBox>
 #include <QSettings>
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
