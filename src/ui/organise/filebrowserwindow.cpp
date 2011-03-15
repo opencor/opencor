@@ -230,6 +230,18 @@ void FileBrowserWindow::gotoOtherItem(QStringList &pItems,
 
             pItems.removeLast();
         }
+
+        // Make sure that the last item in the lists of items and other items
+        // isn't that of the current path (this may happen if some items got
+        // deleted by the user)
+
+        crtPath = mFileBrowserWidget->currentPath();
+
+        if (!pItems.isEmpty() && (pItems.last() == crtPath))
+            pItems.removeLast();
+
+        if (!pOtherItems.isEmpty() && (pOtherItems.last() == crtPath))
+            pOtherItems.removeLast();
     mKeepTrackOfPrevItem = true;
 
     // Going to the previous item may have changed some actions, so...
@@ -280,12 +292,4 @@ void FileBrowserWindow::updateItems(const QString &pItemPath,
 
         pItems = newItems;
     }
-
-    // Now that the list has been reduced, we must check the special case where
-    // only one item is left and it happens to that of the current path, in
-    // which case the list should empty
-
-    if (   (pItems.count() == 1)
-        && (pItems.first() == mFileBrowserWidget->currentPath()))
-        pItems.clear();
 }
