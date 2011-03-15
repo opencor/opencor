@@ -67,9 +67,9 @@ void FileBrowserWindow::updateActions()
 {
     // Make sure that the various actions are properly enabled/disabled
 
-    mUi->actionHome->setEnabled(   (mFileBrowserWidget->currentPath() != mFileBrowserWidget->homeFolder())
-                                || (   (mFileBrowserWidget->currentPath() == mFileBrowserWidget->homeFolder())
-                                    && !mFileBrowserWidget->isCurrentPathVisible()));
+    static QString homeFolder = mFileBrowserWidget->homeFolder();
+
+    mUi->actionHome->setEnabled(mFileBrowserWidget->currentPath() != homeFolder);
 
     mUi->actionParent->setEnabled(mFileBrowserWidget->currentPathParent() != "");
 

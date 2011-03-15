@@ -214,7 +214,8 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
             scrollTo(initPathModelIndex);
         }
 
-        // Set the default width of the columns so that it fits their contents
+        // Set the default width of the columns, if needed, so that it fits
+        // their contents
 
         if (mNeedDefColWidth) {
             header()->setResizeMode(QHeaderView::ResizeToContents);
@@ -231,13 +232,6 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
     }
 }
 
-void FileBrowserWidget::showCurrentPath()
-{
-    // Show the current path by scrolling to it
-
-    scrollTo(currentIndex());
-}
-
 bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
 {
     // Set the current index to that of the provided path
@@ -247,12 +241,10 @@ bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
     if (pathModelIndex != QModelIndex()) {
         // The path exists, so we can go to it
 
-        setCurrentIndex(pathModelIndex);
-
         if (pExpand)
             setExpanded(pathModelIndex, true);
 
-        scrollTo(pathModelIndex);
+        setCurrentIndex(pathModelIndex);
 
         return true;
     } else {
@@ -304,39 +296,4 @@ QString FileBrowserWidget::currentPathParent()
     return (crtIndexParent != QModelIndex())?
                mFileSystemModel->filePath(crtIndexParent):
                "";
-}
-
-bool FileBrowserWidget::isCurrentPathVisible()
-{
-    // Return whether the current path is visible or not, i.e. whether all of
-    // the parent nodes are expanded or not
-
-    bool result = true;
-    QModelIndex crtIndex = currentIndex();
-
-    while (result && (crtIndex.parent() != QModelIndex())) {
-        crtIndex = crtIndex.parent();
-
-        if (!isExpanded(crtIndex))
-            // The current parent is not expanded, meaning the current path
-            // cannot be visible, so...
-
-            result = false;
-    }
-
-    return result;
-}
-
-bool FileBrowserWidget::isCurrentPathDirWritable()
-{
-    // Return whether the directory of the current path is writable or not
-
-    return QFileInfo(currentPathDir()).isWritable();
-}
-
-bool FileBrowserWidget::isCurrentPathWritable()
-{
-    // Return whether the current path is writable or not
-
-    return QFileInfo(currentPath()).isWritable();
 }

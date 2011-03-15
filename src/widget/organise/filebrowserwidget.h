@@ -18,8 +18,6 @@ public:
     virtual void loadSettings(QSettings &pSettings);
     virtual void saveSettings(QSettings &pSettings);
 
-    void showCurrentPath();
-
     bool gotoPath(const QString &pPath, const bool &pExpand = false);
 
     QString homeFolder();
@@ -28,10 +26,6 @@ public:
     QString currentPath();
     QString currentPathDir();
     QString currentPathParent();
-
-    bool isCurrentPathVisible();
-    bool isCurrentPathDirWritable();
-    bool isCurrentPathWritable();
 
 protected:
     virtual QSize sizeHint() const;

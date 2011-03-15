@@ -39,12 +39,12 @@
         <translation>Aller au répertoire principal</translation>
     </message>
     <message>
-        <source>Go to the previous folder</source>
-        <translation>Aller au répertoire précédent</translation>
+        <source>Go to the previous folder/file</source>
+        <translation>Aller au répertoire/fichier précédent</translation>
     </message>
     <message>
-        <source>Go to the next folder</source>
-        <translation>Aller au répertoire suivant</translation>
+        <source>Go to the next folder/file</source>
+        <translation>Aller au répertoire/fichier suivant</translation>
     </message>
     <message>
         <source>Go to the parent folder</source>
