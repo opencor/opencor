@@ -297,3 +297,12 @@ QString FileBrowserWidget::currentPathParent()
                mFileSystemModel->filePath(crtIndexParent):
                "";
 }
+
+QString FileBrowserWidget::pathOf(const QModelIndex &pIndex)
+{
+    // Return the path for pItem, if it exists
+
+    return (pIndex != QModelIndex())?
+               mFileSystemModel->filePath(pIndex):
+               "";
+}

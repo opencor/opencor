@@ -15,7 +15,6 @@
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
     mUi(new Ui::FileBrowserWindow),
-    mPrevFolder(),
     mKeepTrackOfPrevFolder(true)
 {
     // Set up the UI
@@ -107,14 +106,10 @@ void FileBrowserWindow::loadSettings(QSettings &pSettings)
 
         mKeepTrackOfPrevFolder = true;
 
-        // Initialise the previous folder information
-
-        mPrevFolder = mFileBrowserWidget->currentPathDir();
-
         // Make sure that the current path is expanded
         // Note: this is important in case the current path is that of the C:
-        //       drive or the root of the file system which during the
-        //       loadSettings above won't trigger a directoryLoaded signal in
+        //       drive or the root of the file system which, during the
+        //       loadSettings above, won't trigger a directoryLoaded signal in
         //       the file browser widget
 
         if (!mFileBrowserWidget->isExpanded(mFileBrowserWidget->currentIndex()))
@@ -140,7 +135,7 @@ void FileBrowserWindow::needUpdateActions()
 }
 
 void FileBrowserWindow::currentItemChanged(const QModelIndex &,
-                                           const QModelIndex &)
+                                           const QModelIndex &pPrevItem)
 {
     if (!mKeepTrackOfPrevFolder)
         // We don't want to keep track of the previous folder, so...
@@ -150,29 +145,12 @@ void FileBrowserWindow::currentItemChanged(const QModelIndex &,
     // A new item has been selected, so we need to keep track of the old one in
     // case we want to go back to it
 
-    // Retrieve the full path to the folder where the current item is located
+    mPrevFolders.append(mFileBrowserWidget->pathOf(pPrevItem));
 
-    QString crtItemDir  = mFileBrowserWidget->currentPathDir();
+    // Reset the list of next folders since that list doesn't make sense
+    // anymore
 
-    // Check whether there is a previous folder to keep track of
-    // Note: to do so, we cannot rely on the previous item (i.e. the second
-    //       parameter to this function), since both the current and previous
-    //       items might be located in the same folder, so...
-
-    if (crtItemDir != mPrevFolder) {
-        // There is a previous folder to keep track of, so add it to our list of
-        // previous folders and consider the current folder as our future
-        // previous folder
-
-        mPrevFolders.append(mPrevFolder);
-
-        mPrevFolder = crtItemDir;
-
-        // Reset the list of next folders since that list doesn't make sense
-        // anymore
-
-        mNextFolders.clear();
-    }
+    mNextFolders.clear();
 
     // Since a new item has been selected, we must update the actions
 
@@ -190,7 +168,7 @@ void FileBrowserWindow::on_actionParent_triggered()
 {
     // Go to the parent folder
 
-    mFileBrowserWidget->setCurrentIndex(mFileBrowserWidget->currentIndex().parent());
+    mFileBrowserWidget->gotoPath(mFileBrowserWidget->currentPathParent());
 
     // Going to the parent folder may have changed some actions, so...
 
@@ -202,6 +180,7 @@ void FileBrowserWindow::on_actionPrevious_triggered()
     // Go to the previous folder and move the last item from our list of
     // previous folders to our list of next folders
     // Note: we must make sure that we don't keep track of the previous folder
+    //       when doing this
 
     mNextFolders.append(mFileBrowserWidget->currentPath());
 
@@ -223,6 +202,7 @@ void FileBrowserWindow::on_actionNext_triggered()
     // Go to the next folder and move the last item from our list of next
     // folders to our list of previous folders
     // Note: we must make sure that we don't keep track of the previous folder
+    //       when doing this
 
     mPrevFolders.append(mFileBrowserWidget->currentPath());
 

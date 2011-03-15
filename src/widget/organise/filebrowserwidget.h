@@ -27,6 +27,8 @@ public:
     QString currentPathDir();
     QString currentPathParent();
 
+    QString pathOf(const QModelIndex &pIndex);
+
 protected:
     virtual QSize sizeHint() const;
 

@@ -40,11 +40,7 @@ private:
     QStringList mPrevFolders;
     QStringList mNextFolders;
 
-    QString mPrevFolder;
-
     bool mKeepTrackOfPrevFolder;
-
-    void newCellmlFile(const CellmlVersion &pCellmlVersion);
 
     void updateFolders(const QString &pFolderName, QStringList &pFolders);
 
@@ -55,7 +51,7 @@ private Q_SLOTS:
     void on_actionNext_triggered();
 
     void needUpdateActions();
-    void currentItemChanged(const QModelIndex &, const QModelIndex &);
+    void currentItemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
 };
 
 #endif
