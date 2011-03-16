@@ -79,6 +79,8 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
 
 # Compiler and linker options
 
+SET(CMAKE_CXX_FLAGS "-Wall -O2 -ffast-math")
+
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,-subsystem,console -Wl,-s")
 # Note #1: -Wl,-subsystem,console makes sure that we end up with a console
 #          application

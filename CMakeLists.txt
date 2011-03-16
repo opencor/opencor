@@ -223,13 +223,31 @@ ENDIF()
 
 # Compiler and linker options
 
-SET(CMAKE_CXX_FLAGS "-Wall -O2 -ffast-math")
+IF("$ENV{DEBUG_MODE}" STREQUAL "ON")
+    SET(DEBUG_MODE ON)
+ELSE()
+    SET(DEBUG_MODE OFF)
+ENDIF()
+
+SET(CMAKE_CXX_FLAGS "-Wall")
 SET(LINK_FLAGS_PROPERTIES)
+
+IF(${DEBUG_MODE})
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
+ENDIF()
 
 IF(WIN32)
     SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-enable-auto-import")
-    # Note: -Wl,-enable-auto-import makes it possible for us to use
-    #       QtSingleApplication
+    # Note: -Wl,-enable-auto-import allows us to use our various third-party
+    #       libraries without having to worry about importing their functions,
+    #       etc.
+
+    IF(${DEBUG_MODE})
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-subsystem,console")
+        # Note: -Wl,-subsystem,console allows us to use qDebug() (note: this
+        #       requires including QDebug), something that can be done natively
+        #       on Linux and Mac OS X
+    ENDIF()
 ENDIF()
 
 IF(NOT APPLE)
