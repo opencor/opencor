@@ -14,6 +14,14 @@ SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 
+# Type of build
+
+IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    SET(DEBUG_MODE ON)
+ELSE()
+    SET(DEBUG_MODE OFF)
+ENDIF()
+
 # Files that make up the GUI version of OpenCOR
 
 SET(SOURCES
@@ -163,7 +171,7 @@ SET(3RDPARTYLIBS LibQxt QScintilla QtMmlWidget QtSingleApplication)
 FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
     SET(3RDPARTYLIB_DIR 3rdparty/${3RDPARTYLIB})
     SET(3RDPARTYLIB_SUBDIRS)
-    # Note: the above variable is only defined here while actually set when
+    # Note: the above variable is defined here, but is actually set when
     #       processing the CMakeLists.txt file of the third-party library
 
     ADD_SUBDIRECTORY(${3RDPARTYLIB_DIR})
@@ -223,16 +231,12 @@ ENDIF()
 
 # Compiler and linker options
 
-IF("$ENV{DEBUG_MODE}" STREQUAL "ON")
-    SET(DEBUG_MODE ON)
-ELSE()
-    SET(DEBUG_MODE OFF)
-ENDIF()
-
 SET(CMAKE_CXX_FLAGS "-Wall")
 SET(LINK_FLAGS_PROPERTIES)
 
 IF(${DEBUG_MODE})
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+ELSE()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
 ENDIF()
 
@@ -241,16 +245,9 @@ IF(WIN32)
     # Note: -Wl,-enable-auto-import allows us to use our various third-party
     #       libraries without having to worry about importing their functions,
     #       etc.
-
-    IF(${DEBUG_MODE})
-        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-subsystem,console")
-        # Note: -Wl,-subsystem,console allows us to use qDebug() (note: this
-        #       requires including QDebug), something that can be done natively
-        #       on Linux and Mac OS X
-    ENDIF()
 ENDIF()
 
-IF(NOT APPLE)
+IF(NOT APPLE AND NOT ${DEBUG_MODE})
     SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
     # Note #1: -Wl,-s strips all the symbols, thus reducing the final size of
     #          OpenCOR
