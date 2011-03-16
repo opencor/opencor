@@ -5,7 +5,6 @@
 #include "ui_fileorganiserwindow.h"
 
 #include <QSettings>
-#include <QWidget>
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -20,14 +19,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     DockToolBar *toolbar = new DockToolBar(this);
 
-    QWidget *spacer = new QWidget(toolbar);
-    QHBoxLayout *spacerLayout = new QHBoxLayout(spacer);
-
-    spacerLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding));
-    spacer->setLayout(spacerLayout);
-
     toolbar->addAction(mUi->actionNew);
-    toolbar->addWidget(spacer);
     toolbar->addAction(mUi->actionDelete);
 
     mUi->verticalLayout->addWidget(toolbar);
