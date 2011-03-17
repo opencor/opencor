@@ -7,5 +7,5 @@ If CreateObject("Scripting.FileSystemObject").FileExists("build\OpenCOR.exe") Th
 
     CreateObject("WScript.Shell").Run "build\OpenCOR.exe"&args, 1, False
 Else
-    WScript.Echo "Information: OpenCOR must first be built before being run."
+    WScript.Echo "OpenCOR must first be built before being run."
 End If

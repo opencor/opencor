@@ -6,7 +6,7 @@ if [ $OS = "Linux" ]; then
     echo "\033[44;37;1mRunning OpenCOR...\033[0m"
 fi
 
-WMsg="Information: OpenCOR must first be built before being run."
+WMsg="OpenCOR must first be built before being run."
 
 if [ $OS = "Linux" ]; then
     if [ -f build/OpenCOR ]; then
