@@ -642,13 +642,10 @@ void MainWindow::on_actionAbout_triggered()
     // Display some information about OpenCOR
 
     QMessageBox::about(this, qApp->applicationName(),
-                       QString("")+
-                       "<center>"+
-                           "<h1><b>"+qApp->applicationName()+" "+qApp->applicationVersion()+"</b></h1>"+
-                           "<h3><em>"+getOsName()+"</em></h3>"+
-                       "</center>"+
-                       "<br />"+
-                       "<a href=\""+QString(OpencorHomepageUrl)+"\">"+qApp->applicationName()+"</a> "+tr("is a cross-platform <a href=\"http://www.cellml.org/\">CellML</a>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
+                        "<h1 align=center><b>"+qApp->applicationName()+" "+qApp->applicationVersion()+"</b></h1>"
+                       +"<h3 align=center><em>"+getOsName()+"</em></h3>"
+                       +"<p align=center><em>&copy;2011</em></p>"
+                       +"<a href=\""+QString(OpencorHomepageUrl)+"\">"+qApp->applicationName()+"</a> "+tr("is a cross-platform <a href=\"http://www.cellml.org/\">CellML</a>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
 }
 
 void MainWindow::resetAll()
