@@ -1,6 +1,7 @@
 #include "docktoolbar.h"
 #include "fileorganiserwindow.h"
 #include "fileorganiserwidget.h"
+#include "utils.h"
 
 #include "ui_fileorganiserwindow.h"
 
