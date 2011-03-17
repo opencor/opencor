@@ -14,14 +14,6 @@ SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 
-# Type of build
-
-IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    SET(DEBUG_MODE ON)
-ELSE()
-    SET(DEBUG_MODE OFF)
-ENDIF()
-
 # Files that make up the GUI version of OpenCOR
 
 SET(SOURCES
@@ -162,6 +154,16 @@ ELSEIF(APPLE)
     SET_SOURCE_FILES_PROPERTIES(res/boomy/${IconFile} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     SET(SOURCES ${SOURCES} res/boomy/${IconFile})
+ENDIF()
+
+# Type of build
+# Note: we do this here, so that all of our third-party libraries can benefit
+#       from these settings
+
+IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    SET(DEBUG_MODE ON)
+ELSE()
+    SET(DEBUG_MODE OFF)
 ENDIF()
 
 # Build the third-party libraries used by the GUI version of OpenCOR
