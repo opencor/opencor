@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="../../res/OpenCOR.qrc">
     <normaloff>:/appIcon</normaloff>:/appIcon</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
@@ -67,6 +67,8 @@
      <addaction name="actionFrench"/>
     </widget>
     <addaction name="menuLanguage"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionResetAll"/>
    </widget>
@@ -500,6 +502,14 @@
    </property>
    <property name="statusTip">
     <string>Check for updates</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>&amp;Preferences...</string>
+   </property>
+   <property name="statusTip">
+    <string>Preferences for OpenCOR</string>
    </property>
   </action>
  </widget>

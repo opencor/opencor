@@ -532,6 +532,66 @@ void MainWindow::singleAppMsgRcvd(const QString &)
     // TODO: handle the arguments passed to the 'official' instance of OpenCOR
 }
 
+void MainWindow::on_actionNew_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionNew_triggered()");
+}
+
+void MainWindow::on_actionCellML10File_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionCellML10File_triggered()");
+}
+
+void MainWindow::on_actionCellML11File_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionCellML11File_triggered()");
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionOpen_triggered()");
+}
+
+void MainWindow::on_actionReopen_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionReopen_triggered()");
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionSave_triggered()");
+}
+
+void MainWindow::on_actionSaveAs_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionSaveAs_triggered()");
+}
+
+void MainWindow::on_actionSaveAll_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionSaveAll_triggered()");
+}
+
+void MainWindow::on_actionClose_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionClose_triggered()");
+}
+
+void MainWindow::on_actionCloseAll_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionCloseAll_triggered()");
+}
+
+void MainWindow::on_actionFullScreen_triggered()
+{
+    // Switch to / back from full screen mode
+
+    if (mUi->actionFullScreen->isChecked())
+        showFullScreen();
+    else
+        showNormal();
+}
+
 void MainWindow::on_actionSystem_triggered()
 {
     // Select the system's language as the language used by OpenCOR
@@ -551,6 +611,11 @@ void MainWindow::on_actionFrench_triggered()
     // Select French as the language used by OpenCOR
 
     setLocale(FrenchLocale);
+}
+
+void MainWindow::on_actionPreferences_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionPreferences_triggered()");
 }
 
 void MainWindow::on_actionHomePage_triggered()
@@ -611,64 +676,4 @@ void MainWindow::resetAll()
 
         qApp->quit();
     }
-}
-
-void MainWindow::on_actionNew_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionNew_triggered()");
-}
-
-void MainWindow::on_actionCellML10File_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionCellML10File_triggered()");
-}
-
-void MainWindow::on_actionCellML11File_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionCellML11File_triggered()");
-}
-
-void MainWindow::on_actionOpen_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionOpen_triggered()");
-}
-
-void MainWindow::on_actionReopen_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionReopen_triggered()");
-}
-
-void MainWindow::on_actionClose_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionClose_triggered()");
-}
-
-void MainWindow::on_actionCloseAll_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionCloseAll_triggered()");
-}
-
-void MainWindow::on_actionSave_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionSave_triggered()");
-}
-
-void MainWindow::on_actionSaveAs_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionSaveAs_triggered()");
-}
-
-void MainWindow::on_actionSaveAll_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionSaveAll_triggered()");
-}
-
-void MainWindow::on_actionFullScreen_triggered()
-{
-    // Switch to / back from full screen mode
-
-    if (mUi->actionFullScreen->isChecked())
-        showFullScreen();
-    else
-        showNormal();
 }

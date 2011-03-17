@@ -80,19 +80,20 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void on_actionNew_triggered();
-    void on_actionSaveAll_triggered();
-    void on_actionSaveAs_triggered();
-    void on_actionSave_triggered();
-    void on_actionCloseAll_triggered();
-    void on_actionClose_triggered();
-    void on_actionReopen_triggered();
-    void on_actionOpen_triggered();
-    void on_actionCellML11File_triggered();
     void on_actionCellML10File_triggered();
+    void on_actionCellML11File_triggered();
+    void on_actionOpen_triggered();
+    void on_actionReopen_triggered();
+    void on_actionSave_triggered();
+    void on_actionSaveAs_triggered();
+    void on_actionSaveAll_triggered();
+    void on_actionClose_triggered();
+    void on_actionCloseAll_triggered();
     void on_actionFullScreen_triggered();
     void on_actionSystem_triggered();
     void on_actionEnglish_triggered();
     void on_actionFrench_triggered();
+    void on_actionPreferences_triggered();
     void on_actionHomePage_triggered();
     void on_actionCellMLHomePage_triggered();
     void on_actionUpdates_triggered();
