@@ -26,6 +26,9 @@ MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
     // Set a font that we know works on Windows, Linux and Mac OS X
 
     setFontName(NormalFont, "Times New Roman");
+
+//---GRY--- THE BELOW IS JUST FOR TESTING...
+setContent("<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><msub><mi>i</mi><mi>Na</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>g</mi><mi>Na</mi></msub><mo>·</mo><msup><mi>m</mi><mn>3</mn></msup><mo>·</mo><mi>h</mi><mo>·</mo><msub><mi>Na</mi><mi>o</mi></msub><mo>·</mo><mfrac><msup><mi>F</mi><mn>2</mn></msup><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac><mo>·</mo><mo>(</mo><mrow><msup><mi>e</mi><mrow><mo>(</mo><mi>V</mi><mo>-</mo><msub><mi>E</mi><mn>Na</mn></msub><mo>)</mo><mo>·</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow><mo>)</mo></mrow><mrow><msup><mi>e</mi><mrow><mi>V</mi><mo>·</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow></mfrac><mo>·</mo><mi>V</mi></mrow></math>");
 }
 
 MmlViewerWidget::~MmlViewerWidget()
@@ -40,7 +43,8 @@ bool MmlViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
 
     mTestMmlWidget->setContent(pContent);
 
-    return QtMmlWidget::setContent(pContent, pErrorMsg, pErrorLine, pErrorColumn);
+    return QtMmlWidget::setContent(pContent, pErrorMsg,
+                                   pErrorLine, pErrorColumn);
 }
 
 QSize MmlViewerWidget::sizeHint() const
