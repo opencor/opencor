@@ -26,7 +26,7 @@
   <action name="actionHome">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/home.png</normaloff>:/home.png</iconset>
+     <normaloff>:/boomy/home.png</normaloff>:/boomy/home.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Home</string>
@@ -41,7 +41,7 @@
   <action name="actionPrevious">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/back.png</normaloff>:/back.png</iconset>
+     <normaloff>:/boomy/back.png</normaloff>:/boomy/back.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Previous</string>
@@ -56,7 +56,7 @@
   <action name="actionNext">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/forward.png</normaloff>:/forward.png</iconset>
+     <normaloff>:/boomy/forward.png</normaloff>:/boomy/forward.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Next</string>
@@ -71,7 +71,7 @@
   <action name="actionParent">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/up.png</normaloff>:/up.png</iconset>
+     <normaloff>:/boomy/up.png</normaloff>:/boomy/up.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Parent</string>

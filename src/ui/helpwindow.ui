@@ -26,7 +26,7 @@
   <action name="actionHome">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/home.png</normaloff>:/home.png</iconset>
+     <normaloff>:/boomy/home.png</normaloff>:/boomy/home.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Home</string>
@@ -41,7 +41,7 @@
   <action name="actionBack">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/back.png</normaloff>:/back.png</iconset>
+     <normaloff>:/boomy/back.png</normaloff>:/boomy/back.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Back</string>
@@ -56,7 +56,7 @@
   <action name="actionForward">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/forward.png</normaloff>:/forward.png</iconset>
+     <normaloff>:/boomy/forward.png</normaloff>:/boomy/forward.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Forward</string>
@@ -71,7 +71,7 @@
   <action name="actionZoomIn">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/zoomIn.png</normaloff>:/zoomIn.png</iconset>
+     <normaloff>:/boomy/zoomIn.png</normaloff>:/boomy/zoomIn.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;In</string>
@@ -86,7 +86,7 @@
   <action name="actionZoomOut">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/zoomOut.png</normaloff>:/zoomOut.png</iconset>
+     <normaloff>:/boomy/zoomOut.png</normaloff>:/boomy/zoomOut.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;Out</string>
@@ -101,7 +101,7 @@
   <action name="actionNormalSize">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/normalSize.png</normaloff>:/normalSize.png</iconset>
+     <normaloff>:/boomy/normalSize.png</normaloff>:/boomy/normalSize.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Normal Size</string>
@@ -116,7 +116,7 @@
   <action name="actionCopy">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/copy.png</normaloff>:/copy.png</iconset>
+     <normaloff>:/boomy/copy.png</normaloff>:/boomy/copy.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Copy</string>
@@ -131,7 +131,7 @@
   <action name="actionPrint">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/print.png</normaloff>:/print.png</iconset>
+     <normaloff>:/boomy/print.png</normaloff>:/boomy/print.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Print</string>

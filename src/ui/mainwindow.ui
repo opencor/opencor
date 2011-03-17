@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../res/OpenCOR.qrc">
+   <iconset>
     <normaloff>:/appIcon</normaloff>:/appIcon</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
@@ -33,7 +33,7 @@
       <string>&amp;New</string>
      </property>
      <property name="icon">
-      <iconset resource="../../res/OpenCOR.qrc">
+      <iconset>
        <normaloff>:/new.png</normaloff>:/new.png</iconset>
      </property>
      <addaction name="actionCellML10File"/>
@@ -168,7 +168,7 @@
   <action name="actionExit">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/exit.png</normaloff>:/exit.png</iconset>
+     <normaloff>:/boomy/exit.png</normaloff>:/boomy/exit.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Exit</string>
@@ -189,7 +189,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/en.png</normaloff>:/en.png</iconset>
+     <normaloff>:/flags/en.png</normaloff>:/flags/en.png</iconset>
    </property>
    <property name="text">
     <string>&amp;English</string>
@@ -207,7 +207,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/fr.png</normaloff>:/fr.png</iconset>
+     <normaloff>:/flags/fr.png</normaloff>:/flags/fr.png</iconset>
    </property>
    <property name="text">
     <string>&amp;French</string>
@@ -225,7 +225,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/help.png</normaloff>:/help.png</iconset>
+     <normaloff>:/boomy/help.png</normaloff>:/boomy/help.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Help</string>
@@ -243,7 +243,7 @@
   <action name="actionHomePage">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/home.png</normaloff>:/home.png</iconset>
+     <normaloff>:/boomy/home.png</normaloff>:/boomy/home.png</iconset>
    </property>
    <property name="text">
     <string>Home &amp;Page</string>
@@ -258,7 +258,7 @@
   <action name="actionAbout">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/about.png</normaloff>:/about.png</iconset>
+     <normaloff>:/boomy/about.png</normaloff>:/boomy/about.png</iconset>
    </property>
    <property name="text">
     <string>&amp;About</string>
@@ -319,7 +319,7 @@
   <action name="actionOpen">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/open.png</normaloff>:/open.png</iconset>
+     <normaloff>:/boomy/open.png</normaloff>:/boomy/open.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open...</string>
@@ -364,7 +364,7 @@
   <action name="actionSave">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/save.png</normaloff>:/save.png</iconset>
+     <normaloff>:/boomy/save.png</normaloff>:/boomy/save.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Save</string>
@@ -382,7 +382,7 @@
   <action name="actionSaveAs">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/saveAs.png</normaloff>:/saveAs.png</iconset>
+     <normaloff>:/boomy/saveAs.png</normaloff>:/boomy/saveAs.png</iconset>
    </property>
    <property name="text">
     <string>Save &amp;As...</string>
@@ -405,7 +405,7 @@
   <action name="actionNew">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/new.png</normaloff>:/new.png</iconset>
+     <normaloff>:/boomy/new.png</normaloff>:/boomy/new.png</iconset>
    </property>
    <property name="text">
     <string>&amp;New</string>
@@ -431,7 +431,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/fullScreen.png</normaloff>:/fullScreen.png</iconset>
+     <normaloff>:/boomy/fullScreen.png</normaloff>:/boomy/fullScreen.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Full Screen</string>
