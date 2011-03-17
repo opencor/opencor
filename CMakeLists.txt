@@ -161,7 +161,7 @@ ELSEIF(APPLE)
 
     SET_SOURCE_FILES_PROPERTIES(res/boomy/${IconFile} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    SET(SOURCES ${SOURCES} res/${IconFile})
+    SET(SOURCES ${SOURCES} res/boomy/${IconFile})
 ENDIF()
 
 # Build the third-party libraries used by the GUI version of OpenCOR
