@@ -26,6 +26,10 @@ private:
     Ui::FileOrganiserWindow *mUi;
 
     FileOrganiserWidget *mFileOrganiserWidget;
+
+private slots:
+    void on_actionNew_triggered();
+    void on_actionDelete_triggered();
 };
 
 #endif

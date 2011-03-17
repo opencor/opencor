@@ -70,3 +70,13 @@ void FileOrganiserWindow::saveSettings(QSettings &pSettings)
         mFileOrganiserWidget->saveSettings(pSettings);
     pSettings.endGroup();
 }
+
+void FileOrganiserWindow::on_actionNew_triggered()
+{
+    notYetImplemented("void FileOrganiserWindow::on_actionNew_triggered()");
+}
+
+void FileOrganiserWindow::on_actionDelete_triggered()
+{
+    notYetImplemented("void FileOrganiserWindow::on_actionDelete_triggered()");
+}
