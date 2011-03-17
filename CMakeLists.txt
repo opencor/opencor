@@ -139,7 +139,6 @@ ENDFOREACH()
 IF(WIN32)
     SET(IconObjectFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_icon.o)
 
-
     ADD_CUSTOM_COMMAND(OUTPUT ${IconObjectFile}
                        COMMAND windres -I ${CMAKE_SOURCE_DIR} -i ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc
                                        -o ${IconObjectFile}
