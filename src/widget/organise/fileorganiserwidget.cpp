@@ -41,6 +41,21 @@ QSize FileOrganiserWidget::sizeHint() const
     return defaultSize(0.15);
 }
 
+void FileOrganiserWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    if (pEvent->button() == Qt::RightButton)
+        // We are pressing the right mouse button which may be used to display a
+        // context menu and we don't want the row beneath the mouse to be
+        // selected (in case it isn't already), so...
+
+        pEvent->accept();
+    else
+        // We are not pressing the right mouse button, so carry on with the
+        // default handling of the event
+
+        QTreeView::mousePressEvent(pEvent);
+}
+
 QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
 {
     // Come up with the name for a new folder which is to be under pFolderItem
