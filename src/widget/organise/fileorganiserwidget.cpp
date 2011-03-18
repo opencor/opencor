@@ -89,18 +89,19 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
     }
 }
 
-bool FileOrganiserWidget::newFolder()
+bool FileOrganiserWidget::newFolder(const QModelIndex &pItemIndex)
 {
-    // Create a folder item under the current one or root item, if no folder
-    // item is currently selected
+    // Create a folder item under the passed item, current folder item or root
+    // item, depending on the situation
 
-    QModelIndexList itemsList = selectionModel()->selectedIndexes();
+    QModelIndexList itemsList = (pItemIndex != QModelIndex())?
+                                    QModelIndexList() << pItemIndex:
+                                    selectionModel()->selectedIndexes();
     int nbOfSelectedItems = itemsList.count();
 
     if (nbOfSelectedItems <= 1) {
         // Either no or one folder item is currently selected, so create the new
-        // folder item under the root item or the existing folder item,
-        // respecitvely
+        // folder item under the root item or the existing folder item, resp.
 
         QStandardItem *crtFolderItem = !nbOfSelectedItems?
                                            mDataModel->invisibleRootItem():
@@ -119,7 +120,7 @@ bool FileOrganiserWidget::newFolder()
             //       currently selected
 
             if (nbOfSelectedItems == 1)
-                setExpanded(currentIndex(), true);
+                setExpanded(crtFolderItem->index(), true);
 
             // Offer the user to edit the newly added folder item
 
@@ -137,11 +138,13 @@ bool FileOrganiserWidget::newFolder()
     }
 }
 
-bool FileOrganiserWidget::deleteItems()
+bool FileOrganiserWidget::deleteItems(const QModelIndex &pItemIndex)
 {
     // Remove all the selected items
 
-    QModelIndexList itemsList = selectionModel()->selectedIndexes();
+    QModelIndexList itemsList = (pItemIndex != QModelIndex())?
+                                    QModelIndexList() << pItemIndex:
+                                    selectionModel()->selectedIndexes();
 
     if (itemsList.isEmpty()) {
         // Nothing to delete, so...
@@ -160,7 +163,9 @@ bool FileOrganiserWidget::deleteItems()
             mDataModel->removeRow(itemsList.first().row(),
                                   itemsList.first().parent());
 
-            itemsList = selectionModel()->selectedIndexes();
+            itemsList = (pItemIndex != QModelIndex())?
+                            QModelIndexList():
+                            selectionModel()->selectedIndexes();
         }
 
         // Resize the widget to its contents in case its width was too wide (and

@@ -15,8 +15,8 @@ class FileOrganiserWidget : public QTreeView, public CommonWidget
 public:
     FileOrganiserWidget(const QString &pName, QWidget *pParent);
 
-    bool newFolder();
-    bool deleteItems();
+    bool newFolder(const QModelIndex &pItemIndex);
+    bool deleteItems(const QModelIndex &pItemIndex);
 
 protected:
     virtual QSize sizeHint() const;

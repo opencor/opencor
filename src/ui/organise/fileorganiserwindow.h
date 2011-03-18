@@ -3,6 +3,8 @@
 
 #include "dockwidget.h"
 
+#include <QAbstractItemModel>
+
 namespace Ui {
     class FileOrganiserWindow;
 }
@@ -29,11 +31,13 @@ private:
     Ui::FileOrganiserWindow *mUi;
 
     FileOrganiserWidget *mFileOrganiserWidget;
+    QModelIndex mContextMenuItemIndex;
 
 private slots:
     void on_actionNew_triggered();
     void on_actionDelete_triggered();
 
+    void customContextMenu(const QPoint &pPos);
     void needUpdateActions();
 };
 

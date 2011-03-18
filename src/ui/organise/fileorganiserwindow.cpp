@@ -4,11 +4,13 @@
 
 #include "ui_fileorganiserwindow.h"
 
+#include <QMenu>
 #include <QSettings>
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     DockWidget(pParent),
-    mUi(new Ui::FileOrganiserWindow)
+    mUi(new Ui::FileOrganiserWindow),
+    mContextMenuItemIndex(QModelIndex())
 {
     // Set up the UI
 
@@ -34,7 +36,14 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     mFileOrganiserWidget->setAcceptDrops(false);
 
+    // We want our own context menu for the file organiser widget
+
+    mFileOrganiserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
     // Some connections
+
+    connect(mFileOrganiserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(customContextMenu(const QPoint &)));
 
     connect(mFileOrganiserWidget->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
             this, SLOT(needUpdateActions()));
@@ -51,7 +60,9 @@ void FileOrganiserWindow::updateActions()
 {
     // Make sure that the various actions are properly enabled/disabled
 
-    int nbOfSelectedIndexes = mFileOrganiserWidget->selectionModel()->selectedIndexes().count();
+    int nbOfSelectedIndexes = (mContextMenuItemIndex != QModelIndex())?
+                                  1:
+                                  mFileOrganiserWidget->selectionModel()->selectedIndexes().count();
 
     mUi->actionNew->setEnabled(nbOfSelectedIndexes <= 1);
     mUi->actionDelete->setEnabled(nbOfSelectedIndexes >= 1);
@@ -94,14 +105,38 @@ void FileOrganiserWindow::on_actionNew_triggered()
 {
     // Create a new folder
 
-    mFileOrganiserWidget->newFolder();
+    mFileOrganiserWidget->newFolder(mContextMenuItemIndex);
 }
 
 void FileOrganiserWindow::on_actionDelete_triggered()
 {
     // Remove the current item(s)
 
-    mFileOrganiserWidget->deleteItems();
+    mFileOrganiserWidget->deleteItems(mContextMenuItemIndex);
+}
+
+void FileOrganiserWindow::customContextMenu(const QPoint &pPos)
+{
+    // Create a custom context menu which items match the contents of our
+    // toolbar taking into account the item, if any, under the mouse
+
+    mContextMenuItemIndex = mFileOrganiserWidget->indexAt(pPos);
+
+    updateActions();   // To make sure that the actions are updated according to
+                       // value of mContextMenuItemIndex
+
+    QMenu menu;
+
+    menu.addAction(mUi->actionNew);
+    menu.addAction(mUi->actionDelete);
+
+    menu.exec(QCursor::pos());
+
+    // Reset the context menu item index
+
+    mContextMenuItemIndex = QModelIndex();
+
+    updateActions();   // To make sure that the actions are properly reset
 }
 
 void FileOrganiserWindow::needUpdateActions()
