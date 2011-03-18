@@ -60,7 +60,7 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
 {
     // Come up with the name for a new folder which is to be under pFolderItem
 
-    static const QString baseFolderName = "New wer wer wer Folder";
+    static const QString baseFolderName = "New Folder";
 
     if (!pFolderItem->rowCount()) {
         // pFolderItem doesn't have any sub-folder items, so we can use our base
