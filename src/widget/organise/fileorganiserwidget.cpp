@@ -87,16 +87,21 @@ bool FileOrganiserWidget::newFolder()
 
         crtFolderItem->appendRow(newFolderItem);
 
-        // Expand the current index (so that we can see the new folder)
-        // Note: this is only relevant in the case of a folder item being
-        //       currently selected
+        // Some post-processing, but only if no other item is currently being
+        // edited
 
-        if (nbOfSelectedItems == 1)
-            setExpanded(currentIndex(), true);
+        if (state() != QAbstractItemView::EditingState) {
+            // Expand the current index (so that we can see the new folder)
+            // Note: this is only relevant in the case of a folder item being
+            //       currently selected
 
-        // Offer the user to edit the newly added folder item
+            if (nbOfSelectedItems == 1)
+                setExpanded(currentIndex(), true);
 
-        edit(newFolderItem->index());
+            // Offer the user to edit the newly added folder item
+
+            edit(newFolderItem->index());
+        }
 
         return true;
     } else {
