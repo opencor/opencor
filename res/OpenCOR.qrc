@@ -3,6 +3,7 @@
         <file>boomy/about.png</file>
         <file>boomy/add.png</file>
         <file>boomy/back.png</file>
+        <file>boomy/configure.png</file>
         <file>boomy/copy.png</file>
         <file>boomy/delete.png</file>
         <file>boomy/exit.png</file>
@@ -10,9 +11,9 @@
         <file>boomy/fullScreen.png</file>
         <file>boomy/help.png</file>
         <file>boomy/home.png</file>
-        <file>boomy/new.png</file>
+        <file alias="file">boomy/new.png</file>
         <file>boomy/normalSize.png</file>
-        <file>boomy/open.png</file>
+        <file alias="folder">boomy/open.png</file>
         <file alias="appIcon">boomy/OpenCOR.png</file>
         <file>boomy/print.png</file>
         <file>boomy/save.png</file>

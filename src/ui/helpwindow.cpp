@@ -250,7 +250,7 @@ void HelpWindow::customContextMenu(const QPoint &)
 
 void HelpWindow::needUpdateActions()
 {
-    // Something related to the help widget requires the actions to be udpated
+    // Something requires the actions to be udpated
 
     updateActions();
 }

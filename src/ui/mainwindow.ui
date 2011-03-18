@@ -34,7 +34,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>:/new.png</normaloff>:/new.png</iconset>
+       <normaloff>:file</normaloff>:file</iconset>
      </property>
      <addaction name="actionCellML10File"/>
      <addaction name="actionCellML11File"/>
@@ -320,8 +320,8 @@
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/open.png</normaloff>:/boomy/open.png</iconset>
+    <iconset>
+     <normaloff>:folder</normaloff>:folder</iconset>
    </property>
    <property name="text">
     <string>&amp;Open...</string>
@@ -406,8 +406,8 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/new.png</normaloff>:/boomy/new.png</iconset>
+    <iconset>
+     <normaloff>:file</normaloff>:file</iconset>
    </property>
    <property name="text">
     <string>&amp;New</string>
@@ -505,6 +505,10 @@
    </property>
   </action>
   <action name="actionPreferences">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/boomy/configure.png</normaloff>:/boomy/configure.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Preferences...</string>
    </property>

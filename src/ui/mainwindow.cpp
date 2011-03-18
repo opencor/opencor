@@ -287,7 +287,7 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
 
     QList<QUrl> urlList = pEvent->mimeData()->urls();
 
-    for (int i = 0; i < urlList.size(); ++i)
+    for (int i = 0; i < urlList.count(); ++i)
         mDocumentManager->manage(urlList.at(i).toLocalFile());
 
     // Accept the proposed action for the event
