@@ -52,7 +52,6 @@ private Q_SLOTS:
     void on_actionPrint_triggered();
 
     void customContextMenu(const QPoint &);
-
     void needUpdateActions();
 };
 

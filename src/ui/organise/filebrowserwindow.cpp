@@ -5,6 +5,7 @@
 #include "ui_filebrowserwindow.h"
 
 #include <QFileInfo>
+#include <QMenu>
 #include <QSettings>
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
@@ -40,7 +41,14 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mFileBrowserWidget->setAcceptDrops(false);
 
+    // We want our own context menu for the file organiser widget
+
+    mFileBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
     // Some connections
+
+    connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(customContextMenu(const QPoint &)));
 
     connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(currentItemChanged(const QModelIndex &, const QModelIndex &)));
@@ -119,13 +127,6 @@ void FileBrowserWindow::saveSettings(QSettings &pSettings)
 
         mFileBrowserWidget->saveSettings(pSettings);
     pSettings.endGroup();
-}
-
-void FileBrowserWindow::needUpdateActions()
-{
-    // Something requires the actions to be udpated
-
-    updateActions();
 }
 
 void FileBrowserWindow::currentItemChanged(const QModelIndex &,
@@ -287,4 +288,16 @@ void FileBrowserWindow::updateItems(const QString &pItemPath,
 
         pItems = newItems;
     }
+}
+
+void FileBrowserWindow::customContextMenu(const QPoint &)
+{
+    // Create a custom context menu which items match the contents of our
+    // toolbar
+
+    QMenu menu;
+
+    menu.addAction(mUi->actionHome);
+
+    menu.exec(QCursor::pos());
 }

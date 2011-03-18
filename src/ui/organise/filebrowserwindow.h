@@ -47,7 +47,7 @@ private Q_SLOTS:
     void on_actionPrevious_triggered();
     void on_actionNext_triggered();
 
-    void needUpdateActions();
+    void customContextMenu(const QPoint &);
     void currentItemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
 };
 
