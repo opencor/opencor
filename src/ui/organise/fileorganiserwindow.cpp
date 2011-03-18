@@ -74,7 +74,9 @@ void FileOrganiserWindow::saveSettings(QSettings &pSettings)
 
 void FileOrganiserWindow::on_actionNew_triggered()
 {
-    notYetImplemented("void FileOrganiserWindow::on_actionNew_triggered()");
+    // Create a new folder
+
+    mFileOrganiserWidget->newFolder();
 }
 
 void FileOrganiserWindow::on_actionDelete_triggered()

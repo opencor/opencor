@@ -5,6 +5,9 @@
 
 #include <QTreeView>
 
+class QStandardItem;
+class QStandardItemModel;
+
 class FileOrganiserWidget : public QTreeView, public CommonWidget
 {
     Q_OBJECT
@@ -12,8 +15,15 @@ class FileOrganiserWidget : public QTreeView, public CommonWidget
 public:
     FileOrganiserWidget(const QString &pName, QWidget *pParent);
 
+    bool newFolder();
+
 protected:
     virtual QSize sizeHint() const;
+
+private:
+    QStandardItemModel *mDataModel;
+
+    QString newFolderName(QStandardItem *pFolderItem);
 };
 
 #endif
