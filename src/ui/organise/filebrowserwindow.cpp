@@ -123,7 +123,7 @@ void FileBrowserWindow::saveSettings(QSettings &pSettings)
 
 void FileBrowserWindow::needUpdateActions()
 {
-    // Something related to the help widget requires the actions to be udpated
+    // Something requires the actions to be udpated
 
     updateActions();
 }

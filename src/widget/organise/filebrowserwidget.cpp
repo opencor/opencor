@@ -23,15 +23,14 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     // Set some properties for the file browser widget itself
 
 #ifdef Q_WS_MAC
-    setAttribute(Qt::WA_MacShowFocusRect, 0);   // Remove the focus border
-                                                // since it messes up our
-                                                // toolbar
+    setAttribute(Qt::WA_MacShowFocusRect, 0);
+    // Note: the above removes the focus border since it messes up our toolbar
 #endif
-    setModel(mFileSystemModel);   // Associate ourselves to mFileSystemModel
-    setSortingEnabled(true);      // Allow sorting
-    setUniformRowHeights(true);   // Everything ought to be of the same height,
-                                  // so set this property to true since it can
-                                  // only speed things up which can't harm!
+    setFocusPolicy(Qt::NoFocus);
+    setModel(mFileSystemModel);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setSortingEnabled(true);
+    setUniformRowHeights(true);
 
     // Connection to keep track of the directory loading progress of
     // mFileSystemModel
