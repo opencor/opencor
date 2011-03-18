@@ -72,17 +72,17 @@ bool FileOrganiserWidget::newFolder()
     // Create a folder item under the current one or root item, if no folder
     // item is currently selected
 
-    QModelIndexList indexesList = selectionModel()->selectedIndexes();
-    int nbOfSelectedIndexes = indexesList.count();
+    QModelIndexList itemsList = selectionModel()->selectedIndexes();
+    int nbOfSelectedItems = itemsList.count();
 
-    if (nbOfSelectedIndexes <= 1) {
+    if (nbOfSelectedItems <= 1) {
         // Either no or one folder item is currently selected, so create the new
         // folder item under the root item or the existing folder item,
         // respecitvely
 
-        QStandardItem *crtFolderItem = !nbOfSelectedIndexes?
+        QStandardItem *crtFolderItem = !nbOfSelectedItems?
                                            mDataModel->invisibleRootItem():
-                                           mDataModel->itemFromIndex(indexesList.at(0));
+                                           mDataModel->itemFromIndex(itemsList.at(0));
         QStandardItem *newFolderItem = new QStandardItem(QIcon(":folder"), newFolderName(crtFolderItem));
 
         crtFolderItem->appendRow(newFolderItem);
@@ -95,5 +95,35 @@ bool FileOrganiserWidget::newFolder()
         //       function), but it's better to be safe than sorry
 
         return false;
+    }
+}
+
+bool FileOrganiserWidget::deleteItems()
+{
+    // Remove all the selected items
+
+    QModelIndexList itemsList = selectionModel()->selectedIndexes();
+
+    if (itemsList.isEmpty()) {
+        // Nothing to delete, so...
+        // Note: we should never come here (i.e. the caller to this function
+        //       should ensure that a folder can be created before calling this
+        //       function), but it's better to be safe than sorry
+
+        return false;
+    } else {
+        // There are some items to delete, so delete them one by one, making
+        // sure we update our list of items (this is because the row value of
+        // the remaining selected items may become different after deleting an
+        // item)
+
+        while(!itemsList.isEmpty()) {
+            mDataModel->removeRow(itemsList.first().row(),
+                                  itemsList.first().parent());
+
+            itemsList = selectionModel()->selectedIndexes();
+        }
+
+        return true;
     }
 }

@@ -1,7 +1,6 @@
 #include "docktoolbar.h"
 #include "fileorganiserwindow.h"
 #include "fileorganiserwidget.h"
-#include "utils.h"
 
 #include "ui_fileorganiserwindow.h"
 
@@ -100,7 +99,9 @@ void FileOrganiserWindow::on_actionNew_triggered()
 
 void FileOrganiserWindow::on_actionDelete_triggered()
 {
-    notYetImplemented("void FileOrganiserWindow::on_actionDelete_triggered()");
+    // Remove the current item(s)
+
+    mFileOrganiserWidget->deleteItems();
 }
 
 void FileOrganiserWindow::needUpdateActions()

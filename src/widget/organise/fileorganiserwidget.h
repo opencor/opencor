@@ -16,6 +16,7 @@ public:
     FileOrganiserWidget(const QString &pName, QWidget *pParent);
 
     bool newFolder();
+    bool deleteItems();
 
 protected:
     virtual QSize sizeHint() const;
