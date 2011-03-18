@@ -25,6 +25,9 @@ private:
     QStandardItemModel *mDataModel;
 
     QString newFolderName(QStandardItem *pFolderItem);
+
+private slots:
+    void resizeToContents();
 };
 
 #endif

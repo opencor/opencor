@@ -23,6 +23,13 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
     setModel(mDataModel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setUniformRowHeights(true);
+
+    // Some connections
+
+    connect(this, SIGNAL(expanded(const QModelIndex &)),
+            this, SLOT(resizeToContents()));
+    connect(this, SIGNAL(collapsed(const QModelIndex &)),
+            this, SLOT(resizeToContents()));
 }
 
 QSize FileOrganiserWidget::sizeHint() const
@@ -38,7 +45,7 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
 {
     // Come up with the name for a new folder which is to be under pFolderItem
 
-    static const QString baseFolderName = "New Folder";
+    static const QString baseFolderName = "New wer wer wer Folder";
 
     if (!pFolderItem->rowCount()) {
         // pFolderItem doesn't have any sub-folder items, so we can use our base
@@ -83,7 +90,8 @@ bool FileOrganiserWidget::newFolder()
         QStandardItem *crtFolderItem = !nbOfSelectedItems?
                                            mDataModel->invisibleRootItem():
                                            mDataModel->itemFromIndex(itemsList.at(0));
-        QStandardItem *newFolderItem = new QStandardItem(QIcon(":folder"), newFolderName(crtFolderItem));
+        QStandardItem *newFolderItem = new QStandardItem(QIcon(":folder"),
+                                                         newFolderName(crtFolderItem));
 
         crtFolderItem->appendRow(newFolderItem);
 
@@ -140,6 +148,19 @@ bool FileOrganiserWidget::deleteItems()
             itemsList = selectionModel()->selectedIndexes();
         }
 
+        // Resize the widget to its contents in case its width was too wide (and
+        // therefore required a horizontal scrollbar), but is now fine
+
+        resizeToContents();
+
         return true;
     }
+}
+
+void FileOrganiserWidget::resizeToContents()
+{
+    // Make sure that the first column allows for all of its contents to be
+    // visible
+
+    resizeColumnToContents(0);
 }
