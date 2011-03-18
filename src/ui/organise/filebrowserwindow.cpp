@@ -44,10 +44,6 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(currentItemChanged(const QModelIndex &, const QModelIndex &)));
-    connect(mFileBrowserWidget, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(needUpdateActions()));
-    connect(mFileBrowserWidget, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(needUpdateActions()));
 }
 
 FileBrowserWindow::~FileBrowserWindow()
@@ -109,6 +105,10 @@ void FileBrowserWindow::loadSettings(QSettings &pSettings)
         if (!mFileBrowserWidget->isExpanded(mFileBrowserWidget->currentIndex()))
             mFileBrowserWidget->setExpanded(mFileBrowserWidget->currentIndex(),
                                             true);
+
+        // Make sure that all the actions are up-to-date
+
+        updateActions();
     pSettings.endGroup();
 }
 
