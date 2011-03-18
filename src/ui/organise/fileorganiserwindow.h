@@ -22,6 +22,9 @@ public:
     virtual void loadSettings(QSettings &pSettings);
     virtual void saveSettings(QSettings &pSettings);
 
+protected:
+    virtual void updateActions();
+
 private:
     Ui::FileOrganiserWindow *mUi;
 
@@ -30,6 +33,8 @@ private:
 private slots:
     void on_actionNew_triggered();
     void on_actionDelete_triggered();
+
+    void needUpdateActions();
 };
 
 #endif

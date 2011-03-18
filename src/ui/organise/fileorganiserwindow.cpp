@@ -34,6 +34,11 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     // Prevent objects from being dropped on the file organiser widget
 
     mFileOrganiserWidget->setAcceptDrops(false);
+
+    // Some connections
+
+    connect(mFileOrganiserWidget->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+            this, SLOT(needUpdateActions()));
 }
 
 FileOrganiserWindow::~FileOrganiserWindow()
@@ -41,6 +46,16 @@ FileOrganiserWindow::~FileOrganiserWindow()
     // Delete the UI
 
     delete mUi;
+}
+
+void FileOrganiserWindow::updateActions()
+{
+    // Make sure that the various actions are properly enabled/disabled
+
+    int nbOfSelectedIndexes = mFileOrganiserWidget->selectionModel()->selectedIndexes().count();
+
+    mUi->actionNew->setEnabled(nbOfSelectedIndexes <= 1);
+    mUi->actionDelete->setEnabled(nbOfSelectedIndexes >= 1);
 }
 
 void FileOrganiserWindow::retranslateUi()
@@ -60,6 +75,10 @@ void FileOrganiserWindow::loadSettings(QSettings &pSettings)
         // Retrieve the settings of the file organiser widget
 
         mFileOrganiserWidget->loadSettings(pSettings);
+
+        // Make sure that all the actions are up-to-date
+
+        updateActions();
     pSettings.endGroup();
 }
 
@@ -82,4 +101,11 @@ void FileOrganiserWindow::on_actionNew_triggered()
 void FileOrganiserWindow::on_actionDelete_triggered()
 {
     notYetImplemented("void FileOrganiserWindow::on_actionDelete_triggered()");
+}
+
+void FileOrganiserWindow::needUpdateActions()
+{
+    // Something requires the actions to be udpated
+
+    updateActions();
 }
