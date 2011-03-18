@@ -87,6 +87,17 @@ bool FileOrganiserWidget::newFolder()
 
         crtFolderItem->appendRow(newFolderItem);
 
+        // Expand the current index (so that we can see the new folder)
+        // Note: this is only relevant in the case of a folder item being
+        //       currently selected
+
+        if (nbOfSelectedItems == 1)
+            setExpanded(currentIndex(), true);
+
+        // Offer the user to edit the newly added folder item
+
+        edit(newFolderItem->index());
+
         return true;
     } else {
         // Several folder items are selected, so...
