@@ -4,7 +4,7 @@
 #include <QDesktopServices>
 #include <QFileSystemModel>
 #include <QHeaderView>
-#include <QMouseEvent>
+#include <QHelpEvent>
 #include <QSettings>
 
 FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
@@ -169,21 +169,6 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
     // Default handling of the event
 
     return QTreeView::viewportEvent(pEvent);
-}
-
-void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
-{
-    if (pEvent->button() == Qt::RightButton)
-        // We are pressing the right mouse button which may be used to display a
-        // context menu and we don't want the row beneath the mouse to be
-        // selected (in case it isn't already), so...
-
-        pEvent->accept();
-    else
-        // We are not pressing the right mouse button, so carry on with the
-        // default handling of the event
-
-        QTreeView::mousePressEvent(pEvent);
 }
 
 void FileBrowserWidget::directoryLoaded(const QString &pPath)

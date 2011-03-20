@@ -1,6 +1,5 @@
 #include "fileorganiserwidget.h"
 
-#include <QPaintEvent>
 #include <QSettings>
 #include <QStandardItemModel>
 
@@ -53,7 +52,7 @@ void FileOrganiserWidget::saveItemSettings(QSettings &pSettings,
                                            QStandardItem *pItem,
                                            const int &pParentItemIndex)
 {
-    // Recursively keep track of the folder settings
+    // Recursively keep track of the item settings
 
     static int crtItemIndex = -1;
     QStringList itemInfo;
@@ -106,21 +105,6 @@ QSize FileOrganiserWidget::sizeHint() const
     return defaultSize(0.15);
 }
 
-void FileOrganiserWidget::mousePressEvent(QMouseEvent *pEvent)
-{
-    if (pEvent->button() == Qt::RightButton)
-        // We are pressing the right mouse button which may be used to display a
-        // context menu and we don't want the row beneath the mouse to be
-        // selected (in case it isn't already), so...
-
-        pEvent->accept();
-    else
-        // We are not pressing the right mouse button, so carry on with the
-        // default handling of the event
-
-        QTreeView::mousePressEvent(pEvent);
-}
-
 QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
 {
     // Come up with the name for a new folder which is to be under pFolderItem
@@ -154,14 +138,12 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
     }
 }
 
-bool FileOrganiserWidget::newFolder(const QModelIndex &pItemIndex)
+bool FileOrganiserWidget::newFolder()
 {
     // Create a folder item under the passed item, current folder item or root
     // item, depending on the situation
 
-    QModelIndexList itemsList = (pItemIndex != QModelIndex())?
-                                    QModelIndexList() << pItemIndex:
-                                    selectionModel()->selectedIndexes();
+    QModelIndexList itemsList = selectionModel()->selectedIndexes();
     int nbOfSelectedItems = itemsList.count();
 
     if (nbOfSelectedItems <= 1) {
@@ -205,13 +187,11 @@ bool FileOrganiserWidget::newFolder(const QModelIndex &pItemIndex)
     }
 }
 
-bool FileOrganiserWidget::deleteItems(const QModelIndex &pItemIndex)
+bool FileOrganiserWidget::deleteItems()
 {
     // Remove all the selected items
 
-    QModelIndexList itemsList = (pItemIndex != QModelIndex())?
-                                    QModelIndexList() << pItemIndex:
-                                    selectionModel()->selectedIndexes();
+    QModelIndexList itemsList = selectionModel()->selectedIndexes();
 
     if (itemsList.isEmpty()) {
         // Nothing to delete, so...
@@ -230,9 +210,7 @@ bool FileOrganiserWidget::deleteItems(const QModelIndex &pItemIndex)
             mDataModel->removeRow(itemsList.first().row(),
                                   itemsList.first().parent());
 
-            itemsList = (pItemIndex != QModelIndex())?
-                            QModelIndexList():
-                            selectionModel()->selectedIndexes();
+            itemsList = selectionModel()->selectedIndexes();
         }
 
         // Resize the widget to its contents in case its width was too wide (and

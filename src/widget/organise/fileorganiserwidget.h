@@ -18,13 +18,11 @@ public:
     virtual void loadSettings(QSettings &pSettings);
     virtual void saveSettings(QSettings &pSettings);
 
-    bool newFolder(const QModelIndex &pItemIndex);
-    bool deleteItems(const QModelIndex &pItemIndex);
+    bool newFolder();
+    bool deleteItems();
 
 protected:
     virtual QSize sizeHint() const;
-
-    virtual void mousePressEvent(QMouseEvent *pEvent);
 
 private:
     QStandardItemModel *mDataModel;

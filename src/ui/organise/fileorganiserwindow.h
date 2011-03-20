@@ -31,7 +31,6 @@ private:
     Ui::FileOrganiserWindow *mUi;
 
     FileOrganiserWidget *mFileOrganiserWidget;
-    QModelIndex mContextMenuItemIndex;
 
 private slots:
     void on_actionNew_triggered();

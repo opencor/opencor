@@ -9,8 +9,7 @@
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     DockWidget(pParent),
-    mUi(new Ui::FileOrganiserWindow),
-    mContextMenuItemIndex(QModelIndex())
+    mUi(new Ui::FileOrganiserWindow)
 {
     // Set up the UI
 
@@ -60,9 +59,7 @@ void FileOrganiserWindow::updateActions()
 {
     // Make sure that the various actions are properly enabled/disabled
 
-    int nbOfSelectedIndexes = (mContextMenuItemIndex != QModelIndex())?
-                                  1:
-                                  mFileOrganiserWidget->selectionModel()->selectedIndexes().count();
+    int nbOfSelectedIndexes = mFileOrganiserWidget->selectionModel()->selectedIndexes().count();
 
     mUi->actionNew->setEnabled(nbOfSelectedIndexes <= 1);
     mUi->actionDelete->setEnabled(nbOfSelectedIndexes >= 1);
@@ -105,25 +102,20 @@ void FileOrganiserWindow::on_actionNew_triggered()
 {
     // Create a new folder
 
-    mFileOrganiserWidget->newFolder(mContextMenuItemIndex);
+    mFileOrganiserWidget->newFolder();
 }
 
 void FileOrganiserWindow::on_actionDelete_triggered()
 {
     // Remove the current item(s)
 
-    mFileOrganiserWidget->deleteItems(mContextMenuItemIndex);
+    mFileOrganiserWidget->deleteItems();
 }
 
 void FileOrganiserWindow::customContextMenu(const QPoint &pPos)
 {
     // Create a custom context menu which items match the contents of our
-    // toolbar taking into account the item, if any, under the mouse
-
-    mContextMenuItemIndex = mFileOrganiserWidget->indexAt(pPos);
-
-    updateActions();   // To make sure that the actions are updated according to
-                       // value of mContextMenuItemIndex
+    // toolbar
 
     QMenu menu;
 
@@ -131,12 +123,6 @@ void FileOrganiserWindow::customContextMenu(const QPoint &pPos)
     menu.addAction(mUi->actionDelete);
 
     menu.exec(QCursor::pos());
-
-    // Reset the context menu item index
-
-    mContextMenuItemIndex = QModelIndex();
-
-    updateActions();   // To make sure that the actions are properly reset
 }
 
 void FileOrganiserWindow::needUpdateActions()
