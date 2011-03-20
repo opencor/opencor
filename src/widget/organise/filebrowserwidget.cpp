@@ -158,7 +158,7 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 {
     if (pEvent->type() == QEvent::ToolTip) {
         // We need to show a tool tip, so make sure that it's up to date by
-        // setting it to the file path of the current item
+        // setting it to the path of the current item
 
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
 

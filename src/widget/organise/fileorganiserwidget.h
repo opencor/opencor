@@ -24,9 +24,12 @@ public:
 protected:
     virtual QSize sizeHint() const;
 
+    virtual bool viewportEvent(QEvent *pEvent);
+
 private:
     QStandardItemModel *mDataModel;
 
+    void loadItemSettings(QSettings &pSettings, QStandardItem *pParentItem);
     void saveItemSettings(QSettings &pSettings, QStandardItem *pItem,
                           const int &pParentItemIndex);
 

@@ -1,5 +1,8 @@
 #include "fileorganiserwidget.h"
 
+#include <QDir>
+#include <QFileInfo>
+#include <QHelpEvent>
 #include <QSettings>
 #include <QStandardItemModel>
 
@@ -39,12 +42,90 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
 
 static const QString SettingsDataModel = "DataModel";
 
+void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
+                                           QStandardItem *pParentItem)
+{
+    // Recursively retrieve the item settings
+
+    static int crtItemIndex = -1;
+    QStringList itemInfo;
+
+    itemInfo = pSettings.value(QString::number(++crtItemIndex)).toStringList();
+
+    if (itemInfo != QStringList()) {
+        QString textOrPath  = itemInfo.at(0);
+        int parentItemIndex = itemInfo.at(1).toInt();
+        int nbOfChildItems  = itemInfo.at(2).toInt();
+        bool expanded       = itemInfo.at(3).toInt();
+
+        // Create the item, in case we are not dealing with the root folder item
+
+        QStandardItem *childParentItem;
+
+        if (parentItemIndex == -1) {
+            // We are dealing with the root folder item, so don't do anything
+            // except for keeping track of it for when retrieving its child
+            // items, if any
+
+            childParentItem = mDataModel->invisibleRootItem();
+        } else {
+            // This is not the root folder item, so we can create the item which
+            // is either a folder or a file, depending on its number of child
+            // items
+
+            if (nbOfChildItems >= 0) {
+                // We are dealing with a folder item
+
+                QStandardItem *folderItem = new QStandardItem(QIcon(":folder"),
+                                                              textOrPath);
+
+                folderItem->setData(true, FileOrganiserItemFolder);
+
+                pParentItem->appendRow(folderItem);
+
+                // Expand the folder item, if necessary
+
+                if (expanded)
+                    setExpanded(folderItem->index(), true);
+
+                // The folder item is to be the parent of any of its child item
+
+                childParentItem = folderItem;
+            } else {
+                // We are dealing with a file item
+
+                QStandardItem *fileItem = new QStandardItem(QIcon(":file"),
+                                                            QFileInfo(textOrPath).fileName());
+
+                fileItem->setData(textOrPath, FileOrganiserItemPath);
+
+                pParentItem->appendRow(fileItem);
+
+                // A file cannot have child items, so...
+
+                childParentItem = 0;
+            }
+        }
+
+        // Retrieve any child item
+        // Note: the test on childParentItem is not necessary (since
+        //       nbOfChildItems will be equal to -1 in the case of a file item),
+        //       but it doesn't harm having it, so...
+
+        if (childParentItem)
+            for (int i = 0; i < nbOfChildItems; ++i)
+                loadItemSettings(pSettings, childParentItem);
+    }
+}
+
 void FileOrganiserWidget::loadSettings(QSettings &pSettings)
 {
     pSettings.beginGroup(objectName());
         // Retrieve the data model
 
-//---GRY--- TO BE DONE...
+        pSettings.beginGroup(SettingsDataModel);
+            loadItemSettings(pSettings, 0);
+        pSettings.endGroup();
     pSettings.endGroup();
 }
 
@@ -57,22 +138,24 @@ void FileOrganiserWidget::saveItemSettings(QSettings &pSettings,
     static int crtItemIndex = -1;
     QStringList itemInfo;
 
+    // The item information consists of:
+    //  - The name of the folder item or the path of the file item
+    //  - The index of its parent
+    //  - The number of child items the (folder) item has, if any
+    //  - Whether the (folder) items is expanded or not
+
     if (   (pItem == mDataModel->invisibleRootItem())
         || pItem->data(FileOrganiserItemFolder).toBool())
-        // This is a folder item (be it the root folder item or not), so keep
-        // track of both its name, its parent's index and the number of child
-        // items it has
+        // We are dealing with a folder item (be it the root folder item or not)
 
         itemInfo << pItem->text() << QString::number(pParentItemIndex)
-                 << QString::number(pItem->rowCount());
+                 << QString::number(pItem->rowCount())
+                 << QString(isExpanded(pItem->index())?"1":"0");
     else
-        // This a file item, so keep track of its path, its parent's index and
-        // set its number of child items to -1 (very useful, since this is what
-        // will allow, during the loading of the settings, to determine whether
-        // an item is a folder or not
+        // We are dealing with a file item
 
         itemInfo << pItem->data(FileOrganiserItemPath).toString()
-                 << QString::number(pParentItemIndex) << "-1";
+                 << QString::number(pParentItemIndex) << "-1" << "0";
 
     pSettings.setValue(QString::number(++crtItemIndex), itemInfo);
 
@@ -103,6 +186,28 @@ QSize FileOrganiserWidget::sizeHint() const
     //       widget on it, to have a decent size when docked to the main window
 
     return defaultSize(0.15);
+}
+
+bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
+{
+    if (pEvent->type() == QEvent::ToolTip) {
+        // We need to show a tool tip, so make sure that it's up to date by
+        // setting it to the path of the current file item or to nothing if we
+        // are dealing with a folder item
+
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
+        QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(QPoint(helpEvent->x(),
+                                                                          helpEvent->y())));
+
+        if (crtItem)
+            setToolTip(QDir::toNativeSeparators(crtItem->data(FileOrganiserItemFolder).toBool()?
+                                                    "":
+                                                    crtItem->data(FileOrganiserItemPath).toString()));
+    }
+
+    // Default handling of the event
+
+    return QTreeView::viewportEvent(pEvent);
 }
 
 QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
