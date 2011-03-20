@@ -13,7 +13,10 @@ class FileOrganiserWidget : public QTreeView, public CommonWidget
     Q_OBJECT
 
 public:
-    FileOrganiserWidget(const QString &pName, QWidget *pParent);
+    explicit FileOrganiserWidget(const QString &pName, QWidget *pParent);
+
+    virtual void loadSettings(QSettings &pSettings);
+    virtual void saveSettings(QSettings &pSettings);
 
     bool newFolder(const QModelIndex &pItemIndex);
     bool deleteItems(const QModelIndex &pItemIndex);
@@ -25,6 +28,9 @@ protected:
 
 private:
     QStandardItemModel *mDataModel;
+
+    void saveItemSettings(QSettings &pSettings, QStandardItem *pItem,
+                          const int &pParentItemIndex);
 
     QString newFolderName(QStandardItem *pFolderItem);
 

@@ -1,7 +1,13 @@
 #include "fileorganiserwidget.h"
 
 #include <QPaintEvent>
+#include <QSettings>
 #include <QStandardItemModel>
+
+enum FileOrganiserItemRole {
+    FileOrganiserItemFolder = Qt::UserRole,
+    FileOrganiserItemPath = Qt::UserRole+1
+};
 
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
                                          QWidget *pParent) :
@@ -30,6 +36,65 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
             this, SLOT(resizeToContents()));
     connect(this, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeToContents()));
+}
+
+static const QString SettingsDataModel = "DataModel";
+
+void FileOrganiserWidget::loadSettings(QSettings &pSettings)
+{
+    pSettings.beginGroup(objectName());
+        // Retrieve the data model
+
+//---GRY--- TO BE DONE...
+    pSettings.endGroup();
+}
+
+void FileOrganiserWidget::saveItemSettings(QSettings &pSettings,
+                                           QStandardItem *pItem,
+                                           const int &pParentItemIndex)
+{
+    // Recursively keep track of the folder settings
+
+    static int crtItemIndex = -1;
+    QStringList itemInfo;
+
+    if (   (pItem == mDataModel->invisibleRootItem())
+        || pItem->data(FileOrganiserItemFolder).toBool())
+        // This is a folder item (be it the root folder item or not), so keep
+        // track of both its name, its parent's index and the number of child
+        // items it has
+
+        itemInfo << pItem->text() << QString::number(pParentItemIndex)
+                 << QString::number(pItem->rowCount());
+    else
+        // This a file item, so keep track of its path, its parent's index and
+        // set its number of child items to -1 (very useful, since this is what
+        // will allow, during the loading of the settings, to determine whether
+        // an item is a folder or not
+
+        itemInfo << pItem->data(FileOrganiserItemPath).toString()
+                 << QString::number(pParentItemIndex) << "-1";
+
+    pSettings.setValue(QString::number(++crtItemIndex), itemInfo);
+
+    // Keep track of any child item
+
+    int childParentItemIndex = crtItemIndex;
+
+    for (int i = 0; i < pItem->rowCount(); ++i)
+        saveItemSettings(pSettings, pItem->child(i), childParentItemIndex);
+}
+
+void FileOrganiserWidget::saveSettings(QSettings &pSettings)
+{
+    pSettings.beginGroup(objectName());
+        // Keep track of the data model
+
+        pSettings.remove(SettingsDataModel);
+        pSettings.beginGroup(SettingsDataModel);
+            saveItemSettings(pSettings, mDataModel->invisibleRootItem(), -1);
+        pSettings.endGroup();
+    pSettings.endGroup();
 }
 
 QSize FileOrganiserWidget::sizeHint() const
@@ -108,6 +173,8 @@ bool FileOrganiserWidget::newFolder(const QModelIndex &pItemIndex)
                                            mDataModel->itemFromIndex(itemsList.at(0));
         QStandardItem *newFolderItem = new QStandardItem(QIcon(":folder"),
                                                          newFolderName(crtFolderItem));
+
+        newFolderItem->setData(true, FileOrganiserItemFolder);
 
         crtFolderItem->appendRow(newFolderItem);
 
