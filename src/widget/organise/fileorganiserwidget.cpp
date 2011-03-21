@@ -128,6 +128,10 @@ void FileOrganiserWidget::loadSettings(QSettings &pSettings)
         pSettings.beginGroup(SettingsDataModel);
             loadItemSettings(pSettings, 0);
         pSettings.endGroup();
+
+        // Resize the widget, just to be on the safe side
+
+        resizeToContents();
     pSettings.endGroup();
 }
 
@@ -331,6 +335,10 @@ bool FileOrganiserWidget::newFolder()
             edit(newFolderItem->index());
         }
 
+        // Resize the widget, just to be on the safe side
+
+        resizeToContents();
+
         return true;
     } else {
         // Several folder items are selected, so...
@@ -356,6 +364,10 @@ bool FileOrganiserWidget::newFile(const QString &pFileName,
         newFileItem->setData(pFileName, FileOrganiserItemPath);
 
         pParentItem->appendRow(newFileItem);
+
+        // Resize the widget, just to be on the safe side
+
+        resizeToContents();
 
         return true;
     } else {
