@@ -24,6 +24,10 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
     //       so...
 
     setAcceptDrops(false);
+
+    // Prevent the widget from taking over the scrolling of other widgets
+
+    setFocusPolicy(Qt::NoFocus);
 }
 
 QSize CellmlModelRepositoryWidget::sizeHint() const

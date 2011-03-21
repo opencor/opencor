@@ -165,6 +165,10 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
 
     setAcceptDrops(false);
 
+    // Prevent the widget from taking over the scrolling of other widgets
+
+    setFocusPolicy(Qt::NoFocus);
+
     // Some connections
 
     connect(pageAction(QWebPage::Back), SIGNAL(changed()),
