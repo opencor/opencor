@@ -19,12 +19,17 @@ public:
     virtual void saveSettings(QSettings &pSettings);
 
     bool newFolder();
+    bool newFile(const QString &pFileName, QStandardItem *pParentItem);
     bool deleteItems();
 
 protected:
     virtual QSize sizeHint() const;
 
     virtual bool viewportEvent(QEvent *pEvent);
+
+    virtual void dragEnterEvent(QDragEnterEvent *pEvent);
+    virtual void dragMoveEvent(QDragMoveEvent *pEvent);
+    virtual void dropEvent(QDropEvent *pEvent);
 
 private:
     QStandardItemModel *mDataModel;

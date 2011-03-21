@@ -5,6 +5,7 @@
 #include <QHelpEvent>
 #include <QSettings>
 #include <QStandardItemModel>
+#include <QUrl>
 
 enum FileOrganiserItemRole {
     FileOrganiserItemFolder = Qt::UserRole,
@@ -22,6 +23,7 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
 
     // Set some properties for the file organiser widget itself
 
+    setAcceptDrops(true);
 #ifdef Q_WS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, 0);
     // Note: the above removes the focus border since it messes up our toolbar
@@ -210,43 +212,91 @@ bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
     return QTreeView::viewportEvent(pEvent);
 }
 
+void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+{
+    // Accept the proposed action for the event, but only if we are dropping
+    // URLs
+
+    if (pEvent->mimeData()->hasUrls())
+        pEvent->acceptProposedAction();
+    else
+        pEvent->ignore();
+}
+
+void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
+{
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
+}
+
+void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
+{
+    // Add the dropped documents to the folder corresponding to the mouse
+    // position
+
+    QModelIndex crtItemIndex = indexAt(QPoint(pEvent->pos().x(),
+                                              pEvent->pos().y()));
+    QStandardItem *crtItem = mDataModel->itemFromIndex(crtItemIndex);
+
+    if (crtItem) {
+        // The mouse position corresponds to an item, so retrieve its parent
+        // (folder) item in case it's a file item
+
+        if (!crtItem->data(FileOrganiserItemFolder).toBool())
+            // The current item is a file item, so we must get its parent
+            // (folder) item
+            crtItem = mDataModel->itemFromIndex(crtItemIndex.parent());
+    }
+
+    if (!crtItem)
+        // If we don't have a valid item by now, then it means that the item
+        // must be the root (folder) item, so...
+
+        crtItem = mDataModel->invisibleRootItem();
+
+    // We are dropping the documents over a valid item, so add them to it
+
+    QList<QUrl> urlList = pEvent->mimeData()->urls();
+
+    for (int i = 0; i < urlList.count(); ++i)
+        newFile(urlList.at(i).toLocalFile(), crtItem);
+
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
+}
+
 QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
 {
     // Come up with the name for a new folder which is to be under pFolderItem
 
+    // Retrieve the name of the folders under pFolderItem
+
+    QStringList subFolderNames;
+
+    for (int i = 0; i < pFolderItem->rowCount(); ++i)
+        subFolderNames.append(pFolderItem->child(i)->text());
+
+    // Compare the suggested name of our new folder with that of the folders
+    // under pFolderItem, this until we come up with a suggested name which is
+    // not already taken
+
     static const QString baseFolderName = "New Folder";
+    static const QString templateFolderName = baseFolderName+" (%1)";
+    int folderNb = 1;
+    QString folderName = baseFolderName;
 
-    if (!pFolderItem->rowCount()) {
-        // pFolderItem doesn't have any sub-folder items, so we can use our base
-        // folder name
+    while (subFolderNames.contains(folderName))
+        folderName = templateFolderName.arg(++folderNb);
 
-        return baseFolderName;
-    } else {
-        // pFolderItem has one or more sub-folder items, so we need to come up
-        // with a name for the new folder that is not already in use which means
-        // retrieving the name of all the sub-folder items
-
-        QStringList subFolderNames;
-
-        for (int i = 0; i < pFolderItem->rowCount(); ++i)
-            subFolderNames.append(pFolderItem->child(i)->text());
-
-        static const QString templateFolderName = baseFolderName+" (%1)";
-        int folderNb = 1;
-        QString folderName;
-
-        do {
-            folderName = templateFolderName.arg(++folderNb);
-        } while(subFolderNames.contains(folderName));
-
-        return folderName;
-    }
+    return folderName;
 }
 
 bool FileOrganiserWidget::newFolder()
 {
-    // Create a folder item under the passed item, current folder item or root
-    // item, depending on the situation
+    // Create a folder item under current folder item or root item, depending on
+    // the situation
 
     QModelIndexList itemsList = selectionModel()->selectedIndexes();
     int nbOfSelectedItems = itemsList.count();
@@ -269,12 +319,9 @@ bool FileOrganiserWidget::newFolder()
         // edited
 
         if (state() != QAbstractItemView::EditingState) {
-            // Expand the current index (so that we can see the new folder)
-            // Note: this is only relevant in the case of a folder item being
-            //       currently selected
+            // Go to the newly added folder
 
-            if (nbOfSelectedItems == 1)
-                setExpanded(crtFolderItem->index(), true);
+            setCurrentIndex(newFolderItem->index());
 
             // Offer the user to edit the newly added folder item
 
@@ -287,6 +334,36 @@ bool FileOrganiserWidget::newFolder()
         // Note: we should never come here (i.e. the caller to this function
         //       should ensure that a folder can be created before calling this
         //       function), but it's better to be safe than sorry
+
+        return false;
+    }
+}
+
+bool FileOrganiserWidget::newFile(const QString &pFileName,
+                                  QStandardItem *pParentItem)
+{
+    // Add the file the passed parent item
+
+    if (pParentItem) {
+        // The passed parent item is valid, so add the file to it
+
+        QStandardItem *newFileItem = new QStandardItem(QIcon(":file"),
+                                                       QFileInfo(pFileName).fileName());
+
+        newFileItem->setData(pFileName, FileOrganiserItemPath);
+
+        pParentItem->appendRow(newFileItem);
+
+        // Go to the newly added file
+
+        setCurrentIndex(newFileItem->index());
+
+        return true;
+    } else {
+        // The passed parent item is not valid, so...
+        // Note: we should never come here (i.e. the caller to this function
+        //       should ensure that the passed parent item is valid), but it's
+        //       better to be safe than sorry
 
         return false;
     }

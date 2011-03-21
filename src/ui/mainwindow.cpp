@@ -281,6 +281,13 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
         pEvent->ignore();
 }
 
+void MainWindow::dragMoveEvent(QDragMoveEvent *pEvent)
+{
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
+}
+
 void MainWindow::dropEvent(QDropEvent *pEvent)
 {
     // Manage the dropped documents

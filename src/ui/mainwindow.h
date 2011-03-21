@@ -39,6 +39,7 @@ protected:
     virtual void closeEvent(QCloseEvent *pEvent);
 
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
+    virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
 
 private:

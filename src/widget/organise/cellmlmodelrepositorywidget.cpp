@@ -10,6 +10,12 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
     // Load the CellML Model Repository page
 
     setUrl(QUrl("http://models.cellml.org/"));
+
+    // Prevent objects from being dropped on us
+    // Note: by default, QWebView allows for objects to be dropped on itself,
+    //       so...
+
+    setAcceptDrops(false);
 }
 
 QSize CellmlModelRepositoryWidget::sizeHint() const

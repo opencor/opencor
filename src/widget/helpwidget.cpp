@@ -158,6 +158,13 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
     page()->setNetworkAccessManager(new HelpNetworkAccessManager(pHelpEngine,
                                                                  this));
 
+
+    // Prevent objects from being dropped on us
+    // Note: by default, QWebView allows for objects to be dropped on itself,
+    //       so...
+
+    setAcceptDrops(false);
+
     // Some connections
 
     connect(pageAction(QWebPage::Back), SIGNAL(changed()),
