@@ -319,9 +319,12 @@ bool FileOrganiserWidget::newFolder()
         // edited
 
         if (state() != QAbstractItemView::EditingState) {
-            // Go to the newly added folder
+            // Expand the current index (so that we can see the new folder)
+            // Note: this is only relevant in the case of a folder item being
+            //       currently selected (i.e. it's not the root folder item)
 
-            setCurrentIndex(newFolderItem->index());
+            if (nbOfSelectedItems == 1)
+                setExpanded(crtFolderItem->index(), true);
 
             // Offer the user to edit the newly added folder item
 
@@ -353,10 +356,6 @@ bool FileOrganiserWidget::newFile(const QString &pFileName,
         newFileItem->setData(pFileName, FileOrganiserItemPath);
 
         pParentItem->appendRow(newFileItem);
-
-        // Go to the newly added file
-
-        setCurrentIndex(newFileItem->index());
 
         return true;
     } else {
