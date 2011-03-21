@@ -16,10 +16,6 @@ ViewerWindow::ViewerWindow(QWidget *pParent) :
     mMmlViewerWidget = new MmlViewerWidget("MmlViewerWidget", this);
 
     setWidget(mMmlViewerWidget);
-
-    // Prevent objects from being dropped on the viewer widget
-
-    mMmlViewerWidget->setAcceptDrops(false);
 }
 
 ViewerWindow::~ViewerWindow()

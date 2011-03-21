@@ -31,10 +31,6 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     mUi->verticalLayout->addWidget(mFileOrganiserWidget);
 
-    // Prevent objects from being dropped on the file organiser widget
-
-    mFileOrganiserWidget->setAcceptDrops(false);
-
     // We want our own context menu for the file organiser widget
 
     mFileOrganiserWidget->setContextMenuPolicy(Qt::CustomContextMenu);

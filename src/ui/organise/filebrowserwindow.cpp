@@ -37,10 +37,6 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mUi->verticalLayout->addWidget(mFileBrowserWidget);
 
-    // Prevent objects from being dropped on the file browser widget
-
-    mFileBrowserWidget->setAcceptDrops(false);
-
     // We want our own context menu for the file organiser widget
 
     mFileBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);

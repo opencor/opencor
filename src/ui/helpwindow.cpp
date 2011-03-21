@@ -46,10 +46,6 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     mUi->verticalLayout->addWidget(mHelpWidget);
 
-    // Prevent objects from being dropped on the help widget
-
-    mHelpWidget->setAcceptDrops(false);
-
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
     // that we have in our toolbar, so...)
