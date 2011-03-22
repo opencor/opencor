@@ -347,7 +347,7 @@ bool FileOrganiserWidget::newFolder()
                 //       item)
 
                 if (nbOfSelectedItems == 1)
-                    setExpanded(crtFolderItem->index(), true);
+                    setExpanded(crtItem->index(), true);
 
                 // Offer the user to edit the newly added folder item
 
