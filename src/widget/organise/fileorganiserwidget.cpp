@@ -257,10 +257,10 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 
     // We are dropping the documents over a valid item, so add them to it
 
-    QList<QUrl> urlList = pEvent->mimeData()->urls();
+    QList<QUrl> urls = pEvent->mimeData()->urls();
 
-    for (int i = 0; i < urlList.count(); ++i) {
-        QString fileName = urlList.at(i).toLocalFile();
+    for (int i = 0; i < urls.count(); ++i) {
+        QString fileName = urls.at(i).toLocalFile();
         QFileInfo fileInfo = fileName;
 
         if (fileInfo.isFile() && !fileInfo.isSymLink())
@@ -376,15 +376,14 @@ bool FileOrganiserWidget::newFile(const QString &pFileName,
 
         bool fileExists = false;
 
-        for (int i = 0; i < pParentItem->rowCount() && !fileExists; ++i) {
+        for (int i = 0; (i < pParentItem->rowCount()) && !fileExists; ++i) {
+            // Check whether the current item is a file and whether it's the one
+            // we want to add
+
             QStandardItem *crtItem = pParentItem->child(i);
 
-            if (   !crtItem->data(FileOrganiserItemFolder).toBool()
-                && (crtItem->data(FileOrganiserItemPath).toString() == pFileName))
-                // The current item is a file and it's the one that we want to
-                // add, so...
-
-                fileExists = true;
+            fileExists =    !crtItem->data(FileOrganiserItemFolder).toBool()
+                         && (crtItem->data(FileOrganiserItemPath).toString() == pFileName);
         }
 
         if (!fileExists) {
