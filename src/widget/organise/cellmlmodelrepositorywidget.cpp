@@ -7,6 +7,14 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
     QWebView(pParent),
     CommonWidget(pName, this, pParent)
 {
+    // Add a small margin to the widget, so that no visual trace of the border
+    // drawn by drawBorderIfDocked is left when scrolling
+
+    setStyleSheet("QWebView { margin: 1px; }");
+    // Note: not sure why, but no matter how many pixels are specified for the
+    //       margin, no margin actually exists, but it addresses the issue with
+    //       border drawn by drawBorderIfDocked, so...
+
     // Load the CellML Model Repository page
 
     setUrl(QUrl("http://models.cellml.org/"));
@@ -16,6 +24,10 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
     //       so...
 
     setAcceptDrops(false);
+
+    // Prevent the widget from taking over the scrolling of other widgets
+
+    setFocusPolicy(Qt::NoFocus);
 }
 
 QSize CellmlModelRepositoryWidget::sizeHint() const

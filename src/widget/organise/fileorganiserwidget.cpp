@@ -128,6 +128,10 @@ void FileOrganiserWidget::loadSettings(QSettings &pSettings)
         pSettings.beginGroup(SettingsDataModel);
             loadItemSettings(pSettings, 0);
         pSettings.endGroup();
+
+        // Resize the widget, just to be on the safe side
+
+        resizeToContents();
     pSettings.endGroup();
 }
 
@@ -333,18 +337,26 @@ bool FileOrganiserWidget::newFolder()
 
             crtItem->appendRow(newFolderItem);
 
-            // Some post-processing, but only if no other item is currently being
-            // edited
+            // Some post-processing, but only if no other item is currently
+            // being edited
 
             if (state() != QAbstractItemView::EditingState) {
-                // Go to the newly added folder
+                // Expand the current index (so that we can see the new folder)
+                // Note: this is only relevant in the case of a folder item
+                //       being currently selected (i.e. it's not the root folder
+                //       item)
 
-                setCurrentIndex(newFolderItem->index());
+                if (nbOfSelectedItems == 1)
+                    setExpanded(crtFolderItem->index(), true);
 
                 // Offer the user to edit the newly added folder item
 
                 edit(newFolderItem->index());
             }
+
+            // Resize the widget, just to be on the safe side
+
+            resizeToContents();
 
             return true;
         } else {
@@ -396,9 +408,9 @@ bool FileOrganiserWidget::newFile(const QString &pFileName,
 
             pParentItem->appendRow(newFileItem);
 
-            // Go to the newly added file
+            // Resize the widget, just to be on the safe side
 
-            setCurrentIndex(newFileItem->index());
+            resizeToContents();
 
             return true;
         } else {
