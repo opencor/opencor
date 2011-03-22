@@ -215,9 +215,9 @@ bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
 void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are dropping
-    // URLs
+    // URIs
 
-    if (pEvent->mimeData()->hasUrls())
+    if (pEvent->mimeData()->hasFormat("text/uri-list"))
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
@@ -259,12 +259,24 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 
     QList<QUrl> urlList = pEvent->mimeData()->urls();
 
-    for (int i = 0; i < urlList.count(); ++i)
-        newFile(urlList.at(i).toLocalFile(), crtItem);
+    for (int i = 0; i < urlList.count(); ++i) {
+        QString fileName = urlList.at(i).toLocalFile();
+        QFileInfo fileInfo = fileName;
+
+        if (fileInfo.isFile() && !fileInfo.isSymLink())
+            // We are dropping a file (but not a link to it), so we can add it
+
+            newFile(fileName, crtItem);
+    }
 
     // Accept the proposed action for the event
 
     pEvent->acceptProposedAction();
+}
+
+bool FileOrganiserWidget::isFolderItem(const QModelIndex &pItemIndex)
+{
+    return mDataModel->itemFromIndex(pItemIndex)->data(FileOrganiserItemFolder).toBool();
 }
 
 QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
@@ -302,33 +314,47 @@ bool FileOrganiserWidget::newFolder()
     int nbOfSelectedItems = itemsList.count();
 
     if (nbOfSelectedItems <= 1) {
-        // Either no or one folder item is currently selected, so create the new
-        // folder item under the root item or the existing folder item, resp.
+        // Either no or one item is currently selected, so retrieve that item
+        // and check that it is a folder item
 
-        QStandardItem *crtFolderItem = !nbOfSelectedItems?
+        QStandardItem *crtItem = !nbOfSelectedItems?
                                            mDataModel->invisibleRootItem():
                                            mDataModel->itemFromIndex(itemsList.at(0));
-        QStandardItem *newFolderItem = new QStandardItem(QIcon(":folder"),
-                                                         newFolderName(crtFolderItem));
 
-        newFolderItem->setData(true, FileOrganiserItemFolder);
+        if (   (crtItem == mDataModel->invisibleRootItem())
+            || crtItem->data(FileOrganiserItemFolder).toBool()) {
+            // The current item is a folder item, so we can create the new
+            // folder item under the root item or the existing folder item
 
-        crtFolderItem->appendRow(newFolderItem);
+            QStandardItem *newFolderItem = new QStandardItem(QIcon(":folder"),
+                                                             newFolderName(crtItem));
 
-        // Some post-processing, but only if no other item is currently being
-        // edited
+            newFolderItem->setData(true, FileOrganiserItemFolder);
 
-        if (state() != QAbstractItemView::EditingState) {
-            // Go to the newly added folder
+            crtItem->appendRow(newFolderItem);
 
-            setCurrentIndex(newFolderItem->index());
+            // Some post-processing, but only if no other item is currently being
+            // edited
 
-            // Offer the user to edit the newly added folder item
+            if (state() != QAbstractItemView::EditingState) {
+                // Go to the newly added folder
 
-            edit(newFolderItem->index());
+                setCurrentIndex(newFolderItem->index());
+
+                // Offer the user to edit the newly added folder item
+
+                edit(newFolderItem->index());
+            }
+
+            return true;
+        } else {
+            // The current item is not a folder item, so...
+            // Note: we should never come here (i.e. the caller to this function
+            //       should ensure that a folder can be created before calling
+            //       this function), but it's better to be safe than sorry
+
+            return false;
         }
-
-        return true;
     } else {
         // Several folder items are selected, so...
         // Note: we should never come here (i.e. the caller to this function
@@ -345,20 +371,42 @@ bool FileOrganiserWidget::newFile(const QString &pFileName,
     // Add the file the passed parent item
 
     if (pParentItem) {
-        // The passed parent item is valid, so add the file to it
+        // The passed parent item is valid, so add the file to it, but only if
+        // it's not already one of its child items
 
-        QStandardItem *newFileItem = new QStandardItem(QIcon(":file"),
-                                                       QFileInfo(pFileName).fileName());
+        bool fileExists = false;
 
-        newFileItem->setData(pFileName, FileOrganiserItemPath);
+        for (int i = 0; i < pParentItem->rowCount() && !fileExists; ++i) {
+            QStandardItem *crtItem = pParentItem->child(i);
 
-        pParentItem->appendRow(newFileItem);
+            if (   !crtItem->data(FileOrganiserItemFolder).toBool()
+                && (crtItem->data(FileOrganiserItemPath).toString() == pFileName))
+                // The current item is a file and it's the one that we want to
+                // add, so...
 
-        // Go to the newly added file
+                fileExists = true;
+        }
 
-        setCurrentIndex(newFileItem->index());
+        if (!fileExists) {
+            // The file is not already present, so add it
 
-        return true;
+            QStandardItem *newFileItem = new QStandardItem(QIcon(":file"),
+                                                           QFileInfo(pFileName).fileName());
+
+            newFileItem->setData(pFileName, FileOrganiserItemPath);
+
+            pParentItem->appendRow(newFileItem);
+
+            // Go to the newly added file
+
+            setCurrentIndex(newFileItem->index());
+
+            return true;
+        } else {
+            // The file is already present, so...
+
+            return false;
+        }
     } else {
         // The passed parent item is not valid, so...
         // Note: we should never come here (i.e. the caller to this function

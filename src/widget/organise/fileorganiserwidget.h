@@ -18,8 +18,9 @@ public:
     virtual void loadSettings(QSettings &pSettings);
     virtual void saveSettings(QSettings &pSettings);
 
+    bool isFolderItem(const QModelIndex &pItemIndex);
+
     bool newFolder();
-    bool newFile(const QString &pFileName, QStandardItem *pParentItem);
     bool deleteItems();
 
 protected:
@@ -39,6 +40,7 @@ private:
                           const int &pParentItemIndex);
 
     QString newFolderName(QStandardItem *pFolderItem);
+    bool newFile(const QString &pFileName, QStandardItem *pParentItem);
 
 private slots:
     void resizeToContents();

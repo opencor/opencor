@@ -273,9 +273,9 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 void MainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are dropping
-    // URLs
+    // URIs
 
-    if (pEvent->mimeData()->hasUrls())
+    if (pEvent->mimeData()->hasFormat("text/uri-list"))
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
