@@ -408,6 +408,11 @@ bool FileOrganiserWidget::newFile(const QString &pFileName,
 
             pParentItem->appendRow(newFileItem);
 
+            // Expand the parent, so the user knows that the file has been added
+            // (assuming the folder was collapsed)
+
+            setExpanded(pParentItem->index(), true);
+
             // Resize the widget, just to be on the safe side
 
             resizeToContents();
