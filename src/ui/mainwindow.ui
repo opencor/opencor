@@ -61,6 +61,10 @@
      <property name="title">
       <string>&amp;Language</string>
      </property>
+     <property name="icon">
+      <iconset resource="../../res/OpenCOR.qrc">
+       <normaloff>:/oxygen/categories/applications-education-language.png</normaloff>:/oxygen/categories/applications-education-language.png</iconset>
+     </property>
      <addaction name="actionSystem"/>
      <addaction name="separator"/>
      <addaction name="actionEnglish"/>
@@ -92,6 +96,10 @@
     <widget class="QMenu" name="menuToolbars">
      <property name="title">
       <string>&amp;Toolbars</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../res/OpenCOR.qrc">
+       <normaloff>:/oxygen/actions/configure-toolbars.png</normaloff>:/oxygen/actions/configure-toolbars.png</iconset>
      </property>
      <addaction name="actionFileToolbar"/>
      <addaction name="actionHelpToolbar"/>
@@ -275,11 +283,18 @@
    </property>
   </action>
   <action name="actionResetAll">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/system-reboot.png</normaloff>:/oxygen/actions/system-reboot.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Reset All</string>
    </property>
    <property name="statusTip">
     <string>Reset all the user settings</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionHelpToolbar">
@@ -513,11 +528,18 @@
    </property>
   </action>
   <action name="actionUpdates">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/apps/system-software-update.png</normaloff>:/oxygen/apps/system-software-update.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Updates</string>
    </property>
    <property name="statusTip">
     <string>Check for updates</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionPreferences">
