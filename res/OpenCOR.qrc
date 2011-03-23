@@ -5,6 +5,7 @@
         <file>flags/fr.png</file>
         <file>oxygen/actions/application-exit.png</file>
         <file>oxygen/actions/configure.png</file>
+        <file>oxygen/actions/document-close.png</file>
         <file>oxygen/actions/document-open.png</file>
         <file>oxygen/actions/document-open-folder.png</file>
         <file>oxygen/actions/document-print.png</file>
@@ -19,12 +20,14 @@
         <file>oxygen/actions/go-previous.png</file>
         <file>oxygen/actions/go-up.png</file>
         <file>oxygen/actions/help-about.png</file>
-        <file>oxygen/actions/help-contents.png</file>
         <file>oxygen/actions/view-fullscreen.png</file>
         <file>oxygen/actions/zoom-in.png</file>
         <file>oxygen/actions/zoom-original.png</file>
         <file>oxygen/actions/zoom-out.png</file>
+        <file>oxygen/apps/help-browser.png</file>
+        <file>oxygen/categories/applications-internet.png</file>
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
+        <file>oxygen/places/user-home.png</file>
         <file alias="cellmlLogo">cellML.png</file>
         <file alias="helpWidgetError">helpWidgetError.html</file>
         <file alias="qt_fr">qt_fr.qm</file>

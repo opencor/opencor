@@ -26,7 +26,7 @@
   <action name="actionHome">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/oxygen/actions/go-home.png</normaloff>:/oxygen/actions/go-home.png</iconset>
+     <normaloff>:/oxygen/places/user-home.png</normaloff>:/oxygen/places/user-home.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Home</string>
