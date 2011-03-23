@@ -63,7 +63,7 @@ QString getOsName()
     #else
         // Linux
 
-        return exec("uname", "-o")+" "+exec("uname", "-r");
+        return exec("/bin/uname", "-o")+" "+exec("/bin/uname", "-r");
     #endif
 #endif
 }
