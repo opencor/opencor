@@ -267,10 +267,21 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         QString fileName = urls.at(i).toLocalFile();
         QFileInfo fileInfo = fileName;
 
-        if (fileInfo.isFile() && !fileInfo.isSymLink())
-            // We are dropping a file (but not a link to it), so we can add it
+        if (fileInfo.isFile()) {
+            if (fileInfo.isSymLink()) {
+                // We are dropping a symbolic link, so retrieve its target and
+                // check that it exists, and if it does then add it
 
-            newFile(fileName, crtItem);
+                fileName = fileInfo.symLinkTarget();
+
+                if (QFileInfo(fileName).exists())
+                    newFile(fileName, crtItem);
+            } else {
+                // We are dropping a file, so we can just add it
+
+                newFile(fileName, crtItem);
+            }
+        }
     }
 
     // Accept the proposed action for the event
