@@ -26,7 +26,7 @@
   <action name="actionHome">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/home.png</normaloff>:/boomy/home.png</iconset>
+     <normaloff>:/oxygen/actions/go-home.png</normaloff>:/oxygen/actions/go-home.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Home</string>
@@ -41,7 +41,7 @@
   <action name="actionBack">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/back.png</normaloff>:/boomy/back.png</iconset>
+     <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Back</string>
@@ -56,7 +56,7 @@
   <action name="actionForward">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/forward.png</normaloff>:/boomy/forward.png</iconset>
+     <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Forward</string>
@@ -71,7 +71,7 @@
   <action name="actionZoomIn">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/zoomIn.png</normaloff>:/boomy/zoomIn.png</iconset>
+     <normaloff>:/oxygen/actions/zoom-in.png</normaloff>:/oxygen/actions/zoom-in.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;In</string>
@@ -86,7 +86,7 @@
   <action name="actionZoomOut">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/zoomOut.png</normaloff>:/boomy/zoomOut.png</iconset>
+     <normaloff>:/oxygen/actions/zoom-out.png</normaloff>:/oxygen/actions/zoom-out.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;Out</string>
@@ -101,7 +101,7 @@
   <action name="actionNormalSize">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/normalSize.png</normaloff>:/boomy/normalSize.png</iconset>
+     <normaloff>:/oxygen/actions/zoom-original.png</normaloff>:/oxygen/actions/zoom-original.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Normal Size</string>
@@ -116,7 +116,7 @@
   <action name="actionCopy">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/copy.png</normaloff>:/boomy/copy.png</iconset>
+     <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Copy</string>
@@ -131,7 +131,7 @@
   <action name="actionPrint">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/print.png</normaloff>:/boomy/print.png</iconset>
+     <normaloff>:/oxygen/actions/document-print.png</normaloff>:/oxygen/actions/document-print.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Print</string>

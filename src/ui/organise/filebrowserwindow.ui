@@ -26,7 +26,7 @@
   <action name="actionHome">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/home.png</normaloff>:/boomy/home.png</iconset>
+     <normaloff>:/oxygen/actions/go-home.png</normaloff>:/oxygen/actions/go-home.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Home</string>
@@ -41,7 +41,7 @@
   <action name="actionPrevious">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/back.png</normaloff>:/boomy/back.png</iconset>
+     <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Previous</string>
@@ -56,7 +56,7 @@
   <action name="actionNext">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/forward.png</normaloff>:/boomy/forward.png</iconset>
+     <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Next</string>
@@ -71,7 +71,7 @@
   <action name="actionParent">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/up.png</normaloff>:/boomy/up.png</iconset>
+     <normaloff>:/oxygen/actions/go-up.png</normaloff>:/oxygen/actions/go-up.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Parent</string>

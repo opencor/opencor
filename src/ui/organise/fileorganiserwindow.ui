@@ -26,7 +26,7 @@
   <action name="actionNew">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/add.png</normaloff>:/boomy/add.png</iconset>
+     <normaloff>:/oxygen/actions/folder-new.png</normaloff>:/oxygen/actions/folder-new.png</iconset>
    </property>
    <property name="text">
     <string>&amp;New</string>
@@ -41,7 +41,7 @@
   <action name="actionDelete">
    <property name="icon">
     <iconset resource="../../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/delete.png</normaloff>:/boomy/delete.png</iconset>
+     <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Delete</string>

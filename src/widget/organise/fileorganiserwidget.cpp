@@ -12,6 +12,9 @@ enum FileOrganiserItemRole {
     FileOrganiserItemPath = Qt::UserRole+1
 };
 
+static const QString FolderIcon = ":oxygen/actions/document-open-folder.png";
+static const QString FileIcon   = ":oxygen/mimetypes/application-x-zerosize.png";
+
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
                                          QWidget *pParent) :
     QTreeView(pParent),
@@ -78,7 +81,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
             if (nbOfChildItems >= 0) {
                 // We are dealing with a folder item
 
-                QStandardItem *folderItem = new QStandardItem(QIcon(":folder"),
+                QStandardItem *folderItem = new QStandardItem(QIcon(FolderIcon),
                                                               textOrPath);
 
                 folderItem->setData(true, FileOrganiserItemFolder);
@@ -96,7 +99,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
             } else {
                 // We are dealing with a file item
 
-                QStandardItem *fileItem = new QStandardItem(QIcon(":file"),
+                QStandardItem *fileItem = new QStandardItem(QIcon(FileIcon),
                                                             QFileInfo(textOrPath).fileName());
 
                 fileItem->setData(textOrPath, FileOrganiserItemPath);
@@ -341,7 +344,7 @@ bool FileOrganiserWidget::newFolder()
             // The current item is a folder item, so we can create the new
             // folder item under the root item or the existing folder item
 
-            QStandardItem *newFolderItem = new QStandardItem(QIcon(":folder"),
+            QStandardItem *newFolderItem = new QStandardItem(QIcon(FolderIcon),
                                                              newFolderName(crtItem));
 
             newFolderItem->setData(true, FileOrganiserItemFolder);
@@ -412,7 +415,7 @@ bool FileOrganiserWidget::newFile(const QString &pFileName,
         if (!fileExists) {
             // The file is not already present, so add it
 
-            QStandardItem *newFileItem = new QStandardItem(QIcon(":file"),
+            QStandardItem *newFileItem = new QStandardItem(QIcon(FileIcon),
                                                            QFileInfo(pFileName).fileName());
 
             newFileItem->setData(pFileName, FileOrganiserItemPath);

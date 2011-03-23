@@ -33,8 +33,8 @@
       <string>&amp;New</string>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>:file</normaloff>:file</iconset>
+      <iconset resource="../../res/OpenCOR.qrc">
+       <normaloff>:/oxygen/mimetypes/application-x-zerosize.png</normaloff>:/oxygen/mimetypes/application-x-zerosize.png</iconset>
      </property>
      <addaction name="actionCellML10File"/>
      <addaction name="actionCellML11File"/>
@@ -143,6 +143,7 @@
    <addaction name="separator"/>
    <addaction name="actionSave"/>
    <addaction name="actionSaveAs"/>
+   <addaction name="actionSaveAll"/>
   </widget>
   <widget class="QToolBar" name="helpToolbar">
    <property name="windowTitle">
@@ -170,7 +171,7 @@
   <action name="actionExit">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/exit.png</normaloff>:/boomy/exit.png</iconset>
+     <normaloff>:/oxygen/actions/application-exit.png</normaloff>:/oxygen/actions/application-exit.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Exit</string>
@@ -227,7 +228,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/help.png</normaloff>:/boomy/help.png</iconset>
+     <normaloff>:/oxygen/actions/help-contents.png</normaloff>:/oxygen/actions/help-contents.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Help</string>
@@ -245,7 +246,7 @@
   <action name="actionHomePage">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/home.png</normaloff>:/boomy/home.png</iconset>
+     <normaloff>:/oxygen/actions/go-home.png</normaloff>:/oxygen/actions/go-home.png</iconset>
    </property>
    <property name="text">
     <string>Home &amp;Page</string>
@@ -260,7 +261,7 @@
   <action name="actionAbout">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/about.png</normaloff>:/boomy/about.png</iconset>
+     <normaloff>:/oxygen/actions/help-about.png</normaloff>:/oxygen/actions/help-about.png</iconset>
    </property>
    <property name="text">
     <string>&amp;About</string>
@@ -320,8 +321,8 @@
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset>
-     <normaloff>:folder</normaloff>:folder</iconset>
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/document-open.png</normaloff>:/oxygen/actions/document-open.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open...</string>
@@ -366,7 +367,7 @@
   <action name="actionSave">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/save.png</normaloff>:/boomy/save.png</iconset>
+     <normaloff>:/oxygen/actions/document-save.png</normaloff>:/oxygen/actions/document-save.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Save</string>
@@ -384,7 +385,7 @@
   <action name="actionSaveAs">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/saveAs.png</normaloff>:/boomy/saveAs.png</iconset>
+     <normaloff>:/oxygen/actions/document-save-as.png</normaloff>:/oxygen/actions/document-save-as.png</iconset>
    </property>
    <property name="text">
     <string>Save &amp;As...</string>
@@ -397,17 +398,24 @@
    </property>
   </action>
   <action name="actionSaveAll">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/document-save-all.png</normaloff>:/oxygen/actions/document-save-all.png</iconset>
+   </property>
    <property name="text">
     <string>Save All</string>
    </property>
    <property name="statusTip">
     <string>Save all the files</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset>
-     <normaloff>:file</normaloff>:file</iconset>
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/mimetypes/application-x-zerosize.png</normaloff>:/oxygen/mimetypes/application-x-zerosize.png</iconset>
    </property>
    <property name="text">
     <string>&amp;New</string>
@@ -433,7 +441,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/fullScreen.png</normaloff>:/boomy/fullScreen.png</iconset>
+     <normaloff>:/oxygen/actions/view-fullscreen.png</normaloff>:/oxygen/actions/view-fullscreen.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Full Screen</string>
@@ -507,7 +515,7 @@
   <action name="actionPreferences">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
-     <normaloff>:/boomy/configure.png</normaloff>:/boomy/configure.png</iconset>
+     <normaloff>:/oxygen/actions/configure.png</normaloff>:/oxygen/actions/configure.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Preferences...</string>

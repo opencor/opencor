@@ -1,28 +1,30 @@
 <RCC>
     <qresource prefix="/">
-        <file>boomy/about.png</file>
-        <file>boomy/add.png</file>
-        <file>boomy/back.png</file>
-        <file>boomy/configure.png</file>
-        <file>boomy/copy.png</file>
-        <file>boomy/delete.png</file>
-        <file>boomy/exit.png</file>
-        <file>boomy/forward.png</file>
-        <file>boomy/fullScreen.png</file>
-        <file>boomy/help.png</file>
-        <file>boomy/home.png</file>
-        <file alias="file">boomy/new.png</file>
-        <file>boomy/normalSize.png</file>
-        <file alias="folder">boomy/open.png</file>
         <file alias="appIcon">boomy/OpenCOR.png</file>
-        <file>boomy/print.png</file>
-        <file>boomy/save.png</file>
-        <file>boomy/saveAs.png</file>
-        <file>boomy/up.png</file>
-        <file>boomy/zoomIn.png</file>
-        <file>boomy/zoomOut.png</file>
         <file>flags/en.png</file>
         <file>flags/fr.png</file>
+        <file>oxygen/actions/application-exit.png</file>
+        <file>oxygen/actions/configure.png</file>
+        <file>oxygen/actions/document-open.png</file>
+        <file>oxygen/actions/document-open-folder.png</file>
+        <file>oxygen/actions/document-print.png</file>
+        <file>oxygen/actions/document-save.png</file>
+        <file>oxygen/actions/document-save-all.png</file>
+        <file>oxygen/actions/document-save-as.png</file>
+        <file>oxygen/actions/edit-copy.png</file>
+        <file>oxygen/actions/edit-delete.png</file>
+        <file>oxygen/actions/folder-new.png</file>
+        <file>oxygen/actions/go-home.png</file>
+        <file>oxygen/actions/go-next.png</file>
+        <file>oxygen/actions/go-previous.png</file>
+        <file>oxygen/actions/go-up.png</file>
+        <file>oxygen/actions/help-about.png</file>
+        <file>oxygen/actions/help-contents.png</file>
+        <file>oxygen/actions/view-fullscreen.png</file>
+        <file>oxygen/actions/zoom-in.png</file>
+        <file>oxygen/actions/zoom-original.png</file>
+        <file>oxygen/actions/zoom-out.png</file>
+        <file>oxygen/mimetypes/application-x-zerosize.png</file>
         <file alias="cellmlLogo">cellML.png</file>
         <file alias="helpWidgetError">helpWidgetError.html</file>
         <file alias="qt_fr">qt_fr.qm</file>
