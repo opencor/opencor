@@ -162,8 +162,7 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
 
-        setToolTip(QDir::toNativeSeparators(mFileSystemModel->filePath(indexAt(QPoint(helpEvent->x(),
-                                                                                      helpEvent->y())))));
+        setToolTip(QDir::toNativeSeparators(mFileSystemModel->filePath(indexAt(helpEvent->pos()))));
     }
 
     // Default handling of the event
@@ -177,11 +176,11 @@ QStringList FileBrowserWidget::selectedFiles()
     // Note: if there is a non-file among the selected items, then we return an
     //       empty list
 
-    QStringList crtSelectedFiles;
-    QModelIndexList crtSelectedIndexes = selectedIndexes();
+    QStringList selectedFiles;
+    QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
-    for (int i = 0; i < crtSelectedIndexes.count(); ++i) {
-        QString fileName = pathOf(crtSelectedIndexes.at(i));
+    for (int i = 0; i < selectedIndexes.count(); ++i) {
+        QString fileName = pathOf(selectedIndexes.at(i));
         QFileInfo fileInfo = fileName;
 
         if (fileInfo.isFile()) {
@@ -193,11 +192,11 @@ QStringList FileBrowserWidget::selectedFiles()
                 fileName = fileInfo.symLinkTarget();
 
                 if (QFileInfo(fileName).exists())
-                    crtSelectedFiles.append(fileName);
+                    selectedFiles.append(fileName);
             } else {
                 // The current item is a file, so just add to the list
 
-                crtSelectedFiles.append(fileName);
+                selectedFiles.append(fileName);
             }
         } else {
             // The current item is not a file, so return an empty list
@@ -208,9 +207,9 @@ QStringList FileBrowserWidget::selectedFiles()
 
     // Remove duplicates (which might be present as a result of symbolic links)
 
-    crtSelectedFiles.removeDuplicates();
+    selectedFiles.removeDuplicates();
 
-    return crtSelectedFiles;
+    return selectedFiles;
 }
 
 void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)

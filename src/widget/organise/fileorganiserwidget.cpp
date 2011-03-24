@@ -326,8 +326,8 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
 
 bool FileOrganiserWidget::newFolder()
 {
-    // Create a folder item under current folder item or root item, depending on
-    // the situation
+    // Create a folder item under the current folder item or root item,
+    // depending on the situation
 
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
     int nbOfSelectedIndexes = selectedIndexes.count();
