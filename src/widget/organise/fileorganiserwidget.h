@@ -23,6 +23,8 @@ public:
     bool newFolder();
     bool deleteItems();
 
+    QString filePathOf(const QModelIndex &pFileIndex);
+
 protected:
     virtual QSize sizeHint() const;
 

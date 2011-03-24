@@ -41,6 +41,9 @@ private:
     void gotoOtherItem(QStringList &pItems, QStringList &pOtherItems);
     void updateItems(const QString &pItemPath, QStringList &pItems);
 
+Q_SIGNALS:
+    void fileDoubleClicked(const QString &pFileName);
+
 private Q_SLOTS:
     void on_actionHome_triggered();
     void on_actionParent_triggered();
@@ -48,6 +51,8 @@ private Q_SLOTS:
     void on_actionNext_triggered();
 
     void customContextMenu(const QPoint &);
+    void itemDoubleClicked(const QModelIndex &itemIndex);
+
     void currentItemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
 };
 

@@ -32,11 +32,16 @@ private:
 
     FileOrganiserWidget *mFileOrganiserWidget;
 
+Q_SIGNALS:
+    void fileDoubleClicked(const QString &pFileName);
+
 private slots:
     void on_actionNew_triggered();
     void on_actionDelete_triggered();
 
     void customContextMenu(const QPoint &pPos);
+    void itemDoubleClicked(const QModelIndex &itemIndex);
+
     void needUpdateActions();
 };
 

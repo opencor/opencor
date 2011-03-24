@@ -101,6 +101,8 @@ private Q_SLOTS:
     void on_actionAbout_triggered();
 
     void resetAll();
+
+    void fileDoubleClicked(const QString &pFileName);
 };
 
 #endif

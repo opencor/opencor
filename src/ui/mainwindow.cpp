@@ -178,6 +178,16 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionHelp, SLOT(setChecked(bool)));
 
+    // A connection to handle the file browser window
+
+    connect(mFileBrowserWindow, SIGNAL(fileDoubleClicked(const QString &)),
+            this, SLOT(fileDoubleClicked(const QString &)));
+
+    // A connection to handle the file organiser window
+
+    connect(mFileOrganiserWindow, SIGNAL(fileDoubleClicked(const QString &)),
+            this, SLOT(fileDoubleClicked(const QString &)));
+
     // Retrieve the user settings from the previous session, if any
 
     loadSettings();
@@ -680,4 +690,10 @@ void MainWindow::resetAll()
 
         qApp->quit();
     }
+}
+
+void MainWindow::fileDoubleClicked(const QString &pFileName)
+{
+    QMessageBox::information(0, qApp->applicationName()+" Information",
+                             "Eventually, the '"+pFileName+"' will get open within the editor.");
 }

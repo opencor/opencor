@@ -45,6 +45,8 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(customContextMenu(const QPoint &)));
+    connect(mFileBrowserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SLOT(itemDoubleClicked(const QModelIndex &)));
 
     connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(currentItemChanged(const QModelIndex &, const QModelIndex &)));
@@ -123,28 +125,6 @@ void FileBrowserWindow::saveSettings(QSettings &pSettings)
 
         mFileBrowserWidget->saveSettings(pSettings);
     pSettings.endGroup();
-}
-
-void FileBrowserWindow::currentItemChanged(const QModelIndex &,
-                                           const QModelIndex &pPrevItem)
-{
-    if (!mKeepTrackOfPrevItem)
-        // We don't want to keep track of the previous item, so...
-
-        return;
-
-    // A new item has been selected, so we need to keep track of the old one in
-    // case we want to go back to it
-
-    mPrevItems.append(mFileBrowserWidget->pathOf(pPrevItem));
-
-    // Reset the list of next items since that list doesn't make sense anymore
-
-    mNextItems.clear();
-
-    // Since a new item has been selected, we must update the actions
-
-    updateActions();
 }
 
 void FileBrowserWindow::on_actionHome_triggered()
@@ -296,4 +276,56 @@ void FileBrowserWindow::customContextMenu(const QPoint &)
     menu.addAction(mUi->actionHome);
 
     menu.exec(QCursor::pos());
+}
+
+void FileBrowserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
+{
+    // Check what kind of item has been double clicked and if it is a file, then
+    // let people know about it being double clicked
+
+    QString fileName = mFileBrowserWidget->pathOf(itemIndex);
+    QFileInfo fileInfo = fileName;
+
+    if (fileInfo.isFile()) {
+        // We are dealing with a file (as opposed to a folder), so let's see
+        // whether we can let people know about it having been double clicked
+
+        if (fileInfo.isSymLink()) {
+            // The file is actually a symbolic link, so retrieve its target and
+            // check that it exists, and if it does then let people know about
+            // it having been double clicked
+
+            fileName = fileInfo.symLinkTarget();
+
+            if (QFileInfo(fileName).exists())
+                emit fileDoubleClicked(fileName);
+        } else {
+            // This is a 'normal' file, so just go ahead and let people know
+            // about it having been double clicked
+
+            emit fileDoubleClicked(fileName);
+        }
+    }
+}
+
+void FileBrowserWindow::currentItemChanged(const QModelIndex &,
+                                           const QModelIndex &pPrevItem)
+{
+    if (!mKeepTrackOfPrevItem)
+        // We don't want to keep track of the previous item, so...
+
+        return;
+
+    // A new item has been selected, so we need to keep track of the old one in
+    // case we want to go back to it
+
+    mPrevItems.append(mFileBrowserWidget->pathOf(pPrevItem));
+
+    // Reset the list of next items since that list doesn't make sense anymore
+
+    mNextItems.clear();
+
+    // Since a new item has been selected, we must update the actions
+
+    updateActions();
 }

@@ -483,6 +483,19 @@ bool FileOrganiserWidget::deleteItems()
     }
 }
 
+QString FileOrganiserWidget::filePathOf(const QModelIndex &pFileIndex)
+{
+    // Return the file path of pFileIndex, if it exists and corresponds to a
+    // file
+
+    QStandardItem *fileItem = mDataModel->itemFromIndex(pFileIndex);
+
+    if (fileItem && !fileItem->data(FileOrganiserItemFolder).toBool())
+        return fileItem->data(FileOrganiserItemPath).toString();
+    else
+        return "";
+}
+
 void FileOrganiserWidget::resizeToContents()
 {
     // Make sure that the first column allows for all of its contents to be

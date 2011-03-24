@@ -285,7 +285,7 @@ QString FileBrowserWidget::currentPathParent()
 
 QString FileBrowserWidget::pathOf(const QModelIndex &pIndex)
 {
-    // Return the path for pItem, if it exists
+    // Return the file path of pIndex, if it exists
 
     return (pIndex != QModelIndex())?
                mFileSystemModel->filePath(pIndex):
