@@ -308,11 +308,16 @@ void FileBrowserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
     }
 }
 
-void FileBrowserWindow::currentItemChanged(const QModelIndex &,
+void FileBrowserWindow::currentItemChanged(const QModelIndex &pNewItem,
                                            const QModelIndex &pPrevItem)
 {
-    if (!mKeepTrackOfPrevItem)
+    if (   !mKeepTrackOfPrevItem
+        || (mFileBrowserWidget->pathOf(pPrevItem) == mFileBrowserWidget->pathOf(pNewItem)))
         // We don't want to keep track of the previous item, so...
+        // Note: there is a puzzling case where upon starting OpenCOR, a file
+        //       might initially be selected. From there, to click on that link
+        //       will trigger this slot and though pNewItem and pPrevItem are
+        //       different, they both refer to the same path information, so...
 
         return;
 
