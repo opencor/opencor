@@ -34,6 +34,8 @@ protected:
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
 
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
 private:
     QStandardItemModel *mDataModel;
 
@@ -45,6 +47,11 @@ private:
     bool newFile(const QString &pFileName, QStandardItem *pParentItem);
 
     void resizeToContents();
+
+    QStringList selectedFiles();
+
+Q_SIGNALS:
+    void filesOpened(const QStringList &pFileNames);
 
 private slots:
     void expandedFolder(const QModelIndex &pFolderIndex);

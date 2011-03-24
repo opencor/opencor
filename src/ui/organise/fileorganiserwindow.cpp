@@ -41,6 +41,8 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
             this, SLOT(customContextMenu(const QPoint &)));
     connect(mFileOrganiserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
+    connect(mFileOrganiserWidget, SIGNAL(filesOpened(const QStringList &)),
+            this, SIGNAL(filesOpened(const QStringList &)));
 
     connect(mFileOrganiserWidget->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
             this, SLOT(needUpdateActions()));
@@ -141,7 +143,7 @@ void FileOrganiserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
         // We are dealing with a file (as opposed to a folder), so let's see
         // whether we can let people know about it having been double clicked
 
-        emit fileDoubleClicked(fileName);
+        emit filesOpened(QStringList() << fileName);
 }
 
 void FileOrganiserWindow::needUpdateActions()

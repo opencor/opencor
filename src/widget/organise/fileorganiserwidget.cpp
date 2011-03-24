@@ -504,6 +504,56 @@ void FileOrganiserWidget::resizeToContents()
     resizeColumnToContents(0);
 }
 
+QStringList FileOrganiserWidget::selectedFiles()
+{
+    // Retrieve all the files that are currently selected
+    // Note: if there is a folder among the selected items, then we return an
+    //       empty list
+
+    QStringList crtSelectedFiles;
+    QModelIndexList crtSelectedIndexes = selectedIndexes();
+
+    for (int i = 0; i < crtSelectedIndexes.count(); ++i) {
+        QString fileName = filePathOf(crtSelectedIndexes.at(i));
+
+        if (fileName.isEmpty())
+            // The current item is not a file, so return an empty list
+
+            return QStringList();
+        else
+            // The current item is a file, so just add to the list
+
+            crtSelectedFiles.append(fileName);
+    }
+
+    return crtSelectedFiles;
+}
+
+void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Default handling of the event
+
+    QTreeView::keyPressEvent(pEvent);
+
+    // Let people know about a key having been pressed with the view of opening
+    // one or several files
+
+    QStringList crtSelectedFiles = selectedFiles();
+
+    if (   crtSelectedFiles.count()
+#ifndef Q_WS_MAC
+        && (   (pEvent->key() == Qt::Key_Enter)
+            || (pEvent->key() == Qt::Key_Return)))
+#else
+        && (   (pEvent->key() == Qt::Key_Control)
+            && (pEvent->key() == Qt::Key_Down)))
+#endif
+        // There are some files that are selected and we want to open them, so
+        // let people know about it
+
+        emit filesOpened(crtSelectedFiles);
+}
+
 void FileOrganiserWidget::expandedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state

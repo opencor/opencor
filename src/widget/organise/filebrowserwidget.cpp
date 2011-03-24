@@ -173,7 +173,7 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 
 QStringList FileBrowserWidget::selectedFiles()
 {
-    // Retrieve all the files that are currently being selected
+    // Retrieve all the files that are currently selected
     // Note: if there is a non-file among the selected items, then we return an
     //       empty list
 
@@ -195,12 +195,12 @@ QStringList FileBrowserWidget::selectedFiles()
                 if (QFileInfo(fileName).exists())
                     crtSelectedFiles.append(fileName);
             } else {
-                // The current item is a file, so just added to the list
+                // The current item is a file, so just add to the list
 
                 crtSelectedFiles.append(fileName);
             }
         } else {
-            // The current is not a file, so return an empty list
+            // The current item is not a file, so return an empty list
 
             return QStringList();
         }

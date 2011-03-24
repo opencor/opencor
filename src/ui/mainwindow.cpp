@@ -185,8 +185,8 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // A connection to handle the file organiser window
 
-    connect(mFileOrganiserWindow, SIGNAL(fileDoubleClicked(const QString &)),
-            this, SLOT(fileDoubleClicked(const QString &)));
+    connect(mFileOrganiserWindow, SIGNAL(filesOpened(const QStringList &)),
+            this, SLOT(filesOpened(const QStringList &)));
 
     // Retrieve the user settings from the previous session, if any
 
@@ -696,10 +696,4 @@ void MainWindow::filesOpened(const QStringList &pFileNames)
 {
     QMessageBox::information(0, qApp->applicationName()+" Information",
                              QString("Eventually, the following file(s) will get opened within the editor:\n - %1").arg(pFileNames.join("\n - ")));
-}
-
-void MainWindow::fileDoubleClicked(const QString &pFileName)
-{
-    QMessageBox::information(0, qApp->applicationName()+" Information",
-                             "Eventually, '"+pFileName+"' will get opened within the editor.");
 }

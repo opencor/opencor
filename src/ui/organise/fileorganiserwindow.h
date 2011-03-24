@@ -33,7 +33,7 @@ private:
     FileOrganiserWidget *mFileOrganiserWidget;
 
 Q_SIGNALS:
-    void fileDoubleClicked(const QString &pFileName);
+    void filesOpened(const QStringList &pFileNames);
 
 private slots:
     void on_actionNew_triggered();
