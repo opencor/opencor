@@ -42,8 +42,11 @@ private:
     QString newFolderName(QStandardItem *pFolderItem);
     bool newFile(const QString &pFileName, QStandardItem *pParentItem);
 
-private slots:
     void resizeToContents();
+
+private slots:
+    void expandedFolder(const QModelIndex &pFolderIndex);
+    void collapsedFolder(const QModelIndex &pFolderIndex);
 };
 
 #endif

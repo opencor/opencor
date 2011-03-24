@@ -31,6 +31,7 @@
         <file>oxygen/categories/applications-education-language.png</file>
         <file>oxygen/categories/applications-internet.png</file>
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
+        <file>oxygen/places/folder.png</file>
         <file>oxygen/places/user-home.png</file>
         <file alias="cellmlLogo">cellML.png</file>
         <file alias="helpWidgetError">helpWidgetError.html</file>

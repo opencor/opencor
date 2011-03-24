@@ -12,8 +12,9 @@ enum FileOrganiserItemRole {
     FileOrganiserItemPath = Qt::UserRole+1
 };
 
-static const QString FolderIcon = ":oxygen/actions/document-open-folder.png";
-static const QString FileIcon   = ":oxygen/mimetypes/application-x-zerosize.png";
+static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
+static const QString ExpandedFolderIcon  = ":oxygen/actions/document-open-folder.png";
+static const QString FileIcon            = ":oxygen/mimetypes/application-x-zerosize.png";
 
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
                                          QWidget *pParent) :
@@ -40,9 +41,9 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
     // Some connections
 
     connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeToContents()));
+            this, SLOT(expandedFolder(const QModelIndex &)));
     connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeToContents()));
+            this, SLOT(collapsedFolder(const QModelIndex &)));
 }
 
 static const QString SettingsDataModel = "DataModel";
@@ -81,7 +82,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
             if (nbOfChildItems >= 0) {
                 // We are dealing with a folder item
 
-                QStandardItem *folderItem = new QStandardItem(QIcon(FolderIcon),
+                QStandardItem *folderItem = new QStandardItem(QIcon(CollapsedFolderIcon),
                                                               textOrPath);
 
                 folderItem->setData(true, FileOrganiserItemFolder);
@@ -344,7 +345,7 @@ bool FileOrganiserWidget::newFolder()
             // The current item is a folder item, so we can create the new
             // folder item under the root item or the existing folder item
 
-            QStandardItem *newFolderItem = new QStandardItem(QIcon(FolderIcon),
+            QStandardItem *newFolderItem = new QStandardItem(QIcon(CollapsedFolderIcon),
                                                              newFolderName(crtItem));
 
             newFolderItem->setData(true, FileOrganiserItemFolder);
@@ -488,4 +489,26 @@ void FileOrganiserWidget::resizeToContents()
     // visible
 
     resizeColumnToContents(0);
+}
+
+void FileOrganiserWidget::expandedFolder(const QModelIndex &pFolderIndex)
+{
+    // The folder is being expanded, so update its icon to reflect its new state
+
+    mDataModel->itemFromIndex(pFolderIndex)->setIcon(QIcon(ExpandedFolderIcon));
+
+    // Resize the widget, just to be on the safe side
+
+    resizeToContents();
+}
+
+void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
+{
+    // The folder is being expanded, so update its icon to reflect its new state
+
+    mDataModel->itemFromIndex(pFolderIndex)->setIcon(QIcon(CollapsedFolderIcon));
+
+    // Resize the widget, just to be on the safe side
+
+    resizeToContents();
 }
