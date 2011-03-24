@@ -545,7 +545,7 @@ void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
         && (   (pEvent->key() == Qt::Key_Enter)
             || (pEvent->key() == Qt::Key_Return)))
 #else
-        && (   (pEvent->key() == Qt::Key_Control)
+        && (   (pEvent->modifiers() & Qt::ControlModifier)
             && (pEvent->key() == Qt::Key_Down)))
 #endif
         // There are some files that are selected and we want to open them, so
