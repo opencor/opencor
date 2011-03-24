@@ -34,6 +34,8 @@ protected:
 
     virtual bool viewportEvent(QEvent *pEvent);
 
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
 private:
     QFileSystemModel *mFileSystemModel;
 
@@ -41,6 +43,11 @@ private:
 
     QString mInitPathDir;
     QString mInitPath;
+
+    QStringList selectedFiles();
+
+Q_SIGNALS:
+    void filesOpened(const QStringList &pFileNames);
 
 private Q_SLOTS:
     void directoryLoaded(const QString &pPath);

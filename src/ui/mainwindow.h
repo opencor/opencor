@@ -102,6 +102,7 @@ private Q_SLOTS:
 
     void resetAll();
 
+    void filesOpened(const QStringList &pFileNames);
     void fileDoubleClicked(const QString &pFileName);
 };
 

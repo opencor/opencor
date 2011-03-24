@@ -47,6 +47,8 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
             this, SLOT(customContextMenu(const QPoint &)));
     connect(mFileBrowserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
+    connect(mFileBrowserWidget, SIGNAL(filesOpened(const QStringList &)),
+            this, SIGNAL(filesOpened(const QStringList &)));
 
     connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(currentItemChanged(const QModelIndex &, const QModelIndex &)));
@@ -298,12 +300,12 @@ void FileBrowserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
             fileName = fileInfo.symLinkTarget();
 
             if (QFileInfo(fileName).exists())
-                emit fileDoubleClicked(fileName);
+                emit filesOpened(QStringList() << fileName);
         } else {
             // This is a 'normal' file, so just go ahead and let people know
             // about it having been double clicked
 
-            emit fileDoubleClicked(fileName);
+            emit filesOpened(QStringList() << fileName);
         }
     }
 }

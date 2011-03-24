@@ -22,11 +22,11 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
 
     // Set some properties for the file browser widget itself
 
+    setAllColumnsShowFocus(true);
 #ifdef Q_WS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, 0);
     // Note: the above removes the focus border since it messes up our toolbar
 #endif
-    setFocusPolicy(Qt::NoFocus);
     setModel(mFileSystemModel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSortingEnabled(true);
@@ -169,6 +169,73 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
     // Default handling of the event
 
     return QTreeView::viewportEvent(pEvent);
+}
+
+QStringList FileBrowserWidget::selectedFiles()
+{
+    // Retrieve all the files that are currently being selected
+    // Note: if there is a non-file among the selected items, then we return an
+    //       empty list
+
+    QStringList crtSelectedFiles;
+    QModelIndexList crtSelectedIndexes = selectedIndexes();
+
+    for (int i = 0; i < crtSelectedIndexes.count(); ++i) {
+        QString fileName = pathOf(crtSelectedIndexes.at(i));
+        QFileInfo fileInfo = fileName;
+
+        if (fileInfo.isFile()) {
+            if (fileInfo.isSymLink()) {
+                // The current item is a symbolic link, so retrieve its target
+                // and check that it exists, and if it does then add it to the
+                // list
+
+                fileName = fileInfo.symLinkTarget();
+
+                if (QFileInfo(fileName).exists())
+                    crtSelectedFiles.append(fileName);
+            } else {
+                // The current item is a file, so just added to the list
+
+                crtSelectedFiles.append(fileName);
+            }
+        } else {
+            // The current is not a file, so return an empty list
+
+            return QStringList();
+        }
+    }
+
+    // Remove duplicates (which might be present as a result of symbolic links)
+
+    crtSelectedFiles.removeDuplicates();
+
+    return crtSelectedFiles;
+}
+
+void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Default handling of the event
+
+    QTreeView::keyPressEvent(pEvent);
+
+    // Let people know about a key having been pressed with the view of opening
+    // one or several files
+
+    QStringList crtSelectedFiles = selectedFiles();
+
+    if (   crtSelectedFiles.count()
+#ifndef Q_WS_MAC
+        && (   (pEvent->key() == Qt::Key_Enter)
+            || (pEvent->key() == Qt::Key_Return)))
+#else
+        && (   (pEvent->key() == Qt::Key_Control)
+            && (pEvent->key() == Qt::Key_Down)))
+#endif
+        // There are some files that are selected and we want to open them, so
+        // let people know about it
+
+        emit filesOpened(crtSelectedFiles);
 }
 
 void FileBrowserWidget::directoryLoaded(const QString &pPath)

@@ -42,7 +42,7 @@ private:
     void updateItems(const QString &pItemPath, QStringList &pItems);
 
 Q_SIGNALS:
-    void fileDoubleClicked(const QString &pFileName);
+    void filesOpened(const QStringList &pFileNames);
 
 private Q_SLOTS:
     void on_actionHome_triggered();

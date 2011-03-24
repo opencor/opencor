@@ -180,8 +180,8 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // A connection to handle the file browser window
 
-    connect(mFileBrowserWindow, SIGNAL(fileDoubleClicked(const QString &)),
-            this, SLOT(fileDoubleClicked(const QString &)));
+    connect(mFileBrowserWindow, SIGNAL(filesOpened(const QStringList &)),
+            this, SLOT(filesOpened(const QStringList &)));
 
     // A connection to handle the file organiser window
 
@@ -692,8 +692,14 @@ void MainWindow::resetAll()
     }
 }
 
+void MainWindow::filesOpened(const QStringList &pFileNames)
+{
+    QMessageBox::information(0, qApp->applicationName()+" Information",
+                             QString("Eventually, the following file(s) will get opened within the editor:\n - %1").arg(pFileNames.join("\n - ")));
+}
+
 void MainWindow::fileDoubleClicked(const QString &pFileName)
 {
     QMessageBox::information(0, qApp->applicationName()+" Information",
-                             "Eventually, the '"+pFileName+"' will get open within the editor.");
+                             "Eventually, '"+pFileName+"' will get opened within the editor.");
 }
