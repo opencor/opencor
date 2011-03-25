@@ -30,7 +30,9 @@ public:
     ~DocumentManager();
 
     Status manage(const QString &pFileName);
+    void manage(const QStringList &pFileNames);
     Status unmanage(const QString &pFileName);
+    void unmanage(const QStringList &pFileNames);
 
 private:
     QList<Document *> mDocuments;

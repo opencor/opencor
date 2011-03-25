@@ -1,6 +1,7 @@
 #include "documentmanager.h"
 
 #include <QFileInfo>
+#include <QStringList>
 
 Document::Document(const QString &pFileName) :
     mFileName(pFileName)
@@ -46,6 +47,12 @@ DocumentManager::Status DocumentManager::manage(const QString &pFileName)
     }
 }
 
+void DocumentManager::manage(const QStringList &pFileNames)
+{
+    for (int i = 0; i < pFileNames.count(); ++i)
+        manage(pFileNames.at(i));
+}
+
 DocumentManager::Status DocumentManager::unmanage(const QString &pFileName)
 {
     QFileInfo fileInfo = pFileName;
@@ -71,6 +78,12 @@ DocumentManager::Status DocumentManager::unmanage(const QString &pFileName)
 
         return DoesNotExist;
     }
+}
+
+void DocumentManager::unmanage(const QStringList &pFileNames)
+{
+    for (int i = 0; i < pFileNames.count(); ++i)
+        unmanage(pFileNames.at(i));
 }
 
 Document *DocumentManager::isManaged(const QString &pFileName)

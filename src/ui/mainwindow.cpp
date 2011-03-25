@@ -716,6 +716,12 @@ void MainWindow::resetAll()
 
 void MainWindow::filesOpened(const QStringList &pFileNames)
 {
+    // One or several files are to be opened
+
+    // First, we must register the file(s) with out document manager
+
+    mDocumentManager->manage(pFileNames);
+
     QMessageBox::information(0, qApp->applicationName()+" Information",
                              QString("Eventually, the following file(s) will get opened within the editor:\n - %1").arg(pFileNames.join("\n - ")));
 }
