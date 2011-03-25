@@ -74,6 +74,8 @@ private:
 
     void setLocale(const QString &pLocale);
 
+    bool openFile(const QString &pFileName, const bool &pUserFeedback = false);
+
 public Q_SLOTS:
     void singleAppMsgRcvd(const QString &);
 

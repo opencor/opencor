@@ -17,22 +17,24 @@ private:
 
 class DocumentManager
 {
-    enum Status
+public:
+    enum ManageStatus
     {
         DoesNotExist,
         Added,
-        AlreadyManaged,
+        AlreadyManaged
+    };
+
+    enum UnmanageStatus
+    {
         Removed,
         NotManaged
     };
 
-public:
     ~DocumentManager();
 
-    Status manage(const QString &pFileName);
-    void manage(const QStringList &pFileNames);
-    Status unmanage(const QString &pFileName);
-    void unmanage(const QStringList &pFileNames);
+    ManageStatus manage(const QString &pFileName);
+    UnmanageStatus unmanage(const QString &pFileName);
 
 private:
     QList<Document *> mDocuments;

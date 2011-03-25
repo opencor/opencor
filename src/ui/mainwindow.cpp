@@ -714,14 +714,44 @@ void MainWindow::resetAll()
     }
 }
 
+bool MainWindow::openFile(const QString &pFileName, const bool &pUserFeedback)
+{
+    // Register the file with our document manager
+
+    DocumentManager::ManageStatus status = mDocumentManager->manage(pFileName);
+
+    switch (status) {
+    case DocumentManager::Added:
+        // The file has been added to the manager, so we can carry on with the
+        // opening of the file
+
+//---GRY--- TO BE DONE...
+
+        break;
+    case DocumentManager::AlreadyManaged:
+        // The file is already managed, so activate it
+
+//---GRY--- TO BE DONE...
+
+        break;
+    case DocumentManager::DoesNotExist:
+        // The file doesn't exist, so let the user know about it, if
+        // required
+
+        if (pUserFeedback)
+            QMessageBox::information(0, qApp->applicationName()+" Information",
+                                     QString(tr("Sorry, but the '%1' file does not exist.")).arg(pFileName));
+
+        break;
+    }
+
+    return status != DocumentManager::DoesNotExist;
+}
+
 void MainWindow::openFiles(const QStringList &pFileNames)
 {
     // One or several files are to be opened
 
-    // First, we must register the file(s) with out document manager
-
-    mDocumentManager->manage(pFileNames);
-
-    QMessageBox::information(0, qApp->applicationName()+" Information",
-                             QString("Eventually, the following file(s) will get opened within the editor:\n - %1").arg(pFileNames.join("\n - ")));
+    for (int i = 0; i < pFileNames.count(); ++i)
+        openFile(pFileNames.at(i));
 }

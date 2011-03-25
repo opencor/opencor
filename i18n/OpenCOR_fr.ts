@@ -475,6 +475,10 @@
         <source>Preferences for OpenCOR</source>
         <translation>Préférences pour OpenCOR</translation>
     </message>
+    <message>
+        <source>Sorry, but the &apos;%1&apos; file does not exist.</source>
+        <translation>Désolé, mais le fichier &apos;%1&apos; n&apos;existe pas.</translation>
+    </message>
 </context>
 <context>
     <name>ViewerWindow</name>
