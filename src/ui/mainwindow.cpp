@@ -221,13 +221,6 @@ MainWindow::~MainWindow()
     delete mTempDir;
 }
 
-DocumentManager *MainWindow::documentManager()
-{
-    // Return our document manager
-
-    return mDocumentManager;
-}
-
 void MainWindow::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
@@ -300,12 +293,41 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *pEvent)
 
 void MainWindow::dropEvent(QDropEvent *pEvent)
 {
-    // Manage the dropped documents
+    // Retrieve the name of the various files that have been dropped
 
     QList<QUrl> urlList = pEvent->mimeData()->urls();
+    QStringList fileNames;
 
     for (int i = 0; i < urlList.count(); ++i)
-        mDocumentManager->manage(urlList.at(i).toLocalFile());
+    {
+        QString fileName = urlList.at(i).toLocalFile();
+        QFileInfo fileInfo = fileName;
+
+        if (fileInfo.isFile()) {
+            if (fileInfo.isSymLink()) {
+                // We are dropping a symbolic link, so retrieve its target and
+                // check that it exists, and if it does then add it
+
+                fileName = fileInfo.symLinkTarget();
+
+                if (QFileInfo(fileName).exists())
+                    fileNames.append(fileName);
+            } else {
+                // We are dropping a file, so we can just add it
+
+                fileNames.append(fileName);
+            }
+        }
+    }
+
+    // fileNames may contain duplicates (in case we dropped some symbolic
+    // links), so remove them
+
+    fileNames.removeDuplicates();
+
+    // Get the files to be opened
+
+    filesOpened(fileNames);
 
     // Accept the proposed action for the event
 

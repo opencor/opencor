@@ -31,8 +31,6 @@ public:
     explicit MainWindow(QWidget *pParent = 0);
     ~MainWindow();
 
-    DocumentManager *documentManager();
-
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void showEvent(QShowEvent *pEvent);
