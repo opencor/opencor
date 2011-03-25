@@ -10,8 +10,7 @@
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
-    mUi(new Ui::FileBrowserWindow),
-    mKeepTrackOfPrevItem(true)
+    mUi(new Ui::FileBrowserWindow)
 {
     // Set up the UI
 
@@ -152,71 +151,81 @@ void FileBrowserWindow::gotoOtherItem(QStringList &pItems,
 {
     // Go to the previous/next item and move the last item from our list of
     // items to our list of other items
-    // Note: we must make sure that we don't keep track of the previous item
-    //       when doing this
 
-    mKeepTrackOfPrevItem = false;
-        QString crtPath = mFileBrowserWidget->currentPath();
+    // First, we must stop keeping track of the previous item otherwise it's
+    // going to mess things up
 
-        pOtherItems.append(crtPath);
+    disconnect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+               this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 
-        QString newItemPath = pItems.last();
+    // Retrieve our current path and add it to our list of other items
 
-        while (   !pItems.isEmpty()
-               && !QFileInfo(newItemPath).exists()) {
-            // The new item doesn't exist anymore, so remove it from our list of
-            // items and other items
+    QString crtPath = mFileBrowserWidget->currentPath();
 
-            updateItems(newItemPath, pItems);
-            updateItems(newItemPath, pOtherItems);
+    pOtherItems.append(crtPath);
 
-            // Try with the next new item
+    // Retrieve the new path and check whether it still exist or not
 
-            if (!pItems.isEmpty()) {
-                // The list is not empty, so make the last item our next new
-                // item
+    QString newItemPath = pItems.last();
 
-                newItemPath = pItems.last();
+    while (   !pItems.isEmpty()
+           && !QFileInfo(newItemPath).exists()) {
+        // The new item doesn't exist anymore, so remove it from our list of
+        // items and other items
 
-                // The next new item cannot, however, be the same as the current
-                // path
+        updateItems(newItemPath, pItems);
+        updateItems(newItemPath, pOtherItems);
 
-                while (!pItems.isEmpty() && (newItemPath == crtPath)) {
-                    pItems.removeLast();
+        // Try with the next new item
 
-                    if (!pItems.isEmpty())
-                        newItemPath = pItems.last();
-                    else
-                        newItemPath = "";
-                }
-            } else {
-                // The list is empty, so...
+        if (!pItems.isEmpty()) {
+            // The list is not empty, so make the last item our next new item
 
-                newItemPath = "";
+            newItemPath = pItems.last();
+
+            // The next new item cannot, however, be the same as the current
+            // path
+
+            while (!pItems.isEmpty() && (newItemPath == crtPath)) {
+                pItems.removeLast();
+
+                if (!pItems.isEmpty())
+                    newItemPath = pItems.last();
+                else
+                    newItemPath = "";
             }
+        } else {
+            // The list is empty, so...
+
+            newItemPath = "";
         }
+    }
 
-        if (!newItemPath.isEmpty()) {
-            // We have a valid new item, so go to its path and remove it from
-            // our list of items
+    if (!newItemPath.isEmpty()) {
+        // We have a valid new item, so go to its path and remove it from our
+        // list of items
 
-            mFileBrowserWidget->gotoPath(newItemPath);
+        mFileBrowserWidget->gotoPath(newItemPath);
 
-            pItems.removeLast();
-        }
+        pItems.removeLast();
+    }
 
-        // Make sure that the last item in the lists of items and other items
-        // isn't that of the current path (this may happen if some items got
-        // deleted by the user)
+    // Make sure that the last item in the lists of items and other items isn't
+    // that of the current path (this may happen if some items got deleted by
+    // the user)
 
-        crtPath = mFileBrowserWidget->currentPath();
+    crtPath = mFileBrowserWidget->currentPath();
 
-        if (!pItems.isEmpty() && (pItems.last() == crtPath))
-            pItems.removeLast();
+    if (!pItems.isEmpty() && (pItems.last() == crtPath))
+        pItems.removeLast();
 
-        if (!pOtherItems.isEmpty() && (pOtherItems.last() == crtPath))
-            pOtherItems.removeLast();
-    mKeepTrackOfPrevItem = true;
+    if (!pOtherItems.isEmpty() && (pOtherItems.last() == crtPath))
+        pOtherItems.removeLast();
+
+    // Now that we are done, we can once again keep track of the previous item
+
+    connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 
     // Going to the previous item may have changed some actions, so...
 
@@ -273,7 +282,8 @@ void FileBrowserWindow::beginLoadingSettings()
     // We are about to begin loading the settings for the file browser widget,
     // so we don't want to keep track of the previous item
 
-    mKeepTrackOfPrevItem = false;
+    disconnect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+               this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 }
 
 void FileBrowserWindow::endLoadingSettings()
@@ -281,7 +291,8 @@ void FileBrowserWindow::endLoadingSettings()
     // We are now done loading the settings for the file browser widget, so we
     // can now keep track of the previous item
 
-    mKeepTrackOfPrevItem = true;
+    connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 }
 
 void FileBrowserWindow::customContextMenu(const QPoint &)
@@ -329,11 +340,6 @@ void FileBrowserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
 void FileBrowserWindow::itemChanged(const QModelIndex &,
                                     const QModelIndex &pPrevItem)
 {
-    if (!mKeepTrackOfPrevItem)
-        // We don't want to keep track of the previous item, so...
-
-        return;
-
     // A new item has been selected, so we need to keep track of the old one in
     // case we want to go back to it
 

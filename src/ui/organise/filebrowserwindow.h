@@ -36,8 +36,6 @@ private:
     QStringList mPrevItems;
     QStringList mNextItems;
 
-    bool mKeepTrackOfPrevItem;
-
     void gotoOtherItem(QStringList &pItems, QStringList &pOtherItems);
     void updateItems(const QString &pItemPath, QStringList &pItems);
 
