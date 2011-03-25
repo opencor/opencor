@@ -283,11 +283,11 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
             header()->setResizeMode(QHeaderView::Interactive);
         }
 
-        // Check whether or not we are done initializing and, if so, let people
-        // know that this means we are done loading the settings
+        // Check whether or not we are done initializing (which is when we have
+        // reached the root/drive directory) and, if so, let people know that
+        // this means we are done loading the settings
 
-        if (   ( mInitPath.isEmpty() && !mInitPathDir.compare(pPath))
-            || (!mInitPath.isEmpty() && !mInitPath.compare(pPath))) {
+        if (QDir(pPath+QDir::separator()).dirName().isEmpty()) {
             emit endLoadingSettings();
 
             needInitializing = false;
