@@ -725,7 +725,7 @@ bool MainWindow::openFile(const QString &pFileName, const bool &pUserFeedback)
         // The file has been added to the manager, so we can carry on with the
         // opening of the file
 
-//---GRY--- TO BE DONE...
+        mCentralWidget->openFile(pFileName);
 
         break;
     case DocumentManager::AlreadyManaged:

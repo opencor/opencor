@@ -3,6 +3,11 @@
 
 #include "ui_centralwidget.h"
 
+#include <QFileInfo>
+#include <QTextStream>
+
+#include <qsciscintilla.h>
+
 CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
@@ -24,4 +29,27 @@ CentralWidget::~CentralWidget()
     // Delete the UI
 
     delete mUi;
+}
+
+void CentralWidget::openFile(const QString &pFileName)
+{
+    // Create an editor for the file
+
+    QsciScintilla *scintilla = new QsciScintilla(this);
+
+    // Set the contents of the file to the editor
+
+    QFile file(pFileName);
+
+    file.open(QIODevice::ReadOnly);
+
+    scintilla->setText(QTextStream(&file).readAll());
+    scintilla->setReadOnly(!(QFile::permissions(pFileName) & QFile::WriteUser));
+
+    file.close();
+
+    // Create a new tab and have the editor as its contents
+
+    mTabWidget->setCurrentIndex(mTabWidget->addTab(scintilla,
+                                                   QFileInfo(pFileName).baseName()));
 }

@@ -19,6 +19,8 @@ public:
     explicit CentralWidget(QWidget *pParent);
     ~CentralWidget();
 
+    void openFile(const QString &pFileName);
+
 private:
     Ui::CentralWidget *mUi;
 

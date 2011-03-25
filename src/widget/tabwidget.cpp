@@ -7,6 +7,7 @@ TabWidget::TabWidget(QWidget *pParent) :
     QTabWidget(pParent),
     CommonWidget(pParent)
 {
+    setTabsClosable(true);
 }
 
 void TabWidget::paintEvent(QPaintEvent *pEvent)
