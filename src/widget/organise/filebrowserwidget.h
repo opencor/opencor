@@ -41,6 +41,7 @@ private:
 
     bool mNeedDefColWidth;
 
+    QStringList mInitPathDirs;
     QString mInitPathDir;
     QString mInitPath;
 

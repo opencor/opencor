@@ -10,7 +10,10 @@
 FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     QTreeView(pParent),
     CommonWidget(pName, this, pParent),
-    mNeedDefColWidth(true)
+    mNeedDefColWidth(true),
+    mInitPathDirs(QStringList()),
+    mInitPathDir(QString()),
+    mInitPath(QString())
 {
     // Create an instance of the file system model that we want to view
 
@@ -111,6 +114,27 @@ void FileBrowserWidget::loadSettings(QSettings &pSettings)
                 mInitPath    = initPathFileInfo.canonicalFilePath();
             }
         }
+
+        // On Windows, if mInitPathDir refers to the root of a particular drive
+        // (e.g. the C: drive), then it won't include a trailing separator (i.e.
+        // "C:" instead of "C:/") and this causes problems below (when wanting
+        // to retrieve the different folders), so we must make sure that that
+        // mInitPathDir contains a trailing separator
+        // Note: this is clearly not needed on Linux and Mac OS X, but it
+        //       doesn't harm doing it for these platforms too, so...
+
+        mInitPathDir = QDir(mInitPathDir+QDir::separator()).canonicalPath();
+
+        // Create a list of the different folders that need to be loaded to
+        // consider that the loading of the settings is finished (see just below
+        // and the directoryLoaded slot)
+
+        mInitPathDirs.append(mInitPathDir);
+
+        QDir initPathDir = mInitPathDir;
+
+        while (initPathDir.cdUp())
+            mInitPathDirs.append(initPathDir.canonicalPath());
 
         // Set the current index to that of the folder (and file, if it exists)
         // we are interested in
@@ -283,11 +307,21 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
             header()->setResizeMode(QHeaderView::Interactive);
         }
 
-        // Check whether or not we are done initializing (which is when we have
-        // reached the root/drive directory) and, if so, let people know that
+        // Remove the loaded directory from mInitPathDirs
+
+        mInitPathDirs.removeOne(QDir(pPath+QDir::separator()).canonicalPath());
+        // Note: it is very important, on Windows, to add QDir::separator() to
+        //       pPath. Indeed, say that mInitPathDir is on the C: drive, then
+        //       eventually pPath will be equal to "C:" while mInitPathDirs will
+        //       know about "C:/", so... (note: this is clearly not needed on
+        //       Linux and Mac OS X, but it doesn't harm adding it for these
+        //       platforms too, so...)
+
+        // Check whether or not we are done initializing (which is when
+        // mInitPathDirs is empty) and, if so, let people know that
         // this means we are done loading the settings
 
-        if (QDir(pPath+QDir::separator()).dirName().isEmpty()) {
+        if (mInitPathDirs.isEmpty()) {
             emit endLoadingSettings();
 
             needInitializing = false;
