@@ -100,7 +100,7 @@ private Q_SLOTS:
 
     void resetAll();
 
-    void filesOpened(const QStringList &pFileNames);
+    void openFiles(const QStringList &pFileNames);
 };
 
 #endif

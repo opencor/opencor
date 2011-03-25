@@ -181,12 +181,12 @@ MainWindow::MainWindow(QWidget *pParent) :
     // A connection to handle the file browser window
 
     connect(mFileBrowserWindow, SIGNAL(filesOpened(const QStringList &)),
-            this, SLOT(filesOpened(const QStringList &)));
+            this, SLOT(openFiles(const QStringList &)));
 
     // A connection to handle the file organiser window
 
     connect(mFileOrganiserWindow, SIGNAL(filesOpened(const QStringList &)),
-            this, SLOT(filesOpened(const QStringList &)));
+            this, SLOT(openFiles(const QStringList &)));
 
     // Retrieve the user settings from the previous session, if any
 
@@ -327,7 +327,7 @@ void MainWindow::dropEvent(QDropEvent *pEvent)
 
     // Get the files to be opened
 
-    filesOpened(fileNames);
+    openFiles(fileNames);
 
     // Accept the proposed action for the event
 
@@ -714,7 +714,7 @@ void MainWindow::resetAll()
     }
 }
 
-void MainWindow::filesOpened(const QStringList &pFileNames)
+void MainWindow::openFiles(const QStringList &pFileNames)
 {
     // One or several files are to be opened
 
