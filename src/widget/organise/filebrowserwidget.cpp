@@ -52,6 +52,10 @@ static const QString SettingsSortOrder   = "SortOrder";
 void FileBrowserWidget::loadSettings(QSettings &pSettings)
 {
     pSettings.beginGroup(objectName());
+        // Let people know that we are starting loading the settings
+
+        emit beginLoadingSettings();
+
         // Retrieve the width of each column
 
         QString columnWidthKey;
@@ -246,8 +250,9 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
             || (!mInitPath.isEmpty() && mInitPath.contains(pPath)))) {
         // mFileSystemModel is still loading the initial path, so we try to
         // expand it and scroll to it, but first we process any pending event
-        // (indeed, Windows doesn't need this, but Linux and Mac OS X definitely
-        // do and it can't harm having it for all three environments, so...)
+        // (indeed, though Windows doesn't need this, Linux and Mac OS X
+        // definitely do and it can't harm having it for all three environments,
+        // so...)
 
         qApp->processEvents();
 
@@ -255,14 +260,15 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
         setExpanded(initPathDirModelIndex, true);
         scrollTo(initPathDirModelIndex);
+        setCurrentIndex(initPathDirModelIndex);
 
         if (!mInitPath.isEmpty()) {
             // The initial path is that of a file and it exists, so select it
 
             QModelIndex initPathModelIndex = mFileSystemModel->index(mInitPath);
 
-            setExpanded(initPathModelIndex, true);
             scrollTo(initPathModelIndex);
+            setCurrentIndex(initPathModelIndex);
         }
 
         // Set the default width of the columns, if needed, so that it fits
@@ -276,10 +282,16 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
             header()->setResizeMode(QHeaderView::Interactive);
         }
-    } else {
-        // We are done initializing, so...
 
-        needInitializing = false;
+        // Check whether or not we are done initializing and, if so, let people
+        // know that this means we are done loading the settings
+
+        if (   ( mInitPath.isEmpty() && !mInitPathDir.compare(pPath))
+            || (!mInitPath.isEmpty() && !mInitPath.compare(pPath))) {
+            emit endLoadingSettings();
+
+            needInitializing = false;
+        }
     }
 }
 

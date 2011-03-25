@@ -47,6 +47,9 @@ private:
     QStringList selectedFiles();
 
 Q_SIGNALS:
+    void beginLoadingSettings();
+    void endLoadingSettings();
+
     void filesOpened(const QStringList &pFileNames);
 
 private Q_SLOTS:

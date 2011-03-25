@@ -43,6 +43,10 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     // Some connections
 
+    connect(mFileBrowserWidget, SIGNAL(beginLoadingSettings()),
+            this, SLOT(beginLoadingSettings()));
+    connect(mFileBrowserWidget, SIGNAL(endLoadingSettings()),
+            this, SLOT(endLoadingSettings()));
     connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(customContextMenu(const QPoint &)));
     connect(mFileBrowserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
@@ -51,7 +55,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
             this, SIGNAL(filesOpened(const QStringList &)));
 
     connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(currentItemChanged(const QModelIndex &, const QModelIndex &)));
+            this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 }
 
 FileBrowserWindow::~FileBrowserWindow()
@@ -69,7 +73,7 @@ void FileBrowserWindow::updateActions()
 
     mUi->actionHome->setEnabled(mFileBrowserWidget->currentPath() != homeFolder);
 
-    mUi->actionParent->setEnabled(mFileBrowserWidget->currentPathParent() != "");
+    mUi->actionParent->setEnabled(!mFileBrowserWidget->currentPathParent().isEmpty());
 
     mUi->actionPrevious->setEnabled(mPrevItems.count());
     mUi->actionNext->setEnabled(mNextItems.count());
@@ -96,13 +100,9 @@ void FileBrowserWindow::loadSettings(QSettings &pSettings)
 {
     pSettings.beginGroup(objectName());
         // Retrieve the settings of the file browser widget
-        // Note: we must make sure that we don't keep track of the previous item
-
-        mKeepTrackOfPrevItem = false;
+        // Note: check the beginLoadingSettings and endLoadingSettings slots
 
         mFileBrowserWidget->loadSettings(pSettings);
-
-        mKeepTrackOfPrevItem = true;
 
         // Make sure that the current path is expanded
         // Note: this is important in case the current path is that of the C:
@@ -268,6 +268,22 @@ void FileBrowserWindow::updateItems(const QString &pItemPath,
     }
 }
 
+void FileBrowserWindow::beginLoadingSettings()
+{
+    // We are about to begin loading the settings for the file browser widget,
+    // so we don't want to keep track of the previous item
+
+    mKeepTrackOfPrevItem = false;
+}
+
+void FileBrowserWindow::endLoadingSettings()
+{
+    // We are now done loading the settings for the file browser widget, so we
+    // can now keep track of the previous item
+
+    mKeepTrackOfPrevItem = true;
+}
+
 void FileBrowserWindow::customContextMenu(const QPoint &)
 {
     // Create a custom context menu which items match the contents of our
@@ -310,16 +326,11 @@ void FileBrowserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
     }
 }
 
-void FileBrowserWindow::currentItemChanged(const QModelIndex &pNewItem,
-                                           const QModelIndex &pPrevItem)
+void FileBrowserWindow::itemChanged(const QModelIndex &,
+                                    const QModelIndex &pPrevItem)
 {
-    if (   !mKeepTrackOfPrevItem
-        || (mFileBrowserWidget->pathOf(pPrevItem) == mFileBrowserWidget->pathOf(pNewItem)))
+    if (!mKeepTrackOfPrevItem)
         // We don't want to keep track of the previous item, so...
-        // Note: there is a puzzling case where upon starting OpenCOR, a file
-        //       might initially be selected. From there, to click on that link
-        //       will trigger this slot and though pNewItem and pPrevItem are
-        //       different, they both refer to the same path information, so...
 
         return;
 
