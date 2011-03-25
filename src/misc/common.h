@@ -5,7 +5,7 @@
 
 class QCoreApplication;
 
-static const QString OpencorHomepageUrl = "http://opencor.sourceforge.net/";
+static const QString OpencorHomepageUrl = "http://www.opencor.ws/";
 
 void error(const QCoreApplication &pApp, const QString &pMsg);
 
