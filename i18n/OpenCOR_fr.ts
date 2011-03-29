@@ -479,6 +479,18 @@
         <source>Sorry, but the &apos;%1&apos; file does not exist.</source>
         <translation>Désolé, mais le fichier &apos;%1&apos; n&apos;existe pas.</translation>
     </message>
+    <message>
+        <source>&amp;Print...</source>
+        <translation>Im&amp;primer...</translation>
+    </message>
+    <message>
+        <source>Print the current file</source>
+        <translation>Imprimer le fichier actuel</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ViewerWindow</name>

@@ -51,6 +51,8 @@
     <addaction name="actionClose"/>
     <addaction name="actionCloseAll"/>
     <addaction name="separator"/>
+    <addaction name="actionPrint"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuTools">
@@ -552,6 +554,24 @@
    </property>
    <property name="statusTip">
     <string>Preferences for OpenCOR</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/document-print.png</normaloff>:/oxygen/actions/document-print.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Print...</string>
+   </property>
+   <property name="statusTip">
+    <string>Print the current file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

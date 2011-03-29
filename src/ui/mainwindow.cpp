@@ -621,6 +621,11 @@ void MainWindow::on_actionCloseAll_triggered()
     notYetImplemented("void MainWindow::on_actionCloseAll_triggered()");
 }
 
+void MainWindow::on_actionPrint_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionPrint_triggered()");
+}
+
 void MainWindow::on_actionFullScreen_triggered()
 {
     // Switch to / back from full screen mode
