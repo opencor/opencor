@@ -21,6 +21,8 @@
         <file>oxygen/actions/go-previous.png</file>
         <file>oxygen/actions/go-up.png</file>
         <file>oxygen/actions/help-about.png</file>
+        <file>oxygen/actions/media-playback-start.png</file>
+        <file>oxygen/actions/media-playback-stop.png</file>
         <file>oxygen/actions/system-reboot.png</file>
         <file>oxygen/actions/view-fullscreen.png</file>
         <file>oxygen/actions/zoom-in.png</file>

@@ -139,6 +139,11 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
             mUi->actionHelpToolbar, SLOT(setChecked(bool)));
 
+    connect(mUi->actionRunToolbar, SIGNAL(triggered(bool)),
+            mUi->runToolbar, SLOT(setVisible(bool)));
+    connect(mUi->runToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
+            mUi->actionRunToolbar, SLOT(setChecked(bool)));
+
     // A connection to handle the status bar
 
     connect(mUi->actionStatusBar, SIGNAL(triggered(bool)),
@@ -634,6 +639,16 @@ void MainWindow::on_actionFullScreen_triggered()
         showFullScreen();
     else
         showNormal();
+}
+
+void MainWindow::on_actionRun_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionRun_triggered()");
+}
+
+void MainWindow::on_actionStop_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionStop_triggered()");
 }
 
 void MainWindow::on_actionSystem_triggered()

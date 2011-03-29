@@ -491,6 +491,34 @@
         <source>Ctrl+P</source>
         <translation></translation>
     </message>
+    <message>
+        <source>&amp;Run</source>
+        <translation>Exécute&amp;r</translation>
+    </message>
+    <message>
+        <source>Ctrl+R</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Run the current file</source>
+        <translation>Exécuter le fichier actuel</translation>
+    </message>
+    <message>
+        <source>Stop the current file</source>
+        <translation>Arrêter le fichier actuel</translation>
+    </message>
+    <message>
+        <source>S&amp;top</source>
+        <translation>Arrê&amp;ter</translation>
+    </message>
+    <message>
+        <source>Show/hide the Run toolbar</source>
+        <translation>Montrer/cacher la barre d&apos;outils Exécuter</translation>
+    </message>
+    <message>
+        <source>Run Toolbar</source>
+        <translation>Barre d&apos;Outils Exécuter</translation>
+    </message>
 </context>
 <context>
     <name>ViewerWindow</name>

@@ -92,6 +92,8 @@ private Q_SLOTS:
     void on_actionCloseAll_triggered();
     void on_actionPrint_triggered();
     void on_actionFullScreen_triggered();
+    void on_actionRun_triggered();
+    void on_actionStop_triggered();
     void on_actionSystem_triggered();
     void on_actionEnglish_triggered();
     void on_actionFrench_triggered();

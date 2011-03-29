@@ -104,6 +104,7 @@
        <normaloff>:/oxygen/actions/configure-toolbars.png</normaloff>:/oxygen/actions/configure-toolbars.png</iconset>
      </property>
      <addaction name="actionFileToolbar"/>
+     <addaction name="actionRunToolbar"/>
      <addaction name="actionHelpToolbar"/>
     </widget>
     <widget class="QMenu" name="menuOrganise">
@@ -128,8 +129,16 @@
     <addaction name="separator"/>
     <addaction name="actionFullScreen"/>
    </widget>
+   <widget class="QMenu" name="menuRun">
+    <property name="title">
+     <string>&amp;Run</string>
+    </property>
+    <addaction name="actionRun"/>
+    <addaction name="actionStop"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
+   <addaction name="menuRun"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -157,6 +166,19 @@
    <addaction name="actionClose"/>
    <addaction name="separator"/>
    <addaction name="actionPrint"/>
+  </widget>
+  <widget class="QToolBar" name="runToolbar">
+   <property name="windowTitle">
+    <string>Run Toolbar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionRun"/>
+   <addaction name="actionStop"/>
   </widget>
   <widget class="QToolBar" name="helpToolbar">
    <property name="windowTitle">
@@ -574,6 +596,50 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionRun">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/media-playback-start.png</normaloff>:/oxygen/actions/media-playback-start.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Run</string>
+   </property>
+   <property name="statusTip">
+    <string>Run the current file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/media-playback-stop.png</normaloff>:/oxygen/actions/media-playback-stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>S&amp;top</string>
+   </property>
+   <property name="statusTip">
+    <string>Stop the current file</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionRunToolbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Run</string>
+   </property>
+   <property name="statusTip">
+    <string>Show/hide the Run toolbar</string>
    </property>
   </action>
  </widget>
