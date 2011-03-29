@@ -134,15 +134,20 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->fileToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
             mUi->actionFileToolbar, SLOT(setChecked(bool)));
 
-    connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
-            mUi->helpToolbar, SLOT(setVisible(bool)));
-    connect(mUi->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-            mUi->actionHelpToolbar, SLOT(setChecked(bool)));
+    connect(mUi->actionEditToolbar, SIGNAL(triggered(bool)),
+            mUi->editToolbar, SLOT(setVisible(bool)));
+    connect(mUi->editToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
+            mUi->actionEditToolbar, SLOT(setChecked(bool)));
 
     connect(mUi->actionRunToolbar, SIGNAL(triggered(bool)),
             mUi->runToolbar, SLOT(setVisible(bool)));
     connect(mUi->runToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
             mUi->actionRunToolbar, SLOT(setChecked(bool)));
+
+    connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
+            mUi->helpToolbar, SLOT(setVisible(bool)));
+    connect(mUi->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
+            mUi->actionHelpToolbar, SLOT(setChecked(bool)));
 
     // A connection to handle the status bar
 
@@ -380,6 +385,7 @@ static const QString SettingsLocale              = "Locale";
 static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
 static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
+static const QString SettingsDebugModeEnabled    = "DebugModeEnabled";
 
 void MainWindow::loadSettings()
 {
@@ -420,6 +426,11 @@ void MainWindow::loadSettings()
                                                       true).toBool());
         }
 
+        // Retrieve whether we are working in debug mode or not
+
+        mUi->actionDebugMode->setChecked(settings.value(SettingsDebugModeEnabled,
+                                                        false).toBool());
+
         // Retrieve the settings of the various dock windows
 
         loadDockWindowSettings(mCellmlModelRepositoryWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
@@ -453,6 +464,11 @@ void MainWindow::saveSettings()
 
         settings.setValue(SettingsStatusBarVisibility,
                           mUi->statusBar->isVisible());
+
+        // Keep track of whether we are working in debug mode or not
+
+        settings.setValue(SettingsDebugModeEnabled,
+                          mUi->actionDebugMode->isChecked());
 
         // Keep track of the settings of the various dock windows
 
@@ -629,6 +645,61 @@ void MainWindow::on_actionCloseAll_triggered()
 void MainWindow::on_actionPrint_triggered()
 {
     notYetImplemented("void MainWindow::on_actionPrint_triggered()");
+}
+
+void MainWindow::on_actionUndo_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionUndo_triggered()");
+}
+
+void MainWindow::on_actionRedo_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionRedo_triggered()");
+}
+
+void MainWindow::on_actionCut_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionCut_triggered()");
+}
+
+void MainWindow::on_actionCopy_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionCopy_triggered()");
+}
+
+void MainWindow::on_actionPaste_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionPaste_triggered()");
+}
+
+void MainWindow::on_actionDelete_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionDelete_triggered()");
+}
+
+void MainWindow::on_actionFind_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionFind_triggered()");
+}
+
+void MainWindow::on_actionFindNext_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionFindNext_triggered()");
+}
+
+void MainWindow::on_actionFindPrevious_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionFindPrevious_triggered()");
+}
+
+void MainWindow::on_actionReplace_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionReplace_triggered()");
+}
+
+void MainWindow::on_actionSelectAll_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionSelectAll_triggered()");
 }
 
 void MainWindow::on_actionFullScreen_triggered()

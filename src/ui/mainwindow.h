@@ -91,6 +91,17 @@ private Q_SLOTS:
     void on_actionClose_triggered();
     void on_actionCloseAll_triggered();
     void on_actionPrint_triggered();
+    void on_actionUndo_triggered();
+    void on_actionRedo_triggered();
+    void on_actionCut_triggered();
+    void on_actionCopy_triggered();
+    void on_actionPaste_triggered();
+    void on_actionDelete_triggered();
+    void on_actionFind_triggered();
+    void on_actionFindNext_triggered();
+    void on_actionFindPrevious_triggered();
+    void on_actionReplace_triggered();
+    void on_actionSelectAll_triggered();
     void on_actionFullScreen_triggered();
     void on_actionRun_triggered();
     void on_actionStop_triggered();
@@ -103,9 +114,8 @@ private Q_SLOTS:
     void on_actionUpdates_triggered();
     void on_actionAbout_triggered();
 
-    void resetAll();
-
     void openFiles(const QStringList &pFileNames);
+    void resetAll();
 };
 
 #endif

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowIcon">
@@ -20,7 +20,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>640</width>
+     <width>800</width>
      <height>21</height>
     </rect>
    </property>
@@ -104,10 +104,11 @@
        <normaloff>:/oxygen/actions/configure-toolbars.png</normaloff>:/oxygen/actions/configure-toolbars.png</iconset>
      </property>
      <addaction name="actionFileToolbar"/>
+     <addaction name="actionEditToolbar"/>
      <addaction name="actionRunToolbar"/>
      <addaction name="actionHelpToolbar"/>
     </widget>
-    <widget class="QMenu" name="menuOrganise">
+    <widget class="QMenu" name="menuOrganiseView">
      <property name="title">
       <string>&amp;Organise</string>
      </property>
@@ -115,7 +116,7 @@
      <addaction name="actionFileBrowser"/>
      <addaction name="actionFileOrganiser"/>
     </widget>
-    <widget class="QMenu" name="menuEdit">
+    <widget class="QMenu" name="menuEditView">
      <property name="title">
       <string>&amp;Edit</string>
      </property>
@@ -124,8 +125,8 @@
     <addaction name="menuToolbars"/>
     <addaction name="actionStatusBar"/>
     <addaction name="separator"/>
-    <addaction name="menuOrganise"/>
-    <addaction name="menuEdit"/>
+    <addaction name="menuOrganiseView"/>
+    <addaction name="menuEditView"/>
     <addaction name="separator"/>
     <addaction name="actionFullScreen"/>
    </widget>
@@ -135,8 +136,30 @@
     </property>
     <addaction name="actionRun"/>
     <addaction name="actionStop"/>
+    <addaction name="separator"/>
+    <addaction name="actionDebugMode"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionCut"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionPaste"/>
+    <addaction name="actionDelete"/>
+    <addaction name="separator"/>
+    <addaction name="actionFind"/>
+    <addaction name="actionFindNext"/>
+    <addaction name="actionFindPrevious"/>
+    <addaction name="actionReplace"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelectAll"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuRun"/>
    <addaction name="menuTools"/>
@@ -167,6 +190,26 @@
    <addaction name="separator"/>
    <addaction name="actionPrint"/>
   </widget>
+  <widget class="QToolBar" name="editToolbar">
+   <property name="windowTitle">
+    <string>Edit Toolbar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionCut"/>
+   <addaction name="actionCopy"/>
+   <addaction name="actionPaste"/>
+   <addaction name="actionDelete"/>
+   <addaction name="separator"/>
+   <addaction name="actionFind"/>
+  </widget>
   <widget class="QToolBar" name="runToolbar">
    <property name="windowTitle">
     <string>Run Toolbar</string>
@@ -179,6 +222,8 @@
    </attribute>
    <addaction name="actionRun"/>
    <addaction name="actionStop"/>
+   <addaction name="separator"/>
+   <addaction name="actionDebugMode"/>
   </widget>
   <widget class="QToolBar" name="helpToolbar">
    <property name="windowTitle">
@@ -269,7 +314,7 @@
     <string>&amp;Help</string>
    </property>
    <property name="statusTip">
-    <string>Show or hide the OpenCOR help</string>
+    <string>Show/hide the OpenCOR help</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
@@ -640,6 +685,169 @@
    </property>
    <property name="statusTip">
     <string>Show/hide the Run toolbar</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/edit-undo.png</normaloff>:/oxygen/actions/edit-undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Undo</string>
+   </property>
+   <property name="statusTip">
+    <string>Undo the last action</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/edit-redo.png</normaloff>:/oxygen/actions/edit-redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Redo</string>
+   </property>
+   <property name="statusTip">
+    <string>Redo the last action</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/edit-cut.png</normaloff>:/oxygen/actions/edit-cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cu&amp;t</string>
+   </property>
+   <property name="statusTip">
+    <string>Cut the selected object</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="statusTip">
+    <string>Copy the selected object</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/edit-paste.png</normaloff>:/oxygen/actions/edit-paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Paste</string>
+   </property>
+   <property name="statusTip">
+    <string>Paste the contents of the clipboard</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Delete</string>
+   </property>
+   <property name="statusTip">
+    <string>Delete the selected object</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFind">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/edit-find.png</normaloff>:/oxygen/actions/edit-find.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Find...</string>
+   </property>
+   <property name="statusTip">
+    <string>Search for a specific object</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFindNext">
+   <property name="text">
+    <string>Find &amp;Next</string>
+   </property>
+   <property name="statusTip">
+    <string>Search forwards for the same object</string>
+   </property>
+  </action>
+  <action name="actionFindPrevious">
+   <property name="text">
+    <string>Find Pre&amp;vious</string>
+   </property>
+   <property name="statusTip">
+    <string>Search backwards for the same object</string>
+   </property>
+  </action>
+  <action name="actionReplace">
+   <property name="text">
+    <string>Rep&amp;lace</string>
+   </property>
+   <property name="statusTip">
+    <string>Search for a specific object and replace it with another</string>
+   </property>
+  </action>
+  <action name="actionSelectAll">
+   <property name="text">
+    <string>Select &amp;All</string>
+   </property>
+   <property name="statusTip">
+    <string>Select all the objects</string>
+   </property>
+  </action>
+  <action name="actionDebugMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/tools-report-bug.png</normaloff>:/oxygen/actions/tools-report-bug.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Debug Mode</string>
+   </property>
+   <property name="statusTip">
+    <string>Activate/deactivate the debug mode</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionEditToolbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Edit</string>
    </property>
   </action>
  </widget>
