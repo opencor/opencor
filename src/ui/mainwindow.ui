@@ -155,6 +155,8 @@
    <addaction name="actionSaveAs"/>
    <addaction name="separator"/>
    <addaction name="actionClose"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrint"/>
   </widget>
   <widget class="QToolBar" name="helpToolbar">
    <property name="windowTitle">
