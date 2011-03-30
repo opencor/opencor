@@ -44,6 +44,7 @@
         <file alias="cellmlLogo">cellML.png</file>
         <file alias="helpWidgetError">helpWidgetError.html</file>
         <file alias="qt_fr">qt_fr.qm</file>
+        <file alias="sbmlLogo">sbml.png</file>
         <file alias="cellmlTemplate">template.cellml</file>
         <file alias="qchFile">../build/OpenCOR.qch</file>
         <file alias="qhcFile">../build/OpenCOR.qhc</file>
