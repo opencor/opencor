@@ -35,7 +35,7 @@
     <string>Go to the home page</string>
    </property>
    <property name="shortcut">
-    <string>Alt+Home</string>
+    <string>Ctrl+Home</string>
    </property>
   </action>
   <action name="actionBack">
@@ -80,7 +80,7 @@
     <string>Zoom in the help page contents</string>
    </property>
    <property name="shortcut">
-    <string>Alt++</string>
+    <string>Ctrl++</string>
    </property>
   </action>
   <action name="actionZoomOut">
@@ -95,7 +95,7 @@
     <string>Zoom out the help page contents</string>
    </property>
    <property name="shortcut">
-    <string>Alt+-</string>
+    <string>Ctrl+-</string>
    </property>
   </action>
   <action name="actionNormalSize">
@@ -110,7 +110,7 @@
     <string>Reset the size of the help page contents</string>
    </property>
    <property name="shortcut">
-    <string>Alt+0</string>
+    <string>Ctrl+0</string>
    </property>
   </action>
   <action name="actionCopy">
@@ -125,7 +125,7 @@
     <string>Copy the selection to the clipboard</string>
    </property>
    <property name="shortcut">
-    <string>Alt+C</string>
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="actionPrint">
@@ -140,7 +140,7 @@
     <string>Print this help page</string>
    </property>
    <property name="shortcut">
-    <string>Alt+P</string>
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>

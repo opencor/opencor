@@ -698,6 +698,9 @@
    <property name="statusTip">
     <string>Undo the last action</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -712,6 +715,9 @@
    </property>
    <property name="statusTip">
     <string>Redo the last action</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -728,6 +734,9 @@
    <property name="statusTip">
     <string>Cut the selected object</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -742,6 +751,9 @@
    </property>
    <property name="statusTip">
     <string>Copy the selected object</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -758,6 +770,9 @@
    <property name="statusTip">
     <string>Paste the contents of the clipboard</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -772,6 +787,9 @@
    </property>
    <property name="statusTip">
     <string>Delete the selected object</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -788,6 +806,9 @@
    <property name="statusTip">
     <string>Search for a specific object</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -799,6 +820,9 @@
    <property name="statusTip">
     <string>Search forwards for the same object</string>
    </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
   </action>
   <action name="actionFindPrevious">
    <property name="text">
@@ -806,6 +830,9 @@
    </property>
    <property name="statusTip">
     <string>Search backwards for the same object</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F3</string>
    </property>
   </action>
   <action name="actionReplace">
@@ -815,6 +842,9 @@
    <property name="statusTip">
     <string>Search for a specific object and replace it with another</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
   </action>
   <action name="actionSelectAll">
    <property name="text">
@@ -822,6 +852,9 @@
    </property>
    <property name="statusTip">
     <string>Select all the objects</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="actionDebugMode">

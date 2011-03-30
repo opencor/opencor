@@ -35,7 +35,7 @@
     <string>Go to the home folder</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+Home</string>
+    <string>Ctrl+Home</string>
    </property>
   </action>
   <action name="actionPrevious">
@@ -50,7 +50,7 @@
     <string>Go to the previous folder or file</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+Left</string>
+    <string>Alt+Left</string>
    </property>
   </action>
   <action name="actionNext">
@@ -65,7 +65,7 @@
     <string>Go to the next folder or file</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+Right</string>
+    <string>Alt+Right</string>
    </property>
   </action>
   <action name="actionParent">
@@ -80,7 +80,7 @@
     <string>Go to the parent folder</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+Up</string>
+    <string>Alt+Up</string>
    </property>
   </action>
  </widget>

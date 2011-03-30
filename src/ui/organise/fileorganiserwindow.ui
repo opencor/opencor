@@ -35,7 +35,7 @@
     <string>Create a new folder</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+N</string>
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actionDelete">
@@ -50,7 +50,7 @@
     <string>Delete the current folder(s) and/or link(s) to the current file(s)</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+D</string>
+    <string>Del</string>
    </property>
   </action>
  </widget>

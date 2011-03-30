@@ -19,20 +19,20 @@
         <translation>&amp;Principal</translation>
     </message>
     <message>
-        <source>Ctrl+Alt+Home</source>
-        <translation>Ctrl+Alt+Début</translation>
+        <source>Ctrl+Home</source>
+        <translation>Ctrl+Début</translation>
     </message>
     <message>
-        <source>Ctrl+Alt+Left</source>
-        <translation>Ctrl+Alt+Gauche</translation>
+        <source>Alt+Left</source>
+        <translation>Alt+Gauche</translation>
     </message>
     <message>
-        <source>Ctrl+Alt+Right</source>
-        <translation>Ctrl+Alt+Droit</translation>
+        <source>Alt+Right</source>
+        <translation>Alt+Droit</translation>
     </message>
     <message>
-        <source>Ctrl+Alt+Up</source>
-        <translation>Ctrl+Alt+Haut</translation>
+        <source>Alt+Up</source>
+        <translation>Alt+Haut</translation>
     </message>
     <message>
         <source>Go to the home folder</source>
@@ -78,7 +78,7 @@
         <translation>Créer un nouveau répertoire</translation>
     </message>
     <message>
-        <source>Ctrl+Alt+N</source>
+        <source>Ctrl+N</source>
         <translation></translation>
     </message>
     <message>
@@ -86,8 +86,8 @@
         <translation>&amp;Supprimer</translation>
     </message>
     <message>
-        <source>Ctrl+Alt+D</source>
-        <translation></translation>
+        <source>Del</source>
+        <translation>Suppr</translation>
     </message>
     <message>
         <source>Delete the current folder(s) and/or link(s) to the current file(s)</source>
@@ -173,27 +173,27 @@
         <translation>Imprimer cette page d&apos;aide</translation>
     </message>
     <message>
-        <source>Alt+Home</source>
-        <translation>Alt+Début</translation>
+        <source>Ctrl+Home</source>
+        <translation>Ctrl+Début</translation>
     </message>
     <message>
-        <source>Alt++</source>
+        <source>Ctrl++</source>
         <translation></translation>
     </message>
     <message>
-        <source>Alt+-</source>
+        <source>Ctrl+-</source>
         <translation></translation>
     </message>
     <message>
-        <source>Alt+0</source>
+        <source>Ctrl+0</source>
         <translation></translation>
     </message>
     <message>
-        <source>Alt+C</source>
+        <source>Ctrl+C</source>
         <translation></translation>
     </message>
     <message>
-        <source>Alt+P</source>
+        <source>Ctrl+P</source>
         <translation></translation>
     </message>
 </context>
@@ -618,6 +618,50 @@
     <message>
         <source>Select all the objects</source>
         <translation>Sélectionner tous les objets</translation>
+    </message>
+    <message>
+        <source>Ctrl+Z</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ctrl+Y</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ctrl+C</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ctrl+V</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Del</source>
+        <translation>Suppr</translation>
+    </message>
+    <message>
+        <source>Ctrl+F</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>F3</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Shift+F3</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ctrl+H</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ctrl+A</source>
+        <translation></translation>
     </message>
 </context>
 <context>
