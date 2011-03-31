@@ -41,7 +41,7 @@
                     <li>
                         Windows: <a href="http://get.qt.nokia.com/misc/MinGW-gcc440_1.zip">MinGW</a> 4.4.0;
                         <div>
-                            <strong>Note:</strong> MinGW also comes with Qt Creator (see below), but is needed to install Qt (see below), so either skip MinGW, install Qt Creator and then Qt, or unzip the contents of <a href="http://get.qt.nokia.com/misc/MinGW-gcc440_1.zip"><code>MinGW-gcc440_1.zip</code></a> somewhere (e.g. <code>C:\Qt\MinGW\</code>).
+                            <strong>Note:</strong> MinGW also comes with Qt Creator (see below), but is needed to install Qt (see below), so either skip MinGW, install Qt Creator and then Qt, or unzip the contents of <code><a href="http://get.qt.nokia.com/misc/MinGW-gcc440_1.zip">MinGW-gcc440_1.zip</a></code> somewhere (e.g. <code>C:\Qt\MinGW\</code>).
                         </div>
                     </li>
                     <li>Ubuntu: the <a href="http://packages.ubuntu.com/maverick/g++">g++</a> package; and</li>
@@ -98,7 +98,7 @@ $ rm -fr [Qt4.7.2]</pre>
                     <strong>Note #1:</strong> both CMake and Git are supported by Qt Creator, but Git might need configuring. This can be done by selecting the <code>Tools|Options...</code> menu, then the <code>Version Control</code> section, and finally the <code>Git</code> tab. Alternatively, you might want to use Git from the command line, or with <a href="http://code.google.com/p/tortoisegit/">TortoiseGit</a>, <a href="http://sourceforge.net/projects/qgit/">QGit</a> or <a href="http://gitx.frim.nl/">GitX</a> on Windows, Ubuntu and Mac OS X, respectively.
                 </div>
                 <div>
-                    <strong>Note #2:</strong> though OpenCOR is currently being developed using Qt 4.7.2 and Qt Creator 2.1.0, it happens that it can also be built using Qt 4.6. For this reason, our <a href="../../CMakeLists.txt">CMake script</a> requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.
+                    <strong>Note #2:</strong> though OpenCOR is currently being developed using Qt 4.7.2 and Qt Creator 2.1.0, it happens that it can also be built using Qt 4.6. For this reason, our <a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=CMakeLists.txt;hb=HEAD">CMake script</a> requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.
                 </div>
             </li>
             <li><a href="http://nsis.sourceforge.net/">NSIS</a> (Windows only): a program for creating Windows installers.</li>
@@ -128,17 +128,17 @@ $ rm -fr [Qt4.7.2]</pre>
             <li>
                 <strong>Command line:</strong> various batch and VBScript files (<code>.bat</code> and <code>.vbs</code> files) on Windows and shell scripts on Ubuntu/Mac OS X are available: (Note that these command line tools require access to CMake, MinGW/g++/Xcode (for Windows, Ubuntu and Mac OS X, respectively) and Qt from the command line. So, make sure that this is the case by updating your <code>PATH</code> environment variable, if necessary.)
                 <ul>
-                    <li><code><a href="../../cleanproj">cleanproj</a>[<a href="../../cleanproj.bat">.bat</a>]</code>: cleans the OpenCOR environment;</li>
-                    <li><code><a href="../../cleanprojall">cleanprojall</a>[<a href="../../cleanprojall.bat">.bat</a>]</code>: cleans all of the OpenCOR environment (i.e. including <a href="thirdPartyLibraries.html">third-party libraries</a>);</li>
+                    <li><code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=cleanproj;hb=HEAD">[OpenCOR]/cleanproj</a>[<a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=cleanproj.bat;hb=HEAD">.bat</a>]</code>: cleans the OpenCOR environment;</li>
+                    <li><code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=cleanprojall;hb=HEAD">[OpenCOR]/cleanprojall</a>[<a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=cleanprojall.bat;hb=HEAD">.bat</a>]</code>: cleans all of the OpenCOR environment (i.e. including <a href="thirdPartyLibraries.html">third-party libraries</a>);</li>
                     <li>
-                        <code><a href="../../makeproj">makeproj</a>[<a href="../../makeproj.bat">.bat</a>]</code>: compiles and links everything that is required to get a release version of OpenCOR; and
+                        <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=makeproj;hb=HEAD">[OpenCOR]/makeproj</a>[<a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=makeproj.bat;hb=HEAD">.bat</a>]</code>: compiles and links everything that is required to get a release version of OpenCOR; and
                         <div>
                             <strong>Note:</strong> <code>makeproj[.bat]</code> does, by default, compile OpenCOR in parallel. You can, however, specify the number of processors to be used, thus making it possible to compile OpenCOR sequentially, if needed:
                             <pre>$ ./makeproj 1</pre>
                         </div>
                     </li>
                     <li>
-                        <code><a href="../../runproj">runproj</a>[<a href="../../runproj.bat">.bat</a>|<a href="../../runproj.vbs">.vbs</a>]</code>: runs OpenCOR.
+                        <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=runproj;hb=HEAD">[OpenCOR]/runproj</a>[<a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=runproj.bat;hb=HEAD">.bat</a>|<a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=runproj.vbs;hb=HEAD">.vbs</a>]</code>: runs OpenCOR.
                         <div>
                             <strong>Note:</strong> on Windows, if you were to run OpenCOR from a console window by just entering <code>runproj</code>, then the <code>runproj.bat</code> file would be executed (rather than the <code>runproj.vbs</code> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking the <code>runproj.bat</code> file from within Windows Explorer, then a console window will quickly appear and disappear. To avoid this, you should double click on the <code>runproj.vbs</code> file.
                         </div>
@@ -149,8 +149,8 @@ $ rm -fr [Qt4.7.2]</pre>
                 <strong>Using Qt Creator:</strong>
                 <ul>
                     <li>Start Qt Creator;</li>
-                    <li>Open <a href="../../CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File|Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
-                    <li>Specify <a href="../../build"><code>[OpenCOR]/build</code></a> as the build directory;</li>
+                    <li>Open <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=CMakeLists.txt;hb=HEAD">[OpenCOR]/CMakeLists.txt</a></code> (by selecting the <code>File|Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
+                    <li>Specify <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;f=build;hb=HEAD">[OpenCOR]/build</a></code> as the build directory;</li>
                     <li>Select <code>MinGW</code> as the generator (Windows only), if necessary;</li>
                     <li>Click on the <code>Run CMake</code> button;</li>
                     <li>Click on the <code>Finish</code> button;</li>
@@ -176,7 +176,7 @@ $ rm -fr [Qt4.7.2]</pre>
         </h2>
 
         <p>
-            The packaging of OpenCOR can only be done from the command line, using <a href="../../packageproj.bat"><code>packageproj.bat</code></a> on Windows and <a href="../../packageproj"><code>packageproj</code></a> on Ubuntu / Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in the latter case.
+            The packaging of OpenCOR can only be done from the command line, using <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj.bat;hb=HEAD">[OpenCOR]/packageproj.bat</a></code> on Windows and <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj;hb=HEAD">[OpenCOR]/packageproj</a></code> on Ubuntu / Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in the latter case.
         </p>
 
         <div class="copyright">
