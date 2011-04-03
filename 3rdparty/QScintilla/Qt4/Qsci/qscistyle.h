@@ -1,6 +1,6 @@
 // This module defines interface to the QsciStyle class.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -72,10 +72,10 @@ public:
     //! Constructs a QsciStyle instance for style number \a style.  If \a style
     //! is negative then a new style number is automatically allocated.  The
     //! styles description, color, paper color, font and end-of-line fill are
-    //! set to \a description, \a color, \a paper, \a font and \a eol_fill
+    //! set to \a description, \a color, \a paper, \a font and \a eolFill
     //! respectively.
     QsciStyle(int style, const QString &description, const QColor &color,
-            const QColor &paper, const QFont &font, bool eol_fill = false);
+            const QColor &paper, const QFont &font, bool eolFill = false);
 
     //! Returns the number of the style.
     int style() const {return style_nr;}

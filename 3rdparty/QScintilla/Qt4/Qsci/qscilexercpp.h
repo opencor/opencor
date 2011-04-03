@@ -1,6 +1,6 @@
 // This defines the interface to the QsciLexerCPP class.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -53,67 +53,91 @@ public:
     enum {
         //! The default.
         Default = 0,
+        InactiveDefault = Default + 64,
 
         //! A C comment.
         Comment = 1,
+        InactiveComment = Comment + 64,
 
         //! A C++ comment line.
         CommentLine = 2,
+        InactiveCommentLine = CommentLine + 64,
 
         //! A JavaDoc/Doxygen style C comment.
         CommentDoc = 3,
+        InactiveCommentDoc = CommentDoc + 64,
 
         //! A number.
         Number = 4,
+        InactiveNumber = Number + 64,
 
         //! A keyword.
         Keyword = 5,
+        InactiveKeyword = Keyword + 64,
 
         //! A double-quoted string.
         DoubleQuotedString = 6,
+        InactiveDoubleQuotedString = DoubleQuotedString + 64,
 
         //! A single-quoted string.
         SingleQuotedString = 7,
+        InactiveSingleQuotedString = SingleQuotedString + 64,
 
         //! An IDL UUID.
         UUID = 8,
+        InactiveUUID = UUID + 64,
 
         //! A pre-processor block.
         PreProcessor = 9,
+        InactivePreProcessor = PreProcessor + 64,
 
         //! An operator.
         Operator = 10,
+        InactiveOperator = Operator + 64,
 
         //! An identifier
         Identifier = 11,
+        InactiveIdentifier = Identifier + 64,
 
         //! The end of a line where a string is not closed.
         UnclosedString = 12,
+        InactiveUnclosedString = UnclosedString + 64,
 
         //! A C# verbatim string.
         VerbatimString = 13,
+        InactiveVerbatimString = VerbatimString + 64,
 
         //! A JavaScript regular expression.
         Regex = 14,
+        InactiveRegex = Regex + 64,
 
         //! A JavaDoc/Doxygen style C++ comment line.
         CommentLineDoc = 15,
+        InactiveCommentLineDoc = CommentLineDoc + 64,
 
         //! A keyword defined in keyword set number 2.  The class must
         //! be sub-classed and re-implement keywords() to make use of
         //! this style.
         KeywordSet2 = 16,
+        InactiveKeywordSet2 = KeywordSet2 + 64,
 
         //! A JavaDoc/Doxygen keyword.
         CommentDocKeyword = 17,
+        InactiveCommentDocKeyword = CommentDocKeyword + 64,
 
         //! A JavaDoc/Doxygen keyword error.
         CommentDocKeywordError = 18,
+        InactiveCommentDocKeywordError = CommentDocKeywordError + 64,
 
         //! A global class or typedef defined in keyword set number 5.
         //! The class must be sub-classed and re-implement keywords()
         //! to make use of this style.
-        GlobalClass = 19
+        GlobalClass = 19,
+        InactiveGlobalClass = GlobalClass + 64,
+
+        //! A C++ raw string.
+        RawString = 20,
+        InactiveRawString = RawString + 20,
     };
 
     //! Construct a QsciLexerCPP with parent \a parent.  \a parent is typically
@@ -188,28 +212,28 @@ public:
     //! Returns true if "} else {" lines can be folded.
     //!
     //! \sa setFoldAtElse()
-    bool foldAtElse() const;
+    bool foldAtElse() const {return fold_atelse;}
 
     //! Returns true if multi-line comment blocks can be folded.
     //!
     //! \sa setFoldComments()
-    bool foldComments() const;
+    bool foldComments() const {return fold_comments;}
 
     //! Returns true if trailing blank lines are included in a fold block.
     //!
     //! \sa setFoldCompact()
-    bool foldCompact() const;
+    bool foldCompact() const {return fold_compact;}
 
     //! Returns true if preprocessor blocks can be folded.
     //!
     //! \sa setFoldPreprocessor()
-    bool foldPreprocessor() const;
+    bool foldPreprocessor() const {return fold_preproc;}
 
     //! Returns true if preprocessor lines (after the preprocessor
     //! directive) are styled.
     //!
     //! \sa setStylePreprocessor()
-    bool stylePreprocessor() const;
+    bool stylePreprocessor() const {return style_preproc;}
 
     //! If \a allowed is true then '$' characters are allowed in identifier
     //! names.  The default is true.
@@ -220,7 +244,7 @@ public:
     //! Returns true if '$' characters are allowed in identifier names.
     //!
     //! \sa setDollarsAllowed()
-    bool dollarsAllowed() const;
+    bool dollarsAllowed() const {return dollars;}
 
 public slots:
     //! If \a fold is true then "} else {" lines can be folded.  The

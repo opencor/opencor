@@ -1,6 +1,6 @@
 // This module implements the "official" low-level API.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -381,6 +381,12 @@ void QsciScintillaBase::keyPressEvent(QKeyEvent *e)
         key = SCK_TAB;
         break;
 
+    case Qt::Key_Backtab:
+        // Scintilla assumes a backtab is shift-tab.
+        key = SCK_TAB;
+        shift = true;
+        break;
+
     case Qt::Key_Return:
     case Qt::Key_Enter:
         key = SCK_RETURN;
@@ -512,9 +518,19 @@ void QsciScintillaBase::mousePressEvent(QMouseEvent *e)
 
         triple_click.stop();
 
+        // Scintilla uses the Alt modifier to initiate rectangular selection.
+        // However the GTK port (under X11, not Windows) uses the Control
+        // modifier (by default, although it is configurable).  It does this
+        // because most X11 window managers hijack Alt-drag to move the window.
+        // We do the same, except that (for the moment at least) we don't allow
+        // the modifier to be configured.
         bool shift = e->modifiers() & Qt::ShiftModifier;
         bool ctrl = e->modifiers() & Qt::ControlModifier;
+#if defined(Q_WS_X11)
+        bool alt = ctrl;
+#else
         bool alt = e->modifiers() & Qt::AltModifier;
+#endif
 
         sci->ButtonDown(pt, clickTime, shift, ctrl, alt);
     }
@@ -590,15 +606,16 @@ void QsciScintillaBase::dragEnterEvent(QDragEnterEvent *e)
 // Handle drag leaves.
 void QsciScintillaBase::dragLeaveEvent(QDragLeaveEvent *)
 {
-    sci->SetDragPosition(-1);
+    sci->SetDragPosition(SelectionPosition());
 }
 
 
 // Handle drag moves.
 void QsciScintillaBase::dragMoveEvent(QDragMoveEvent *e)
 {
-    sci->SetDragPosition(sci->PositionFromLocation(Point(e->pos().x(),
-                    e->pos().y())));
+    sci->SetDragPosition(
+            sci->SPositionFromLocation(Point(e->pos().x(), e->pos().y()),
+                    false, false, sci->UserVirtualSpace()));
 
     acceptAction(e);
 }
@@ -609,6 +626,7 @@ void QsciScintillaBase::dropEvent(QDropEvent *e)
 {
     bool moving;
     const char *s;
+    bool rectangular;
 
     acceptAction(e);
 
@@ -617,17 +635,11 @@ void QsciScintillaBase::dropEvent(QDropEvent *e)
 
     moving = (e->dropAction() == Qt::MoveAction);
 
-    QString qs = fromMimeData(e->mimeData());
-    QByteArray ba;
-
-    if (sci->IsUnicodeMode())
-        ba = qs.toUtf8();
-    else
-        ba = qs.toLatin1();
+    QByteArray ba = fromMimeData(e->mimeData(), rectangular);
 
     s = ba.data();
 
-    sci->DropAt(sci->posDrop, s, moving, false);
+    sci->DropAt(sci->posDrop, s, moving, rectangular);
     sci->Redraw();
 }
 
@@ -654,23 +666,44 @@ void QsciScintillaBase::acceptAction(QDropEvent *e)
 // See if a MIME data object can be decoded.
 bool QsciScintillaBase::canInsertFromMimeData(const QMimeData *source) const
 {
-    return source->hasText() && !source->text().isEmpty();
+    return !source->data(QLatin1String("text/plain")).isEmpty();
 }
 
 
 // Create text from a MIME data object.
-QString QsciScintillaBase::fromMimeData(const QMimeData *source) const
+QByteArray QsciScintillaBase::fromMimeData(const QMimeData *source, bool &rectangular) const
 {
-    return source->text();
+    QByteArray data = source->data(QLatin1String("text/plain"));
+
+    // See if it is rectangular.
+    int size = data.size();
+
+    if (size > 2 && data.at(size - 1) == '\0' && data.at(size - 2) == '\n')
+    {
+        rectangular = true;
+        data.chop(1);
+    }
+    else
+    {
+        rectangular = false;
+    }
+
+    return data;
 }
 
 
 // Create a MIME data object for some text.
-QMimeData *QsciScintillaBase::toMimeData(const QString &text) const
+QMimeData *QsciScintillaBase::toMimeData(const QByteArray &text, bool rectangular) const
 {
     QMimeData *mime = new QMimeData;
+    QByteArray data(text);
 
-    mime->setText(text);
+    // This is the hack that Scintilla uses to mark rectangular text.  The text
+    // will have a trailing '\n' if it is rectangular.
+    if (rectangular)
+        data.append('\0');
+
+    mime->setData(QLatin1String("text/plain"), data);
 
     return mime;
 }

@@ -1,6 +1,6 @@
 // This module implements the portability layer for the Qt port of Scintilla.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -52,21 +52,23 @@
 #include "Qsci/qsciscintillabase.h"
 #include "SciClasses.h"
 
+#include "FontQuality.h"
+
 
 // Type convertors.
-static QFont *PFont(FontID id)
+static QFont *PFont(FontID fid)
 {
-    return reinterpret_cast<QFont *>(id);
+    return reinterpret_cast<QFont *>(fid);
 }
 
-static QWidget *PWindow(WindowID id)
+static QWidget *PWindow(WindowID wid)
 {
-    return reinterpret_cast<QWidget *>(id);
+    return reinterpret_cast<QWidget *>(wid);
 }
 
-static SciPopup *PMenu(MenuID id)
+static SciPopup *PMenu(MenuID mid)
 {
-    return reinterpret_cast<SciPopup *>(id);
+    return reinterpret_cast<SciPopup *>(mid);
 }
 
 
@@ -108,7 +110,7 @@ void Palette::Allocate(Window &)
 
 
 // Font management.
-Font::Font() : id(0)
+Font::Font() : fid(0)
 {
 }
 
@@ -117,23 +119,32 @@ Font::~Font()
 }
 
 void Font::Create(const char *faceName, int, int size, bool bold, bool italic,
-        bool)
+        int flags)
 {
     Release();
 
     QFont *f = new QFont();
 
+    QFont::StyleStrategy strategy = QFont::PreferAntialias;
+
+    if ((flags & SC_EFF_QUALITY_MASK) == SC_EFF_QUALITY_NON_ANTIALIASED)
+        strategy = QFont::NoAntialias;
+
 #if defined(Q_WS_MAC)
 #if QT_VERSION >= 0x040700
-    f->setStyleStrategy(QFont::ForceIntegerMetrics);
+    strategy = static_cast<QFont::StyleStrategy>(strategy | QFont::ForceIntegerMetrics);
 #else
 #warning "Correct handling of QFont metrics requires Qt v4.7.0 or later"
 #endif
 #endif
 
+    f->setStyleStrategy(strategy);
+
     // If name of the font begins with a '-', assume, that it is an XLFD.
     if (faceName[0] == '-')
+    {
         f->setRawName(faceName);
+    }
     else
     {
         f->setFamily(faceName);
@@ -142,15 +153,15 @@ void Font::Create(const char *faceName, int, int size, bool bold, bool italic,
         f->setItalic(italic);
     }
 
-    id = f;
+    fid = f;
 }
 
 void Font::Release()
 {
-    if (id)
+    if (fid)
     {
-        delete PFont(id);
-        id = 0;
+        delete PFont(fid);
+        fid = 0;
     }
 }
 
@@ -612,7 +623,7 @@ Window::~Window()
 
 void Window::Destroy()
 {
-    QWidget *w = PWindow(id);
+    QWidget *w = PWindow(wid);
 
     if (w)
     {
@@ -623,18 +634,18 @@ void Window::Destroy()
         // around the problem but this is the simplest and doesn't seem to
         // cause problems of its own.
         w->deleteLater();
-        id = 0;
+        wid = 0;
     }
 }
 
 bool Window::HasFocus()
 {
-    return PWindow(id)->hasFocus();
+    return PWindow(wid)->hasFocus();
 }
 
 PRectangle Window::GetPosition()
 {
-    QWidget *w = PWindow(id);
+    QWidget *w = PWindow(wid);
 
     // Before any size allocated pretend its big enough not to be scrolled.
     PRectangle rc(0,0,5000,5000);
@@ -652,19 +663,19 @@ PRectangle Window::GetPosition()
 
 void Window::SetPosition(PRectangle rc)
 {
-    PWindow(id)->setGeometry(rc.left, rc.top, rc.right - rc.left,
+    PWindow(wid)->setGeometry(rc.left, rc.top, rc.right - rc.left,
             rc.bottom - rc.top);
 }
 
 void Window::SetPositionRelative(PRectangle rc, Window relativeTo)
 {
-    QWidget *rel = PWindow(relativeTo.id);
+    QWidget *rel = PWindow(relativeTo.wid);
     QPoint pos = rel->mapToGlobal(rel->pos());
 
     int x = pos.x() + rc.left;
     int y = pos.y() + rc.top;
 
-    PWindow(id)->setGeometry(x, y, rc.right - rc.left, rc.bottom - rc.top);
+    PWindow(wid)->setGeometry(x, y, rc.right - rc.left, rc.bottom - rc.top);
 }
 
 PRectangle Window::GetClientPosition()
@@ -674,7 +685,7 @@ PRectangle Window::GetClientPosition()
 
 void Window::Show(bool show)
 {
-    QWidget *w = PWindow(id);
+    QWidget *w = PWindow(wid);
 
     if (show)
         w->show();
@@ -684,7 +695,7 @@ void Window::Show(bool show)
 
 void Window::InvalidateAll()
 {
-    QWidget *w = PWindow(id);
+    QWidget *w = PWindow(wid);
 
     if (w)
         w->update();
@@ -692,7 +703,7 @@ void Window::InvalidateAll()
 
 void Window::InvalidateRectangle(PRectangle rc)
 {
-    QWidget *w = PWindow(id);
+    QWidget *w = PWindow(wid);
 
     if (w)
         w->update(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
@@ -700,7 +711,7 @@ void Window::InvalidateRectangle(PRectangle rc)
 
 void Window::SetFont(Font &font)
 {
-    PWindow(id)->setFont(*PFont(font.GetID()));
+    PWindow(wid)->setFont(*PFont(font.GetID()));
 }
 
 void Window::SetCursor(Cursor curs)
@@ -734,53 +745,55 @@ void Window::SetCursor(Cursor curs)
         break;
 
     default:
+        // Note that Qt doesn't have a standard cursor that could be used to
+        // implement cursorReverseArrow.
         qc = Qt::ArrowCursor;
     }
 
-    PWindow(id)->setCursor(qc);
+    PWindow(wid)->setCursor(qc);
 }
 
 void Window::SetTitle(const char *s)
 {
-    PWindow(id)->setWindowTitle(s);
+    PWindow(wid)->setWindowTitle(s);
 }
 
 
 PRectangle Window::GetMonitorRect(Point pt)
 {
-    QPoint qpt = PWindow(id)->mapToGlobal(QPoint(pt.x, pt.y));
+    QPoint qpt = PWindow(wid)->mapToGlobal(QPoint(pt.x, pt.y));
     QRect qr = QApplication::desktop()->availableGeometry(qpt);
-    qpt = PWindow(id)->mapFromGlobal(qr.topLeft());
+    qpt = PWindow(wid)->mapFromGlobal(qr.topLeft());
 
     return PRectangle(qpt.x(), qpt.y(), qpt.x() + qr.width(), qpt.y() + qr.height());
 }
 
 
 // Menu management.
-Menu::Menu() : id(0)
+Menu::Menu() : mid(0)
 {
 }
 
 void Menu::CreatePopUp()
 {
     Destroy();
-    id = new SciPopup();
+    mid = new SciPopup();
 }
 
 void Menu::Destroy()
 {
-    SciPopup *m = PMenu(id);
+    SciPopup *m = PMenu(mid);
 
     if (m)
     {
         delete m;
-        id = 0;
+        mid = 0;
     }
 }
 
 void Menu::Show(Point pt, Window &)
 {
-    PMenu(id)->popup(QPoint(pt.x, pt.y));
+    PMenu(mid)->popup(QPoint(pt.x, pt.y));
 }
 
 

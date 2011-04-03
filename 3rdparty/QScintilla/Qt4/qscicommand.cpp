@@ -1,6 +1,6 @@
 // This module implements the QsciCommand class.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -123,6 +123,9 @@ static int convert(int key)
 
     if (key & Qt::ALT)
         sci_mod |= QsciScintillaBase::SCMOD_ALT;
+
+    if (key & Qt::META)
+        sci_mod |= QsciScintillaBase::SCMOD_SUPER;
 
     key &= ~Qt::MODIFIER_MASK;
 

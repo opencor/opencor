@@ -1,6 +1,6 @@
 // This defines the interface to the QsciLexerPython class.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -187,18 +187,40 @@ public:
     //! Returns true if indented comment blocks can be folded.
     //!
     //! \sa setFoldComments()
-    bool foldComments() const;
+    bool foldComments() const {return fold_comments;}
+
+    //! If \a fold is true then trailing blank lines are included in a fold
+    //! block. The default is true.
+    //!
+    //! \sa foldCompact()
+    void setFoldCompact(bool fold);
+
+    //! Returns true if trailing blank lines are included in a fold block.
+    //!
+    //! \sa setFoldCompact()
+    bool foldCompact() const {return fold_compact;}
 
     //! Returns true if triple quoted strings can be folded.
     //!
     //! \sa setFoldQuotes()
-    bool foldQuotes() const;
+    bool foldQuotes() const {return fold_quotes;}
 
     //! Returns the condition that will cause bad indentations to be
     //! displayed.
     //!
     //! \sa setIndentationWarning()
-    QsciLexerPython::IndentationWarning indentationWarning() const;
+    QsciLexerPython::IndentationWarning indentationWarning() const {return indent_warn;}
+
+    //! If \a allowed is true then string literals are allowed to span newline
+    //! characters.  The default is false.
+    //!
+    //! \sa stringsOverNewlineAllowed()
+    void setStringsOverNewlineAllowed(bool allowed);
+
+    //! Returns true if string literals are allowed to span newline characters.
+    //!
+    //! \sa setStringsOverNewlineAllowed()
+    bool stringsOverNewlineAllowed() const {return strings_over_newline;}
 
     //! If \a allowed is true then Python v2 unicode string literals (e.g.
     //! u"utf8") are allowed.  The default is true.
@@ -210,7 +232,7 @@ public:
     //! allowed.
     //!
     //! \sa setV2UnicodeAllowed()
-    bool v2UnicodeAllowed() const;
+    bool v2UnicodeAllowed() const {return v2_unicode;}
 
     //! If \a allowed is true then Python v3 binary and octal literals (e.g.
     //! 0b1011, 0o712) are allowed.  The default is true.
@@ -222,7 +244,7 @@ public:
     //! 0o712) are allowed.
     //!
     //! \sa setV3BinaryOctalAllowed()
-    bool v3BinaryOctalAllowed() const;
+    bool v3BinaryOctalAllowed() const {return v3_binary_octal;}
 
     //! If \a allowed is true then Python v3 bytes string literals (e.g.
     //! b"bytes") are allowed.  The default is true.
@@ -234,7 +256,7 @@ public:
     //! allowed.
     //!
     //! \sa setV3BytesAllowed()
-    bool v3BytesAllowed() const;
+    bool v3BytesAllowed() const {return v3_bytes;}
 
 public slots:
     //! If \a fold is true then indented comment blocks can be folded.  The
@@ -270,15 +292,19 @@ protected:
 
 private:
     void setCommentProp();
+    void setCompactProp();
     void setQuotesProp();
     void setTabWhingeProp();
+    void setStringsOverNewlineProp();
     void setV2UnicodeProp();
     void setV3BinaryOctalProp();
     void setV3BytesProp();
 
     bool fold_comments;
+    bool fold_compact;
     bool fold_quotes;
     IndentationWarning indent_warn;
+    bool strings_over_newline;
     bool v2_unicode;
     bool v3_binary_octal;
     bool v3_bytes;

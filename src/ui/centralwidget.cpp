@@ -7,6 +7,7 @@
 #include <QTextStream>
 
 #include <qsciscintilla.h>
+#include <qscilexerxml.h>
 
 CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
@@ -36,6 +37,10 @@ void CentralWidget::openFile(const QString &pFileName)
     // Create an editor for the file
 
     QsciScintilla *scintilla = new QsciScintilla(this);
+    QsciLexerXML *lexer      = new QsciLexerXML;
+
+    scintilla->setLexer(lexer);
+    scintilla->setFolding(QsciScintilla::BoxedTreeFoldStyle);
 
     // Set the contents of the file to the editor
 

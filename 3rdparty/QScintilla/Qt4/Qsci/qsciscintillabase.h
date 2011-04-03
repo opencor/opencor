@@ -1,6 +1,6 @@
 // This class defines the "official" low-level API.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -316,27 +316,27 @@ public:
         SCI_MARKERDEFINEPIXMAP = 2049,
 
         //! This message sets what can be displayed in a margin.
-        //! \a wParam is the number of the margin: 0, 1 or 2.
+        //! \a wParam is the number of the margin.
         //! \a lParam is the logical or of the SC_MARGIN_* values.
         //!
         //! \sa SCI_GETMARGINTYPEN
         SCI_SETMARGINTYPEN = 2240,
 
         //! This message returns what can be displayed in a margin.
-        //! \a wParam is the number of the margin: 0, 1 or 2.
+        //! \a wParam is the number of the margin.
         //!
         //! \sa SCI_SETMARGINTYPEN
         SCI_GETMARGINTYPEN = 2241,
 
         //! This message sets the width of a margin in pixels.
-        //! \a wParam is the number of the margin: 0, 1 or 2.
+        //! \a wParam is the number of the margin.
         //! \a lParam is the new margin width.
         //!
         //! \sa SCI_GETMARGINWIDTHN
         SCI_SETMARGINWIDTHN = 2242,
 
         //! This message returns the width of a margin in pixels.
-        //! \a wParam is the number of the margin: 0, 1 or 2.
+        //! \a wParam is the number of the margin.
         //!
         //! \sa SCI_SETMARGINWIDTHN
         SCI_GETMARGINWIDTHN = 2243,
@@ -345,20 +345,20 @@ public:
         //! with one bit for each possible marker.  If a bit is set then the
         //! corresponding marker is displayed.  By default, all markers are
         //! displayed.
-        //! \a wParam is the number of the margin: 0, 1 or 2.
+        //! \a wParam is the number of the margin.
         //! \a lParam is the new margin mask.
         //!
         //! \sa SCI_GETMARGINMASKN, SCI_MARKERDEFINE
         SCI_SETMARGINMASKN = 2244,
 
         //! This message returns the mask of a margin.
-        //! \a wParam is the number of the margin: 0, 1 or 2.
+        //! \a wParam is the number of the margin.
         //!
         //! \sa SCI_SETMARGINMASKN
         SCI_GETMARGINMASKN = 2245,
 
         //! This message sets the sensitivity of a margin to mouse clicks.
-        //! \a wParam is the number of the margin: 0, 1 or 2.
+        //! \a wParam is the number of the margin.
         //! \a lParam is non-zero to make the margin sensitive to mouse clicks.
         //! When the mouse is clicked the SCN_MARGINCLICK() signal is emitted.
         //!
@@ -366,10 +366,25 @@ public:
         SCI_SETMARGINSENSITIVEN = 2246,
 
         //! This message returns the sensitivity of a margin to mouse clicks.
-        //! \a wParam is the number of the margin: 0, 1 or 2.
+        //! \a wParam is the number of the margin.
         //!
         //! \sa SCI_SETMARGINSENSITIVEN, SCN_MARGINCLICK()
         SCI_GETMARGINSENSITIVEN = 2247,
+
+        //! This message sets the cursor shape displayed over a margin.
+        //! \a wParam is the number of the margin.
+        //! \a lParam is the cursor shape, normally either SC_CURSORARROW or
+        //! SC_CURSORREVERSEARROW.  Note that, currently, QScintilla implements
+        //! both of these as Qt::ArrowCursor.
+        //!
+        //! \sa SCI_GETMARGINCURSORN
+        SCI_SETMARGINCURSORN = 2248,
+
+        //! This message returns the cursor shape displayed over a margin.
+        //! \a wParam is the number of the margin.
+        //!
+        //! \sa SCI_SETMARGINCURSORN
+        SCI_GETMARGINCURSORN = 2249,
 
         //!
         SCI_STYLECLEARALL = 2050,
@@ -463,6 +478,12 @@ public:
 
         //!
         SCI_SETWHITESPACEBACK = 2085,
+
+        //!
+        SCI_SETWHITESPACESIZE = 2086,
+
+        //!
+        SCI_GETWHITESPACESIZE = 2087,
 
         //!
         SCI_SETSTYLEBITS = 2090,
@@ -1491,6 +1512,12 @@ public:
         SCI_GETCARETLINEBACKALPHA = 2471,
 
         //!
+        SCI_SETWRAPINDENTMODE = 2472,
+
+        //!
+        SCI_GETWRAPINDENTMODE = 2473,
+
+        //!
         SCI_MARKERSETALPHA = 2476,
 
         //!
@@ -1715,6 +1742,180 @@ public:
         SCI_ADDUNDOACTION = 2560,
 
         //!
+        SCI_CHARPOSITIONFROMPOINT = 2561,
+
+        //!
+        SCI_CHARPOSITIONFROMPOINTCLOSE = 2562,
+
+        //!
+        SCI_SETMULTIPLESELECTION = 2563,
+
+        //!
+        SCI_GETMULTIPLESELECTION = 2564,
+
+        //!
+        SCI_SETADDITIONALSELECTIONTYPING = 2565,
+
+        //!
+        SCI_GETADDITIONALSELECTIONTYPING = 2566,
+
+        //!
+        SCI_SETADDITIONALCARETSBLINK = 2567,
+
+        //!
+        SCI_GETADDITIONALCARETSBLINK = 2568,
+
+        //!
+        SCI_SETADDITIONALCARETSVISIBLE = 2608,
+
+        //!
+        SCI_GETADDITIONALCARETSVISIBLE = 2609,
+
+        //!
+        SCI_AUTOCGETCURRENTTEXT = 2610,
+
+        //!
+        SCI_GETSELECTIONS = 2570,
+
+        //!
+        SCI_CLEARSELECTIONS = 2571,
+
+        //!
+        SCI_SETSELECTION = 2572,
+
+        //!
+        SCI_ADDSELECTION = 2573,
+
+        //!
+        SCI_SETMAINSELECTION = 2574,
+
+        //!
+        SCI_GETMAINSELECTION = 2575,
+
+        //!
+        SCI_SETSELECTIONNCARET = 2576,
+
+        //!
+        SCI_GETSELECTIONNCARET = 2577,
+
+        //!
+        SCI_SETSELECTIONNANCHOR = 2578,
+
+        //!
+        SCI_GETSELECTIONNANCHOR = 2579,
+
+        //!
+        SCI_SETSELECTIONNCARETVIRTUALSPACE = 2580,
+
+        //!
+        SCI_GETSELECTIONNCARETVIRTUALSPACE = 2581,
+
+        //!
+        SCI_SETSELECTIONNANCHORVIRTUALSPACE = 2582,
+
+        //!
+        SCI_GETSELECTIONNANCHORVIRTUALSPACE = 2583,
+
+        //!
+        SCI_SETSELECTIONNSTART = 2584,
+
+        //!
+        SCI_GETSELECTIONNSTART = 2585,
+
+        //!
+        SCI_SETSELECTIONNEND = 2586,
+
+        //!
+        SCI_GETSELECTIONNEND = 2587,
+
+        //!
+        SCI_SETRECTANGULARSELECTIONCARET = 2588,
+
+        //!
+        SCI_GETRECTANGULARSELECTIONCARET = 2589,
+
+        //!
+        SCI_SETRECTANGULARSELECTIONANCHOR = 2590,
+
+        //!
+        SCI_GETRECTANGULARSELECTIONANCHOR = 2591,
+
+        //!
+        SCI_SETRECTANGULARSELECTIONCARETVIRTUALSPACE = 2592,
+
+        //!
+        SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE = 2593,
+
+        //!
+        SCI_SETRECTANGULARSELECTIONANCHORVIRTUALSPACE = 2594,
+
+        //!
+        SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE = 2595,
+
+        //!
+        SCI_SETVIRTUALSPACEOPTIONS = 2596,
+
+        //!
+        SCI_GETVIRTUALSPACEOPTIONS = 2597,
+
+        //!
+        SCI_SETRECTANGULARSELECTIONMODIFIER = 2598,
+
+        //!
+        SCI_GETRECTANGULARSELECTIONMODIFIER = 2599,
+
+        //!
+        SCI_SETADDITIONALSELFORE = 2600,
+
+        //!
+        SCI_SETADDITIONALSELBACK = 2601,
+
+        //!
+        SCI_SETADDITIONALSELALPHA = 2602,
+
+        //!
+        SCI_GETADDITIONALSELALPHA = 2603,
+
+        //!
+        SCI_SETADDITIONALCARETFORE = 2604,
+
+        //!
+        SCI_GETADDITIONALCARETFORE = 2605,
+
+        //!
+        SCI_ROTATESELECTION = 2606,
+
+        //!
+        SCI_SWAPMAINANCHORCARET = 2607,
+
+        //!
+        SCI_SETFONTQUALITY = 2611,
+
+        //!
+        SCI_GETFONTQUALITY = 2612,
+
+        //!
+        SCI_SETFIRSTVISIBLELINE = 2613,
+
+        //!
+        SCI_SETMULTIPASTE = 2614,
+
+        //!
+        SCI_GETMULTIPASTE = 2615,
+
+        //!
+        SCI_GETTAG = 2616,
+
+        //!
+        SCI_CHANGELEXERSTATE = 2617,
+
+        //!
+        SCI_CONTRACTEDFOLDNEXT = 2618,
+
+        //!
+        SCI_VERTICALCENTRECARET = 2619,
+
+        //!
         SCI_STARTRECORD = 3001,
 
         //!
@@ -1757,7 +1958,25 @@ public:
         SCI_GETPROPERTYINT = 4010,
 
         //!
-        SCI_GETSTYLEBITSNEEDED = 4011
+        SCI_GETSTYLEBITSNEEDED = 4011,
+
+        //!
+        SCI_GETLEXERLANGUAGE = 4012,
+
+        //!
+        SCI_PRIVATELEXERCALL = 4013,
+
+        //!
+        SCI_PROPERTYNAMES = 4014,
+
+        //!
+        SCI_PROPERTYTYPE = 4015,
+
+        //!
+        SCI_DESCRIBEPROPERTY = 4016,
+
+        //!
+        SCI_DESCRIBEKEYWORDSETS = 4017
     };
 
     enum
@@ -1765,6 +1984,43 @@ public:
         SC_ALPHA_TRANSPARENT = 0,
         SC_ALPHA_OPAQUE = 255,
         SC_ALPHA_NOALPHA = 256
+    };
+
+    enum
+    {
+        SC_CARETSTICKY_OFF = 0,
+        SC_CARETSTICKY_ON = 1,
+        SC_CARETSTICKY_WHITESPACE = 2
+    };
+
+    enum
+    {
+        SC_EFF_QUALITY_MASK = 0x0f,
+        SC_EFF_QUALITY_DEFAULT = 0,
+        SC_EFF_QUALITY_NON_ANTIALIASED = 1,
+        SC_EFF_QUALITY_ANTIALIASED = 2,
+        SC_EFF_QUALITY_LCD_OPTIMIZED = 3
+    };
+
+    enum
+    {
+        SC_MULTIPASTE_ONCE = 0,
+        SC_MULTIPASTE_EACH = 1
+    };
+
+    enum
+    {
+        SC_TYPE_BOOLEAN = 0,
+        SC_TYPE_INTEGER = 1,
+        SC_TYPE_STRING = 2
+    };
+
+    enum
+    {
+        SC_UPDATE_CONTENT = 0x01,
+        SC_UPDATE_SELECTION = 0x02,
+        SC_UPDATE_V_SCROLL = 0x04,
+        SC_UPDATE_H_SCROLL = 0x08
     };
 
     enum
@@ -1788,7 +2044,15 @@ public:
     {
         SC_SEL_STREAM = 0,
         SC_SEL_RECTANGLE = 1,
-        SC_SEL_LINES = 2
+        SC_SEL_LINES = 2,
+        SC_SEL_THIN = 3
+    };
+
+    enum
+    {
+        SCVS_NONE = 0,
+        SCVS_RECTANGULARSELECTION = 1,
+        SCVS_USERACCESSIBLE = 2
     };
 
     enum
@@ -1886,8 +2150,8 @@ public:
         //! A drawn minus sign in a connected circle.
         SC_MARK_CIRCLEMINUSCONNECTED = 21,
 
-        //! No symbol is drawn but the line of text is drawn with the
-        //! same background colour.
+        //! No symbol is drawn but the line is drawn with the same background
+        //! color as the marker's.
         SC_MARK_BACKGROUND = 22,
 
         //! Three drawn dots.
@@ -1899,14 +2163,19 @@ public:
         //! An XPM format pixmap.
         SC_MARK_PIXMAP = 25,
 
-        //! A full rectangle (ie. the margin background).
+        //! A full rectangle (ie. the margin background) using the marker's
+        //! background color.
         SC_MARK_FULLRECT = 26,
 
-        //! A left rectangle (ie. part of the margin background).
+        //! A left rectangle (ie. the left part of the margin background) using
+        //! the marker's background color.
         SC_MARK_LEFTRECT = 27,
 
         //! The value is available for plugins to use.
         SC_MARK_AVAILABLE = 28,
+
+        //! The line is underlined using the marker's background color.
+        SC_MARK_UNDERLINE = 29,
 
         //! Characters can be used as symbols by adding this to the ASCII value
         //! of the character.
@@ -2087,6 +2356,13 @@ public:
 
     enum
     {
+        SC_WRAPINDENT_FIXED = 0,
+        SC_WRAPINDENT_SAME = 1,
+        SC_WRAPINDENT_INDENT = 2
+    };
+
+    enum
+    {
         SC_CACHE_NONE = 0,
         SC_CACHE_CARET = 1,
         SC_CACHE_PAGE = 2,
@@ -2110,7 +2386,9 @@ public:
     enum
     {
         SC_CURSORNORMAL = -1,
-        SC_CURSORWAIT = 4
+        SC_CURSORARROW = 2,
+        SC_CURSORWAIT = 4,
+        SC_CURSORREVERSEARROW = 7
     };
 
     enum
@@ -2160,7 +2438,8 @@ public:
         SC_MOD_CHANGEMARGIN = 0x10000,
         SC_MOD_CHANGEANNOTATION = 0x20000,
         SC_MOD_CONTAINER = 0x40000,
-        SC_MODEVENTMASKALL = 0x7ffff
+        SC_MOD_LEXERSTATE = 0x80000,
+        SC_MODEVENTMASKALL = 0xfffff
     };
 
     enum
@@ -2200,7 +2479,10 @@ public:
         SCMOD_CTRL = 2,
 
         //! Alt key.
-        SCMOD_ALT = 4
+        SCMOD_ALT = 4,
+
+        //! Meta key.
+        SCMOD_SUPER = 8
     };
 
     //! This enum defines the different language lexers.
@@ -2499,7 +2781,19 @@ public:
         SCLEX_NIMROD = 96,
 
         //! Select the SML lexer.
-        SCLEX_SML = 97
+        SCLEX_SML = 97,
+
+        //! Select the Markdown lexer.
+        SCLEX_MARKDOWN = 98,
+
+        //! Select the txt2tags lexer.
+        SCLEX_TXT2TAGS = 99,
+
+        //! Select the 68000 assembler lexer.
+        SCLEX_A68K = 100,
+
+        //! Select the Modula 3 lexer.
+        SCLEX_MODULA = 101
     };
 
     //! Construct an empty QsciScintillaBase with parent \a parent.
@@ -2628,6 +2922,13 @@ signals:
     //! when the user double clicked.
     void SCN_HOTSPOTDOUBLECLICK(int position, int modifiers);
 
+    //! This signal is emitted when the user releases the mouse button on text
+    //! in a style with the hotspot attribute set.
+    //! \a position is the position in the text where the release occured.
+    //! \a modifiers is the logical or of the modifier keys that were pressed
+    //! when the user released the button.
+    void SCN_HOTSPOTRELEASECLICK(int position, int modifiers);
+
     //! This signal is emitted when the user clicks on text that has an
     //! indicator.
     //! \a position is the position in the text where the click occured.
@@ -2693,8 +2994,11 @@ signals:
     //! \sa SCI_COLOURISE, SCI_GETENDSTYLED
     void SCN_STYLENEEDED(int position);
 
-    //!
-    void SCN_UPDATEUI();
+    //! This signal is emitted when either the text or styling of the text has
+    //! changed or the selection range or scroll position has changed.
+    //! \a updated contains the set of SC_UPDATE_* flags describing the changes
+    //! since the signal was last emitted.
+    void SCN_UPDATEUI(int updated);
 
     //!
     void SCN_USERLISTSELECTION(const char *, int);
@@ -2711,20 +3015,23 @@ protected:
     //! \sa fromMimeData(), toMimeData()
     virtual bool canInsertFromMimeData(const QMimeData *source) const;
 
-    //! Returns the text decoded from a MIME data object.  It is called when a
-    //! drag and drop is completed and when text is pasted from the clipboard.
-    //! \a source is the MIME data object.
+    //! Returns the text of a MIME data object.  It is called when a drag and
+    //! drop is completed and when text is pasted from the clipboard.
+    //! \a source is the MIME data object.  On return \a rectangular is set if
+    //! the text corresponds to a rectangular selection.
     //!
     //! \sa canInsertFromMimeData(), toMimeData()
-    virtual QString fromMimeData(const QMimeData *source) const;
+    virtual QByteArray fromMimeData(const QMimeData *source, bool &rectangular) const;
 
-    //! Returns a new MIME data object that encodes some text.  It is called
-    //! when a drag and drop is started and when the selection is copied to the
-    //! clipboard.  Ownership of the object is passed to the caller.
-    //! \a text is the text to encode.
+    //! Returns a new MIME data object containing some text and whether it
+    //! corresponds to a rectangular selection.  It is called when a drag and
+    //! drop is started and when the selection is copied to the clipboard.
+    //! Ownership of the object is passed to the caller.  \a text is the text.
+    //! \a rectangular is set if the text corresponds to a rectangular
+    //! selection.
     //!
     //! \sa canInsertFromMimeData(), fromMimeData()
-    virtual QMimeData *toMimeData(const QString &text) const;
+    virtual QMimeData *toMimeData(const QByteArray &text, bool rectangular) const;
 
     //! Re-implemented to handle the context menu.
     virtual void contextMenuEvent(QContextMenuEvent *e);

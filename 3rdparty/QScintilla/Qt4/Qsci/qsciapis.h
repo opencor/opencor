@@ -1,6 +1,6 @@
 // This module defines interface to the QsciAPIs class.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -100,9 +100,9 @@ public:
     //! \sa add(), load(), remove()
     void clear();
 
-    //! Load the API information from the file named \a fname, adding it to the
-    //! current set.  Returns true if successful, otherwise false.
-    bool load(const QString &fname);
+    //! Load the API information from the file named \a filename, adding it to
+    //! the current set.  Returns true if successful, otherwise false.
+    bool load(const QString &filename);
 
     //! Remove the single raw API entry \a entry from the current set.
     //!
@@ -127,26 +127,27 @@ public:
     //! set then $HOME/.qsci is used.
     QString defaultPreparedName() const;
 
-    //! Check to see is a prepared API information file named \a fname exists.
-    //! If \a fname is empty then the value returned by defaultPreparedName()
-    //! is used.  Returns true if successful, otherwise false.
+    //! Check to see is a prepared API information file named \a filename
+    //! exists.  If \a filename is empty then the value returned by
+    //! defaultPreparedName() is used.  Returns true if successful, otherwise
+    //! false.
     //!
     //! \sa defaultPreparedName()
-    bool isPrepared(const QString &fname = QString()) const;
+    bool isPrepared(const QString &filename = QString()) const;
 
-    //! Load the prepared API information from the file named \a fname.  If
-    //! \a fname is empty then a name is constructed based on the name of the
-    //! associated lexer and saved in the directory defined by the QSCIDIR
+    //! Load the prepared API information from the file named \a filename.  If
+    //! \a filename is empty then a name is constructed based on the name of
+    //! the associated lexer and saved in the directory defined by the QSCIDIR
     //! environment variable.  If the environment variable isn't set then
     //! $HOME/.qsci is used.  Returns true if successful, otherwise false.
-    bool loadPrepared(const QString &fname = QString());
+    bool loadPrepared(const QString &filename = QString());
 
-    //! Save the prepared API information to the file named \a fname.  If
-    //! \a fname is empty then a name is constructed based on the name of the
-    //! associated lexer and saved in the directory defined by the QSCIDIR
+    //! Save the prepared API information to the file named \a filename.  If
+    //! \a filename is empty then a name is constructed based on the name of
+    //! the associated lexer and saved in the directory defined by the QSCIDIR
     //! environment variable.  If the environment variable isn't set then
     //! $HOME/.qsci is used.  Returns true if successful, otherwise false.
-    bool savePrepared(const QString &fname = QString()) const;
+    bool savePrepared(const QString &filename = QString()) const;
 
     //! \reimp
     virtual void updateAutoCompletionList(const QStringList &context,
@@ -218,7 +219,7 @@ private:
             bool &unambig);
     void addAPIEntries(const WordIndexList &wl, bool complete,
             QStringList &with_context, bool &unambig);
-    QString prepName(const QString &fname, bool mkpath = false) const;
+    QString prepName(const QString &filename, bool mkpath = false) const;
     void deleteWorker();
 
     QsciAPIs(const QsciAPIs &);

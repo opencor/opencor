@@ -2,7 +2,7 @@
 // Scintilla.  It is modelled on QTextEdit - a method of the same name should
 // behave in the same way.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -71,7 +71,7 @@ QsciScintilla::QsciScintilla(QWidget *parent)
       fold(NoFoldStyle), foldmargin(2), autoInd(false),
       braceMode(NoBraceMatch), acSource(AcsNone), acThresh(-1),
       wchars(defaultWordChars), call_tips_style(CallTipsNoContext),
-      maxCallTips(-1), showSingle(false), explicit_fillups(""),
+      maxCallTips(-1), use_single(AcusNever), explicit_fillups(""),
       fillups_enabled(false)
 {
     connect(this,SIGNAL(SCN_MODIFYATTEMPTRO()),
@@ -93,8 +93,8 @@ QsciScintilla::QsciScintilla(QWidget *parent)
              SLOT(handleSavePointReached()));
     connect(this,SIGNAL(SCN_SAVEPOINTLEFT()),
              SLOT(handleSavePointLeft()));
-    connect(this,SIGNAL(SCN_UPDATEUI()),
-             SLOT(handleUpdateUI()));
+    connect(this,SIGNAL(SCN_UPDATEUI(int)),
+             SLOT(handleUpdateUI(int)));
     connect(this,SIGNAL(QSCN_SELCHANGED(bool)),
              SLOT(handleSelectionChanged(bool)));
     connect(this,SIGNAL(SCN_AUTOCSELECTION(const char *,int)),
@@ -121,9 +121,6 @@ QsciScintilla::QsciScintilla(QWidget *parent)
     // Capturing the mouse seems to cause problems on multi-head systems. Qt
     // should do the right thing anyway.
     SendScintilla(SCI_SETMOUSEDOWNCAPTURES, 0UL);
-
-    SendScintilla(SCI_SETPROPERTY, "fold", "1");
-    SendScintilla(SCI_SETPROPERTY, "fold.html", "1");
 
     setMatchedBraceForegroundColor(Qt::blue);
     setUnmatchedBraceForegroundColor(Qt::red);
@@ -240,7 +237,7 @@ void QsciScintilla::handleCharAdded(int ch)
         if (isStartChar(ch))
         {
             cancelList();
-            startAutoCompletion(acSource, false, false);
+            startAutoCompletion(acSource, false, use_single == AcusAlways);
         }
 
         return;
@@ -260,9 +257,9 @@ void QsciScintilla::handleCharAdded(int ch)
     // See if we might want to start auto-completion.
     if (!isCallTipActive() && acSource != AcsNone)
         if (isStartChar(ch))
-            startAutoCompletion(acSource, false, false);
+            startAutoCompletion(acSource, false, use_single == AcusAlways);
         else if (acThresh >= 1 && isWordCharacter(ch))
-            startAutoCompletion(acSource, true, false);
+            startAutoCompletion(acSource, true, use_single == AcusAlways);
 }
 
 
@@ -647,7 +644,7 @@ bool QsciScintilla::isStartChar(char ch) const
 
 // Possibly start auto-completion.
 void QsciScintilla::startAutoCompletion(AutoCompletionSource acs,
-        bool checkThresh, bool single)
+        bool checkThresh, bool choose_single)
 {
     int start, ignore;
     QStringList context = apiContext(SendScintilla(SCI_GETCURRENTPOS), start,
@@ -755,7 +752,7 @@ void QsciScintilla::startAutoCompletion(AutoCompletionSource acs,
 
     wlist.sort();
 
-    SendScintilla(SCI_AUTOCSETCHOOSESINGLE, single);
+    SendScintilla(SCI_AUTOCSETCHOOSESINGLE, choose_single);
     SendScintilla(SCI_AUTOCSETSEPARATOR, acSeparator);
 
     ScintillaString wlist_s = convertTextQ2S(wlist.join(QChar(acSeparator)));
@@ -1117,6 +1114,62 @@ void QsciScintilla::setEolVisibility(bool visible)
 }
 
 
+// Return the extra ascent.
+int QsciScintilla::extraAscent() const
+{
+    return SendScintilla(SCI_GETEXTRAASCENT);
+}
+
+
+// Set the extra ascent.
+void QsciScintilla::setExtraAscent(int extra)
+{
+    SendScintilla(SCI_SETEXTRAASCENT, extra);
+}
+
+
+// Return the extra descent.
+int QsciScintilla::extraDescent() const
+{
+    return SendScintilla(SCI_GETEXTRADESCENT);
+}
+
+
+// Set the extra descent.
+void QsciScintilla::setExtraDescent(int extra)
+{
+    SendScintilla(SCI_SETEXTRADESCENT, extra);
+}
+
+
+// Return the whitespace size.
+int QsciScintilla::whitespaceSize() const
+{
+    return SendScintilla(SCI_GETWHITESPACESIZE);
+}
+
+
+// Set the whitespace size.
+void QsciScintilla::setWhitespaceSize(int size)
+{
+    SendScintilla(SCI_SETWHITESPACESIZE, size);
+}
+
+
+// Set the whitespace background colour.
+void QsciScintilla::setWhitespaceBackgroundColor(const QColor &col)
+{
+    SendScintilla(SCI_SETWHITESPACEBACK, col.isValid(), col);
+}
+
+
+// Set the whitespace foreground colour.
+void QsciScintilla::setWhitespaceForegroundColor(const QColor &col)
+{
+    SendScintilla(SCI_SETWHITESPACEFORE, col.isValid(), col);
+}
+
+
 // Return the whitespace visibility.
 QsciScintilla::WhitespaceVisibility QsciScintilla::whitespaceVisibility() const
 {
@@ -1147,32 +1200,46 @@ void QsciScintilla::setWrapMode(WrapMode mode)
 }
 
 
+// Return the line wrap indent mode.
+QsciScintilla::WrapIndentMode QsciScintilla::wrapIndentMode() const
+{
+    return (WrapIndentMode)SendScintilla(SCI_GETWRAPINDENTMODE);
+}
+
+
+// Set the line wrap indent mode.
+void QsciScintilla::setWrapIndentMode(WrapIndentMode mode)
+{
+    SendScintilla(SCI_SETWRAPINDENTMODE, mode);
+}
+
+
 // Set the line wrap visual flags.
-void QsciScintilla::setWrapVisualFlags(WrapVisualFlag eflag,
-        WrapVisualFlag sflag, int sindent)
+void QsciScintilla::setWrapVisualFlags(WrapVisualFlag endFlag,
+        WrapVisualFlag startFlag, int indent)
 {
     int flags = SC_WRAPVISUALFLAG_NONE;
     int loc = SC_WRAPVISUALFLAGLOC_DEFAULT;
 
-    if (eflag == WrapFlagByText)
+    if (endFlag == WrapFlagByText)
     {
         flags |= SC_WRAPVISUALFLAG_END;
         loc |= SC_WRAPVISUALFLAGLOC_END_BY_TEXT;
     }
-    else if (eflag == WrapFlagByBorder)
+    else if (endFlag == WrapFlagByBorder)
         flags |= SC_WRAPVISUALFLAG_END;
 
-    if (sflag == WrapFlagByText)
+    if (startFlag == WrapFlagByText)
     {
         flags |= SC_WRAPVISUALFLAG_START;
         loc |= SC_WRAPVISUALFLAGLOC_START_BY_TEXT;
     }
-    else if (sflag == WrapFlagByBorder)
+    else if (startFlag == WrapFlagByBorder)
         flags |= SC_WRAPVISUALFLAG_START;
 
     SendScintilla(SCI_SETWRAPVISUALFLAGS, flags);
     SendScintilla(SCI_SETWRAPVISUALFLAGSLOCATION, loc);
-    SendScintilla(SCI_SETWRAPSTARTINDENT, sindent);
+    SendScintilla(SCI_SETWRAPSTARTINDENT, indent);
 }
 
 
@@ -1462,6 +1529,36 @@ void QsciScintilla::foldChanged(int line,int levelNow,int levelPrev)
 void QsciScintilla::foldLine(int line)
 {
     SendScintilla(SCI_TOGGLEFOLD, line);
+}
+
+
+// Return the list of folded lines.
+QList<int> QsciScintilla::contractedFolds() const
+{
+    QList<int> folds;
+    int linenr = 0, fold_line;
+
+    while ((fold_line = SendScintilla(SCI_CONTRACTEDFOLDNEXT, linenr)) >= 0)
+    {
+        folds.append(fold_line);
+        linenr = fold_line + 1;
+    }
+
+    return folds;
+}
+
+
+// Set the fold state from a list.
+void QsciScintilla::setContractedFolds(const QList<int> &folds)
+{
+    for (int i = 0; i < folds.count(); ++i)
+    {
+        int line = folds[i];
+        int last_line = SendScintilla(SCI_GETLASTCHILD, line, -1);
+
+        SendScintilla(SCI_SETFOLDEXPANDED, line, 0L);
+        SendScintilla(SCI_HIDELINES, line + 1, last_line);
+    }
 }
 
 
@@ -1997,6 +2094,13 @@ void QsciScintilla::removeSelectedText()
 }
 
 
+// Replace any selected text.
+void QsciScintilla::replaceSelectedText(const QString &text)
+{
+    SendScintilla(SCI_REPLACESEL, ScintillaStringData(convertTextQ2S(text)));
+}
+
+
 // Return the current selected text.
 QString QsciScintilla::selectedText() const
 {
@@ -2448,57 +2552,57 @@ void QsciScintilla::setMarginsFont(const QFont &f)
 
 
 // Define an indicator.
-int QsciScintilla::indicatorDefine(IndicatorStyle style, int inr)
+int QsciScintilla::indicatorDefine(IndicatorStyle style, int indicatorNumber)
 {
-    checkIndicator(inr);
+    checkIndicator(indicatorNumber);
 
-    if (inr >= 0)
-        SendScintilla(SCI_INDICSETSTYLE, inr, static_cast<long>(style));
+    if (indicatorNumber >= 0)
+        SendScintilla(SCI_INDICSETSTYLE, indicatorNumber, static_cast<long>(style));
 
-    return inr;
+    return indicatorNumber;
 }
 
 
 // Return the state of an indicator being drawn under the text.
-bool QsciScintilla::indicatorDrawUnder(int inr) const
+bool QsciScintilla::indicatorDrawUnder(int indicatorNumber) const
 {
-    if (inr < 0 || inr >= INDIC_MAX)
+    if (indicatorNumber < 0 || indicatorNumber >= INDIC_MAX)
         return false;
 
-    return SendScintilla(SCI_INDICGETUNDER, inr);
+    return SendScintilla(SCI_INDICGETUNDER, indicatorNumber);
 }
 
 
 // Set the state of indicators being drawn under the text.
-void QsciScintilla::setIndicatorDrawUnder(bool under, int inr)
+void QsciScintilla::setIndicatorDrawUnder(bool under, int indicatorNumber)
 {
-    if (inr <= INDIC_MAX)
+    if (indicatorNumber <= INDIC_MAX)
     {
         // We ignore allocatedIndicators to allow any indicators defined
         // elsewhere (e.g. in lexers) to be set.
-        if (inr < 0)
+        if (indicatorNumber < 0)
         {
             for (int i = 0; i <= INDIC_MAX; ++i)
                 SendScintilla(SCI_INDICSETUNDER, i, under);
         }
         else
         {
-            SendScintilla(SCI_INDICSETUNDER, inr, under);
+            SendScintilla(SCI_INDICSETUNDER, indicatorNumber, under);
         }
     }
 }
 
 
 // Set the indicator foreground colour.
-void QsciScintilla::setIndicatorForegroundColor(const QColor &col, int inr)
+void QsciScintilla::setIndicatorForegroundColor(const QColor &col, int indicatorNumber)
 {
-    if (inr <= INDIC_MAX)
+    if (indicatorNumber <= INDIC_MAX)
     {
         int alpha = col.alpha();
 
         // We ignore allocatedIndicators to allow any indicators defined
         // elsewhere (e.g. in lexers) to be set.
-        if (inr < 0)
+        if (indicatorNumber < 0)
         {
             for (int i = 0; i <= INDIC_MAX; ++i)
             {
@@ -2508,8 +2612,8 @@ void QsciScintilla::setIndicatorForegroundColor(const QColor &col, int inr)
         }
         else
         {
-            SendScintilla(SCI_INDICSETFORE, inr, col);
-            SendScintilla(SCI_INDICSETALPHA, inr, alpha);
+            SendScintilla(SCI_INDICSETFORE, indicatorNumber, col);
+            SendScintilla(SCI_INDICSETALPHA, indicatorNumber, alpha);
         }
     }
 }
@@ -2517,16 +2621,16 @@ void QsciScintilla::setIndicatorForegroundColor(const QColor &col, int inr)
 
 // Fill a range with an indicator.
 void QsciScintilla::fillIndicatorRange(int lineFrom, int indexFrom,
-        int lineTo, int indexTo, int inr)
+        int lineTo, int indexTo, int indicatorNumber)
 {
-    if (inr <= INDIC_MAX)
+    if (indicatorNumber <= INDIC_MAX)
     {
         int start = positionFromLineIndex(lineFrom, indexFrom);
         int finish = positionFromLineIndex(lineTo, indexTo);
 
         // We ignore allocatedIndicators to allow any indicators defined
         // elsewhere (e.g. in lexers) to be set.
-        if (inr < 0)
+        if (indicatorNumber < 0)
         {
             for (int i = 0; i <= INDIC_MAX; ++i)
             {
@@ -2536,7 +2640,7 @@ void QsciScintilla::fillIndicatorRange(int lineFrom, int indexFrom,
         }
         else
         {
-            SendScintilla(SCI_SETINDICATORCURRENT, inr);
+            SendScintilla(SCI_SETINDICATORCURRENT, indicatorNumber);
             SendScintilla(SCI_INDICATORFILLRANGE, start, finish - start);
         }
     }
@@ -2545,16 +2649,16 @@ void QsciScintilla::fillIndicatorRange(int lineFrom, int indexFrom,
 
 // Clear a range with an indicator.
 void QsciScintilla::clearIndicatorRange(int lineFrom, int indexFrom,
-        int lineTo, int indexTo, int inr)
+        int lineTo, int indexTo, int indicatorNumber)
 {
-    if (inr <= INDIC_MAX)
+    if (indicatorNumber <= INDIC_MAX)
     {
         int start = positionFromLineIndex(lineFrom, indexFrom);
         int finish = positionFromLineIndex(lineTo, indexTo);
 
         // We ignore allocatedIndicators to allow any indicators defined
         // elsewhere (e.g. in lexers) to be set.
-        if (inr < 0)
+        if (indicatorNumber < 0)
         {
             for (int i = 0; i <= INDIC_MAX; ++i)
             {
@@ -2564,7 +2668,7 @@ void QsciScintilla::clearIndicatorRange(int lineFrom, int indexFrom,
         }
         else
         {
-            SendScintilla(SCI_SETINDICATORCURRENT, inr);
+            SendScintilla(SCI_SETINDICATORCURRENT, indicatorNumber);
             SendScintilla(SCI_INDICATORCLEARRANGE, start, finish - start);
         }
     }
@@ -2572,49 +2676,49 @@ void QsciScintilla::clearIndicatorRange(int lineFrom, int indexFrom,
 
 
 // Define a marker based on a symbol.
-int QsciScintilla::markerDefine(MarkerSymbol sym, int mnr)
+int QsciScintilla::markerDefine(MarkerSymbol sym, int markerNumber)
 {
-    checkMarker(mnr);
+    checkMarker(markerNumber);
 
-    if (mnr >= 0)
-        SendScintilla(SCI_MARKERDEFINE, mnr, static_cast<long>(sym));
+    if (markerNumber >= 0)
+        SendScintilla(SCI_MARKERDEFINE, markerNumber, static_cast<long>(sym));
 
-    return mnr;
+    return markerNumber;
 }
 
 
 // Define a marker based on a character.
-int QsciScintilla::markerDefine(char ch, int mnr)
+int QsciScintilla::markerDefine(char ch, int markerNumber)
 {
-    checkMarker(mnr);
+    checkMarker(markerNumber);
 
-    if (mnr >= 0)
-        SendScintilla(SCI_MARKERDEFINE, mnr,
+    if (markerNumber >= 0)
+        SendScintilla(SCI_MARKERDEFINE, markerNumber,
                 static_cast<long>(SC_MARK_CHARACTER) + ch);
 
-    return mnr;
+    return markerNumber;
 }
 
 
 // Define a marker based on a QPixmap.
-int QsciScintilla::markerDefine(const QPixmap &pm, int mnr)
+int QsciScintilla::markerDefine(const QPixmap &pm, int markerNumber)
 {
-    checkMarker(mnr);
+    checkMarker(markerNumber);
 
-    if (mnr >= 0)
-        SendScintilla(SCI_MARKERDEFINEPIXMAP, mnr, pm);
+    if (markerNumber >= 0)
+        SendScintilla(SCI_MARKERDEFINEPIXMAP, markerNumber, pm);
 
-    return mnr;
+    return markerNumber;
 }
 
 
 // Add a marker to a line.
-int QsciScintilla::markerAdd(int linenr, int mnr)
+int QsciScintilla::markerAdd(int linenr, int markerNumber)
 {
-    if (mnr < 0 || mnr > MARKER_MAX || (allocatedMarkers & (1 << mnr)) == 0)
+    if (markerNumber < 0 || markerNumber > MARKER_MAX || (allocatedMarkers & (1 << markerNumber)) == 0)
         return -1;
 
-    return SendScintilla(SCI_MARKERADD, linenr, mnr);
+    return SendScintilla(SCI_MARKERADD, linenr, markerNumber);
 }
 
 
@@ -2626,11 +2730,11 @@ unsigned QsciScintilla::markersAtLine(int linenr) const
 
 
 // Delete a marker from a line.
-void QsciScintilla::markerDelete(int linenr, int mnr)
+void QsciScintilla::markerDelete(int linenr, int markerNumber)
 {
-    if (mnr <= MARKER_MAX)
+    if (markerNumber <= MARKER_MAX)
     {
-        if (mnr < 0)
+        if (markerNumber < 0)
         {
             unsigned am = allocatedMarkers;
 
@@ -2642,21 +2746,21 @@ void QsciScintilla::markerDelete(int linenr, int mnr)
                 am >>= 1;
             }
         }
-        else if (allocatedMarkers & (1 << mnr))
-            SendScintilla(SCI_MARKERDELETE, linenr, mnr);
+        else if (allocatedMarkers & (1 << markerNumber))
+            SendScintilla(SCI_MARKERDELETE, linenr, markerNumber);
     }
 }
 
 
 // Delete a marker from the text.
-void QsciScintilla::markerDeleteAll(int mnr)
+void QsciScintilla::markerDeleteAll(int markerNumber)
 {
-    if (mnr <= MARKER_MAX)
+    if (markerNumber <= MARKER_MAX)
     {
-        if (mnr < 0)
+        if (markerNumber < 0)
             SendScintilla(SCI_MARKERDELETEALL, -1);
-        else if (allocatedMarkers & (1 << mnr))
-            SendScintilla(SCI_MARKERDELETEALL, mnr);
+        else if (allocatedMarkers & (1 << markerNumber))
+            SendScintilla(SCI_MARKERDELETEALL, markerNumber);
     }
 }
 
@@ -2690,9 +2794,9 @@ int QsciScintilla::markerFindPrevious(int linenr, unsigned mask) const
 
 
 // Set the marker background colour.
-void QsciScintilla::setMarkerBackgroundColor(const QColor &col, int mnr)
+void QsciScintilla::setMarkerBackgroundColor(const QColor &col, int markerNumber)
 {
-    if (mnr <= MARKER_MAX)
+    if (markerNumber <= MARKER_MAX)
     {
         int alpha = col.alpha();
 
@@ -2700,7 +2804,7 @@ void QsciScintilla::setMarkerBackgroundColor(const QColor &col, int mnr)
         if (alpha == 255)
             alpha = SC_ALPHA_NOALPHA;
 
-        if (mnr < 0)
+        if (markerNumber < 0)
         {
             unsigned am = allocatedMarkers;
 
@@ -2715,21 +2819,21 @@ void QsciScintilla::setMarkerBackgroundColor(const QColor &col, int mnr)
                 am >>= 1;
             }
         }
-        else if (allocatedMarkers & (1 << mnr))
+        else if (allocatedMarkers & (1 << markerNumber))
         {
-            SendScintilla(SCI_MARKERSETBACK, mnr, col);
-            SendScintilla(SCI_MARKERSETALPHA, mnr, alpha);
+            SendScintilla(SCI_MARKERSETBACK, markerNumber, col);
+            SendScintilla(SCI_MARKERSETALPHA, markerNumber, alpha);
         }
     }
 }
 
 
 // Set the marker foreground colour.
-void QsciScintilla::setMarkerForegroundColor(const QColor &col, int mnr)
+void QsciScintilla::setMarkerForegroundColor(const QColor &col, int markerNumber)
 {
-    if (mnr <= MARKER_MAX)
+    if (markerNumber <= MARKER_MAX)
     {
-        if (mnr < 0)
+        if (markerNumber < 0)
         {
             unsigned am = allocatedMarkers;
 
@@ -2741,25 +2845,26 @@ void QsciScintilla::setMarkerForegroundColor(const QColor &col, int mnr)
                 am >>= 1;
             }
         }
-        else if (allocatedMarkers & (1 << mnr))
+        else if (allocatedMarkers & (1 << markerNumber))
         {
-            SendScintilla(SCI_MARKERSETFORE, mnr, col);
+            SendScintilla(SCI_MARKERSETFORE, markerNumber, col);
         }
     }
 }
 
 
 // Check a marker, allocating a marker number if necessary.
-void QsciScintilla::checkMarker(int &mnr)
+void QsciScintilla::checkMarker(int &markerNumber)
 {
-    allocateId(mnr, allocatedMarkers, 0, MARKER_MAX);
+    allocateId(markerNumber, allocatedMarkers, 0, MARKER_MAX);
 }
 
 
 // Check an indicator, allocating an indicator number if necessary.
-void QsciScintilla::checkIndicator(int &inr)
+void QsciScintilla::checkIndicator(int &indicatorNumber)
 {
-    allocateId(inr, allocatedIndicators, INDIC_CONTAINER, INDIC_MAX);
+    allocateId(indicatorNumber, allocatedIndicators, INDIC_CONTAINER,
+            INDIC_MAX);
 }
 
 
@@ -2901,6 +3006,9 @@ void QsciScintilla::setLexer(QsciLexer *lexer)
         connect(lex,SIGNAL(propertyChanged(const char *, const char *)),
                 SLOT(handlePropertyChange(const char *, const char *)));
 
+        SendScintilla(SCI_SETPROPERTY, "fold", "1");
+        SendScintilla(SCI_SETPROPERTY, "fold.html", "1");
+
         // Set the keywords.  Scintilla allows for sets numbered 0 to
         // KEYWORDSET_MAX (although the lexers only seem to exploit 0 to
         // KEYWORDSET_MAX - 1).  We number from 1 in line with SciTE's property
@@ -3032,7 +3140,7 @@ void QsciScintilla::handlePropertyChange(const char *prop, const char *val)
 
 
 // Handle a change to the user visible user interface.
-void QsciScintilla::handleUpdateUI()
+void QsciScintilla::handleUpdateUI(int)
 {
     int newPos = SendScintilla(SCI_GETCURRENTPOS);
 
@@ -3318,21 +3426,21 @@ void QsciScintilla::setAutoCompletionWordSeparators(const QStringList &separator
 // Explicitly auto-complete from all sources.
 void QsciScintilla::autoCompleteFromAll()
 {
-    startAutoCompletion(AcsAll, false, showSingle);
+    startAutoCompletion(AcsAll, false, use_single != AcusNever);
 }
 
 
 // Explicitly auto-complete from the APIs.
 void QsciScintilla::autoCompleteFromAPIs()
 {
-    startAutoCompletion(AcsAPIs, false, showSingle);
+    startAutoCompletion(AcsAPIs, false, use_single != AcusNever);
 }
 
 
 // Explicitly auto-complete from the document.
 void QsciScintilla::autoCompleteFromDocument()
 {
-    startAutoCompletion(AcsDocument, false, showSingle);
+    startAutoCompletion(AcsDocument, false, use_single != AcusNever);
 }
 
 
@@ -3404,11 +3512,10 @@ void QsciScintilla::setAutoCompletionFillups(const char *fillups)
 }
 
 
-// Set the case sensitivity for auto-completion if there is no current lexer.
+// Set the case sensitivity for auto-completion.
 void QsciScintilla::setAutoCompletionCaseSensitivity(bool cs)
 {
-    if (lex.isNull())
-        SendScintilla(SCI_AUTOCSETIGNORECASE, !cs);
+    SendScintilla(SCI_AUTOCSETIGNORECASE, !cs);
 }
 
 
@@ -3434,16 +3541,30 @@ bool QsciScintilla::autoCompletionReplaceWord() const
 
 
 // Set the single item mode for auto-completion.
-void QsciScintilla::setAutoCompletionShowSingle(bool single)
+void QsciScintilla::setAutoCompletionUseSingle(AutoCompletionUseSingle single)
 {
-    showSingle = single;
+    use_single = single;
 }
 
 
 // Return the single item mode for auto-completion.
+QsciScintilla::AutoCompletionUseSingle QsciScintilla::autoCompletionUseSingle() const
+{
+    return use_single;
+}
+
+
+// Set the single item mode for auto-completion (deprecated).
+void QsciScintilla::setAutoCompletionShowSingle(bool single)
+{
+    use_single = (single ? AcusExplicit : AcusNever);
+}
+
+
+// Return the single item mode for auto-completion (deprecated).
 bool QsciScintilla::autoCompletionShowSingle() const
 {
-    return showSingle;
+    return (use_single != AcusNever);
 }
 
 
@@ -3489,6 +3610,13 @@ bool QsciScintilla::ensureRW()
 int QsciScintilla::firstVisibleLine() const
 {
     return SendScintilla(SCI_GETFIRSTVISIBLELINE);
+}
+
+
+// Set the number of the first visible line.
+void QsciScintilla::setFirstVisibleLine(int linenr)
+{
+    SendScintilla(SCI_SETFIRSTVISIBLELINE, linenr);
 }
 
 
@@ -3696,20 +3824,7 @@ void QsciScintilla::annotate(int line, const QString &text, int style)
     ScintillaString s = convertTextQ2S(text);
 
     SendScintilla(SCI_ANNOTATIONSETTEXT, line, ScintillaStringData(s));
-
-    // SCI_ANNOTATIONSETSTYLE is broken in Scintilla v1.78 when the text
-    // contains newlines.
-#if 0
     SendScintilla(SCI_ANNOTATIONSETSTYLE, line, style - style_offset);
-#else
-    int nr_bytes = ScintillaStringLength(s);
-    char *styles = new char[nr_bytes];
-
-    memset(styles, style - style_offset, nr_bytes);
-    SendScintilla(SCI_ANNOTATIONSETSTYLES, line, styles);
-
-    delete[] styles;
-#endif
 }
 
 
@@ -3802,6 +3917,9 @@ int QsciScintilla::mapModifiers(int modifiers)
 
     if (modifiers & SCMOD_ALT)
         state |= Qt::AltModifier;
+
+    if (modifiers & SCMOD_SUPER)
+        state |= Qt::MetaModifier;
 
     return state;
 }

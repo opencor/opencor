@@ -1,6 +1,6 @@
 // The implementation of the Qt specific subclass of ScintillaBase.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -57,6 +57,7 @@
 #undef  SCN_DWELLSTART
 #undef  SCN_HOTSPOTCLICK
 #undef  SCN_HOTSPOTDOUBLECLICK
+#undef  SCN_HOTSPOTRELEASECLICK
 #undef  SCN_INDICATORCLICK
 #undef  SCN_INDICATORRELEASE
 #undef  SCN_MACRORECORD
@@ -85,6 +86,7 @@ enum
     SCN_DWELLSTART = 2016,
     SCN_HOTSPOTCLICK = 2019,
     SCN_HOTSPOTDOUBLECLICK = 2020,
+    SCN_HOTSPOTRELEASECLICK = 2027,
     SCN_INDICATORCLICK = 2023,
     SCN_INDICATORRELEASE = 2024,
     SCN_MACRORECORD = 2009,
@@ -144,7 +146,7 @@ void ScintillaQt::StartDrag()
     inDragDrop = ddDragging;
 
     QDrag *qdrag = new QDrag(qsb);
-    qdrag->setMimeData(qsb->toMimeData(textRange(&drag)));
+    qdrag->setMimeData(mimeSelection(drag));
 
 # if QT_VERSION >= 0x040300
     // The default action is to copy so that the cursor is correct when over
@@ -160,7 +162,7 @@ void ScintillaQt::StartDrag()
     if (action == Qt::MoveAction && qdrag->target() != qsb->viewport())
         ClearSelection();
 
-    SetDragPosition(-1);
+    SetDragPosition(SelectionPosition());
     inDragDrop = ddNone;
 }
 
@@ -323,6 +325,10 @@ void ScintillaQt::NotifyParent(SCNotification scn)
         emit qsb->SCN_HOTSPOTDOUBLECLICK(scn.position, scn.modifiers);
         break;
 
+    case SCN_HOTSPOTRELEASECLICK:
+        emit qsb->SCN_HOTSPOTRELEASECLICK(scn.position, scn.modifiers);
+        break;
+
     case SCN_INDICATORCLICK:
         emit qsb->SCN_INDICATORCLICK(scn.position, scn.modifiers);
         break;
@@ -391,7 +397,7 @@ void ScintillaQt::NotifyParent(SCNotification scn)
         break;
 
     case SCN_UPDATEUI:
-        emit qsb->SCN_UPDATEUI();
+        emit qsb->SCN_UPDATEUI(scn.updated);
         break;
 
     case SCN_USERLISTSELECTION:
@@ -408,31 +414,26 @@ void ScintillaQt::NotifyParent(SCNotification scn)
 }
 
 
-// Convert a text range to a QString.
-QString ScintillaQt::textRange(const SelectionText *text)
+
+// Convert a selection to mime data.
+QMimeData *ScintillaQt::mimeSelection(const SelectionText &text) const
 {
-    if (!text->s)
-        return QString();
-
-    if (IsUnicodeMode())
-        return QString::fromUtf8(text->s);
-
-    return QString::fromLatin1(text->s);
+    return qsb->toMimeData(QByteArray(text.s), text.rectangular);
 }
+
 
 
 // Copy the selected text to the clipboard.
 void ScintillaQt::CopyToClipboard(const SelectionText &selectedText)
 {
-    QApplication::clipboard()->setMimeData(
-            qsb->toMimeData(textRange(&selectedText)));
+    QApplication::clipboard()->setMimeData(mimeSelection(selectedText));
 }
 
 
 // Implement copy.
 void ScintillaQt::Copy()
 {
-    if (currentPos != anchor)
+    if (!sel.Empty())
     {
         SelectionText text;
 
@@ -452,42 +453,34 @@ void ScintillaQt::Paste()
 // Paste text from either the clipboard or selection.
 void ScintillaQt::pasteFromClipboard(QClipboard::Mode mode)
 {
+    int len;
+    const char *s;
+    bool rectangular;
+
     const QMimeData *source = QApplication::clipboard()->mimeData(mode);
 
     if (!source || !qsb->canInsertFromMimeData(source))
         return;
 
-    QString str = qsb->fromMimeData(source);
+    QByteArray text = qsb->fromMimeData(source, rectangular);
+    len = text.length();
+    s = text.data();
 
-    pdoc->BeginUndoAction();
+    s = Document::TransformLineEnds(&len, s, len, pdoc->eolMode);
+
+    UndoGroup ug(pdoc);
 
     ClearSelection();
 
-    int len;
-    const char *s;
+    SelectionPosition start = sel.IsRectangular() ? sel.Rectangular().Start()
+            : sel.Range(sel.Main()).Start();
 
-    QByteArray bytes;
-
-    if (IsUnicodeMode())
-    {
-        bytes = str.toUtf8();
-
-        len = bytes.length();
-        s = bytes.data();
-    }
+    if (rectangular)
+        PasteRectangular(start, s, len);
     else
-    {
-        bytes = str.toLatin1();
-        len = bytes.length();
-        s = bytes.data();
-    }
+        InsertPaste(start, s, len);
 
-    if (len)
-        pdoc->InsertString(currentPos, s, len);
-
-    SetEmptySelection(currentPos + len);
-
-    pdoc->EndUndoAction();
+    delete[] s;
 
     NotifyChange();
     Redraw();
@@ -522,7 +515,7 @@ void ScintillaQt::AddToPopUp(const char *label, int cmd, bool enabled)
 // Claim the selection.
 void ScintillaQt::ClaimSelection()
 {
-    bool isSel = (currentPos != anchor);
+    bool isSel = !sel.Empty();
 
     if (isSel)
     {
@@ -536,7 +529,7 @@ void ScintillaQt::ClaimSelection()
             CopySelectionRange(&text);
 
             if (text.s)
-                cb->setText(textRange(&text), QClipboard::Selection);
+                cb->setMimeData(mimeSelection(text), QClipboard::Selection);
         }
 
         primarySelection = true;

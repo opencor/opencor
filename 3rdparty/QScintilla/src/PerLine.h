@@ -11,7 +11,7 @@
 #ifdef SCI_NAMESPACE
 namespace Scintilla {
 #endif
-	
+
 /**
  * This holds the marker identifier and the marker type to display.
  * MarkerHandleNumbers are members of lists.
@@ -49,13 +49,14 @@ public:
 	LineMarkers() : handleCurrent(0) {
 	}
 	virtual ~LineMarkers();
+	virtual void Init();
 	virtual void InsertLine(int line);
 	virtual void RemoveLine(int line);
 
 	int MarkValue(int line);
 	int AddMark(int line, int marker, int lines);
 	void MergeMarkers(int pos);
-	void DeleteMark(int line, int markerNum, bool all);
+	bool DeleteMark(int line, int markerNum, bool all);
 	void DeleteMarkFromHandle(int markerHandle);
 	int LineFromHandle(int markerHandle);
 };
@@ -64,6 +65,7 @@ class LineLevels : public PerLine {
 	SplitVector<int> levels;
 public:
 	virtual ~LineLevels();
+	virtual void Init();
 	virtual void InsertLine(int line);
 	virtual void RemoveLine(int line);
 
@@ -79,6 +81,7 @@ public:
 	LineState() {
 	}
 	virtual ~LineState();
+	virtual void Init();
 	virtual void InsertLine(int line);
 	virtual void RemoveLine(int line);
 
@@ -93,6 +96,7 @@ public:
 	LineAnnotation() {
 	}
 	virtual ~LineAnnotation();
+	virtual void Init();
 	virtual void InsertLine(int line);
 	virtual void RemoveLine(int line);
 

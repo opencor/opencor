@@ -1,6 +1,6 @@
 // This module implements the QsciLexerCPP class.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -128,44 +128,83 @@ QColor QsciLexerCPP::defaultColor(int style) const
     switch (style)
     {
     case Default:
-        return QColor(0x80,0x80,0x80);
+        return QColor(0x80, 0x80, 0x80);
 
     case Comment:
     case CommentLine:
-        return QColor(0x00,0x7f,0x00);
+        return QColor(0x00, 0x7f, 0x00);
 
     case CommentDoc:
     case CommentLineDoc:
-        return QColor(0x3f,0x70,0x3f);
+        return QColor(0x3f, 0x70, 0x3f);
 
     case Number:
-        return QColor(0x00,0x7f,0x7f);
+        return QColor(0x00, 0x7f, 0x7f);
 
     case Keyword:
-        return QColor(0x00,0x00,0x7f);
+        return QColor(0x00, 0x00, 0x7f);
 
     case DoubleQuotedString:
     case SingleQuotedString:
-        return QColor(0x7f,0x00,0x7f);
+    case RawString:
+        return QColor(0x7f, 0x00, 0x7f);
 
     case PreProcessor:
-        return QColor(0x7f,0x7f,0x00);
+        return QColor(0x7f, 0x7f, 0x00);
 
     case Operator:
     case UnclosedString:
-        return QColor(0x00,0x00,0x00);
-
-    case Identifier:
-        break;
+        return QColor(0x00, 0x00, 0x00);
 
     case Regex:
-        return QColor(0x3f,0x7f,0x3f);
+        return QColor(0x3f, 0x7f, 0x3f);
 
     case CommentDocKeyword:
-        return QColor(0x30,0x60,0xa0);
+        return QColor(0x30, 0x60, 0xa0);
 
     case CommentDocKeywordError:
-        return QColor(0x80,0x40,0x20);
+        return QColor(0x80, 0x40, 0x20);
+
+    case InactiveDefault:
+    case InactiveUUID:
+    case InactiveCommentLineDoc:
+    case InactiveKeywordSet2:
+    case InactiveCommentDocKeyword:
+    case InactiveCommentDocKeywordError:
+        return QColor(0xc0, 0xc0, 0xc0);
+
+    case InactiveComment:
+    case InactiveCommentLine:
+    case InactiveNumber:
+        return QColor(0x90, 0xb0, 0x90);
+
+    case InactiveCommentDoc:
+        return QColor(0xd0, 0xd0, 0xd0);
+
+    case InactiveKeyword:
+        return QColor(0x90, 0x90, 0xb0);
+
+    case InactiveDoubleQuotedString:
+    case InactiveSingleQuotedString:
+    case InactiveRawString:
+        return QColor(0xb0, 0x90, 0xb0);
+
+    case InactivePreProcessor:
+        return QColor(0xb0, 0xb0, 0x90);
+
+    case InactiveOperator:
+    case InactiveIdentifier:
+    case InactiveGlobalClass:
+        return QColor(0xb0, 0xb0, 0xb0);
+
+    case InactiveUnclosedString:
+        return QColor(0x00, 0x00, 0x00);
+
+    case InactiveVerbatimString:
+        return QColor(0x00, 0x7f, 0x00);
+
+    case InactiveRegex:
+        return QColor(0x7f, 0xaf, 0x7f);
     }
 
     return QsciLexer::defaultColor(style);
@@ -175,7 +214,7 @@ QColor QsciLexerCPP::defaultColor(int style) const
 // Returns the end-of-line fill for a style.
 bool QsciLexerCPP::defaultEolFill(int style) const
 {
-    if (style == UnclosedString)
+    if (style == UnclosedString || style == InactiveUnclosedString)
         return true;
 
     return QsciLexer::defaultEolFill(style);
@@ -190,11 +229,17 @@ QFont QsciLexerCPP::defaultFont(int style) const
     switch (style)
     {
     case Comment:
+    case InactiveComment:
     case CommentLine:
+    case InactiveCommentLine:
     case CommentDoc:
+    case InactiveCommentDoc:
     case CommentLineDoc:
+    case InactiveCommentLineDoc:
     case CommentDocKeyword:
+    case InactiveCommentDocKeyword:
     case CommentDocKeywordError:
+    case InactiveCommentDocKeywordError:
 #if defined(Q_OS_WIN)
         f = QFont("Comic Sans MS",9);
 #else
@@ -203,14 +248,19 @@ QFont QsciLexerCPP::defaultFont(int style) const
         break;
 
     case Keyword:
+    case InactiveKeyword:
     case Operator:
+    case InactiveOperator:
         f = QsciLexer::defaultFont(style);
         f.setBold(true);
         break;
 
     case DoubleQuotedString:
+    case InactiveDoubleQuotedString:
     case SingleQuotedString:
+    case InactiveSingleQuotedString:
     case UnclosedString:
+    case InactiveUnclosedString:
 #if defined(Q_OS_WIN)
         f = QFont("Courier New",10);
 #else
@@ -270,56 +320,116 @@ QString QsciLexerCPP::description(int style) const
     case Default:
         return tr("Default");
 
+    case InactiveDefault:
+        return tr("Inactive default");
+
     case Comment:
         return tr("C comment");
+
+    case InactiveComment:
+        return tr("Inactive C comment");
 
     case CommentLine:
         return tr("C++ comment");
 
+    case InactiveCommentLine:
+        return tr("Inactive C++ comment");
+
     case CommentDoc:
         return tr("JavaDoc style C comment");
+
+    case InactiveCommentDoc:
+        return tr("Inactive JavaDoc style C comment");
 
     case Number:
         return tr("Number");
 
+    case InactiveNumber:
+        return tr("Inactive number");
+
     case Keyword:
         return tr("Keyword");
+
+    case InactiveKeyword:
+        return tr("Inactive keyword");
 
     case DoubleQuotedString:
         return tr("Double-quoted string");
 
+    case InactiveDoubleQuotedString:
+        return tr("Inactive double-quoted string");
+
     case SingleQuotedString:
         return tr("Single-quoted string");
+
+    case InactiveSingleQuotedString:
+        return tr("Inactive single-quoted string");
 
     case UUID:
         return tr("IDL UUID");
 
+    case InactiveUUID:
+        return tr("Inactive IDL UUID");
+
     case PreProcessor:
         return tr("Pre-processor block");
+
+    case InactivePreProcessor:
+        return tr("Inactive pre-processor block");
 
     case Operator:
         return tr("Operator");
 
+    case InactiveOperator:
+        return tr("Inactive operator");
+
     case Identifier:
         return tr("Identifier");
+
+    case InactiveIdentifier:
+        return tr("Inactive identifier");
 
     case UnclosedString:
         return tr("Unclosed string");
 
+    case InactiveUnclosedString:
+        return tr("Inactive unclosed string");
+
     case CommentLineDoc:
         return tr("JavaDoc style C++ comment");
+
+    case InactiveCommentLineDoc:
+        return tr("Inactive JavaDoc style C++ comment");
 
     case KeywordSet2:
         return tr("Secondary keywords and identifiers");
 
+    case InactiveKeywordSet2:
+        return tr("Inactive secondary keywords and identifiers");
+
     case CommentDocKeyword:
         return tr("JavaDoc keyword");
+
+    case InactiveCommentDocKeyword:
+        return tr("Inactive JavaDoc keyword");
 
     case CommentDocKeywordError:
         return tr("JavaDoc keyword error");
 
+    case InactiveCommentDocKeywordError:
+        return tr("Inactive JavaDoc keyword error");
+
     case GlobalClass:
         return tr("Global classes and typedefs");
+
+    case InactiveGlobalClass:
+        return tr("Inactive global classes and typedefs");
+
+    case RawString:
+        return tr("C++ raw string");
+
+    case InactiveRawString:
+        return tr("Inactive C++ raw string");
     }
 
     return QString();
@@ -329,8 +439,16 @@ QString QsciLexerCPP::description(int style) const
 // Returns the background colour of the text for a style.
 QColor QsciLexerCPP::defaultPaper(int style) const
 {
-    if (style == UnclosedString)
+    switch (style)
+    {
+    case UnclosedString:
+    case InactiveUnclosedString:
         return QColor(0xe0,0xc0,0xe0);
+
+    case RawString:
+    case InactiveRawString:
+        return QColor(0xff,0xf3,0xff);
+    }
 
     return QsciLexer::defaultPaper(style);
 }
@@ -380,13 +498,6 @@ bool QsciLexerCPP::writeProperties(QSettings &qs,const QString &prefix) const
 }
 
 
-// Return true if else can be folded.
-bool QsciLexerCPP::foldAtElse() const
-{
-    return fold_atelse;
-}
-
-
 // Set if else can be folded.
 void QsciLexerCPP::setFoldAtElse(bool fold)
 {
@@ -400,13 +511,6 @@ void QsciLexerCPP::setFoldAtElse(bool fold)
 void QsciLexerCPP::setAtElseProp()
 {
     emit propertyChanged("fold.at.else",(fold_atelse ? "1" : "0"));
-}
-
-
-// Return true if comments can be folded.
-bool QsciLexerCPP::foldComments() const
-{
-    return fold_comments;
 }
 
 
@@ -426,13 +530,6 @@ void QsciLexerCPP::setCommentProp()
 }
 
 
-// Return true if folds are compact.
-bool QsciLexerCPP::foldCompact() const
-{
-    return fold_compact;
-}
-
-
 // Set if folds are compact
 void QsciLexerCPP::setFoldCompact(bool fold)
 {
@@ -446,13 +543,6 @@ void QsciLexerCPP::setFoldCompact(bool fold)
 void QsciLexerCPP::setCompactProp()
 {
     emit propertyChanged("fold.compact",(fold_compact ? "1" : "0"));
-}
-
-
-// Return true if preprocessor blocks can be folded.
-bool QsciLexerCPP::foldPreprocessor() const
-{
-    return fold_preproc;
 }
 
 
@@ -472,13 +562,6 @@ void QsciLexerCPP::setPreprocProp()
 }
 
 
-// Return true if preprocessor lines are styled.
-bool QsciLexerCPP::stylePreprocessor() const
-{
-    return style_preproc;
-}
-
-
 // Set if preprocessor lines are styled.
 void QsciLexerCPP::setStylePreprocessor(bool style)
 {
@@ -492,13 +575,6 @@ void QsciLexerCPP::setStylePreprocessor(bool style)
 void QsciLexerCPP::setStylePreprocProp()
 {
     emit propertyChanged("styling.within.preprocessor",(style_preproc ? "1" : "0"));
-}
-
-
-// Return true if '$' characters are allowed.
-bool QsciLexerCPP::dollarsAllowed() const
-{
-    return dollars;
 }
 
 

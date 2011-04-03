@@ -1,6 +1,6 @@
 // The definition of the Qt specific subclass of ScintillaBase.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -37,10 +37,12 @@
 
 #include <Qsci/qsciglobal.h>
 
-// These are needed because scintilla class header files don't seem to manage
-// their own dependencies properly.
+// These are needed because scintilla class header files don't manage their own
+// dependencies properly.
+#include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include "ILexer.h"
 #include "Platform.h"
 #include "Scintilla.h"
 #include "SVector.h"
@@ -58,14 +60,13 @@
 #include "ViewStyle.h"
 #include "KeyMap.h"
 #include "ContractionState.h"
+#include "Selection.h"
 #include "PositionCache.h"
 #include "Editor.h"
 #include "AutoComplete.h"
 #include "CallTip.h"
-#include "SString.h"
-#include "PropSet.h"
+#include "LexAccessor.h"
 #include "Accessor.h"
-#include "KeyWords.h"
 
 #include "ScintillaBase.h"
 
@@ -73,6 +74,7 @@
 QT_BEGIN_NAMESPACE
 class QPaintEvent;
 class QDropEvent;
+class QMimeData;
 QT_END_NAMESPACE
 
 class QsciScintillaBase;
@@ -117,7 +119,7 @@ private:
 	static sptr_t DirectFunction(ScintillaQt *sci, unsigned int iMessage,
             uptr_t wParam,sptr_t lParam);
 
-	QString textRange(const SelectionText *text);
+	QMimeData *mimeSelection(const SelectionText &text) const;
 	void paintEvent(QPaintEvent *e);
     void pasteFromClipboard(QClipboard::Mode mode);
 

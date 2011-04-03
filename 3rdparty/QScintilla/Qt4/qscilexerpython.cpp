@@ -1,6 +1,6 @@
 // This module implements the QsciLexerPython class.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -45,8 +45,9 @@ const char *QsciLexerPython::keywordClass =
 // The ctor.
 QsciLexerPython::QsciLexerPython(QObject *parent)
     : QsciLexer(parent),
-      fold_comments(false), fold_quotes(false), indent_warn(NoWarning),
-      v2_unicode(true), v3_binary_octal(true), v3_bytes(true)
+      fold_comments(false), fold_compact(true), fold_quotes(false),
+      indent_warn(NoWarning), strings_over_newline(false), v2_unicode(true),
+      v3_binary_octal(true), v3_bytes(true)
 {
 }
 
@@ -300,8 +301,10 @@ QColor QsciLexerPython::defaultPaper(int style) const
 void QsciLexerPython::refreshProperties()
 {
     setCommentProp();
+    setCompactProp();
     setQuotesProp();
     setTabWhingeProp();
+    setStringsOverNewlineProp();
     setV2UnicodeProp();
     setV3BinaryOctalProp();
     setV3BytesProp();
@@ -314,8 +317,10 @@ bool QsciLexerPython::readProperties(QSettings &qs,const QString &prefix)
     int rc = true, num;
 
     fold_comments = qs.value(prefix + "foldcomments", false).toBool();
+    fold_compact = qs.value(prefix + "foldcompact", true).toBool();
     fold_quotes = qs.value(prefix + "foldquotes", false).toBool();
     indent_warn = (IndentationWarning)qs.value(prefix + "indentwarning", (int)NoWarning).toInt();
+    strings_over_newline = qs.value(prefix + "stringsovernewline", false).toBool();
     v2_unicode = qs.value(prefix + "v2unicode", true).toBool();
     v3_binary_octal = qs.value(prefix + "v3binaryoctal", true).toBool();
     v3_bytes = qs.value(prefix + "v3bytes", true).toBool();
@@ -330,20 +335,15 @@ bool QsciLexerPython::writeProperties(QSettings &qs,const QString &prefix) const
     int rc = true;
 
     qs.setValue(prefix + "foldcomments", fold_comments);
+    qs.setValue(prefix + "foldcompact", fold_compact);
     qs.setValue(prefix + "foldquotes", fold_quotes);
     qs.setValue(prefix + "indentwarning", (int)indent_warn);
+    qs.setValue(prefix + "stringsovernewline", strings_over_newline);
     qs.setValue(prefix + "v2unicode", v2_unicode);
     qs.setValue(prefix + "v3binaryoctal", v3_binary_octal);
     qs.setValue(prefix + "v3bytes", v3_bytes);
 
     return rc;
-}
-
-
-// Return true if comments can be folded.
-bool QsciLexerPython::foldComments() const
-{
-    return fold_comments;
 }
 
 
@@ -363,10 +363,19 @@ void QsciLexerPython::setCommentProp()
 }
 
 
-// Return true if quotes can be folded.
-bool QsciLexerPython::foldQuotes() const
+// Set if folds are compact.
+void QsciLexerPython::setFoldCompact(bool fold)
 {
-    return fold_quotes;
+    fold_compact = fold;
+
+    setCompactProp();
+}
+
+
+// Set the "fold.compact" property.
+void QsciLexerPython::setCompactProp()
+{
+    emit propertyChanged("fold.compact",(fold_compact ? "1" : "0"));
 }
 
 
@@ -386,13 +395,6 @@ void QsciLexerPython::setQuotesProp()
 }
 
 
-// Return the indentation warning.
-QsciLexerPython::IndentationWarning QsciLexerPython::indentationWarning() const
-{
-    return indent_warn;
-}
-
-
 // Set the indentation warning.
 void QsciLexerPython::setIndentationWarning(QsciLexerPython::IndentationWarning warn)
 {
@@ -409,10 +411,19 @@ void QsciLexerPython::setTabWhingeProp()
 }
 
 
-// Return true if v2 unicode string literals are allowed.
-bool QsciLexerPython::v2UnicodeAllowed() const
+// Set if string literals can span newlines.
+void QsciLexerPython::setStringsOverNewlineAllowed(bool allowed)
 {
-    return v2_unicode;
+    strings_over_newline = allowed;
+
+    setStringsOverNewlineProp();
+}
+
+
+// Set the "lexer.python.strings.u" property.
+void QsciLexerPython::setStringsOverNewlineProp()
+{
+    emit propertyChanged("lexer.python.strings.over.newline", (strings_over_newline ? "1" : "0"));
 }
 
 
@@ -432,13 +443,6 @@ void QsciLexerPython::setV2UnicodeProp()
 }
 
 
-// Return true if v3 binary and octal literals are allowed.
-bool QsciLexerPython::v3BinaryOctalAllowed() const
-{
-    return v3_binary_octal;
-}
-
-
 // Set if v3 binary and octal literals are allowed.
 void QsciLexerPython::setV3BinaryOctalAllowed(bool allowed)
 {
@@ -452,13 +456,6 @@ void QsciLexerPython::setV3BinaryOctalAllowed(bool allowed)
 void QsciLexerPython::setV3BinaryOctalProp()
 {
     emit propertyChanged("lexer.python.literals.binary", (v3_binary_octal ? "1" : "0"));
-}
-
-
-// Return true if v3 bytes string literals are allowed.
-bool QsciLexerPython::v3BytesAllowed() const
-{
-    return v3_bytes;
 }
 
 

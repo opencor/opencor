@@ -3,6 +3,18 @@ PROJECT(QScintilla)
 # Files that make up QScintilla
 
 SET(SOURCES
+    lexers/LexCPP.cpp
+    lexers/LexCSS.cpp
+    lexers/LexHTML.cpp
+    lexers/LexPython.cpp
+    lexlib/Accessor.cpp
+    lexlib/CharacterSet.cpp
+    lexlib/LexerBase.cpp
+    lexlib/LexerModule.cpp
+    lexlib/LexerSimple.cpp
+    lexlib/PropSetSimple.cpp
+    lexlib/StyleContext.cpp
+    lexlib/WordList.cpp
     Qt4/ListBoxQt.cpp
     Qt4/PlatQt.cpp
     Qt4/qsciabstractapis.cpp
@@ -12,6 +24,7 @@ SET(SOURCES
     Qt4/qscidocument.cpp
     Qt4/qscilexer.cpp
     Qt4/qscilexercpp.cpp
+    Qt4/qscilexercss.cpp
     Qt4/qscilexerhtml.cpp
     Qt4/qscilexerjavascript.cpp
     Qt4/qscilexerpython.cpp
@@ -24,36 +37,44 @@ SET(SOURCES
     Qt4/ScintillaQt.cpp
     src/AutoComplete.cpp
     src/CallTip.cpp
+    src/Catalogue.cpp
     src/CellBuffer.cpp
     src/CharClassify.cpp
     src/ContractionState.cpp
     src/Decoration.cpp
     src/Document.cpp
-    src/DocumentAccessor.cpp
     src/Editor.cpp
     src/Indicator.cpp
     src/KeyMap.cpp
-    src/KeyWords.cpp
     src/LineMarker.cpp
     src/PerLine.cpp
     src/PositionCache.cpp
-    src/PropSet.cpp
     src/RESearch.cpp
     src/RunStyles.cpp
     src/ScintillaBase.cpp
+    src/Selection.cpp
     src/Style.cpp
+    src/UniConversion.cpp
     src/ViewStyle.cpp
     src/XPM.cpp
 )
 
 SET(HEADERS
-    include/Accessor.h
-    include/KeyWords.h
+    include/ILexer.h
     include/Platform.h
-    include/PropSet.h
     include/SciLexer.h
     include/Scintilla.h
-    include/SString.h
+    lexlib/Accessor.h
+    lexlib/CharacterSet.h
+    lexlib/LexAccessor.h
+    lexlib/LexerBase.h
+    lexlib/LexerModule.h
+    lexlib/LexerSimple.h
+    lexlib/OptionSet.h
+    lexlib/PropSetSimple.h
+    lexlib/SparseState.h
+    lexlib/StyleContext.h
+    lexlib/WordList.h
     Qt4/ListBoxQt.h
     Qt4/ScintillaQt.h
     Qt4/Qsci/qscicommand.h
@@ -64,16 +85,16 @@ SET(HEADERS
     Qt4/Qsci/qscistyledtext.h
     src/Autocomplete.h
     src/CallTip.h
+    src/Catalogue.h
     src/CellBuffer.h
     src/CharClassify.h
     src/ContractionState.h
     src/Decoration.h
     src/Document.h
-    src/DocumentAccessor.h
     src/Editor.h
+    src/FontQuality.h
     src/Indicator.h
     src/KeyMap.h
-    src/KeyWords.h
     src/LineMarker.h
     src/Partitioning.h
     src/PerLine.h
@@ -81,9 +102,11 @@ SET(HEADERS
     src/RESearch.h
     src/RunStyles.h
     src/ScintillaBase.h
+    src/Selection.h
     src/SplitVector.h
     src/Style.h
     src/SVector.h
+    src/UniConversion.h
     src/ViewStyle.h
     src/XPM.h
 )
@@ -93,6 +116,7 @@ SET(HEADERS_MOC
     Qt4/Qsci/qsciapis.h
     Qt4/Qsci/qscilexer.h
     Qt4/Qsci/qscilexercpp.h
+    Qt4/Qsci/qscilexercss.h
     Qt4/Qsci/qscilexerhtml.h
     Qt4/Qsci/qscilexerjavascript.h
     Qt4/Qsci/qscilexerpython.h
@@ -104,7 +128,7 @@ SET(HEADERS_MOC
 
 # Various include directories
 
-SET(LOCAL_3RDPARTYLIB_SUBDIRS include Qt4 Qt4/Qsci src)
+SET(LOCAL_3RDPARTYLIB_SUBDIRS include lexlib Qt4 Qt4/Qsci src)
 SET(3RDPARTYLIB_SUBDIRS ${LOCAL_3RDPARTYLIB_SUBDIRS} PARENT_SCOPE)
 
 INCLUDE_DIRECTORIES(${LOCAL_3RDPARTYLIB_SUBDIRS})

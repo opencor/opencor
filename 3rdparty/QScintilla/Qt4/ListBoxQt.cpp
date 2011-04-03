@@ -1,7 +1,7 @@
 // This module implements the specialisation of QListBox that handles the
 // Scintilla double-click callback.
 //
-// Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -57,7 +57,7 @@ void ListBoxQt::Create(Window &parent, int, Point, int, bool unicodeMode)
     utf8 = unicodeMode;
 
     // The parent we want is the QsciScintillaBase, not the text area.
-    id = slb = new SciListBox(reinterpret_cast<QWidget *>(parent.GetID())->parentWidget(), this);
+    wid = slb = new SciListBox(reinterpret_cast<QWidget *>(parent.GetID())->parentWidget(), this);
 }
 
 
