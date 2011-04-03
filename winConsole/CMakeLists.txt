@@ -34,6 +34,16 @@ SET(QT_DONT_USE_QTGUI TRUE)
 
 INCLUDE(${QT_USE_FILE})
 
+# Type of build
+# Note: we do this here, so that all of our third-party libraries can benefit
+#       from these settings
+
+IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    SET(DEBUG_MODE ON)
+ELSE()
+    SET(DEBUG_MODE OFF)
+ENDIF()
+
 # Build the third-party libraries used by the console version of OpenCOR
 
 SET(3RDPARTYLIBS LibQxt)
@@ -79,13 +89,30 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
 
 # Compiler and linker options
 
-SET(CMAKE_CXX_FLAGS "-Wall -O2 -ffast-math")
+SET(CMAKE_CXX_FLAGS "-Wall")
+SET(LINK_FLAGS_PROPERTIES)
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,-subsystem,console -Wl,-s")
-# Note #1: -Wl,-subsystem,console makes sure that we end up with a console
-#          application
-# Note #2: -Wl,-s strips all the symbols, thus reducing the final size of our
-#          console application
+IF(${DEBUG_MODE})
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+ELSE()
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
+ENDIF()
+
+SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-enable-auto-import")
+# Note: -Wl,-enable-auto-import allows us to use our various third-party
+#       libraries without having to worry about importing their functions, etc.
+
+IF(NOT ${DEBUG_MODE})
+    SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
+    # Note: -Wl,-s strips all the symbols, thus reducing the final size of
+    #       our console application
+ENDIF()
+
+SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-subsystem,console")
+# Note: -Wl,-subsystem,console makes sure that we end up with a console
+#       application
+
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
 # Move the console version of OpenCOR to the main build folder
 

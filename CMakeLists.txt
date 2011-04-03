@@ -180,7 +180,8 @@ FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
     ADD_SUBDIRECTORY(${3RDPARTYLIB_DIR})
 
     IF("${3RDPARTYLIB_SUBDIRS}" STRGREATER "")
-        # The third-party library has at least one sub-directory, so add it/them
+        # The third-party library has at least one sub-directory, so add
+        # it/them
 
         FOREACH(3RDPARTYLIB_SUBDIR ${3RDPARTYLIB_SUBDIRS})
             INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR}/${3RDPARTYLIB_SUBDIR})
