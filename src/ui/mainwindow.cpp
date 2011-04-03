@@ -15,6 +15,7 @@
     #include <windows.h>
 #endif
 
+#include <QApplication>
 #include <QCoreApplication>
 #include <QDesktopServices>
 #include <QDesktopWidget>
@@ -592,6 +593,41 @@ void MainWindow::singleAppMsgRcvd(const QString &)
     // TODO: handle the arguments passed to the 'official' instance of OpenCOR
 }
 
+bool MainWindow::needActionHandling(const QAction *pAction)
+{
+    // An action has been triggered, but because some actions share the same
+    // shortcut (e.g. Ctrl+C) from different widgets (e.g. the main window and
+    // the help window), we need to determine whether the active window is the
+    // main window or not. If it isn't, then we need to tell the active widget
+    // (which should be of CommonWidget type) that there is an action that needs
+    // handling. From there, either the widget has a handler or not for that
+    // action. If it has, then it will have handled the action and we can return
+    // false, otherwise we return true to let the main window handle the action
+
+    QWidget *activeWindow = QApplication::activeWindow();
+
+    if (activeWindow == this) {
+        // The main window is the active window, so...
+
+        return true;
+    } else {
+        // The main window is not the active window, so retrieve the widget (of
+        // CommonWidget type) and check whether it can handle the action
+
+        CommonWidget *commonWidget = dynamic_cast<CommonWidget *>(activeWindow);
+
+        if (commonWidget)
+            // The active window is of CommonWidget type, so we can let it know
+            // of the action having been triggered
+
+            return !commonWidget->shortcutTriggered(pAction->shortcut());
+        else
+            // The active window is not of CommonWidget type, so...
+
+            return true;
+    }
+}
+
 void MainWindow::on_actionNew_triggered()
 {
     notYetImplemented("void MainWindow::on_actionNew_triggered()");
@@ -644,7 +680,8 @@ void MainWindow::on_actionCloseAll_triggered()
 
 void MainWindow::on_actionPrint_triggered()
 {
-    notYetImplemented("void MainWindow::on_actionPrint_triggered()");
+    if (needActionHandling(mUi->actionPrint))
+        notYetImplemented("void MainWindow::on_actionPrint_triggered()");
 }
 
 void MainWindow::on_actionUndo_triggered()
@@ -664,7 +701,8 @@ void MainWindow::on_actionCut_triggered()
 
 void MainWindow::on_actionCopy_triggered()
 {
-    notYetImplemented("void MainWindow::on_actionCopy_triggered()");
+    if (needActionHandling(mUi->actionCopy))
+        notYetImplemented("void MainWindow::on_actionCopy_triggered()");
 }
 
 void MainWindow::on_actionPaste_triggered()

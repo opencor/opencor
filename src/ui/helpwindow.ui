@@ -35,7 +35,7 @@
     <string>Go to the home page</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Home</string>
+    <string>Alt+Home</string>
    </property>
   </action>
   <action name="actionBack">
@@ -127,6 +127,9 @@
    <property name="shortcut">
     <string>Ctrl+C</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::WidgetShortcut</enum>
+   </property>
   </action>
   <action name="actionPrint">
    <property name="icon">
@@ -141,6 +144,9 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WidgetShortcut</enum>
    </property>
   </action>
  </widget>

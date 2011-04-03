@@ -1,6 +1,7 @@
 #ifndef COMMONWIDGET_H
 #define COMMONWIDGET_H
 
+class QKeySequence;
 class QSettings;
 class QSize;
 class QString;
@@ -17,6 +18,8 @@ public:
 
     virtual void loadSettings(QSettings &pSettings);
     virtual void saveSettings(QSettings &pSettings);
+
+    virtual bool shortcutTriggered(const QKeySequence &pShortcut);
 
 protected:
     QSize defaultSize(const double &pRatio) const;

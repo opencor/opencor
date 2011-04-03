@@ -19,8 +19,8 @@
         <translation>&amp;Principal</translation>
     </message>
     <message>
-        <source>Ctrl+Home</source>
-        <translation>Ctrl+Début</translation>
+        <source>Alt+Home</source>
+        <translation>Alt+Début</translation>
     </message>
     <message>
         <source>Alt+Left</source>
@@ -173,8 +173,8 @@
         <translation>Imprimer cette page d&apos;aide</translation>
     </message>
     <message>
-        <source>Ctrl+Home</source>
-        <translation>Ctrl+Début</translation>
+        <source>Alt+Home</source>
+        <translation>Alt+Début</translation>
     </message>
     <message>
         <source>Ctrl++</source>

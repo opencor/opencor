@@ -35,7 +35,7 @@
     <string>Go to the home folder</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Home</string>
+    <string>Alt+Home</string>
    </property>
   </action>
   <action name="actionPrevious">
