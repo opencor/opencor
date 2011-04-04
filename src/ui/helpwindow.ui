@@ -34,9 +34,6 @@
    <property name="statusTip">
     <string>Go to the home page</string>
    </property>
-   <property name="shortcut">
-    <string>Alt+Home</string>
-   </property>
   </action>
   <action name="actionBack">
    <property name="icon">
@@ -48,9 +45,6 @@
    </property>
    <property name="statusTip">
     <string>Go back</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+Left</string>
    </property>
   </action>
   <action name="actionForward">
@@ -64,9 +58,6 @@
    <property name="statusTip">
     <string>Go forward</string>
    </property>
-   <property name="shortcut">
-    <string>Alt+Right</string>
-   </property>
   </action>
   <action name="actionZoomIn">
    <property name="icon">
@@ -78,9 +69,6 @@
    </property>
    <property name="statusTip">
     <string>Zoom in the help page contents</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl++</string>
    </property>
   </action>
   <action name="actionZoomOut">
@@ -94,9 +82,6 @@
    <property name="statusTip">
     <string>Zoom out the help page contents</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+-</string>
-   </property>
   </action>
   <action name="actionNormalSize">
    <property name="icon">
@@ -108,9 +93,6 @@
    </property>
    <property name="statusTip">
     <string>Reset the size of the help page contents</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+0</string>
    </property>
   </action>
   <action name="actionCopy">
@@ -124,12 +106,6 @@
    <property name="statusTip">
     <string>Copy the selection to the clipboard</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+C</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
-   </property>
   </action>
   <action name="actionPrint">
    <property name="icon">
@@ -141,12 +117,6 @@
    </property>
    <property name="statusTip">
     <string>Print this help page</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+P</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
    </property>
   </action>
  </widget>

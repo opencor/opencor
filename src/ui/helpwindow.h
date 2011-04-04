@@ -26,8 +26,6 @@ public:
     virtual void loadSettings(QSettings &pSettings);
     virtual void saveSettings(QSettings &pSettings);
 
-    virtual bool shortcutTriggered(const QKeySequence &pShortcut);
-
     void gotoHomePage();
 
     int defaultZoomLevel();

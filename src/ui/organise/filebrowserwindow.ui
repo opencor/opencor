@@ -34,9 +34,6 @@
    <property name="statusTip">
     <string>Go to the home folder</string>
    </property>
-   <property name="shortcut">
-    <string>Alt+Home</string>
-   </property>
   </action>
   <action name="actionPrevious">
    <property name="icon">
@@ -48,9 +45,6 @@
    </property>
    <property name="statusTip">
     <string>Go to the previous folder or file</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+Left</string>
    </property>
   </action>
   <action name="actionNext">
@@ -64,9 +58,6 @@
    <property name="statusTip">
     <string>Go to the next folder or file</string>
    </property>
-   <property name="shortcut">
-    <string>Alt+Right</string>
-   </property>
   </action>
   <action name="actionParent">
    <property name="icon">
@@ -78,9 +69,6 @@
    </property>
    <property name="statusTip">
     <string>Go to the parent folder</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+Up</string>
    </property>
   </action>
  </widget>

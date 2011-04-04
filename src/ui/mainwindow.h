@@ -74,8 +74,6 @@ private:
 
     void setLocale(const QString &pLocale);
 
-    bool needActionHandling(const QAction *pAction);
-
     bool openFile(const QString &pFileName, const bool &pUserFeedback = false);
 
 public Q_SLOTS:

@@ -47,13 +47,6 @@ void CommonWidget::saveSettings(QSettings &)
     // Nothing to do by default...
 }
 
-bool CommonWidget::shortcutTriggered(const QKeySequence &)
-{
-    // By default, we don't know how to handle the shortcut, so...
-
-    return false;
-}
-
 void CommonWidget::updateActions()
 {
     // Nothing to do by default...

@@ -130,30 +130,6 @@ void HelpWindow::saveSettings(QSettings &pSettings)
     pSettings.endGroup();
 }
 
-bool HelpWindow::shortcutTriggered(const QKeySequence &pShortcut)
-{
-    // A shortcut has been triggered and caught by the main window, but we are
-    // the active window, so check whether or not we can handle it
-
-    if (pShortcut.matches(mUi->actionCopy->shortcut())) {
-        // We want to copy, so...
-
-        on_actionCopy_triggered();
-
-        return true;
-    } else if (pShortcut.matches(mUi->actionPrint->shortcut())) {
-        // We want to print, so...
-
-        on_actionPrint_triggered();
-
-        return true;
-    } else {
-        // We don't know how to handle the shortcut, so...
-
-        return false;
-    }
-}
-
 void HelpWindow::gotoHomePage()
 {
     // Go to the home page

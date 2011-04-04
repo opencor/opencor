@@ -19,22 +19,6 @@
         <translation>&amp;Principal</translation>
     </message>
     <message>
-        <source>Alt+Home</source>
-        <translation>Alt+Début</translation>
-    </message>
-    <message>
-        <source>Alt+Left</source>
-        <translation>Alt+Gauche</translation>
-    </message>
-    <message>
-        <source>Alt+Right</source>
-        <translation>Alt+Droit</translation>
-    </message>
-    <message>
-        <source>Alt+Up</source>
-        <translation>Alt+Haut</translation>
-    </message>
-    <message>
         <source>Go to the home folder</source>
         <translation>Aller au répertoire principal</translation>
     </message>
@@ -78,16 +62,8 @@
         <translation>Créer un nouveau répertoire</translation>
     </message>
     <message>
-        <source>Ctrl+N</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>&amp;Delete</source>
         <translation>&amp;Supprimer</translation>
-    </message>
-    <message>
-        <source>Del</source>
-        <translation>Suppr</translation>
     </message>
     <message>
         <source>Delete the current folder(s) and/or link(s) to the current file(s)</source>
@@ -117,20 +93,12 @@
         <translation>Aller en arrière</translation>
     </message>
     <message>
-        <source>Alt+Left</source>
-        <translation>Alt+Gauche</translation>
-    </message>
-    <message>
         <source>&amp;Forward</source>
         <translation>En A&amp;vant</translation>
     </message>
     <message>
         <source>Go forward</source>
         <translation>Aller en avant</translation>
-    </message>
-    <message>
-        <source>Alt+Right</source>
-        <translation>Alt+Droit</translation>
     </message>
     <message>
         <source>Zoom &amp;In</source>
@@ -171,30 +139,6 @@
     <message>
         <source>Print this help page</source>
         <translation>Imprimer cette page d&apos;aide</translation>
-    </message>
-    <message>
-        <source>Alt+Home</source>
-        <translation>Alt+Début</translation>
-    </message>
-    <message>
-        <source>Ctrl++</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Ctrl+-</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Ctrl+0</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Ctrl+C</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Ctrl+P</source>
-        <translation></translation>
     </message>
 </context>
 <context>

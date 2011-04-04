@@ -34,9 +34,6 @@
    <property name="statusTip">
     <string>Create a new folder</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+N</string>
-   </property>
   </action>
   <action name="actionDelete">
    <property name="icon">
@@ -48,9 +45,6 @@
    </property>
    <property name="statusTip">
     <string>Delete the current folder(s) and/or link(s) to the current file(s)</string>
-   </property>
-   <property name="shortcut">
-    <string>Del</string>
    </property>
   </action>
  </widget>
