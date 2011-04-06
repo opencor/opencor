@@ -1,13 +1,11 @@
 #ifndef FILEBROWSERWIDGET_H
 #define FILEBROWSERWIDGET_H
 
-#include "commonwidget.h"
-
-#include <QTreeView>
+#include "treeview.h"
 
 class QFileSystemModel;
 
-class FileBrowserWidget : public QTreeView, public CommonWidget
+class FileBrowserWidget : public TreeView
 {
     Q_OBJECT
 

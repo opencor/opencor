@@ -8,8 +8,7 @@
 #include <QSettings>
 
 FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
-    QTreeView(pParent),
-    CommonWidget(pName, this, pParent),
+    TreeView(pName, this, pParent),
     mNeedDefColWidth(true),
     mInitPathDirs(QStringList()),
     mInitPathDir(QString()),
@@ -30,6 +29,7 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     setAttribute(Qt::WA_MacShowFocusRect, 0);
     // Note: the above removes the focus border since it messes up our toolbar
 #endif
+    setDragDropMode(QAbstractItemView::DragOnly);
     setModel(mFileSystemModel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSortingEnabled(true);
