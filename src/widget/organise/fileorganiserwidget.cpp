@@ -19,8 +19,7 @@ static const QString FileIcon            = ":oxygen/mimetypes/application-x-zero
 
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
                                          QWidget *pParent) :
-    QTreeView(pParent),
-    CommonWidget(pName, this, pParent)
+    TreeView(pName, this, pParent)
 {
     // Create an instance of the data model that we want to view
 

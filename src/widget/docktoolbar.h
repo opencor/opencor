@@ -8,7 +8,7 @@ class DockToolBar : public QToolBar
     Q_OBJECT
 
 public:
-    DockToolBar(QWidget *pParent);
+    explicit DockToolBar(QWidget *pParent);
 };
 
 #endif

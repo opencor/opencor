@@ -33,6 +33,7 @@ SET(SOURCES
     src/widget/dockwidget.cpp
     src/widget/helpwidget.cpp
     src/widget/tabwidget.cpp
+    src/widget/treeview.cpp
     src/widget/edit/mmlviewerwidget.cpp
     src/widget/misc/commonwidget.cpp
     src/widget/organise/cellmlmodelrepositorywidget.cpp
@@ -60,6 +61,7 @@ SET(HEADERS_MOC
     src/widget/dockwidget.h
     src/widget/helpwidget.h
     src/widget/tabwidget.h
+    src/widget/treeview.h
     src/widget/edit/mmlviewerwidget.h
     src/widget/organise/cellmlmodelrepositorywidget.h
     src/widget/organise/filebrowserwidget.h

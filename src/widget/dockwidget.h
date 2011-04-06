@@ -10,7 +10,7 @@ class DockWidget : public QDockWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    DockWidget(QWidget *pParent);
+    explicit DockWidget(QWidget *pParent);
 };
 
 #endif

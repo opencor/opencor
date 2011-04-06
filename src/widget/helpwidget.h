@@ -13,8 +13,9 @@ class QHelpEngine;
 class HelpNetworkReply : public QNetworkReply
 {
 public:
-    HelpNetworkReply(const QNetworkRequest &pRequest, const QByteArray &pData,
-                     const QString &pMimeType);
+    explicit HelpNetworkReply(const QNetworkRequest &pRequest,
+                              const QByteArray &pData,
+                              const QString &pMimeType);
 
     virtual void abort();
     virtual qint64 bytesAvailable() const;
@@ -30,7 +31,8 @@ private:
 class HelpNetworkAccessManager : public QNetworkAccessManager
 {
 public:
-    HelpNetworkAccessManager(QHelpEngine *pHelpEngine, QObject *pParent);
+    explicit HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
+                                      QObject *pParent);
 
 protected:
     virtual QNetworkReply *createRequest(Operation pOperation,
@@ -46,7 +48,7 @@ private:
 class HelpPage : public QWebPage
 {
 public:
-    HelpPage(QHelpEngine *pHelpEngine, QObject *pParent);
+    explicit HelpPage(QHelpEngine *pHelpEngine, QObject *pParent);
 
 protected:
     virtual bool acceptNavigationRequest(QWebFrame*,
@@ -62,8 +64,8 @@ class HelpWidget : public QWebView, public CommonWidget
     Q_OBJECT
 
 public:
-    HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
-               const QUrl &pHomePage, QWidget *pParent);
+    explicit HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
+                        const QUrl &pHomePage, QWidget *pParent);
 
     virtual void loadSettings(QSettings &pSettings);
     virtual void saveSettings(QSettings &pSettings);

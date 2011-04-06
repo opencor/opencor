@@ -1,14 +1,12 @@
 #ifndef FILEORGANISERWIDGET_H
 #define FILEORGANISERWIDGET_H
 
-#include "commonwidget.h"
-
-#include <QTreeView>
+#include "treeview.h"
 
 class QStandardItem;
 class QStandardItemModel;
 
-class FileOrganiserWidget : public QTreeView, public CommonWidget
+class FileOrganiserWidget : public TreeView
 {
     Q_OBJECT
 

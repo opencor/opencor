@@ -10,7 +10,7 @@ class TabWidget : public QTabWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    TabWidget(QWidget *pParent);
+    explicit TabWidget(QWidget *pParent);
 
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);

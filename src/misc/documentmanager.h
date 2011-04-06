@@ -7,7 +7,7 @@
 class Document
 {
 public:
-    Document(const QString &pFileName);
+    explicit Document(const QString &pFileName);
 
     QString fileName();
 
