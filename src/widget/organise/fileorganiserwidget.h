@@ -30,6 +30,8 @@ protected:
 
     virtual bool viewportEvent(QEvent *pEvent);
 
+    virtual void startDrag(Qt::DropActions pSupportedActions);
+
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
