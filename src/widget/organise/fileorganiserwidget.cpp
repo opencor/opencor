@@ -26,16 +26,10 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
 
     // Set some properties for the file organiser widget itself
 
-#ifdef Q_WS_MAC
-    setAttribute(Qt::WA_MacShowFocusRect, 0);
-    // Note: the above removes the focus border since it messes up our toolbar
-#endif
     setDragDropMode(QAbstractItemView::DragDrop);
     setEditTriggers(QAbstractItemView::EditKeyPressed);
     setHeaderHidden(true);
     setModel(mDataModel);
-    setSelectionMode(QAbstractItemView::ExtendedSelection);
-    setUniformRowHeights(true);
 
     // Some connections
 

@@ -8,6 +8,15 @@ TreeView::TreeView(const QString &pName, QWidget *pWidget,
     QTreeView(pParent),
     CommonWidget(pName, pWidget, pParent)
 {
+    // Set some properties for the tree view itself
+
+    setAllColumnsShowFocus(true);
+#ifdef Q_WS_MAC
+    setAttribute(Qt::WA_MacShowFocusRect, 0);
+    // Note: the above removes the focus border since it messes up our toolbar
+#endif
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setUniformRowHeights(true);
 }
 
 void TreeView::startDrag(Qt::DropActions pSupportedActions)
@@ -27,7 +36,18 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
     QModelIndexList selectedDraggableIndexes = selectedIndexes();
 
     for (int i = selectedDraggableIndexes.count()-1; i >= 0; --i)
-        if (!(model()->flags(selectedDraggableIndexes.at(i)) & Qt::ItemIsDragEnabled))
+        if (   !(model()->flags(selectedDraggableIndexes.at(i)) & Qt::ItemIsDragEnabled)
+            || selectedDraggableIndexes.at(i).column())
+            // The current selected item is not draggable or is not in the first
+            // column
+            // Note: regarding the test on the column number, it is because we
+            //       may have a model data that requires several columns (e.g.
+            //       QFileSystemModel) in which case selectedIndexes would
+            //       return a number of indexes equal to the number of rows
+            //       times the number of columns while we only want a number of
+            //       indexes to be equal to the number of rows (since we have a
+            //       selection mode of QAbstractItemView::ExtendedSelection)
+
             selectedDraggableIndexes.removeAt(i);
 
     // Start the dragging action is there is at least one selected draggable

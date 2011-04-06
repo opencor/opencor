@@ -24,16 +24,9 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
 
     // Set some properties for the file browser widget itself
 
-    setAllColumnsShowFocus(true);
-#ifdef Q_WS_MAC
-    setAttribute(Qt::WA_MacShowFocusRect, 0);
-    // Note: the above removes the focus border since it messes up our toolbar
-#endif
     setDragDropMode(QAbstractItemView::DragOnly);
     setModel(mFileSystemModel);
-    setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSortingEnabled(true);
-    setUniformRowHeights(true);
 
     // Connection to keep track of the directory loading progress of
     // mFileSystemModel
