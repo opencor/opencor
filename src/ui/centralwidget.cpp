@@ -30,6 +30,15 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mTabWidget = new TabWidget(this);
 
+    mTabWidget->setUsesScrollButtons(true);
+    // Note #1: the above property is style dependent and it happens that it's
+    //          not enabled on Mac OS X, so... set it in all cases, even though
+    //          it's already set on Windows and Linux, but one can never know
+    //          what the future holds, so...
+    // Note #2: if the above property is not enabled and many files are opened,
+    //          then the central widget will widen reducing the width of any
+    //          dock window which is clearly not what we want, so...
+
     mUi->verticalLayout->addWidget(mTabWidget);
 
     // A connection to handle the closing of a tab
