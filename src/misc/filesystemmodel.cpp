@@ -28,3 +28,10 @@ Qt::ItemFlags FileSystemModel::flags(const QModelIndex &pIndex) const
 
     return flags;
 }
+
+Qt::DropActions FileSystemModel::supportedDropActions() const
+{
+    // We only allow for a dragged item to be copied to its target
+
+    return Qt::CopyAction;
+}
