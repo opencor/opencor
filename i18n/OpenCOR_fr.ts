@@ -607,6 +607,10 @@
         <source>Ctrl+A</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Sorry, but the &apos;%1&apos; file is not currently managed.</source>
+        <translation>Désolé, mais le fichier &apos;%1&apos; n&apos;est pas actuellement géré.</translation>
+    </message>
 </context>
 <context>
     <name>ViewerWindow</name>

@@ -19,7 +19,10 @@ public:
     explicit CentralWidget(QWidget *pParent);
     ~CentralWidget();
 
-    void openFile(const QString &pFileName);
+    bool openFile(const QString &pFileName);
+    QString closeFile(const int &pIndex = -1);
+
+    bool activateFile(const QString &pFileName);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
@@ -33,6 +36,10 @@ private:
 
 Q_SIGNALS:
     void filesDropped(const QStringList &pFileNames);
+    void fileClosed(const QString &pFileName);
+
+private Q_SLOTS:
+    void closeTab(const int &pIndex);
 };
 
 #endif

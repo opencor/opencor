@@ -84,8 +84,6 @@ private Q_SLOTS:
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
     void on_actionSaveAll_triggered();
-    void on_actionClose_triggered();
-    void on_actionCloseAll_triggered();
     void on_actionPrint_triggered();
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
@@ -111,6 +109,11 @@ private Q_SLOTS:
     void on_actionAbout_triggered();
 
     void openFiles(const QStringList &pFileNames);
+    void unmanageFile(const QString &pFileName,
+                      const bool &pUserFeedback = false);
+
+    bool closeFile(const bool &pUserFeedback = false);
+    void closeFiles();
     void resetAll();
 };
 

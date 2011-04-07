@@ -184,6 +184,13 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionHelp, SLOT(setChecked(bool)));
 
+    // Some connections to handle the File menu
+
+    connect(mUi->actionClose, SIGNAL(triggered(bool)),
+            this, SLOT(closeFile()));
+    connect(mUi->actionCloseAll, SIGNAL(triggered(bool)),
+            this, SLOT(closeFiles()));
+
     // A connection to handle the file browser window
 
     connect(mFileBrowserWindow, SIGNAL(filesOpened(const QStringList &)),
@@ -194,10 +201,12 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mFileOrganiserWindow, SIGNAL(filesOpened(const QStringList &)),
             this, SLOT(openFiles(const QStringList &)));
 
-    // A connection to handle the central widget
+    // Some connections to handle the central widget
 
     connect(mCentralWidget, SIGNAL(filesDropped(const QStringList &)),
             this, SLOT(openFiles(const QStringList &)));
+    connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
+            this, SLOT(unmanageFile(const QString &)));
 
     // Retrieve the user settings from the previous session, if any
 
@@ -572,16 +581,6 @@ void MainWindow::on_actionSaveAll_triggered()
     notYetImplemented("void MainWindow::on_actionSaveAll_triggered()");
 }
 
-void MainWindow::on_actionClose_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionClose_triggered()");
-}
-
-void MainWindow::on_actionCloseAll_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionCloseAll_triggered()");
-}
-
 void MainWindow::on_actionPrint_triggered()
 {
     notYetImplemented("void MainWindow::on_actionPrint_triggered()");
@@ -754,7 +753,7 @@ bool MainWindow::openFile(const QString &pFileName, const bool &pUserFeedback)
     switch (status) {
     case DocumentManager::Added:
         // The file has been added to the manager, so we can carry on with the
-        // opening of the file
+        // opening of the file in our central widget
 
         mCentralWidget->openFile(pFileName);
 
@@ -762,7 +761,7 @@ bool MainWindow::openFile(const QString &pFileName, const bool &pUserFeedback)
     case DocumentManager::AlreadyManaged:
         // The file is already managed, so activate it
 
-//---GRY--- TO BE DONE...
+        mCentralWidget->activateFile(pFileName);
 
         break;
     case DocumentManager::DoesNotExist:
@@ -785,4 +784,55 @@ void MainWindow::openFiles(const QStringList &pFileNames)
 
     for (int i = 0; i < pFileNames.count(); ++i)
         openFile(pFileNames.at(i));
+}
+
+void MainWindow::unmanageFile(const QString &pFileName,
+                              const bool &pUserFeedback)
+{
+    // Unregister the given file from our document manager
+
+    DocumentManager::UnmanageStatus status = mDocumentManager->unmanage(pFileName);
+
+    switch (status) {
+    case DocumentManager::Removed:
+        // The file has been removed, so all is fine
+
+        break;
+    case DocumentManager::NotManaged:
+        // The file is not managed, so...
+
+        if (pUserFeedback)
+            QMessageBox::information(0, qApp->applicationName()+" Information",
+                                     QString(tr("Sorry, but the '%1' file is not currently managed.")).arg(pFileName));
+
+        break;
+    }
+}
+
+bool MainWindow::closeFile(const bool &pUserFeedback)
+{
+    // Remove the current file from our central widget
+
+    QString fileName = mCentralWidget->closeFile();
+
+    // If a file was really closed, then unregister it from our document manager
+
+    if (!fileName.isEmpty()) {
+        unmanageFile(fileName, pUserFeedback);
+
+        // Everything went file (i.e. a file was closed), so...
+
+        return true;
+    } else {
+        // There was no file to close, so...
+
+        return false;
+    }
+}
+
+void MainWindow::closeFiles()
+{
+    // Remove all the files until there is none left
+
+    while (closeFile()) {}
 }

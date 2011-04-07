@@ -30,7 +30,7 @@ QString FileOrganiserItemModel::filePath(const QModelIndex &pFileIndex) const
     if (fileItem && !fileItem->data(FileOrganiserItemFolder).toBool())
         return fileItem->data(FileOrganiserItemPath).toString();
     else
-        return "";
+        return QString();
 }
 
 QMimeData * FileOrganiserItemModel::mimeData(const QModelIndexList &pIndexes) const

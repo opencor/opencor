@@ -4,6 +4,7 @@
 
 #include "ui_centralwidget.h"
 
+#include <QDir>
 #include <QDragEnterEvent>
 #include <QFileInfo>
 #include <QTextStream>
@@ -30,6 +31,11 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mTabWidget = new TabWidget(this);
 
     mUi->verticalLayout->addWidget(mTabWidget);
+
+    // A connection to handle the closing of a tab
+
+    connect(mTabWidget, SIGNAL(tabCloseRequested(int)),
+            this, SLOT(closeTab(int)));
 }
 
 CentralWidget::~CentralWidget()
@@ -39,8 +45,13 @@ CentralWidget::~CentralWidget()
     delete mUi;
 }
 
-void CentralWidget::openFile(const QString &pFileName)
+bool CentralWidget::openFile(const QString &pFileName)
 {
+    if (!QFileInfo(pFileName).exists())
+        // The file doesn't exist, so...
+
+        return false;
+
     // Create an editor for the file
 
     QsciScintilla *scintilla = new QsciScintilla(this);
@@ -64,6 +75,83 @@ void CentralWidget::openFile(const QString &pFileName)
 
     mTabWidget->setCurrentIndex(mTabWidget->addTab(scintilla,
                                                    QFileInfo(pFileName).baseName()));
+
+    // Set the full name of the file as the tool tip for the new tab
+
+    mTabWidget->setTabToolTip(mTabWidget->currentIndex(),
+                              QDir::toNativeSeparators(pFileName));
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+QString CentralWidget::closeFile(const int &pIndex)
+{
+    // Close the file at the given tab index or the current tab index, if no tab
+    // index is provided, and then return the name of the file that was closed,
+    // if any
+
+    QsciScintilla *scintilla = qobject_cast<QsciScintilla *>(mTabWidget->widget((pIndex != -1)?
+                                                                                    pIndex:
+                                                                                    mTabWidget->currentIndex()));
+
+    if (scintilla) {
+        // There is a file currently opened, so first retrieve its filename
+
+        QString fileName = mTabWidget->tabToolTip(mTabWidget->currentIndex());
+
+        // Next, we must close the tab
+
+        mTabWidget->removeTab(mTabWidget->currentIndex());
+
+        // Then, we must release the allocated memory for the widget that the
+        // tab used to contain
+
+        delete scintilla;
+
+        // Finally, we return the filename of the file we have just closed
+
+        return fileName;
+    } else {
+        // There is no file currently opened, so...
+
+        return QString();
+    }
+}
+
+bool CentralWidget::activateFile(const QString &pFileName)
+{
+    // Go through the different tabs and check whether one of them corresponds
+    // to the requested file
+
+    QString realFileName = QDir::toNativeSeparators(pFileName);
+
+    for (int i = 0; i < mTabWidget->count(); ++i)
+        if (!mTabWidget->tabToolTip(i).compare(realFileName)) {
+            // We have found the file, so activate it and return
+
+            mTabWidget->setCurrentIndex(i);
+
+            return true;
+        }
+
+    // We couldn't find the file, so...
+
+    return false;
+}
+
+void CentralWidget::closeTab(const int &pIndex)
+{
+    // We want to close a tab, so close the file that is associated with it, and
+    // let people know about it
+
+    QString fileName = closeFile(pIndex);
+
+    if (!fileName.isEmpty())
+        // The closing of the file was successful, so...
+
+        emit fileClosed(fileName);
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
