@@ -99,6 +99,10 @@ bool CentralWidget::openFile(const QString &pFileName)
     mTabWidget->setTabToolTip(mTabWidget->currentIndex(),
                               QDir::toNativeSeparators(pFileName));
 
+    // Give the focus to the newly created editor
+
+    mTabWidget->currentWidget()->setFocus();
+
     // Everything went fine, so...
 
     return true;
@@ -147,9 +151,16 @@ bool CentralWidget::activateFile(const QString &pFileName)
 
     for (int i = 0; i < mTabWidget->count(); ++i)
         if (!mTabWidget->tabToolTip(i).compare(realFileName)) {
-            // We have found the file, so activate it and return
+            // We have found the file, so set the current index to that of its
+            // tab
 
             mTabWidget->setCurrentIndex(i);
+
+            // Then, give the focus to the editor
+
+            mTabWidget->currentWidget()->setFocus();
+
+            // We were able to activate the file, so...
 
             return true;
         }
