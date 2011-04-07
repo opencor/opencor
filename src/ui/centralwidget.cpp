@@ -66,8 +66,17 @@ bool CentralWidget::openFile(const QString &pFileName)
     QsciScintilla *scintilla = new QsciScintilla(this);
     QsciLexerXML *lexer      = new QsciLexerXML;
 
-    scintilla->setLexer(lexer);
+    QFont defaultFont(DefaultFontFamily, DefaultFontSize);
+
+    // The font that will be used for XML-like and non XML-like files, resp.
+
+    lexer->setDefaultFont(defaultFont);
+    lexer->setFont(defaultFont);
+
+    // A few settings for the editor itself
+
     scintilla->setFolding(QsciScintilla::BoxedTreeFoldStyle);
+    scintilla->setLexer(lexer);
 
     // Set the contents of the file to the editor
 

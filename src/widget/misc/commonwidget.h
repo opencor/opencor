@@ -1,10 +1,26 @@
 #ifndef COMMONWIDGET_H
 #define COMMONWIDGET_H
 
+#include <QString>
+#include <QtGlobal>
+
 class QSettings;
 class QSize;
-class QString;
 class QWidget;
+
+// The default font family and size below were taken from Qt Creator
+#ifdef Q_WS_WIN
+static const QString DefaultFontFamily = "Courier";
+static const int DefaultFontSize = 10;
+#else
+#ifdef Q_WS_MAC
+static const QString DefaultFontFamily = "Monaco";
+static const int DefaultFontSize = 12;
+#else
+static const QString DefaultFontFamily = "Monospace";
+static const int DefaultFontSize = 9;
+#endif
+#endif
 
 class CommonWidget
 {
