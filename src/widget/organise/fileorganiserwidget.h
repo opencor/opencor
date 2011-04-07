@@ -3,8 +3,18 @@
 
 #include "treeview.h"
 
+#include <QStandardItemModel>
+#include <QString>
+
 class QStandardItem;
-class QStandardItemModel;
+
+static const QString FileOrganiserMimeType = "opencor/file-organiser";
+
+class FileOrganiserItemModel : public QStandardItemModel
+{
+public:
+    virtual QStringList mimeTypes() const;
+};
 
 class FileOrganiserWidget : public TreeView
 {
@@ -35,7 +45,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 private:
-    QStandardItemModel *mDataModel;
+    FileOrganiserItemModel *mDataModel;
 
     void loadItemSettings(QSettings &pSettings, QStandardItem *pParentItem);
     void saveItemSettings(QSettings &pSettings, QStandardItem *pItem,

@@ -4,7 +4,6 @@
 #include <QFileInfo>
 #include <QHelpEvent>
 #include <QSettings>
-#include <QStandardItemModel>
 #include <QUrl>
 
 enum FileOrganiserItemRole {
@@ -16,13 +15,18 @@ static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
 static const QString ExpandedFolderIcon  = ":oxygen/actions/document-open-folder.png";
 static const QString FileIcon            = ":oxygen/mimetypes/application-x-zerosize.png";
 
+QStringList FileOrganiserItemModel::mimeTypes() const
+{
+    return QStringList() << FileOrganiserMimeType;
+}
+
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
                                          QWidget *pParent) :
     TreeView(pName, this, pParent)
 {
     // Create an instance of the data model that we want to view
 
-    mDataModel = new QStandardItemModel;
+    mDataModel = new FileOrganiserItemModel;
 
     // Set some properties for the file organiser widget itself
 
@@ -218,7 +222,8 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     // Accept the proposed action for the event, but only if we are dropping
     // URIs
 
-    if (pEvent->mimeData()->hasFormat("text/uri-list"))
+if ((pEvent->mimeData()->hasFormat("text/uri-list")) ||
+    (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)))
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
