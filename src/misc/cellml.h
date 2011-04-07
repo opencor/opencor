@@ -4,7 +4,7 @@
 #include <QString>
 
 static const QString CellmlHomepageUrl   = "http://www.cellml.org/";
-static const QString CellmlFileExtension = ".cellml";
+static const QString CellmlFileExtension = "cellml";
 
 enum CellmlVersion
 {

@@ -1,3 +1,4 @@
+#include "cellml.h"
 #include "centralwidget.h"
 #include "fileorganiserwidget.h"
 #include "tabwidget.h"
@@ -91,8 +92,12 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     // Create a new tab and have the editor as its contents
 
+    QFileInfo fileInfo = pFileName;
+
     mTabWidget->setCurrentIndex(mTabWidget->addTab(scintilla,
-                                                   QFileInfo(pFileName).baseName()));
+                                                   (!fileInfo.completeSuffix().compare(CellmlFileExtension, Qt::CaseInsensitive))?
+                                                       fileInfo.baseName():
+                                                       fileInfo.fileName()));
 
     // Set the full name of the file as the tool tip for the new tab
 
