@@ -1,7 +1,6 @@
 #include "treeview.h"
 
 #include <QDrag>
-#include <QPainter>
 
 TreeView::TreeView(const QString &pName, QWidget *pWidget,
                    QWidget *pParent) :

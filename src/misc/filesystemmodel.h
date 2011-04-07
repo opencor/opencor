@@ -10,7 +10,7 @@ class FileSystemModel : public QFileSystemModel
 public:
     explicit FileSystemModel(QObject *pParent = 0);
 
-    Qt::ItemFlags flags(const QModelIndex &pIndex) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &pIndex) const;
 };
 
 #endif

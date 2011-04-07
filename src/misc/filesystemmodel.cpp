@@ -13,7 +13,7 @@ Qt::ItemFlags FileSystemModel::flags(const QModelIndex &pIndex) const
     if (!pIndex.isValid())
         // The index is not valid, so...
 
-        return 0;
+        return Qt::NoItemFlags;
 
     // Default flags value
 
