@@ -1,8 +1,8 @@
 #include "filebrowserwidget.h"
+#include "filesystemmodel.h"
 
 #include <QApplication>
 #include <QDesktopServices>
-#include <QFileSystemModel>
 #include <QHeaderView>
 #include <QHelpEvent>
 #include <QSettings>
@@ -16,11 +16,7 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
 {
     // Create an instance of the file system model that we want to view
 
-    mFileSystemModel = new QFileSystemModel;
-
-    // We want acces to the full file system
-
-    mFileSystemModel->setRootPath("");
+    mFileSystemModel = new FileSystemModel;
 
     // Set some properties for the file browser widget itself
 
@@ -369,8 +365,8 @@ QString FileBrowserWidget::currentPathDir()
 {
     // Return the directory of the current path
 
-    QString crtIndexPath  = mFileSystemModel->filePath(currentIndex());
-    QFileInfo crtIndexFileInfo  = crtIndexPath;
+    QString crtIndexPath = mFileSystemModel->filePath(currentIndex());
+    QFileInfo crtIndexFileInfo = crtIndexPath;
 
     return crtIndexFileInfo.isDir()?
                crtIndexPath:
