@@ -434,6 +434,9 @@ void MainWindow::saveSettings()
 void MainWindow::setLocale(const QString &pLocale)
 {
     if ((pLocale != mLocale) || (pLocale == SystemLocale)) {
+        // The new locale is different from the existing one, so we need to
+        // translate everything
+
         QString realLocale = (pLocale == SystemLocale)?
                                  QLocale::system().name().left(2):
                                  pLocale;
@@ -450,10 +453,12 @@ void MainWindow::setLocale(const QString &pLocale)
         mAppTranslator.load(":app_"+realLocale);
         qApp->installTranslator(&mAppTranslator);
 
-        // Translate the whole GUI (including any 'child' window), should the
-        // language have changed
+        // Translate the whole GUI (including any 'child' window) and update the
+        // actions just to be on the safe side
 
         mUi->retranslateUi(this);
+
+        updateActions();
 
         mCellmlModelRepositoryWindow->retranslateUi();
         mFileBrowserWindow->retranslateUi();
@@ -539,6 +544,14 @@ void MainWindow::singleAppMsgRcvd(const QString &)
     // Now, we must handle the arguments that were passed to OpenCOR
 
     // TODO: handle the arguments passed to the 'official' instance of OpenCOR
+}
+
+void MainWindow::updateActions()
+{
+    // Make sure that the various actions are properly enabled/disabled
+
+    mUi->actionClose->setEnabled(mDocumentManager->count());
+    mUi->actionCloseAll->setEnabled(mDocumentManager->count());
 }
 
 void MainWindow::on_actionNew_triggered()
@@ -765,8 +778,7 @@ bool MainWindow::openFile(const QString &pFileName, const bool &pUserFeedback)
 
         break;
     case DocumentManager::DoesNotExist:
-        // The file doesn't exist, so let the user know about it, if
-        // required
+        // The file doesn't exist, so let the user know about it, if requested
 
         if (pUserFeedback)
             QMessageBox::information(0, qApp->applicationName()+" Information",
@@ -775,7 +787,15 @@ bool MainWindow::openFile(const QString &pFileName, const bool &pUserFeedback)
         break;
     }
 
-    return status != DocumentManager::DoesNotExist;
+    // Update the actions, if pontentially needed
+
+    if (status != DocumentManager::DoesNotExist) {
+        updateActions();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void MainWindow::openFiles(const QStringList &pFileNames)
@@ -795,7 +815,9 @@ void MainWindow::unmanageFile(const QString &pFileName,
 
     switch (status) {
     case DocumentManager::Removed:
-        // The file has been removed, so all is fine
+        // The file has been removed, so update the actions, just in case
+
+        updateActions();
 
         break;
     case DocumentManager::NotManaged:

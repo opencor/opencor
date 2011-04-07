@@ -70,6 +70,8 @@ private:
 
     void setLocale(const QString &pLocale);
 
+    void updateActions();
+
     bool openFile(const QString &pFileName, const bool &pUserFeedback = false);
 
 public Q_SLOTS:

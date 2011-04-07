@@ -36,6 +36,8 @@ public:
     ManageStatus manage(const QString &pFileName);
     UnmanageStatus unmanage(const QString &pFileName);
 
+    int count() const;
+
 private:
     QList<Document *> mDocuments;
 

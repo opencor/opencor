@@ -71,7 +71,7 @@ DocumentManager::UnmanageStatus DocumentManager::unmanage(const QString &pFileNa
     }
 }
 
-Document *DocumentManager::isManaged(const QString &pFileName)
+Document * DocumentManager::isManaged(const QString &pFileName)
 {
     foreach (Document *document, mDocuments)
         if (document->fileName() == pFileName)
@@ -82,4 +82,11 @@ Document *DocumentManager::isManaged(const QString &pFileName)
     // The document couldn't be found meaning it's not managed
 
     return 0;
+}
+
+int DocumentManager::count() const
+{
+    // Return the number of documents currently being managed
+
+    return mDocuments.count();
 }
