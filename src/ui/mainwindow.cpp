@@ -4,6 +4,7 @@
 #include "dockwidget.h"
 #include "mainwindow.h"
 #include "filebrowserwindow.h"
+#include "fileorganiserwidget.h"
 #include "fileorganiserwindow.h"
 #include "helpwindow.h"
 #include "cellmlmodelrepositorywindow.h"
@@ -286,9 +287,14 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 void MainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are dropping
-    // URIs
+    // URIs or items from our file organiser
 
-    if (pEvent->mimeData()->hasFormat("text/uri-list"))
+    if (   (   (pEvent->mimeData()->hasFormat("text/uri-list"))
+            || (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)))
+        && (!pEvent->mimeData()->urls().isEmpty()))
+        // Note: we test the list of URL in case we are trying to drop one or
+        //       several folders (and no file) from the file organiser
+
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();

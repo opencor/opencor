@@ -92,10 +92,10 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
             //       QAbstractItemViewPrivate::clearOrRemove...
 
             const QItemSelection selection = selectionModel()->selection();
-            QList<QItemSelectionRange>::const_iterator iter = selection.constBegin();
 
             if (!dragDropOverwriteMode()) {
-                for (; iter != selection.constEnd(); ++iter) {
+                for (QList<QItemSelectionRange>::const_iterator iter = selection.constBegin();
+                     iter != selection.constEnd(); ++iter) {
                     QModelIndex parent = (*iter).parent();
 
                     if ((*iter).left())

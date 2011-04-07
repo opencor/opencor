@@ -12,8 +12,14 @@ static const QString FileOrganiserMimeType = "opencor/file-organiser";
 
 class FileOrganiserItemModel : public QStandardItemModel
 {
+friend class FileOrganiserWidget;
+
 public:
     virtual QStringList mimeTypes() const;
+    virtual QMimeData *mimeData(const QModelIndexList &pIndexes) const;
+
+private:
+    QString filePath(const QModelIndex &pFileIndex) const;
 };
 
 class FileOrganiserWidget : public TreeView
@@ -31,7 +37,7 @@ public:
     bool newFolder();
     bool deleteItems();
 
-    QString filePathOf(const QModelIndex &pFileIndex);
+    QString filePath(const QModelIndex &pFileIndex);
 
 protected:
     virtual QSize sizeHint() const;

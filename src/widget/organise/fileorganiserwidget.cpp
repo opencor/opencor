@@ -8,7 +8,7 @@
 
 enum FileOrganiserItemRole {
     FileOrganiserItemFolder = Qt::UserRole,
-    FileOrganiserItemPath = Qt::UserRole+1
+    FileOrganiserItemPath   = Qt::UserRole+1
 };
 
 static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
@@ -17,7 +17,40 @@ static const QString FileIcon            = ":oxygen/mimetypes/application-x-zero
 
 QStringList FileOrganiserItemModel::mimeTypes() const
 {
-    return QStringList() << FileOrganiserMimeType;
+    return QStringList(FileOrganiserMimeType);
+}
+
+QString FileOrganiserItemModel::filePath(const QModelIndex &pFileIndex) const
+{
+    // Return the file path of pFileIndex, if it exists and corresponds to a
+    // file
+
+    QStandardItem *fileItem = itemFromIndex(pFileIndex);
+
+    if (fileItem && !fileItem->data(FileOrganiserItemFolder).toBool())
+        return fileItem->data(FileOrganiserItemPath).toString();
+    else
+        return "";
+}
+
+QMimeData * FileOrganiserItemModel::mimeData(const QModelIndexList &pIndexes) const
+{
+    QMimeData *mimeData = new QMimeData();
+    QList<QUrl> urls;
+
+    // Retrieve the URL of the different file (not folder) items
+
+    for (QList<QModelIndex>::const_iterator iter = pIndexes.begin();
+         iter != pIndexes.end(); ++iter) {
+        QString crtFilePath = filePath(*iter);
+
+        if (!crtFilePath.isEmpty())
+            urls << QUrl::fromLocalFile(crtFilePath);
+    }
+
+    mimeData->setUrls(urls);
+
+    return mimeData;
 }
 
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
@@ -481,17 +514,11 @@ bool FileOrganiserWidget::deleteItems()
     }
 }
 
-QString FileOrganiserWidget::filePathOf(const QModelIndex &pFileIndex)
+QString FileOrganiserWidget::filePath(const QModelIndex &pFileIndex)
 {
-    // Return the file path of pFileIndex, if it exists and corresponds to a
-    // file
+    // Return the file path of pFileIndex
 
-    QStandardItem *fileItem = mDataModel->itemFromIndex(pFileIndex);
-
-    if (fileItem && !fileItem->data(FileOrganiserItemFolder).toBool())
-        return fileItem->data(FileOrganiserItemPath).toString();
-    else
-        return "";
+    return mDataModel->filePath(pFileIndex);
 }
 
 void FileOrganiserWidget::resizeToContents()
@@ -512,7 +539,7 @@ QStringList FileOrganiserWidget::selectedFiles()
     QModelIndexList crtSelectedIndexes = selectedIndexes();
 
     for (int i = 0; i < crtSelectedIndexes.count(); ++i) {
-        QString fileName = filePathOf(crtSelectedIndexes.at(i));
+        QString fileName = filePath(crtSelectedIndexes.at(i));
 
         if (fileName.isEmpty())
             // The current item is not a file, so return an empty list
