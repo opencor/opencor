@@ -332,6 +332,12 @@ bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
 
         setCurrentIndex(pathModelIndex);
 
+        // Make sure that the widget has the focus, so that the user can really
+        // see where we are (which is important for folders, since they are not
+        // selectable)
+
+        setFocus();
+
         return true;
     } else {
         // The path doesn't exist, so...
