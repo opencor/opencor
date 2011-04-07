@@ -64,17 +64,9 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
 
         // Create the pixmap that will be associated to the dragging action
 
-        QFontMetrics fontMetrics(font());
-        QString someText =  QString::number(selectedDraggableIndexes.count())
-                           +" item"
-                           +QString((selectedDraggableIndexes.count() == 1)?"":"s");
-        QPixmap pixmap(fontMetrics.width(someText), fontMetrics.height());
-
-        pixmap.fill(Qt::transparent);
-
-        QPainter painter(&pixmap);
-
-        painter.drawText(0, pixmap.height()-fontMetrics.descent(), someText);
+        QPixmap pixmap((selectedDraggableIndexes.count() == 1)?
+                           ":oxygen/mimetypes/application-x-zerosize.png":
+                           ":oxygen/places/document-multiple.png");
 
         // Create the drag object
 
@@ -82,7 +74,7 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
 
         drag->setMimeData(mimeData);
         drag->setPixmap(pixmap);
-        drag->setHotSpot(QPoint(0.5*pixmap.width(), pixmap.height()));
+        drag->setHotSpot(QPoint(0.5*pixmap.width(), 0.5*pixmap.height()));
 
         // Do the dragging itself
 
