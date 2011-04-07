@@ -4,7 +4,6 @@
 #include "dockwidget.h"
 #include "mainwindow.h"
 #include "filebrowserwindow.h"
-#include "fileorganiserwidget.h"
 #include "fileorganiserwindow.h"
 #include "helpwindow.h"
 #include "cellmlmodelrepositorywindow.h"
@@ -82,10 +81,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     mCentralWidget = new CentralWidget(this);
 
     setCentralWidget(mCentralWidget);
-
-    // Allow for things to be dropped on us
-
-    setAcceptDrops(true);
 
     // Create a temporary directory where to put OpenCOR's resources
 
@@ -199,6 +194,11 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mFileOrganiserWindow, SIGNAL(filesOpened(const QStringList &)),
             this, SLOT(openFiles(const QStringList &)));
 
+    // A connection to handle the central widget
+
+    connect(mCentralWidget, SIGNAL(filesDropped(const QStringList &)),
+            this, SLOT(openFiles(const QStringList &)));
+
     // Retrieve the user settings from the previous session, if any
 
     loadSettings();
@@ -282,72 +282,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Default handling of the event
 
     QMainWindow::closeEvent(pEvent);
-}
-
-void MainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
-{
-    // Accept the proposed action for the event, but only if we are dropping
-    // URIs or items from our file organiser
-
-    if (   (   (pEvent->mimeData()->hasFormat("text/uri-list"))
-            || (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)))
-        && (!pEvent->mimeData()->urls().isEmpty()))
-        // Note: we test the list of URL in case we are trying to drop one or
-        //       several folders (and no file) from the file organiser
-
-        pEvent->acceptProposedAction();
-    else
-        pEvent->ignore();
-}
-
-void MainWindow::dragMoveEvent(QDragMoveEvent *pEvent)
-{
-    // Accept the proposed action for the event
-
-    pEvent->acceptProposedAction();
-}
-
-void MainWindow::dropEvent(QDropEvent *pEvent)
-{
-    // Retrieve the name of the various files that have been dropped
-
-    QList<QUrl> urlList = pEvent->mimeData()->urls();
-    QStringList fileNames;
-
-    for (int i = 0; i < urlList.count(); ++i)
-    {
-        QString fileName = urlList.at(i).toLocalFile();
-        QFileInfo fileInfo = fileName;
-
-        if (fileInfo.isFile()) {
-            if (fileInfo.isSymLink()) {
-                // We are dropping a symbolic link, so retrieve its target and
-                // check that it exists, and if it does then add it
-
-                fileName = fileInfo.symLinkTarget();
-
-                if (QFileInfo(fileName).exists())
-                    fileNames.append(fileName);
-            } else {
-                // We are dropping a file, so we can just add it
-
-                fileNames.append(fileName);
-            }
-        }
-    }
-
-    // fileNames may contain duplicates (in case we dropped some symbolic
-    // links), so remove them
-
-    fileNames.removeDuplicates();
-
-    // Get the files to be opened
-
-    openFiles(fileNames);
-
-    // Accept the proposed action for the event
-
-    pEvent->acceptProposedAction();
 }
 
 void MainWindow::loadDockWindowSettings(DockWidget *pDockWindow,

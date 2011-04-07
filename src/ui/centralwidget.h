@@ -21,10 +21,18 @@ public:
 
     void openFile(const QString &pFileName);
 
+protected:
+    virtual void dragEnterEvent(QDragEnterEvent *pEvent);
+    virtual void dragMoveEvent(QDragMoveEvent *pEvent);
+    virtual void dropEvent(QDropEvent *pEvent);
+
 private:
     Ui::CentralWidget *mUi;
 
     TabWidget *mTabWidget;
+
+Q_SIGNALS:
+    void filesDropped(const QStringList &pFileNames);
 };
 
 #endif
