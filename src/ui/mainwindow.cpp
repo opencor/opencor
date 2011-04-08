@@ -552,10 +552,6 @@ void MainWindow::updateActions()
 
     // File actions
 
-    mUi->actionNew->setEnabled(false);
-    mUi->actionCellML10File->setEnabled(false);
-    mUi->actionCellML11File->setEnabled(false);
-
     mUi->actionOpen->setEnabled(false);
     mUi->actionReopen->setEnabled(false);
 
