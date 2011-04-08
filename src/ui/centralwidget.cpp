@@ -119,18 +119,18 @@ QString CentralWidget::closeFile(const int &pIndex)
     // index is provided, and then return the name of the file that was closed,
     // if any
 
-    QsciScintilla *scintilla = qobject_cast<QsciScintilla *>(mTabWidget->widget((pIndex != -1)?
-                                                                                    pIndex:
-                                                                                    mTabWidget->currentIndex()));
+    int realIndex = (pIndex != -1)?pIndex:mTabWidget->currentIndex();
+
+    QsciScintilla *scintilla = qobject_cast<QsciScintilla *>(mTabWidget->widget(realIndex));
 
     if (scintilla) {
         // There is a file currently opened, so first retrieve its filename
 
-        QString fileName = mTabWidget->tabToolTip(mTabWidget->currentIndex());
+        QString fileName = mTabWidget->tabToolTip(realIndex);
 
         // Next, we must close the tab
 
-        mTabWidget->removeTab(mTabWidget->currentIndex());
+        mTabWidget->removeTab(realIndex);
 
         // Then, we must release the allocated memory for the widget that the
         // tab used to contain
