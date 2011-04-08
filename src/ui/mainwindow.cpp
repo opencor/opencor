@@ -548,10 +548,47 @@ void MainWindow::singleAppMsgRcvd(const QString &)
 
 void MainWindow::updateActions()
 {
-    // Make sure that the various actions are properly enabled/disabled
+    // Make sure that our various actions are properly enabled/disabled
+
+    // File actions
+
+    mUi->actionNew->setEnabled(false);
+    mUi->actionCellML10File->setEnabled(false);
+    mUi->actionCellML11File->setEnabled(false);
+
+    mUi->actionOpen->setEnabled(false);
+    mUi->actionReopen->setEnabled(false);
+
+    mUi->actionSave->setEnabled(false);
+    mUi->actionSaveAs->setEnabled(false);
+    mUi->actionSaveAll->setEnabled(false);
 
     mUi->actionClose->setEnabled(mDocumentManager->count());
     mUi->actionCloseAll->setEnabled(mDocumentManager->count());
+
+    mUi->actionPrint->setEnabled(false);
+
+    // Edit actions
+
+    mUi->actionUndo->setEnabled(false);
+    mUi->actionRedo->setEnabled(false);
+
+    mUi->actionCut->setEnabled(false);
+    mUi->actionCopy->setEnabled(false);
+    mUi->actionPaste->setEnabled(false);
+    mUi->actionDelete->setEnabled(false);
+
+    mUi->actionFind->setEnabled(false);
+    mUi->actionFindNext->setEnabled(false);
+    mUi->actionFindPrevious->setEnabled(false);
+    mUi->actionReplace->setEnabled(false);
+
+    mUi->actionSelectAll->setEnabled(false);
+
+    // Run actions
+
+    mUi->actionRun->setEnabled(false);
+    mUi->actionStop->setEnabled(false);
 }
 
 void MainWindow::on_actionNew_triggered()
