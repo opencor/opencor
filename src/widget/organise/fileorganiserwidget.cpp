@@ -50,9 +50,14 @@ QMimeData * FileOrganiserItemModel::mimeData(const QModelIndexList &pIndexes) co
     mimeData->setUrls(urls);
 
     // Set the data which contains information on both the folder and file items
-    // Note: this data is useful with regards to the FileOrganiserMimeType mime
-    //       type on which the file organiser widget relies for moving folder
-    //       and file items around
+    // Note #1: this data is useful with regards to the FileOrganiserMimeType
+    //          mime type on which the file organiser widget relies for moving
+    //          folder and file items around
+    // Note #2: if both a folder item and some (if not all) of its contents is
+    //          included in the list, then we only keep track of the folder
+    //          item, since we want its contents to be automatically moved with
+    //          it
+    //          ---GRY--- TO BE DONE...
 
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
