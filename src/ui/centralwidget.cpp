@@ -196,8 +196,9 @@ void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     if (   (   (pEvent->mimeData()->hasFormat("text/uri-list"))
             || (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)))
         && (!pEvent->mimeData()->urls().isEmpty()))
-        // Note: we test the list of URL in case we are trying to drop one or
-        //       several folders (and no file) from the file organiser
+        // Note: we test the list of URLs in case we are trying to drop one or
+        //       several folders (and no file) from the file organiser, in which
+        //       case the list of URLs will be empty...
 
         pEvent->acceptProposedAction();
     else
