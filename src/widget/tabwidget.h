@@ -14,6 +14,9 @@ public:
 
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
+
+private Q_SLOTS:
+    void activateWidget(const int &pIndex);
 };
 
 #endif

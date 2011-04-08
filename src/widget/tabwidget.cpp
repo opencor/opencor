@@ -7,7 +7,17 @@ TabWidget::TabWidget(QWidget *pParent) :
     QTabWidget(pParent),
     CommonWidget(pParent)
 {
+    // Set some properties
+    // Note: we give a strong focus policy to the tab widget so that it can also
+    //       get focus by being clicked on
+
     setTabsClosable(true);
+    setFocusPolicy(Qt::StrongFocus);
+
+    // A connection to handle the change of tab
+
+    connect(this, SIGNAL(currentChanged(int)),
+            this, SLOT(activateWidget(int)));
 }
 
 void TabWidget::paintEvent(QPaintEvent *pEvent)
@@ -36,4 +46,14 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
 
         QTabWidget::paintEvent(pEvent);
     }
+}
+
+void TabWidget::activateWidget(const int &pIndex)
+{
+    // Activate the widget of the given tab index
+
+    QWidget *crtWidget = widget(pIndex);
+
+    if (crtWidget)
+        crtWidget->setFocus();
 }
