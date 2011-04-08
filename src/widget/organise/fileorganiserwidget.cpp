@@ -57,9 +57,11 @@ QMimeData * FileOrganiserItemModel::mimeData(const QModelIndexList &pIndexes) co
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
 
+    stream << pIndexes.count();
+
     for (QModelIndexList::ConstIterator iter = pIndexes.begin();
          iter != pIndexes.end(); ++iter)
-        stream << (*iter).row() << (*iter).column() << itemData(*iter);
+        stream << (*iter).row() << itemData(*iter);
 
     mimeData->setData(FileOrganiserMimeType, data);
 
@@ -298,6 +300,20 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         // folders/files to be moved around
 
 //---GRY--- TO BE DONE...
+
+        QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
+        QDataStream stream(&data, QIODevice::ReadOnly);
+
+        int nbOfItems;
+
+        stream >> nbOfItems;
+
+        for (int i = 0; i < nbOfItems; ++i) {
+            int row;
+            QMap<int, QVariant> itemData;
+
+            stream >> row >> itemData;
+        }
     } else {
         // The user is dropping files from the system, so add the dropped files
         // documents to the folder corresponding to the mouse position
