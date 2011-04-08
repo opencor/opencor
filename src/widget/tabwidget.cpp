@@ -1,5 +1,6 @@
 #include "tabwidget.h"
 
+#include <QApplication>
 #include <QPainter>
 #include <QPaintEvent>
 
@@ -17,7 +18,9 @@ TabWidget::TabWidget(QWidget *pParent) :
     // A connection to handle the change of tab
 
     connect(this, SIGNAL(currentChanged(int)),
-            this, SLOT(activateWidget(int)));
+            this, SLOT(tabChanged(const int &)));
+    connect(qApp, SIGNAL(focusChanged(QWidget *, QWidget *)),
+            this, SLOT(getFocus(QWidget *, QWidget *)));
 }
 
 void TabWidget::paintEvent(QPaintEvent *pEvent)
@@ -48,12 +51,29 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
     }
 }
 
-void TabWidget::activateWidget(const int &pIndex)
+void TabWidget::tabChanged(const int &pIndex)
 {
-    // Activate the widget of the given tab index
+    // A new tab has been selected, so give the focus to its widget
 
     QWidget *crtWidget = widget(pIndex);
 
     if (crtWidget)
         crtWidget->setFocus();
+}
+
+void TabWidget::getFocus(QWidget *, QWidget *pNew)
+{
+    // The tab widget (or a part of it) has just received the focus and, here,
+    // we want to take advantage of this to give the focus to the widget of the
+    // active tab as a result of the user clicking on the active tab (since this
+    // won't emit the currentChanged signal). In our case, this means we are
+    // after pNew being of QTabBar type and that, more importantly, its parent
+    // is this tab widget
+
+    if (pNew && (pNew->parentWidget() == this))
+        // The tab widget didn't have the focus, but the user has just clicked
+        // on the tab widget's active tab, thus giving the focus to the tab
+        // widget, so now we need to give the focus to the active tab's widget
+
+        tabChanged(currentIndex());
 }

@@ -16,7 +16,8 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private Q_SLOTS:
-    void activateWidget(const int &pIndex);
+    void tabChanged(const int &pIndex);
+    void getFocus(QWidget *, QWidget *pNew);
 };
 
 #endif
