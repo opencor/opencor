@@ -8,6 +8,7 @@
 
 class QStandardItem;
 
+static const QString FileSystemMimeType = "text/uri-list";
 static const QString FileOrganiserMimeType = "opencor/file-organiser";
 
 class FileOrganiserItemModel : public QStandardItemModel

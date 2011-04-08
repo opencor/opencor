@@ -193,7 +193,7 @@ void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     // Accept the proposed action for the event, but only if we are dropping
     // URIs or items from our file organiser
 
-    if (   (   (pEvent->mimeData()->hasFormat("text/uri-list"))
+    if (   (   (pEvent->mimeData()->hasFormat(FileSystemMimeType))
             || (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)))
         && (!pEvent->mimeData()->urls().isEmpty()))
         // Note: we test the list of URLs in case we are trying to drop one or

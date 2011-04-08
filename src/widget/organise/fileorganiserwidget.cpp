@@ -255,7 +255,7 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     // Accept the proposed action for the event, but only if we are dropping
     // URIs
 
-if ((pEvent->mimeData()->hasFormat("text/uri-list")) ||
+if ((pEvent->mimeData()->hasFormat(FileSystemMimeType)) ||
     (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)))
         pEvent->acceptProposedAction();
     else
