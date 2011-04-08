@@ -236,8 +236,7 @@ bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
         // are dealing with a folder item
 
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
-        QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(QPoint(helpEvent->x(),
-                                                                          helpEvent->y())));
+        QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(helpEvent->pos()));
 
         if (crtItem)
             setToolTip(QDir::toNativeSeparators(crtItem->data(FileOrganiserItemFolder).toBool()?
@@ -271,52 +270,58 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 {
-    // Add the dropped documents to the folder corresponding to the mouse
-    // position
+    if (pEvent->mimeData()->hasFormat(FileSystemMimeType)) {
+        // The user is dropping files from the system, so add the dropped files
+        // documents to the folder corresponding to the mouse position
 
-    QModelIndex crtItemIndex = indexAt(QPoint(pEvent->pos().x(),
-                                              pEvent->pos().y()));
-    QStandardItem *crtItem = mDataModel->itemFromIndex(crtItemIndex);
+        QModelIndex crtItemIndex = indexAt(pEvent->pos());
+        QStandardItem *crtItem = mDataModel->itemFromIndex(crtItemIndex);
 
-    if (crtItem) {
-        // The mouse position corresponds to an item, so retrieve its parent
-        // (folder) item in case it's a file item
+        if (crtItem) {
+            // The mouse position corresponds to an item, so retrieve its parent
+            // (folder) item in case it's a file item
 
-        if (!crtItem->data(FileOrganiserItemFolder).toBool())
-            // The current item is a file item, so we must get its parent
-            // (folder) item
-            crtItem = mDataModel->itemFromIndex(crtItemIndex.parent());
-    }
+            if (!crtItem->data(FileOrganiserItemFolder).toBool())
+                // The current item is a file item, so we must get its parent
+                // (folder) item
+                crtItem = mDataModel->itemFromIndex(crtItemIndex.parent());
+        }
 
-    if (!crtItem)
-        // If we don't have a valid item by now, then it means that the item
-        // must be the root (folder) item, so...
+        if (!crtItem)
+            // If we don't have a valid item by now, then it means that the item
+            // must be the root (folder) item, so...
 
-        crtItem = mDataModel->invisibleRootItem();
+            crtItem = mDataModel->invisibleRootItem();
 
-    // We are dropping the documents over a valid item, so add them to it
+        // We are dropping the documents over a valid item, so add them to it
 
-    QList<QUrl> urls = pEvent->mimeData()->urls();
+        QList<QUrl> urls = pEvent->mimeData()->urls();
 
-    for (int i = 0; i < urls.count(); ++i) {
-        QString fileName = urls.at(i).toLocalFile();
-        QFileInfo fileInfo = fileName;
+        for (int i = 0; i < urls.count(); ++i) {
+            QString fileName = urls.at(i).toLocalFile();
+            QFileInfo fileInfo = fileName;
 
-        if (fileInfo.isFile()) {
-            if (fileInfo.isSymLink()) {
-                // We are dropping a symbolic link, so retrieve its target and
-                // check that it exists, and if it does then add it
+            if (fileInfo.isFile()) {
+                if (fileInfo.isSymLink()) {
+                    // We are dropping a symbolic link, so retrieve its target and
+                    // check that it exists, and if it does then add it
 
-                fileName = fileInfo.symLinkTarget();
+                    fileName = fileInfo.symLinkTarget();
 
-                if (QFileInfo(fileName).exists())
+                    if (QFileInfo(fileName).exists())
+                        newFile(fileName, crtItem);
+                } else {
+                    // We are dropping a file, so we can just add it
+
                     newFile(fileName, crtItem);
-            } else {
-                // We are dropping a file, so we can just add it
-
-                newFile(fileName, crtItem);
+                }
             }
         }
+    } else {
+        // The user is dropping folders/files from ourselves, i.e. he wants some
+        // folders/files to be moved around
+
+//---GRY--- TO BE DONE...
     }
 
     // Accept the proposed action for the event
@@ -493,16 +498,40 @@ bool FileOrganiserWidget::deleteItems()
 
         return false;
     } else {
-        // There are some items to delete, so delete them one by one, making
-        // sure we update our list of items (this is because the row value of
-        // the remaining selected items may become different after deleting an
-        // item)
+        // There are some items to delete, so first retrieve the list of their
+        // parent folders (since we may have to collapse them later on, see
+        // below)
+
+        QModelIndexList parentIndexes;
+
+        for (int i = 0; i < selectedIndexes.count(); ++i)
+            parentIndexes.append(selectedIndexes.at(i).parent());
+
+        parentIndexes = parentIndexes.toSet().toList();
+        // Note: the above is a way to remove duplicates, since a set doesn't
+        //       allow duplicates
+
+        // Now, delete the items one by one, making sure we update our list of
+        // items (this is because the row value of the remaining selected items
+        // may become different after deleting an item)
 
         while(!selectedIndexes.isEmpty()) {
             mDataModel->removeRow(selectedIndexes.first().row(),
                                   selectedIndexes.first().parent());
 
             selectedIndexes = selectionModel()->selectedIndexes();
+        }
+
+        // Collapse any parent folder that doesn't contain any file anymore
+
+        for (int i = 0; i < parentIndexes.count(); ++i) {
+            QStandardItem *parentItem = mDataModel->itemFromIndex(parentIndexes.at(i));
+
+            if (parentItem && !parentItem->rowCount())
+                    // The parent folder is not the root folder and it doesn't
+                    // have (any?) file, so collapse it
+
+                    collapse(parentIndexes.at(i));
         }
 
         // Resize the widget to its contents in case its width was too wide (and
