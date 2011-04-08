@@ -16,7 +16,6 @@ class FileOrganiserItemModel : public QStandardItemModel
 friend class FileOrganiserWidget;
 
 public:
-    virtual QStringList mimeTypes() const;
     virtual QMimeData *mimeData(const QModelIndexList &pIndexes) const;
 
 private:

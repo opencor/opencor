@@ -15,11 +15,6 @@ static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
 static const QString ExpandedFolderIcon  = ":oxygen/actions/document-open-folder.png";
 static const QString FileIcon            = ":oxygen/mimetypes/application-x-zerosize.png";
 
-QStringList FileOrganiserItemModel::mimeTypes() const
-{
-    return QStringList(FileOrganiserMimeType);
-}
-
 QString FileOrganiserItemModel::filePath(const QModelIndex &pFileIndex) const
 {
     // Return the file path of pFileIndex, if it exists and corresponds to a
@@ -39,6 +34,10 @@ QMimeData * FileOrganiserItemModel::mimeData(const QModelIndexList &pIndexes) co
     QList<QUrl> urls;
 
     // Retrieve the URL of the different file (not folder) items
+    // Note: this list of URLs is useful with regards to the FileSystemMimeType
+    //       mime type on which external widgets (e.g. the central widget) rely
+    //       on to extract the name of the vavarious files the mime data
+    //       contains
 
     for (QList<QModelIndex>::const_iterator iter = pIndexes.begin();
          iter != pIndexes.end(); ++iter) {
@@ -49,6 +48,22 @@ QMimeData * FileOrganiserItemModel::mimeData(const QModelIndexList &pIndexes) co
     }
 
     mimeData->setUrls(urls);
+
+    // Set the data which contains information on both the folder and file items
+    // Note: this data is useful with regards to the FileOrganiserMimeType mime
+    //       type on which the file organiser widget relies for moving folder
+    //       and file items around
+
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+
+    for (QModelIndexList::ConstIterator iter = pIndexes.begin();
+         iter != pIndexes.end(); ++iter)
+        stream << (*iter).row() << (*iter).column() << itemData(*iter);
+
+    mimeData->setData(FileOrganiserMimeType, data);
+
+    // All done, so...
 
     return mimeData;
 }
@@ -270,7 +285,20 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 {
-    if (pEvent->mimeData()->hasFormat(FileSystemMimeType)) {
+    // Note: the mime data will definitely contain the FileSystemMimeType mime
+    //       type (if the objects originated from outside this widget), but it
+    //       may also contain the FileOrganiserMimeType mime type (if the
+    //       objects originated from this widget). The FileOrganiserMimeType
+    //       mime type is used by this widget while the latter by external
+    //       widgets. So, this means that we must check for the
+    //       FileOrganiserMimeType mime type first
+
+    if (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)) {
+        // The user is dropping folders/files from ourselves, i.e. he wants some
+        // folders/files to be moved around
+
+//---GRY--- TO BE DONE...
+    } else {
         // The user is dropping files from the system, so add the dropped files
         // documents to the folder corresponding to the mouse position
 
@@ -317,11 +345,6 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
                 }
             }
         }
-    } else {
-        // The user is dropping folders/files from ourselves, i.e. he wants some
-        // folders/files to be moved around
-
-//---GRY--- TO BE DONE...
     }
 
     // Accept the proposed action for the event
