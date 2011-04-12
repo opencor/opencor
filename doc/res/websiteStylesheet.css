@@ -1,0 +1,32 @@
+h3 {
+    color: rgba(103, 103, 103, 1);
+    font-style: italic;
+    font-weight: normal;
+}
+
+img {
+    border: none;
+}
+
+img.shadow {
+    -moz-box-shadow: 1px 1px 10px rgba(103, 103, 103, 1);
+    -webkit-box-shadow: 1px 1px 10px rgba(103, 103, 103, 1);
+    box-shadow: 1px 1px 10px rgba(103, 103, 103, 1);
+}
+
+a.image:hover {
+    /* This is to prevent img elements that have an anchor from looking like */
+    /* a link                                                                */
+
+    margin: 0px;
+    border: none;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+th {
+    padding: 7px 13px;
+}							
+
+td {
+    padding: 7px 13px;
+}
