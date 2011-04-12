@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "common.h"
 
+#include <QProcess>
+#include <QSettings>
+
 #include <QtSingleApplication>
 
 int main(int pArgc, char *pArgv[])
@@ -64,5 +67,34 @@ int main(int pArgc, char *pArgv[])
 
     // Execute the application
 
-    return app.exec();
+#ifdef Q_WS_WIN
+    int res;
+#endif
+
+    res = app.exec();
+
+    // We are done with the execution of the application, so now the question is
+    // whether we need to reset everything
+    // Note: we do this here rather than 'within' the GUI because once we have
+    //       launched a new instance of OpenCOR, we want this instance of
+    //       OpenCOR to finish as soon as possible which will be the case here
+    //       since all that remains to be done is to return the result of the
+    //       execution of the application...
+
+    if (win.needResetAll()) {
+        // Clear all the user settings and restart OpenCOR (indeed, a restart
+        // will ensure that the various dock windows are, for instance, properly
+        // reset with regards to their dimensions)
+
+        QSettings(app.applicationName()).clear();
+
+        // Restart OpenCOR, but without providing any of the argument with which
+        // OpenCOR was originally started, since we indeed want to reset
+        // everything
+
+        QProcess::startDetached(app.applicationFilePath(), QStringList(),
+                                app.applicationDirPath());
+    }
+
+    return res;
 }

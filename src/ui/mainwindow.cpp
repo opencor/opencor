@@ -35,6 +35,7 @@ static const QString FrenchLocale  = "fr";
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
+    mNeedResetAll(false),
     mLocale(SystemLocale)
 {
     // Set the name of the main window to that of the application
@@ -239,6 +240,13 @@ MainWindow::~MainWindow()
     QFile(mQhcFileName).remove();
 
     delete mTempDir;
+}
+
+bool MainWindow::needResetAll()
+{
+    // Simply return whether or not we need to reset everything
+
+    return mNeedResetAll;
 }
 
 void MainWindow::changeEvent(QEvent *pEvent)
@@ -769,18 +777,10 @@ void MainWindow::resetAll()
                               tr("You are about to reset <strong>all</strong> of your user settings. Are you sure that this is what you want?"),
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes ) {
-        // Clear all the user settings and restart OpenCOR (indeed, a restart
-        // will ensure that the various dock windows are, for instance, properly
-        // reset with regards to their dimensions)
+        // We want to reset everything, so...
+        // Note: the actual resetting is done in the main procedure
 
-        QSettings(qApp->applicationName()).clear();
-
-        // Restart OpenCOR, but without providing any of the argument with which
-        // OpenCOR was originally started, since we indeed want to reset
-        // everything
-
-        QProcess::startDetached(qApp->applicationFilePath(), QStringList(),
-                                qApp->applicationDirPath());
+        mNeedResetAll = true;
 
         // Quit OpenCOR
         // Note: the closeEvent method won't get called and this is exactly what

@@ -31,6 +31,8 @@ public:
     explicit MainWindow(QWidget *pParent = 0);
     ~MainWindow();
 
+    bool needResetAll();
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void showEvent(QShowEvent *pEvent);
@@ -38,6 +40,8 @@ protected:
 
 private:
     Ui::MainWindow *mUi;
+
+    bool mNeedResetAll;
 
     CentralWidget *mCentralWidget;
 
