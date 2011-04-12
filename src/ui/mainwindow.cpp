@@ -213,16 +213,14 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     loadSettings();
 
-    // Bring ourselves to the foreground. Indeed, when restarting OpenCOR (as a
-    // result of a reset all), OpenCOR will on Mac OS X be behind other
-    // applications. This behaviour has, on occasions, also been observed on
-    // Windows, so... rather than making the following code Mac OS X specific,
-    // we may as well make it general, since it doesn't have any adverse effect
-    // on either Windows or Linux
+    // Bring ourselves to the foreground
+    // Note: indeed, when starting/restarting OpenCOR (as a result of a Reset
+    //       All in the case of a restart), OpenCOR will on Mac OS X be behind
+    //       any other application. Now, because it doesn't harm to bring
+    //       ourselves to the foreground when on Windows or Linux, we may as
+    //       well do it on those platforms too...
 
-    activateWindow();
-
-    raise();   // Just to be on the safe side
+    raise();
 }
 
 MainWindow::~MainWindow()
