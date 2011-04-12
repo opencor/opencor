@@ -23,11 +23,12 @@ h2 {
 }
 
 h2 a:hover {
-    /* This is to prevent h2s that have an anchor from looking like a link */
+    /* This is to prevent h2 elements that have an anchor from looking like */
+    /* a link                                                               */
 
     margin: 0px;
     border: none;
-    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 1);
     color: rgba(49, 133, 155, 1);
 }
 
