@@ -9,6 +9,7 @@ class QSize;
 class QWidget;
 
 // The default font family and size below were taken from Qt Creator
+
 #ifdef Q_WS_WIN
 static const QString DefaultFontFamily = "Courier";
 static const int DefaultFontSize = 10;
