@@ -26,7 +26,7 @@ int main(int pArgc, char *pArgv[])
         // OpenCOR wasn't run as a proper console application, so start its GUI
         // version instead
 
-		QString dotExe = ".exe";
+        static const QString dotExe = ".exe";
 
         if (app->applicationFilePath().right(4) == dotExe) {
             // This is a safeguard from accidentally running a non-renamed (to

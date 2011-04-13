@@ -33,10 +33,13 @@ int main(int pArgc, char *pArgv[])
     //       Windows, hence the ../winConsole/main.cpp file which is used to
     //       generate the console version of OpenCOR...
 
-    if (consoleApplication(app, &res))
+    if (consoleApplication(app, &res)) {
         // OpenCOR was run as a proper console application, so...
 
+        delete app;
+
         return res;
+    }
 #endif
 
     // Send a message (containing the arguments that were passed to this
@@ -48,6 +51,8 @@ int main(int pArgc, char *pArgv[])
     if (app->isRunning()) {
         app->sendMessage(app->arguments().join(" "));
 
+        delete app;
+
         return 0;
     }
 
@@ -55,7 +60,8 @@ int main(int pArgc, char *pArgv[])
 
     win = new MainWindow;
 
-    // Keep track of the main window (useful for QtSingleApplication)
+    // Keep track of the main window (required by QtSingleApplication so that it
+    // can do what it's supposed to be doing)
 
     app->setActivationWindow(win);
 
