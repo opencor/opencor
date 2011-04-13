@@ -28,10 +28,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    enum ExitCode
+    {
+        NeedRestart = 1789
+    };
+
     explicit MainWindow(QWidget *pParent = 0);
     ~MainWindow();
-
-    bool needResetAll();
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
@@ -40,8 +43,6 @@ protected:
 
 private:
     Ui::MainWindow *mUi;
-
-    bool mNeedResetAll;
 
     CentralWidget *mCentralWidget;
 

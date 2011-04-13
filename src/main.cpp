@@ -1,14 +1,20 @@
 #include "mainwindow.h"
 #include "common.h"
 
+#include <QPointer>
 #include <QProcess>
-#include <QSettings>
 
 #include <QtSingleApplication>
 
 int main(int pArgc, char *pArgv[])
 {
-    QtSingleApplication app(pArgc, pArgv);
+    int res;
+    QPointer<QtSingleApplication> app;
+    QPointer<MainWindow> win;
+
+    // Create the application
+
+    app = new QtSingleApplication(pArgc, pArgv);
 
     // Some general initialisations
 
@@ -27,9 +33,7 @@ int main(int pArgc, char *pArgv[])
     //       Windows, hence the ../winConsole/main.cpp file which is used to
     //       generate the console version of OpenCOR...
 
-    int res;
-
-    if (consoleApplication(app, res))
+    if (consoleApplication(app, &res))
         // OpenCOR was run as a proper console application, so...
 
         return res;
@@ -41,60 +45,62 @@ int main(int pArgc, char *pArgv[])
     // on as normal, otherwise exit since we only want one instance of OpenCOR
     // at any given time
 
-    if (app.isRunning()) {
-        app.sendMessage(app.arguments().join(" "));
+    if (app->isRunning()) {
+        app->sendMessage(app->arguments().join(" "));
 
         return 0;
     }
 
     // Create the main window
 
-    MainWindow win;
+    win = new MainWindow;
 
     // Keep track of the main window (useful for QtSingleApplication)
 
-    app.setActivationWindow(&win);
+    app->setActivationWindow(win);
 
     // Make sure that OpenCOR can handle the message sent by another
     // instance of itself
 
-    QObject::connect(&app, SIGNAL(messageReceived(const QString &)),
-                     &win, SLOT(singleAppMsgRcvd(const QString &)));
+    QObject::connect(app, SIGNAL(messageReceived(const QString &)),
+                     win, SLOT(singleAppMsgRcvd(const QString &)));
 
     // Show the main window
 
-    win.show();
+    win->show();
 
     // Execute the application
 
-#ifdef Q_WS_WIN
-    int res;
-#endif
-
-    res = app.exec();
+    res = app->exec();
 
     // We are done with the execution of the application, so now the question is
-    // whether we need to reset everything
-    // Note: we do this here rather than 'within' the GUI because once we have
-    //       launched a new instance of OpenCOR, we want this instance of
-    //       OpenCOR to finish as soon as possible which will be the case here
-    //       since all that remains to be done is to return the result of the
-    //       execution of the application...
+    // whether we need to restart or not
+    // Note #1: we do this here rather than 'within' the GUI because once we
+    //          have launched a new instance of OpenCOR, we want this instance
+    //          of OpenCOR to finish as soon as possible which will be the case
+    //          here since all that remains to be done is to return the result
+    //          of the execution of the application...
+    // Note #2: ideally, we would have a do...while loop which is executed while
+    //          res equals MainWindow::NeedRestart, deleting (if necessary) and
+    //          reinitialising app and win. There is, however, a bug in Qt (see
+    //          http://bugreports.qt.nokia.com/browse/QTBUG-17305) which has
+    //          been fixed but hasn't yet been released, so... we go for the
+    //          second best solution instead...
 
-    if (win.needResetAll()) {
-        // Clear all the user settings and restart OpenCOR (indeed, a restart
-        // will ensure that the various dock windows are, for instance, properly
-        // reset with regards to their dimensions)
-
-        QSettings(app.applicationName()).clear();
-
+    if (res == MainWindow::NeedRestart)
         // Restart OpenCOR, but without providing any of the argument with which
         // OpenCOR was originally started, since we indeed want to reset
         // everything
 
-        QProcess::startDetached(app.applicationFilePath(), QStringList(),
-                                app.applicationDirPath());
-    }
+        QProcess::startDetached(app->applicationFilePath(), QStringList(),
+                                app->applicationDirPath());
+
+    // Release some memory
+
+    delete win;
+    delete app;
+
+    // We are done, so...
 
     return res;
 }

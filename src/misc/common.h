@@ -7,10 +7,10 @@ class QCoreApplication;
 
 static const QString OpencorHomepageUrl = "http://www.opencor.ws/";
 
-void error(const QCoreApplication &pApp, const QString &pMsg);
+void error(const QCoreApplication *pApp, const QString &pMsg);
 
-void initApplication(QCoreApplication &pApp);
+void initApplication(const QCoreApplication *pApp);
 
-bool consoleApplication(const QCoreApplication &pApp, int &pRes);
+bool consoleApplication(const QCoreApplication *pApp, int *pRes);
 
 #endif
