@@ -84,8 +84,8 @@ int main(int pArgc, char *pArgv[])
     // Note #1: we do this here rather than 'within' the GUI because once we
     //          have launched a new instance of OpenCOR, we want this instance
     //          of OpenCOR to finish as soon as possible which will be the case
-    //          here since all that remains to be done is to return the result
-    //          of the execution of the application...
+    //          here since all that remains to be done is to delete app and win,
+    //          and return the result of the execution of the application...
     // Note #2: ideally, we would have a do...while loop which is executed while
     //          res equals MainWindow::NeedRestart, deleting (if necessary) and
     //          reinitialising app and win. There is, however, a bug in Qt (see
