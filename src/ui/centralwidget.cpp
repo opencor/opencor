@@ -207,6 +207,7 @@ void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 void CentralWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
     // Accept the proposed action for the event
+    // Note: this is required when dragging external objects...
 
     pEvent->acceptProposedAction();
 }
