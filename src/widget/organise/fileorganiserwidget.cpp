@@ -293,7 +293,7 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
     // Default handling of the event
-    // Note: this is required if we want to see the drop indicator, so...
+    // Note: this gives us the drop indicator
 
     TreeView::dragMoveEvent(pEvent);
 

@@ -6,6 +6,39 @@
 #include <QHeaderView>
 #include <QHelpEvent>
 #include <QSettings>
+#include <QUrl>
+
+FileBrowserModel::FileBrowserModel(QObject *pParent)
+    : QFileSystemModel(pParent)
+{
+    // We want acces to the full file system
+
+    setRootPath("");
+}
+
+QMimeData * FileBrowserModel::mimeData(const QModelIndexList &pIndexes) const
+{
+    // Retrieve the default mime data from QFileSystemModel
+
+    QMimeData *mimeData = QFileSystemModel::mimeData(pIndexes);
+
+    // Remove all the folders in the mime data, since we don't want to all their
+    // dragging and dropping
+
+    QList<QUrl> urls = mimeData->urls();
+
+    for (int i = urls.count()-1; i >= 0; --i)
+        if (QFileInfo(urls.at(i).toLocalFile()).isDir())
+            // The current URL is that of a folder, so remove it
+
+            urls.removeAt(i);
+
+    mimeData->setUrls(urls);
+
+    // We are all done, so...
+
+    return mimeData;
+}
 
 FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     TreeView(pName, this, pParent),
@@ -16,28 +49,23 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
 {
     // Create an instance of the file system model that we want to view
 
-    mFileSystemModel = new QFileSystemModel;
-
-    // We want acces to the full file system
-
-    mFileSystemModel->setRootPath("");
+    mDataModel = new FileBrowserModel;
 
     // Set some properties for the file browser widget itself
 
     setDragDropMode(QAbstractItemView::DragOnly);
-    setModel(mFileSystemModel);
+    setModel(mDataModel);
     setSortingEnabled(true);
 
-    // Connection to keep track of the directory loading progress of
-    // mFileSystemModel
+    // Connection to keep track of the directory loading progress of mDataModel
 
-    connect(mFileSystemModel, SIGNAL(directoryLoaded(const QString &)),
+    connect(mDataModel, SIGNAL(directoryLoaded(const QString &)),
             this, SLOT(directoryLoaded(const QString &)));
 }
 
 FileBrowserWidget::~FileBrowserWidget()
 {
-    delete mFileSystemModel;
+    delete mDataModel;
 }
 
 static const QString SettingsColumnWidth = "ColumnWidth";
@@ -135,12 +163,12 @@ void FileBrowserWidget::loadSettings(QSettings &pSettings)
         //       and, us, to take advantage of it to scroll to the right
         //       directory/file
 
-        setCurrentIndex(mFileSystemModel->index(mInitPathDir));
+        setCurrentIndex(mDataModel->index(mInitPathDir));
 
         if (!mInitPath.isEmpty())
             // The initial path is that of a file, so...
 
-            setCurrentIndex(mFileSystemModel->index(mInitPath));
+            setCurrentIndex(mDataModel->index(mInitPath));
     pSettings.endGroup();
 }
 
@@ -162,7 +190,7 @@ void FileBrowserWidget::saveSettings(QSettings &pSettings)
         // Keep track of what will be our future initial folder/file path
 
         pSettings.setValue(SettingsInitialPath,
-                           mFileSystemModel->filePath(currentIndex()));
+                           mDataModel->filePath(currentIndex()));
     pSettings.endGroup();
 }
 
@@ -183,7 +211,7 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
 
-        setToolTip(QDir::toNativeSeparators(mFileSystemModel->filePath(indexAt(helpEvent->pos()))));
+        setToolTip(QDir::toNativeSeparators(mDataModel->filePath(indexAt(helpEvent->pos()))));
     }
 
     // Default handling of the event
@@ -265,15 +293,14 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
     if (needInitializing
         && (   ( mInitPath.isEmpty() && mInitPathDir.contains(pPath))
             || (!mInitPath.isEmpty() && mInitPath.contains(pPath)))) {
-        // mFileSystemModel is still loading the initial path, so we try to
-        // expand it and scroll to it, but first we process any pending event
-        // (indeed, though Windows doesn't need this, Linux and Mac OS X
-        // definitely do and it can't harm having it for all three environments,
-        // so...)
+        // mDataModel is still loading the initial path, so we try to expand it
+        // and scroll to it, but first we process any pending event (indeed,
+        // though Windows doesn't need this, Linux and Mac OS X definitely do
+        // and it can't harm having it for all three environments, so...)
 
         qApp->processEvents();
 
-        QModelIndex initPathDirModelIndex = mFileSystemModel->index(mInitPathDir);
+        QModelIndex initPathDirModelIndex = mDataModel->index(mInitPathDir);
 
         setExpanded(initPathDirModelIndex, true);
         scrollTo(initPathDirModelIndex);
@@ -282,7 +309,7 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
         if (!mInitPath.isEmpty()) {
             // The initial path is that of a file and it exists, so select it
 
-            QModelIndex initPathModelIndex = mFileSystemModel->index(mInitPath);
+            QModelIndex initPathModelIndex = mDataModel->index(mInitPath);
 
             scrollTo(initPathModelIndex);
             setCurrentIndex(initPathModelIndex);
@@ -326,7 +353,7 @@ bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
 {
     // Set the current index to that of the provided path
 
-    QModelIndex pathModelIndex = mFileSystemModel->index(pPath);
+    QModelIndex pathModelIndex = mDataModel->index(pPath);
 
     if (pathModelIndex != QModelIndex()) {
         // The path exists, so we can go to it
@@ -362,14 +389,14 @@ QString FileBrowserWidget::currentPath()
 {
     // Return the current path
 
-    return mFileSystemModel->filePath(currentIndex());
+    return mDataModel->filePath(currentIndex());
 }
 
 QString FileBrowserWidget::currentPathDir()
 {
     // Return the directory of the current path
 
-    QString crtIndexPath = mFileSystemModel->filePath(currentIndex());
+    QString crtIndexPath = mDataModel->filePath(currentIndex());
     QFileInfo crtIndexFileInfo = crtIndexPath;
 
     return crtIndexFileInfo.isDir()?
@@ -384,7 +411,7 @@ QString FileBrowserWidget::currentPathParent()
     QModelIndex crtIndexParent = currentIndex().parent();
 
     return (crtIndexParent != QModelIndex())?
-               mFileSystemModel->filePath(crtIndexParent):
+               mDataModel->filePath(crtIndexParent):
                "";
 }
 
@@ -393,6 +420,6 @@ QString FileBrowserWidget::pathOf(const QModelIndex &pIndex)
     // Return the file path of pIndex, if it exists
 
     return (pIndex != QModelIndex())?
-               mFileSystemModel->filePath(pIndex):
+               mDataModel->filePath(pIndex):
                "";
 }
