@@ -11,11 +11,12 @@ class QStandardItem;
 static const QString FileSystemMimeType = "text/uri-list";
 static const QString FileOrganiserMimeType = "opencor/file-organiser";
 
-class FileOrganiserItemModel : public QStandardItemModel
+class FileOrganiserModel : public QStandardItemModel
 {
 friend class FileOrganiserWidget;
 
 public:
+    virtual QStringList mimeTypes() const;
     virtual QMimeData *mimeData(const QModelIndexList &pIndexes) const;
 
 private:
@@ -51,7 +52,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 private:
-    FileOrganiserItemModel *mDataModel;
+    FileOrganiserModel *mDataModel;
 
     void loadItemSettings(QSettings &pSettings, QStandardItem *pParentItem);
     void saveItemSettings(QSettings &pSettings, QStandardItem *pItem,

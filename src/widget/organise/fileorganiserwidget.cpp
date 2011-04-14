@@ -15,20 +15,14 @@ static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
 static const QString ExpandedFolderIcon  = ":oxygen/actions/document-open-folder.png";
 static const QString FileIcon            = ":oxygen/mimetypes/application-x-zerosize.png";
 
-QString FileOrganiserItemModel::filePath(const QModelIndex &pFileIndex) const
+QStringList FileOrganiserModel::mimeTypes() const
 {
-    // Return the file path of pFileIndex, if it exists and corresponds to a
-    // file
+    // Return the mime types supported by our model
 
-    QStandardItem *fileItem = itemFromIndex(pFileIndex);
-
-    if (fileItem && !fileItem->data(FileOrganiserItemFolder).toBool())
-        return fileItem->data(FileOrganiserItemPath).toString();
-    else
-        return QString();
+    return QStringList() << FileSystemMimeType << FileOrganiserMimeType;
 }
 
-QMimeData * FileOrganiserItemModel::mimeData(const QModelIndexList &pIndexes) const
+QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
 {
     QMimeData *mimeData = new QMimeData();
     QList<QUrl> urls;
@@ -75,13 +69,26 @@ QMimeData * FileOrganiserItemModel::mimeData(const QModelIndexList &pIndexes) co
     return mimeData;
 }
 
+QString FileOrganiserModel::filePath(const QModelIndex &pFileIndex) const
+{
+    // Return the file path of pFileIndex, if it exists and corresponds to a
+    // file
+
+    QStandardItem *fileItem = itemFromIndex(pFileIndex);
+
+    if (fileItem && !fileItem->data(FileOrganiserItemFolder).toBool())
+        return fileItem->data(FileOrganiserItemPath).toString();
+    else
+        return QString();
+}
+
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
                                          QWidget *pParent) :
     TreeView(pName, this, pParent)
 {
     // Create an instance of the data model that we want to view
 
-    mDataModel = new FileOrganiserItemModel;
+    mDataModel = new FileOrganiserModel;
 
     // Set some properties for the file organiser widget itself
 
@@ -285,9 +292,21 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 
 void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
-    // Accept the proposed action for the event
+    // Default handling of the event
+    // Note: this is required if we want to see the drop indicator, so...
 
-    pEvent->acceptProposedAction();
+    TreeView::dragMoveEvent(pEvent);
+
+    // Accept the proposed action for the event, but only if we are not trying
+    // to drop the object over a file item
+
+    QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
+
+    if (   (crtItem && crtItem->data(FileOrganiserItemFolder).toBool())
+        || dropIndicatorPosition() != QAbstractItemView::OnItem)
+        pEvent->acceptProposedAction();
+    else
+        pEvent->ignore();
 }
 
 void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
