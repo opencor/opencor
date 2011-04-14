@@ -1,8 +1,8 @@
 #include "filebrowserwidget.h"
-#include "filesystemmodel.h"
 
 #include <QApplication>
 #include <QDesktopServices>
+#include <QFileSystemModel>
 #include <QHeaderView>
 #include <QHelpEvent>
 #include <QSettings>
@@ -16,7 +16,11 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
 {
     // Create an instance of the file system model that we want to view
 
-    mFileSystemModel = new FileSystemModel;
+    mFileSystemModel = new QFileSystemModel;
+
+    // We want acces to the full file system
+
+    mFileSystemModel->setRootPath("");
 
     // Set some properties for the file browser widget itself
 
@@ -331,12 +335,6 @@ bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
             setExpanded(pathModelIndex, true);
 
         setCurrentIndex(pathModelIndex);
-
-        // Make sure that the widget has the focus, so that the user can really
-        // see where we are (which is important for folders, since they are not
-        // selectable)
-
-        setFocus();
 
         return true;
     } else {

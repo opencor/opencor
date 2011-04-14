@@ -3,7 +3,7 @@
 
 #include "treeview.h"
 
-class FileSystemModel;
+class QFileSystemModel;
 
 class FileBrowserWidget : public TreeView
 {
@@ -35,7 +35,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 private:
-    FileSystemModel *mFileSystemModel;
+    QFileSystemModel *mFileSystemModel;
 
     bool mNeedDefColWidth;
 
