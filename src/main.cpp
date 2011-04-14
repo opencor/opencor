@@ -92,6 +92,7 @@ int main(int pArgc, char *pArgv[])
     //          http://bugreports.qt.nokia.com/browse/QTBUG-17305) which has
     //          been fixed but hasn't yet been released, so... we go for the
     //          second best solution instead...
+    //          ---GRY--- TO BE DONE...
 
     if (res == MainWindow::NeedRestart)
         // Restart OpenCOR, but without providing any of the argument with which
