@@ -292,6 +292,17 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 
 void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
+    // Set the state to dragging, since we can only come here when dragging
+    // Note #1: the state is properly set for file organiser objects being
+    //          dragged, but should we be dragging external objects over our
+    //          file organiser widget, then the state will (obviously) not be
+    //          set. This wouldn't be a problem in itself if it was for the fact
+    //          that this prevents the drop indicator from being painted, so...
+    // Note #2: there doesn't seem to be a need to reset the state after the
+    //          dropping. The resetting seems to be done elsewhere, so...
+
+    setState(QAbstractItemView::DraggingState);
+
     // Default handling of the event
     // Note: this gives us the drop indicator
 
