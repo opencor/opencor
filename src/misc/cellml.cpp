@@ -2,7 +2,6 @@
 #include "common.h"
 
 #include <QApplication>
-#include <QByteArray>
 #include <QDate>
 #include <QFile>
 
