@@ -297,13 +297,30 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
     TreeView::dragMoveEvent(pEvent);
 
-    // Accept the proposed action for the event, but only if we are not trying
-    // to drop the object over a file item
+    // Accept the proposed action for the event, but only if there are objects
+    // to drop and that we are not trying to drop them over a file item
+    // Note #1: for the number of objects being dropped, we have to check the
+    //          number of URLs information (i.e. external objects), as well as
+    //          the mime data associated to FileOrganiserMimeType (i.e. objects
+    //          from the file organiser widget)
+    // Note #2: for the dropping location, it can be either a folder or a file
+    //          (as long as the indicator position isn't on the folder)
+
+    QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
+    QDataStream stream(&data, QIODevice::ReadOnly);
+
+    int nbOfFileOrganiserItemsDropped;
+
+    if (data.size())
+        stream >> nbOfFileOrganiserItemsDropped;
+    else
+        nbOfFileOrganiserItemsDropped = 0;
 
     QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
 
-    if (   (crtItem && crtItem->data(FileOrganiserItemFolder).toBool())
-        || dropIndicatorPosition() != QAbstractItemView::OnItem)
+    if (   (pEvent->mimeData()->urls().count() || nbOfFileOrganiserItemsDropped)
+        && (   (crtItem && crtItem->data(FileOrganiserItemFolder).toBool())
+            || (dropIndicatorPosition() != QAbstractItemView::OnItem)))
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
@@ -328,11 +345,11 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
         QDataStream stream(&data, QIODevice::ReadOnly);
 
-        int nbOfItems;
+        int nbOfFileOrganiserItemsDropped;
 
-        stream >> nbOfItems;
+        stream >> nbOfFileOrganiserItemsDropped;
 
-        for (int i = 0; i < nbOfItems; ++i) {
+        for (int i = 0; i < nbOfFileOrganiserItemsDropped; ++i) {
             int row;
             QMap<int, QVariant> itemData;
 
