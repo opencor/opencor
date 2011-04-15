@@ -293,13 +293,11 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
     // Set the state to dragging, since we can only come here when dragging
-    // Note #1: the state is properly set for file organiser objects being
-    //          dragged, but should we be dragging external objects over our
-    //          file organiser widget, then the state will (obviously) not be
-    //          set. This wouldn't be a problem in itself if it was for the fact
-    //          that this prevents the drop indicator from being painted, so...
-    // Note #2: there doesn't seem to be a need to reset the state after the
-    //          dropping. The resetting seems to be done elsewhere, so...
+    // Note: the state is properly set for file organiser objects being dragged,
+    //       but should we be dragging external objects over our file organiser
+    //       widget, then the state will (obviously) not be set. This wouldn't
+    //       be a problem in itself if it was for the fact that this prevents
+    //       the drop indicator from being painted, so...
 
     setState(QAbstractItemView::DraggingState);
 
@@ -367,57 +365,57 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
             stream >> row >> itemData;
         }
     } else {
-        // The user is dropping files from the system, so add the dropped files
-        // documents to the folder corresponding to the mouse position
+        // Files have been dropped, so add them to the widget and this at the
+        // right place (i.e. above/on/below a folder, above/below a file or on
+        // the invisible root folder)
 
-        QModelIndex crtItemIndex = indexAt(pEvent->pos());
-        QStandardItem *crtItem = mDataModel->itemFromIndex(crtItemIndex);
+        QStandardItem *crtItem;
+        DropIndicatorPosition dropPosition = dropIndicatorPosition();
 
-        if (crtItem) {
-            // The mouse position corresponds to an item, so retrieve its parent
-            // (folder) item in case it's a file item
-
-            if (!crtItem->data(FileOrganiserItemFolder).toBool())
-                // The current item is a file item, so we must get its parent
-                // (folder) item
-                crtItem = mDataModel->itemFromIndex(crtItemIndex.parent());
-        }
-
-        if (!crtItem)
-            // If we don't have a valid item by now, then it means that the item
-            // must be the root (folder) item, so...
+        if (dropPosition == QAbstractItemView::OnViewport) {
+            // We dropped the files on the viewport, so...
 
             crtItem = mDataModel->invisibleRootItem();
 
-        // We are dropping the documents over a valid item, so add them to it
+            // Change the drop position since we know that we want want the
+            // objects to be dropped on the root folder
+
+            dropPosition = QAbstractItemView::OnItem;
+        } else {
+            // We dropped the files above/on/below a folder or above/below a
+            // file, so...
+
+            crtItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
+        }
+
+        // Effectively add the files to the widget and this at the right place
 
         QList<QUrl> urls = pEvent->mimeData()->urls();
 
-        for (int i = 0; i < urls.count(); ++i) {
-            QString fileName = urls.at(i).toLocalFile();
-            QFileInfo fileInfo = fileName;
+        if (dropPosition != QAbstractItemView::BelowItem)
+            // Add the files in the order they were dropped
 
-            if (fileInfo.isFile()) {
-                if (fileInfo.isSymLink()) {
-                    // We are dropping a symbolic link, so retrieve its target and
-                    // check that it exists, and if it does then add it
+            for (int i = 0; i < urls.count(); ++i)
+                addFile(urls.at(i).toLocalFile(), crtItem, dropPosition);
+        else
+            // Add the files in a reverse order to that they were dropped since
+            // we want them added below the current item
 
-                    fileName = fileInfo.symLinkTarget();
-
-                    if (QFileInfo(fileName).exists())
-                        newFile(fileName, crtItem);
-                } else {
-                    // We are dropping a file, so we can just add it
-
-                    newFile(fileName, crtItem);
-                }
-            }
-        }
+            for (int i = urls.count()-1; i >= 0; --i)
+                addFile(urls.at(i).toLocalFile(), crtItem, dropPosition);
     }
 
     // Accept the proposed action for the event
 
     pEvent->acceptProposedAction();
+
+    // Reset the state of the widget
+    // Note: there doesn't seem to be and there shouldn't be a need to reset the
+    //       state after the widget (the resetting seems to be done elsewhere),
+    //       but if don't reset the state of the widget, then the drop indicator
+    //       may, in some cases, remain visible (a bug in Qt?), so...
+
+    setState(QAbstractItemView::NoState);
 }
 
 bool FileOrganiserWidget::isFolderItem(const QModelIndex &pItemIndex)
@@ -453,7 +451,7 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
 
 bool FileOrganiserWidget::newFolder()
 {
-    // Create a folder item under the current folder item or root item,
+    // Create a folder item below the current folder item or root item,
     // depending on the situation
 
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
@@ -519,43 +517,77 @@ bool FileOrganiserWidget::newFolder()
     }
 }
 
-bool FileOrganiserWidget::newFile(const QString &pFileName,
-                                  QStandardItem *pParentItem)
+bool FileOrganiserWidget::addFileItem(const QString &pFileName,
+                                      QStandardItem *pItem,
+                                      const QAbstractItemView::DropIndicatorPosition &pDropPosition)
 {
-    // Add the file the passed parent item
+    // Add the file above/on/below the passed item
 
-    if (pParentItem) {
-        // The passed parent item is valid, so add the file to it, but only if
-        // it's not already one of its child items
+    if (pItem) {
+        // The passed item is valid, so add the file above/on/below it,
+        // depending on the drop position and only if the file isn't already
+        // present
+
+        // First, determine the item that will own the file
+
+        QStandardItem *parentItem = (pDropPosition == QAbstractItemView::OnItem)?
+                                        pItem:
+                                        pItem->parent()?
+                                            pItem->parent():
+                                            mDataModel->invisibleRootItem();
+
+        // Second, check whether the file is already owned by the future parent
+        // item or not
 
         bool fileExists = false;
 
-        for (int i = 0; (i < pParentItem->rowCount()) && !fileExists; ++i) {
+        for (int i = 0; (i < parentItem->rowCount()) && !fileExists; ++i) {
             // Check whether the current item is a file and whether it's the one
             // we want to add
 
-            QStandardItem *crtItem = pParentItem->child(i);
+            QStandardItem *crtItem = parentItem->child(i);
 
             fileExists =    !crtItem->data(FileOrganiserItemFolder).toBool()
                          && (crtItem->data(FileOrganiserItemPath).toString() == pFileName);
         }
 
-        if (!fileExists) {
-            // The file is not already present, so add it
+        // Third, if the file is not already owned, then add it to the parent
+        // item and this to the right place, depending on the drop position
 
+        if (!fileExists) {
             QStandardItem *newFileItem = new QStandardItem(QIcon(FileIcon),
                                                            QFileInfo(pFileName).fileName());
 
             newFileItem->setData(pFileName, FileOrganiserItemPath);
 
-            pParentItem->appendRow(newFileItem);
+            switch (pDropPosition) {
+            case QAbstractItemView::AboveItem:
+                // We dropped the file above the item, so...
 
-            // Expand the parent, so the user knows that the file has been added
-            // (assuming the folder was collapsed)
+                parentItem->insertRow(pItem->row(), newFileItem);
 
-            setExpanded(pParentItem->index(), true);
+                break;
+            case QAbstractItemView::BelowItem:
+                // We dropped the file below the item, so...
 
-            // Resize the widget, just to be on the safe side
+                parentItem->insertRow(pItem->row()+1, newFileItem);
+
+                break;
+            default:
+                // We directly dropped the file onto the item, so...
+
+                parentItem->appendRow(newFileItem);
+
+                // Expand the parent item, so the user knows that the file has
+                // been added (assuming it was collapsed)
+
+                setExpanded(parentItem->index(), true);
+
+                break;
+            }
+
+            // Resize the widget, just in case the new file takes more space
+            // that is visible
 
             resizeToContents();
 
@@ -566,13 +598,60 @@ bool FileOrganiserWidget::newFile(const QString &pFileName,
             return false;
         }
     } else {
-        // The passed parent item is not valid, so...
+        // The passed item is not valid, so...
         // Note: we should never come here (i.e. the caller to this function
-        //       should ensure that the passed parent item is valid), but it's
-        //       better to be safe than sorry
+        //       should ensure that the passed item is valid), but it's better
+        //       to be safe than sorry
 
         return false;
     }
+}
+
+bool FileOrganiserWidget::addFile(const QString &pFileName,
+                                  QStandardItem *pItem,
+                                  const QAbstractItemView::DropIndicatorPosition &pDropPosition)
+{
+    QFileInfo fileInfo = pFileName;
+
+    if (fileInfo.isFile()) {
+        if (fileInfo.isSymLink()) {
+            // We are dropping a symbolic link, so retrieve its target
+            // and check that it exists, and if it does then add it
+
+            QString fileName = fileInfo.symLinkTarget();
+
+            if (QFileInfo(fileName).exists())
+                // The target file exists, so...
+
+                return addFileItem(fileName, pItem, pDropPosition);
+            else
+                // The target file doesn't exist, so...
+
+                return false;
+        } else {
+            // We are dropping a file, so we can just add it
+
+            return addFileItem(pFileName, pItem, pDropPosition);
+        }
+    } else {
+        // This is not a file, so...
+
+        return false;
+    }
+}
+
+void FileOrganiserWidget::collapseEmptyFolders(QStandardItem *pFolder)
+{
+    // Recursively collapse any empty child folder
+
+    for (int i = 0; i < pFolder->rowCount(); ++i)
+        if (pFolder->child(i)->data(FileOrganiserItemFolder).toBool())
+            collapseEmptyFolders(pFolder->child(i));
+
+    // Collapse the current folder, if necessary and if it isn't the root folder
+
+    if ((pFolder != mDataModel->invisibleRootItem()) && !pFolder->rowCount())
+        collapse(mDataModel->indexFromItem(pFolder));
 }
 
 bool FileOrganiserWidget::deleteItems()
@@ -589,22 +668,10 @@ bool FileOrganiserWidget::deleteItems()
 
         return false;
     } else {
-        // There are some items to delete, so first retrieve the list of their
-        // parent folders (since we may have to collapse them later on, see
-        // below)
-
-        QModelIndexList parentIndexes;
-
-        for (int i = 0; i < selectedIndexes.count(); ++i)
-            parentIndexes.append(selectedIndexes.at(i).parent());
-
-        parentIndexes = parentIndexes.toSet().toList();
-        // Note: the above is a way to remove duplicates, since a set doesn't
-        //       allow duplicates
-
-        // Now, delete the items one by one, making sure we update our list of
-        // items (this is because the row value of the remaining selected items
-        // may become different after deleting an item)
+        // There are some items to delete, so delete them one by one, making
+        // sure that we update our list of items every time (this is because the
+        // row value of the remaining selected items may become different after
+        // deleting an item)
 
         while(!selectedIndexes.isEmpty()) {
             mDataModel->removeRow(selectedIndexes.first().row(),
@@ -613,17 +680,9 @@ bool FileOrganiserWidget::deleteItems()
             selectedIndexes = selectionModel()->selectedIndexes();
         }
 
-        // Collapse any parent folder that doesn't contain any file anymore
+        // Collapse any folder that doesn't contain any file/folder anymore
 
-        for (int i = 0; i < parentIndexes.count(); ++i) {
-            QStandardItem *parentItem = mDataModel->itemFromIndex(parentIndexes.at(i));
-
-            if (parentItem && !parentItem->rowCount())
-                    // The parent folder is not the root folder and it doesn't
-                    // have (any?) file, so collapse it
-
-                    collapse(parentIndexes.at(i));
-        }
+        collapseEmptyFolders(mDataModel->invisibleRootItem());
 
         // Resize the widget to its contents in case its width was too wide (and
         // therefore required a horizontal scrollbar), but is now fine

@@ -59,7 +59,12 @@ private:
                           const int &pParentItemIndex);
 
     QString newFolderName(QStandardItem *pFolderItem);
-    bool newFile(const QString &pFileName, QStandardItem *pParentItem);
+    void collapseEmptyFolders(QStandardItem *pFolder);
+
+    bool addFileItem(const QString &pFileName, QStandardItem *pItem,
+                     const QAbstractItemView::DropIndicatorPosition &pDropPosition);
+    bool addFile(const QString &pFileName, QStandardItem *pItem,
+                 const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
     void resizeToContents();
 
