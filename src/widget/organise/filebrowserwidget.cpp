@@ -209,7 +209,7 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 
     // Default handling of the event
 
-    return QTreeView::viewportEvent(pEvent);
+    return TreeView::viewportEvent(pEvent);
 }
 
 QStringList FileBrowserWidget::selectedFiles()
@@ -258,7 +258,7 @@ void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
 
-    QTreeView::keyPressEvent(pEvent);
+    TreeView::keyPressEvent(pEvent);
 
     // Let people know about a key having been pressed with the view of opening
     // one or several files
