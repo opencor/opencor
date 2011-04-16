@@ -307,13 +307,17 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     TreeView::dragMoveEvent(pEvent);
 
     // Accept the proposed action for the event, but only if there are objects
-    // to drop and that we are not trying to drop them over a file item
+    // to drop and that we are not trying to drop them over a file item. Also,
+    // should one object be dragged, then it cannot be dropped on itself...
     // Note #1: for the number of objects being dropped, we have to check the
     //          number of URLs information (i.e. external objects), as well as
     //          the mime data associated to FileOrganiserMimeType (i.e. objects
     //          from the file organiser widget)
     // Note #2: for the dropping location, it can be either a folder or a file
     //          (as long as the indicator position isn't on the folder)
+    // Note #3: regarding the case where one object is being dragged, to check
+    //          that it's not being dropped on itself only makes sense if the
+    //          object comes from the file organiser widget...
 
     QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
     QDataStream stream(&data, QIODevice::ReadOnly);
@@ -325,11 +329,19 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     else
         nbOfFileOrganiserItemsDropped = 0;
 
+    QStandardItem *draggedItem;
+
+    if (nbOfFileOrganiserItemsDropped == 1)
+        draggedItem = 0;   //---GRY--- TO BE DONE
+    else
+        draggedItem = 0;
+
     QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
 
     if (   (pEvent->mimeData()->urls().count() || nbOfFileOrganiserItemsDropped)
         && (   (crtItem && crtItem->data(FileOrganiserItemFolder).toBool())
-            || (dropIndicatorPosition() != QAbstractItemView::OnItem)))
+            || (dropIndicatorPosition() != QAbstractItemView::OnItem))
+        && ((draggedItem != crtItem)))
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
