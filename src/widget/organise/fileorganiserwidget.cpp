@@ -22,6 +22,26 @@ QStringList FileOrganiserModel::mimeTypes() const
     return QStringList() << FileSystemMimeType << FileOrganiserMimeType;
 }
 
+QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
+{
+    // Encode the mime data, i.e.
+    //  - The number of items
+    //  - For each item:
+    //     - Its row
+    //     - Its data
+
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+
+    stream << pIndexes.count();
+
+    for (QModelIndexList::ConstIterator iter = pIndexes.begin();
+         iter != pIndexes.end(); ++iter)
+        stream << (*iter).row() << itemData(*iter);
+
+    return data;
+}
+
 QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
 {
     QMimeData *mimeData = new QMimeData();
@@ -53,16 +73,7 @@ QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
     //          it
     //          ---GRY--- TO BE DONE...
 
-    QByteArray data;
-    QDataStream stream(&data, QIODevice::WriteOnly);
-
-    stream << pIndexes.count();
-
-    for (QModelIndexList::ConstIterator iter = pIndexes.begin();
-         iter != pIndexes.end(); ++iter)
-        stream << (*iter).row() << itemData(*iter);
-
-    mimeData->setData(FileOrganiserMimeType, data);
+    mimeData->setData(FileOrganiserMimeType, encodeData(pIndexes));
 
     // All done, so...
 

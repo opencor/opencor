@@ -17,9 +17,11 @@ friend class FileOrganiserWidget;
 
 public:
     virtual QStringList mimeTypes() const;
-    virtual QMimeData *mimeData(const QModelIndexList &pIndexes) const;
+    virtual QMimeData * mimeData(const QModelIndexList &pIndexes) const;
 
 private:
+    QByteArray encodeData(const QModelIndexList &pIndexes) const;
+
     QString filePath(const QModelIndex &pFileIndex) const;
 };
 
