@@ -16,28 +16,21 @@ FileBrowserModel::FileBrowserModel(QObject *pParent)
     setRootPath("");
 }
 
-QMimeData * FileBrowserModel::mimeData(const QModelIndexList &pIndexes) const
+Qt::ItemFlags FileBrowserModel::flags(const QModelIndex &pIndex) const
 {
-    // Retrieve the default mime data from QFileSystemModel
+    // Determine the draggable/droppable state of the item referenced by the
+    // index
 
-    QMimeData *mimeData = QFileSystemModel::mimeData(pIndexes);
+    Qt::ItemFlags flags = QFileSystemModel::flags(pIndex);
 
-    // Remove all the folders in the mime data, since we don't want to all their
-    // dragging and dropping
+    // Don't allow the item to be dragged if it's a folder
 
-    QList<QUrl> urls = mimeData->urls();
-
-    for (int i = urls.count()-1; i >= 0; --i)
-        if (QFileInfo(urls.at(i).toLocalFile()).isDir())
-            // The current URL is that of a folder, so remove it
-
-            urls.removeAt(i);
-
-    mimeData->setUrls(urls);
+    if (QFileInfo(filePath(pIndex)).isDir())
+        flags &= ~Qt::ItemIsDragEnabled;
 
     // We are all done, so...
 
-    return mimeData;
+    return flags;
 }
 
 FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :

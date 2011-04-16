@@ -12,7 +12,7 @@ class FileBrowserModel : public QFileSystemModel
 public:
     explicit FileBrowserModel(QObject *pParent = 0);
 
-    virtual QMimeData *mimeData(const QModelIndexList &pIndexes) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &pIndex) const;
 };
 
 class FileBrowserWidget : public TreeView
