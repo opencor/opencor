@@ -254,11 +254,31 @@ QStringList FileBrowserWidget::selectedFiles()
     return selectedFiles;
 }
 
+void FileBrowserWidget::deselectFolders()
+{
+    // Check whether more than one item is selected with the view of dragging
+    // them and, if so, unselect any folder item since we don't allow them to be
+    // dragged
+
+    if (selectionModel()->selectedRows().count() > 1) {
+        QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
+
+        for (int i = 0; i < selectedIndexes.count(); ++i)
+            if (QFileInfo(pathOf(selectedIndexes.at(i))).isDir())
+                selectionModel()->select(selectedIndexes.at(i),
+                                         QItemSelectionModel::Deselect);
+    }
+}
+
 void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
 
     TreeView::keyPressEvent(pEvent);
+
+    // Deselect folders, if required
+
+    deselectFolders();
 
     // Let people know about a key having been pressed with the view of opening
     // one or several files
@@ -277,6 +297,17 @@ void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
         // let people know about it
 
         emit filesOpened(crtSelectedFiles);
+}
+
+void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
+{
+    // Default handling of the event
+
+    TreeView::mouseMoveEvent(pEvent);
+
+    // Deselect folders, if required
+
+    deselectFolders();
 }
 
 void FileBrowserWidget::directoryLoaded(const QString &pPath)

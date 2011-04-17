@@ -44,6 +44,8 @@ protected:
 
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
+    virtual void mouseMoveEvent(QMouseEvent *pEvent);
+
 private:
     FileBrowserModel *mDataModel;
 
@@ -52,6 +54,8 @@ private:
     QStringList mInitPathDirs;
     QString mInitPathDir;
     QString mInitPath;
+
+    void deselectFolders();
 
     QStringList selectedFiles();
 
