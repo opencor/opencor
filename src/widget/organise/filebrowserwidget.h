@@ -5,26 +5,19 @@
 
 #include <QFileSystemModel>
 
-class FileBrowserWidget;
-
 class FileBrowserModel : public QFileSystemModel
 {
     Q_OBJECT
 
 public:
-    explicit FileBrowserModel(FileBrowserWidget *pOwner, QObject *pParent = 0);
+    explicit FileBrowserModel(QObject *pParent = 0);
 
     virtual Qt::ItemFlags flags(const QModelIndex &pIndex) const;
-
-private:
-    FileBrowserWidget *mOwner;
 };
 
 class FileBrowserWidget : public TreeView
 {
     Q_OBJECT
-
-    friend class FileBrowserModel;
 
 public:
     explicit FileBrowserWidget(const QString &pName, QWidget *pParent);
@@ -61,8 +54,6 @@ private:
     QStringList mInitPathDirs;
     QString mInitPathDir;
     QString mInitPath;
-
-    bool mCanSelectFolders;
 
     void deselectFolders();
 
