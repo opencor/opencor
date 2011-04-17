@@ -13,7 +13,7 @@ static const QString FileOrganiserMimeType = "opencor/file-organiser";
 
 class FileOrganiserModel : public QStandardItemModel
 {
-friend class FileOrganiserWidget;
+    friend class FileOrganiserWidget;
 
 public:
     virtual QStringList mimeTypes() const;

@@ -8,8 +8,8 @@
 #include <QSettings>
 #include <QUrl>
 
-FileBrowserModel::FileBrowserModel(QObject *pParent)
-    : QFileSystemModel(pParent)
+FileBrowserModel::FileBrowserModel(QObject *pParent) :
+    QFileSystemModel(pParent)
 {
     // We want acces to the full file system
 
@@ -18,12 +18,12 @@ FileBrowserModel::FileBrowserModel(QObject *pParent)
 
 Qt::ItemFlags FileBrowserModel::flags(const QModelIndex &pIndex) const
 {
-    // Determine the draggable/droppable state of the item referenced by the
-    // index
+    // Specify the supported features for the current item
 
     Qt::ItemFlags flags = QFileSystemModel::flags(pIndex);
 
-    // Don't allow the item to be dragged if it's a folder
+    // Prevent the item from being selected in case it's a folder item and that
+    // we want to select it with the view of dragging it
 
     if (QFileInfo(filePath(pIndex)).isDir())
         flags &= ~Qt::ItemIsDragEnabled;
