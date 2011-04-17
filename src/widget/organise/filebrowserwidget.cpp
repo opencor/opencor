@@ -8,8 +8,10 @@
 #include <QSettings>
 #include <QUrl>
 
-FileBrowserModel::FileBrowserModel(QObject *pParent) :
-    QFileSystemModel(pParent)
+FileBrowserModel::FileBrowserModel(FileBrowserWidget *pOwner,
+                                   QObject *pParent) :
+    QFileSystemModel(pParent),
+    mOwner(pOwner)
 {
     // We want acces to the full file system
 
@@ -22,11 +24,18 @@ Qt::ItemFlags FileBrowserModel::flags(const QModelIndex &pIndex) const
 
     Qt::ItemFlags flags = QFileSystemModel::flags(pIndex);
 
-    // Prevent the item from being selected in case it's a folder item and that
-    // we want to select it with the view of dragging it
+    // Prevent some features for the item in case it's a folder
 
-    if (QFileInfo(filePath(pIndex)).isDir())
+    if (QFileInfo(filePath(pIndex)).isDir()) {
+        // We don't want a folder to be draggable
+
         flags &= ~Qt::ItemIsDragEnabled;
+
+        // Make the folder unselectable, if required
+
+        if (!mOwner->mCanSelectFolders)
+            flags &= ~Qt::ItemIsSelectable;
+    }
 
     // We are all done, so...
 
@@ -38,11 +47,12 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     mNeedDefColWidth(true),
     mInitPathDirs(QStringList()),
     mInitPathDir(QString()),
-    mInitPath(QString())
+    mInitPath(QString()),
+    mCanSelectFolders(true)
 {
     // Create an instance of the file system model that we want to view
 
-    mDataModel = new FileBrowserModel;
+    mDataModel = new FileBrowserModel(this);
 
     // Set some properties for the file browser widget itself
 
@@ -260,7 +270,11 @@ void FileBrowserWidget::deselectFolders()
     // them and, if so, unselect any folder item since we don't allow them to be
     // dragged
 
-    if (selectionModel()->selectedRows().count() > 1) {
+    bool crtCanSelectFolders = selectionModel()->selectedRows().count() <= 1;
+
+    if (crtCanSelectFolders != mCanSelectFolders) {
+        mCanSelectFolders = crtCanSelectFolders;
+
         QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
         for (int i = 0; i < selectedIndexes.count(); ++i)
