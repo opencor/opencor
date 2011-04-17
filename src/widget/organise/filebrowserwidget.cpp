@@ -300,6 +300,17 @@ void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
         emit filesOpened(crtSelectedFiles);
 }
 
+void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    // Default handling of the event
+
+    TreeView::mousePressEvent(pEvent);
+
+    // Deselect folders, if required
+
+    deselectFolders();
+}
+
 void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event

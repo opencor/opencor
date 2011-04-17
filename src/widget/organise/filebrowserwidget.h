@@ -44,6 +44,7 @@ protected:
 
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
+    virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
 
 private:
