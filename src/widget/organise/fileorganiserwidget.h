@@ -20,6 +20,8 @@ public:
     virtual QMimeData * mimeData(const QModelIndexList &pIndexes) const;
 
 private:
+    void encodeHierarchyData(const QModelIndex &pIndex, QDataStream &pStream,
+                             const int &pLevel = 0) const;
     QByteArray encodeData(const QModelIndexList &pIndexes) const;
 
     QString filePath(const QModelIndex &pFileIndex) const;

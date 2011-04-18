@@ -22,26 +22,65 @@ QStringList FileOrganiserModel::mimeTypes() const
     return QStringList() << FileSystemMimeType << FileOrganiserMimeType;
 }
 
+void FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
+                                             QDataStream &pStream,
+                                             const int &pLevel) const
+{
+    // Encode the item's hierarchy
+
+    if (pIndex != QModelIndex()) {
+        // The current index is valid, try to encode its parent's hierarchy
+
+        encodeHierarchyData(pIndex.parent(), pStream, pLevel+1);
+
+        // Now, we can encode the current index's hierarchy information
+
+        pStream << pIndex.row();
+    } else {
+        // We are the top of the hierarchy, so encode the number of levels
+        // (essential if we want to be able to decode the hierarchy)
+
+        pStream << pLevel;
+    }
+}
+
 QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
 {
-    // Encode the mime data, i.e.
-    //  - The number of items
-    //  - For each item:
-    //     - Its row
-    //     - Its data
-    // Note: if both a folder item and some (if not all) of its contents is
-    //       included in the list, then we only keep track of the folder item,
-    //       since we want its contents to be automatically moved with it
-    //       ---GRY--- TO BE DONE...
+    // Encode the mime data
 
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
 
+    // The number of items
+
     stream << pIndexes.count();
 
     for (QModelIndexList::ConstIterator iter = pIndexes.begin();
-         iter != pIndexes.end(); ++iter)
-        stream << (*iter).row() << itemData(*iter);
+         iter != pIndexes.end(); ++iter) {
+        QStandardItem *crtItem = itemFromIndex(*iter);
+        bool isFolderItem = crtItem->data(FileOrganiserItemFolder).toBool();
+
+        // Whether the current item is a folder or not
+
+        stream << isFolderItem;
+
+        // Hierarchy to reach the current item
+
+        encodeHierarchyData(*iter, stream);
+
+        // Information specific to the type of item we are dealing with
+
+        if (isFolderItem)
+            // The name of the folder
+
+            stream << crtItem->text();
+        else
+            // The physical path to the file
+
+            stream << crtItem->data(FileOrganiserItemPath).toString();
+    }
+
+    // We are all done, so...
 
     return data;
 }
@@ -485,7 +524,7 @@ bool FileOrganiserWidget::newFolder()
 
         QStandardItem *crtItem = !nbOfSelectedIndexes?
                                            mDataModel->invisibleRootItem():
-                                           mDataModel->itemFromIndex(selectedIndexes.at(0));
+                                           mDataModel->itemFromIndex(selectedIndexes.first());
 
         if (   (crtItem == mDataModel->invisibleRootItem())
             || crtItem->data(FileOrganiserItemFolder).toBool()) {
