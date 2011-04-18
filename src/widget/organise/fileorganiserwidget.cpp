@@ -55,34 +55,59 @@ QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
 
     stream << pIndexes.count();
 
+    // Hierarchy to reach the various items
+
     for (QModelIndexList::ConstIterator iter = pIndexes.begin();
-         iter != pIndexes.end(); ++iter) {
-        QStandardItem *crtItem = itemFromIndex(*iter);
-        bool isFolderItem = crtItem->data(FileOrganiserItemFolder).toBool();
-
-        // Whether the current item is a folder or not
-
-        stream << isFolderItem;
-
+         iter != pIndexes.end(); ++iter)
         // Hierarchy to reach the current item
 
         encodeHierarchyData(*iter, stream);
 
-        // Information specific to the type of item we are dealing with
+    // We are all done, so...
 
-        if (isFolderItem)
-            // The name of the folder
+    return data;
+}
 
-            stream << crtItem->text();
-        else
-            // The physical path to the file
+QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
+{
+    // Decode the mime data
 
-            stream << crtItem->data(FileOrganiserItemPath).toString();
+    QModelIndexList decodedData;
+    QDataStream stream(&pData, QIODevice::ReadOnly);
+
+    // The number of items
+
+    int nbOfItems;
+
+    stream >> nbOfItems;
+
+    // Hierarchy to reach the various items
+
+    int nbOfLevels;
+    int row;
+    QStandardItem *crtItem;
+
+    for (int i = 0; i < nbOfItems; ++i) {
+        // Hierarchy to reach the current item
+
+        stream >> nbOfLevels;
+
+        crtItem = invisibleRootItem();
+
+        for (int j = 0; j < nbOfLevels; ++j) {
+            stream >> row;
+
+            crtItem = crtItem->child(row, 0);
+        }
+
+        // Add the current item to our list
+
+        decodedData.append(indexFromItem(crtItem));
     }
 
     // We are all done, so...
 
-    return data;
+    return decodedData;
 }
 
 QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
