@@ -85,6 +85,7 @@ private:
 
     bool parentIndexExists(const QModelIndex &pIndex,
                            const QModelIndexList &pIndexes);
+
     QModelIndexList cleanIndexList(const QModelIndexList &pIndexes);
 
 Q_SIGNALS:

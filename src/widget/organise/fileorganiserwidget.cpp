@@ -803,8 +803,8 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
                                                pDropItem->parent():
                                                mDataModel->invisibleRootItem();
 
-        // Second, check whether the file is already owned by newParentItem or
-        // not
+        // Second, check whether or not the file is already owned by
+        // newParentItem
 
         bool fileExists = false;
 
@@ -860,7 +860,7 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
 
             return true;
         } else {
-            // The file is already present, so...
+            // The file is already owned by newParentItem, so...
 
             return false;
         }
@@ -928,43 +928,77 @@ bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
                                                pDropItem->parent():
                                                mDataModel->invisibleRootItem();
 
-        // Second, move pItem to newParentItem and this to the right place,
-        // depending on the value of pDropPosition
+        // Second, check whether or not the (file) item points to a file which
+        // is already owned by newParentItem
 
-        switch (pDropPosition) {
-        case QAbstractItemView::AboveItem:
-            // We dropped pItem above pDropItem, so...
+        bool fileExists = false;
 
-            newParentItem->insertRow(pDropItem->row(),
-                                     crtParentItem->takeRow(pItem->row()));
+        if (!pItem->data(FileOrganiserItemFolder).toBool()) {
+            // The current item is a file item, so retrieve the name of the file
+            // it refers to and check whether or not it's already owned by
+            // newParentItem
 
-            break;
-        case QAbstractItemView::BelowItem:
-            // We dropped pItem below pDropItem, so...
+            QString fileName = pItem->data(FileOrganiserItemPath).toString();
 
-            newParentItem->insertRow(pDropItem->row()+1,
-                                     crtParentItem->takeRow(pItem->row()));
+            for (int i = 0; (i < newParentItem->rowCount()) && !fileExists; ++i) {
+                // Check whether the current item is a file and whether it's the one
+                // we want to add
 
-            break;
-        default:
-            // We directly dropped pItem on pDropItem, so...
+                QStandardItem *crtItem = newParentItem->child(i);
 
-            newParentItem->appendRow(crtParentItem->takeRow(pItem->row()));
-
-            // Expand newParentItem, so the user knows that the item has been
-            // moved to it (assuming that newParentItem was collapsed)
-
-            setExpanded(newParentItem->index(), true);
-
-            break;
+                fileExists =    !crtItem->data(FileOrganiserItemFolder).toBool()
+                             && (crtItem->data(FileOrganiserItemPath).toString() == fileName);
+            }
         }
 
-        // Resize the widget, just in case the new file takes more space
-        // that is visible
+        // Third, move pItem to newParentItem and this to the right place,
+        // depending on the value of pDropPosition and only if the destination
+        // doesn't already have that item (should it be a file item, since
+        // folder items are always moved)
 
-        resizeToContents();
+        if (!fileExists) {
+            switch (pDropPosition) {
+            case QAbstractItemView::AboveItem:
+                // We dropped pItem above pDropItem, so...
 
-        return true;
+                newParentItem->insertRow(pDropItem->row(),
+                                         crtParentItem->takeRow(pItem->row()));
+
+                break;
+            case QAbstractItemView::BelowItem:
+                // We dropped pItem below pDropItem, so...
+
+                newParentItem->insertRow(pDropItem->row()+1,
+                                         crtParentItem->takeRow(pItem->row()));
+
+                break;
+            default:
+                // We directly dropped pItem on pDropItem, so...
+
+                newParentItem->appendRow(crtParentItem->takeRow(pItem->row()));
+
+                // Expand newParentItem, so the user knows that the item has been
+                // moved to it (assuming that newParentItem was collapsed)
+
+                setExpanded(newParentItem->index(), true);
+
+                break;
+            }
+
+            // Resize the widget, just in case the new file takes more space
+            // that is visible
+
+            resizeToContents();
+
+            return true;
+        } else {
+            // A (file) item pointing to the same file is already owned by
+            // newParentItem, so just remove the item rather than move it
+
+            crtParentItem->removeRow(pItem->row());
+
+            return false;
+        }
     } else {
         // pDropItem is not valid, so...
         // Note: we should never come here (i.e. the caller to this function
