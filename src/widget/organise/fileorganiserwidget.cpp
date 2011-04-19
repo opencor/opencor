@@ -489,13 +489,40 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 {
-    // Note: the mime data will definitely contain the FileSystemMimeType mime
-    //       type (if the objects originated from outside this widget), but it
-    //       may also contain the FileOrganiserMimeType mime type (if the
-    //       objects originated from this widget). The FileOrganiserMimeType
-    //       mime type is used by this widget while the latter by external
-    //       widgets. So, this means that we must check for the
-    //       FileOrganiserMimeType mime type first
+    // Note: the mime data definitely contains the FileSystemMimeType mime type
+    //       (for objects originating from outside this widget), but it may also
+    //       contain the FileOrganiserMimeType mime type (for objects
+    //       originating from within this widget). FileOrganiserMimeType is used
+    //       by this widget while FileSystemMimeType by external widgets. So,
+    //       this means that we must check for FileOrganiserMimeType first
+
+    // Files have been dropped, so add them to the widget and this at the right
+    // place (i.e. above/on/below a folder, above/below a file or on the
+    // invisible root folder)
+
+    // First, determine the item above/on/below which objects are to be dropped,
+    // as well as the drop position (i.e. above, on or below)
+
+    QStandardItem *dropItem;
+    DropIndicatorPosition dropPosition = dropIndicatorPosition();
+
+    if (dropPosition == QAbstractItemView::OnViewport) {
+        // We dropped the files on the viewport, so...
+
+        dropItem = mDataModel->invisibleRootItem();
+
+        // Change the drop position since we know that we want want the
+        // objects to be dropped on the root folder
+
+        dropPosition = QAbstractItemView::OnItem;
+    } else {
+        // We dropped the files above/on/below a folder or above/below a
+        // file, so...
+
+        dropItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
+    }
+
+    // Check the type of mime data to be dropped
 
     if (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)) {
         // The user is dropping folders/files from ourselves, i.e. s/he wants
@@ -503,30 +530,8 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 
 //---GRY--- TO BE DONE...
     } else {
-        // Files have been dropped, so add them to the widget and this at the
-        // right place (i.e. above/on/below a folder, above/below a file or on
-        // the invisible root folder)
-
-        QStandardItem *crtItem;
-        DropIndicatorPosition dropPosition = dropIndicatorPosition();
-
-        if (dropPosition == QAbstractItemView::OnViewport) {
-            // We dropped the files on the viewport, so...
-
-            crtItem = mDataModel->invisibleRootItem();
-
-            // Change the drop position since we know that we want want the
-            // objects to be dropped on the root folder
-
-            dropPosition = QAbstractItemView::OnItem;
-        } else {
-            // We dropped the files above/on/below a folder or above/below a
-            // file, so...
-
-            crtItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
-        }
-
-        // Effectively add the files to the widget and this at the right place
+        // The user wants to drop files, so add them to the widget and this at
+        // the right place
 
         QList<QUrl> urls = pEvent->mimeData()->urls();
 
@@ -534,13 +539,13 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
             // Add the files in the order they were dropped
 
             for (int i = 0; i < urls.count(); ++i)
-                addFile(urls.at(i).toLocalFile(), crtItem, dropPosition);
+                addFile(urls.at(i).toLocalFile(), dropItem, dropPosition);
         else
             // Add the files in a reverse order to that they were dropped since
             // we want them added below the current item
 
             for (int i = urls.count()-1; i >= 0; --i)
-                addFile(urls.at(i).toLocalFile(), crtItem, dropPosition);
+                addFile(urls.at(i).toLocalFile(), dropItem, dropPosition);
     }
 
     // Accept the proposed action for the event
