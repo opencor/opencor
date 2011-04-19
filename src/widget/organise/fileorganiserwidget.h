@@ -71,10 +71,13 @@ private:
     QString newFolderName(QStandardItem *pFolderItem);
     void collapseEmptyFolders(QStandardItem *pFolder);
 
-    bool addFileItem(const QString &pFileName, QStandardItem *pItem,
+    bool addFileItem(const QString &pFileName, QStandardItem *pDropItem,
                      const QAbstractItemView::DropIndicatorPosition &pDropPosition);
-    bool addFile(const QString &pFileName, QStandardItem *pItem,
+    bool addFile(const QString &pFileName, QStandardItem *pDropItem,
                  const QAbstractItemView::DropIndicatorPosition &pDropPosition);
+
+    bool moveItem(QStandardItem *pItem, QStandardItem *pDropItem,
+                  const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
     void resizeToContents();
 

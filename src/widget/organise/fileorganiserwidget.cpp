@@ -528,7 +528,26 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         // The user is dropping folders/files from ourselves, i.e. s/he wants
         // some folders/files to be moved around
 
-//---GRY--- TO BE DONE...
+        // Retrieve the list of indexes to move around and clean it
+
+        QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
+        QModelIndexList indexes = cleanIndexList(mDataModel->decodeData(data));
+
+        // Move the contents of the list to its final destination
+
+        if (dropPosition != QAbstractItemView::BelowItem)
+            // Move the items in the order they were dropped
+
+            for (int i = 0; i < indexes.count(); ++i)
+                moveItem(mDataModel->itemFromIndex(indexes.at(i)),
+                         dropItem, dropPosition);
+        else
+            // Move the items in a reverse order to that they were dropped since
+            // we want them moved below the current item
+
+            for (int i = indexes.count()-1; i >= 0; --i)
+                moveItem(mDataModel->itemFromIndex(indexes.at(i)),
+                         dropItem, dropPosition);
     } else {
         // The user wants to drop files, so add them to the widget and this at
         // the right place
@@ -767,41 +786,40 @@ bool FileOrganiserWidget::newFolder()
 }
 
 bool FileOrganiserWidget::addFileItem(const QString &pFileName,
-                                      QStandardItem *pItem,
+                                      QStandardItem *pDropItem,
                                       const QAbstractItemView::DropIndicatorPosition &pDropPosition)
 {
-    // Add the file above/on/below the passed item
+    // Add the file above/on/below pDropItem
 
-    if (pItem) {
-        // The passed item is valid, so add the file above/on/below it,
-        // depending on the drop position and only if the file isn't already
-        // present
+    if (pDropItem) {
+        // pDropItem is valid, so add the file above/on/below it, depending on
+        // the drop position and only if the file isn't already present
 
         // First, determine the item that will own the file
 
-        QStandardItem *parentItem = (pDropPosition == QAbstractItemView::OnItem)?
-                                        pItem:
-                                        pItem->parent()?
-                                            pItem->parent():
-                                            mDataModel->invisibleRootItem();
+        QStandardItem *newParentItem = (pDropPosition == QAbstractItemView::OnItem)?
+                                           pDropItem:
+                                           pDropItem->parent()?
+                                               pDropItem->parent():
+                                               mDataModel->invisibleRootItem();
 
-        // Second, check whether the file is already owned by the future parent
-        // item or not
+        // Second, check whether the file is already owned by newParentItem or
+        // not
 
         bool fileExists = false;
 
-        for (int i = 0; (i < parentItem->rowCount()) && !fileExists; ++i) {
+        for (int i = 0; (i < newParentItem->rowCount()) && !fileExists; ++i) {
             // Check whether the current item is a file and whether it's the one
             // we want to add
 
-            QStandardItem *crtItem = parentItem->child(i);
+            QStandardItem *crtItem = newParentItem->child(i);
 
             fileExists =    !crtItem->data(FileOrganiserItemFolder).toBool()
                          && (crtItem->data(FileOrganiserItemPath).toString() == pFileName);
         }
 
-        // Third, if the file is not already owned, then add it to the parent
-        // item and this to the right place, depending on the drop position
+        // Third, if the file is not already owned, then add it to newParentItem
+        // and this to the right place, depending on the value of pDropPosition
 
         if (!fileExists) {
             QStandardItem *newFileItem = new QStandardItem(QIcon(FileIcon),
@@ -811,26 +829,26 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
 
             switch (pDropPosition) {
             case QAbstractItemView::AboveItem:
-                // We dropped the file above the item, so...
+                // We dropped the file above pDropItem, so...
 
-                parentItem->insertRow(pItem->row(), newFileItem);
+                newParentItem->insertRow(pDropItem->row(), newFileItem);
 
                 break;
             case QAbstractItemView::BelowItem:
-                // We dropped the file below the item, so...
+                // We dropped the file below pDropItem, so...
 
-                parentItem->insertRow(pItem->row()+1, newFileItem);
+                newParentItem->insertRow(pDropItem->row()+1, newFileItem);
 
                 break;
             default:
-                // We directly dropped the file onto the item, so...
+                // We directly dropped the file on pDropItem, so...
 
-                parentItem->appendRow(newFileItem);
+                newParentItem->appendRow(newFileItem);
 
-                // Expand the parent item, so the user knows that the file has
-                // been added (assuming it was collapsed)
+                // Expand newParentItem, so the user knows that the file has
+                // been added to it (assuming that newParentItem was collapsed)
 
-                setExpanded(parentItem->index(), true);
+                setExpanded(newParentItem->index(), true);
 
                 break;
             }
@@ -847,32 +865,32 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
             return false;
         }
     } else {
-        // The passed item is not valid, so...
+        // pDropItem is not valid, so...
         // Note: we should never come here (i.e. the caller to this function
-        //       should ensure that the passed item is valid), but it's better
-        //       to be safe than sorry
+        //       should ensure that pDropItem is valid), but it's better to be
+        //       safe than sorry
 
         return false;
     }
 }
 
 bool FileOrganiserWidget::addFile(const QString &pFileName,
-                                  QStandardItem *pItem,
+                                  QStandardItem *pDropItem,
                                   const QAbstractItemView::DropIndicatorPosition &pDropPosition)
 {
     QFileInfo fileInfo = pFileName;
 
     if (fileInfo.isFile()) {
         if (fileInfo.isSymLink()) {
-            // We are dropping a symbolic link, so retrieve its target
-            // and check that it exists, and if it does then add it
+            // We are dropping a symbolic link, so retrieve its target and check
+            // that it exists, and if it does then add it
 
             QString fileName = fileInfo.symLinkTarget();
 
             if (QFileInfo(fileName).exists())
                 // The target file exists, so...
 
-                return addFileItem(fileName, pItem, pDropPosition);
+                return addFileItem(fileName, pDropItem, pDropPosition);
             else
                 // The target file doesn't exist, so...
 
@@ -880,10 +898,78 @@ bool FileOrganiserWidget::addFile(const QString &pFileName,
         } else {
             // We are dropping a file, so we can just add it
 
-            return addFileItem(pFileName, pItem, pDropPosition);
+            return addFileItem(pFileName, pDropItem, pDropPosition);
         }
     } else {
         // This is not a file, so...
+
+        return false;
+    }
+}
+
+bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
+                                   QStandardItem *pDropItem,
+                                   const QAbstractItemView::DropIndicatorPosition &pDropPosition)
+{
+    // Move pItem above/on/below pDropItem
+
+    if (pDropItem) {
+        // pDropItem is valid, so add pItem above/on/below it, depending on the
+        // drop position
+
+        // First, determine the item that will own pItem
+
+        QStandardItem *crtParentItem = pItem->parent()?
+                                           pItem->parent():
+                                           mDataModel->invisibleRootItem();
+        QStandardItem *newParentItem = (pDropPosition == QAbstractItemView::OnItem)?
+                                           pDropItem:
+                                           pDropItem->parent()?
+                                               pDropItem->parent():
+                                               mDataModel->invisibleRootItem();
+
+        // Second, move pItem to newParentItem and this to the right place,
+        // depending on the value of pDropPosition
+
+        switch (pDropPosition) {
+        case QAbstractItemView::AboveItem:
+            // We dropped pItem above pDropItem, so...
+
+            newParentItem->insertRow(pDropItem->row(),
+                                     crtParentItem->takeRow(pItem->row()));
+
+            break;
+        case QAbstractItemView::BelowItem:
+            // We dropped pItem below pDropItem, so...
+
+            newParentItem->insertRow(pDropItem->row()+1,
+                                     crtParentItem->takeRow(pItem->row()));
+
+            break;
+        default:
+            // We directly dropped pItem on pDropItem, so...
+
+            newParentItem->appendRow(crtParentItem->takeRow(pItem->row()));
+
+            // Expand newParentItem, so the user knows that the item has been
+            // moved to it (assuming that newParentItem was collapsed)
+
+            setExpanded(newParentItem->index(), true);
+
+            break;
+        }
+
+        // Resize the widget, just in case the new file takes more space
+        // that is visible
+
+        resizeToContents();
+
+        return true;
+    } else {
+        // pDropItem is not valid, so...
+        // Note: we should never come here (i.e. the caller to this function
+        //       should ensure that pDropItem is valid), but it's better to be
+        //       safe than sorry
 
         return false;
     }
