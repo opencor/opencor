@@ -68,6 +68,32 @@ QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
     return data;
 }
 
+QModelIndex FileOrganiserModel::decodeHierarchyData(QDataStream &pStream) const
+{
+    // Decode the hierarchy data
+
+    // The number of levels
+
+    int nbOfLevels;
+
+    pStream >> nbOfLevels;
+
+    // Hierarchy to reach the item
+
+    int row;
+    QStandardItem *crtItem = invisibleRootItem();
+
+    for (int j = 0; j < nbOfLevels; ++j) {
+        pStream >> row;
+
+        crtItem = crtItem->child(row, 0);
+    }
+
+    // We are all done, so...
+
+    return indexFromItem(crtItem);
+}
+
 QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
 {
     // Decode the mime data
@@ -83,27 +109,8 @@ QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
 
     // Hierarchy to reach the various items
 
-    int nbOfLevels;
-    int row;
-    QStandardItem *crtItem;
-
-    for (int i = 0; i < nbOfItems; ++i) {
-        // Hierarchy to reach the current item
-
-        stream >> nbOfLevels;
-
-        crtItem = invisibleRootItem();
-
-        for (int j = 0; j < nbOfLevels; ++j) {
-            stream >> row;
-
-            crtItem = crtItem->child(row, 0);
-        }
-
-        // Add the current item to our list
-
-        decodedData.append(indexFromItem(crtItem));
-    }
+    for (int i = 0; i < nbOfItems; ++i)
+        decodedData.append(decodeHierarchyData(stream));
 
     // We are all done, so...
 

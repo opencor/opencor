@@ -24,6 +24,7 @@ private:
                              const int &pLevel = 0) const;
     QByteArray encodeData(const QModelIndexList &pIndexes) const;
 
+    QModelIndex decodeHierarchyData(QDataStream &pStream) const;
     QModelIndexList decodeData(QByteArray &pData) const;
 
     QString filePath(const QModelIndex &pFileIndex) const;
