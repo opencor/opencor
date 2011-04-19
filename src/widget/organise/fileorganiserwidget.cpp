@@ -506,13 +506,13 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 
         dropItem = mDataModel->invisibleRootItem();
 
-        // Change the drop position since we know that we want want the
-        // objects to be dropped on the root folder
+        // Change the drop position since we know that we want want the objects
+        // to be dropped on the root folder
 
         dropPosition = QAbstractItemView::OnItem;
     } else {
-        // We dropped the files above/on/below a folder or above/below a
-        // file, so...
+        // We dropped the files above/on/below a folder or above/below a file,
+        // so...
 
         dropItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
     }
