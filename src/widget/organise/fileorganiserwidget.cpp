@@ -460,28 +460,23 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     //          from the file organiser widget, after we have )
     // Note #2: for the dropping location, it can be either a folder or a file
     //          (as long as the indicator position isn't on the item itself),
-    //          but not above/on/below any of the objects being dragged (only
-    //          relevant when dragging file organiser items)
+    //          but not above/on/below any of the objects (or any of their
+    //          children) being dragged (only relevant when dragging items from
+    //          the file organiser widget)
 
     QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
     QModelIndexList indexes = mDataModel->decodeData(data);
-    QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
-    bool draggingOnSelf = false;
+    QStandardItem *dropItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
+    bool draggingOnSelfOrChild = false;
 
-    for (int i = 0; i < indexes.count(); ++i)
-        if (crtItem == mDataModel->itemFromIndex(indexes.at(i))) {
-            // The item above/on/below which we want to drop objects could be
-            // found in our list of objects, so...
-
-            draggingOnSelf = true;
-
-            break;
-        }
+    if (dropItem)
+        for (int i = 0; (i < indexes.count()) && !draggingOnSelfOrChild; ++i)
+            draggingOnSelfOrChild = itemIsOrIsChildOf(dropItem, mDataModel->itemFromIndex(indexes.at(i)));
 
     if (   (pEvent->mimeData()->urls().count() || indexes.count())
-        && (   (crtItem && crtItem->data(FileOrganiserItemFolder).toBool())
+        && (   (dropItem && dropItem->data(FileOrganiserItemFolder).toBool())
             || (dropIndicatorPosition() != QAbstractItemView::OnItem))
-        && !draggingOnSelf)
+        && !draggingOnSelfOrChild)
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
@@ -684,6 +679,32 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
     // We are all done, so...
 
     return cleanedIndexes;
+}
+
+bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
+                                            QStandardItem *pOtherItem)
+{
+    if (pItem == pOtherItem) {
+        // pItem is the same as pOtherItem, so...
+
+        return true;
+    } else if (pOtherItem->rowCount()) {
+        // pOtherItem has children, so check against them
+
+        for (int i = 0; i < pOtherItem->rowCount(); ++i)
+            if (itemIsOrIsChildOf(pItem, pOtherItem->child(i)))
+                // pItem is a (in)direct child of pOtherItem, so...
+
+                return true;
+
+        // pItem is not the (in)direct child of pOtherItem, so...
+
+        return false;
+    } else {
+        // pOtherItem doesn't have any children, so...
+
+        return false;
+    }
 }
 
 bool FileOrganiserWidget::isFolderItem(const QModelIndex &pItemIndex)

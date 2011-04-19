@@ -88,6 +88,8 @@ private:
 
     QModelIndexList cleanIndexList(const QModelIndexList &pIndexes);
 
+    bool itemIsOrIsChildOf(QStandardItem *pItem, QStandardItem *pOtherItem);
+
 Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);
 
