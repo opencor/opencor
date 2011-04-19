@@ -561,6 +561,112 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
     setState(QAbstractItemView::NoState);
 }
 
+bool FileOrganiserWidget::parentIndexExists(const QModelIndex &pIndex,
+                                            const QModelIndexList &pIndexes)
+{
+    // Recursively determine whether one of the parents of the given index is in
+    // the provided list
+
+    QModelIndex parentIndex = pIndex.parent();
+
+    if (parentIndex != QModelIndex()) {
+        // The current index has a valid parent, so check whether the parent is
+        // in the list
+
+        if (pIndexes.indexOf(parentIndex) != -1)
+            // The parent index could be found, so...
+
+            return true;
+        else
+            // The parent index couldn't be found, but what about the parent
+            // index's parent?
+
+            return parentIndexExists(parentIndex, pIndexes);
+    } else {
+        // The current index doesn't have a valid parent, so...
+
+        return false;
+    }
+}
+
+QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pIndexes)
+{
+    // A list of indexes may contain indexes that are not relevant or
+    // effectively the duplicate of another existing index, so...
+
+    QModelIndexList cleanedIndexes;
+
+    // If both the index of a folder and some (if not all) of its (in)direct
+    // contents is in the original list, then we only keep track of the index of
+    // the folder
+
+    for (int i = 0; i < pIndexes.count(); ++i) {
+        // Check whether one of the current index's parents is already in the
+        // list. If so, then skip the current index
+
+        QModelIndex crtIndex = pIndexes.at(i);
+
+        if (!parentIndexExists(crtIndex, pIndexes)) {
+            // None of the index's parents is in the list, so we can safely add
+            // the index to the list
+
+            cleanedIndexes.append(crtIndex);
+
+            // If the index refers to a folder, then we must double check that
+            // the list of cleaned indexes doesn't contain any of the index's
+            // children. If it does, then we must remove all of them
+
+            QStandardItem *crtItem = mDataModel->itemFromIndex(crtIndex);
+
+            if (crtItem && crtItem->data(FileOrganiserItemFolder).toBool())
+                for (int j = cleanedIndexes.count()-1; j >= 0; --j)
+                    if (parentIndexExists(cleanedIndexes.at(j), cleanedIndexes))
+                        cleanedIndexes.removeAt(j);
+        }
+    }
+
+    // At this stage, we have indexes for folders that are unique, but we may
+    // still have indexes for files that are effectively the duplicate of
+    // another file, so these are to be removed from the cleaned list and from
+    // the model
+
+    for (int i = cleanedIndexes.count()-1; i >= 0; --i) {
+        QStandardItem *crtItem = mDataModel->itemFromIndex(cleanedIndexes.at(i));
+
+        if (crtItem && !crtItem->data(FileOrganiserItemFolder).toBool())
+            // The index corresponds to a valid file item, so check whether in
+            // the cleaned list there is another file item referencing the same
+            // physical file and, if so, remove it from the cleaned list and the
+            // model
+
+            for (int j = 0; j < i; ++j) {
+                QStandardItem *testItem = mDataModel->itemFromIndex(cleanedIndexes.at(j));
+
+                if (   testItem
+                    && !testItem->data(FileOrganiserItemFolder).toBool()
+                    && !crtItem->data(FileOrganiserItemPath).toString().compare(testItem->data(FileOrganiserItemPath).toString())) {
+                    // The test item is a valid file item and references the
+                    // same physical file as our current item, so remove the
+                    // current item from the cleaned list
+
+                    cleanedIndexes.removeAt(i);
+
+                    // Also remove the current item from the model
+
+                    crtItem->parent()->removeRow(crtItem->row());
+
+                    // Go to our next current item
+
+                    break;
+                }
+            }
+    }
+
+    // We are all done, so...
+
+    return cleanedIndexes;
+}
+
 bool FileOrganiserWidget::isFolderItem(const QModelIndex &pItemIndex)
 {
     return mDataModel->itemFromIndex(pItemIndex)->data(FileOrganiserItemFolder).toBool();
