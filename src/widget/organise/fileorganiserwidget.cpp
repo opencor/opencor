@@ -59,26 +59,32 @@ QByteArray FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
 
 QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
 {
-    // Encode the mime data
+    if (!pIndexes.count()) {
+        // There is nothing to encode, so...
 
-    QByteArray data;
-    QDataStream stream(&data, QIODevice::WriteOnly);
+        return QByteArray();
+    } else {
+        // Encode the mime data
 
-    // The number of items
+        QByteArray encodedData;
+        QDataStream stream(&encodedData, QIODevice::WriteOnly);
 
-    stream << pIndexes.count();
+        // The number of items
 
-    // Hierarchy to reach the various items
+        stream << pIndexes.count();
 
-    for (QModelIndexList::ConstIterator iter = pIndexes.begin();
-         iter != pIndexes.end(); ++iter)
-        // Hierarchy to reach the current item
+        // Hierarchy to reach the various items
 
-        encodeHierarchyData(*iter, stream);
+        for (QModelIndexList::ConstIterator iter = pIndexes.begin();
+             iter != pIndexes.end(); ++iter)
+            // Hierarchy to reach the current item
 
-    // We are all done, so...
+            encodeHierarchyData(*iter, stream);
 
-    return data;
+        // We are all done, so...
+
+        return encodedData;
+    }
 }
 
 QModelIndex FileOrganiserModel::decodeHierarchyData(QDataStream &pStream) const
@@ -118,25 +124,31 @@ QModelIndex FileOrganiserModel::decodeHierarchyData(QByteArray &pData) const
 
 QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
 {
-    // Decode the mime data
+    if (!pData.size()) {
+        // There is nothing to decode, so...
 
-    QModelIndexList decodedData;
-    QDataStream stream(&pData, QIODevice::ReadOnly);
+        return QModelIndexList();
+    } else {
+        // Decode the mime data
 
-    // The number of items
+        QModelIndexList decodedData;
+        QDataStream stream(&pData, QIODevice::ReadOnly);
 
-    int nbOfItems;
+        // The number of items
 
-    stream >> nbOfItems;
+        int nbOfItems;
 
-    // Hierarchy to reach the various items
+        stream >> nbOfItems;
 
-    for (int i = 0; i < nbOfItems; ++i)
-        decodedData.append(decodeHierarchyData(stream));
+        // Hierarchy to reach the various items
 
-    // We are all done, so...
+        for (int i = 0; i < nbOfItems; ++i)
+            decodedData.append(decodeHierarchyData(stream));
 
-    return decodedData;
+        // We are all done, so...
+
+        return decodedData;
+    }
 }
 
 QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
@@ -361,7 +373,7 @@ void FileOrganiserWidget::saveSettings(QSettings &pSettings)
         bool crtItemVisible = true;
         QModelIndex crtIndexParent = currentIndex().parent();
 
-        while (crtIndexParent != QModelIndex()) {
+        while (crtIndexParent != QModelIndex())
             if (isExpanded(crtIndexParent)) {
                 // The current parent is expanded, so check to its parent
 
@@ -373,7 +385,6 @@ void FileOrganiserWidget::saveSettings(QSettings &pSettings)
 
                 break;
             }
-        }
 
         pSettings.setValue(SettingsSelectedItem, mDataModel->encodeHierarchyData(crtItemVisible?
                                                                                      currentIndex():
@@ -440,41 +451,37 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     TreeView::dragMoveEvent(pEvent);
 
     // Accept the proposed action for the event, but only if there are objects
-    // to drop and that we are not trying to drop them over a file item. Also,
-    // should one object be dragged, then it cannot be dropped on itself...
+    // to drop and if we are not trying to drop the objects above/on/below one
+    // of them (should the objects come from the file organiser widget) or on a
+    // file item
     // Note #1: for the number of objects being dropped, we have to check the
     //          number of URLs information (i.e. external objects), as well as
     //          the mime data associated to FileOrganiserMimeType (i.e. objects
-    //          from the file organiser widget)
+    //          from the file organiser widget, after we have )
     // Note #2: for the dropping location, it can be either a folder or a file
-    //          (as long as the indicator position isn't on the folder)
-    // Note #3: regarding the case where one object is being dragged, to check
-    //          that it's not being dropped on itself only makes sense if the
-    //          object comes from the file organiser widget...
+    //          (as long as the indicator position isn't on the item itself),
+    //          but not above/on/below any of the objects being dragged (only
+    //          relevant when dragging file organiser items)
 
     QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
-    QDataStream stream(&data, QIODevice::ReadOnly);
-
-    int nbOfFileOrganiserItemsDropped;
-
-    if (data.size())
-        stream >> nbOfFileOrganiserItemsDropped;
-    else
-        nbOfFileOrganiserItemsDropped = 0;
-
-    QStandardItem *draggedItem;
-
-    if (nbOfFileOrganiserItemsDropped == 1)
-        draggedItem = 0;   //---GRY--- TO BE DONE
-    else
-        draggedItem = 0;
-
+    QModelIndexList indexes = mDataModel->decodeData(data);
     QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
+    bool draggingOnSelf = false;
 
-    if (   (pEvent->mimeData()->urls().count() || nbOfFileOrganiserItemsDropped)
+    for (int i = 0; i < indexes.count(); ++i)
+        if (crtItem == mDataModel->itemFromIndex(indexes.at(i))) {
+            // The item above/on/below which we want to drop objects could be
+            // found in our list of objects, so...
+
+            draggingOnSelf = true;
+
+            break;
+        }
+
+    if (   (pEvent->mimeData()->urls().count() || indexes.count())
         && (   (crtItem && crtItem->data(FileOrganiserItemFolder).toBool())
             || (dropIndicatorPosition() != QAbstractItemView::OnItem))
-        && ((draggedItem != crtItem)))
+        && !draggingOnSelf)
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
@@ -491,24 +498,10 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
     //       FileOrganiserMimeType mime type first
 
     if (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)) {
-        // The user is dropping folders/files from ourselves, i.e. he wants some
-        // folders/files to be moved around
+        // The user is dropping folders/files from ourselves, i.e. s/he wants
+        // some folders/files to be moved around
 
 //---GRY--- TO BE DONE...
-
-        QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
-        QDataStream stream(&data, QIODevice::ReadOnly);
-
-        int nbOfFileOrganiserItemsDropped;
-
-        stream >> nbOfFileOrganiserItemsDropped;
-
-        for (int i = 0; i < nbOfFileOrganiserItemsDropped; ++i) {
-            int row;
-            QMap<int, QVariant> itemData;
-
-            stream >> row >> itemData;
-        }
     } else {
         // Files have been dropped, so add them to the widget and this at the
         // right place (i.e. above/on/below a folder, above/below a file or on
