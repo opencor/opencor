@@ -977,7 +977,12 @@ bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
         // doesn't already have that item (should it be a file item, since
         // folder items are always moved)
 
-        if (!fileExists) {
+        if (!fileExists || (pItem->parent() == newParentItem)) {
+            // Either newParentItem doesn't already own an item which points to
+            // the same file as pItem or pItem's parent is the same as
+            // newParentItem in which case it means we want to move the item
+            // within its current location
+
             switch (pDropPosition) {
             case QAbstractItemView::AboveItem:
                 // We dropped pItem above pDropItem, so...
