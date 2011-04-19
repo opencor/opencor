@@ -44,6 +44,19 @@ void FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
     }
 }
 
+QByteArray FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
+                                                   const int &pLevel) const
+{
+    // Encode the hierarchy data
+
+    QByteArray hierarchyData;
+    QDataStream stream(&hierarchyData, QIODevice::WriteOnly);
+
+    encodeHierarchyData(pIndex, stream);
+
+    return hierarchyData;
+}
+
 QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
 {
     // Encode the mime data
@@ -92,6 +105,15 @@ QModelIndex FileOrganiserModel::decodeHierarchyData(QDataStream &pStream) const
     // We are all done, so...
 
     return indexFromItem(crtItem);
+}
+
+QModelIndex FileOrganiserModel::decodeHierarchyData(QByteArray &pData) const
+{
+    // Decode the hierarchy data
+
+    QDataStream stream(&pData, QIODevice::ReadOnly);
+
+    return decodeHierarchyData(stream);
 }
 
 QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
@@ -186,7 +208,8 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
             this, SLOT(collapsedFolder(const QModelIndex &)));
 }
 
-static const QString SettingsDataModel = "DataModel";
+static const QString SettingsDataModel    = "DataModel";
+static const QString SettingsSelectedItem = "SelectedItem";
 
 void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
                                            QStandardItem *pParentItem)
@@ -273,6 +296,12 @@ void FileOrganiserWidget::loadSettings(QSettings &pSettings)
             loadItemSettings(pSettings, 0);
         pSettings.endGroup();
 
+        // Retrieve the currently selected item, if any
+
+        QByteArray hierarchyData = pSettings.value(SettingsSelectedItem).toByteArray();
+
+        setCurrentIndex(mDataModel->decodeHierarchyData(hierarchyData));
+
         // Resize the widget, just to be on the safe side
 
         resizeToContents();
@@ -326,6 +355,29 @@ void FileOrganiserWidget::saveSettings(QSettings &pSettings)
         pSettings.beginGroup(SettingsDataModel);
             saveItemSettings(pSettings, mDataModel->invisibleRootItem(), -1);
         pSettings.endGroup();
+
+        // Keep track of the currently selected item, but only if it is visible
+
+        bool crtItemVisible = true;
+        QModelIndex crtIndexParent = currentIndex().parent();
+
+        while (crtIndexParent != QModelIndex()) {
+            if (isExpanded(crtIndexParent)) {
+                // The current parent is expanded, so check to its parent
+
+                crtIndexParent = crtIndexParent.parent();
+            } else {
+                // The current parent is not expanded, so...
+
+                crtItemVisible = false;
+
+                break;
+            }
+        }
+
+        pSettings.setValue(SettingsSelectedItem, mDataModel->encodeHierarchyData(crtItemVisible?
+                                                                                     currentIndex():
+                                                                                     QModelIndex()));
     pSettings.endGroup();
 }
 

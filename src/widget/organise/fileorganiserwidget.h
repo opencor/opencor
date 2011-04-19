@@ -22,9 +22,12 @@ public:
 private:
     void encodeHierarchyData(const QModelIndex &pIndex, QDataStream &pStream,
                              const int &pLevel = 0) const;
+    QByteArray encodeHierarchyData(const QModelIndex &pIndex,
+                                   const int &pLevel = 0) const;
     QByteArray encodeData(const QModelIndexList &pIndexes) const;
 
     QModelIndex decodeHierarchyData(QDataStream &pStream) const;
+    QModelIndex decodeHierarchyData(QByteArray &pData) const;
     QModelIndexList decodeData(QByteArray &pData) const;
 
     QString filePath(const QModelIndex &pFileIndex) const;
