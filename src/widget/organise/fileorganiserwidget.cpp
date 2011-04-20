@@ -206,6 +206,10 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
 
     mDataModel = new FileOrganiserModel;
 
+    // Create our document manager
+
+    mDocumentManager = new DocumentManager();
+
     // Set some properties for the file organiser widget itself
 
     setDragDropMode(QAbstractItemView::DragDrop);
@@ -219,6 +223,14 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
             this, SLOT(expandedFolder(const QModelIndex &)));
     connect(this, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(collapsedFolder(const QModelIndex &)));
+}
+
+FileOrganiserWidget::~FileOrganiserWidget()
+{
+    // Delete some internal objects
+
+    delete mDocumentManager;
+    delete mDataModel;
 }
 
 static const QString SettingsDataModel    = "DataModel";
@@ -283,6 +295,13 @@ void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
 
                 pParentItem->appendRow(fileItem);
 
+                // Add the file to our document manager
+                // Note: it doesn't matter whether or not the file is already
+                //       being monitored, since if that's the case then the
+                //       current instance will be ignored
+
+                mDocumentManager->manage(textOrPath);
+
                 // A file cannot have child items, so...
 
                 childParentItem = 0;
@@ -337,17 +356,26 @@ void FileOrganiserWidget::saveItemSettings(QSettings &pSettings,
     //  - Whether the (folder) items is expanded or not
 
     if (   (pItem == mDataModel->invisibleRootItem())
-        || pItem->data(FileOrganiserItemFolder).toBool())
+        || pItem->data(FileOrganiserItemFolder).toBool()) {
         // We are dealing with a folder item (be it the root folder item or not)
 
         itemInfo << pItem->text() << QString::number(pParentItemIndex)
                  << QString::number(pItem->rowCount())
                  << QString(isExpanded(pItem->index())?"1":"0");
-    else
+    } else {
         // We are dealing with a file item
 
-        itemInfo << pItem->data(FileOrganiserItemPath).toString()
+        QString fileName = pItem->data(FileOrganiserItemPath).toString();
+
+        itemInfo << fileName
                  << QString::number(pParentItemIndex) << "-1" << "0";
+
+        // Remove the file from our document manager
+        // Note: it doesn't matter whether or not the file has already been
+        //       removed, since if that's the case then nothing will be done
+
+        mDocumentManager->unmanage(fileName);
+    }
 
     pSettings.setValue(QString::number(++crtItemIndex), itemInfo);
 
@@ -919,6 +947,13 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
                 break;
             }
 
+            // Add the file to our document manager
+            // Note: it doesn't matter whether or not the file is already being
+            //       monitored, since if that's the case then the current
+            //       instance will be ignored
+
+            mDocumentManager->manage(pFileName);
+
             // Resize the widget, just in case the new file takes more space
             // than is visible
 
@@ -1126,8 +1161,22 @@ bool FileOrganiserWidget::deleteItems()
         // deleting an item)
 
         while(!selectedIndexes.isEmpty()) {
-            mDataModel->removeRow(selectedIndexes.first().row(),
-                                  selectedIndexes.first().parent());
+            // Remove the file from our document manager, should the index refer
+            // to a file item
+            // Note: it doesn't matter whether or not the file has already been
+            //       removed, since if that's the case then nothing will be done
+
+            QModelIndex crtIndex = selectedIndexes.first();
+            QStandardItem *crtItem = mDataModel->itemFromIndex(crtIndex);
+
+            if (crtItem && !crtItem->data(FileOrganiserItemFolder).toBool())
+                mDocumentManager->unmanage(crtItem->data(FileOrganiserItemPath).toString());
+
+            // Remove the item from the model itself
+
+            mDataModel->removeRow(crtIndex.row(), crtIndex.parent());
+
+            // Update our list of selected indexes
 
             selectedIndexes = selectionModel()->selectedIndexes();
         }

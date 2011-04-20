@@ -1,6 +1,7 @@
 #ifndef FILEORGANISERWIDGET_H
 #define FILEORGANISERWIDGET_H
 
+#include "documentmanager.h"
 #include "treeview.h"
 
 #include <QStandardItemModel>
@@ -39,6 +40,7 @@ class FileOrganiserWidget : public TreeView
 
 public:
     explicit FileOrganiserWidget(const QString &pName, QWidget *pParent);
+    ~FileOrganiserWidget();
 
     virtual void loadSettings(QSettings &pSettings);
     virtual void saveSettings(QSettings &pSettings);
@@ -63,6 +65,7 @@ protected:
 
 private:
     FileOrganiserModel *mDataModel;
+    DocumentManager *mDocumentManager;
 
     void loadItemSettings(QSettings &pSettings, QStandardItem *pParentItem);
     void saveItemSettings(QSettings &pSettings, QStandardItem *pItem,
