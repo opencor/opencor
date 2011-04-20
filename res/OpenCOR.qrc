@@ -42,6 +42,7 @@
         <file>oxygen/places/document-multiple.png</file>
         <file>oxygen/places/folder.png</file>
         <file>oxygen/places/user-home.png</file>
+        <file>oxygen/status/image-missing.png</file>
         <file alias="cellmlLogo">cellML.png</file>
         <file alias="helpWidgetError">helpWidgetError.html</file>
         <file alias="qt_fr">qt_fr.qm</file>
