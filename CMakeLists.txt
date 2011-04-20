@@ -44,12 +44,12 @@ SET(SOURCES
 SET(HEADERS
     src/misc/cellml.h
     src/misc/common.h
-    src/misc/documentmanager.h
     src/misc/utils.h
     src/widget/misc/commonwidget.h
 )
 
 SET(HEADERS_MOC
+    src/misc/documentmanager.h
     src/ui/centralwidget.h
     src/ui/helpwindow.h
     src/ui/mainwindow.h

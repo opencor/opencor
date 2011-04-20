@@ -6,11 +6,44 @@
 
 Document::Document(const QString &pFileName) :
     mFileName(pFileName),
-    mSha1(updateSha1(false))
+    mSha1(sha1())
 {
 }
 
-QString Document::updateSha1(const bool &pFeedback)
+QString Document::fileName() const
+{
+    // Return the file name of the document
+
+    return mFileName;
+}
+
+Document::DocumentStatus Document::check()
+{
+    // Get the current SHA1 value for the file and compare it to its currently
+    // stored value
+
+    QString crtSha1 = sha1();
+
+    if (crtSha1.isEmpty()) {
+        // The current SHA1 value is empty, so the file has been deleted
+
+        return Document::Deleted;
+    } else if (!crtSha1.compare(mSha1)) {
+        // The current SHA1 value is the same as our currently stored value,
+        // so...
+
+        return Document::Unchanged;
+    } else {
+        // The current SHA1 value is different from our currently stored value,
+        // so update the latter and make the caller aware of the change
+
+        mSha1 = crtSha1;
+
+        return Document::Changed;
+    }
+}
+
+QString Document::sha1() const
 {
     // Compute the SHA1 value for the file, if it still exists
 
@@ -32,13 +65,6 @@ QString Document::updateSha1(const bool &pFeedback)
 
         return QString();
     }
-}
-
-QString Document::fileName()
-{
-    // Return the file name of the document
-
-    return mFileName;
 }
 
 DocumentManager::~DocumentManager()
@@ -116,4 +142,30 @@ int DocumentManager::count() const
     // Return the number of documents currently being managed
 
     return mDocuments.count();
+}
+
+void DocumentManager::check()
+{
+    // Check our various documents
+
+    foreach (Document *document, mDocuments)
+        switch (document->check())
+        {
+        case Document::Changed:
+            // The contents of the document has changed, so...
+
+            emit fileContentsChanged(document->fileName());
+
+            break;
+        case Document::Deleted:
+            // The document has been deleted, so...
+
+            emit fileDeleted(document->fileName());
+
+            break;
+        default:
+            // The document is unchanged, so do nothing...
+
+            break;
+        }
 }

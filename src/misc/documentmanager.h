@@ -2,25 +2,36 @@
 #define DOCUMENTMANAGER_H
 
 #include <QList>
+#include <QObject>
 #include <QString>
 
 class Document
 {
 public:
+    enum DocumentStatus
+    {
+        Changed,
+        Unchanged,
+        Deleted
+    };
+
     explicit Document(const QString &pFileName);
 
-    QString fileName();
+    QString fileName() const;
+
+    DocumentStatus check();
 
 private:
     QString mFileName;
-
     QString mSha1;
 
-    QString updateSha1(const bool &pFeedback = true);
+    QString sha1() const;
 };
 
-class DocumentManager
+class DocumentManager : public QObject
 {
+    Q_OBJECT
+
 public:
     enum ManageStatus
     {
@@ -42,10 +53,16 @@ public:
 
     int count() const;
 
+    void check();
+
 private:
     QList<Document *> mDocuments;
 
-    Document *isManaged(const QString &pFileName);
+    Document * isManaged(const QString &pFileName);
+
+Q_SIGNALS:
+    void fileContentsChanged(const QString &pFileName);
+    void fileDeleted(const QString &pFileName);
 };
 
 #endif
