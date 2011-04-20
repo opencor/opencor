@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create a temporary directory where to put OpenCOR's resources
 
-    mTempDir = new QxtTemporaryDir();
+    mTempDir = new QxtTemporaryDir;
 
     // Extract the help files
 

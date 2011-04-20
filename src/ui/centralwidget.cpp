@@ -65,7 +65,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     // Create an editor for the file
 
     QsciScintilla *scintilla = new QsciScintilla(this);
-    QsciLexerXML *lexer      = new QsciLexerXML;
+    QsciLexerXML *lexer      = new QsciLexerXML(this);
 
     QFont defaultFont(DefaultFontFamily, DefaultFontSize);
 
