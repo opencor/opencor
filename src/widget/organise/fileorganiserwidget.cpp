@@ -528,21 +528,29 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
         QModelIndexList indexes = cleanIndexList(mDataModel->decodeData(data));
 
+        // Convert our list of indexes to a list of items
+        // Note: indeed, by moving the item corresponding to a particular index,
+        //       we may mess up the other indexes, meaning that we may not be
+        //       able to retrieve their corresponding item, so...
+
+        QList<QStandardItem *> items;
+
+        for (int i = 0; i < indexes.count(); ++i)
+            items.append(mDataModel->itemFromIndex(indexes.at(i)));
+
         // Move the contents of the list to its final destination
 
         if (dropPosition != QAbstractItemView::BelowItem)
             // Move the items in the order they were dropped
 
-            for (int i = 0; i < indexes.count(); ++i)
-                moveItem(mDataModel->itemFromIndex(indexes.at(i)),
-                         dropItem, dropPosition);
+            for (int i = 0; i < items.count(); ++i)
+                moveItem(items.at(i), dropItem, dropPosition);
         else
             // Move the items in a reverse order to that they were dropped since
             // we want them moved below the current item
 
-            for (int i = indexes.count()-1; i >= 0; --i)
-                moveItem(mDataModel->itemFromIndex(indexes.at(i)),
-                         dropItem, dropPosition);
+            for (int i = items.count()-1; i >= 0; --i)
+                moveItem(items.at(i), dropItem, dropPosition);
     } else {
         // The user wants to drop files, so add them to the widget and this at
         // the right place
