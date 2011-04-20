@@ -3,7 +3,9 @@
 
 #include <QList>
 #include <QObject>
-#include <QString>
+
+class QString;
+class QTimer;
 
 class Document
 {
@@ -46,6 +48,7 @@ public:
         NotManaged
     };
 
+    explicit DocumentManager(const int &pTimerInterval = 1000);
     ~DocumentManager();
 
     ManageStatus manage(const QString &pFileName);
@@ -53,9 +56,8 @@ public:
 
     int count() const;
 
-    void check();
-
 private:
+    QTimer *mTimer;
     QList<Document *> mDocuments;
 
     Document * isManaged(const QString &pFileName);
@@ -63,6 +65,9 @@ private:
 Q_SIGNALS:
     void fileContentsChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
+
+private Q_SLOTS:
+    void check();
 };
 
 #endif

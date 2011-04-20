@@ -96,12 +96,18 @@ private:
     void backupExpandedInformation(QStandardItem *pItem);
     void restoreExpandedInformation(QStandardItem *pItem);
 
+    void updateFileItems(QStandardItem *pItem, const QString &pFileName,
+                         const Document::DocumentStatus &pStatus);
+
 Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);
 
 private slots:
     void expandedFolder(const QModelIndex &pFolderIndex);
     void collapsedFolder(const QModelIndex &pFolderIndex);
+
+    void fileContentsChanged(const QString &pFileName);
+    void fileDeleted(const QString &pFileName);
 };
 
 #endif

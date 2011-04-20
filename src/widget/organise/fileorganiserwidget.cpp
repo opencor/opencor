@@ -15,6 +15,7 @@ enum FileOrganiserItemRole {
 static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
 static const QString ExpandedFolderIcon  = ":oxygen/actions/document-open-folder.png";
 static const QString FileIcon            = ":oxygen/mimetypes/application-x-zerosize.png";
+static const QString DeletedFileIcon     = ":oxygen/status/image-missing.png";
 
 QStringList FileOrganiserModel::mimeTypes() const
 {
@@ -223,6 +224,13 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
             this, SLOT(expandedFolder(const QModelIndex &)));
     connect(this, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(collapsedFolder(const QModelIndex &)));
+
+    // Some connections to handle our document manager
+
+    connect(mDocumentManager, SIGNAL(fileContentsChanged(const QString &)),
+            this, SLOT(fileContentsChanged(const QString &)));
+    connect(mDocumentManager, SIGNAL(fileDeleted(const QString &)),
+            this, SLOT(fileDeleted(const QString &)));
 }
 
 FileOrganiserWidget::~FileOrganiserWidget()
@@ -1279,4 +1287,43 @@ void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
     // Resize the widget, just to be on the safe side
 
     resizeToContents();
+}
+
+void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
+                                          const QString &pFileName,
+                                          const Document::DocumentStatus &pStatus)
+{
+    // Recursively update the icon of all file items that refer to pFileName
+
+    if (   !pItem->data(FileOrganiserItemFolder).toBool()
+        && !pItem->data(FileOrganiserItemPath).toString().compare(pFileName))
+        // The current item is a file item and it refers to pFileName, so update
+        // its icon based on the value of pStatus
+
+        pItem->setIcon(QIcon((pStatus == Document::Deleted)?
+                                 DeletedFileIcon:
+                                 FileIcon));
+
+    // Update our child file items, if any
+
+    for (int i = 0; i < pItem->rowCount(); ++i)
+        updateFileItems(pItem->child(i), pFileName, pStatus);
+}
+
+void FileOrganiserWidget::fileContentsChanged(const QString &pFileName)
+{
+    // The contents of a file has been changed which may also mean that a file
+    // may have been deleted and recreated, so go through all the (file) items
+    // and update the icon of the ones that refer to the file in question
+
+    updateFileItems(mDataModel->invisibleRootItem(), pFileName,
+                    Document::Changed);
+}
+
+void FileOrganiserWidget::fileDeleted(const QString &pFileName)
+{
+    // A file has been deleted, so...
+
+    updateFileItems(mDataModel->invisibleRootItem(), pFileName,
+                    Document::Deleted);
 }

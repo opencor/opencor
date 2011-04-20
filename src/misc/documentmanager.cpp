@@ -3,6 +3,7 @@
 #include <QCryptographicHash>
 #include <QFileInfo>
 #include <QTextStream>
+#include <QTimer>
 
 Document::Document(const QString &pFileName) :
     mFileName(pFileName),
@@ -25,7 +26,10 @@ Document::DocumentStatus Document::check()
     QString crtSha1 = sha1();
 
     if (crtSha1.isEmpty()) {
-        // The current SHA1 value is empty, so the file has been deleted
+        // The current SHA1 value is empty, meaning that the file has been
+        // deleted, so update our currently stored value and let the caller know
+
+        mSha1 = crtSha1;
 
         return Document::Deleted;
     } else if (!crtSha1.compare(mSha1)) {
@@ -67,8 +71,27 @@ QString Document::sha1() const
     }
 }
 
+DocumentManager::DocumentManager(const int &pTimerInterval)
+{
+    // Create our timer
+
+    mTimer = new QTimer(this);
+
+    // A connection to handle the timing out of our timer
+
+    connect(mTimer, SIGNAL(timeout()), this, SLOT(check()));
+
+    // Start our timer
+
+    mTimer->start(pTimerInterval);
+}
+
 DocumentManager::~DocumentManager()
 {
+    // Delete the timer
+
+    delete mTimer;
+
     // Remove all the managed documents
 
     foreach (Document *document, mDocuments)
