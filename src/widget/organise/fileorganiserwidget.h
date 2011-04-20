@@ -90,6 +90,9 @@ private:
 
     bool itemIsOrIsChildOf(QStandardItem *pItem, QStandardItem *pOtherItem);
 
+    void backupExpandedInformation(QStandardItem *pItem);
+    void restoreExpandedInformation(QStandardItem *pItem);
+
 Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);
 

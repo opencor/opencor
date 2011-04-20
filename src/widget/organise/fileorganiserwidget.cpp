@@ -7,8 +7,9 @@
 #include <QUrl>
 
 enum FileOrganiserItemRole {
-    FileOrganiserItemFolder = Qt::UserRole,
-    FileOrganiserItemPath   = Qt::UserRole+1
+    FileOrganiserItemFolder   = Qt::UserRole,
+    FileOrganiserItemPath     = Qt::UserRole+1,
+    FileOrganiserItemExpanded = Qt::UserRole+2
 };
 
 static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
@@ -715,6 +716,42 @@ bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
     }
 }
 
+void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem)
+{
+    // Recursively backup the expanded state of the item, should it be a folder,
+    // and of any of its children, should it have some
+
+    if (pItem->data(FileOrganiserItemFolder).toBool()) {
+        // Keep track of the expanded state of pItem
+
+        pItem->setData(isExpanded(mDataModel->indexFromItem(pItem)),
+                       FileOrganiserItemExpanded);
+
+        // Do the same with all of pItem's children, if any
+
+        for (int i = 0; i < pItem->rowCount(); ++i)
+            backupExpandedInformation(pItem->child(i));
+    }
+}
+
+void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
+{
+    // Recursively restore the expanded state of the item, should it be a
+    // folder, and of any of its children, should it have some
+
+    if (pItem->data(FileOrganiserItemFolder).toBool()) {
+        // Retrieve the expanded state of pItem
+
+        setExpanded(mDataModel->indexFromItem(pItem),
+                    pItem->data(FileOrganiserItemExpanded).toBool());
+
+        // Do the same with all of pItem's children, if any
+
+        for (int i = 0; i < pItem->rowCount(); ++i)
+            restoreExpandedInformation(pItem->child(i));
+    }
+}
+
 bool FileOrganiserWidget::isFolderItem(const QModelIndex &pItemIndex)
 {
     return mDataModel->itemFromIndex(pItemIndex)->data(FileOrganiserItemFolder).toBool();
@@ -883,7 +920,7 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
             }
 
             // Resize the widget, just in case the new file takes more space
-            // that is visible
+            // than is visible
 
             resizeToContents();
 
@@ -988,8 +1025,16 @@ bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
         if (!fileExists || (pItem->parent() == newParentItem)) {
             // Either newParentItem doesn't already own an item which points to
             // the same file as pItem or pItem's parent is the same as
-            // newParentItem in which case it means we want to move the item
-            // within its current location
+            // newParentItem in which case it means that we want to move the
+            // item within its current location
+
+            // First, check whether the item is a folder and, if so, whether or
+            // not it's expanded (and the same with any (in)direct child folder
+            // it may contain)
+
+            backupExpandedInformation(pItem);
+
+            // Second, move the item (and any of its children)
 
             switch (pDropPosition) {
             case QAbstractItemView::AboveItem:
@@ -1019,8 +1064,12 @@ bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
                 break;
             }
 
-            // Resize the widget, just in case the new file takes more space
-            // that is visible
+            // Third, re-expand folders, if necessary
+
+            restoreExpandedInformation(pItem);
+
+            // Fourth, resize the widget, just in case the new location of the
+            // item(s) requires more space than is visible
 
             resizeToContents();
 
