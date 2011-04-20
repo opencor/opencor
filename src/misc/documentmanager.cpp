@@ -1,10 +1,37 @@
 #include "documentmanager.h"
 
+#include <QCryptographicHash>
 #include <QFileInfo>
+#include <QTextStream>
 
 Document::Document(const QString &pFileName) :
-    mFileName(pFileName)
+    mFileName(pFileName),
+    mSha1(updateSha1(false))
 {
+}
+
+QString Document::updateSha1(const bool &pFeedback)
+{
+    // Compute the SHA1 value for the file, if it still exists
+
+    if (QFileInfo(mFileName).exists()) {
+        // The file still exists, so we can go ahead and compute its SHA1 value
+
+        QFile file(mFileName);
+
+        file.open(QIODevice::ReadOnly);
+
+        QString res = QCryptographicHash::hash(QTextStream(&file).readAll().toLatin1(),
+                                               QCryptographicHash::Sha1).toHex();
+
+        file.close();
+
+        return res;
+    } else {
+        // The file doesn't exist anymore, so...
+
+        return QString();
+    }
 }
 
 QString Document::fileName()

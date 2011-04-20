@@ -13,6 +13,10 @@ public:
 
 private:
     QString mFileName;
+
+    QString mSha1;
+
+    QString updateSha1(const bool &pFeedback = true);
 };
 
 class DocumentManager
