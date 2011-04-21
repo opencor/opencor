@@ -28,6 +28,10 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     setAcceptDrops(true);
 
+    // Create our document manager
+
+    mDocumentManager = new DocumentManager();
+
     // Create and add our tab widget
 
     mTabWidget = new TabWidget(this);
@@ -55,8 +59,9 @@ CentralWidget::~CentralWidget()
 
     closeFiles();
 
-    // Delete the UI
+    // Delete some internal objects
 
+    delete mDocumentManager;
     delete mUi;
 }
 
@@ -77,7 +82,10 @@ void CentralWidget::loadSettings(QSettings &pSettings)
 
         // Retrieve the active file
 
-        activateFile(openedFiles.at(pSettings.value(SettingsActiveFile).toInt()));
+        if (openedFiles.count())
+            // There is at least one file, so we can try to activate one of them
+
+            activateFile(openedFiles.at(pSettings.value(SettingsActiveFile).toInt()));
     pSettings.endGroup();
 }
 
@@ -112,6 +120,10 @@ bool CentralWidget::openFile(const QString &pFileName)
         // The file is already opened and got activated, so...
 
         return false;
+
+    // Register the file with our document manager
+
+    mDocumentManager->manage(pFileName);
 
     // Create an editor for the file
 
@@ -200,6 +212,10 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         delete scintilla;
 
+        // Unregister the file from our document manager
+
+        mDocumentManager->unmanage(fileName);
+
         // Finally, we let people know about the file having just been closed
 
         emit fileClosed(fileName);
@@ -251,6 +267,11 @@ bool CentralWidget::activateFile(const QString &pFileName)
     // We couldn't find the file, so...
 
     return false;
+}
+
+int CentralWidget::nbOfFilesOpened()
+{
+    return mTabWidget->count();
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)

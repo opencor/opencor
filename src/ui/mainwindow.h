@@ -1,8 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "documentmanager.h"
-
 #include <QMainWindow>
 #include <QTranslator>
 
@@ -63,8 +61,6 @@ private:
     QxtTemporaryDir *mTempDir;
     QString mQchFileName, mQhcFileName;
 
-    DocumentManager *mDocumentManager;
-
     void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,
                                 QSettings &pSettings,
@@ -74,8 +70,6 @@ private:
     void saveSettings();
 
     void setLocale(const QString &pLocale);
-
-    void updateActions();
 
 public Q_SLOTS:
     void singleAppMsgRcvd(const QString &);
@@ -113,8 +107,7 @@ private Q_SLOTS:
     void on_actionUpdates_triggered();
     void on_actionAbout_triggered();
 
-    void manageFile(const QString &pFileName);
-    void unmanageFile(const QString &pFileName);
+    void updateActions();
 
     void resetAll();
 };

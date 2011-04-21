@@ -9,6 +9,7 @@ namespace Ui {
     class CentralWidget;
 }
 
+class DocumentManager;
 class TabWidget;
 
 class CentralWidget : public QWidget, public CommonWidget
@@ -23,8 +24,9 @@ public:
     virtual void saveSettings(QSettings &pSettings);
 
     bool openFile(const QString &pFileName);
-
     bool activateFile(const QString &pFileName);
+
+    int nbOfFilesOpened();
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
@@ -33,6 +35,8 @@ protected:
 
 private:
     Ui::CentralWidget *mUi;
+
+    DocumentManager *mDocumentManager;
 
     TabWidget *mTabWidget;
 

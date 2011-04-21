@@ -102,10 +102,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mHelpEngine->setupData();
 
-    // Create our document manager
-
-    mDocumentManager = new DocumentManager();
-
     // Specify some general docking settings
 
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
@@ -204,9 +200,9 @@ MainWindow::MainWindow(QWidget *pParent) :
     // Some connections to handle the central widget
 
     connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
-            this, SLOT(manageFile(const QString &)));
+            this, SLOT(updateActions()));
     connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
-            this, SLOT(unmanageFile(const QString &)));
+            this, SLOT(updateActions()));
 
     // Retrieve the user settings from the previous session, if any
 
@@ -226,7 +222,6 @@ MainWindow::~MainWindow()
 {
     // Delete some internal objects
 
-    delete mDocumentManager;
     delete mHelpEngine;
     delete mUi;
 
@@ -563,8 +558,8 @@ void MainWindow::updateActions()
     mUi->actionSaveAs->setEnabled(false);
     mUi->actionSaveAll->setEnabled(false);
 
-    mUi->actionClose->setEnabled(mDocumentManager->count());
-    mUi->actionCloseAll->setEnabled(mDocumentManager->count());
+    mUi->actionClose->setEnabled(mCentralWidget->nbOfFilesOpened());
+    mUi->actionCloseAll->setEnabled(mCentralWidget->nbOfFilesOpened());
 
     mUi->actionPrint->setEnabled(false);
 
@@ -786,24 +781,4 @@ void MainWindow::resetAll()
 
         qApp->exit(MainWindow::NeedRestart);
     }
-}
-
-void MainWindow::manageFile(const QString &pFileName)
-{
-    // Register the file with our document manager
-
-    if (mDocumentManager->manage(pFileName) != DocumentManager::DoesNotExist)
-        // Update the actions, since it may be needed
-
-        updateActions();
-}
-
-void MainWindow::unmanageFile(const QString &pFileName)
-{
-    // Unregister the file from our document manager
-
-    if (mDocumentManager->unmanage(pFileName) == DocumentManager::Removed)
-        // The file has been removed, so update the actions, just in case
-
-        updateActions();
 }
