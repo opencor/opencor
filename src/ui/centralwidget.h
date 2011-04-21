@@ -23,7 +23,6 @@ public:
     virtual void saveSettings(QSettings &pSettings);
 
     bool openFile(const QString &pFileName);
-    QString closeFile(const int &pIndex = -1);
 
     bool activateFile(const QString &pFileName);
 
@@ -38,11 +37,15 @@ private:
     TabWidget *mTabWidget;
 
 Q_SIGNALS:
-    void filesDropped(const QStringList &pFileNames);
+    void fileOpened(const QString &pFileName);
     void fileClosed(const QString &pFileName);
+    void fileActivated(const QString &pFileName);
 
-private Q_SLOTS:
-    void closeTab(const int &pIndex);
+public Q_SLOTS:
+    void openFiles(const QStringList &pFileNames);
+
+    bool closeFile(const int &pIndex = -1);
+    void closeFiles();
 };
 
 #endif

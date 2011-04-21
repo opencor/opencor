@@ -187,24 +187,24 @@ MainWindow::MainWindow(QWidget *pParent) :
     // Some connections to handle the File menu
 
     connect(mUi->actionClose, SIGNAL(triggered(bool)),
-            this, SLOT(closeFile()));
+            mCentralWidget, SLOT(closeFile()));
     connect(mUi->actionCloseAll, SIGNAL(triggered(bool)),
-            this, SLOT(closeFiles()));
+            mCentralWidget, SLOT(closeFiles()));
 
     // A connection to handle the file browser window
 
     connect(mFileBrowserWindow, SIGNAL(filesOpened(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
+            mCentralWidget, SLOT(openFiles(const QStringList &)));
 
     // A connection to handle the file organiser window
 
     connect(mFileOrganiserWindow, SIGNAL(filesOpened(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
+            mCentralWidget, SLOT(openFiles(const QStringList &)));
 
     // Some connections to handle the central widget
 
-    connect(mCentralWidget, SIGNAL(filesDropped(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
+    connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
+            this, SLOT(manageFile(const QString &)));
     connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
             this, SLOT(unmanageFile(const QString &)));
 
@@ -788,104 +788,22 @@ void MainWindow::resetAll()
     }
 }
 
-bool MainWindow::openFile(const QString &pFileName, const bool &pUserFeedback)
+void MainWindow::manageFile(const QString &pFileName)
 {
     // Register the file with our document manager
 
-    DocumentManager::ManageStatus status = mDocumentManager->manage(pFileName);
+    if (mDocumentManager->manage(pFileName) != DocumentManager::DoesNotExist)
+        // Update the actions, since it may be needed
 
-    switch (status) {
-    case DocumentManager::Added:
-        // The file has been added to the manager, so we can carry on with the
-        // opening of the file in our central widget
-
-        mCentralWidget->openFile(pFileName);
-
-        break;
-    case DocumentManager::AlreadyManaged:
-        // The file is already managed, so activate it
-
-        mCentralWidget->activateFile(pFileName);
-
-        break;
-    case DocumentManager::DoesNotExist:
-        // The file doesn't exist, so let the user know about it, if requested
-
-        if (pUserFeedback)
-            QMessageBox::information(0, qApp->applicationName()+" Information",
-                                     QString(tr("Sorry, but the '%1' file does not exist.")).arg(pFileName));
-
-        break;
-    }
-
-    // Update the actions, if pontentially needed
-
-    if (status != DocumentManager::DoesNotExist) {
         updateActions();
-
-        return true;
-    } else {
-        return false;
-    }
 }
 
-void MainWindow::openFiles(const QStringList &pFileNames)
+void MainWindow::unmanageFile(const QString &pFileName)
 {
-    // One or several files are to be opened
+    // Unregister the file from our document manager
 
-    for (int i = 0; i < pFileNames.count(); ++i)
-        openFile(pFileNames.at(i));
-}
-
-void MainWindow::unmanageFile(const QString &pFileName,
-                              const bool &pUserFeedback)
-{
-    // Unregister the given file from our document manager
-
-    DocumentManager::UnmanageStatus status = mDocumentManager->unmanage(pFileName);
-
-    switch (status) {
-    case DocumentManager::Removed:
+    if (mDocumentManager->unmanage(pFileName) == DocumentManager::Removed)
         // The file has been removed, so update the actions, just in case
 
         updateActions();
-
-        break;
-    case DocumentManager::NotManaged:
-        // The file is not managed, so...
-
-        if (pUserFeedback)
-            QMessageBox::information(0, qApp->applicationName()+" Information",
-                                     QString(tr("Sorry, but the '%1' file is not currently managed.")).arg(pFileName));
-
-        break;
-    }
-}
-
-bool MainWindow::closeFile(const bool &pUserFeedback)
-{
-    // Remove the current file from our central widget
-
-    QString fileName = mCentralWidget->closeFile();
-
-    // If a file was really closed, then unregister it from our document manager
-
-    if (!fileName.isEmpty()) {
-        unmanageFile(fileName, pUserFeedback);
-
-        // Everything went file (i.e. a file was closed), so...
-
-        return true;
-    } else {
-        // There was no file to close, so...
-
-        return false;
-    }
-}
-
-void MainWindow::closeFiles()
-{
-    // Remove all the files until there is none left
-
-    while (closeFile()) {}
 }

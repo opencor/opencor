@@ -46,16 +46,14 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // A connection to handle the closing of a tab
 
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)),
-            this, SLOT(closeTab(int)));
+            this, SLOT(closeFile(int)));
 }
 
 CentralWidget::~CentralWidget()
 {
-    // Close all the tabs (and therefore files)
+    // Close all the files
 
-    while (mTabWidget->count()) {
-        closeTab(0);
-    }
+    closeFiles();
 
     // Delete the UI
 
@@ -108,6 +106,13 @@ bool CentralWidget::openFile(const QString &pFileName)
 
         return false;
 
+    // Check whether or not the file is already opened
+
+    if (activateFile(pFileName))
+        // The file is already opened and got activated, so...
+
+        return false;
+
     // Create an editor for the file
 
     QsciScintilla *scintilla = new QsciScintilla(this);
@@ -154,12 +159,24 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     mTabWidget->currentWidget()->setFocus();
 
+    // Everything went fine, so let people know that the file has been opened
+
+    emit fileOpened(pFileName);
+
     // Everything went fine, so...
 
     return true;
 }
 
-QString CentralWidget::closeFile(const int &pIndex)
+void CentralWidget::openFiles(const QStringList &pFileNames)
+{
+    // Open the various files
+
+    for (int i = 0; i < pFileNames.count(); ++i)
+        openFile(pFileNames.at(i));
+}
+
+bool CentralWidget::closeFile(const int &pIndex)
 {
     // Close the file at the given tab index or the current tab index, if no tab
     // index is provided, and then return the name of the file that was closed,
@@ -183,14 +200,25 @@ QString CentralWidget::closeFile(const int &pIndex)
 
         delete scintilla;
 
-        // Finally, we return the filename of the file we have just closed
+        // Finally, we let people know about the file having just been closed
 
-        return fileName;
+        emit fileClosed(fileName);
+
+        // Everything went fine, so...
+
+        return true;
     } else {
-        // There is no file currently opened, so...
+        // The file is not currently opened, so...
 
-        return QString();
+        return false;
     }
+}
+
+void CentralWidget::closeFiles()
+{
+    // Close all the files
+
+    while (closeFile()) {}
 }
 
 bool CentralWidget::activateFile(const QString &pFileName)
@@ -211,7 +239,11 @@ bool CentralWidget::activateFile(const QString &pFileName)
 
             mTabWidget->currentWidget()->setFocus();
 
-            // We were able to activate the file, so...
+            // We were able to activate the file, so let people know about it
+
+            emit fileActivated(pFileName);
+
+            // Everything went fine, so...
 
             return true;
         }
@@ -219,19 +251,6 @@ bool CentralWidget::activateFile(const QString &pFileName)
     // We couldn't find the file, so...
 
     return false;
-}
-
-void CentralWidget::closeTab(const int &pIndex)
-{
-    // We want to close a tab, so close the file that is associated with it, and
-    // let people know about it
-
-    QString fileName = closeFile(pIndex);
-
-    if (!fileName.isEmpty())
-        // The closing of the file was successful, so...
-
-        emit fileClosed(fileName);
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
@@ -292,9 +311,9 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
     fileNames.removeDuplicates();
 
-    // Let people know that some files have been dropped on us
+    // Open the various files
 
-    emit filesDropped(fileNames);
+    openFiles(fileNames);
 
     // Accept the proposed action for the event
 

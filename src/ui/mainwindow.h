@@ -77,8 +77,6 @@ private:
 
     void updateActions();
 
-    bool openFile(const QString &pFileName, const bool &pUserFeedback = false);
-
 public Q_SLOTS:
     void singleAppMsgRcvd(const QString &);
 
@@ -115,12 +113,9 @@ private Q_SLOTS:
     void on_actionUpdates_triggered();
     void on_actionAbout_triggered();
 
-    void openFiles(const QStringList &pFileNames);
-    void unmanageFile(const QString &pFileName,
-                      const bool &pUserFeedback = false);
+    void manageFile(const QString &pFileName);
+    void unmanageFile(const QString &pFileName);
 
-    bool closeFile(const bool &pUserFeedback = false);
-    void closeFiles();
     void resetAll();
 };
 
