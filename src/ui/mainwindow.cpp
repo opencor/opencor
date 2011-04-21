@@ -378,13 +378,16 @@ void MainWindow::loadSettings()
         mUi->actionDebugMode->setChecked(settings.value(SettingsDebugModeEnabled,
                                                         false).toBool());
 
-        // Retrieve the settings of the various dock windows
+        // Retrieve the settings of the various dock windows and of the central
+        // widget
 
         loadDockWindowSettings(mCellmlModelRepositoryWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
         loadDockWindowSettings(mFileBrowserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
         loadDockWindowSettings(mFileOrganiserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
 
         loadDockWindowSettings(mViewerWindow, needDefaultSettings, settings, Qt::TopDockWidgetArea);
+
+        mCentralWidget->loadSettings(settings);
 
         loadDockWindowSettings(mHelpWindow, needDefaultSettings, settings, Qt::RightDockWidgetArea);
     settings.endGroup();
@@ -417,13 +420,16 @@ void MainWindow::saveSettings()
         settings.setValue(SettingsDebugModeEnabled,
                           mUi->actionDebugMode->isChecked());
 
-        // Keep track of the settings of the various dock windows
+        // Keep track of the settings of the various dock windows and of the
+        // central widget
 
         mCellmlModelRepositoryWindow->saveSettings(settings);
         mFileBrowserWindow->saveSettings(settings);
         mFileOrganiserWindow->saveSettings(settings);
 
         mViewerWindow->saveSettings(settings);
+
+        mCentralWidget->saveSettings(settings);
 
         mHelpWindow->saveSettings(settings);
     settings.endGroup();

@@ -19,6 +19,9 @@ public:
     explicit CentralWidget(QWidget *pParent);
     ~CentralWidget();
 
+    virtual void loadSettings(QSettings &pSettings);
+    virtual void saveSettings(QSettings &pSettings);
+
     bool openFile(const QString &pFileName);
     QString closeFile(const int &pIndex = -1);
 

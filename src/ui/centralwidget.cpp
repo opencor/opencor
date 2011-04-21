@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QDragEnterEvent>
 #include <QFileInfo>
+#include <QSettings>
 #include <QTextStream>
 #include <QUrl>
 
@@ -50,9 +51,54 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
 CentralWidget::~CentralWidget()
 {
+    // Close all the tabs (and therefore files)
+
+    while (mTabWidget->count()) {
+        closeTab(0);
+    }
+
     // Delete the UI
 
     delete mUi;
+}
+
+static const QString SettingsOpenedFiles = "OpenedFiles";
+static const QString SettingsActiveFile  = "ActiveFile";
+
+void CentralWidget::loadSettings(QSettings &pSettings)
+{
+    pSettings.beginGroup(objectName());
+        // Retrieve the files that were previously opened
+
+        QStringList openedFiles;
+
+        openedFiles = pSettings.value(SettingsOpenedFiles).toStringList();
+
+        for (int i = 0; i < openedFiles.count(); ++i)
+            openFile(openedFiles.at(i));
+
+        // Retrieve the active file
+
+        activateFile(openedFiles.at(pSettings.value(SettingsActiveFile).toInt()));
+    pSettings.endGroup();
+}
+
+void CentralWidget::saveSettings(QSettings &pSettings)
+{
+    pSettings.beginGroup(objectName());
+        // Keep track of the files that are opened
+
+        QStringList openedFiles;
+
+        for (int i = 0; i < mTabWidget->count(); ++i)
+            openedFiles << mTabWidget->tabToolTip(i);
+
+        pSettings.setValue(SettingsOpenedFiles, openedFiles);
+
+        // Keep track of the active file
+
+        pSettings.setValue(SettingsActiveFile, mTabWidget->currentIndex());
+    pSettings.endGroup();
 }
 
 bool CentralWidget::openFile(const QString &pFileName)
