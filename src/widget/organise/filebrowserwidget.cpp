@@ -264,10 +264,17 @@ void FileBrowserWidget::deselectFolders()
     if (selectionModel()->selectedRows().count() > 1) {
         QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
-        for (int i = 0; i < selectedIndexes.count(); ++i)
-            if (QFileInfo(pathOf(selectedIndexes.at(i))).isDir())
+        for (int i = 0; i < selectedIndexes.count(); ++i) {
+            QFileInfo fileInfo = pathOf(selectedIndexes.at(i));
+
+            if (fileInfo.isDir() || !fileInfo.exists())
+                // Either we are dealing with a directory or an entry that
+                // doesn't actually exist (e.g. on Windows, it could be a drive
+                // for a removable device with the device not being present)
+
                 selectionModel()->select(selectedIndexes.at(i),
                                          QItemSelectionModel::Deselect);
+        }
     }
 }
 
