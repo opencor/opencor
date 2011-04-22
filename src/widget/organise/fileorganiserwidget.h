@@ -65,7 +65,7 @@ protected:
 
 private:
     FileOrganiserModel *mDataModel;
-    DocumentManager *mDocumentManager;
+    FileManager *mFileManager;
 
     void loadItemSettings(QSettings &pSettings, QStandardItem *pParentItem);
     void saveItemSettings(QSettings &pSettings, QStandardItem *pItem,
@@ -97,7 +97,7 @@ private:
     void restoreExpandedInformation(QStandardItem *pItem);
 
     void updateFileItems(QStandardItem *pItem, const QString &pFileName,
-                         const Document::DocumentStatus &pStatus);
+                         const File::FileStatus &pStatus);
 
 Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);

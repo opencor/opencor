@@ -5,20 +5,20 @@
 #include <QTextStream>
 #include <QTimer>
 
-Document::Document(const QString &pFileName) :
+File::File(const QString &pFileName) :
     mFileName(pFileName),
     mSha1(sha1())
 {
 }
 
-QString Document::fileName() const
+QString File::fileName() const
 {
-    // Return the file name of the document
+    // Return the file name of the file
 
     return mFileName;
 }
 
-Document::DocumentStatus Document::check()
+File::FileStatus File::check()
 {
     // Get the current SHA1 value for the file and compare it to its currently
     // stored value
@@ -31,23 +31,23 @@ Document::DocumentStatus Document::check()
 
         mSha1 = crtSha1;
 
-        return Document::Deleted;
+        return File::Deleted;
     } else if (!crtSha1.compare(mSha1)) {
         // The current SHA1 value is the same as our currently stored value,
         // so...
 
-        return Document::Unchanged;
+        return File::Unchanged;
     } else {
         // The current SHA1 value is different from our currently stored value,
         // so update the latter and make the caller aware of the change
 
         mSha1 = crtSha1;
 
-        return Document::Changed;
+        return File::Changed;
     }
 }
 
-QString Document::sha1() const
+QString File::sha1() const
 {
     // Compute the SHA1 value for the file, if it still exists
 
@@ -71,7 +71,7 @@ QString Document::sha1() const
     }
 }
 
-DocumentManager::DocumentManager(const int &pTimerInterval)
+FileManager::FileManager(const int &pTimerInterval)
 {
     // Create our timer
 
@@ -86,108 +86,108 @@ DocumentManager::DocumentManager(const int &pTimerInterval)
     mTimer->start(pTimerInterval);
 }
 
-DocumentManager::~DocumentManager()
+FileManager::~FileManager()
 {
     // Delete the timer
 
     delete mTimer;
 
-    // Remove all the managed documents
+    // Remove all the managed files
 
-    foreach (Document *document, mDocuments)
-        delete document;
+    foreach (File *file, mFiles)
+        delete file;
 }
 
-DocumentManager::ManageStatus DocumentManager::manage(const QString &pFileName)
+FileManager::ManageStatus FileManager::manage(const QString &pFileName)
 {
     QFileInfo fileInfo = pFileName;
 
     if (fileInfo.exists()) {
         if (isManaged(fileInfo.canonicalFilePath())) {
-            // The document is already managed, so...
+            // The file is already managed, so...
 
             return AlreadyManaged;
         } else {
-            // The document isn't already managed, so add it to our list of
-            // managed documents
+            // The file isn't already managed, so add it to our list of managed
+            // files
 
-            mDocuments.append(new Document(fileInfo.canonicalFilePath()));
+            mFiles.append(new File(fileInfo.canonicalFilePath()));
 
             return Added;
         }
     } else {
-        // The document doesn't exist, so...
+        // The file doesn't exist, so...
 
         return DoesNotExist;
     }
 }
 
-DocumentManager::UnmanageStatus DocumentManager::unmanage(const QString &pFileName)
+FileManager::UnmanageStatus FileManager::unmanage(const QString &pFileName)
 {
     QFileInfo fileInfo = pFileName;
 
     if (fileInfo.exists()) {
-        Document *document = isManaged(fileInfo.canonicalFilePath());
+        File *file = isManaged(fileInfo.canonicalFilePath());
 
-        if (document) {
-            // The document is managed, so we can remove it
+        if (file) {
+            // The file is managed, so we can remove it
 
-            mDocuments.removeAt(mDocuments.indexOf(document));
+            mFiles.removeAt(mFiles.indexOf(file));
 
             return Removed;
         } else {
-            // The document isn't managed, so...
+            // The file isn't managed, so...
 
             return NotManaged;
         }
     } else {
-        // The document doesn't exist, so...
+        // The file doesn't exist, so...
 
         return NotManaged;
     }
 }
 
-Document * DocumentManager::isManaged(const QString &pFileName)
+File * FileManager::isManaged(const QString &pFileName)
 {
-    foreach (Document *document, mDocuments)
-        if (document->fileName() == pFileName)
-            // The document has been found meaning it is managed
+    foreach (File *file, mFiles)
+        if (file->fileName() == pFileName)
+            // The file has been found meaning it is managed
 
-            return document;
+            return file;
 
-    // The document couldn't be found meaning it's not managed
+    // The file couldn't be found meaning it's not managed
 
     return 0;
 }
 
-int DocumentManager::count() const
+int FileManager::count() const
 {
-    // Return the number of documents currently being managed
+    // Return the number of files currently being managed
 
-    return mDocuments.count();
+    return mFiles.count();
 }
 
-void DocumentManager::check()
+void FileManager::check()
 {
-    // Check our various documents
+    // Check our various files
 
-    foreach (Document *document, mDocuments)
-        switch (document->check())
+    foreach (File *file, mFiles)
+        switch (file->check())
         {
-        case Document::Changed:
-            // The contents of the document has changed, so...
+        case File::Changed:
+            // The contents of the file has changed, so...
 
-            emit fileContentsChanged(document->fileName());
+            emit fileContentsChanged(file->fileName());
 
             break;
-        case Document::Deleted:
-            // The document has been deleted, so...
+        case File::Deleted:
+            // The file has been deleted, so...
 
-            emit fileDeleted(document->fileName());
+            emit fileDeleted(file->fileName());
 
             break;
         default:
-            // The document is unchanged, so do nothing...
+            // The file is unchanged, so do nothing...
 
             break;
         }

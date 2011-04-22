@@ -1,5 +1,5 @@
-#ifndef DOCUMENTMANAGER_H
-#define DOCUMENTMANAGER_H
+#ifndef FILEMANAGER_H
+#define FILEMANAGER_H
 
 #include <QList>
 #include <QObject>
@@ -7,21 +7,21 @@
 class QString;
 class QTimer;
 
-class Document
+class File
 {
 public:
-    enum DocumentStatus
+    enum FileStatus
     {
         Changed,
         Unchanged,
         Deleted
     };
 
-    explicit Document(const QString &pFileName);
+    explicit File(const QString &pFileName);
 
     QString fileName() const;
 
-    DocumentStatus check();
+    FileStatus check();
 
 private:
     QString mFileName;
@@ -30,7 +30,7 @@ private:
     QString sha1() const;
 };
 
-class DocumentManager : public QObject
+class FileManager : public QObject
 {
     Q_OBJECT
 
@@ -48,8 +48,8 @@ public:
         NotManaged
     };
 
-    explicit DocumentManager(const int &pTimerInterval = 1000);
-    ~DocumentManager();
+    explicit FileManager(const int &pTimerInterval = 1000);
+    ~FileManager();
 
     ManageStatus manage(const QString &pFileName);
     UnmanageStatus unmanage(const QString &pFileName);
@@ -58,9 +58,9 @@ public:
 
 private:
     QTimer *mTimer;
-    QList<Document *> mDocuments;
+    QList<File *> mFiles;
 
-    Document * isManaged(const QString &pFileName);
+    File * isManaged(const QString &pFileName);
 
 Q_SIGNALS:
     void fileContentsChanged(const QString &pFileName);

@@ -9,7 +9,7 @@ namespace Ui {
     class CentralWidget;
 }
 
-class DocumentManager;
+class FileManager;
 class TabWidget;
 
 class CentralWidget : public QWidget, public CommonWidget
@@ -36,7 +36,7 @@ protected:
 private:
     Ui::CentralWidget *mUi;
 
-    DocumentManager *mDocumentManager;
+    FileManager *mFileManager;
 
     TabWidget *mTabWidget;
 

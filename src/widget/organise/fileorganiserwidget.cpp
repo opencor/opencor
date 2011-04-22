@@ -207,9 +207,9 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
 
     mDataModel = new FileOrganiserModel;
 
-    // Create our document manager
+    // Create our file manager
 
-    mDocumentManager = new DocumentManager();
+    mFileManager = new FileManager();
 
     // Set some properties for the file organiser widget itself
 
@@ -225,11 +225,11 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
     connect(this, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(collapsedFolder(const QModelIndex &)));
 
-    // Some connections to handle our document manager
+    // Some connections to handle our file manager
 
-    connect(mDocumentManager, SIGNAL(fileContentsChanged(const QString &)),
+    connect(mFileManager, SIGNAL(fileContentsChanged(const QString &)),
             this, SLOT(fileContentsChanged(const QString &)));
-    connect(mDocumentManager, SIGNAL(fileDeleted(const QString &)),
+    connect(mFileManager, SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 }
 
@@ -237,7 +237,7 @@ FileOrganiserWidget::~FileOrganiserWidget()
 {
     // Delete some internal objects
 
-    delete mDocumentManager;
+    delete mFileManager;
     delete mDataModel;
 }
 
@@ -303,12 +303,12 @@ void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
 
                 pParentItem->appendRow(fileItem);
 
-                // Add the file to our document manager
+                // Add the file to our file manager
                 // Note: it doesn't matter whether or not the file is already
                 //       being monitored, since if that's the case then the
                 //       current instance will be ignored
 
-                mDocumentManager->manage(textOrPath);
+                mFileManager->manage(textOrPath);
 
                 // A file cannot have child items, so...
 
@@ -378,11 +378,11 @@ void FileOrganiserWidget::saveItemSettings(QSettings &pSettings,
         itemInfo << fileName
                  << QString::number(pParentItemIndex) << "-1" << "0";
 
-        // Remove the file from our document manager
+        // Remove the file from our file manager
         // Note: it doesn't matter whether or not the file has already been
         //       removed, since if that's the case then nothing will be done
 
-        mDocumentManager->unmanage(fileName);
+        mFileManager->unmanage(fileName);
     }
 
     pSettings.setValue(QString::number(++crtItemIndex), itemInfo);
@@ -955,12 +955,12 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
                 break;
             }
 
-            // Add the file to our document manager
+            // Add the file to our file manager
             // Note: it doesn't matter whether or not the file is already being
             //       monitored, since if that's the case then the current
             //       instance will be ignored
 
-            mDocumentManager->manage(pFileName);
+            mFileManager->manage(pFileName);
 
             // Resize the widget, just in case the new file takes more space
             // than is visible
@@ -1169,8 +1169,8 @@ bool FileOrganiserWidget::deleteItems()
         // deleting an item)
 
         while(!selectedIndexes.isEmpty()) {
-            // Remove the file from our document manager, should the index refer
-            // to a file item
+            // Remove the file from our file manager, should the index refer to
+            // a file item
             // Note: it doesn't matter whether or not the file has already been
             //       removed, since if that's the case then nothing will be done
 
@@ -1178,7 +1178,7 @@ bool FileOrganiserWidget::deleteItems()
             QStandardItem *crtItem = mDataModel->itemFromIndex(crtIndex);
 
             if (crtItem && !crtItem->data(FileOrganiserItemFolder).toBool())
-                mDocumentManager->unmanage(crtItem->data(FileOrganiserItemPath).toString());
+                mFileManager->unmanage(crtItem->data(FileOrganiserItemPath).toString());
 
             // Remove the item from the model itself
 
@@ -1291,7 +1291,7 @@ void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 
 void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
                                           const QString &pFileName,
-                                          const Document::DocumentStatus &pStatus)
+                                          const File::FileStatus &pStatus)
 {
     // Recursively update the icon of all file items that refer to pFileName
 
@@ -1300,7 +1300,7 @@ void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
         // The current item is a file item and it refers to pFileName, so update
         // its icon based on the value of pStatus
 
-        pItem->setIcon(QIcon((pStatus == Document::Deleted)?
+        pItem->setIcon(QIcon((pStatus == File::Deleted)?
                                  DeletedFileIcon:
                                  FileIcon));
 
@@ -1317,7 +1317,7 @@ void FileOrganiserWidget::fileContentsChanged(const QString &pFileName)
     // and update the icon of the ones that refer to the file in question
 
     updateFileItems(mDataModel->invisibleRootItem(), pFileName,
-                    Document::Changed);
+                    File::Changed);
 }
 
 void FileOrganiserWidget::fileDeleted(const QString &pFileName)
@@ -1325,5 +1325,5 @@ void FileOrganiserWidget::fileDeleted(const QString &pFileName)
     // A file has been deleted, so...
 
     updateFileItems(mDataModel->invisibleRootItem(), pFileName,
-                    Document::Deleted);
+                    File::Deleted);
 }

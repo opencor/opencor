@@ -28,9 +28,9 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     setAcceptDrops(true);
 
-    // Create our document manager
+    // Create our file manager
 
-    mDocumentManager = new DocumentManager();
+    mFileManager = new FileManager();
 
     // Create and add our tab widget
 
@@ -61,7 +61,7 @@ CentralWidget::~CentralWidget()
 
     // Delete some internal objects
 
-    delete mDocumentManager;
+    delete mFileManager;
     delete mUi;
 }
 
@@ -121,9 +121,9 @@ bool CentralWidget::openFile(const QString &pFileName)
 
         return false;
 
-    // Register the file with our document manager
+    // Register the file with our file manager
 
-    mDocumentManager->manage(pFileName);
+    mFileManager->manage(pFileName);
 
     // Create an editor for the file
 
@@ -212,9 +212,9 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         delete scintilla;
 
-        // Unregister the file from our document manager
+        // Unregister the file from our file manager
 
-        mDocumentManager->unmanage(fileName);
+        mFileManager->unmanage(fileName);
 
         // Finally, we let people know about the file having just been closed
 
