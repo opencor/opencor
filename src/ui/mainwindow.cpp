@@ -882,6 +882,24 @@ int MainWindow::isRecentlyOpenedFile(const QString &pFileName)
     return -1;
 }
 
+void MainWindow::doUpdateRecentlyOpenedFiles(const QList<QAction *> pActions)
+{
+    // Sepcify within the actions which ones should be visible
+
+    static const int TotalNbOfRecentlyOpenedFiles = 10;
+
+    for (int i = 0; i < pActions.count(); ++i)
+        pActions.at(i)->setVisible(i < TotalNbOfRecentlyOpenedFiles);
+}
+
+void MainWindow::updateRecentlyOpenedFiles()
+{
+    // Update the list of actions for our reopen menus
+
+    doUpdateRecentlyOpenedFiles(mActionReopenMenu->actions());
+    doUpdateRecentlyOpenedFiles(mActionOpenReopenMenu->actions());
+}
+
 void MainWindow::addRecentlyOpenedFile(const QString &pFileName)
 {
     // Check whether the file is not already in our list of recently opened
@@ -904,6 +922,10 @@ void MainWindow::addRecentlyOpenedFile(const QString &pFileName)
                                                 mActionOpenReopenMenu->actions().first():
                                                 0,
                                             action);
+
+        // Update what should be shown in our list of recently opened files
+
+        updateRecentlyOpenedFiles();
     }
 }
 
@@ -922,6 +944,10 @@ void MainWindow::removeRecentlyOpenedFile(const QString &pFileName)
         mActionOpenReopenMenu->removeAction(action);
 
         delete action;
+
+        // Update what should be shown in our list of recently opened files
+
+        updateRecentlyOpenedFiles();
     }
 }
 

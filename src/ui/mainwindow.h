@@ -78,6 +78,9 @@ private:
 
     int isRecentlyOpenedFile(const QString &pFileName);
 
+    void doUpdateRecentlyOpenedFiles(const QList<QAction *> pActions);
+    void updateRecentlyOpenedFiles();
+
     void addRecentlyOpenedFile(const QString &pFileName);
     void removeRecentlyOpenedFile(const QString &pFileName);
 
