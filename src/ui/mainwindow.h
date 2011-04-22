@@ -65,7 +65,6 @@ private:
     QMenu *mActionOpenReopenMenu;
 
     QStringList mRecentlyOpenedFiles;
-    QList<QAction *> mRecentlyOpenedFilesActions;
 
     void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,

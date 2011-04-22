@@ -865,16 +865,14 @@ void MainWindow::addRecentlyOpenedFile(const QString &pFileName)
         connect(action, SIGNAL(triggered()),
                 this, SLOT(reopenFile()));
 
-        mRecentlyOpenedFilesActions.prepend(new QAction(pFileName, this));
-
         mActionReopenMenu->insertAction(mActionOpenReopenMenu->actions().count()?
-                                                mActionOpenReopenMenu->actions().first():
-                                                0,
-                                            mRecentlyOpenedFilesActions.first());
+                                            mActionOpenReopenMenu->actions().first():
+                                            0,
+                                        action);
         mActionOpenReopenMenu->insertAction(mActionOpenReopenMenu->actions().count()?
                                                 mActionOpenReopenMenu->actions().first():
                                                 0,
-                                            mRecentlyOpenedFilesActions.first());
+                                            action);
     }
 }
 
@@ -890,16 +888,21 @@ void MainWindow::removeRecentlyOpenedFile(const QString &pFileName)
 
         mRecentlyOpenedFiles.removeAt(index);
 
-        mActionReopenMenu->removeAction(mRecentlyOpenedFilesActions.at(index));
-        mActionOpenReopenMenu->removeAction(mRecentlyOpenedFilesActions.at(index));
+        QAction *action = mActionReopenMenu->actions().at(index);
 
-        delete mRecentlyOpenedFilesActions.at(index);
+        mActionReopenMenu->removeAction(action);
+        mActionOpenReopenMenu->removeAction(action);
 
-        mRecentlyOpenedFilesActions.removeAt(index);
+        delete action;
     }
 }
 
 void MainWindow::reopenFile()
 {
+    // Reopen one of our recently opened files
 
+    QAction *action = qobject_cast<QAction *>(sender());
+
+    if (action)
+        mCentralWidget->openFile(action->text());
 }
