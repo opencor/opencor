@@ -603,6 +603,18 @@
         <source>Ctrl+A</source>
         <translation></translation>
     </message>
+    <message>
+        <source>&amp;Open/Reopen...</source>
+        <translation>&amp;Ouvrir/Réouvrir...</translation>
+    </message>
+    <message>
+        <source>Open/Reopen</source>
+        <translation>Ouvrir/Réouvrir</translation>
+    </message>
+    <message>
+        <source>Open/reopen a file</source>
+        <translation>Ouvrir/réouvrir un fichier</translation>
+    </message>
 </context>
 <context>
     <name>ViewerWindow</name>

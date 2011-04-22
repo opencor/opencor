@@ -61,9 +61,11 @@ private:
     QxtTemporaryDir *mTempDir;
     QString mQchFileName, mQhcFileName;
 
-    QMenu *mActionOpenMenu;
+    QMenu *mActionReopenMenu;
+    QMenu *mActionOpenReopenMenu;
 
     QStringList mRecentlyOpenedFiles;
+    QList<QAction *> mRecentlyOpenedFilesActions;
 
     void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,
@@ -89,6 +91,7 @@ private Q_SLOTS:
     void on_actionCellML11File_triggered();
     void on_actionOpen_triggered();
     void on_actionReopen_triggered();
+    void on_actionOpenReopen_triggered();
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
     void on_actionSaveAll_triggered();

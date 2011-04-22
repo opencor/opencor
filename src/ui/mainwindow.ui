@@ -42,8 +42,6 @@
     <addaction name="menuNew"/>
     <addaction name="separator"/>
     <addaction name="actionOpen"/>
-    <addaction name="actionReopen"/>
-    <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="actionSaveAll"/>
@@ -891,6 +889,24 @@
    </property>
    <property name="text">
     <string>&amp;Edit</string>
+   </property>
+  </action>
+  <action name="actionOpenReopen">
+   <property name="icon">
+    <iconset resource="../../res/OpenCOR.qrc">
+     <normaloff>:/oxygen/actions/document-open.png</normaloff>:/oxygen/actions/document-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open/Reopen...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open/Reopen</string>
+   </property>
+   <property name="statusTip">
+    <string>Open/reopen a file</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

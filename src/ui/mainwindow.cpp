@@ -76,13 +76,22 @@ MainWindow::MainWindow(QWidget *pParent) :
     mUi->fileToolbar->insertAction(mUi->actionSave, mUi->actionNew);
     mUi->fileToolbar->insertSeparator(mUi->actionSave);
 
-    // Set the Open toolbar button with its dropdown menu
+    // Set the Reopen menu
 
-    mActionOpenMenu = new QMenu(this);
+    mActionReopenMenu = new QMenu(this);
 
-    mUi->actionOpen->setMenu(mActionOpenMenu);
+    mUi->actionReopen->setMenu(mActionReopenMenu);
 
-    mUi->fileToolbar->insertAction(mUi->actionSave, mUi->actionOpen);
+    mUi->menuFile->insertAction(mUi->actionSave, mUi->actionReopen);
+    mUi->menuFile->insertSeparator(mUi->actionSave);
+
+    // Set the Open/Reopen toolbar button with its dropdown menu
+
+    mActionOpenReopenMenu = new QMenu(this);
+
+    mUi->actionOpenReopen->setMenu(mActionOpenReopenMenu);
+
+    mUi->fileToolbar->insertAction(mUi->actionSave, mUi->actionOpenReopen);
     mUi->fileToolbar->insertSeparator(mUi->actionSave);
 
     // Set the central widget
@@ -560,8 +569,9 @@ void MainWindow::updateActions()
 
     // File actions
 
-    mUi->actionOpen->setEnabled(false);
-    mUi->actionReopen->setEnabled(false);
+    mUi->actionOpen->setEnabled(true);
+    mUi->actionReopen->setEnabled(mRecentlyOpenedFiles.count());
+    mUi->actionOpenReopen->setEnabled(true);
 
     mUi->actionSave->setEnabled(false);
     mUi->actionSaveAs->setEnabled(false);
@@ -618,6 +628,11 @@ void MainWindow::on_actionOpen_triggered()
 void MainWindow::on_actionReopen_triggered()
 {
     notYetImplemented("void MainWindow::on_actionReopen_triggered()");
+}
+
+void MainWindow::on_actionOpenReopen_triggered()
+{
+    notYetImplemented("void MainWindow::on_actionOpenReopen_triggered()");
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -817,8 +832,45 @@ void MainWindow::fileClosed(const QString &pFileName)
 
 void MainWindow::addRecentlyOpenedFile(const QString &pFileName)
 {
+    // Check whether the file is not already in our list of recently opened
+    // files
+
+    if (mRecentlyOpenedFiles.indexOf(pFileName) == -1) {
+        // The file couldn't be found in our list, so add it as well as create
+        // an entry for the file in our menus
+
+        mRecentlyOpenedFiles.prepend(pFileName);
+
+        mRecentlyOpenedFilesActions.prepend(new QAction(pFileName, this));
+
+        mActionReopenMenu->insertAction(mActionOpenReopenMenu->actions().count()?
+                                                mActionOpenReopenMenu->actions().first():
+                                                0,
+                                            mRecentlyOpenedFilesActions.first());
+        mActionOpenReopenMenu->insertAction(mActionOpenReopenMenu->actions().count()?
+                                                mActionOpenReopenMenu->actions().first():
+                                                0,
+                                            mRecentlyOpenedFilesActions.first());
+    }
 }
 
 void MainWindow::removeRecentlyOpenedFile(const QString &pFileName)
 {
+    // Search for the file in our list of recently opened files
+
+    int index = mRecentlyOpenedFiles.indexOf(pFileName);
+
+    if (index != -1) {
+        // The file could be found in our list, so remove it from both our list
+        // and from our menus
+
+        mRecentlyOpenedFiles.removeAt(index);
+
+        mActionReopenMenu->removeAction(mRecentlyOpenedFilesActions.at(index));
+        mActionOpenReopenMenu->removeAction(mRecentlyOpenedFilesActions.at(index));
+
+        delete mRecentlyOpenedFilesActions.at(index);
+
+        mRecentlyOpenedFilesActions.removeAt(index);
+    }
 }
