@@ -64,8 +64,6 @@ private:
     QMenu *mActionReopenMenu;
     QMenu *mActionOpenReopenMenu;
 
-    QStringList mRecentlyOpenedFiles;
-
     void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,
                                 QSettings &pSettings,
@@ -77,6 +75,8 @@ private:
     void setLocale(const QString &pLocale);
 
     void updateActions();
+
+    int isRecentlyOpenedFile(const QString &pFileName);
 
     void addRecentlyOpenedFile(const QString &pFileName);
     void removeRecentlyOpenedFile(const QString &pFileName);

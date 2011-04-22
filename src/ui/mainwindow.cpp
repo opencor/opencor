@@ -586,7 +586,7 @@ void MainWindow::updateActions()
     // File actions
 
     mUi->actionOpen->setEnabled(true);
-    mUi->actionReopen->setEnabled(mRecentlyOpenedFiles.count());
+    mUi->actionReopen->setEnabled(mActionReopenMenu->actions().count());
     mUi->actionOpenReopen->setEnabled(true);
 
     mUi->actionSave->setEnabled(false);
@@ -849,16 +849,30 @@ void MainWindow::fileClosed(const QString &pFileName)
     updateActions();
 }
 
+int MainWindow::isRecentlyOpenedFile(const QString &pFileName)
+{
+    // Check whether the given file name is part of our list of recently opened
+    // files
+
+    for (int i = 0; i < mActionReopenMenu->actions().count(); ++i)
+        if (!mActionReopenMenu->actions().at(i)->text().compare(pFileName))
+            // The file name was found, so return its index in our list
+
+            return i;
+
+    // The file name couldn't be found, so...
+
+    return -1;
+}
+
 void MainWindow::addRecentlyOpenedFile(const QString &pFileName)
 {
     // Check whether the file is not already in our list of recently opened
     // files
 
-    if (mRecentlyOpenedFiles.indexOf(pFileName) == -1) {
-        // The file couldn't be found in our list, so add it as well as create
-        // an entry for the file in our menus
-
-        mRecentlyOpenedFiles.prepend(pFileName);
+    if (isRecentlyOpenedFile(pFileName) == -1) {
+        // The file couldn't be found in our list, so create an entry for the
+        // file in our menus
 
         QAction *action = new QAction(pFileName, this);
 
@@ -880,13 +894,10 @@ void MainWindow::removeRecentlyOpenedFile(const QString &pFileName)
 {
     // Search for the file in our list of recently opened files
 
-    int index = mRecentlyOpenedFiles.indexOf(pFileName);
+    int index = isRecentlyOpenedFile(pFileName);
 
     if (index != -1) {
-        // The file could be found in our list, so remove it from both our list
-        // and from our menus
-
-        mRecentlyOpenedFiles.removeAt(index);
+        // The file could be found in our list, so remove it from our menus
 
         QAction *action = mActionReopenMenu->actions().at(index);
 
