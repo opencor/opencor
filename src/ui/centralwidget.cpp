@@ -123,7 +123,11 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     // Register the file with our file manager
 
-    mFileManager->manage(pFileName);
+    QString fileName = QDir::toNativeSeparators(pFileName);
+    // Note: this ensures that we are always dealing with a file name that makes
+    //       sense on the platform on which we are
+
+    mFileManager->manage(fileName);
 
     // Create an editor for the file
 
@@ -144,18 +148,18 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     // Set the contents of the file to the editor
 
-    QFile file(pFileName);
+    QFile file(fileName);
 
     file.open(QIODevice::ReadOnly);
 
     scintilla->setText(QTextStream(&file).readAll());
-    scintilla->setReadOnly(!(QFile::permissions(pFileName) & QFile::WriteUser));
+    scintilla->setReadOnly(!(QFile::permissions(fileName) & QFile::WriteUser));
 
     file.close();
 
     // Create a new tab and have the editor as its contents
 
-    QFileInfo fileInfo = pFileName;
+    QFileInfo fileInfo = fileName;
 
     mTabWidget->setCurrentIndex(mTabWidget->addTab(scintilla,
                                                    (!fileInfo.completeSuffix().compare(CellmlFileExtension, Qt::CaseInsensitive))?
@@ -164,8 +168,7 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     // Set the full name of the file as the tool tip for the new tab
 
-    mTabWidget->setTabToolTip(mTabWidget->currentIndex(),
-                              QDir::toNativeSeparators(pFileName));
+    mTabWidget->setTabToolTip(mTabWidget->currentIndex(), fileName);
 
     // Give the focus to the newly created editor
 
@@ -173,7 +176,7 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     // Everything went fine, so let people know that the file has been opened
 
-    emit fileOpened(pFileName);
+    emit fileOpened(fileName);
 
     // Everything went fine, so...
 
