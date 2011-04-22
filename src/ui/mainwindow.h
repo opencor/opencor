@@ -61,6 +61,10 @@ private:
     QxtTemporaryDir *mTempDir;
     QString mQchFileName, mQhcFileName;
 
+    QMenu *mActionOpenMenu;
+
+    QStringList mRecentlyOpenedFiles;
+
     void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,
                                 QSettings &pSettings,
@@ -70,6 +74,11 @@ private:
     void saveSettings();
 
     void setLocale(const QString &pLocale);
+
+    void updateActions();
+
+    void addRecentlyOpenedFile(const QString &pFileName);
+    void removeRecentlyOpenedFile(const QString &pFileName);
 
 public Q_SLOTS:
     void singleAppMsgRcvd(const QString &);
@@ -107,7 +116,8 @@ private Q_SLOTS:
     void on_actionUpdates_triggered();
     void on_actionAbout_triggered();
 
-    void updateActions();
+    void fileOpened(const QString &pFileName);
+    void fileClosed(const QString &pFileName);
 
     void resetAll();
 };

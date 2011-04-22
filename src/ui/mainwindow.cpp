@@ -73,8 +73,17 @@ MainWindow::MainWindow(QWidget *pParent) :
     actionNewMenu->addAction(mUi->actionCellML10File);
     actionNewMenu->addAction(mUi->actionCellML11File);
 
-    mUi->fileToolbar->insertAction(mUi->actionOpen, mUi->actionNew);
-    mUi->fileToolbar->insertSeparator(mUi->actionOpen);
+    mUi->fileToolbar->insertAction(mUi->actionSave, mUi->actionNew);
+    mUi->fileToolbar->insertSeparator(mUi->actionSave);
+
+    // Set the Open toolbar button with its dropdown menu
+
+    mActionOpenMenu = new QMenu(this);
+
+    mUi->actionOpen->setMenu(mActionOpenMenu);
+
+    mUi->fileToolbar->insertAction(mUi->actionSave, mUi->actionOpen);
+    mUi->fileToolbar->insertSeparator(mUi->actionSave);
 
     // Set the central widget
 
@@ -200,9 +209,9 @@ MainWindow::MainWindow(QWidget *pParent) :
     // Some connections to handle the central widget
 
     connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
-            this, SLOT(updateActions()));
+            this, SLOT(fileOpened(const QString &)));
     connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
-            this, SLOT(updateActions()));
+            this, SLOT(fileClosed(const QString &)));
 
     // Retrieve the user settings from the previous session, if any
 
@@ -781,4 +790,35 @@ void MainWindow::resetAll()
 
         qApp->exit(MainWindow::NeedRestart);
     }
+}
+
+void MainWindow::fileOpened(const QString &pFileName)
+{
+    // Remove the file from our list of recently opened files, should it be in
+    // it
+
+    removeRecentlyOpenedFile(pFileName);
+
+    // Update the actions, just to be on the safe side
+
+    updateActions();
+}
+
+void MainWindow::fileClosed(const QString &pFileName)
+{
+    // Add the file to our list of recently opened files, should it be in it
+
+    removeRecentlyOpenedFile(pFileName);
+
+    // Update the actions, just to be on the safe side
+
+    updateActions();
+}
+
+void MainWindow::addRecentlyOpenedFile(const QString &pFileName)
+{
+}
+
+void MainWindow::removeRecentlyOpenedFile(const QString &pFileName)
+{
 }
