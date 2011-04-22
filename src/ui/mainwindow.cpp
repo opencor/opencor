@@ -361,6 +361,7 @@ static const QString SettingsLocale              = "Locale";
 static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
 static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
+static const QString SettingsRecentlyOpenedFiles = "RecentlyOpenedFiles";
 static const QString SettingsDebugModeEnabled    = "DebugModeEnabled";
 
 void MainWindow::loadSettings()
@@ -401,6 +402,13 @@ void MainWindow::loadSettings()
             mUi->statusBar->setVisible(settings.value(SettingsStatusBarVisibility,
                                                       true).toBool());
         }
+
+        // Retrieve our recently opened files (and add them to our menus)
+
+        QStringList recentlyOpenedFiles = settings.value(SettingsRecentlyOpenedFiles).toStringList();
+
+        for (int i = recentlyOpenedFiles.count()-1; i >= 0; --i)
+            addRecentlyOpenedFile(recentlyOpenedFiles.at(i));
 
         // Retrieve whether we are working in debug mode or not
 
@@ -443,6 +451,15 @@ void MainWindow::saveSettings()
 
         settings.setValue(SettingsStatusBarVisibility,
                           mUi->statusBar->isVisible());
+
+        // Keep track of our recently opened files
+
+        QStringList recentlyOpenedFiles;
+
+        for (int i = 0; i < mActionReopenMenu->actions().count(); ++i)
+            recentlyOpenedFiles << mActionReopenMenu->actions().at(i)->text();
+
+        settings.setValue(SettingsRecentlyOpenedFiles, recentlyOpenedFiles);
 
         // Keep track of whether we are working in debug mode or not
 
