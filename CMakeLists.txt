@@ -20,7 +20,7 @@ SET(SOURCES
     src/main.cpp
     src/misc/cellml.cpp
     src/misc/common.cpp
-    src/misc/documentmanager.cpp
+    src/misc/filemanager.cpp
     src/misc/utils.cpp
     src/ui/centralwidget.cpp
     src/ui/helpwindow.cpp
@@ -49,7 +49,7 @@ SET(HEADERS
 )
 
 SET(HEADERS_MOC
-    src/misc/documentmanager.h
+    src/misc/filemanager.h
     src/ui/centralwidget.h
     src/ui/helpwindow.h
     src/ui/mainwindow.h

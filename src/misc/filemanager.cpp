@@ -1,4 +1,4 @@
-#include "documentmanager.h"
+#include "filemanager.h"
 
 #include <QCryptographicHash>
 #include <QFileInfo>

@@ -1,7 +1,7 @@
 #ifndef FILEORGANISERWIDGET_H
 #define FILEORGANISERWIDGET_H
 
-#include "documentmanager.h"
+#include "filemanager.h"
 #include "treeview.h"
 
 #include <QStandardItemModel>
