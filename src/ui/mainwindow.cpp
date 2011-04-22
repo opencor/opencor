@@ -808,7 +808,7 @@ void MainWindow::fileClosed(const QString &pFileName)
 {
     // Add the file to our list of recently opened files, should it be in it
 
-    removeRecentlyOpenedFile(pFileName);
+    addRecentlyOpenedFile(pFileName);
 
     // Update the actions, just to be on the safe side
 
