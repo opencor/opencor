@@ -47,10 +47,12 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mUi->verticalLayout->addWidget(mTabWidget);
 
-    // A connection to handle the closing of a tab
+    // Some connections to handle our tab widget
 
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)),
             this, SLOT(closeFile(int)));
+    connect(mTabWidget, SIGNAL(currentChanged(int)),
+            this, SLOT(fileActivated(int)));
 }
 
 CentralWidget::~CentralWidget()
@@ -255,12 +257,9 @@ bool CentralWidget::activateFile(const QString &pFileName)
             mTabWidget->setCurrentIndex(i);
 
             // Then, give the focus to the editor
+            // Note: this will automatically trigger the fileActivated signal
 
             mTabWidget->currentWidget()->setFocus();
-
-            // We were able to activate the file, so let people know about it
-
-            emit fileActivated(pFileName);
 
             // Everything went fine, so...
 
@@ -272,9 +271,28 @@ bool CentralWidget::activateFile(const QString &pFileName)
     return false;
 }
 
+void CentralWidget::fileActivated(const int &pIndex)
+{
+    // Let people know that a file has been activated
+
+    emit fileActivated(mTabWidget->tabToolTip(pIndex));
+}
+
 int CentralWidget::nbOfFilesOpened()
 {
+    // Return the number of files currently opened
+
     return mTabWidget->count();
+}
+
+QString CentralWidget::activeFileName()
+{
+    // Return the name of the file currently active, if any
+
+    if (mTabWidget->count())
+        return mTabWidget->tabToolTip(mTabWidget->currentIndex());
+    else
+        return QString();
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)

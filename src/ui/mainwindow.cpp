@@ -37,10 +37,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     mUi(new Ui::MainWindow),
     mLocale(SystemLocale)
 {
-    // Set the name of the main window to that of the application
-
-    setWindowTitle(qApp->applicationName());
-
     // Set up the UI
 
     mUi->setupUi(this);
@@ -221,6 +217,13 @@ MainWindow::MainWindow(QWidget *pParent) :
             this, SLOT(fileOpened(const QString &)));
     connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
             this, SLOT(fileClosed(const QString &)));
+    connect(mCentralWidget, SIGNAL(fileActivated(const QString &)),
+            this, SLOT(updateWindowTitle()));
+
+    // Default title for the main window
+    // Note: loadSettings may result in a new title (if a file is opened)
+
+    updateWindowTitle();
 
     // Retrieve the user settings from the previous session, if any
 
@@ -302,6 +305,19 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Default handling of the event
 
     QMainWindow::closeEvent(pEvent);
+}
+
+void MainWindow::updateWindowTitle()
+{
+    // Set the title of the main window to that of the application and add the
+    // name of the active file, should there be one
+
+    QString activeFileName = mCentralWidget->activeFileName();
+
+    if (activeFileName.isEmpty())
+        setWindowTitle(qApp->applicationName());
+    else
+        setWindowTitle(qApp->applicationName()+" - "+activeFileName);
 }
 
 void MainWindow::loadDockWindowSettings(DockWidget *pDockWindow,
@@ -625,11 +641,6 @@ void MainWindow::on_actionOpen_triggered()
     notYetImplemented("void MainWindow::on_actionOpen_triggered()");
 }
 
-void MainWindow::on_actionReopen_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionReopen_triggered()");
-}
-
 void MainWindow::on_actionOpenReopen_triggered()
 {
     notYetImplemented("void MainWindow::on_actionOpenReopen_triggered()");
@@ -814,6 +825,10 @@ void MainWindow::fileOpened(const QString &pFileName)
 
     removeRecentlyOpenedFile(pFileName);
 
+    // Update the main window's title
+
+    updateWindowTitle();
+
     // Update the actions, just to be on the safe side
 
     updateActions();
@@ -824,6 +839,10 @@ void MainWindow::fileClosed(const QString &pFileName)
     // Add the file to our list of recently opened files, should it be in it
 
     addRecentlyOpenedFile(pFileName);
+
+    // Update the main window's title
+
+    updateWindowTitle();
 
     // Update the actions, just to be on the safe side
 
@@ -840,6 +859,11 @@ void MainWindow::addRecentlyOpenedFile(const QString &pFileName)
         // an entry for the file in our menus
 
         mRecentlyOpenedFiles.prepend(pFileName);
+
+        QAction *action = new QAction(pFileName, this);
+
+        connect(action, SIGNAL(triggered()),
+                this, SLOT(reopenFile()));
 
         mRecentlyOpenedFilesActions.prepend(new QAction(pFileName, this));
 
@@ -873,4 +897,9 @@ void MainWindow::removeRecentlyOpenedFile(const QString &pFileName)
 
         mRecentlyOpenedFilesActions.removeAt(index);
     }
+}
+
+void MainWindow::reopenFile()
+{
+
 }

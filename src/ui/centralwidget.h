@@ -28,6 +28,8 @@ public:
 
     int nbOfFilesOpened();
 
+    QString activeFileName();
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
@@ -47,9 +49,9 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void openFiles(const QStringList &pFileNames);
-
     bool closeFile(const int &pIndex = -1);
     void closeFiles();
+    void fileActivated(const int &pIndex);
 };
 
 #endif

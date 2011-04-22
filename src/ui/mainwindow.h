@@ -90,7 +90,6 @@ private Q_SLOTS:
     void on_actionCellML10File_triggered();
     void on_actionCellML11File_triggered();
     void on_actionOpen_triggered();
-    void on_actionReopen_triggered();
     void on_actionOpenReopen_triggered();
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
@@ -119,8 +118,12 @@ private Q_SLOTS:
     void on_actionUpdates_triggered();
     void on_actionAbout_triggered();
 
+    void updateWindowTitle();
+
     void fileOpened(const QString &pFileName);
     void fileClosed(const QString &pFileName);
+
+    void reopenFile();
 
     void resetAll();
 };
