@@ -12,6 +12,8 @@ TabWidget::TabWidget(QWidget *pParent) :
     // Note: we give a strong focus policy to the tab widget so that it can also
     //       get focus by being clicked on
 
+
+    setMovable(true);
     setTabsClosable(true);
     setFocusPolicy(Qt::StrongFocus);
 
