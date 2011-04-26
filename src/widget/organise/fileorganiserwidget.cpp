@@ -294,10 +294,14 @@ void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
 
                 childParentItem = folderItem;
             } else {
+                QFileInfo fileInfo = textOrPath;
+
                 // We are dealing with a file item
 
-                QStandardItem *fileItem = new QStandardItem(QIcon(FileIcon),
-                                                            QFileInfo(textOrPath).fileName());
+                QStandardItem *fileItem = new QStandardItem(QIcon(fileInfo.exists()?
+                                                                      FileIcon:
+                                                                      DeletedFileIcon),
+                                                            fileInfo.fileName());
 
                 fileItem->setData(textOrPath, FileOrganiserItemPath);
 
