@@ -29,10 +29,13 @@
 
         <ul>
             <li>
-                <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/maverick/git">git</a> package on Ubuntu): a distributed version control system. You can get a copy of OpenCOR's source code by cloning our <A HREF ="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=tree;hb=HEAD">Git repository</a> either in <em>read-only</em> mode:
-                <pre>$ git clone git://opencor.git.sourceforge.net/gitroot/opencor/opencor</pre>
+                <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/maverick/git">git</a> package on Ubuntu): a distributed version control system. You can get a copy of OpenCOR's source code by cloning our <A HREF ="https://github.com/opencor/opencor">Git repository</a> either in <em>read-only</em> mode:
+                <pre>$ git clone git://github.com/opencor/opencor.git</pre>
                 or in <em>read-write</em> mode:
-                <pre>$ git clone ssh://<strong>login</strong>@opencor.git.sourceforge.net/gitroot/opencor/opencor</pre>
+                <pre>$ git clone git@github.com:opencor/opencor.git</pre>
+                <div>
+                    <strong>Note:</strong> you might want to check the GitHub help on setting up Git on <a href="http://help.github.com/win-set-up-git/">Windows</a>, <a href="http://help.github.com/linux-set-up-git/">Linux</a> and <a href="http://help.github.com/mac-set-up-git/">Mac OS X</a>, respectively.
+                </div>
             </li>
             <li><a href="http://www.cmake.org/">CMake</a> 2.8+ (the <a href="http://packages.ubuntu.com/maverick/cmake">cmake</a> package on Ubuntu): a cross-platform build system;</li>
             <li>
@@ -44,7 +47,7 @@
                             <strong>Note:</strong> MinGW also comes with Qt Creator (see below), but is needed to install Qt (see below), so either skip MinGW, install Qt Creator and then Qt, or unzip the contents of <code><a href="http://get.qt.nokia.com/misc/MinGW-gcc440_1.zip">MinGW-gcc440_1.zip</a></code> somewhere (e.g. <code>C:\Qt\MinGW\</code>).
                         </div>
                     </li>
-                    <li>Ubuntu: the <a href="http://packages.ubuntu.com/maverick/g++">g++</a> package; and</li>
+                    <li>Linux: the <a href="http://packages.ubuntu.com/maverick/g++">g++</a> package on Ubuntu; and</li>
                     <li>Mac OS X: <a href="http://developer.apple.com/technologies/tools/xcode.html">Xcode</a>.</li>
                 </ul>
             </li>
@@ -95,7 +98,7 @@ $ rm -fr [Qt4.7.2]</pre>
                     <li><a href = "http://qt.nokia.com/downloads/qt-creator-binary-for-mac">Mac OS X</a>.</li>
                 </ul>
                 <div>
-                    <strong>Note #1:</strong> both CMake and Git are supported by Qt Creator, but Git might need configuring. This can be done by selecting the <code>Tools|Options...</code> menu, then the <code>Version Control</code> section, and finally the <code>Git</code> tab. Alternatively, you might want to use Git from the command line, or with <a href="http://code.google.com/p/tortoisegit/">TortoiseGit</a>, <a href="http://sourceforge.net/projects/qgit/">QGit</a> or <a href="http://gitx.frim.nl/">GitX</a> on Windows, Ubuntu and Mac OS X, respectively.
+                    <strong>Note #1:</strong> both CMake and Git are supported by Qt Creator, but Git might need configuring. This can be done by selecting the <code>Tools|Options...</code> menu, then the <code>Version Control</code> section, and finally the <code>Git</code> tab. Alternatively, you might want to use Git from the command line, or with <a href="http://code.google.com/p/tortoisegit/">TortoiseGit</a>, <a href="http://sourceforge.net/projects/qgit/">QGit</a> or <a href="http://gitx.frim.nl/">GitX</a> on Windows, Linux and Mac OS X, respectively.
                 </div>
                 <div>
                     <strong>Note #2:</strong> though OpenCOR is currently being developed using Qt 4.7.2 and Qt Creator 2.1.0, it happens that it can also be built using Qt 4.6. For this reason, our <a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=CMakeLists.txt;hb=HEAD">CMake script</a> requires Qt 4.6 or above to build OpenCOR, but this requirement will be revised as soon as Qt 4.6 is shown to break the build.
@@ -126,7 +129,7 @@ $ rm -fr [Qt4.7.2]</pre>
 
         <ul>
             <li>
-                <strong>Command line:</strong> various batch and VBScript files (<code>.bat</code> and <code>.vbs</code> files) on Windows and shell scripts on Ubuntu/Mac OS X are available: (Note that these command line tools require access to CMake, MinGW/g++/Xcode (for Windows, Ubuntu and Mac OS X, respectively) and Qt from the command line. So, make sure that this is the case by updating your <code>PATH</code> environment variable, if necessary.)
+                <strong>Command line:</strong> various batch and VBScript files (<code>.bat</code> and <code>.vbs</code> files) on Windows and shell scripts on Linux / Mac OS X are available: (Note that these command line tools require access to CMake, MinGW/g++/Xcode (for Windows, Linux and Mac OS X, respectively) and Qt from the command line. So, make sure that this is the case by updating your <code>PATH</code> environment variable, if necessary.)
                 <ul>
                     <li><code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=cleanproj;hb=HEAD">[OpenCOR]/cleanproj</a>[<a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=cleanproj.bat;hb=HEAD">.bat</a>]</code>: cleans the OpenCOR environment;</li>
                     <li><code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=cleanprojall;hb=HEAD">[OpenCOR]/cleanprojall</a>[<a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=cleanprojall.bat;hb=HEAD">.bat</a>]</code>: cleans all of the OpenCOR environment (i.e. including <a href="thirdPartyLibraries.html">third-party libraries</a>);</li>
@@ -176,7 +179,7 @@ $ rm -fr [Qt4.7.2]</pre>
         </h2>
 
         <p>
-            The packaging of OpenCOR can only be done from the command line, using <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj.bat;hb=HEAD">[OpenCOR]/packageproj.bat</a></code> on Windows and <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj;hb=HEAD">[OpenCOR]/packageproj</a></code> on Ubuntu / Mac OS X. Note that though the Ubuntu package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in this particular case.
+            The packaging of OpenCOR can only be done from the command line, using <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj.bat;hb=HEAD">[OpenCOR]/packageproj.bat</a></code> on Windows and <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj;hb=HEAD">[OpenCOR]/packageproj</a></code> on Linux / Mac OS X. Note that though the Linux package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in this particular case.
         </p>
 
         <div class="copyright">
