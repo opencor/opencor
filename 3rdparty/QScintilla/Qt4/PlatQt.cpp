@@ -125,10 +125,21 @@ void Font::Create(const char *faceName, int, int size, bool bold, bool italic,
 
     QFont *f = new QFont();
 
-    QFont::StyleStrategy strategy = QFont::PreferAntialias;
+    QFont::StyleStrategy strategy;
 
-    if ((flags & SC_EFF_QUALITY_MASK) == SC_EFF_QUALITY_NON_ANTIALIASED)
+    switch (flags & SC_EFF_QUALITY_MASK)
+    {
+    case SC_EFF_QUALITY_NON_ANTIALIASED:
         strategy = QFont::NoAntialias;
+        break;
+
+    case SC_EFF_QUALITY_ANTIALIASED:
+        strategy = QFont::PreferAntialias;
+        break;
+
+    default:
+        strategy = QFont::PreferDefault;
+    }
 
 #if defined(Q_WS_MAC)
 #if QT_VERSION >= 0x040700
