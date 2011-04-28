@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QSettings>
+#include <QShortcut>
 #include <QShowEvent>
 
 #include <QxtTemporaryDir>
@@ -219,6 +220,16 @@ MainWindow::MainWindow(QWidget *pParent) :
             this, SLOT(fileClosed(const QString &)));
     connect(mCentralWidget, SIGNAL(fileActivated(const QString &)),
             this, SLOT(updateWindowTitle()));
+
+#ifdef Q_WS_MAC
+    // A special shortcut to have OpenCOR minimised on Mac OS X when pressing
+    // Cmd+M
+    // Note: indeed, when pressing Cmd+M on Mac OS X, the active application
+    //       is expected to minimise itself, so...
+
+    new QShortcut(QKeySequence("Ctrl+M"),
+                  this, SLOT(showMinimized()));
+#endif
 
     // Default title for the main window
     // Note: loadSettings may result in a new title (if a file is opened)
