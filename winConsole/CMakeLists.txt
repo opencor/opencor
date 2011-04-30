@@ -46,26 +46,28 @@ ENDIF()
 
 # Build the third-party libraries used by the console version of OpenCOR
 
-SET(3RDPARTYLIBS LibQxt)
+SET(THIRD_PARTY_LIBRARIES LibQxt)
 
-FOREACH(3RDPARTYLIB ${3RDPARTYLIBS})
-    SET(3RDPARTYLIB_DIR ../3rdparty/${3RDPARTYLIB})
-    SET(3RDPARTYLIB_SUBDIRS)
+FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
+    SET(THIRD_PARTY_LIBRARY_DIR ../3rdparty/${THIRD_PARTY_LIBRARY})
+    SET(THIRD_PARTY_LIBRARY_SUBDIRS)
+    # Note: the above variable is defined here, but is actually set when
+    #       processing the CMakeLists.txt file of the third-party library
 
-    ADD_SUBDIRECTORY(${3RDPARTYLIB_DIR} 3rdparty/${3RDPARTYLIB})
+    ADD_SUBDIRECTORY(${THIRD_PARTY_LIBRARY_DIR} 3rdparty/${THIRD_PARTY_LIBRARY})
 
-    IF("${3RDPARTYLIB_SUBDIRS}" STRGREATER "")
+    IF("${THIRD_PARTY_LIBRARY_SUBDIRS}" STRGREATER "")
         # The third-party library has at least one sub-directory, so add
         # it/them
 
-        FOREACH(3RDPARTYLIB_SUBDIR ${3RDPARTYLIB_SUBDIRS})
-            INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR}/${3RDPARTYLIB_SUBDIR})
+        FOREACH(THIRD_PARTY_LIBRARY_SUBDIR ${THIRD_PARTY_LIBRARY_SUBDIRS})
+            INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR}/${THIRD_PARTY_LIBRARY_SUBDIR})
         ENDFOREACH()
     ELSE()
         # The third-party library doesn't have any sub-directory, so just add
-        # the third-party library directory and that's it
+        # its directory and that's it
 
-        INCLUDE_DIRECTORIES(${3RDPARTYLIB_DIR})
+        INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR})
     ENDIF()
 ENDFOREACH()
 
@@ -84,7 +86,7 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
 
-    ${3RDPARTYLIBS}
+    ${THIRD_PARTY_LIBRARIES}
 )
 
 # Compiler and linker options
