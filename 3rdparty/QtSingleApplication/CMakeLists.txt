@@ -34,8 +34,8 @@ IF(APPLE)
 ELSE()
     SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 ENDIF()
-# Note: the above is only required so that we can quickly test OpenCOR without
-#       first having to package everything
+# Note: the above is only required so that we can quickly test
+#       QtSingleApplication without first having to package everything
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${SOURCES}
