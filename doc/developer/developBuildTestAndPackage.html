@@ -16,7 +16,7 @@
         </h1>
 
         <p>
-            OpenCOR is developed, built, tested and packaged on <a href="http://www.microsoft.com/windows/windows-7/">Windows 7</a>, <a href="http://www.ubuntu.com/">Ubuntu</a> 10.10 (Maverick Meerkat; both the 32-bit and 64-bit versions) and <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.6 (Snow Leopard). The information which follows assumes that you are using one of these operating systems.
+            OpenCOR is developed, built, tested and packaged on <a href="http://www.microsoft.com/windows/windows-7/">Windows 7</a>, <a href="http://www.ubuntu.com/">Ubuntu</a> 11.04 (Natty Narwhal; both the 32-bit and 64-bit versions) and <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.6 (Snow Leopard). The information which follows assumes that you are using one of these operating systems.
         </p>
 
         <h2>
@@ -29,7 +29,7 @@
 
         <ul>
             <li>
-                <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/maverick/git">git</a> package on Ubuntu): a distributed version control system. You can get a copy of OpenCOR's source code by cloning our <A HREF ="https://github.com/opencor/opencor">Git repository</a> either in <em>read-only</em> mode:
+                <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/natty/git">git</a> package on Ubuntu): a distributed version control system. You can get a copy of OpenCOR's source code by cloning our <A HREF ="https://github.com/opencor/opencor">Git repository</a> either in <em>read-only</em> mode:
                 <pre>$ git clone git://github.com/opencor/opencor.git</pre>
                 or in <em>read-write</em> mode:
                 <pre>$ git clone git@github.com:opencor/opencor.git</pre>
@@ -37,7 +37,7 @@
                     <strong>Note:</strong> you might want to check the GitHub help on setting up Git on <a href="http://help.github.com/win-set-up-git/">Windows</a>, <a href="http://help.github.com/linux-set-up-git/">Linux</a> and <a href="http://help.github.com/mac-set-up-git/">Mac OS X</a>, respectively.
                 </div>
             </li>
-            <li><a href="http://www.cmake.org/">CMake</a> 2.8+ (the <a href="http://packages.ubuntu.com/maverick/cmake">cmake</a> package on Ubuntu): a cross-platform build system;</li>
+            <li><a href="http://www.cmake.org/">CMake</a> 2.8+ (the <a href="http://packages.ubuntu.com/natty/cmake">cmake</a> package on Ubuntu): a cross-platform build system;</li>
             <li>
                 C++ toolchain: a set of C++ tools. The toolchain is different depending on the platform you are using:
                 <ul>
@@ -47,7 +47,7 @@
                             <strong>Note:</strong> MinGW also comes with Qt Creator (see below), but is needed to install Qt (see below), so either skip MinGW, install Qt Creator and then Qt, or unzip the contents of <code><a href="http://get.qt.nokia.com/misc/MinGW-gcc440_1.zip">MinGW-gcc440_1.zip</a></code> somewhere (e.g. <code>C:\Qt\MinGW\</code>).
                         </div>
                     </li>
-                    <li>Linux: the <a href="http://packages.ubuntu.com/maverick/g++">g++</a> package on Ubuntu; and</li>
+                    <li>Linux: the <a href="http://packages.ubuntu.com/natty/g++">g++</a> package on Ubuntu; and</li>
                     <li>Mac OS X: <a href="http://developer.apple.com/technologies/tools/xcode.html">Xcode</a>.</li>
                 </ul>
             </li>
@@ -63,7 +63,7 @@
                     <li>
                         <a href="http://qt.nokia.com/downloads/linux-x11-cpp">Linux</a>; and
                         <div>
-                            <strong>Note:</strong> Qt has to be built from its source code which requires some <a href="http://doc.qt.nokia.com/latest/requirements-x11.html">development packages</a> to be installed (<a href="http://packages.ubuntu.com/maverick/libxrender-dev">libxrender-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxrandr-dev">libxrandr-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxcursor-dev">libxcursor-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxfixes-dev">libxfixes-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxinerama-dev">libxinerama-dev</a>, <a href="http://packages.ubuntu.com/maverick/libfontconfig1-dev">libfontconfig1-dev</a>, <a href="http://packages.ubuntu.com/maverick/libfreetype6-dev">libfreetype6-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxi-dev">libxi-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxt-dev">libxt-dev</a>, <a href="http://packages.ubuntu.com/maverick/libxext-dev">libxext-dev</a>, <a href="http://packages.ubuntu.com/maverick/libx11-dev">libx11-dev</a>, <a href="http://packages.ubuntu.com/maverick/libsm-dev">libsm-dev</a>, <a href="http://packages.ubuntu.com/maverick/libice-dev">libice-dev</a>, <a href="http://packages.ubuntu.com/maverick/libglib2.0-dev">libglib2.0-dev</a> and <a href="http://packages.ubuntu.com/maverick/libpthread-stubs0-dev">libpthread-stubs0-dev</a>). Though not mentioned on the list of required development packages, <a href="http://packages.ubuntu.com/maverick/libdbus-1-dev">libdbus-1-dev</a> is also needed (to build the <a href="http://doc.qt.nokia.com/qtdbus.html">QtDBus</a> module). Once these development packages are installed, you can build the Qt library by doing the following from the command line:
+                            <strong>Note:</strong> Qt has to be built from its source code which requires some <a href="http://doc.qt.nokia.com/latest/requirements-x11.html">development packages</a> to be installed (<a href="http://packages.ubuntu.com/natty/libxrender-dev">libxrender-dev</a>, <a href="http://packages.ubuntu.com/natty/libxrandr-dev">libxrandr-dev</a>, <a href="http://packages.ubuntu.com/natty/libxcursor-dev">libxcursor-dev</a>, <a href="http://packages.ubuntu.com/natty/libxfixes-dev">libxfixes-dev</a>, <a href="http://packages.ubuntu.com/natty/libxinerama-dev">libxinerama-dev</a>, <a href="http://packages.ubuntu.com/natty/libfontconfig1-dev">libfontconfig1-dev</a>, <a href="http://packages.ubuntu.com/natty/libfreetype6-dev">libfreetype6-dev</a>, <a href="http://packages.ubuntu.com/natty/libxi-dev">libxi-dev</a>, <a href="http://packages.ubuntu.com/natty/libxt-dev">libxt-dev</a>, <a href="http://packages.ubuntu.com/natty/libxext-dev">libxext-dev</a>, <a href="http://packages.ubuntu.com/natty/libx11-dev">libx11-dev</a>, <a href="http://packages.ubuntu.com/natty/libsm-dev">libsm-dev</a>, <a href="http://packages.ubuntu.com/natty/libice-dev">libice-dev</a>, <a href="http://packages.ubuntu.com/natty/libglib2.0-dev">libglib2.0-dev</a> and <a href="http://packages.ubuntu.com/natty/libpthread-stubs0-dev">libpthread-stubs0-dev</a>). Though not mentioned on the list of required development packages, <a href="http://packages.ubuntu.com/natty/libdbus-1-dev">libdbus-1-dev</a> is also needed (to build the <a href="http://doc.qt.nokia.com/qtdbus.html">QtDBus</a> module). Once these development packages are installed, you can build the Qt library by doing the following from the command line:
                             <pre>$ cd [Qt4.7.2]
 $ ./configure
 $ make
@@ -81,7 +81,7 @@ $ rm -fr [Qt4.7.2]</pre>
                     </li>
                 </ul>
                 <div>
-                    <strong>Note:</strong> Qt and Qt Creator (see below) can be installed as part of the Qt SDK, but we would still recommend installing Qt and Qt Creator individually (this is indeed the safest way to ensure that everything is going to work as expected).
+                    <strong>Note:</strong> Qt and Qt Creator (see below) can be installed as part of the <a href="http://qt.nokia.com/downloads/">Qt SDK</a>, but the current official release version (2010.05) comes with Qt 4.7.0 (rather than 4.7.2) and Qt Creator 2.0.1 (rather than 2.1.0). A <a href="http://developer.qt.nokia.com/prereleases">pre-release version of Qt SDK 1.1</a> is available and comes with both Qt 4.7.3 and Qt Creator 2.1.0, but we would for now still recommend waiting for the official release.
                 </div>
             </li>
             <li>
@@ -113,7 +113,7 @@ $ rm -fr [Qt4.7.2]</pre>
         </ul>
 
         <p>
-            Please note that the above pre-requirements are meant for someone who wants to develop, build, test and package OpenCOR in the exact same way as it is done by the <a href="../user/authors.html">OpenCOR team</a>. However, when it comes to Qt and Qt Creator, older versions may also work (e.g. on Ubuntu, you might just want to install the <a href="http://packages.ubuntu.com/maverick/qtcreator">qtcreator</a> package).
+            Please note that the above pre-requirements are meant for someone who wants to develop, build, test and package OpenCOR in the exact same way as it is done by the <a href="../user/authors.html">OpenCOR team</a>. However, when it comes to Qt and Qt Creator, older versions may also work (e.g. on Ubuntu, you might just want to install the <a href="http://packages.ubuntu.com/natty/qtcreator">qtcreator</a> package).
         </p>
 
         <h2>
@@ -184,7 +184,7 @@ $ rm -fr [Qt4.7.2]</pre>
         </h2>
 
         <p>
-            The packaging of OpenCOR can only be done from the command line, using <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj.bat;hb=HEAD">[OpenCOR]/packageproj.bat</a></code> on Windows and <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj;hb=HEAD">[OpenCOR]/packageproj</a></code> on Linux / Mac OS X. Note that though the Linux package is originally meant for Ubuntu 10.10 (Maverick Meerkat; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in this particular case.
+            The packaging of OpenCOR can only be done from the command line, using <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj.bat;hb=HEAD">[OpenCOR]/packageproj.bat</a></code> on Windows and <code><a href="http://opencor.git.sourceforge.net/git/gitweb.cgi?p=opencor/opencor;a=blob_plain;f=packageproj;hb=HEAD">[OpenCOR]/packageproj</a></code> on Linux / Mac OS X. Note that though the Linux package is originally meant for Ubuntu 11.04 (Natty Narwhal; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in this particular case.
         </p>
 
         <div class="copyright">
