@@ -171,10 +171,9 @@ ENDIF()
 
 # Build the third-party libraries used by the GUI version of OpenCOR
 
-SET(PRECOMPILED_THIRD_PARTY_LIBRARIES CellmlDomApi)
 SET(THIRD_PARTY_LIBRARIES LibQxt QScintilla QtMmlWidget QtSingleApplication)
 
-FOREACH(THIRD_PARTY_LIBRARY ${PRECOMPILED_THIRD_PARTY_LIBRARIES} ${THIRD_PARTY_LIBRARIES})
+FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
     SET(THIRD_PARTY_LIBRARY_DIR 3rdparty/${THIRD_PARTY_LIBRARY})
     SET(THIRD_PARTY_LIBRARY_SUBDIRS)
     # Note: the above variable is defined here, but is actually set when
