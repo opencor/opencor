@@ -181,18 +181,18 @@ FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
 
     ADD_SUBDIRECTORY(${THIRD_PARTY_LIBRARY_DIR})
 
-    IF("${THIRD_PARTY_LIBRARY_SUBDIRS}" STRGREATER "")
+    IF("${THIRD_PARTY_LIBRARY_SUBDIRS}" STREQUAL "")
+        # The third-party library doesn't have any sub-directory, so just add
+        # its directory and that's it
+
+        INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR})
+    ELSE()
         # The third-party library has at least one sub-directory, so add
         # it/them
 
         FOREACH(THIRD_PARTY_LIBRARY_SUBDIR ${THIRD_PARTY_LIBRARY_SUBDIRS})
             INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR}/${THIRD_PARTY_LIBRARY_SUBDIR})
         ENDFOREACH()
-    ELSE()
-        # The third-party library doesn't have any sub-directory, so just add
-        # its directory and that's it
-
-        INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR})
     ENDIF()
 ENDFOREACH()
 
@@ -429,6 +429,49 @@ ELSE()
                 RENAME lib${LIBRARY}.so.${QT_VERSION_MAJOR}
                 DESTINATION lib
         )
+    ENDFOREACH()
+
+    # Additional libraries required by Qt, but not available on a 'blank'
+    # version of Ubuntu or their version differs from one version of Ubuntu to
+    # another
+    # Note: it seems that, starting with Ubuntu 11.04, some libraries may end
+    #       up in /usr/lib/i386-linux-gnu or /usr/lib/x86_64-linux-gnu,
+    #       depending on whether the system is 32-bit or 64-bit, so we need to
+    #       check for these folders first
+
+    SET(DEFAULT_LIBRARY_FOLDER /usr/lib)
+    SET(X86_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/i386-linux-gnu)
+    SET(X64_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/x86_64-linux-gnu)
+
+    IF(EXISTS "${X86_LIBRARY_FOLDER}" AND IS_DIRECTORY "${X86_LIBRARY_FOLDER}")
+        SET(LIBRARY_FOLDER ${X86_LIBRARY_FOLDER})
+    ELSEIF(EXISTS "${X64_LIBRARY_FOLDER}" AND IS_DIRECTORY "${X64_LIBRARY_FOLDER}")
+        SET(LIBRARY_FOLDER ${X64_LIBRARY_FOLDER})
+    ELSE()
+        SET(LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER})
+    ENDIF()
+
+    FOREACH(LIBRARY stdc++.so.6)
+        # Note: stdc++.so.6 is required by QtCLucene and may be needed when
+        #       packaging on a particular version of Ubuntu and deploying on
+        #       another (e.g. packaging on Ubuntu 11.04 and deploying on Ubuntu
+        #       10.04)
+
+        IF(EXISTS "${LIBRARY_FOLDER}/lib${LIBRARY}")
+            SET(CORRECT_LIBRARY ${LIBRARY_FOLDER}/lib${LIBRARY})
+        ELSEIF(EXISTS "${DEFAULT_LIBRARY_FOLDER}/lib${LIBRARY}")
+            SET(CORRECT_LIBRARY ${DEFAULT_LIBRARY_FOLDER}/lib${LIBRARY})
+        ELSE()
+            SET(CORRECT_LIBRARY)
+        ENDIF()
+
+        IF("${CORRECT_LIBRARY}" STREQUAL "")
+            MESSAGE(FATAL_ERROR "The '${LIBRARY}' could not be found...")
+        ELSE()
+            GET_FILENAME_COMPONENT(REAL_CORRECT_LIBRARY ${CORRECT_LIBRARY} REALPATH)
+
+            INSTALL(FILES ${REAL_CORRECT_LIBRARY} RENAME lib${LIBRARY} DESTINATION lib)
+        ENDIF()
     ENDFOREACH()
 
     # Qt configuration file to tell OpenCOR where to look for plugins
