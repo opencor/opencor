@@ -431,15 +431,6 @@ ELSE()
         )
     ENDFOREACH()
 
-    # Additional files required by Qt, but not available on a 'blank' version
-    # of Ubuntu
-
-    FOREACH(LIBRARY audio.so.2 phonon.so.4)
-        GET_FILENAME_COMPONENT(REAL_LIBRARY /usr/lib/lib${LIBRARY} REALPATH)
-
-        INSTALL(FILES ${REAL_LIBRARY} RENAME lib${LIBRARY} DESTINATION lib)
-    ENDFOREACH()
-
     # Qt configuration file to tell OpenCOR where to look for plugins
 
     INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/qt.conf DESTINATION bin)
