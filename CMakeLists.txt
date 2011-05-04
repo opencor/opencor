@@ -308,10 +308,10 @@ IF(APPLE)
     # Make sure that the SQLite plugin refers to our embedded version of QtCore
     # and QtSql which it needs
 
-    FOREACH(LIB QtCore QtSql)
+    FOREACH(LIBRARY QtCore QtSql)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${LIB}.framework/Versions/${QT_VERSION_MAJOR}/${LIB}
-                                                             @executable_path/../Frameworks/${LIB}.framework/Versions/${QT_VERSION_MAJOR}/${LIB}
+                           COMMAND install_name_tool -change ${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
+                                                             @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
                                                              ../PlugIns/sqldrivers/libqsqlite.dylib
                            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks)
     ENDFOREACH()
@@ -410,7 +410,8 @@ ELSEIF(APPLE)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.sh.macosx.in ${ShellFile})
 
-    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION .
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
     # Select TGZ as the packager on Linux
 
@@ -422,19 +423,22 @@ ELSE()
 
     # Qt files required by OpenCOR
 
-    FOREACH(LIB QtCLucene QtCore QtDBus QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
+    FOREACH(LIBRARY QtCLucene QtCore QtDBus QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
         INSTALL(FILES
-            ${QT_LIBRARY_DIR}/lib${LIB}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
-            RENAME lib${LIB}.so.${QT_VERSION_MAJOR}
-            DESTINATION lib
+                ${QT_LIBRARY_DIR}/lib${LIBRARY}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
+                RENAME lib${LIBRARY}.so.${QT_VERSION_MAJOR}
+                DESTINATION lib
         )
     ENDFOREACH()
 
     # Additional files required by Qt, but not available on a 'blank' version
     # of Ubuntu
 
-    INSTALL(FILES /usr/lib/libaudio.so.2.4 RENAME libaudio.so.2 DESTINATION lib)
-    INSTALL(FILES /usr/lib/libphonon.so.4.4.0 RENAME libphonon.so.4 DESTINATION lib)
+    FOREACH(LIBRARY audio.so.2 phonon.so.4)
+        GET_FILENAME_COMPONENT(REAL_LIBRARY /usr/lib/lib${LIBRARY} REALPATH)
+
+        INSTALL(FILES ${REAL_LIBRARY} RENAME lib${LIBRARY} DESTINATION lib)
+    ENDFOREACH()
 
     # Qt configuration file to tell OpenCOR where to look for plugins
 
