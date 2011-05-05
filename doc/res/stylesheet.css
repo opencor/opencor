@@ -34,15 +34,6 @@ h2 {
     font-weight: bold;
 }
 
-div.copyright {
-    margin: 13px -3px -3px -3px;
-    background: rgba(0, 0, 0, 0.1);
-    color: rgba(0, 0, 0, 0.3);
-    font-size: 9pt;
-    font-weight: bold;
-    text-align: center;
-}
-
 li {
     list-style-type: square;
 }
@@ -53,4 +44,13 @@ pre {
     padding: 3px;
     background: rgba(103, 103, 103, 0.07);
     white-space: pre-wrap;
+}
+
+div.copyright {
+    margin: 13px -3px -3px -3px;
+    background: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 9pt;
+    font-weight: bold;
+    text-align: center;
 }
