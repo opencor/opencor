@@ -18,6 +18,7 @@
 #include <QCoreApplication>
 #include <QDesktopServices>
 #include <QDesktopWidget>
+#include <QFileDialog>
 #include <QHelpEngine>
 #include <QMessageBox>
 #include <QProcess>
@@ -666,12 +667,24 @@ void MainWindow::on_actionCellML11File_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    notYetImplemented("void MainWindow::on_actionOpen_triggered()");
+    // Open one or several files
+
+    mCentralWidget->openFiles(QFileDialog::getOpenFileNames(this,
+                                                            tr("Open File"),
+                                                            "",
+                                                             tr("All Files")
+                                                            +" (*"
+#ifdef Q_WS_WIN
+                                                            +".*"
+#endif
+                                                            +");;"+tr("CellML File")+" (*.cellml)"));
 }
 
 void MainWindow::on_actionOpenReopen_triggered()
 {
-    notYetImplemented("void MainWindow::on_actionOpenReopen_triggered()");
+    // Open one or several files
+
+    on_actionOpen_triggered();
 }
 
 void MainWindow::on_actionSave_triggered()
