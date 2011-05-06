@@ -36,8 +36,7 @@ static const QString FrenchLocale  = "fr";
 
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
-    mUi(new Ui::MainWindow),
-    mLocale(SystemLocale)
+    mUi(new Ui::MainWindow)
 {
     // Set up the UI
 
@@ -373,6 +372,7 @@ static const QString SettingsLocale              = "Locale";
 static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
 static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
+static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
 static const QString SettingsRecentlyOpenedFiles = "RecentlyOpenedFiles";
 static const QString SettingsDebugModeEnabled    = "DebugModeEnabled";
 
@@ -414,6 +414,11 @@ void MainWindow::loadSettings()
             mUi->statusBar->setVisible(settings.value(SettingsStatusBarVisibility,
                                                       true).toBool());
         }
+
+        // Retrieve the active directory
+
+        mActiveDir.setPath(settings.value(SettingsFileDialogDirectory,
+                                          QDir::currentPath()).toString());
 
         // Retrieve our recently opened files (and add them to our menus)
 
@@ -463,6 +468,10 @@ void MainWindow::saveSettings()
 
         settings.setValue(SettingsStatusBarVisibility,
                           mUi->statusBar->isVisible());
+
+        // Keep track of the active directory
+
+        settings.setValue(SettingsFileDialogDirectory, mActiveDir.path());
 
         // Keep track of our recently opened files
 
@@ -667,17 +676,27 @@ void MainWindow::on_actionCellML11File_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    // Open one or several files
+    // Ask for the file(s) to be opened
 
-    mCentralWidget->openFiles(QFileDialog::getOpenFileNames(this,
-                                                            tr("Open File"),
-                                                            "",
-                                                             tr("All Files")
-                                                            +" (*"
+    QStringList files = QFileDialog::getOpenFileNames(this,
+                                                      tr("Open File"),
+                                                      mActiveDir.path(),
+                                                      tr("All Files")
+                                                      +" (*"
 #ifdef Q_WS_WIN
-                                                            +".*"
+                                                      +".*"
 #endif
-                                                            +");;"+tr("CellML File")+" (*.cellml)"));
+                                                      +");;"+tr("CellML File")+" (*.cellml)");
+
+    if (files.count())
+        // There is at least one file which is to be opened, so we can keep
+        // track of the folder in which it is
+
+        mActiveDir = QFileInfo(files.at(0)).path();
+
+    // Open the file(s)
+
+    mCentralWidget->openFiles(files);
 }
 
 void MainWindow::on_actionOpenReopen_triggered()

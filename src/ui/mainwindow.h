@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QDir>
 #include <QMainWindow>
 #include <QTranslator>
 
@@ -63,6 +64,8 @@ private:
 
     QMenu *mActionReopenMenu;
     QMenu *mActionOpenReopenMenu;
+
+    QDir mActiveDir;
 
     void loadDockWindowSettings(DockWidget *pDockWindow,
                                 const bool &pNeedDefaultSettings,
