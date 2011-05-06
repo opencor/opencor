@@ -83,23 +83,23 @@ $ rm -fr [Qt4.7.3]</pre>
                 </div>
             </li>
             <li>
-                <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a> 2.1.0: a cross-platform environment for Qt:
+                <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a> 2.2.0: a cross-platform environment for Qt:
                 <ul>
                     <li>
-                        <a href="http://get.qt.nokia.com/qtcreator/qt-creator-win-opensource-2.1.0.exe">Windows</a>;
+                        <a href="http://get.qt.nokia.com/qtcreator/qt-creator-win-opensource-2.2.0.exe">Windows</a>;
                         <div>
                             <strong>Note:</strong> dependening on the order in which you want to install MinGW, Qt and Qt Creator (see the MinGW section above), you might want to select or unselect MinGW when installing Qt Creator.
                         </div>
                     </li>
-                    <li>Linux <a href="http://get.qt.nokia.com/qtcreator/qt-creator-linux-x86-opensource-2.1.0.bin">32-bit</a>/<a href="http://get.qt.nokia.com/qtcreator/qt-creator-linux-x86_64-opensource-2.1.0.bin">64-bit</a>; and</li>
-                    <li><a href = "http://get.qt.nokia.com/qtcreator/qt-creator-mac-opensource-2.1.0.dmg">Mac OS X</a>.</li>
+                    <li>Linux <a href="http://get.qt.nokia.com/qtcreator/qt-creator-linux-x86-opensource-2.2.0.bin">32-bit</a>/<a href="http://get.qt.nokia.com/qtcreator/qt-creator-linux-x86_64-opensource-2.2.0.bin">64-bit</a>; and</li>
+                    <li><a href = "http://get.qt.nokia.com/qtcreator/qt-creator-mac-opensource-2.2.0.dmg">Mac OS X</a>.</li>
                 </ul>
             </li>
             <li><a href="http://nsis.sourceforge.net/">NSIS</a> (Windows only): a program for creating Windows installers.</li>
         </ul>
 
         <p>
-            Note that though OpenCOR is currently being developed using Qt 4.7.3 and Qt Creator 2.1.0, it happens that it can also be built using Qt 4.6. For this reason, our various CMakeLists.txt files require Qt 4.6 or above, but this requirement will be revised as soon as Qt 4.6 is shown to break our build.
+            Note that though OpenCOR is currently being developed using Qt 4.7.3 and Qt Creator 2.2.0, it happens that it can also be built using Qt 4.6. For this reason, our various CMakeLists.txt files require Qt 4.6 or above, but this requirement will be revised as soon as Qt 4.6 is shown to break our build.
         </p>
 
         <p>
@@ -154,14 +154,14 @@ $ rm -fr [Qt4.7.3]</pre>
                     <li>Start Qt Creator;</li>
                     <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
                     <li>Specify <a href="https://github.com/opencor/opencor/tree/master/build"><code>[OpenCOR]/build</code></a> as the build directory;</li>
-                    <li>Select <code>MinGW</code> as the generator (Windows only), if necessary;</li>
+                    <li>Select <code>MinGW Generator (MinGW (x86 32bit))</code> as the generator (Windows only), if necessary;</li>
                     <li>Click on the <code>Run CMake</code> button;</li>
                     <li>Click on the <code>Finish</code> button;</li>
                     <li>Select <code>OpenCOR</code> as the run target (by selecting the <code>Build</code> | <code>Open Build/Run Target Seclector...</code> menu or by pressing <code>Ctrl+T</code>), if necessary; and</li>
                     <li>
                         Build and test OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl+R</code>).
                         <div>
-                            <strong>Note #1:</strong> because of our use of CMake, debugging with Qt Creator requires an extra build step which can be set up by selecting the <code>Projects</code> view and by clicking on the <code>Add Build Step</code> drop-down button and clicking on the <code>Custom Process Step</code> menu item. From there, make sure that the <code>Enable custom process step</code> check box is ticked, set the <code>Command</code> field to <code>cmake</code>, the <code>Working directory</code> field to <code>${BUILDDIR}/build</code> and the <code>Command arguments</code> field to <code>-DCMAKE_BUILD_TYPE=Debug ..</code>. Finally, make sure that this new build step comes before the default <code>Make</code> build step.
+                            <strong>Note #1:</strong> because of our use of CMake, debugging with Qt Creator requires an extra build step which can be set up by selecting the <code>Projects</code> view and by clicking on the <code>Add Build Step</code> drop-down button and clicking on the <code>Custom Process Step</code> menu item. From there, tick the <code>Enable custom process step</code> check box, set the <code>Command</code> field to <code>cmake</code>, the <code>Working directory</code> field to <a href="https://github.com/opencor/opencor/tree/master/build"><code>[OpenCOR]/build</code></a> and the <code>Command arguments</code> field to <code>-DCMAKE_BUILD_TYPE=Debug ..</code>. Finally, make sure that this new build step comes before the default <code>Make</code> build step.
                         </div>
                         <div>
                             <strong>Note #2:</strong> by default, Qt Creator will compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button of the default <code>Make</code> build step under the <code>Build Steps</code> header. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> where <code>n</code> is the number of jobs to be run simultaneously (if no <code>n</code> value is provided, then Qt Creator will try to run as many jobs as possible).
