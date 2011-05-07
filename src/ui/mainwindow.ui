@@ -85,7 +85,7 @@
     <addaction name="actionHomePage"/>
     <addaction name="actionCellMLHomePage"/>
     <addaction name="separator"/>
-    <addaction name="actionUpdates"/>
+    <addaction name="actionCheckForUpdates"/>
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
@@ -606,7 +606,7 @@
     <string>Look up the CellML home page</string>
    </property>
   </action>
-  <action name="actionUpdates">
+  <action name="actionCheckForUpdates">
    <property name="icon">
     <iconset resource="../../res/OpenCOR.qrc">
      <normaloff>:/oxygen/apps/system-software-update.png</normaloff>:/oxygen/apps/system-software-update.png</iconset>

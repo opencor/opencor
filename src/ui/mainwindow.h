@@ -120,7 +120,7 @@ private Q_SLOTS:
     void on_actionPreferences_triggered();
     void on_actionHomePage_triggered();
     void on_actionCellMLHomePage_triggered();
-    void on_actionUpdates_triggered();
+    void on_actionCheckForUpdates_triggered();
     void on_actionAbout_triggered();
 
     void updateWindowTitle();

@@ -852,9 +852,9 @@ void MainWindow::on_actionCellMLHomePage_triggered()
     QDesktopServices::openUrl(QUrl(CellmlHomepageUrl));
 }
 
-void MainWindow::on_actionUpdates_triggered()
+void MainWindow::on_actionCheckForUpdates_triggered()
 {
-    notYetImplemented("void MainWindow::on_actionUpdates_triggered()");
+    notYetImplemented("void MainWindow::on_actionCheckForUpdates_triggered()");
 }
 
 void MainWindow::on_actionAbout_triggered()
