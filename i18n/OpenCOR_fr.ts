@@ -208,8 +208,8 @@
         <translation>Consulter la page d&apos;accueil d&apos;OpenCOR</translation>
     </message>
     <message>
-        <source>&amp;About</source>
-        <translation>&amp;A Propos</translation>
+        <source>&amp;About...</source>
+        <translation>&amp;A Propos...</translation>
     </message>
     <message>
         <source>Some general information about OpenCOR</source>
@@ -404,12 +404,12 @@
         <translation>Page d&apos;Accueil de CellML</translation>
     </message>
     <message>
-        <source>&amp;Updates</source>
-        <translation>Mises à Jo&amp;ur</translation>
+        <source>Check for &amp;Updates...</source>
+        <translation>Vérifier pour des Mises à Jo&amp;ur...</translation>
     </message>
     <message>
         <source>Check for updates</source>
-        <translation>Vérifier les mises à jour</translation>
+        <translation>Vérifier pour des mises à jour</translation>
     </message>
     <message>
         <source>&amp;Preferences...</source>
@@ -626,6 +626,13 @@
     <message>
         <source>CellML File</source>
         <translation>Fichier CellML</translation>
+    </message>
+</context>
+<context>
+    <name>UpdateWindow</name>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Vérifier pour des Mises à Jour</translation>
     </message>
 </context>
 <context>
