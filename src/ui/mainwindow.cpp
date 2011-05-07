@@ -691,8 +691,19 @@ void MainWindow::on_actionOpen_triggered()
     if (files.count())
         // There is at least one file which is to be opened, so we can keep
         // track of the folder in which it is
+        // Note #1: we use the last file to determine the folder that is to be
+        //          remembered since on Windows 7, at least, it's possible to
+        //          search for files from within the file dialog box, the last
+        //          file should be the one we are 'interested' in...
+        // Note #2: this doesn't, unfortunately, address the case where the user
+        //          goes to a directory and then closes the file dialog box
+        //          without selecting any file. There might be a way to get it
+        //          to work, but that would involve using the exec method rather
+        //          than the static getOpenFilesNames method, which would result
+        //          in a non-native looking file dialog box (on Windows 7 at
+        //          least), so it's not an option unfortunately...
 
-        mActiveDir = QFileInfo(files.at(0)).path();
+        mActiveDir = QFileInfo(files.at(files.count()-1)).path();
 
     // Open the file(s)
 
