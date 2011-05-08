@@ -2,8 +2,8 @@
 
 #include "ui_updatewindow.h"
 
-UpdateWindow::UpdateWindow(QWidget *parent) :
-    QDialog(parent),
+UpdateWindow::UpdateWindow(QWidget *pParent) :
+    QDialog(pParent),
     mUi(new Ui::UpdateWindow)
 {
     // Set up the UI
