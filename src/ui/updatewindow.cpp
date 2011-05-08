@@ -6,6 +6,7 @@ namespace OpenCOR {
 
 UpdateWindow::UpdateWindow(QWidget *pParent) :
     QDialog(pParent),
+    CommonWidget(pParent),
     mUi(new Ui::UpdateWindow)
 {
     // Set up the UI
@@ -18,6 +19,13 @@ UpdateWindow::~UpdateWindow()
     // Delete the UI
 
     delete mUi;
+}
+
+void UpdateWindow::retranslateUi()
+{
+    // Translate the whole window
+
+    mUi->retranslateUi(this);
 }
 
 }

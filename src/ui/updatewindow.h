@@ -1,6 +1,8 @@
 #ifndef UPDATEWINDOW_H
 #define UPDATEWINDOW_H
 
+#include "commonwidget.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -9,13 +11,15 @@ namespace Ui {
 
 namespace OpenCOR {
 
-class UpdateWindow : public QDialog
+class UpdateWindow : public QDialog, public CommonWidget
 {
     Q_OBJECT
 
 public:
     explicit UpdateWindow(QWidget *pParent = 0);
     ~UpdateWindow();
+
+    virtual void retranslateUi();
 
 private:
     Ui::UpdateWindow *mUi;

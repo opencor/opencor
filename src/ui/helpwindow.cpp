@@ -104,8 +104,7 @@ void HelpWindow::retranslateUi()
     mUi->retranslateUi(this);
 
     // Make sure that the enabled state of the various actions is correct
-    // (indeed, to translate everything messes things up in that respect,
-    // so...)
+    // (indeed, to translate everything messes things up in that respect, so...)
 
     updateActions();
 

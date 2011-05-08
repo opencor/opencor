@@ -6,6 +6,7 @@ namespace OpenCOR {
 
 PreferencesWindow::PreferencesWindow(QWidget *pParent) :
     QDialog(pParent),
+    CommonWidget(pParent),
     mUi(new Ui::PreferencesWindow)
 {
     // Set up the UI
@@ -18,6 +19,13 @@ PreferencesWindow::~PreferencesWindow()
     // Delete the UI
 
     delete mUi;
+}
+
+void PreferencesWindow::retranslateUi()
+{
+    // Translate the whole window
+
+    mUi->retranslateUi(this);
 }
 
 }
