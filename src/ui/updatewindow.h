@@ -7,6 +7,8 @@ namespace Ui {
     class UpdateWindow;
 }
 
+namespace OpenCOR {
+
 class UpdateWindow : public QDialog
 {
     Q_OBJECT
@@ -18,5 +20,7 @@ public:
 private:
     Ui::UpdateWindow *mUi;
 };
+
+}
 
 #endif

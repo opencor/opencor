@@ -2,6 +2,8 @@
 
 #include "ui_updatewindow.h"
 
+namespace OpenCOR {
+
 UpdateWindow::UpdateWindow(QWidget *pParent) :
     QDialog(pParent),
     mUi(new Ui::UpdateWindow)
@@ -16,4 +18,6 @@ UpdateWindow::~UpdateWindow()
     // Delete the UI
 
     delete mUi;
+}
+
 }

@@ -1,13 +1,14 @@
+#include "cellmlmodelrepositorywindow.h"
 #include "centralwidget.h"
-#include "viewerwindow.h"
 #include "common.h"
 #include "dockwidget.h"
 #include "mainwindow.h"
 #include "filebrowserwindow.h"
 #include "fileorganiserwindow.h"
 #include "helpwindow.h"
-#include "cellmlmodelrepositorywindow.h"
+#include "updatewindow.h"
 #include "utils.h"
+#include "viewerwindow.h"
 
 #include "ui_mainwindow.h"
 
@@ -854,7 +855,11 @@ void MainWindow::on_actionCellMLHomePage_triggered()
 
 void MainWindow::on_actionCheckForUpdates_triggered()
 {
-    notYetImplemented("void MainWindow::on_actionCheckForUpdates_triggered()");
+    // Check for updates
+
+    OpenCOR::UpdateWindow updateWindow(this);
+
+    updateWindow.exec();
 }
 
 void MainWindow::on_actionAbout_triggered()
