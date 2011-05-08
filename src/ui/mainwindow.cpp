@@ -6,6 +6,7 @@
 #include "filebrowserwindow.h"
 #include "fileorganiserwindow.h"
 #include "helpwindow.h"
+#include "preferenceswindow.h"
 #include "updatewindow.h"
 #include "utils.h"
 #include "viewerwindow.h"
@@ -838,7 +839,11 @@ void MainWindow::on_actionFrench_triggered()
 
 void MainWindow::on_actionPreferences_triggered()
 {
-    notYetImplemented("void MainWindow::on_actionPreferences_triggered()");
+    // Update the user's preferences
+
+    OpenCOR::PreferencesWindow preferencesWindow(this);
+
+    preferencesWindow.exec();
 }
 
 void MainWindow::on_actionHomePage_triggered()

@@ -25,6 +25,7 @@ SET(SOURCES
     src/ui/centralwidget.cpp
     src/ui/helpwindow.cpp
     src/ui/mainwindow.cpp
+    src/ui/preferenceswindow.cpp
     src/ui/updatewindow.cpp
     src/ui/edit/viewerwindow.cpp
     src/ui/organise/cellmlmodelrepositorywindow.cpp
@@ -54,6 +55,7 @@ SET(HEADERS_MOC
     src/ui/centralwidget.h
     src/ui/helpwindow.h
     src/ui/mainwindow.h
+    src/ui/preferenceswindow.h
     src/ui/updatewindow.h
     src/ui/edit/viewerwindow.h
     src/ui/organise/cellmlmodelrepositorywindow.h
@@ -74,6 +76,7 @@ SET(UIS
     src/ui/centralwidget.ui
     src/ui/helpwindow.ui
     src/ui/mainwindow.ui
+    src/ui/preferenceswindow.ui
     src/ui/updatewindow.ui
     src/ui/edit/viewerwindow.ui
     src/ui/organise/cellmlmodelrepositorywindow.ui

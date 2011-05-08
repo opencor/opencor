@@ -632,6 +632,13 @@
     </message>
 </context>
 <context>
+    <name>PreferencesWindow</name>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+</context>
+<context>
     <name>UpdateWindow</name>
     <message>
         <source>Check for Updates</source>
