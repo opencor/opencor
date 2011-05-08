@@ -9,6 +9,8 @@ namespace Ui {
     class FileOrganiserWindow;
 }
 
+namespace OpenCOR {
+
 class FileOrganiserWidget;
 
 class FileOrganiserWindow : public DockWidget
@@ -44,5 +46,7 @@ private slots:
 
     void needUpdateActions();
 };
+
+}
 
 #endif

@@ -7,6 +7,8 @@
 #include <QMenu>
 #include <QSettings>
 
+namespace OpenCOR {
+
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     DockWidget(pParent),
     mUi(new Ui::FileOrganiserWindow)
@@ -151,4 +153,6 @@ void FileOrganiserWindow::needUpdateActions()
     // Something requires the actions to be udpated
 
     updateActions();
+}
+
 }

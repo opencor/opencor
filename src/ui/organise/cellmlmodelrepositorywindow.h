@@ -7,6 +7,8 @@ namespace Ui {
     class CellmlModelRepositoryWindow;
 }
 
+namespace OpenCOR {
+
 class CellmlModelRepositoryWidget;
 
 class CellmlModelRepositoryWindow : public DockWidget
@@ -27,5 +29,7 @@ private:
 
     CellmlModelRepositoryWidget *mCellmlModelRepositoryWidget;
 };
+
+}
 
 #endif

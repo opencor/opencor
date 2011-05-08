@@ -5,6 +5,8 @@
 
 #include <QDockWidget>
 
+namespace OpenCOR {
+
 class DockWidget : public QDockWidget, public CommonWidget
 {
     Q_OBJECT
@@ -12,5 +14,7 @@ class DockWidget : public QDockWidget, public CommonWidget
 public:
     explicit DockWidget(QWidget *pParent);
 };
+
+}
 
 #endif

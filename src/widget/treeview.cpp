@@ -2,6 +2,8 @@
 
 #include <QDrag>
 
+namespace OpenCOR {
+
 TreeView::TreeView(const QString &pName, QWidget *pWidget,
                    QWidget *pParent) :
     QTreeView(pParent),
@@ -127,4 +129,6 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
             }
         }
     }
+}
+
 }

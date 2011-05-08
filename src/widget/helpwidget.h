@@ -6,9 +6,11 @@
 #include <QNetworkReply>
 #include <QWebView>
 
-class HelpWidget;
-
 class QHelpEngine;
+
+namespace OpenCOR {
+
+class HelpWidget;
 
 class HelpNetworkReply : public QNetworkReply
 {
@@ -112,5 +114,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void webPageChanged();
 };
+
+}
 
 #endif

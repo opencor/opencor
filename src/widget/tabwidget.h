@@ -5,6 +5,8 @@
 
 #include <QTabWidget>
 
+namespace OpenCOR {
+
 class TabWidget : public QTabWidget, public CommonWidget
 {
     Q_OBJECT
@@ -19,5 +21,7 @@ private Q_SLOTS:
     void tabChanged(const int &pIndex);
     void getFocus(QWidget *, QWidget *pNew);
 };
+
+}
 
 #endif

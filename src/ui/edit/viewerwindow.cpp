@@ -3,6 +3,8 @@
 
 #include "ui_viewerwindow.h"
 
+namespace OpenCOR {
+
 ViewerWindow::ViewerWindow(QWidget *pParent) :
     DockWidget(pParent),
     mUi(new Ui::ViewerWindow)
@@ -52,4 +54,6 @@ void ViewerWindow::saveSettings(QSettings &pSettings)
 
         mMmlViewerWidget->saveSettings(pSettings);
     pSettings.endGroup();
+}
+
 }

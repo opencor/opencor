@@ -6,6 +6,8 @@
 #include <QSettings>
 #include <QUrl>
 
+namespace OpenCOR {
+
 enum FileOrganiserItemRole {
     FileOrganiserItemFolder   = Qt::UserRole,
     FileOrganiserItemPath     = Qt::UserRole+1,
@@ -1330,4 +1332,6 @@ void FileOrganiserWidget::fileDeleted(const QString &pFileName)
 
     updateFileItems(mDataModel->invisibleRootItem(), pFileName,
                     File::Deleted);
+}
+
 }

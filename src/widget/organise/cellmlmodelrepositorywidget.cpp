@@ -2,6 +2,8 @@
 
 #include <QPaintEvent>
 
+namespace OpenCOR {
+
 CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
                                                          QWidget *pParent) :
     QWebView(pParent),
@@ -48,4 +50,6 @@ void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
     // Draw a border in case we are docked
 
     drawBorderIfDocked();
+}
+
 }

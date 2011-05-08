@@ -4,6 +4,8 @@
 #include <QPainter>
 #include <QPaintEvent>
 
+namespace OpenCOR {
+
 TabWidget::TabWidget(QWidget *pParent) :
     QTabWidget(pParent),
     CommonWidget(pParent)
@@ -78,4 +80,6 @@ void TabWidget::getFocus(QWidget *, QWidget *pNew)
         // widget, so now we need to give the focus to the active tab's widget
 
         tabChanged(currentIndex());
+}
+
 }

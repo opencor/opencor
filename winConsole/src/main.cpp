@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+using namespace OpenCOR;
+
 int main(int pArgc, char *pArgv[])
 {
     int res;

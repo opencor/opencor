@@ -8,6 +8,8 @@
 #include <QMenu>
 #include <QSettings>
 
+namespace OpenCOR {
+
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
     mUi(new Ui::FileBrowserWindow)
@@ -352,4 +354,6 @@ void FileBrowserWindow::itemChanged(const QModelIndex &,
     // Since a new item has been selected, we must update the actions
 
     updateActions();
+}
+
 }

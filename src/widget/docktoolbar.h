@@ -3,6 +3,8 @@
 
 #include <QToolBar>
 
+namespace OpenCOR {
+
 class DockToolBar : public QToolBar
 {
     Q_OBJECT
@@ -10,5 +12,7 @@ class DockToolBar : public QToolBar
 public:
     explicit DockToolBar(QWidget *pParent);
 };
+
+}
 
 #endif

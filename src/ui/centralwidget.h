@@ -9,6 +9,8 @@ namespace Ui {
     class CentralWidget;
 }
 
+namespace OpenCOR {
+
 class FileManager;
 class TabWidget;
 
@@ -53,5 +55,7 @@ public Q_SLOTS:
     void closeFiles();
     void fileActivated(const int &pIndex);
 };
+
+}
 
 #endif

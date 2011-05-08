@@ -7,6 +7,8 @@ namespace Ui {
     class ViewerWindow;
 }
 
+namespace OpenCOR {
+
 class MmlViewerWidget;
 
 class ViewerWindow : public DockWidget
@@ -27,5 +29,7 @@ private:
 
     MmlViewerWidget *mMmlViewerWidget;
 };
+
+}
 
 #endif

@@ -2,6 +2,8 @@
 
 #include <QPaintEvent>
 
+namespace OpenCOR {
+
 MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
     QtMmlWidget(pParent),
     CommonWidget(pName, this, pParent)
@@ -88,4 +90,6 @@ void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
     // Note: to go for 100% of the 'optimal' size may result in the edges of
     //       the equation being clipped, hence we go for 93% of the 'optimal'
     //       size...
+}
+
 }

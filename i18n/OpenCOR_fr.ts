@@ -388,14 +388,6 @@
         <translation>&amp;Visionneur</translation>
     </message>
     <message>
-        <source>is a cross-platform &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
-        <translation>est un environnement de modélisation &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
-    </message>
-    <message>
-        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
-        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Etes-vous sûr que c&amp;apos;est ce que vous voulez ?</translation>
-    </message>
-    <message>
         <source>Look up the CellML home page</source>
         <translation>Consulter la page d&apos;accueil de CellML</translation>
     </message>
@@ -614,6 +606,17 @@
     <message>
         <source>Open/reopen a file</source>
         <translation>Ouvrir/réouvrir un fichier</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::MainWindow</name>
+    <message>
+        <source>is a cross-platform &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
+        <translation>est un environnement de modélisation &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
+    </message>
+    <message>
+        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
+        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Etes-vous sûr que c&amp;apos;est ce que vous voulez ?</translation>
     </message>
     <message>
         <source>Open File</source>

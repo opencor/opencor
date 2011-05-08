@@ -7,6 +7,8 @@
 class QString;
 class QTimer;
 
+namespace OpenCOR {
+
 class File
 {
 public:
@@ -69,5 +71,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void check();
 };
+
+}
 
 #endif

@@ -3,6 +3,8 @@
 
 #include <QString>
 
+namespace OpenCOR {
+
 static const QString CellmlHomepageUrl   = "http://www.cellml.org/";
 static const QString CellmlFileExtension = "cellml";
 
@@ -16,5 +18,7 @@ QString cellmlVersionString(const CellmlVersion &pCellmlVersion);
 
 bool newCellmlFile(const QString &pFileName, const QString &pModelName,
                    const CellmlVersion &pCellmlVersion);
+
+}
 
 #endif

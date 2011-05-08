@@ -5,6 +5,8 @@
 
 #include <QFileSystemModel>
 
+namespace OpenCOR {
+
 class FileBrowserModel : public QFileSystemModel
 {
     Q_OBJECT
@@ -69,5 +71,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void directoryLoaded(const QString &pPath);
 };
+
+}
 
 #endif

@@ -8,6 +8,8 @@
 #include <QSettings>
 #include <QUrl>
 
+namespace OpenCOR {
+
 FileBrowserModel::FileBrowserModel(QObject *pParent) :
     QFileSystemModel(pParent)
 {
@@ -465,4 +467,6 @@ QString FileBrowserWidget::pathOf(const QModelIndex &pIndex)
     return (pIndex != QModelIndex())?
                mDataModel->filePath(pIndex):
                "";
+}
+
 }

@@ -5,6 +5,8 @@
 
 #include <QtMmlWidget>
 
+namespace OpenCOR {
+
 class MmlViewerWidget : public QtMmlWidget, public CommonWidget
 {
     Q_OBJECT
@@ -25,5 +27,7 @@ protected:
 private:
     QtMmlWidget *mTestMmlWidget;
 };
+
+}
 
 #endif

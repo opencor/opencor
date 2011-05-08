@@ -1,5 +1,7 @@
 #include "dockwidget.h"
 
+namespace OpenCOR {
+
 DockWidget::DockWidget(QWidget *pParent) :
     QDockWidget(pParent),
     CommonWidget(pParent)
@@ -11,4 +13,6 @@ DockWidget::DockWidget(QWidget *pParent) :
 
     setStyleSheet("QDockWidget::float-button, QDockWidget::close-button { padding: 0px; }");
 #endif
+}
+
 }

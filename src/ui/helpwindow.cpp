@@ -10,6 +10,8 @@
 #include <QPrinter>
 #include <QSettings>
 
+namespace OpenCOR {
+
 HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                        QWidget *pParent) :
     DockWidget(pParent),
@@ -249,4 +251,6 @@ void HelpWindow::needUpdateActions()
     // Something requires the actions to be udpated
 
     updateActions();
+}
+
 }

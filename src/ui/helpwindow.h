@@ -3,14 +3,16 @@
 
 #include "dockwidget.h"
 
+class QHelpEngine;
+class QUrl;
+
 namespace Ui {
     class HelpWindow;
 }
 
-class HelpWidget;
+namespace OpenCOR {
 
-class QHelpEngine;
-class QUrl;
+class HelpWidget;
 
 class HelpWindow : public DockWidget
 {
@@ -54,5 +56,7 @@ private Q_SLOTS:
     void customContextMenu(const QPoint &);
     void needUpdateActions();
 };
+
+}
 
 #endif

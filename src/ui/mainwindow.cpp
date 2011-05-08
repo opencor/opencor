@@ -29,6 +29,8 @@
 
 #include <QxtTemporaryDir>
 
+namespace OpenCOR {
+
 static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/userIndex.html";
 
 static const QString SystemLocale  = "";
@@ -1018,4 +1020,6 @@ void MainWindow::reopenFile()
 
     if (action)
         mCentralWidget->openFile(action->text());
+}
+
 }

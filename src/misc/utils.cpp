@@ -1,11 +1,19 @@
 #include "utils.h"
 
+#ifdef QT_GUI_LIB
+#include <QApplication>
+#endif
 #include <QDir>
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
+#ifdef QT_GUI_LIB
+#include <QMessageBox>
+#endif
 #include <QProcess>
 #include <QResource>
+
+namespace OpenCOR {
 
 QString exec(const QString &pProg, const QString &pArgs)
 {
@@ -110,12 +118,11 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
 }
 
 #ifdef QT_GUI_LIB
-#include <QApplication>
-#include <QMessageBox>
-
 void notYetImplemented(const QString &method)
 {
     QMessageBox::information(0, qApp->applicationName()+" Information",
                              "Sorry, but the '"+method+"' method has not yet been implemented.");
 }
 #endif
+
+}

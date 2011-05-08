@@ -8,6 +8,8 @@ class QSettings;
 class QSize;
 class QWidget;
 
+namespace OpenCOR {
+
 // The default font family and size below were taken from Qt Creator
 
 #ifdef Q_WS_WIN
@@ -47,5 +49,7 @@ protected:
 private:
     QWidget *mParent;
 };
+
+}
 
 #endif

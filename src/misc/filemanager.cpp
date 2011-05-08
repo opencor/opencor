@@ -5,6 +5,8 @@
 #include <QTextStream>
 #include <QTimer>
 
+namespace OpenCOR {
+
 File::File(const QString &pFileName) :
     mFileName(pFileName),
     mSha1(sha1())
@@ -191,4 +193,6 @@ void FileManager::check()
 
             break;
         }
+}
+
 }

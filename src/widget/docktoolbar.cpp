@@ -1,5 +1,7 @@
 #include "docktoolbar.h"
 
+namespace OpenCOR {
+
 DockToolBar::DockToolBar(QWidget *pParent) :
     QToolBar(pParent)
 {
@@ -11,4 +13,6 @@ DockToolBar::DockToolBar(QWidget *pParent) :
     // Set the size of the icons to 20 by 20 pixels
 
     setIconSize(QSize(20, 20));
+}
+
 }

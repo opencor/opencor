@@ -8,6 +8,8 @@
 #include <QPen>
 #include <QWidget>
 
+namespace OpenCOR {
+
 CommonWidget::CommonWidget(QWidget *pParent) :
     mParent(pParent)
 {
@@ -116,4 +118,6 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
 #endif
             painter.drawLine(border.topRight(), border.bottomRight());
     }
+}
+
 }

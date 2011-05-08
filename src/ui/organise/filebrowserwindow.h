@@ -4,13 +4,15 @@
 #include "cellml.h"
 #include "dockwidget.h"
 
+class QModelIndex;
+
 namespace Ui {
     class FileBrowserWindow;
 }
 
-class FileBrowserWidget;
+namespace OpenCOR {
 
-class QModelIndex;
+class FileBrowserWidget;
 
 class FileBrowserWindow : public DockWidget
 {
@@ -55,5 +57,7 @@ private Q_SLOTS:
 
     void itemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
 };
+
+}
 
 #endif

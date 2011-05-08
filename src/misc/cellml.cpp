@@ -5,6 +5,8 @@
 #include <QDate>
 #include <QFile>
 
+namespace OpenCOR {
+
 QString cellmlVersionString(const CellmlVersion &pCellmlVersion)
 {
     switch (pCellmlVersion)
@@ -49,4 +51,6 @@ bool newCellmlFile(const QString &pFileName, const QString &pModelName,
 
         return false;
     }
+}
+
 }

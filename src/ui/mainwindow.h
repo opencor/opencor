@@ -5,9 +5,16 @@
 #include <QMainWindow>
 #include <QTranslator>
 
+class QHelpEngine;
+class QSettings;
+
+class QxtTemporaryDir;
+
 namespace Ui {
     class MainWindow;
 }
+
+namespace OpenCOR {
 
 class CentralWidget;
 class DockWidget;
@@ -16,11 +23,6 @@ class FileBrowserWindow;
 class FileOrganiserWindow;
 class ViewerWindow;
 class HelpWindow;
-
-class QHelpEngine;
-class QSettings;
-
-class QxtTemporaryDir;
 
 class MainWindow : public QMainWindow
 {
@@ -132,5 +134,7 @@ private Q_SLOTS:
 
     void resetAll();
 };
+
+}
 
 #endif

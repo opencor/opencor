@@ -5,6 +5,8 @@
 
 #include <QWebView>
 
+namespace OpenCOR {
+
 class CellmlModelRepositoryWidget : public QWebView, public CommonWidget
 {
     Q_OBJECT
@@ -18,5 +20,7 @@ protected:
 
     virtual void paintEvent(QPaintEvent *pEvent);
 };
+
+}
 
 #endif

@@ -15,6 +15,8 @@
 #include <qsciscintilla.h>
 #include <qscilexerxml.h>
 
+namespace OpenCOR {
+
 CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
@@ -360,4 +362,6 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
     // Accept the proposed action for the event
 
     pEvent->acceptProposedAction();
+}
+
 }

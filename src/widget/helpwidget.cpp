@@ -9,6 +9,8 @@
 #include <QTimer>
 #include <QWebHistory>
 
+namespace OpenCOR {
+
 HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
                                    const QByteArray &pData,
                                    const QString &pMimeType) :
@@ -392,4 +394,6 @@ void HelpWidget::webPageChanged()
             emit forwardAvailable(mForwardAvailable);
         }
     }
+}
+
 }

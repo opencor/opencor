@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+namespace OpenCOR {
+
 void usage(const QCoreApplication *pApp)
 {
     std::cout << "Usage: " << pApp->applicationName().toLatin1().constData()
@@ -138,4 +140,6 @@ bool consoleApplication(const QCoreApplication *pApp, int *pRes)
 
         return false;
     }
+}
+
 }
