@@ -30,13 +30,13 @@ SET(SOURCES
     src/ui/organise/cellmlmodelrepositorywindow.cpp
     src/ui/organise/filebrowserwindow.cpp
     src/ui/organise/fileorganiserwindow.cpp
+    src/widget/commonwidget.cpp
     src/widget/docktoolbar.cpp
     src/widget/dockwidget.cpp
     src/widget/helpwidget.cpp
     src/widget/tabwidget.cpp
     src/widget/treeview.cpp
     src/widget/edit/mmlviewerwidget.cpp
-    src/widget/misc/commonwidget.cpp
     src/widget/organise/cellmlmodelrepositorywidget.cpp
     src/widget/organise/filebrowserwidget.cpp
     src/widget/organise/fileorganiserwidget.cpp
@@ -46,7 +46,7 @@ SET(HEADERS
     src/misc/cellml.h
     src/misc/common.h
     src/misc/utils.h
-    src/widget/misc/commonwidget.h
+    src/widget/commonwidget.h
 )
 
 SET(HEADERS_MOC
