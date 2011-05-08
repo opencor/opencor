@@ -1,5 +1,6 @@
 #include "cellmlmodelrepositorywindow.h"
 #include "centralwidget.h"
+#include "checkforupdateswindow.h"
 #include "common.h"
 #include "dockwidget.h"
 #include "mainwindow.h"
@@ -7,7 +8,6 @@
 #include "fileorganiserwindow.h"
 #include "helpwindow.h"
 #include "preferenceswindow.h"
-#include "updatewindow.h"
 #include "utils.h"
 #include "viewerwindow.h"
 
@@ -864,9 +864,9 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 {
     // Check for updates
 
-    OpenCOR::UpdateWindow updateWindow(this);
+    OpenCOR::CheckForUpdatesWindow checkForUpdatesWindow(this);
 
-    updateWindow.exec();
+    checkForUpdatesWindow.exec();
 }
 
 void MainWindow::on_actionAbout_triggered()

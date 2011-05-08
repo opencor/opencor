@@ -9,6 +9,13 @@
     </message>
 </context>
 <context>
+    <name>CheckForUpdatesWindow</name>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Vérifier pour des Mises à Jour</translation>
+    </message>
+</context>
+<context>
     <name>FileBrowserWindow</name>
     <message>
         <source>File Browser</source>
@@ -636,13 +643,6 @@
     <message>
         <source>Preferences</source>
         <translation>Préférences</translation>
-    </message>
-</context>
-<context>
-    <name>UpdateWindow</name>
-    <message>
-        <source>Check for Updates</source>
-        <translation>Vérifier pour des Mises à Jour</translation>
     </message>
 </context>
 <context>
