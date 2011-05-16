@@ -33,6 +33,21 @@ QString exec(const QString &pProg, const QString &pArgs)
     }
 }
 
+OsType getOsType()
+{
+#ifdef Q_WS_WIN
+    return Windows;
+#else
+    #ifdef Q_WS_MAC
+        return MacOsX;
+    #else
+        // Linux
+
+        return Linux;
+    #endif
+#endif
+}
+
 QString getOsName()
 {
 #ifdef Q_WS_WIN
@@ -74,6 +89,26 @@ QString getOsName()
         return exec("/bin/uname", "-o")+" "+exec("/bin/uname", "-r");
     #endif
 #endif
+}
+
+BitVersion getAppBitVersion()
+{
+    int sizeOfPointer = sizeof(void *);
+
+    switch (sizeOfPointer) {
+        case 4:
+            // 32-bit
+
+            return x86;
+        case 8:
+            // 64-bit
+
+            return x86_64;
+        default:
+            // Not a size that we recognise, so...
+
+            return xUnknown;
+    }
 }
 
 QByteArray resourceAsByteArray(const QString &pResource)

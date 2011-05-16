@@ -176,22 +176,22 @@ void FileManager::check()
     foreach (File *file, mFiles)
         switch (file->check())
         {
-        case File::Changed:
-            // The contents of the file has changed, so...
+            case File::Changed:
+                // The contents of the file has changed, so...
 
-            emit fileContentsChanged(file->fileName());
+                emit fileContentsChanged(file->fileName());
 
-            break;
-        case File::Deleted:
-            // The file has been deleted, so...
+                break;
+            case File::Deleted:
+                // The file has been deleted, so...
 
-            emit fileDeleted(file->fileName());
+                emit fileDeleted(file->fileName());
 
-            break;
-        default:
-            // The file is unchanged, so do nothing...
+                break;
+            default:
+                // The file is unchanged, so do nothing...
 
-            break;
+                break;
         }
 }
 

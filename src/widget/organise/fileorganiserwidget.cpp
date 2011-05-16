@@ -936,29 +936,28 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
             newFileItem->setData(pFileName, FileOrganiserItemPath);
 
             switch (pDropPosition) {
-            case QAbstractItemView::AboveItem:
-                // We dropped the file above pDropItem, so...
+                case QAbstractItemView::AboveItem:
+                    // We dropped the file above pDropItem, so...
 
-                newParentItem->insertRow(pDropItem->row(), newFileItem);
+                    newParentItem->insertRow(pDropItem->row(), newFileItem);
 
-                break;
-            case QAbstractItemView::BelowItem:
-                // We dropped the file below pDropItem, so...
+                    break;
+                case QAbstractItemView::BelowItem:
+                    // We dropped the file below pDropItem, so...
 
-                newParentItem->insertRow(pDropItem->row()+1, newFileItem);
+                    newParentItem->insertRow(pDropItem->row()+1, newFileItem);
 
-                break;
-            default:
-                // We directly dropped the file on pDropItem, so...
+                    break;
+                default:
+                    // We directly dropped the file on pDropItem, so...
 
-                newParentItem->appendRow(newFileItem);
+                    newParentItem->appendRow(newFileItem);
 
-                // Expand newParentItem, so the user knows that the file has
-                // been added to it (assuming that newParentItem was collapsed)
+                    // Expand newParentItem, so the user knows that the file has
+                    // been added to it (assuming that newParentItem was
+                    // collapsed)
 
-                setExpanded(newParentItem->index(), true);
-
-                break;
+                    setExpanded(newParentItem->index(), true);
             }
 
             // Add the file to our file manager
@@ -1086,31 +1085,30 @@ bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
             // Second, move the item (and any of its children)
 
             switch (pDropPosition) {
-            case QAbstractItemView::AboveItem:
-                // We dropped pItem above pDropItem, so...
+                case QAbstractItemView::AboveItem:
+                    // We dropped pItem above pDropItem, so...
 
-                newParentItem->insertRow(pDropItem->row(),
-                                         crtParentItem->takeRow(pItem->row()));
+                    newParentItem->insertRow(pDropItem->row(),
+                                             crtParentItem->takeRow(pItem->row()));
 
-                break;
-            case QAbstractItemView::BelowItem:
-                // We dropped pItem below pDropItem, so...
+                    break;
+                case QAbstractItemView::BelowItem:
+                    // We dropped pItem below pDropItem, so...
 
-                newParentItem->insertRow(pDropItem->row()+1,
-                                         crtParentItem->takeRow(pItem->row()));
+                    newParentItem->insertRow(pDropItem->row()+1,
+                                             crtParentItem->takeRow(pItem->row()));
 
-                break;
-            default:
-                // We directly dropped pItem on pDropItem, so...
+                    break;
+                default:
+                    // We directly dropped pItem on pDropItem, so...
 
-                newParentItem->appendRow(crtParentItem->takeRow(pItem->row()));
+                    newParentItem->appendRow(crtParentItem->takeRow(pItem->row()));
 
-                // Expand newParentItem, so the user knows that the item has been
-                // moved to it (assuming that newParentItem was collapsed)
+                    // Expand newParentItem, so the user knows that the item has
+                    // been moved to it (assuming that newParentItem was
+                    // collapsed)
 
-                setExpanded(newParentItem->index(), true);
-
-                break;
+                    setExpanded(newParentItem->index(), true);
             }
 
             // Third, re-expand folders, if necessary
