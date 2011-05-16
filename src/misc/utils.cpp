@@ -37,9 +37,9 @@ OsType getOsType()
 {
 #ifdef Q_OS_WIN32
     return Windows;
-#elif Q_OS_LINUX
+#elif defined(Q_OS_LINUX)
     return Linux;
-#elif Q_OS_MAC
+#elif defined(Q_OS_MAC)
     return MacOsX;
 #else
     return Unknown;
@@ -66,7 +66,7 @@ QString getOsName()
         default:
             return "Microsoft Windows";
     }
-#elif Q_WS_MAC
+#elif defined(Q_WS_MAC)
     // Note: the version of Qt that we use on Mac OS X only supports Mac OS X
     //       10.5 and above, so...
 
