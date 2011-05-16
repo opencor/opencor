@@ -35,16 +35,14 @@ QString exec(const QString &pProg, const QString &pArgs)
 
 OsType getOsType()
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32
     return Windows;
+#elif Q_OS_LINUX
+    return Linux;
+#elif Q_OS_MAC
+    return MacOsX;
 #else
-    #ifdef Q_WS_MAC
-        return MacOsX;
-    #else
-        // Linux
-
-        return Linux;
-    #endif
+    return Unknown;
 #endif
 }
 
@@ -68,26 +66,28 @@ QString getOsName()
         default:
             return "Microsoft Windows";
     }
-#else
-    #ifdef Q_WS_MAC
-        switch(QSysInfo::MacintoshVersion)
-        {
-            case QSysInfo::MV_10_3:
-                return "Mac OS X 10.3 (Jaguar)";
-            case QSysInfo::MV_10_4:
-                return "Mac OS X 10.4 (Panther)";
-            case QSysInfo::MV_10_5:
-                return "Mac OS X 10.5 (Leopard)";
-            case QSysInfo::MV_10_6:
-                return "Mac OS X 10.6 (Snow Leopard)";
-            default:
-                return "Mac OS X";
-        }
-    #else
-        // Linux
+#elif Q_WS_MAC
+    // Note: the version of Qt that we use on Mac OS X only supports Mac OS X
+    //       10.5 and above, so...
 
-        return exec("/bin/uname", "-o")+" "+exec("/bin/uname", "-r");
-    #endif
+    switch(QSysInfo::MacintoshVersion)
+    {
+        case QSysInfo::MV_10_5:
+            return "Mac OS X 10.5 (Leopard)";
+        case QSysInfo::MV_10_6:
+            return "Mac OS X 10.6 (Snow Leopard)";
+        default:
+            return "Mac OS X";
+    }
+#else
+    QString os = exec("/bin/uname", "-o");
+
+    if (os.isEmpty())
+        // We couldn't find /bin/uname, so...
+
+        return "Unknown";
+    else
+        return os+" "+exec("/bin/uname", "-r");
 #endif
 }
 
@@ -105,7 +105,7 @@ BitVersion getAppBitVersion()
 
             return x86_64;
         default:
-            // Not a size that we recognise, so...
+            // Not a size that we could recognise, so...
 
             return xUnknown;
     }

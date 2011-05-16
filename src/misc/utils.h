@@ -11,7 +11,8 @@ enum OsType
 {
     Windows,
     Linux,
-    MacOsX
+    MacOsX,
+    Unknown
 };
 
 OsType getOsType();
