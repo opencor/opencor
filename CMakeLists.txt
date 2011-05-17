@@ -21,7 +21,7 @@ SET(SOURCES
     src/misc/cellml.cpp
     src/misc/common.cpp
     src/misc/filemanager.cpp
-    src/misc/updatemanager.cpp
+    src/misc/updatesmanager.cpp
     src/misc/utils.cpp
     src/ui/centralwidget.cpp
     src/ui/checkforupdateswindow.cpp
@@ -53,7 +53,7 @@ SET(HEADERS
 
 SET(HEADERS_MOC
     src/misc/filemanager.h
-    src/misc/updatemanager.h
+    src/misc/updatesmanager.h
     src/ui/centralwidget.h
     src/ui/checkforupdateswindow.h
     src/ui/helpwindow.h
