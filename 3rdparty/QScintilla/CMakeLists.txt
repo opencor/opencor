@@ -7,6 +7,7 @@ SET(SOURCES
     lexers/LexCSS.cpp
     lexers/LexHTML.cpp
     lexers/LexPython.cpp
+
     lexlib/Accessor.cpp
     lexlib/CharacterSet.cpp
     lexlib/LexerBase.cpp
@@ -15,6 +16,7 @@ SET(SOURCES
     lexlib/PropSetSimple.cpp
     lexlib/StyleContext.cpp
     lexlib/WordList.cpp
+
     Qt4/ListBoxQt.cpp
     Qt4/PlatQt.cpp
     Qt4/qsciabstractapis.cpp
@@ -35,6 +37,7 @@ SET(SOURCES
     Qt4/qscistyledtext.cpp
     Qt4/SciClasses.cpp
     Qt4/ScintillaQt.cpp
+
     src/AutoComplete.cpp
     src/CallTip.cpp
     src/Catalogue.cpp
@@ -64,6 +67,7 @@ SET(HEADERS
     include/Platform.h
     include/SciLexer.h
     include/Scintilla.h
+
     lexlib/Accessor.h
     lexlib/CharacterSet.h
     lexlib/LexAccessor.h
@@ -75,14 +79,17 @@ SET(HEADERS
     lexlib/SparseState.h
     lexlib/StyleContext.h
     lexlib/WordList.h
+
     Qt4/ListBoxQt.h
     Qt4/ScintillaQt.h
+
     Qt4/Qsci/qscicommand.h
     Qt4/Qsci/qscicommandset.h
     Qt4/Qsci/qscidocument.h
     Qt4/Qsci/qsciglobal.h
     Qt4/Qsci/qscistyle.h
     Qt4/Qsci/qscistyledtext.h
+
     src/Autocomplete.h
     src/CallTip.h
     src/Catalogue.h
@@ -112,6 +119,8 @@ SET(HEADERS
 )
 
 SET(HEADERS_MOC
+    Qt4/SciClasses.h
+
     Qt4/Qsci/qsciabstractapis.h
     Qt4/Qsci/qsciapis.h
     Qt4/Qsci/qscilexer.h
@@ -123,7 +132,6 @@ SET(HEADERS_MOC
     Qt4/Qsci/qscilexerxml.h
     Qt4/Qsci/qsciscintilla.h
     Qt4/Qsci/qsciscintillabase.h
-    Qt4/SciClasses.h
 )
 
 # Various include directories
