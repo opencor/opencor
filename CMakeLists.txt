@@ -193,25 +193,15 @@ SET(THIRD_PARTY_LIBRARIES LibQxt QScintilla QtMmlWidget QtSingleApplication)
 
 FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
     SET(THIRD_PARTY_LIBRARY_DIR 3rdparty/${THIRD_PARTY_LIBRARY})
-    SET(THIRD_PARTY_LIBRARY_SUBDIRS)
+    SET(THIRD_PARTY_LIBRARY_INCLUDE_DIRS)
     # Note: the above variable is defined here, but is actually set when
     #       processing the CMakeLists.txt file of the third-party library
 
     ADD_SUBDIRECTORY(${THIRD_PARTY_LIBRARY_DIR})
 
-    IF("${THIRD_PARTY_LIBRARY_SUBDIRS}" STREQUAL "")
-        # The third-party library doesn't have any sub-directory, so just add
-        # its directory and that's it
-
-        INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR})
-    ELSE()
-        # The third-party library has at least one sub-directory, so add
-        # it/them
-
-        FOREACH(THIRD_PARTY_LIBRARY_SUBDIR ${THIRD_PARTY_LIBRARY_SUBDIRS})
-            INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR}/${THIRD_PARTY_LIBRARY_SUBDIR})
-        ENDFOREACH()
-    ENDIF()
+    FOREACH(THIRD_PARTY_LIBRARY_INCLUDE_DIR ${THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
+        INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR}/${THIRD_PARTY_LIBRARY_INCLUDE_DIR})
+    ENDFOREACH()
 ENDFOREACH()
 
 # Rules to build the GUI version of OpenCOR
