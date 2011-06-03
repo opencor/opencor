@@ -41,12 +41,12 @@ SET(SOURCES
     src/ui/mainwindow.cpp
     src/ui/preferenceswindow.cpp
 
-    src/widget/commonwidget.cpp
-    src/widget/docktoolbar.cpp
-    src/widget/dockwidget.cpp
-    src/widget/helpwidget.cpp
-    src/widget/tabwidget.cpp
-    src/widget/treeview.cpp
+    src/widgets/commonwidget.cpp
+    src/widgets/docktoolbar.cpp
+    src/widgets/dockwidget.cpp
+    src/widgets/helpwidget.cpp
+    src/widgets/tabwidget.cpp
+    src/widgets/treeview.cpp
 )
 
 SET(HEADERS
@@ -54,7 +54,7 @@ SET(HEADERS
     src/misc/common.h
     src/misc/utils.h
 
-    src/widget/commonwidget.h
+    src/widgets/commonwidget.h
 )
 
 SET(HEADERS_MOC
@@ -77,11 +77,11 @@ SET(HEADERS_MOC
     src/ui/mainwindow.h
     src/ui/preferenceswindow.h
 
-    src/widget/docktoolbar.h
-    src/widget/dockwidget.h
-    src/widget/helpwidget.h
-    src/widget/tabwidget.h
-    src/widget/treeview.h
+    src/widgets/docktoolbar.h
+    src/widgets/dockwidget.h
+    src/widgets/helpwidget.h
+    src/widgets/tabwidget.h
+    src/widgets/treeview.h
 )
 
 SET(UIS
@@ -109,7 +109,7 @@ INCLUDE_DIRECTORIES(src/plugins/organise/cellmlmodelrepository)
 INCLUDE_DIRECTORIES(src/plugins/organise/filebrowser)
 INCLUDE_DIRECTORIES(src/plugins/organise/fileorganiser)
 INCLUDE_DIRECTORIES(src/ui)
-INCLUDE_DIRECTORIES(src/widget)
+INCLUDE_DIRECTORIES(src/widgets)
 
 # Qt specific
 
