@@ -1,15 +1,20 @@
 #include "utils.h"
 
 #ifdef QT_GUI_LIB
-#include <QApplication>
+    #include <QApplication>
+#else
+    #include <QCoreApplication>
 #endif
+
 #include <QDir>
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
+
 #ifdef QT_GUI_LIB
-#include <QMessageBox>
+    #include <QMessageBox>
 #endif
+
 #include <QProcess>
 #include <QResource>
 
@@ -31,19 +36,6 @@ QString exec(const QString &pProg, const QString &pArgs)
 
         return QString();
     }
-}
-
-OsType getOsType()
-{
-#ifdef Q_OS_WIN32
-    return Windows;
-#elif defined(Q_OS_LINUX)
-    return Linux;
-#elif defined(Q_OS_MAC)
-    return MacOsX;
-#else
-    return Unknown;
-#endif
 }
 
 QString getOsName()
@@ -91,24 +83,32 @@ QString getOsName()
 #endif
 }
 
-BitVersion getAppBitVersion()
+QString getAppVersion(const QCoreApplication *pApp)
 {
+    QString bitVersion;
     int sizeOfPointer = sizeof(void *);
 
     switch (sizeOfPointer) {
         case 4:
-            // 32-bit
+            bitVersion = " (32-bit)";
 
-            return x86;
+            break;
         case 8:
-            // 64-bit
+            bitVersion = " (64-bit)";
 
-            return x86_64;
+            break;
         default:
             // Not a size that we could recognise, so...
 
-            return xUnknown;
+            bitVersion = "";
     }
+
+    return  pApp->applicationName()+" "+pApp->applicationVersion()+bitVersion;
+}
+
+QString getAppCopyright(const bool &pHtml)
+{
+    return QString(pHtml?"&copy;":"Copyright ")+"2011";
 }
 
 QByteArray resourceAsByteArray(const QString &pResource)

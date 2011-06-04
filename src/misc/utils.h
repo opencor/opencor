@@ -3,29 +3,15 @@
 
 #include <QString>
 
+class QCoreApplication;
+
 namespace OpenCOR {
 
 QString exec(const QString &pProg, const QString &pArgs);
 
-enum OsType
-{
-    Windows,
-    Linux,
-    MacOsX,
-    Unknown
-};
-
-OsType getOsType();
 QString getOsName();
-
-enum BitVersion
-{
-    x86,
-    x86_64,
-    xUnknown
-};
-
-BitVersion getAppBitVersion();
+QString getAppVersion(const QCoreApplication *pApp);
+QString getAppCopyright(const bool &pHtml);
 
 QByteArray resourceAsByteArray(const QString &pResource);
 void saveResourceAs(const QString &pResource, const QString &pFilename);

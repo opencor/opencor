@@ -30,15 +30,17 @@ void usage(const QCoreApplication *pApp)
 
 void version(const QCoreApplication *pApp)
 {
-    std::cout << pApp->applicationName().toLatin1().constData() << " "
-              << pApp->applicationVersion().toLatin1().constData() << std::endl;
+    std::cout << getAppVersion(pApp).toLatin1().constData() << std::endl;
 }
 
 void about(const QCoreApplication *pApp)
 {
     version(pApp);
 
+    std::cout << std::endl;
     std::cout << getOsName().toLatin1().constData() << std::endl;
+    std::cout << std::endl;
+    std::cout << getAppCopyright(false).toLatin1().constData() << std::endl;
     std::cout << std::endl;
     std::cout << pApp->applicationName().toLatin1().constData()
               << " is a cross-platform CellML-based modelling environment"
@@ -51,6 +53,7 @@ void error(const QCoreApplication *pApp, const QString &pMsg)
 {
     version(pApp);
 
+    std::cout << std::endl;
     std::cout << "Error: " << pMsg.toLatin1().constData() << std::endl;
 }
 

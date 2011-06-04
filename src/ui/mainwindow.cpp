@@ -873,27 +873,10 @@ void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
-    QString bitVersion;
-
-    switch (getAppBitVersion()) {
-        case x86:
-            bitVersion = " (32-bit)";
-
-            break;
-        case x86_64:
-            bitVersion = " (64-bit)";
-
-            break;
-        default:
-            // Unknown, so...
-
-            bitVersion = "";
-    }
-
     QMessageBox::about(this, qApp->applicationName(),
-                        "<h1 align=center><b>"+qApp->applicationName()+" "+qApp->applicationVersion()+bitVersion+"</b></h1>"
+                        "<h1 align=center><b>"+getAppVersion(qApp)+"</b></h1>"
                        +"<h3 align=center><em>"+getOsName()+"</em></h3>"
-                       +"<p align=center><em>&copy;2011</em></p>"
+                       +"<p align=center><em>"+getAppCopyright(true)+"</em></p>"
                        +"<a href=\""+QString(OpencorHomepageUrl)+"\">"+qApp->applicationName()+"</a> "+tr("is a cross-platform <a href=\"http://www.cellml.org/\">CellML</a>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
 }
 
