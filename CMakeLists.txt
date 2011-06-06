@@ -108,7 +108,7 @@ SET(UIS
 
 SET(RESOURCES
     res/common.qrc
-    res/gui.qrc
+    res/ui.qrc
 )
 
 # Various include directories

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../res/OpenCOR.qrc">
+   <iconset resource="../../res/ui.qrc">
     <normaloff>:/appIcon</normaloff>:/appIcon</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
@@ -33,7 +33,7 @@
       <string>&amp;New</string>
      </property>
      <property name="icon">
-      <iconset resource="../../res/OpenCOR.qrc">
+      <iconset resource="../../res/ui.qrc">
        <normaloff>:/oxygen/mimetypes/application-x-zerosize.png</normaloff>:/oxygen/mimetypes/application-x-zerosize.png</iconset>
      </property>
      <addaction name="actionCellML10File"/>
@@ -62,7 +62,7 @@
       <string>&amp;Language</string>
      </property>
      <property name="icon">
-      <iconset resource="../../res/OpenCOR.qrc">
+      <iconset resource="../../res/ui.qrc">
        <normaloff>:/oxygen/categories/applications-education-language.png</normaloff>:/oxygen/categories/applications-education-language.png</iconset>
      </property>
      <addaction name="actionSystem"/>
@@ -98,7 +98,7 @@
       <string>&amp;Toolbars</string>
      </property>
      <property name="icon">
-      <iconset resource="../../res/OpenCOR.qrc">
+      <iconset resource="../../res/ui.qrc">
        <normaloff>:/oxygen/actions/configure-toolbars.png</normaloff>:/oxygen/actions/configure-toolbars.png</iconset>
      </property>
      <addaction name="actionFileToolbar"/>
@@ -258,7 +258,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/application-exit.png</normaloff>:/oxygen/actions/application-exit.png</iconset>
    </property>
    <property name="text">
@@ -279,7 +279,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/flags/en.png</normaloff>:/flags/en.png</iconset>
    </property>
    <property name="text">
@@ -297,7 +297,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/flags/fr.png</normaloff>:/flags/fr.png</iconset>
    </property>
    <property name="text">
@@ -315,7 +315,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/apps/help-browser.png</normaloff>:/oxygen/apps/help-browser.png</iconset>
    </property>
    <property name="text">
@@ -333,7 +333,7 @@
   </action>
   <action name="actionHomePage">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/categories/applications-internet.png</normaloff>:/oxygen/categories/applications-internet.png</iconset>
    </property>
    <property name="text">
@@ -348,7 +348,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/help-about.png</normaloff>:/oxygen/actions/help-about.png</iconset>
    </property>
    <property name="text">
@@ -363,7 +363,7 @@
   </action>
   <action name="actionResetAll">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/system-reboot.png</normaloff>:/oxygen/actions/system-reboot.png</iconset>
    </property>
    <property name="text">
@@ -416,7 +416,7 @@
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/document-open.png</normaloff>:/oxygen/actions/document-open.png</iconset>
    </property>
    <property name="text">
@@ -442,7 +442,7 @@
   </action>
   <action name="actionClose">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/document-close.png</normaloff>:/oxygen/actions/document-close.png</iconset>
    </property>
    <property name="text">
@@ -468,7 +468,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/document-save.png</normaloff>:/oxygen/actions/document-save.png</iconset>
    </property>
    <property name="text">
@@ -486,7 +486,7 @@
   </action>
   <action name="actionSaveAs">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/document-save-as.png</normaloff>:/oxygen/actions/document-save-as.png</iconset>
    </property>
    <property name="text">
@@ -501,7 +501,7 @@
   </action>
   <action name="actionSaveAll">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/document-save-all.png</normaloff>:/oxygen/actions/document-save-all.png</iconset>
    </property>
    <property name="text">
@@ -516,7 +516,7 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/mimetypes/application-x-zerosize.png</normaloff>:/oxygen/mimetypes/application-x-zerosize.png</iconset>
    </property>
    <property name="text">
@@ -542,7 +542,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/view-fullscreen.png</normaloff>:/oxygen/actions/view-fullscreen.png</iconset>
    </property>
    <property name="text">
@@ -608,7 +608,7 @@
   </action>
   <action name="actionCheckForUpdates">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/apps/system-software-update.png</normaloff>:/oxygen/apps/system-software-update.png</iconset>
    </property>
    <property name="text">
@@ -623,7 +623,7 @@
   </action>
   <action name="actionPreferences">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/configure.png</normaloff>:/oxygen/actions/configure.png</iconset>
    </property>
    <property name="text">
@@ -635,7 +635,7 @@
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/document-print.png</normaloff>:/oxygen/actions/document-print.png</iconset>
    </property>
    <property name="text">
@@ -653,7 +653,7 @@
   </action>
   <action name="actionRun">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/media-playback-start.png</normaloff>:/oxygen/actions/media-playback-start.png</iconset>
    </property>
    <property name="text">
@@ -671,7 +671,7 @@
   </action>
   <action name="actionStop">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/media-playback-stop.png</normaloff>:/oxygen/actions/media-playback-stop.png</iconset>
    </property>
    <property name="text">
@@ -697,7 +697,7 @@
   </action>
   <action name="actionUndo">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-undo.png</normaloff>:/oxygen/actions/edit-undo.png</iconset>
    </property>
    <property name="text">
@@ -715,7 +715,7 @@
   </action>
   <action name="actionRedo">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-redo.png</normaloff>:/oxygen/actions/edit-redo.png</iconset>
    </property>
    <property name="text">
@@ -733,7 +733,7 @@
   </action>
   <action name="actionCut">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-cut.png</normaloff>:/oxygen/actions/edit-cut.png</iconset>
    </property>
    <property name="text">
@@ -751,7 +751,7 @@
   </action>
   <action name="actionCopy">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
    </property>
    <property name="text">
@@ -769,7 +769,7 @@
   </action>
   <action name="actionPaste">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-paste.png</normaloff>:/oxygen/actions/edit-paste.png</iconset>
    </property>
    <property name="text">
@@ -787,7 +787,7 @@
   </action>
   <action name="actionDelete">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
    </property>
    <property name="text">
@@ -805,7 +805,7 @@
   </action>
   <action name="actionFind">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-find.png</normaloff>:/oxygen/actions/edit-find.png</iconset>
    </property>
    <property name="text">
@@ -870,7 +870,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/tools-report-bug.png</normaloff>:/oxygen/actions/tools-report-bug.png</iconset>
    </property>
    <property name="text">
@@ -893,7 +893,7 @@
   </action>
   <action name="actionOpenReopen">
    <property name="icon">
-    <iconset resource="../../res/OpenCOR.qrc">
+    <iconset resource="../../res/ui.qrc">
      <normaloff>:/oxygen/actions/document-open.png</normaloff>:/oxygen/actions/document-open.png</iconset>
    </property>
    <property name="text">
@@ -912,7 +912,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../../res/OpenCOR.qrc"/>
+  <include location="../../res/ui.qrc"/>
  </resources>
  <connections/>
 </ui>
