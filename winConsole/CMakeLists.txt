@@ -19,7 +19,7 @@ SET(HEADERS
 )
 
 SET(RESOURCES
-    res/${PROJECT_NAME}.qrc
+    ../res/common.qrc
 )
 
 # Various include directories
