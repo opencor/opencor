@@ -26,23 +26,27 @@
             There are two sets of language files:
         </p>
 
-        <ul>
+        <ol>
             <li>
-                Qt-specific files: these files are originally located under <code>[QtCreator]/share/qtcreator/translations/qt_xx.qm</code> with <code>xx</code> the language code (e.g. <code>fr</code> for French). So, for every language supported by OpenCOR (except for English which is natively supported by Qt), we need to add one such a file to <a href="https://github.com/opencor/opencor/tree/master/res"><code>[OpenCOR]/res</code></a>. Then, an entry for that file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
+                <strong>Qt-specific files:</strong> these files are originally located under <code>[QtCreator]/share/qtcreator/translations/qt_xx.qm</code> with <code>xx</code> the language code (e.g. <code>fr</code> for French). So, for every language supported by OpenCOR (except for English which is natively supported by Qt), we need to add one such a file to <a href="https://github.com/opencor/opencor/tree/master/res"><code>[OpenCOR]/res</code></a>. Then, an entry for that file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
                 <pre class="prettyprint">&lt;file alias=&quot;qt_xx&quot;&gt;qt_xx.qm&lt;/file&gt;</pre>
             </li>
             <li>
-                OpenCOR-specific files: for each supported language (except for English), a file called <code>[OpenCOR]/i18n/OpenCOR_xx.ts</code> must be created. The best way to go about this is by starting from an existing language file (e.g. <a href="https://github.com/opencor/opencor/blob/master/i18n/OpenCOR_fr.ts"><code>[OpenCOR]/i18n/OpenCOR_fr.ts</code></a>). From there, locate the following line:
+                <strong>OpenCOR-specific files:</strong> for each supported language (except for English), a file called <code>[OpenCOR]/i18n/OpenCOR_xx.ts</code> must be created. The best way to go about this is by starting from an existing language file (e.g. <a href="https://github.com/opencor/opencor/blob/master/i18n/OpenCOR_fr.ts"><code>[OpenCOR]/i18n/OpenCOR_fr.ts</code></a>). From there, locate the following line:
                 <pre class="prettyprint">&lt;TS version=&quot;2.0&quot; language=&quot;xx_XX&quot; sourcelanguage=&quot;en_GB&quot;&gt;</pre>
                 and replace <code>xx_XX</code> accordingly. Otherwise, as for the Qt-specific file above, an entry for the OpenCOR-specific file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
                 <pre class="prettyprint">&lt;file alias=&quot;app_xx&quot;&gt;../build/OpenCOR_xx.qm&lt;/file&gt;</pre>
-                The <code>OpenCOR_xx.qm</code> file gets automatically generated when <a href="developBuildTestAndPackage.html#buildAndTest">building OpenCOR</a>. This does, however, require updating <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
+                The <code>OpenCOR_xx.qm</code> file gets automatically generated from the <code>OpenCOR_xx.ts</code> file when <a href="developBuildTestAndPackage.html#buildAndTest">building OpenCOR</a>. This does, however, require updating <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
                 <pre class="prettyprint lang-cmake">SET(LANGUAGE_FILES
     ${PROJECT_NAME}_fr
     ${PROJECT_NAME}_xx    # New language file
 )</pre>
             </li>
-        </ul>
+        </ol>
+
+        <p>
+            On the user interface (UI) side, an <a href="http://doc.qt.nokia.com/latest/qaction.html">action</a> and a menu item exist for each supported language. The best way to add UI support for a new language is by mimicking what has been done for the <code>actionEnglish</code> action in <a href="https://github.com/opencor/opencor/blob/master/src/ui/mainwindow.ui"><code>[OpenCOR]/src/ui/mainwindow.ui</code></a>. A similar mimicking work then has to be done in <a href="https://github.com/opencor/opencor/blob/master/src/ui/mainwindow.cpp"><code>[OpenCOR]/src/ui/mainwindow.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/ui/mainwindow.h"><code>[OpenCOR]/src/ui/mainwindow.h</code></a> by looking up both <code>actionEnglish</code> and <code>EnglishLocale</code>.
+        </p>
 
         <div class="copyright">
             Copyright ©2011
