@@ -28,10 +28,13 @@ SET(SOURCES
 
     src/plugins/edit/viewer/mmlviewerwidget.cpp
     src/plugins/edit/viewer/viewerwindow.cpp
+
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywidget.cpp
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywindow.cpp
+
     src/plugins/organise/filebrowser/filebrowserwidget.cpp
     src/plugins/organise/filebrowser/filebrowserwindow.cpp
+
     src/plugins/organise/fileorganiser/fileorganiserwidget.cpp
     src/plugins/organise/fileorganiser/fileorganiserwindow.cpp
 
@@ -64,10 +67,13 @@ SET(HEADERS_MOC
 
     src/plugins/edit/viewer/mmlviewerwidget.h
     src/plugins/edit/viewer/viewerwindow.h
+
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywidget.h
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywindow.h
+
     src/plugins/organise/filebrowser/filebrowserwidget.h
     src/plugins/organise/filebrowser/filebrowserwindow.h
+
     src/plugins/organise/fileorganiser/fileorganiserwidget.h
     src/plugins/organise/fileorganiser/fileorganiserwindow.h
 
@@ -92,8 +98,11 @@ SET(UIS
     src/ui/preferenceswindow.ui
 
     src/plugins/edit/viewer/viewerwindow.ui
+
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywindow.ui
+
     src/plugins/organise/filebrowser/filebrowserwindow.ui
+
     src/plugins/organise/fileorganiser/fileorganiserwindow.ui
 )
 

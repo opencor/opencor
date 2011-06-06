@@ -37,9 +37,7 @@ void about(const QCoreApplication *pApp)
 {
     version(pApp);
 
-    std::cout << std::endl;
     std::cout << getOsName().toLatin1().constData() << std::endl;
-    std::cout << std::endl;
     std::cout << getAppCopyright(false).toLatin1().constData() << std::endl;
     std::cout << std::endl;
     std::cout << pApp->applicationName().toLatin1().constData()
