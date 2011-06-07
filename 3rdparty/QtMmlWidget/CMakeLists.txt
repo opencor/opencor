@@ -19,14 +19,6 @@ INCLUDE_DIRECTORIES(${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
 
 # Rules to build QtMmlWidget
 
-IF(APPLE)
-    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
-ELSE()
-    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-ENDIF()
-# Note: the above is only required so that we can quickly test QtMmlWidget
-#       without first having to package everything
-
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${SOURCES}
 )

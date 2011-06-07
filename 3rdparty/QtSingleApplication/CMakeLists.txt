@@ -23,14 +23,6 @@ INCLUDE_DIRECTORIES(${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
 
 QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
 
-IF(APPLE)
-    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
-ELSE()
-    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-ENDIF()
-# Note: the above is only required so that we can quickly test
-#       QtSingleApplication without first having to package everything
-
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${SOURCES}
     ${SOURCES_MOC}
