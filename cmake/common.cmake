@@ -19,7 +19,6 @@ MACRO(INITIALISATION)
 
         MESSAGE("Building a release version...")
     ENDIF()
-SET(DEBUG_MODE ON)
 
     # Default compiler and linker settings
 
