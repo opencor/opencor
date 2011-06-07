@@ -4,6 +4,14 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
+# Some in-house Make functions/macros
+
+INCLUDE(cmake/common.cmake)
+
+# Some initialisations
+
+INITIALISATION()
+
 # Version of OpenCOR
 
 SET(VERSION_MAJOR 0)
@@ -123,8 +131,6 @@ INCLUDE_DIRECTORIES(src/widgets)
 
 # Qt specific
 
-FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
-
 SET(QT_USE_QTHELP TRUE)
 SET(QT_USE_QTNETWORK TRUE)
 SET(QT_USE_QTSQL TRUE)
@@ -187,16 +193,6 @@ ELSEIF(APPLE)
     SET(SOURCES ${SOURCES} res/boomy/${IconFile})
 ENDIF()
 
-# Type of build
-# Note: we do this here, so that all of our third-party libraries can benefit
-#       from these settings
-
-IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    SET(DEBUG_MODE ON)
-ELSE()
-    SET(DEBUG_MODE OFF)
-ENDIF()
-
 # Build the third-party libraries used by the GUI version of OpenCOR
 
 SET(THIRD_PARTY_LIBRARIES LibQxt QScintilla QtMmlWidget QtSingleApplication)
@@ -215,9 +211,6 @@ FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
 ENDFOREACH()
 
 # Rules to build the GUI version of OpenCOR
-
-#SET(CMAKE_VERBOSE_MAKEFILE ON)
-SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
 QT4_WRAP_UI(SOURCES_UIS ${UIS})
@@ -255,14 +248,8 @@ ENDIF()
 
 # Compiler and linker options
 
-SET(CMAKE_CXX_FLAGS "-Wall")
+SET(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
 SET(LINK_FLAGS_PROPERTIES)
-
-IF(${DEBUG_MODE})
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
-ELSE()
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
-ENDIF()
 
 IF(WIN32)
     SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-enable-auto-import")
