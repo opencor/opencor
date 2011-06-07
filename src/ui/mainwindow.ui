@@ -72,6 +72,8 @@
     </widget>
     <addaction name="menuLanguage"/>
     <addaction name="separator"/>
+    <addaction name="actionPlugins"/>
+    <addaction name="separator"/>
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionResetAll"/>
@@ -907,6 +909,15 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionPlugins">
+   <property name="icon">
+    <iconset resource="../../res/ui.qrc">
+     <normaloff>:/oxygen/apps/preferences-plugin.png</normaloff>:/oxygen/apps/preferences-plugin.png</iconset>
+   </property>
+   <property name="text">
+    <string>Plu&amp;gins...</string>
    </property>
   </action>
  </widget>

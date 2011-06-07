@@ -30,7 +30,6 @@ SET(SOURCES
     src/misc/cellml.cpp
     src/misc/common.cpp
     src/misc/filemanager.cpp
-    src/misc/pluginmanager.cpp
     src/misc/utils.cpp
     src/misc/versionmanager.cpp
 
@@ -45,6 +44,9 @@ SET(SOURCES
 
     src/plugins/organise/fileorganiser/fileorganiserwidget.cpp
     src/plugins/organise/fileorganiser/fileorganiserwindow.cpp
+
+    src/plugins/pluginmanager.cpp
+    src/plugins/pluginswindow.cpp
 
     src/ui/centralwidget.cpp
     src/ui/checkforupdateswindow.cpp
@@ -70,7 +72,6 @@ SET(HEADERS
 
 SET(HEADERS_MOC
     src/misc/filemanager.h
-    src/misc/pluginmanager.h
     src/misc/versionmanager.h
 
     src/plugins/edit/viewer/mmlviewerwidget.h
@@ -84,6 +85,9 @@ SET(HEADERS_MOC
 
     src/plugins/organise/fileorganiser/fileorganiserwidget.h
     src/plugins/organise/fileorganiser/fileorganiserwindow.h
+
+    src/plugins/pluginmanager.h
+    src/plugins/pluginswindow.h
 
     src/ui/centralwidget.h
     src/ui/checkforupdateswindow.h
@@ -99,6 +103,8 @@ SET(HEADERS_MOC
 )
 
 SET(UIS
+    src/plugins/pluginswindow.ui
+
     src/ui/centralwidget.ui
     src/ui/checkforupdateswindow.ui
     src/ui/helpwindow.ui
@@ -122,6 +128,7 @@ SET(RESOURCES
 # Various include directories
 
 INCLUDE_DIRECTORIES(src/misc)
+INCLUDE_DIRECTORIES(src/plugins)
 INCLUDE_DIRECTORIES(src/plugins/edit/viewer)
 INCLUDE_DIRECTORIES(src/plugins/organise/cellmlmodelrepository)
 INCLUDE_DIRECTORIES(src/plugins/organise/filebrowser)

@@ -3,10 +3,11 @@
 #include "checkforupdateswindow.h"
 #include "common.h"
 #include "dockwidget.h"
-#include "mainwindow.h"
 #include "filebrowserwindow.h"
 #include "fileorganiserwindow.h"
 #include "helpwindow.h"
+#include "mainwindow.h"
+#include "pluginswindow.h"
 #include "preferenceswindow.h"
 #include "utils.h"
 #include "viewerwindow.h"
@@ -837,9 +838,18 @@ void MainWindow::on_actionFrench_triggered()
     setLocale(FrenchLocale);
 }
 
+void MainWindow::on_actionPlugins_triggered()
+{
+    // Plugins' preferences
+
+    OpenCOR::PluginsWindow pluginsWindow(this);
+
+    pluginsWindow.exec();
+}
+
 void MainWindow::on_actionPreferences_triggered()
 {
-    // Update the user's preferences
+    // User's preferences
 
     OpenCOR::PreferencesWindow preferencesWindow(this);
 

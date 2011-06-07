@@ -614,6 +614,10 @@
         <source>Open/reopen a file</source>
         <translation>Ouvrir/réouvrir un fichier</translation>
     </message>
+    <message>
+        <source>Plu&amp;gins...</source>
+        <translation>E&amp;xtensions...</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::MainWindow</name>
@@ -636,6 +640,13 @@
     <message>
         <source>CellML File</source>
         <translation>Fichier CellML</translation>
+    </message>
+</context>
+<context>
+    <name>PluginsWindow</name>
+    <message>
+        <source>Plugins</source>
+        <translation>Extensions</translation>
     </message>
 </context>
 <context>

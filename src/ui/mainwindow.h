@@ -119,6 +119,7 @@ private Q_SLOTS:
     void on_actionSystem_triggered();
     void on_actionEnglish_triggered();
     void on_actionFrench_triggered();
+    void on_actionPlugins_triggered();
     void on_actionPreferences_triggered();
     void on_actionHomePage_triggered();
     void on_actionCellMLHomePage_triggered();
