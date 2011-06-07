@@ -73,20 +73,9 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${THIRD_PARTY_LIBRARIES}
 )
 
-# Compiler and linker options
+# Additional compiler and linker settings
 
 SET(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
-SET(LINK_FLAGS_PROPERTIES)
-
-SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-enable-auto-import")
-# Note: -Wl,-enable-auto-import allows us to use our various third-party
-#       libraries without having to worry about importing their functions, etc.
-
-IF(NOT ${DEBUG_MODE})
-    SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
-    # Note: -Wl,-s strips all the symbols, thus reducing the final size of
-    #       our console application
-ENDIF()
 
 SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-subsystem,console")
 # Note: -Wl,-subsystem,console makes sure that we end up with a console
