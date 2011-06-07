@@ -33,9 +33,6 @@ SET(SOURCES
     src/misc/utils.cpp
     src/misc/versionmanager.cpp
 
-    src/plugins/edit/viewer/mmlviewerwidget.cpp
-    src/plugins/edit/viewer/viewerwindow.cpp
-
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywidget.cpp
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywindow.cpp
 
@@ -54,9 +51,7 @@ SET(SOURCES
     src/ui/mainwindow.cpp
     src/ui/preferenceswindow.cpp
 
-    src/widgets/commonwidget.cpp
     src/widgets/docktoolbar.cpp
-    src/widgets/dockwidget.cpp
     src/widgets/helpwidget.cpp
     src/widgets/tabwidget.cpp
     src/widgets/treeview.cpp
@@ -66,16 +61,11 @@ SET(HEADERS
     src/misc/cellml.h
     src/misc/common.h
     src/misc/utils.h
-
-    src/widgets/commonwidget.h
 )
 
 SET(HEADERS_MOC
     src/misc/filemanager.h
     src/misc/versionmanager.h
-
-    src/plugins/edit/viewer/mmlviewerwidget.h
-    src/plugins/edit/viewer/viewerwindow.h
 
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywidget.h
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywindow.h
@@ -96,7 +86,6 @@ SET(HEADERS_MOC
     src/ui/preferenceswindow.h
 
     src/widgets/docktoolbar.h
-    src/widgets/dockwidget.h
     src/widgets/helpwidget.h
     src/widgets/tabwidget.h
     src/widgets/treeview.h
@@ -110,8 +99,6 @@ SET(UIS
     src/ui/helpwindow.ui
     src/ui/mainwindow.ui
     src/ui/preferenceswindow.ui
-
-    src/plugins/edit/viewer/viewerwindow.ui
 
     src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywindow.ui
 
@@ -129,7 +116,6 @@ SET(RESOURCES
 
 INCLUDE_DIRECTORIES(src/misc)
 INCLUDE_DIRECTORIES(src/plugins)
-INCLUDE_DIRECTORIES(src/plugins/edit/viewer)
 INCLUDE_DIRECTORIES(src/plugins/organise/cellmlmodelrepository)
 INCLUDE_DIRECTORIES(src/plugins/organise/filebrowser)
 INCLUDE_DIRECTORIES(src/plugins/organise/fileorganiser)
@@ -217,6 +203,24 @@ FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
     ENDFOREACH()
 ENDFOREACH()
 
+# Build the plugins used by the GUI version of OpenCOR
+
+SET(PLUGINS core edit/viewer)
+SET(COMPULSORY_PLUGINS Core)
+
+FOREACH(PLUGIN ${PLUGINS})
+    SET(PLUGIN_DIR src/plugins/${PLUGIN})
+    SET(PLUGIN_INCLUDE_DIRS)
+    # Note: the above variable is defined here, but is actually set when
+    #       processing the CMakeLists.txt file of the plugin
+
+    ADD_SUBDIRECTORY(${PLUGIN_DIR})
+
+    FOREACH(PLUGIN_INCLUDE_DIR ${PLUGIN_INCLUDE_DIRS})
+        INCLUDE_DIRECTORIES(${PLUGIN_DIR}/${PLUGIN_INCLUDE_DIR})
+    ENDFOREACH()
+ENDFOREACH()
+
 # Rules to build the GUI version of OpenCOR
 
 QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
@@ -233,14 +237,22 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
-
     ${QT_QTHELP_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTSQL_LIBRARY}
     ${QT_QTWEBKIT_LIBRARY}
     ${QT_QTXML_LIBRARY}
 
+    ${COMPULSORY_PLUGINS}
+
     ${THIRD_PARTY_LIBRARIES}
+
+    #---GRY---
+    # The following libraries are optional plugins, so they shouldn't be listed
+    # here, but for now they have to be since OpenCOR doesn't yet support
+    # plugins as such
+
+    Viewer
 )
 
 IF(WIN32 OR APPLE)

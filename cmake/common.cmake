@@ -63,3 +63,30 @@ MACRO(PACKAGE_THIRD_PARTY_LIBRARY)
         INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
     ENDIF()
 ENDMACRO()
+
+MACRO(PACKAGE_PLUGIN)
+    #---GRY---
+
+    # Deployed location:
+    # ------------------
+    # The plugin is currently deployed in the same location as third-party
+    # libraries, since OpenCOR doesn't currently support plugins as such.
+    # However, once it does, the plugin will have to be deployed in its correct
+    # location, i.e. the "plugins" folder. For the time being, though, the
+    # current approach allows to test things, so...
+
+    # Translation files:
+    # ------------------
+    # There is currently no support for the internationalisation of the plugin.
+    # This is therefore something that will have to be added at some point.
+
+    IF(WIN32)
+#        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION plugins)
+        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+    ELSEIF(NOT APPLE)
+#        INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins)
+        INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
+    ENDIF()
+
+MESSAGE(WARNING "Call to PACKAGE_PLUGIN for ${PROJECT_NAME}: please note that the plugin is not currently being deployed in the right location. Also, there is currently no support for the internationalisation of the plugin.")
+ENDMACRO()

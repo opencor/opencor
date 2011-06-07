@@ -656,11 +656,4 @@
         <translation>Préférences</translation>
     </message>
 </context>
-<context>
-    <name>ViewerWindow</name>
-    <message>
-        <source>Viewer</source>
-        <translation>Visionneur</translation>
-    </message>
-</context>
 </TS>
