@@ -4,7 +4,7 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-# Some in-house Make functions/macros
+# Some in-house CMake functions/macros
 
 INCLUDE(../cmake/common.cmake)
 
