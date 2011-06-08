@@ -1,5 +1,13 @@
 PROJECT(LibQxt)
 
+# Some in-house CMake functions/macros
+
+INCLUDE(../../cmake/common.cmake)
+
+# Initialise LibQxt
+
+INITIALISE_THIRD_PARTY_LIBRARY()
+
 # Files that make up LibQxt
 
 SET(SOURCES
@@ -48,17 +56,9 @@ IF(WIN32)
     #       QxtTemporaryDirPrivate) to compile fine on Windows
 ENDIF()
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED
-    ${SOURCES}
-)
-
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+BUILD_THIRD_PARTY_LIBRARY(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
 )
-
-# Linker settings
-
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
 # Rules to package LibQxt
 

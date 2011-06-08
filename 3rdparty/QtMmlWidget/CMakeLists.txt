@@ -1,5 +1,13 @@
 PROJECT(QtMmlWidget)
 
+# Some in-house CMake functions/macros
+
+INCLUDE(../../cmake/common.cmake)
+
+# Initialise QtMmlWidget
+
+INITIALISE_THIRD_PARTY_LIBRARY()
+
 # Files that make up QtMmlWidget
 
 SET(SOURCES
@@ -19,19 +27,11 @@ INCLUDE_DIRECTORIES(${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
 
 # Rules to build QtMmlWidget
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED
-    ${SOURCES}
-)
-
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+BUILD_THIRD_PARTY_LIBRARY(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTXML_LIBRARY}
 )
-
-# Linker settings
-
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
 # Rules to package QtMmlWidget
 

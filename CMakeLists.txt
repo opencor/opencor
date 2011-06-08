@@ -145,11 +145,6 @@ EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} doc/${PROJECT_NAME
                                                            -o build/${PROJECT_NAME}.qhc
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# Update the translation (.ts) files and generate the language (.qm) files
-# which will later on be embedded in the executable as resources
-
-UPDATE_LANGUAGE_FILES()
-
 # Set the application icon, but only for Windows and Mac OS X, since in the
 # case of Linux, it's done through res/OpenCOR.qrc
 
@@ -206,6 +201,11 @@ FOREACH(PLUGIN ${PLUGINS})
         INCLUDE_DIRECTORIES(${PLUGIN_DIR}/${PLUGIN_INCLUDE_DIR})
     ENDFOREACH()
 ENDFOREACH()
+
+# Update the translation (.ts) files and generate the language (.qm) files
+# which will later on be embedded in the executable as resources
+
+UPDATE_LANGUAGE_FILES()
 
 # Rules to build the GUI version of OpenCOR
 
