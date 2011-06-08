@@ -88,5 +88,5 @@ MACRO(PACKAGE_PLUGIN)
         INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
     ENDIF()
 
-MESSAGE(WARNING "Call to PACKAGE_PLUGIN for ${PROJECT_NAME}: please note that the plugin is not currently being deployed in the right location. Also, there is currently no support for the internationalisation of the plugin.")
+MESSAGE(WARNING "---GRY--- Call to PACKAGE_PLUGIN (in [OpenCOR]/cmake/common.cmake) for the ${PROJECT_NAME} plugin: please note that the plugin is not currently being deployed in the right location. Also, there is currently no support for the internationalisation of the plugin.")
 ENDMACRO()
