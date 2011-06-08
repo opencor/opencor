@@ -8,9 +8,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 INCLUDE(../cmake/common.cmake)
 
-# Some initialisations
+# Initialise the project
 
-INITIALISATION()
+INITIALISE_PROJECT()
 
 # Files that make up the console version of OpenCOR
 

@@ -18,6 +18,10 @@
             Internationalisation
         </h1>
 
+        <h2>
+            General
+        </h2>
+
         <p>
             OpenCOR is a multi-lingual application currently supporting both English and French. OpenCOR will, by default, try to use the language used by a user's operating system. If it cannot, then it will revert to English. Otherwise, users can switch to any language supported by OpenCOR, independent of the language used by their operating system.
         </p>
@@ -46,6 +50,16 @@
 
         <p>
             On the user interface (UI) side, an <a href="http://doc.qt.nokia.com/latest/qaction.html">action</a> and a menu item exist for each supported language. The best way to add UI support for a new language is by mimicking what has been done for the <code>actionEnglish</code> action in <a href="https://github.com/opencor/opencor/blob/master/src/ui/mainwindow.ui"><code>[OpenCOR]/src/ui/mainwindow.ui</code></a>. A similar mimicking work then has to be done in <a href="https://github.com/opencor/opencor/blob/master/src/ui/mainwindow.cpp"><code>[OpenCOR]/src/ui/mainwindow.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/ui/mainwindow.h"><code>[OpenCOR]/src/ui/mainwindow.h</code></a> by looking up both <code>actionEnglish</code> and <code>EnglishLocale</code>.
+        </p>
+
+        <h2>
+            Plugins
+        </h2>
+
+        <p>
+            A <code>[Plugin]_xx.ts</code> file must be created for each plugin that requires internationalisation and that file must be placed in <code>[Plugin]/i18n</code>. A <code>ui.qrc</code> file must also be created and placed in <code>[Plugin]/res</code>. For example, for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/edit/viewer"><code>Viewer plugin</code></a> and the French language, we have <a href="https://github.com/opencor/opencor/blob/master/src/plugins/edit/viewer/i18n/Viewer_fr.ts"><code>[OpenCOR]/src/plugins/edit/viewer/i18n/Viewer_fr.ts</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/edit/viewer/i18n/Viewer_fr.ts"><code>[OpenCOR]/src/plugins/edit/viewer/res/ui.qrc</code></a>.
+
+            For a set of translations to be embedded in a pluging, the <code>CMakeLists.txt</code> file of the plugin must absolutely set the <code>SOURCES</code>, <code>HEADERS</code>, <code>HEADERS_MOC</code> and <code>UIS</code> variables, even if it means some of them are to be empty (this is critical for the compilation of the translations). In addition, the <code>RESOURCES</code> variable must reference the aforementioned <code>ui.qrc</code> file
         </p>
 
         <div class="copyright">

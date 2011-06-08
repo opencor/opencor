@@ -8,9 +8,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 INCLUDE(cmake/common.cmake)
 
-# Some initialisations
+# Initialise the project
 
-INITIALISATION()
+INITIALISE_PROJECT()
 
 # Version of OpenCOR
 
@@ -146,23 +146,9 @@ EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} doc/${PROJECT_NAME
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Update the translation (.ts) files and generate the language (.qm) files
-# which will be embedded in the executable as resources
+# which will later on be embedded in the executable as resources
 
-SET(LANGUAGE_FILES
-    ${PROJECT_NAME}_fr
-)
-
-FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
-    SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
-
-    EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} -no-obsolete
-                                                     ${SOURCES} ${HEADERS} ${HEADERS_MOC} ${UIS}
-                                                 -ts ${TS_FILE}
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-    EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${TS_FILE}
-                                                  -qm build/${LANGUAGE_FILE}.qm
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-ENDFOREACH()
+UPDATE_LANGUAGE_FILES()
 
 # Set the application icon, but only for Windows and Mac OS X, since in the
 # case of Linux, it's done through res/OpenCOR.qrc

@@ -1,5 +1,13 @@
 PROJECT(Core)
 
+# Some in-house CMake functions/macros
+
+INCLUDE(../../../cmake/common.cmake)
+
+# Initialise the plugin
+
+INITIALISE_PLUGIN(FALSE)
+
 # Files that make up the Core plugin
 
 SET(SOURCES
@@ -22,24 +30,13 @@ SET(PLUGIN_INCLUDE_DIRS ${LOCAL_PLUGIN_INCLUDE_DIRS} PARENT_SCOPE)
 
 INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 
-# Rules to build the Core plugin
+# Build the plugin
 
-QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
-
-ADD_LIBRARY(${PROJECT_NAME} SHARED
-    ${SOURCES}
-    ${SOURCES_MOC}
-)
-
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+BUILD_PLUGIN(${PROJECT_NAME} FALSE
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
 )
 
-# Linker settings
-
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
-
-# Rules to package the Core plugin
+# Package the plugin
 
 PACKAGE_PLUGIN()

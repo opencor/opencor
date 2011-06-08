@@ -1,5 +1,13 @@
 PROJECT(Viewer)
 
+# Some in-house CMake functions/macros
+
+INCLUDE(../../../../cmake/common.cmake)
+
+# Initialise the plugin
+
+INITIALISE_PLUGIN(TRUE)
+
 # Files that make up the Viewer plugin
 
 SET(SOURCES
@@ -23,18 +31,9 @@ SET(PLUGIN_INCLUDE_DIRS ${LOCAL_PLUGIN_INCLUDE_DIRS} PARENT_SCOPE)
 
 INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 
-# Rules to build the Viewer plugin
+# Build the plugin
 
-QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
-QT4_WRAP_UI(SOURCES_UIS ${UIS})
-
-ADD_LIBRARY(${PROJECT_NAME} SHARED
-    ${SOURCES}
-    ${SOURCES_MOC}
-    ${SOURCES_UIS}
-)
-
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+BUILD_PLUGIN(${PROJECT_NAME} TRUE
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
 
@@ -42,10 +41,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     QtMmlWidget
 )
 
-# Linker settings
-
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
-
-# Rules to package the Viewer plugin
+# Package the plugin
 
 PACKAGE_PLUGIN()

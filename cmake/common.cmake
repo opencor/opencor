@@ -1,4 +1,4 @@
-MACRO(INITIALISATION)
+MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -56,6 +56,77 @@ MACRO(INITIALISATION)
     ENDIF()
 ENDMACRO()
 
+MACRO(INITIALISE_PLUGIN INTERNATIONALISATION)
+    SET(SOURCES)
+    SET(HEADERS)
+    SET(HEADERS_MOC)
+    SET(UIS)
+
+    IF(${INTERNATIONALISATION})
+        SET(RESOURCES
+            res/ui.qrc
+        )
+    ELSE()
+        SET(RESOURCES)
+    ENDIF()
+ENDMACRO()
+
+MACRO(UPDATE_LANGUAGE_FILES)
+    # Update the translation (.ts) files and generate the language (.qm) files
+    # which will later on be embedded in the project itself
+    # Note: this requires SOURCES, HEADERS, HEADERS_MOC and UIS to be defined
+    #       for the current CMake project, even if that means that these
+    #       variables are to be empty (the case with some plugins for example).
+    #       Indeed, since otherwise the value of these variables, as defined in
+    #       a previous project, may be used, so...
+
+    SET(LANGUAGE_FILES
+        ${PROJECT_NAME}_fr
+    )
+
+    FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
+        SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
+
+        EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} -no-obsolete
+                                                         ${SOURCES} ${HEADERS} ${HEADERS_MOC} ${UIS}
+                                                     -ts ${TS_FILE}
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+        EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${TS_FILE}
+                                                      -qm ${CMAKE_SOURCE_DIR}/build/${LANGUAGE_FILE}.qm
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+    ENDFOREACH()
+ENDMACRO()
+
+MACRO(BUILD_PLUGIN PLUGIN_NAME INTERNATIONALISATION)
+    # Update the translation (.ts) files and generate the language (.qm) files
+    # which will later on be embedded in the plugin itself
+
+    IF(${INTERNATIONALISATION})
+        UPDATE_LANGUAGE_FILES()
+    ENDIF()
+
+    # Rules to build the Viewer plugin
+
+    QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
+    QT4_WRAP_UI(SOURCES_UIS ${UIS})
+    QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+
+    ADD_LIBRARY(${PLUGIN_NAME} SHARED
+        ${SOURCES}
+        ${SOURCES_MOC}
+        ${SOURCES_UIS}
+        ${SOURCES_RCS}
+    )
+
+    TARGET_LINK_LIBRARIES(${PLUGIN_NAME}
+        ${ARGN}
+    )
+
+    # Linker settings
+
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
+ENDMACRO()
+
 MACRO(PACKAGE_THIRD_PARTY_LIBRARY)
     IF(WIN32)
         INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
@@ -88,5 +159,9 @@ MACRO(PACKAGE_PLUGIN)
         INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
     ENDIF()
 
-MESSAGE(WARNING "---GRY--- Call to PACKAGE_PLUGIN (in [OpenCOR]/cmake/common.cmake) for the ${PROJECT_NAME} plugin: please note that the plugin is not currently being deployed in the right location. Also, there is currently no support for the internationalisation of the plugin.")
+MESSAGE("")
+MESSAGE("********* WARNING **********")
+MESSAGE("Call to PACKAGE_PLUGIN (in [OpenCOR]/cmake/common.cmake) for the ${PROJECT_NAME} plugin: please note that the plugin is not currently being deployed in the right location. Also, there is currently no support for the internationalisation of the plugin.")
+MESSAGE("****************************")
+MESSAGE("")
 ENDMACRO()

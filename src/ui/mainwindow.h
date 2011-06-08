@@ -52,6 +52,12 @@ private:
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
 
+//---GRY---
+// The following translator is only here so that we can test the translations
+// in the Viewer plugin. It will clearly have to be removed once OpenCOR can
+// 'properly' handle plugins...
+QTranslator mViewerTranslator;
+
     CellmlModelRepositoryWindow *mCellmlModelRepositoryWindow;
     FileBrowserWindow *mFileBrowserWindow;
     FileOrganiserWindow *mFileOrganiserWindow;

@@ -529,6 +529,10 @@ void MainWindow::setLocale(const QString &pLocale)
         mAppTranslator.load(":app_"+realLocale);
         qApp->installTranslator(&mAppTranslator);
 
+qApp->removeTranslator(&mViewerTranslator);
+mViewerTranslator.load(":Viewer_"+realLocale);
+qApp->installTranslator(&mViewerTranslator);
+
         // Translate the whole GUI (including any 'child' window) and update the
         // actions just to be on the safe side
 
