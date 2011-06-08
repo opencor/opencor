@@ -4,11 +4,11 @@ PROJECT(QtMmlWidget)
 
 INCLUDE(../../cmake/common.cmake)
 
-# Initialise QtMmlWidget
+# Initialise the third-party library
 
 INITIALISE_THIRD_PARTY_LIBRARY()
 
-# Files that make up QtMmlWidget
+# Files that make up the third-party library
 
 SET(SOURCES
     src/qtmmlwidget.cpp
@@ -25,7 +25,7 @@ SET(THIRD_PARTY_LIBRARY_INCLUDE_DIRS ${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS} P
 
 INCLUDE_DIRECTORIES(${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
 
-# Rules to build QtMmlWidget
+# Build the third-party library
 
 BUILD_THIRD_PARTY_LIBRARY(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
@@ -33,6 +33,6 @@ BUILD_THIRD_PARTY_LIBRARY(${PROJECT_NAME}
     ${QT_QTXML_LIBRARY}
 )
 
-# Rules to package QtMmlWidget
+# Package the third-party library
 
 PACKAGE_THIRD_PARTY_LIBRARY()

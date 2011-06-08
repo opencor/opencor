@@ -4,11 +4,11 @@ PROJECT(QtSingleApplication)
 
 INCLUDE(../../cmake/common.cmake)
 
-# Initialise QtSingleApplication
+# Initialise the third-party library
 
 INITIALISE_THIRD_PARTY_LIBRARY()
 
-# Files that make up QtSingleApplication
+# Files that make up the third-party library
 
 SET(SOURCES
     src/qtlocalpeer.cpp
@@ -27,7 +27,7 @@ SET(THIRD_PARTY_LIBRARY_INCLUDE_DIRS ${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS} P
 
 INCLUDE_DIRECTORIES(${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
 
-# Rules to build QtSingleApplication
+# Build the third-party library
 
 BUILD_THIRD_PARTY_LIBRARY(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
@@ -35,6 +35,6 @@ BUILD_THIRD_PARTY_LIBRARY(${PROJECT_NAME}
     ${QT_QTNETWORK_LIBRARY}
 )
 
-# Rules to package QtSingleApplication
+# Package the third-party library
 
 PACKAGE_THIRD_PARTY_LIBRARY()

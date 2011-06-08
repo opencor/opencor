@@ -207,7 +207,7 @@ FOREACH(PLUGIN ${PLUGINS})
     ENDFOREACH()
 ENDFOREACH()
 
-# Rules to build the GUI version of OpenCOR
+# Build the GUI version of OpenCOR
 
 QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
 QT4_WRAP_UI(SOURCES_UIS ${UIS})
@@ -312,7 +312,7 @@ IF(APPLE)
     ENDFOREACH()
 ENDIF()
 
-# Rules to package OpenCOR (using CPack)
+# Package OpenCOR (using CPack)
 
 SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_CONTACT "Alan Garny (alan.garny@dpag.ox.ac.uk)")

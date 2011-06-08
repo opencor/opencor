@@ -58,7 +58,7 @@ FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
     ENDFOREACH()
 ENDFOREACH()
 
-# Rules to build the console version of OpenCOR
+# Build the console version of OpenCOR
 
 QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
 
