@@ -8,7 +8,7 @@ INCLUDE(../../../cmake/common.cmake)
 
 INITIALISE_PLUGIN(FALSE)
 
-# Files that make up the Core plugin
+# Files that make up the plugin
 
 SET(SOURCES
     src/commonwidget.cpp

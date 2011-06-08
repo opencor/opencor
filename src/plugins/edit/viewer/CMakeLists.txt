@@ -8,7 +8,7 @@ INCLUDE(../../../../cmake/common.cmake)
 
 INITIALISE_PLUGIN(TRUE)
 
-# Files that make up the Viewer plugin
+# Files that make up the plugin
 
 SET(SOURCES
     src/mmlviewerwidget.cpp

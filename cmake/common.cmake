@@ -103,7 +103,7 @@ MACRO(UPDATE_LANGUAGE_FILES)
 ENDMACRO()
 
 MACRO(BUILD_THIRD_PARTY_LIBRARY THIRD_PARTY_LIBRARY_NAME)
-    # Rules to build the Viewer plugin
+    # Rules to build the third-party library
 
     IF("${HEADERS_MOC}" STREQUAL "")
         SET(SOURCES_MOC)

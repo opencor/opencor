@@ -513,9 +513,9 @@ void MainWindow::setLocale(const QString &pLocale)
         // The new locale is different from the existing one, so we need to
         // translate everything
 
-        QString realLocale = (pLocale == SystemLocale)?
-                                 QLocale::system().name().left(2):
-                                 pLocale;
+        const QString systemLocale = QLocale::system().name().left(2);
+
+        QString realLocale = (pLocale == SystemLocale)?systemLocale:pLocale;
 
         mLocale = pLocale;
 
