@@ -4,11 +4,11 @@ PROJECT(LibQxt)
 
 INCLUDE(../../cmake/common.cmake)
 
-# Initialise LibQxt
+# Initialise the third-party library
 
 INITIALISE_THIRD_PARTY_LIBRARY()
 
-# Files that make up LibQxt
+# Files that make up the third-party library
 
 SET(SOURCES
     src/core/qxtcommandoptions.cpp
@@ -39,7 +39,7 @@ SET(THIRD_PARTY_LIBRARY_INCLUDE_DIRS ${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS} P
 
 INCLUDE_DIRECTORIES(${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
 
-# Rules to build LibQxt
+# Build the third-party library
 
 ADD_DEFINITIONS(-DQXT_STATIC)
 # Note: the above is just to 'fool' LibQxt in believing that we want a static
@@ -60,6 +60,6 @@ BUILD_THIRD_PARTY_LIBRARY(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
 )
 
-# Rules to package LibQxt
+# Package the third-party library
 
 PACKAGE_THIRD_PARTY_LIBRARY()

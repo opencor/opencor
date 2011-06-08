@@ -4,11 +4,11 @@ PROJECT(QScintilla)
 
 INCLUDE(../../cmake/common.cmake)
 
-# Initialise QScintilla
+# Initialise the third-party library
 
 INITIALISE_THIRD_PARTY_LIBRARY()
 
-# Files that make up QScintilla
+# Files that make up the third-party library
 
 SET(SOURCES
     lexers/LexCPP.cpp
@@ -149,7 +149,7 @@ SET(THIRD_PARTY_LIBRARY_INCLUDE_DIRS ${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS} P
 
 INCLUDE_DIRECTORIES(${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
 
-# Rules to build QScintilla
+# Build the third-party library
 
 ADD_DEFINITIONS(-DQT -DSCI_LEXER)
 
@@ -158,6 +158,6 @@ BUILD_THIRD_PARTY_LIBRARY(${PROJECT_NAME}
     ${QT_QTGUI_LIBRARY}
 )
 
-# Rules to package QScintilla
+# Package the third-party library
 
 PACKAGE_THIRD_PARTY_LIBRARY()

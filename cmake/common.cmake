@@ -181,8 +181,9 @@ MACRO(PACKAGE_PLUGIN)
 
     # Translation files:
     # ------------------
-    # There is currently no support for the internationalisation of the plugin.
-    # This is therefore something that will have to be added at some point.
+    # There is currently no 'proper' support for the internationalisation of
+    # the plugin. This is therefore something that will have to be added at
+    # some point.
 
     IF(WIN32)
 #        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION plugins)
@@ -194,7 +195,7 @@ MACRO(PACKAGE_PLUGIN)
 
 MESSAGE("")
 MESSAGE("********* WARNING **********")
-MESSAGE("Call to PACKAGE_PLUGIN (in [OpenCOR]/cmake/common.cmake) for the ${PROJECT_NAME} plugin: please note that the plugin is not currently being deployed in the right location. Also, there is currently no support for the internationalisation of the plugin.")
+MESSAGE("Call to PACKAGE_PLUGIN (in [OpenCOR]/cmake/common.cmake) for the ${PROJECT_NAME} plugin: please note that the plugin is not currently being deployed in the right location. Also, there is currently no 'proper' support for the internationalisation of the plugin.")
 MESSAGE("****************************")
 MESSAGE("")
 ENDMACRO()
