@@ -69,7 +69,7 @@ MACRO(INITIALISE_PLUGIN INTERNATIONALISATION)
 
     IF(${INTERNATIONALISATION})
         SET(RESOURCES
-            res/ui.qrc
+            res/${PROJECT_NAME}.qrc
         )
     ELSE()
         SET(RESOURCES)

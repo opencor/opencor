@@ -38,6 +38,7 @@ BUILD_PLUGIN(${PROJECT_NAME}
     ${QT_QTGUI_LIBRARY}
 
     Core
+
     QtMmlWidget
 )
 
