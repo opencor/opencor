@@ -1,6 +1,6 @@
 @ECHO OFF
 
-CALL cleanprojall
+CALL cleanproj
 CALL makeproj %1
 
 TITLE Packaging OpenCOR...
