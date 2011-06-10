@@ -41,20 +41,22 @@ SET(QT_DONT_USE_QTGUI TRUE)
 
 INCLUDE(${QT_USE_FILE})
 
-# Build the third-party libraries used by the console version of OpenCOR
+# Build the plugins used by the console version of OpenCOR
 
-SET(THIRD_PARTY_LIBRARIES LibQxt)
+SET(PLUGINS
+    3rdparty/LibQxt
+)
 
-FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
-    SET(THIRD_PARTY_LIBRARY_DIR ../3rdparty/${THIRD_PARTY_LIBRARY})
-    SET(THIRD_PARTY_LIBRARY_INCLUDE_DIRS)
+FOREACH(PLUGIN ${PLUGINS})
+    SET(PLUGIN_DIR ../src/plugins/${PLUGIN})
+    SET(PLUGIN_INCLUDE_DIRS)
     # Note: the above variable is defined here, but is actually set when
-    #       processing the CMakeLists.txt file of the third-party library
+    #       processing the CMakeLists.txt file of the plugin
 
-    ADD_SUBDIRECTORY(${THIRD_PARTY_LIBRARY_DIR} 3rdparty/${THIRD_PARTY_LIBRARY})
+    ADD_SUBDIRECTORY(${PLUGIN_DIR} src/${PLUGIN})
 
-    FOREACH(THIRD_PARTY_LIBRARY_INCLUDE_DIR ${THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
-        INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR}/${THIRD_PARTY_LIBRARY_INCLUDE_DIR})
+    FOREACH(PLUGIN_INCLUDE_DIR ${PLUGIN_INCLUDE_DIRS})
+        INCLUDE_DIRECTORIES(${PLUGIN_DIR}/${PLUGIN_INCLUDE_DIR})
     ENDFOREACH()
 ENDFOREACH()
 
@@ -70,7 +72,12 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
 
-    ${THIRD_PARTY_LIBRARIES}
+    #---GRY---
+    # The following libraries are plugins, so they shouldn't be listed here,
+    # but for now they have to be since OpenCOR doesn't yet support plugins as
+    # such
+
+    LibQxt
 )
 
 # Additional compiler and linker settings

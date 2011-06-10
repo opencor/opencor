@@ -136,34 +136,22 @@ ELSEIF(APPLE)
     SET(SOURCES ${SOURCES} res/boomy/${IconFile})
 ENDIF()
 
-# Build the third-party libraries used by the GUI version of OpenCOR
-
-SET(THIRD_PARTY_LIBRARIES LibQxt QScintilla QtMmlWidget QtSingleApplication)
-
-FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
-    SET(THIRD_PARTY_LIBRARY_DIR 3rdparty/${THIRD_PARTY_LIBRARY})
-    SET(THIRD_PARTY_LIBRARY_INCLUDE_DIRS)
-    # Note: the above variable is defined here, but is actually set when
-    #       processing the CMakeLists.txt file of the third-party library
-
-    ADD_SUBDIRECTORY(${THIRD_PARTY_LIBRARY_DIR})
-
-    FOREACH(THIRD_PARTY_LIBRARY_INCLUDE_DIR ${THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
-        INCLUDE_DIRECTORIES(${THIRD_PARTY_LIBRARY_DIR}/${THIRD_PARTY_LIBRARY_INCLUDE_DIR})
-    ENDFOREACH()
-ENDFOREACH()
-
 # Build the plugins used by the GUI version of OpenCOR
 
 SET(PLUGINS
-    core
-    help
-    
-    edit/viewer 
-    
-    organise/cellmlmodelrepository
-    organise/filebrowser
-    organise/fileorganiser
+    Core
+    Help
+
+    3rdparty/LibQxt
+    3rdparty/QScintilla
+    3rdparty/QtMmlWidget
+    3rdparty/QtSingleApplication
+
+    edit/Viewer
+
+    organise/CellMLModelRepository
+    organise/FileBrowser
+    organise/FileOrganiser
 )
 
 FOREACH(PLUGIN ${PLUGINS})
@@ -201,18 +189,20 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTWEBKIT_LIBRARY}
     ${QT_QTXML_LIBRARY}
 
-    ${THIRD_PARTY_LIBRARIES}
-
     #---GRY---
-    # The following libraries are optional plugins, so they shouldn't be listed
-    # here, but for now they have to be since OpenCOR doesn't yet support
-    # plugins as such
+    # The following libraries are plugins, so they shouldn't be listed here,
+    # but for now they have to be since OpenCOR doesn't yet support plugins as
+    # such
 
     CellMLModelRepository
     Core
     FileBrowser
     FileOrganiser
     Help
+    LibQxt
+    QScintilla
+    QtMmlWidget
+    QtSingleApplication
     Viewer
 )
 

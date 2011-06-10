@@ -2,13 +2,13 @@ PROJECT(LibQxt)
 
 # Some in-house CMake functions/macros
 
-INCLUDE(../../cmake/common.cmake)
+INCLUDE(../../../../cmake/common.cmake)
 
-# Initialise the third-party library
+# Initialise the plugin
 
-INITIALISE_THIRD_PARTY_LIBRARY()
+INITIALISE_PLUGIN(FALSE)
 
-# Files that make up the third-party library
+# Files that make up the plugin
 
 SET(SOURCES
     src/core/qxtcommandoptions.cpp
@@ -34,12 +34,12 @@ ENDIF()
 
 # Various include directories
 
-SET(LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS src/core include/QxtCore)
-SET(THIRD_PARTY_LIBRARY_INCLUDE_DIRS ${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS} PARENT_SCOPE)
+SET(LOCAL_PLUGIN_INCLUDE_DIRS src/core include/QxtCore)
+SET(PLUGIN_INCLUDE_DIRS ${LOCAL_PLUGIN_INCLUDE_DIRS} PARENT_SCOPE)
 
-INCLUDE_DIRECTORIES(${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 
-# Build the third-party library
+# Build the plugin
 
 ADD_DEFINITIONS(-DQXT_STATIC)
 # Note: the above is just to 'fool' LibQxt in believing that we want a static
@@ -56,10 +56,10 @@ IF(WIN32)
     #       QxtTemporaryDirPrivate) to compile fine on Windows
 ENDIF()
 
-BUILD_THIRD_PARTY_LIBRARY(
+BUILD_PLUGIN(
     ${QT_QTCORE_LIBRARY}
 )
 
-# Package the third-party library
+# Package the plugin
 
-PACKAGE_THIRD_PARTY_LIBRARY()
+PACKAGE_PLUGIN()

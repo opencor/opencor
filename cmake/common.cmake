@@ -56,11 +56,6 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 ENDMACRO()
 
-MACRO(INITIALISE_THIRD_PARTY_LIBRARY)
-    SET(SOURCES)
-    SET(HEADERS_MOC)
-ENDMACRO()
-
 MACRO(INITIALISE_PLUGIN INTERNATIONALISATION)
     SET(SOURCES)
     SET(HEADERS)
@@ -102,44 +97,6 @@ MACRO(UPDATE_LANGUAGE_FILES)
     ENDFOREACH()
 ENDMACRO()
 
-MACRO(SET_LINKER_SETTINGS)
-    # Note: by default "lib" will be prepended to the name of the target file.
-    #       However, this is not common practice on Windows, so...
-
-    IF(WIN32)
-        SET_TARGET_PROPERTIES(${PROJECT_NAME}
-            PROPERTIES PREFIX ""
-        )
-    ENDIF()
-
-    SET_TARGET_PROPERTIES(${PROJECT_NAME}
-        PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
-    )
-ENDMACRO()
-
-MACRO(BUILD_THIRD_PARTY_LIBRARY)
-    # Rules to build the third-party library
-
-    IF("${HEADERS_MOC}" STREQUAL "")
-        SET(SOURCES_MOC)
-    ELSE()
-        QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
-    ENDIF()
-
-    ADD_LIBRARY(${PROJECT_NAME} SHARED
-        ${SOURCES}
-        ${SOURCES_MOC}
-    )
-
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-        ${ARGN}
-    )
-
-    # Linker settings
-
-    SET_LINKER_SETTINGS()
-ENDMACRO()
-
 MACRO(BUILD_PLUGIN)
     # Update the translation (.ts) files and generate the language (.qm) files
     # which will later on be embedded in the plugin itself
@@ -150,8 +107,17 @@ MACRO(BUILD_PLUGIN)
 
     # Rules to build the plugin
 
-    QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
-    QT4_WRAP_UI(SOURCES_UIS ${UIS})
+    IF("${HEADERS_MOC}" STREQUAL "")
+        SET(SOURCES_MOC)
+    ELSE()
+        QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
+    ENDIF()
+
+    IF("${UIS}" STREQUAL "")
+        SET(SOURCES_UIS)
+    ELSE()
+        QT4_WRAP_UI(SOURCES_UIS ${UIS})
+    ENDIF()
 
     IF("${RESOURCES}" STREQUAL "")
         SET(SOURCES_RCS)
@@ -171,16 +137,18 @@ MACRO(BUILD_PLUGIN)
     )
 
     # Linker settings
+    # Note: by default "lib" will be prepended to the name of the target file.
+    #       However, this is not common practice on Windows, so...
 
-    SET_LINKER_SETTINGS()
-ENDMACRO()
-
-MACRO(PACKAGE_THIRD_PARTY_LIBRARY)
     IF(WIN32)
-        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-    ELSEIF(NOT APPLE)
-        INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
+        SET_TARGET_PROPERTIES(${PROJECT_NAME}
+            PROPERTIES PREFIX ""
+        )
     ENDIF()
+
+    SET_TARGET_PROPERTIES(${PROJECT_NAME}
+        PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+    )
 ENDMACRO()
 
 MACRO(PACKAGE_PLUGIN)
@@ -201,7 +169,7 @@ MACRO(PACKAGE_PLUGIN)
     # some point.
 
     IF(WIN32)
-#        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION plugins)
+#        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/plugins)
         INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
     ELSEIF(NOT APPLE)
 #        INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins)

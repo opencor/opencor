@@ -2,13 +2,13 @@ PROJECT(QScintilla)
 
 # Some in-house CMake functions/macros
 
-INCLUDE(../../cmake/common.cmake)
+INCLUDE(../../../../cmake/common.cmake)
 
-# Initialise the third-party library
+# Initialise the plugin
 
-INITIALISE_THIRD_PARTY_LIBRARY()
+INITIALISE_PLUGIN(FALSE)
 
-# Files that make up the third-party library
+# Files that make up the plugin
 
 SET(SOURCES
     lexers/LexCPP.cpp
@@ -144,20 +144,20 @@ SET(HEADERS_MOC
 
 # Various include directories
 
-SET(LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS include lexlib Qt4 Qt4/Qsci src)
-SET(THIRD_PARTY_LIBRARY_INCLUDE_DIRS ${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS} PARENT_SCOPE)
+SET(LOCAL_PLUGIN_INCLUDE_DIRS include lexlib Qt4 Qt4/Qsci src)
+SET(PLUGIN_INCLUDE_DIRS ${LOCAL_PLUGIN_INCLUDE_DIRS} PARENT_SCOPE)
 
-INCLUDE_DIRECTORIES(${LOCAL_THIRD_PARTY_LIBRARY_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 
-# Build the third-party library
+# Build the plugin
 
 ADD_DEFINITIONS(-DQT -DSCI_LEXER)
 
-BUILD_THIRD_PARTY_LIBRARY(
+BUILD_PLUGIN(
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
 )
 
-# Package the third-party library
+# Package the plugin
 
-PACKAGE_THIRD_PARTY_LIBRARY()
+PACKAGE_PLUGIN()
