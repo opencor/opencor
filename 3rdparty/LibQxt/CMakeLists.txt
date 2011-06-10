@@ -56,7 +56,7 @@ IF(WIN32)
     #       QxtTemporaryDirPrivate) to compile fine on Windows
 ENDIF()
 
-BUILD_THIRD_PARTY_LIBRARY(${PROJECT_NAME}
+BUILD_THIRD_PARTY_LIBRARY(
     ${QT_QTCORE_LIBRARY}
 )
 
