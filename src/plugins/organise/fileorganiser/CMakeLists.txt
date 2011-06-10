@@ -1,32 +1,27 @@
-PROJECT(Core)
+PROJECT(FileOrganiser)
 
 # Some in-house CMake functions/macros
 
-INCLUDE(../../../cmake/common.cmake)
+INCLUDE(../../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(FALSE)
+INITIALISE_PLUGIN(TRUE)
 
 # Files that make up the plugin
 
 SET(SOURCES
-    src/commonwidget.cpp
-    src/docktoolbar.cpp
-    src/dockwidget.cpp
-    src/filemanager.cpp
-    src/treeview.cpp
-)
-
-SET(HEADERS
-    src/commonwidget.h
+    src/fileorganiserwidget.cpp
+    src/fileorganiserwindow.cpp
 )
 
 SET(HEADERS_MOC
-    src/docktoolbar.h
-    src/dockwidget.h
-    src/filemanager.h
-    src/treeview.h
+    src/fileorganiserwidget.h
+    src/fileorganiserwindow.h
+)
+
+SET(UIS
+    src/fileorganiserwindow.ui
 )
 
 # Various include directories
@@ -41,6 +36,13 @@ INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 BUILD_PLUGIN(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
+    ${QT_QTHELP_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
+    ${QT_QTSQL_LIBRARY}
+    ${QT_QTWEBKIT_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+
+    Core
 )
 
 # Package the plugin

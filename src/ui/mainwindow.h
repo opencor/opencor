@@ -56,6 +56,9 @@ private:
 // The following translators are only here so that we can test the translations
 // in the plugins. They will clearly have to be removed once OpenCOR can
 // 'properly' handle plugins...
+QTranslator mCellmlModelRepositoryTranslator;
+QTranslator mFileBrowserTranslator;
+QTranslator mFileOrganiserTranslator;
 QTranslator mHelpTranslator;
 QTranslator mViewerTranslator;
 

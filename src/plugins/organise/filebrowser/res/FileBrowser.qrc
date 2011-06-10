@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="FileBrowser_fr">../../../../../build/FileBrowser_fr.qm</file>
+    </qresource>
+</RCC>

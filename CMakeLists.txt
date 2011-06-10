@@ -29,18 +29,8 @@ SET(SOURCES
 
     src/misc/cellml.cpp
     src/misc/common.cpp
-    src/misc/filemanager.cpp
     src/misc/utils.cpp
     src/misc/versionmanager.cpp
-
-    src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywidget.cpp
-    src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywindow.cpp
-
-    src/plugins/organise/filebrowser/filebrowserwidget.cpp
-    src/plugins/organise/filebrowser/filebrowserwindow.cpp
-
-    src/plugins/organise/fileorganiser/fileorganiserwidget.cpp
-    src/plugins/organise/fileorganiser/fileorganiserwindow.cpp
 
     src/plugins/plugin.cpp
     src/plugins/pluginmanager.cpp
@@ -52,7 +42,6 @@ SET(SOURCES
     src/ui/preferenceswindow.cpp
 
     src/widgets/tabwidget.cpp
-    src/widgets/treeview.cpp
 )
 
 SET(HEADERS
@@ -62,17 +51,7 @@ SET(HEADERS
 )
 
 SET(HEADERS_MOC
-    src/misc/filemanager.h
     src/misc/versionmanager.h
-
-    src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywidget.h
-    src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywindow.h
-
-    src/plugins/organise/filebrowser/filebrowserwidget.h
-    src/plugins/organise/filebrowser/filebrowserwindow.h
-
-    src/plugins/organise/fileorganiser/fileorganiserwidget.h
-    src/plugins/organise/fileorganiser/fileorganiserwindow.h
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
@@ -84,7 +63,6 @@ SET(HEADERS_MOC
     src/ui/preferenceswindow.h
 
     src/widgets/tabwidget.h
-    src/widgets/treeview.h
 )
 
 SET(UIS
@@ -94,12 +72,6 @@ SET(UIS
     src/ui/checkforupdateswindow.ui
     src/ui/mainwindow.ui
     src/ui/preferenceswindow.ui
-
-    src/plugins/organise/cellmlmodelrepository/cellmlmodelrepositorywindow.ui
-
-    src/plugins/organise/filebrowser/filebrowserwindow.ui
-
-    src/plugins/organise/fileorganiser/fileorganiserwindow.ui
 )
 
 SET(RESOURCES
@@ -111,9 +83,6 @@ SET(RESOURCES
 
 INCLUDE_DIRECTORIES(src/misc)
 INCLUDE_DIRECTORIES(src/plugins)
-INCLUDE_DIRECTORIES(src/plugins/organise/cellmlmodelrepository)
-INCLUDE_DIRECTORIES(src/plugins/organise/filebrowser)
-INCLUDE_DIRECTORIES(src/plugins/organise/fileorganiser)
 INCLUDE_DIRECTORIES(src/ui)
 INCLUDE_DIRECTORIES(src/widgets)
 
@@ -186,7 +155,16 @@ ENDFOREACH()
 
 # Build the plugins used by the GUI version of OpenCOR
 
-SET(PLUGINS core edit/viewer help)
+SET(PLUGINS
+    core
+    help
+    
+    edit/viewer 
+    
+    organise/cellmlmodelrepository
+    organise/filebrowser
+    organise/fileorganiser
+)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
@@ -230,7 +208,10 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     # here, but for now they have to be since OpenCOR doesn't yet support
     # plugins as such
 
+    CellMLModelRepository
     Core
+    FileBrowser
+    FileOrganiser
     Help
     Viewer
 )

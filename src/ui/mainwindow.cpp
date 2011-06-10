@@ -529,6 +529,18 @@ void MainWindow::setLocale(const QString &pLocale)
         mAppTranslator.load(":app_"+realLocale);
         qApp->installTranslator(&mAppTranslator);
 
+qApp->removeTranslator(&mCellmlModelRepositoryTranslator);
+mCellmlModelRepositoryTranslator.load(":CellMLModelRepository_"+realLocale);
+qApp->installTranslator(&mCellmlModelRepositoryTranslator);
+
+qApp->removeTranslator(&mFileBrowserTranslator);
+mFileBrowserTranslator.load(":FileBrowser_"+realLocale);
+qApp->installTranslator(&mFileBrowserTranslator);
+
+qApp->removeTranslator(&mFileOrganiserTranslator);
+mFileOrganiserTranslator.load(":FileOrganiser_"+realLocale);
+qApp->installTranslator(&mFileOrganiserTranslator);
+
 qApp->removeTranslator(&mHelpTranslator);
 mHelpTranslator.load(":Help_"+realLocale);
 qApp->installTranslator(&mHelpTranslator);
