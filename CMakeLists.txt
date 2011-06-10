@@ -42,6 +42,7 @@ SET(SOURCES
     src/plugins/organise/fileorganiser/fileorganiserwidget.cpp
     src/plugins/organise/fileorganiser/fileorganiserwindow.cpp
 
+    src/plugins/plugin.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/pluginswindow.cpp
 
@@ -76,6 +77,7 @@ SET(HEADERS_MOC
     src/plugins/organise/fileorganiser/fileorganiserwidget.h
     src/plugins/organise/fileorganiser/fileorganiserwindow.h
 
+    src/plugins/plugin.h
     src/plugins/pluginmanager.h
     src/plugins/pluginswindow.h
 
