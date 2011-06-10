@@ -529,6 +529,10 @@ void MainWindow::setLocale(const QString &pLocale)
         mAppTranslator.load(":app_"+realLocale);
         qApp->installTranslator(&mAppTranslator);
 
+qApp->removeTranslator(&mHelpTranslator);
+mHelpTranslator.load(":Help_"+realLocale);
+qApp->installTranslator(&mHelpTranslator);
+
 qApp->removeTranslator(&mViewerTranslator);
 mViewerTranslator.load(":Viewer_"+realLocale);
 qApp->installTranslator(&mViewerTranslator);

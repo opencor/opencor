@@ -34,12 +34,9 @@ INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 # Build the plugin
 
 BUILD_PLUGIN(${PROJECT_NAME}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
+    QtMmlWidget
 
     Core
-
-    QtMmlWidget
 )
 
 # Package the plugin

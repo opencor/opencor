@@ -48,12 +48,9 @@ SET(SOURCES
 
     src/ui/centralwidget.cpp
     src/ui/checkforupdateswindow.cpp
-    src/ui/helpwindow.cpp
     src/ui/mainwindow.cpp
     src/ui/preferenceswindow.cpp
 
-    src/widgets/docktoolbar.cpp
-    src/widgets/helpwidget.cpp
     src/widgets/tabwidget.cpp
     src/widgets/treeview.cpp
 )
@@ -83,12 +80,9 @@ SET(HEADERS_MOC
 
     src/ui/centralwidget.h
     src/ui/checkforupdateswindow.h
-    src/ui/helpwindow.h
     src/ui/mainwindow.h
     src/ui/preferenceswindow.h
 
-    src/widgets/docktoolbar.h
-    src/widgets/helpwidget.h
     src/widgets/tabwidget.h
     src/widgets/treeview.h
 )
@@ -98,7 +92,6 @@ SET(UIS
 
     src/ui/centralwidget.ui
     src/ui/checkforupdateswindow.ui
-    src/ui/helpwindow.ui
     src/ui/mainwindow.ui
     src/ui/preferenceswindow.ui
 
@@ -193,8 +186,7 @@ ENDFOREACH()
 
 # Build the plugins used by the GUI version of OpenCOR
 
-SET(PLUGINS core edit/viewer)
-SET(COMPULSORY_PLUGINS Core)
+SET(PLUGINS core edit/viewer help)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
@@ -231,8 +223,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTWEBKIT_LIBRARY}
     ${QT_QTXML_LIBRARY}
 
-    ${COMPULSORY_PLUGINS}
-
     ${THIRD_PARTY_LIBRARIES}
 
     #---GRY---
@@ -240,6 +230,8 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     # here, but for now they have to be since OpenCOR doesn't yet support
     # plugins as such
 
+    Core
+    Help
     Viewer
 )
 

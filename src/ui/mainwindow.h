@@ -53,9 +53,10 @@ private:
     QTranslator mAppTranslator;
 
 //---GRY---
-// The following translator is only here so that we can test the translations
-// in the Viewer plugin. It will clearly have to be removed once OpenCOR can
+// The following translators are only here so that we can test the translations
+// in the plugins. They will clearly have to be removed once OpenCOR can
 // 'properly' handle plugins...
+QTranslator mHelpTranslator;
 QTranslator mViewerTranslator;
 
     CellmlModelRepositoryWindow *mCellmlModelRepositoryWindow;

@@ -1,4 +1,4 @@
-PROJECT(Core)
+PROJECT(Help)
 
 # Some in-house CMake functions/macros
 
@@ -6,23 +6,22 @@ INCLUDE(../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(FALSE)
+INITIALISE_PLUGIN(TRUE)
 
 # Files that make up the plugin
 
 SET(SOURCES
-    src/commonwidget.cpp
-    src/docktoolbar.cpp
-    src/dockwidget.cpp
-)
-
-SET(HEADERS
-    src/commonwidget.h
+    src/helpwidget.cpp
+    src/helpwindow.cpp
 )
 
 SET(HEADERS_MOC
-    src/docktoolbar.h
-    src/dockwidget.h
+    src/helpwidget.h
+    src/helpwindow.h
+)
+
+SET(UIS
+    src/helpwindow.ui
 )
 
 # Various include directories
@@ -35,8 +34,11 @@ INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 # Build the plugin
 
 BUILD_PLUGIN(${PROJECT_NAME}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
+    ${QT_QTHELP_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
+    ${QT_QTWEBKIT_LIBRARY}
+
+    Core
 )
 
 # Package the plugin
