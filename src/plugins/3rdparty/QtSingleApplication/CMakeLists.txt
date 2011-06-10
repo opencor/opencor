@@ -1,4 +1,4 @@
-PROJECT(QtSingleApplication)
+PROJECT(QtSingleApplicationPlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,7 +6,7 @@ INCLUDE(../../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(FALSE)
+INITIALISE_PLUGIN(QtSingleApplication FALSE)
 
 # Files that make up the plugin
 

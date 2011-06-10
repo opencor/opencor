@@ -1,4 +1,4 @@
-PROJECT(Help)
+PROJECT(HelpPlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,7 +6,7 @@ INCLUDE(../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(TRUE)
+INITIALISE_PLUGIN(Help TRUE)
 
 # Files that make up the plugin
 
@@ -38,7 +38,7 @@ BUILD_PLUGIN(
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTWEBKIT_LIBRARY}
 
-    Core
+    CorePlugin
 )
 
 # Package the plugin

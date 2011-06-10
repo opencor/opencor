@@ -77,7 +77,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     # but for now they have to be since OpenCOR doesn't yet support plugins as
     # such
 
-    LibQxt
+    LibQxtPlugin
 )
 
 # Additional compiler and linker settings

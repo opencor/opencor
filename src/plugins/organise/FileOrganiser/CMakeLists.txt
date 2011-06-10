@@ -1,4 +1,4 @@
-PROJECT(FileOrganiser)
+PROJECT(FileOrganiserPlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,7 +6,7 @@ INCLUDE(../../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(TRUE)
+INITIALISE_PLUGIN(FileOrganiser TRUE)
 
 # Files that make up the plugin
 
@@ -34,15 +34,7 @@ INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 # Build the plugin
 
 BUILD_PLUGIN(
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTHELP_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
-    ${QT_QTSQL_LIBRARY}
-    ${QT_QTWEBKIT_LIBRARY}
-    ${QT_QTXML_LIBRARY}
-
-    Core
+    CorePlugin
 )
 
 # Package the plugin

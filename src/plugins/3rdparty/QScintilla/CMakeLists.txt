@@ -1,4 +1,4 @@
-PROJECT(QScintilla)
+PROJECT(QScintillaPlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,7 +6,7 @@ INCLUDE(../../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(FALSE)
+INITIALISE_PLUGIN(QScintilla FALSE)
 
 # Files that make up the plugin
 

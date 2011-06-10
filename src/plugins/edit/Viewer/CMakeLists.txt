@@ -1,4 +1,4 @@
-PROJECT(Viewer)
+PROJECT(ViewerPlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,7 +6,7 @@ INCLUDE(../../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(TRUE)
+INITIALISE_PLUGIN(Viewer TRUE)
 
 # Files that make up the plugin
 
@@ -34,9 +34,8 @@ INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 # Build the plugin
 
 BUILD_PLUGIN(
-    QtMmlWidget
-
-    Core
+    CorePlugin
+    QtMmlWidgetPlugin
 )
 
 # Package the plugin

@@ -112,7 +112,7 @@ EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} doc/${PROJECT_NAME
 # Update the translation (.ts) files and generate the language (.qm) files
 # which will later on be embedded in the executable as resources
 
-UPDATE_LANGUAGE_FILES()
+UPDATE_LANGUAGE_FILES(${PROJECT_NAME})
 
 # Set the application icon, but only for Windows and Mac OS X, since in the
 # case of Linux, it's done through res/OpenCOR.qrc
@@ -194,16 +194,16 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     # but for now they have to be since OpenCOR doesn't yet support plugins as
     # such
 
-    CellMLModelRepository
-    Core
-    FileBrowser
-    FileOrganiser
-    Help
-    LibQxt
-    QScintilla
-    QtMmlWidget
-    QtSingleApplication
-    Viewer
+    CellMLModelRepositoryPlugin
+    CorePlugin
+    FileBrowserPlugin
+    FileOrganiserPlugin
+    HelpPlugin
+    LibQxtPlugin
+    QScintillaPlugin
+    QtMmlWidgetPlugin
+    QtSingleApplicationPlugin
+    ViewerPlugin
 )
 
 IF(WIN32 OR APPLE)

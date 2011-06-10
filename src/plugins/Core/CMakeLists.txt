@@ -1,4 +1,4 @@
-PROJECT(Core)
+PROJECT(CorePlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,7 +6,7 @@ INCLUDE(../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(FALSE)
+INITIALISE_PLUGIN(Core FALSE)
 
 # Files that make up the plugin
 

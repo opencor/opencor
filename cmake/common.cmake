@@ -56,7 +56,9 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 ENDMACRO()
 
-MACRO(INITIALISE_PLUGIN INTERNATIONALISATION)
+MACRO(INITIALISE_PLUGIN TARGET_NAME INTERNATIONALISATION)
+    SET(PLUGIN_NAME ${TARGET_NAME})
+
     SET(SOURCES)
     SET(HEADERS)
     SET(HEADERS_MOC)
@@ -64,14 +66,14 @@ MACRO(INITIALISE_PLUGIN INTERNATIONALISATION)
 
     IF(${INTERNATIONALISATION})
         SET(RESOURCES
-            res/${PROJECT_NAME}.qrc
+            res/${PLUGIN_NAME}.qrc
         )
     ELSE()
         SET(RESOURCES)
     ENDIF()
 ENDMACRO()
 
-MACRO(UPDATE_LANGUAGE_FILES)
+MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     # Update the translation (.ts) files and generate the language (.qm) files
     # which will later on be embedded in the project itself
     # Note: this requires SOURCES, HEADERS, HEADERS_MOC and UIS to be defined
@@ -81,7 +83,7 @@ MACRO(UPDATE_LANGUAGE_FILES)
     #       a previous project, may be used, so...
 
     SET(LANGUAGE_FILES
-        ${PROJECT_NAME}_fr
+        ${TARGET_NAME}_fr
     )
 
     FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
@@ -102,7 +104,7 @@ MACRO(BUILD_PLUGIN)
     # which will later on be embedded in the plugin itself
 
     IF(NOT "${RESOURCES}" STREQUAL "")
-        UPDATE_LANGUAGE_FILES()
+        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
     ENDIF()
 
     # Rules to build the plugin
@@ -147,7 +149,7 @@ MACRO(BUILD_PLUGIN)
     ENDIF()
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME}
-        PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+        PROPERTIES OUTPUT_NAME ${PLUGIN_NAME} LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 ENDMACRO()
 
