@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>oxygen/actions/document-print.png</file>
+        <file>oxygen/actions/edit-copy.png</file>
+        <file>oxygen/actions/edit-delete.png</file>
+        <file>oxygen/actions/go-next.png</file>
+        <file>oxygen/actions/go-previous.png</file>
+    </qresource>
+</RCC>

@@ -56,7 +56,7 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 ENDMACRO()
 
-MACRO(INITIALISE_PLUGIN TARGET_NAME INTERNATIONALISATION)
+MACRO(INITIALISE_PLUGIN TARGET_NAME HAS_RESOURCES)
     SET(PLUGIN_NAME ${TARGET_NAME})
 
     SET(SOURCES)
@@ -64,7 +64,7 @@ MACRO(INITIALISE_PLUGIN TARGET_NAME INTERNATIONALISATION)
     SET(HEADERS_MOC)
     SET(UIS)
 
-    IF(${INTERNATIONALISATION})
+    IF(${HAS_RESOURCES})
         SET(RESOURCES
             res/${PLUGIN_NAME}.qrc
         )
@@ -74,8 +74,9 @@ MACRO(INITIALISE_PLUGIN TARGET_NAME INTERNATIONALISATION)
 ENDMACRO()
 
 MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
-    # Update the translation (.ts) files and generate the language (.qm) files
-    # which will later on be embedded in the project itself
+    # Update the translation (.ts) files (if they exist) and generate the
+    # language (.qm) files which will later on be embedded in the project
+    # itself
     # Note: this requires SOURCES, HEADERS, HEADERS_MOC and UIS to be defined
     #       for the current CMake project, even if that means that these
     #       variables are to be empty (the case with some plugins for example).
@@ -89,13 +90,15 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
         SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
 
-        EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} -no-obsolete
-                                                         ${SOURCES} ${HEADERS} ${HEADERS_MOC} ${UIS}
-                                                     -ts ${TS_FILE}
-                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-        EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${TS_FILE}
-                                                      -qm ${CMAKE_SOURCE_DIR}/build/${LANGUAGE_FILE}.qm
-                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+        IF(EXISTS "${PROJECT_SOURCE_DIR}/${TS_FILE}")
+            EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} -no-obsolete
+                                                             ${SOURCES} ${HEADERS} ${HEADERS_MOC} ${UIS}
+                                                         -ts ${TS_FILE}
+                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+            EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${TS_FILE}
+                                                          -qm ${CMAKE_SOURCE_DIR}/build/${LANGUAGE_FILE}.qm
+                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+        ENDIF()
     ENDFOREACH()
 ENDMACRO()
 

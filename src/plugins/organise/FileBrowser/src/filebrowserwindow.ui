@@ -25,7 +25,7 @@
   </widget>
   <action name="actionHome">
    <property name="icon">
-    <iconset resource="../../../res/ui.qrc">
+    <iconset resource="../res/FileBrowser.qrc">
      <normaloff>:/oxygen/places/user-home.png</normaloff>:/oxygen/places/user-home.png</iconset>
    </property>
    <property name="text">
@@ -37,7 +37,7 @@
   </action>
   <action name="actionPrevious">
    <property name="icon">
-    <iconset resource="../../../res/ui.qrc">
+    <iconset resource="../../../Core/res/Core.qrc">
      <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
    </property>
    <property name="text">
@@ -49,7 +49,7 @@
   </action>
   <action name="actionNext">
    <property name="icon">
-    <iconset resource="../../../res/ui.qrc">
+    <iconset resource="../../../Core/res/Core.qrc">
      <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
    </property>
    <property name="text">
@@ -61,7 +61,7 @@
   </action>
   <action name="actionParent">
    <property name="icon">
-    <iconset resource="../../../res/ui.qrc">
+    <iconset resource="../res/FileBrowser.qrc">
      <normaloff>:/oxygen/actions/go-up.png</normaloff>:/oxygen/actions/go-up.png</iconset>
    </property>
    <property name="text">
@@ -73,7 +73,8 @@
   </action>
  </widget>
  <resources>
-  <include location="../../../res/ui.qrc"/>
+  <include location="../../../Core/res/Core.qrc"/>
+  <include location="../res/FileBrowser.qrc"/>
  </resources>
  <connections/>
 </ui>

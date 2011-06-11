@@ -6,7 +6,7 @@ INCLUDE(../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(Core FALSE)
+INITIALISE_PLUGIN(Core TRUE)
 
 # Files that make up the plugin
 

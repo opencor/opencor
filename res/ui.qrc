@@ -9,31 +9,20 @@
         <file>oxygen/actions/document-close.png</file>
         <file>oxygen/actions/document-open.png</file>
         <file>oxygen/actions/document-open-folder.png</file>
-        <file>oxygen/actions/document-print.png</file>
         <file>oxygen/actions/document-save.png</file>
         <file>oxygen/actions/document-save-all.png</file>
         <file>oxygen/actions/document-save-as.png</file>
-        <file>oxygen/actions/edit-copy.png</file>
         <file>oxygen/actions/edit-cut.png</file>
-        <file>oxygen/actions/edit-delete.png</file>
         <file>oxygen/actions/edit-find.png</file>
         <file>oxygen/actions/edit-paste.png</file>
         <file>oxygen/actions/edit-redo.png</file>
         <file>oxygen/actions/edit-undo.png</file>
-        <file>oxygen/actions/folder-new.png</file>
-        <file>oxygen/actions/go-home.png</file>
-        <file>oxygen/actions/go-next.png</file>
-        <file>oxygen/actions/go-previous.png</file>
-        <file>oxygen/actions/go-up.png</file>
         <file>oxygen/actions/help-about.png</file>
         <file>oxygen/actions/media-playback-start.png</file>
         <file>oxygen/actions/media-playback-stop.png</file>
         <file>oxygen/actions/system-reboot.png</file>
         <file>oxygen/actions/tools-report-bug.png</file>
         <file>oxygen/actions/view-fullscreen.png</file>
-        <file>oxygen/actions/zoom-in.png</file>
-        <file>oxygen/actions/zoom-original.png</file>
-        <file>oxygen/actions/zoom-out.png</file>
         <file>oxygen/apps/help-browser.png</file>
         <file>oxygen/apps/preferences-plugin.png</file>
         <file>oxygen/apps/system-software-update.png</file>
@@ -42,14 +31,11 @@
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
         <file>oxygen/places/document-multiple.png</file>
         <file>oxygen/places/folder.png</file>
-        <file>oxygen/places/user-home.png</file>
         <file>oxygen/status/image-missing.png</file>
         <file alias="cellmlLogo">cellML.png</file>
         <file alias="helpWidgetError">helpWidgetError.html</file>
         <file alias="qt_fr">qt_fr.qm</file>
         <file alias="cellmlTemplate">template.cellml</file>
-        <file alias="qchFile">../build/OpenCOR.qch</file>
-        <file alias="qhcFile">../build/OpenCOR.qhc</file>
         <file alias="app_fr">../build/OpenCOR_fr.qm</file>
     </qresource>
 </RCC>
