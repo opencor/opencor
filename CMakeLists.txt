@@ -197,7 +197,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     # plugins as such, so...
 
     CoreUIPlugin
-HelpPlugin
     LibQxtPlugin
     QtSingleApplicationPlugin
 )

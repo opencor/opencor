@@ -2,8 +2,6 @@
 #include "centralwidget.h"
 #include "checkforupdateswindow.h"
 #include "common.h"
-#include "dockwidget.h"
-#include "helpwindow.h"
 #include "mainwindow.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
@@ -98,10 +96,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
-    // Create our various dock windows
-
-    mHelpWindow = new HelpWindow(this);
-
     // Load our various plugins
 
 //---GRY--- TO BE DONE...
@@ -139,13 +133,6 @@ MainWindow::MainWindow(QWidget *pParent) :
             this, SLOT(close()));
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
-
-    // Some connections to handle the visibility of our various dock windows
-
-    connect(mUi->actionHelp, SIGNAL(triggered(bool)),
-            mHelpWindow, SLOT(setVisible(bool)));
-    connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
-            mUi->actionHelp, SLOT(setChecked(bool)));
 
     // Some connections to handle the File menu
 
@@ -268,43 +255,6 @@ void MainWindow::updateWindowTitle()
         setWindowTitle(qApp->applicationName()+" - "+activeFileName);
 }
 
-void MainWindow::loadDockWindowSettings(DockWidget *pDockWindow,
-                                        const bool &pNeedDefaultSettings,
-                                        QSettings &pSettings,
-                                        const Qt::DockWidgetArea &pDockArea,
-                                        DockWidget *pDockWidget)
-{
-    CommonWidget *commonWidget = dynamic_cast<CommonWidget *>(pDockWindow);
-
-    if (commonWidget) {
-        // The dynamic casting was successful, so we are really dealing with
-        // the right kind of dock window and can therefore go ahead
-
-        if (pNeedDefaultSettings) {
-            // Hide the dock window, so that we can set things up without having
-            // the screen flashing
-
-            pDockWindow->setVisible(false);
-
-            // Position the dock window to its default location
-
-            if (pDockWidget)
-                tabifyDockWidget(pDockWidget, pDockWindow);
-            else
-                addDockWidget(pDockArea, pDockWindow);
-        }
-
-        // Load the dock window's settings
-
-        commonWidget->loadSettings(pSettings);
-
-        if (pNeedDefaultSettings)
-            // Make the dock window visible
-
-            pDockWindow->setVisible(true);
-    }
-}
-
 static const QString SettingsLocale              = "Locale";
 static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
@@ -374,8 +324,6 @@ void MainWindow::loadSettings()
 
         mCentralWidget->loadSettings(settings);
 
-        loadDockWindowSettings(mHelpWindow, needDefaultSettings, settings, Qt::RightDockWidgetArea);
-
 //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     settings.endGroup();
 }
@@ -425,8 +373,6 @@ void MainWindow::saveSettings()
 
         mCentralWidget->saveSettings(settings);
 
-        mHelpWindow->saveSettings(settings);
-
 //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     settings.endGroup();
 }
@@ -453,10 +399,6 @@ void MainWindow::setLocale(const QString &pLocale)
         mAppTranslator.load(":app_"+realLocale);
         qApp->installTranslator(&mAppTranslator);
 
-qApp->removeTranslator(&mHelpTranslator);
-mHelpTranslator.load(":Help_"+realLocale);
-qApp->installTranslator(&mHelpTranslator);
-
 //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
 
         // Translate the whole GUI (including our various plugins) and update
@@ -465,8 +407,6 @@ qApp->installTranslator(&mHelpTranslator);
         mUi->retranslateUi(this);
 
         updateActions();
-
-        mHelpWindow->retranslateUi();
 
 //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     }

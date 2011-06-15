@@ -14,8 +14,6 @@ namespace Ui {
 namespace OpenCOR {
 
 class CentralWidget;
-class DockWidget;
-class HelpWindow;
 
 class MainWindow : public QMainWindow
 {
@@ -45,24 +43,11 @@ private:
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
 
-//---GRY---
-// The following translators are only here so that we can test the translations
-// in the plugins. They will clearly have to be removed once OpenCOR can
-// 'properly' handle plugins...
-QTranslator mHelpTranslator;
-
-    HelpWindow *mHelpWindow;
-
     QMenu *mActionReopenMenu;
     QMenu *mActionOpenReopenMenu;
 
     QDir mActiveDir;
 
-    void loadDockWindowSettings(DockWidget *pDockWindow,
-                                const bool &pNeedDefaultSettings,
-                                QSettings &pSettings,
-                                const Qt::DockWidgetArea &pDockArea,
-                                DockWidget *pDockWidget = 0);
     void loadSettings();
     void saveSettings();
 

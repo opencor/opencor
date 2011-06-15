@@ -63,10 +63,6 @@
         <translation>Sélectionner le français comme langue utilisée par OpenCOR</translation>
     </message>
     <message>
-        <source>F1</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Home &amp;Page</source>
         <translation>&amp;Page d&apos;Accueil</translation>
     </message>
@@ -207,10 +203,6 @@
         <translation>&amp;Plein Ecran</translation>
     </message>
     <message>
-        <source>Show/hide the OpenCOR help</source>
-        <translation>Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
-    </message>
-    <message>
         <source>Switch to / back from full screen mode</source>
         <translation>Passer au / revenir du mode plein écran</translation>
     </message>
@@ -235,24 +227,8 @@
         <translation>&amp;Organiser</translation>
     </message>
     <message>
-        <source>File &amp;Organiser</source>
-        <translation>&amp;Organisateur de Fichiers</translation>
-    </message>
-    <message>
-        <source>&amp;CellML Model Repository</source>
-        <translation>Répertoire de Modèles &amp;CellML</translation>
-    </message>
-    <message>
-        <source>&amp;File Browser</source>
-        <translation>Gestionnaire de &amp;Fichiers</translation>
-    </message>
-    <message>
         <source>&amp;Edit</source>
         <translation>&amp;Editer</translation>
-    </message>
-    <message>
-        <source>&amp;Viewer</source>
-        <translation>&amp;Visionneur</translation>
     </message>
     <message>
         <source>Look up the CellML home page</source>

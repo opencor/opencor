@@ -82,8 +82,6 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionHelp"/>
-    <addaction name="separator"/>
     <addaction name="actionHomePage"/>
     <addaction name="actionCellMLHomePage"/>
     <addaction name="separator"/>
@@ -247,8 +245,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionHelp"/>
-   <addaction name="separator"/>
    <addaction name="actionHomePage"/>
    <addaction name="separator"/>
    <addaction name="actionAbout"/>
@@ -303,27 +299,6 @@
    </property>
    <property name="statusTip">
     <string>Select French as the language used by OpenCOR</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
-  <action name="actionHelp">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../res/ui.qrc">
-     <normaloff>:/oxygen/apps/help-browser.png</normaloff>:/oxygen/apps/help-browser.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Help</string>
-   </property>
-   <property name="statusTip">
-    <string>Show/hide the OpenCOR help</string>
-   </property>
-   <property name="shortcut">
-    <string>F1</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -562,38 +537,6 @@
    </property>
    <property name="statusTip">
     <string>Show/hide the status bar</string>
-   </property>
-  </action>
-  <action name="actionCellmlModelRepository">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;CellML Model Repository</string>
-   </property>
-  </action>
-  <action name="actionFileBrowser">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;File Browser</string>
-   </property>
-  </action>
-  <action name="actionFileOrganiser">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>File &amp;Organiser</string>
-   </property>
-  </action>
-  <action name="actionViewer">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Viewer</string>
    </property>
   </action>
   <action name="actionCellMLHomePage">
