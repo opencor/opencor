@@ -36,7 +36,7 @@ INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 BUILD_PLUGIN(
     ${QT_QTWEBKIT_LIBRARY}
 
-    CorePlugin
+    CoreUIPlugin
 )
 
 # Package the plugin

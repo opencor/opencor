@@ -1,4 +1,4 @@
-PROJECT(CorePlugin)
+PROJECT(CoreUIPlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,7 +6,7 @@ INCLUDE(../../../../cmake/common.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(Core TRUE)
+INITIALISE_PLUGIN(CoreUI TRUE)
 
 # Files that make up the plugin
 

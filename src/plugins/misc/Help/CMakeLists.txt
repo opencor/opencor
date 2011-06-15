@@ -38,7 +38,7 @@ BUILD_PLUGIN(
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTWEBKIT_LIBRARY}
 
-    CorePlugin
+    CoreUIPlugin
 )
 
 # Package the plugin

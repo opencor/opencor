@@ -139,8 +139,8 @@ ENDIF()
 # Build the plugins used by the GUI version of OpenCOR
 
 SET(PLUGINS
-    misc/Core
-    # Note: the Core plugin must be built before any other plugin
+    misc/CoreUI
+    # Note: the CoreUI plugin must be built before any other plugin
 
     3rdparty/LibQxt
     3rdparty/QScintilla
@@ -197,7 +197,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     # such
 
     CellMLModelRepositoryPlugin
-    CorePlugin
+    CoreUIPlugin
     FileBrowserPlugin
     FileOrganiserPlugin
     HelpPlugin

@@ -34,7 +34,7 @@ INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 # Build the plugin
 
 BUILD_PLUGIN(
-    CorePlugin
+    CoreUIPlugin
     QtMmlWidgetPlugin
 )
 
