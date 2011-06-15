@@ -21,7 +21,6 @@ class DockWidget;
 class CellmlModelRepositoryWindow;
 class FileBrowserWindow;
 class FileOrganiserWindow;
-class ViewerWindow;
 class HelpWindow;
 
 class MainWindow : public QMainWindow
@@ -60,13 +59,10 @@ QTranslator mCellmlModelRepositoryTranslator;
 QTranslator mFileBrowserTranslator;
 QTranslator mFileOrganiserTranslator;
 QTranslator mHelpTranslator;
-QTranslator mViewerTranslator;
 
     CellmlModelRepositoryWindow *mCellmlModelRepositoryWindow;
     FileBrowserWindow *mFileBrowserWindow;
     FileOrganiserWindow *mFileOrganiserWindow;
-
-    ViewerWindow *mViewerWindow;
 
     QHelpEngine *mHelpEngine;
     HelpWindow *mHelpWindow;

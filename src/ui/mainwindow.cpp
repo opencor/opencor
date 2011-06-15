@@ -10,7 +10,6 @@
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
 #include "utils.h"
-#include "viewerwindow.h"
 
 #include "ui_mainwindow.h"
 
@@ -135,9 +134,11 @@ MainWindow::MainWindow(QWidget *pParent) :
     mFileBrowserWindow           = new FileBrowserWindow(this);
     mFileOrganiserWindow         = new FileOrganiserWindow(this);
 
-    mViewerWindow = new ViewerWindow(this);
-
     mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OpencorHelpHomepageUrl), this);
+
+    // Load our various plugins
+
+    //---GRY--- TO BE DONE...
 
     // Some connections to handle the various toolbars
 
@@ -190,11 +191,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mFileOrganiserWindow, SIGNAL(visibilityChanged(bool)),
             mUi->actionFileOrganiser, SLOT(setChecked(bool)));
 
-    connect(mUi->actionViewer, SIGNAL(triggered(bool)),
-            mViewerWindow, SLOT(setVisible(bool)));
-    connect(mViewerWindow, SIGNAL(visibilityChanged(bool)),
-            mUi->actionViewer, SLOT(setChecked(bool)));
-
     connect(mUi->actionHelp, SIGNAL(triggered(bool)),
             mHelpWindow, SLOT(setVisible(bool)));
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
@@ -225,6 +221,10 @@ MainWindow::MainWindow(QWidget *pParent) :
             this, SLOT(fileClosed(const QString &)));
     connect(mCentralWidget, SIGNAL(fileActivated(const QString &)),
             this, SLOT(updateWindowTitle()));
+
+    // Some connections for the UI side of our various plugins
+
+    //---GRY--- TO BE DONE...
 
 #ifdef Q_WS_MAC
     // A special shortcut to have OpenCOR minimised on Mac OS X when pressing
@@ -444,11 +444,13 @@ void MainWindow::loadSettings()
         loadDockWindowSettings(mFileBrowserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
         loadDockWindowSettings(mFileOrganiserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
 
-        loadDockWindowSettings(mViewerWindow, needDefaultSettings, settings, Qt::TopDockWidgetArea);
-
         mCentralWidget->loadSettings(settings);
 
         loadDockWindowSettings(mHelpWindow, needDefaultSettings, settings, Qt::RightDockWidgetArea);
+
+        // Retrieve the settings of our various plugins
+
+        //---GRY--- TO BE DONE...
     settings.endGroup();
 }
 
@@ -499,11 +501,13 @@ void MainWindow::saveSettings()
         mFileBrowserWindow->saveSettings(settings);
         mFileOrganiserWindow->saveSettings(settings);
 
-        mViewerWindow->saveSettings(settings);
-
         mCentralWidget->saveSettings(settings);
 
         mHelpWindow->saveSettings(settings);
+
+        // Keep track of the settings of our various plugins
+
+        //---GRY--- TO BE DONE...
     settings.endGroup();
 }
 
@@ -519,7 +523,7 @@ void MainWindow::setLocale(const QString &pLocale)
 
         mLocale = pLocale;
 
-        // Specify the language to be used by OpenCOR
+        // Specify the language to be used by OpenCOR and our various plugins
 
         qApp->removeTranslator(&mQtTranslator);
         mQtTranslator.load(":qt_"+realLocale);
@@ -545,12 +549,10 @@ qApp->removeTranslator(&mHelpTranslator);
 mHelpTranslator.load(":Help_"+realLocale);
 qApp->installTranslator(&mHelpTranslator);
 
-qApp->removeTranslator(&mViewerTranslator);
-mViewerTranslator.load(":Viewer_"+realLocale);
-qApp->installTranslator(&mViewerTranslator);
+        //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
 
-        // Translate the whole GUI (including any 'child' window) and update the
-        // actions just to be on the safe side
+        // Translate the whole GUI (including our various plugins) and update
+        // the actions just to be on the safe side
 
         mUi->retranslateUi(this);
 
@@ -560,9 +562,9 @@ qApp->installTranslator(&mViewerTranslator);
         mFileBrowserWindow->retranslateUi();
         mFileOrganiserWindow->retranslateUi();
 
-        mViewerWindow->retranslateUi();
-
         mHelpWindow->retranslateUi();
+
+        //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     }
 
     // Update the checked menu item

@@ -120,7 +120,6 @@
      <property name="title">
       <string>&amp;Edit</string>
      </property>
-     <addaction name="actionViewer"/>
     </widget>
     <addaction name="menuToolbars"/>
     <addaction name="actionStatusBar"/>
@@ -923,8 +922,8 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../plugins/misc/CoreUI/res/CoreUI.qrc"/>
   <include location="../../res/ui.qrc"/>
+  <include location="../plugins/misc/CoreUI/res/CoreUI.qrc"/>
  </resources>
  <connections/>
 </ui>

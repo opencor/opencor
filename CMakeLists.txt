@@ -205,7 +205,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     QScintillaPlugin
     QtMmlWidgetPlugin
     QtSingleApplicationPlugin
-    ViewerPlugin
 )
 
 IF(WIN32 OR APPLE)
