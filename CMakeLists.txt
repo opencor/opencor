@@ -194,7 +194,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     #---GRY---
     # The following libraries are plugins, so they shouldn't be listed here,
     # but for now they have to be since OpenCOR doesn't yet support plugins as
-    # such
+    # such, so...
 
     CellMLModelRepositoryPlugin
     CoreUIPlugin
