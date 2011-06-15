@@ -139,8 +139,8 @@ ENDIF()
 # Build the plugins used by the GUI version of OpenCOR
 
 SET(PLUGINS
-    Core
-    Help
+    misc/Core
+    # Note: the Core plugin must be built before any other plugin
 
     3rdparty/LibQxt
     3rdparty/QScintilla
@@ -148,6 +148,8 @@ SET(PLUGINS
     3rdparty/QtSingleApplication
 
     edit/Viewer
+
+    misc/Help
 
     organise/CellMLModelRepository
     organise/FileBrowser

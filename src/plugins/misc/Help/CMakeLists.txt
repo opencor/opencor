@@ -2,7 +2,7 @@ PROJECT(HelpPlugin)
 
 # Some in-house CMake functions/macros
 
-INCLUDE(../../../cmake/common.cmake)
+INCLUDE(../../../../cmake/common.cmake)
 
 # Initialise the plugin
 
