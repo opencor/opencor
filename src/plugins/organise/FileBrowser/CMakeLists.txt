@@ -2,7 +2,7 @@ PROJECT(FileBrowserPlugin)
 
 # Some in-house CMake functions/macros
 
-INCLUDE(../../../../cmake/common.cmake)
+INCLUDE(${CMAKE_FILES_DIR}/plugin.cmake)
 
 # Initialise the plugin
 
