@@ -6,6 +6,8 @@
 class QHelpEngine;
 class QUrl;
 
+class QxtTemporaryDir;
+
 namespace Ui {
     class HelpWindow;
 }
@@ -19,8 +21,7 @@ class HelpWindow : public DockWidget
     Q_OBJECT
 
 public:
-    explicit HelpWindow(QHelpEngine *pEngine, const QUrl &pHomePage,
-                        QWidget *pParent = 0);
+    explicit HelpWindow(QWidget *pParent = 0);
     ~HelpWindow();
 
     virtual void retranslateUi();
@@ -42,6 +43,11 @@ private:
     Ui::HelpWindow *mUi;
 
     HelpWidget *mHelpWidget;
+
+    QHelpEngine *mHelpEngine;
+
+    QxtTemporaryDir *mTempDir;
+    QString mQchFileName, mQhcFileName;
 
 private Q_SLOTS:
     void on_actionHome_triggered();

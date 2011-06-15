@@ -39,6 +39,7 @@ BUILD_PLUGIN(
     ${QT_QTWEBKIT_LIBRARY}
 
     CoreUIPlugin
+    LibQxtPlugin
 )
 
 # Package the plugin

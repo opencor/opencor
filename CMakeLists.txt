@@ -192,12 +192,12 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTXML_LIBRARY}
 
     #---GRY---
-    # The following libraries are plugins, so they shouldn't be listed here,
-    # but for now they have to be since OpenCOR doesn't yet support plugins as
-    # such, so...
+    # The following libraries are compulsory plugins, yet they shouldn't be
+    # listed here, but for now they have to be since OpenCOR doesn't yet support
+    # plugins as such, so...
 
     CoreUIPlugin
-    HelpPlugin
+HelpPlugin
     LibQxtPlugin
     QtSingleApplicationPlugin
 )

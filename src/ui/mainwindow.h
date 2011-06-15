@@ -5,10 +5,7 @@
 #include <QMainWindow>
 #include <QTranslator>
 
-class QHelpEngine;
 class QSettings;
-
-class QxtTemporaryDir;
 
 namespace Ui {
     class MainWindow;
@@ -54,11 +51,7 @@ private:
 // 'properly' handle plugins...
 QTranslator mHelpTranslator;
 
-    QHelpEngine *mHelpEngine;
     HelpWindow *mHelpWindow;
-
-    QxtTemporaryDir *mTempDir;
-    QString mQchFileName, mQhcFileName;
 
     QMenu *mActionReopenMenu;
     QMenu *mActionOpenReopenMenu;

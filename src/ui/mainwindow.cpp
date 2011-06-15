@@ -15,22 +15,14 @@
     #include <windows.h>
 #endif
 
-#include <QCoreApplication>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFileDialog>
-#include <QHelpEngine>
 #include <QMessageBox>
-#include <QProcess>
 #include <QSettings>
-#include <QShortcut>
-#include <QShowEvent>
-
-#include <QxtTemporaryDir>
+#include <QUrl>
 
 namespace OpenCOR {
-
-static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/userIndex.html";
 
 static const QString SystemLocale  = "";
 static const QString EnglishLocale = "en";
@@ -99,26 +91,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     setCentralWidget(mCentralWidget);
 
-    // Create a temporary directory where to put OpenCOR's resources
-
-    mTempDir = new QxtTemporaryDir;
-
-    // Extract the help files
-
-    QString applicationBaseName = QFileInfo(qApp->applicationFilePath()).baseName();
-
-    mQchFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qch";
-    mQhcFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qhc";
-
-    saveResourceAs(":qchFile", mQchFileName);
-    saveResourceAs(":qhcFile", mQhcFileName);
-
-    // Set up the help engine
-
-    mHelpEngine = new QHelpEngine(mQhcFileName);
-
-    mHelpEngine->setupData();
-
     // Specify some general docking settings
 
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
@@ -128,11 +100,11 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create our various dock windows
 
-    mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OpencorHelpHomepageUrl), this);
+    mHelpWindow = new HelpWindow(this);
 
     // Load our various plugins
 
-    //---GRY--- TO BE DONE...
+//---GRY--- TO BE DONE...
 
     // Some connections to handle the various toolbars
 
@@ -191,9 +163,9 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mCentralWidget, SIGNAL(fileActivated(const QString &)),
             this, SLOT(updateWindowTitle()));
 
-    // Some connections for the UI side of our various plugins
+    // Some connections for the GUI side of our various plugins
 
-    //---GRY--- TO BE DONE...
+//---GRY--- TO BE DONE...
 
 #ifdef Q_WS_MAC
     // A special shortcut to have OpenCOR minimised on Mac OS X when pressing
@@ -226,18 +198,9 @@ MainWindow::MainWindow(QWidget *pParent) :
 
 MainWindow::~MainWindow()
 {
-    // Delete some internal objects
+    // Delete the UI
 
-    delete mHelpEngine;
     delete mUi;
-
-    // Delete the help files and then temporary directory by deleting the
-    // temporary directory object
-
-    QFile(mQchFileName).remove();
-    QFile(mQhcFileName).remove();
-
-    delete mTempDir;
 }
 
 void MainWindow::changeEvent(QEvent *pEvent)
@@ -406,16 +369,14 @@ void MainWindow::loadSettings()
         mUi->actionDebugMode->setChecked(settings.value(SettingsDebugModeEnabled,
                                                         false).toBool());
 
-        // Retrieve the settings of the various dock windows and of the central
-        // widget
+        // Retrieve the settings of the the central widget and of our various
+        // plugins
 
         mCentralWidget->loadSettings(settings);
 
         loadDockWindowSettings(mHelpWindow, needDefaultSettings, settings, Qt::RightDockWidgetArea);
 
-        // Retrieve the settings of our various plugins
-
-        //---GRY--- TO BE DONE...
+//---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     settings.endGroup();
 }
 
@@ -459,16 +420,14 @@ void MainWindow::saveSettings()
         settings.setValue(SettingsDebugModeEnabled,
                           mUi->actionDebugMode->isChecked());
 
-        // Keep track of the settings of the various dock windows and of the
-        // central widget
+        // Keep track of the settings of the central widget and of our various
+        // plugins
 
         mCentralWidget->saveSettings(settings);
 
         mHelpWindow->saveSettings(settings);
 
-        // Keep track of the settings of our various plugins
-
-        //---GRY--- TO BE DONE...
+//---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     settings.endGroup();
 }
 
@@ -498,7 +457,7 @@ qApp->removeTranslator(&mHelpTranslator);
 mHelpTranslator.load(":Help_"+realLocale);
 qApp->installTranslator(&mHelpTranslator);
 
-        //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
+//---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
 
         // Translate the whole GUI (including our various plugins) and update
         // the actions just to be on the safe side
@@ -509,7 +468,7 @@ qApp->installTranslator(&mHelpTranslator);
 
         mHelpWindow->retranslateUi();
 
-        //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
+//---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     }
 
     // Update the checked menu item

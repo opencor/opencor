@@ -1,3 +1,4 @@
+#include "coreuiutils.h"
 #include "docktoolbar.h"
 #include "helpwindow.h"
 #include "helpwidget.h"
@@ -5,21 +6,45 @@
 #include "ui_helpwindow.h"
 
 #include <QClipboard>
+#include <QHelpEngine>
 #include <QMenu>
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QSettings>
 
+#include <QxtTemporaryDir>
+
 namespace OpenCOR {
 
-HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
-                       QWidget *pParent) :
+static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/userIndex.html";
+
+HelpWindow::HelpWindow(QWidget *pParent) :
     DockWidget(pParent),
     mUi(new Ui::HelpWindow)
 {
     // Set up the UI
 
     mUi->setupUi(this);
+
+    // Create a temporary directory where to put OpenCOR's resources
+
+    mTempDir = new QxtTemporaryDir;
+
+    // Extract the help files
+
+    QString applicationBaseName = QFileInfo(qApp->applicationFilePath()).baseName();
+
+    mQchFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qch";
+    mQhcFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qhc";
+
+    saveResourceAs(":qchFile", mQchFileName);
+    saveResourceAs(":qhcFile", mQhcFileName);
+
+    // Set up the help engine
+
+    mHelpEngine = new QHelpEngine(mQhcFileName);
+
+    mHelpEngine->setupData();
 
     // Create a toolbar with different buttons
     // Note: this sadly can't be done using the design mode, so...
@@ -44,7 +69,8 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     // Create and add the help widget
 
-    mHelpWidget = new HelpWidget("HelpWidget", pHelpEngine, pHomePage, this);
+    mHelpWidget = new HelpWidget("HelpWidget", mHelpEngine,
+                                 OpencorHelpHomepageUrl, this);
 
     mUi->verticalLayout->addWidget(mHelpWidget);
 
@@ -76,9 +102,18 @@ HelpWindow::HelpWindow(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
 HelpWindow::~HelpWindow()
 {
-    // Delete the UI
+    // Delete some internal objects
 
+    delete mHelpEngine;
     delete mUi;
+
+    // Delete the help files and then temporary directory by deleting the
+    // temporary directory object
+
+    QFile(mQchFileName).remove();
+    QFile(mQhcFileName).remove();
+
+    delete mTempDir;
 }
 
 void HelpWindow::updateActions()

@@ -12,6 +12,7 @@ INITIALISE_PLUGIN(CoreUI TRUE)
 
 SET(SOURCES
     src/commonwidget.cpp
+    src/coreuiutils.cpp
     src/docktoolbar.cpp
     src/dockwidget.cpp
     src/filemanager.cpp
@@ -20,6 +21,7 @@ SET(SOURCES
 
 SET(HEADERS
     src/commonwidget.h
+    src/coreuiutils.h
 )
 
 SET(HEADERS_MOC

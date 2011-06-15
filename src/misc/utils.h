@@ -13,9 +13,6 @@ QString getOsName();
 QString getAppVersion(const QCoreApplication *pApp);
 QString getAppCopyright(const bool &pHtml);
 
-QByteArray resourceAsByteArray(const QString &pResource);
-void saveResourceAs(const QString &pResource, const QString &pFilename);
-
 #ifdef QT_GUI_LIB
 void notYetImplemented(const QString &method);
 #endif
