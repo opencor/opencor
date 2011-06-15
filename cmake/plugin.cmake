@@ -69,6 +69,26 @@ MACRO(BUILD_PLUGIN)
     SET_TARGET_PROPERTIES(${PROJECT_NAME}
         PROPERTIES OUTPUT_NAME ${PLUGIN_NAME} LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
+
+    # Create the plugins directory if it doesn't already exist and move the
+    # plugin to it
+    # Note: this is so that we can test the use of plugins in OpenCOR without
+    #       having to package OpenCOR first
+#---GRY--- NOTE THAT THIS IS ONLY FOR WINDOWS AND LINUX AT THIS STAGE (NO
+#          ACCESS TO A MAC AT THE MOMENT...)
+
+    IF(NOT APPLE)
+        SET(PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins)
+        SET(PLUGIN_FILENAME ${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    
+        IF(NOT EXISTS ${PLUGINS_DIR})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND ${CMAKE_COMMAND} -E make_directory ${PLUGINS_DIR})
+        ENDIF()
+
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E rename ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME} ${PLUGINS_DIR}/${PLUGIN_FILENAME})
+    ENDIF()
 ENDMACRO()
 
 MACRO(PACKAGE_PLUGIN)
@@ -89,11 +109,9 @@ MACRO(PACKAGE_PLUGIN)
     # some point.
 
     IF(WIN32)
-#        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/plugins)
-        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/plugins)
     ELSEIF(NOT APPLE)
-#        INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins)
-        INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
+        INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins)
     ENDIF()
 
 MESSAGE("")

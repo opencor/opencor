@@ -94,8 +94,7 @@ SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-subsystem,console")
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
-# Move the console version of OpenCOR to the main build folder
+# Copy the console version of OpenCOR to the main build folder
 
 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_NAME}.exe ../../build/${PROJECT_NAME}.com
-                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe ../../build/${PROJECT_NAME}.com)
