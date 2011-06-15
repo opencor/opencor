@@ -199,8 +199,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     CoreUIPlugin
     HelpPlugin
     LibQxtPlugin
-    QScintillaPlugin
-    QtMmlWidgetPlugin
     QtSingleApplicationPlugin
 )
 

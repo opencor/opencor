@@ -12,9 +12,6 @@
 #include <QTextStream>
 #include <QUrl>
 
-#include <qsciscintilla.h>
-#include <qscilexerxml.h>
-
 namespace OpenCOR {
 
 CentralWidget::CentralWidget(QWidget *pParent) :
@@ -133,39 +130,13 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     mFileManager->manage(fileName);
 
-    // Create an editor for the file
-
-    QsciScintilla *scintilla = new QsciScintilla(this);
-    QsciLexerXML *lexer      = new QsciLexerXML(this);
-
-    QFont defaultFont(DefaultFontFamily, DefaultFontSize);
-
-    // The font that will be used for XML-like and non XML-like files, resp.
-
-    lexer->setDefaultFont(defaultFont);
-    lexer->setFont(defaultFont);
-
-    // A few settings for the editor itself
-
-    scintilla->setFolding(QsciScintilla::BoxedTreeFoldStyle);
-    scintilla->setLexer(lexer);
-
-    // Set the contents of the file to the editor
-
-    QFile file(fileName);
-
-    file.open(QIODevice::ReadOnly);
-
-    scintilla->setText(QTextStream(&file).readAll());
-    scintilla->setReadOnly(!(QFile::permissions(fileName) & QFile::WriteUser));
-
-    file.close();
-
     // Create a new tab and have the editor as its contents
 
     QFileInfo fileInfo = fileName;
 
-    mTabWidget->setCurrentIndex(mTabWidget->addTab(scintilla,
+    QWidget *dummyWidget = new QWidget(this);
+
+    mTabWidget->setCurrentIndex(mTabWidget->addTab(dummyWidget,
                                                    (!fileInfo.completeSuffix().compare(CellmlFileExtension, Qt::CaseInsensitive))?
                                                        fileInfo.baseName():
                                                        fileInfo.fileName()));
@@ -203,9 +174,9 @@ bool CentralWidget::closeFile(const int &pIndex)
 
     int realIndex = (pIndex != -1)?pIndex:mTabWidget->currentIndex();
 
-    QsciScintilla *scintilla = qobject_cast<QsciScintilla *>(mTabWidget->widget(realIndex));
+    QWidget *dummyWidget = qobject_cast<QWidget *>(mTabWidget->widget(realIndex));
 
-    if (scintilla) {
+    if (dummyWidget) {
         // There is a file currently opened, so first retrieve its filename
 
         QString fileName = mTabWidget->tabToolTip(realIndex);
@@ -214,10 +185,10 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         mTabWidget->removeTab(realIndex);
 
-        // Then, we must release the allocated memory for the widget that the
-        // tab used to contain
+        // Then, we must release the allocated memory for the dummy widget that
+        // the tab used to contain
 
-        delete scintilla;
+        delete dummyWidget;
 
         // Unregister the file from our file manager
 
