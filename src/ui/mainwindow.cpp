@@ -1,10 +1,8 @@
-#include "cellmlmodelrepositorywindow.h"
+#include "cellml.h"
 #include "centralwidget.h"
 #include "checkforupdateswindow.h"
 #include "common.h"
 #include "dockwidget.h"
-#include "filebrowserwindow.h"
-#include "fileorganiserwindow.h"
 #include "helpwindow.h"
 #include "mainwindow.h"
 #include "pluginswindow.h"
@@ -130,10 +128,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create our various dock windows
 
-    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindow(this);
-    mFileBrowserWindow           = new FileBrowserWindow(this);
-    mFileOrganiserWindow         = new FileOrganiserWindow(this);
-
     mHelpWindow = new HelpWindow(mHelpEngine, QUrl(OpencorHelpHomepageUrl), this);
 
     // Load our various plugins
@@ -176,21 +170,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Some connections to handle the visibility of our various dock windows
 
-    connect(mUi->actionCellmlModelRepository, SIGNAL(triggered(bool)),
-            mCellmlModelRepositoryWindow, SLOT(setVisible(bool)));
-    connect(mCellmlModelRepositoryWindow, SIGNAL(visibilityChanged(bool)),
-            mUi->actionCellmlModelRepository, SLOT(setChecked(bool)));
-
-    connect(mUi->actionFileBrowser, SIGNAL(triggered(bool)),
-            mFileBrowserWindow, SLOT(setVisible(bool)));
-    connect(mFileBrowserWindow, SIGNAL(visibilityChanged(bool)),
-            mUi->actionFileBrowser, SLOT(setChecked(bool)));
-
-    connect(mUi->actionFileOrganiser, SIGNAL(triggered(bool)),
-            mFileOrganiserWindow, SLOT(setVisible(bool)));
-    connect(mFileOrganiserWindow, SIGNAL(visibilityChanged(bool)),
-            mUi->actionFileOrganiser, SLOT(setChecked(bool)));
-
     connect(mUi->actionHelp, SIGNAL(triggered(bool)),
             mHelpWindow, SLOT(setVisible(bool)));
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
@@ -202,16 +181,6 @@ MainWindow::MainWindow(QWidget *pParent) :
             mCentralWidget, SLOT(closeFile()));
     connect(mUi->actionCloseAll, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(closeFiles()));
-
-    // A connection to handle the file browser window
-
-    connect(mFileBrowserWindow, SIGNAL(filesOpened(const QStringList &)),
-            mCentralWidget, SLOT(openFiles(const QStringList &)));
-
-    // A connection to handle the file organiser window
-
-    connect(mFileOrganiserWindow, SIGNAL(filesOpened(const QStringList &)),
-            mCentralWidget, SLOT(openFiles(const QStringList &)));
 
     // Some connections to handle the central widget
 
@@ -440,10 +409,6 @@ void MainWindow::loadSettings()
         // Retrieve the settings of the various dock windows and of the central
         // widget
 
-        loadDockWindowSettings(mCellmlModelRepositoryWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
-        loadDockWindowSettings(mFileBrowserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
-        loadDockWindowSettings(mFileOrganiserWindow, needDefaultSettings, settings, Qt::LeftDockWidgetArea);
-
         mCentralWidget->loadSettings(settings);
 
         loadDockWindowSettings(mHelpWindow, needDefaultSettings, settings, Qt::RightDockWidgetArea);
@@ -497,10 +462,6 @@ void MainWindow::saveSettings()
         // Keep track of the settings of the various dock windows and of the
         // central widget
 
-        mCellmlModelRepositoryWindow->saveSettings(settings);
-        mFileBrowserWindow->saveSettings(settings);
-        mFileOrganiserWindow->saveSettings(settings);
-
         mCentralWidget->saveSettings(settings);
 
         mHelpWindow->saveSettings(settings);
@@ -533,18 +494,6 @@ void MainWindow::setLocale(const QString &pLocale)
         mAppTranslator.load(":app_"+realLocale);
         qApp->installTranslator(&mAppTranslator);
 
-qApp->removeTranslator(&mCellmlModelRepositoryTranslator);
-mCellmlModelRepositoryTranslator.load(":CellMLModelRepository_"+realLocale);
-qApp->installTranslator(&mCellmlModelRepositoryTranslator);
-
-qApp->removeTranslator(&mFileBrowserTranslator);
-mFileBrowserTranslator.load(":FileBrowser_"+realLocale);
-qApp->installTranslator(&mFileBrowserTranslator);
-
-qApp->removeTranslator(&mFileOrganiserTranslator);
-mFileOrganiserTranslator.load(":FileOrganiser_"+realLocale);
-qApp->installTranslator(&mFileOrganiserTranslator);
-
 qApp->removeTranslator(&mHelpTranslator);
 mHelpTranslator.load(":Help_"+realLocale);
 qApp->installTranslator(&mHelpTranslator);
@@ -557,10 +506,6 @@ qApp->installTranslator(&mHelpTranslator);
         mUi->retranslateUi(this);
 
         updateActions();
-
-        mCellmlModelRepositoryWindow->retranslateUi();
-        mFileBrowserWindow->retranslateUi();
-        mFileOrganiserWindow->retranslateUi();
 
         mHelpWindow->retranslateUi();
 

@@ -1,7 +1,6 @@
 #ifndef FILEBROWSERWINDOW_H
 #define FILEBROWSERWINDOW_H
 
-#include "cellml.h"
 #include "dockwidget.h"
 
 class QModelIndex;

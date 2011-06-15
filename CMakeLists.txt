@@ -196,10 +196,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     # but for now they have to be since OpenCOR doesn't yet support plugins as
     # such, so...
 
-    CellMLModelRepositoryPlugin
     CoreUIPlugin
-    FileBrowserPlugin
-    FileOrganiserPlugin
     HelpPlugin
     LibQxtPlugin
     QScintillaPlugin

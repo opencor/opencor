@@ -112,9 +112,6 @@
      <property name="title">
       <string>&amp;Organise</string>
      </property>
-     <addaction name="actionCellmlModelRepository"/>
-     <addaction name="actionFileBrowser"/>
-     <addaction name="actionFileOrganiser"/>
     </widget>
     <widget class="QMenu" name="menuEditView">
      <property name="title">

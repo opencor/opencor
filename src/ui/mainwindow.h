@@ -18,9 +18,6 @@ namespace OpenCOR {
 
 class CentralWidget;
 class DockWidget;
-class CellmlModelRepositoryWindow;
-class FileBrowserWindow;
-class FileOrganiserWindow;
 class HelpWindow;
 
 class MainWindow : public QMainWindow
@@ -55,14 +52,7 @@ private:
 // The following translators are only here so that we can test the translations
 // in the plugins. They will clearly have to be removed once OpenCOR can
 // 'properly' handle plugins...
-QTranslator mCellmlModelRepositoryTranslator;
-QTranslator mFileBrowserTranslator;
-QTranslator mFileOrganiserTranslator;
 QTranslator mHelpTranslator;
-
-    CellmlModelRepositoryWindow *mCellmlModelRepositoryWindow;
-    FileBrowserWindow *mFileBrowserWindow;
-    FileOrganiserWindow *mFileOrganiserWindow;
 
     QHelpEngine *mHelpEngine;
     HelpWindow *mHelpWindow;
