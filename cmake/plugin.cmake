@@ -61,9 +61,7 @@ MACRO(BUILD_PLUGIN)
     #       However, this is not common practice on Windows, so...
 
     IF(WIN32)
-        SET_TARGET_PROPERTIES(${PROJECT_NAME}
-            PROPERTIES PREFIX ""
-        )
+        SET(CMAKE_SHARED_LIBRARY_PREFIX)
     ENDIF()
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME}
