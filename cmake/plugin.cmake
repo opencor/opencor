@@ -118,7 +118,7 @@ MACRO(PACKAGE_PLUGIN)
 
 MESSAGE("")
 MESSAGE("********* WARNING **********")
-MESSAGE("Call to PACKAGE_PLUGIN (in [OpenCOR]/cmake/plugin.cmake) for the ${PROJECT_NAME} plugin: please note that the plugin is not currently being deployed in the right location. Also, there is currently no 'proper' support for the internationalisation of the plugin.")
+MESSAGE("Call to PACKAGE_PLUGIN (in [OpenCOR]/cmake/plugin.cmake) for the ${PLUGIN_NAME} plugin: please note that the plugin is not currently being deployed in the right location. Also, there is currently no 'proper' support for the internationalisation of the plugin.")
 MESSAGE("****************************")
 MESSAGE("")
 ENDMACRO()
