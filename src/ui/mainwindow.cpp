@@ -18,6 +18,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
+#ifdef Q_WS_MAC
+    #include <QShortcut>
+#endif
 #include <QUrl>
 
 namespace OpenCOR {
