@@ -4,6 +4,12 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
+# Name of the main project
+# Note: this is required, on Mac OS X, to determine where the plugins should be
+#       copied
+
+SET(MAIN_PROJECT_NAME ${PROJECT_NAME})
+
 # Location of our CMake files
 
 SET(CMAKE_FILES_DIR ${CMAKE_SOURCE_DIR}/cmake)
@@ -109,9 +115,8 @@ INCLUDE(${QT_USE_FILE})
 # Generate the help files which will be embedded in the executable as a
 # resource
 
-EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} doc/${PROJECT_NAME}.qhcp
-                                                           -o build/${PROJECT_NAME}.qhc
-                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} ${PROJECT_SOURCE_DIR}/doc/${PROJECT_NAME}.qhcp
+                                                           -o ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.qhc)
 
 # Update the translation (.ts) files and generate the language (.qm) files
 # which will later on be embedded in the executable as resources
@@ -238,20 +243,19 @@ IF(APPLE)
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile})
 
     # Remove any qt.conf file left from a previous build
-    # Note: this prevents us from getting a warning when everything is actually OK
+    # Note: this prevents us from getting a warning when everything is actually
+    #       OK
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
-                       COMMAND rm -f ${PROJECT_NAME}.app/Contents/Resources/qt.conf
-                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+                       COMMAND rm -f ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/qt.conf)
 
     # Use macdeployqt to have all the Qt files required by OpenCOR added to the
     # bundle
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${QT_BINARY_DIR}/macdeployqt ${PROJECT_NAME}.app
-                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+                       COMMAND ${QT_BINARY_DIR}/macdeployqt ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
 
-    # Add the SQLite plugin to the bundle (required to see the help file)
+    # Add the SQLite plugin to the bundle (required by the Help plugin)
     # Note: this would, ideally, be done as part of the packaging, but we do it
     #       here, since it allows us to test things as if Qt wasn't installed
     #       on our development Mac OS X machine (which is useful since we
@@ -259,10 +263,9 @@ IF(APPLE)
     #       unlike with Windows and Linux)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND mkdir -p ${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
+                       COMMAND mkdir -p ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
                        COMMAND cp ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib
-                                  ${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
-                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+                                  ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers)
 
     # Make sure that the SQLite plugin refers to our embedded version of QtCore
     # and QtSql which it needs

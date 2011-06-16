@@ -78,9 +78,8 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
                                                              ${SOURCES} ${HEADERS} ${HEADERS_MOC} ${UIS}
                                                          -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-            EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${TS_FILE}
-                                                          -qm ${CMAKE_SOURCE_DIR}/build/${LANGUAGE_FILE}.qm
-                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+            EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${PROJECT_SOURCE_DIR}/${TS_FILE}
+                                                          -qm ${CMAKE_BINARY_DIR}/${LANGUAGE_FILE}.qm)
         ENDIF()
     ENDFOREACH()
 ENDMACRO()
