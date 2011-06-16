@@ -103,6 +103,12 @@ MainWindow::MainWindow(QWidget *pParent) :
 
 //---GRY--- TO BE DONE...
 
+    // Enable/disable the View|Organise and View|Edit menus depending on whether
+    // they contain any items
+
+    mUi->menuOrganiseView->setEnabled(!mUi->menuOrganiseView->actions().isEmpty());
+    mUi->menuEditView->setEnabled(!mUi->menuEditView->actions().isEmpty());
+
     // Some connections to handle the various toolbars
 
     connect(mUi->actionFileToolbar, SIGNAL(triggered(bool)),
