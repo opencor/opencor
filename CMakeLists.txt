@@ -4,11 +4,11 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-# Name of the main project
-# Note: this is required, on Mac OS X, to determine where the plugins should be
-#       copied
+# Location of the built OpenCOR application on Mac OS X
+# Note: this is, among other things, required to determine where plugins should
+#       be copied
 
-SET(MAIN_PROJECT_NAME ${PROJECT_NAME})
+SET(MAC_OS_X_PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
 
 # Location of our CMake files
 
@@ -247,13 +247,13 @@ IF(APPLE)
     #       OK
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
-                       COMMAND rm -f ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/qt.conf)
+                       COMMAND ${CMAKE_COMMAND} -E remove -f ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
 
     # Use macdeployqt to have all the Qt files required by OpenCOR added to the
     # bundle
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${QT_BINARY_DIR}/macdeployqt ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
+                       COMMAND ${QT_BINARY_DIR}/macdeployqt ${MAC_OS_X_PROJECT_BINARY_DIR})
 
     # Add the SQLite plugin to the bundle (required by the Help plugin)
     # Note: this would, ideally, be done as part of the packaging, but we do it
@@ -262,10 +262,15 @@ IF(APPLE)
     #       cannot have a virtual machine with a 'blank' Mac OS X system on it
     #       unlike with Windows and Linux)
 
+    SET(SQLDRIVERS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers)
+
+    IF(NOT EXISTS ${SQLDRIVERS_DIR})
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E make_directory ${SQLDRIVERS_DIR})
+    ENDIF()
+
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND mkdir -p ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers
-                       COMMAND cp ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib
-                                  ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/sqldrivers)
+                       COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib ${SQLDRIVERS_DIR})
 
     # Make sure that the SQLite plugin refers to our embedded version of QtCore
     # and QtSql which it needs
@@ -275,7 +280,7 @@ IF(APPLE)
                            COMMAND install_name_tool -change ${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
                                                              @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
                                                              ../PlugIns/sqldrivers/libqsqlite.dylib
-                           WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks)
+                           WORKING_DIRECTORY ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks)
     ENDFOREACH()
 ENDIF()
 
