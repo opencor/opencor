@@ -1,4 +1,4 @@
-#include "coreuiutils.h"
+#include "coreutils.h"
 #include "docktoolbar.h"
 #include "helpwindow.h"
 #include "helpwidget.h"
