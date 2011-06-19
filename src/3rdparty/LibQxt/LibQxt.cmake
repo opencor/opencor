@@ -1,19 +1,19 @@
 # Files that make up LibQxt
 
 SET(SOURCES ${SOURCES}
-    ${MAIN_SOURCE_LOCATION}/src/3rdparty/LibQxt/src/core/qxtcommandoptions.cpp
-    ${MAIN_SOURCE_LOCATION}/src/3rdparty/LibQxt/src/core/qxtglobal.cpp
+    ${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/LibQxt/src/core/qxtcommandoptions.cpp
+    ${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/LibQxt/src/core/qxtglobal.cpp
 )
 
 SET(HEADERS ${HEADERS}
-    ${MAIN_SOURCE_LOCATION}/src/3rdparty/LibQxt/src/core/qxtcommandoptions.h
-    ${MAIN_SOURCE_LOCATION}/src/3rdparty/LibQxt/src/core/qxtglobal.h
+    ${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/LibQxt/src/core/qxtcommandoptions.h
+    ${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/LibQxt/src/core/qxtglobal.h
 )
 
 # Various include directories
 
-INCLUDE_DIRECTORIES(${MAIN_SOURCE_LOCATION}/src/3rdparty/LibQxt/src/core)
-INCLUDE_DIRECTORIES(${MAIN_SOURCE_LOCATION}/src/3rdparty/LibQxt/include/QxtCore)
+INCLUDE_DIRECTORIES(${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/LibQxt/src/core)
+INCLUDE_DIRECTORIES(${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/LibQxt/include/QxtCore)
 
 # Compiler settings specific to LibQxt
 

@@ -41,15 +41,9 @@ INCLUDE_DIRECTORIES(../src/misc)
 # Third-party library which must be directly embedded in the console version of
 # OpenCOR
 
-SET(MAIN_SOURCE_LOCATION ..)
-
-SET(THIRD_PARTY_LIBRARIES
+INCLUDE_THIRD_PARTY_LIBRARIES(..
     LibQxt
 )
-
-FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
-    INCLUDE(${MAIN_SOURCE_LOCATION}/src/3rdparty/${THIRD_PARTY_LIBRARY}/${THIRD_PARTY_LIBRARY}.cmake)
-ENDFOREACH()
 
 # Qt specific
 

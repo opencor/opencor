@@ -126,16 +126,10 @@ UPDATE_LANGUAGE_FILES(${PROJECT_NAME})
 # Third-party libraries which must be directly embedded in the GUI version of
 # OpenCOR
 
-SET(MAIN_SOURCE_LOCATION .)
-
-SET(THIRD_PARTY_LIBRARIES
-    QtSingleApplication
+INCLUDE_THIRD_PARTY_LIBRARIES(.
     LibQxt
+    QtSingleApplication
 )
-
-FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
-    INCLUDE(${MAIN_SOURCE_LOCATION}/src/3rdparty/${THIRD_PARTY_LIBRARY}/${THIRD_PARTY_LIBRARY}.cmake)
-ENDFOREACH()
 
 # Set the application icon, but only for Windows and Mac OS X, since in the
 # case of Linux, it's done through res/OpenCOR.qrc
