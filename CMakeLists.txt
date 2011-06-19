@@ -52,6 +52,11 @@ SET(SOURCES
     src/ui/preferenceswindow.cpp
 
     src/widgets/tabwidget.cpp
+
+    # QtSingleApplication
+
+    src/3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
+    src/3rdparty/QtSingleApplication/src/qtsingleapplication.cpp
 )
 
 SET(HEADERS
@@ -73,6 +78,11 @@ SET(HEADERS_MOC
     src/ui/preferenceswindow.h
 
     src/widgets/tabwidget.h
+
+    # QtSingleApplication
+
+    src/3rdparty/QtSingleApplication/src/qtlocalpeer.h
+    src/3rdparty/QtSingleApplication/src/qtsingleapplication.h
 )
 
 SET(UIS
@@ -95,6 +105,8 @@ INCLUDE_DIRECTORIES(src/misc)
 INCLUDE_DIRECTORIES(src/plugins)
 INCLUDE_DIRECTORIES(src/ui)
 INCLUDE_DIRECTORIES(src/widgets)
+
+INCLUDE_DIRECTORIES(src/3rdparty/QtSingleApplication/src)
 
 # Qt specific
 
@@ -154,7 +166,6 @@ SET(PLUGINS
     3rdparty/LibQxt
     3rdparty/QScintilla
     3rdparty/QtMmlWidget
-    3rdparty/QtSingleApplication
 
     edit/Viewer
 
@@ -207,7 +218,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
 
     CoreUIPlugin
     LibQxtPlugin
-    QtSingleApplicationPlugin
 )
 
 IF(WIN32 OR APPLE)
