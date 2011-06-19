@@ -1,5 +1,5 @@
-#ifndef COREUIUTILS_H
-#define COREUIUTILS_H
+#ifndef COREUTILS_H
+#define COREUTILS_H
 
 #include <QString>
 

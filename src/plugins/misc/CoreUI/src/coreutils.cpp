@@ -1,4 +1,4 @@
-#include "coreuiutils.h"
+#include "coreutils.h"
 
 #include <QFile>
 #include <QResource>

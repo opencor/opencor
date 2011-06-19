@@ -1,4 +1,4 @@
-PROJECT(CoreUIPlugin)
+PROJECT(CorePlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,13 +6,13 @@ INCLUDE(${CMAKE_FILES_DIR}/plugin.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(CoreUI TRUE)
+INITIALISE_PLUGIN(Core TRUE)
 
 # Files that make up the plugin
 
 SET(SOURCES
     src/commonwidget.cpp
-    src/coreuiutils.cpp
+    src/coreutils.cpp
     src/docktoolbar.cpp
     src/dockwidget.cpp
     src/filemanager.cpp
@@ -21,7 +21,7 @@ SET(SOURCES
 
 SET(HEADERS
     src/commonwidget.h
-    src/coreuiutils.h
+    src/coreutils.h
 )
 
 SET(HEADERS_MOC

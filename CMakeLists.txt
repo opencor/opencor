@@ -153,11 +153,11 @@ ELSEIF(APPLE)
     SET(SOURCES ${SOURCES} res/boomy/${IconFile})
 ENDIF()
 
-# Build the plugins used by the GUI version of OpenCOR
+# Build the plugins used by either the GUI and/or console version of OpenCOR
 
 SET(PLUGINS
-    misc/CoreUI
-    # Note: the CoreUI plugin must be built before any other plugin
+    misc/Core
+    # Note: the Core plugin must be built before any other plugin
 
     3rdparty/QScintilla
     3rdparty/QtMmlWidget
@@ -211,7 +211,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     # listed here, but for now they have to be since OpenCOR doesn't yet support
     # plugins as such, so...
 
-    CoreUIPlugin
+    CorePlugin
 )
 
 IF(WIN32 OR APPLE)
