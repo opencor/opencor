@@ -6,8 +6,6 @@
 class QHelpEngine;
 class QUrl;
 
-class QxtTemporaryDir;
-
 namespace Ui {
     class HelpWindow;
 }
@@ -46,7 +44,6 @@ private:
 
     QHelpEngine *mHelpEngine;
 
-    QxtTemporaryDir *mTempDir;
     QString mQchFileName, mQhcFileName;
 
 private Q_SLOTS:

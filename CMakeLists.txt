@@ -52,11 +52,6 @@ SET(SOURCES
     src/ui/preferenceswindow.cpp
 
     src/widgets/tabwidget.cpp
-
-    # QtSingleApplication
-
-    src/3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
-    src/3rdparty/QtSingleApplication/src/qtsingleapplication.cpp
 )
 
 SET(HEADERS
@@ -78,11 +73,6 @@ SET(HEADERS_MOC
     src/ui/preferenceswindow.h
 
     src/widgets/tabwidget.h
-
-    # QtSingleApplication
-
-    src/3rdparty/QtSingleApplication/src/qtlocalpeer.h
-    src/3rdparty/QtSingleApplication/src/qtsingleapplication.h
 )
 
 SET(UIS
@@ -106,7 +96,19 @@ INCLUDE_DIRECTORIES(src/plugins)
 INCLUDE_DIRECTORIES(src/ui)
 INCLUDE_DIRECTORIES(src/widgets)
 
-INCLUDE_DIRECTORIES(src/3rdparty/QtSingleApplication/src)
+# Third-party libraries which must be directly embedded in the GUI version of
+# OpenCOR
+
+SET(MAIN_SOURCE_LOCATION .)
+
+SET(THIRD_PARTY_LIBRARIES
+    QtSingleApplication
+    LibQxt
+)
+
+FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
+    INCLUDE(${MAIN_SOURCE_LOCATION}/src/3rdparty/${THIRD_PARTY_LIBRARY}/${THIRD_PARTY_LIBRARY}.cmake)
+ENDFOREACH()
 
 # Qt specific
 
@@ -163,7 +165,6 @@ SET(PLUGINS
     misc/CoreUI
     # Note: the CoreUI plugin must be built before any other plugin
 
-    3rdparty/LibQxt
     3rdparty/QScintilla
     3rdparty/QtMmlWidget
 
@@ -217,7 +218,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     # plugins as such, so...
 
     CoreUIPlugin
-    LibQxtPlugin
 )
 
 IF(WIN32 OR APPLE)

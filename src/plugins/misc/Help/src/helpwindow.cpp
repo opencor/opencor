@@ -6,13 +6,12 @@
 #include "ui_helpwindow.h"
 
 #include <QClipboard>
+#include <QDir>
 #include <QHelpEngine>
 #include <QMenu>
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QSettings>
-
-#include <QxtTemporaryDir>
 
 namespace OpenCOR {
 
@@ -26,16 +25,12 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     mUi->setupUi(this);
 
-    // Create a temporary directory where to put OpenCOR's resources
-
-    mTempDir = new QxtTemporaryDir;
-
     // Extract the help files
 
     QString applicationBaseName = QFileInfo(qApp->applicationFilePath()).baseName();
 
-    mQchFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qch";
-    mQhcFileName = mTempDir->path()+QDir::separator()+applicationBaseName+".qhc";
+    mQchFileName = QDir::tempPath()+QDir::separator()+applicationBaseName+".qch";
+    mQhcFileName = QDir::tempPath()+QDir::separator()+applicationBaseName+".qhc";
 
     saveResourceAs(":qchFile", mQchFileName);
     saveResourceAs(":qhcFile", mQhcFileName);
@@ -112,8 +107,6 @@ HelpWindow::~HelpWindow()
 
     QFile(mQchFileName).remove();
     QFile(mQhcFileName).remove();
-
-    delete mTempDir;
 }
 
 void HelpWindow::updateActions()

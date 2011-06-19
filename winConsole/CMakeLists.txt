@@ -38,31 +38,25 @@ SET(RESOURCES
 
 INCLUDE_DIRECTORIES(../src/misc)
 
+# Third-party library which must be directly embedded in the console version of
+# OpenCOR
+
+SET(MAIN_SOURCE_LOCATION ..)
+
+SET(THIRD_PARTY_LIBRARIES
+    LibQxt
+)
+
+FOREACH(THIRD_PARTY_LIBRARY ${THIRD_PARTY_LIBRARIES})
+    INCLUDE(${MAIN_SOURCE_LOCATION}/src/3rdparty/${THIRD_PARTY_LIBRARY}/${THIRD_PARTY_LIBRARY}.cmake)
+ENDFOREACH()
+
 # Qt specific
 
 SET(QT_DONT_USE_QTGUI TRUE)
 # Note: since we want a console version of OpenCOR...
 
 INCLUDE(${QT_USE_FILE})
-
-# Build the plugins used by the console version of OpenCOR
-
-SET(PLUGINS
-    3rdparty/LibQxt
-)
-
-FOREACH(PLUGIN ${PLUGINS})
-    SET(PLUGIN_DIR ../src/plugins/${PLUGIN})
-    SET(PLUGIN_INCLUDE_DIRS)
-    # Note: the above variable is defined here, but is actually set when
-    #       processing the CMakeLists.txt file of the plugin
-
-    ADD_SUBDIRECTORY(${PLUGIN_DIR} src/${PLUGIN})
-
-    FOREACH(PLUGIN_INCLUDE_DIR ${PLUGIN_INCLUDE_DIRS})
-        INCLUDE_DIRECTORIES(${PLUGIN_DIR}/${PLUGIN_INCLUDE_DIR})
-    ENDFOREACH()
-ENDFOREACH()
 
 # Build the console version of OpenCOR
 
@@ -75,13 +69,6 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
-
-    #---GRY---
-    # The following libraries are plugins, so they shouldn't be listed here,
-    # but for now they have to be since OpenCOR doesn't yet support plugins as
-    # such
-
-    LibQxtPlugin
 )
 
 # Additional compiler and linker settings
