@@ -185,23 +185,23 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
 
 static const QString SettingsZoomLevel = "ZoomLevel";
 
-void HelpWidget::loadSettings(QSettings &pSettings)
+void HelpWidget::loadSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Retrieve the zoom level
 
-        setZoomLevel(pSettings.value(SettingsZoomLevel,
-                                     defaultZoomLevel()).toInt());
-    pSettings.endGroup();
+        setZoomLevel(pSettings->value(SettingsZoomLevel,
+                                      defaultZoomLevel()).toInt());
+    pSettings->endGroup();
 }
 
-void HelpWidget::saveSettings(QSettings &pSettings)
+void HelpWidget::saveSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Keep track of the text size multiplier
 
-        pSettings.setValue(SettingsZoomLevel, zoomLevel());
-    pSettings.endGroup();
+        pSettings->setValue(SettingsZoomLevel, zoomLevel());
+    pSettings->endGroup();
 }
 
 QUrl HelpWidget::homePage()

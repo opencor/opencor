@@ -36,6 +36,8 @@ protected:
 private:
     Ui::MainWindow *mUi;
 
+    QSettings *mSettings;
+
     PluginManager *mPluginManager;
 
     QString mLocale;

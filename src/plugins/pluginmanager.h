@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class QSettings;
+
 namespace OpenCOR {
 
 class PluginManager : public QObject
@@ -12,6 +14,8 @@ class PluginManager : public QObject
 public:
     explicit PluginManager();
     ~PluginManager();
+
+    void loadPlugins(QSettings *pSettings);
 
 private:
     QString mPluginsDir;

@@ -22,8 +22,8 @@ public:
     explicit CentralWidget(QWidget *pParent);
     ~CentralWidget();
 
-    virtual void loadSettings(QSettings &pSettings);
-    virtual void saveSettings(QSettings &pSettings);
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings);
 
     bool openFile(const QString &pFileName);
     bool activateFile(const QString &pFileName);

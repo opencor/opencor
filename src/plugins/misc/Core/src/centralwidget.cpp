@@ -68,14 +68,14 @@ CentralWidget::~CentralWidget()
 static const QString SettingsOpenedFiles = "OpenedFiles";
 static const QString SettingsActiveFile  = "ActiveFile";
 
-void CentralWidget::loadSettings(QSettings &pSettings)
+void CentralWidget::loadSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Retrieve the files that were previously opened
 
         QStringList openedFiles;
 
-        openedFiles = pSettings.value(SettingsOpenedFiles).toStringList();
+        openedFiles = pSettings->value(SettingsOpenedFiles).toStringList();
 
         for (int i = 0; i < openedFiles.count(); ++i)
             openFile(openedFiles.at(i));
@@ -85,13 +85,13 @@ void CentralWidget::loadSettings(QSettings &pSettings)
         if (openedFiles.count())
             // There is at least one file, so we can try to activate one of them
 
-            activateFile(openedFiles.at(pSettings.value(SettingsActiveFile).toInt()));
-    pSettings.endGroup();
+            activateFile(openedFiles.at(pSettings->value(SettingsActiveFile).toInt()));
+    pSettings->endGroup();
 }
 
-void CentralWidget::saveSettings(QSettings &pSettings)
+void CentralWidget::saveSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Keep track of the files that are opened
 
         QStringList openedFiles;
@@ -99,12 +99,12 @@ void CentralWidget::saveSettings(QSettings &pSettings)
         for (int i = 0; i < mTabWidget->count(); ++i)
             openedFiles << mTabWidget->tabToolTip(i);
 
-        pSettings.setValue(SettingsOpenedFiles, openedFiles);
+        pSettings->setValue(SettingsOpenedFiles, openedFiles);
 
         // Keep track of the active file
 
-        pSettings.setValue(SettingsActiveFile, mTabWidget->currentIndex());
-    pSettings.endGroup();
+        pSettings->setValue(SettingsActiveFile, mTabWidget->currentIndex());
+    pSettings->endGroup();
 }
 
 bool CentralWidget::openFile(const QString &pFileName)

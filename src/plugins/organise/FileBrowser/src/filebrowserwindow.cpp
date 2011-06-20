@@ -96,9 +96,9 @@ void FileBrowserWindow::retranslateUi()
     mFileBrowserWidget->retranslateUi();
 }
 
-void FileBrowserWindow::loadSettings(QSettings &pSettings)
+void FileBrowserWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Retrieve the settings of the file browser widget
         // Note: check the beginLoadingSettings and endLoadingSettings slots
 
@@ -117,16 +117,16 @@ void FileBrowserWindow::loadSettings(QSettings &pSettings)
         // Make sure that all the actions are up-to-date
 
         updateActions();
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
-void FileBrowserWindow::saveSettings(QSettings &pSettings)
+void FileBrowserWindow::saveSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Keep track of the settings of the file browser widget
 
         mFileBrowserWidget->saveSettings(pSettings);
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
 void FileBrowserWindow::on_actionHome_triggered()

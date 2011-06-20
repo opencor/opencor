@@ -39,12 +39,12 @@ void CommonWidget::retranslateUi()
     // Nothing to do by default...
 }
 
-void CommonWidget::loadSettings(QSettings &)
+void CommonWidget::loadSettings(QSettings *)
 {
     // Nothing to do by default...
 }
 
-void CommonWidget::saveSettings(QSettings &)
+void CommonWidget::saveSettings(QSettings *)
 {
     // Nothing to do by default...
 }

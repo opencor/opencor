@@ -246,7 +246,7 @@ FileOrganiserWidget::~FileOrganiserWidget()
 static const QString SettingsDataModel    = "DataModel";
 static const QString SettingsSelectedItem = "SelectedItem";
 
-void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
+void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
                                            QStandardItem *pParentItem)
 {
     // Recursively retrieve the item settings
@@ -254,7 +254,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
     static int crtItemIndex = -1;
     QStringList itemInfo;
 
-    itemInfo = pSettings.value(QString::number(++crtItemIndex)).toStringList();
+    itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
 
     if (itemInfo != QStringList()) {
         QString textOrPath  = itemInfo.at(0);
@@ -333,28 +333,28 @@ void FileOrganiserWidget::loadItemSettings(QSettings &pSettings,
     }
 }
 
-void FileOrganiserWidget::loadSettings(QSettings &pSettings)
+void FileOrganiserWidget::loadSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Retrieve the data model
 
-        pSettings.beginGroup(SettingsDataModel);
+        pSettings->beginGroup(SettingsDataModel);
             loadItemSettings(pSettings, 0);
-        pSettings.endGroup();
+        pSettings->endGroup();
 
         // Retrieve the currently selected item, if any
 
-        QByteArray hierarchyData = pSettings.value(SettingsSelectedItem).toByteArray();
+        QByteArray hierarchyData = pSettings->value(SettingsSelectedItem).toByteArray();
 
         setCurrentIndex(mDataModel->decodeHierarchyData(hierarchyData));
 
         // Resize the widget, just to be on the safe side
 
         resizeToContents();
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
-void FileOrganiserWidget::saveItemSettings(QSettings &pSettings,
+void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
                                            QStandardItem *pItem,
                                            const int &pParentItemIndex)
 {
@@ -391,7 +391,7 @@ void FileOrganiserWidget::saveItemSettings(QSettings &pSettings,
         mFileManager->unmanage(fileName);
     }
 
-    pSettings.setValue(QString::number(++crtItemIndex), itemInfo);
+    pSettings->setValue(QString::number(++crtItemIndex), itemInfo);
 
     // Keep track of any child item
 
@@ -401,15 +401,15 @@ void FileOrganiserWidget::saveItemSettings(QSettings &pSettings,
         saveItemSettings(pSettings, pItem->child(i), childParentItemIndex);
 }
 
-void FileOrganiserWidget::saveSettings(QSettings &pSettings)
+void FileOrganiserWidget::saveSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Keep track of the data model
 
-        pSettings.remove(SettingsDataModel);
-        pSettings.beginGroup(SettingsDataModel);
+        pSettings->remove(SettingsDataModel);
+        pSettings->beginGroup(SettingsDataModel);
             saveItemSettings(pSettings, mDataModel->invisibleRootItem(), -1);
-        pSettings.endGroup();
+        pSettings->endGroup();
 
         // Keep track of the currently selected item, but only if it is visible
 
@@ -429,10 +429,10 @@ void FileOrganiserWidget::saveSettings(QSettings &pSettings)
                 break;
             }
 
-        pSettings.setValue(SettingsSelectedItem, mDataModel->encodeHierarchyData(crtItemVisible?
-                                                                                     currentIndex():
-                                                                                     QModelIndex()));
-    pSettings.endGroup();
+        pSettings->setValue(SettingsSelectedItem, mDataModel->encodeHierarchyData(crtItemVisible?
+                                                                                      currentIndex():
+                                                                                      QModelIndex()));
+    pSettings->endGroup();
 }
 
 QSize FileOrganiserWidget::sizeHint() const

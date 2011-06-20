@@ -56,6 +56,10 @@ MainWindow::MainWindow(QWidget *pParent) :
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
+    // Create our settings object
+
+    mSettings = new QSettings(qApp->applicationName());
+
     // Create our plugin manager and load our various plugins
 
     mPluginManager = new PluginManager;
@@ -114,6 +118,7 @@ MainWindow::~MainWindow()
     // Delete some internal objects
 
     delete mPluginManager;
+    delete mSettings;
     delete mUi;
 }
 
@@ -176,17 +181,15 @@ static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
 
 void MainWindow::loadSettings()
 {
-    QSettings settings(qApp->applicationName());
-
-    settings.beginGroup(objectName());
+    mSettings->beginGroup(objectName());
         // Retrieve the language to be used by OpenCOR
 
-        setLocale(settings.value(SettingsLocale, SystemLocale).toString());
+        setLocale(mSettings->value(SettingsLocale, SystemLocale).toString());
 
         // Retrieve the geometry and state of the main window
 
-        bool needDefaultSettings =    !restoreGeometry(settings.value(SettingsGeometry).toByteArray())
-                                   || !restoreState(settings.value(SettingsState).toByteArray());
+        bool needDefaultSettings =    !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
+                                   || !restoreState(mSettings->value(SettingsState).toByteArray());
 
         if (needDefaultSettings) {
             // The geometry and/or state of the main window couldn't be
@@ -209,42 +212,40 @@ void MainWindow::loadSettings()
 
             // Retrieve whether the status bar is to be shown
 
-            mUi->statusBar->setVisible(settings.value(SettingsStatusBarVisibility,
-                                                      true).toBool());
+            mUi->statusBar->setVisible(mSettings->value(SettingsStatusBarVisibility,
+                                                        true).toBool());
         }
 
         // Retrieve the settings of our various plugins
 
 //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
-    settings.endGroup();
+    mSettings->endGroup();
 }
 
 void MainWindow::saveSettings()
 {
-    QSettings settings(qApp->applicationName());
-
-    settings.beginGroup(objectName());
+    mSettings->beginGroup(objectName());
         // Keep track of the language to be used by OpenCOR
 
-        settings.setValue(SettingsLocale, mLocale);
+        mSettings->setValue(SettingsLocale, mLocale);
 
         // Keep track of the geometry of the main window
 
-        settings.setValue(SettingsGeometry, saveGeometry());
+        mSettings->setValue(SettingsGeometry, saveGeometry());
 
         // Keep track of the state of the main window
 
-        settings.setValue(SettingsState, saveState());
+        mSettings->setValue(SettingsState, saveState());
 
         // Keep track of whether the status bar is to be shown
 
-        settings.setValue(SettingsStatusBarVisibility,
-                          mUi->statusBar->isVisible());
+        mSettings->setValue(SettingsStatusBarVisibility,
+                            mUi->statusBar->isVisible());
 
         // Keep track of the settings of our various plugins
 
 //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
-    settings.endGroup();
+    mSettings->endGroup();
 }
 
 void MainWindow::setLocale(const QString &pLocale)

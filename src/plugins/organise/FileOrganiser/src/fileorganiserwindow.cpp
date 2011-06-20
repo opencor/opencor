@@ -85,9 +85,9 @@ void FileOrganiserWindow::retranslateUi()
     mFileOrganiserWidget->retranslateUi();
 }
 
-void FileOrganiserWindow::loadSettings(QSettings &pSettings)
+void FileOrganiserWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Retrieve the settings of the file organiser widget
 
         mFileOrganiserWidget->loadSettings(pSettings);
@@ -95,16 +95,16 @@ void FileOrganiserWindow::loadSettings(QSettings &pSettings)
         // Make sure that all the actions are up-to-date
 
         updateActions();
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
-void FileOrganiserWindow::saveSettings(QSettings &pSettings)
+void FileOrganiserWindow::saveSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Keep track of the settings of the file organiser widget
 
         mFileOrganiserWidget->saveSettings(pSettings);
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
 void FileOrganiserWindow::on_actionNew_triggered()

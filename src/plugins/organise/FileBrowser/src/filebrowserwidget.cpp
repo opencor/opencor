@@ -69,9 +69,9 @@ static const QString SettingsInitialPath = "InitialPath";
 static const QString SettingsSortColumn  = "SortColumn";
 static const QString SettingsSortOrder   = "SortOrder";
 
-void FileBrowserWidget::loadSettings(QSettings &pSettings)
+void FileBrowserWidget::loadSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Let people know that we are starting loading the settings
 
         emit beginLoadingSettings();
@@ -84,22 +84,22 @@ void FileBrowserWidget::loadSettings(QSettings &pSettings)
             columnWidthKey = SettingsColumnWidth+QString::number(i);
 
             mNeedDefColWidth =     mNeedDefColWidth
-                               && !pSettings.contains(columnWidthKey);
+                               && !pSettings->contains(columnWidthKey);
 
-            setColumnWidth(i, pSettings.value(columnWidthKey,
-                                              columnWidth(i)).toInt());
+            setColumnWidth(i, pSettings->value(columnWidthKey,
+                                               columnWidth(i)).toInt());
         }
 
         // Retrieve the sorting information
 
-        sortByColumn(pSettings.value(SettingsSortColumn, 0).toInt(),
-                     Qt::SortOrder(pSettings.value(SettingsSortOrder,
-                                                   Qt::AscendingOrder).toInt()));
+        sortByColumn(pSettings->value(SettingsSortColumn, 0).toInt(),
+                     Qt::SortOrder(pSettings->value(SettingsSortOrder,
+                                                    Qt::AscendingOrder).toInt()));
 
         // Retrieve the initial path
 
-        mInitPath = pSettings.value(SettingsInitialPath,
-                                    QDir::homePath()).toString();
+        mInitPath = pSettings->value(SettingsInitialPath,
+                                     QDir::homePath()).toString();
 
         QFileInfo initPathFileInfo = mInitPath;
 
@@ -165,29 +165,29 @@ void FileBrowserWidget::loadSettings(QSettings &pSettings)
             // The initial path is that of a file, so...
 
             setCurrentIndex(mDataModel->index(mInitPath));
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
-void FileBrowserWidget::saveSettings(QSettings &pSettings)
+void FileBrowserWidget::saveSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Retrieve the width of each column
 
         for (int i = 0; i < header()->count(); ++i)
-            pSettings.setValue(SettingsColumnWidth+QString::number(i),
-                               columnWidth(i));
+            pSettings->setValue(SettingsColumnWidth+QString::number(i),
+                                columnWidth(i));
 
         // Keep track of the sorting information
 
-        pSettings.setValue(SettingsSortColumn,
-                           header()->sortIndicatorSection());
-        pSettings.setValue(SettingsSortOrder, header()->sortIndicatorOrder());
+        pSettings->setValue(SettingsSortColumn,
+                            header()->sortIndicatorSection());
+        pSettings->setValue(SettingsSortOrder, header()->sortIndicatorOrder());
 
         // Keep track of what will be our future initial folder/file path
 
-        pSettings.setValue(SettingsInitialPath,
-                           mDataModel->filePath(currentIndex()));
-    pSettings.endGroup();
+        pSettings->setValue(SettingsInitialPath,
+                            mDataModel->filePath(currentIndex()));
+    pSettings->endGroup();
 }
 
 QSize FileBrowserWidget::sizeHint() const

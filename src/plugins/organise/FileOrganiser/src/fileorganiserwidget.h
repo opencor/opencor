@@ -43,8 +43,8 @@ public:
     explicit FileOrganiserWidget(const QString &pName, QWidget *pParent);
     ~FileOrganiserWidget();
 
-    virtual void loadSettings(QSettings &pSettings);
-    virtual void saveSettings(QSettings &pSettings);
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings);
 
     bool isFolderItem(const QModelIndex &pItemIndex);
 
@@ -68,8 +68,8 @@ private:
     FileOrganiserModel *mDataModel;
     FileManager *mFileManager;
 
-    void loadItemSettings(QSettings &pSettings, QStandardItem *pParentItem);
-    void saveItemSettings(QSettings &pSettings, QStandardItem *pItem,
+    void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);
+    void saveItemSettings(QSettings *pSettings, QStandardItem *pItem,
                           const int &pParentItemIndex);
 
     QString newFolderName(QStandardItem *pFolderItem);

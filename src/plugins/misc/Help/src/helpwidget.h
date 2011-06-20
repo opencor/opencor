@@ -69,8 +69,8 @@ public:
     explicit HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
                         const QUrl &pHomePage, QWidget *pParent);
 
-    virtual void loadSettings(QSettings &pSettings);
-    virtual void saveSettings(QSettings &pSettings);
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings);
 
     QUrl homePage();
     void gotoHomePage();

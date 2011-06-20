@@ -38,22 +38,22 @@ void ViewerWindow::retranslateUi()
     mMmlViewerWidget->retranslateUi();
 }
 
-void ViewerWindow::loadSettings(QSettings &pSettings)
+void ViewerWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Retrieve the settings of the viewer widget
 
         mMmlViewerWidget->loadSettings(pSettings);
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
-void ViewerWindow::saveSettings(QSettings &pSettings)
+void ViewerWindow::saveSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Keep track of the settings of the viewer widget
 
         mMmlViewerWidget->saveSettings(pSettings);
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
 }

@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QSettings>
 
 namespace OpenCOR {
 
@@ -17,6 +18,11 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
+}
+
+void PluginManager::loadPlugins(QSettings *pSettings)
+{
+//---GRY--- TO BE DONE...
 }
 
 }

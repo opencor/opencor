@@ -21,8 +21,8 @@ public:
 
     virtual void retranslateUi();
 
-    virtual void loadSettings(QSettings &pSettings);
-    virtual void saveSettings(QSettings &pSettings);
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings);
 
 private:
     Ui::CellmlModelRepositoryWindow *mUi;

@@ -141,22 +141,22 @@ void HelpWindow::retranslateUi()
     mHelpWidget->retranslateUi();
 }
 
-void HelpWindow::loadSettings(QSettings &pSettings)
+void HelpWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Retrieve the settings of the help widget
 
         mHelpWidget->loadSettings(pSettings);
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
-void HelpWindow::saveSettings(QSettings &pSettings)
+void HelpWindow::saveSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Keep track of the settings of the help widget
 
         mHelpWidget->saveSettings(pSettings);
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
 void HelpWindow::gotoHomePage()

@@ -41,22 +41,22 @@ void CellmlModelRepositoryWindow::retranslateUi()
     mCellmlModelRepositoryWidget->retranslateUi();
 }
 
-void CellmlModelRepositoryWindow::loadSettings(QSettings &pSettings)
+void CellmlModelRepositoryWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Retrieve the settings of the PMR explorer widget
 
         mCellmlModelRepositoryWidget->loadSettings(pSettings);
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
-void CellmlModelRepositoryWindow::saveSettings(QSettings &pSettings)
+void CellmlModelRepositoryWindow::saveSettings(QSettings *pSettings)
 {
-    pSettings.beginGroup(objectName());
+    pSettings->beginGroup(objectName());
         // Keep track of the settings of the PMR explorer widget
 
         mCellmlModelRepositoryWidget->saveSettings(pSettings);
-    pSettings.endGroup();
+    pSettings->endGroup();
 }
 
 }

@@ -25,8 +25,8 @@ public:
     explicit FileBrowserWidget(const QString &pName, QWidget *pParent);
     ~FileBrowserWidget();
 
-    virtual void loadSettings(QSettings &pSettings);
-    virtual void saveSettings(QSettings &pSettings);
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings);
 
     bool gotoPath(const QString &pPath, const bool &pExpand = false);
 
