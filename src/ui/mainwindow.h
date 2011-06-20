@@ -13,6 +13,8 @@ namespace Ui {
 
 namespace OpenCOR {
 
+class PluginManager;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -33,6 +35,8 @@ protected:
 
 private:
     Ui::MainWindow *mUi;
+
+    PluginManager *mPluginManager;
 
     QString mLocale;
 

@@ -1,5 +1,6 @@
 #include "common.h"
 #include "mainwindow.h"
+#include "pluginmanager.h"
 #include "utils.h"
 
 #include "ui_mainwindow.h"
@@ -55,7 +56,9 @@ MainWindow::MainWindow(QWidget *pParent) :
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
-    // Load our various plugins
+    // Create our plugin manager and load our various plugins
+
+    mPluginManager = new PluginManager;
 
 //---GRY--- TO BE DONE...
 
@@ -108,8 +111,9 @@ MainWindow::MainWindow(QWidget *pParent) :
 
 MainWindow::~MainWindow()
 {
-    // Delete the UI
+    // Delete some internal objects
 
+    delete mPluginManager;
     delete mUi;
 }
 

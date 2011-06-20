@@ -12,6 +12,9 @@ class PluginManager : public QObject
 public:
     explicit PluginManager();
     ~PluginManager();
+
+private:
+    QString mPluginsDir;
 };
 
 }
