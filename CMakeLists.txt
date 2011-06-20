@@ -50,8 +50,6 @@ SET(SOURCES
     src/ui/checkforupdateswindow.cpp
     src/ui/mainwindow.cpp
     src/ui/preferenceswindow.cpp
-
-    src/widgets/tabwidget.cpp
 )
 
 SET(HEADERS
@@ -71,8 +69,6 @@ SET(HEADERS_MOC
     src/ui/checkforupdateswindow.h
     src/ui/mainwindow.h
     src/ui/preferenceswindow.h
-
-    src/widgets/tabwidget.h
 )
 
 SET(UIS

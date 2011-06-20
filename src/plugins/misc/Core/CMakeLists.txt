@@ -16,6 +16,7 @@ SET(SOURCES
     src/docktoolbar.cpp
     src/dockwidget.cpp
     src/filemanager.cpp
+    src/tabwidget.cpp
     src/treeview.cpp
 )
 
@@ -28,6 +29,7 @@ SET(HEADERS_MOC
     src/docktoolbar.h
     src/dockwidget.h
     src/filemanager.h
+    src/tabwidget.h
     src/treeview.h
 )
 
