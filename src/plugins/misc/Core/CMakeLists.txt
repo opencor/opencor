@@ -17,6 +17,7 @@ SET(SOURCES
     src/docktoolbar.cpp
     src/dockwidget.cpp
     src/filemanager.cpp
+    src/pluginswindow.cpp
     src/preferenceswindow.cpp
     src/tabwidget.cpp
     src/treeview.cpp
@@ -32,6 +33,7 @@ SET(HEADERS_MOC
     src/docktoolbar.h
     src/dockwidget.h
     src/filemanager.h
+    src/pluginswindow.h
     src/preferenceswindow.h
     src/tabwidget.h
     src/treeview.h
@@ -39,6 +41,7 @@ SET(HEADERS_MOC
 
 SET(UIS
     src/checkforupdateswindow.ui
+    src/pluginswindow.ui
     src/preferenceswindow.ui
 )
 

@@ -5,14 +5,21 @@
     <name>CheckForUpdatesWindow</name>
     <message>
         <source>Check for Updates</source>
-        <translation>Vérifier pour des Mises à Jour</translation>
+        <translation>VÃ©rifier pour des Mises Ã  Jour</translation>
+    </message>
+</context>
+<context>
+    <name>PluginsWindow</name>
+    <message>
+        <source>Plugins</source>
+        <translation>Extensions</translation>
     </message>
 </context>
 <context>
     <name>PreferencesWindow</name>
     <message>
         <source>Preferences</source>
-        <translation>Préférences</translation>
+        <translation>PrÃ©fÃ©rences</translation>
     </message>
 </context>
 </TS>

@@ -471,11 +471,4 @@
         <translation>Fichier CellML</translation>
     </message>
 </context>
-<context>
-    <name>PluginsWindow</name>
-    <message>
-        <source>Plugins</source>
-        <translation>Extensions</translation>
-    </message>
-</context>
 </TS>
