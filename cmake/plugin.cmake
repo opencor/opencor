@@ -89,27 +89,10 @@ MACRO(BUILD_PLUGIN)
     ENDIF()
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_PLUGINS_DIR}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-    #---GRY--- NOTE THAT copy SHOULD PROBABLY REPLACED BY rename WHEN PLUGINS REALLY WORK
+                       COMMAND ${CMAKE_COMMAND} -E rename ${ORIG_PLUGINS_DIR}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 ENDMACRO()
 
 MACRO(PACKAGE_PLUGIN)
-    #---GRY---
-
-    # Deployed location:
-    # ------------------
-    # The plugin is currently deployed in the same location as third-party
-    # libraries, since OpenCOR doesn't currently support plugins as such.
-    # However, once it does, the plugin will have to be deployed in its correct
-    # location, i.e. the "plugins" folder. For the time being, though, the
-    # current approach allows to test things, so...
-
-    # Translation files:
-    # ------------------
-    # There is currently no 'proper' support for the internationalisation of
-    # the plugin. This is therefore something that will have to be added at
-    # some point.
-
     IF(WIN32)
         INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/plugins)
     ELSEIF(NOT APPLE)
