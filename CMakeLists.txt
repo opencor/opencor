@@ -198,13 +198,7 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTHELP_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
-    ${QT_QTSQL_LIBRARY}
-    ${QT_QTWEBKIT_LIBRARY}
-    ${QT_QTXML_LIBRARY}
 
     #---GRY---
     # The following libraries are compulsory plugins, yet they shouldn't be
