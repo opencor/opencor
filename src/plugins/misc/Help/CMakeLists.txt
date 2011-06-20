@@ -34,11 +34,11 @@ INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 # Build the plugin
 
 BUILD_PLUGIN(
+    CorePlugin
+
     ${QT_QTHELP_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTWEBKIT_LIBRARY}
-
-    CorePlugin
 )
 
 # Package the plugin

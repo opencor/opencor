@@ -1,4 +1,4 @@
-PROJECT(CellMLPlugin)
+PROJECT(VersionManagerPlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,16 +6,16 @@ INCLUDE(${CMAKE_FILES_DIR}/plugin.cmake)
 
 # Initialise the plugin
 
-INITIALISE_PLUGIN(CellML FALSE)
+INITIALISE_PLUGIN(VersionManager FALSE)
 
 # Files that make up the plugin
 
 SET(SOURCES
-    src/cellml.cpp
+    src/versionmanager.cpp
 )
 
-SET(HEADERS
-    src/cellml.h
+SET(HEADERS_MOC
+    src/versionmanager.h
 )
 
 # Various include directories

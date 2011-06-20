@@ -34,9 +34,9 @@ INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
 # Build the plugin
 
 BUILD_PLUGIN(
-    ${QT_QTWEBKIT_LIBRARY}
-
     CorePlugin
+
+    ${QT_QTWEBKIT_LIBRARY}
 )
 
 # Package the plugin
