@@ -1,4 +1,3 @@
-#include "cellml.h"
 #include "centralwidget.h"
 #include "filemanager.h"
 #include "tabwidget.h"
@@ -137,9 +136,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     QWidget *dummyWidget = new QWidget(this);
 
     mTabWidget->setCurrentIndex(mTabWidget->addTab(dummyWidget,
-                                                   (!fileInfo.completeSuffix().compare(CellmlFileExtension, Qt::CaseInsensitive))?
-                                                       fileInfo.baseName():
-                                                       fileInfo.fileName()));
+                                                   fileInfo.fileName()));
 
     // Set the full name of the file as the tool tip for the new tab
 

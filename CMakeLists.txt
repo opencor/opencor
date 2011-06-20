@@ -37,7 +37,6 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 SET(SOURCES
     src/main.cpp
 
-    src/misc/cellml.cpp
     src/misc/common.cpp
     src/misc/utils.cpp
     src/misc/versionmanager.cpp
@@ -49,7 +48,6 @@ SET(SOURCES
 )
 
 SET(HEADERS
-    src/misc/cellml.h
     src/misc/common.h
     src/misc/utils.h
 )
@@ -142,6 +140,7 @@ SET(PLUGINS
     misc/Core
     # Note: the Core plugin must be built before any other plugin
 
+    3rdparty/CellML
     3rdparty/QScintilla
     3rdparty/QtMmlWidget
 
