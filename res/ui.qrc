@@ -10,9 +10,7 @@
         <file>oxygen/actions/view-fullscreen.png</file>
         <file>oxygen/categories/applications-education-language.png</file>
         <file>oxygen/categories/applications-internet.png</file>
-        <file alias="helpWidgetError">helpWidgetError.html</file>
         <file alias="qt_fr">qt_fr.qm</file>
-        <file alias="cellmlTemplate">template.cellml</file>
         <file alias="app_fr">../build/OpenCOR_fr.qm</file>
     </qresource>
 </RCC>

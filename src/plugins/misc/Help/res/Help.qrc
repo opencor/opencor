@@ -4,6 +4,7 @@
         <file>oxygen/actions/zoom-in.png</file>
         <file>oxygen/actions/zoom-original.png</file>
         <file>oxygen/actions/zoom-out.png</file>
+        <file alias="helpWidgetError">helpWidgetError.html</file>
         <file alias="Help_fr">../../../../../build/Help_fr.qm</file>
         <file alias="qchFile">../../../../../build/OpenCOR.qch</file>
         <file alias="qhcFile">../../../../../build/OpenCOR.qhc</file>
