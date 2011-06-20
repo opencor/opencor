@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CheckForUpdatesWindow</name>
-    <message>
-        <source>Check for Updates</source>
-        <translation>Vérifier pour des Mises à Jour</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <source>&amp;File</source>
@@ -483,13 +476,6 @@
     <message>
         <source>Plugins</source>
         <translation>Extensions</translation>
-    </message>
-</context>
-<context>
-    <name>PreferencesWindow</name>
-    <message>
-        <source>Preferences</source>
-        <translation>Préférences</translation>
     </message>
 </context>
 </TS>

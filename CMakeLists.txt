@@ -47,9 +47,7 @@ SET(SOURCES
     src/plugins/pluginswindow.cpp
 
     src/ui/centralwidget.cpp
-    src/ui/checkforupdateswindow.cpp
     src/ui/mainwindow.cpp
-    src/ui/preferenceswindow.cpp
 )
 
 SET(HEADERS
@@ -66,18 +64,14 @@ SET(HEADERS_MOC
     src/plugins/pluginswindow.h
 
     src/ui/centralwidget.h
-    src/ui/checkforupdateswindow.h
     src/ui/mainwindow.h
-    src/ui/preferenceswindow.h
 )
 
 SET(UIS
     src/plugins/pluginswindow.ui
 
     src/ui/centralwidget.ui
-    src/ui/checkforupdateswindow.ui
     src/ui/mainwindow.ui
-    src/ui/preferenceswindow.ui
 )
 
 SET(RESOURCES

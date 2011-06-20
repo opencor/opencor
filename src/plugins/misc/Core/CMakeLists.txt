@@ -11,11 +11,13 @@ INITIALISE_PLUGIN(Core TRUE)
 # Files that make up the plugin
 
 SET(SOURCES
+    src/checkforupdateswindow.cpp
     src/commonwidget.cpp
     src/coreutils.cpp
     src/docktoolbar.cpp
     src/dockwidget.cpp
     src/filemanager.cpp
+    src/preferenceswindow.cpp
     src/tabwidget.cpp
     src/treeview.cpp
 )
@@ -26,11 +28,18 @@ SET(HEADERS
 )
 
 SET(HEADERS_MOC
+    src/checkforupdateswindow.h
     src/docktoolbar.h
     src/dockwidget.h
     src/filemanager.h
+    src/preferenceswindow.h
     src/tabwidget.h
     src/treeview.h
+)
+
+SET(UIS
+    src/checkforupdateswindow.ui
+    src/preferenceswindow.ui
 )
 
 # Various include directories
