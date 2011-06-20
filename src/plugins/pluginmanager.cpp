@@ -13,8 +13,7 @@ PluginManager::PluginManager()
 #ifndef Q_WS_MAC
     mPluginsDir = QDir(qApp->applicationDirPath()).canonicalPath()+"/plugins";
 #else
-    mPluginsDir = QDir(qApp->applicationFilePath()).canonicalPath()+"/../PlugIns";
-    //---GRY--- TO BE DOUBLE CHECKED...
+    mPluginsDir = QDir(qApp->applicationDirPath()).canonicalPath()+"/../PlugIns";
 #endif
 }
 
