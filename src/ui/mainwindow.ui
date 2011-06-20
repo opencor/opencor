@@ -576,7 +576,7 @@
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset resource="../plugins/misc/CoreUI/res/CoreUI.qrc">
+    <iconset resource="../plugins/misc/Core/res/Core.qrc">
      <normaloff>:/oxygen/actions/document-print.png</normaloff>:/oxygen/actions/document-print.png</iconset>
    </property>
    <property name="text">
@@ -692,7 +692,7 @@
   </action>
   <action name="actionCopy">
    <property name="icon">
-    <iconset resource="../plugins/misc/CoreUI/res/CoreUI.qrc">
+    <iconset resource="../plugins/misc/Core/res/Core.qrc">
      <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
    </property>
    <property name="text">
@@ -728,7 +728,7 @@
   </action>
   <action name="actionDelete">
    <property name="icon">
-    <iconset resource="../plugins/misc/CoreUI/res/CoreUI.qrc">
+    <iconset resource="../plugins/misc/Core/res/Core.qrc">
      <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
    </property>
    <property name="text">
@@ -863,7 +863,7 @@
  <layoutdefault spacing="6" margin="11"/>
  <resources>
   <include location="../../res/ui.qrc"/>
-  <include location="../plugins/misc/CoreUI/res/CoreUI.qrc"/>
+  <include location="../plugins/misc/Core/res/Core.qrc"/>
  </resources>
  <connections/>
 </ui>
