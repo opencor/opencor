@@ -1,6 +1,6 @@
 #include "cellml.h"
 #include "centralwidget.h"
-#include "fileorganiserwidget.h"
+#include "filemanager.h"
 #include "tabwidget.h"
 
 #include "ui_centralwidget.h"

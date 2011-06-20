@@ -9,6 +9,8 @@ class QTimer;
 
 namespace OpenCOR {
 
+static const QString FileSystemMimeType = "text/uri-list";
+
 class File
 {
 public:

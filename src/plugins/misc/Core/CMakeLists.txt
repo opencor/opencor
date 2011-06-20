@@ -11,6 +11,7 @@ INITIALISE_PLUGIN(Core TRUE)
 # Files that make up the plugin
 
 SET(SOURCES
+    src/centralwidget.cpp
     src/checkforupdateswindow.cpp
     src/commonwidget.cpp
     src/coreutils.cpp
@@ -29,6 +30,7 @@ SET(HEADERS
 )
 
 SET(HEADERS_MOC
+    src/centralwidget.h
     src/checkforupdateswindow.h
     src/docktoolbar.h
     src/dockwidget.h
@@ -40,6 +42,7 @@ SET(HEADERS_MOC
 )
 
 SET(UIS
+    src/centralwidget.ui
     src/checkforupdateswindow.ui
     src/pluginswindow.ui
     src/preferenceswindow.ui

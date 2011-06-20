@@ -11,7 +11,6 @@ class QStandardItem;
 
 namespace OpenCOR {
 
-static const QString FileSystemMimeType = "text/uri-list";
 static const QString FileOrganiserMimeType = "opencor/file-organiser";
 
 class FileOrganiserModel : public QStandardItemModel
