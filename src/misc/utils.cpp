@@ -11,10 +11,6 @@
 #include <QFile>
 #include <QFileInfo>
 
-#ifdef QT_GUI_LIB
-    #include <QMessageBox>
-#endif
-
 #include <QProcess>
 #include <QResource>
 
@@ -110,13 +106,5 @@ QString getAppCopyright(const bool &pHtml)
 {
     return QString(pHtml?"&copy;":"Copyright ")+"2011";
 }
-
-#ifdef QT_GUI_LIB
-void notYetImplemented(const QString &method)
-{
-    QMessageBox::information(0, qApp->applicationName()+" Information",
-                             "Sorry, but the '"+method+"' method has not yet been implemented.");
-}
-#endif
 
 }
