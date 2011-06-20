@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mPluginManager = new PluginManager;
 
-//---GRY--- TO BE DONE...
+    mPluginManager->loadPlugins(mSettings);
 
     // Some connections to handle our Help toolbar
 
