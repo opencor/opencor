@@ -5,6 +5,7 @@
         <file>oxygen/actions/edit-delete.png</file>
         <file>oxygen/actions/go-next.png</file>
         <file>oxygen/actions/go-previous.png</file>
+        <file>oxygen/places/document-multiple.png</file>
         <file alias="cellmlLogo">cellML.png</file>
     </qresource>
 </RCC>

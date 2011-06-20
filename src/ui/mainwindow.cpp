@@ -1,10 +1,5 @@
-#include "cellml.h"
-#include "centralwidget.h"
-#include "checkforupdateswindow.h"
 #include "common.h"
 #include "mainwindow.h"
-#include "pluginswindow.h"
-#include "preferenceswindow.h"
 #include "utils.h"
 
 #include "ui_mainwindow.h"
@@ -53,45 +48,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 //    setUnifiedTitleAndToolBarOnMac(true);
 //#endif
 
-    // Set the New toolbar button with its dropdown menu using our custom-made
-    // action (actionNew)
-    // Note: ideally, this would be done using the GUI designer in QtCreator,
-    //       but it's not quite clear to me how this can be achieved, so...
-
-    QMenu *actionNewMenu = new QMenu(this);
-
-    mUi->actionNew->setMenu(actionNewMenu);
-
-    actionNewMenu->addAction(mUi->actionCellML10File);
-    actionNewMenu->addAction(mUi->actionCellML11File);
-
-    mUi->fileToolbar->insertAction(mUi->actionSave, mUi->actionNew);
-    mUi->fileToolbar->insertSeparator(mUi->actionSave);
-
-    // Set the Reopen menu
-
-    mActionReopenMenu = new QMenu(this);
-
-    mUi->actionReopen->setMenu(mActionReopenMenu);
-
-    mUi->menuFile->insertAction(mUi->actionSave, mUi->actionReopen);
-    mUi->menuFile->insertSeparator(mUi->actionSave);
-
-    // Set the Open/Reopen toolbar button with its dropdown menu
-
-    mActionOpenReopenMenu = new QMenu(this);
-
-    mUi->actionOpenReopen->setMenu(mActionOpenReopenMenu);
-
-    mUi->fileToolbar->insertAction(mUi->actionSave, mUi->actionOpenReopen);
-    mUi->fileToolbar->insertSeparator(mUi->actionSave);
-
-    // Set the central widget
-
-    mCentralWidget = new CentralWidget(this);
-
-    setCentralWidget(mCentralWidget);
-
     // Specify some general docking settings
 
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
@@ -103,28 +59,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
 //---GRY--- TO BE DONE...
 
-    // Enable/disable the View|Organise and View|Edit menus depending on whether
-    // they contain any items
-
-    mUi->menuOrganiseView->setEnabled(!mUi->menuOrganiseView->actions().isEmpty());
-    mUi->menuEditView->setEnabled(!mUi->menuEditView->actions().isEmpty());
-
-    // Some connections to handle the various toolbars
-
-    connect(mUi->actionFileToolbar, SIGNAL(triggered(bool)),
-            mUi->fileToolbar, SLOT(setVisible(bool)));
-    connect(mUi->fileToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-            mUi->actionFileToolbar, SLOT(setChecked(bool)));
-
-    connect(mUi->actionEditToolbar, SIGNAL(triggered(bool)),
-            mUi->editToolbar, SLOT(setVisible(bool)));
-    connect(mUi->editToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-            mUi->actionEditToolbar, SLOT(setChecked(bool)));
-
-    connect(mUi->actionRunToolbar, SIGNAL(triggered(bool)),
-            mUi->runToolbar, SLOT(setVisible(bool)));
-    connect(mUi->runToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-            mUi->actionRunToolbar, SLOT(setChecked(bool)));
+    // Some connections to handle our Help toolbar
 
     connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
             mUi->helpToolbar, SLOT(setVisible(bool)));
@@ -143,22 +78,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
-    // Some connections to handle the File menu
-
-    connect(mUi->actionClose, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(closeFile()));
-    connect(mUi->actionCloseAll, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(closeFiles()));
-
-    // Some connections to handle the central widget
-
-    connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
-            this, SLOT(fileOpened(const QString &)));
-    connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
-            this, SLOT(fileClosed(const QString &)));
-    connect(mCentralWidget, SIGNAL(fileActivated(const QString &)),
-            this, SLOT(updateWindowTitle()));
-
     // Some connections for the GUI side of our various plugins
 
 //---GRY--- TO BE DONE...
@@ -172,11 +91,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     new QShortcut(QKeySequence("Ctrl+M"),
                   this, SLOT(showMinimized()));
 #endif
-
-    // Default title for the main window
-    // Note: loadSettings may result in a new title (if a file is opened)
-
-    updateWindowTitle();
 
     // Retrieve the user settings from the previous session, if any
 
@@ -251,26 +165,10 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     QMainWindow::closeEvent(pEvent);
 }
 
-void MainWindow::updateWindowTitle()
-{
-    // Set the title of the main window to that of the application and add the
-    // name of the active file, should there be one
-
-    QString activeFileName = mCentralWidget->activeFileName();
-
-    if (activeFileName.isEmpty())
-        setWindowTitle(qApp->applicationName());
-    else
-        setWindowTitle(qApp->applicationName()+" - "+activeFileName);
-}
-
 static const QString SettingsLocale              = "Locale";
 static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
 static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
-static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
-static const QString SettingsRecentlyOpenedFiles = "RecentlyOpenedFiles";
-static const QString SettingsDebugModeEnabled    = "DebugModeEnabled";
 
 void MainWindow::loadSettings()
 {
@@ -311,27 +209,7 @@ void MainWindow::loadSettings()
                                                       true).toBool());
         }
 
-        // Retrieve the active directory
-
-        mActiveDir.setPath(settings.value(SettingsFileDialogDirectory,
-                                          QDir::currentPath()).toString());
-
-        // Retrieve our recently opened files (and add them to our menus)
-
-        QStringList recentlyOpenedFiles = settings.value(SettingsRecentlyOpenedFiles).toStringList();
-
-        for (int i = recentlyOpenedFiles.count()-1; i >= 0; --i)
-            addRecentlyOpenedFile(recentlyOpenedFiles.at(i));
-
-        // Retrieve whether we are working in debug mode or not
-
-        mUi->actionDebugMode->setChecked(settings.value(SettingsDebugModeEnabled,
-                                                        false).toBool());
-
-        // Retrieve the settings of the the central widget and of our various
-        // plugins
-
-        mCentralWidget->loadSettings(settings);
+        // Retrieve the settings of our various plugins
 
 //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     settings.endGroup();
@@ -359,28 +237,7 @@ void MainWindow::saveSettings()
         settings.setValue(SettingsStatusBarVisibility,
                           mUi->statusBar->isVisible());
 
-        // Keep track of the active directory
-
-        settings.setValue(SettingsFileDialogDirectory, mActiveDir.path());
-
-        // Keep track of our recently opened files
-
-        QStringList recentlyOpenedFiles;
-
-        for (int i = 0; i < mActionReopenMenu->actions().count(); ++i)
-            recentlyOpenedFiles << mActionReopenMenu->actions().at(i)->text();
-
-        settings.setValue(SettingsRecentlyOpenedFiles, recentlyOpenedFiles);
-
-        // Keep track of whether we are working in debug mode or not
-
-        settings.setValue(SettingsDebugModeEnabled,
-                          mUi->actionDebugMode->isChecked());
-
-        // Keep track of the settings of the central widget and of our various
-        // plugins
-
-        mCentralWidget->saveSettings(settings);
+        // Keep track of the settings of our various plugins
 
 //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     settings.endGroup();
@@ -414,8 +271,6 @@ void MainWindow::setLocale(const QString &pLocale)
         // the actions just to be on the safe side
 
         mUi->retranslateUi(this);
-
-        updateActions();
 
 //---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
     }
@@ -497,181 +352,6 @@ void MainWindow::singleAppMsgRcvd(const QString &)
     // TODO: handle the arguments passed to the 'official' instance of OpenCOR
 }
 
-void MainWindow::updateActions()
-{
-    // Make sure that our various actions are properly enabled/disabled
-
-    // File actions
-
-    mUi->actionOpen->setEnabled(true);
-    mUi->actionReopen->setEnabled(mActionReopenMenu->actions().count());
-    mUi->actionOpenReopen->setEnabled(true);
-
-    mUi->actionSave->setEnabled(false);
-    mUi->actionSaveAs->setEnabled(false);
-    mUi->actionSaveAll->setEnabled(false);
-
-    mUi->actionClose->setEnabled(mCentralWidget->nbOfFilesOpened());
-    mUi->actionCloseAll->setEnabled(mCentralWidget->nbOfFilesOpened());
-
-    mUi->actionPrint->setEnabled(false);
-
-    // Edit actions
-
-    mUi->actionUndo->setEnabled(false);
-    mUi->actionRedo->setEnabled(false);
-
-    mUi->actionCut->setEnabled(false);
-    mUi->actionCopy->setEnabled(false);
-    mUi->actionPaste->setEnabled(false);
-    mUi->actionDelete->setEnabled(false);
-
-    mUi->actionFind->setEnabled(false);
-    mUi->actionFindNext->setEnabled(false);
-    mUi->actionFindPrevious->setEnabled(false);
-    mUi->actionReplace->setEnabled(false);
-
-    mUi->actionSelectAll->setEnabled(false);
-
-    // Run actions
-
-    mUi->actionRun->setEnabled(false);
-    mUi->actionStop->setEnabled(false);
-}
-
-void MainWindow::on_actionNew_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionNew_triggered()");
-}
-
-void MainWindow::on_actionCellML10File_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionCellML10File_triggered()");
-}
-
-void MainWindow::on_actionCellML11File_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionCellML11File_triggered()");
-}
-
-void MainWindow::on_actionOpen_triggered()
-{
-    // Ask for the file(s) to be opened
-
-    QStringList files = QFileDialog::getOpenFileNames(this,
-                                                      tr("Open File"),
-                                                      mActiveDir.path(),
-                                                      tr("All Files")
-                                                      +" (*"
-#ifdef Q_WS_WIN
-                                                      +".*"
-#endif
-                                                      +");;"+tr("CellML File")+" (*.cellml)");
-
-    if (files.count())
-        // There is at least one file which is to be opened, so we can keep
-        // track of the folder in which it is
-        // Note #1: we use the last file to determine the folder that is to be
-        //          remembered since on Windows 7, at least, it's possible to
-        //          search for files from within the file dialog box, the last
-        //          file should be the one we are 'interested' in...
-        // Note #2: this doesn't, unfortunately, address the case where the user
-        //          goes to a directory and then closes the file dialog box
-        //          without selecting any file. There might be a way to get it
-        //          to work, but that would involve using the exec method rather
-        //          than the static getOpenFilesNames method, which would result
-        //          in a non-native looking file dialog box (on Windows 7 at
-        //          least), so it's not an option unfortunately...
-
-        mActiveDir = QFileInfo(files.at(files.count()-1)).path();
-
-    // Open the file(s)
-
-    mCentralWidget->openFiles(files);
-}
-
-void MainWindow::on_actionOpenReopen_triggered()
-{
-    // Open one or several files
-
-    on_actionOpen_triggered();
-}
-
-void MainWindow::on_actionSave_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionSave_triggered()");
-}
-
-void MainWindow::on_actionSaveAs_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionSaveAs_triggered()");
-}
-
-void MainWindow::on_actionSaveAll_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionSaveAll_triggered()");
-}
-
-void MainWindow::on_actionPrint_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionPrint_triggered()");
-}
-
-void MainWindow::on_actionUndo_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionUndo_triggered()");
-}
-
-void MainWindow::on_actionRedo_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionRedo_triggered()");
-}
-
-void MainWindow::on_actionCut_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionCut_triggered()");
-}
-
-void MainWindow::on_actionCopy_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionCopy_triggered()");
-}
-
-void MainWindow::on_actionPaste_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionPaste_triggered()");
-}
-
-void MainWindow::on_actionDelete_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionDelete_triggered()");
-}
-
-void MainWindow::on_actionFind_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionFind_triggered()");
-}
-
-void MainWindow::on_actionFindNext_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionFindNext_triggered()");
-}
-
-void MainWindow::on_actionFindPrevious_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionFindPrevious_triggered()");
-}
-
-void MainWindow::on_actionReplace_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionReplace_triggered()");
-}
-
-void MainWindow::on_actionSelectAll_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionSelectAll_triggered()");
-}
-
 void MainWindow::on_actionFullScreen_triggered()
 {
     // Switch to / back from full screen mode
@@ -680,16 +360,6 @@ void MainWindow::on_actionFullScreen_triggered()
         showFullScreen();
     else
         showNormal();
-}
-
-void MainWindow::on_actionRun_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionRun_triggered()");
-}
-
-void MainWindow::on_actionStop_triggered()
-{
-    notYetImplemented("void MainWindow::on_actionStop_triggered()");
 }
 
 void MainWindow::on_actionSystem_triggered()
@@ -713,45 +383,11 @@ void MainWindow::on_actionFrench_triggered()
     setLocale(FrenchLocale);
 }
 
-void MainWindow::on_actionPlugins_triggered()
-{
-    // Plugins' preferences
-
-    OpenCOR::PluginsWindow pluginsWindow(this);
-
-    pluginsWindow.exec();
-}
-
-void MainWindow::on_actionPreferences_triggered()
-{
-    // User's preferences
-
-    OpenCOR::PreferencesWindow preferencesWindow(this);
-
-    preferencesWindow.exec();
-}
-
 void MainWindow::on_actionHomePage_triggered()
 {
     // Look up OpenCOR home page
 
     QDesktopServices::openUrl(QUrl(OpencorHomepageUrl));
-}
-
-void MainWindow::on_actionCellMLHomePage_triggered()
-{
-    // Look up CellML home page
-
-    QDesktopServices::openUrl(QUrl(CellmlHomepageUrl));
-}
-
-void MainWindow::on_actionCheckForUpdates_triggered()
-{
-    // Check for updates
-
-    OpenCOR::CheckForUpdatesWindow checkForUpdatesWindow(this);
-
-    checkForUpdatesWindow.exec();
 }
 
 void MainWindow::on_actionAbout_triggered()
@@ -784,132 +420,6 @@ void MainWindow::resetAll()
 
         qApp->exit(MainWindow::NeedRestart);
     }
-}
-
-void MainWindow::fileOpened(const QString &pFileName)
-{
-    // Remove the file from our list of recently opened files, should it be in
-    // it
-
-    removeRecentlyOpenedFile(pFileName);
-
-    // Update the main window's title
-
-    updateWindowTitle();
-
-    // Update the actions, just to be on the safe side
-
-    updateActions();
-}
-
-void MainWindow::fileClosed(const QString &pFileName)
-{
-    // Add the file to our list of recently opened files, should it be in it
-
-    addRecentlyOpenedFile(pFileName);
-
-    // Update the main window's title
-
-    updateWindowTitle();
-
-    // Update the actions, just to be on the safe side
-
-    updateActions();
-}
-
-int MainWindow::isRecentlyOpenedFile(const QString &pFileName)
-{
-    // Check whether the given file name is part of our list of recently opened
-    // files
-
-    for (int i = 0; i < mActionReopenMenu->actions().count(); ++i)
-        if (!mActionReopenMenu->actions().at(i)->text().compare(pFileName))
-            // The file name was found, so return its index in our list
-
-            return i;
-
-    // The file name couldn't be found, so...
-
-    return -1;
-}
-
-void MainWindow::doUpdateRecentlyOpenedFiles(const QList<QAction *> pActions)
-{
-    // Sepcify within the actions which ones should be visible
-
-    static const int TotalNbOfRecentlyOpenedFiles = 10;
-
-    for (int i = 0; i < pActions.count(); ++i)
-        pActions.at(i)->setVisible(i < TotalNbOfRecentlyOpenedFiles);
-}
-
-void MainWindow::updateRecentlyOpenedFiles()
-{
-    // Update the list of actions for our reopen menus
-
-    doUpdateRecentlyOpenedFiles(mActionReopenMenu->actions());
-    doUpdateRecentlyOpenedFiles(mActionOpenReopenMenu->actions());
-}
-
-void MainWindow::addRecentlyOpenedFile(const QString &pFileName)
-{
-    // Check whether the file is not already in our list of recently opened
-    // files
-
-    if (isRecentlyOpenedFile(pFileName) == -1) {
-        // The file couldn't be found in our list, so create an entry for the
-        // file in our menus
-
-        QAction *action = new QAction(pFileName, this);
-
-        connect(action, SIGNAL(triggered()),
-                this, SLOT(reopenFile()));
-
-        mActionReopenMenu->insertAction(mActionOpenReopenMenu->actions().count()?
-                                            mActionOpenReopenMenu->actions().first():
-                                            0,
-                                        action);
-        mActionOpenReopenMenu->insertAction(mActionOpenReopenMenu->actions().count()?
-                                                mActionOpenReopenMenu->actions().first():
-                                                0,
-                                            action);
-
-        // Update what should be shown in our list of recently opened files
-
-        updateRecentlyOpenedFiles();
-    }
-}
-
-void MainWindow::removeRecentlyOpenedFile(const QString &pFileName)
-{
-    // Search for the file in our list of recently opened files
-
-    int index = isRecentlyOpenedFile(pFileName);
-
-    if (index != -1) {
-        // The file could be found in our list, so remove it from our menus
-
-        QAction *action = mActionReopenMenu->actions().at(index);
-
-        mActionReopenMenu->removeAction(action);
-        mActionOpenReopenMenu->removeAction(action);
-
-        delete action;
-
-        // Update what should be shown in our list of recently opened files
-
-        updateRecentlyOpenedFiles();
-    }
-}
-
-void MainWindow::reopenFile()
-{
-    // Reopen one of our recently opened files
-
-    QAction *action = qobject_cast<QAction *>(sender());
-
-    if (action)
-        mCentralWidget->openFile(action->text());
 }
 
 }

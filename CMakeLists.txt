@@ -181,14 +181,9 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
-
-    #---GRY---
-    # The following libraries are compulsory plugins, yet they shouldn't be
-    # listed here, but for now they have to be since OpenCOR doesn't yet support
-    # plugins as such, so...
-
-    CorePlugin
 )
 
 IF(WIN32 OR APPLE)
