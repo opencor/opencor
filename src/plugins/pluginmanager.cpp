@@ -11,9 +11,16 @@ namespace OpenCOR {
 PluginManager::PluginManager()
 {
 #ifndef Q_WS_MAC
-    mPluginsDir = QDir(qApp->applicationDirPath()).canonicalPath()+"/plugins";
+    QString pluginsDir = "plugins";
 #else
-    mPluginsDir = QDir(qApp->applicationDirPath()).canonicalPath()+"/../PlugIns";
+    QString pluginsDir = QString("..")+QDir::separator()+"PlugIns";
+#endif
+
+    mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
+                  +QDir::separator()+pluginsDir;
+
+#ifdef Q_WS_MAC
+    mPluginsDir += QDir::separator()+qApp->applicationName();
 #endif
 }
 

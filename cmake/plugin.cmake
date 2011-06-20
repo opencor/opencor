@@ -70,14 +70,14 @@ MACRO(BUILD_PLUGIN)
 
     # Create the plugins directory if it doesn't already exist and move the
     # plugin to it
-    # Note: this is so that we can test the use of plugins in OpenCOR without
-    #       first having to package OpenCOR
+    # Note: this is so that we can, on Windows and Linux, test the use of
+    #       plugins in OpenCOR without first having to package OpenCOR
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     IF(APPLE)
         SET(ORIG_PLUGINS_DIR ${CMAKE_BINARY_DIR}/lib)
-        SET(DEST_PLUGINS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns)
+        SET(DEST_PLUGINS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME})
     ELSE()
         SET(ORIG_PLUGINS_DIR ${CMAKE_BINARY_DIR})
         SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins)
