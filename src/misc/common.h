@@ -1,5 +1,5 @@
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#ifndef COMMON_H
+#define COMMON_H
 
 #include <QString>
 
