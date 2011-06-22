@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QPluginLoader>
 #include <QSettings>
 
 #include <QDebug>
@@ -43,13 +44,30 @@ void PluginManager::loadPlugins(QSettings *pSettings)
     QFileInfoList files = QDir(mPluginsDir).entryInfoList(QStringList("*"+extension), QDir::Files);
     QStringList pluginFiles;
 
-    foreach (const QFileInfo &file, files)
-{
-        pluginFiles << file.canonicalFilePath();
-qDebug() << "Plugin #" << pluginFiles.count() << ":" << pluginFiles.last();
-}
+    foreach (const QFileInfo &file, files) {
+        QString pluginFileName = file.canonicalFilePath();
 
-//---GRY--- TO BE DONE...
+        pluginFiles << pluginFileName;
+
+        qDebug() << "Plugin #" << pluginFiles.count() << ":" << pluginFileName;
+
+        QString pluginBaseName = QFileInfo(pluginFileName).baseName();
+
+        if (!pluginBaseName.compare("Core") || !pluginBaseName.compare("Viewer")) {
+            // Try to load the plugin as a 'proper' plugin
+
+            QPluginLoader loader(pluginFileName);
+
+            if (loader.load()) {
+                qDebug() << " -" << pluginFileName << " loaded...";
+            } else {
+                qDebug() << " -" << pluginFileName << " NOT loaded...";
+                qDebug() << "    ===>" << loader.errorString();
+            }
+        }
+    }
+
+    //---GRY--- TO BE DONE...
 }
 
 }
