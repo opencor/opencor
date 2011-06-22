@@ -5,7 +5,7 @@
 
 namespace OpenCOR {
 
-class PluginInterface
+class PluginInterface : public QObject
 {
 };
 

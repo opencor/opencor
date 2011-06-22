@@ -5,7 +5,7 @@
 
 namespace OpenCOR {
 
-class VersionManagerPlugin : public QObject, public PluginInterface
+class VersionManagerPlugin : public PluginInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::PluginInterface)

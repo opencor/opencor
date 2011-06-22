@@ -5,7 +5,7 @@
 
 namespace OpenCOR {
 
-class QScintillaPlugin : public QObject, public PluginInterface
+class QScintillaPlugin : public PluginInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::PluginInterface)
