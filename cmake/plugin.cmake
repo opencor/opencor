@@ -92,6 +92,21 @@ MACRO(BUILD_PLUGIN)
                        COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_PLUGINS_DIR}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 ENDMACRO()
 
+MACRO(SET_PLUGIN_QT_LIBRARIES)
+    # Make sure that the plugin refers to our embedded version of the Qt
+    # libraries which it needs
+
+    IF(APPLE)
+        FOREACH(LIBRARY ${ARGN})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
+                                                                 @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
+                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                               WORKING_DIRECTORY ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks)
+        ENDFOREACH()
+    ENDIF()
+ENDMACRO()
+
 MACRO(PACKAGE_PLUGIN)
     IF(WIN32)
         INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/plugins)

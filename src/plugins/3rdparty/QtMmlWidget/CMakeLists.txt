@@ -38,6 +38,12 @@ BUILD_PLUGIN(
     ${QT_QTXML_LIBRARY}
 )
 
+# Set the right Qt libraries for the plugin
+
+SET_PLUGIN_QT_LIBRARIES(
+    QtGui
+)
+
 # Package the plugin
 
 PACKAGE_PLUGIN()
