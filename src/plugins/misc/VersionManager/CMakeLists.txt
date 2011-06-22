@@ -12,10 +12,12 @@ INITIALISE_PLUGIN(VersionManager FALSE)
 
 SET(SOURCES
     src/versionmanager.cpp
+    src/versionmanagerplugin.cpp
 )
 
 SET(HEADERS_MOC
     src/versionmanager.h
+    src/versionmanagerplugin.h
 )
 
 # Various include directories

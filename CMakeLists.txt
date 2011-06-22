@@ -147,7 +147,7 @@ SET(PLUGINS
 
     misc/CellML
 #    misc/Help
-#    misc/VersionManager
+    misc/VersionManager
 
 #    organise/CellMLModelRepository
 #    organise/FileBrowser
