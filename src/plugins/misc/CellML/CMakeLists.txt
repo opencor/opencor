@@ -12,10 +12,15 @@ INITIALISE_PLUGIN(CellML FALSE)
 
 SET(SOURCES
     src/cellml.cpp
+    src/cellmlplugin.cpp
 )
 
 SET(HEADERS
     src/cellml.h
+)
+
+SET(HEADERS_MOC
+    src/cellmlplugin.h
 )
 
 # Various include directories

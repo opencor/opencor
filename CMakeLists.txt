@@ -140,12 +140,12 @@ SET(PLUGINS
     misc/Core
     # Note: the Core plugin must be built before any other plugin
 
-#    3rdparty/QScintilla
-#    3rdparty/QtMmlWidget
+    3rdparty/QScintilla
+    3rdparty/QtMmlWidget
 
 #    edit/Viewer
 
-#    misc/CellML
+    misc/CellML
 #    misc/Help
 #    misc/VersionManager
 

@@ -60,6 +60,7 @@ SET(SOURCES
     src/LineMarker.cpp
     src/PerLine.cpp
     src/PositionCache.cpp
+    src/qscintillaplugin.cpp
     src/RESearch.cpp
     src/RunStyles.cpp
     src/ScintillaBase.cpp
@@ -140,6 +141,8 @@ SET(HEADERS_MOC
     Qt4/Qsci/qscilexerxml.h
     Qt4/Qsci/qsciscintilla.h
     Qt4/Qsci/qsciscintillabase.h
+
+    src/qscintillaplugin.h
 )
 
 # Various include directories

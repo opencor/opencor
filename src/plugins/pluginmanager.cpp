@@ -51,10 +51,10 @@ void PluginManager::loadPlugins(QSettings *pSettings)
 
         qDebug() << "Plugin #" << pluginFiles.count() << ":" << pluginFileName;
 
-        QString pluginBaseName = QFileInfo(pluginFileName).baseName();
+//        QString pluginBaseName = QFileInfo(pluginFileName).baseName();
 
-        if (   !pluginBaseName.compare("Core") || !pluginBaseName.compare("libCore")
-            || !pluginBaseName.compare("Viewer") || !pluginBaseName.compare("libViewer")) {
+//        if (   !pluginBaseName.compare("Core") || !pluginBaseName.compare("libCore")
+//            || !pluginBaseName.compare("Viewer") || !pluginBaseName.compare("libViewer")) {
             // Try to load the plugin as a 'proper' plugin
 
             QPluginLoader loader(pluginFileName);
@@ -65,7 +65,7 @@ void PluginManager::loadPlugins(QSettings *pSettings)
                 qDebug() << " -" << pluginFileName << " NOT loaded...";
                 qDebug() << "    ===>" << loader.errorString();
             }
-        }
+//        }
     }
 
     //---GRY--- TO BE DONE...

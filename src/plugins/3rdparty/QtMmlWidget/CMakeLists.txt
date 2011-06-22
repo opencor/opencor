@@ -12,10 +12,15 @@ INITIALISE_PLUGIN(QtMmlWidget FALSE)
 
 SET(SOURCES
     src/qtmmlwidget.cpp
+    src/qtmmlwidgetplugin.cpp
 )
 
 SET(HEADERS
     src/qtmmlwidget.h
+)
+
+SET(HEADERS_MOC
+    src/qtmmlwidgetplugin.h
 )
 
 # Various include directories

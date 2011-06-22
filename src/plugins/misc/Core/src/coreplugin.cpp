@@ -2,6 +2,6 @@
 
 namespace OpenCOR {
 
-Q_EXPORT_PLUGIN2(CorePlugin, CorePlugin)
+Q_EXPORT_PLUGIN2(Core, CorePlugin)
 
 }
