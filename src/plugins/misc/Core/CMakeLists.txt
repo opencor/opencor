@@ -14,6 +14,7 @@ SET(SOURCES
     src/centralwidget.cpp
     src/checkforupdateswindow.cpp
     src/commonwidget.cpp
+    src/coreplugin.cpp
     src/coreutils.cpp
     src/docktoolbar.cpp
     src/dockwidget.cpp
@@ -32,6 +33,7 @@ SET(HEADERS
 SET(HEADERS_MOC
     src/centralwidget.h
     src/checkforupdateswindow.h
+    src/coreplugin.h
     src/docktoolbar.h
     src/dockwidget.h
     src/filemanager.h

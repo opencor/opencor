@@ -50,6 +50,8 @@ SET(SOURCES
 SET(HEADERS
     src/misc/common.h
     src/misc/utils.h
+
+    src/plugins/plugininterface.h
 )
 
 SET(HEADERS_MOC
@@ -138,18 +140,18 @@ SET(PLUGINS
     misc/Core
     # Note: the Core plugin must be built before any other plugin
 
-    3rdparty/QScintilla
-    3rdparty/QtMmlWidget
+#    3rdparty/QScintilla
+#    3rdparty/QtMmlWidget
 
-    edit/Viewer
+#    edit/Viewer
 
-    misc/CellML
-    misc/Help
-    misc/VersionManager
+#    misc/CellML
+#    misc/Help
+#    misc/VersionManager
 
-    organise/CellMLModelRepository
-    organise/FileBrowser
-    organise/FileOrganiser
+#    organise/CellMLModelRepository
+#    organise/FileBrowser
+#    organise/FileOrganiser
 )
 
 FOREACH(PLUGIN ${PLUGINS})
