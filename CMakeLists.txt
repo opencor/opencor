@@ -72,10 +72,12 @@ SET(RESOURCES
 
 # Various include directories
 
-INCLUDE_DIRECTORIES(src/misc)
-INCLUDE_DIRECTORIES(src/plugins)
-INCLUDE_DIRECTORIES(src/ui)
-INCLUDE_DIRECTORIES(src/widgets)
+INCLUDE_DIRECTORIES(
+    src/misc
+    src/plugins
+    src/ui
+    src/widgets
+)
 
 # Qt specific
 
@@ -143,7 +145,7 @@ SET(PLUGINS
     3rdparty/QScintilla
     3rdparty/QtMmlWidget
 
-#    edit/Viewer
+    edit/Viewer
 
     misc/CellML
 #    misc/Help
