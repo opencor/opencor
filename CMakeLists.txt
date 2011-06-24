@@ -151,7 +151,7 @@ SET(PLUGINS
     misc/Help
     misc/VersionManager
 
-#    organise/CellMLModelRepository
+    organise/CellMLModelRepository
 #    organise/FileBrowser
 #    organise/FileOrganiser
 )

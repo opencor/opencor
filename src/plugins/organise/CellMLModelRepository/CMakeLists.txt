@@ -11,11 +11,13 @@ INITIALISE_PLUGIN(CellMLModelRepository TRUE)
 # Files that make up the plugin
 
 SET(SOURCES
+    src/cellmlmodelrepositoryplugin.cpp
     src/cellmlmodelrepositorywidget.cpp
     src/cellmlmodelrepositorywindow.cpp
 )
 
 SET(HEADERS_MOC
+    src/cellmlmodelrepositoryplugin.h
     src/cellmlmodelrepositorywidget.h
     src/cellmlmodelrepositorywindow.h
 )
