@@ -1,11 +1,13 @@
 #ifndef DOCKTOOLBAR_H
 #define DOCKTOOLBAR_H
 
+#include "coreglobal.h"
+
 #include <QToolBar>
 
 namespace OpenCOR {
 
-class DockToolBar : public QToolBar
+class CORE_EXPORT DockToolBar : public QToolBar
 {
     Q_OBJECT
 

@@ -58,7 +58,7 @@ void PluginManager::loadPlugins(QSettings *pSettings)
         if (loader.load())
             qDebug() << "Plugin #" << pluginFiles.count() << ":" << QFileInfo(pluginFileName).baseName() << "- Loaded...";
         else
-            qDebug() << "Plugin #" << pluginFiles.count() << ":" << QFileInfo(pluginFileName).baseName() << "- NOT Loaded...";
+            qDebug() << "Plugin #" << pluginFiles.count() << ":" << QFileInfo(pluginFileName).baseName() << "- NOT LOADED...";
     }
 
     //---GRY--- TO BE DONE...

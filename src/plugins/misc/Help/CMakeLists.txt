@@ -11,11 +11,13 @@ INITIALISE_PLUGIN(Help TRUE)
 # Files that make up the plugin
 
 SET(SOURCES
+    src/helpplugin.cpp
     src/helpwidget.cpp
     src/helpwindow.cpp
 )
 
 SET(HEADERS_MOC
+    src/helpplugin.h
     src/helpwidget.h
     src/helpwindow.h
 )
