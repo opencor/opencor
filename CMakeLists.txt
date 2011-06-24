@@ -152,7 +152,7 @@ SET(PLUGINS
     misc/VersionManager
 
     organise/CellMLModelRepository
-#    organise/FileBrowser
+    organise/FileBrowser
 #    organise/FileOrganiser
 )
 

@@ -11,11 +11,13 @@ INITIALISE_PLUGIN(FileBrowser TRUE)
 # Files that make up the plugin
 
 SET(SOURCES
+    src/filebrowserplugin.cpp
     src/filebrowserwidget.cpp
     src/filebrowserwindow.cpp
 )
 
 SET(HEADERS_MOC
+    src/filebrowserplugin.h
     src/filebrowserwidget.h
     src/filebrowserwindow.h
 )

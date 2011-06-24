@@ -2,12 +2,13 @@
 #define TREEVIEW_H
 
 #include "commonwidget.h"
+#include "coreglobal.h"
 
 #include <QTreeView>
 
 namespace OpenCOR {
 
-class TreeView : public QTreeView, public CommonWidget
+class CORE_EXPORT TreeView : public QTreeView, public CommonWidget
 {
     Q_OBJECT
 
