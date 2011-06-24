@@ -41,6 +41,8 @@ void PluginManager::loadPlugins(QSettings *pSettings)
     const QString extension = ".so";
 #endif
 
+    qDebug() << "Loading plugins from" << mPluginsDir << ":";
+
     QFileInfoList files = QDir(mPluginsDir).entryInfoList(QStringList("*"+extension), QDir::Files);
     QStringList pluginFiles;
 
@@ -49,23 +51,14 @@ void PluginManager::loadPlugins(QSettings *pSettings)
 
         pluginFiles << pluginFileName;
 
-        qDebug() << "Plugin #" << pluginFiles.count() << ":" << pluginFileName;
+        // Try to load the plugin as a 'proper' plugin
 
-//        QString pluginBaseName = QFileInfo(pluginFileName).baseName();
+        QPluginLoader loader(pluginFileName);
 
-//        if (   !pluginBaseName.compare("Core") || !pluginBaseName.compare("libCore")
-//            || !pluginBaseName.compare("Viewer") || !pluginBaseName.compare("libViewer")) {
-            // Try to load the plugin as a 'proper' plugin
-
-            QPluginLoader loader(pluginFileName);
-
-            if (loader.load()) {
-                qDebug() << " -" << pluginFileName << " loaded...";
-            } else {
-                qDebug() << " -" << pluginFileName << " NOT loaded...";
-                qDebug() << "    ===>" << loader.errorString();
-            }
-//        }
+        if (loader.load())
+            qDebug() << "Plugin #" << pluginFiles.count() << ":" << QFileInfo(pluginFileName).baseName() << "- Loaded...";
+        else
+            qDebug() << "Plugin #" << pluginFiles.count() << ":" << QFileInfo(pluginFileName).baseName() << "- NOT Loaded...";
     }
 
     //---GRY--- TO BE DONE...
