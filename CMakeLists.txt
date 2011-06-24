@@ -153,7 +153,7 @@ SET(PLUGINS
 
     organise/CellMLModelRepository
     organise/FileBrowser
-#    organise/FileOrganiser
+    organise/FileOrganiser
 )
 
 FOREACH(PLUGIN ${PLUGINS})

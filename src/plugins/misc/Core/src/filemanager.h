@@ -1,6 +1,8 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
+#include "coreglobal.h"
+
 #include <QList>
 #include <QObject>
 
@@ -34,7 +36,7 @@ private:
     QString sha1() const;
 };
 
-class FileManager : public QObject
+class CORE_EXPORT FileManager : public QObject
 {
     Q_OBJECT
 

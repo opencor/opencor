@@ -11,11 +11,13 @@ INITIALISE_PLUGIN(FileOrganiser TRUE)
 # Files that make up the plugin
 
 SET(SOURCES
+    src/fileorganiserplugin.cpp
     src/fileorganiserwidget.cpp
     src/fileorganiserwindow.cpp
 )
 
 SET(HEADERS_MOC
+    src/fileorganiserplugin.h
     src/fileorganiserwidget.h
     src/fileorganiserwindow.h
 )
