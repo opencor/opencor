@@ -25,6 +25,10 @@ MACRO(BUILD_PLUGIN)
         UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
     ENDIF()
 
+    # Definition to make sure that the plugin can be used by other plugins
+
+    ADD_DEFINITIONS(-D${PLUGIN_NAME}_PLUGIN)
+
     # Rules to build the plugin
 
     IF("${HEADERS_MOC}" STREQUAL "")
@@ -94,7 +98,7 @@ ENDMACRO()
 
 MACRO(SET_PLUGIN_QT_LIBRARIES)
     # Make sure that the plugin refers to our embedded version of the Qt
-    #Â libraries which it needs
+    # libraries which it needs
 
     IF(APPLE)
         FOREACH(LIBRARY ${ARGN})

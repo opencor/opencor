@@ -52,6 +52,7 @@
 
 class MmlDocument;
 
+/*---OPENCOR---
 #if defined(Q_WS_WIN)
 #  if !defined(QT_QTMMLWIDGET_EXPORT) && !defined(QT_QTMMLWIDGET_IMPORT)
 #    define QT_QTMMLWIDGET_EXPORT
@@ -67,6 +68,14 @@ class MmlDocument;
 #else
 #  define QT_QTMMLWIDGET_EXPORT
 #endif
+*/
+//---OPENCOR--- BEGIN
+#ifdef QtMmlWidget_PLUGIN
+    #define QT_QTMMLWIDGET_EXPORT Q_DECL_EXPORT
+#else
+    #define QT_QTMMLWIDGET_EXPORT Q_DECL_IMPORT
+#endif
+//---OPENCOR--- END
 
 class QT_QTMMLWIDGET_EXPORT QtMmlWidget : public QFrame
 {

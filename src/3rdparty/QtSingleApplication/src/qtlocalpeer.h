@@ -65,7 +65,12 @@ protected:
     QString id;
     QString socketName;
     QLocalServer* server;
+/*---OPENCOR---
+    QtLP_Private::QtLockedFile lockFile;
+*/
+//---OPENCOR--- BEGIN
     QtLockedFile lockFile;
+//---OPENCOR--- END
 
 private:
     static const char* ack;
