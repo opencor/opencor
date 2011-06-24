@@ -2,12 +2,13 @@
 #define DOCKWIDGET_H
 
 #include "commonwidget.h"
+#include "coreglobal.h"
 
 #include <QDockWidget>
 
 namespace OpenCOR {
 
-class DockWidget : public QDockWidget, public CommonWidget
+class CORE_EXPORT DockWidget : public QDockWidget, public CommonWidget
 {
     Q_OBJECT
 

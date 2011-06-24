@@ -1,6 +1,8 @@
 #ifndef COMMONWIDGET_H
 #define COMMONWIDGET_H
 
+#include "coreglobal.h"
+
 #include <QString>
 #include <QtGlobal>
 
@@ -25,7 +27,7 @@ static const int DefaultFontSize = 9;
 #endif
 #endif
 
-class CommonWidget
+class CORE_EXPORT CommonWidget
 {
 public:
     explicit CommonWidget(QWidget *pParent);

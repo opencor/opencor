@@ -27,6 +27,7 @@ SET(SOURCES
 
 SET(HEADERS
     src/commonwidget.h
+    src/coreglobal.h
     src/coreutils.h
 )
 

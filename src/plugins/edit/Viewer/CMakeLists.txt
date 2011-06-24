@@ -12,11 +12,13 @@ INITIALISE_PLUGIN(Viewer TRUE)
 
 SET(SOURCES
     src/mmlviewerwidget.cpp
+    src/viewerplugin.cpp
     src/viewerwindow.cpp
 )
 
 SET(HEADERS_MOC
     src/mmlviewerwidget.h
+    src/viewerplugin.h
     src/viewerwindow.h
 )
 
