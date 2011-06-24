@@ -227,6 +227,15 @@ IF(APPLE)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
                        COMMAND ${CMAKE_COMMAND} -E remove -f ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
 
+    # Remove the PlugIns directory left from a previous build
+    # Note #1: this prevents us from getting error messages
+    # Note #2: there doesn't seem to be an option in ${CMAKE_COMMAND} to delete
+    #          the contents of the PlugIns directory (the remove_directory
+    #          option doesn't do what we are after)
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
+                       COMMAND rm -fr ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/*)
+
     # Use macdeployqt to have all the Qt files required by OpenCOR added to the
     # bundle
 
@@ -242,10 +251,8 @@ IF(APPLE)
 
     SET(SQLDRIVERS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers)
 
-    IF(NOT EXISTS ${SQLDRIVERS_DIR})
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E make_directory ${SQLDRIVERS_DIR})
-    ENDIF()
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E make_directory ${SQLDRIVERS_DIR})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib ${SQLDRIVERS_DIR})
