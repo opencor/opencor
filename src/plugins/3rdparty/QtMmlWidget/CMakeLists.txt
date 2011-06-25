@@ -2,53 +2,23 @@ PROJECT(QtMmlWidgetPlugin)
 
 # Some in-house CMake functions/macros
 
-INCLUDE(${CMAKE_FILES_DIR}/plugin.cmake)
+INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
-# Initialise the plugin
+# Add the plugin
 
-INITIALISE_PLUGIN(QtMmlWidget FALSE)
-
-# Files that make up the plugin
-
-SET(SOURCES
-    src/qtmmlwidget.cpp
-    src/qtmmlwidgetplugin.cpp
+ADD_PLUGIN(QtMmlWidget FALSE
+    SOURCES
+        src/qtmmlwidget.cpp
+        src/qtmmlwidgetplugin.cpp
+    HEADERS
+        src/qtmmlwidget.h
+    HEADERS_MOC
+        src/qtmmlwidgetplugin.h
+    PLUGIN_INCLUDE_DIRS
+        include
+        src
+    QT_DEPENDENCIES
+        QtCore
+        QtGui
+        QtXml
 )
-
-SET(HEADERS
-    src/qtmmlwidget.h
-)
-
-SET(HEADERS_MOC
-    src/qtmmlwidgetplugin.h
-)
-
-# Various include directories
-
-SET(LOCAL_PLUGIN_INCLUDE_DIRS include src)
-SET(PLUGIN_INCLUDE_DIRS ${LOCAL_PLUGIN_INCLUDE_DIRS} PARENT_SCOPE)
-
-INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
-
-# Build the plugin
-
-BUILD_PLUGIN(
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTXML_LIBRARY}
-)
-
-# Sort out our plugin and Qt dependencies
-
-SET_PLUGIN_OPENCOR_DEPENDENCIES(
-)
-
-SET_PLUGIN_QT_DEPENDENCIES(
-    QtCore
-    QtGui
-    QtXml
-)
-
-# Package the plugin
-
-PACKAGE_PLUGIN()

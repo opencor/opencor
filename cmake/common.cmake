@@ -91,3 +91,207 @@ MACRO(INCLUDE_THIRD_PARTY_LIBRARIES MAIN_PROJECT_SOURCE_DIR)
         INCLUDE(${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/${THIRD_PARTY_LIBRARY}/${THIRD_PARTY_LIBRARY}.cmake)
     ENDFOREACH()
 ENDMACRO()
+
+MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
+    # Initialise the plugin
+
+    SET(PLUGIN_NAME ${PLUGIN_NAME})
+
+    SET(SOURCES)
+    SET(HEADERS)
+    SET(HEADERS_MOC)
+    SET(UIS)
+    SET(PLUGIN_INCLUDE_DIRS)
+    SET(OPENCOR_DEPENDENCIES)
+    SET(QT_DEPENDENCIES)
+
+    IF(${HAS_RESOURCES})
+        SET(RESOURCES
+            res/${PLUGIN_NAME}.qrc
+        )
+    ELSE()
+        SET(RESOURCES)
+    ENDIF()
+
+    # Analyse the extra parameters
+
+    SET(TYPE_OF_PARAMETER 0)
+
+    FOREACH(PARAMETER ${ARGN})
+        IF(${PARAMETER} STREQUAL "SOURCES")
+            # Switch to the SOURCE type of parameters
+
+            SET(TYPE_OF_PARAMETER 1)
+        ELSEIF(${PARAMETER} STREQUAL "HEADERS")
+            # Switch to the HEADERS type of parameters
+
+            SET(TYPE_OF_PARAMETER 2)
+        ELSEIF(${PARAMETER} STREQUAL "HEADERS_MOC")
+            # Switch to the HEADERS_MOC type of parameters
+
+            SET(TYPE_OF_PARAMETER 3)
+        ELSEIF(${PARAMETER} STREQUAL "UIS")
+            # Switch to the UIS type of parameters
+
+            SET(TYPE_OF_PARAMETER 4)
+        ELSEIF(${PARAMETER} STREQUAL "PLUGIN_INCLUDE_DIRS")
+            # Switch to the PLUGIN_INCLUDE_DIRS type of parameters
+
+            SET(TYPE_OF_PARAMETER 5)
+        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_DEPENDENCIES")
+            # Switch to the OPENCOR_DEPENDENCIES type of parameters
+
+            SET(TYPE_OF_PARAMETER 6)
+        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
+            # Switch to the QT_DEPENDENCIES type of parameters
+
+            SET(TYPE_OF_PARAMETER 7)
+        ELSE()
+            # Add the parameter to the corresponding set
+
+            IF(${TYPE_OF_PARAMETER} EQUAL 1)
+                SET(SOURCES ${SOURCES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
+                SET(HEADERS ${HEADERS} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 3)
+                SET(HEADERS_MOC ${HEADERS_MOC} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 4)
+                SET(UIS ${UIS} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 5)
+                SET(PLUGIN_INCLUDE_DIRS ${PLUGIN_INCLUDE_DIRS} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 6)
+                SET(OPENCOR_DEPENDENCIES ${OPENCOR_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
+                SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
+            ENDIF()
+        ENDIF()
+    ENDFOREACH()
+
+    # Various include directories
+
+    SET(PLUGIN_INCLUDE_DIRS ${PLUGIN_INCLUDE_DIRS} PARENT_SCOPE)
+
+    INCLUDE_DIRECTORIES(${PLUGIN_INCLUDE_DIRS})
+
+    # Update the translation (.ts) files and generate the language (.qm) files
+    # which will later on be embedded in the plugin itself
+
+    IF(NOT "${RESOURCES}" STREQUAL "")
+        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
+    ENDIF()
+
+    # Definition to make sure that the plugin can be used by other plugins
+
+    ADD_DEFINITIONS(-D${PLUGIN_NAME}_PLUGIN)
+
+    # Rules to build the plugin
+
+    IF("${HEADERS_MOC}" STREQUAL "")
+        SET(SOURCES_MOC)
+    ELSE()
+        QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
+    ENDIF()
+
+    IF("${UIS}" STREQUAL "")
+        SET(SOURCES_UIS)
+    ELSE()
+        QT4_WRAP_UI(SOURCES_UIS ${UIS})
+    ENDIF()
+
+    IF("${RESOURCES}" STREQUAL "")
+        SET(SOURCES_RCS)
+    ELSE()
+        QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+    ENDIF()
+
+    ADD_LIBRARY(${PROJECT_NAME} SHARED
+        ${SOURCES}
+        ${SOURCES_MOC}
+        ${SOURCES_UIS}
+        ${SOURCES_RCS}
+    )
+
+    FOREACH(QT_LIBRARY ${QT_DEPENDENCIES})
+        IF(WIN32)
+            SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${QT_LIBRARY}${QT_VERSION_MAJOR}${CMAKE_STATIC_LIBRARY_SUFFIX})
+        ELSEIF(APPLE)
+            SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework)
+        ELSE()
+            SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ENDIF()
+
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${QT_LIBRARY_PATH}
+        )
+    ENDFOREACH()
+
+    # Linker settings
+    # Note: by default "lib" will be prepended to the name of the target file.
+    #       However, this is not common practice on Windows, so...
+
+    IF(WIN32)
+        SET(CMAKE_SHARED_LIBRARY_PREFIX)
+    ENDIF()
+
+    SET_TARGET_PROPERTIES(${PROJECT_NAME}
+        PROPERTIES OUTPUT_NAME ${PLUGIN_NAME} LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+    )
+
+    # Create the plugins directory if it doesn't already exist and move the
+    # plugin to it
+    # Note: this is so that we can, on Windows and Linux, test the use of
+    #       plugins in OpenCOR without first having to package OpenCOR
+
+    SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+    IF(APPLE)
+        SET(ORIG_PLUGINS_DIR ${CMAKE_BINARY_DIR}/lib)
+        SET(DEST_PLUGINS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME})
+    ELSE()
+        SET(ORIG_PLUGINS_DIR ${CMAKE_BINARY_DIR})
+        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins)
+    ENDIF()
+
+    IF(NOT EXISTS ${PLUGINS_DIR})
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PLUGINS_DIR})
+    ENDIF()
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_PLUGINS_DIR}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+
+    # Make sure that the plugin refers to our embedded version of itself and
+    # other plugins on which it depends
+
+    IF(APPLE)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND install_name_tool -id @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                         ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+        FOREACH(PLUGIN ${OPENCOR_DEPENDENCIES})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -id @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                             ${MAC_OS_X_PROJECT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ENDFOREACH()
+    ENDIF()
+
+    # Make sure that the plugin refers to our embedded version of the Qt
+    # libraries on which it depends
+
+    IF(APPLE)
+        FOREACH(LIBRARY ${QT_DEPENDENCIES})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
+                                                                 @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
+                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ENDFOREACH()
+    ENDIF()
+
+    # Package the plugin
+
+    IF(WIN32)
+        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/plugins)
+    ELSEIF(NOT APPLE)
+        INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins)
+    ENDIF()
+ENDMACRO()
