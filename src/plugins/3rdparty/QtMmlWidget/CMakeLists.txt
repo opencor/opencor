@@ -38,9 +38,12 @@ BUILD_PLUGIN(
     ${QT_QTXML_LIBRARY}
 )
 
-# Set the right Qt libraries for the plugin
+# Sort out our plugin and Qt dependencies
 
-SET_PLUGIN_QT_LIBRARIES(
+SET_PLUGIN_OPENCOR_DEPENDENCIES(
+)
+
+SET_PLUGIN_QT_DEPENDENCIES(
     QtCore
     QtGui
     QtXml

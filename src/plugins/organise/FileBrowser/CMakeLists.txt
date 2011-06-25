@@ -39,6 +39,17 @@ BUILD_PLUGIN(
     CorePlugin
 )
 
+# Sort out our plugin and Qt dependencies
+
+SET_PLUGIN_OPENCOR_DEPENDENCIES(
+    Core
+)
+
+SET_PLUGIN_QT_DEPENDENCIES(
+    QtCore
+    QtGui
+)
+
 # Package the plugin
 
 PACKAGE_PLUGIN()

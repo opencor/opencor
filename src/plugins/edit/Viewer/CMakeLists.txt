@@ -40,9 +40,14 @@ BUILD_PLUGIN(
     QtMmlWidgetPlugin
 )
 
-# Set the right Qt libraries for the plugin
+# Sort out our plugin and Qt dependencies
 
-SET_PLUGIN_QT_LIBRARIES(
+SET_PLUGIN_OPENCOR_DEPENDENCIES(
+    Core
+    QtMmlWidget
+)
+
+SET_PLUGIN_QT_DEPENDENCIES(
     QtCore
     QtGui
     QtXml

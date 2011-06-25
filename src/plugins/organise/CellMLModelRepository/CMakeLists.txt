@@ -41,6 +41,18 @@ BUILD_PLUGIN(
     ${QT_QTWEBKIT_LIBRARY}
 )
 
+# Sort out our plugin and Qt dependencies
+
+SET_PLUGIN_OPENCOR_DEPENDENCIES(
+    Core
+)
+
+SET_PLUGIN_QT_DEPENDENCIES(
+    QtCore
+    QtGui
+    QtWebKit
+)
+
 # Package the plugin
 
 PACKAGE_PLUGIN()
