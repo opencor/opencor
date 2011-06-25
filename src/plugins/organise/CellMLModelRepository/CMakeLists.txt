@@ -2,57 +2,27 @@ PROJECT(CellMLModelRepositoryPlugin)
 
 # Some in-house CMake functions/macros
 
-INCLUDE(${CMAKE_FILES_DIR}/plugin.cmake)
+INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
-# Initialise the plugin
+# Add the plugin
 
-INITIALISE_PLUGIN(CellMLModelRepository TRUE)
-
-# Files that make up the plugin
-
-SET(SOURCES
-    src/cellmlmodelrepositoryplugin.cpp
-    src/cellmlmodelrepositorywidget.cpp
-    src/cellmlmodelrepositorywindow.cpp
+ADD_PLUGIN(CellMLModelRepository TRUE
+    SOURCES
+        src/cellmlmodelrepositoryplugin.cpp
+        src/cellmlmodelrepositorywidget.cpp
+        src/cellmlmodelrepositorywindow.cpp
+    HEADERS_MOC
+        src/cellmlmodelrepositoryplugin.h
+        src/cellmlmodelrepositorywidget.h
+        src/cellmlmodelrepositorywindow.h
+    UIS
+        src/cellmlmodelrepositorywindow.ui
+    PLUGIN_INCLUDE_DIRS
+        src
+    OPENCOR_DEPENDENCIES
+        Core
+    QT_DEPENDENCIES
+        QtCore
+        QtGui
+        QtWebKit
 )
-
-SET(HEADERS_MOC
-    src/cellmlmodelrepositoryplugin.h
-    src/cellmlmodelrepositorywidget.h
-    src/cellmlmodelrepositorywindow.h
-)
-
-SET(UIS
-    src/cellmlmodelrepositorywindow.ui
-)
-
-# Various include directories
-
-SET(LOCAL_PLUGIN_INCLUDE_DIRS src)
-SET(PLUGIN_INCLUDE_DIRS ${LOCAL_PLUGIN_INCLUDE_DIRS} PARENT_SCOPE)
-
-INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
-
-# Build the plugin
-
-BUILD_PLUGIN(
-    CorePlugin
-
-    ${QT_QTWEBKIT_LIBRARY}
-)
-
-# Sort out our plugin and Qt dependencies
-
-SET_PLUGIN_OPENCOR_DEPENDENCIES(
-    Core
-)
-
-SET_PLUGIN_QT_DEPENDENCIES(
-    QtCore
-    QtGui
-    QtWebKit
-)
-
-# Package the plugin
-
-PACKAGE_PLUGIN()

@@ -2,57 +2,28 @@ PROJECT(ViewerPlugin)
 
 # Some in-house CMake functions/macros
 
-INCLUDE(${CMAKE_FILES_DIR}/plugin.cmake)
+INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
-# Initialise the plugin
+# Add the plugin
 
-INITIALISE_PLUGIN(Viewer TRUE)
-
-# Files that make up the plugin
-
-SET(SOURCES
-    src/mmlviewerwidget.cpp
-    src/viewerplugin.cpp
-    src/viewerwindow.cpp
+ADD_PLUGIN(Viewer TRUE
+    SOURCES
+        src/mmlviewerwidget.cpp
+        src/viewerplugin.cpp
+        src/viewerwindow.cpp
+    HEADERS_MOC
+        src/mmlviewerwidget.h
+        src/viewerplugin.h
+        src/viewerwindow.h
+    UIS
+        src/viewerwindow.ui
+    PLUGIN_INCLUDE_DIRS
+        src
+    OPENCOR_DEPENDENCIES
+        Core
+        QtMmlWidget
+    QT_DEPENDENCIES
+        QtCore
+        QtGui
+        QtXml
 )
-
-SET(HEADERS_MOC
-    src/mmlviewerwidget.h
-    src/viewerplugin.h
-    src/viewerwindow.h
-)
-
-SET(UIS
-    src/viewerwindow.ui
-)
-
-# Various include directories
-
-SET(LOCAL_PLUGIN_INCLUDE_DIRS src)
-SET(PLUGIN_INCLUDE_DIRS ${LOCAL_PLUGIN_INCLUDE_DIRS} PARENT_SCOPE)
-
-INCLUDE_DIRECTORIES(${LOCAL_PLUGIN_INCLUDE_DIRS})
-
-# Build the plugin
-
-BUILD_PLUGIN(
-    CorePlugin
-    QtMmlWidgetPlugin
-)
-
-# Sort out our plugin and Qt dependencies
-
-SET_PLUGIN_OPENCOR_DEPENDENCIES(
-    Core
-    QtMmlWidget
-)
-
-SET_PLUGIN_QT_DEPENDENCIES(
-    QtCore
-    QtGui
-    QtXml
-)
-
-# Package the plugin
-
-PACKAGE_PLUGIN()

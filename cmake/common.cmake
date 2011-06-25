@@ -102,6 +102,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
     SET(HEADERS_MOC)
     SET(UIS)
     SET(PLUGIN_INCLUDE_DIRS)
+    SET(DEFINITIONS)
     SET(OPENCOR_DEPENDENCIES)
     SET(QT_DEPENDENCIES)
 
@@ -138,14 +139,18 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
             # Switch to the PLUGIN_INCLUDE_DIRS type of parameters
 
             SET(TYPE_OF_PARAMETER 5)
+        ELSEIF(${PARAMETER} STREQUAL "DEFINITIONS")
+            # Switch to the DEFINITIONS type of parameters
+
+            SET(TYPE_OF_PARAMETER 6)
         ELSEIF(${PARAMETER} STREQUAL "OPENCOR_DEPENDENCIES")
             # Switch to the OPENCOR_DEPENDENCIES type of parameters
 
-            SET(TYPE_OF_PARAMETER 6)
+            SET(TYPE_OF_PARAMETER 7)
         ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
             # Switch to the QT_DEPENDENCIES type of parameters
 
-            SET(TYPE_OF_PARAMETER 7)
+            SET(TYPE_OF_PARAMETER 8)
         ELSE()
             # Add the parameter to the corresponding set
 
@@ -160,8 +165,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 5)
                 SET(PLUGIN_INCLUDE_DIRS ${PLUGIN_INCLUDE_DIRS} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 6)
-                SET(OPENCOR_DEPENDENCIES ${OPENCOR_DEPENDENCIES} ${PARAMETER})
+                SET(DEFINITIONS ${DEFINITIONS} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
+                SET(OPENCOR_DEPENDENCIES ${OPENCOR_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
             ENDIF()
         ENDIF()
@@ -211,6 +218,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
         ${SOURCES_RCS}
     )
 
+    # OpenCOR dependencies
+    
+    FOREACH(PLUGIN ${OPENCOR_DEPENDENCIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${PLUGIN}Plugin
+        )
+    ENDFOREACH()
+
+    # Qt dependencies
+    
     FOREACH(QT_LIBRARY ${QT_DEPENDENCIES})
         IF(WIN32)
             SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${QT_LIBRARY}${QT_VERSION_MAJOR}${CMAKE_STATIC_LIBRARY_SUFFIX})
@@ -259,6 +276,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_PLUGINS_DIR}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+
+    # Add some definitions
+
+    FOREACH(DEFINITION ${DEFINITIONS})
+        ADD_DEFINITIONS(-D${DEFINITION})
+    ENDFOREACH()
 
     # Make sure that the plugin refers to our embedded version of itself and
     # other plugins on which it depends
