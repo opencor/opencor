@@ -261,7 +261,7 @@ IF(APPLE)
                        COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib ${SQLDRIVERS_DIR})
 
     # Make sure that the SQLite plugin refers to our embedded version of QtCore
-    # and QtSql which it needs
+    # and QtSql on which it depends
 
     FOREACH(LIBRARY QtCore QtSql)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD

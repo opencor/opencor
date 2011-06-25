@@ -288,13 +288,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
 
     IF(APPLE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -id @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                           COMMAND install_name_tool -id ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                          ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
         FOREACH(PLUGIN ${OPENCOR_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -id @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                             ${MAC_OS_X_PROJECT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                               COMMAND install_name_tool -change ${MAC_OS_X_PROJECT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ENDFOREACH()
     ENDIF()
 
