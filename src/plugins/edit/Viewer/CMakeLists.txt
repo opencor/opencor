@@ -43,7 +43,9 @@ BUILD_PLUGIN(
 # Set the right Qt libraries for the plugin
 
 SET_PLUGIN_QT_LIBRARIES(
+    QtCore
     QtGui
+    QtXml
 )
 
 # Package the plugin

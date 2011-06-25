@@ -36,6 +36,12 @@ BUILD_PLUGIN(
     ${QT_QTCORE_LIBRARY}
 )
 
+# Set the right Qt libraries for the plugin
+
+SET_PLUGIN_QT_LIBRARIES(
+    QtCore
+)
+
 # Package the plugin
 
 PACKAGE_PLUGIN()
