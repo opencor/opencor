@@ -249,20 +249,20 @@ IF(APPLE)
     # refer to our embedded version of the Qt libraries
 
     DEPLOY_MAC_OS_X_QT_LIBRARY(QtHelp
-    	QtCore
-    	QtGui
-    	QtNetwork
-    	QtSql
-    	QtXml
+        QtCore
+        QtGui
+        QtNetwork
+        QtSql
+        QtXml
     )
 
     DEPLOY_MAC_OS_X_QT_LIBRARY(QtWebKit
-    	phonon
-    	QtCore
-    	QtDBus
-    	QtGui
-    	QtNetwork
-    	QtXml
+        phonon
+        QtCore
+        QtDBus
+        QtGui
+        QtNetwork
+        QtXml
     )
 
     # Add the SQLite plugin to the bundle (required by the Help plugin)
@@ -322,19 +322,19 @@ IF(WIN32)
 
     # MinGW files required by OpenCOR
 
-    FOREACH(DLL mingwm10 libgcc_s_dw2-1)
-        INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${DLL}.dll DESTINATION bin)
+    FOREACH(MINGW_LIBRARY mingwm10 libgcc_s_dw2-1)
+        INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${MINGW_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
     # Qt files required by OpenCOR
 
-    FOREACH(DLL phonon QtCLucene QtCore QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
-        INSTALL(FILES ${QT_BINARY_DIR}/${DLL}${QT_VERSION_MAJOR}.dll DESTINATION bin)
+    FOREACH(QT_LIBRARY phonon QtCLucene QtCore QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
+        INSTALL(FILES ${QT_BINARY_DIR}/${QT_LIBRARY}${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
     # SQLite plugin (required to see the help file)
 
-    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/qsqlite${QT_VERSION_MAJOR}.dll DESTINATION bin/sqldrivers)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/qsqlite${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin/sqldrivers)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -401,8 +401,8 @@ ELSE()
 
     FOREACH(LIBRARY QtCLucene QtCore QtDBus QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
         INSTALL(FILES
-                ${QT_LIBRARY_DIR}/lib${LIBRARY}.so.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
-                RENAME lib${LIBRARY}.so.${QT_VERSION_MAJOR}
+                ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
+                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}
                 DESTINATION lib
         )
     ENDFOREACH()
@@ -433,10 +433,10 @@ ELSE()
         #       another (e.g. packaging on Ubuntu 11.04 and deploying on Ubuntu
         #       10.04)
 
-        IF(EXISTS "${LIBRARY_FOLDER}/lib${LIBRARY}")
-            SET(CORRECT_LIBRARY ${LIBRARY_FOLDER}/lib${LIBRARY})
-        ELSEIF(EXISTS "${DEFAULT_LIBRARY_FOLDER}/lib${LIBRARY}")
-            SET(CORRECT_LIBRARY ${DEFAULT_LIBRARY_FOLDER}/lib${LIBRARY})
+        IF(EXISTS "${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}")
+            SET(CORRECT_LIBRARY ${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
+        ELSEIF(EXISTS "${DEFAULT_LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}")
+            SET(CORRECT_LIBRARY ${DEFAULT_LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
         ELSE()
             SET(CORRECT_LIBRARY)
         ENDIF()
@@ -446,7 +446,7 @@ ELSE()
         ELSE()
             GET_FILENAME_COMPONENT(REAL_CORRECT_LIBRARY ${CORRECT_LIBRARY} REALPATH)
 
-            INSTALL(FILES ${REAL_CORRECT_LIBRARY} RENAME lib${LIBRARY} DESTINATION lib)
+            INSTALL(FILES ${REAL_CORRECT_LIBRARY} RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY} DESTINATION lib)
         ENDIF()
     ENDFOREACH()
 
