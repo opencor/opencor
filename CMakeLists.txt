@@ -247,7 +247,7 @@ IF(APPLE)
     # so we do it ourselves and make sure that their Qt dependencies refer to
     # our embedded version of the Qt libraries
 
-    DEPLOY_QT_LIBRARY(QtHelp
+    DEPLOY_MAC_OS_X_QT_LIBRARY(QtHelp
     	QtCore
     	QtGui
     	QtNetwork
@@ -255,7 +255,7 @@ IF(APPLE)
     	QtXml
     )
 
-    DEPLOY_QT_LIBRARY(QtWebKit
+    DEPLOY_MAC_OS_X_QT_LIBRARY(QtWebKit
     	phonon
     	QtCore
     	QtDBus
