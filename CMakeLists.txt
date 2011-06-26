@@ -243,9 +243,10 @@ IF(APPLE)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${QT_BINARY_DIR}/macdeployqt ${MAC_OS_X_PROJECT_BINARY_DIR})
 
-    # For some reason, neither QtHelp nor QtWebKit get deployed by macdeployqt,
-    # so we do it ourselves and make sure that their Qt dependencies refer to
-    # our embedded version of the Qt libraries
+    # Neither QtHelp nor QtWebKit get deployed by macdeployqt since they are
+    # not used by OpenCOR directly anymore but by some plugins. We must
+    # therefore deploy them ourselves and make sure that their Qt dependencies
+    # refer to our embedded version of the Qt libraries
 
     DEPLOY_MAC_OS_X_QT_LIBRARY(QtHelp
     	QtCore
