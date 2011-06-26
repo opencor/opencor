@@ -219,7 +219,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
     )
 
     # OpenCOR dependencies
-    
+
     FOREACH(PLUGIN ${OPENCOR_DEPENDENCIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
             ${PLUGIN}Plugin
@@ -227,7 +227,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
     ENDFOREACH()
 
     # Qt dependencies
-    
+
     FOREACH(QT_LIBRARY ${QT_DEPENDENCIES})
         IF(WIN32)
             SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${QT_LIBRARY}${QT_VERSION_MAJOR}${CMAKE_STATIC_LIBRARY_SUFFIX})
@@ -288,13 +288,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
 
     IF(APPLE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -id ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                           COMMAND install_name_tool -id @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                          ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-        FOREACH(PLUGIN ${OPENCOR_DEPENDENCIES})
+        FOREACH(OPENCOR_DEPENDENCY ${OPENCOR_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${MAC_OS_X_PROJECT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                               COMMAND install_name_tool -change ${MAC_OS_X_PROJECT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ENDFOREACH()
     ENDIF()
@@ -303,10 +303,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
     # libraries on which it depends
 
     IF(APPLE)
-        FOREACH(QT_LIBRARY ${QT_DEPENDENCIES})
+        FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
-                                                                 @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
+                               COMMAND install_name_tool -change ${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                 @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ENDFOREACH()
     ENDIF()
@@ -318,4 +318,39 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
     ELSEIF(NOT APPLE)
         INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins)
     ENDIF()
+ENDMACRO()
+
+MACRO(DEPLOY_QT_LIBRARY QT_LIBRARY)
+    # Create the folder hierarchy for the Qt library
+
+    SET(QT_LIBRARY_HOME_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${QT_LIBRARY}.framework)
+    SET(QT_LIBRARY_LIB_DIR ${QT_LIBRARY_HOME_DIR}/Versions/${QT_VERSION_MAJOR})
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E make_directory ${QT_LIBRARY_HOME_DIR}/Resources
+                       COMMAND ${CMAKE_COMMAND} -E make_directory ${QT_LIBRARY_LIB_DIR})
+
+    # Copy the Qt library itself
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY} ${QT_LIBRARY_LIB_DIR})
+
+    # Strip the Qt library from anything that is not essential
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND strip -S -x ${QT_LIBRARY_LIB_DIR}/${QT_LIBRARY})
+
+    # Make sure that the Qt library refers to our embedded version of the Qt
+    # libraries on which it depends
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND install_name_tool -id @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
+                                                     ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+
+    FOREACH(QT_DEPENDENCY ${ARGN})
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND install_name_tool -change ${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                             @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                             ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+    ENDFOREACH()
 ENDMACRO()

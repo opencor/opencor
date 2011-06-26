@@ -243,6 +243,27 @@ IF(APPLE)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${QT_BINARY_DIR}/macdeployqt ${MAC_OS_X_PROJECT_BINARY_DIR})
 
+    # For some reason, neither QtHelp nor QtWebKit get deployed by macdeployqt,
+    # so we do it ourselves and make sure that their Qt dependencies refer to
+    # our embedded version of the Qt libraries
+
+    DEPLOY_QT_LIBRARY(QtHelp
+    	QtCore
+    	QtGui
+    	QtNetwork
+    	QtSql
+    	QtXml
+    )
+
+    DEPLOY_QT_LIBRARY(QtWebKit
+    	phonon
+    	QtCore
+    	QtDBus
+    	QtGui
+    	QtNetwork
+    	QtXml
+    )
+
     # Add the SQLite plugin to the bundle (required by the Help plugin)
     # Note: this would, ideally, be done as part of the packaging, but we do it
     #       here, since it allows us to test things as if Qt wasn't installed
