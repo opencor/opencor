@@ -18,7 +18,6 @@ MACRO(INITIALISE_PROJECT)
 
         SET(CMAKE_CXX_FLAGS "-g -O0")
     ELSE()
-SET(CMAKE_BUILD_TYPE "Release")
         MESSAGE("Building a release version...")
 
         # Default compiler and linker settings
