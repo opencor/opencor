@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd ./$1
+
+otool -L `du -a | awk '{ print $2 }'` 2> /dev/null | grep \@executable_path\/\.\.\/Frameworks | sed -e 's/^.*Frameworks\///' -e 's/\..*$//' | sort -u

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Plugins
+        </title>
+
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+
+        <link href="../res/stylesheet.css" rel="stylesheet" type="text/css" />
+        <link href="../res/developerStylesheet.css" rel="stylesheet" type="text/css" />
+
+        <link href="../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="../3rdparty/googleCodePrettify/prettify.js"></script>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>
+            Plugins
+        </h1>
+
+        <h2>
+            General
+        </h2>
+
+        <p>
+            OpenCOR is an application which completely relies on <a href="https://github.com/opencor/opencor/tree/master/src/plugins"><code>plugins</code></a>. So, though OpenCOR works if no plugin is loaded, it is of no use at all.
+        </p>
+
+        <p>
+             Some of the plugins provide access to <a href="https://github.com/opencor/opencor/tree/master/src/plugins/3rdparty">third-party libraries</a> while others are specific to the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/organise">organisation</a> or <a href="https://github.com/opencor/opencor/tree/master/src/plugins/edit">editing</a> side of OpenCOR, or are <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc">plugins</a> that do not fit in any of the aforementioned categories.
+        </p>
+
+        <h2>
+            Deployment
+        </h2>
+
+        <p>
+            Our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>ADD_PLUGIN</code></a> takes care of the deployment. However, on Mac OS X, we must ensure that all the Qt libraries required by the plugins are embedded in the OpenCOR bundle. Indeed, our use of <code>macdeployqt</code> can only deploy the Qt libraries that are required by OpenCOR itself, not its plugins. So, to that end, we have a shell script, <a href="res/qtdependencies">qtdependencies</a>, which can be used to check which Qt libraries are required by either OpenCOR and/or any of its plugins. For example, after having built OpenCOR:
+        </p>
+
+        <pre>$ cd [OpenCOR]/build/OpenCOR.app/Contents
+$ qtdeployment
+...</pre>
+
+        <p>
+            From there, should any of the Qt libraries not be deployed, we must deploy it ourselves using our <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_MAC_OS_X_QT_LIBRARY</code></a> macro as is done in <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
+        </p>        
+
+        <pre>DEPLOY_MAC_OS_X_QT_LIBRARY(QtHelp
+    QtCore
+    QtGui
+    QtNetwork
+    QtSql
+    QtXml
+)
+</pre>
+
+        <p>
+            This will deploy <code>QtHelp</code>, strip it from anything that is not essential (thus reducing its size) and ensure that its Qt dependencies (<code>QtCore</code>, <code>QtGui</code>, <code>QtNetwork</code>, <code>QtSql</code> and <code>QtXml</code>) refer to our embedded version of the Qt libraries.
+        </p>
+
+        <div class="copyright">
+            Copyright ©2011
+        </div>
+    </body>
+</html>
