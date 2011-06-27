@@ -4,14 +4,13 @@
     <virtualFolder>doc</virtualFolder>
     <filterSection>
         <files>
-            <file>userIndex.html</file>
-            <file>res/stylesheet.css</file>
-            <file>res/userStylesheet.css</file>
+            <file>user/res/stylesheet.css</file>
+            <file>user/authors.html</file>
+            <file>user/contactUs.html</file>
+            <file>user/index.html</file>
             <file>user/introduction.html</file>
             <file>user/knownIssuesLimitations.html</file>
             <file>user/licensing.html</file>
-            <file>user/authors.html</file>
-            <file>user/contactUs.html</file>
         </files>
     </filterSection>
 </QtHelpProject>
