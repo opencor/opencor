@@ -6,36 +6,32 @@ MACRO(INITIALISE_PROJECT)
 
     FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
 
-    # Type of build
-    # Note: we do this here, so that all of our third-party libraries and
-    #       plugins can benefit from these settings
-
-    IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        SET(DEBUG_MODE ON)
-
-        MESSAGE("Building a debug version...")
-    ELSE()
-        SET(DEBUG_MODE OFF)
-
-        MESSAGE("Building a release version...")
-    ENDIF()
-
-    # Default compiler and linker settings
-
-    IF(${DEBUG_MODE})
-        SET(CMAKE_CXX_FLAGS "-g -O0")
-    ELSE()
-        SET(CMAKE_CXX_FLAGS "-O2 -ffast-math")
-    ENDIF()
+    # Some settings which depend on whether we want a debug or release version
+    # of OpenCOR
 
     SET(LINK_FLAGS_PROPERTIES)
 
-    IF(NOT APPLE AND NOT ${DEBUG_MODE})
-        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
-        # Note #1: -Wl,-s strips all the symbols, thus reducing the final size
-        #          of OpenCOR of one its shared libraries
-        # Note #2: the above linking option has become obsolete on Mac OS X,
-        #          so...
+    IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        MESSAGE("Building a debug version...")
+
+        # Default compiler settings
+
+        SET(CMAKE_CXX_FLAGS "-g -O0")
+    ELSE()
+SET(CMAKE_BUILD_TYPE "Release")
+        MESSAGE("Building a release version...")
+
+        # Default compiler and linker settings
+
+        SET(CMAKE_CXX_FLAGS "-O2 -ffast-math")
+
+        IF(NOT APPLE)
+            SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
+            # Note #1: -Wl,-s strips all the symbols, thus reducing the final size
+            #          of OpenCOR of one its shared libraries
+            # Note #2: the above linking option has become obsolete on Mac OS X,
+            #          so...
+        ENDIF()
     ENDIF()
 
     # Default location for third-party libraries
