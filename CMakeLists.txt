@@ -205,6 +205,23 @@ SET(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
+# Some post-processing specific to Windows and Linux
+
+IF(NOT APPLE)
+    # Create the bin directory if it doesn't already exist and move the OpenCOR
+    # binary to it
+
+    SET(BIN_DIR ${CMAKE_BINARY_DIR}/bin)
+
+    IF(NOT EXISTS ${BIN_DIR})
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E make_directory ${BIN_DIR})
+    ENDIF()
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${BIN_DIR}/${PLUGIN_FILENAME})
+ENDIF()
+
 # Some Mac OS X specific information, as well as some pre- and post-processing
 # Note: the post-processing ensures that OpenCOR can be used on any Mac OS X
 #       machine that doesn't have Qt and the SQLite plugin
@@ -318,7 +335,7 @@ IF(WIN32)
 
     # The console version of OpenCOR
 
-    INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.com DESTINATION bin)
+    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
 
     # MinGW files required by OpenCOR
 
@@ -334,7 +351,7 @@ IF(WIN32)
 
     # SQLite plugin (required to see the help file)
 
-    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/qsqlite${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin/sqldrivers)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/qsqlite${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/sqldrivers)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)

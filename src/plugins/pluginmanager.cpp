@@ -5,23 +5,36 @@
 #include <QPluginLoader>
 #include <QSettings>
 
-#include <QDebug>
+#include <QMessageBox>
 
 namespace OpenCOR {
 
 PluginManager::PluginManager()
 {
 #ifndef Q_WS_MAC
-    QString pluginsDir = "plugins";
+    const QString pluginsDir = "plugins";
 #else
-    QString pluginsDir = QString("..")+QDir::separator()+"PlugIns";
+    const QString pluginsDir = "PlugIns";
 #endif
 
     mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
-                  +QDir::separator()+pluginsDir;
+                  +QDir::separator()+QString("..")
+                  +QDir::separator()+pluginsDir
+                  +QDir::separator()+qApp->applicationName();
 
-#ifdef Q_WS_MAC
-    mPluginsDir += QDir::separator()+qApp->applicationName();
+#ifndef Q_WS_MAC
+    // The plugins directory should be correct, but in case we try to run
+    // OpenCOR on Windows or Linux AND from within Qt Creator, then the binary
+    // will be running [OpenCOR]/build/OpenCOR[.exe] rather than
+    // [OpenCOR]/build/bin/OpenCOR[.exe] as we should if we were to mimic the
+    // case where OpenCOR has been deployed. Then, because the plugins are in
+    // [OpenCOR]/build/plugins/OpenCOR, we must skip the "../" bit. Yes, it's
+    // not neat, but... is there another solution?...
+
+    if (!QDir(mPluginsDir).exists())
+        mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
+                      +QDir::separator()+pluginsDir
+                      +QDir::separator()+qApp->applicationName();
 #endif
 }
 
@@ -41,7 +54,7 @@ void PluginManager::loadPlugins(QSettings *pSettings)
     const QString extension = ".so";
 #endif
 
-    qDebug() << "Loading plugins from" << mPluginsDir << ":";
+    QString feedback = QString("Loading plugins from '%1':").arg(QDir::toNativeSeparators(mPluginsDir));
 
     QFileInfoList files = QDir(mPluginsDir).entryInfoList(QStringList("*"+extension), QDir::Files);
     QStringList pluginFiles;
@@ -56,10 +69,12 @@ void PluginManager::loadPlugins(QSettings *pSettings)
         QPluginLoader loader(pluginFileName);
 
         if (loader.load())
-            qDebug() << "Plugin #" << pluginFiles.count() << ":" << QFileInfo(pluginFileName).baseName() << "- Loaded...";
+            feedback += QString("\nPlugin #%1: '%2' - Loaded...").arg(QString::number(pluginFiles.count()), QFileInfo(pluginFileName).baseName());
         else
-            qDebug() << "Plugin #" << pluginFiles.count() << ":" << QFileInfo(pluginFileName).baseName() << "- NOT LOADED...";
+            feedback += QString("\nPlugin #%1: '%2' - NOT LOADED [%3]...").arg(QString::number(pluginFiles.count()), QFileInfo(pluginFileName).baseName(), loader.errorString());
     }
+
+    QMessageBox::information(0, "Plugins...", feedback);
 
     //---GRY--- TO BE DONE...
 }
