@@ -2,10 +2,6 @@ MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-    # Required packages
-
-    FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
-
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
 
@@ -18,6 +14,8 @@ MACRO(INITIALISE_PROJECT)
 
         SET(CMAKE_CXX_FLAGS "-g -O0")
     ELSE()
+        SET(CMAKE_BUILD_TYPE "Release")
+
         MESSAGE("Building a release version...")
 
         # Default compiler and linker settings
@@ -32,6 +30,10 @@ MACRO(INITIALISE_PROJECT)
             #          so...
         ENDIF()
     ENDIF()
+
+    # Required packages
+
+    FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
 
     # Default location for third-party libraries
     # Note: this is only required so that we can quickly test third-party
