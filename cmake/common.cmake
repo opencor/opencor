@@ -30,13 +30,6 @@ MACRO(INITIALISE_PROJECT)
 
     SET(LINK_FLAGS_PROPERTIES)
 
-    IF(WIN32)
-        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-enable-auto-import")
-        # Note: -Wl,-enable-auto-import allows us to use our various
-        #       third-party libraries without having to worry about importing
-        #       their functions, etc.
-    ENDIF()
-
     IF(NOT APPLE AND NOT ${DEBUG_MODE})
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
         # Note #1: -Wl,-s strips all the symbols, thus reducing the final size
