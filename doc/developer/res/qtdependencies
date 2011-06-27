@@ -1,19 +1,19 @@
 #!/bin/sh
 
 if [ $# -le 1 ]; then
-	if [ $# -eq 1 ]; then
-		if [ -d $1 ]; then
-			cd $1
+    if [ $# -eq 1 ]; then
+        if [ -d $1 ]; then
+            cd $1
 
-			FILES=.
-		else
-			FILES=$1
-		fi
-	else
-		FILES=.
-	fi
+            FILES=.
+        else
+            FILES=$1
+        fi
+    else
+        FILES=.
+    fi
 
-	otool -L `du -a $FILES | awk '{ print $2 }'` 2> /dev/null | grep '\.framework\/Versions\/4\/.*compatibility' | sed -e 's/^.*\.framework\/Versions\/4\///' -e 's/ .*$//' | sort -u
+    otool -L `du -a $FILES | awk '{ print $2 }'` 2> /dev/null | grep '\.framework\/Versions\/4\/.*compatibility' | sed -e 's/^.*\.framework\/Versions\/4\///' -e 's/ .*$//' | sort -u
 else
-	echo "Usage: `basename $0` [<FileNameOrFolderName>]"
+    echo "Usage: `basename $0` [<FileNameOrFolderName>]"
 fi
