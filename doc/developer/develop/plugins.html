@@ -17,16 +17,45 @@
             Plugins
         </h1>
 
-        <h2>
-            General
-        </h2>
-
         <p>
-            OpenCOR is an application which completely relies on <a href="https://github.com/opencor/opencor/tree/master/src/plugins"><code>plugins</code></a>. So, though OpenCOR works if no plugin is loaded, it is of no use at all.
+            OpenCOR relies entirely on <a href="https://github.com/opencor/opencor/tree/master/src/plugins"><code>plugins</code></a>. So, though it works with no plugin, it is of no use at all.
         </p>
 
         <p>
              Some of the plugins provide access to <a href="https://github.com/opencor/opencor/tree/master/src/plugins/3rdparty">third-party libraries</a> while others are specific to the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/organise">organisation</a> or <a href="https://github.com/opencor/opencor/tree/master/src/plugins/edit">editing</a> side of OpenCOR, or are <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc">plugins</a> that do not fit in any of the aforementioned categories.
+        </p>
+
+        <h2>
+            <code>&lt;pluginname&gt;plugin.*</code>
+        </h2>
+
+        <p>
+            A plugin could be released as a pure shared library, but this would make it unnecessarily cumbersome to use. So, instead, we rely on <a href="http://doc.qt.nokia.com/latest/plugins-howto.html">Qt's support for plugins</a>. To that end, we must create a couple of files, such as <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.cpp</code></a> for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc/Core">Core plugin</a>. As can be seen from the header file, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h">CorePlugin</a> inherits from <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h"><code>PluginInterface</code></a> and so must other plugin classes. In addition, a plugin class must inherit from any other interface that a plugin is to support.
+        </p>
+
+        <h2>
+            Basic information
+        </h2>
+
+        <p>
+            Every plugin must provide the following information:
+        </p>
+
+        <ul>
+            <li><strong>Type of plugin:</strong> an OpenCOR plugin can be used either for the <a href="http://en.wikipedia.org/wiki/Console_application">console</a> version of OpenCOR and/or its <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a> version. So, depending on the version of OpenCOR which is run, a plugin may or not be loaded.</li>
+            <li><strong>Plugin dependencies:</strong> some plugins rely on other plugins to work. Those plugins must therefore be loaded first which means that OpenCOR must be able to determine the loading order of the plugins.</li>
+        </ul>
+
+        <p>
+            This information is, for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc/Core">Core plugin</a>, provided in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.cpp</code></a> through the <code>PLUGININFO_FUNC CorePluginInfo()</code> function. As can be seen, the name of the function is related to the name of the plugin and is <code>&lt;PluginName&gt;PluginInfo</code>. OpenCOR uses the name of the plugin file to determine the name of that function. This means that only one version of a given plugin can be loaded.
+        </p>
+
+        <h2>
+            Import/export
+        </h2>
+
+        <p>
+            To support plugin dependencies requires some classes and/or functions to be imported/exported (using <a href="http://doc.qt.nokia.com/latest/qtglobal.html#Q_DECL_IMPORT"><code>Q_DECL_IMPORT</code></a>/<a href="http://doc.qt.nokia.com/latest/qtglobal.html#Q_DECL_EXPORT"><code>Q_DECL_EXPORT</code></a>, respectively). To handle this, we must create a header file which defines a macro that refers to either <code>Q_DECL_IMPORT</code> or <code>Q_DECL_EXPORT</code>, depending on how the plugin code is to be compiled. For the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc/Core">Core plugin</a>, the header file in question is <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreglobal.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreglobal.h</code></a>.
         </p>
 
         <h2>
@@ -66,8 +95,7 @@ QtGui
 QtHelp
 QtNetwork
 QtSql
-QtXml
-</pre>
+QtXml</pre>
                 The <code>QtHelp</code> dependency can be ignored, leaving us with the following call to <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_MAC_OS_X_QT_LIBRARY</code></a> which is also used in <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
                 <pre class="prettyprint">DEPLOY_MAC_OS_X_QT_LIBRARY(QtHelp
     QtCore
@@ -75,8 +103,7 @@ QtXml
     QtNetwork
     QtSql
     QtXml
-)
-</pre>
+)</pre>
                 This will embed <code>QtHelp</code> within the OpenCOR bundle, after having stripped it from anything that is not essential (thus reducing its size) and having ensured that its Qt dependencies (<code>QtCore</code>, <code>QtGui</code>, <code>QtNetwork</code>, <code>QtSql</code> and <code>QtXml</code>) refer to our embedded version of the Qt libraries.
             </li>
         </ul>

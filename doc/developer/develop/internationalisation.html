@@ -17,10 +17,6 @@
             Internationalisation
         </h1>
 
-        <h2>
-            General
-        </h2>
-
         <p>
             OpenCOR is a multi-lingual application currently supporting both English and French. OpenCOR will, by default, try to use the language used by a user's operating system. If it cannot, then it will revert to English. Otherwise, users can switch to any language supported by OpenCOR, independent of the language used by their operating system.
         </p>
@@ -39,7 +35,7 @@
                 <pre class="prettyprint">&lt;TS version=&quot;2.0&quot; language=&quot;xx_XX&quot; sourcelanguage=&quot;en_GB&quot;&gt;</pre>
                 and replace <code>xx_XX</code> accordingly. Otherwise, as for the Qt-specific file above, an entry for the OpenCOR-specific file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
                 <pre class="prettyprint">&lt;file alias=&quot;app_xx&quot;&gt;../build/OpenCOR_xx.qm&lt;/file&gt;</pre>
-                The <code>OpenCOR_xx.qm</code> file gets automatically generated from the <code>OpenCOR_xx.ts</code> file when <a href="developBuildTestAndPackage.html#buildAndTest">building OpenCOR</a>. This does, however, require updating <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
+                The <code>OpenCOR_xx.qm</code> file gets automatically generated from the <code>OpenCOR_xx.ts</code> file when <a href="../buildAndTest.html">building OpenCOR</a>. This does, however, require updating <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
                 <pre class="prettyprint">SET(LANGUAGE_FILES
     ${PROJECT_NAME}_fr
     ${PROJECT_NAME}_xx    # New language file
