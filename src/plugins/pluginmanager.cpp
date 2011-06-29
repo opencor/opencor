@@ -1,3 +1,4 @@
+#include "plugin.h"
 #include "pluginmanager.h"
 
 #include <QApplication>
@@ -40,6 +41,10 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
+    // Remove all the plugins
+
+    foreach (Plugin *plugin, mPlugins)
+        delete plugin;
 }
 
 void PluginManager::loadPlugins(QSettings *pSettings)

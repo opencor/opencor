@@ -1,7 +1,10 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
+#include <QList>
 #include <QObject>
+
+class Plugin;
 
 class QSettings;
 
@@ -19,6 +22,8 @@ public:
 
 private:
     QString mPluginsDir;
+
+    QList<Plugin *> mPlugins;
 };
 
 }
