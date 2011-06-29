@@ -70,11 +70,9 @@ class MmlDocument;
 #endif
 */
 //---OPENCOR--- BEGIN
-#ifdef QtMmlWidget_PLUGIN
-    #define QT_QTMMLWIDGET_EXPORT Q_DECL_EXPORT
-#else
-    #define QT_QTMMLWIDGET_EXPORT Q_DECL_IMPORT
-#endif
+#include "qtmmlwidgetglobal.h"
+
+#define QT_QTMMLWIDGET_EXPORT QTMMLWIDGET_EXPORT
 //---OPENCOR--- END
 
 class QT_QTMMLWIDGET_EXPORT QtMmlWidget : public QFrame
