@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>
-            Develop, build, test and package
+            Pre-Requirements
         </title>
 
         <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -14,16 +14,8 @@
     </head>
     <body onload="prettyPrint()">
         <h1>
-            Develop, build, test and package
-        </h1>
-
-        <p>
-            OpenCOR is being developed, built, tested and packaged on <a href="http://windows.microsoft.com/">Windows</a> 7, <a href="http://www.ubuntu.com/">Ubuntu</a> 11.04 (Natty Narwhal; both the 32-bit and 64-bit versions) and <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.6 (Snow Leopard). The information which follows assumes that you are using one of these operating systems.
-        </p>
-
-        <h2>
             Pre-Requirements
-        </h2>
+        </h1>
 
         <p>
             The following tools are required in order to develop, build, test and/or package OpenCOR:
@@ -112,82 +104,6 @@ $ rm -fr [Qt4.7.3]</pre>
             <li>Windows: <code>C:\Program Files (x86)\CMake 2.8\bin</code>, <code>C:\Qt\MinGW\bin</code> and <code>C:\Qt\4.7.3\bin</code>; and</li>
             <li>Linux: <code>/usr/local/Trolltech/Qt-4.7.3/bin</code> (in <code>/etc/environment</code> on Ubuntu).</li>
         </ul>
-
-        <h2>
-            Develop
-        </h2>
-
-        <p class="warning">
-            Except for the <a href="../user/authors.html" class="warning">authors</a>, OpenCOR is not currently opened for development, but this will change as soon as OpenCOR gets officially released.
-        </p>
-
-        <p>
-            Different aspects related to the development of OpenCOR can be found in the following pages:
-        </p>
-
-        <ul>
-            <li><a href="develop/plugins.html">Plugins</a></li>
-            <li><a href="develop/internationalisation.html">Internationalisation</a></li>
-        </ul>
-
-        <h2>
-            <a name="buildAndTest" class="sectionAnchor">Build and Test</a>
-        </h2>
-
-        <p>
-            OpenCOR can be built in two different ways:
-        </p>
-
-        <ul>
-            <li>
-                <strong>Command line:</strong> various batch and VBScript files (<code>.bat</code> and <code>.vbs</code> files) on Windows and shell scripts on Linux / Mac OS X are available:
-                <ul>
-                    <li><a href="https://github.com/opencor/opencor/blob/master/cleanproj"><code>[OpenCOR]/cleanproj</code></a>[<a href="https://github.com/opencor/opencor/blob/master/cleanproj.bat"><code>.bat</code></a>]: cleans the OpenCOR environment;</li>
-                    <li>
-                        <a href="https://github.com/opencor/opencor/blob/master/makeproj"><code>[OpenCOR]/makeproj</code></a>[<a href="https://github.com/opencor/opencor/blob/master/makeproj.bat"><code>.bat</code></a>]: compiles and links everything that is required to get a release version of OpenCOR; and
-                        <div>
-                            <strong>Note:</strong> <code>makeproj[.bat]</code> does, by default, compile OpenCOR in parallel. You can, however, specify the number of jobs to be run simultaneously, thus making it possible to compile OpenCOR sequentially, if needed:
-                            <pre class="prettyprint">$ ./makeproj 1</pre>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="https://github.com/opencor/opencor/blob/master/runproj"><code>[OpenCOR]/runproj</code></a>[<a href="https://github.com/opencor/opencor/blob/master/runproj.bat"><code>.bat</code></a> | <a href="https://github.com/opencor/opencor/blob/master/runproj.vbs"><code>.vbs</code></a>]: runs OpenCOR.
-                        <div>
-                            <strong>Note:</strong> on Windows, if you were to run OpenCOR from a console window by just entering <code>runproj</code>, then the <code>runproj.bat</code> file would be executed (rather than the <code>runproj.vbs</code> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking the <code>runproj.bat</code> file from within Windows Explorer, then a console window will quickly appear and disappear. To avoid this, you should double click on the <code>runproj.vbs</code> file.
-                        </div>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <strong>Using Qt Creator:</strong>
-                <ul>
-                    <li>Start Qt Creator;</li>
-                    <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
-                    <li>Specify <a href="https://github.com/opencor/opencor/tree/master/build"><code>[OpenCOR]/build</code></a> as the build directory;</li>
-                    <li>Select <code>MinGW Generator (MinGW (x86 32bit))</code> as the generator (Windows only), if necessary;</li>
-                    <li>Click on the <code>Run CMake</code> button;</li>
-                    <li>Click on the <code>Finish</code> button;</li>
-                    <li>Select <code>OpenCOR</code> as the run target (by selecting the <code>Build</code> | <code>Open Build/Run Target Seclector...</code> menu or by pressing <code>Ctrl+T</code>), if necessary; and</li>
-                    <li>
-                        Build and test OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl+R</code>).
-                        <div>
-                            <strong>Note #1:</strong> because of our use of CMake, debugging with Qt Creator requires an extra build step which can be set up by selecting the <code>Projects</code> view and by clicking on the <code>Add Build Step</code> drop-down button and clicking on the <code>Custom Process Step</code> menu item. From there, tick the <code>Enable custom process step</code> check box, set the <code>Command</code> field to <code>cmake</code>, the <code>Working directory</code> field to <a href="https://github.com/opencor/opencor/tree/master/build"><code>[OpenCOR]/build</code></a> and the <code>Command arguments</code> field to <code>-DCMAKE_BUILD_TYPE=Debug ..</code>. Finally, make sure that this new build step comes before the default <code>Make</code> build step.
-                        </div>
-                        <div>
-                            <strong>Note #2:</strong> by default, Qt Creator will compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button of the default <code>Make</code> build step under the <code>Build Steps</code> header. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> where <code>n</code> is the number of jobs to be run simultaneously (if no <code>n</code> value is provided, then Qt Creator will try to run as many jobs as possible).
-                        </div>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-
-        <h2>
-            Package
-        </h2>
-
-        <p>
-            Packaging of OpenCOR can only be done from the command line, using <a href="https://github.com/opencor/opencor/blob/master/packageproj.bat"><code>[OpenCOR]/packageproj.bat</code></a> on Windows and <a href="https://github.com/opencor/opencor/blob/master/packageproj"><code>[OpenCOR]/packageproj</code></a> on Linux / Mac OS X. Note that though the Linux package is originally meant for Ubuntu 11.04 (Natty Narwhal; both 32-bit and 64-bit), it should also work with other versions of Ubuntu, as well as other Linux distributions though additional libraries may be required in this particular case.
-        </p>
 
         <div class="copyright">
             Copyright ©2011
