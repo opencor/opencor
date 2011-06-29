@@ -55,7 +55,13 @@ void PluginManager::loadPlugin(const QString &pPluginFileName)
     // are, if any
 
     typedef PluginInfo (*PluginInfoFunc)();
+
+#ifndef Q_WS_WIN
+    const QString pluginName = QFileInfo(pPluginFileName).baseName().remove(0, 3);
+    // Note: remove the "lib" part of the plugin file name...
+#else
     const QString pluginName = QFileInfo(pPluginFileName).baseName();
+#endif
 
     PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) QLibrary::resolve(pPluginFileName,
                                                                        QString(pluginName+"PluginInfo").toLatin1().constData());
