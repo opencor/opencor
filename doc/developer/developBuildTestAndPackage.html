@@ -8,8 +8,11 @@
         <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 
         <link href="res/stylesheet.css" rel="stylesheet" type="text/css" />
+
+        <link href="../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="../3rdparty/googleCodePrettify/prettify.js"></script>
     </head>
-    <body>
+    <body onload="prettyPrint()">
         <h1>
             Develop, build, test and package
         </h1>
@@ -29,9 +32,9 @@
         <ul>
             <li>
                 <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/natty/git">git</a> package on Ubuntu): a distributed version control system. You can get a copy of OpenCOR's source code by cloning our <A HREF ="https://github.com/opencor/opencor">Git repository</a> either in <em>read-only</em> mode:
-                <pre>$ git clone git://github.com/opencor/opencor.git</pre>
+                <pre class="prettyprint">$ git clone git://github.com/opencor/opencor.git</pre>
                 or in <em>read-write</em> mode:
-                <pre>$ git clone git@github.com:opencor/opencor.git</pre>
+                <pre class="prettyprint">$ git clone git@github.com:opencor/opencor.git</pre>
                 <div>
                     <strong>Note #1:</strong> you might want to check the GitHub help on setting up Git on <a href="http://help.github.com/win-set-up-git/">Windows</a>, <a href="http://help.github.com/linux-set-up-git/">Linux</a> and <a href="http://help.github.com/mac-set-up-git/">Mac OS X</a>, respectively.
                 </div>
@@ -66,7 +69,7 @@
                         <a href="http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz">Linux</a>; and
                         <div>
                             <strong>Note:</strong> Qt has to be built from its source code which requires some <a href="http://doc.qt.nokia.com/latest/requirements-x11.html">development packages</a> to be installed (<a href="http://packages.ubuntu.com/natty/libxrender-dev">libxrender-dev</a>, <a href="http://packages.ubuntu.com/natty/libxrandr-dev">libxrandr-dev</a>, <a href="http://packages.ubuntu.com/natty/libxcursor-dev">libxcursor-dev</a>, <a href="http://packages.ubuntu.com/natty/libxfixes-dev">libxfixes-dev</a>, <a href="http://packages.ubuntu.com/natty/libxinerama-dev">libxinerama-dev</a>, <a href="http://packages.ubuntu.com/natty/libfontconfig1-dev">libfontconfig1-dev</a>, <a href="http://packages.ubuntu.com/natty/libfreetype6-dev">libfreetype6-dev</a>, <a href="http://packages.ubuntu.com/natty/libxi-dev">libxi-dev</a>, <a href="http://packages.ubuntu.com/natty/libxt-dev">libxt-dev</a>, <a href="http://packages.ubuntu.com/natty/libxext-dev">libxext-dev</a>, <a href="http://packages.ubuntu.com/natty/libx11-dev">libx11-dev</a>, <a href="http://packages.ubuntu.com/natty/libsm-dev">libsm-dev</a>, <a href="http://packages.ubuntu.com/natty/libice-dev">libice-dev</a>, <a href="http://packages.ubuntu.com/natty/libglib2.0-dev">libglib2.0-dev</a> and <a href="http://packages.ubuntu.com/natty/libpthread-stubs0-dev">libpthread-stubs0-dev</a>). Though not mentioned on the list of required development packages, <a href="http://packages.ubuntu.com/natty/libdbus-1-dev">libdbus-1-dev</a> is also needed (to build the <a href="http://doc.qt.nokia.com/qtdbus.html">QtDBus</a> module). Once these development packages are installed, you can build the Qt library by entering the following on the command line:
-                            <pre>$ cd [Qt4.7.3]
+                            <pre class="prettyprint">$ cd [Qt4.7.3]
 $ ./configure
 $ make
 $ sudo make install
@@ -114,9 +117,18 @@ $ rm -fr [Qt4.7.3]</pre>
             Develop
         </h2>
 
-        <p>
-            Except for the <a href="../user/authors.html">authors</a>, OpenCOR is not currently opened for development. This will change as soon as OpenCOR gets officially released.
+        <p class="warning">
+            Except for the <a href="../user/authors.html" class="warning">authors</a>, OpenCOR is not currently opened for development, but this will change as soon as OpenCOR gets officially released.
         </p>
+
+        <p>
+            Different aspects related to the development of OpenCOR can be found in the following pages:
+        </p>
+
+        <ul>
+            <li><a href="develop/plugins.html">Plugins</a></li>
+            <li><a href="develop/internationalisation.html">Internationalisation</a></li>
+        </ul>
 
         <h2>
             <a name="buildAndTest" class="sectionAnchor">Build and Test</a>
@@ -135,7 +147,7 @@ $ rm -fr [Qt4.7.3]</pre>
                         <a href="https://github.com/opencor/opencor/blob/master/makeproj"><code>[OpenCOR]/makeproj</code></a>[<a href="https://github.com/opencor/opencor/blob/master/makeproj.bat"><code>.bat</code></a>]: compiles and links everything that is required to get a release version of OpenCOR; and
                         <div>
                             <strong>Note:</strong> <code>makeproj[.bat]</code> does, by default, compile OpenCOR in parallel. You can, however, specify the number of jobs to be run simultaneously, thus making it possible to compile OpenCOR sequentially, if needed:
-                            <pre>$ ./makeproj 1</pre>
+                            <pre class="prettyprint">$ ./makeproj 1</pre>
                         </div>
                     </li>
                     <li>

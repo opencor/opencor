@@ -8,8 +8,11 @@
         <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 
         <link href="res/stylesheet.css" rel="stylesheet" type="text/css" />
+
+        <link href="../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="../3rdparty/googleCodePrettify/prettify.js"></script>
     </head>
-    <body>
+    <body onload="prettyPrint()">
         <h1>
             Known Issues/Limitations
         </h1>
@@ -56,7 +59,7 @@
             <li>To show the help window by pressing the <code>F1</code> key may, if the help window is floating (as opposed to being docked to the main window), result in OpenCOR not being the active application anymore. This means that if you were to press the <code>F1</code> key one more time, then the help window would remain visible while it should have disappeared.</li>
             <li>
                 Menu items that have sub-menus may not, on some versions of <a href="http://www.gnome.org/">Gnome</a>, have their icon displayed (should they normally have one). This has been discussed in many places, such as <a href="http://www.omgubuntu.co.uk/2010/02/missing-menu-icons-what-are-gnome-playing-at/">here</a> and <a href="http://ubuntuforums.org/showthread.php?t=1505270">here</a>. Anyway, one way to change this behaviour is to enter the following on the command line:
-                <pre>$ gconftool-2 --type Boolean --set /desktop/gnome/interface/menus_have_icons True</pre>
+                <pre class="prettyprint">$ gconftool-2 --type Boolean --set /desktop/gnome/interface/menus_have_icons True</pre>
             </li>
         </ul>
 
