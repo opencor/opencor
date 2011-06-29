@@ -6,8 +6,8 @@ PLUGININFO_FUNC QtMmlWidgetPluginInfo()
 {
     PluginInfo info;
 
-    info.dependencies = QStringList();
     info.type         = Gui;
+    info.dependencies = QStringList();
 
     return info;
 }

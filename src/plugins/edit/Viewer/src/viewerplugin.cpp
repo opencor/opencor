@@ -6,8 +6,8 @@ PLUGININFO_FUNC ViewerPluginInfo()
 {
     PluginInfo info;
 
-    info.dependencies = QStringList() << "Core" << "QtMmlWidget";
     info.type         = Gui;
+    info.dependencies = QStringList() << "Core" << "QtMmlWidget";
 
     return info;
 }

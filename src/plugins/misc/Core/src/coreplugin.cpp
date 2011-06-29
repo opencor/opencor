@@ -6,8 +6,8 @@ PLUGININFO_FUNC CorePluginInfo()
 {
     PluginInfo info;
 
-    info.dependencies = QStringList();
     info.type         = Both;
+    info.dependencies = QStringList();
 
     return info;
 }

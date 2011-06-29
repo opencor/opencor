@@ -6,8 +6,8 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 {
     PluginInfo info;
 
-    info.dependencies = QStringList() << "Core";
     info.type         = Gui;
+    info.dependencies = QStringList() << "Core";
 
     return info;
 }

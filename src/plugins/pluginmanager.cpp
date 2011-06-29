@@ -64,17 +64,9 @@ void PluginManager::loadPlugin(const QString &pPluginFileName)
         // we are after
 
         PluginInfo pluginInfo = pluginInfoFunc();
-        QString dependencies;
+
         QString type;
-
-        if (!pluginInfo.dependencies.count()) {
-            dependencies = "none";
-        } else {
-            foreach (QString dependency, pluginInfo.dependencies)
-                dependencies += dependency+" | ";
-
-            dependencies.chop(3);
-        }
+        QString dependencies;
 
         switch (pluginInfo.type) {
         case Console:
@@ -91,10 +83,19 @@ void PluginManager::loadPlugin(const QString &pPluginFileName)
             break;
         }
 
+        if (!pluginInfo.dependencies.count()) {
+            dependencies = "none";
+        } else {
+            foreach (QString dependency, pluginInfo.dependencies)
+                dependencies += dependency+" | ";
+
+            dependencies.chop(3);
+        }
+
         QMessageBox::information(0, "Plugin info",
-                                 QString("Plugin name: %1\nDependencies: %2\nType: %3").arg(pluginName,
-                                                                                            dependencies,
-                                                                                            type));
+                                 QString("Plugin name: %1\nType: %2\nDependencies: %3").arg(pluginName,
+                                                                                            type,
+                                                                                            dependencies));
     } else {
         QMessageBox::information(0, "Plugin info",
                                  QString("The %1 plugin CANNOT be loaded").arg(pluginName));

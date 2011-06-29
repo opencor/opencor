@@ -22,8 +22,8 @@ enum PluginType
 
 struct PluginInfo
 {
-    QStringList dependencies;
     PluginType type;
+    QStringList dependencies;
 };
 
 class PluginInterface : public QObject
