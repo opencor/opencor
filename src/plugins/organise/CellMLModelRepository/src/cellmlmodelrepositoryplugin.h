@@ -5,6 +5,8 @@
 
 namespace OpenCOR {
 
+PLUGININFO_FUNC CellMLModelRepositoryPluginInfo();
+
 class CellMLModelRepositoryPlugin : public PluginInterface
 {
     Q_OBJECT

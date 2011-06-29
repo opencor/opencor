@@ -1,4 +1,5 @@
 #include "plugin.h"
+#include "plugininterface.h"
 #include "pluginmanager.h"
 
 #include <QApplication>
@@ -53,13 +54,51 @@ void PluginManager::loadPlugin(const QString &pPluginFileName)
     // Check what type of plugin we are dealing with and what its dependencies
     // are, if any
 
-    void *info = QLibrary::resolve(pPluginFileName,
-                                   QString(QFileInfo(pPluginFileName).baseName()+"Info").toLatin1().constData());
+    typedef PluginInfo (*PluginInfoFunc)();
+    const QString pluginName = QFileInfo(pPluginFileName).baseName();
 
-    if (info)
-        QMessageBox::information(0, "Info", QString("Found '%1' in '%2'...").arg(QFileInfo(pPluginFileName).baseName()+"Info", pPluginFileName));
-    else
-        QMessageBox::information(0, "Info", QString("Did NOT find '%1' in '%2'...").arg(QFileInfo(pPluginFileName).baseName()+"Info", pPluginFileName));
+    PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) QLibrary::resolve(pPluginFileName,
+                                                                       QString(pluginName+"PluginInfo").toLatin1().constData());
+    if (pluginInfoFunc) {
+        // The plugin information function was found, so extract the information
+        // we are after
+
+        PluginInfo pluginInfo = pluginInfoFunc();
+        QString dependencies;
+        QString type;
+
+        if (!pluginInfo.dependencies.count()) {
+            dependencies = "none";
+        } else {
+            foreach (QString dependency, pluginInfo.dependencies)
+                dependencies += dependency+" | ";
+
+            dependencies.chop(3);
+        }
+
+        switch (pluginInfo.type) {
+        case Console:
+            type = "console";
+
+            break;
+        case Gui:
+            type = "GUI";
+
+            break;
+        default:
+            type = "both console and GUI";
+
+            break;
+        }
+
+        QMessageBox::information(0, "Plugin info",
+                                 QString("Plugin name: %1\nDependencies: %2\nType: %3").arg(pluginName,
+                                                                                            dependencies,
+                                                                                            type));
+    } else {
+        QMessageBox::information(0, "Plugin info",
+                                 QString("The %1 plugin CANNOT be loaded").arg(pluginName));
+    }
 }
 
 void PluginManager::loadPlugins()

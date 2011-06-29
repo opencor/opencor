@@ -5,6 +5,8 @@
 
 namespace OpenCOR {
 
+PLUGININFO_FUNC QScintillaPluginInfo();
+
 class QScintillaPlugin : public PluginInterface
 {
     Q_OBJECT

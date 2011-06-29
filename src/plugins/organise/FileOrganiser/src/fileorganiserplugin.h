@@ -5,6 +5,8 @@
 
 namespace OpenCOR {
 
+PLUGININFO_FUNC FileOrganiserPluginInfo();
+
 class FileOrganiserPlugin : public PluginInterface
 {
     Q_OBJECT

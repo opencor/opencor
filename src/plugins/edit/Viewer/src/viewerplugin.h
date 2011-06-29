@@ -5,6 +5,8 @@
 
 namespace OpenCOR {
 
+PLUGININFO_FUNC ViewerPluginInfo();
+
 class ViewerPlugin : public PluginInterface
 {
     Q_OBJECT

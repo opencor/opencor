@@ -5,6 +5,8 @@
 
 namespace OpenCOR {
 
+PLUGININFO_FUNC VersionManagerPluginInfo();
+
 class VersionManagerPlugin : public PluginInterface
 {
     Q_OBJECT

@@ -5,6 +5,8 @@
 
 namespace OpenCOR {
 
+PLUGININFO_FUNC FileBrowserPluginInfo();
+
 class FileBrowserPlugin : public PluginInterface
 {
     Q_OBJECT
