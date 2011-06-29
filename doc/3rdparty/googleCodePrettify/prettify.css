@@ -32,7 +32,9 @@
 }
 
 /* Put a border around prettyprinted code snippets. */
+/*---GRY--- DISABLED FOR OpenCOR
 pre.prettyprint { padding: 2px; border: 1px solid #888 }
+*/
 
 /* Specify class=linenums on a pre to get line numbering */
 ol.linenums { margin-top: 0; margin-bottom: 0 } /* IE indents via margin-left */

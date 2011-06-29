@@ -2,63 +2,20 @@
 <html>
     <head>
         <title>
-            Best practices
+            Coding style
         </title>
 
         <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 
-        <link href="res/stylesheet.css" rel="stylesheet" type="text/css" />
+        <link href="../res/stylesheet.css" rel="stylesheet" type="text/css" />
 
-        <link href="../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="../3rdparty/googleCodePrettify/prettify.js"></script>
+        <link href="../../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="../../3rdparty/googleCodePrettify/prettify.js"></script>
     </head>
     <body onload="prettyPrint()">
         <h1>
-            Best practices
+            Coding style
         </h1>
-
-        <h2>
-            File Structure
-        </h2>
-
-        <p>
-            Source code files are, in OpenCOR, organised within a very specific <a href="https://github.com/opencor/opencor">file structure</a>, as shown below. Any new (set of) file(s) is therefore expected to be added to the right folder.
-            <pre><a href="https://github.com/opencor/opencor/tree/master/build">build</a>                         <em>// Where OpenCOR-related build files are generated</em>
-<a href="https://github.com/opencor/opencor/tree/master/cmake">cmake</a>                         <em>// <a href="http://www.cmake.org/">CMake</a> files used throughout the project</em>
-<a href="https://github.com/opencor/opencor/tree/master/distrib">distrib</a>                       <em>// Files used for the packaging of OpenCOR</em>
-<a href="https://github.com/opencor/opencor/tree/master/doc">doc</a>                           <em>// User and developer documentation</em>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/doc/3rdparty">3rdparty</a>                  <em>// <a href="thirdPartyLibraries.html">Third-party library</a> used for the documentation</em>
- &#9474;   &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/doc/3rdparty/googleCodePrettify">googleCodePrettify</a>    <em>// The <a href="http://code.google.com/p/google-code-prettify/">Google Code Prettify</a> library</em>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/doc/developer">developer</a>                 <em>// Developer documentation</em>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/doc/res">res</a>                       <em>// Resource files used by the documentation</em>
- &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/doc/user">user</a>                      <em>// User documentation</em>
-<a href="https://github.com/opencor/opencor/tree/master/i18n">i18n</a>                          <em>// Internationalisation files</em>
-<a href="https://github.com/opencor/opencor/tree/master/models">models</a>                        <em>// Some (real) sample models</em>
-<a href="https://github.com/opencor/opencor/tree/master/res">res</a>                           <em>// Resource files used by OpenCOR</em>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/res/boomy">boomy</a>                     <em>// The <a href="http://miloszwl.deviantart.com/art/Boomy-multiplatform-36215357">Boomy multiplatform</a> icon library</em>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/res/flags">flags</a>                     <em>// The <a href="http://www.printableworldflags.com/flag-icon/">Printable world flags</a> icon library</em>
- &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/res/oxygen">oxygen</a>                    <em>// The <a href="http://packages.ubuntu.com/natty/oxygen-icon-theme">Oxygen</a> icon library</em>
-<a href="https://github.com/opencor/opencor/tree/master/src">src</a>                           <em>// Source code files for OpenCOR</em>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/3rdparty">3rdparty</a>                  <em>// <a href="thirdPartyLibraries.html">Third-party libraries</a> directly embedded in OpenCOR</em>
- &#9474;   &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/3rdparty/LibQxt">LibQxt</a>                <em>// <a href="http://libqxt.org/">LibQxt</a></em>
- &#9474;   &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/3rdparty/QtSingleApplication">QtSingleApplication</a>   <em>// <a href="http://qt.gitorious.org/qt-solutions/">QtSingleApplication</a></em>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/misc">misc</a>                      <em>// Files that do not fit anywhere else</em>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins">plugins</a>                   <em>// Plugins used by OpenCOR</em>
- &#9474;   &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/3rdparty">3rdparty</a>              <em>// <a href="thirdPartyLibraries.html">Third-party libraries</a> used as plugins by OpenCOR</em>
- &#9474;   &#9474;   &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/3rdparty/QScintilla">QScintilla</a>        <em>// <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a> as a plugin</em>
- &#9474;   &#9474;   &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/3rdparty/QtMmlWidget">QtMmlWidget</a>       <em>// <a href="ftp://ftp.qt.nokia.com/qt/solutions/lgpl/">QtMmlWidget</a> as a plugin</em>
- &#9474;   &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/edit">edit</a>                  <em>// Plugins for the editing side of things</em>
- &#9474;   &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc">misc</a>                  <em>// Plugins that do not fit anywhere else</em>
- &#9474;   &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/organise">organise</a>              <em>// Plugins for the organisation side of things</em>
- &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/ui">ui</a>                        <em>// User interfaces</em>
-<a href="https://github.com/opencor/opencor/tree/master/winConsole">winConsole</a>                    <em>// Console version of OpenCOR (Windows only)</em>
- &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/winConsole/build">build</a>                     <em>// Where the build files are generated</em>
- &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/winConsole/src">src</a>                       <em>// Source code files</em></pre>
-        </p>
-
-        <h2>
-            Coding Style
-        </h2>
 
         <p>
             No matter how great an application is, if its source code is difficult to understand and/or to maintain, it will have a limited life expectancy. This document therefore provides some simple rules which, as much as possible, ought to be respected when working on OpenCOR. These rules were taken (paraphrased, if not simply copied/pasted) from the <a href="http://qt.gitorious.org/qt-creator/qt-creator/blobs/master/doc/api/coding-style.qdoc">coding style document</a> written by the developers of <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a>:
