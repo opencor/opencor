@@ -10,7 +10,8 @@
 
 namespace OpenCOR {
 
-PluginManager::PluginManager()
+PluginManager::PluginManager(QSettings *pSettings) :
+    mSettings(pSettings)
 {
 #ifndef Q_WS_MAC
     const QString pluginsDir = "plugins";
@@ -47,9 +48,23 @@ PluginManager::~PluginManager()
         delete plugin;
 }
 
-void PluginManager::loadPlugins(QSettings *pSettings)
+void PluginManager::loadPlugin(const QString &pPluginFileName)
 {
-    // Determine which plugins are available for loading
+    // Check what type of plugin we are dealing with and what its dependencies
+    // are, if any
+
+    void *info = QLibrary::resolve(pPluginFileName,
+                                   QString(QFileInfo(pPluginFileName).baseName()+"Info").toLatin1().constData());
+
+    if (info)
+        QMessageBox::information(0, "Info", QString("Found '%1' in '%2'...").arg(QFileInfo(pPluginFileName).baseName()+"Info", pPluginFileName));
+    else
+        QMessageBox::information(0, "Info", QString("Did NOT find '%1' in '%2'...").arg(QFileInfo(pPluginFileName).baseName()+"Info", pPluginFileName));
+}
+
+void PluginManager::loadPlugins()
+{
+    // Try to load all the plugins
 
 #ifdef Q_WS_WIN
     const QString extension = ".dll";
@@ -59,29 +74,10 @@ void PluginManager::loadPlugins(QSettings *pSettings)
     const QString extension = ".so";
 #endif
 
-    QString feedback = QString("Loading plugins from '%1':").arg(QDir::toNativeSeparators(mPluginsDir));
-
     QFileInfoList files = QDir(mPluginsDir).entryInfoList(QStringList("*"+extension), QDir::Files);
-    QStringList pluginFiles;
 
-    foreach (const QFileInfo &file, files) {
-        QString pluginFileName = file.canonicalFilePath();
-
-        pluginFiles << pluginFileName;
-
-        // Try to load the plugin as a 'proper' plugin
-
-        QPluginLoader loader(pluginFileName);
-
-        if (loader.load())
-            feedback += QString("\nPlugin #%1: '%2' - Loaded...").arg(QString::number(pluginFiles.count()), QFileInfo(pluginFileName).baseName());
-        else
-            feedback += QString("\nPlugin #%1: '%2' - NOT LOADED [%3]...").arg(QString::number(pluginFiles.count()), QFileInfo(pluginFileName).baseName(), loader.errorString());
-    }
-
-    QMessageBox::information(0, "Plugins...", feedback);
-
-    //---GRY--- TO BE DONE...
+    foreach (const QFileInfo &file, files)
+        loadPlugin(file.canonicalFilePath());
 }
 
 }

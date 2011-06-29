@@ -62,9 +62,9 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Create our plugin manager and load our various plugins
 
-    mPluginManager = new PluginManager;
+    mPluginManager = new PluginManager(mSettings);
 
-    mPluginManager->loadPlugins(mSettings);
+    mPluginManager->loadPlugins();
 
     // Some connections to handle our Help toolbar
 

@@ -15,15 +15,19 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager();
+    explicit PluginManager(QSettings *pSettings);
     ~PluginManager();
 
-    void loadPlugins(QSettings *pSettings);
+    void loadPlugins();
 
 private:
+    QSettings *mSettings;
+
     QString mPluginsDir;
 
     QList<Plugin *> mPlugins;
+
+    void loadPlugin(const QString &pPluginFileName);
 };
 
 }
