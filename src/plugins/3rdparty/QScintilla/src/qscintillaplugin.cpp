@@ -6,7 +6,7 @@ PLUGININFO_FUNC QScintillaPluginInfo()
 {
     PluginInfo info;
 
-    info.type         = Gui;
+    info.type         = PluginInfo::Gui;
     info.dependencies = QStringList();
 
     return info;

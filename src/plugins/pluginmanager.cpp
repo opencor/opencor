@@ -4,10 +4,7 @@
 
 #include <QApplication>
 #include <QDir>
-#include <QPluginLoader>
 #include <QSettings>
-
-#include <QMessageBox>
 
 namespace OpenCOR {
 
@@ -15,9 +12,9 @@ PluginManager::PluginManager(QSettings *pSettings) :
     mSettings(pSettings)
 {
 #ifndef Q_WS_MAC
-    const QString pluginsDir = "plugins";
+    static const QString pluginsDir = "plugins";
 #else
-    const QString pluginsDir = "PlugIns";
+    static const QString pluginsDir = "PlugIns";
 #endif
 
     mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
@@ -28,8 +25,8 @@ PluginManager::PluginManager(QSettings *pSettings) :
 #ifndef Q_WS_MAC
     // The plugins directory should be correct, but in case we try to run
     // OpenCOR on Windows or Linux AND from within Qt Creator, then the binary
-    // will be running [OpenCOR]/build/OpenCOR[.exe] rather than
-    // [OpenCOR]/build/bin/OpenCOR[.exe] as we should if we were to mimic the
+    // will be running from [OpenCOR]/build/OpenCOR[.exe] rather than
+    // [OpenCOR]/build/bin/OpenCOR[.exe] as it should if we were to mimic the
     // case where OpenCOR has been deployed. Then, because the plugins are in
     // [OpenCOR]/build/plugins/OpenCOR, we must skip the "../" bit. Yes, it's
     // not neat, but... is there another solution?...
@@ -45,85 +42,74 @@ PluginManager::~PluginManager()
 {
     // Remove all the plugins
 
-    foreach (Plugin *plugin, mPlugins)
-        delete plugin;
+    while (!mPlugins.isEmpty()) {
+        delete mPlugins.begin().value();
+
+        mPlugins.erase(mPlugins.begin());
+    }
+}
+
+Plugin * PluginManager::plugin(const QString &pPluginName)
+{
+    // Check whether the plugin exists
+
+    Plugin *plugin = mPlugins.value(pPluginName);
+
+    if (!plugin) {
+        // The plugin doesn't exist, so create it
+
+        plugin = new Plugin(pPluginName);
+
+        mPlugins.insert(pPluginName, plugin);
+    }
+
+    // Return the plugin
+
+    return plugin;
 }
 
 void PluginManager::loadPlugin(const QString &pPluginFileName)
 {
-    // Check what type of plugin we are dealing with and what its dependencies
-    // are, if any
-
-    typedef PluginInfo (*PluginInfoFunc)();
-
-#ifndef Q_WS_WIN
-    const QString pluginName = QFileInfo(pPluginFileName).baseName().remove(0, 3);
-    // Note: remove the "lib" part of the plugin file name...
-#else
-    const QString pluginName = QFileInfo(pPluginFileName).baseName();
-#endif
-
-    PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) QLibrary::resolve(pPluginFileName,
-                                                                       QString(pluginName+"PluginInfo").toLatin1().constData());
-    if (pluginInfoFunc) {
-        // The plugin information function was found, so extract the information
-        // we are after
-
-        PluginInfo pluginInfo = pluginInfoFunc();
-
-        QString type;
-        QString dependencies;
-
-        switch (pluginInfo.type) {
-        case Console:
-            type = "console";
-
-            break;
-        case Gui:
-            type = "GUI";
-
-            break;
-        default:
-            type = "both console and GUI";
-
-            break;
-        }
-
-        if (!pluginInfo.dependencies.count()) {
-            dependencies = "none";
-        } else {
-            foreach (QString dependency, pluginInfo.dependencies)
-                dependencies += dependency+" | ";
-
-            dependencies.chop(3);
-        }
-
-        QMessageBox::information(0, "Plugin info",
-                                 QString("Plugin name: %1\nType: %2\nDependencies: %3").arg(pluginName,
-                                                                                            type,
-                                                                                            dependencies));
-    } else {
-        QMessageBox::information(0, "Plugin info",
-                                 QString("The %1 plugin CANNOT be loaded").arg(pluginName));
-    }
 }
 
 void PluginManager::loadPlugins()
 {
-    // Try to load all the plugins
+    // Retrieve the file name of all the plugins
 
 #ifdef Q_WS_WIN
-    const QString extension = ".dll";
+    static const QString extension = ".dll";
 #elif defined(Q_WS_MAC)
-    const QString extension = ".dylib";
+    static const QString extension = ".dylib";
 #else
-    const QString extension = ".so";
+    static const QString extension = ".so";
 #endif
 
     QFileInfoList files = QDir(mPluginsDir).entryInfoList(QStringList("*"+extension), QDir::Files);
 
+    QStringList pluginFileNames;
+
     foreach (const QFileInfo &file, files)
-        loadPlugin(file.canonicalFilePath());
+        pluginFileNames << file.canonicalFilePath();
+
+    // Try to load all the plugins
+
+    while (pluginFileNames.count()) {
+        // Retrieve the plugin information
+
+        QString pluginFileName = pluginFileNames.first();
+
+        pluginFileNames.removeFirst();
+
+        PluginInfo pluginInfo = Plugin::pluginInfo(pluginFileName);
+
+        if (   (pluginInfo.type == PluginInfo::General)
+            || (pluginInfo.type == PluginInfo::Gui)) {
+            // The file is either a general or GUI plugin, so we can try to load
+            // it
+
+//---GRY--- TO BE DONE...
+        }
+    }
 }
 
 }

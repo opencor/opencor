@@ -174,7 +174,7 @@ bool CentralWidget::closeFile(const int &pIndex)
     QWidget *dummyWidget = qobject_cast<QWidget *>(mTabWidget->widget(realIndex));
 
     if (dummyWidget) {
-        // There is a file currently opened, so first retrieve its filename
+        // There is a file currently opened, so first retrieve its file name
 
         QString fileName = mTabWidget->tabToolTip(realIndex);
 

@@ -6,7 +6,7 @@ PLUGININFO_FUNC VersionManagerPluginInfo()
 {
     PluginInfo info;
 
-    info.type         = Both;
+    info.type         = PluginInfo::General;
     info.dependencies = QStringList();
 
     return info;

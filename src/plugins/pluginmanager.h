@@ -1,7 +1,7 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include <QList>
+#include <QMap>
 #include <QObject>
 
 class Plugin;
@@ -25,7 +25,9 @@ private:
 
     QString mPluginsDir;
 
-    QList<Plugin *> mPlugins;
+    QMap<QString, Plugin *> mPlugins;
+
+    Plugin *plugin(const QString &pPluginName);
 
     void loadPlugin(const QString &pPluginFileName);
 };

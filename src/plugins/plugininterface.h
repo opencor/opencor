@@ -13,15 +13,16 @@ namespace OpenCOR {
     #define PLUGININFO_FUNC extern "C" PluginInfo
 #endif
 
-enum PluginType
-{
-    Both,
-    Console,
-    Gui
-};
-
 struct PluginInfo
 {
+    enum PluginType
+    {
+        Unknown,
+        General,
+        Console,
+        Gui
+    };
+
     PluginType type;
     QStringList dependencies;
 };
