@@ -6,10 +6,14 @@
 #include <QDir>
 #include <QSettings>
 
+#include <QDebug>
+
 namespace OpenCOR {
 
-PluginManager::PluginManager(QSettings *pSettings) :
-    mSettings(pSettings)
+PluginManager::PluginManager(QSettings *pSettings,
+                             const PluginInfo::PluginType &pGuiOrConsoleType) :
+    mSettings(pSettings),
+    mGuiOrConsoleType(pGuiOrConsoleType)
 {
 #ifndef Q_WS_MAC
     static const QString pluginsDir = "plugins";
@@ -103,12 +107,16 @@ void PluginManager::loadPlugins()
         PluginInfo pluginInfo = Plugin::pluginInfo(pluginFileName);
 
         if (   (pluginInfo.type == PluginInfo::General)
-            || (pluginInfo.type == PluginInfo::Gui)) {
+            || (pluginInfo.type == mGuiOrConsoleType)) {
             // The file is either a general or GUI plugin, so we can try to load
             // it
 
+qDebug() << "    OK:" << Plugin::pluginName(pluginFileName);
+
 //---GRY--- TO BE DONE...
         }
+else
+qDebug() << "NOT OK:" << Plugin::pluginName(pluginFileName);
     }
 }
 

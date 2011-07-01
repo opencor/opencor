@@ -1,6 +1,8 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
+#include "plugininterface.h"
+
 #include <QMap>
 #include <QObject>
 
@@ -15,13 +17,16 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager(QSettings *pSettings);
+    explicit PluginManager(QSettings *pSettings,
+                           const PluginInfo::PluginType &pGuiOrConsoleType);
     ~PluginManager();
 
     void loadPlugins();
 
 private:
     QSettings *mSettings;
+
+    PluginInfo::PluginType mGuiOrConsoleType;
 
     QString mPluginsDir;
 
