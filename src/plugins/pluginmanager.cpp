@@ -104,19 +104,19 @@ void PluginManager::loadPlugins()
 
         pluginFileNames.removeFirst();
 
-        PluginInfo pluginInfo = Plugin::pluginInfo(pluginFileName);
+        PluginInfo pluginInfo = Plugin::info(pluginFileName);
 
         if (   (pluginInfo.type == PluginInfo::General)
             || (pluginInfo.type == mGuiOrConsoleType)) {
             // The file is either a general or GUI plugin, so we can try to load
             // it
 
-qDebug() << "    OK:" << Plugin::pluginName(pluginFileName);
+qDebug() << "    OK:" << Plugin::name(pluginFileName);
 
 //---GRY--- TO BE DONE...
         }
 else
-qDebug() << "NOT OK:" << Plugin::pluginName(pluginFileName);
+qDebug() << "NOT OK:" << Plugin::name(pluginFileName);
     }
 }
 

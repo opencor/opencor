@@ -30,7 +30,7 @@ bool Plugin::isLoaded()
     return mLoaded;
 }
 
-QString Plugin::pluginName(const QString &pPluginFileName)
+QString Plugin::name(const QString &pPluginFileName)
 {
     // Return the name of the plugin based on its file name
 
@@ -42,7 +42,7 @@ QString Plugin::pluginName(const QString &pPluginFileName)
 #endif
 }
 
-PluginInfo Plugin::pluginInfo(const QString &pPluginFileName)
+PluginInfo Plugin::info(const QString &pPluginFileName)
 {
     // Return the information associated to the plugin
 
@@ -51,7 +51,7 @@ PluginInfo Plugin::pluginInfo(const QString &pPluginFileName)
     typedef PluginInfo (*PluginInfoFunc)();
 
     PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) QLibrary::resolve(pPluginFileName,
-                                                                       QString(pluginName(pPluginFileName)+"PluginInfo").toLatin1().constData());
+                                                                       QString(name(pPluginFileName)+"PluginInfo").toLatin1().constData());
 
     if (pluginInfoFunc)
         // The plugin information function was found, so extract the information

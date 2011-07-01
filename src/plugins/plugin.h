@@ -19,8 +19,8 @@ public:
 
     bool isLoaded();
 
-    static QString pluginName(const QString &pPluginFileName);
-    static PluginInfo pluginInfo(const QString &pPluginFileName);
+    static QString name(const QString &pPluginFileName);
+    static PluginInfo info(const QString &pPluginFileName);
 
 private:
     QString mName;
