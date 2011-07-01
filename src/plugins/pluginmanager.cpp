@@ -4,9 +4,10 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QPluginLoader>
 #include <QSettings>
 
-#include <QDebug>
+#include <QMessageBox>
 
 namespace OpenCOR {
 
@@ -74,50 +75,146 @@ Plugin * PluginManager::plugin(const QString &pPluginName)
 
 void PluginManager::loadPlugin(const QString &pPluginFileName)
 {
+    Plugin *pluginObject = plugin(Plugin::name(pPluginFileName));
+
+    // Check whether the plugin has already been dealt with
+
+    if (pluginObject->status() == Plugin::Undefined) {
+        // The plugin hasn't already been dealt with, so check whether it
+        // physically exists
+
+        if (QFileInfo(pPluginFileName).exists()) {
+            // The plugin exists, so retrieve its information and only try to
+            // load it if it is either a general plugin or one of the type we
+            // are happy with
+
+            PluginInfo pluginInfo = Plugin::info(pPluginFileName);
+
+            if (   (pluginInfo.type == PluginInfo::General)
+                || (pluginInfo.type == mGuiOrConsoleType)) {
+                // We are dealing with the right kind of plugin, so check
+                // whether it has dependencies, and if so then load them and
+                // make sure that they are properly loaded
+
+                bool dependenciesLoaded = true;
+
+                foreach(QString dependency, pluginInfo.dependencies) {
+                    loadPlugin(Plugin::fileName(mPluginsDir, dependency));
+
+                    Plugin *dependencyPlugin = plugin(dependency);
+
+                    if (dependencyPlugin->status() != Plugin::Loaded) {
+                        dependenciesLoaded = false;
+
+                        break;
+                    }
+                }
+
+                // At this stage, we try to load the plugin itself, but only if
+                // all of its dependencies have been loaded
+
+                if (dependenciesLoaded) {
+                    // The plugin's dependencies have been loaded, so try to
+                    // load the plugin
+//---GRY--- WE SHOULD CHECK IN THE SETTINGS WHETHER THE USER ACTUALLY WANTs TO
+//          LOAD THE PLUGIN OR NOT...
+
+                    QPluginLoader pluginLoader(pPluginFileName);
+
+                    if (pluginLoader.load())
+                        // The plugin has been properly loaded, so...
+
+                        pluginObject->setStatus(Plugin::Loaded);
+                    else
+                        // The plugin couldn't be loaded for some reason
+                        // (surely, this should never happen...?!), so...
+
+                        pluginObject->setStatus(Plugin::NotLoaded);
+                } else {
+                    // Some dependencies haven't been loaded, so...
+
+                    pluginObject->setStatus(Plugin::DependenciesNotLoaded);
+                }
+            } else if (pluginInfo.type == PluginInfo::Undefined) {
+                // We couldn't retrieve the plugin information which means we
+                // are not dealing with an OpenCOR plugin, so...
+
+                pluginObject->setStatus(Plugin::NotPlugin);
+            } else {
+                // We are dealing with a plugin that is not of the type we are
+                // happy with (i.e. it's a console plugin but we are running the
+                // GUI version of OpenCOR, or it's a GUI plugin but we are
+                // running the console version of OpenCOR), so...
+
+                pluginObject->setStatus(Plugin::NotSuitable);
+            }
+        } else {
+            // The plugin doesn't exist, so...
+
+            pluginObject->setStatus(Plugin::NotFound);
+        }
+    }
 }
 
 void PluginManager::loadPlugins()
 {
-    // Retrieve the file name of all the plugins
+    // Try to load all the plugins we can find
 
-#ifdef Q_WS_WIN
-    static const QString extension = ".dll";
-#elif defined(Q_WS_MAC)
-    static const QString extension = ".dylib";
-#else
-    static const QString extension = ".so";
-#endif
-
-    QFileInfoList files = QDir(mPluginsDir).entryInfoList(QStringList("*"+extension), QDir::Files);
-
-    QStringList pluginFileNames;
+    QFileInfoList files = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
 
     foreach (const QFileInfo &file, files)
-        pluginFileNames << file.canonicalFilePath();
+        loadPlugin(file.canonicalFilePath());
 
-    // Try to load all the plugins
+QString report;
 
-    while (pluginFileNames.count()) {
-        // Retrieve the plugin information
+QMap<QString, Plugin *>::const_iterator iter = mPlugins.begin();
 
-        QString pluginFileName = pluginFileNames.first();
+while (iter != mPlugins.constEnd()) {
+    QString status;
 
-        pluginFileNames.removeFirst();
+    switch (plugin(iter.key())->status()) {
+    case Plugin::NotFound:
+        status = "NOT FOUND...";
 
-        PluginInfo pluginInfo = Plugin::info(pluginFileName);
+        break;
+    case Plugin::NotPlugin:
+        status = "Not plugin...";
 
-        if (   (pluginInfo.type == PluginInfo::General)
-            || (pluginInfo.type == mGuiOrConsoleType)) {
-            // The file is either a general or GUI plugin, so we can try to load
-            // it
+        break;
+    case Plugin::NotSuitable:
+        status = "Not suitable...";
 
-qDebug() << "    OK:" << Plugin::name(pluginFileName);
+        break;
+    case Plugin::Loaded:
+        status = "Loaded...";
 
-//---GRY--- TO BE DONE...
-        }
-else
-qDebug() << "NOT OK:" << Plugin::name(pluginFileName);
+        break;
+    case Plugin::NotLoaded:
+        status = "NOT LOADED...";
+
+        break;
+    case Plugin::NotWanted:
+        status = "Not wanted...";
+
+        break;
+    case Plugin::DependenciesNotLoaded:
+        status = "Dependencies not loaded...";
+
+        break;
+    default:
+        status = "Undefined...";
+
+        break;
     }
+
+    report += iter.key()+":\t\t"+status+"\n";
+
+    ++iter;
+}
+
+report.chop(1);
+
+QMessageBox::information(0, QString("Nb of plugins: %1...").arg(mPlugins.count()), report);
 }
 
 }

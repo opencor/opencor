@@ -17,7 +17,7 @@ struct PluginInfo
 {
     enum PluginType
     {
-        Unknown,
+        Undefined,
         General,
         Console,
         Gui

@@ -12,6 +12,19 @@ class QSettings;
 
 namespace OpenCOR {
 
+#ifdef Q_WS_WIN
+    static const QString PluginPrefix = "";
+    static const QString PluginExtension = ".dll";
+#else
+    static const QString PluginPrefix = "lib";
+
+    #ifdef(Q_WS_MAC)
+        static const QString PluginExtension = ".dylib";
+    #else
+        static const QString PluginExtension = ".so";
+    #endif
+#endif
+
 class PluginManager : public QObject
 {
     Q_OBJECT
