@@ -69,8 +69,12 @@ PluginInfo Plugin::info(const QString &pPluginFileName)
     if (pluginInfoFunc)
         // The plugin information function was found, so we can extract the
         // information we are after
+
         pluginInfo = pluginInfoFunc();
     else
+        // The plugin information funciton couldn't be found which means that
+        // we are not dealing with an OpenCOR plugin
+
         pluginInfo.type = PluginInfo::Undefined;
 
     return pluginInfo;
