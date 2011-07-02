@@ -5,7 +5,7 @@
 
 namespace OpenCOR {
 
-PLUGININFO_FUNC CellmlPluginInfo();
+PLUGININFO_FUNC CellMLPluginInfo();
 
 class CellMLPlugin : public PluginInterface
 {
