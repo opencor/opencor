@@ -98,7 +98,7 @@ void PluginManager::loadPlugin(const QString &pPluginFileName)
 
                 bool dependenciesLoaded = true;
 
-                foreach(QString dependency, pluginInfo.dependencies) {
+                foreach(const QString &dependency, pluginInfo.dependencies) {
                     loadPlugin(Plugin::fileName(mPluginsDir, dependency));
 
                     Plugin *dependencyPlugin = plugin(dependency);
