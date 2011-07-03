@@ -37,7 +37,11 @@ public:
     static QString fileName(const QString &pPluginsDir,
                             const QString &pPluginName);
 
-    static PluginInfo info(const QString &pPluginFileName);
+    static PluginInfo info(  const QString &pPluginFileName
+#ifdef Q_WS_WIN
+                           , const QStringList &pLoadedPlugins
+#endif
+                          );
 
 private:
     QString mName;
@@ -45,6 +49,10 @@ private:
     PluginStatus mStatus;
 
     void setStatus(const PluginStatus &pStatus);
+
+#ifdef Q_WS_WIN
+    static QStringList dependencies(const QString &pPluginFileName);
+#endif
 };
 
 }
