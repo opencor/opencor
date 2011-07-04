@@ -88,11 +88,7 @@ void PluginManager::loadPlugin(const QString &pPluginFileName)
             // load it if it is either a general plugin or one of the type we
             // are happy with
 
-            PluginInfo pluginInfo = Plugin::info(  pPluginFileName
-#ifdef Q_WS_WIN
-                                                 , loadedPlugins()
-#endif
-                                                );
+            PluginInfo pluginInfo = Plugin::info(pPluginFileName);
 
             if (   (pluginInfo.type == PluginInfo::General)
                 || (pluginInfo.type == mGuiOrConsoleType)) {
@@ -220,25 +216,5 @@ report.chop(1);
 
 QMessageBox::information(0, QString("Nb of plugins: %1...").arg(mPlugins.count()), report);
 }
-
-#ifdef Q_WS_WIN
-QStringList PluginManager::loadedPlugins()
-{
-    // Return the currently loaded plugins
-
-    QStringList loadedPlugins = QStringList();
-
-    QMap<QString, Plugin *>::const_iterator iter = mPlugins.constBegin();
-
-    while (iter != mPlugins.constEnd()) {
-        if (((Plugin *) iter.value())->status() == Plugin::Loaded)
-            loadedPlugins << iter.key();
-
-        ++iter;
-    }
-
-    return loadedPlugins;
-}
-#endif
 
 }

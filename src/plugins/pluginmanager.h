@@ -48,10 +48,6 @@ private:
     Plugin *plugin(const QString &pPluginName);
 
     void loadPlugin(const QString &pPluginFileName);
-
-#ifdef Q_WS_WIN
-    QStringList loadedPlugins();
-#endif
 };
 
 }
