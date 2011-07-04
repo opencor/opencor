@@ -22,18 +22,18 @@ Qt::ItemFlags FileBrowserModel::flags(const QModelIndex &pIndex) const
 {
     // Specify the supported features for the current item
 
-    Qt::ItemFlags flags = QFileSystemModel::flags(pIndex);
+    Qt::ItemFlags res = QFileSystemModel::flags(pIndex);
 
     // Prevent some features for the item in case it's a folder
 
     if (QFileInfo(filePath(pIndex)).isDir())
         // We don't want a folder to be draggable
 
-        flags &= ~Qt::ItemIsDragEnabled;
+        res &= ~Qt::ItemIsDragEnabled;
 
     // We are all done, so...
 
-    return flags;
+    return res;
 }
 
 FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
@@ -221,7 +221,7 @@ QStringList FileBrowserWidget::selectedFiles()
     // Note: if there is a non-file among the selected items, then we return an
     //       empty list
 
-    QStringList selectedFiles;
+    QStringList res;
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
     for (int i = 0; i < selectedIndexes.count(); ++i) {
@@ -237,24 +237,20 @@ QStringList FileBrowserWidget::selectedFiles()
                 fileName = fileInfo.symLinkTarget();
 
                 if (QFileInfo(fileName).exists())
-                    selectedFiles << fileName;
+                    res << fileName;
             } else {
                 // The current item is a file, so just add to the list
 
-                selectedFiles << fileName;
+                res << fileName;
             }
-        } else {
-            // The current item is not a file, so return an empty list
-
-            return QStringList();
         }
     }
 
     // Remove duplicates (which might be present as a result of symbolic links)
 
-    selectedFiles.removeDuplicates();
+    res.removeDuplicates();
 
-    return selectedFiles;
+    return res;
 }
 
 void FileBrowserWidget::deselectFolders()

@@ -53,25 +53,22 @@ QByteArray FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
 {
     // Encode the hierarchy data
 
-    QByteArray hierarchyData;
-    QDataStream stream(&hierarchyData, QIODevice::WriteOnly);
+    QByteArray res;
+    QDataStream stream(&res, QIODevice::WriteOnly);
 
     encodeHierarchyData(pIndex, stream);
 
-    return hierarchyData;
+    return res;
 }
 
 QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
 {
-    if (!pIndexes.count()) {
-        // There is nothing to encode, so...
+    QByteArray res;
 
-        return QByteArray();
-    } else {
+    if (pIndexes.count()) {
         // Encode the mime data
 
-        QByteArray encodedData;
-        QDataStream stream(&encodedData, QIODevice::WriteOnly);
+        QDataStream stream(&res, QIODevice::WriteOnly);
 
         // The number of items
 
@@ -84,11 +81,11 @@ QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
             // Hierarchy to reach the current item
 
             encodeHierarchyData(*iter, stream);
-
-        // We are all done, so...
-
-        return encodedData;
     }
+
+    // We are all done, so...
+
+    return res;
 }
 
 QModelIndex FileOrganiserModel::decodeHierarchyData(QDataStream &pStream) const
@@ -128,14 +125,11 @@ QModelIndex FileOrganiserModel::decodeHierarchyData(QByteArray &pData) const
 
 QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
 {
-    if (!pData.size()) {
-        // There is nothing to decode, so...
+    QModelIndexList res;
 
-        return QModelIndexList();
-    } else {
+    if (pData.size()) {
         // Decode the mime data
 
-        QModelIndexList decodedData;
         QDataStream stream(&pData, QIODevice::ReadOnly);
 
         // The number of items
@@ -147,17 +141,17 @@ QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
         // Hierarchy to reach the various items
 
         for (int i = 0; i < nbOfItems; ++i)
-            decodedData << decodeHierarchyData(stream);
-
-        // We are all done, so...
-
-        return decodedData;
+            res << decodeHierarchyData(stream);
     }
+
+    // We are all done, so...
+
+    return res;
 }
 
 QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
 {
-    QMimeData *mimeData = new QMimeData;
+    QMimeData *res = new QMimeData;
     QList<QUrl> urls;
 
     // Retrieve the URL of the different file (not folder) items
@@ -174,18 +168,18 @@ QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
             urls << QUrl::fromLocalFile(crtFilePath);
     }
 
-    mimeData->setUrls(urls);
+    res->setUrls(urls);
 
     // Set the data which contains information on both the folder and file items
     // Note: this data is useful with regards to the FileOrganiserMimeType mime
     //       type on which the file organiser widget relies for moving folder
     //       and file items around
 
-    mimeData->setData(FileOrganiserMimeType, encodeData(pIndexes));
+    res->setData(FileOrganiserMimeType, encodeData(pIndexes));
 
     // All done, so...
 
-    return mimeData;
+    return res;
 }
 
 QString FileOrganiserModel::filePath(const QModelIndex &pFileIndex) const
@@ -659,7 +653,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
     // A list of indexes may contain indexes that are not relevant or
     // effectively the duplicate of another existing index, so...
 
-    QModelIndexList cleanedIndexes;
+    QModelIndexList res;
 
     // If both the index of a folder and some (if not all) of its (in)direct
     // contents is in the original list, then we only keep track of the index of
@@ -675,7 +669,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
             // None of the index's parents is in the list, so we can safely add
             // the index to the list
 
-            cleanedIndexes << crtIndex;
+            res << crtIndex;
 
             // If the index refers to a folder, then we must double check that
             // the list of cleaned indexes doesn't contain any of the index's
@@ -684,9 +678,9 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
             QStandardItem *crtItem = mDataModel->itemFromIndex(crtIndex);
 
             if (crtItem && crtItem->data(FileOrganiserItemFolder).toBool())
-                for (int j = cleanedIndexes.count()-1; j >= 0; --j)
-                    if (parentIndexExists(cleanedIndexes.at(j), cleanedIndexes))
-                        cleanedIndexes.removeAt(j);
+                for (int j = res.count()-1; j >= 0; --j)
+                    if (parentIndexExists(res.at(j), res))
+                        res.removeAt(j);
         }
     }
 
@@ -695,8 +689,8 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
     // another file, so these are to be removed from the cleaned list and from
     // the model
 
-    for (int i = cleanedIndexes.count()-1; i >= 0; --i) {
-        QStandardItem *crtItem = mDataModel->itemFromIndex(cleanedIndexes.at(i));
+    for (int i = res.count()-1; i >= 0; --i) {
+        QStandardItem *crtItem = mDataModel->itemFromIndex(res.at(i));
 
         if (crtItem && !crtItem->data(FileOrganiserItemFolder).toBool())
             // The index corresponds to a valid file item, so check whether in
@@ -705,7 +699,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
             // model
 
             for (int j = 0; j < i; ++j) {
-                QStandardItem *testItem = mDataModel->itemFromIndex(cleanedIndexes.at(j));
+                QStandardItem *testItem = mDataModel->itemFromIndex(res.at(j));
 
                 if (   testItem
                     && !testItem->data(FileOrganiserItemFolder).toBool()
@@ -714,7 +708,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
                     // same physical file as our current item, so remove the
                     // current item from the cleaned list
 
-                    cleanedIndexes.removeAt(i);
+                    res.removeAt(i);
 
                     // Also remove the current item from the model
 
@@ -729,7 +723,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
 
     // We are all done, so...
 
-    return cleanedIndexes;
+    return res;
 }
 
 bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
@@ -817,12 +811,12 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
     static const QString baseFolderName = "New Folder";
     static const QString templateFolderName = baseFolderName+" (%1)";
     int folderNb = 1;
-    QString folderName = baseFolderName;
+    QString res = baseFolderName;
 
-    while (subFolderNames.contains(folderName))
-        folderName = templateFolderName.arg(++folderNb);
+    while (subFolderNames.contains(res))
+        res = templateFolderName.arg(++folderNb);
 
-    return folderName;
+    return res;
 }
 
 bool FileOrganiserWidget::newFolder()
@@ -1227,7 +1221,7 @@ QStringList FileOrganiserWidget::selectedFiles()
     // Note: if there is a folder among the selected items, then we return an
     //       empty list
 
-    QStringList crtSelectedFiles;
+    QStringList res;
     QModelIndexList crtSelectedIndexes = selectedIndexes();
 
     for (int i = 0; i < crtSelectedIndexes.count(); ++i) {
@@ -1240,10 +1234,10 @@ QStringList FileOrganiserWidget::selectedFiles()
         else
             // The current item is a file, so just add to the list
 
-            crtSelectedFiles << fileName;
+            res << fileName;
     }
 
-    return crtSelectedFiles;
+    return res;
 }
 
 void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
