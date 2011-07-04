@@ -4,12 +4,12 @@ namespace OpenCOR {
 
 PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 {
-    PluginInfo info;
+    PluginInfo res;
 
-    info.type         = PluginInfo::Gui;
-    info.dependencies = QStringList() << "Core";
+    res.type         = PluginInfo::Gui;
+    res.dependencies = QStringList() << "Core";
 
-    return info;
+    return res;
 }
 
 Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)

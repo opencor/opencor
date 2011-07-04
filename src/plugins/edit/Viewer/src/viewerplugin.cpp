@@ -4,12 +4,12 @@ namespace OpenCOR {
 
 PLUGININFO_FUNC ViewerPluginInfo()
 {
-    PluginInfo info;
+    PluginInfo res;
 
-    info.type         = PluginInfo::Gui;
-    info.dependencies = QStringList() << "Core" << "QtMmlWidget";
+    res.type         = PluginInfo::Gui;
+    res.dependencies = QStringList() << "Core" << "QtMmlWidget";
 
-    return info;
+    return res;
 }
 
 Q_EXPORT_PLUGIN2(Viewer, ViewerPlugin)
