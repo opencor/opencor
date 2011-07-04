@@ -113,7 +113,7 @@ FileManager::ManageStatus FileManager::manage(const QString &pFileName)
             // The file isn't already managed, so add it to our list of managed
             // files
 
-            mFiles.append(new File(fileInfo.canonicalFilePath()));
+            mFiles << new File(fileInfo.canonicalFilePath());
 
             return Added;
         }

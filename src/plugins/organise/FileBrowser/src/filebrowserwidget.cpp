@@ -146,12 +146,12 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
         // consider that the loading of the settings is finished (see just below
         // and the directoryLoaded slot)
 
-        mInitPathDirs.append(mInitPathDir);
+        mInitPathDirs << mInitPathDir;
 
         QDir initPathDir = mInitPathDir;
 
         while (initPathDir.cdUp())
-            mInitPathDirs.append(initPathDir.canonicalPath());
+            mInitPathDirs << initPathDir.canonicalPath();
 
         // Set the current index to that of the folder (and file, if it exists)
         // we are interested in
@@ -237,11 +237,11 @@ QStringList FileBrowserWidget::selectedFiles()
                 fileName = fileInfo.symLinkTarget();
 
                 if (QFileInfo(fileName).exists())
-                    selectedFiles.append(fileName);
+                    selectedFiles << fileName;
             } else {
                 // The current item is a file, so just add to the list
 
-                selectedFiles.append(fileName);
+                selectedFiles << fileName;
             }
         } else {
             // The current item is not a file, so return an empty list

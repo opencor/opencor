@@ -309,11 +309,11 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
                 fileName = fileInfo.symLinkTarget();
 
                 if (QFileInfo(fileName).exists())
-                    fileNames.append(fileName);
+                    fileNames << fileName;
             } else {
                 // We are dropping a file, so we can just add it
 
-                fileNames.append(fileName);
+                fileNames << fileName;
             }
         }
     }

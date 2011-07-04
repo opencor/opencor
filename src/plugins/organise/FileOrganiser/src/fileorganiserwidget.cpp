@@ -147,7 +147,7 @@ QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
         // Hierarchy to reach the various items
 
         for (int i = 0; i < nbOfItems; ++i)
-            decodedData.append(decodeHierarchyData(stream));
+            decodedData << decodeHierarchyData(stream);
 
         // We are all done, so...
 
@@ -579,7 +579,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         QList<QStandardItem *> items;
 
         for (int i = 0; i < indexes.count(); ++i)
-            items.append(mDataModel->itemFromIndex(indexes.at(i)));
+            items << mDataModel->itemFromIndex(indexes.at(i));
 
         // Move the contents of the list to its final destination
 
@@ -675,7 +675,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
             // None of the index's parents is in the list, so we can safely add
             // the index to the list
 
-            cleanedIndexes.append(crtIndex);
+            cleanedIndexes << crtIndex;
 
             // If the index refers to a folder, then we must double check that
             // the list of cleaned indexes doesn't contain any of the index's
@@ -808,7 +808,7 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
     QStringList subFolderNames;
 
     for (int i = 0; i < pFolderItem->rowCount(); ++i)
-        subFolderNames.append(pFolderItem->child(i)->text());
+        subFolderNames << pFolderItem->child(i)->text();
 
     // Compare the suggested name of our new folder with that of the folders
     // under pFolderItem, this until we come up with a suggested name which is
@@ -1240,7 +1240,7 @@ QStringList FileOrganiserWidget::selectedFiles()
         else
             // The current item is a file, so just add to the list
 
-            crtSelectedFiles.append(fileName);
+            crtSelectedFiles << fileName;
     }
 
     return crtSelectedFiles;

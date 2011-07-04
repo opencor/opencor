@@ -163,7 +163,7 @@ void FileBrowserWindow::gotoOtherItem(QStringList &pItems,
 
     QString crtPath = mFileBrowserWidget->currentPath();
 
-    pOtherItems.append(crtPath);
+    pOtherItems << crtPath;
 
     // Retrieve the new path and check whether it still exist or not
 
@@ -257,7 +257,7 @@ void FileBrowserWindow::updateItems(const QString &pItemPath,
         QStringList newItems;
         QString prevItem = pItems.at(0);
 
-        newItems.append(prevItem);
+        newItems << prevItem;
 
         for (int i = 1; i < pItems.count(); ++i) {
             QString crtItem = pItems.at(i);
@@ -266,7 +266,7 @@ void FileBrowserWindow::updateItems(const QString &pItemPath,
                 // The current and previous items are different, so we want to
                 // keep track of it and add it to our new list
 
-                newItems.append(crtItem);
+                newItems << crtItem;
 
                 prevItem = crtItem;
             }
@@ -344,7 +344,7 @@ void FileBrowserWindow::itemChanged(const QModelIndex &,
     // A new item has been selected, so we need to keep track of the old one in
     // case we want to go back to it
 
-    mPrevItems.append(mFileBrowserWidget->pathOf(pPrevItem));
+    mPrevItems << mFileBrowserWidget->pathOf(pPrevItem);
 
     // Reset the list of next items since that list doesn't make sense anymore
 
