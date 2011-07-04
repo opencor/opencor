@@ -7,8 +7,6 @@
 #include <QPluginLoader>
 #include <QSettings>
 
-#include <QMessageBox>
-
 namespace OpenCOR {
 
 PluginManager::PluginManager(QSettings *pSettings,
@@ -160,61 +158,9 @@ void PluginManager::loadPlugins()
 {
     // Try to load all the plugins we can find
 
-    QFileInfoList files = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
-
-    foreach (const QFileInfo &file, files)
+    foreach (const QFileInfo &file,
+             QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files))
         loadPlugin(file.canonicalFilePath());
-
-QString report;
-
-QMap<QString, Plugin *>::const_iterator iter = mPlugins.begin();
-
-while (iter != mPlugins.constEnd()) {
-    QString status;
-
-    switch (plugin(iter.key())->status()) {
-    case Plugin::NotFound:
-        status = "NOT FOUND...";
-
-        break;
-    case Plugin::NotPlugin:
-        status = "Not plugin...";
-
-        break;
-    case Plugin::NotSuitable:
-        status = "Not suitable...";
-
-        break;
-    case Plugin::Loaded:
-        status = "Loaded...";
-
-        break;
-    case Plugin::NotLoaded:
-        status = "NOT LOADED...";
-
-        break;
-    case Plugin::NotWanted:
-        status = "Not wanted...";
-
-        break;
-    case Plugin::DependenciesNotLoaded:
-        status = "Dependencies not loaded...";
-
-        break;
-    default:
-        status = "Undefined...";
-
-        break;
-    }
-
-    report += iter.key()+":\t\t"+status+"\n";
-
-    ++iter;
-}
-
-report.chop(1);
-
-QMessageBox::information(0, QString("Nb of plugins: %1...").arg(mPlugins.count()), report);
 }
 
 }
