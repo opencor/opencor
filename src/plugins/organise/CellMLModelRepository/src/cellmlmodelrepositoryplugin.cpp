@@ -18,7 +18,7 @@ void CellMLModelRepositoryPlugin::setupUi(QMainWindow *pMainWindow)
 {
 //---GRY--- TO BE DONE...
 
-QMessageBox::information(pMainWindow, "CellMLModelRepository plugin", "CellMLModelRepository plugin...");
+//QMessageBox::information(0, "CellMLModelRepository plugin", "CellMLModelRepository plugin...");
 }
 
 Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)

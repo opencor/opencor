@@ -14,6 +14,7 @@ class FileBrowserPlugin : public QObject,
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
 
 public:
     // GuiInterface

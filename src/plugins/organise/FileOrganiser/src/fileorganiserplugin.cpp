@@ -18,7 +18,7 @@ void FileOrganiserPlugin::setupUi(QMainWindow *pMainWindow)
 {
 //---GRY--- TO BE DONE...
 
-QMessageBox::information(pMainWindow, "FileOrganiser plugin", "FileOrganiser plugin...");
+//QMessageBox::information(0, "FileOrganiser plugin", "FileOrganiser plugin...");
 }
 
 Q_EXPORT_PLUGIN2(FileOrganiser, FileOrganiserPlugin)
