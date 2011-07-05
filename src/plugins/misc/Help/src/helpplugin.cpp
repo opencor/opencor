@@ -18,7 +18,7 @@ void HelpPlugin::setupUi(QMainWindow *pMainWindow)
 {
 //---GRY--- TO BE DONE...
 
-//QMessageBox::information(0, "Help plugin", "Help plugin...");
+QMessageBox::information(0, "Help plugin", "Help plugin...");
 }
 
 Q_EXPORT_PLUGIN2(Help, HelpPlugin)

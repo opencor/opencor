@@ -18,7 +18,7 @@ void ViewerPlugin::setupUi(QMainWindow *pMainWindow)
 {
 //---GRY--- TO BE DONE...
 
-//QMessageBox::information(0, "Viewer plugin", "Viewer plugin...");
+QMessageBox::information(0, "Viewer plugin", "Viewer plugin...");
 }
 
 Q_EXPORT_PLUGIN2(Viewer, ViewerPlugin)
