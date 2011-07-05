@@ -7,7 +7,8 @@ namespace OpenCOR {
 
 PLUGININFO_FUNC QtMmlWidgetPluginInfo();
 
-class QtMmlWidgetPlugin : public PluginInterface
+class QtMmlWidgetPlugin : public QObject,
+                          public PluginInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::PluginInterface)

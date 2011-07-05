@@ -9,9 +9,10 @@ namespace OpenCOR {
 
 Plugin::Plugin(const QString &pFileName,
                const PluginInfo::PluginType &pGuiOrConsoleType) :
-    mName(QFileInfo(pFileName).baseName().remove(0, PluginPrefix.length()))
+    mName(QFileInfo(pFileName).baseName().remove(0, PluginPrefix.length())),
     // Note: to get the name of the plugin from its file name, we must remove
     //       the plugin prefix part from it...
+    mInstance(0)
 {
     // Default type of plugin
 
@@ -63,15 +64,18 @@ Plugin::Plugin(const QString &pFileName,
 
             QPluginLoader pluginLoader(pFileName);
 
-            if (pluginLoader.load())
+            if (pluginLoader.load()) {
                 // The plugin has been properly loaded, so...
 
+                mInstance = pluginLoader.instance();
+
                 mStatus = Loaded;
-            else
+            } else {
                 // The plugin couldn't be loaded for some reason (surely, this
                 // should never happen...?!), so...
 
                 mStatus = NotLoaded;
+            }
         } else if (mInfo.type == PluginInfo::Undefined) {
             // We couldn't retrieve the plugin information which means we are
             // not dealing with an OpenCOR plugin or that one or several of the
@@ -105,6 +109,13 @@ PluginInfo Plugin::info()
     // Return the plugin's information
 
     return mInfo;
+}
+
+QObject * Plugin::instance()
+{
+    // Return the plugin's insance
+
+    return mInstance;
 }
 
 Plugin::PluginStatus Plugin::status()

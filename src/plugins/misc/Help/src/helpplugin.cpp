@@ -1,5 +1,7 @@
 #include "helpplugin.h"
 
+#include <QMessageBox>
+
 namespace OpenCOR {
 
 PLUGININFO_FUNC HelpPluginInfo()
@@ -10,6 +12,13 @@ PLUGININFO_FUNC HelpPluginInfo()
     res.dependencies = QStringList() << "Core";
 
     return res;
+}
+
+void HelpPlugin::setupUi(QMainWindow *pMainWindow)
+{
+//---GRY--- TO BE DONE...
+
+QMessageBox::information(pMainWindow, "Help plugin", "Help plugin...");
 }
 
 Q_EXPORT_PLUGIN2(Help, HelpPlugin)

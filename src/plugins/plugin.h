@@ -31,12 +31,16 @@ public:
 
     PluginInfo info();
 
+    QObject * instance();
+
     PluginStatus status();
 
 private:
     QString mName;
 
     PluginInfo mInfo;
+
+    QObject *mInstance;
 
     PluginStatus mStatus;
 };

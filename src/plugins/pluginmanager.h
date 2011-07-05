@@ -31,6 +31,8 @@ public:
     explicit PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType);
     ~PluginManager();
 
+    QList<Plugin *> loadedPlugins();
+
 private:
     PluginInfo::PluginType mGuiOrConsoleType;
 

@@ -27,7 +27,7 @@ struct PluginInfo
     QStringList dependencies;
 };
 
-class PluginInterface : public QObject
+class PluginInterface
 {
 };
 

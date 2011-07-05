@@ -1,5 +1,7 @@
 #include "filebrowserplugin.h"
 
+#include <QMessageBox>
+
 namespace OpenCOR {
 
 PLUGININFO_FUNC FileBrowserPluginInfo()
@@ -10,6 +12,13 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
     res.dependencies = QStringList() << "Core";
 
     return res;
+}
+
+void FileBrowserPlugin::setupUi(QMainWindow *pMainWindow)
+{
+//---GRY--- TO BE DONE...
+
+QMessageBox::information(pMainWindow, "FileBrowser plugin", "FileBrowser plugin...");
 }
 
 Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)

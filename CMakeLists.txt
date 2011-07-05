@@ -52,6 +52,7 @@ SET(HEADERS
     src/misc/common.h
     src/misc/utils.h
 
+    src/plugins/guiinterface.h
     src/plugins/plugininterface.h
 )
 

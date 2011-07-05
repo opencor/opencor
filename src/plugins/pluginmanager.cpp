@@ -101,6 +101,24 @@ PluginManager::~PluginManager()
     }
 }
 
+QList<Plugin *> PluginManager::loadedPlugins()
+{
+    // Return the list of loaded plugins
+
+    QList<Plugin *> res;
+
+    QMap<QString, Plugin *>::const_iterator iter = mPlugins.begin();
+
+    while (iter != mPlugins.constEnd()) {
+        if (iter.value()->status() == Plugin::Loaded)
+            res << iter.value();
+
+        ++iter;
+    }
+
+    return res;
+}
+
 Plugin * PluginManager::plugin(const QString &pFileName)
 {
     // Check whether the plugin exists

@@ -7,7 +7,8 @@ namespace OpenCOR {
 
 PLUGININFO_FUNC CorePluginInfo();
 
-class CorePlugin : public PluginInterface
+class CorePlugin : public QObject,
+                   public PluginInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::PluginInterface)

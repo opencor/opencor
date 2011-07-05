@@ -7,7 +7,8 @@ namespace OpenCOR {
 
 PLUGININFO_FUNC VersionManagerPluginInfo();
 
-class VersionManagerPlugin : public PluginInterface
+class VersionManagerPlugin : public QObject,
+                             public PluginInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::PluginInterface)

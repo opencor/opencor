@@ -1,5 +1,7 @@
 #include "common.h"
+#include "guiinterface.h"
 #include "mainwindow.h"
+#include "plugin.h"
 #include "pluginmanager.h"
 #include "utils.h"
 
@@ -29,6 +31,22 @@ MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow)
 {
+    // Create our settings object
+
+    mSettings = new QSettings(qApp->applicationName());
+
+    // Create our plugin manager (which will automatically load our various
+    // plugins)
+
+    mPluginManager = new PluginManager(PluginInfo::Gui);
+
+    // Specify some general docking settings
+
+    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
+    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
     // Set up the UI
 
     mUi->setupUi(this);
@@ -49,21 +67,16 @@ MainWindow::MainWindow(QWidget *pParent) :
 //    setUnifiedTitleAndToolBarOnMac(true);
 //#endif
 
-    // Specify some general docking settings
+    // Set up the UI for our various plugins
 
-    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
-    setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
-    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
-    setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-    // Create our settings object
+        if (guiInterface)
+            // The plugin implements our GUI interface, so...
 
-    mSettings = new QSettings(qApp->applicationName());
-
-    // Create our plugin manager (which will automatically load our various
-    // plugins)
-
-    mPluginManager = new PluginManager(PluginInfo::Gui);
+            guiInterface->setupUi(this);
+    }
 
     // Some connections to handle our Help toolbar
 
@@ -84,7 +97,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
-    // Some connections for the GUI side of our various plugins
+    // Some connections for our various plugins
 
 //---GRY--- TO BE DONE...
 
