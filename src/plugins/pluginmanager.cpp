@@ -43,51 +43,6 @@ PluginManager::PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType) :
     foreach (const QFileInfo &file,
              QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files))
         plugin(QDir::toNativeSeparators(file.canonicalFilePath()));
-
-// Quick report on the loading of the plugins
-
-QString report;
-
-QMap<QString, Plugin *>::const_iterator iter = mPlugins.begin();
-
-while (iter != mPlugins.constEnd()) {
-    QString status;
-
-    switch (plugin(iter.key())->status()) {
-    case Plugin::NotFound:
-        status = "NOT FOUND...";
-
-        break;
-    case Plugin::NotSuitable:
-        status = "Not suitable...";
-
-        break;
-    case Plugin::Loaded:
-        status = "Loaded...";
-
-        break;
-    case Plugin::NotLoaded:
-        status = "NOT LOADED...";
-
-        break;
-    case Plugin::NotPluginOrMissingDependencies:
-        status = "Not a plugin or missing dependencies...";
-
-        break;
-    default:
-        status = "Undefined...";
-
-        break;
-    }
-
-    report += plugin(iter.key())->name()+"\n   ---> "+status+"\n";
-
-    ++iter;
-}
-
-report.chop(1);
-
-QMessageBox::information(0, QString("Nb of plugins: %1...").arg(mPlugins.count()), report);
 }
 
 PluginManager::~PluginManager()
