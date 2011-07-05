@@ -8,8 +8,6 @@
 
 class Plugin;
 
-class QSettings;
-
 namespace OpenCOR {
 
 #ifdef Q_WS_WIN
@@ -30,24 +28,15 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager(QSettings *pSettings,
-                           const PluginInfo::PluginType &pGuiOrConsoleType);
+    explicit PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType);
     ~PluginManager();
 
-    void loadPlugins();
-
 private:
-    QSettings *mSettings;
-
     PluginInfo::PluginType mGuiOrConsoleType;
-
-    QString mPluginsDir;
 
     QMap<QString, Plugin *> mPlugins;
 
-    Plugin *plugin(const QString &pPluginName);
-
-    void loadPlugin(const QString &pPluginFileName);
+    Plugin * plugin(const QString &pFileName);
 };
 
 }

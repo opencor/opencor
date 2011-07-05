@@ -1,11 +1,11 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
+#include "plugininterface.h"
+
 #include <QObject>
 
 namespace OpenCOR {
-
-class PluginInfo;
 
 class Plugin : public QObject
 {
@@ -18,33 +18,27 @@ public:
     {
         Undefined,
         NotFound,
-        NotPlugin,
         NotSuitable,
         Loaded,
         NotLoaded,
-        NotWanted,
-        DependenciesNotLoaded
+        NotPluginOrMissingDependencies
     };
 
-    explicit Plugin(const QString &pName);
-    ~Plugin();
+    explicit Plugin(const QString &pFileName,
+                    const PluginInfo::PluginType &pGuiOrConsoleType);
 
     QString name();
 
+    PluginInfo info();
+
     PluginStatus status();
-
-    static QString name(const QString &pPluginFileName);
-    static QString fileName(const QString &pPluginsDir,
-                            const QString &pPluginName);
-
-    static PluginInfo info(const QString &pPluginFileName);
 
 private:
     QString mName;
 
-    PluginStatus mStatus;
+    PluginInfo mInfo;
 
-    void setStatus(const PluginStatus &pStatus);
+    PluginStatus mStatus;
 };
 
 }
