@@ -60,7 +60,8 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mSettings = new QSettings(qApp->applicationName());
 
-    // Create our plugin manager and load our various plugins
+    // Create our plugin manager (which will automatically load our various
+    // plugins)
 
     mPluginManager = new PluginManager(PluginInfo::Gui);
 
