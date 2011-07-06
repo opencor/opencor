@@ -6,7 +6,8 @@ namespace Help {
 PLUGININFO_FUNC HelpPluginInfo()
 {
     return PluginInfo(PluginInfo::Gui,
-                       QStringList() << "Core");
+                       QStringList() << "Core",
+                       true);
 }
 
 void HelpPlugin::initialize()

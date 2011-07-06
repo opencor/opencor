@@ -26,15 +26,18 @@ public:
         Gui
     };
 
-    explicit PluginInfo(const PluginType &pType,
-                        const QStringList &pDependencies);
+    explicit PluginInfo(const PluginType &pType = Undefined,
+                        const QStringList &pDependencies = QStringList(),
+                        const bool &pManageable = false);
 
     PluginType type();
     QStringList dependencies();
+    bool manageable();
 
 private:
     PluginType mType;
     QStringList mDependencies;
+    bool mManageable;
 };
 
 class PluginInterface

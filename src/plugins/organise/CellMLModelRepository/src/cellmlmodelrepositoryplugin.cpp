@@ -6,7 +6,8 @@ namespace CellMLModelRepository {
 PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 {
     return PluginInfo(PluginInfo::Gui,
-                       QStringList() << "Core");
+                       QStringList() << "Core",
+                       true);
 }
 
 void CellMLModelRepositoryPlugin::initialize()

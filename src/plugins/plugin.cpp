@@ -12,7 +12,7 @@ Plugin::Plugin(const QString &pFileName,
     mName(QFileInfo(pFileName).baseName().remove(0, PluginPrefix.length())),
     // Note: to get the name of the plugin from its file name, we must remove
     //       the plugin prefix part from it...
-    mInfo(PluginInfo::Undefined, QStringList()),
+    mInfo(),
     mInstance(0),
     mStatus(Undefined)
 {
