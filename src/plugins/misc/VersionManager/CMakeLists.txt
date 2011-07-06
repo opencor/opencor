@@ -8,13 +8,11 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(VersionManager FALSE
     SOURCES
-        ../../guiinterface.cpp
         ../../plugininterface.cpp
 
         src/versionmanager.cpp
         src/versionmanagerplugin.cpp
     HEADERS
-        ../../guiinterface.h
         ../../plugininterface.h
     HEADERS_MOC
         src/versionmanager.h
