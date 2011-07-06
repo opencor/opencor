@@ -10,10 +10,11 @@ namespace Ui {
 }
 
 namespace OpenCOR {
+namespace FileOrganiser {
 
 class FileOrganiserWidget;
 
-class FileOrganiserWindow : public DockWidget
+class FileOrganiserWindow : public Core::DockWidget
 {
     Q_OBJECT
 
@@ -47,6 +48,6 @@ private slots:
     void needUpdateActions();
 };
 
-}
+} }
 
 #endif

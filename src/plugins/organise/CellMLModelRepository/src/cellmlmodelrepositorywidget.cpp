@@ -3,6 +3,7 @@
 #include <QPaintEvent>
 
 namespace OpenCOR {
+namespace CellMLModelRepository {
 
 CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
                                                          QWidget *pParent) :
@@ -52,4 +53,4 @@ void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
     drawBorderIfDocked();
 }
 
-}
+} }

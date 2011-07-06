@@ -6,6 +6,7 @@
 #include <QTabWidget>
 
 namespace OpenCOR {
+namespace Core {
 
 class TabWidget : public QTabWidget, public CommonWidget
 {
@@ -22,6 +23,6 @@ private Q_SLOTS:
     void getFocus(QWidget *, QWidget *pNew);
 };
 
-}
+} }
 
 #endif

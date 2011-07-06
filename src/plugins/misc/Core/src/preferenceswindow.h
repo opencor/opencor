@@ -10,6 +10,7 @@ namespace Ui {
 }
 
 namespace OpenCOR {
+namespace Core {
 
 class PreferencesWindow : public QDialog, public CommonWidget
 {
@@ -25,6 +26,6 @@ private:
     Ui::PreferencesWindow *mUi;
 };
 
-}
+} }
 
 #endif

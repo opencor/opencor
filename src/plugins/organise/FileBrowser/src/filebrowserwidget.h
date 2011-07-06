@@ -6,6 +6,7 @@
 #include <QFileSystemModel>
 
 namespace OpenCOR {
+namespace FileBrowser {
 
 class FileBrowserModel : public QFileSystemModel
 {
@@ -17,7 +18,7 @@ public:
     virtual Qt::ItemFlags flags(const QModelIndex &pIndex) const;
 };
 
-class FileBrowserWidget : public TreeView
+class FileBrowserWidget : public Core::TreeView
 {
     Q_OBJECT
 
@@ -72,6 +73,6 @@ private Q_SLOTS:
     void directoryLoaded(const QString &pPath);
 };
 
-}
+} }
 
 #endif

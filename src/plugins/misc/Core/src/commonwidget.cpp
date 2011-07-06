@@ -9,6 +9,7 @@
 #include <QWidget>
 
 namespace OpenCOR {
+namespace Core {
 
 CommonWidget::CommonWidget(QWidget *pParent) :
     mParent(pParent)
@@ -120,4 +121,4 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
     }
 }
 
-}
+} }

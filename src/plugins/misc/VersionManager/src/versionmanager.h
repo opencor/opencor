@@ -4,6 +4,7 @@
 #include <QObject>
 
 namespace OpenCOR {
+namespace VersionManager {
 
 class VersionManager : public QObject
 {
@@ -14,6 +15,6 @@ public:
     ~VersionManager();
 };
 
-}
+} }
 
 #endif

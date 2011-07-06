@@ -8,6 +8,7 @@
 #include <QSettings>
 
 namespace OpenCOR {
+namespace FileOrganiser {
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -20,7 +21,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     // Create a toolbar with different buttons
     // Note: this sadly can't be done using the design mode, so...
 
-    DockToolBar *toolbar = new DockToolBar(this);
+    Core::DockToolBar *toolbar = new Core::DockToolBar(this);
 
     toolbar->addAction(mUi->actionNew);
     toolbar->addAction(mUi->actionDelete);
@@ -155,4 +156,4 @@ void FileOrganiserWindow::needUpdateActions()
     updateActions();
 }
 
-}
+} }

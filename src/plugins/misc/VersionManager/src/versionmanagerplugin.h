@@ -4,6 +4,7 @@
 #include "plugininterface.h"
 
 namespace OpenCOR {
+namespace VersionManager {
 
 PLUGININFO_FUNC VersionManagerPluginInfo();
 
@@ -14,6 +15,6 @@ class VersionManagerPlugin : public QObject,
     Q_INTERFACES(OpenCOR::PluginInterface)
 };
 
-}
+} }
 
 #endif

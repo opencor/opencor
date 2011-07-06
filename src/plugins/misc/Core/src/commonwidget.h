@@ -11,6 +11,7 @@ class QSize;
 class QWidget;
 
 namespace OpenCOR {
+namespace Core {
 
 // The default font family and size below were taken from Qt Creator
 
@@ -52,6 +53,6 @@ private:
     QWidget *mParent;
 };
 
-}
+} }
 
 #endif

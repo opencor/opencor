@@ -1,6 +1,7 @@
 #include "cellmlplugin.h"
 
 namespace OpenCOR {
+namespace CellML {
 
 PLUGININFO_FUNC CellMLPluginInfo()
 {
@@ -14,4 +15,4 @@ PLUGININFO_FUNC CellMLPluginInfo()
 
 Q_EXPORT_PLUGIN2(CellML, CellMLPlugin)
 
-}
+} }

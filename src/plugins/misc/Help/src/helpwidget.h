@@ -9,6 +9,7 @@
 class QHelpEngine;
 
 namespace OpenCOR {
+namespace Help {
 
 class HelpWidget;
 
@@ -61,7 +62,7 @@ private:
     QHelpEngine *mHelpEngine;
 };
 
-class HelpWidget : public QWebView, public CommonWidget
+class HelpWidget : public QWebView, public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -115,6 +116,6 @@ private Q_SLOTS:
     void webPageChanged();
 };
 
-}
+} }
 
 #endif

@@ -6,11 +6,12 @@
 #include <QString>
 
 namespace OpenCOR {
+namespace Core {
 
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 void CORE_EXPORT saveResourceAs(const QString &pResource,
                                 const QString &pFilename);
 
-}
+} }
 
 #endif

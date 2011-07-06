@@ -4,6 +4,7 @@
 #include "plugininterface.h"
 
 namespace OpenCOR {
+namespace QtMmlWidget {
 
 PLUGININFO_FUNC QtMmlWidgetPluginInfo();
 
@@ -14,6 +15,6 @@ class QtMmlWidgetPlugin : public QObject,
     Q_INTERFACES(OpenCOR::PluginInterface)
 };
 
-}
+} }
 
 #endif

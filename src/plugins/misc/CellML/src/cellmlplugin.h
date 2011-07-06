@@ -4,6 +4,7 @@
 #include "plugininterface.h"
 
 namespace OpenCOR {
+namespace CellML {
 
 PLUGININFO_FUNC CellMLPluginInfo();
 
@@ -14,6 +15,6 @@ class CellMLPlugin : public QObject,
     Q_INTERFACES(OpenCOR::PluginInterface)
 };
 
-}
+} }
 
 #endif

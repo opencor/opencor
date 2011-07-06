@@ -6,6 +6,7 @@
 #include <QTimer>
 
 namespace OpenCOR {
+namespace Core {
 
 File::File(const QString &pFileName) :
     mFileName(pFileName),
@@ -195,4 +196,4 @@ void FileManager::check()
         }
 }
 
-}
+} }

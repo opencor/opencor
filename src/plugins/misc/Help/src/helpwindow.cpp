@@ -14,6 +14,7 @@
 #include <QSettings>
 
 namespace OpenCOR {
+namespace Help {
 
 static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/userIndex.html";
 
@@ -32,8 +33,8 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     mQchFileName = QDir::tempPath()+QDir::separator()+applicationBaseName+".qch";
     mQhcFileName = QDir::tempPath()+QDir::separator()+applicationBaseName+".qhc";
 
-    saveResourceAs(":qchFile", mQchFileName);
-    saveResourceAs(":qhcFile", mQhcFileName);
+    Core::saveResourceAs(":qchFile", mQchFileName);
+    Core::saveResourceAs(":qhcFile", mQhcFileName);
 
     // Set up the help engine
 
@@ -44,7 +45,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     // Create a toolbar with different buttons
     // Note: this sadly can't be done using the design mode, so...
 
-    DockToolBar *toolbar = new DockToolBar(this);
+    Core::DockToolBar *toolbar = new Core::DockToolBar(this);
 
     toolbar->addAction(mUi->actionHome);
     toolbar->addSeparator();
@@ -280,4 +281,4 @@ void HelpWindow::needUpdateActions()
     updateActions();
 }
 
-}
+} }

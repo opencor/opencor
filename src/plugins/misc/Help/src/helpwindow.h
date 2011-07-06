@@ -11,10 +11,11 @@ namespace Ui {
 }
 
 namespace OpenCOR {
+namespace Help {
 
 class HelpWidget;
 
-class HelpWindow : public DockWidget
+class HelpWindow : public Core::DockWidget
 {
     Q_OBJECT
 
@@ -60,6 +61,6 @@ private Q_SLOTS:
     void needUpdateActions();
 };
 
-}
+} }
 
 #endif

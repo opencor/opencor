@@ -7,6 +7,7 @@
 #include <QTreeView>
 
 namespace OpenCOR {
+namespace Core {
 
 class CORE_EXPORT TreeView : public QTreeView, public CommonWidget
 {
@@ -20,6 +21,6 @@ protected:
     virtual void startDrag(Qt::DropActions pSupportedActions);
 };
 
-}
+} }
 
 #endif

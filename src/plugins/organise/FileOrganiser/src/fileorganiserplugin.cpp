@@ -3,6 +3,7 @@
 #include <QMessageBox>
 
 namespace OpenCOR {
+namespace FileOrganiser {
 
 PLUGININFO_FUNC FileOrganiserPluginInfo()
 {
@@ -23,4 +24,4 @@ QMessageBox::information(0, "FileOrganiser plugin", "FileOrganiser plugin...");
 
 Q_EXPORT_PLUGIN2(FileOrganiser, FileOrganiserPlugin)
 
-}
+} }

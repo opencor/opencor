@@ -6,6 +6,7 @@
 #include <QToolBar>
 
 namespace OpenCOR {
+namespace Core {
 
 class CORE_EXPORT DockToolBar : public QToolBar
 {
@@ -15,6 +16,6 @@ public:
     explicit DockToolBar(QWidget *pParent);
 };
 
-}
+} }
 
 #endif

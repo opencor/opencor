@@ -6,8 +6,9 @@
 #include <QtMmlWidget>
 
 namespace OpenCOR {
+namespace Viewer {
 
-class MmlViewerWidget : public QtMmlWidget, public CommonWidget
+class MmlViewerWidget : public QtMmlWidget, public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -28,6 +29,6 @@ private:
     QtMmlWidget *mTestMmlWidget;
 };
 
-}
+} }
 
 #endif

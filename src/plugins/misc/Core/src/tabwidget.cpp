@@ -5,6 +5,7 @@
 #include <QPaintEvent>
 
 namespace OpenCOR {
+namespace Core {
 
 TabWidget::TabWidget(QWidget *pParent) :
     QTabWidget(pParent),
@@ -82,4 +83,4 @@ void TabWidget::getFocus(QWidget *, QWidget *pNew)
         tabChanged(currentIndex());
 }
 
-}
+} }

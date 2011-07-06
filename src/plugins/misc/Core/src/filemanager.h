@@ -10,6 +10,7 @@ class QString;
 class QTimer;
 
 namespace OpenCOR {
+namespace Core {
 
 static const QString FileSystemMimeType = "text/uri-list";
 
@@ -76,6 +77,6 @@ private Q_SLOTS:
     void check();
 };
 
-}
+} }
 
 #endif

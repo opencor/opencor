@@ -5,6 +5,7 @@
 #include "plugininterface.h"
 
 namespace OpenCOR {
+namespace FileOrganiser {
 
 PLUGININFO_FUNC FileOrganiserPluginInfo();
 
@@ -22,6 +23,6 @@ public:
     virtual void setupUi(QMainWindow *pMainWindow);
 };
 
-}
+} }
 
 #endif

@@ -5,6 +5,7 @@
 #include "plugininterface.h"
 
 namespace OpenCOR {
+namespace FileBrowser {
 
 PLUGININFO_FUNC FileBrowserPluginInfo();
 
@@ -22,6 +23,6 @@ public:
     virtual void setupUi(QMainWindow *pMainWindow);
 };
 
-}
+} }
 
 #endif

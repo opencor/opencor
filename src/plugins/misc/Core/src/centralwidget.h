@@ -10,6 +10,7 @@ namespace Ui {
 }
 
 namespace OpenCOR {
+namespace Core {
 
 class FileManager;
 class TabWidget;
@@ -56,6 +57,6 @@ public Q_SLOTS:
     void fileActivated(const int &pIndex);
 };
 
-}
+} }
 
 #endif

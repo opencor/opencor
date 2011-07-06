@@ -5,6 +5,7 @@
 #include "plugininterface.h"
 
 namespace OpenCOR {
+namespace Viewer {
 
 PLUGININFO_FUNC ViewerPluginInfo();
 
@@ -22,6 +23,6 @@ public:
     virtual void setupUi(QMainWindow *pMainWindow);
 };
 
-}
+} }
 
 #endif

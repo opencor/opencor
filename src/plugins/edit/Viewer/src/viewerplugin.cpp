@@ -3,6 +3,7 @@
 #include <QMessageBox>
 
 namespace OpenCOR {
+namespace Viewer {
 
 PLUGININFO_FUNC ViewerPluginInfo()
 {
@@ -23,4 +24,4 @@ QMessageBox::information(0, "Viewer plugin", "Viewer plugin...");
 
 Q_EXPORT_PLUGIN2(Viewer, ViewerPlugin)
 
-}
+} }

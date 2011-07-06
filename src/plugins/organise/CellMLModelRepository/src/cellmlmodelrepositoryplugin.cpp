@@ -3,6 +3,7 @@
 #include <QMessageBox>
 
 namespace OpenCOR {
+namespace CellMLModelRepository {
 
 PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 {
@@ -23,4 +24,4 @@ QMessageBox::information(0, "CellMLModelRepository plugin", "CellMLModelReposito
 
 Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)
 
-}
+} }

@@ -5,6 +5,7 @@
 #include "plugininterface.h"
 
 namespace OpenCOR {
+namespace Help {
 
 PLUGININFO_FUNC HelpPluginInfo();
 
@@ -22,6 +23,6 @@ public:
     virtual void setupUi(QMainWindow *pMainWindow);
 };
 
-}
+} }
 
 #endif

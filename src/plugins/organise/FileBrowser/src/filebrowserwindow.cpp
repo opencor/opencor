@@ -9,6 +9,7 @@
 #include <QSettings>
 
 namespace OpenCOR {
+namespace FileBrowser {
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -21,7 +22,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     // Create a toolbar with different buttons
     // Note: this sadly can't be done using the design mode, so...
 
-    DockToolBar *toolbar = new DockToolBar(this);
+    Core::DockToolBar *toolbar = new Core::DockToolBar(this);
 
     toolbar->addAction(mUi->actionHome);
     toolbar->addSeparator();
@@ -355,4 +356,4 @@ void FileBrowserWindow::itemChanged(const QModelIndex &,
     updateActions();
 }
 
-}
+} }

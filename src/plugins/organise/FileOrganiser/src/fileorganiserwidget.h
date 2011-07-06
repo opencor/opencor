@@ -10,6 +10,7 @@
 class QStandardItem;
 
 namespace OpenCOR {
+namespace FileOrganiser {
 
 static const QString FileOrganiserMimeType = "opencor/file-organiser";
 
@@ -35,7 +36,7 @@ private:
     QString filePath(const QModelIndex &pFileIndex) const;
 };
 
-class FileOrganiserWidget : public TreeView
+class FileOrganiserWidget : public Core::TreeView
 {
     Q_OBJECT
 
@@ -66,7 +67,7 @@ protected:
 
 private:
     FileOrganiserModel *mDataModel;
-    FileManager *mFileManager;
+    Core::FileManager *mFileManager;
 
     void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);
     void saveItemSettings(QSettings *pSettings, QStandardItem *pItem,
@@ -98,7 +99,7 @@ private:
     void restoreExpandedInformation(QStandardItem *pItem);
 
     void updateFileItems(QStandardItem *pItem, const QString &pFileName,
-                         const File::FileStatus &pStatus);
+                         const Core::File::FileStatus &pStatus);
 
 Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);
@@ -111,6 +112,6 @@ private slots:
     void fileDeleted(const QString &pFileName);
 };
 
-}
+} }
 
 #endif

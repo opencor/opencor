@@ -6,6 +6,7 @@
 #include <QSettings>
 
 namespace OpenCOR {
+namespace CellMLModelRepository {
 
 CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -59,4 +60,4 @@ void CellmlModelRepositoryWindow::saveSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-}
+} }

@@ -1,6 +1,7 @@
 #include "coreplugin.h"
 
 namespace OpenCOR {
+namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo()
 {
@@ -14,4 +15,4 @@ PLUGININFO_FUNC CorePluginInfo()
 
 Q_EXPORT_PLUGIN2(Core, CorePlugin)
 
-}
+} }

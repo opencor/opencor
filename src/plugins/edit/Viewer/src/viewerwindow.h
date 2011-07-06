@@ -8,10 +8,11 @@ namespace Ui {
 }
 
 namespace OpenCOR {
+namespace Viewer {
 
 class MmlViewerWidget;
 
-class ViewerWindow : public DockWidget
+class ViewerWindow : public Core::DockWidget
 {
     Q_OBJECT
 
@@ -30,6 +31,6 @@ private:
     MmlViewerWidget *mMmlViewerWidget;
 };
 
-}
+} }
 
 #endif

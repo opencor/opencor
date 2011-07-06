@@ -7,6 +7,7 @@
 #include <QUrl>
 
 namespace OpenCOR {
+namespace FileOrganiser {
 
 enum FileOrganiserItemRole {
     FileOrganiserItemFolder   = Qt::UserRole,
@@ -23,7 +24,7 @@ QStringList FileOrganiserModel::mimeTypes() const
 {
     // Return the mime types supported by our model
 
-    return QStringList() << FileSystemMimeType << FileOrganiserMimeType;
+    return QStringList() << Core::FileSystemMimeType << FileOrganiserMimeType;
 }
 
 void FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
@@ -205,7 +206,7 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
 
     // Create our file manager
 
-    mFileManager = new FileManager();
+    mFileManager = new Core::FileManager();
 
     // Set some properties for the file organiser widget itself
 
@@ -464,8 +465,8 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     // Accept the proposed action for the event, but only if we are dropping
     // URIs
 
-    if ((pEvent->mimeData()->hasFormat(FileSystemMimeType)) ||
-        (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)))
+    if (   (pEvent->mimeData()->hasFormat(Core::FileSystemMimeType))
+        || (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)))
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
@@ -1289,7 +1290,7 @@ void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 
 void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
                                           const QString &pFileName,
-                                          const File::FileStatus &pStatus)
+                                          const Core::File::FileStatus &pStatus)
 {
     // Recursively update the icon of all file items that refer to pFileName
 
@@ -1298,7 +1299,7 @@ void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
         // The current item is a file item and it refers to pFileName, so update
         // its icon based on the value of pStatus
 
-        pItem->setIcon(QIcon((pStatus == File::Deleted)?
+        pItem->setIcon(QIcon((pStatus == Core::File::Deleted)?
                                  DeletedFileIcon:
                                  FileIcon));
 
@@ -1315,7 +1316,7 @@ void FileOrganiserWidget::fileContentsChanged(const QString &pFileName)
     // and update the icon of the ones that refer to the file in question
 
     updateFileItems(mDataModel->invisibleRootItem(), pFileName,
-                    File::Changed);
+                    Core::File::Changed);
 }
 
 void FileOrganiserWidget::fileDeleted(const QString &pFileName)
@@ -1323,7 +1324,7 @@ void FileOrganiserWidget::fileDeleted(const QString &pFileName)
     // A file has been deleted, so...
 
     updateFileItems(mDataModel->invisibleRootItem(), pFileName,
-                    File::Deleted);
+                    Core::File::Deleted);
 }
 
-}
+} }

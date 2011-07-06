@@ -1,6 +1,7 @@
 #include "qscintillaplugin.h"
 
 namespace OpenCOR {
+namespace QScintilla {
 
 PLUGININFO_FUNC QScintillaPluginInfo()
 {
@@ -14,4 +15,4 @@ PLUGININFO_FUNC QScintillaPluginInfo()
 
 Q_EXPORT_PLUGIN2(QScintilla, QScintillaPlugin)
 
-}
+} }

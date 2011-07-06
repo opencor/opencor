@@ -3,6 +3,7 @@
 #include <QPaintEvent>
 
 namespace OpenCOR {
+namespace Viewer {
 
 MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
     QtMmlWidget(pParent),
@@ -92,4 +93,4 @@ void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
     //       size...
 }
 
-}
+} }

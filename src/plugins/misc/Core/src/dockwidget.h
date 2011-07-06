@@ -7,6 +7,7 @@
 #include <QDockWidget>
 
 namespace OpenCOR {
+namespace Core {
 
 class CORE_EXPORT DockWidget : public QDockWidget, public CommonWidget
 {
@@ -16,6 +17,6 @@ public:
     explicit DockWidget(QWidget *pParent);
 };
 
-}
+} }
 
 #endif

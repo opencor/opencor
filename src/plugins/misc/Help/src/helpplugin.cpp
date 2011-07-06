@@ -3,6 +3,7 @@
 #include <QMessageBox>
 
 namespace OpenCOR {
+namespace Help {
 
 PLUGININFO_FUNC HelpPluginInfo()
 {
@@ -23,4 +24,4 @@ QMessageBox::information(0, "Help plugin", "Help plugin...");
 
 Q_EXPORT_PLUGIN2(Help, HelpPlugin)
 
-}
+} }

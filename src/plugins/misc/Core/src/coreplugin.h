@@ -4,6 +4,7 @@
 #include "plugininterface.h"
 
 namespace OpenCOR {
+namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo();
 
@@ -14,6 +15,6 @@ class CorePlugin : public QObject,
     Q_INTERFACES(OpenCOR::PluginInterface)
 };
 
-}
+} }
 
 #endif

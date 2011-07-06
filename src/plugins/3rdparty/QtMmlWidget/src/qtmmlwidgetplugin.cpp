@@ -1,6 +1,7 @@
 #include "qtmmlwidgetplugin.h"
 
 namespace OpenCOR {
+namespace QtMmlWidget {
 
 PLUGININFO_FUNC QtMmlWidgetPluginInfo()
 {
@@ -14,4 +15,4 @@ PLUGININFO_FUNC QtMmlWidgetPluginInfo()
 
 Q_EXPORT_PLUGIN2(QtMmlWidget, QtMmlWidgetPlugin)
 
-}
+} }

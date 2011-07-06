@@ -4,6 +4,7 @@
 #include "ui_viewerwindow.h"
 
 namespace OpenCOR {
+namespace Viewer {
 
 ViewerWindow::ViewerWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -56,4 +57,4 @@ void ViewerWindow::saveSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-}
+} }

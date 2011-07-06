@@ -1,6 +1,7 @@
 #include "docktoolbar.h"
 
 namespace OpenCOR {
+namespace Core {
 
 DockToolBar::DockToolBar(QWidget *pParent) :
     QToolBar(pParent)
@@ -15,4 +16,4 @@ DockToolBar::DockToolBar(QWidget *pParent) :
     setIconSize(QSize(20, 20));
 }
 
-}
+} }

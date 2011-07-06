@@ -6,6 +6,7 @@
 #include <QFile>
 
 namespace OpenCOR {
+namespace CellML {
 
 QString cellmlVersionString(const CellmlVersion &pCellmlVersion)
 {
@@ -53,4 +54,4 @@ bool newCellmlFile(const QString &pFileName, const QString &pModelName,
     }
 }
 
-}
+} }

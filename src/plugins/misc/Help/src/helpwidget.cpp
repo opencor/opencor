@@ -10,6 +10,7 @@
 #include <QWebHistory>
 
 namespace OpenCOR {
+namespace Help {
 
 HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
                                    const QByteArray &pData,
@@ -396,4 +397,4 @@ void HelpWidget::webPageChanged()
     }
 }
 
-}
+} }

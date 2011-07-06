@@ -1,6 +1,7 @@
 #include "dockwidget.h"
 
 namespace OpenCOR {
+namespace Core {
 
 DockWidget::DockWidget(QWidget *pParent) :
     QDockWidget(pParent),
@@ -15,4 +16,4 @@ DockWidget::DockWidget(QWidget *pParent) :
 #endif
 }
 
-}
+} }

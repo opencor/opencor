@@ -3,6 +3,7 @@
 #include "ui_checkforupdateswindow.h"
 
 namespace OpenCOR {
+namespace Core {
 
 CheckForUpdatesWindow::CheckForUpdatesWindow(QWidget *pParent) :
     QDialog(pParent),
@@ -28,4 +29,4 @@ void CheckForUpdatesWindow::retranslateUi()
     mUi->retranslateUi(this);
 }
 
-}
+} }

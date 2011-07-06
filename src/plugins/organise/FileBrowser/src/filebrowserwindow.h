@@ -10,10 +10,11 @@ namespace Ui {
 }
 
 namespace OpenCOR {
+namespace FileBrowser {
 
 class FileBrowserWidget;
 
-class FileBrowserWindow : public DockWidget
+class FileBrowserWindow : public Core::DockWidget
 {
     Q_OBJECT
 
@@ -57,6 +58,6 @@ private Q_SLOTS:
     void itemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
 };
 
-}
+} }
 
 #endif

@@ -12,6 +12,7 @@
 #include <QUrl>
 
 namespace OpenCOR {
+namespace Core {
 
 CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
@@ -332,4 +333,4 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
     pEvent->acceptProposedAction();
 }
 
-}
+} }

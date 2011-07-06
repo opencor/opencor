@@ -4,6 +4,7 @@
 #include <QResource>
 
 namespace OpenCOR {
+namespace Core {
 
 QByteArray resourceAsByteArray(const QString &pResource)
 {
@@ -46,4 +47,4 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
     }
 }
 
-}
+} }

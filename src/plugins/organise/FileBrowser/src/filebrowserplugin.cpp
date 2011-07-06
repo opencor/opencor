@@ -3,6 +3,7 @@
 #include <QMessageBox>
 
 namespace OpenCOR {
+namespace FileBrowser {
 
 PLUGININFO_FUNC FileBrowserPluginInfo()
 {
@@ -23,4 +24,4 @@ QMessageBox::information(0, "FileBrowser plugin", "FileBrowser plugin...");
 
 Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)
 
-}
+} }
