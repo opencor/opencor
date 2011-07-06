@@ -8,7 +8,8 @@
 namespace OpenCOR {
 
 Plugin::Plugin(const QString &pFileName,
-               const PluginInfo::PluginType &pGuiOrConsoleType) :
+               const PluginInfo::PluginType &pGuiOrConsoleType,
+               const bool &pForceLoading) :
     mName(name(pFileName)),
     // Note: to get the name of the plugin from its file name, we must remove
     //       the plugin prefix part from it...
@@ -24,10 +25,12 @@ Plugin::Plugin(const QString &pFileName,
         mInfo = info(pFileName);
 
         // Try to load the plugin, but only if it is either a general plugin or
-        // one of the type we are happy with
+        // one of the type we are happy with, and has dependencies or is
+        // required by another plugin
 
-        if (   (mInfo.mType == PluginInfo::General)
-            || (mInfo.mType == pGuiOrConsoleType)) {
+        if (   (   (mInfo.mType == PluginInfo::General)
+                || (mInfo.mType == pGuiOrConsoleType))
+            && (mInfo.dependencies().count() || pForceLoading)) {
             // We are dealing with the right kind of plugin, so try to load it
 //---GRY--- WE SHOULD CHECK IN THE SETTINGS WHETHER THE USER ACTUALLY WANTs TO
 //          LOAD THE PLUGIN OR NOT...

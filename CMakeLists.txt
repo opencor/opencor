@@ -42,6 +42,7 @@ SET(SOURCES
     src/misc/common.cpp
     src/misc/utils.cpp
 
+    src/plugins/guiinterface.cpp
     src/plugins/plugin.cpp
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp

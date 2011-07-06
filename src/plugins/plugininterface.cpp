@@ -27,4 +27,14 @@ QStringList PluginInfo::dependencies()
     return mDependencies;
 }
 
+void PluginInterface::initialize()
+{
+    // Nothing to do by default...
+}
+
+void PluginInterface::finalize()
+{
+    // Nothing to do by default...
+}
+
 }

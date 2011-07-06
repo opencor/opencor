@@ -9,16 +9,6 @@ PLUGININFO_FUNC QScintillaPluginInfo()
                       QStringList());
 }
 
-void QScintillaPlugin::initialize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void QScintillaPlugin::finalize()
-{
-//---GRY--- TO BE DONE...
-}
-
 Q_EXPORT_PLUGIN2(QScintilla, QScintillaPlugin)
 
 } }

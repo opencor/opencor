@@ -8,6 +8,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(FileOrganiser TRUE
     SOURCES
+        ../../guiinterface.cpp
         ../../plugininterface.cpp
 
         src/fileorganiserplugin.cpp

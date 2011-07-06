@@ -9,26 +9,6 @@ PLUGININFO_FUNC ViewerPluginInfo()
                        QStringList() << "Core" << "QtMmlWidget");
 }
 
-void ViewerPlugin::initialize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void ViewerPlugin::finalize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void ViewerPlugin::initializeGui(QMainWindow *pMainWindow)
-{
-//---GRY--- TO BE DONE...
-}
-
-void ViewerPlugin::finalizeGui()
-{
-//---GRY--- TO BE DONE...
-}
-
 Q_EXPORT_PLUGIN2(Viewer, ViewerPlugin)
 
 } }

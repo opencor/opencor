@@ -25,7 +25,8 @@ public:
     };
 
     explicit Plugin(const QString &pFileName,
-                    const PluginInfo::PluginType &pGuiOrConsoleType);
+                    const PluginInfo::PluginType &pGuiOrConsoleType,
+                    const bool &pForceLoading);
 
     QString name();
     PluginInfo info();

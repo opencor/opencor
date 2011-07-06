@@ -9,26 +9,6 @@ PLUGININFO_FUNC CorePluginInfo()
                       QStringList());
 }
 
-void CorePlugin::initialize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void CorePlugin::finalize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void CorePlugin::initializeGui(QMainWindow *pMainWindow)
-{
-//---GRY--- TO BE DONE...
-}
-
-void CorePlugin::finalizeGui()
-{
-//---GRY--- TO BE DONE...
-}
-
 Q_EXPORT_PLUGIN2(Core, CorePlugin)
 
 } }

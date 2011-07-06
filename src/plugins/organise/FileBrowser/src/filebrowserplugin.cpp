@@ -9,26 +9,6 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
                        QStringList() << "Core");
 }
 
-void FileBrowserPlugin::initialize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void FileBrowserPlugin::finalize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void FileBrowserPlugin::initializeGui(QMainWindow *pMainWindow)
-{
-//---GRY--- TO BE DONE...
-}
-
-void FileBrowserPlugin::finalizeGui()
-{
-//---GRY--- TO BE DONE...
-}
-
 Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)
 
 } }

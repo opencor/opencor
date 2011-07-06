@@ -8,8 +8,8 @@ namespace OpenCOR {
 class GuiInterface
 {
 public:
-    virtual void initializeGui(QMainWindow *pMainWindow) = 0;
-    virtual void finalizeGui() = 0;
+    virtual void initializeGui(QMainWindow *);
+    virtual void finalizeGui();
 };
 
 }

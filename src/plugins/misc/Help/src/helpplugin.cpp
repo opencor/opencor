@@ -9,26 +9,6 @@ PLUGININFO_FUNC HelpPluginInfo()
                        QStringList() << "Core");
 }
 
-void HelpPlugin::initialize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void HelpPlugin::finalize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void HelpPlugin::initializeGui(QMainWindow *pMainWindow)
-{
-//---GRY--- TO BE DONE...
-}
-
-void HelpPlugin::finalizeGui()
-{
-//---GRY--- TO BE DONE...
-}
-
 Q_EXPORT_PLUGIN2(Help, HelpPlugin)
 
 } }

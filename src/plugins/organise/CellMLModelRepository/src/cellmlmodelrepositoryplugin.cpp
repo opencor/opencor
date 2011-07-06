@@ -9,26 +9,6 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
                        QStringList() << "Core");
 }
 
-void CellMLModelRepositoryPlugin::initialize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void CellMLModelRepositoryPlugin::finalize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void CellMLModelRepositoryPlugin::initializeGui(QMainWindow *pMainWindow)
-{
-//---GRY--- TO BE DONE...
-}
-
-void CellMLModelRepositoryPlugin::finalizeGui()
-{
-//---GRY--- TO BE DONE...
-}
-
 Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)
 
 } }

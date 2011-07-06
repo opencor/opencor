@@ -37,8 +37,6 @@ private:
     PluginInfo::PluginType mGuiOrConsoleType;
 
     QMap<QString, Plugin *> mPlugins;
-
-    Plugin * plugin(const QString &pFileName);
 };
 
 }

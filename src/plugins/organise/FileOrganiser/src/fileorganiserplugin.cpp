@@ -9,26 +9,6 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
                        QStringList() << "Core");
 }
 
-void FileOrganiserPlugin::initialize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void FileOrganiserPlugin::finalize()
-{
-//---GRY--- TO BE DONE...
-}
-
-void FileOrganiserPlugin::initializeGui(QMainWindow *pMainWindow)
-{
-//---GRY--- TO BE DONE...
-}
-
-void FileOrganiserPlugin::finalizeGui()
-{
-//---GRY--- TO BE DONE...
-}
-
 Q_EXPORT_PLUGIN2(FileOrganiser, FileOrganiserPlugin)
 
 } }

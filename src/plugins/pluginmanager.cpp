@@ -46,15 +46,24 @@ PluginManager::PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType) :
     // loaded, but the situation is obviously different if such a plugin is
     // required by another plugin (e.g. the Help plugin requires the Core
     // plugin), in which case the self-contained plugin should be loaded. So, we
-    // must here determine which of those plugins needs to be loaded...
+    // must here determine which of those plugins need to be loaded...
+
+    QStringList requiredSelfContainedPlugins;
 
 //---GRY--- TO BE DONE...
+
+    requiredSelfContainedPlugins.removeDuplicates();
 
     // Try to load all the plugins we can find, but only if nothing has been
     // done about plugins before
 
-    foreach (const QFileInfo &file, fileInfoList)
-        plugin(QDir::toNativeSeparators(file.canonicalFilePath()));
+    foreach (const QFileInfo &file, fileInfoList) {
+        QString fileName = QDir::toNativeSeparators(file.canonicalFilePath());
+
+        mPlugins.insert(fileName, new Plugin(fileName,
+                                             mGuiOrConsoleType,
+                                             false));
+    }
 }
 
 PluginManager::~PluginManager()
@@ -82,25 +91,6 @@ QList<Plugin *> PluginManager::loadedPlugins()
 
         ++iter;
     }
-
-    return res;
-}
-
-Plugin * PluginManager::plugin(const QString &pFileName)
-{
-    // Check whether the plugin exists
-
-    Plugin *res = mPlugins.value(pFileName);
-
-    if (!res) {
-        // The plugin doesn't exist, so create it
-
-        res = new Plugin(pFileName, mGuiOrConsoleType);
-
-        mPlugins.insert(pFileName, res);
-    }
-
-    // Return the plugin
 
     return res;
 }
