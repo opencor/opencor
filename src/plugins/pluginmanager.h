@@ -36,7 +36,11 @@ public:
 private:
     PluginInfo::PluginType mGuiOrConsoleType;
 
+    QString mPluginsDir;
     QMap<QString, Plugin *> mPlugins;
+
+    QStringList requiredPlugins(const QString &pFileName,
+                                const int &pLevel = 0);
 };
 
 }

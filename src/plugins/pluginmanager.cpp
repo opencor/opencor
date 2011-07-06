@@ -6,21 +6,19 @@
 #include <QDir>
 #include <QPluginLoader>
 
-#include <QMessageBox>
-
 namespace OpenCOR {
 
 PluginManager::PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType) :
     mGuiOrConsoleType(pGuiOrConsoleType)
 {
-    QString pluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
-                         +QDir::separator()+QString("..")
+    mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
+                  +QDir::separator()+QString("..")
 #ifndef Q_WS_MAC
-                         +QDir::separator()+"plugins"
+                  +QDir::separator()+"plugins"
 #else
-                         +QDir::separator()+"PlugIns"
+                  +QDir::separator()+"PlugIns"
 #endif
-                         +QDir::separator()+qApp->applicationName();
+                  +QDir::separator()+qApp->applicationName();
 
 #ifndef Q_WS_MAC
     // The plugins directory should be correct, but in case we try to run
@@ -31,16 +29,21 @@ PluginManager::PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType) :
     // [OpenCOR]/build/plugins/OpenCOR, we must skip the "../" bit. Yes, it's
     // not neat, but... is there another solution?...
 
-    if (!QDir(pluginsDir).exists())
-        pluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
-                     +QDir::separator()+"plugins"
-                     +QDir::separator()+qApp->applicationName();
+    if (!QDir(mPluginsDir).exists())
+        mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
+                      +QDir::separator()+"plugins"
+                      +QDir::separator()+qApp->applicationName();
 #endif
 
     // Retrieve the list of plugins available for loading
 
-    QFileInfoList fileInfoList = QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension),
-                                                                QDir::Files);
+    QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension),
+                                                                 QDir::Files);
+
+    QStringList fileNames;
+
+    foreach (const QFileInfo &file, fileInfoList)
+        fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
 
     // Self-contained plugins (e.g. the Core plugin) don't, by default, get
     // loaded, but the situation is obviously different if such a plugin is
@@ -48,27 +51,25 @@ PluginManager::PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType) :
     // plugin), in which case the self-contained plugin should be loaded. So, we
     // must here determine which of those plugins need to be loaded...
 
-    QStringList requiredSelfContainedPlugins;
+    QStringList plugins;
 
-//---GRY--- TO BE DONE...
+    foreach (const QString &fileName, fileNames)
+        plugins << requiredPlugins(fileName);
 
-    requiredSelfContainedPlugins.removeDuplicates();
+    plugins.removeDuplicates();
 
     // Try to load all the plugins we can find, but only if nothing has been
     // done about plugins before
 
-    foreach (const QFileInfo &file, fileInfoList) {
-        QString fileName = QDir::toNativeSeparators(file.canonicalFilePath());
-
+    foreach (const QString &fileName, fileNames)
         mPlugins.insert(fileName, new Plugin(fileName,
                                              mGuiOrConsoleType,
-                                             false));
-    }
+                                             plugins.contains(Plugin::name(fileName))));
 }
 
 PluginManager::~PluginManager()
 {
-    // Delete the plugins
+    // Delete all of the plugins
 
     while (!mPlugins.isEmpty()) {
         delete mPlugins.begin().value();
@@ -91,6 +92,27 @@ QList<Plugin *> PluginManager::loadedPlugins()
 
         ++iter;
     }
+
+    return res;
+}
+
+QStringList PluginManager::requiredPlugins(const QString &pFileName,
+                                           const int &pLevel)
+{
+    // Return the list of plugins required by a given plugin
+
+    QStringList res;
+
+    // Recursively look for the plugins required by the current plugin
+
+    foreach(const QString &plugin, Plugin::info(pFileName).dependencies())
+        res << requiredPlugins(Plugin::fileName(mPluginsDir, plugin), pLevel+1);
+
+    // Add the current plugin to the list if it is not the original plugin for
+    // which we want to know what its requirements are
+
+    if (pLevel)
+        res << Plugin::name(pFileName);
 
     return res;
 }
