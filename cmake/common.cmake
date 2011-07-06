@@ -10,6 +10,8 @@ MACRO(INITIALISE_PROJECT)
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         MESSAGE("Building a debug version...")
 
+        SET(DEBUG_MODE ON)
+
         # Default compiler settings
 
         SET(CMAKE_CXX_FLAGS "-g -O0")
@@ -17,6 +19,8 @@ MACRO(INITIALISE_PROJECT)
         SET(CMAKE_BUILD_TYPE "Release")
 
         MESSAGE("Building a release version...")
+
+        SET(DEBUG_MODE OFF)
 
         # Default compiler and linker settings
 
@@ -220,7 +224,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
 
     FOREACH(QT_LIBRARY ${QT_DEPENDENCIES})
         IF(WIN32)
-            SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${QT_LIBRARY}${QT_VERSION_MAJOR}${CMAKE_STATIC_LIBRARY_SUFFIX})
+            IF(DEBUG_MODE)
+                SET(QT_DEPENDENCY_VERSION d)
+            ELSE()
+                SET(QT_DEPENDENCY_VERSION)
+            ENDIF()
+
+            SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${QT_LIBRARY}${QT_DEPENDENCY_VERSION}${QT_VERSION_MAJOR}${CMAKE_STATIC_LIBRARY_SUFFIX})
         ELSEIF(APPLE)
             SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework)
         ELSE()
