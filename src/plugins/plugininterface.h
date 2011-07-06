@@ -27,17 +27,14 @@ public:
     };
 
     explicit PluginInfo(const PluginType &pType = Undefined,
-                        const QStringList &pDependencies = QStringList(),
-                        const bool &pManageable = false);
+                        const QStringList &pDependencies = QStringList());
 
     PluginType type();
     QStringList dependencies();
-    bool manageable();
 
 private:
     PluginType mType;
     QStringList mDependencies;
-    bool mManageable;
 };
 
 class PluginInterface

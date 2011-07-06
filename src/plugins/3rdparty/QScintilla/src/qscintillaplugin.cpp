@@ -6,8 +6,7 @@ namespace QScintilla {
 PLUGININFO_FUNC QScintillaPluginInfo()
 {
     return PluginInfo(PluginInfo::Gui,
-                      QStringList(),
-                      false);
+                      QStringList());
 }
 
 void QScintillaPlugin::initialize()

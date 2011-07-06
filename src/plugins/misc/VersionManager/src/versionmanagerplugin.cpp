@@ -6,8 +6,7 @@ namespace VersionManager {
 PLUGININFO_FUNC VersionManagerPluginInfo()
 {
     return PluginInfo(PluginInfo::General,
-                      QStringList(),
-                      true);
+                      QStringList());
 }
 
 void VersionManagerPlugin::initialize()

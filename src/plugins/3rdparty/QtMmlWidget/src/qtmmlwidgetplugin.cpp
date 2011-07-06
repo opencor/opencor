@@ -6,8 +6,7 @@ namespace QtMmlWidget {
 PLUGININFO_FUNC QtMmlWidgetPluginInfo()
 {
     return PluginInfo(PluginInfo::Gui,
-                      QStringList(),
-                      false);
+                      QStringList());
 }
 
 void QtMmlWidgetPlugin::initialize()

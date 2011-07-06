@@ -6,8 +6,7 @@ namespace Core {
 PLUGININFO_FUNC CorePluginInfo()
 {
     return PluginInfo(PluginInfo::General,
-                      QStringList(),
-                      false);
+                      QStringList());
 }
 
 void CorePlugin::initialize()

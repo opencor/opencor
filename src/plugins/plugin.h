@@ -28,20 +28,18 @@ public:
                     const PluginInfo::PluginType &pGuiOrConsoleType);
 
     QString name();
-
     PluginInfo info();
-
     QObject * instance();
-
     PluginStatus status();
+
+    static QString name(const QString &pFileName);
+    static QString fileName(const QString &pDir, const QString &pName);
+    static PluginInfo info(const QString &pFileName);
 
 private:
     QString mName;
-
     PluginInfo mInfo;
-
     QObject *mInstance;
-
     PluginStatus mStatus;
 };
 

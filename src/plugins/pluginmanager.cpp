@@ -37,11 +37,23 @@ PluginManager::PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType) :
                      +QDir::separator()+qApp->applicationName();
 #endif
 
+    // Retrieve the list of plugins available for loading
+
+    QFileInfoList fileInfoList = QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension),
+                                                                QDir::Files);
+
+    // Self-contained plugins (e.g. the Core plugin) don't, by default, get
+    // loaded, but the situation is obviously different if such a plugin is
+    // required by another plugin (e.g. the Help plugin requires the Core
+    // plugin), in which case the self-contained plugin should be loaded. So, we
+    // must here determine which of those plugins needs to be loaded...
+
+//---GRY--- TO BE DONE...
+
     // Try to load all the plugins we can find, but only if nothing has been
     // done about plugins before
 
-    foreach (const QFileInfo &file,
-             QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files))
+    foreach (const QFileInfo &file, fileInfoList)
         plugin(QDir::toNativeSeparators(file.canonicalFilePath()));
 }
 

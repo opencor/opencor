@@ -6,8 +6,7 @@ namespace CellML {
 PLUGININFO_FUNC CellMLPluginInfo()
 {
     return PluginInfo(PluginInfo::General,
-                      QStringList(),
-                      false);
+                      QStringList());
 }
 
 void CellMLPlugin::initialize()

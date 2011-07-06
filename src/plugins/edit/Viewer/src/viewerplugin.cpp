@@ -6,8 +6,7 @@ namespace Viewer {
 PLUGININFO_FUNC ViewerPluginInfo()
 {
     return PluginInfo(PluginInfo::Gui,
-                       QStringList() << "Core" << "QtMmlWidget",
-                       true);
+                       QStringList() << "Core" << "QtMmlWidget");
 }
 
 void ViewerPlugin::initialize()

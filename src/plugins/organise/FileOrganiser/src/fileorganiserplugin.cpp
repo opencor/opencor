@@ -6,8 +6,7 @@ namespace FileOrganiser {
 PLUGININFO_FUNC FileOrganiserPluginInfo()
 {
     return PluginInfo(PluginInfo::Gui,
-                       QStringList() << "Core",
-                       true);
+                       QStringList() << "Core");
 }
 
 void FileOrganiserPlugin::initialize()
