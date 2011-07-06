@@ -15,11 +15,19 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
     return res;
 }
 
+void CellMLModelRepositoryPlugin::initialize()
+{
+//---GRY--- TO BE DONE...
+}
+
+void CellMLModelRepositoryPlugin::finalize()
+{
+//---GRY--- TO BE DONE...
+}
+
 void CellMLModelRepositoryPlugin::setupUi(QMainWindow *pMainWindow)
 {
 //---GRY--- TO BE DONE...
-
-QMessageBox::information(0, "CellMLModelRepository plugin", "CellMLModelRepository plugin...");
 }
 
 Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)

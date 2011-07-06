@@ -67,6 +67,18 @@ MainWindow::MainWindow(QWidget *pParent) :
 //    setUnifiedTitleAndToolBarOnMac(true);
 //#endif
 
+    // Initialise our various plugins
+
+    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+
+        if (pluginInterface)
+            // The plugin implements our plugin interface (what if it didn't?!),
+            // so...
+
+            pluginInterface->initialize();
+    }
+
     // Set up the UI for our various plugins
 
     foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
@@ -127,6 +139,18 @@ MainWindow::MainWindow(QWidget *pParent) :
 
 MainWindow::~MainWindow()
 {
+    // Finalize our various plugins
+
+    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+
+        if (pluginInterface)
+            // The plugin implements our plugin interface (what if it didn't?!),
+            // so...
+
+            pluginInterface->finalize();
+    }
+
     // Delete some internal objects
 
     delete mPluginManager;

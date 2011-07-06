@@ -29,6 +29,9 @@ struct PluginInfo
 
 class PluginInterface
 {
+public:
+    virtual void initialize() = 0;
+    virtual void finalize() = 0;
 };
 
 }

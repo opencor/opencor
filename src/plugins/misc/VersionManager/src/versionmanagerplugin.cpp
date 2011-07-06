@@ -13,6 +13,16 @@ PLUGININFO_FUNC VersionManagerPluginInfo()
     return res;
 }
 
+void VersionManagerPlugin::initialize()
+{
+//---GRY--- TO BE DONE...
+}
+
+void VersionManagerPlugin::finalize()
+{
+//---GRY--- TO BE DONE...
+}
+
 Q_EXPORT_PLUGIN2(VersionManager, VersionManagerPlugin)
 
 } }

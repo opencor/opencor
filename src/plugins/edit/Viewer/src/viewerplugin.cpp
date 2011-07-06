@@ -15,11 +15,19 @@ PLUGININFO_FUNC ViewerPluginInfo()
     return res;
 }
 
+void ViewerPlugin::initialize()
+{
+//---GRY--- TO BE DONE...
+}
+
+void ViewerPlugin::finalize()
+{
+//---GRY--- TO BE DONE...
+}
+
 void ViewerPlugin::setupUi(QMainWindow *pMainWindow)
 {
 //---GRY--- TO BE DONE...
-
-QMessageBox::information(0, "Viewer plugin", "Viewer plugin...");
 }
 
 Q_EXPORT_PLUGIN2(Viewer, ViewerPlugin)

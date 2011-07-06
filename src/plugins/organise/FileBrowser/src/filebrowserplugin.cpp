@@ -15,11 +15,19 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
     return res;
 }
 
+void FileBrowserPlugin::initialize()
+{
+//---GRY--- TO BE DONE...
+}
+
+void FileBrowserPlugin::finalize()
+{
+//---GRY--- TO BE DONE...
+}
+
 void FileBrowserPlugin::setupUi(QMainWindow *pMainWindow)
 {
 //---GRY--- TO BE DONE...
-
-QMessageBox::information(0, "FileBrowser plugin", "FileBrowser plugin...");
 }
 
 Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)

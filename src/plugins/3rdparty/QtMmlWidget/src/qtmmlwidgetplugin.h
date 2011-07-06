@@ -13,6 +13,12 @@ class QtMmlWidgetPlugin : public QObject,
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::PluginInterface)
+
+public:
+    // Plugin interface
+
+    virtual void initialize();
+    virtual void finalize();
 };
 
 } }

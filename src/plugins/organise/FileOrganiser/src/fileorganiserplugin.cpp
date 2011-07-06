@@ -15,11 +15,19 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
     return res;
 }
 
+void FileOrganiserPlugin::initialize()
+{
+//---GRY--- TO BE DONE...
+}
+
+void FileOrganiserPlugin::finalize()
+{
+//---GRY--- TO BE DONE...
+}
+
 void FileOrganiserPlugin::setupUi(QMainWindow *pMainWindow)
 {
 //---GRY--- TO BE DONE...
-
-QMessageBox::information(0, "FileOrganiser plugin", "FileOrganiser plugin...");
 }
 
 Q_EXPORT_PLUGIN2(FileOrganiser, FileOrganiserPlugin)

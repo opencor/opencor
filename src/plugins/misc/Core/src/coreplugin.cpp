@@ -13,6 +13,16 @@ PLUGININFO_FUNC CorePluginInfo()
     return res;
 }
 
+void CorePlugin::initialize()
+{
+//---GRY--- TO BE DONE...
+}
+
+void CorePlugin::finalize()
+{
+//---GRY--- TO BE DONE...
+}
+
 Q_EXPORT_PLUGIN2(Core, CorePlugin)
 
 } }

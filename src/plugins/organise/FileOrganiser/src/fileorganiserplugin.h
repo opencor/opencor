@@ -18,7 +18,12 @@ class FileOrganiserPlugin : public QObject,
     Q_INTERFACES(OpenCOR::GuiInterface)
 
 public:
-    // GuiInterface
+    // Plugin interface
+
+    virtual void initialize();
+    virtual void finalize();
+
+    // GUI interface
 
     virtual void setupUi(QMainWindow *pMainWindow);
 };
