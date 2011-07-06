@@ -25,7 +25,8 @@ public:
 
     // GUI interface
 
-    virtual void setupUi(QMainWindow *pMainWindow);
+    virtual void initializeGui(QMainWindow *pMainWindow);
+    virtual void finalizeGui();
 };
 
 } }

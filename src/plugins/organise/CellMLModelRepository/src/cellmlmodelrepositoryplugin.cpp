@@ -1,18 +1,12 @@
 #include "cellmlmodelrepositoryplugin.h"
 
-#include <QMessageBox>
-
 namespace OpenCOR {
 namespace CellMLModelRepository {
 
 PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 {
-    PluginInfo res;
-
-    res.type         = PluginInfo::Gui;
-    res.dependencies = QStringList() << "Core";
-
-    return res;
+    return PluginInfo(PluginInfo::Gui,
+                       QStringList() << "Core");
 }
 
 void CellMLModelRepositoryPlugin::initialize()
@@ -25,7 +19,12 @@ void CellMLModelRepositoryPlugin::finalize()
 //---GRY--- TO BE DONE...
 }
 
-void CellMLModelRepositoryPlugin::setupUi(QMainWindow *pMainWindow)
+void CellMLModelRepositoryPlugin::initializeGui(QMainWindow *pMainWindow)
+{
+//---GRY--- TO BE DONE...
+}
+
+void CellMLModelRepositoryPlugin::finalizeGui()
 {
 //---GRY--- TO BE DONE...
 }

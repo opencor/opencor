@@ -5,12 +5,8 @@ namespace CellML {
 
 PLUGININFO_FUNC CellMLPluginInfo()
 {
-    PluginInfo res;
-
-    res.type         = PluginInfo::General;
-    res.dependencies = QStringList();
-
-    return res;
+    return PluginInfo(PluginInfo::General,
+                      QStringList());
 }
 
 void CellMLPlugin::initialize()

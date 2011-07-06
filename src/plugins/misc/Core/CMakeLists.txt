@@ -8,6 +8,8 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(Core TRUE
     SOURCES
+        ../../plugininterface.cpp
+
         src/centralwidget.cpp
         src/checkforupdateswindow.cpp
         src/commonwidget.cpp
@@ -21,6 +23,9 @@ ADD_PLUGIN(Core TRUE
         src/tabwidget.cpp
         src/treeview.cpp
     HEADERS
+        ../../guiinterface.h
+        ../../plugininterface.h
+
         src/commonwidget.h
         src/coreglobal.h
         src/coreutils.h

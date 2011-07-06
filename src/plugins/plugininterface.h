@@ -13,8 +13,11 @@ namespace OpenCOR {
     #define PLUGININFO_FUNC extern "C" PluginInfo
 #endif
 
-struct PluginInfo
+class PluginInfo
 {
+    friend class Plugin;
+
+public:
     enum PluginType
     {
         Undefined,
@@ -23,8 +26,15 @@ struct PluginInfo
         Gui
     };
 
-    PluginType type;
-    QStringList dependencies;
+    explicit PluginInfo(const PluginType &pType,
+                        const QStringList &pDependencies);
+
+    PluginType type();
+    QStringList dependencies();
+
+private:
+    PluginType mType;
+    QStringList mDependencies;
 };
 
 class PluginInterface

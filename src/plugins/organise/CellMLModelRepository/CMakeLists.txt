@@ -8,9 +8,14 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(CellMLModelRepository TRUE
     SOURCES
+        ../../plugininterface.cpp
+
         src/cellmlmodelrepositoryplugin.cpp
         src/cellmlmodelrepositorywidget.cpp
         src/cellmlmodelrepositorywindow.cpp
+    HEADERS
+        ../../guiinterface.h
+        ../../plugininterface.h
     HEADERS_MOC
         src/cellmlmodelrepositoryplugin.h
         src/cellmlmodelrepositorywidget.h

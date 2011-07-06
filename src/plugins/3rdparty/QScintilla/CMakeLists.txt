@@ -8,6 +8,8 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(QScintilla FALSE
     SOURCES
+        ../../plugininterface.cpp
+
         lexers/LexCPP.cpp
         lexers/LexCSS.cpp
         lexers/LexHTML.cpp
@@ -67,6 +69,8 @@ ADD_PLUGIN(QScintilla FALSE
         src/ViewStyle.cpp
         src/XPM.cpp
     HEADERS
+        ../../plugininterface.h
+
         include/ILexer.h
         include/Platform.h
         include/SciLexer.h

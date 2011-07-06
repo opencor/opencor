@@ -79,17 +79,6 @@ MainWindow::MainWindow(QWidget *pParent) :
             pluginInterface->initialize();
     }
 
-    // Set up the UI for our various plugins
-
-    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
-
-        if (guiInterface)
-            // The plugin implements our GUI interface, so...
-
-            guiInterface->setupUi(this);
-    }
-
     // Some connections to handle our Help toolbar
 
     connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
@@ -109,7 +98,16 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
-    // Some connections for our various plugins
+    // Initialise the GUI side of our various plugins
+
+    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            // The plugin implements our GUI interface, so...
+
+            guiInterface->initializeGui(this);
+    }
 
 //---GRY--- TO BE DONE...
 
@@ -139,7 +137,18 @@ MainWindow::MainWindow(QWidget *pParent) :
 
 MainWindow::~MainWindow()
 {
-    // Finalize our various plugins
+    // Finalise the GUI side of our various plugins
+
+    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            // The plugin implements our GUI interface, so...
+
+            guiInterface->finalizeGui();
+    }
+
+    // Finalise our various plugins
 
     foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
         PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());

@@ -8,9 +8,14 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(Viewer TRUE
     SOURCES
+        ../../plugininterface.cpp
+
         src/mmlviewerwidget.cpp
         src/viewerplugin.cpp
         src/viewerwindow.cpp
+    HEADERS
+        ../../guiinterface.h
+        ../../plugininterface.h
     HEADERS_MOC
         src/mmlviewerwidget.h
         src/viewerplugin.h

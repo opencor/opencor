@@ -1,18 +1,12 @@
 #include "viewerplugin.h"
 
-#include <QMessageBox>
-
 namespace OpenCOR {
 namespace Viewer {
 
 PLUGININFO_FUNC ViewerPluginInfo()
 {
-    PluginInfo res;
-
-    res.type         = PluginInfo::Gui;
-    res.dependencies = QStringList() << "Core" << "QtMmlWidget";
-
-    return res;
+    return PluginInfo(PluginInfo::Gui,
+                       QStringList() << "Core" << "QtMmlWidget");
 }
 
 void ViewerPlugin::initialize()
@@ -25,7 +19,12 @@ void ViewerPlugin::finalize()
 //---GRY--- TO BE DONE...
 }
 
-void ViewerPlugin::setupUi(QMainWindow *pMainWindow)
+void ViewerPlugin::initializeGui(QMainWindow *pMainWindow)
+{
+//---GRY--- TO BE DONE...
+}
+
+void ViewerPlugin::finalizeGui()
 {
 //---GRY--- TO BE DONE...
 }

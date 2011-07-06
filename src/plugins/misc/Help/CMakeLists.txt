@@ -8,9 +8,14 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(Help TRUE
     SOURCES
+        ../../plugininterface.cpp
+
         src/helpplugin.cpp
         src/helpwidget.cpp
         src/helpwindow.cpp
+    HEADERS
+        ../../guiinterface.h
+        ../../plugininterface.h
     HEADERS_MOC
         src/helpplugin.h
         src/helpwidget.h

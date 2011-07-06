@@ -8,9 +8,13 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(CellML FALSE
     SOURCES
+        ../../plugininterface.cpp
+
         src/cellml.cpp
         src/cellmlplugin.cpp
     HEADERS
+        ../../plugininterface.h
+
         src/cellml.h
     HEADERS_MOC
         src/cellmlplugin.h

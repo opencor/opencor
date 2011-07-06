@@ -5,12 +5,8 @@ namespace VersionManager {
 
 PLUGININFO_FUNC VersionManagerPluginInfo()
 {
-    PluginInfo res;
-
-    res.type         = PluginInfo::General;
-    res.dependencies = QStringList();
-
-    return res;
+    return PluginInfo(PluginInfo::General,
+                      QStringList());
 }
 
 void VersionManagerPlugin::initialize()
@@ -19,6 +15,16 @@ void VersionManagerPlugin::initialize()
 }
 
 void VersionManagerPlugin::finalize()
+{
+//---GRY--- TO BE DONE...
+}
+
+void VersionManagerPlugin::initializeGui(QMainWindow *pMainWindow)
+{
+//---GRY--- TO BE DONE...
+}
+
+void VersionManagerPlugin::finalizeGui()
 {
 //---GRY--- TO BE DONE...
 }

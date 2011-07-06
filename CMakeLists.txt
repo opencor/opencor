@@ -43,6 +43,7 @@ SET(SOURCES
     src/misc/utils.cpp
 
     src/plugins/plugin.cpp
+    src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
 
     src/ui/mainwindow.cpp

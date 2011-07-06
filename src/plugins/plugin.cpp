@@ -12,12 +12,10 @@ Plugin::Plugin(const QString &pFileName,
     mName(QFileInfo(pFileName).baseName().remove(0, PluginPrefix.length())),
     // Note: to get the name of the plugin from its file name, we must remove
     //       the plugin prefix part from it...
-    mInstance(0)
+    mInfo(PluginInfo::Undefined, QStringList()),
+    mInstance(0),
+    mStatus(Undefined)
 {
-    // Default type of plugin
-
-    mInfo.type = PluginInfo::Undefined;
-
     // Check whether the plugin physically exists
 
     if (QFileInfo(pFileName).exists()) {
@@ -56,8 +54,8 @@ Plugin::Plugin(const QString &pFileName,
         // Try to load the plugin, but only if it is either a general plugin or
         // one of the type we are happy with
 
-        if (   (mInfo.type == PluginInfo::General)
-            || (mInfo.type == pGuiOrConsoleType)) {
+        if (   (mInfo.mType == PluginInfo::General)
+            || (mInfo.mType == pGuiOrConsoleType)) {
             // We are dealing with the right kind of plugin, so try to load it
 //---GRY--- WE SHOULD CHECK IN THE SETTINGS WHETHER THE USER ACTUALLY WANTs TO
 //          LOAD THE PLUGIN OR NOT...
@@ -76,7 +74,7 @@ Plugin::Plugin(const QString &pFileName,
 
                 mStatus = NotLoaded;
             }
-        } else if (mInfo.type == PluginInfo::Undefined) {
+        } else if (mInfo.mType == PluginInfo::Undefined) {
             // We couldn't retrieve the plugin information which means we are
             // not dealing with an OpenCOR plugin or that one or several of the
             // plugin's dependencies weren't loaded, so...

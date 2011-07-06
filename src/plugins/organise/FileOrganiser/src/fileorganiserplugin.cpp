@@ -1,18 +1,12 @@
 #include "fileorganiserplugin.h"
 
-#include <QMessageBox>
-
 namespace OpenCOR {
 namespace FileOrganiser {
 
 PLUGININFO_FUNC FileOrganiserPluginInfo()
 {
-    PluginInfo res;
-
-    res.type         = PluginInfo::Gui;
-    res.dependencies = QStringList() << "Core";
-
-    return res;
+    return PluginInfo(PluginInfo::Gui,
+                       QStringList() << "Core");
 }
 
 void FileOrganiserPlugin::initialize()
@@ -25,7 +19,12 @@ void FileOrganiserPlugin::finalize()
 //---GRY--- TO BE DONE...
 }
 
-void FileOrganiserPlugin::setupUi(QMainWindow *pMainWindow)
+void FileOrganiserPlugin::initializeGui(QMainWindow *pMainWindow)
+{
+//---GRY--- TO BE DONE...
+}
+
+void FileOrganiserPlugin::finalizeGui()
 {
 //---GRY--- TO BE DONE...
 }

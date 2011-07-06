@@ -5,12 +5,8 @@ namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo()
 {
-    PluginInfo res;
-
-    res.type         = PluginInfo::General;
-    res.dependencies = QStringList();
-
-    return res;
+    return PluginInfo(PluginInfo::General,
+                      QStringList());
 }
 
 void CorePlugin::initialize()
@@ -19,6 +15,16 @@ void CorePlugin::initialize()
 }
 
 void CorePlugin::finalize()
+{
+//---GRY--- TO BE DONE...
+}
+
+void CorePlugin::initializeGui(QMainWindow *pMainWindow)
+{
+//---GRY--- TO BE DONE...
+}
+
+void CorePlugin::finalizeGui()
 {
 //---GRY--- TO BE DONE...
 }

@@ -1,18 +1,12 @@
 #include "helpplugin.h"
 
-#include <QMessageBox>
-
 namespace OpenCOR {
 namespace Help {
 
 PLUGININFO_FUNC HelpPluginInfo()
 {
-    PluginInfo res;
-
-    res.type         = PluginInfo::Gui;
-    res.dependencies = QStringList() << "Core";
-
-    return res;
+    return PluginInfo(PluginInfo::Gui,
+                       QStringList() << "Core");
 }
 
 void HelpPlugin::initialize()
@@ -25,7 +19,12 @@ void HelpPlugin::finalize()
 //---GRY--- TO BE DONE...
 }
 
-void HelpPlugin::setupUi(QMainWindow *pMainWindow)
+void HelpPlugin::initializeGui(QMainWindow *pMainWindow)
+{
+//---GRY--- TO BE DONE...
+}
+
+void HelpPlugin::finalizeGui()
 {
 //---GRY--- TO BE DONE...
 }

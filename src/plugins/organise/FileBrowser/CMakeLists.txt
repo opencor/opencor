@@ -8,9 +8,14 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(FileBrowser TRUE
     SOURCES
+        ../../plugininterface.cpp
+
         src/filebrowserplugin.cpp
         src/filebrowserwidget.cpp
         src/filebrowserwindow.cpp
+    HEADERS
+        ../../guiinterface.h
+        ../../plugininterface.h
     HEADERS_MOC
         src/filebrowserplugin.h
         src/filebrowserwidget.h
