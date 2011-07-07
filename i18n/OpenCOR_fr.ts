@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>CheckForUpdatesWindow</name>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Vérifier pour des Mises à Jour</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>&amp;File</source>
@@ -125,6 +132,20 @@
     <message>
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Etes-vous sûr que c&amp;apos;est ce que vous voulez ?</translation>
+    </message>
+</context>
+<context>
+    <name>PluginsWindow</name>
+    <message>
+        <source>Plugins</source>
+        <translation>Extensions</translation>
+    </message>
+</context>
+<context>
+    <name>PreferencesWindow</name>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
     </message>
 </context>
 </TS>

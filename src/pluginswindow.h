@@ -10,9 +10,8 @@ namespace Ui {
 }
 
 namespace OpenCOR {
-namespace Core {
 
-class PluginsWindow : public QDialog, public CommonWidget
+class PluginsWindow : public QDialog, public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -26,6 +25,6 @@ private:
     Ui::PluginsWindow *mUi;
 };
 
-} }
+}
 
 #endif

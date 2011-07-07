@@ -37,8 +37,11 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 # Files that make up the GUI version of OpenCOR
 
 SET(SOURCES
+    src/checkforupdateswindow.cpp
     src/main.cpp
     src/mainwindow.cpp
+    src/pluginswindow.cpp
+    src/preferenceswindow.cpp
 
     src/misc/common.cpp
     src/misc/utils.cpp
@@ -48,6 +51,8 @@ SET(SOURCES
     src/plugins/plugin.cpp
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
+
+    src/plugins/misc/Core/src/commonwidget.cpp
 )
 
 SET(HEADERS
@@ -56,10 +61,16 @@ SET(HEADERS
 
     src/plugins/guiinterface.h
     src/plugins/plugininterface.h
+
+    src/plugins/misc/Core/src/commonwidget.h
+    src/plugins/misc/Core/src/coreglobal.h
 )
 
 SET(HEADERS_MOC
+    src/checkforupdateswindow.h
     src/mainwindow.h
+    src/pluginswindow.h
+    src/preferenceswindow.h
 
     src/misc/versionmanager.h
 
@@ -68,7 +79,10 @@ SET(HEADERS_MOC
 )
 
 SET(UIS
+    src/checkforupdateswindow.ui
     src/mainwindow.ui
+    src/pluginswindow.ui
+    src/preferenceswindow.ui
 )
 
 SET(RESOURCES
@@ -206,8 +220,11 @@ ENDIF()
 # Additional compiler and linker settings
 
 SET(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
+ADD_DEFINITIONS(-D${PROJECT_NAME}_MAIN)
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
+SET_TARGET_PROPERTIES(${PROJECT_NAME}
+    PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+)
 
 # Some post-processing specific to Windows and Linux
 

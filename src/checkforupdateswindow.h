@@ -10,9 +10,8 @@ namespace Ui {
 }
 
 namespace OpenCOR {
-namespace Core {
 
-class CheckForUpdatesWindow : public QDialog, public CommonWidget
+class CheckForUpdatesWindow : public QDialog, public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -26,6 +25,6 @@ private:
     Ui::CheckForUpdatesWindow *mUi;
 };
 
-} }
+}
 
 #endif

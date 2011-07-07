@@ -3,7 +3,6 @@
 #include "ui_pluginswindow.h"
 
 namespace OpenCOR {
-namespace Core {
 
 PluginsWindow::PluginsWindow(QWidget *pParent) :
     QDialog(pParent),
@@ -29,4 +28,4 @@ void PluginsWindow::retranslateUi()
     mUi->retranslateUi(this);
 }
 
-} }
+}

@@ -3,7 +3,6 @@
 #include "ui_preferenceswindow.h"
 
 namespace OpenCOR {
-namespace Core {
 
 PreferencesWindow::PreferencesWindow(QWidget *pParent) :
     QDialog(pParent),
@@ -29,4 +28,4 @@ void PreferencesWindow::retranslateUi()
     mUi->retranslateUi(this);
 }
 
-} }
+}
