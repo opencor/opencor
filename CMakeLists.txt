@@ -41,6 +41,7 @@ SET(SOURCES
 
     src/misc/common.cpp
     src/misc/utils.cpp
+    src/misc/versionmanager.cpp
 
     src/plugins/guiinterface.cpp
     src/plugins/plugin.cpp
@@ -59,6 +60,8 @@ SET(HEADERS
 )
 
 SET(HEADERS_MOC
+    src/misc/versionmanager.h
+
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
 
@@ -153,7 +156,6 @@ SET(PLUGINS
 
     misc/CellML
     misc/Help
-    misc/VersionManager
 
     organise/CellMLModelRepository
     organise/FileBrowser
