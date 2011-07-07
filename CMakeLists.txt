@@ -38,6 +38,7 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 
 SET(SOURCES
     src/main.cpp
+    src/mainwindow.cpp
 
     src/misc/common.cpp
     src/misc/utils.cpp
@@ -47,8 +48,6 @@ SET(SOURCES
     src/plugins/plugin.cpp
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
-
-    src/ui/mainwindow.cpp
 )
 
 SET(HEADERS
@@ -60,16 +59,16 @@ SET(HEADERS
 )
 
 SET(HEADERS_MOC
+    src/mainwindow.h
+
     src/misc/versionmanager.h
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
-
-    src/ui/mainwindow.h
 )
 
 SET(UIS
-    src/ui/mainwindow.ui
+    src/mainwindow.ui
 )
 
 SET(RESOURCES
