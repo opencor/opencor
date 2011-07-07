@@ -49,6 +49,8 @@
     </widget>
     <addaction name="menuLanguage"/>
     <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
+    <addaction name="separator"/>
     <addaction name="actionResetAll"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -254,10 +256,22 @@
     <string>Show/hide the status bar</string>
    </property>
   </action>
+  <action name="actionPreferences">
+   <property name="icon">
+    <iconset resource="../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/configure.png</normaloff>:/oxygen/actions/configure.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Preferences...</string>
+   </property>
+   <property name="statusTip">
+    <string>Preferences for OpenCOR</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../../res/ui.qrc"/>
+  <include location="../res/ui.qrc"/>
  </resources>
  <connections/>
 </ui>

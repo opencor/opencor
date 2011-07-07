@@ -122,6 +122,14 @@
         <source>Help Toolbar</source>
         <translation>Barre d&apos;Outils Aide</translation>
     </message>
+    <message>
+        <source>&amp;Preferences...</source>
+        <translation>&amp;Préférences...</translation>
+    </message>
+    <message>
+        <source>Preferences for OpenCOR</source>
+        <translation>Préférences pour OpenCOR</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::MainWindow</name>
