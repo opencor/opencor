@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
+#include "pluginswindow.h"
 #include "preferenceswindow.h"
 #include "utils.h"
 
@@ -432,6 +433,15 @@ void MainWindow::on_actionFrench_triggered()
     // Select French as the language used by OpenCOR
 
     setLocale(FrenchLocale);
+}
+
+void MainWindow::on_actionPlugins_triggered()
+{
+    // Plugins' preferences
+
+    OpenCOR::PluginsWindow pluginsWindow(this);
+
+    pluginsWindow.exec();
 }
 
 void MainWindow::on_actionPreferences_triggered()

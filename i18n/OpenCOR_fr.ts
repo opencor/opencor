@@ -130,6 +130,10 @@
         <source>Preferences for OpenCOR</source>
         <translation>Préférences pour OpenCOR</translation>
     </message>
+    <message>
+        <source>Plu&amp;gins...</source>
+        <translation>E&amp;xtensions...</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::MainWindow</name>

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../res/ui.qrc">
+   <iconset resource="../res/ui.qrc">
     <normaloff>:/appIcon</normaloff>:/appIcon</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
@@ -39,7 +39,7 @@
       <string>&amp;Language</string>
      </property>
      <property name="icon">
-      <iconset resource="../../res/ui.qrc">
+      <iconset resource="../res/ui.qrc">
        <normaloff>:/oxygen/categories/applications-education-language.png</normaloff>:/oxygen/categories/applications-education-language.png</iconset>
      </property>
      <addaction name="actionSystem"/>
@@ -48,6 +48,8 @@
      <addaction name="actionFrench"/>
     </widget>
     <addaction name="menuLanguage"/>
+    <addaction name="separator"/>
+    <addaction name="actionPlugins"/>
     <addaction name="separator"/>
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
@@ -70,7 +72,7 @@
       <string>&amp;Toolbars</string>
      </property>
      <property name="icon">
-      <iconset resource="../../res/ui.qrc">
+      <iconset resource="../res/ui.qrc">
        <normaloff>:/oxygen/actions/configure-toolbars.png</normaloff>:/oxygen/actions/configure-toolbars.png</iconset>
      </property>
      <addaction name="actionHelpToolbar"/>
@@ -108,7 +110,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="../../res/ui.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/application-exit.png</normaloff>:/oxygen/actions/application-exit.png</iconset>
    </property>
    <property name="text">
@@ -129,7 +131,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../res/ui.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/flags/en.png</normaloff>:/flags/en.png</iconset>
    </property>
    <property name="text">
@@ -147,7 +149,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../res/ui.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/flags/fr.png</normaloff>:/flags/fr.png</iconset>
    </property>
    <property name="text">
@@ -162,7 +164,7 @@
   </action>
   <action name="actionHomePage">
    <property name="icon">
-    <iconset resource="../../res/ui.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/categories/applications-internet.png</normaloff>:/oxygen/categories/applications-internet.png</iconset>
    </property>
    <property name="text">
@@ -177,7 +179,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="../../res/ui.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/help-about.png</normaloff>:/oxygen/actions/help-about.png</iconset>
    </property>
    <property name="text">
@@ -192,7 +194,7 @@
   </action>
   <action name="actionResetAll">
    <property name="icon">
-    <iconset resource="../../res/ui.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/system-reboot.png</normaloff>:/oxygen/actions/system-reboot.png</iconset>
    </property>
    <property name="text">
@@ -232,7 +234,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../res/ui.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/view-fullscreen.png</normaloff>:/oxygen/actions/view-fullscreen.png</iconset>
    </property>
    <property name="text">
@@ -258,7 +260,7 @@
   </action>
   <action name="actionPreferences">
    <property name="icon">
-    <iconset resource="../../res/ui.qrc">
+    <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/configure.png</normaloff>:/oxygen/actions/configure.png</iconset>
    </property>
    <property name="text">
@@ -266,6 +268,15 @@
    </property>
    <property name="statusTip">
     <string>Preferences for OpenCOR</string>
+   </property>
+  </action>
+  <action name="actionPlugins">
+   <property name="icon">
+    <iconset resource="../res/ui.qrc">
+     <normaloff>:/oxygen/apps/preferences-plugin.png</normaloff>:/oxygen/apps/preferences-plugin.png</iconset>
+   </property>
+   <property name="text">
+    <string>Plu&amp;gins...</string>
    </property>
   </action>
  </widget>

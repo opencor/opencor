@@ -9,6 +9,7 @@
         <file>oxygen/actions/help-about.png</file>
         <file>oxygen/actions/system-reboot.png</file>
         <file>oxygen/actions/view-fullscreen.png</file>
+        <file>oxygen/apps/preferences-plugin.png</file>
         <file>oxygen/categories/applications-education-language.png</file>
         <file>oxygen/categories/applications-internet.png</file>
         <file alias="qt_fr">qt_fr.qm</file>
