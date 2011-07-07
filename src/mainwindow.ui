@@ -61,6 +61,8 @@
     </property>
     <addaction name="actionHomePage"/>
     <addaction name="separator"/>
+    <addaction name="actionCheckForUpdates"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -256,6 +258,21 @@
    </property>
    <property name="statusTip">
     <string>Show/hide the status bar</string>
+   </property>
+  </action>
+  <action name="actionCheckForUpdates">
+   <property name="icon">
+    <iconset resource="../res/ui.qrc">
+     <normaloff>:/oxygen/apps/system-software-update.png</normaloff>:/oxygen/apps/system-software-update.png</iconset>
+   </property>
+   <property name="text">
+    <string>Check for &amp;Updates...</string>
+   </property>
+   <property name="statusTip">
+    <string>Check for updates</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionPreferences">

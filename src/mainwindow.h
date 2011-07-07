@@ -66,6 +66,7 @@ private Q_SLOTS:
     void on_actionPlugins_triggered();
     void on_actionPreferences_triggered();
     void on_actionHomePage_triggered();
+    void on_actionCheckForUpdates_triggered();
     void on_actionAbout_triggered();
 
     void resetAll();

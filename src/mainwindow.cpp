@@ -1,3 +1,4 @@
+#include "checkforupdateswindow.h"
 #include "common.h"
 #include "guiinterface.h"
 #include "mainwindow.h"
@@ -460,11 +461,20 @@ void MainWindow::on_actionHomePage_triggered()
     QDesktopServices::openUrl(QUrl(OpencorHomepageUrl));
 }
 
+void MainWindow::on_actionCheckForUpdates_triggered()
+{
+    // Check for updates
+
+    OpenCOR::CheckForUpdatesWindow checkForUpdatesWindow(this);
+
+    checkForUpdatesWindow.exec();
+}
+
 void MainWindow::on_actionAbout_triggered()
 {
     // Display some information about OpenCOR
 
-    QMessageBox::about(this, qApp->applicationName(),
+    QMessageBox::about(this, tr("About"),
                         "<h1 align=center><b>"+getAppVersion(qApp)+"</b></h1>"
                        +"<h3 align=center><em>"+getOsName()+"</em></h3>"
                        +"<p align=center><em>"+getAppCopyright(true)+"</em></p>"

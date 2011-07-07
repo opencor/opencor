@@ -134,6 +134,14 @@
         <source>Plu&amp;gins...</source>
         <translation>E&amp;xtensions...</translation>
     </message>
+    <message>
+        <source>Check for &amp;Updates...</source>
+        <translation>Vérifier pour des Mises à Jo&amp;ur...</translation>
+    </message>
+    <message>
+        <source>Check for updates</source>
+        <translation>Vérifier pour des mises à jour</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::MainWindow</name>
@@ -144,6 +152,10 @@
     <message>
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Etes-vous sûr que c&amp;apos;est ce que vous voulez ?</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>A Propos</translation>
     </message>
 </context>
 <context>
