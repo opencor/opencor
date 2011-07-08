@@ -13,6 +13,7 @@
   <property name="windowTitle">
    <string>Check for Updates</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout"/>
  </widget>
  <resources/>
  <connections/>
