@@ -8,7 +8,7 @@ namespace FileBrowser {
 
 PLUGININFO_FUNC FileBrowserPluginInfo();
 
-class FileBrowserPlugin : public QObject, public GuiInterface
+class FileBrowserPlugin : public GuiInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)

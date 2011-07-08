@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-This CellML %1 file was generated on %2 at %3 using %4
-%5
--->
-<model name="%6" cmeta:id="%7" xmlns="http://www.cellml.org/cellml/%8#" xmlns:cellml="http://www.cellml.org/cellml/%9#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"/>

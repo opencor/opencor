@@ -8,7 +8,7 @@ namespace Help {
 
 PLUGININFO_FUNC HelpPluginInfo();
 
-class HelpPlugin : public QObject, public GuiInterface
+class HelpPlugin : public GuiInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)

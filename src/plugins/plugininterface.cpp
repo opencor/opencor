@@ -7,9 +7,11 @@
 namespace OpenCOR {
 
 PluginInfo::PluginInfo(const PluginType &pType,
-                       const QStringList &pDependencies) :
+                       const QStringList &pDependencies,
+                       const QString &pDescription) :
     mType(pType),
-    mDependencies(pDependencies)
+    mDependencies(pDependencies),
+    mDescription(pDescription)
 {
 }
 
@@ -25,6 +27,13 @@ QStringList PluginInfo::dependencies()
     // Return the plugin's dependencies
 
     return mDependencies;
+}
+
+QString PluginInfo::description()
+{
+    // Return the plugin's description
+
+    return mDescription;
 }
 
 void PluginInterface::initialize()

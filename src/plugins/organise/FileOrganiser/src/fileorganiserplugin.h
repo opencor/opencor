@@ -8,7 +8,7 @@ namespace FileOrganiser {
 
 PLUGININFO_FUNC FileOrganiserPluginInfo();
 
-class FileOrganiserPlugin : public QObject, public GuiInterface
+class FileOrganiserPlugin : public GuiInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)

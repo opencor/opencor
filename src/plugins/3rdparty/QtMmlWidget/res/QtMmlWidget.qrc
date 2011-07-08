@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="QtMmlWidget_fr">../../../../../build/QtMmlWidget_fr.qm</file>
+    </qresource>
+</RCC>

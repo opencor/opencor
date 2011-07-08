@@ -6,7 +6,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 # Add the plugin
 
-ADD_PLUGIN(QtMmlWidget FALSE
+ADD_PLUGIN(QtMmlWidget TRUE
     SOURCES
         ../../plugininterface.cpp
 

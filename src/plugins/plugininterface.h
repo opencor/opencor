@@ -27,17 +27,20 @@ public:
     };
 
     explicit PluginInfo(const PluginType &pType = Undefined,
-                        const QStringList &pDependencies = QStringList());
+                        const QStringList &pDependencies = QStringList(),
+                        const QString &pDescription = "");
 
     PluginType type();
     QStringList dependencies();
+    QString description();
 
 private:
     PluginType mType;
     QStringList mDependencies;
+    QString mDescription;
 };
 
-class PluginInterface
+class PluginInterface : public QObject
 {
 public:
     virtual void initialize();

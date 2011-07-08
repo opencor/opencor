@@ -8,7 +8,7 @@ namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo();
 
-class CorePlugin : public QObject, public GuiInterface
+class CorePlugin : public GuiInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)

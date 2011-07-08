@@ -8,7 +8,7 @@ namespace Viewer {
 
 PLUGININFO_FUNC ViewerPluginInfo();
 
-class ViewerPlugin : public QObject, public GuiInterface
+class ViewerPlugin : public GuiInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)

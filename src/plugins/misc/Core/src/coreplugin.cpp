@@ -6,7 +6,8 @@ namespace Core {
 PLUGININFO_FUNC CorePluginInfo()
 {
     return PluginInfo(PluginInfo::General,
-                      QStringList());
+                      QStringList(),
+                      QObject::tr("the core plugin for OpenCOR"));
 }
 
 Q_EXPORT_PLUGIN2(Core, CorePlugin)

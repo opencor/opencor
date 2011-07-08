@@ -124,7 +124,7 @@ EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} ${PROJECT_SOURCE_D
 # Update the translation (.ts) files and generate the language (.qm) files
 # which will later on be embedded in the executable as resources
 
-UPDATE_LANGUAGE_FILES(${PROJECT_NAME})
+UPDATE_LANGUAGE_FILES(${PROJECT_NAME} FALSE)
 
 # Third-party libraries which must be directly embedded in the GUI version of
 # OpenCOR
@@ -159,15 +159,18 @@ ENDIF()
 # Build the plugins used by either the GUI and/or console version of OpenCOR
 
 SET(PLUGINS
+    # Build the plugins which may be required by other plugins
+
     misc/Core
-    # Note: the Core plugin must be built before any other plugin
+
+    3rdparty/QtMmlWidget
+
+    # Build the remaining plugins
 
     3rdparty/QScintilla
-    3rdparty/QtMmlWidget
 
     edit/Viewer
 
-    misc/CellML
     misc/Help
 
     organise/CellMLModelRepository
