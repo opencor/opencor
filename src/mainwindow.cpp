@@ -438,7 +438,7 @@ void MainWindow::on_actionPlugins_triggered()
 {
     // Plugins' preferences
 
-    OpenCOR::PluginsWindow pluginsWindow(this);
+    OpenCOR::PluginsWindow pluginsWindow(mPluginManager, this);
 
     pluginsWindow.exec();
 }

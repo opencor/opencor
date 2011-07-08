@@ -78,22 +78,31 @@ PluginManager::~PluginManager()
     }
 }
 
-QList<Plugin *> PluginManager::loadedPlugins()
+QList<Plugin *> PluginManager::plugins(const bool &pOnlyLoadedPlugins)
 {
-    // Return the list of loaded plugins
+    // Return a list of all the plugins
 
     QList<Plugin *> res;
 
     QMap<QString, Plugin *>::const_iterator iter = mPlugins.begin();
 
     while (iter != mPlugins.constEnd()) {
-        if (iter.value()->status() == Plugin::Loaded)
-            res << iter.value();
+        if (   !pOnlyLoadedPlugins
+            || (   pOnlyLoadedPlugins
+                && (iter.value()->status() == Plugin::Loaded)))
+        res << iter.value();
 
         ++iter;
     }
 
     return res;
+}
+
+QList<Plugin *> PluginManager::loadedPlugins()
+{
+    // Return a list of all the loaded plugins
+
+    return plugins(true);
 }
 
 QStringList PluginManager::requiredPlugins(const QString &pFileName,

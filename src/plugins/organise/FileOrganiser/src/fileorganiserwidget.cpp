@@ -49,8 +49,7 @@ void FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
     }
 }
 
-QByteArray FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
-                                                   const int &pLevel) const
+QByteArray FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex) const
 {
     // Encode the hierarchy data
 
