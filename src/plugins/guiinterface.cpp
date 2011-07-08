@@ -2,12 +2,7 @@
 
 namespace OpenCOR {
 
-void GuiInterface::initializeGui(QMainWindow *)
-{
-    // Nothing to do by default...
-}
-
-void GuiInterface::finalizeGui()
+void GuiInterface::initialize(QMainWindow *)
 {
     // Nothing to do by default...
 }

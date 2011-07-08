@@ -8,11 +8,9 @@ namespace CellML {
 
 PLUGININFO_FUNC CellMLPluginInfo();
 
-class CellMLPlugin : public QObject,
-                     public PluginInterface
+class CellMLPlugin : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::PluginInterface)
 };
 
 } }

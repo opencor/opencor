@@ -8,11 +8,9 @@ namespace QScintilla {
 
 PLUGININFO_FUNC QScintillaPluginInfo();
 
-class QScintillaPlugin : public QObject,
-                         public PluginInterface
+class QScintillaPlugin : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::PluginInterface)
 };
 
 } }

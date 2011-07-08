@@ -8,11 +8,9 @@ namespace QtMmlWidget {
 
 PLUGININFO_FUNC QtMmlWidgetPluginInfo();
 
-class QtMmlWidgetPlugin : public QObject,
-                          public PluginInterface
+class QtMmlWidgetPlugin : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::PluginInterface)
 };
 
 } }

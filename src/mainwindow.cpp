@@ -70,18 +70,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 //    setUnifiedTitleAndToolBarOnMac(true);
 //#endif
 
-    // Initialise our various plugins
-
-    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
-        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
-
-        if (pluginInterface)
-            // The plugin implements our plugin interface (what if it didn't?!),
-            // so...
-
-            pluginInterface->initialize();
-    }
-
     // Some connections to handle our Help toolbar
 
     connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
@@ -101,15 +89,26 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
-    // Initialise the GUI side of our various plugins
+    // Initialise our various plugins
 
     foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-        if (guiInterface)
+        if (guiInterface) {
             // The plugin implements our GUI interface, so...
 
-            guiInterface->initializeGui(this);
+            guiInterface->initialize(this);
+        } else {
+            // The plugin doesn't implement our GUI interface, so let's see
+            // whether it implements our default interface
+
+            PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+
+            if (pluginInterface)
+                // The plugin implements our default interface, so...
+
+                pluginInterface->initialize();
+        }
     }
 
 //---GRY--- TO BE DONE...
@@ -140,27 +139,26 @@ MainWindow::MainWindow(QWidget *pParent) :
 
 MainWindow::~MainWindow()
 {
-    // Finalise the GUI side of our various plugins
+    // Finalize our various plugins
 
     foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-        if (guiInterface)
+        if (guiInterface) {
             // The plugin implements our GUI interface, so...
 
-            guiInterface->finalizeGui();
-    }
+            guiInterface->finalize();
+        } else {
+            // The plugin doesn't implement our GUI interface, so let's see
+            // whether it implements our default interface
 
-    // Finalise our various plugins
+            PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
-        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+            if (pluginInterface)
+                // The plugin implements our default interface, so...
 
-        if (pluginInterface)
-            // The plugin implements our plugin interface (what if it didn't?!),
-            // so...
-
-            pluginInterface->finalize();
+                pluginInterface->finalize();
+        }
     }
 
     // Delete some internal objects
