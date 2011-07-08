@@ -20,6 +20,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     mDataModel = new QStandardItemModel;
 
+    mUi->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mUi->listView->setModel(mDataModel);
 
     // Populate the data model
