@@ -38,13 +38,19 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
         mDataModel->invisibleRootItem()->appendRow(pluginItem);
     }
 
-    // Make sure that the list view only takes as much as necessary
-    // Note: for some reason the retrieved column size gives us a width that is
-    //       slightly too small and therefore requires a horizontal scroll bar,
-    //       hence we add 10% to it
+    // Make sure that the list view only takes as much space as necessary
+    // Note: for some reason (maybe because of the check boxes?) the retrieved
+    //       column size gives us a width that is slightly too small and
+    //       therefore requires a horizontal scroll bar, hence we add 10% to it
 
     mUi->listView->setMinimumWidth(1.1*mUi->listView->sizeHintForColumn(0));
     mUi->listView->setMaximumWidth(mUi->listView->minimumWidth());
+
+    // Avoid issues of the information widgets resizing crazily (especially on
+    // Mac OS X) by fixing the width of the description value widget
+
+    mUi->descriptionValue->setMinimumWidth(mUi->listView->minimumWidth());
+    mUi->descriptionValue->setMaximumWidth(mUi->descriptionValue->minimumWidth());
 
     // Connection to handle a plugin's information
 
@@ -103,7 +109,7 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
         dependencies << tr("None");
 
     if (dependencies.count() > 1)
-        mUi->dependenciesValue->setText(" - "+dependencies.join("\n - "));
+        mUi->dependenciesValue->setText("- "+dependencies.join("\n- "));
     else
         mUi->dependenciesValue->setText(dependencies.first());
 
