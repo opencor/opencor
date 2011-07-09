@@ -32,6 +32,12 @@
          </property>
          <item row="0" column="0">
           <widget class="QLabel" name="typeLabel">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Type:</string>
            </property>
@@ -46,6 +52,12 @@
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="dependenciesLabel">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Dependencies:</string>
            </property>
@@ -63,6 +75,12 @@
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="descriptionLabel">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Description:</string>
            </property>

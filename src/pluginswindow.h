@@ -34,6 +34,7 @@ private:
 
 private slots:
     void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &);
+    void openLink(const QString &pLink);
 };
 
 }

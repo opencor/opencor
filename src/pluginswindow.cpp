@@ -4,6 +4,9 @@
 
 #include "ui_pluginswindow.h"
 
+#include <QDesktopServices>
+#include <QUrl>
+
 namespace OpenCOR {
 
 PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
@@ -56,6 +59,11 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     connect(mUi->listView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updatePluginInfo(const QModelIndex &, const QModelIndex &)));
+
+    // Connection to handle the activation of a link in the description
+
+    connect(mUi->descriptionValue, SIGNAL(linkActivated(const QString &)),
+            this, SLOT(openLink(const QString &)));
 }
 
 PluginsWindow::~PluginsWindow()
@@ -116,6 +124,13 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
     // The plugin's description
 
     mUi->descriptionValue->setText(pluginInfo.description());
+}
+
+void PluginsWindow::openLink(const QString &pLink)
+{
+    // Open the link in the user's browser
+
+    QDesktopServices::openUrl(QUrl(pLink));
 }
 
 }
