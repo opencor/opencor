@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QDir>
 #include <QMainWindow>
 #include <QTranslator>
 
@@ -44,11 +43,6 @@ private:
 
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
-
-    QMenu *mActionReopenMenu;
-    QMenu *mActionOpenReopenMenu;
-
-    QDir mActiveDir;
 
     void loadSettings();
     void saveSettings();

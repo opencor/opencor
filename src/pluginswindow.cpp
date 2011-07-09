@@ -7,7 +7,34 @@
 #include <QDesktopServices>
 #include <QUrl>
 
+#include <QDebug>
+
 namespace OpenCOR {
+
+PluginDelegate::PluginDelegate(QStandardItemModel *pDataModel,
+                               QObject *pParent) :
+    QItemDelegate(pParent),
+    mDataModel(pDataModel)
+{
+}
+
+void PluginDelegate::paint(QPainter *pPainter,
+                           const QStyleOptionViewItem &pOption,
+                           const QModelIndex &pIndex) const
+{
+    // Paint the item as normal, except for the items which are not checkable
+    // (i.e. plugins which the user cannot decide whether to load) in which case
+    // we paint them as if they were disabled
+
+    QStandardItem *pluginItem = mDataModel->itemFromIndex(pIndex);
+
+    QStyleOptionViewItem option(pOption);
+
+    if (!pluginItem->isCheckable())
+        option.state ^= QStyle::State_Enabled;
+
+    QItemDelegate::paint(pPainter, option, pIndex);
+}
 
 PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
                              QWidget *pParent) :
@@ -20,20 +47,22 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     mUi->setupUi(this);
 
-    // Set up the tree view
+    // Set up the tree view with a delegate, so that we can select plugins that
+    // are shown as 'disabled' (to reflect the fact that users cannot decide
+    // whether they should be loaded)
 
     mDataModel = new QStandardItemModel;
+    mPluginDelegate = new PluginDelegate(mDataModel);
 
     mUi->listView->setModel(mDataModel);
+    mUi->listView->setItemDelegate(mPluginDelegate);
 
     // Populate the data model
 
     foreach(Plugin *plugin, pPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem(plugin->name());
 
-        pluginItem->setCheckable(true);
-        pluginItem->setEnabled(plugin->info().dependencies().count());
-
+        pluginItem->setCheckable(plugin->info().dependencies().count());
         pluginItem->setCheckState((plugin->status() == Plugin::Loaded)?
                                       Qt::Checked:
                                       Qt::Unchecked);
@@ -71,6 +100,7 @@ PluginsWindow::~PluginsWindow()
     // Delete some internal objects
 
     delete mDataModel;
+    delete mPluginDelegate;
     delete mUi;
 }
 

@@ -4,6 +4,7 @@
 #include "commonwidget.h"
 
 #include <QDialog>
+#include <QItemDelegate>
 #include <QStandardItemModel>
 
 namespace Ui {
@@ -13,6 +14,19 @@ namespace Ui {
 namespace OpenCOR {
 
 class PluginManager;
+
+class PluginDelegate : public QItemDelegate
+{
+public:
+    explicit PluginDelegate(QStandardItemModel *pDataModel,
+                            QObject *pParent = 0);
+
+    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+                       const QModelIndex &pIndex) const;
+
+private:
+    QStandardItemModel *mDataModel;
+};
 
 class PluginsWindow : public QDialog, public Core::CommonWidget
 {
@@ -28,9 +42,11 @@ public:
 private:
     Ui::PluginsWindow *mUi;
 
+    PluginManager *mPluginManager;
+
     QStandardItemModel *mDataModel;
 
-    PluginManager *mPluginManager;
+    PluginDelegate *mPluginDelegate;
 
 private slots:
     void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &);
