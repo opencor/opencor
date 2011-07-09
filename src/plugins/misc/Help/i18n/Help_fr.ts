@@ -75,8 +75,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>a plugin which provides you help</source>
-        <translation>une extension qui vous offre de l&apos;aide</translation>
+        <source>A plugin to provide help</source>
+        <translation>Une extension pour fournir de l&apos;aide</translation>
     </message>
 </context>
 </TS>

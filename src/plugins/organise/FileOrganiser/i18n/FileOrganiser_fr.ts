@@ -27,8 +27,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>a plugin which provides you with a means to organise your files</source>
-        <translation>une extension qui vous permet d&apos;organiser vos fichiers</translation>
+        <source>A plugin to organise your files</source>
+        <translation>Une extension pour organiser vos fichiers</translation>
     </message>
 </context>
 </TS>

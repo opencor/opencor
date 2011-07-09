@@ -4,8 +4,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>the core plugin for OpenCOR</source>
-        <translation>l&apos;extension de base d&apos;OpenCOR</translation>
+        <source>The core plugin for OpenCOR</source>
+        <translation>L&apos;extension de base d&apos;OpenCOR</translation>
     </message>
 </context>
 </TS>

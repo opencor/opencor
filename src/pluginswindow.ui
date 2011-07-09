@@ -19,6 +19,52 @@
      <item>
       <widget class="QListView" name="listView"/>
      </item>
+     <item>
+      <layout class="QVBoxLayout" name="rightRerticalLayout">
+       <item>
+        <layout class="QFormLayout" name="detailsFormLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="typeLabel">
+           <property name="text">
+            <string>Type:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="typeValue">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="dependenciesLabel">
+           <property name="text">
+            <string>Dependencies:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="dependenciesValue">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="descriptionLabel">
+           <property name="text">
+            <string>Description:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QTextBrowser" name="descriptionValue"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
     </layout>
    </item>
    <item>

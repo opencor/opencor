@@ -29,6 +29,11 @@ private:
     Ui::PluginsWindow *mUi;
 
     QStandardItemModel *mDataModel;
+
+    PluginManager *mPluginManager;
+
+private slots:
+    void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &);
 };
 
 }

@@ -159,10 +159,45 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PluginsWindow</name>
+    <message>
+        <source>General</source>
+        <translation>Général</translation>
+    </message>
+    <message>
+        <source>Console</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>GUI</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Undefined</source>
+        <translation>Non défini</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Aucune</translation>
+    </message>
+</context>
+<context>
     <name>PluginsWindow</name>
     <message>
         <source>Plugins</source>
         <translation>Extensions</translation>
+    </message>
+    <message>
+        <source>Type:</source>
+        <translation>Type :</translation>
+    </message>
+    <message>
+        <source>Dependencies:</source>
+        <translation>Dépendances :</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Description :</translation>
     </message>
 </context>
 <context>

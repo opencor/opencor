@@ -34,6 +34,8 @@ public:
     QList<Plugin *> plugins(const bool &pOnlyLoadedPlugins = false);
     QList<Plugin *> loadedPlugins();
 
+    Plugin * plugin(const QString &pName);
+
 private:
     PluginInfo::PluginType mGuiOrConsoleType;
 

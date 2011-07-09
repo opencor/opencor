@@ -62,9 +62,10 @@ PluginManager::PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType) :
     // done about plugins before
 
     foreach (const QString &fileName, fileNames)
-        mPlugins.insert(fileName, new Plugin(fileName,
-                                             mGuiOrConsoleType,
-                                             plugins.contains(Plugin::name(fileName))));
+        mPlugins.insert(Plugin::name(fileName),
+                        new Plugin(fileName,
+                                   mGuiOrConsoleType,
+                                   plugins.contains(Plugin::name(fileName))));
 }
 
 PluginManager::~PluginManager()
@@ -103,6 +104,13 @@ QList<Plugin *> PluginManager::loadedPlugins()
     // Return a list of all the loaded plugins
 
     return plugins(true);
+}
+
+Plugin * PluginManager::plugin(const QString &pName)
+{
+    // Return the plugin which name is that we have been passed
+
+    return mPlugins.value(pName);
 }
 
 QStringList PluginManager::requiredPlugins(const QString &pFileName,

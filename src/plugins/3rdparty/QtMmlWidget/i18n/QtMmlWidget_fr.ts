@@ -4,8 +4,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>a plugin which provides other plugins with an interface to the &lt;a href=&quot;ftp://ftp.qt.nokia.com/qt/solutions/lgpl/&quot;&gt;QtMmlWidget&lt;/a&gt; third-party library</source>
-        <translation>une extension qui offre aux autres extensions une interface à la librarie externe &lt;a href=&quot;ftp://ftp.qt.nokia.com/qt/solutions/lgpl/&quot;&gt;QtMmlWidget&lt;/a&gt;</translation>
+        <source>A plugin to use &lt;a href=&quot;ftp://ftp.qt.nokia.com/qt/solutions/lgpl/&quot;&gt;QtMmlWidget&lt;/a&gt;</source>
+        <translation>Une extension pour utiliser &lt;a href=&quot;ftp://ftp.qt.nokia.com/qt/solutions/lgpl/&quot;&gt;QtMmlWidget&lt;/a&gt;</translation>
     </message>
 </context>
 </TS>

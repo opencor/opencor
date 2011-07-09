@@ -43,8 +43,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>a plugin which provides you with a means to access your local files</source>
-        <translation>une extension qui vous permet d&apos;accéder à vos fichiers locaux</translation>
+        <source>A plugin to access your local files</source>
+        <translation>Une extension pour accéder à vos fichiers locaux</translation>
     </message>
 </context>
 </TS>
