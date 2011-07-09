@@ -86,7 +86,12 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 {
     // Update the information view with the plugin's information
 
-    PluginInfo pluginInfo = mPluginManager->plugin(mDataModel->itemFromIndex(pNewIndex)->text())->info();
+    QString pluginName = mDataModel->itemFromIndex(pNewIndex)->text();
+    PluginInfo pluginInfo = mPluginManager->plugin(pluginName)->info();
+
+    // The plugin's name
+
+    mUi->nameValue->setText(pluginName);
 
     // The plugin's type
 

@@ -199,6 +199,10 @@
         <source>Description:</source>
         <translation>Description :</translation>
     </message>
+    <message>
+        <source>Name:</source>
+        <translation>Nom :</translation>
+    </message>
 </context>
 <context>
     <name>PreferencesWindow</name>
