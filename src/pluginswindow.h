@@ -4,7 +4,7 @@
 #include "commonwidget.h"
 
 #include <QDialog>
-#include <QItemDelegate>
+#include <QStyledItemDelegate>
 #include <QStandardItemModel>
 
 namespace Ui {
@@ -15,7 +15,7 @@ namespace OpenCOR {
 
 class PluginManager;
 
-class PluginDelegate : public QItemDelegate
+class PluginDelegate : public QStyledItemDelegate
 {
 public:
     explicit PluginDelegate(QStandardItemModel *pDataModel,

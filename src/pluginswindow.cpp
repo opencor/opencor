@@ -13,7 +13,7 @@ namespace OpenCOR {
 
 PluginDelegate::PluginDelegate(QStandardItemModel *pDataModel,
                                QObject *pParent) :
-    QItemDelegate(pParent),
+    QStyledItemDelegate(pParent),
     mDataModel(pDataModel)
 {
 }
@@ -28,12 +28,14 @@ void PluginDelegate::paint(QPainter *pPainter,
 
     QStandardItem *pluginItem = mDataModel->itemFromIndex(pIndex);
 
-    QStyleOptionViewItem option(pOption);
+    QStyleOptionViewItemV4 option(pOption);
+
+    initStyleOption(&option, pIndex);
 
     if (!pluginItem->isCheckable())
         option.state ^= QStyle::State_Enabled;
 
-    QItemDelegate::paint(pPainter, option, pIndex);
+    QStyledItemDelegate::paint(pPainter, option, pIndex);
 }
 
 PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
