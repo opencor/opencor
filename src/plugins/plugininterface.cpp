@@ -8,7 +8,7 @@ namespace OpenCOR {
 
 PluginInfo::PluginInfo(const PluginType &pType,
                        const QStringList &pDependencies,
-                       const QMap<QString, QString> &pDescriptions) :
+                       const PluginInfoDescriptions &pDescriptions) :
     mType(pType),
     mDependencies(pDependencies),
     mDescriptions(pDescriptions)

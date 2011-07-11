@@ -14,6 +14,8 @@ namespace OpenCOR {
     #define PLUGININFO_FUNC extern "C" PluginInfo
 #endif
 
+typedef QMap<QString, QString> PluginInfoDescriptions;
+
 class PluginInfo
 {
     friend class Plugin;
@@ -29,7 +31,7 @@ public:
 
     explicit PluginInfo(const PluginType &pType = Undefined,
                         const QStringList &pDependencies = QStringList(),
-                        const QMap<QString, QString> &pDescriptions = QMap<QString, QString>());
+                        const PluginInfoDescriptions &pDescriptions = PluginInfoDescriptions());
 
     PluginType type();
     QStringList dependencies();
@@ -38,7 +40,7 @@ public:
 private:
     PluginType mType;
     QStringList mDependencies;
-    QMap<QString, QString> mDescriptions;
+    PluginInfoDescriptions mDescriptions;
 };
 
 class PluginInterface : public QObject
