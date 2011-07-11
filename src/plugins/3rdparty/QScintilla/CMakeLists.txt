@@ -6,7 +6,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 # Add the plugin
 
-ADD_PLUGIN(QScintilla FALSE
+ADD_PLUGIN(QScintilla
     SOURCES
         ../../plugininterface.cpp
 
