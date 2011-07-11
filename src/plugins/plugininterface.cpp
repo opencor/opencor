@@ -8,10 +8,10 @@ namespace OpenCOR {
 
 PluginInfo::PluginInfo(const PluginType &pType,
                        const QStringList &pDependencies,
-                       const QString &pDescription) :
+                       const QMap<QString, QString> &pDescriptions) :
     mType(pType),
     mDependencies(pDependencies),
-    mDescription(pDescription)
+    mDescriptions(pDescriptions)
 {
 }
 
@@ -29,11 +29,23 @@ QStringList PluginInfo::dependencies()
     return mDependencies;
 }
 
-QString PluginInfo::description()
+QString PluginInfo::description(const QString &pLocale)
 {
-    // Return the plugin's description
+    // Return the plugin's description using the provided locale or the first
+    // description if no description can be found for the provided locale
 
-    return mDescription;
+    if (mDescriptions.isEmpty()) {
+        // No description is avalable, so...
+
+        return "???";
+    } else {
+        // At least one description is available, so return the one that
+        // matches our locale our the first description if there is no match
+
+        QString res = mDescriptions.value(pLocale);
+
+        return res.isEmpty()?mDescriptions.begin().value():res;
+    }
 }
 
 void PluginInterface::initialize()

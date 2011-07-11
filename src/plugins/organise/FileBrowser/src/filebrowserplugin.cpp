@@ -5,9 +5,14 @@ namespace FileBrowser {
 
 PLUGININFO_FUNC FileBrowserPluginInfo()
 {
+    QMap<QString, QString> descriptions;
+
+    descriptions.insert("en", "A plugin to access your local files");
+    descriptions.insert("fr", "Une extension pour accéder à vos fichiers locaux");
+
     return PluginInfo(PluginInfo::Gui,
                        QStringList() << "Core",
-                       QObject::tr("A plugin to access your local files"));
+                       descriptions);
 }
 
 Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)

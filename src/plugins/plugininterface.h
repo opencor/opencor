@@ -3,6 +3,7 @@
 
 #include <QtPlugin>
 
+#include <QMap>
 #include <QStringList>
 
 namespace OpenCOR {
@@ -28,16 +29,16 @@ public:
 
     explicit PluginInfo(const PluginType &pType = Undefined,
                         const QStringList &pDependencies = QStringList(),
-                        const QString &pDescription = "");
+                        const QMap<QString, QString> &pDescriptions = QMap<QString, QString>());
 
     PluginType type();
     QStringList dependencies();
-    QString description();
+    QString description(const QString &pLocale = "en");
 
 private:
     PluginType mType;
     QStringList mDependencies;
-    QString mDescription;
+    QMap<QString, QString> mDescriptions;
 };
 
 class PluginInterface : public QObject

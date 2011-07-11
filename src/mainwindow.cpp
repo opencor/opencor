@@ -294,6 +294,15 @@ void MainWindow::saveSettings()
     mSettings->endGroup();
 }
 
+QString MainWindow::locale()
+{
+    // Return the current locale
+
+    const QString systemLocale = QLocale::system().name().left(2);
+
+    return (mLocale == SystemLocale)?systemLocale:mLocale;
+}
+
 void MainWindow::setLocale(const QString &pLocale)
 {
     if ((pLocale != mLocale) || (pLocale == SystemLocale)) {

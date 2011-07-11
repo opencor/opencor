@@ -1,3 +1,4 @@
+#include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
 #include "pluginswindow.h"
@@ -6,8 +7,6 @@
 
 #include <QDesktopServices>
 #include <QUrl>
-
-#include <QDebug>
 
 namespace OpenCOR {
 
@@ -160,7 +159,7 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     // The plugin's description
 
-    mUi->descriptionValue->setText(pluginInfo.description());
+    mUi->descriptionValue->setText(pluginInfo.description(qobject_cast<MainWindow *>(parent())->locale()));
 }
 
 void PluginsWindow::openLink(const QString &pLink)

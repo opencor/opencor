@@ -40,11 +40,4 @@
         <translation>Aller au répertoire parent</translation>
     </message>
 </context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>A plugin to access your local files</source>
-        <translation>Une extension pour accéder à vos fichiers locaux</translation>
-    </message>
-</context>
 </TS>

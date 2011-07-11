@@ -24,11 +24,4 @@
         <translation>Supprimer le(s) répertoire(s) et/ou le(s) lien(s) vers fichier(s) courant(s)</translation>
     </message>
 </context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>A plugin to organise your files</source>
-        <translation>Une extension pour organiser vos fichiers</translation>
-    </message>
-</context>
 </TS>

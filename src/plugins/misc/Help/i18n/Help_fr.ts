@@ -72,11 +72,4 @@
         <translation>Imprimer cette page d&apos;aide</translation>
     </message>
 </context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>A plugin to provide help</source>
-        <translation>Une extension pour fournir de l&apos;aide</translation>
-    </message>
-</context>
 </TS>

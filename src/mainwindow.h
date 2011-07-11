@@ -27,6 +27,8 @@ public:
     explicit MainWindow(QWidget *pParent = 0);
     ~MainWindow();
 
+    QString locale();
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void showEvent(QShowEvent *pEvent);
