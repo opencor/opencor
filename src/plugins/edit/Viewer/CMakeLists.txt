@@ -6,7 +6,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 # Add the plugin
 
-ADD_PLUGIN(Viewer FALSE
+ADD_PLUGIN(Viewer TRUE
     SOURCES
         ../../guiinterface.cpp
         ../../plugininterface.cpp

@@ -50,7 +50,7 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 ENDMACRO()
 
-MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME THIRD_PARTY_PLUGIN)
+MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files which will later on be embedded in the project
     # itself
@@ -64,24 +64,12 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME THIRD_PARTY_PLUGIN)
         ${TARGET_NAME}_fr
     )
 
-    IF(${THIRD_PARTY_PLUGIN})
-        # We want translations for a third-party plugin, so only translate what
-        # is related to OpenCOR not what is related to the third-party plugin
-        # itself
-    
-        STRING(TOLOWER ${PLUGIN_NAME} LOWER_CASE_PLUGIN_NAME)
-
-        SET(FILES_TO_TRANSLATE src/${LOWER_CASE_PLUGIN_NAME}plugin.cpp)
-    ELSE()
-        SET(FILES_TO_TRANSLATE ${SOURCES} ${HEADERS} ${HEADERS_MOC} ${UIS})
-    ENDIF()
-
     FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
         SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
 
         IF(EXISTS "${PROJECT_SOURCE_DIR}/${TS_FILE}")
             EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} -no-obsolete
-                                                             ${FILES_TO_TRANSLATE}
+                                                             ${SOURCES} ${HEADERS} ${HEADERS_MOC} ${UIS}
                                                          -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
             EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${PROJECT_SOURCE_DIR}/${TS_FILE}
@@ -98,7 +86,7 @@ MACRO(INCLUDE_THIRD_PARTY_LIBRARIES MAIN_PROJECT_SOURCE_DIR)
     ENDFOREACH()
 ENDMACRO()
 
-MACRO(ADD_PLUGIN PLUGIN_NAME THIRD_PARTY_PLUGIN)
+MACRO(ADD_PLUGIN PLUGIN_NAME HAS_RESOURCES)
     # Various initialisations
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})
@@ -112,7 +100,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME THIRD_PARTY_PLUGIN)
     SET(OPENCOR_DEPENDENCIES)
     SET(QT_DEPENDENCIES)
 
-    SET(RESOURCES res/${PLUGIN_NAME}.qrc)
+    IF(${HAS_RESOURCES})
+        SET(RESOURCES
+            res/${PLUGIN_NAME}.qrc
+        )
+    ELSE()
+        SET(RESOURCES)
+    ENDIF()
 
     # Analyse the extra parameters
 
@@ -183,7 +177,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME THIRD_PARTY_PLUGIN)
     # Update the translation (.ts) files and generate the language (.qm) files
     # which will later on be embedded in the plugin itself
 
-    UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${THIRD_PARTY_PLUGIN})
+    IF(${HAS_RESOURCES})
+        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
+    ENDIF()
 
     # Definition to make sure that the plugin can be used by other plugins
 
@@ -204,6 +200,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME THIRD_PARTY_PLUGIN)
     ENDIF()
 
     QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+
+    IF(${HAS_RESOURCES})
+        QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+    ELSE()
+        SET(SOURCES_RCS)
+    ENDIF()
 
     ADD_LIBRARY(${PROJECT_NAME} SHARED
         ${SOURCES}

@@ -6,7 +6,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 # Add the plugin
 
-ADD_PLUGIN(FileBrowser FALSE
+ADD_PLUGIN(FileBrowser TRUE
     SOURCES
         ../../guiinterface.cpp
         ../../plugininterface.cpp

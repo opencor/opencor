@@ -6,7 +6,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 # Add the plugin
 
-ADD_PLUGIN(FileOrganiser FALSE
+ADD_PLUGIN(FileOrganiser TRUE
     SOURCES
         ../../guiinterface.cpp
         ../../plugininterface.cpp

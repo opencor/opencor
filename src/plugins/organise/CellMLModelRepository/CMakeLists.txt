@@ -6,7 +6,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLModelRepository FALSE
+ADD_PLUGIN(CellMLModelRepository TRUE
     SOURCES
         ../../guiinterface.cpp
         ../../plugininterface.cpp
