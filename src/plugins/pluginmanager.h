@@ -38,6 +38,8 @@ public:
 
     Plugin * plugin(const QString &pName);
 
+    QSettings * settings();
+
 private:
     QSettings *mSettings;
 

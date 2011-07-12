@@ -5,6 +5,8 @@
 
 #include <QObject>
 
+class QSettings;
+
 namespace OpenCOR {
 
 class PluginManager;
@@ -12,8 +14,6 @@ class PluginManager;
 class Plugin : public QObject
 {
     Q_OBJECT
-
-    friend class PluginManager;
 
 public:
     enum PluginStatus
@@ -42,6 +42,10 @@ public:
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pDir, const QString &pName);
     static PluginInfo info(const QString &pFileName);
+
+    static bool load(QSettings *pSettings, const QString &pName);
+    static void setLoad(QSettings *pSettings, const QString &pName,
+                        const bool &pToBeLoaded);
 
 private:
     QString mName;

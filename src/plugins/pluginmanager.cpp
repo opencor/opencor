@@ -76,7 +76,7 @@ PluginManager::PluginManager(QSettings *pSettings,
 
     orderedFileNames.removeDuplicates();
 
-    // Try to load all the plugins we can find
+    // Deal with all the plugins we can find
 
     foreach (const QString &fileName, orderedFileNames)
         mPlugins.insert(Plugin::name(fileName),
@@ -127,6 +127,13 @@ Plugin * PluginManager::plugin(const QString &pName)
     // Return the plugin which name is that we have been passed
 
     return mPlugins.value(pName);
+}
+
+QSettings * PluginManager::settings()
+{
+    // Return the settings object
+
+    return mSettings;
 }
 
 QStringList PluginManager::requiredPlugins(const QString &pFileName,

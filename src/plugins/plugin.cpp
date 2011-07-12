@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QPluginLoader>
+#include <QSettings>
 
 namespace OpenCOR {
 
@@ -228,6 +229,29 @@ PluginInfo Plugin::info(const QString &pFileName)
         return pluginInfoFunc();
     else
         return PluginInfo();
+}
+
+static const QString PluginGroup = "Plugin";
+
+bool Plugin::load(QSettings *pSettings, const QString &pName)
+{
+    // Retrieve the plugin's loading requirement
+
+    pSettings->beginGroup(PluginGroup);
+        bool res = pSettings->value(pName, true).toBool();
+    pSettings->endGroup();
+
+    return res;
+}
+
+void Plugin::setLoad(QSettings *pSettings, const QString &pName,
+                     const bool &pToBeLoaded)
+{
+    // Keep track of the plugin's loading requirement
+
+    pSettings->beginGroup(PluginGroup);
+        pSettings->setValue(pName, pToBeLoaded);
+    pSettings->endGroup();
 }
 
 }

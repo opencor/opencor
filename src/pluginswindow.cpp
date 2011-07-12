@@ -60,13 +60,34 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     // Populate the data model
 
-    foreach(Plugin *plugin, pPluginManager->plugins()) {
+    foreach(Plugin *plugin, mPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem(plugin->name());
 
+        // Only plugins that have dependencies are checkable
+
         pluginItem->setCheckable(plugin->info().dependencies().count());
-        pluginItem->setCheckState((plugin->status() == Plugin::Loaded)?
-                                      Qt::Checked:
-                                      Qt::Unchecked);
+
+        // A plugin should be shown as checked (i.e. to be loaded at startup)
+        // if it is a required plugin or a plugin which is explicitly required
+        // to be loaded
+
+        if (pluginItem->isCheckable())
+            // We are dealing with a plugin which has dependencies and may
+            // therefore be explicitly required to be loaded, so...
+
+            pluginItem->setCheckState((Plugin::load(mPluginManager->settings(),
+                                                    plugin->name()))?
+                                          Qt::Checked:
+                                          Qt::Unchecked);
+        else
+            // We are dealing with a plugin that has no dependencies, so show it
+            // checked only if it is actually loaded
+
+            pluginItem->setCheckState((plugin->status() == Plugin::Loaded)?
+                                          Qt::Checked:
+                                          Qt::Unchecked);
+
+        // Add the plugin to our data model
 
         mDataModel->invisibleRootItem()->appendRow(pluginItem);
     }
