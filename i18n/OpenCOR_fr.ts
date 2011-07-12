@@ -193,8 +193,8 @@
         <translation>Ce n&apos;est pas une extension</translation>
     </message>
     <message>
-        <source>The plugin could not be loaded due to a/some missing dependency/ies</source>
-        <translation>L&apos;extension n&apos;a pas pu être installée à une/des dépendance/s manquante/s</translation>
+        <source>The plugin could not be loaded due to a/some missing dependency/ies:</source>
+        <translation>L&apos;extension n&apos;a pas pu être installée à une/des dépendance/s manquante/s :</translation>
     </message>
 </context>
 <context>

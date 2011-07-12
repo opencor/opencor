@@ -42,6 +42,8 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 #ifndef Q_WS_WIN
             bool pluginDependenciesLoaded = true;
 
+            mStatusError = "";
+
             foreach(const QString &dependency, mInfo.dependencies()) {
                 Plugin *pluginDependency = pPluginManager->plugin(dependency);
 
@@ -55,7 +57,10 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 
                     mStatus = MissingDependencies;
 
-                    break;
+                    if (!mStatusError.isEmpty())
+                        mStatusError += "\n";
+
+                    mStatusError += " - "+dependency;
                 }
             }
 #endif
@@ -164,7 +169,8 @@ QString Plugin::statusDescription()
     case NotPlugin:
         return tr("This is not a plugin");
     case MissingDependencies:
-        return tr("The plugin could not be loaded due to a/some missing dependency/ies");
+        return  tr("The plugin could not be loaded due to a/some missing dependency/ies:")+"\n"
+               +mStatusError;
     case NotPluginOrMissingDependencies:
         return tr("This is not a plugin or some plugin dependencies are missing");
     default:

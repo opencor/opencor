@@ -60,9 +60,25 @@ PluginManager::PluginManager(QSettings *pSettings,
 
     plugins.removeDuplicates();
 
+    // Knowing which plugins are required, we must now ensure that these are
+    // loaded first. Note that this is not required on Windows (even though it
+    // clearly doesn't harm having them loaded first!), but on Linux (and maybe
+    // also on Mac OS X -- TO BE CHECKED!) it is otherwise the plugin's status
+    // will be wrong (since on Linux and Mac OS X, we check that dependencies
+    // are first loaded before loading the plugin itself), so...
+
+    QStringList orderedFileNames;
+
+    foreach (const QString &plugin, plugins)
+        orderedFileNames << Plugin::fileName(mPluginsDir, plugin);
+
+    orderedFileNames << fileNames;
+
+    orderedFileNames.removeDuplicates();
+
     // Try to load all the plugins we can find
 
-    foreach (const QString &fileName, fileNames)
+    foreach (const QString &fileName, orderedFileNames)
         mPlugins.insert(Plugin::name(fileName),
                         new Plugin(this, fileName, mGuiOrConsoleType,
                                    plugins.contains(Plugin::name(fileName))));
