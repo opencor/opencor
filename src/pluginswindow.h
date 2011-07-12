@@ -1,8 +1,6 @@
 #ifndef PLUGINSWINDOW_H
 #define PLUGINSWINDOW_H
 
-#include "commonwidget.h"
-
 #include <QDialog>
 #include <QStyledItemDelegate>
 #include <QStandardItemModel>
@@ -28,7 +26,7 @@ private:
     QStandardItemModel *mDataModel;
 };
 
-class PluginsWindow : public QDialog, public Core::CommonWidget
+class PluginsWindow : public QDialog
 {
     Q_OBJECT
 

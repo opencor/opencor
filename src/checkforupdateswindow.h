@@ -1,8 +1,6 @@
 #ifndef CHECKFORUPDATESWINDOW_H
 #define CHECKFORUPDATESWINDOW_H
 
-#include "commonwidget.h"
-
 #include <QDialog>
 
 namespace Ui {
@@ -11,7 +9,7 @@ namespace Ui {
 
 namespace OpenCOR {
 
-class CheckForUpdatesWindow : public QDialog, public Core::CommonWidget
+class CheckForUpdatesWindow : public QDialog
 {
     Q_OBJECT
 

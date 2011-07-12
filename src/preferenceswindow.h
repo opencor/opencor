@@ -1,8 +1,6 @@
 #ifndef PREFERENCESWINDOW_H
 #define PREFERENCESWINDOW_H
 
-#include "commonwidget.h"
-
 #include <QDialog>
 
 namespace Ui {
@@ -11,7 +9,7 @@ namespace Ui {
 
 namespace OpenCOR {
 
-class PreferencesWindow : public QDialog, public Core::CommonWidget
+class PreferencesWindow : public QDialog
 {
     Q_OBJECT
 

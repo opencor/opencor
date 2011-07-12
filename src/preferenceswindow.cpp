@@ -6,7 +6,6 @@ namespace OpenCOR {
 
 PreferencesWindow::PreferencesWindow(QWidget *pParent) :
     QDialog(pParent),
-    CommonWidget(pParent),
     mUi(new Ui::PreferencesWindow)
 {
     // Set up the UI

@@ -40,7 +40,6 @@ void PluginDelegate::paint(QPainter *pPainter,
 PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
                              QWidget *pParent) :
     QDialog(pParent),
-    CommonWidget(pParent),
     mUi(new Ui::PluginsWindow),
     mPluginManager(pPluginManager)
 {

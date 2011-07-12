@@ -6,7 +6,6 @@ namespace OpenCOR {
 
 CheckForUpdatesWindow::CheckForUpdatesWindow(QWidget *pParent) :
     QDialog(pParent),
-    CommonWidget(pParent),
     mUi(new Ui::CheckForUpdatesWindow)
 {
     // Set up the UI
