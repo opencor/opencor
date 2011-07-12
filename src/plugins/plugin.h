@@ -7,6 +7,8 @@
 
 namespace OpenCOR {
 
+class PluginManager;
+
 class Plugin : public QObject
 {
     Q_OBJECT
@@ -22,10 +24,12 @@ public:
         NotNeeded,
         Loaded,
         NotLoaded,
+        NotPlugin,
+        MissingDependencies,
         NotPluginOrMissingDependencies
     };
 
-    explicit Plugin(const QString &pFileName,
+    explicit Plugin(PluginManager *pPluginManager, const QString &pFileName,
                     const PluginInfo::PluginType &pGuiOrConsoleType,
                     const bool &pForceLoading);
 

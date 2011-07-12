@@ -8,7 +8,9 @@
 
 namespace OpenCOR {
 
-PluginManager::PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType) :
+PluginManager::PluginManager(QSettings *pSettings,
+                             const PluginInfo::PluginType &pGuiOrConsoleType) :
+    mSettings(pSettings),
     mGuiOrConsoleType(pGuiOrConsoleType)
 {
     mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
@@ -58,13 +60,11 @@ PluginManager::PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType) :
 
     plugins.removeDuplicates();
 
-    // Try to load all the plugins we can find, but only if nothing has been
-    // done about plugins before
+    // Try to load all the plugins we can find
 
     foreach (const QString &fileName, fileNames)
         mPlugins.insert(Plugin::name(fileName),
-                        new Plugin(fileName,
-                                   mGuiOrConsoleType,
+                        new Plugin(this, fileName, mGuiOrConsoleType,
                                    plugins.contains(Plugin::name(fileName))));
 }
 

@@ -7,7 +7,7 @@
 
 namespace OpenCOR {
 
-Plugin::Plugin(const QString &pFileName,
+Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
                const PluginInfo::PluginType &pGuiOrConsoleType,
                const bool &pForceLoading) :
     mName(name(pFileName)),
@@ -31,29 +31,72 @@ Plugin::Plugin(const QString &pFileName,
         if (   (   (mInfo.mType == PluginInfo::General)
                 || (mInfo.mType == pGuiOrConsoleType))
             && (mInfo.dependencies().count() || pForceLoading)) {
-            // We are dealing with the right kind of plugin, so try to load it
+            // We are dealing with the right kind of plugin, so check that all
+            // of its dependencies, if any, are loaded
+            // Note: the reason we only do this on non-Windows systems is that
+            //       on Windows a shared library's dependencies must be loadable
+            //       before the shared library itself can be loaded while on
+            //       Linux / Mac OS X, it's possible to load a shared library
+            //       even its dependencies are not loaded, so...
 
-            QPluginLoader pluginLoader(pFileName);
+#ifndef Q_WS_WIN
+            bool pluginDependenciesLoaded = true;
 
-            if (pluginLoader.load()) {
-                // The plugin has been properly loaded, so...
+            foreach(const QString &dependency, mInfo.dependencies()) {
+                Plugin *pluginDependency = pPluginManager->plugin(dependency);
 
-                mInstance = pluginLoader.instance();
+                if (   !pluginDependency
+                    || (   pluginDependency
+                        && (pluginDependency->status() != Loaded))) {
+                    // Either the plugin dependency couldn't be found or it
+                    // could be found but it isn't loaded, so...
 
-                mStatus = Loaded;
-            } else {
-                // The plugin couldn't be loaded for some reason (surely, this
-                // should never happen...?!), so...
+                    pluginDependenciesLoaded = false;
 
-                mStatus = NotLoaded;
-                mStatusError = pluginLoader.errorString();
+                    mStatus = MissingDependencies;
+
+                    break;
+                }
             }
+#endif
+
+            // Check whether all of the plugin's dependencies, if any, were
+            // loaded, and if so then try to load the plugin itself
+
+#ifndef Q_WS_WIN
+            if (pluginDependenciesLoaded) {
+#endif
+                // All the plugin's dependencies, if any, were loaded, so try to
+                // load the plugin itself
+
+                QPluginLoader pluginLoader(pFileName);
+
+                if (pluginLoader.load()) {
+                    // The plugin has been properly loaded, so...
+
+                    mInstance = pluginLoader.instance();
+
+                    mStatus = Loaded;
+                } else {
+                    // The plugin couldn't be loaded for some reason (surely,
+                    // this should never happen...?!), so...
+
+                    mStatus = NotLoaded;
+                    mStatusError = pluginLoader.errorString();
+                }
+#ifndef Q_WS_WIN
+            }
+#endif
         } else if (mInfo.mType == PluginInfo::Undefined) {
             // We couldn't retrieve the plugin information which means that we
             // are not dealing with an OpenCOR plugin or that one or several of
             // the plugin's dependencies weren't loaded, so...
 
+#ifdef Q_WS_WIN
             mStatus = NotPluginOrMissingDependencies;
+#else
+            mStatus = NotPlugin;
+#endif
         } else if (mInfo.mType != pGuiOrConsoleType){
             // We are dealing with a plugin which is not of the type we are
             // happy with (i.e. it's a console plugin but we are running the GUI
@@ -116,8 +159,12 @@ QString Plugin::statusDescription()
     case Loaded:
         return tr("The plugin is loaded and is fully functional");
     case NotLoaded:
-        return  tr("The plugin is not loaded due to the following problem:")+"\n"
+        return  tr("The plugin could not be loaded due to the following problem:")+"\n"
                +mStatusError;
+    case NotPlugin:
+        return tr("This is not a plugin");
+    case MissingDependencies:
+        return tr("The plugin could not be loaded due to a/some missing dependency/ies");
     case NotPluginOrMissingDependencies:
         return tr("This is not a plugin or some plugin dependencies are missing");
     default:

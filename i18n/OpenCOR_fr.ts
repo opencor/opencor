@@ -169,10 +169,6 @@
         <translation>L&apos;extension n&apos;est pas du bon type</translation>
     </message>
     <message>
-        <source>The plugin is not loaded due to the following problem:</source>
-        <translation>L&apos;extension n&apos;est pas installée à cause du problème suivant :</translation>
-    </message>
-    <message>
         <source>This is not a plugin or some plugin dependencies are missing</source>
         <translation>Ce n&apos;est pas une extension ou des dépendances de l&apos;extension sont manquantes</translation>
     </message>
@@ -187,6 +183,18 @@
     <message>
         <source>The plugin is loaded and is fully functional</source>
         <translation>L&apos;extension est installée et est pleinement fonctionnelle</translation>
+    </message>
+    <message>
+        <source>The plugin could not be loaded due to the following problem:</source>
+        <translation>L&apos;extension n&apos;a pas pu être installée à cause du problème suivant :</translation>
+    </message>
+    <message>
+        <source>This is not a plugin</source>
+        <translation>Ce n&apos;est pas une extension</translation>
+    </message>
+    <message>
+        <source>The plugin could not be loaded due to a/some missing dependency/ies</source>
+        <translation>L&apos;extension n&apos;a pas pu être installée à une/des dépendance/s manquante/s</translation>
     </message>
 </context>
 <context>

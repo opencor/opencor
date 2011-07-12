@@ -5,6 +5,7 @@
 
 #include <QMap>
 #include <QObject>
+#include <QSettings>
 
 class Plugin;
 
@@ -28,7 +29,8 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager(const PluginInfo::PluginType &pGuiOrConsoleType);
+    explicit PluginManager(QSettings *pSettings,
+                           const PluginInfo::PluginType &pGuiOrConsoleType);
     ~PluginManager();
 
     QList<Plugin *> plugins(const bool &pOnlyLoadedPlugins = false);
@@ -37,6 +39,8 @@ public:
     Plugin * plugin(const QString &pName);
 
 private:
+    QSettings *mSettings;
+
     PluginInfo::PluginType mGuiOrConsoleType;
 
     QString mPluginsDir;
