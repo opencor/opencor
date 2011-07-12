@@ -118,7 +118,8 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
     // Update the information view with the plugin's information
 
     QString pluginName = mDataModel->itemFromIndex(pNewIndex)->text();
-    PluginInfo pluginInfo = mPluginManager->plugin(pluginName)->info();
+    Plugin *plugin = mPluginManager->plugin(pluginName);
+    PluginInfo pluginInfo = plugin->info();
 
     // The plugin's name
 
@@ -160,6 +161,12 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
     // The plugin's description
 
     mUi->descriptionValue->setText(pluginInfo.description(qobject_cast<MainWindow *>(parent())->locale()));
+
+    // The plugin's status
+
+    mUi->statusValue->setText((plugin->status() == Plugin::Loaded)?
+                                  tr("Loaded"):
+                                  tr("Not loaded"));
 }
 
 void PluginsWindow::openLink(const QString &pLink)
