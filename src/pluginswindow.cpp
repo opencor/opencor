@@ -160,7 +160,11 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     // The plugin's description
 
-    mUi->descriptionValue->setText(pluginInfo.description(qobject_cast<MainWindow *>(parent())->locale()));
+    QString description = pluginInfo.description(qobject_cast<MainWindow *>(parent())->locale());
+
+    mUi->descriptionValue->setText(description.isEmpty()?
+                                       tr("None"):
+                                       description);
 
     // The plugin's status
 

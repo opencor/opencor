@@ -46,11 +46,12 @@ Plugin::Plugin(const QString &pFileName,
                 // should never happen...?!), so...
 
                 mStatus = NotLoaded;
+                mStatusError = pluginLoader.errorString();
             }
         } else if (mInfo.mType == PluginInfo::Undefined) {
-            // We couldn't retrieve the plugin information which means we are
-            // not dealing with an OpenCOR plugin or that one or several of the
-            // plugin's dependencies weren't loaded, so...
+            // We couldn't retrieve the plugin information which means that we
+            // are not dealing with an OpenCOR plugin or that one or several of
+            // the plugin's dependencies weren't loaded, so...
 
             mStatus = NotPluginOrMissingDependencies;
         } else if (mInfo.mType != pGuiOrConsoleType){
@@ -115,7 +116,8 @@ QString Plugin::statusDescription()
     case Loaded:
         return tr("The plugin is loaded and is fully functional");
     case NotLoaded:
-        return tr("The plugin is not loaded due to the following problem:");
+        return  tr("The plugin is not loaded due to the following problem:")+"\n"
+               +mStatusError;
     case NotPluginOrMissingDependencies:
         return tr("This is not a plugin or some plugin dependencies are missing");
     default:

@@ -37,7 +37,7 @@ QString PluginInfo::description(const QString &pLocale)
     if (mDescriptions.isEmpty()) {
         // No description is avalable, so...
 
-        return "???";
+        return QString();
     } else {
         // At least one description is available, so return the one that
         // matches our locale our the first description if there is no match

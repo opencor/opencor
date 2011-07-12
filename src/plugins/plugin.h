@@ -44,6 +44,7 @@ private:
     PluginInfo mInfo;
     QObject *mInstance;
     PluginStatus mStatus;
+    QString mStatusError;
 };
 
 }
