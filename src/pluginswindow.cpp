@@ -200,4 +200,21 @@ void PluginsWindow::openLink(const QString &pLink)
     QDesktopServices::openUrl(QUrl(pLink));
 }
 
+void OpenCOR::PluginsWindow::on_buttonBox_accepted()
+{
+    // Take into account the user's changes, if any, to which plugin should be
+    // loaded
+
+//---GRY--- TO BE DONE...
+
+    accept();
+}
+
+void OpenCOR::PluginsWindow::on_buttonBox_rejected()
+{
+    // Simple cancel whatever was done here
+
+    reject();
+}
+
 }

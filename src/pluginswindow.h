@@ -47,6 +47,9 @@ private:
     PluginDelegate *mPluginDelegate;
 
 private slots:
+    void on_buttonBox_accepted();
+    void on_buttonBox_rejected();
+
     void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &);
     void openLink(const QString &pLink);
 };
