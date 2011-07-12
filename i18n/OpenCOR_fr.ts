@@ -159,6 +159,37 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::Plugin</name>
+    <message>
+        <source>The plugin could not be found</source>
+        <translation>L&apos;extension n&apos;a pas été trouvée</translation>
+    </message>
+    <message>
+        <source>The plugin is not of the right type</source>
+        <translation>L&apos;extension n&apos;est pas du bon type</translation>
+    </message>
+    <message>
+        <source>The plugin is not loaded due to the following problem:</source>
+        <translation>L&apos;extension n&apos;est pas installée à cause du problème suivant :</translation>
+    </message>
+    <message>
+        <source>This is not a plugin or some plugin dependencies are missing</source>
+        <translation>Ce n&apos;est pas une extension ou des dépendances de l&apos;extension sont manquantes</translation>
+    </message>
+    <message>
+        <source>The plugin is not needed</source>
+        <translation>L&apos;extension n&apos;est pas nécessaire</translation>
+    </message>
+    <message>
+        <source>The plugin&apos;s status is undefined</source>
+        <translation>Le statut de l&apos;extension est indéfini</translation>
+    </message>
+    <message>
+        <source>The plugin is loaded and is fully functional</source>
+        <translation>L&apos;extension est installée et est pleinement fonctionnelle</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PluginsWindow</name>
     <message>
         <source>General</source>
@@ -202,6 +233,10 @@
     <message>
         <source>Name:</source>
         <translation>Nom :</translation>
+    </message>
+    <message>
+        <source>Status:</source>
+        <translation>Statut :</translation>
     </message>
 </context>
 <context>

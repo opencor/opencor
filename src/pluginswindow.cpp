@@ -164,9 +164,7 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     // The plugin's status
 
-    mUi->statusValue->setText((plugin->status() == Plugin::Loaded)?
-                                  tr("Loaded"):
-                                  tr("Not loaded"));
+    mUi->statusValue->setText(plugin->statusDescription());
 }
 
 void PluginsWindow::openLink(const QString &pLink)

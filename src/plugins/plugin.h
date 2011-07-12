@@ -19,6 +19,7 @@ public:
         Undefined,
         NotFound,
         NotSuitable,
+        NotNeeded,
         Loaded,
         NotLoaded,
         NotPluginOrMissingDependencies
@@ -32,6 +33,7 @@ public:
     PluginInfo info();
     QObject * instance();
     PluginStatus status();
+    QString statusDescription();
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pDir, const QString &pName);

@@ -32,8 +32,6 @@ Plugin::Plugin(const QString &pFileName,
                 || (mInfo.mType == pGuiOrConsoleType))
             && (mInfo.dependencies().count() || pForceLoading)) {
             // We are dealing with the right kind of plugin, so try to load it
-//---GRY--- WE SHOULD CHECK IN THE SETTINGS WHETHER THE USER ACTUALLY WANTs TO
-//          LOAD THE PLUGIN OR NOT...
 
             QPluginLoader pluginLoader(pFileName);
 
@@ -55,13 +53,18 @@ Plugin::Plugin(const QString &pFileName,
             // plugin's dependencies weren't loaded, so...
 
             mStatus = NotPluginOrMissingDependencies;
-        } else {
-            // We are dealing with a plugin that is not of the type we are happy
-            // with (i.e. it's a console plugin but we are running the GUI
+        } else if (mInfo.mType != pGuiOrConsoleType){
+            // We are dealing with a plugin which is not of the type we are
+            // happy with (i.e. it's a console plugin but we are running the GUI
             // version of OpenCOR, or it's a GUI plugin but we are running the
             // console version of OpenCOR), so...
 
             mStatus = NotSuitable;
+        } else {
+            // If none of the above applies then it means we are dealing with a
+            // plugin which is not needed, so...
+
+            mStatus = NotNeeded;
         }
     } else {
         // The plugin doesn't exist, so...
@@ -96,6 +99,28 @@ Plugin::PluginStatus Plugin::status()
     // Return the plugin's status
 
     return mStatus;
+}
+
+QString Plugin::statusDescription()
+{
+    // Return the plugin's status' description, if any
+
+    switch (mStatus) {
+    case NotFound:
+        return tr("The plugin could not be found");
+    case NotSuitable:
+        return tr("The plugin is not of the right type");
+    case NotNeeded:
+        return tr("The plugin is not needed");
+    case Loaded:
+        return tr("The plugin is loaded and is fully functional");
+    case NotLoaded:
+        return tr("The plugin is not loaded due to the following problem:");
+    case NotPluginOrMissingDependencies:
+        return tr("This is not a plugin or some plugin dependencies are missing");
+    default:
+        return tr("The plugin's status is undefined");
+    }
 }
 
 QString Plugin::name(const QString &pFileName)
