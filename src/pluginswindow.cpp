@@ -72,11 +72,13 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     }
 
     // Make sure that the list view only takes as much space as necessary
-    // Note: for some reason (maybe because of the check boxes?) the retrieved
-    //       column size gives us a width that is slightly too small and
-    //       therefore requires a horizontal scroll bar, hence we add 10% to it
+    // Note: for some reasons (maybe because we have check boxes?), the
+    //       retrieved column size gives us a width that is slightly too small
+    //       and therefore requires a horizontal scroll bar, hence we add 15% to
+    //       it (the extra 15% seems to be enough to even account for a big
+    //       number of plugins which would then require a vertical scroll bar)
 
-    mUi->listView->setMinimumWidth(1.1*mUi->listView->sizeHintForColumn(0));
+    mUi->listView->setMinimumWidth(1.15*mUi->listView->sizeHintForColumn(0));
     mUi->listView->setMaximumWidth(mUi->listView->minimumWidth());
 
     // Avoid issues of the information widgets resizing crazily (especially on
