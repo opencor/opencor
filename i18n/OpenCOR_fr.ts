@@ -198,7 +198,7 @@
     </message>
     <message>
         <source>The plugin is not wanted</source>
-        <translation>L&apos;extension n&apos;est pas voulue</translation>
+        <translation>L&apos;extension n&apos;est pas désirée</translation>
     </message>
 </context>
 <context>
