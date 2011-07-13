@@ -101,12 +101,6 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mUi->listView->setMinimumWidth(1.15*mUi->listView->sizeHintForColumn(0));
     mUi->listView->setMaximumWidth(mUi->listView->minimumWidth());
 
-    // Avoid issues of the information widgets resizing crazily (especially on
-    // Mac OS X) by fixing the width of the description value widget
-
-    mUi->descriptionValue->setMinimumWidth(mUi->listView->minimumWidth());
-    mUi->descriptionValue->setMaximumWidth(mUi->descriptionValue->minimumWidth());
-
     // Connection to handle a plugin's information
 
     connect(mUi->listView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
@@ -116,6 +110,10 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     connect(mUi->descriptionValue, SIGNAL(linkActivated(const QString &)),
             this, SLOT(openLink(const QString &)));
+
+    // Make sure that the window has a reasonable starting size
+
+    layout()->setSizeConstraint(QLayout::SetMinimumSize);
 }
 
 PluginsWindow::~PluginsWindow()
