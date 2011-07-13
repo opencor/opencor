@@ -143,8 +143,7 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
     CommonWidget(pName, this, pParent),
     mHomePage(pHomePage),
     mBackAvailable(false),
-    mForwardAvailable(false),
-    mZoomLevel(defaultZoomLevel())
+    mForwardAvailable(false)
 {
     // Add a small margin to the widget, so that no visual trace of the border
     // drawn by drawBorderIfDocked is left when scrolling
@@ -171,6 +170,12 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
     // Prevent the widget from taking over the scrolling of other widgets
 
     setFocusPolicy(Qt::NoFocus);
+
+    // Set our initial zoom level to the default value
+    // Note: to set mZoomLevel directly is not good enough since one of the
+    //       things setZoomLevel does is to set our zoom factor, so...
+
+    setZoomLevel(defaultZoomLevel());
 
     // Some connections
 
@@ -244,7 +249,7 @@ int HelpWidget::defaultZoomLevel()
 {
     // Return the default zoom level
 
-    return 10;
+    return 9;
 }
 
 void HelpWidget::resetZoom()
