@@ -88,6 +88,7 @@ SET(RESOURCES
 # Various include directories
 
 INCLUDE_DIRECTORIES(
+    src
     src/misc
     src/plugins
     src/ui
