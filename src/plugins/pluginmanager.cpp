@@ -56,7 +56,11 @@ PluginManager::PluginManager(QSettings *pSettings,
     QStringList plugins;
 
     foreach (const QString &fileName, fileNames)
-        plugins << requiredPlugins(fileName);
+        if (   Plugin::info(fileName).dependencies().count()
+            && Plugin::load(mSettings, Plugin::name(fileName)))
+            // The plugin is to be loaded, so retrieve its dependencies
+
+            plugins << requiredPlugins(fileName);
 
     plugins.removeDuplicates();
 
@@ -122,6 +126,13 @@ QList<Plugin *> PluginManager::loadedPlugins()
     return plugins(true);
 }
 
+QString PluginManager::pluginsDir()
+{
+    // Return the plugins directory
+
+    return mPluginsDir;
+}
+
 Plugin * PluginManager::plugin(const QString &pName)
 {
     // Return the plugin which name is that we have been passed
@@ -148,8 +159,8 @@ QStringList PluginManager::requiredPlugins(const QString &pFileName,
     foreach(const QString &plugin, Plugin::info(pFileName).dependencies())
         res << requiredPlugins(Plugin::fileName(mPluginsDir, plugin), pLevel+1);
 
-    // Add the current plugin to the list if it is not the original plugin for
-    // which we want to know what its requirements are
+    // Add the current plugin to the list, but only if it is not the original
+    // plugin for which we want to know what its requirements are
 
     if (pLevel)
         res << Plugin::name(pFileName);

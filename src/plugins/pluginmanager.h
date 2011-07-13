@@ -36,9 +36,13 @@ public:
     QList<Plugin *> plugins(const bool &pOnlyLoadedPlugins = false);
     QList<Plugin *> loadedPlugins();
 
+    QString pluginsDir();
     Plugin * plugin(const QString &pName);
 
     QSettings * settings();
+
+    QStringList requiredPlugins(const QString &pFileName,
+                                const int &pLevel = 0);
 
 private:
     QSettings *mSettings;
@@ -47,9 +51,6 @@ private:
 
     QString mPluginsDir;
     QMap<QString, Plugin *> mPlugins;
-
-    QStringList requiredPlugins(const QString &pFileName,
-                                const int &pLevel = 0);
 };
 
 }

@@ -32,7 +32,7 @@ void PluginDelegate::paint(QPainter *pPainter,
     initStyleOption(&option, pIndex);
 
     if (!pluginItem->isCheckable())
-        option.state ^= QStyle::State_Enabled;
+        option.state &= ~QStyle::State_Enabled;
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
 }
@@ -46,6 +46,10 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // Set up the UI
 
     mUi->setupUi(this);
+
+    // Update the note label
+
+    mUi->noteLabel->setText(mUi->noteLabel->text().arg(qApp->applicationName()));
 
     // Set up the tree view with a delegate, so that we can select plugins that
     // are shown as 'disabled' (to reflect the fact that users cannot decide
@@ -66,23 +70,12 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
         pluginItem->setCheckable(plugin->info().dependencies().count());
 
-        // A plugin should be shown as checked (i.e. to be loaded at startup)
-        // if it is a required plugin or a plugin which is explicitly required
-        // to be loaded
+        // Retrieve the loading state of the plugin, in case it is a plugin the
+        // user can manage
 
         if (pluginItem->isCheckable())
-            // We are dealing with a plugin which has dependencies and may
-            // therefore be explicitly required to be loaded, so...
-
             pluginItem->setCheckState((Plugin::load(mPluginManager->settings(),
                                                     plugin->name()))?
-                                          Qt::Checked:
-                                          Qt::Unchecked);
-        else
-            // We are dealing with a plugin that has no dependencies, so show it
-            // checked only if it is actually loaded
-
-            pluginItem->setCheckState((plugin->status() == Plugin::Loaded)?
                                           Qt::Checked:
                                           Qt::Unchecked);
 
@@ -90,6 +83,16 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
         mDataModel->invisibleRootItem()->appendRow(pluginItem);
     }
+
+    // Make sure that the loading state of all the plugins is right, including
+    // that of the plugins which the user cannot manage
+
+    updatePluginsLoadingState();
+
+    // Select the first plugin
+
+    mUi->listView->selectionModel()->select(mDataModel->index(0, 0),
+                                            QItemSelectionModel::Select);
 
     // Make sure that the list view only takes as much space as necessary
     // Note: for some reasons (maybe because we have check boxes?), the
@@ -105,6 +108,11 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     connect(mUi->listView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updatePluginInfo(const QModelIndex &, const QModelIndex &)));
+
+    // Connection to handle a change in a plugin's loading state
+
+    connect(mDataModel, SIGNAL(itemChanged(QStandardItem *)),
+            this, SLOT(updatePluginsLoadingState(QStandardItem *)));
 
     // Connection to handle the activation of a link in the description
 
@@ -191,6 +199,36 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
     mUi->statusValue->setText(plugin->statusDescription());
 }
 
+void PluginsWindow::updatePluginsLoadingState(QStandardItem *)
+{
+    // Determine which plugins are required by the plugins over which the user
+    // has loading control
+
+    QStringList requiredPlugins;
+
+    for (int i = 0; i < mDataModel->rowCount(); ++i) {
+        QStandardItem *pluginItem = mDataModel->item(i);
+
+        if (   pluginItem->isCheckable()
+            && (pluginItem->checkState() == Qt::Checked))
+           requiredPlugins << mPluginManager->requiredPlugins(Plugin::fileName(mPluginManager->pluginsDir(), pluginItem->text()));
+    }
+
+    requiredPlugins.removeDuplicates();
+
+    // Update the loading state of the plugins over which the user has no
+    // control
+
+    for (int i = 0; i < mDataModel->rowCount(); ++i) {
+        QStandardItem *pluginItem = mDataModel->item(i);
+
+        if (!pluginItem->isCheckable())
+            pluginItem->setCheckState(requiredPlugins.contains(pluginItem->text())?
+                                          Qt::Checked:
+                                          Qt::Unchecked);
+    }
+}
+
 void PluginsWindow::openLink(const QString &pLink)
 {
     // Open the link in the user's browser
@@ -198,17 +236,25 @@ void PluginsWindow::openLink(const QString &pLink)
     QDesktopServices::openUrl(QUrl(pLink));
 }
 
-void OpenCOR::PluginsWindow::on_buttonBox_accepted()
+void PluginsWindow::on_buttonBox_accepted()
 {
-    // Take into account the user's changes, if any, to which plugin should be
-    // loaded
+    // Keep track of the loading state of the various plugins over which the
+    // user has control (i.e. the ones that are checkable)
 
-//---GRY--- TO BE DONE...
+    for (int i = 0; i < mDataModel->rowCount(); ++i) {
+        QStandardItem *pluginItem = mDataModel->item(i);
+
+        if (pluginItem->isCheckable())
+            Plugin::setLoad(mPluginManager->settings(), pluginItem->text(),
+                            pluginItem->checkState() == Qt::Checked);
+    }
+
+    // Confirm that we accepted the changes
 
     accept();
 }
 
-void OpenCOR::PluginsWindow::on_buttonBox_rejected()
+void PluginsWindow::on_buttonBox_rejected()
 {
     // Simple cancel whatever was done here
 

@@ -31,14 +31,16 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 
         if (   (   (mInfo.mType == PluginInfo::General)
                 || (mInfo.mType == pGuiOrConsoleType))
-            && (mInfo.dependencies().count() || pForceLoading)) {
+            && (   (   mInfo.dependencies().count()
+                    && load(pPluginManager->settings(), mName))
+                || pForceLoading)) {
             // We are dealing with the right kind of plugin, so check that all
             // of its dependencies, if any, are loaded
             // Note: the reason we only do this on non-Windows systems is that
-            //       on Windows a shared library's dependencies must be loadable
+            //       on Windows a shared library's dependencies must be loaded
             //       before the shared library itself can be loaded while on
             //       Linux / Mac OS X, it's possible to load a shared library
-            //       even its dependencies are not loaded, so...
+            //       even if its dependencies are not loaded, so...
 
 #ifndef Q_WS_WIN
             bool pluginDependenciesLoaded = true;
@@ -112,9 +114,13 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
             mStatus = NotSuitable;
         } else {
             // If none of the above applies then it means we are dealing with a
-            // plugin which is not needed, so...
+            // plugin which is either no wanted or not needed, depending on
+            // whether it has dependencies
 
-            mStatus = NotNeeded;
+            if (mInfo.dependencies().count())
+                mStatus = NotWanted;
+            else
+                mStatus = NotNeeded;
         }
     } else {
         // The plugin doesn't exist, so...
@@ -160,6 +166,8 @@ QString Plugin::statusDescription()
         return tr("The plugin could not be found");
     case NotSuitable:
         return tr("The plugin is not of the right type");
+    case NotWanted:
+        return tr("The plugin is not wanted");
     case NotNeeded:
         return tr("The plugin is not needed");
     case Loaded:

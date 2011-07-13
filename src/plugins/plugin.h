@@ -21,6 +21,7 @@ public:
         Undefined,
         NotFound,
         NotSuitable,
+        NotWanted,
         NotNeeded,
         Loaded,
         NotLoaded,

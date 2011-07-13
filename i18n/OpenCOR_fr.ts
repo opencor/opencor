@@ -196,6 +196,10 @@
         <source>The plugin could not be loaded due to a/some missing dependency/ies:</source>
         <translation>L&apos;extension n&apos;a pas pu être installée à une/des dépendance/s manquante/s :</translation>
     </message>
+    <message>
+        <source>The plugin is not wanted</source>
+        <translation>L&apos;extension n&apos;est pas voulue</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PluginsWindow</name>
@@ -245,6 +249,10 @@
     <message>
         <source>Status:</source>
         <translation>Statut :</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; your changes will only be effective upon restarting %1.</source>
+        <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; vos changements ne seront effectifs qu&apos;une fois %1 relancé.</translation>
     </message>
 </context>
 <context>
