@@ -16,7 +16,7 @@
 namespace OpenCOR {
 namespace Help {
 
-static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/userIndex.html";
+static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/user/index.html";
 
 HelpWindow::HelpWindow(QWidget *pParent) :
     DockWidget(pParent),

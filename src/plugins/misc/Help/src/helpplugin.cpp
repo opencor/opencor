@@ -1,4 +1,5 @@
 #include "helpplugin.h"
+#include "helpwindow.h"
 
 namespace OpenCOR {
 namespace Help {
@@ -16,5 +17,15 @@ PLUGININFO_FUNC HelpPluginInfo()
 }
 
 Q_EXPORT_PLUGIN2(Help, HelpPlugin)
+
+void HelpPlugin::initialize(QMainWindow *pMainWindow)
+{
+    mHelpWindow = new HelpWindow(pMainWindow);
+}
+
+void HelpPlugin::finalize()
+{
+    delete mHelpWindow;
+}
 
 } }

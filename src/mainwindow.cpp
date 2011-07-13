@@ -111,8 +111,6 @@ MainWindow::MainWindow(QWidget *pParent) :
         }
     }
 
-//---GRY--- TO BE DONE...
-
 #ifdef Q_WS_MAC
     // A special shortcut to have OpenCOR minimised on Mac OS X when pressing
     // Cmd+M

@@ -8,10 +8,19 @@ namespace Help {
 
 PLUGININFO_FUNC HelpPluginInfo();
 
+class HelpWindow;
+
 class HelpPlugin : public GuiInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)
+
+public:
+    virtual void initialize(QMainWindow *pMainWindow);
+    virtual void finalize();
+
+private:
+    HelpWindow *mHelpWindow;
 };
 
 } }
