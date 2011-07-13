@@ -251,8 +251,8 @@
         <translation>Statut :</translation>
     </message>
     <message>
-        <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; your changes will only be effective upon restarting %1.</source>
-        <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; vos changements ne seront effectifs qu&apos;une fois %1 relancé.</translation>
+        <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 must be restarted for your changes to be effective.</source>
+        <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 doit etre relancé pour que vos changements deviennent effectifs.</translation>
     </message>
 </context>
 <context>

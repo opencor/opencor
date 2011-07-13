@@ -176,7 +176,10 @@
    <item>
     <widget class="QLabel" name="noteLabel">
      <property name="text">
-      <string>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; your changes will only be effective upon restarting %1.</string>
+      <string>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 must be restarted for your changes to be effective.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

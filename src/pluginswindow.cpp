@@ -94,7 +94,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mUi->listView->selectionModel()->select(mDataModel->index(0, 0),
                                             QItemSelectionModel::Select);
 
-    // Make sure that the list view only takes as much space as necessary
+    // Make sure that the list view only takes as much width as necessary
     // Note: for some reasons (maybe because we have check boxes?), the
     //       retrieved column size gives us a width that is slightly too small
     //       and therefore requires a horizontal scroll bar, hence we add 15% to
@@ -103,6 +103,10 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     mUi->listView->setMinimumWidth(1.15*mUi->listView->sizeHintForColumn(0));
     mUi->listView->setMaximumWidth(mUi->listView->minimumWidth());
+
+    // Make, through the note label, sure that the window has a minimum width
+
+    mUi->noteLabel->setMinimumWidth(2.75*mUi->listView->minimumWidth());
 
     // Connection to handle a plugin's information
 
