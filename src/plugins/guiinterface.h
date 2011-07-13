@@ -1,16 +1,15 @@
 #ifndef GUIINTERFACE_H
 #define GUIINTERFACE_H
 
+#include "mainwindow.h"
 #include "plugininterface.h"
-
-#include <QMainWindow>
 
 namespace OpenCOR {
 
 class GuiInterface : public PluginInterface
 {
 public:
-    virtual void initialize(QMainWindow *);
+    virtual void initialize(MainWindow *);
 };
 
 }

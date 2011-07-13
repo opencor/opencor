@@ -18,13 +18,17 @@ PLUGININFO_FUNC HelpPluginInfo()
 
 Q_EXPORT_PLUGIN2(Help, HelpPlugin)
 
-void HelpPlugin::initialize(QMainWindow *pMainWindow)
+void HelpPlugin::initialize(MainWindow *pMainWindow)
 {
+    // Add our help window to OpenCOR
+
     mHelpWindow = new HelpWindow(pMainWindow);
 }
 
 void HelpPlugin::finalize()
 {
+    // Delete our help window
+
     delete mHelpWindow;
 }
 

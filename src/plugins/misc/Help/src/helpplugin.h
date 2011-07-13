@@ -16,7 +16,7 @@ class HelpPlugin : public GuiInterface
     Q_INTERFACES(OpenCOR::GuiInterface)
 
 public:
-    virtual void initialize(QMainWindow *pMainWindow);
+    virtual void initialize(MainWindow *pMainWindow);
     virtual void finalize();
 
 private:
