@@ -113,7 +113,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     // Make sure that the window has a reasonable starting size
 
-    layout()->setSizeConstraint(QLayout::SetMinimumSize);
+    mUi->verticalLayout->setSizeConstraint(QLayout::SetMinimumSize);
 }
 
 PluginsWindow::~PluginsWindow()
