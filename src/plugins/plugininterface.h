@@ -18,8 +18,6 @@ typedef QMap<QString, QString> PluginInfoDescriptions;
 
 class PluginInfo
 {
-    friend class Plugin;
-
 public:
     enum PluginType
     {

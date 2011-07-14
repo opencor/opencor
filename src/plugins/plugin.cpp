@@ -29,8 +29,8 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
         // one of the type we are happy with, and has dependencies or is
         // required by another plugin
 
-        if (   (   (mInfo.mType == PluginInfo::General)
-                || (mInfo.mType == pGuiOrConsoleType))
+        if (   (   (mInfo.type() == PluginInfo::General)
+                || (mInfo.type() == pGuiOrConsoleType))
             && (   (   mInfo.dependencies().count()
                     && load(pPluginManager->settings(), mName))
                 || pForceLoading)) {
@@ -95,7 +95,7 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 #ifndef Q_WS_WIN
             }
 #endif
-        } else if (mInfo.mType == PluginInfo::Undefined) {
+        } else if (mInfo.type() == PluginInfo::Undefined) {
             // We couldn't retrieve the plugin information which means that we
             // are not dealing with an OpenCOR plugin or that one or several of
             // the plugin's dependencies weren't loaded, so...
@@ -105,7 +105,7 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 #else
             mStatus = NotPlugin;
 #endif
-        } else if (mInfo.mType != pGuiOrConsoleType){
+        } else if (mInfo.type() != pGuiOrConsoleType){
             // We are dealing with a plugin which is not of the type we are
             // happy with (i.e. it's a console plugin but we are running the GUI
             // version of OpenCOR, or it's a GUI plugin but we are running the
