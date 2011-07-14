@@ -28,6 +28,13 @@ void HelpPlugin::initialize(MainWindow *pMainWindow)
     // Add our help window to OpenCOR
 
     mHelpWindow = new HelpWindow(pMainWindow);
+
+    // Create some actions that are to be registered by OpenCOR
+
+/*---GRY--- THE BELOW IS NOT RIGHT, NOT LEAST BECAUSE THE PLUGIN PROBABLY SHOULD
+            CREATE THE ACTIONS, SO THAT IT CAN CONNECT TO THEM...
+    mActions << GuiAction(Help, true, ":/oxygen/apps/help-browser.png");
+*/
 }
 
 void HelpPlugin::finalize()

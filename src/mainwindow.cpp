@@ -98,6 +98,10 @@ MainWindow::MainWindow(QWidget *pParent) :
             // The plugin implements our GUI interface, so...
 
             guiInterface->initialize(this);
+
+            // Create and incorporate any action requested by the plugin
+
+//---GRY--- TO BE DONE USING guiInterface->actions
         } else {
             // The plugin doesn't implement our GUI interface, so let's see
             // whether it implements our default interface
