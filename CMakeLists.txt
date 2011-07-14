@@ -75,7 +75,6 @@ SET(HEADERS_MOC
 
 SET(UIS
     src/checkforupdateswindow.ui
-    src/mainwindow.ui
     src/pluginswindow.ui
     src/preferenceswindow.ui
 )

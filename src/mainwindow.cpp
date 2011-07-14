@@ -8,12 +8,11 @@
 #include "preferenceswindow.h"
 #include "utils.h"
 
-#include "ui_mainwindow.h"
-
 #ifdef Q_WS_WIN
     #include <windows.h>
 #endif
 
+#include <QApplication>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFileDialog>
@@ -30,9 +29,217 @@ static const QString SystemLocale  = "";
 static const QString EnglishLocale = "en";
 static const QString FrenchLocale  = "fr";
 
+void MainWindowUi::setupUi(MainWindow *pMainWindow)
+{
+    if (pMainWindow->objectName().isEmpty())
+        pMainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+    pMainWindow->resize(800, 600);
+    QIcon icon;
+    icon.addFile(QString::fromUtf8(":/appIcon"), QSize(), QIcon::Normal, QIcon::Off);
+    pMainWindow->setWindowIcon(icon);
+    actionExit = new QAction(pMainWindow);
+    actionExit->setObjectName(QString::fromUtf8("actionExit"));
+    QIcon icon1;
+    icon1.addFile(QString::fromUtf8(":/oxygen/actions/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionExit->setIcon(icon1);
+    actionExit->setIconVisibleInMenu(true);
+    actionEnglish = new QAction(pMainWindow);
+    actionEnglish->setObjectName(QString::fromUtf8("actionEnglish"));
+    actionEnglish->setCheckable(true);
+    QIcon icon2;
+    icon2.addFile(QString::fromUtf8(":/flags/en.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionEnglish->setIcon(icon2);
+    actionEnglish->setIconVisibleInMenu(true);
+    actionFrench = new QAction(pMainWindow);
+    actionFrench->setObjectName(QString::fromUtf8("actionFrench"));
+    actionFrench->setCheckable(true);
+    QIcon icon3;
+    icon3.addFile(QString::fromUtf8(":/flags/fr.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionFrench->setIcon(icon3);
+    actionFrench->setIconVisibleInMenu(true);
+    actionHomePage = new QAction(pMainWindow);
+    actionHomePage->setObjectName(QString::fromUtf8("actionHomePage"));
+    QIcon icon4;
+    icon4.addFile(QString::fromUtf8(":/oxygen/categories/applications-internet.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionHomePage->setIcon(icon4);
+    actionHomePage->setIconVisibleInMenu(true);
+    actionAbout = new QAction(pMainWindow);
+    actionAbout->setObjectName(QString::fromUtf8("actionAbout"));
+    QIcon icon5;
+    icon5.addFile(QString::fromUtf8(":/oxygen/actions/help-about.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionAbout->setIcon(icon5);
+    actionAbout->setIconVisibleInMenu(true);
+    actionResetAll = new QAction(pMainWindow);
+    actionResetAll->setObjectName(QString::fromUtf8("actionResetAll"));
+    QIcon icon6;
+    icon6.addFile(QString::fromUtf8(":/oxygen/actions/system-reboot.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionResetAll->setIcon(icon6);
+    actionResetAll->setIconVisibleInMenu(true);
+    actionHelpToolbar = new QAction(pMainWindow);
+    actionHelpToolbar->setObjectName(QString::fromUtf8("actionHelpToolbar"));
+    actionHelpToolbar->setCheckable(true);
+    actionSystem = new QAction(pMainWindow);
+    actionSystem->setObjectName(QString::fromUtf8("actionSystem"));
+    actionSystem->setCheckable(true);
+    actionFullScreen = new QAction(pMainWindow);
+    actionFullScreen->setObjectName(QString::fromUtf8("actionFullScreen"));
+    actionFullScreen->setCheckable(true);
+    QIcon icon7;
+    icon7.addFile(QString::fromUtf8(":/oxygen/actions/view-fullscreen.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionFullScreen->setIcon(icon7);
+    actionStatusBar = new QAction(pMainWindow);
+    actionStatusBar->setObjectName(QString::fromUtf8("actionStatusBar"));
+    actionStatusBar->setCheckable(true);
+    actionCheckForUpdates = new QAction(pMainWindow);
+    actionCheckForUpdates->setObjectName(QString::fromUtf8("actionCheckForUpdates"));
+    QIcon icon8;
+    icon8.addFile(QString::fromUtf8(":/oxygen/apps/system-software-update.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionCheckForUpdates->setIcon(icon8);
+    actionCheckForUpdates->setIconVisibleInMenu(true);
+    actionPreferences = new QAction(pMainWindow);
+    actionPreferences->setObjectName(QString::fromUtf8("actionPreferences"));
+    QIcon icon9;
+    icon9.addFile(QString::fromUtf8(":/oxygen/actions/configure.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionPreferences->setIcon(icon9);
+    actionPlugins = new QAction(pMainWindow);
+    actionPlugins->setObjectName(QString::fromUtf8("actionPlugins"));
+    QIcon icon10;
+    icon10.addFile(QString::fromUtf8(":/oxygen/apps/preferences-plugin.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionPlugins->setIcon(icon10);
+    centralWidget = new QWidget(pMainWindow);
+    centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+    pMainWindow->setCentralWidget(centralWidget);
+    menuBar = new QMenuBar(pMainWindow);
+    menuBar->setObjectName(QString::fromUtf8("menuBar"));
+    menuBar->setGeometry(QRect(0, 0, 800, 21));
+    menuFile = new QMenu(menuBar);
+    menuFile->setObjectName(QString::fromUtf8("menuFile"));
+    menuTools = new QMenu(menuBar);
+    menuTools->setObjectName(QString::fromUtf8("menuTools"));
+    menuLanguage = new QMenu(menuTools);
+    menuLanguage->setObjectName(QString::fromUtf8("menuLanguage"));
+    QIcon icon11;
+    icon11.addFile(QString::fromUtf8(":/oxygen/categories/applications-education-language.png"), QSize(), QIcon::Normal, QIcon::Off);
+    menuLanguage->setIcon(icon11);
+    menuHelp = new QMenu(menuBar);
+    menuHelp->setObjectName(QString::fromUtf8("menuHelp"));
+    menuView = new QMenu(menuBar);
+    menuView->setObjectName(QString::fromUtf8("menuView"));
+    menuToolbars = new QMenu(menuView);
+    menuToolbars->setObjectName(QString::fromUtf8("menuToolbars"));
+    QIcon icon12;
+    icon12.addFile(QString::fromUtf8(":/oxygen/actions/configure-toolbars.png"), QSize(), QIcon::Normal, QIcon::Off);
+    menuToolbars->setIcon(icon12);
+    pMainWindow->setMenuBar(menuBar);
+    helpToolbar = new QToolBar(pMainWindow);
+    helpToolbar->setObjectName(QString::fromUtf8("helpToolbar"));
+    helpToolbar->setIconSize(QSize(24, 24));
+    pMainWindow->addToolBar(Qt::TopToolBarArea, helpToolbar);
+    statusBar = new QStatusBar(pMainWindow);
+    statusBar->setObjectName(QString::fromUtf8("statusBar"));
+    pMainWindow->setStatusBar(statusBar);
+
+    menuBar->addAction(menuFile->menuAction());
+    menuBar->addAction(menuView->menuAction());
+    menuBar->addAction(menuTools->menuAction());
+    menuBar->addAction(menuHelp->menuAction());
+    menuFile->addAction(actionExit);
+    menuTools->addAction(menuLanguage->menuAction());
+    menuTools->addSeparator();
+    menuTools->addAction(actionPlugins);
+    menuTools->addSeparator();
+    menuTools->addAction(actionPreferences);
+    menuTools->addSeparator();
+    menuTools->addAction(actionResetAll);
+    menuLanguage->addAction(actionSystem);
+    menuLanguage->addSeparator();
+    menuLanguage->addAction(actionEnglish);
+    menuLanguage->addAction(actionFrench);
+    menuHelp->addAction(actionHomePage);
+    menuHelp->addSeparator();
+    menuHelp->addAction(actionCheckForUpdates);
+    menuHelp->addSeparator();
+    menuHelp->addAction(actionAbout);
+    menuView->addAction(menuToolbars->menuAction());
+    menuView->addAction(actionStatusBar);
+    menuView->addSeparator();
+    menuView->addAction(actionFullScreen);
+    menuToolbars->addAction(actionHelpToolbar);
+    helpToolbar->addAction(actionHomePage);
+    helpToolbar->addSeparator();
+    helpToolbar->addAction(actionAbout);
+
+    retranslateUi(pMainWindow);
+
+    QMetaObject::connectSlotsByName(pMainWindow);
+}
+
+void MainWindowUi::retranslateUi(MainWindow *pMainWindow)
+{
+    actionExit->setText(tr("&Exit"));
+#ifndef QT_NO_STATUSTIP
+    actionExit->setStatusTip(tr("Exit OpenCOR"));
+#endif // QT_NO_STATUSTIP
+    actionExit->setShortcut(tr("Ctrl+Q"));
+    actionEnglish->setText(tr("&English"));
+#ifndef QT_NO_STATUSTIP
+    actionEnglish->setStatusTip(tr("Select English as the language used by OpenCOR"));
+#endif // QT_NO_STATUSTIP
+    actionFrench->setText(tr("&French"));
+#ifndef QT_NO_STATUSTIP
+    actionFrench->setStatusTip(tr("Select French as the language used by OpenCOR"));
+#endif // QT_NO_STATUSTIP
+    actionHomePage->setText(tr("Home &Page"));
+#ifndef QT_NO_STATUSTIP
+    actionHomePage->setStatusTip(tr("Look up the OpenCOR home page"));
+#endif // QT_NO_STATUSTIP
+    actionAbout->setText(tr("&About..."));
+#ifndef QT_NO_STATUSTIP
+    actionAbout->setStatusTip(tr("Some general information about OpenCOR"));
+#endif // QT_NO_STATUSTIP
+    actionResetAll->setText(tr("&Reset All"));
+#ifndef QT_NO_STATUSTIP
+    actionResetAll->setStatusTip(tr("Reset all the user settings"));
+#endif // QT_NO_STATUSTIP
+    actionHelpToolbar->setText(tr("&Help"));
+#ifndef QT_NO_STATUSTIP
+    actionHelpToolbar->setStatusTip(tr("Show/hide the Help toolbar"));
+#endif // QT_NO_STATUSTIP
+    actionSystem->setText(tr("&System"));
+#ifndef QT_NO_STATUSTIP
+    actionSystem->setStatusTip(tr("Select the system's language as the language used by OpenCOR"));
+#endif // QT_NO_STATUSTIP
+    actionFullScreen->setText(tr("&Full Screen"));
+#ifndef QT_NO_STATUSTIP
+    actionFullScreen->setStatusTip(tr("Switch to / back from full screen mode"));
+#endif // QT_NO_STATUSTIP
+    actionFullScreen->setShortcut(tr("F11"));
+    actionStatusBar->setText(tr("Status &Bar"));
+#ifndef QT_NO_STATUSTIP
+    actionStatusBar->setStatusTip(tr("Show/hide the status bar"));
+#endif // QT_NO_STATUSTIP
+    actionCheckForUpdates->setText(tr("Check for &Updates..."));
+#ifndef QT_NO_STATUSTIP
+    actionCheckForUpdates->setStatusTip(tr("Check for updates"));
+#endif // QT_NO_STATUSTIP
+    actionPreferences->setText(tr("&Preferences..."));
+#ifndef QT_NO_STATUSTIP
+    actionPreferences->setStatusTip(tr("Preferences for OpenCOR"));
+#endif // QT_NO_STATUSTIP
+    actionPlugins->setText(tr("Plu&gins..."));
+    menuFile->setTitle(tr("&File"));
+    menuTools->setTitle(tr("&Tools"));
+    menuLanguage->setTitle(tr("&Language"));
+    menuHelp->setTitle(tr("&Help"));
+    menuView->setTitle(tr("&View"));
+    menuToolbars->setTitle(tr("&Toolbars"));
+    helpToolbar->setWindowTitle(tr("Help Toolbar"));
+    Q_UNUSED(pMainWindow);
+} // retranslateUi
+
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
-    mUi(new Ui::MainWindow)
+    mUi(new MainWindowUi)
 {
     // Create our settings object
 
