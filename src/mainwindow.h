@@ -1,82 +1,18 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QAction>
 #include <QMainWindow>
-#include <QMenu>
-#include <QMenuBar>
-#include <QStatusBar>
-#include <QToolBar>
 #include <QTranslator>
-#include <QWidget>
 
 class QSettings;
 
+namespace Ui {
+    class MainWindow;
+}
+
 namespace OpenCOR {
 
-class MainWindow;
 class PluginManager;
-
-class MainWindowUi : public QObject
-{
-    Q_OBJECT
-
-    friend class MainWindow;
-
-public:
-
-private:
-    // General
-
-    QMenuBar *menuBar;
-    QToolBar *helpToolbar;
-
-    QWidget *centralWidget;
-
-    QStatusBar *statusBar;
-
-    // File menu
-
-    QMenu *menuFile;
-        QAction *actionExit;
-
-    // View menu
-
-    QMenu *menuView;
-        QMenu *menuToolbars;
-            QAction *actionHelpToolbar;
-        QAction *actionStatusBar;
-        // Separator
-        QAction *actionFullScreen;
-
-    // Tools menu
-
-    QMenu *menuTools;
-        QMenu *menuLanguage;
-            QAction *actionSystem;
-            QAction *actionEnglish;
-            QAction *actionFrench;
-        // Separator
-        QAction *actionPlugins;
-        // Separator
-        QAction *actionPreferences;
-        // Separator
-        QAction *actionResetAll;
-
-    // Help menu
-
-    QMenu *menuHelp;
-        QAction *actionHomePage;
-        // Separator
-        QAction *actionCheckForUpdates;
-        // Separator
-        QAction *actionAbout;
-
-    // Methods
-
-    void setupUi(MainWindow *pMainWindow);
-    void retranslateUi(MainWindow *pMainWindow);
-};
 
 class MainWindow : public QMainWindow
 {
@@ -99,7 +35,7 @@ protected:
     virtual void closeEvent(QCloseEvent *pEvent);
 
 private:
-    MainWindowUi *mUi;
+    Ui::MainWindow *mUi;
 
     QSettings *mSettings;
 

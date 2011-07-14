@@ -9,7 +9,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::MainWindowUi</name>
+    <name>MainWindow</name>
     <message>
         <source>&amp;File</source>
         <translation>&amp;Fichier</translation>
