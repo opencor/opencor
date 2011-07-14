@@ -17,4 +17,9 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 
 Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)
 
+CellMLModelRepositoryPlugin::CellMLModelRepositoryPlugin() :
+    GuiInterface("CellMLModelRepository")
+{
+}
+
 } }

@@ -17,4 +17,9 @@ PLUGININFO_FUNC CorePluginInfo()
 
 Q_EXPORT_PLUGIN2(Core, CorePlugin)
 
+CorePlugin::CorePlugin() :
+    GuiInterface("Core")
+{
+}
+
 } }

@@ -17,4 +17,9 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
 
 Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)
 
+FileBrowserPlugin::FileBrowserPlugin() :
+    GuiInterface("FileBrowser")
+{
+}
+
 } }

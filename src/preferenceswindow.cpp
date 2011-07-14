@@ -22,7 +22,7 @@ PreferencesWindow::~PreferencesWindow()
 
 void PreferencesWindow::retranslateUi()
 {
-    // Translate the whole window
+    // Retranslate the whole window
 
     mUi->retranslateUi(this);
 }

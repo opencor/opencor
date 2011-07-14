@@ -83,7 +83,7 @@ void FileBrowserWindow::updateActions()
 
 void FileBrowserWindow::retranslateUi()
 {
-    // Translate the whole window
+    // Retranslate the whole window
 
     mUi->retranslateUi(this);
 

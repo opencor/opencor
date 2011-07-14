@@ -18,6 +18,11 @@ PLUGININFO_FUNC HelpPluginInfo()
 
 Q_EXPORT_PLUGIN2(Help, HelpPlugin)
 
+HelpPlugin::HelpPlugin() :
+    GuiInterface("Help")
+{
+}
+
 void HelpPlugin::initialize(MainWindow *pMainWindow)
 {
     // Add our help window to OpenCOR
@@ -30,6 +35,13 @@ void HelpPlugin::finalize()
     // Delete our help window
 
     delete mHelpWindow;
+}
+
+void HelpPlugin::retranslateUi()
+{
+    // Retranslate our help window
+
+    mHelpWindow->retranslateUi();
 }
 
 } }

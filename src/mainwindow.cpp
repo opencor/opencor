@@ -520,7 +520,7 @@ void MainWindow::setLocale(const QString &pLocale)
 
         mLocale = pLocale;
 
-        // Specify the language to be used by OpenCOR and our various plugins
+        // Specify the language to be used by OpenCOR
 
         qApp->removeTranslator(&mQtTranslator);
         mQtTranslator.load(":qt_"+realLocale);
@@ -530,14 +530,20 @@ void MainWindow::setLocale(const QString &pLocale)
         mAppTranslator.load(":app_"+realLocale);
         qApp->installTranslator(&mAppTranslator);
 
-//---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
-
-        // Translate the whole GUI (including our various plugins) and update
-        // the actions just to be on the safe side
+        // Retranslate OpenCOR
 
         mUi->retranslateUi(this);
 
-//---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
+        // Update the locale of our various plugins
+
+        foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
+            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+            if (guiInterface)
+                // The plugin implements our GUI interface, so...
+
+                guiInterface->setLocale(realLocale);
+        }
     }
 
     // Update the checked menu item

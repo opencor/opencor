@@ -128,7 +128,7 @@ void HelpWindow::updateActions()
 
 void HelpWindow::retranslateUi()
 {
-    // Translate the whole window
+    // Retranslate the whole window
 
     mUi->retranslateUi(this);
 

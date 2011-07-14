@@ -30,7 +30,7 @@ ViewerWindow::~ViewerWindow()
 
 void ViewerWindow::retranslateUi()
 {
-    // Translate the whole window
+    // Retranslate the whole window
 
     mUi->retranslateUi(this);
 

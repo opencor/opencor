@@ -77,7 +77,7 @@ void FileOrganiserWindow::updateActions()
 
 void FileOrganiserWindow::retranslateUi()
 {
-    // Translate the whole window
+    // Retranslate the whole window
 
     mUi->retranslateUi(this);
 

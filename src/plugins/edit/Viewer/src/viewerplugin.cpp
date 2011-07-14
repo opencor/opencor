@@ -17,4 +17,9 @@ PLUGININFO_FUNC ViewerPluginInfo()
 
 Q_EXPORT_PLUGIN2(Viewer, ViewerPlugin)
 
+ViewerPlugin::ViewerPlugin() :
+    GuiInterface("Viewer")
+{
+}
+
 } }

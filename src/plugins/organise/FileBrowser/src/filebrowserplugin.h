@@ -12,6 +12,9 @@ class FileBrowserPlugin : public GuiInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)
+
+public:
+    explicit FileBrowserPlugin();
 };
 
 } }
