@@ -55,7 +55,11 @@ private:
     void setLocale(const QString &pLocale);
 
 public Q_SLOTS:
+#ifdef Q_WS_WIN
     void singleAppMsgRcvd(const QString &) const;
+#else
+    void singleAppMsgRcvd(const QString &);
+#endif
 
 private Q_SLOTS:
     void on_actionFullScreen_triggered();

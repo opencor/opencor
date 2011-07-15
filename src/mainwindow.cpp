@@ -379,7 +379,11 @@ void MainWindow::setLocale(const QString &pLocale)
     mUi->actionFrench->setChecked(mLocale == FrenchLocale);
 }
 
+#ifdef Q_WS_WIN
 void MainWindow::singleAppMsgRcvd(const QString &) const
+#else
+void MainWindow::singleAppMsgRcvd(const QString &)
+#endif
 {
     // We have just received a message from another instance of OpenCOR, so
     // bring ourselves to the foreground
@@ -431,14 +435,14 @@ void MainWindow::singleAppMsgRcvd(const QString &) const
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
 #else
-    // Do what one should normally do
+    // Do what one would normally do
 
     activateWindow();
 
     raise();   // Just to be on the safe side
     // Note: raise() never seems to be required on Mac OS X, but to use
-    //       activateWindow() under Linux may or not give the expected result,
-    //       so...
+    //       activateWindow() on its own under Linux may or not give the
+    //       expected result, so...
 #endif
 
     // Now, we must handle the arguments that were passed to OpenCOR
