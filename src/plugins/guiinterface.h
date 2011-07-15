@@ -1,6 +1,7 @@
 #ifndef GUIINTERFACE_H
 #define GUIINTERFACE_H
 
+#include "dockwidget.h"
 #include "mainwindow.h"
 #include "plugininterface.h"
 
@@ -8,9 +9,20 @@ namespace OpenCOR {
 
 class GuiSettings;
 
-class GuiSettingsAction {
-    friend class GuiSettings;
+class GuiSettingsDockWidget {
+public:
+    explicit GuiSettingsDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
+                                   Core::DockWidget *pDockWidget);
 
+    Qt::DockWidgetArea defaultDockingArea() const;
+    Core::DockWidget *dockWidget() const;
+
+private:
+    Qt::DockWidgetArea mDefaultDockingArea;
+    Core::DockWidget *mDockWidget;
+};
+
+class GuiSettingsAction {
 public:
     enum GuiSettingsActionType
     {
@@ -31,12 +43,16 @@ private:
 class GuiSettings
 {
 public:
+    void addDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
+                       Core::DockWidget *pDockWidget);
+
     void addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
                    QAction *pAction);
 
     QList<GuiSettingsAction> actions() const;
 
 private:
+    QList<GuiSettingsDockWidget> mDockWidgets;
     QList<GuiSettingsAction> mActions;
 };
 

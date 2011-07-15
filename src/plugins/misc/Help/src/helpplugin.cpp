@@ -27,11 +27,13 @@ HelpPlugin::HelpPlugin() :
 
 void HelpPlugin::initialize(MainWindow *pMainWindow)
 {
-    // Add our help window to OpenCOR
+    // Create our help window
 
     mHelpWindow = new HelpWindow(pMainWindow);
 
-    // Create some actions that are to be registered by OpenCOR
+    mSettings.addDockWidget(Qt::RightDockWidgetArea, mHelpWindow);
+
+    // Create an action to show/hide our help window
 
     mHelpAction = newAction(pMainWindow, true,
                             ":/oxygen/apps/help-browser.png");

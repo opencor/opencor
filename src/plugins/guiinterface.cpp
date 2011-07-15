@@ -5,6 +5,27 @@
 
 namespace OpenCOR {
 
+GuiSettingsDockWidget::GuiSettingsDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
+                                             Core::DockWidget *pDockWidget) :
+    mDefaultDockingArea(pDefaultDockingArea),
+    mDockWidget(pDockWidget)
+{
+}
+
+Qt::DockWidgetArea GuiSettingsDockWidget::defaultDockingArea() const
+{
+    // Return the dock widget's default docking area
+
+    return mDefaultDockingArea;
+}
+
+Core::DockWidget * GuiSettingsDockWidget::dockWidget() const
+{
+    // Return the dock widget itself
+
+    return mDockWidget;
+}
+
 GuiSettingsAction::GuiSettingsAction(const GuiSettingsActionType &pType,
                                      QAction *pAction) :
     mType(pType),
@@ -24,6 +45,14 @@ QAction * GuiSettingsAction::action() const
     // Return the action itself
 
     return mAction;
+}
+
+void GuiSettings::addDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
+                                Core::DockWidget *pDockWidget)
+{
+    // Add a new dock widget to our list
+
+    mDockWidgets << GuiSettingsDockWidget(pDefaultDockingArea, pDockWidget);
 }
 
 void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
