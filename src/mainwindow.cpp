@@ -264,18 +264,18 @@ void MainWindow::loadPluginSettings(const GuiSettings &pGuiSettings,
 
             dockWidget->setVisible(false);
 
-            // Position the dock window to its default location
+            // Position the dock widget to its default location
 
             addDockWidget(guiSettingsDockWidget.defaultDockingArea(),
                           dockWidget);
         }
 
-        // Load the dock window's settings
+        // Load the dock widget's settings
 
         dockWidget->loadSettings(mSettings);
 
         if (pNeedDefaultSettings)
-            // Make the dock window visible
+            // Make the dock widget visible
 
             dockWidget->setVisible(true);
     }
