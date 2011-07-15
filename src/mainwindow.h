@@ -47,7 +47,11 @@ private:
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
 
-    void handlePluginGuiSettings(const GuiSettings &pGuiSettings) const;
+    void initializePlugin(const GuiSettings &pGuiSettings) const;
+
+    void loadPluginSettings(const GuiSettings &pGuiSettings,
+                            const bool &pNeedDefaultSettings);
+    void savePluginSettings(const GuiSettings &pGuiSettings) const;
 
     void loadSettings();
     void saveSettings() const;

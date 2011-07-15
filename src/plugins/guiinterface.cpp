@@ -63,9 +63,16 @@ void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pTyp
     mActions << GuiSettingsAction(pType, pAction);
 }
 
+QList<GuiSettingsDockWidget> GuiSettings::dockWidgets() const
+{
+    // Return our dock widgets
+
+    return mDockWidgets;
+}
+
 QList<GuiSettingsAction> GuiSettings::actions() const
 {
-    // Return the settings actions
+    // Return our actions
 
     return mActions;
 }

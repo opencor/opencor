@@ -99,9 +99,10 @@ MainWindow::MainWindow(QWidget *pParent) :
 
             guiInterface->initialize(this);
 
-            // Handle the GUI settings of the plugin
+            // Initialise the plugin further (i.e. do things which can only be
+            // done by OpenCOR itself)
 
-            handlePluginGuiSettings(guiInterface->settings());
+            initializePlugin(guiInterface->settings());
         } else {
             // The plugin doesn't implement our GUI interface, so let's see
             // whether it implements our default interface
@@ -222,7 +223,7 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     QMainWindow::closeEvent(pEvent);
 }
 
-void MainWindow::handlePluginGuiSettings(const GuiSettings &pGuiSettings) const
+void MainWindow::initializePlugin(const GuiSettings &pGuiSettings) const
 {
     // Handle the plugin's actions
 
@@ -246,6 +247,47 @@ void MainWindow::handlePluginGuiSettings(const GuiSettings &pGuiSettings) const
 
             break;
         }
+}
+
+void MainWindow::loadPluginSettings(const GuiSettings &pGuiSettings,
+                                    const bool &pNeedDefaultSettings)
+{
+    // Retrieve all of the plugin's dock widgets' settings
+
+    foreach (const GuiSettingsDockWidget &guiSettingsDockWidget,
+             pGuiSettings.dockWidgets()) {
+        Core::DockWidget *dockWidget = guiSettingsDockWidget.dockWidget();
+
+        if (pNeedDefaultSettings) {
+            // Hide the dock widget, so that we can set things up without having
+            // the screen flashing
+
+            dockWidget->setVisible(false);
+
+            // Position the dock window to its default location
+
+            addDockWidget(guiSettingsDockWidget.defaultDockingArea(),
+                          dockWidget);
+        }
+
+        // Load the dock window's settings
+
+        dockWidget->loadSettings(mSettings);
+
+        if (pNeedDefaultSettings)
+            // Make the dock window visible
+
+            dockWidget->setVisible(true);
+    }
+}
+
+void MainWindow::savePluginSettings(const GuiSettings &pGuiSettings) const
+{
+    // Keep track of all of the plugin's dock widgets' settings
+
+    foreach (const GuiSettingsDockWidget &guiSettingsDockWidget,
+             pGuiSettings.dockWidgets())
+        guiSettingsDockWidget.dockWidget()->saveSettings(mSettings);
 }
 
 static const QString SettingsLocale              = "Locale";
@@ -292,7 +334,15 @@ void MainWindow::loadSettings()
 
         // Retrieve the settings of our various plugins
 
-//---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
+        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+            if (guiInterface)
+                // The plugin implements our GUI interface, so...
+
+                loadPluginSettings(guiInterface->settings(),
+                                   needDefaultSettings);
+        }
     mSettings->endGroup();
 }
 
@@ -318,7 +368,14 @@ void MainWindow::saveSettings() const
 
         // Keep track of the settings of our various plugins
 
-//---GRY--- TO BE DONE (FOR OUR VARIOUS PLUGINS)...
+        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+            if (guiInterface)
+                // The plugin implements our GUI interface, so...
+
+                savePluginSettings(guiInterface->settings());
+        }
     mSettings->endGroup();
 }
 

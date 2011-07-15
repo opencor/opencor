@@ -49,6 +49,7 @@ public:
     void addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
                    QAction *pAction);
 
+    QList<GuiSettingsDockWidget> dockWidgets() const;
     QList<GuiSettingsAction> actions() const;
 
 private:
