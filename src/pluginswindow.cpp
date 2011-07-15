@@ -63,7 +63,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     // Populate the data model
 
-    foreach(Plugin *plugin, mPluginManager->plugins()) {
+    foreach (Plugin *plugin, mPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem(plugin->name());
 
         // Only plugins that have dependencies are checkable

@@ -47,7 +47,7 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 
             mStatusError = "";
 
-            foreach(const QString &dependency, mInfo.dependencies()) {
+            foreach (const QString &dependency, mInfo.dependencies()) {
                 Plugin *pluginDependency = pPluginManager->plugin(dependency);
 
                 if (   !pluginDependency

@@ -12,6 +12,7 @@ namespace Ui {
 
 namespace OpenCOR {
 
+class GuiSettings;
 class PluginManager;
 
 class MainWindow : public QMainWindow
@@ -45,6 +46,8 @@ private:
 
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
+
+    void handlePluginGuiSettings(GuiSettings *pGuiSettings);
 
     void loadSettings();
     void saveSettings();

@@ -1,6 +1,8 @@
 #include "helpplugin.h"
 #include "helpwindow.h"
 
+#include <QAction>
+
 namespace OpenCOR {
 namespace Help {
 
@@ -23,7 +25,7 @@ HelpPlugin::HelpPlugin() :
 {
 }
 
-void HelpPlugin::initialize(MainWindow *pMainWindow)
+void HelpPlugin::initialize(MainWindow *pMainWindow, GuiSettings *pSettings)
 {
     // Add our help window to OpenCOR
 
@@ -31,17 +33,10 @@ void HelpPlugin::initialize(MainWindow *pMainWindow)
 
     // Create some actions that are to be registered by OpenCOR
 
-/*---GRY--- THE BELOW IS NOT RIGHT, NOT LEAST BECAUSE THE PLUGIN PROBABLY SHOULD
-            CREATE THE ACTIONS, SO THAT IT CAN CONNECT TO THEM...
-    mActions << GuiAction(Help, true, ":/oxygen/apps/help-browser.png");
-*/
-}
+    mHelpAction = newAction(pMainWindow, true,
+                            ":/oxygen/apps/help-browser.png");
 
-void HelpPlugin::finalize()
-{
-    // Delete our help window
-
-    delete mHelpWindow;
+    pSettings->addAction(GuiSettingsAction::Help, mHelpAction);
 }
 
 void HelpPlugin::retranslateUi()
@@ -49,6 +44,12 @@ void HelpPlugin::retranslateUi()
     // Retranslate our help window
 
     mHelpWindow->retranslateUi();
+
+    // Retranslate our aciton
+
+    mHelpAction->setText(tr("&Help"));
+    mHelpAction->setStatusTip(tr("Show/hide the OpenCOR help"));
+    mHelpAction->setShortcut(tr("F1"));
 }
 
 } }

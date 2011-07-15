@@ -6,25 +6,38 @@
 
 namespace OpenCOR {
 
-class GuiAction
-{
+class GuiSettings;
+
+class GuiSettingsAction {
+    friend class GuiSettings;
+
 public:
-    enum GuiActionType
+    enum GuiSettingsActionType
     {
         Help
     };
 
-    explicit GuiAction(const GuiActionType &pType, const bool &pCheckable,
-                       const QString &pIconResource);
+    explicit GuiSettingsAction(const GuiSettingsActionType &pType,
+                               QAction *pAction);
 
-    GuiActionType type();
-    bool checkable();
-    QString iconResource();
+    GuiSettingsActionType type();
+    QAction *action();
 
 private:
-    GuiActionType mType;
-    bool mCheckable;
-    QString mIconResource;
+    GuiSettingsActionType mType;
+    QAction *mAction;
+};
+
+class GuiSettings
+{
+public:
+    void addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
+                   QAction *pAction);
+
+    QList<GuiSettingsAction> actions();
+
+private:
+    QList<GuiSettingsAction> mActions;
 };
 
 class GuiInterface : public PluginInterface
@@ -32,14 +45,13 @@ class GuiInterface : public PluginInterface
 public:
     explicit GuiInterface(const QString &pPluginName);
 
-    virtual void initialize(MainWindow *);
-
-    QList<GuiAction> actions();
+    virtual void initialize(MainWindow *, GuiSettings *);
 
     void setLocale(const QString &pLocale);
 
 protected:
-    QList<GuiAction> mActions;
+    QAction * newAction(MainWindow *pMainWindow, const bool &pCheckable,
+                        const QString &pIconResource);
 
 private:
     QString mPluginName;

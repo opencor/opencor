@@ -1,36 +1,44 @@
 #include "guiinterface.h"
 
+#include <QAction>
 #include <QApplication>
 
 namespace OpenCOR {
 
-GuiAction::GuiAction(const GuiActionType &pType, const bool &pCheckable,
-                     const QString &pIconResource) :
+GuiSettingsAction::GuiSettingsAction(const GuiSettingsActionType &pType,
+                                     QAction *pAction) :
     mType(pType),
-    mCheckable(pCheckable),
-    mIconResource(pIconResource)
+    mAction(pAction)
 {
 }
 
-GuiAction::GuiActionType GuiAction::type()
+GuiSettingsAction::GuiSettingsActionType GuiSettingsAction::type()
 {
     // Return the action's type
 
     return mType;
 }
 
-bool GuiAction::checkable()
+QAction * GuiSettingsAction::action()
 {
-    // Return whether the action is checkable
+    // Return the action itself
 
-    return mCheckable;
+    return mAction;
 }
 
-QString GuiAction::iconResource()
+void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
+                            QAction *pAction)
 {
-    // Return the action's icon resource
+    // Add a new action to our list
 
-    return mIconResource;
+    mActions << GuiSettingsAction(pType, pAction);
+}
+
+QList<GuiSettingsAction> GuiSettings::actions()
+{
+    // Return the settings actions
+
+    return mActions;
 }
 
 GuiInterface::GuiInterface(const QString &pPluginName) :
@@ -38,17 +46,9 @@ GuiInterface::GuiInterface(const QString &pPluginName) :
 {
 }
 
-void GuiInterface::initialize(MainWindow *)
+void GuiInterface::initialize(MainWindow *, GuiSettings *)
 {
     // Nothing to do by default...
-}
-
-QList<GuiAction> GuiInterface::actions()
-{
-    // Return the plugin's actions that are to be created and incorporated into
-    // OpenCOR
-
-    return mActions;
 }
 
 void GuiInterface::setLocale(const QString &pLocale)
@@ -62,6 +62,20 @@ void GuiInterface::setLocale(const QString &pLocale)
     // Retranslate the plugin
 
     retranslateUi();
+}
+
+QAction * GuiInterface::newAction(MainWindow *pMainWindow,
+                                  const bool &pCheckable,
+                                  const QString &pIconResource)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pMainWindow);
+
+    res->setCheckable(pCheckable);
+    res->setIcon(QIcon(pIconResource));
+
+    return res;
 }
 
 void GuiInterface::retranslateUi()

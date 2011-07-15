@@ -156,7 +156,7 @@ QStringList PluginManager::requiredPlugins(const QString &pFileName,
 
     // Recursively look for the plugins required by the current plugin
 
-    foreach(const QString &plugin, Plugin::info(pFileName).dependencies())
+    foreach (const QString &plugin, Plugin::info(pFileName).dependencies())
         res << requiredPlugins(Plugin::fileName(mPluginsDir, plugin), pLevel+1);
 
     // Add the current plugin to the list, but only if it is not the original

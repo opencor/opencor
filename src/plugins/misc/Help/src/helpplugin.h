@@ -18,13 +18,14 @@ class HelpPlugin : public GuiInterface
 public:
     explicit HelpPlugin();
 
-    virtual void initialize(MainWindow *pMainWindow);
-    virtual void finalize();
+    virtual void initialize(MainWindow *pMainWindow, GuiSettings *pSettings);
 
     virtual void retranslateUi();
 
 private:
     HelpWindow *mHelpWindow;
+
+    QAction *mHelpAction;
 };
 
 } }

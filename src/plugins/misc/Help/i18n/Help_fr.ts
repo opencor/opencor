@@ -72,4 +72,19 @@
         <translation>Imprimer cette page d&apos;aide</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::Help::HelpPlugin</name>
+    <message>
+        <source>&amp;Help</source>
+        <translation>&amp;Aide</translation>
+    </message>
+    <message>
+        <source>Show/hide the OpenCOR help</source>
+        <translation>Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
+    </message>
+    <message>
+        <source>F1</source>
+        <translation></translation>
+    </message>
+</context>
 </TS>

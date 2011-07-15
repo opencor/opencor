@@ -91,17 +91,23 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Initialise our various plugins
 
-    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface) {
             // The plugin implements our GUI interface, so...
 
-            guiInterface->initialize(this);
+            GuiSettings *guiSettings = new GuiSettings;
 
-            // Create and incorporate any action requested by the plugin
+            guiInterface->initialize(this, guiSettings);
 
-//---GRY--- TO BE DONE USING guiInterface->actions
+            // Handle the GUI settings of the plugin
+
+            handlePluginGuiSettings(guiSettings);
+
+            // We are done with the plugin's GUI settings, so...
+
+            delete guiSettings;
         } else {
             // The plugin doesn't implement our GUI interface, so let's see
             // whether it implements our default interface
@@ -143,7 +149,7 @@ MainWindow::~MainWindow()
 {
     // Finalize our various plugins
 
-    foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface) {
@@ -220,6 +226,32 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Default handling of the event
 
     QMainWindow::closeEvent(pEvent);
+}
+
+void MainWindow::handlePluginGuiSettings(GuiSettings *pGuiSettings)
+{
+    // Handle the plugin's actions
+
+    foreach (GuiSettingsAction guiSettingsAction, pGuiSettings->actions())
+        // Handle the action depending on its type
+
+        switch (guiSettingsAction.type()) {
+        case GuiSettingsAction::Help:
+            // Dealing with a help type action, so need to add it to our help
+            // menu
+
+            mUi->menuHelp->insertAction(mUi->actionHomePage,
+                                        guiSettingsAction.action());
+            mUi->menuHelp->insertSeparator(mUi->actionHomePage);
+
+            // And then, also to our help tool bar
+
+            mUi->helpToolbar->insertAction(mUi->actionHomePage,
+                                           guiSettingsAction.action());
+            mUi->helpToolbar->insertSeparator(mUi->actionHomePage);
+
+            break;
+        }
 }
 
 static const QString SettingsLocale              = "Locale";
@@ -333,7 +365,7 @@ void MainWindow::setLocale(const QString &pLocale)
 
         // Update the locale of our various plugins
 
-        foreach(Plugin *plugin, mPluginManager->loadedPlugins()) {
+        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
             GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
             if (guiInterface)
