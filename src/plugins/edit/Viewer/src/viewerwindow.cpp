@@ -48,7 +48,7 @@ void ViewerWindow::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-void ViewerWindow::saveSettings(QSettings *pSettings)
+void ViewerWindow::saveSettings(QSettings *pSettings) const
 {
     pSettings->beginGroup(objectName());
         // Keep track of the settings of the viewer widget

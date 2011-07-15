@@ -169,7 +169,7 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-void FileBrowserWidget::saveSettings(QSettings *pSettings)
+void FileBrowserWidget::saveSettings(QSettings *pSettings) const
 {
     pSettings->beginGroup(objectName());
         // Retrieve the width of each column
@@ -216,7 +216,7 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
     return TreeView::viewportEvent(pEvent);
 }
 
-QStringList FileBrowserWidget::selectedFiles()
+QStringList FileBrowserWidget::selectedFiles() const
 {
     // Retrieve all the files that are currently selected
     // Note: if there is a non-file among the selected items, then we return an
@@ -254,7 +254,7 @@ QStringList FileBrowserWidget::selectedFiles()
     return res;
 }
 
-void FileBrowserWidget::deselectFolders()
+void FileBrowserWidget::deselectFolders() const
 {
     // Check whether more than one item is selected with the view of dragging
     // them and, if so, unselect any folder item since we don't allow them to be
@@ -413,7 +413,7 @@ bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
     }
 }
 
-QString FileBrowserWidget::homeFolder()
+QString FileBrowserWidget::homeFolder() const
 {
     // Return the path to the home folder
 
@@ -427,14 +427,14 @@ void FileBrowserWidget::gotoHomeFolder(const bool &pExpand)
     gotoPath(QDir::homePath(), pExpand);
 }
 
-QString FileBrowserWidget::currentPath()
+QString FileBrowserWidget::currentPath() const
 {
     // Return the current path
 
     return mDataModel->filePath(currentIndex());
 }
 
-QString FileBrowserWidget::currentPathDir()
+QString FileBrowserWidget::currentPathDir() const
 {
     // Return the directory of the current path
 
@@ -446,7 +446,7 @@ QString FileBrowserWidget::currentPathDir()
                crtIndexFileInfo.dir().canonicalPath();
 }
 
-QString FileBrowserWidget::currentPathParent()
+QString FileBrowserWidget::currentPathParent() const
 {
     // Return the current path parent, if any
 
@@ -457,7 +457,7 @@ QString FileBrowserWidget::currentPathParent()
                "";
 }
 
-QString FileBrowserWidget::pathOf(const QModelIndex &pIndex)
+QString FileBrowserWidget::pathOf(const QModelIndex &pIndex) const
 {
     // Return the file path of pIndex, if it exists
 

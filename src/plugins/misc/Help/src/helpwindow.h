@@ -26,14 +26,14 @@ public:
     virtual void retranslateUi();
 
     virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
-    void gotoHomePage();
+    void gotoHomePage() const;
 
-    int defaultZoomLevel();
+    int defaultZoomLevel() const;
 
-    void setZoomLevel(const int &pZoomLevel);
-    int zoomLevel();
+    void setZoomLevel(const int &pZoomLevel) const;
+    int zoomLevel() const;
 
 protected:
     virtual void updateActions();
@@ -57,7 +57,7 @@ private Q_SLOTS:
     void on_actionZoomOut_triggered();
     void on_actionPrint_triggered();
 
-    void customContextMenu(const QPoint &);
+    void customContextMenu(const QPoint &) const;
     void needUpdateActions();
 };
 

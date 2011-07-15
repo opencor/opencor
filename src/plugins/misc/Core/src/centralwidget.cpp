@@ -90,7 +90,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-void CentralWidget::saveSettings(QSettings *pSettings)
+void CentralWidget::saveSettings(QSettings *pSettings) const
 {
     pSettings->beginGroup(objectName());
         // Keep track of the files that are opened
@@ -249,14 +249,14 @@ void CentralWidget::fileActivated(const int &pIndex)
     emit fileActivated(mTabWidget->tabToolTip(pIndex));
 }
 
-int CentralWidget::nbOfFilesOpened()
+int CentralWidget::nbOfFilesOpened() const
 {
     // Return the number of files currently opened
 
     return mTabWidget->count();
 }
 
-QString CentralWidget::activeFileName()
+QString CentralWidget::activeFileName() const
 {
     // Return the name of the file currently active, if any
 

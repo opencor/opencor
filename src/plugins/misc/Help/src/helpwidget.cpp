@@ -201,7 +201,7 @@ void HelpWidget::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-void HelpWidget::saveSettings(QSettings *pSettings)
+void HelpWidget::saveSettings(QSettings *pSettings) const
 {
     pSettings->beginGroup(objectName());
         // Keep track of the text size multiplier
@@ -210,7 +210,7 @@ void HelpWidget::saveSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-QUrl HelpWidget::homePage()
+QUrl HelpWidget::homePage() const
 {
     // Return the URL for the home page
 
@@ -224,28 +224,28 @@ void HelpWidget::gotoHomePage()
     load(mHomePage);
 }
 
-bool HelpWidget::isBackAvailable()
+bool HelpWidget::isBackAvailable() const
 {
     // Return whether we can go to the previous help or not
 
     return mBackAvailable;
 }
 
-bool HelpWidget::isForwardAvailable()
+bool HelpWidget::isForwardAvailable() const
 {
     // Return whether we can go to the next help or not
 
     return mForwardAvailable;
 }
 
-int HelpWidget::minimumZoomLevel()
+int HelpWidget::minimumZoomLevel() const
 {
     // Return the minimum zoom level
 
     return 1;
 }
 
-int HelpWidget::defaultZoomLevel()
+int HelpWidget::defaultZoomLevel() const
 {
     // Return the default zoom level
 
@@ -284,7 +284,7 @@ void HelpWidget::setZoomLevel(const int &pZoomLevel)
     emit zoomLevelChanged(mZoomLevel);
 }
 
-int HelpWidget::zoomLevel()
+int HelpWidget::zoomLevel() const
 {
     // Return the current zoom level for the help page contents
 

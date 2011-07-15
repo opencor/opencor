@@ -34,11 +34,11 @@ public:
                     const PluginInfo::PluginType &pGuiOrConsoleType,
                     const bool &pForceLoading);
 
-    QString name();
-    PluginInfo info();
-    QObject * instance();
-    PluginStatus status();
-    QString statusDescription();
+    QString name() const;
+    PluginInfo info() const;
+    QObject * instance() const;
+    PluginStatus status() const;
+    QString statusDescription() const;
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pDir, const QString &pName);

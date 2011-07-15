@@ -51,7 +51,7 @@ void CellmlModelRepositoryWindow::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-void CellmlModelRepositoryWindow::saveSettings(QSettings *pSettings)
+void CellmlModelRepositoryWindow::saveSettings(QSettings *pSettings) const
 {
     pSettings->beginGroup(objectName());
         // Keep track of the settings of the PMR explorer widget

@@ -82,7 +82,7 @@ FileManager::FileManager(const int &pTimerInterval)
 
     // A connection to handle the timing out of our timer
 
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(check()));
+    connect(mTimer, SIGNAL(timeout()), this, SLOT(checkFiles()));
 
     // Start our timer
 
@@ -150,7 +150,7 @@ FileManager::UnmanageStatus FileManager::unmanage(const QString &pFileName)
     }
 }
 
-File * FileManager::isManaged(const QString &pFileName)
+File * FileManager::isManaged(const QString &pFileName) const
 {
     foreach (File *file, mFiles)
         if (file->fileName() == pFileName)
@@ -170,7 +170,7 @@ int FileManager::count() const
     return mFiles.count();
 }
 
-void FileManager::check()
+void FileManager::checkFiles()
 {
     // Check our various files
 

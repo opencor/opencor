@@ -121,7 +121,7 @@ void FileBrowserWindow::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-void FileBrowserWindow::saveSettings(QSettings *pSettings)
+void FileBrowserWindow::saveSettings(QSettings *pSettings) const
 {
     pSettings->beginGroup(objectName());
         // Keep track of the settings of the file browser widget
@@ -245,7 +245,7 @@ void FileBrowserWindow::on_actionNext_triggered()
 }
 
 void FileBrowserWindow::updateItems(const QString &pItemPath,
-                                    QStringList &pItems)
+                                    QStringList &pItems) const
 {
     // Remove any instance of pItemPath in pItems
 
@@ -279,7 +279,7 @@ void FileBrowserWindow::updateItems(const QString &pItemPath,
     }
 }
 
-void FileBrowserWindow::beginLoadingSettings()
+void FileBrowserWindow::beginLoadingSettings() const
 {
     // We are about to begin loading the settings for the file browser widget,
     // so we don't want to keep track of the previous item
@@ -288,7 +288,7 @@ void FileBrowserWindow::beginLoadingSettings()
                this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 }
 
-void FileBrowserWindow::endLoadingSettings()
+void FileBrowserWindow::endLoadingSettings() const
 {
     // We are now done loading the settings for the file browser widget, so we
     // can now keep track of the previous item
@@ -297,7 +297,7 @@ void FileBrowserWindow::endLoadingSettings()
             this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 }
 
-void FileBrowserWindow::customContextMenu(const QPoint &)
+void FileBrowserWindow::customContextMenu(const QPoint &) const
 {
     // Create a custom context menu which items match the contents of our
     // toolbar

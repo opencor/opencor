@@ -33,16 +33,16 @@ public:
                            const PluginInfo::PluginType &pGuiOrConsoleType);
     ~PluginManager();
 
-    QList<Plugin *> plugins(const bool &pOnlyLoadedPlugins = false);
-    QList<Plugin *> loadedPlugins();
+    QList<Plugin *> plugins(const bool &pOnlyLoadedPlugins = false) const;
+    QList<Plugin *> loadedPlugins() const;
 
-    QString pluginsDir();
-    Plugin * plugin(const QString &pName);
+    QString pluginsDir() const;
+    Plugin * plugin(const QString &pName) const;
 
-    QSettings * settings();
+    QSettings * settings() const;
 
     QStringList requiredPlugins(const QString &pFileName,
-                                const int &pLevel = 0);
+                                const int &pLevel = 0) const;
 
 private:
     QSettings *mSettings;

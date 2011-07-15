@@ -71,16 +71,16 @@ public:
                         const QUrl &pHomePage, QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
-    QUrl homePage();
+    QUrl homePage() const;
     void gotoHomePage();
 
-    bool isBackAvailable();
-    bool isForwardAvailable();
+    bool isBackAvailable() const;
+    bool isForwardAvailable() const;
 
-    int minimumZoomLevel();
-    int defaultZoomLevel();
+    int minimumZoomLevel() const;
+    int defaultZoomLevel() const;
 
     void resetZoom();
 
@@ -88,7 +88,7 @@ public:
     void zoomOut();
 
     void setZoomLevel(const int &pZoomLevel);
-    int zoomLevel();
+    int zoomLevel() const;
 
 protected:
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);

@@ -151,7 +151,7 @@ void HelpWindow::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-void HelpWindow::saveSettings(QSettings *pSettings)
+void HelpWindow::saveSettings(QSettings *pSettings) const
 {
     pSettings->beginGroup(objectName());
         // Keep track of the settings of the help widget
@@ -160,28 +160,28 @@ void HelpWindow::saveSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-void HelpWindow::gotoHomePage()
+void HelpWindow::gotoHomePage() const
 {
     // Go to the home page
 
     mHelpWidget->gotoHomePage();
 }
 
-int HelpWindow::defaultZoomLevel()
+int HelpWindow::defaultZoomLevel() const
 {
     // Return the default zoom level for the help widget
 
     return mHelpWidget->defaultZoomLevel();
 }
 
-void HelpWindow::setZoomLevel(const int &pZoomLevel)
+void HelpWindow::setZoomLevel(const int &pZoomLevel) const
 {
     // Set the zoom level for the help widget
 
     mHelpWidget->setZoomLevel(pZoomLevel);
 }
 
-int HelpWindow::zoomLevel()
+int HelpWindow::zoomLevel() const
 {
     // Return the current zoom level for the help widget
 
@@ -250,7 +250,7 @@ void HelpWindow::on_actionPrint_triggered()
           mHelpWidget->print(&printer);
 }
 
-void HelpWindow::customContextMenu(const QPoint &)
+void HelpWindow::customContextMenu(const QPoint &) const
 {
     // Create a custom context menu which items match the contents of our
     // toolbar

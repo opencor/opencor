@@ -28,7 +28,7 @@ public:
     explicit MainWindow(QWidget *pParent = 0);
     ~MainWindow();
 
-    QString locale();
+    QString locale() const;
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
@@ -47,15 +47,15 @@ private:
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
 
-    void handlePluginGuiSettings(GuiSettings *pGuiSettings);
+    void handlePluginGuiSettings(const GuiSettings &pGuiSettings) const;
 
     void loadSettings();
-    void saveSettings();
+    void saveSettings() const;
 
     void setLocale(const QString &pLocale);
 
 public Q_SLOTS:
-    void singleAppMsgRcvd(const QString &);
+    void singleAppMsgRcvd(const QString &) const;
 
 private Q_SLOTS:
     void on_actionFullScreen_triggered();

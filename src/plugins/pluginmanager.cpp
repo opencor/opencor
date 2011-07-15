@@ -99,7 +99,7 @@ PluginManager::~PluginManager()
     }
 }
 
-QList<Plugin *> PluginManager::plugins(const bool &pOnlyLoadedPlugins)
+QList<Plugin *> PluginManager::plugins(const bool &pOnlyLoadedPlugins) const
 {
     // Return a list of all the plugins
 
@@ -119,28 +119,28 @@ QList<Plugin *> PluginManager::plugins(const bool &pOnlyLoadedPlugins)
     return res;
 }
 
-QList<Plugin *> PluginManager::loadedPlugins()
+QList<Plugin *> PluginManager::loadedPlugins() const
 {
     // Return a list of all the loaded plugins
 
     return plugins(true);
 }
 
-QString PluginManager::pluginsDir()
+QString PluginManager::pluginsDir() const
 {
     // Return the plugins directory
 
     return mPluginsDir;
 }
 
-Plugin * PluginManager::plugin(const QString &pName)
+Plugin * PluginManager::plugin(const QString &pName) const
 {
     // Return the plugin which name is that we have been passed
 
     return mPlugins.value(pName);
 }
 
-QSettings * PluginManager::settings()
+QSettings * PluginManager::settings() const
 {
     // Return the settings object
 
@@ -148,7 +148,7 @@ QSettings * PluginManager::settings()
 }
 
 QStringList PluginManager::requiredPlugins(const QString &pFileName,
-                                           const int &pLevel)
+                                           const int &pLevel) const
 {
     // Return the list of plugins required by a given plugin
 

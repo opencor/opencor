@@ -15,21 +15,21 @@ PluginInfo::PluginInfo(const PluginType &pType,
 {
 }
 
-PluginInfo::PluginType PluginInfo::type()
+PluginInfo::PluginType PluginInfo::type() const
 {
     // Return the plugin's type
 
     return mType;
 }
 
-QStringList PluginInfo::dependencies()
+QStringList PluginInfo::dependencies() const
 {
     // Return the plugin's dependencies
 
     return mDependencies;
 }
 
-QString PluginInfo::description(const QString &pLocale)
+QString PluginInfo::description(const QString &pLocale) const
 {
     // Return the plugin's description using the provided locale or the first
     // description if no description can be found for the provided locale

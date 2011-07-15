@@ -31,9 +31,9 @@ public:
                         const QStringList &pDependencies = QStringList(),
                         const PluginInfoDescriptions &pDescriptions = PluginInfoDescriptions());
 
-    PluginType type();
-    QStringList dependencies();
-    QString description(const QString &pLocale = "en");
+    PluginType type() const;
+    QStringList dependencies() const;
+    QString description(const QString &pLocale = "en") const;
 
 private:
     PluginType mType;

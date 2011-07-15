@@ -27,18 +27,18 @@ public:
     ~FileBrowserWidget();
 
     virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
     bool gotoPath(const QString &pPath, const bool &pExpand = false);
 
-    QString homeFolder();
+    QString homeFolder() const;
     void gotoHomeFolder(const bool &pExpand = false);
 
-    QString currentPath();
-    QString currentPathDir();
-    QString currentPathParent();
+    QString currentPath() const;
+    QString currentPathDir() const;
+    QString currentPathParent() const;
 
-    QString pathOf(const QModelIndex &pIndex);
+    QString pathOf(const QModelIndex &pIndex) const;
 
 protected:
     virtual QSize sizeHint() const;
@@ -59,9 +59,9 @@ private:
     QString mInitPathDir;
     QString mInitPath;
 
-    void deselectFolders();
+    void deselectFolders() const;
 
-    QStringList selectedFiles();
+    QStringList selectedFiles() const;
 
 Q_SIGNALS:
     void beginLoadingSettings();

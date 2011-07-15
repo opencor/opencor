@@ -24,14 +24,14 @@ public:
     ~CentralWidget();
 
     virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
     bool openFile(const QString &pFileName);
     bool activateFile(const QString &pFileName);
 
-    int nbOfFilesOpened();
+    int nbOfFilesOpened() const;
 
-    QString activeFileName();
+    QString activeFileName() const;
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);

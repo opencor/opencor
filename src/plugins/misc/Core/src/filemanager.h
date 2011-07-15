@@ -67,14 +67,14 @@ private:
     QTimer *mTimer;
     QList<File *> mFiles;
 
-    File * isManaged(const QString &pFileName);
+    File * isManaged(const QString &pFileName) const;
 
 Q_SIGNALS:
     void fileContentsChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
 
 private Q_SLOTS:
-    void check();
+    void checkFiles();
 };
 
 } }

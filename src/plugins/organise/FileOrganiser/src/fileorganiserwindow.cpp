@@ -99,7 +99,7 @@ void FileOrganiserWindow::loadSettings(QSettings *pSettings)
     pSettings->endGroup();
 }
 
-void FileOrganiserWindow::saveSettings(QSettings *pSettings)
+void FileOrganiserWindow::saveSettings(QSettings *pSettings) const
 {
     pSettings->beginGroup(objectName());
         // Keep track of the settings of the file organiser widget
@@ -122,7 +122,7 @@ void FileOrganiserWindow::on_actionDelete_triggered()
     mFileOrganiserWidget->deleteItems();
 }
 
-void FileOrganiserWindow::customContextMenu(const QPoint &pPos)
+void FileOrganiserWindow::customContextMenu(const QPoint &) const
 {
     // Create a custom context menu which items match the contents of our
     // toolbar

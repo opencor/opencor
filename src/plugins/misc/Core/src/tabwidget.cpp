@@ -56,7 +56,7 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
     }
 }
 
-void TabWidget::tabChanged(const int &pIndex)
+void TabWidget::tabChanged(const int &pIndex) const
 {
     // A new tab has been selected, so give the focus to its widget
 
@@ -66,7 +66,7 @@ void TabWidget::tabChanged(const int &pIndex)
         crtWidget->setFocus();
 }
 
-void TabWidget::getFocus(QWidget *, QWidget *pNew)
+void TabWidget::getFocus(QWidget *, QWidget *pNew) const
 {
     // The tab widget (or a part of it) has just received the focus and, here,
     // we want to take advantage of this to give the focus to the widget of the

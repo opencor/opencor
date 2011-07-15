@@ -129,35 +129,35 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
     }
 }
 
-QString Plugin::name()
+QString Plugin::name() const
 {
     // Return the plugin's name
 
     return mName;
 }
 
-PluginInfo Plugin::info()
+PluginInfo Plugin::info() const
 {
     // Return the plugin's information
 
     return mInfo;
 }
 
-QObject * Plugin::instance()
+QObject * Plugin::instance() const
 {
     // Return the plugin's insance
 
     return mInstance;
 }
 
-Plugin::PluginStatus Plugin::status()
+Plugin::PluginStatus Plugin::status() const
 {
     // Return the plugin's status
 
     return mStatus;
 }
 
-QString Plugin::statusDescription()
+QString Plugin::statusDescription() const
 {
     // Return the plugin's status' description, if any
 

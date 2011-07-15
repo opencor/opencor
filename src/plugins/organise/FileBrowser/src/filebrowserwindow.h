@@ -25,7 +25,7 @@ public:
     virtual void retranslateUi();
 
     virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
 protected:
     virtual void updateActions();
@@ -39,7 +39,7 @@ private:
     QStringList mNextItems;
 
     void gotoOtherItem(QStringList &pItems, QStringList &pOtherItems);
-    void updateItems(const QString &pItemPath, QStringList &pItems);
+    void updateItems(const QString &pItemPath, QStringList &pItems) const;
 
 Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);
@@ -50,9 +50,9 @@ private Q_SLOTS:
     void on_actionPrevious_triggered();
     void on_actionNext_triggered();
 
-    void beginLoadingSettings();
-    void endLoadingSettings();
-    void customContextMenu(const QPoint &);
+    void beginLoadingSettings() const;
+    void endLoadingSettings() const;
+    void customContextMenu(const QPoint &) const;
     void itemDoubleClicked(const QModelIndex &itemIndex);
 
     void itemChanged(const QModelIndex &, const QModelIndex &pPrevItem);

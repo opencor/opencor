@@ -350,7 +350,7 @@ void FileOrganiserWidget::loadSettings(QSettings *pSettings)
 
 void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
                                            QStandardItem *pItem,
-                                           const int &pParentItemIndex)
+                                           const int &pParentItemIndex) const
 {
     // Recursively keep track of the item settings
 
@@ -395,7 +395,7 @@ void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
         saveItemSettings(pSettings, pItem->child(i), childParentItemIndex);
 }
 
-void FileOrganiserWidget::saveSettings(QSettings *pSettings)
+void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
 {
     pSettings->beginGroup(objectName());
         // Keep track of the data model
@@ -621,7 +621,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 }
 
 bool FileOrganiserWidget::parentIndexExists(const QModelIndex &pIndex,
-                                            const QModelIndexList &pIndexes)
+                                            const QModelIndexList &pIndexes) const
 {
     // Recursively determine whether one of the parents of the given index is in
     // the provided list
@@ -648,7 +648,7 @@ bool FileOrganiserWidget::parentIndexExists(const QModelIndex &pIndex,
     }
 }
 
-QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pIndexes)
+QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pIndexes) const
 {
     // A list of indexes may contain indexes that are not relevant or
     // effectively the duplicate of another existing index, so...
@@ -727,7 +727,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
 }
 
 bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
-                                            QStandardItem *pOtherItem)
+                                            QStandardItem *pOtherItem) const
 {
     if (pItem == pOtherItem) {
         // pItem is the same as pOtherItem, so...
@@ -752,7 +752,7 @@ bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
     }
 }
 
-void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem)
+void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem) const
 {
     // Recursively backup the expanded state of the item, should it be a folder,
     // and of any of its children, should it have some
@@ -788,12 +788,12 @@ void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
     }
 }
 
-bool FileOrganiserWidget::isFolderItem(const QModelIndex &pItemIndex)
+bool FileOrganiserWidget::isFolderItem(const QModelIndex &pItemIndex) const
 {
     return mDataModel->itemFromIndex(pItemIndex)->data(FileOrganiserItemFolder).toBool();
 }
 
-QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem)
+QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem) const
 {
     // Come up with the name for a new folder which is to be under pFolderItem
 
@@ -1200,7 +1200,7 @@ bool FileOrganiserWidget::deleteItems()
     }
 }
 
-QString FileOrganiserWidget::filePath(const QModelIndex &pFileIndex)
+QString FileOrganiserWidget::filePath(const QModelIndex &pFileIndex) const
 {
     // Return the file path of pFileIndex
 
@@ -1215,7 +1215,7 @@ void FileOrganiserWidget::resizeToContents()
     resizeColumnToContents(0);
 }
 
-QStringList FileOrganiserWidget::selectedFiles()
+QStringList FileOrganiserWidget::selectedFiles() const
 {
     // Retrieve all the files that are currently selected
     // Note: if there is a folder among the selected items, then we return an
@@ -1289,7 +1289,7 @@ void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 
 void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
                                           const QString &pFileName,
-                                          const Core::File::FileStatus &pStatus)
+                                          const Core::File::FileStatus &pStatus) const
 {
     // Recursively update the icon of all file items that refer to pFileName
 
@@ -1308,7 +1308,7 @@ void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
         updateFileItems(pItem->child(i), pFileName, pStatus);
 }
 
-void FileOrganiserWidget::fileContentsChanged(const QString &pFileName)
+void FileOrganiserWidget::fileContentsChanged(const QString &pFileName) const
 {
     // The contents of a file has been changed which may also mean that a file
     // may have been deleted and recreated, so go through all the (file) items
@@ -1318,7 +1318,7 @@ void FileOrganiserWidget::fileContentsChanged(const QString &pFileName)
                     Core::File::Changed);
 }
 
-void FileOrganiserWidget::fileDeleted(const QString &pFileName)
+void FileOrganiserWidget::fileDeleted(const QString &pFileName) const
 {
     // A file has been deleted, so...
 

@@ -50,9 +50,9 @@ private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 
-    void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &);
-    void updatePluginsLoadingState(QStandardItem * = 0);
-    void openLink(const QString &pLink);
+    void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &) const;
+    void updatePluginsLoadingState(QStandardItem * = 0) const;
+    void openLink(const QString &pLink) const;
 };
 
 }

@@ -12,14 +12,14 @@ GuiSettingsAction::GuiSettingsAction(const GuiSettingsActionType &pType,
 {
 }
 
-GuiSettingsAction::GuiSettingsActionType GuiSettingsAction::type()
+GuiSettingsAction::GuiSettingsActionType GuiSettingsAction::type() const
 {
     // Return the action's type
 
     return mType;
 }
 
-QAction * GuiSettingsAction::action()
+QAction * GuiSettingsAction::action() const
 {
     // Return the action itself
 
@@ -34,7 +34,7 @@ void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pTyp
     mActions << GuiSettingsAction(pType, pAction);
 }
 
-QList<GuiSettingsAction> GuiSettings::actions()
+QList<GuiSettingsAction> GuiSettings::actions() const
 {
     // Return the settings actions
 
@@ -46,9 +46,16 @@ GuiInterface::GuiInterface(const QString &pPluginName) :
 {
 }
 
-void GuiInterface::initialize(MainWindow *, GuiSettings *)
+void GuiInterface::initialize(MainWindow *)
 {
     // Nothing to do by default...
+}
+
+GuiSettings GuiInterface::settings() const
+{
+    // Return the plugin's settings
+
+    return mSettings;
 }
 
 void GuiInterface::setLocale(const QString &pLocale)
@@ -66,7 +73,7 @@ void GuiInterface::setLocale(const QString &pLocale)
 
 QAction * GuiInterface::newAction(MainWindow *pMainWindow,
                                   const bool &pCheckable,
-                                  const QString &pIconResource)
+                                  const QString &pIconResource) const
 {
     // Create and return an action
 

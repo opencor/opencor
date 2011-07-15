@@ -25,7 +25,7 @@ public:
     virtual void retranslateUi();
 
     virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
 protected:
     virtual void updateActions();
@@ -42,7 +42,7 @@ private slots:
     void on_actionNew_triggered();
     void on_actionDelete_triggered();
 
-    void customContextMenu(const QPoint &pPos);
+    void customContextMenu(const QPoint &) const;
     void itemDoubleClicked(const QModelIndex &itemIndex);
 
     void needUpdateActions();

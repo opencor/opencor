@@ -25,7 +25,7 @@ HelpPlugin::HelpPlugin() :
 {
 }
 
-void HelpPlugin::initialize(MainWindow *pMainWindow, GuiSettings *pSettings)
+void HelpPlugin::initialize(MainWindow *pMainWindow)
 {
     // Add our help window to OpenCOR
 
@@ -36,7 +36,7 @@ void HelpPlugin::initialize(MainWindow *pMainWindow, GuiSettings *pSettings)
     mHelpAction = newAction(pMainWindow, true,
                             ":/oxygen/apps/help-browser.png");
 
-    pSettings->addAction(GuiSettingsAction::Help, mHelpAction);
+    mSettings.addAction(GuiSettingsAction::Help, mHelpAction);
 
     // Some connections to handle the visibility of our help window
 

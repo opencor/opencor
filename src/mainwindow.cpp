@@ -97,17 +97,11 @@ MainWindow::MainWindow(QWidget *pParent) :
         if (guiInterface) {
             // The plugin implements our GUI interface, so...
 
-            GuiSettings *guiSettings = new GuiSettings;
-
-            guiInterface->initialize(this, guiSettings);
+            guiInterface->initialize(this);
 
             // Handle the GUI settings of the plugin
 
-            handlePluginGuiSettings(guiSettings);
-
-            // We are done with the plugin's GUI settings, so...
-
-            delete guiSettings;
+            handlePluginGuiSettings(guiInterface->settings());
         } else {
             // The plugin doesn't implement our GUI interface, so let's see
             // whether it implements our default interface
@@ -228,23 +222,23 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     QMainWindow::closeEvent(pEvent);
 }
 
-void MainWindow::handlePluginGuiSettings(GuiSettings *pGuiSettings)
+void MainWindow::handlePluginGuiSettings(const GuiSettings &pGuiSettings) const
 {
     // Handle the plugin's actions
 
-    foreach (GuiSettingsAction guiSettingsAction, pGuiSettings->actions())
+    foreach (const GuiSettingsAction &guiSettingsAction, pGuiSettings.actions())
         // Handle the action depending on its type
 
         switch (guiSettingsAction.type()) {
         case GuiSettingsAction::Help:
-            // Dealing with a help type action, so need to add it to our help
-            // menu
+            // We are dealing with a help type action, so we need to add it to
+            // our help menu
 
             mUi->menuHelp->insertAction(mUi->actionHomePage,
                                         guiSettingsAction.action());
             mUi->menuHelp->insertSeparator(mUi->actionHomePage);
 
-            // And then, also to our help tool bar
+            // As well as to our help tool bar
 
             mUi->helpToolbar->insertAction(mUi->actionHomePage,
                                            guiSettingsAction.action());
@@ -302,7 +296,7 @@ void MainWindow::loadSettings()
     mSettings->endGroup();
 }
 
-void MainWindow::saveSettings()
+void MainWindow::saveSettings() const
 {
     mSettings->beginGroup(objectName());
         // Keep track of the language to be used by OpenCOR
@@ -328,7 +322,7 @@ void MainWindow::saveSettings()
     mSettings->endGroup();
 }
 
-QString MainWindow::locale()
+QString MainWindow::locale() const
 {
     // Return the current locale
 
@@ -385,7 +379,7 @@ void MainWindow::setLocale(const QString &pLocale)
     mUi->actionFrench->setChecked(mLocale == FrenchLocale);
 }
 
-void MainWindow::singleAppMsgRcvd(const QString &)
+void MainWindow::singleAppMsgRcvd(const QString &) const
 {
     // We have just received a message from another instance of OpenCOR, so
     // bring ourselves to the foreground

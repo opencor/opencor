@@ -145,7 +145,7 @@ void PluginsWindow::retranslateUi()
 }
 
 void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
-                                     const QModelIndex &)
+                                     const QModelIndex &) const
 {
     // Update the information view with the plugin's information
 
@@ -203,7 +203,7 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
     mUi->statusValue->setText(plugin->statusDescription());
 }
 
-void PluginsWindow::updatePluginsLoadingState(QStandardItem *)
+void PluginsWindow::updatePluginsLoadingState(QStandardItem *) const
 {
     // Determine which plugins are required by the plugins over which the user
     // has loading control
@@ -233,7 +233,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *)
     }
 }
 
-void PluginsWindow::openLink(const QString &pLink)
+void PluginsWindow::openLink(const QString &pLink) const
 {
     // Open the link in the user's browser
 

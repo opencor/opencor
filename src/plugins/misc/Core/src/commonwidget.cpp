@@ -47,7 +47,7 @@ void CommonWidget::loadSettings(QSettings *)
     // Nothing to do by default...
 }
 
-void CommonWidget::saveSettings(QSettings *)
+void CommonWidget::saveSettings(QSettings *) const
 {
     // Nothing to do by default...
 }
