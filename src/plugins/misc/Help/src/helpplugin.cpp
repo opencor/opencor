@@ -37,6 +37,13 @@ void HelpPlugin::initialize(MainWindow *pMainWindow, GuiSettings *pSettings)
                             ":/oxygen/apps/help-browser.png");
 
     pSettings->addAction(GuiSettingsAction::Help, mHelpAction);
+
+    // Some connections to handle the visibility of our help window
+
+    connect(mHelpAction, SIGNAL(triggered(bool)),
+            mHelpWindow, SLOT(setVisible(bool)));
+    connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
+            mHelpAction, SLOT(setChecked(bool)));
 }
 
 void HelpPlugin::retranslateUi()
