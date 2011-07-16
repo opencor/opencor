@@ -13,6 +13,8 @@
         <file>oxygen/apps/system-software-update.png</file>
         <file>oxygen/categories/applications-education-language.png</file>
         <file>oxygen/categories/applications-internet.png</file>
+        <file>oxygen/status/task-complete.png</file>
+        <file>oxygen/status/task-reject.png</file>
         <file alias="qt_fr">qt_fr.qm</file>
         <file alias="app_fr">../build/OpenCOR_fr.qm</file>
     </qresource>

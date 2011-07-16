@@ -64,7 +64,11 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // Populate the data model
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
-        QStandardItem *pluginItem = new QStandardItem(plugin->name());
+        QStandardItem *pluginItem = new QStandardItem((   (plugin->status() == Plugin::Loaded)
+                                                       || (plugin->status() == Plugin::NotNeeded))?
+                                                          QIcon(":oxygen/status/task-complete.png"):
+                                                          QIcon(":oxygen/status/task-reject.png"),
+                                                      plugin->name());
 
         if (plugin->info().manageable()) {
             // Only manageable plugins are checkable
