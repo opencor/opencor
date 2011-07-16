@@ -25,6 +25,12 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 
         mInfo = info(pFileName);
 
+        // Now, retrieve the plugin's full dependencies (i.e. both its direct
+        // and indirect dependencies)
+
+        mInfo.mFullDependencies << requiredPlugins(pPluginManager->pluginsDir(),
+                                                   mName);
+
         // Try to load the plugin, but only if it is either a general plugin or
         // one of the type we are happy with, and if it is manageable or is
         // required by another plugin
@@ -236,6 +242,8 @@ PluginInfo Plugin::info(const QString &pFileName)
 
         return pluginInfoFunc();
     else
+        // The plugin information couldn't be found, so...
+
         return PluginInfo();
 }
 
@@ -260,6 +268,35 @@ void Plugin::setLoad(QSettings *pSettings, const QString &pName,
     pSettings->beginGroup(PluginGroup);
         pSettings->setValue(pName, pToBeLoaded);
     pSettings->endGroup();
+}
+
+QStringList Plugin::requiredPlugins(const QString &pPluginsDir,
+                                    const QString &pName,
+                                    const int &pLevel)
+{
+    // Return the list of plugins required by a given plugin
+
+    QStringList res;
+
+    // Recursively look for the plugins required by the current plugin
+
+    foreach (const QString &plugin,
+             Plugin::info(Plugin::fileName(pPluginsDir, pName)).dependencies())
+        res << requiredPlugins(pPluginsDir, plugin, pLevel+1);
+
+    // Add the current plugin to the list, but only if it is not the original
+    // plugin for which we want to know what its requirements are
+
+    if (pLevel)
+        // We are not dealing with the original plugin, so...
+
+        res << pName;
+    else
+        // We are done, so remove any duplicate which might be present
+
+        res.removeDuplicates();
+
+    return res;
 }
 
 }

@@ -13,6 +13,7 @@ PluginInfo::PluginInfo(const PluginType &pType,
     mType(pType),
     mManageable(pManageable),
     mDependencies(pDependencies),
+    mFullDependencies(QStringList()),
     mDescriptions(pDescriptions)
 {
 }
@@ -36,6 +37,15 @@ QStringList PluginInfo::dependencies() const
     // Return the plugin's dependencies
 
     return mDependencies;
+}
+
+QStringList PluginInfo::fullDependencies() const
+{
+    // Return the plugin's full dependencies
+    // Note: they are determined by the plugin itself (i.e. during the
+    //       construction of a Plugin object)
+
+    return mFullDependencies;
 }
 
 QString PluginInfo::description(const QString &pLocale) const

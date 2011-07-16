@@ -48,6 +48,10 @@ public:
     static void setLoad(QSettings *pSettings, const QString &pName,
                         const bool &pToBeLoaded);
 
+    static QStringList requiredPlugins(const QString &pPluginsDir,
+                                       const QString &pName,
+                                       const int &pLevel = 0);
+
 private:
     QString mName;
     PluginInfo mInfo;

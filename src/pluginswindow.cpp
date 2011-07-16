@@ -66,18 +66,28 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     foreach (Plugin *plugin, mPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem(plugin->name());
 
-        // Only manageable plugins are checkable
+        if (plugin->info().manageable()) {
+            // Only manageable plugins are checkable
 
-        pluginItem->setCheckable(plugin->info().manageable());
+            pluginItem->setCheckable(true);
 
-        // Retrieve the loading state of the plugin, in case it is a plugin the
-        // user can manage
+            // Retrieve the loading state of the plugin
 
-        if (pluginItem->isCheckable())
             pluginItem->setCheckState((Plugin::load(mPluginManager->settings(),
                                                     plugin->name()))?
                                           Qt::Checked:
                                           Qt::Unchecked);
+
+            // We are dealing with a manageable plugin, so add it to our list of
+            // manageable plugins
+
+            mManageablePlugins << pluginItem;
+        } else {
+            // We are dealing with an unmanageable plugin, so add it to our list
+            // of unmanageable plugins
+
+            mUnmanageablePlugins << pluginItem;
+        }
 
         // Add the plugin to our data model
 
@@ -112,11 +122,6 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     connect(mUi->listView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updatePluginInfo(const QModelIndex &, const QModelIndex &)));
-
-    // Connection to handle a change in a plugin's loading state
-
-    connect(mDataModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(updatePluginsLoadingState(QStandardItem *)));
 
     // Connection to handle the activation of a link in the description
 
@@ -203,34 +208,92 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
     mUi->statusValue->setText(plugin->statusDescription());
 }
 
-void PluginsWindow::updatePluginsLoadingState(QStandardItem *) const
+void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem) const
 {
-    // Determine which plugins are required by the plugins over which the user
-    // has loading control
+    // Disable the connection that handles a change in a plugin's loading state
 
-    QStringList requiredPlugins;
+    disconnect(mDataModel, SIGNAL(itemChanged(QStandardItem *)),
+               this, SLOT(updatePluginsLoadingState(QStandardItem *)));
 
-    for (int i = 0; i < mDataModel->rowCount(); ++i) {
-        QStandardItem *pluginItem = mDataModel->item(i);
+    // Prevent the list view from being updated, since we may change a few
+    // things
 
-        if (   pluginItem->isCheckable()
-            && (pluginItem->checkState() == Qt::Checked))
-           requiredPlugins << mPluginManager->requiredPlugins(Plugin::fileName(mPluginManager->pluginsDir(), pluginItem->text()));
+    mUi->listView->setUpdatesEnabled(false);
+
+    // Check whether we came here as a result of checking a plugin and, if so,
+    // then make sure that all of that plugin's dependencies are also checked
+
+    if (   pChangedPluginItem
+        && (pChangedPluginItem->checkState() == Qt::Checked))
+        foreach (const QString &requiredPlugin,
+                 mPluginManager->plugin(pChangedPluginItem->text())->info().fullDependencies())
+            foreach (QStandardItem *pluginItem, mManageablePlugins)
+                if (!pluginItem->text().compare(requiredPlugin))
+                    // We are dealing with one of the plugin's dependencies, so
+                    // make sure it's checked
+
+                    pluginItem->setCheckState(Qt::Checked);
+
+    // At this stage, all the plugins which should be checked are checked, so
+    // now we must update the manageable plugins that are currently checked to
+    // make sure that their loading state is consistent with that of the others.
+    // This means going through each of the plugins and have them checked only
+    // if all of their dependencies are checked. Note that it is fine to do it
+    // this way since all we need is for one of a plugin's dependencies to be
+    // unchecked for the plugin to also be unchecked, so...
+
+    foreach (QStandardItem *pluginItem, mManageablePlugins)
+        if (pluginItem->checkState() == Qt::Checked)
+            foreach (const QString &requiredPlugin,
+                     mPluginManager->plugin(pluginItem->text())->info().fullDependencies())
+                foreach (QStandardItem *otherPluginItem, mManageablePlugins)
+                    if (!otherPluginItem->text().compare(requiredPlugin)) {
+                        // We have found the plugin's dependency
+
+                        if (otherPluginItem->checkState() == Qt::Unchecked)
+                            // The plugin's dependency is unchecked, meaning the
+                            // plugin must also be unchecked
+
+                            pluginItem->setCheckState(Qt::Unchecked);
+
+                        break;
+                    }
+
+    // Finally, we need to see whether any of the unmanageable plugins should be
+    // checked
+
+    foreach (QStandardItem *pluginItem, mUnmanageablePlugins) {
+        // First, reset the loading state of the unamangeable plugin
+
+        pluginItem->setCheckState(Qt::Unchecked);
+
+        // Next, go through the manageable plugins' dependencies
+
+        foreach (QStandardItem *otherPluginItem, mManageablePlugins)
+            if (otherPluginItem->checkState() == Qt::Checked)
+                // The manageable plugin is checked, so carry on...
+
+                foreach (const QString &requiredPlugin,
+                         mPluginManager->plugin(otherPluginItem->text())->info().fullDependencies())
+                    if (!requiredPlugin.compare(pluginItem->text())) {
+                        // The manageable plugin does require the unamanageable
+                        // plugin, so...
+
+                        pluginItem->setCheckState(Qt::Checked);
+
+                        break;
+                    }
     }
 
-    requiredPlugins.removeDuplicates();
+    // Re-enable the the list view from being updated
 
-    // Update the loading state of the plugins over which the user has no
-    // control
+    mUi->listView->setUpdatesEnabled(true);
 
-    for (int i = 0; i < mDataModel->rowCount(); ++i) {
-        QStandardItem *pluginItem = mDataModel->item(i);
+    // Re-enable the connection that handles a change in a plugin's loading
+    // state
 
-        if (!pluginItem->isCheckable())
-            pluginItem->setCheckState(requiredPlugins.contains(pluginItem->text())?
-                                          Qt::Checked:
-                                          Qt::Unchecked);
-    }
+    connect(mDataModel, SIGNAL(itemChanged(QStandardItem *)),
+            this, SLOT(updatePluginsLoadingState(QStandardItem *)));
 }
 
 void PluginsWindow::openLink(const QString &pLink) const
@@ -245,13 +308,10 @@ void PluginsWindow::on_buttonBox_accepted()
     // Keep track of the loading state of the various plugins over which the
     // user has control (i.e. the ones that are checkable)
 
-    for (int i = 0; i < mDataModel->rowCount(); ++i) {
-        QStandardItem *pluginItem = mDataModel->item(i);
-
+    foreach (QStandardItem *pluginItem, mManageablePlugins)
         if (pluginItem->isCheckable())
             Plugin::setLoad(mPluginManager->settings(), pluginItem->text(),
                             pluginItem->checkState() == Qt::Checked);
-    }
 
     // Confirm that we accepted the changes
 

@@ -41,9 +41,6 @@ public:
 
     QSettings * settings() const;
 
-    QStringList requiredPlugins(const QString &pFileName,
-                                const int &pLevel = 0) const;
-
 private:
     QSettings *mSettings;
 

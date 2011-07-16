@@ -46,12 +46,15 @@ private:
 
     PluginDelegate *mPluginDelegate;
 
+    QList<QStandardItem *> mManageablePlugins;
+    QList<QStandardItem *> mUnmanageablePlugins;
+
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 
     void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &) const;
-    void updatePluginsLoadingState(QStandardItem * = 0) const;
+    void updatePluginsLoadingState(QStandardItem *pChangedPluginItem = 0) const;
     void openLink(const QString &pLink) const;
 };
 

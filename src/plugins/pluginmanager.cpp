@@ -47,10 +47,10 @@ PluginManager::PluginManager(QSettings *pSettings,
     foreach (const QFileInfo &file, fileInfoList)
         fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
 
-    // Non-manageable plugins (e.g. the QScintilla plugin) don't, by default,
-    // get loaded, but the situation is obviously different if such a plugin is
+    // Unmanageable plugins (e.g. the QScintilla plugin) don't, by default, get
+    // loaded, but the situation is obviously different if such a plugin is
     // required by another plugin (e.g. the Viewer plugin requires the
-    // QtMmlWidget plugin), in which case the non-manageable plugin must be
+    // QtMmlWidget plugin), in which case the unmanageable plugin must be
     // loaded. So, we must here determine which of those plugins must be
     // loaded...
 
@@ -62,7 +62,8 @@ PluginManager::PluginManager(QSettings *pSettings,
             // The plugin is manageable and to be loaded, so retrieve its
             // dependencies
 
-            plugins << requiredPlugins(fileName);
+            plugins << Plugin::requiredPlugins(mPluginsDir,
+                                               Plugin::name(fileName));
 
     plugins.removeDuplicates();
 
@@ -82,7 +83,7 @@ PluginManager::PluginManager(QSettings *pSettings,
 
     orderedFileNames.removeDuplicates();
 
-    // Deal with all the plugins we can find
+    // Deal with all the plugins we found
 
     foreach (const QString &fileName, orderedFileNames)
         mPlugins.insert(Plugin::name(fileName),
@@ -147,27 +148,6 @@ QSettings * PluginManager::settings() const
     // Return the settings object
 
     return mSettings;
-}
-
-QStringList PluginManager::requiredPlugins(const QString &pFileName,
-                                           const int &pLevel) const
-{
-    // Return the list of plugins required by a given plugin
-
-    QStringList res;
-
-    // Recursively look for the plugins required by the current plugin
-
-    foreach (const QString &plugin, Plugin::info(pFileName).dependencies())
-        res << requiredPlugins(Plugin::fileName(mPluginsDir, plugin), pLevel+1);
-
-    // Add the current plugin to the list, but only if it is not the original
-    // plugin for which we want to know what its requirements are
-
-    if (pLevel)
-        res << Plugin::name(pFileName);
-
-    return res;
 }
 
 }

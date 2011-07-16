@@ -18,6 +18,8 @@ typedef QMap<QString, QString> PluginInfoDescriptions;
 
 class PluginInfo
 {
+    friend class Plugin;
+
 public:
     enum PluginType
     {
@@ -35,12 +37,14 @@ public:
     PluginType type() const;
     bool manageable() const;
     QStringList dependencies() const;
+    QStringList fullDependencies() const;
     QString description(const QString &pLocale = "en") const;
 
 private:
     PluginType mType;
     bool mManageable;
     QStringList mDependencies;
+    QStringList mFullDependencies;
     PluginInfoDescriptions mDescriptions;
 };
 
