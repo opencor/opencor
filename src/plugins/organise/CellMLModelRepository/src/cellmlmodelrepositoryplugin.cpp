@@ -11,8 +11,8 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
     descriptions.insert("fr", "Une extension pour accéder au <a href=\"http://models.cellml.org/\">Répertoire de Modèles CellML</a>");
 
     return PluginInfo(PluginInfo::Gui, true,
-                       QStringList() << "Core",
-                       descriptions);
+                      QStringList() << "Core",
+                      descriptions);
 }
 
 Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)

@@ -11,8 +11,8 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
     descriptions.insert("fr", "Une extension pour organiser vos fichiers");
 
     return PluginInfo(PluginInfo::Gui, true,
-                       QStringList() << "Core",
-                       descriptions);
+                      QStringList() << "Core",
+                      descriptions);
 }
 
 Q_EXPORT_PLUGIN2(FileOrganiser, FileOrganiserPlugin)

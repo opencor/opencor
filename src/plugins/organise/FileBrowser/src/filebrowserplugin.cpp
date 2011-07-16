@@ -11,8 +11,8 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
     descriptions.insert("fr", "Une extension pour accéder à vos fichiers locaux");
 
     return PluginInfo(PluginInfo::Gui, true,
-                       QStringList() << "Core",
-                       descriptions);
+                      QStringList() << "Core",
+                      descriptions);
 }
 
 Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)
