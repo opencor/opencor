@@ -20,6 +20,7 @@ public:
     {
         Undefined,
         NotFound,
+        IncompatiblePluginInterfaceVersion,
         NotSuitable,
         NotWanted,
         NotNeeded,
@@ -53,6 +54,7 @@ public:
                                        const int &pLevel = 0);
 
 private:
+    PluginManager *mPluginManager;
     QString mName;
     PluginInfo mInfo;
     QObject *mInstance;

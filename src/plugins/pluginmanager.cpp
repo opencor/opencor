@@ -11,6 +11,7 @@ namespace OpenCOR {
 PluginManager::PluginManager(QSettings *pSettings,
                              const PluginInfo::PluginType &pGuiOrConsoleType) :
     mSettings(pSettings),
+    mPluginInterfaceVersion(PluginInterface::V001),
     mGuiOrConsoleType(pGuiOrConsoleType)
 {
     mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
@@ -141,6 +142,30 @@ Plugin * PluginManager::plugin(const QString &pName) const
     // Return the plugin which name is that we have been passed
 
     return mPlugins.value(pName);
+}
+
+PluginInterface::PluginInterfaceVersion PluginManager::pluginInterfaceVersion() const
+{
+    // Return the plugin interface version used by the plugin manager
+
+    return mPluginInterfaceVersion;
+}
+
+QString PluginManager::pluginInterfaceVersionAsString(const PluginInterface::PluginInterfaceVersion &pPluginInterfaceVersion)
+{
+    // Return the passed plugin interface version as a string
+    // Note: ideally, this function would be part of the PluginInterface class,
+    //       but this class is used by all the plugins and because this method
+    //       requires a translation, well... we can't have it there since a
+    //       translation will otherwise be required for each plugin, so...
+    //       another solution is to have it here...
+
+    switch (pPluginInterfaceVersion) {
+    case PluginInterface::V001:
+        return tr("Version 001");
+    default:
+        return tr("Unknown version");
+    }
 }
 
 QSettings * PluginManager::settings() const

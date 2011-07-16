@@ -8,6 +8,19 @@
 
 namespace OpenCOR {
 
+class PluginInterface : public QObject
+{
+public:
+    enum PluginInterfaceVersion
+    {
+        Undefined,
+        V001
+    };
+
+    virtual void initialize();
+    virtual void finalize();
+};
+
 #ifdef Q_WS_WIN
     #define PLUGININFO_FUNC extern "C" __declspec(dllexport) PluginInfo
 #else
@@ -29,11 +42,13 @@ public:
         Gui
     };
 
-    explicit PluginInfo(const PluginType &pType = Undefined,
+    explicit PluginInfo(const PluginInterface::PluginInterfaceVersion &pPluginInterfaceVersion = PluginInterface::Undefined,
+                        const PluginType &pType = Undefined,
                         const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
                         const PluginInfoDescriptions &pDescriptions = PluginInfoDescriptions());
 
+    PluginInterface::PluginInterfaceVersion pluginInterfaceVersion() const;
     PluginType type() const;
     bool manageable() const;
     QStringList dependencies() const;
@@ -41,18 +56,12 @@ public:
     QString description(const QString &pLocale = "en") const;
 
 private:
+    PluginInterface::PluginInterfaceVersion mPluginInterfaceVersion;
     PluginType mType;
     bool mManageable;
     QStringList mDependencies;
     QStringList mFullDependencies;
     PluginInfoDescriptions mDescriptions;
-};
-
-class PluginInterface : public QObject
-{
-public:
-    virtual void initialize();
-    virtual void finalize();
 };
 
 }

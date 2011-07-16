@@ -161,44 +161,63 @@
 <context>
     <name>OpenCOR::Plugin</name>
     <message>
-        <source>The plugin could not be found</source>
-        <translation>L&apos;extension n&apos;a pas été trouvée</translation>
+        <source>%1 could not be found</source>
+        <translation>%1 n&apos;a pas été trouvé</translation>
     </message>
     <message>
-        <source>The plugin is not of the right type</source>
-        <translation>L&apos;extension n&apos;est pas du bon type</translation>
+        <source>%1 is not of the right type</source>
+        <translation>%1 n&apos;est pas du bon type</translation>
     </message>
     <message>
-        <source>This is not a plugin or some plugin dependencies are missing</source>
-        <translation>Ce n&apos;est pas une extension ou des dépendances de l&apos;extension sont manquantes</translation>
+        <source>%1 is not wanted</source>
+        <translation>%1 n&apos;est pas désiré</translation>
     </message>
     <message>
-        <source>The plugin is not needed</source>
-        <translation>L&apos;extension n&apos;est pas nécessaire</translation>
+        <source>%1 is not needed</source>
+        <translation>%1 n&apos;est pas nécessaire</translation>
     </message>
     <message>
-        <source>The plugin&apos;s status is undefined</source>
-        <translation>Le statut de l&apos;extension est indéfini</translation>
+        <source>%1 is loaded and fully functional</source>
+        <translation>%1 est installé et pleinement fonctionnel</translation>
     </message>
     <message>
-        <source>The plugin is loaded and is fully functional</source>
-        <translation>L&apos;extension est installée et est pleinement fonctionnelle</translation>
+        <source>%1 could not be loaded due to the following problem:</source>
+        <translation>%1 n&apos;a pas pu être installé à cause du problème suivant :</translation>
     </message>
     <message>
-        <source>The plugin could not be loaded due to the following problem:</source>
-        <translation>L&apos;extension n&apos;a pas pu être installée à cause du problème suivant :</translation>
+        <source>%1 is not a plugin</source>
+        <translation>%1 n&apos;est pas une extension</translation>
     </message>
     <message>
-        <source>This is not a plugin</source>
-        <translation>Ce n&apos;est pas une extension</translation>
+        <source>%1&apos;s status is undefined</source>
+        <translation>Le statut %1 est indéfini</translation>
     </message>
     <message>
-        <source>The plugin could not be loaded due to a/some missing dependency/ies:</source>
-        <translation>L&apos;extension n&apos;a pas pu être installée à une/des dépendance/s manquante/s :</translation>
+        <source>%1 could not be loaded due a missing dependency:</source>
+        <translation>%1 n&apos;a pas pu être installé dû à une dépendance manquante :</translation>
     </message>
     <message>
-        <source>The plugin is not wanted</source>
-        <translation>L&apos;extension n&apos;est pas désirée</translation>
+        <source>%1 could not be loaded due to some missing dependencies:</source>
+        <translation>%1 n&apos;a pas pu être installé dû à des dépendances manquantes :</translation>
+    </message>
+    <message>
+        <source>%1 is not a plugin or %2 could not be loaded due to a/some missing dependency/ies</source>
+        <translation>%1 n&apos;est pas une extension ou %2 n&apos;a pas pu être installé dû à une/des dépendance/s manquante/s</translation>
+    </message>
+    <message>
+        <source>The version of the interface used by %1 (%2) is not compatible with that of %3 (%4)</source>
+        <translation>La version de l&apos;interface utilisée par %1 (%2) n&apos;est pas compatible avec celle de %3 (%4)</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::PluginManager</name>
+    <message>
+        <source>Version 001</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unknown version</source>
+        <translation>Version inconnue</translation>
     </message>
 </context>
 <context>

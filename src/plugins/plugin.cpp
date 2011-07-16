@@ -1,6 +1,7 @@
 #include "plugin.h"
 #include "pluginmanager.h"
 
+#include <QApplication>
 #include <QDir>
 #include <QFileInfo>
 #include <QPluginLoader>
@@ -11,6 +12,7 @@ namespace OpenCOR {
 Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
                const PluginInfo::PluginType &pGuiOrConsoleType,
                const bool &pForceLoading) :
+    mPluginManager(pPluginManager),
     mName(name(pFileName)),
     // Note: to get the name of the plugin from its file name, we must remove
     //       the plugin prefix part from it...
@@ -28,17 +30,19 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
         // Now, retrieve the plugin's full dependencies (i.e. both its direct
         // and indirect dependencies)
 
-        mInfo.mFullDependencies << requiredPlugins(pPluginManager->pluginsDir(),
+        mInfo.mFullDependencies << requiredPlugins(mPluginManager->pluginsDir(),
                                                    mName);
 
-        // Try to load the plugin, but only if it is either a general plugin or
-        // one of the type we are happy with, and if it is manageable or is
-        // required by another plugin
+        // Try to load the plugin, but only if it uses the right plugin
+        // interface version, if it is either a general plugin or one of the
+        // type we are happy with, and if it is manageable or is required by
+        // another plugin
 
-        if (   (   (mInfo.type() == PluginInfo::General)
+        if (    (mInfo.pluginInterfaceVersion() == mPluginManager->pluginInterfaceVersion())
+            &&  (   (mInfo.type() == PluginInfo::General)
                 || (mInfo.type() == pGuiOrConsoleType))
             && (   (   mInfo.manageable()
-                    && load(pPluginManager->settings(), mName))
+                    && load(mPluginManager->settings(), mName))
                 || pForceLoading)) {
             // We are dealing with the right kind of plugin, so check that all
             // of its dependencies, if any, are loaded
@@ -54,7 +58,7 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
             mStatusError = "";
 
             foreach (const QString &dependency, mInfo.dependencies()) {
-                Plugin *pluginDependency = pPluginManager->plugin(dependency);
+                Plugin *pluginDependency = mPluginManager->plugin(dependency);
 
                 if (   !pluginDependency
                     || (   pluginDependency
@@ -111,6 +115,11 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 #else
             mStatus = NotPlugin;
 #endif
+        } else if (mInfo.pluginInterfaceVersion() != mPluginManager->pluginInterfaceVersion()) {
+            // We are dealing with a plugin which relies on a different version
+            // of the plugin interface, so...
+
+            mStatus = IncompatiblePluginInterfaceVersion;
         } else if (mInfo.type() != pGuiOrConsoleType){
             // We are dealing with a plugin which is not of the type we are
             // happy with (i.e. it's a console plugin but we are running the GUI
@@ -169,27 +178,37 @@ QString Plugin::statusDescription() const
 
     switch (mStatus) {
     case NotFound:
-        return tr("The plugin could not be found");
+        return tr("%1 could not be found").arg(mName);
+    case IncompatiblePluginInterfaceVersion:
+        return tr("The version of the interface used by %1 (%2) is not compatible with that of %3 (%4)").arg(mName,
+                                                                                                             mPluginManager->pluginInterfaceVersionAsString(mInfo.pluginInterfaceVersion()),
+                                                                                                             qApp->applicationName(),
+                                                                                                             mPluginManager->pluginInterfaceVersionAsString(mPluginManager->pluginInterfaceVersion()));
     case NotSuitable:
-        return tr("The plugin is not of the right type");
+        return tr("%1 is not of the right type").arg(mName);
     case NotWanted:
-        return tr("The plugin is not wanted");
+        return tr("%1 is not wanted").arg(mName);
     case NotNeeded:
-        return tr("The plugin is not needed");
+        return tr("%1 is not needed").arg(mName);
     case Loaded:
-        return tr("The plugin is loaded and is fully functional");
+        return tr("%1 is loaded and fully functional").arg(mName);
     case NotLoaded:
-        return  tr("The plugin could not be loaded due to the following problem:")+"\n"
+        return  tr("%1 could not be loaded due to the following problem:").arg(mName)+"\n"
                +mStatusError;
     case NotPlugin:
-        return tr("This is not a plugin");
+        return tr("%1 is not a plugin").arg(mName);
     case MissingDependencies:
-        return  tr("The plugin could not be loaded due to a/some missing dependency/ies:")+"\n"
-               +mStatusError;
+        if (mStatusError.count() == 1)
+            return  tr("%1 could not be loaded due a missing dependency:").arg(mName)+"\n"
+                   +mStatusError;
+        else
+            return  tr("%1 could not be loaded due to some missing dependencies:").arg(mName)+"\n"
+                   +mStatusError;
     case NotPluginOrMissingDependencies:
-        return tr("This is not a plugin or some plugin dependencies are missing");
+        return tr("%1 is not a plugin or %2 could not be loaded due to a/some missing dependency/ies").arg(mName,
+                                                                                                           mName);
     default:
-        return tr("The plugin's status is undefined");
+        return tr("%1's status is undefined").arg(mName);
     }
 }
 
