@@ -38,7 +38,7 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
         // type we are happy with, and if it is manageable or is required by
         // another plugin
 
-        if (    (mInfo.pluginInterfaceVersion() == mPluginManager->pluginInterfaceVersion())
+        if (    (mInfo.interfaceVersion() == mPluginManager->interfaceVersion())
             &&  (   (mInfo.type() == PluginInfo::General)
                 || (mInfo.type() == pGuiOrConsoleType))
             && (   (   mInfo.manageable()
@@ -115,11 +115,11 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 #else
             mStatus = NotPlugin;
 #endif
-        } else if (mInfo.pluginInterfaceVersion() != mPluginManager->pluginInterfaceVersion()) {
+        } else if (mInfo.interfaceVersion() != mPluginManager->interfaceVersion()) {
             // We are dealing with a plugin which relies on a different version
-            // of the plugin interface, so...
+            // of the interface, so...
 
-            mStatus = IncompatiblePluginInterfaceVersion;
+            mStatus = IncompatibleInterfaceVersion;
         } else if (mInfo.type() != pGuiOrConsoleType){
             // We are dealing with a plugin which is not of the type we are
             // happy with (i.e. it's a console plugin but we are running the GUI
@@ -179,11 +179,11 @@ QString Plugin::statusDescription() const
     switch (mStatus) {
     case NotFound:
         return tr("%1 could not be found").arg(mName);
-    case IncompatiblePluginInterfaceVersion:
+    case IncompatibleInterfaceVersion:
         return tr("The version of the interface used by %1 (%2) is not compatible with that of %3 (%4)").arg(mName,
-                                                                                                             mPluginManager->pluginInterfaceVersionAsString(mInfo.pluginInterfaceVersion()),
+                                                                                                             mPluginManager->interfaceVersionAsString(mInfo.interfaceVersion()),
                                                                                                              qApp->applicationName(),
-                                                                                                             mPluginManager->pluginInterfaceVersionAsString(mPluginManager->pluginInterfaceVersion()));
+                                                                                                             mPluginManager->interfaceVersionAsString(mPluginManager->interfaceVersion()));
     case NotSuitable:
         return tr("%1 is not of the right type").arg(mName);
     case NotWanted:

@@ -20,7 +20,7 @@ public:
     {
         Undefined,
         NotFound,
-        IncompatiblePluginInterfaceVersion,
+        IncompatibleInterfaceVersion,
         NotSuitable,
         NotWanted,
         NotNeeded,

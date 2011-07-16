@@ -50,9 +50,10 @@
         </p>
 
         <ul>
-            <li><strong>Type:</strong> an OpenCOR plugin can be used for the <a href="http://en.wikipedia.org/wiki/Console_application">console</a> version of OpenCOR and/or its <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a> version. So, depending on the version of OpenCOR which is to be run, it may or not be possible to load a plugin.</li>
-            <li><strong>Manageable:</strong> whether a user can decide on the loading state of a plugin.</li>
-            <li><strong>Dependencies:</strong> some plugins rely on other plugins to work and must therefore be listed, so that OpenCOR can make sure that they also get loaded.</li>
+            <li><strong>Interface version:</strong> OpenCOR may, in the future, use a different interface to communicate with plugins. It must therefore ensure that a plugin uses the same interface before loading it.</li>
+            <li><strong>Type:</strong> a plugin can be used for the <a href="http://en.wikipedia.org/wiki/Console_application">console</a> version of OpenCOR and/or its <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a> version, and the type of the plugin is used to determine whether the plugin can be loaded.</li>
+            <li><strong>Manageable:</strong> specify whether a user can change the loading state of a plugin.</li>
+            <li><strong>Dependencies:</strong> some plugins depend on other plugins to work. OpenCOR must therefore know about them, so that it can make sure that they also get loaded.</li>
             <li><strong>Description:</strong> a short description of the plugin.</li>
         </ul>
 

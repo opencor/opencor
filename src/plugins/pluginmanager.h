@@ -41,13 +41,13 @@ public:
 
     QSettings * settings() const;
 
-    PluginInterface::PluginInterfaceVersion pluginInterfaceVersion() const;
-    static QString pluginInterfaceVersionAsString(const PluginInterface::PluginInterfaceVersion &pPluginInterfaceVersion);
+    PluginInterface::Version interfaceVersion() const;
+    static QString interfaceVersionAsString(const PluginInterface::Version &pInterfaceVersion);
 
 private:
     QSettings *mSettings;
 
-    PluginInterface::PluginInterfaceVersion mPluginInterfaceVersion;
+    PluginInterface::Version mInterfaceVersion;
     PluginInfo::PluginType mGuiOrConsoleType;
 
     QString mPluginsDir;

@@ -11,7 +11,7 @@ namespace OpenCOR {
 class PluginInterface : public QObject
 {
 public:
-    enum PluginInterfaceVersion
+    enum Version
     {
         Undefined,
         V001
@@ -42,13 +42,13 @@ public:
         Gui
     };
 
-    explicit PluginInfo(const PluginInterface::PluginInterfaceVersion &pPluginInterfaceVersion = PluginInterface::Undefined,
+    explicit PluginInfo(const PluginInterface::Version &pInterfaceVersion = PluginInterface::Undefined,
                         const PluginType &pType = Undefined,
                         const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
                         const PluginInfoDescriptions &pDescriptions = PluginInfoDescriptions());
 
-    PluginInterface::PluginInterfaceVersion pluginInterfaceVersion() const;
+    PluginInterface::Version interfaceVersion() const;
     PluginType type() const;
     bool manageable() const;
     QStringList dependencies() const;
@@ -56,7 +56,7 @@ public:
     QString description(const QString &pLocale = "en") const;
 
 private:
-    PluginInterface::PluginInterfaceVersion mPluginInterfaceVersion;
+    PluginInterface::Version mInterfaceVersion;
     PluginType mType;
     bool mManageable;
     QStringList mDependencies;
