@@ -28,15 +28,18 @@ public:
     };
 
     explicit PluginInfo(const PluginType &pType = Undefined,
+                        const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
                         const PluginInfoDescriptions &pDescriptions = PluginInfoDescriptions());
 
     PluginType type() const;
+    bool manageable() const;
     QStringList dependencies() const;
     QString description(const QString &pLocale = "en") const;
 
 private:
     PluginType mType;
+    bool mManageable;
     QStringList mDependencies;
     PluginInfoDescriptions mDescriptions;
 };

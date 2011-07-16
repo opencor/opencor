@@ -26,12 +26,12 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
         mInfo = info(pFileName);
 
         // Try to load the plugin, but only if it is either a general plugin or
-        // one of the type we are happy with, and has dependencies or is
+        // one of the type we are happy with, and if it is manageable or is
         // required by another plugin
 
         if (   (   (mInfo.type() == PluginInfo::General)
                 || (mInfo.type() == pGuiOrConsoleType))
-            && (   (   mInfo.dependencies().count()
+            && (   (   mInfo.manageable()
                     && load(pPluginManager->settings(), mName))
                 || pForceLoading)) {
             // We are dealing with the right kind of plugin, so check that all
@@ -114,10 +114,10 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
             mStatus = NotSuitable;
         } else {
             // If none of the above applies then it means we are dealing with a
-            // plugin which is either no wanted or not needed, depending on
-            // whether it has dependencies
+            // plugin which is either not wanted or not needed, depending on
+            // whether it is manageable
 
-            if (mInfo.dependencies().count())
+            if (mInfo.manageable())
                 mStatus = NotWanted;
             else
                 mStatus = NotNeeded;

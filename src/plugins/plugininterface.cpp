@@ -7,9 +7,11 @@
 namespace OpenCOR {
 
 PluginInfo::PluginInfo(const PluginType &pType,
+                       const bool &pManageable,
                        const QStringList &pDependencies,
                        const PluginInfoDescriptions &pDescriptions) :
     mType(pType),
+    mManageable(pManageable),
     mDependencies(pDependencies),
     mDescriptions(pDescriptions)
 {
@@ -20,6 +22,13 @@ PluginInfo::PluginType PluginInfo::type() const
     // Return the plugin's type
 
     return mType;
+}
+
+bool PluginInfo::manageable() const
+{
+    // Return the plugin's manageability
+
+    return mManageable;
 }
 
 QStringList PluginInfo::dependencies() const

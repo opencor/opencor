@@ -47,18 +47,20 @@ PluginManager::PluginManager(QSettings *pSettings,
     foreach (const QFileInfo &file, fileInfoList)
         fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
 
-    // Self-contained plugins (e.g. the Core plugin) don't, by default, get
-    // loaded, but the situation is obviously different if such a plugin is
-    // required by another plugin (e.g. the Help plugin requires the Core
-    // plugin), in which case the self-contained plugin should be loaded. So, we
-    // must here determine which of those plugins need to be loaded...
+    // Non-manageable plugins (e.g. the QScintilla plugin) don't, by default,
+    // get loaded, but the situation is obviously different if such a plugin is
+    // required by another plugin (e.g. the Viewer plugin requires the
+    // QtMmlWidget plugin), in which case the non-manageable plugin must be
+    // loaded. So, we must here determine which of those plugins must be
+    // loaded...
 
     QStringList plugins;
 
     foreach (const QString &fileName, fileNames)
-        if (   Plugin::info(fileName).dependencies().count()
+        if (   Plugin::info(fileName).manageable()
             && Plugin::load(mSettings, Plugin::name(fileName)))
-            // The plugin is to be loaded, so retrieve its dependencies
+            // The plugin is manageable and to be loaded, so retrieve its
+            // dependencies
 
             plugins << requiredPlugins(fileName);
 

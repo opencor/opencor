@@ -66,9 +66,9 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     foreach (Plugin *plugin, mPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem(plugin->name());
 
-        // Only plugins that have dependencies are checkable
+        // Only manageable plugins are checkable
 
-        pluginItem->setCheckable(plugin->info().dependencies().count());
+        pluginItem->setCheckable(plugin->info().manageable());
 
         // Retrieve the loading state of the plugin, in case it is a plugin the
         // user can manage

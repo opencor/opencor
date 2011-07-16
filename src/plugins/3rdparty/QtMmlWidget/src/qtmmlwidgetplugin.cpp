@@ -10,7 +10,7 @@ PLUGININFO_FUNC QtMmlWidgetPluginInfo()
     descriptions.insert("en", "A plugin to use <a href=\"ftp://ftp.qt.nokia.com/qt/solutions/lgpl/\">QtMmlWidget</a>");
     descriptions.insert("fr", "Une extension pour utiliser <a href=\"ftp://ftp.qt.nokia.com/qt/solutions/lgpl/\">QtMmlWidget</a>");
 
-    return PluginInfo(PluginInfo::Gui,
+    return PluginInfo(PluginInfo::Gui, false,
                       QStringList(),
                       descriptions);
 }

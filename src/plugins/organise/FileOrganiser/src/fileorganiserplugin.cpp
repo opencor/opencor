@@ -10,7 +10,7 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
     descriptions.insert("en", "A plugin to organise your files");
     descriptions.insert("fr", "Une extension pour organiser vos fichiers");
 
-    return PluginInfo(PluginInfo::Gui,
+    return PluginInfo(PluginInfo::Gui, true,
                        QStringList() << "Core",
                        descriptions);
 }

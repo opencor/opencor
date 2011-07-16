@@ -10,7 +10,7 @@ PLUGININFO_FUNC CorePluginInfo()
     descriptions.insert("en", "The core plugin for OpenCOR");
     descriptions.insert("fr", "L'extension de base pour OpenCOR");
 
-    return PluginInfo(PluginInfo::General,
+    return PluginInfo(PluginInfo::General, true,
                       QStringList(),
                       descriptions);
 }

@@ -10,7 +10,7 @@ PLUGININFO_FUNC ViewerPluginInfo()
     descriptions.insert("en", "A plugin to graphically visualise mathematical equations");
     descriptions.insert("fr", "Une extension pour visualiser graphiquement des équations mathématiques");
 
-    return PluginInfo(PluginInfo::Gui,
+    return PluginInfo(PluginInfo::Gui, true,
                        QStringList() << "Core" << "QtMmlWidget",
                        descriptions);
 }
