@@ -7,8 +7,6 @@
 
 namespace OpenCOR {
 
-class GuiSettings;
-
 class GuiSettingsDockWidget {
 public:
     explicit GuiSettingsDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
