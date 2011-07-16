@@ -211,12 +211,13 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem) const
 {
     // Disable the connection that handles a change in a plugin's loading state
+    // (otherwise what we are doing here is going to be completely uneffective)
 
     disconnect(mDataModel, SIGNAL(itemChanged(QStandardItem *)),
                this, SLOT(updatePluginsLoadingState(QStandardItem *)));
 
-    // Prevent the list view from being updated, since we may change a few
-    // things
+    // Prevent the list view from being updated, since we may end up changing
+    // quite a bit of its visual contents
 
     mUi->listView->setUpdatesEnabled(false);
 
@@ -236,11 +237,11 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem)
 
     // At this stage, all the plugins which should be checked are checked, so
     // now we must update the manageable plugins that are currently checked to
-    // make sure that their loading state is consistent with that of the others.
-    // This means going through each of the plugins and have them checked only
-    // if all of their dependencies are checked. Note that it is fine to do it
-    // this way since all we need is for one of a plugin's dependencies to be
-    // unchecked for the plugin to also be unchecked, so...
+    // make sure that they should still be checked indeed. This means going
+    // through each of the plugins and keep them checked only if all of their
+    // dependencies are checked. Note that it is fine to do it this way since
+    // all we need is one plugin's dependency to be unchecked for the plugin
+    // itself to also be unchecked, so...
 
     foreach (QStandardItem *pluginItem, mManageablePlugins)
         if (pluginItem->checkState() == Qt::Checked)
@@ -251,23 +252,23 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem)
                         // We have found the plugin's dependency
 
                         if (otherPluginItem->checkState() == Qt::Unchecked)
-                            // The plugin's dependency is unchecked, meaning the
-                            // plugin must also be unchecked
+                            // The plugin's dependency is unchecked which means
+                            // that the plugin cannot be checked, so...
 
                             pluginItem->setCheckState(Qt::Unchecked);
 
                         break;
                     }
 
-    // Finally, we need to see whether any of the unmanageable plugins should be
-    // checked
+    // Finally, we need to see whether our unmanageable plugins should be
+    // checked or unchecked
 
     foreach (QStandardItem *pluginItem, mUnmanageablePlugins) {
-        // First, reset the loading state of the unamangeable plugin
+        // First, reset the loading state of the unamanageable plugin
 
         pluginItem->setCheckState(Qt::Unchecked);
 
-        // Next, go through the manageable plugins' dependencies
+        // Next, go through the checked manageable plugins' dependencies
 
         foreach (QStandardItem *otherPluginItem, mManageablePlugins)
             if (otherPluginItem->checkState() == Qt::Checked)
@@ -285,7 +286,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem)
                     }
     }
 
-    // Re-enable the the list view from being updated
+    // Re-enable the updating of the list view
 
     mUi->listView->setUpdatesEnabled(true);
 
