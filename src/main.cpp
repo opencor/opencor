@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "common.h"
 
+#include <QDir>
 #include <QPointer>
 #include <QProcess>
 
@@ -57,6 +58,14 @@ int main(int pArgc, char *pArgv[])
 
         return 0;
     }
+
+    // Specify where to find non-OpenCOR plugins (only required on Windows)
+
+#ifdef Q_WS_WIN
+    app->addLibraryPath( QDir(app->applicationDirPath()).canonicalPath()
+                        +QDir::separator()+QString("..")
+                        +QDir::separator()+"plugins");
+#endif
 
     // Create the main window
 
