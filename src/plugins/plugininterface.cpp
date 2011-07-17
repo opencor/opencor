@@ -1,9 +1,5 @@
 #include "plugininterface.h"
 
-#include <QDir>
-#include <QFileInfo>
-#include <QPluginLoader>
-
 namespace OpenCOR {
 
 PluginInfo::PluginInfo(const PluginInterface::Version &pInterfaceVersion,

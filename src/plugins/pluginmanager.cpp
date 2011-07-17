@@ -4,7 +4,6 @@
 
 #include <QApplication>
 #include <QDir>
-#include <QPluginLoader>
 
 namespace OpenCOR {
 
