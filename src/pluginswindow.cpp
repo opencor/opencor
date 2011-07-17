@@ -64,19 +64,18 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // Populate the data model
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
-        QStandardItem *pluginItem = new QStandardItem((   (plugin->status() == Plugin::Loaded)
-                                                       || (plugin->status() == Plugin::NotSuitable)
-                                                       || (plugin->status() == Plugin::NotNeeded)
-                                                       || (plugin->status() == Plugin::NotWanted))?
+        QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?
                                                           QIcon(":oxygen/status/task-complete.png"):
                                                           QIcon(":oxygen/status/task-reject.png"),
                                                       plugin->name());
 
-        if (plugin->info().manageable()) {
-            // Only manageable plugins are checkable
+        // Only manageable plugins and plugins that are of the right type are
+        // checkable
 
-            pluginItem->setCheckable(true);
+        pluginItem->setCheckable(   plugin->info().manageable()
+                                 && (plugin->info().type() != PluginInfo::Console));
 
+        if (pluginItem->isCheckable()) {
             // Retrieve the loading state of the plugin
 
             pluginItem->setCheckState((Plugin::load(mPluginManager->settings(),
