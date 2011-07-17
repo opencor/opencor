@@ -39,7 +39,7 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
         // another plugin
 
         if (    (mInfo.interfaceVersion() == mPluginManager->interfaceVersion())
-            &&  (   (mInfo.type() == PluginInfo::General)
+            && (   (mInfo.type() == PluginInfo::General)
                 || (mInfo.type() == pGuiOrConsoleType))
             && (   (   mInfo.manageable()
                     && load(mPluginManager->settings(), mName))
@@ -120,7 +120,8 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
             // of the interface, so...
 
             mStatus = IncompatibleInterfaceVersion;
-        } else if (mInfo.type() != pGuiOrConsoleType){
+        } else if (   (mInfo.type() != PluginInfo::General)
+                   && (mInfo.type() != pGuiOrConsoleType)) {
             // We are dealing with a plugin which is not of the type we are
             // happy with (i.e. it's a console plugin but we are running the GUI
             // version of OpenCOR, or it's a GUI plugin but we are running the
