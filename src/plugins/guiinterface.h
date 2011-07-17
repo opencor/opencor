@@ -2,8 +2,10 @@
 #define GUIINTERFACE_H
 
 #include "dockwidget.h"
-#include "mainwindow.h"
 #include "plugininterface.h"
+
+#include <QMainWindow>
+#include <QTranslator>
 
 namespace OpenCOR {
 
@@ -60,7 +62,7 @@ class GuiInterface : public PluginInterface
 public:
     explicit GuiInterface(const QString &pPluginName);
 
-    virtual void initialize(MainWindow *);
+    virtual void initialize(QMainWindow *);
 
     GuiSettings settings() const;
 
@@ -69,7 +71,7 @@ public:
 protected:
     GuiSettings mSettings;
 
-    QAction * newAction(MainWindow *pMainWindow, const bool &pCheckable,
+    QAction * newAction(QMainWindow *pMainWindow, const bool &pCheckable,
                         const QString &pIconResource) const;
 
 private:

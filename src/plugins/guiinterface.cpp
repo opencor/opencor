@@ -82,7 +82,7 @@ GuiInterface::GuiInterface(const QString &pPluginName) :
 {
 }
 
-void GuiInterface::initialize(MainWindow *)
+void GuiInterface::initialize(QMainWindow *)
 {
     // Nothing to do by default...
 }
@@ -107,7 +107,7 @@ void GuiInterface::setLocale(const QString &pLocale)
     retranslateUi();
 }
 
-QAction * GuiInterface::newAction(MainWindow *pMainWindow,
+QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
                                   const bool &pCheckable,
                                   const QString &pIconResource) const
 {

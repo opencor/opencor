@@ -25,7 +25,7 @@ HelpPlugin::HelpPlugin() :
 {
 }
 
-void HelpPlugin::initialize(MainWindow *pMainWindow)
+void HelpPlugin::initialize(QMainWindow *pMainWindow)
 {
     // Create our help window
 
