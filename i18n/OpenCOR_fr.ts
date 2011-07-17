@@ -157,6 +157,14 @@
         <source>About</source>
         <translation>A Propos</translation>
     </message>
+    <message>
+        <source>Plugins</source>
+        <translation>Extensions</translation>
+    </message>
+    <message>
+        <source>No plugin could be found.</source>
+        <translation>Aucune extension n&apos;a été trouvée.</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Plugin</name>

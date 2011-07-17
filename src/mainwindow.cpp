@@ -542,9 +542,18 @@ void MainWindow::on_actionPlugins_triggered()
 {
     // Plugins' preferences
 
-    OpenCOR::PluginsWindow pluginsWindow(mPluginManager, this);
+    if (mPluginManager->plugins().count()) {
+        // There are some plugins, so we can show the plugins window
 
-    pluginsWindow.exec();
+        OpenCOR::PluginsWindow pluginsWindow(mPluginManager, this);
+
+        pluginsWindow.exec();
+    } else {
+        // There are no plugins, so...
+
+        QMessageBox::warning(this, tr("Plugins"),
+                             tr("No plugin could be found."));
+    }
 }
 
 void MainWindow::on_actionPreferences_triggered()
