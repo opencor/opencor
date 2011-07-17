@@ -65,6 +65,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem((   (plugin->status() == Plugin::Loaded)
+                                                       || (plugin->status() == Plugin::NotSuitable)
                                                        || (plugin->status() == Plugin::NotNeeded)
                                                        || (plugin->status() == Plugin::NotWanted))?
                                                           QIcon(":oxygen/status/task-complete.png"):
