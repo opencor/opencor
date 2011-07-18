@@ -65,8 +65,8 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?
-                                                          QIcon(":oxygen/status/task-complete.png"):
-                                                          QIcon(":oxygen/status/task-reject.png"),
+                                                          QIcon(":oxygen/actions/dialog-ok-apply.png"):
+                                                          QIcon(":oxygen/actions/edit-delete.png"),
                                                       plugin->name());
 
         // Only manageable plugins and plugins that are of the right type are

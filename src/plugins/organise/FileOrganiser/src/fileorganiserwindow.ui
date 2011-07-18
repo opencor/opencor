@@ -37,7 +37,7 @@
   </action>
   <action name="actionDelete">
    <property name="icon">
-    <iconset resource="../res/FileOrganiser.qrc">
+    <iconset resource="../../../../../res/ui.qrc">
      <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
    </property>
    <property name="text">
@@ -49,6 +49,7 @@
   </action>
  </widget>
  <resources>
+  <include location="../../../../../res/ui.qrc"/>
   <include location="../res/FileOrganiser.qrc"/>
  </resources>
  <connections/>

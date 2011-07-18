@@ -6,6 +6,8 @@
         <file>oxygen/actions/application-exit.png</file>
         <file>oxygen/actions/configure.png</file>
         <file>oxygen/actions/configure-toolbars.png</file>
+        <file>oxygen/actions/dialog-ok-apply.png</file>
+        <file>oxygen/actions/edit-delete.png</file>
         <file>oxygen/actions/help-about.png</file>
         <file>oxygen/actions/system-reboot.png</file>
         <file>oxygen/actions/view-fullscreen.png</file>
