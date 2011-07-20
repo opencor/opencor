@@ -130,6 +130,11 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     loadSettings();
 
+    // Initialise the checking state of the full screen action, since OpenCOR
+    // may (re)start in full screen mode
+
+    mUi->actionFullScreen->setChecked(isFullScreen());
+
     // Bring ourselves to the foreground
     // Note: indeed, when starting/restarting OpenCOR (as a result of a Reset
     //       All in the case of a restart), OpenCOR will on Mac OS X be behind
