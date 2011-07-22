@@ -88,6 +88,7 @@ SET(RESOURCES
 # Various include directories
 
 INCLUDE_DIRECTORIES(
+    build
     src
     src/misc
     src/plugins
@@ -185,6 +186,8 @@ FOREACH(PLUGIN ${PLUGINS})
     FOREACH(PLUGIN_INCLUDE_DIR ${PLUGIN_INCLUDE_DIRS})
         INCLUDE_DIRECTORIES(${PLUGIN_DIR}/${PLUGIN_INCLUDE_DIR})
     ENDFOREACH()
+
+    INCLUDE_DIRECTORIES(build/${PLUGIN_DIR})
 ENDFOREACH()
 
 # Build the GUI version of OpenCOR
