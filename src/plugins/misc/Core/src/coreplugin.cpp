@@ -1,3 +1,4 @@
+#include "centralwidget.h"
 #include "coreplugin.h"
 
 namespace OpenCOR {
@@ -20,6 +21,22 @@ Q_EXPORT_PLUGIN2(Core, CorePlugin)
 CorePlugin::CorePlugin() :
     GuiInterface("Core")
 {
+}
+
+void CorePlugin::initialize(QMainWindow *pMainWindow)
+{
+    // Create our help window
+
+    mCentralWidget = new CentralWidget(pMainWindow);
+
+    mSettings.addCentralWidget(mCentralWidget);
+}
+
+void CorePlugin::retranslateUi()
+{
+    // Retranslate our central widget
+
+    mCentralWidget->retranslateUi();
 }
 
 } }

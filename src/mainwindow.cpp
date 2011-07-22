@@ -257,6 +257,26 @@ void MainWindow::initializePlugin(const GuiSettings &pGuiSettings) const
 void MainWindow::loadPluginSettings(const GuiSettings &pGuiSettings,
                                     const bool &pNeedDefaultSettings)
 {
+    // Retrieve the plugin's central widget's settings
+    // Note: we can have only one central widget, so...
+
+    static bool centralWidgetLoaded = false;
+
+    if (   !centralWidgetLoaded
+        && !pGuiSettings.centralWidget().isEmpty()) {
+        centralWidgetLoaded = true;
+
+        Core::CentralWidget *centralWidget = pGuiSettings.centralWidget().first().centralWidget();
+
+        // Load the dock widget's settings
+
+        centralWidget->loadSettings(mSettings);
+
+        // Set the central widget
+
+        setCentralWidget(centralWidget);
+    }
+
     // Retrieve all of the plugin's dock widgets' settings
 
     foreach (const GuiSettingsDockWidget &guiSettingsDockWidget,
@@ -288,6 +308,18 @@ void MainWindow::loadPluginSettings(const GuiSettings &pGuiSettings,
 
 void MainWindow::savePluginSettings(const GuiSettings &pGuiSettings) const
 {
+    // Retrieve the plugin's central widget's settings
+    // Note: we can have only one central widget, so...
+
+    static bool centralWidgetSaved = false;
+
+    if (   !centralWidgetSaved
+        && !pGuiSettings.centralWidget().isEmpty()) {
+        centralWidgetSaved = true;
+
+        pGuiSettings.centralWidget().first().centralWidget()->saveSettings(mSettings);
+    }
+
     // Keep track of all of the plugin's dock widgets' settings
 
     foreach (const GuiSettingsDockWidget &guiSettingsDockWidget,

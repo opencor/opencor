@@ -8,6 +8,8 @@ namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo();
 
+class CentralWidget;
+
 class CorePlugin : public GuiInterface
 {
     Q_OBJECT
@@ -15,6 +17,13 @@ class CorePlugin : public GuiInterface
 
 public:
     explicit CorePlugin();
+
+    virtual void initialize(QMainWindow *pMainWindow);
+
+    virtual void retranslateUi();
+
+private:
+    CentralWidget *mCentralWidget;
 };
 
 } }

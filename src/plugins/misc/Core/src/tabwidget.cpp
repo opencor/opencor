@@ -15,10 +15,16 @@ TabWidget::TabWidget(QWidget *pParent) :
     // Note: we give a strong focus policy to the tab widget so that it can also
     //       get focus by being clicked on
 
-
     setMovable(true);
     setTabsClosable(true);
     setFocusPolicy(Qt::StrongFocus);
+
+    // Logo settings
+
+    mLogo.load(":logo");
+
+    mBackgroundBrush.setStyle(Qt::SolidPattern);
+    mBackgroundBrush.setColor(QImage(":logo").pixel(0, 0));
 
     // A connection to handle the change of tab
 
@@ -34,17 +40,16 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
     // tab widget doesn't have any tab associated with it
 
     if (!count()) {
-        // There are no tabs, so display our CellML logo
-
-        QPixmap pixmap;
-
-        pixmap.load(":cellmlLogo");
+        // There are no tabs, so display our logo after having filled the widget
+        // with the logo's background colour
 
         QPainter paint(this);
 
-        paint.drawPixmap(0.5*(width()-pixmap.width()),
-                         0.5*(height()-pixmap.height()),
-                         pixmap);
+        paint.fillRect(QRect(0, 0, width(), height()), mBackgroundBrush);
+
+        paint.drawPixmap(0.5*(width()-mLogo.width()),
+                         0.5*(height()-mLogo.height()),
+                         mLogo);
 
         // Accept the event
 

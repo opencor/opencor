@@ -1,6 +1,7 @@
 #ifndef GUIINTERFACE_H
 #define GUIINTERFACE_H
 
+#include "centralwidget.h"
 #include "dockwidget.h"
 #include "plugininterface.h"
 
@@ -8,6 +9,16 @@
 #include <QTranslator>
 
 namespace OpenCOR {
+
+class GuiSettingsCentralWidget {
+public:
+    explicit GuiSettingsCentralWidget(Core::CentralWidget *pCentralWidget);
+
+    Core::CentralWidget *centralWidget() const;
+
+private:
+    Core::CentralWidget *mCentralWidget;
+};
 
 class GuiSettingsDockWidget {
 public:
@@ -43,16 +54,20 @@ private:
 class GuiSettings
 {
 public:
+    void addCentralWidget(Core::CentralWidget *pCentralWidget);
+
     void addDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
                        Core::DockWidget *pDockWidget);
 
     void addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
                    QAction *pAction);
 
+    QList<GuiSettingsCentralWidget> centralWidget() const;
     QList<GuiSettingsDockWidget> dockWidgets() const;
     QList<GuiSettingsAction> actions() const;
 
 private:
+    QList<GuiSettingsCentralWidget> mCentralWidget;
     QList<GuiSettingsDockWidget> mDockWidgets;
     QList<GuiSettingsAction> mActions;
 };

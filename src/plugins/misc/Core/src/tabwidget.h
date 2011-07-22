@@ -18,6 +18,10 @@ public:
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
+private:
+    QPixmap mLogo;
+    QBrush mBackgroundBrush;
+
 private Q_SLOTS:
     void tabChanged(const int &pIndex) const;
     void getFocus(QWidget *, QWidget *pNew) const;

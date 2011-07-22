@@ -3,7 +3,21 @@
 #include <QAction>
 #include <QApplication>
 
+#include <QDebug>
+
 namespace OpenCOR {
+
+GuiSettingsCentralWidget::GuiSettingsCentralWidget(Core::CentralWidget *pCentralWidget) :
+    mCentralWidget(pCentralWidget)
+{
+}
+
+Core::CentralWidget * GuiSettingsCentralWidget::centralWidget() const
+{
+    // Return the central widget itself
+
+    return mCentralWidget;
+}
 
 GuiSettingsDockWidget::GuiSettingsDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
                                              Core::DockWidget *pDockWidget) :
@@ -47,6 +61,15 @@ QAction * GuiSettingsAction::action() const
     return mAction;
 }
 
+void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
+{
+    // Add the central widget
+    // Note: we can have only one central widget, so...
+
+    if (mCentralWidget.isEmpty())
+        mCentralWidget << GuiSettingsCentralWidget(pCentralWidget);
+}
+
 void GuiSettings::addDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
                                 Core::DockWidget *pDockWidget)
 {
@@ -61,6 +84,13 @@ void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pTyp
     // Add a new action to our list
 
     mActions << GuiSettingsAction(pType, pAction);
+}
+
+QList<GuiSettingsCentralWidget> GuiSettings::centralWidget() const
+{
+    // Return our central widget
+
+    return mCentralWidget;
 }
 
 QList<GuiSettingsDockWidget> GuiSettings::dockWidgets() const
