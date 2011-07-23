@@ -22,6 +22,15 @@ private:
     QPixmap mLogo;
     QBrush mBackgroundBrush;
 
+    int mLogoWidth;
+    int mLogoHeight;
+
+    double mLogoOneOverWidth;
+    double mLogoOneOverHeight;
+
+    double mLogoWidthOverHeight;
+    double mLogoHeightOverWidth;
+
 private Q_SLOTS:
     void tabChanged(const int &pIndex) const;
     void getFocus(QWidget *, QWidget *pNew) const;

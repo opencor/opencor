@@ -26,6 +26,15 @@ TabWidget::TabWidget(const QString &pLogoFileName, QWidget *pParent) :
     mBackgroundBrush.setStyle(Qt::SolidPattern);
     mBackgroundBrush.setColor(QImage(pLogoFileName).pixel(0, 0));
 
+    mLogoWidth  = mLogo.width();
+    mLogoHeight = mLogo.height();
+
+    mLogoOneOverWidth  = 1.0/mLogoWidth;
+    mLogoOneOverHeight = 1.0/mLogoHeight;
+
+    mLogoWidthOverHeight = (double) mLogoWidth/mLogoHeight;
+    mLogoHeightOverWidth = (double) mLogoHeight/mLogoWidth;
+
     // A connection to handle the change of tab
 
     connect(this, SIGNAL(currentChanged(int)),
@@ -40,45 +49,51 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
     // tab widget doesn't have any tab associated with it
 
     if (!count()) {
-        // There are no tabs, so display our logo after having filled the widget
-        // with the logo's background colour
+        // There are no tabs, so display our logo
 
         QPainter painter(this);
 
-        painter.fillRect(QRect(0, 0, width(), height()), mBackgroundBrush);
+        // Fill the widget with the logo's background colour
 
-        int logoWidth  = mLogo.width();
-        int logoHeight = mLogo.height();
+        int widgetWidth  = width();
+        int widgetHeight = height();
 
-        if ((mLogo.width() >= width()) || (mLogo.height() >= height())) {
-            // The logo doesn't fit within the widget, so determine what its
-            // size should be for it to fit
+        painter.fillRect(QRect(0, 0, widgetWidth, widgetHeight),
+                         mBackgroundBrush);
 
-            if (height()) {
-                // The widget has a non-zero height, so...
+        // Determine what the dimensions of the logo should be based on the
+        // widget's current dimensions
 
-                if (width()/height() > logoWidth/logoHeight) {
-                    // The height of the widget is to dictate the size of the
-                    // logo
+        int logoWidth  = mLogoWidth;
+        int logoHeight = mLogoHeight;
 
-                    logoHeight = qMin(logoHeight, height());
-                    logoWidth  = logoHeight*mLogo.width()/mLogo.height();
-                } else {
-                    // The width of the widget is to dictate the size of the
-                    // logo
+        bool needResizeWidth  = false;
+        bool needResizeHeight = false;
 
-                    logoWidth  = qMin(logoWidth, width());
-                    logoHeight = logoWidth*mLogo.height()/mLogo.width();
-                }
-            } else {
-                // The widget has a zero height, so...
+        if (widgetWidth < mLogoWidth) {
+            if (widgetHeight < mLogoHeight)
+                needResizeWidth =   widgetWidth*mLogoOneOverWidth
+                                  < widgetHeight*mLogoOneOverHeight;
+            else
+                needResizeWidth = true;
 
-                logoHeight = 0;
-            }
+            needResizeHeight = !needResizeWidth;
+        } else {
+            needResizeHeight = widgetHeight < mLogoHeight;
         }
 
-        painter.drawPixmap(QRect(0.5*(width()-logoWidth),
-                                 0.5*(height()-logoHeight),
+        if (needResizeWidth) {
+            logoWidth  = widgetWidth;
+            logoHeight = logoWidth*mLogoHeightOverWidth;
+        } else if (needResizeHeight) {
+            logoHeight = widgetHeight;
+            logoWidth  = logoHeight*mLogoWidthOverHeight;
+        }
+
+        // Draw the logo itself
+
+        painter.drawPixmap(QRect(0.5*(widgetWidth-logoWidth),
+                                 0.5*(widgetHeight-logoHeight),
                                  logoWidth, logoHeight),
                            mLogo);
 
