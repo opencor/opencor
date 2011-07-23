@@ -33,7 +33,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create and add our tab widget
 
-    mTabWidget = new TabWidget(this);
+    mTabWidget = new TabWidget(":logo", this);
 
     mTabWidget->setUsesScrollButtons(true);
     // Note #1: the above property is style dependent and it happens that it's

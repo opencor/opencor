@@ -7,7 +7,7 @@
 namespace OpenCOR {
 namespace Core {
 
-TabWidget::TabWidget(QWidget *pParent) :
+TabWidget::TabWidget(const QString &pLogoFileName, QWidget *pParent) :
     QTabWidget(pParent),
     CommonWidget(pParent)
 {
@@ -21,10 +21,10 @@ TabWidget::TabWidget(QWidget *pParent) :
 
     // Logo settings
 
-    mLogo.load(":logo");
+    mLogo.load(pLogoFileName);
 
     mBackgroundBrush.setStyle(Qt::SolidPattern);
-    mBackgroundBrush.setColor(QImage(":logo").pixel(0, 0));
+    mBackgroundBrush.setColor(QImage(pLogoFileName).pixel(0, 0));
 
     // A connection to handle the change of tab
 
