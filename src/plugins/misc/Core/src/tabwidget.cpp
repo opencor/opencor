@@ -43,9 +43,9 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
         // There are no tabs, so display our logo after having filled the widget
         // with the logo's background colour
 
-        QPainter paint(this);
+        QPainter painter(this);
 
-        paint.fillRect(QRect(0, 0, width(), height()), mBackgroundBrush);
+        painter.fillRect(QRect(0, 0, width(), height()), mBackgroundBrush);
 
         int logoWidth  = mLogo.width();
         int logoHeight = mLogo.height();
@@ -61,13 +61,13 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
                     // The height of the widget is to dictate the size of the
                     // logo
 
-                    logoHeight = height();
+                    logoHeight = qMin(logoHeight, height());
                     logoWidth  = logoHeight*mLogo.width()/mLogo.height();
                 } else {
                     // The width of the widget is to dictate the size of the
                     // logo
 
-                    logoWidth  = width();
+                    logoWidth  = qMin(logoWidth, width());
                     logoHeight = logoWidth*mLogo.height()/mLogo.width();
                 }
             } else {
@@ -77,10 +77,10 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
             }
         }
 
-        paint.drawPixmap(QRect(0.5*(width()-logoWidth),
-                               0.5*(height()-logoHeight),
-                               logoWidth, logoHeight),
-                         mLogo);
+        painter.drawPixmap(QRect(0.5*(width()-logoWidth),
+                                 0.5*(height()-logoHeight),
+                                 logoWidth, logoHeight),
+                           mLogo);
 
         // Accept the event
 
