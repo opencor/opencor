@@ -47,8 +47,39 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
 
         paint.fillRect(QRect(0, 0, width(), height()), mBackgroundBrush);
 
-        paint.drawPixmap(0.5*(width()-mLogo.width()),
-                         0.5*(height()-mLogo.height()),
+        int logoWidth  = mLogo.width();
+        int logoHeight = mLogo.height();
+
+        if ((mLogo.width() >= width()) || (mLogo.height() >= height())) {
+            // The logo doesn't fit within the widget, so determine what its
+            // size should be for it to fit
+
+            if (height()) {
+                // The widget has a non-zero height, so...
+
+                if (width()/height() > logoWidth/logoHeight) {
+                    // The height of the widget is to dictate the size of the
+                    // logo
+
+                    logoHeight = height();
+                    logoWidth  = logoHeight*mLogo.width()/mLogo.height();
+                } else {
+                    // The width of the widget is to dictate the size of the
+                    // logo
+
+                    logoWidth  = width();
+                    logoHeight = logoWidth*mLogo.height()/mLogo.width();
+                }
+            } else {
+                // The widget has a zero height, so...
+
+                logoHeight = 0;
+            }
+        }
+
+        paint.drawPixmap(QRect(0.5*(width()-logoWidth),
+                               0.5*(height()-logoHeight),
+                               logoWidth, logoHeight),
                          mLogo);
 
         // Accept the event
