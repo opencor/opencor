@@ -13,7 +13,7 @@ class CORE_EXPORT DockToolBar : public QToolBar
     Q_OBJECT
 
 public:
-    explicit DockToolBar(QWidget *pParent);
+    explicit DockToolBar(QWidget *pParent = 0);
 };
 
 } }

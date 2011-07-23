@@ -31,9 +31,9 @@ static const int DefaultFontSize = 9;
 class CORE_EXPORT CommonWidget
 {
 public:
-    explicit CommonWidget(QWidget *pParent);
+    explicit CommonWidget(QWidget *pParent = 0);
     explicit CommonWidget(const QString &pName, QWidget *pWidget,
-                          QWidget *pParent);
+                          QWidget *pParent = 0);
 
     virtual void retranslateUi();
 

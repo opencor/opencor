@@ -13,7 +13,7 @@ class TabWidget : public QTabWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    explicit TabWidget(const QString &pLogoFileName, QWidget *pParent);
+    explicit TabWidget(const QString &pLogoFileName, QWidget *pParent = 0);
 
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);

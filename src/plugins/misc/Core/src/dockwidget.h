@@ -14,7 +14,7 @@ class CORE_EXPORT DockWidget : public QDockWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    explicit DockWidget(QWidget *pParent);
+    explicit DockWidget(QWidget *pParent = 0);
 };
 
 } }

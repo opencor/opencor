@@ -20,7 +20,7 @@ class CentralWidget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    explicit CentralWidget(QWidget *pParent);
+    explicit CentralWidget(QWidget *pParent = 0);
     ~CentralWidget();
 
     virtual void loadSettings(QSettings *pSettings);

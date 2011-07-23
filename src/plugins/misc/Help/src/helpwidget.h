@@ -68,7 +68,7 @@ class HelpWidget : public QWebView, public Core::CommonWidget
 
 public:
     explicit HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
-                        const QUrl &pHomePage, QWidget *pParent);
+                        const QUrl &pHomePage, QWidget *pParent = 0);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;

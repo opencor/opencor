@@ -14,7 +14,7 @@ class CellmlModelRepositoryWidget : public QWebView, public Core::CommonWidget
 
 public:
     explicit CellmlModelRepositoryWidget(const QString &pName,
-                                         QWidget *pParent);
+                                         QWidget *pParent = 0);
 
 protected:
     virtual QSize sizeHint() const;

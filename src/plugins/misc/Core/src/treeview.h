@@ -15,7 +15,7 @@ class CORE_EXPORT TreeView : public QTreeView, public CommonWidget
 
 public:
     explicit TreeView(const QString &pName, QWidget *pWidget,
-                      QWidget *pParent);
+                      QWidget *pParent = 0);
 
 protected:
     virtual void startDrag(Qt::DropActions pSupportedActions);

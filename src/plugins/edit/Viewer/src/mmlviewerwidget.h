@@ -13,7 +13,7 @@ class MmlViewerWidget : public QtMmlWidget, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit MmlViewerWidget(const QString &pName, QWidget *pParent);
+    explicit MmlViewerWidget(const QString &pName, QWidget *pParent = 0);
     ~MmlViewerWidget();
 
     bool setContent(const QString &pContent, QString *pErrorMsg = 0,
