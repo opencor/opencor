@@ -32,5 +32,6 @@ ADD_PLUGIN(Help
         QtGui
         QtHelp
         QtNetwork
+        QtSvg
         QtWebKit
 )
