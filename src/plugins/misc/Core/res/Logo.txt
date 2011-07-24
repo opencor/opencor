@@ -1,8 +1,7 @@
 The logo was created as follows:
  1) Microsoft PowerPoint 2010 was used to design the logo itself (see Logo.pptx in this folder);
- 2) The logo was then saved as a PDF file; and finally
- 3) The PDF file was viewed on Ubuntu and printed to a SVG file.
+ 2) The logo was then saved as a PDF file;
+ 3) The PDF file was then viewed on Ubuntu and printed to a SVG file; and
+ 4) The SVG file was then edited using Inkscape to manually add a shadow, move the C, O and R letters slightly to the right to make them look nicer, and make the outline for the Open part thinner while that for the C, O and R letters thicker.
 
-From there, the SVG code was cleaned up and the C, O and R letters were moved slightly to the right to make them look nicer. Finally, the outline for the Open part was made thinner while that for the C, O and R letters thicker.
-
-Note that we originally wanted to have a shadow, but though the SVG file would look fine in any SVG viewer, it didn't in OpenCOR (using Qt 4.7.3). However, QtSvg (which we are currently using) is to be deprecated in favour of QtWebKit (see http://labs.qt.nokia.com/2011/05/12/qt-modules-maturity-level-the-list/) which unlike QtSvg supports SVG Full (as opposed to SVG Tiny). So, we shall wait until it's done before reinvestigating this issue.
+Note that we originally wanted to have a (PowerPoint) shadow, but though the SVG file would look fine in any SVG viewer, it didn't in OpenCOR (using Qt 4.7.3). However, QtSvg (which we are currently using) is to be deprecated in favour of QtWebKit (see http://labs.qt.nokia.com/2011/05/12/qt-modules-maturity-level-the-list/) which unlike QtSvg supports SVG Full (as opposed to SVG Tiny). So, we shall wait until it's done before reinvestigating this issue.
