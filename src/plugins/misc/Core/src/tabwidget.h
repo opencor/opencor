@@ -3,6 +3,7 @@
 
 #include "commonwidget.h"
 
+#include <QSvgRenderer>
 #include <QTabWidget>
 
 namespace OpenCOR {
@@ -19,8 +20,7 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
-    QPixmap mLogo;
-    QBrush mBackgroundBrush;
+    QSvgRenderer mLogoRenderer;
 
     int mLogoWidth;
     int mLogoHeight;

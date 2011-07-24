@@ -21,13 +21,10 @@ TabWidget::TabWidget(const QString &pLogoFileName, QWidget *pParent) :
 
     // Logo settings
 
-    mLogo.load(pLogoFileName);
+    mLogoRenderer.load(pLogoFileName);
 
-    mBackgroundBrush.setStyle(Qt::SolidPattern);
-    mBackgroundBrush.setColor(QImage(pLogoFileName).pixel(0, 0));
-
-    mLogoWidth  = mLogo.width();
-    mLogoHeight = mLogo.height();
+    mLogoWidth  = mLogoRenderer.defaultSize().width();
+    mLogoHeight = mLogoRenderer.defaultSize().height();
 
     mLogoOneOverWidth  = 1.0/mLogoWidth;
     mLogoOneOverHeight = 1.0/mLogoHeight;
@@ -53,16 +50,18 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
 
         QPainter painter(this);
 
-        // Fill the widget with the logo's background colour
+        // Paint the widget's background
 
         int widgetWidth  = width();
         int widgetHeight = height();
 
         painter.fillRect(QRect(0, 0, widgetWidth, widgetHeight),
-                         mBackgroundBrush);
+                         palette().color(QPalette::Base));
 
-        // Determine what the dimensions of the logo should be based on the
+        // Determine what the dimensions of the logo should be, based on the
         // widget's current dimensions
+
+        const int padding = 30;
 
         int logoWidth  = mLogoWidth;
         int logoHeight = mLogoHeight;
@@ -70,8 +69,8 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
         bool needResizeWidth  = false;
         bool needResizeHeight = false;
 
-        if (widgetWidth < mLogoWidth) {
-            if (widgetHeight < mLogoHeight)
+        if (widgetWidth < mLogoWidth+padding) {
+            if (widgetHeight < mLogoHeight+padding)
                 needResizeWidth =   widgetWidth*mLogoOneOverWidth
                                   < widgetHeight*mLogoOneOverHeight;
             else
@@ -79,23 +78,23 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
 
             needResizeHeight = !needResizeWidth;
         } else {
-            needResizeHeight = widgetHeight < mLogoHeight;
+            needResizeHeight = widgetHeight < mLogoHeight+padding;
         }
 
         if (needResizeWidth) {
-            logoWidth  = widgetWidth;
+            logoWidth  = widgetWidth-padding;
             logoHeight = logoWidth*mLogoHeightOverWidth;
         } else if (needResizeHeight) {
-            logoHeight = widgetHeight;
+            logoHeight = widgetHeight-padding;
             logoWidth  = logoHeight*mLogoWidthOverHeight;
         }
 
-        // Draw the logo itself
+        // Render the logo itself
 
-        painter.drawPixmap(QRect(0.5*(widgetWidth-logoWidth),
-                                 0.5*(widgetHeight-logoHeight),
-                                 logoWidth, logoHeight),
-                           mLogo);
+        mLogoRenderer.render(&painter,
+                             QRect(0.5*(widgetWidth-logoWidth),
+                                   0.5*(widgetHeight-logoHeight),
+                                   logoWidth, logoHeight));
 
         // Accept the event
 
