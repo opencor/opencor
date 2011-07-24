@@ -79,9 +79,9 @@
 
         <ul>
             <li>
-                <strong>Qt dependencies:</strong> our shell script, <a href="res/qtdependencies"><code>qtdependencies</code></a>, can be used to check which libraries are required by one or several Qt binaries. Thus, to check which Qt libraries are required by OpenCOR's plugins, we could enter the following on the command line, this after having built OpenCOR:
+                <strong>Qt dependencies:</strong> our shell script, <a href="https://github.com/opencor/opencor/blob/master/doc/developer/develop/res/qtdependencies"><code>qtdependencies</code></a>, can be used to check which libraries are required by one or several Qt binaries. Thus, to check which Qt libraries are required by OpenCOR's plugins, we could enter the following on the command line, this after having built OpenCOR:
                 <pre class="prettyprint">$ cd [OpenCOR]
-$ doc/developer/res/qtdependencies build/OpenCOR.app/Contents/PlugIns
+$ doc/developer/develop/res/qtdependencies build/OpenCOR.app/Contents/PlugIns
 QtCore
 QtDBus
 QtDeclarative
@@ -100,7 +100,7 @@ phonon</pre>
             </li>
             <li>
                 <strong>Qt libraries deployment:</strong> any missing Qt library can be deployed using our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_MAC_OS_X_QT_LIBRARY</code></a> macro, but first we must determine the library's Qt dependencies. For example, for <code>QtHelp</code>, we could enter the following on the command line
-                <pre class="prettyprint">$ [OpenCOR]/doc/developer/res/qtdependencies /Library/Frameworks/QtHelp.framework/Versions/4/QtHelp
+                <pre class="prettyprint">$ [OpenCOR]/doc/developer/develop/res/qtdependencies /Library/Frameworks/QtHelp.framework/Versions/4/QtHelp
 QtCore
 QtGui
 QtHelp
