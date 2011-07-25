@@ -31,6 +31,5 @@ ADD_PLUGIN(Viewer
     QT_DEPENDENCIES
         QtCore
         QtGui
-        QtSvg
         QtXml
 )

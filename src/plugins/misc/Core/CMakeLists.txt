@@ -42,5 +42,4 @@ ADD_PLUGIN(Core
     QT_DEPENDENCIES
         QtCore
         QtGui
-        QtSvg
 )

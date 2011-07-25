@@ -30,5 +30,4 @@ ADD_PLUGIN(FileOrganiser
     QT_DEPENDENCIES
         QtCore
         QtGui
-        QtSvg
 )
