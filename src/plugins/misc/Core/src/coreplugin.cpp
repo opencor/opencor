@@ -23,13 +23,22 @@ CorePlugin::CorePlugin() :
 {
 }
 
+CorePlugin::~CorePlugin()
+{
+    // Delete our data
+
+    delete (GuiSettingsCorePlugin *) mData;
+}
+
 void CorePlugin::initialize(QMainWindow *pMainWindow)
 {
     // Create our help window
 
     mCentralWidget = new CentralWidget(pMainWindow);
 
-    mSettings.addCentralWidget(mCentralWidget);
+    // Create and set our data
+
+    mData = new GuiSettingsCorePlugin(mCentralWidget);
 }
 
 void CorePlugin::retranslateUi()

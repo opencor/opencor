@@ -12,7 +12,11 @@ namespace Ui {
 
 namespace OpenCOR {
 
-class GuiSettings;
+namespace Core {
+    class DockWidget;
+}
+
+class GuiInterface;
 class PluginManager;
 
 class MainWindow : public QMainWindow
@@ -47,11 +51,15 @@ private:
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
 
-    void initializePlugin(const GuiSettings &pGuiSettings) const;
+    void initializePlugin(GuiInterface *pGuiInterface) const;
 
-    void loadPluginSettings(const GuiSettings &pGuiSettings,
-                            const bool &pNeedDefaultSettings);
-    void savePluginSettings(const GuiSettings &pGuiSettings) const;
+    void loadPluginWindowSettings(const bool &pNeedDefaultSettings,
+                                  const Qt::DockWidgetArea &pDefaultDockingArea,
+                                  Core::DockWidget *pWindow);
+
+    void loadPluginSettings(const bool &pNeedDefaultSettings,
+                            GuiInterface *pGuiInterface);
+    void savePluginSettings(GuiInterface *pGuiInterface) const;
 
     void loadSettings();
     void saveSettings() const;

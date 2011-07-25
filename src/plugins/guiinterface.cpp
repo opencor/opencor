@@ -7,6 +7,39 @@
 
 namespace OpenCOR {
 
+GuiSettingsCorePlugin::GuiSettingsCorePlugin(Core::CentralWidget *pCentralWidget) :
+    mCentralWidget(pCentralWidget)
+{
+}
+
+Core::CentralWidget * GuiSettingsCorePlugin::centralWidget() const
+{
+    // Return the central widget
+
+    return mCentralWidget;
+}
+
+GuiSettingsHelpPlugin::GuiSettingsHelpPlugin(QAction *pHelpAction,
+                                             Core::DockWidget *pHelpWindow) :
+    mHelpAction(pHelpAction),
+    mHelpWindow(pHelpWindow)
+{
+}
+
+QAction * GuiSettingsHelpPlugin::helpAction() const
+{
+    // Return the help action
+
+    return mHelpAction;
+}
+
+Core::DockWidget * GuiSettingsHelpPlugin::helpWindow() const
+{
+    // Return the help window
+
+    return mHelpWindow;
+}
+
 GuiSettingsCentralWidget::GuiSettingsCentralWidget(Core::CentralWidget *pCentralWidget) :
     mCentralWidget(pCentralWidget)
 {
@@ -14,30 +47,9 @@ GuiSettingsCentralWidget::GuiSettingsCentralWidget(Core::CentralWidget *pCentral
 
 Core::CentralWidget * GuiSettingsCentralWidget::centralWidget() const
 {
-    // Return the central widget itself
+    // Return the central widget
 
     return mCentralWidget;
-}
-
-GuiSettingsDockWidget::GuiSettingsDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
-                                             Core::DockWidget *pDockWidget) :
-    mDefaultDockingArea(pDefaultDockingArea),
-    mDockWidget(pDockWidget)
-{
-}
-
-Qt::DockWidgetArea GuiSettingsDockWidget::defaultDockingArea() const
-{
-    // Return the dock widget's default docking area
-
-    return mDefaultDockingArea;
-}
-
-Core::DockWidget * GuiSettingsDockWidget::dockWidget() const
-{
-    // Return the dock widget itself
-
-    return mDockWidget;
 }
 
 GuiSettingsAction::GuiSettingsAction(const GuiSettingsActionType &pType,
@@ -61,6 +73,27 @@ QAction * GuiSettingsAction::action() const
     return mAction;
 }
 
+GuiSettingsWindow::GuiSettingsWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
+                                     Core::DockWidget *pWindow) :
+    mDefaultDockingArea(pDefaultDockingArea),
+    mWindow(pWindow)
+{
+}
+
+Qt::DockWidgetArea GuiSettingsWindow::defaultDockingArea() const
+{
+    // Return the window's default docking area
+
+    return mDefaultDockingArea;
+}
+
+Core::DockWidget * GuiSettingsWindow::window() const
+{
+    // Return the window itself
+
+    return mWindow;
+}
+
 void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
 {
     // Add the central widget
@@ -68,14 +101,6 @@ void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
 
     if (mCentralWidget.isEmpty())
         mCentralWidget << GuiSettingsCentralWidget(pCentralWidget);
-}
-
-void GuiSettings::addDockWidget(const Qt::DockWidgetArea &pDefaultDockingArea,
-                                Core::DockWidget *pDockWidget)
-{
-    // Add a new dock widget to our list
-
-    mDockWidgets << GuiSettingsDockWidget(pDefaultDockingArea, pDockWidget);
 }
 
 void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
@@ -86,18 +111,19 @@ void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pTyp
     mActions << GuiSettingsAction(pType, pAction);
 }
 
+void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
+                            Core::DockWidget *pWindow)
+{
+    // Add a new dock widget to our list
+
+    mWindows << GuiSettingsWindow(pDefaultDockingArea, pWindow);
+}
+
 QList<GuiSettingsCentralWidget> GuiSettings::centralWidget() const
 {
     // Return our central widget
 
     return mCentralWidget;
-}
-
-QList<GuiSettingsDockWidget> GuiSettings::dockWidgets() const
-{
-    // Return our dock widgets
-
-    return mDockWidgets;
 }
 
 QList<GuiSettingsAction> GuiSettings::actions() const
@@ -107,7 +133,15 @@ QList<GuiSettingsAction> GuiSettings::actions() const
     return mActions;
 }
 
+QList<GuiSettingsWindow> GuiSettings::windows() const
+{
+    // Return our windows
+
+    return mWindows;
+}
+
 GuiInterface::GuiInterface(const QString &pPluginName) :
+    mData(0),
     mPluginName(pPluginName)
 {
 }
@@ -122,6 +156,20 @@ GuiSettings GuiInterface::settings() const
     // Return the plugin's settings
 
     return mSettings;
+}
+
+void * GuiInterface::data() const
+{
+    // Return the plugin's data
+
+    return mData;
+}
+
+QString GuiInterface::pluginName() const
+{
+    // Return the plugin's name
+
+    return mPluginName;
 }
 
 void GuiInterface::setLocale(const QString &pLocale)
@@ -139,7 +187,7 @@ void GuiInterface::setLocale(const QString &pLocale)
 
 QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
                                   const bool &pCheckable,
-                                  const QString &pIconResource) const
+                                  const QString &pIconResource)
 {
     // Create and return an action
 

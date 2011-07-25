@@ -17,6 +17,7 @@ class CorePlugin : public GuiInterface
 
 public:
     explicit CorePlugin();
+    ~CorePlugin();
 
     virtual void initialize(QMainWindow *pMainWindow);
 

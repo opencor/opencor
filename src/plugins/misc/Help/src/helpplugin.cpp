@@ -25,20 +25,27 @@ HelpPlugin::HelpPlugin() :
 {
 }
 
+HelpPlugin::~HelpPlugin()
+{
+    // Delete our data
+
+    delete (GuiSettingsHelpPlugin *) mData;
+}
+
 void HelpPlugin::initialize(QMainWindow *pMainWindow)
 {
-    // Create our help window
-
-    mHelpWindow = new HelpWindow(pMainWindow);
-
-    mSettings.addDockWidget(Qt::RightDockWidgetArea, mHelpWindow);
-
     // Create an action to show/hide our help window
 
     mHelpAction = newAction(pMainWindow, true,
                             ":/oxygen/apps/help-browser.png");
 
-    mSettings.addAction(GuiSettingsAction::Help, mHelpAction);
+    // Create our help window
+
+    mHelpWindow = new HelpWindow(pMainWindow);
+
+    // Create and set our data
+
+    mData = new GuiSettingsHelpPlugin(mHelpAction, mHelpWindow);
 
     // Some connections to handle the visibility of our help window
 
@@ -50,15 +57,15 @@ void HelpPlugin::initialize(QMainWindow *pMainWindow)
 
 void HelpPlugin::retranslateUi()
 {
-    // Retranslate our help window
-
-    mHelpWindow->retranslateUi();
-
-    // Retranslate our aciton
+    // Retranslate our action
 
     mHelpAction->setText(tr("&Help"));
     mHelpAction->setStatusTip(tr("Show/hide the OpenCOR help"));
     mHelpAction->setShortcut(tr("F1"));
+
+    // Retranslate our help window
+
+    mHelpWindow->retranslateUi();
 }
 
 } }

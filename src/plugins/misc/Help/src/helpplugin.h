@@ -17,15 +17,16 @@ class HelpPlugin : public GuiInterface
 
 public:
     explicit HelpPlugin();
+    ~HelpPlugin();
 
     virtual void initialize(QMainWindow *pMainWindow);
 
     virtual void retranslateUi();
 
 private:
-    HelpWindow *mHelpWindow;
-
     QAction *mHelpAction;
+
+    HelpWindow *mHelpWindow;
 };
 
 } }
