@@ -61,9 +61,12 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
                                  mLogoWidth, mLogoHeight),
                            mLogo);
 
-        // Draw a border around the widget which actually consists of two
-        // borders. A 'dark' outer border and a 'light' inner border. Note the
-        // way the border coordinates were adjusted to get the right effect...
+#ifndef Q_WS_MAC
+        // Draw a border around the widget
+        // Note #1: the border actually consists of two borders. A 'dark' outer
+        //          border and a 'light' inner border. Note the way the border
+        //          coordinates were adjusted to get the right effect...
+        // Note #2: the border doesn't look good on Mac OS X, so...
 
         QPen pen = painter.pen();
 
@@ -84,6 +87,7 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
         border.adjust(1, 1, -1, -1);
 
         painter.drawRect(border);
+#endif
 
         // Accept the event
 
