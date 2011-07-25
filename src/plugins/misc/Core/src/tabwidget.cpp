@@ -21,16 +21,12 @@ TabWidget::TabWidget(const QString &pLogoFileName, QWidget *pParent) :
 
     // Logo settings
 
-    mLogoRenderer.load(pLogoFileName);
+    mLogo.load(pLogoFileName);
 
-    mLogoWidth  = mLogoRenderer.defaultSize().width();
-    mLogoHeight = mLogoRenderer.defaultSize().height();
+    mLogoBackgroundColor = QImage(pLogoFileName).pixel(0, 0);
 
-    mLogoOneOverWidth  = 1.0/mLogoWidth;
-    mLogoOneOverHeight = 1.0/mLogoHeight;
-
-    mLogoWidthOverHeight = (double) mLogoWidth/mLogoHeight;
-    mLogoHeightOverWidth = (double) mLogoHeight/mLogoWidth;
+    mLogoWidth  = mLogo.width();
+    mLogoHeight = mLogo.height();
 
     // A connection to handle the change of tab
 
@@ -50,51 +46,44 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
 
         QPainter painter(this);
 
-        // Paint the widget's background
+        // Paint the widget with the logo's background colour
 
         int widgetWidth  = width();
         int widgetHeight = height();
 
         painter.fillRect(QRect(0, 0, widgetWidth, widgetHeight),
-                         palette().color(QPalette::Base));
+                         mLogoBackgroundColor);
 
-        // Determine what the dimensions of the logo should be, based on the
-        // widget's current dimensions
+        // Draw the logo itself
 
-        const int padding = 30;
+        painter.drawPixmap(QRect(0.5*(widgetWidth-mLogoWidth),
+                                 0.5*(widgetHeight-mLogoHeight),
+                                 mLogoWidth, mLogoHeight),
+                           mLogo);
 
-        int logoWidth  = mLogoWidth;
-        int logoHeight = mLogoHeight;
+        // Draw a border around the widget which actually consists of two
+        // borders. A 'dark' outer border and a 'light' inner border. Note the
+        // way the border coordinates were adjusted to get the right effect...
 
-        bool needResizeWidth  = false;
-        bool needResizeHeight = false;
+        QPen pen = painter.pen();
 
-        if (widgetWidth < mLogoWidth+padding) {
-            if (widgetHeight < mLogoHeight+padding)
-                needResizeWidth =   widgetWidth*mLogoOneOverWidth
-                                  < widgetHeight*mLogoOneOverHeight;
-            else
-                needResizeWidth = true;
+        pen.setColor(palette().color(QPalette::Button));
 
-            needResizeHeight = !needResizeWidth;
-        } else {
-            needResizeHeight = widgetHeight < mLogoHeight+padding;
-        }
+        painter.setPen(pen);
 
-        if (needResizeWidth) {
-            logoWidth  = qMax(1, widgetWidth-padding);
-            logoHeight = logoWidth*mLogoHeightOverWidth;
-        } else if (needResizeHeight) {
-            logoHeight = qMax(1, widgetHeight-padding);
-            logoWidth  = logoHeight*mLogoWidthOverHeight;
-        }
+        QRect border = rect();
 
-        // Render the logo itself
+        border.adjust(0, 0, -1, 0);
 
-        mLogoRenderer.render(&painter,
-                             QRect(0.5*(widgetWidth-logoWidth),
-                                   0.5*(widgetHeight-logoHeight),
-                                   logoWidth, logoHeight));
+        painter.drawRect(border);
+
+        pen.setColor(palette().color(QPalette::Midlight));
+
+        painter.setPen(pen);
+
+        border.adjust(1, 1, -1, -1);
+
+        painter.drawRect(border);
 
         // Accept the event
 

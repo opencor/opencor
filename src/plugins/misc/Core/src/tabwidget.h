@@ -3,7 +3,6 @@
 
 #include "commonwidget.h"
 
-#include <QSvgRenderer>
 #include <QTabWidget>
 
 namespace OpenCOR {
@@ -20,16 +19,11 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
-    QSvgRenderer mLogoRenderer;
+    QPixmap mLogo;
+    QColor mLogoBackgroundColor;
 
     int mLogoWidth;
     int mLogoHeight;
-
-    double mLogoOneOverWidth;
-    double mLogoOneOverHeight;
-
-    double mLogoWidthOverHeight;
-    double mLogoHeightOverWidth;
 
 private Q_SLOTS:
     void tabChanged(const int &pIndex) const;
