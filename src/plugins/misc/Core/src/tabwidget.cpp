@@ -82,10 +82,10 @@ void TabWidget::paintEvent(QPaintEvent *pEvent)
         }
 
         if (needResizeWidth) {
-            logoWidth  = widgetWidth-padding;
+            logoWidth  = qMax(1, widgetWidth-padding);
             logoHeight = logoWidth*mLogoHeightOverWidth;
         } else if (needResizeHeight) {
-            logoHeight = widgetHeight-padding;
+            logoHeight = qMax(1, widgetHeight-padding);
             logoWidth  = logoHeight*mLogoWidthOverHeight;
         }
 
