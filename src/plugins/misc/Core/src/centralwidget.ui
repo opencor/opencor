@@ -10,10 +10,41 @@
     <height>240</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="margin">
     <number>0</number>
    </property>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::West</enum>
+     </property>
+     <widget class="QWidget" name="editing">
+      <attribute name="title">
+       <string>Editing</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="simulation">
+      <attribute name="title">
+       <string>Simulation</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="analysis">
+      <attribute name="title">
+       <string>Analysis</string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

@@ -44,7 +44,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     //          then the central widget will widen reducing the width of any
     //          dock window which is clearly not what we want, so...
 
-    mUi->verticalLayout->addWidget(mTabWidget);
+    mUi->horizontalLayout->addWidget(mTabWidget);
 
     // Some connections to handle our tab widget
 
