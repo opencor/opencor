@@ -23,13 +23,6 @@ CorePlugin::CorePlugin() :
 {
 }
 
-CorePlugin::~CorePlugin()
-{
-    // Delete our data
-
-    delete (GuiSettingsCorePlugin *) mData;
-}
-
 void CorePlugin::initialize(QMainWindow *pMainWindow)
 {
     // Create our help window
@@ -39,6 +32,13 @@ void CorePlugin::initialize(QMainWindow *pMainWindow)
     // Create and set our data
 
     mData = new GuiSettingsCorePlugin(mCentralWidget);
+}
+
+void CorePlugin::finalize()
+{
+    // Delete our data
+
+    delete (GuiSettingsCorePlugin *) mData;
 }
 
 void CorePlugin::retranslateUi()

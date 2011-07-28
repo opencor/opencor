@@ -11,6 +11,7 @@ PLUGININFO_FUNC ViewerPluginInfo();
 class ViewerPlugin : public GuiInterface
 {
     Q_OBJECT
+    Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
 
 public:

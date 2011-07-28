@@ -148,25 +148,17 @@ MainWindow::MainWindow(QWidget *pParent) :
 MainWindow::~MainWindow()
 {
     // Finalize our various plugins
+    // Note: we only need to test for our default interface since we want to
+    //       call the finalize method and this method is not overriden by any
+    //       other interface, so...
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-        if (guiInterface) {
-            // The plugin implements our GUI interface, so...
+        if (pluginInterface)
+            // The plugin implements our default interface, so...
 
-            guiInterface->finalize();
-        } else {
-            // The plugin doesn't implement our GUI interface, so let's see
-            // whether it implements our default interface
-
-            PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
-
-            if (pluginInterface)
-                // The plugin implements our default interface, so...
-
-                pluginInterface->finalize();
-        }
+            pluginInterface->finalize();
     }
 
     // Delete some internal objects

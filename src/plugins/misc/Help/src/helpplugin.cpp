@@ -25,13 +25,6 @@ HelpPlugin::HelpPlugin() :
 {
 }
 
-HelpPlugin::~HelpPlugin()
-{
-    // Delete our data
-
-    delete (GuiSettingsHelpPlugin *) mData;
-}
-
 void HelpPlugin::initialize(QMainWindow *pMainWindow)
 {
     // Create an action to show/hide our help window
@@ -53,6 +46,13 @@ void HelpPlugin::initialize(QMainWindow *pMainWindow)
             mHelpWindow, SLOT(setVisible(bool)));
     connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
             mHelpAction, SLOT(setChecked(bool)));
+}
+
+void HelpPlugin::finalize()
+{
+    // Delete our data
+
+    delete (GuiSettingsHelpPlugin *) mData;
 }
 
 void HelpPlugin::retranslateUi()
