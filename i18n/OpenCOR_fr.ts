@@ -151,7 +151,7 @@
     </message>
     <message>
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
-        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Etes-vous sûr que c&amp;apos;est ce que vous voulez ?</translation>
+        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Êtes-vous sûr que c&apos;est ce que vous voulez ?</translation>
     </message>
     <message>
         <source>About</source>
@@ -249,6 +249,10 @@
     <message>
         <source>None</source>
         <translation>Aucune</translation>
+    </message>
+    <message>
+        <source>%1 must be restarted for your changes to be effective. Are you sure that this is what you want?</source>
+        <translation>%1 doit etre relancé pour que vos changements deviennent effectifs. Êtes-vous sûr que c&apos;est ce que vous voulez ?</translation>
     </message>
 </context>
 <context>

@@ -34,6 +34,8 @@ public:
 
     QString locale() const;
 
+    void restart(const bool &pSaveSettings) const;
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void showEvent(QShowEvent *pEvent);

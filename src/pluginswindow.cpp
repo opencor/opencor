@@ -6,6 +6,8 @@
 #include "ui_pluginswindow.h"
 
 #include <QDesktopServices>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QUrl>
 
 namespace OpenCOR {
@@ -41,7 +43,8 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
                              QWidget *pParent) :
     QDialog(pParent),
     mUi(new Ui::PluginsWindow),
-    mPluginManager(pPluginManager)
+    mPluginManager(pPluginManager),
+    mMainWindow(qobject_cast<MainWindow *>(pParent))
 {
     // Set up the UI
 
@@ -133,6 +136,11 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     connect(mUi->descriptionValue, SIGNAL(linkActivated(const QString &)),
             this, SLOT(openLink(const QString &)));
 
+    // Connection to handle the window's buttons
+
+    connect(mUi->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
+            this, SLOT(apply()));
+
     // Make sure that the window has a reasonable starting size
 
     mUi->verticalLayout->setSizeConstraint(QLayout::SetMinimumSize);
@@ -202,7 +210,7 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     // The plugin's description
 
-    QString description = pluginInfo.description(qobject_cast<MainWindow *>(parent())->locale());
+    QString description = pluginInfo.description(mMainWindow->locale());
 
     mUi->descriptionValue->setText(description.isEmpty()?
                                        tr("None"):
@@ -329,6 +337,22 @@ void PluginsWindow::on_buttonBox_rejected()
     // Simple cancel whatever was done here
 
     reject();
+}
+
+void PluginsWindow::apply()
+{
+    if( QMessageBox::question(this, qApp->applicationName(),
+                              tr("%1 must be restarted for your changes to be effective. Are you sure that this is what you want?").arg(qApp->applicationName()),
+                              QMessageBox::Yes|QMessageBox::No,
+                              QMessageBox::Yes) == QMessageBox::Yes ) {
+        // Do what is done when clicking on the OK button
+
+        on_buttonBox_accepted();
+
+        // Exit OpenCOR with the request to restart it after having saved its settings
+
+        mMainWindow->restart(true);
+    }
 }
 
 }

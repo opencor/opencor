@@ -661,6 +661,19 @@ void MainWindow::on_actionAbout_triggered()
                        +"<a href=\""+QString(OpencorHomepageUrl)+"\">"+qApp->applicationName()+"</a> "+tr("is a cross-platform <a href=\"http://www.cellml.org/\">CellML</a>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
 }
 
+void MainWindow::restart(const bool &pSaveSettings) const
+{
+    // Restart OpenCOR after saving its settings, if required
+    // Note: the closeEvent method won't get called when exiting OpenCOR and
+    //       this is exactly what we want in case we don't want to save its
+    //       settings (e.g. when resetting all)
+
+    if (pSaveSettings)
+        saveSettings();
+
+    qApp->exit(MainWindow::NeedRestart);
+}
+
 void MainWindow::resetAll()
 {
     if( QMessageBox::question(this, qApp->applicationName(),
@@ -674,11 +687,9 @@ void MainWindow::resetAll()
 
         QSettings(qApp->applicationName()).clear();
 
-        // Ask for OpenCOR to be restarted
-        // Note: the closeEvent method won't get called and this is exactly what
-        //       we want, since we don't want to save OpenCOR's settings
+        // Restart OpenCOR without first saving its settings
 
-        qApp->exit(MainWindow::NeedRestart);
+        restart(false);
     }
 }
 

@@ -11,6 +11,7 @@ namespace Ui {
 
 namespace OpenCOR {
 
+class MainWindow;
 class PluginManager;
 
 class PluginDelegate : public QStyledItemDelegate
@@ -49,6 +50,8 @@ private:
     QList<QStandardItem *> mManageablePlugins;
     QList<QStandardItem *> mUnmanageablePlugins;
 
+    MainWindow *mMainWindow;
+
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
@@ -56,6 +59,7 @@ private slots:
     void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &) const;
     void updatePluginsLoadingState(QStandardItem *pChangedPluginItem = 0) const;
     void openLink(const QString &pLink) const;
+    void apply();
 };
 
 }
