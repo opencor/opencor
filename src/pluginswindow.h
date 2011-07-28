@@ -52,12 +52,15 @@ private:
 
     MainWindow *mMainWindow;
 
+    QMap<QString, bool> mInitialLoadingStates;
+
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 
     void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &) const;
-    void updatePluginsLoadingState(QStandardItem *pChangedPluginItem = 0) const;
+    void updatePluginsLoadingState(QStandardItem *pChangedPluginItem = 0,
+                                   const bool &pInitializing = false);
     void openLink(const QString &pLink) const;
     void apply();
 };

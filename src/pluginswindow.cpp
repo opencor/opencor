@@ -105,7 +105,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // Make sure that the loading state of all the plugins is right, including
     // that of the plugins which the user cannot manage
 
-    updatePluginsLoadingState();
+    updatePluginsLoadingState(0, true);
 
     // Select the first plugin
 
@@ -221,7 +221,8 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
     mUi->statusValue->setText(plugin->statusDescription());
 }
 
-void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem) const
+void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
+                                              const bool &pInitializing)
 {
     // Disable the connection that handles a change in a plugin's loading state
     // (otherwise what we are doing here is going to be completely uneffective)
@@ -302,6 +303,32 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem)
     // Re-enable the updating of the list view
 
     mUi->listView->setUpdatesEnabled(true);
+
+    // Check whether the OK and apply buttons should be enabled
+
+    if (pInitializing)
+        // We are initialising the plugins window, so retrieve the initial
+        // loading state of the plugins
+
+        foreach (QStandardItem *pluginItem,
+                 mManageablePlugins+mUnmanageablePlugins)
+            mInitialLoadingStates.insert(pluginItem->text(),
+                                         pluginItem->checkState() == Qt::Checked);
+
+    bool buttonsEnabled = false;
+
+    foreach (QStandardItem *pluginItem, mManageablePlugins+mUnmanageablePlugins)
+        if (   mInitialLoadingStates.value(pluginItem->text())
+            != (pluginItem->checkState() == Qt::Checked)) {
+            // The loading state of the plugin has changed, so...
+
+            buttonsEnabled = true;
+
+            break;
+        }
+
+    mUi->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(buttonsEnabled);
+    mUi->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(buttonsEnabled);
 
     // Re-enable the connection that handles a change in a plugin's loading
     // state
