@@ -48,8 +48,10 @@ private:
     FileManager *mFileManager;
 
     QTabBar *mModes;
-    TabWidget *mTabWidget;
+    TabWidget *mFiles;
     QTabBar *mViews;
+
+    void updateGui() const;
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);

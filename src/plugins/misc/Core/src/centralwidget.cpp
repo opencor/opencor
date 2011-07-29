@@ -43,9 +43,9 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our tab widget
 
-    mTabWidget = new TabWidget(":logo", this);
+    mFiles = new TabWidget(":logo", this);
 
-    mTabWidget->setUsesScrollButtons(true);
+    mFiles->setUsesScrollButtons(true);
     // Note #1: the above property is style dependent and it happens that it's
     //          not enabled on Mac OS X, so... set it in all cases, even though
     //          it's already set on Windows and Linux, but one can never know
@@ -67,14 +67,14 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // Add the widgets to our horizontal layout
 
     mUi->horizontalLayout->addWidget(mModes);
-    mUi->horizontalLayout->addWidget(mTabWidget);
+    mUi->horizontalLayout->addWidget(mFiles);
     mUi->horizontalLayout->addWidget(mViews);
 
     // Some connections to handle our tab widget
 
-    connect(mTabWidget, SIGNAL(tabCloseRequested(int)),
+    connect(mFiles, SIGNAL(tabCloseRequested(int)),
             this, SLOT(closeFile(int)));
-    connect(mTabWidget, SIGNAL(currentChanged(int)),
+    connect(mFiles, SIGNAL(currentChanged(int)),
             this, SLOT(fileActivated(int)));
 }
 
@@ -130,14 +130,14 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
         QStringList openedFiles;
 
-        for (int i = 0; i < mTabWidget->count(); ++i)
-            openedFiles << mTabWidget->tabToolTip(i);
+        for (int i = 0; i < mFiles->count(); ++i)
+            openedFiles << mFiles->tabToolTip(i);
 
         pSettings->setValue(SettingsOpenedFiles, openedFiles);
 
         // Keep track of the active file
 
-        pSettings->setValue(SettingsActiveFile, mTabWidget->currentIndex());
+        pSettings->setValue(SettingsActiveFile, mFiles->currentIndex());
     pSettings->endGroup();
 }
 
@@ -169,16 +169,19 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     QWidget *dummyWidget = new QWidget(this);
 
-    mTabWidget->setCurrentIndex(mTabWidget->addTab(dummyWidget,
-                                                   fileInfo.fileName()));
+    mFiles->setCurrentIndex(mFiles->addTab(dummyWidget, fileInfo.fileName()));
 
     // Set the full name of the file as the tool tip for the new tab
 
-    mTabWidget->setTabToolTip(mTabWidget->currentIndex(), fileName);
+    mFiles->setTabToolTip(mFiles->currentIndex(), fileName);
 
     // Give the focus to the newly created editor
 
-    mTabWidget->currentWidget()->setFocus();
+    mFiles->currentWidget()->setFocus();
+
+    // Update the GUI
+
+    updateGui();
 
     // Everything went fine, so let people know that the file has been opened
 
@@ -203,18 +206,18 @@ bool CentralWidget::closeFile(const int &pIndex)
     // index is provided, and then return the name of the file that was closed,
     // if any
 
-    int realIndex = (pIndex != -1)?pIndex:mTabWidget->currentIndex();
+    int realIndex = (pIndex != -1)?pIndex:mFiles->currentIndex();
 
-    QWidget *dummyWidget = qobject_cast<QWidget *>(mTabWidget->widget(realIndex));
+    QWidget *dummyWidget = qobject_cast<QWidget *>(mFiles->widget(realIndex));
 
     if (dummyWidget) {
         // There is a file currently opened, so first retrieve its file name
 
-        QString fileName = mTabWidget->tabToolTip(realIndex);
+        QString fileName = mFiles->tabToolTip(realIndex);
 
         // Next, we must close the tab
 
-        mTabWidget->removeTab(realIndex);
+        mFiles->removeTab(realIndex);
 
         // Then, we must release the allocated memory for the dummy widget that
         // the tab used to contain
@@ -224,6 +227,10 @@ bool CentralWidget::closeFile(const int &pIndex)
         // Unregister the file from our file manager
 
         mFileManager->unmanage(fileName);
+
+        // Update the GUI
+
+        updateGui();
 
         // Finally, we let people know about the file having just been closed
 
@@ -253,17 +260,17 @@ bool CentralWidget::activateFile(const QString &pFileName)
 
     QString realFileName = QDir::toNativeSeparators(pFileName);
 
-    for (int i = 0; i < mTabWidget->count(); ++i)
-        if (!mTabWidget->tabToolTip(i).compare(realFileName)) {
+    for (int i = 0; i < mFiles->count(); ++i)
+        if (!mFiles->tabToolTip(i).compare(realFileName)) {
             // We have found the file, so set the current index to that of its
             // tab
 
-            mTabWidget->setCurrentIndex(i);
+            mFiles->setCurrentIndex(i);
 
             // Then, give the focus to the editor
             // Note: this will automatically trigger the fileActivated signal
 
-            mTabWidget->currentWidget()->setFocus();
+            mFiles->currentWidget()->setFocus();
 
             // Everything went fine, so...
 
@@ -279,22 +286,22 @@ void CentralWidget::fileActivated(const int &pIndex)
 {
     // Let people know that a file has been activated
 
-    emit fileActivated(mTabWidget->tabToolTip(pIndex));
+    emit fileActivated(mFiles->tabToolTip(pIndex));
 }
 
 int CentralWidget::nbOfFilesOpened() const
 {
     // Return the number of files currently opened
 
-    return mTabWidget->count();
+    return mFiles->count();
 }
 
 QString CentralWidget::activeFileName() const
 {
     // Return the name of the file currently active, if any
 
-    if (mTabWidget->count())
-        return mTabWidget->tabToolTip(mTabWidget->currentIndex());
+    if (mFiles->count())
+        return mFiles->tabToolTip(mFiles->currentIndex());
     else
         return QString();
 }
@@ -364,6 +371,15 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
     // Accept the proposed action for the event
 
     pEvent->acceptProposedAction();
+}
+
+void CentralWidget::updateGui() const
+{
+    // Show/hide the modes and views tab bars depending on whether files are
+    // opened
+
+    mModes->setVisible(mFiles->count());
+    mViews->setVisible(mModes->isVisible());
 }
 
 } }
