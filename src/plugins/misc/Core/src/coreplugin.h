@@ -25,6 +25,14 @@ public:
     virtual void retranslateUi();
 
 private:
+    QAction *mFileOpen;
+    QAction *mFileSave;
+    QAction *mFileSaveAs;
+    QAction *mFileSaveAll;
+    QAction *mFileClose;
+    QAction *mFileCloseAll;
+    QAction *mFilePrint;
+
     CentralWidget *mCentralWidget;
 };
 

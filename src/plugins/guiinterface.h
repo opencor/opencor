@@ -10,14 +10,45 @@
 
 namespace OpenCOR {
 
+class GuiSettingsCoreAction
+{
+public:
+    enum GuiSettingsCoreActionType
+    {
+        Undefined,
+        File,
+    };
+
+    explicit GuiSettingsCoreAction(const GuiSettingsCoreActionType &pType,
+                                   QAction *pAction);
+    explicit GuiSettingsCoreAction(QMenu *pMenu, QAction *pAction);
+
+    GuiSettingsCoreActionType type() const;
+    QMenu *menu() const;
+    QAction *action() const;
+
+private:
+    GuiSettingsCoreActionType mType;
+    QMenu *mMenu;
+    QAction *mAction;
+};
+
 class GuiSettingsCorePlugin
 {
 public:
     explicit GuiSettingsCorePlugin(Core::CentralWidget *pCentralWidget);
 
+    void addAction(const GuiSettingsCoreAction::GuiSettingsCoreActionType &pType,
+                   QAction *pAction = 0);
+    void addAction(QMenu *pMenu, QAction *pAction = 0);
+
+    QList<GuiSettingsCoreAction> actions() const;
+
     Core::CentralWidget *centralWidget() const;
 
 private:
+    QList<GuiSettingsCoreAction> mActions;
+
     Core::CentralWidget *mCentralWidget;
 };
 
@@ -120,8 +151,13 @@ protected:
     //       of a kind and therefore require special treatment (as opposed to
     //       generic treatment)
 
-    static QAction * newAction(QMainWindow *pMainWindow, const bool &pCheckable,
-                               const QString &pIconResource);
+    static QAction * newAction(QMainWindow *pMainWindow,
+                               const bool &pCheckable = false,
+                               const QString &pIconResource = QString());
+
+    void retranslateAction(QAction *pAction, const QString &pText,
+                           const QString &pStatusTip,
+                           const QString &pShortcut = QString());
 
 private:
     QString mPluginName;

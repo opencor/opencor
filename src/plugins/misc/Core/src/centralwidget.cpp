@@ -70,6 +70,10 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mUi->horizontalLayout->addWidget(mFiles);
     mUi->horizontalLayout->addWidget(mViews);
 
+    // Update the GUI
+
+    updateGui();
+
     // Some connections to handle our tab widget
 
     connect(mFiles, SIGNAL(tabCloseRequested(int)),

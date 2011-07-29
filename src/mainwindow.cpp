@@ -232,7 +232,35 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
             // Our special Core plugin has its data set, so we can make use of
             // it
 
-            //---GRY--- TO BE DONE
+            GuiSettingsCorePlugin *guiSettingsCorePlugin = (GuiSettingsCorePlugin *) pGuiInterface->data();
+
+            foreach (const GuiSettingsCoreAction &coreAction,
+                     guiSettingsCorePlugin->actions()) {
+                // Add the action to the right menu
+
+                if (coreAction.type() != GuiSettingsCoreAction::Undefined)
+                    // The core action has a type, so use to determine where the
+                    // action should be inserted
+
+                    switch (coreAction.type()) {
+                    default:   // File
+                        if(coreAction.action())
+                            mUi->menuFile->insertAction(mUi->actionExit,
+                                                        coreAction.action());
+                        else
+                            mUi->menuFile->insertSeparator(mUi->actionExit);
+                    }
+                else
+                    // The core action doesn't have a type, but a menu owner to
+                    // which it is to be added
+
+                    if (coreAction.action())
+                        coreAction.menu()->insertAction(0, coreAction.action());
+                    else
+                        coreAction.menu()->insertSeparator(0);
+            }
+
+//---GRY--- TO BE COMPLETED...
         }
     } else if (!pGuiInterface->pluginName().compare(HelpPlugin)) {
         // We are dealing with our special Help plugin

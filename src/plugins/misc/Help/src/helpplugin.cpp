@@ -59,9 +59,9 @@ void HelpPlugin::retranslateUi()
 {
     // Retranslate our action
 
-    mHelpAction->setText(tr("&Help"));
-    mHelpAction->setStatusTip(tr("Show/hide the OpenCOR help"));
-    mHelpAction->setShortcut(tr("F1"));
+    retranslateAction(mHelpAction, tr("&Help"),
+                      tr("Show/hide the OpenCOR help"),
+                      tr("F1"));
 
     // Retranslate our help window
 

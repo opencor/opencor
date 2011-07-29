@@ -7,9 +7,67 @@
 
 namespace OpenCOR {
 
+GuiSettingsCoreAction::GuiSettingsCoreAction(const GuiSettingsCoreActionType &pType,
+                                             QAction *pAction) :
+    mType(pType),
+    mMenu(0),
+    mAction(pAction)
+{
+}
+
+GuiSettingsCoreAction::GuiSettingsCoreAction(QMenu *pMenu, QAction *pAction) :
+    mType(Undefined),
+    mMenu(pMenu),
+    mAction(pAction)
+{
+}
+
+GuiSettingsCoreAction::GuiSettingsCoreActionType GuiSettingsCoreAction::type() const
+{
+    // Return the action's type
+
+    return mType;
+}
+
+QMenu * GuiSettingsCoreAction::menu() const
+{
+    // Return the action's menu owner
+
+    return mMenu;
+}
+
+QAction * GuiSettingsCoreAction::action() const
+{
+    // Return the action itself
+
+    return mAction;
+}
+
 GuiSettingsCorePlugin::GuiSettingsCorePlugin(Core::CentralWidget *pCentralWidget) :
     mCentralWidget(pCentralWidget)
 {
+}
+
+void GuiSettingsCorePlugin::addAction(const GuiSettingsCoreAction::GuiSettingsCoreActionType &pType,
+                                      QAction *pAction)
+{
+    // Add a new action to our list
+
+    mActions << GuiSettingsCoreAction(pType, pAction);
+}
+
+void GuiSettingsCorePlugin::addAction(QMenu *pMenu, QAction *pAction)
+{
+    // Add a new action to our list
+
+    mActions << GuiSettingsCoreAction(pMenu, pAction);
+}
+
+QList<GuiSettingsCoreAction> GuiSettingsCorePlugin::actions() const
+{
+    // Return our actions
+
+    return mActions;
 }
 
 Core::CentralWidget * GuiSettingsCorePlugin::centralWidget() const
@@ -197,6 +255,18 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
     res->setIcon(QIcon(pIconResource));
 
     return res;
+}
+
+void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,
+                                     const QString &pStatusTip,
+                                     const QString &pShortcut)
+{
+    // Retranslate the action, i.e. retranslate its text, status tip and
+    // shortcut
+
+    pAction->setText(pText);
+    pAction->setStatusTip(pStatusTip);
+    pAction->setShortcut(pShortcut);
 }
 
 void GuiInterface::retranslateUi()
