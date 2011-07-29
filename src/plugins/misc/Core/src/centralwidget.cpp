@@ -35,7 +35,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mModes = new QTabBar(this);
 
-    mModes->setShape(QTabBar::TriangularWest);
+    mModes->setShape(QTabBar::RoundedWest);
 
     mModes->addTab("");   // Add the three tabs for our editing, simulation and
     mModes->addTab("");   // analysis mode
@@ -58,7 +58,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mViews = new QTabBar(this);
 
-    mViews->setShape(QTabBar::TriangularEast);
+    mViews->setShape(QTabBar::RoundedEast);
 
     mViews->addTab("View #1");
     mViews->addTab("View #2");
