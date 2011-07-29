@@ -379,7 +379,7 @@ void CentralWidget::updateGui() const
     // opened
 
     mModes->setVisible(mFiles->count());
-    mViews->setVisible(mModes->isVisible());
+    mViews->setVisible(mFiles->count());
 }
 
 } }
