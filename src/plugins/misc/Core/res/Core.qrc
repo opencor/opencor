@@ -7,6 +7,12 @@
         <file>oxygen/actions/document-save-all.png</file>
         <file>oxygen/actions/document-save-as.png</file>
         <file>oxygen/actions/edit-copy.png</file>
+        <file>oxygen/actions/edit-cut.png</file>
+        <file>oxygen/actions/edit-delete.png</file>
+        <file>oxygen/actions/edit-find.png</file>
+        <file>oxygen/actions/edit-paste.png</file>
+        <file>oxygen/actions/edit-redo.png</file>
+        <file>oxygen/actions/edit-undo.png</file>
         <file>oxygen/actions/go-next.png</file>
         <file>oxygen/actions/go-previous.png</file>
         <file>oxygen/places/document-multiple.png</file>

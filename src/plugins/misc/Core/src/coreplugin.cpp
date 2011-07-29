@@ -50,7 +50,31 @@ void CorePlugin::initialize(QMainWindow *pMainWindow)
 
     mEdit = newMenu(pMainWindow);
 
-    // Create our help window
+    // Create our different Edit actions
+
+    mEditUndo = newAction(pMainWindow, false,
+                          ":/oxygen/actions/edit-undo.png");
+    mEditRedo = newAction(pMainWindow, false,
+                          ":/oxygen/actions/edit-redo.png");
+
+    mEditCut    = newAction(pMainWindow, false,
+                          ":/oxygen/actions/edit-cut.png");
+    mEditCopy   = newAction(pMainWindow, false,
+                          ":/oxygen/actions/edit-copy.png");
+    mEditPaste  = newAction(pMainWindow, false,
+                          ":/oxygen/actions/edit-paste.png");
+    mEditDelete = newAction(pMainWindow, false,
+                          ":/oxygen/actions/edit-delete.png");
+
+    mEditFind     = newAction(pMainWindow, false,
+                          ":/oxygen/actions/edit-find.png");
+    mEditFindNext = newAction(pMainWindow, false);
+    mEditPrevious = newAction(pMainWindow, false);
+    mEditReplace  = newAction(pMainWindow, false);
+
+    mEditSelectAll = newAction(pMainWindow, false);
+
+    // Create our central widget
 
     mCentralWidget = new CentralWidget(pMainWindow);
 
@@ -73,6 +97,22 @@ void CorePlugin::initialize(QMainWindow *pMainWindow)
     guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File);
 
     guiSettingsCorePlugin->addMenu(GuiSettingsCoreMenu::View, mEdit);
+
+    guiSettingsCorePlugin->addAction(mEdit, mEditUndo);
+    guiSettingsCorePlugin->addAction(mEdit, mEditRedo);
+    guiSettingsCorePlugin->addAction(mEdit);
+    guiSettingsCorePlugin->addAction(mEdit, mEditCut);
+    guiSettingsCorePlugin->addAction(mEdit, mEditCopy);
+    guiSettingsCorePlugin->addAction(mEdit, mEditPaste);
+    guiSettingsCorePlugin->addAction(mEdit, mEditDelete);
+    guiSettingsCorePlugin->addAction(mEdit);
+    guiSettingsCorePlugin->addAction(mEdit, mEditFind);
+    guiSettingsCorePlugin->addAction(mEdit, mEditFindNext);
+    guiSettingsCorePlugin->addAction(mEdit, mEditPrevious);
+    guiSettingsCorePlugin->addAction(mEdit, mEditReplace);
+    guiSettingsCorePlugin->addAction(mEdit);
+    guiSettingsCorePlugin->addAction(mEdit, mEditSelectAll);
+    guiSettingsCorePlugin->addAction(mEdit);
 }
 
 void CorePlugin::finalize()
@@ -111,6 +151,45 @@ void CorePlugin::retranslateUi()
     // Retranslate our Edit menu
 
     retranslateMenu(mEdit, tr("&Edit"));
+
+    // Retranslate our different Edit actions
+
+    retranslateAction(mEditUndo, tr("&Undo"),
+                      tr("Undo the last action"),
+                      tr("Ctrl+Z"));
+    retranslateAction(mEditRedo, tr("&Redo"),
+                      tr("Redo the last action"),
+                      tr("Ctrl+Y"));
+
+    retranslateAction(mEditCut, tr("Cu&t"),
+                      tr("Cut the selected object"),
+                      tr("Ctrl+X"));
+    retranslateAction(mEditCopy, tr("&Copy"),
+                      tr("Copy the selected object"),
+                      tr("Ctrl+C"));
+    retranslateAction(mEditPaste, tr("&Paste"),
+                      tr("Paste the contents of the clipboard"),
+                      tr("Ctrl+V"));
+    retranslateAction(mEditDelete, tr("&Delete"),
+                      tr("Delete the selected object"),
+                      tr("Del"));
+
+    retranslateAction(mEditFind, tr("&Find..."),
+                      tr("Search for a specific object"),
+                      tr("Ctrl+F"));
+    retranslateAction(mEditFindNext, tr("Find &Next"),
+                      tr("Search forwards for the same object"),
+                      tr("F3"));
+    retranslateAction(mEditPrevious, tr("Find Pre&vious"),
+                      tr("Search backwards for the same object"),
+                      tr("Shift+F3"));
+    retranslateAction(mEditReplace, tr("Re&place"),
+                      tr("Search for a specific object and replace it with another"),
+                      tr("Ctrl+H"));
+
+    retranslateAction(mEditSelectAll, tr("Select &All"),
+                      tr("Select all the objects"),
+                      tr("Ctrl+A"));
 
     // Retranslate our central widget
 

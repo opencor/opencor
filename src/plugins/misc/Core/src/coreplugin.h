@@ -35,6 +35,18 @@ private:
 
     QMenu *mEdit;
 
+    QAction *mEditUndo;
+    QAction *mEditRedo;
+    QAction *mEditCut;
+    QAction *mEditCopy;
+    QAction *mEditPaste;
+    QAction *mEditDelete;
+    QAction *mEditFind;
+    QAction *mEditFindNext;
+    QAction *mEditPrevious;
+    QAction *mEditReplace;
+    QAction *mEditSelectAll;
+
     CentralWidget *mCentralWidget;
 };
 
