@@ -234,6 +234,21 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
 
             GuiSettingsCorePlugin *guiSettingsCorePlugin = (GuiSettingsCorePlugin *) pGuiInterface->data();
 
+            // Add the menus to our menu bar
+
+            foreach (const GuiSettingsCoreMenu &coreMenu,
+                     guiSettingsCorePlugin->menus()) {
+                // Insert the menu in the right place
+
+                switch (coreMenu.type()) {
+                default:   // View
+                    mUi->menuBar->insertAction(mUi->menuView->menuAction(),
+                                               coreMenu.menu()->menuAction());
+                }
+            }
+
+            // Add the actions to our different menus
+
             foreach (const GuiSettingsCoreAction &coreAction,
                      guiSettingsCorePlugin->actions()) {
                 // Add the action to the right menu

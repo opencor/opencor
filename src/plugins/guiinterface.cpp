@@ -2,10 +2,30 @@
 
 #include <QAction>
 #include <QApplication>
-
-#include <QDebug>
+#include <QMenu>
 
 namespace OpenCOR {
+
+GuiSettingsCoreMenu::GuiSettingsCoreMenu(const GuiSettingsCoreMenuType &pType,
+                                         QMenu *pMenu) :
+    mType(pType),
+    mMenu(pMenu)
+{
+}
+
+GuiSettingsCoreMenu::GuiSettingsCoreMenuType GuiSettingsCoreMenu::type() const
+{
+    // Return the menu's type
+
+    return mType;
+}
+
+QMenu * GuiSettingsCoreMenu::menu() const
+{
+    // Return the menu itsef
+
+    return mMenu;
+}
 
 GuiSettingsCoreAction::GuiSettingsCoreAction(const GuiSettingsCoreActionType &pType,
                                              QAction *pAction) :
@@ -48,6 +68,14 @@ GuiSettingsCorePlugin::GuiSettingsCorePlugin(Core::CentralWidget *pCentralWidget
 {
 }
 
+void GuiSettingsCorePlugin::addMenu(const GuiSettingsCoreMenu::GuiSettingsCoreMenuType &pType,
+                                    QMenu *pMenu)
+{
+    // Add a new menu to our list
+
+    mMenus << GuiSettingsCoreMenu(pType, pMenu);
+}
+
 void GuiSettingsCorePlugin::addAction(const GuiSettingsCoreAction::GuiSettingsCoreActionType &pType,
                                       QAction *pAction)
 {
@@ -61,6 +89,13 @@ void GuiSettingsCorePlugin::addAction(QMenu *pMenu, QAction *pAction)
     // Add a new action to our list
 
     mActions << GuiSettingsCoreAction(pMenu, pAction);
+}
+
+QList<GuiSettingsCoreMenu> GuiSettingsCorePlugin::menus() const
+{
+    // Return our menus
+
+    return mMenus;
 }
 
 QList<GuiSettingsCoreAction> GuiSettingsCorePlugin::actions() const
@@ -243,6 +278,13 @@ void GuiInterface::setLocale(const QString &pLocale)
     retranslateUi();
 }
 
+QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow)
+{
+    // Create and return a menu
+
+    return new QMenu(pMainWindow);
+}
+
 QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
                                   const bool &pCheckable,
                                   const QString &pIconResource)
@@ -255,6 +297,13 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
     res->setIcon(QIcon(pIconResource));
 
     return res;
+}
+
+void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
+{
+    // Retranslate the menu, i.e. retranslate its title
+
+    pMenu->setTitle(pTitle);
 }
 
 void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,

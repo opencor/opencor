@@ -90,5 +90,9 @@
         <source>&amp;Print...</source>
         <translation>Im&amp;primer...</translation>
     </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Éditer</translation>
+    </message>
 </context>
 </TS>

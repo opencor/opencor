@@ -10,13 +10,32 @@
 
 namespace OpenCOR {
 
+class GuiSettingsCoreMenu
+{
+public:
+    enum GuiSettingsCoreMenuType
+    {
+        View
+    };
+
+    explicit GuiSettingsCoreMenu(const GuiSettingsCoreMenuType &pType,
+                                 QMenu *pMenu);
+
+    GuiSettingsCoreMenuType type() const;
+    QMenu *menu() const;
+
+private:
+    GuiSettingsCoreMenuType mType;
+    QMenu *mMenu;
+};
+
 class GuiSettingsCoreAction
 {
 public:
     enum GuiSettingsCoreActionType
     {
         Undefined,
-        File,
+        File
     };
 
     explicit GuiSettingsCoreAction(const GuiSettingsCoreActionType &pType,
@@ -38,15 +57,20 @@ class GuiSettingsCorePlugin
 public:
     explicit GuiSettingsCorePlugin(Core::CentralWidget *pCentralWidget);
 
+    void addMenu(const GuiSettingsCoreMenu::GuiSettingsCoreMenuType &pType,
+                 QMenu *pMenu);
+
     void addAction(const GuiSettingsCoreAction::GuiSettingsCoreActionType &pType,
                    QAction *pAction = 0);
     void addAction(QMenu *pMenu, QAction *pAction = 0);
 
+    QList<GuiSettingsCoreMenu> menus() const;
     QList<GuiSettingsCoreAction> actions() const;
 
     Core::CentralWidget *centralWidget() const;
 
 private:
+    QList<GuiSettingsCoreMenu> mMenus;
     QList<GuiSettingsCoreAction> mActions;
 
     Core::CentralWidget *mCentralWidget;
@@ -151,13 +175,15 @@ protected:
     //       of a kind and therefore require special treatment (as opposed to
     //       generic treatment)
 
+    static QMenu * newMenu(QMainWindow *pMainWindow);
     static QAction * newAction(QMainWindow *pMainWindow,
                                const bool &pCheckable = false,
                                const QString &pIconResource = QString());
 
-    void retranslateAction(QAction *pAction, const QString &pText,
-                           const QString &pStatusTip,
-                           const QString &pShortcut = QString());
+    static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
+    static void retranslateAction(QAction *pAction, const QString &pText,
+                                  const QString &pStatusTip,
+                                  const QString &pShortcut = QString());
 
 private:
     QString mPluginName;

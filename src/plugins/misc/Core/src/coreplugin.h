@@ -33,6 +33,8 @@ private:
     QAction *mFileCloseAll;
     QAction *mFilePrint;
 
+    QMenu *mEdit;
+
     CentralWidget *mCentralWidget;
 };
 

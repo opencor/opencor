@@ -46,6 +46,10 @@ void CorePlugin::initialize(QMainWindow *pMainWindow)
     mFilePrint = newAction(pMainWindow, false,
                           ":/oxygen/actions/document-open.png");
 
+    // Create our Edit menu
+
+    mEdit = newMenu(pMainWindow);
+
     // Create our help window
 
     mCentralWidget = new CentralWidget(pMainWindow);
@@ -67,6 +71,8 @@ void CorePlugin::initialize(QMainWindow *pMainWindow)
     guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File);
     guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File, mFilePrint);
     guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File);
+
+    guiSettingsCorePlugin->addMenu(GuiSettingsCoreMenu::View, mEdit);
 }
 
 void CorePlugin::finalize()
@@ -101,6 +107,10 @@ void CorePlugin::retranslateUi()
     retranslateAction(mFilePrint, tr("&Print..."),
                       tr("Print the current file"),
                       tr("Ctrl+P"));
+
+    // Retranslate our Edit menu
+
+    retranslateMenu(mEdit, tr("&Edit"));
 
     // Retranslate our central widget
 
