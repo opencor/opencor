@@ -6,6 +6,6 @@
         <file>oxygen/actions/go-previous.png</file>
         <file>oxygen/places/document-multiple.png</file>
         <file alias="logo">Logo.png</file>
-        <file alias="Help_fr">../../../../../build/Core_fr.qm</file>
+        <file alias="Core_fr">../../../../../build/Core_fr.qm</file>
     </qresource>
 </RCC>
