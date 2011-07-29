@@ -31,7 +31,17 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mFileManager = new FileManager();
 
-    // Create and add our tab widget
+    // Create our modes tab bar
+
+    mModes = new QTabBar(this);
+
+    mModes->setShape(QTabBar::TriangularWest);
+
+    mModes->addTab("");   // Add the three tabs for our editing, simulation and
+    mModes->addTab("");   // analysis mode
+    mModes->addTab("");
+
+    // Create our tab widget
 
     mTabWidget = new TabWidget(":logo", this);
 
@@ -44,7 +54,21 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     //          then the central widget will widen reducing the width of any
     //          dock window which is clearly not what we want, so...
 
-    mUi->gridLayout->addWidget(mTabWidget, 0, 1);
+    // Create our views tab bar
+
+    mViews = new QTabBar(this);
+
+    mViews->setShape(QTabBar::TriangularEast);
+
+    mViews->addTab("View #1");
+    mViews->addTab("View #2");
+    mViews->addTab("View #3");
+
+    // Add the widgets to our horizontal layout
+
+    mUi->horizontalLayout->addWidget(mModes);
+    mUi->horizontalLayout->addWidget(mTabWidget);
+    mUi->horizontalLayout->addWidget(mViews);
 
     // Some connections to handle our tab widget
 
@@ -64,6 +88,15 @@ CentralWidget::~CentralWidget()
 
     delete mFileManager;
     delete mUi;
+}
+
+void CentralWidget::retranslateUi()
+{
+    // Retranslate the modes tab bar
+
+    mModes->setTabText(0, tr("Editing"));
+    mModes->setTabText(1, tr("Simulation"));
+    mModes->setTabText(2, tr("Analysis"));
 }
 
 static const QString SettingsOpenedFiles = "OpenedFiles";

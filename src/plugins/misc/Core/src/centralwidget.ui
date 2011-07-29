@@ -10,69 +10,13 @@
     <height>240</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="margin">
     <number>0</number>
    </property>
    <property name="spacing">
     <number>0</number>
    </property>
-   <item row="0" column="0">
-    <widget class="QTabWidget" name="mode">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="tabPosition">
-      <enum>QTabWidget::West</enum>
-     </property>
-     <widget class="QWidget" name="editing">
-      <attribute name="title">
-       <string>Editing</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="simulation">
-      <attribute name="title">
-       <string>Simulation</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="analysis">
-      <attribute name="title">
-       <string>Analysis</string>
-      </attribute>
-     </widget>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QTabWidget" name="view">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="tabPosition">
-      <enum>QTabWidget::South</enum>
-     </property>
-     <widget class="QWidget" name="view1">
-      <attribute name="title">
-       <string>View #1</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="view2">
-      <attribute name="title">
-       <string>View #2</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="view3">
-      <attribute name="title">
-       <string>View #3</string>
-      </attribute>
-     </widget>
-    </widget>
-   </item>
   </layout>
  </widget>
  <resources/>

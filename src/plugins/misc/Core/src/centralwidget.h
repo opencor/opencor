@@ -9,6 +9,8 @@ namespace Ui {
     class CentralWidget;
 }
 
+class QTabBar;
+
 namespace OpenCOR {
 namespace Core {
 
@@ -22,6 +24,8 @@ class CentralWidget : public QWidget, public CommonWidget
 public:
     explicit CentralWidget(QWidget *pParent = 0);
     ~CentralWidget();
+
+    virtual void retranslateUi();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -43,7 +47,9 @@ private:
 
     FileManager *mFileManager;
 
+    QTabBar *mModes;
     TabWidget *mTabWidget;
+    QTabBar *mViews;
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);
