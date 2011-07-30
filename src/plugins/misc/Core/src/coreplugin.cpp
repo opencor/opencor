@@ -2,6 +2,7 @@
 #include "coreplugin.h"
 
 #include <QAction>
+#include <QMenu>
 
 namespace OpenCOR {
 namespace Core {
@@ -50,7 +51,7 @@ void CorePlugin::initialize(QMainWindow *pMainWindow)
 
     mEdit = newMenu(pMainWindow);
 
-    // Create our different Edit actions
+    // Create our different Edit actions and add them to our Edit menu
 
     mEditUndo = newAction(pMainWindow, false,
                           ":/oxygen/actions/edit-undo.png");
@@ -73,6 +74,21 @@ void CorePlugin::initialize(QMainWindow *pMainWindow)
     mEditReplace  = newAction(pMainWindow, false);
 
     mEditSelectAll = newAction(pMainWindow, false);
+
+    mEdit->addAction(mEditUndo);
+    mEdit->addAction(mEditRedo);
+    mEdit->addSeparator();
+    mEdit->addAction(mEditCut);
+    mEdit->addAction(mEditCopy);
+    mEdit->addAction(mEditPaste);
+    mEdit->addAction(mEditDelete);
+    mEdit->addSeparator();
+    mEdit->addAction(mEditFind);
+    mEdit->addAction(mEditFindNext);
+    mEdit->addAction(mEditPrevious);
+    mEdit->addAction(mEditReplace);
+    mEdit->addSeparator();
+    mEdit->addAction(mEditSelectAll);
 
     // Create our central widget
 
@@ -97,22 +113,6 @@ void CorePlugin::initialize(QMainWindow *pMainWindow)
     guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File);
 
     guiSettingsCorePlugin->addMenu(GuiSettingsCoreMenu::View, mEdit);
-
-    guiSettingsCorePlugin->addAction(mEdit, mEditUndo);
-    guiSettingsCorePlugin->addAction(mEdit, mEditRedo);
-    guiSettingsCorePlugin->addAction(mEdit);
-    guiSettingsCorePlugin->addAction(mEdit, mEditCut);
-    guiSettingsCorePlugin->addAction(mEdit, mEditCopy);
-    guiSettingsCorePlugin->addAction(mEdit, mEditPaste);
-    guiSettingsCorePlugin->addAction(mEdit, mEditDelete);
-    guiSettingsCorePlugin->addAction(mEdit);
-    guiSettingsCorePlugin->addAction(mEdit, mEditFind);
-    guiSettingsCorePlugin->addAction(mEdit, mEditFindNext);
-    guiSettingsCorePlugin->addAction(mEdit, mEditPrevious);
-    guiSettingsCorePlugin->addAction(mEdit, mEditReplace);
-    guiSettingsCorePlugin->addAction(mEdit);
-    guiSettingsCorePlugin->addAction(mEdit, mEditSelectAll);
-    guiSettingsCorePlugin->addAction(mEdit);
 }
 
 void CorePlugin::finalize()

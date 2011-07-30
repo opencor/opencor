@@ -34,21 +34,17 @@ class GuiSettingsCoreAction
 public:
     enum GuiSettingsCoreActionType
     {
-        Undefined,
         File
     };
 
     explicit GuiSettingsCoreAction(const GuiSettingsCoreActionType &pType,
                                    QAction *pAction);
-    explicit GuiSettingsCoreAction(QMenu *pMenu, QAction *pAction);
 
     GuiSettingsCoreActionType type() const;
-    QMenu *menu() const;
     QAction *action() const;
 
 private:
     GuiSettingsCoreActionType mType;
-    QMenu *mMenu;
     QAction *mAction;
 };
 

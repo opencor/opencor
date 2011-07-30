@@ -30,14 +30,6 @@ QMenu * GuiSettingsCoreMenu::menu() const
 GuiSettingsCoreAction::GuiSettingsCoreAction(const GuiSettingsCoreActionType &pType,
                                              QAction *pAction) :
     mType(pType),
-    mMenu(0),
-    mAction(pAction)
-{
-}
-
-GuiSettingsCoreAction::GuiSettingsCoreAction(QMenu *pMenu, QAction *pAction) :
-    mType(Undefined),
-    mMenu(pMenu),
     mAction(pAction)
 {
 }
@@ -47,13 +39,6 @@ GuiSettingsCoreAction::GuiSettingsCoreActionType GuiSettingsCoreAction::type() c
     // Return the action's type
 
     return mType;
-}
-
-QMenu * GuiSettingsCoreAction::menu() const
-{
-    // Return the action's menu owner
-
-    return mMenu;
 }
 
 QAction * GuiSettingsCoreAction::action() const
@@ -82,13 +67,6 @@ void GuiSettingsCorePlugin::addAction(const GuiSettingsCoreAction::GuiSettingsCo
     // Add a new action to our list
 
     mActions << GuiSettingsCoreAction(pType, pAction);
-}
-
-void GuiSettingsCorePlugin::addAction(QMenu *pMenu, QAction *pAction)
-{
-    // Add a new action to our list
-
-    mActions << GuiSettingsCoreAction(pMenu, pAction);
 }
 
 QList<GuiSettingsCoreMenu> GuiSettingsCorePlugin::menus() const
