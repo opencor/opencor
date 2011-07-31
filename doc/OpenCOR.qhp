@@ -7,6 +7,7 @@
             <file>3rdparty/googleCodePrettify/prettify.css</file>
             <file>3rdparty/googleCodePrettify/prettify.js</file>
 
+            <file>res/common.css</file>
             <file>user/res/stylesheet.css</file>
 
             <file>user/authors.html</file>

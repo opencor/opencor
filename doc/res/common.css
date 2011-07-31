@@ -1,0 +1,56 @@
+body {
+    font-family: arial, sans-serif;
+    font-size: 10pt;
+}
+
+a {
+    color: rgba(103, 103, 103, 1);
+    text-decoration: none;
+}
+
+a:visited {
+    color: rgba(103, 103, 103, 1);
+}
+
+a:hover {
+    margin: -1px;
+    border: 1px dotted rgba(103, 103, 103, 0.49);
+    background-color: rgba(103, 103, 103, 0.07);
+    color: rgba(103, 103, 103, 1);
+}
+
+h1 {
+    margin: -3px -3px 13px -3px;
+    padding: 3px 3px 3px 3px;
+    background: rgba(103, 103, 103, 1);
+    color: rgba(255, 255, 255, 1);
+    font-size: 15pt;
+    font-weight: bold;
+}
+
+h2 {
+    color: rgba(103, 103, 103, 1);
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+li {
+    list-style-type: square;
+}
+
+pre {
+    margin: 3px 13px 3px 13px;
+    border: 1px dashed rgba(103, 103, 103, 0.49);
+    padding: 3px;
+    background: rgba(103, 103, 103, 0.07);
+    white-space: pre-wrap;
+}
+
+div.copyright {
+    margin: 13px -3px -3px -3px;
+    background: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 9pt;
+    font-weight: bold;
+    text-align: center;
+}
