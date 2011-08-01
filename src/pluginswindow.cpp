@@ -58,6 +58,13 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     mUi->setupUi(this);
 
+    // Hide the details widget since one of the categories gets selected at the
+    // beginning
+    // Note: this gets hidden as part of updatePluginInfo, but it may not be
+    //       triggered fast enough (e.g. the case on Linux), so...
+
+    mUi->detailsWidget->setVisible(false);
+
     // Update the note label
 
     mUi->noteLabel->setText(mUi->noteLabel->text().arg(qApp->applicationName()));
