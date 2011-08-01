@@ -33,8 +33,16 @@ void PluginDelegate::paint(QPainter *pPainter,
 
     initStyleOption(&option, pIndex);
 
-    if (!pluginItem->isCheckable())
-        option.state &= ~QStyle::State_Enabled;
+    if (pluginItem->parent()) {
+        // This is a plugin item, so check whether it should be enabled
+
+        if (!pluginItem->isCheckable())
+            option.state &= ~QStyle::State_Enabled;
+    } else {
+        // This is not a plugin item, but a category item, so make its text bold
+
+        option.font.setBold(true);
+    }
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
 }
@@ -64,11 +72,20 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mUi->treeView->setModel(mDataModel);
     mUi->treeView->setItemDelegate(mPluginDelegate);
 
+    // Prevent the categories from being collapsable
+
+    mUi->treeView->setRootIsDecorated(false);
+    mUi->treeView->setExpandsOnDoubleClick(false);
+
     // Populate the data model
 
 QStandardItem *groupItem = new QStandardItem("General");
 
 mDataModel->invisibleRootItem()->appendRow(groupItem);
+
+QStandardItem *otherItem = new QStandardItem("Other");
+
+mDataModel->invisibleRootItem()->appendRow(otherItem);
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?
@@ -104,7 +121,9 @@ mDataModel->invisibleRootItem()->appendRow(groupItem);
         // Add the plugin to our data model
 
 //        mDataModel->invisibleRootItem()->appendRow(pluginItem);
+        if (plugin->name() == "Core")
 groupItem->appendRow(pluginItem);
+        else otherItem->appendRow(pluginItem);
     }
 
     // Make sure that the loading state of all the plugins is right, including
@@ -179,17 +198,22 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     QStandardItem *pluginItem = mDataModel->itemFromIndex(pNewIndex);
 
-    if (!pluginItem->parent()) {
-        // This is not a plugin item, but a group item, so hide it and leave...
-
-        mUi->detailsWidget->setVisible(false);
-
-        return;
-    } else {
+    if (pluginItem->parent()) {
         // This is a plugin item, so make sure that the details widget is
         // visible
 
         mUi->detailsWidget->setVisible(true);
+        mUi->categoryValue->setVisible(false);
+    } else {
+        // This is not a plugin item, but a category item, so hide it and
+        // leave...
+
+mUi->categoryValue->setText("Some description of sorts for the selected category...");
+
+        mUi->categoryValue->setVisible(true);
+        mUi->detailsWidget->setVisible(false);
+
+        return;
     }
 
     // Update the information view with the plugin's information
