@@ -42,6 +42,17 @@ public:
         Gui
     };
 
+    enum PluginCategory
+    {
+        Application,
+        Api,
+        Organisation,
+        Editing,
+        Simulation,
+        Analysis,
+        ThirdParty
+    };
+
     explicit PluginInfo(const PluginInterface::Version &pInterfaceVersion = PluginInterface::Undefined,
                         const PluginType &pType = Undefined,
                         const bool &pManageable = false,

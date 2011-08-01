@@ -2,6 +2,16 @@
 
 namespace OpenCOR {
 
+void PluginInterface::initialize()
+{
+    // Nothing to do by default...
+}
+
+void PluginInterface::finalize()
+{
+    // Nothing to do by default...
+}
+
 PluginInfo::PluginInfo(const PluginInterface::Version &pInterfaceVersion,
                        const PluginType &pType,
                        const bool &pManageable,
@@ -70,16 +80,6 @@ QString PluginInfo::description(const QString &pLocale) const
 
         return res.isEmpty()?mDescriptions.begin().value():res;
     }
-}
-
-void PluginInterface::initialize()
-{
-    // Nothing to do by default...
-}
-
-void PluginInterface::finalize()
-{
-    // Nothing to do by default...
 }
 
 }

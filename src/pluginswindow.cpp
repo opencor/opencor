@@ -84,7 +84,25 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mUi->treeView->setRootIsDecorated(false);
     mUi->treeView->setExpandsOnDoubleClick(false);
 
-    // Populate the data model
+    // Populate the data model with our different categories of plugins
+
+    QStandardItem *applicationItem  = new QStandardItem(qApp->applicationName());
+    QStandardItem *apiItem          = new QStandardItem(tr("API"));
+    QStandardItem *organisationItem = new QStandardItem(tr("Organisation"));
+    QStandardItem *editingItem      = new QStandardItem(tr("Editing"));
+    QStandardItem *simulationItem   = new QStandardItem(tr("Simulation"));
+    QStandardItem *analysisItem     = new QStandardItem(tr("Analysis"));
+    QStandardItem *thirdPartyItem   = new QStandardItem(tr("Third-party"));
+
+    mDataModel->invisibleRootItem()->appendRow(applicationItem);
+    mDataModel->invisibleRootItem()->appendRow(apiItem);
+    mDataModel->invisibleRootItem()->appendRow(organisationItem);
+    mDataModel->invisibleRootItem()->appendRow(editingItem);
+    mDataModel->invisibleRootItem()->appendRow(simulationItem);
+    mDataModel->invisibleRootItem()->appendRow(analysisItem);
+    mDataModel->invisibleRootItem()->appendRow(thirdPartyItem);
+
+    // Populate the data model with our different plugins
 
 QStandardItem *groupItem = new QStandardItem("General");
 

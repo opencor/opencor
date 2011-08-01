@@ -254,6 +254,30 @@
         <source>%1 must be restarted for your changes to be effective. Are you sure that this is what you want?</source>
         <translation>%1 doit etre relancé pour que vos changements deviennent effectifs. Êtes-vous sûr que c&apos;est ce que vous voulez ?</translation>
     </message>
+    <message>
+        <source>API</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Organisation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Editing</source>
+        <translation>Édition</translation>
+    </message>
+    <message>
+        <source>Simulation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation>Analyse</translation>
+    </message>
+    <message>
+        <source>Third-party</source>
+        <translation>Externe</translation>
+    </message>
 </context>
 <context>
     <name>PluginsWindow</name>
