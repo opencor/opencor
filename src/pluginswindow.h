@@ -1,6 +1,8 @@
 #ifndef PLUGINSWINDOW_H
 #define PLUGINSWINDOW_H
 
+#include "plugininterface.h"
+
 #include <QDialog>
 #include <QStyledItemDelegate>
 #include <QStandardItemModel>
@@ -53,6 +55,11 @@ private:
     MainWindow *mMainWindow;
 
     QMap<QString, bool> mInitialLoadingStates;
+
+    QMap<PluginInfo::PluginCategory, QStandardItem *> mPluginCategories;
+
+    void newPluginCategory(const PluginInfo::PluginCategory &pCategory,
+                           const QString &pName);
 
 private slots:
     void on_buttonBox_accepted();

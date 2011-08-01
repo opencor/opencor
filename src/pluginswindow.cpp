@@ -39,7 +39,13 @@ void PluginDelegate::paint(QPainter *pPainter,
         if (!pluginItem->isCheckable())
             option.state &= ~QStyle::State_Enabled;
     } else {
-        // This is not a plugin item, but a category item, so make its text bold
+        // This is not a plugin item, but a category item, so prevent it from
+        // being hoverable. Otherwise, show the category item enabled since it's
+        // actually disabled (so we can't select it), yet we want to see as if
+        // it was enabled. Finally, make the category item's text bold
+
+        option.state &= ~QStyle::State_MouseOver;
+        option.state |=  QStyle::State_Enabled;
 
         option.font.setBold(true);
     }
@@ -57,13 +63,6 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // Set up the UI
 
     mUi->setupUi(this);
-
-    // Hide the details widget since one of the categories gets selected at the
-    // beginning
-    // Note: this gets hidden as part of updatePluginInfo, but it may not be
-    //       triggered fast enough (e.g. the case on Linux), so...
-
-    mUi->detailsWidget->setVisible(false);
 
     // Update the note label
 
@@ -86,31 +85,15 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     // Populate the data model with our different categories of plugins
 
-    QStandardItem *applicationItem  = new QStandardItem(qApp->applicationName());
-    QStandardItem *apiItem          = new QStandardItem(tr("API"));
-    QStandardItem *organisationItem = new QStandardItem(tr("Organisation"));
-    QStandardItem *editingItem      = new QStandardItem(tr("Editing"));
-    QStandardItem *simulationItem   = new QStandardItem(tr("Simulation"));
-    QStandardItem *analysisItem     = new QStandardItem(tr("Analysis"));
-    QStandardItem *thirdPartyItem   = new QStandardItem(tr("Third-party"));
-
-    mDataModel->invisibleRootItem()->appendRow(applicationItem);
-    mDataModel->invisibleRootItem()->appendRow(apiItem);
-    mDataModel->invisibleRootItem()->appendRow(organisationItem);
-    mDataModel->invisibleRootItem()->appendRow(editingItem);
-    mDataModel->invisibleRootItem()->appendRow(simulationItem);
-    mDataModel->invisibleRootItem()->appendRow(analysisItem);
-    mDataModel->invisibleRootItem()->appendRow(thirdPartyItem);
+    newPluginCategory(PluginInfo::Application, qApp->applicationName());
+    newPluginCategory(PluginInfo::Api, tr("API"));
+    newPluginCategory(PluginInfo::Organisation, tr("Organisation"));
+    newPluginCategory(PluginInfo::Editing, tr("Editing"));
+    newPluginCategory(PluginInfo::Simulation, tr("Simulation"));
+    newPluginCategory(PluginInfo::Analysis, tr("Analysis"));
+    newPluginCategory(PluginInfo::ThirdParty, tr("Third-party"));
 
     // Populate the data model with our different plugins
-
-QStandardItem *groupItem = new QStandardItem("General");
-
-mDataModel->invisibleRootItem()->appendRow(groupItem);
-
-QStandardItem *otherItem = new QStandardItem("Other");
-
-mDataModel->invisibleRootItem()->appendRow(otherItem);
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?
@@ -143,23 +126,23 @@ mDataModel->invisibleRootItem()->appendRow(otherItem);
             mUnmanageablePlugins << pluginItem;
         }
 
-        // Add the plugin to our data model
+        // Add the plugin to the right category
 
-//        mDataModel->invisibleRootItem()->appendRow(pluginItem);
-        if (plugin->name() == "Core")
-groupItem->appendRow(pluginItem);
-        else otherItem->appendRow(pluginItem);
+        mPluginCategories.value(plugin->info().category())->appendRow(pluginItem);
     }
+
+    // Remove any category which doesn't have any plugin
+
+    foreach (QStandardItem *categoryItem, mPluginCategories)
+        if (!categoryItem->hasChildren())
+            for (int i = 0; i < mDataModel->invisibleRootItem()->rowCount(); ++i)
+                if (mDataModel->invisibleRootItem()->child(i) == categoryItem)
+                    mDataModel->invisibleRootItem()->removeRow(i);
 
     // Make sure that the loading state of all the plugins is right, including
     // that of the plugins which the user cannot manage
 
     updatePluginsLoadingState(0, true);
-
-    // Select the first plugin
-
-    mUi->treeView->selectionModel()->select(mDataModel->index(0, 0),
-                                            QItemSelectionModel::Select);
 
     // Expand the whole tree view and make sure that the it only takes as much
     // width as necessary
@@ -178,6 +161,11 @@ groupItem->appendRow(pluginItem);
     // Make, through the note label, sure that the window has a minimum width
 
     mUi->noteLabel->setMinimumWidth(2.5*mUi->treeView->minimumWidth());
+
+    // Select the first plugin
+
+    mUi->treeView->selectionModel()->select(mDataModel->invisibleRootItem()->child(0)->child(0)->index(),
+                                            QItemSelectionModel::Select);
 
     // Connection to handle a plugin's information
 
@@ -228,14 +216,10 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
         // visible
 
         mUi->detailsWidget->setVisible(true);
-        mUi->categoryValue->setVisible(false);
     } else {
         // This is not a plugin item, but a category item, so hide it and
         // leave...
 
-mUi->categoryValue->setText("Some description of sorts for the selected category...");
-
-        mUi->categoryValue->setVisible(true);
         mUi->detailsWidget->setVisible(false);
 
         return;
@@ -456,6 +440,22 @@ void PluginsWindow::apply()
 
         mMainWindow->restart(true);
     }
+}
+
+void PluginsWindow::newPluginCategory(const PluginInfo::PluginCategory &pCategory,
+                                      const QString &pName)
+{
+    // Create the category item, disable it (but it will be seen as enabled, we
+    // just don't want to allow the user to select it), add it to our data model
+    // and then to our list of plugin categories
+
+    QStandardItem *categoryItem = new QStandardItem(pName);
+
+    categoryItem->setEnabled(false);
+
+    mDataModel->invisibleRootItem()->appendRow(categoryItem);
+
+    mPluginCategories.insert(pCategory, categoryItem);
 }
 
 }
