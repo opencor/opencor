@@ -61,10 +61,14 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mDataModel = new QStandardItemModel;
     mPluginDelegate = new PluginDelegate(mDataModel);
 
-    mUi->listView->setModel(mDataModel);
-    mUi->listView->setItemDelegate(mPluginDelegate);
+    mUi->treeView->setModel(mDataModel);
+    mUi->treeView->setItemDelegate(mPluginDelegate);
 
     // Populate the data model
+
+QStandardItem *groupItem = new QStandardItem("General");
+
+mDataModel->invisibleRootItem()->appendRow(groupItem);
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?
@@ -99,7 +103,8 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
         // Add the plugin to our data model
 
-        mDataModel->invisibleRootItem()->appendRow(pluginItem);
+//        mDataModel->invisibleRootItem()->appendRow(pluginItem);
+groupItem->appendRow(pluginItem);
     }
 
     // Make sure that the loading state of all the plugins is right, including
@@ -109,26 +114,30 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     // Select the first plugin
 
-    mUi->listView->selectionModel()->select(mDataModel->index(0, 0),
+    mUi->treeView->selectionModel()->select(mDataModel->index(0, 0),
                                             QItemSelectionModel::Select);
 
-    // Make sure that the list view only takes as much width as necessary
+    // Expand the whole tree view and make sure that the it only takes as much
+    // width as necessary
     // Note: for some reasons (maybe because we have check boxes?), the
     //       retrieved column size gives us a width that is slightly too small
     //       and therefore requires a horizontal scroll bar, hence we add 15% to
-    //       it (the extra 15% seems to be enough to even account for a big
+    //       it (the extra 15% seems to be enough even to even account for a big
     //       number of plugins which would then require a vertical scroll bar)
 
-    mUi->listView->setMinimumWidth(1.15*mUi->listView->sizeHintForColumn(0));
-    mUi->listView->setMaximumWidth(mUi->listView->minimumWidth());
+    mUi->treeView->expandAll();
+    mUi->treeView->resizeColumnToContents(0);
+
+    mUi->treeView->setMinimumWidth(1.15*mUi->treeView->columnWidth(0));
+    mUi->treeView->setMaximumWidth(mUi->treeView->minimumWidth());
 
     // Make, through the note label, sure that the window has a minimum width
 
-    mUi->noteLabel->setMinimumWidth(2.75*mUi->listView->minimumWidth());
+    mUi->noteLabel->setMinimumWidth(2.5*mUi->treeView->minimumWidth());
 
     // Connection to handle a plugin's information
 
-    connect(mUi->listView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+    connect(mUi->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updatePluginInfo(const QModelIndex &, const QModelIndex &)));
 
     // Connection to handle the activation of a link in the description
@@ -165,9 +174,27 @@ void PluginsWindow::retranslateUi()
 void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
                                      const QModelIndex &) const
 {
+    // Check whether we are really dealing with a plugin item or whether we are
+    // dealing with a group item
+
+    QStandardItem *pluginItem = mDataModel->itemFromIndex(pNewIndex);
+
+    if (!pluginItem->parent()) {
+        // This is not a plugin item, but a group item, so hide it and leave...
+
+        mUi->detailsWidget->setVisible(false);
+
+        return;
+    } else {
+        // This is a plugin item, so make sure that the details widget is
+        // visible
+
+        mUi->detailsWidget->setVisible(true);
+    }
+
     // Update the information view with the plugin's information
 
-    QString pluginName = mDataModel->itemFromIndex(pNewIndex)->text();
+    QString pluginName = pluginItem->text();
     Plugin *plugin = mPluginManager->plugin(pluginName);
     PluginInfo pluginInfo = plugin->info();
 
@@ -233,7 +260,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
     // Prevent the list view from being updated, since we may end up changing
     // quite a bit of its visual contents
 
-    mUi->listView->setUpdatesEnabled(false);
+    mUi->treeView->setUpdatesEnabled(false);
 
     // Check whether we came here as a result of checking a plugin and, if so,
     // then make sure that all of that plugin's dependencies are also checked
@@ -302,7 +329,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
 
     // Re-enable the updating of the list view
 
-    mUi->listView->setUpdatesEnabled(true);
+    mUi->treeView->setUpdatesEnabled(true);
 
     // Check whether the OK and apply buttons should be enabled
 
