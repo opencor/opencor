@@ -34,9 +34,11 @@ void PluginDelegate::paint(QPainter *pPainter,
     initStyleOption(&option, pIndex);
 
     if (pluginItem->parent()) {
-        // This is a plugin item, so check whether it should be enabled
+        // This is a plugin item, so check whether it should look enabled
 
         if (!pluginItem->isCheckable())
+            // No, it shouldn't...
+
             option.state &= ~QStyle::State_Enabled;
     } else {
         // This is not a plugin item, but a category item, so prevent it from

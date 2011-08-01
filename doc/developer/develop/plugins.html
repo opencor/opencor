@@ -46,19 +46,20 @@
         </h2>
 
         <p>
-            Every plugin must provide the following information:
+            Every plugin must provide the following information (which can also be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h">[OpenCOR]/src/plugins/plugininterface.h</a>):
         </p>
 
         <ul>
-            <li><strong>Interface version:</strong> OpenCOR may, in the future, use a different interface to communicate with plugins. It must therefore ensure that a plugin uses the same interface before loading it.</li>
+            <li><strong>Interface version:</strong> OpenCOR may, in the future, use a different interface to communicate with plugins. It must therefore ensure that a plugin uses the same interface before loading it. The current version used by OpenCOR can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/pluginmanager.cpp">[OpenCOR]/src/plugins/pluginmanager.cpp</a> (look for the initialisation of <code>mInterfaceVersion</code> in <code>PluginManager</code>'s constructor).</li>
             <li><strong>Type:</strong> a plugin can be used for the <a href="http://en.wikipedia.org/wiki/Console_application">console</a> version of OpenCOR and/or its <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a> version, and the type of the plugin is used to determine whether the plugin can be loaded.</li>
-            <li><strong>Manageable:</strong> specify whether a user can change the loading state of a plugin.</li>
+            <li><strong>Category:</strong> plugins are grouped in different categories. These are only meant to improve user experience and have therefore no effects on the plugin itself.</li>
+            <li><strong>Manageable:</strong> specify whether a user can change the loading state of a plugin. As a rule of thumbs, any plugin required by another plugin should not be manageable.</li>
             <li><strong>Dependencies:</strong> some plugins depend on other plugins to work. OpenCOR must therefore know about them, so that it can make sure that they also get loaded.</li>
             <li><strong>Description:</strong> a short description of the plugin.</li>
         </ul>
 
         <p>
-            This information is, for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc/Core">Core plugin</a>, provided in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.h</code></a> through the <code>PLUGININFO_FUNC CorePluginInfo()</code> function. As can be seen, the name of the function is related to the name of the plugin and is <code>&lt;PluginName&gt;PluginInfo</code>. OpenCOR uses the name of the plugin file to determine the name of that function. This ensures that only one copy of a given plugin is loaded. Otherwise, support for internationalisation would normally be done using Qt's <code>tr()</code> function, but it cannot be applied in this particular case. So, instead, we use a <code>QMap</code> approach, as can be seen from <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.cpp</code></a>.
+            The above information is, for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc/Core">Core plugin</a>, provided in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.h</code></a> through the <code>PLUGININFO_FUNC CorePluginInfo()</code> function. As can be seen, the name of the function is related to the name of the plugin and is <code>&lt;PluginName&gt;PluginInfo</code>. OpenCOR uses the name of the plugin file to determine the name of that function. This ensures that only one copy of a given plugin is loaded. Otherwise, support for internationalisation would normally be done using Qt's <code>tr()</code> function, but it cannot be applied in this particular case. So, instead, we use a <code>QMap</code> approach, as can be seen from <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.cpp</code></a>.
         </p>
 
         <h2>
