@@ -166,19 +166,23 @@ SET(PLUGINS
     editing/CoreEditing
     editing/CoreCellMLEditing
 
+    simulation/CoreSimulation
+
     3rdparty/QScintilla
     3rdparty/QtMmlWidget
 
     # Build the remaining plugins
-
-    editing/CellMLXMLView
-    editing/Viewer
 
     application/Help
 
     organisation/CellMLModelRepository
     organisation/FileBrowser
     organisation/FileOrganiser
+
+    editing/CellMLXMLView
+    editing/Viewer
+
+    simulation/CellMLSimulation
 )
 
 FOREACH(PLUGIN ${PLUGINS})
