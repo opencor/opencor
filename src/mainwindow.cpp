@@ -269,10 +269,10 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
         switch (actionSettings.type()) {
         default:   // File
             if(actionSettings.action())
-                mUi->menuFile->insertAction(mUi->actionExit,
+                mUi->menuFile->insertAction(mUi->menuFile->actions().first(),
                                             actionSettings.action());
             else
-                mUi->menuFile->insertSeparator(mUi->actionExit);
+                mUi->menuFile->insertSeparator(mUi->menuFile->actions().first());
         }
     }
 }

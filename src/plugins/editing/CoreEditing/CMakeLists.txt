@@ -8,10 +8,12 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(CoreEditing
     SOURCES
+        ../../guiinterface.cpp
         ../../plugininterface.cpp
 
         src/coreeditingplugin.cpp
     HEADERS
+        ../../guiinterface.h
         ../../plugininterface.h
     HEADERS_MOC
         src/coreeditingplugin.h
