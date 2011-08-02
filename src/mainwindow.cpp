@@ -225,72 +225,55 @@ static const QString HelpPlugin = "Help";
 
 void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
 {
-    if (!pGuiInterface->pluginName().compare(CorePlugin)) {
-        // We are dealing with our special Core plugin
+    // Check whether we are dealing with our special Help plugin
 
-        if (pGuiInterface->data()) {
-            // Our special Core plugin has its data set, so we can make use of
-            // it
+    if (   !pGuiInterface->pluginName().compare(HelpPlugin)
+        && pGuiInterface->data()) {
+        // We are dealing with our special Help plugin and its data is set, so
+        // we can make use of it
 
-            GuiSettingsCorePlugin *guiSettingsCorePlugin = (GuiSettingsCorePlugin *) pGuiInterface->data();
+        QAction *helpAction = ((GuiSettingsHelpPlugin *) pGuiInterface->data())->helpAction();
 
-            // Add the menus to our menu bar
+        // Add the action to our help menu
 
-            foreach (const GuiSettingsCoreMenu &coreMenu,
-                     guiSettingsCorePlugin->menus()) {
-                // Insert the menu in the right place
+        mUi->menuHelp->insertAction(mUi->actionHomePage, helpAction);
+        mUi->menuHelp->insertSeparator(mUi->actionHomePage);
 
-                switch (coreMenu.type()) {
-                default:   // View
-                    mUi->menuBar->insertAction(mUi->menuView->menuAction(),
-                                               coreMenu.menu()->menuAction());
-                }
-            }
+        // As well as to our help tool bar
 
-            // Add the actions/separators to our different menus
+        mUi->helpToolbar->insertAction(mUi->actionHomePage, helpAction);
+        mUi->helpToolbar->insertSeparator(mUi->actionHomePage);
+    }
 
-            foreach (const GuiSettingsCoreAction &coreAction,
-                     guiSettingsCorePlugin->actions()) {
-                // Add the action/separator to the right menu
+    // Deal with the menus and actions that the plugin may want us to add
 
-                switch (coreAction.type()) {
-                default:   // File
-                    if(coreAction.action())
-                        mUi->menuFile->insertAction(mUi->actionExit,
-                                                    coreAction.action());
-                    else
-                        mUi->menuFile->insertSeparator(mUi->actionExit);
-                }
-            }
+    GuiSettings guiSettings = pGuiInterface->settings();
+
+    // Add the menus to our menu bar
+
+    foreach (const GuiSettingsMenu &menuSettings, guiSettings.menus()) {
+        // Insert the menu in the right place
+
+        switch (menuSettings.type()) {
+        default:   // View
+            mUi->menuBar->insertAction(mUi->menuView->menuAction(),
+                                       menuSettings.menu()->menuAction());
         }
-    } else if (!pGuiInterface->pluginName().compare(HelpPlugin)) {
-        // We are dealing with our special Help plugin
+    }
 
-        if (pGuiInterface->data()) {
-            // Our special Help plugin has its data set, so we can make use of
-            // it
+    // Add the actions/separators to our different menus
 
-            QAction *helpAction = ((GuiSettingsHelpPlugin *) pGuiInterface->data())->helpAction();
+    foreach (const GuiSettingsAction &actionSettings, guiSettings.actions()) {
+        // Add the action/separator to the right menu
 
-            // Add the action to our help menu
-
-            mUi->menuHelp->insertAction(mUi->actionHomePage, helpAction);
-            mUi->menuHelp->insertSeparator(mUi->actionHomePage);
-
-            // As well as to our help tool bar
-
-            mUi->helpToolbar->insertAction(mUi->actionHomePage, helpAction);
-            mUi->helpToolbar->insertSeparator(mUi->actionHomePage);
+        switch (actionSettings.type()) {
+        default:   // File
+            if(actionSettings.action())
+                mUi->menuFile->insertAction(mUi->actionExit,
+                                            actionSettings.action());
+            else
+                mUi->menuFile->insertSeparator(mUi->actionExit);
         }
-    } else {
-        // Neither the Core nor the Help plugin, so handle the plugin's actions
-
-        foreach (const GuiSettingsAction &guiSettingsAction,
-                 pGuiInterface->settings().actions())
-            // Handle the action depending on its type
-
-            switch (guiSettingsAction.type()) {
-            }
     }
 }
 

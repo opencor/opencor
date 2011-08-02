@@ -10,64 +10,14 @@
 
 namespace OpenCOR {
 
-class GuiSettingsCoreMenu
-{
-public:
-    enum GuiSettingsCoreMenuType
-    {
-        View
-    };
-
-    explicit GuiSettingsCoreMenu(const GuiSettingsCoreMenuType &pType,
-                                 QMenu *pMenu);
-
-    GuiSettingsCoreMenuType type() const;
-    QMenu *menu() const;
-
-private:
-    GuiSettingsCoreMenuType mType;
-    QMenu *mMenu;
-};
-
-class GuiSettingsCoreAction
-{
-public:
-    enum GuiSettingsCoreActionType
-    {
-        File
-    };
-
-    explicit GuiSettingsCoreAction(const GuiSettingsCoreActionType &pType,
-                                   QAction *pAction);
-
-    GuiSettingsCoreActionType type() const;
-    QAction *action() const;
-
-private:
-    GuiSettingsCoreActionType mType;
-    QAction *mAction;
-};
-
 class GuiSettingsCorePlugin
 {
 public:
     explicit GuiSettingsCorePlugin(Core::CentralWidget *pCentralWidget);
 
-    void addMenu(const GuiSettingsCoreMenu::GuiSettingsCoreMenuType &pType,
-                 QMenu *pMenu);
-
-    void addAction(const GuiSettingsCoreAction::GuiSettingsCoreActionType &pType,
-                   QAction *pAction = 0);
-
-    QList<GuiSettingsCoreMenu> menus() const;
-    QList<GuiSettingsCoreAction> actions() const;
-
     Core::CentralWidget *centralWidget() const;
 
 private:
-    QList<GuiSettingsCoreMenu> mMenus;
-    QList<GuiSettingsCoreAction> mActions;
-
     Core::CentralWidget *mCentralWidget;
 };
 
@@ -85,11 +35,31 @@ private:
     Core::DockWidget *mHelpWindow;
 };
 
+class GuiSettingsMenu
+{
+public:
+    enum GuiSettingsMenuType
+    {
+        View
+    };
+
+    explicit GuiSettingsMenu(const GuiSettingsMenuType &pType,
+                             QMenu *pMenu);
+
+    GuiSettingsMenuType type() const;
+    QMenu *menu() const;
+
+private:
+    GuiSettingsMenuType mType;
+    QMenu *mMenu;
+};
+
 class GuiSettingsAction
 {
 public:
     enum GuiSettingsActionType
     {
+        File
     };
 
     explicit GuiSettingsAction(const GuiSettingsActionType &pType,
@@ -120,16 +90,19 @@ private:
 class GuiSettings
 {
 public:
+    void addMenu(const GuiSettingsMenu::GuiSettingsMenuType &pType,
+                 QMenu *pMenu);
     void addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
-                   QAction *pAction);
-
+                   QAction *pAction = 0);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow);
 
+    QList<GuiSettingsMenu> menus() const;
     QList<GuiSettingsAction> actions() const;
     QList<GuiSettingsWindow> windows() const;
 
 private:
+    QList<GuiSettingsMenu> mMenus;
     QList<GuiSettingsAction> mActions;
     QList<GuiSettingsWindow> mWindows;
 };

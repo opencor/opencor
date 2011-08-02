@@ -6,81 +6,9 @@
 
 namespace OpenCOR {
 
-GuiSettingsCoreMenu::GuiSettingsCoreMenu(const GuiSettingsCoreMenuType &pType,
-                                         QMenu *pMenu) :
-    mType(pType),
-    mMenu(pMenu)
-{
-}
-
-GuiSettingsCoreMenu::GuiSettingsCoreMenuType GuiSettingsCoreMenu::type() const
-{
-    // Return the menu's type
-
-    return mType;
-}
-
-QMenu * GuiSettingsCoreMenu::menu() const
-{
-    // Return the menu itsef
-
-    return mMenu;
-}
-
-GuiSettingsCoreAction::GuiSettingsCoreAction(const GuiSettingsCoreActionType &pType,
-                                             QAction *pAction) :
-    mType(pType),
-    mAction(pAction)
-{
-}
-
-GuiSettingsCoreAction::GuiSettingsCoreActionType GuiSettingsCoreAction::type() const
-{
-    // Return the action's type
-
-    return mType;
-}
-
-QAction * GuiSettingsCoreAction::action() const
-{
-    // Return the action itself
-
-    return mAction;
-}
-
 GuiSettingsCorePlugin::GuiSettingsCorePlugin(Core::CentralWidget *pCentralWidget) :
     mCentralWidget(pCentralWidget)
 {
-}
-
-void GuiSettingsCorePlugin::addMenu(const GuiSettingsCoreMenu::GuiSettingsCoreMenuType &pType,
-                                    QMenu *pMenu)
-{
-    // Add a new menu to our list
-
-    mMenus << GuiSettingsCoreMenu(pType, pMenu);
-}
-
-void GuiSettingsCorePlugin::addAction(const GuiSettingsCoreAction::GuiSettingsCoreActionType &pType,
-                                      QAction *pAction)
-{
-    // Add a new action to our list
-
-    mActions << GuiSettingsCoreAction(pType, pAction);
-}
-
-QList<GuiSettingsCoreMenu> GuiSettingsCorePlugin::menus() const
-{
-    // Return our menus
-
-    return mMenus;
-}
-
-QList<GuiSettingsCoreAction> GuiSettingsCorePlugin::actions() const
-{
-    // Return our actions
-
-    return mActions;
 }
 
 Core::CentralWidget * GuiSettingsCorePlugin::centralWidget() const
@@ -109,6 +37,27 @@ Core::DockWidget * GuiSettingsHelpPlugin::helpWindow() const
     // Return the help window
 
     return mHelpWindow;
+}
+
+GuiSettingsMenu::GuiSettingsMenu(const GuiSettingsMenuType &pType,
+                                 QMenu *pMenu) :
+    mType(pType),
+    mMenu(pMenu)
+{
+}
+
+GuiSettingsMenu::GuiSettingsMenuType GuiSettingsMenu::type() const
+{
+    // Return the menu's type
+
+    return mType;
+}
+
+QMenu * GuiSettingsMenu::menu() const
+{
+    // Return the menu itsef
+
+    return mMenu;
 }
 
 GuiSettingsAction::GuiSettingsAction(const GuiSettingsActionType &pType,
@@ -153,10 +102,19 @@ Core::DockWidget * GuiSettingsWindow::window() const
     return mWindow;
 }
 
+void GuiSettings::addMenu(const GuiSettingsMenu::GuiSettingsMenuType &pType,
+                          QMenu *pMenu)
+{
+    // Add a new menu to our list
+
+    mMenus << GuiSettingsMenu(pType, pMenu);
+}
+
 void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
                             QAction *pAction)
 {
     // Add a new action to our list
+    // Note: a null pAction means that we want to add a separator
 
     mActions << GuiSettingsAction(pType, pAction);
 }
@@ -167,6 +125,13 @@ void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
     // Add a new dock widget to our list
 
     mWindows << GuiSettingsWindow(pDefaultDockingArea, pWindow);
+}
+
+QList<GuiSettingsMenu> GuiSettings::menus() const
+{
+    // Return our menus
+
+    return mMenus;
 }
 
 QList<GuiSettingsAction> GuiSettings::actions() const

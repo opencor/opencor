@@ -101,19 +101,19 @@ void CorePlugin::initialize(QMainWindow *pMainWindow)
 
     mData = guiSettingsCorePlugin = new GuiSettingsCorePlugin(mCentralWidget);
 
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File, mFileOpen);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File, mFileSave);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File, mFileSaveAs);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File, mFileSaveAll);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File, mFileClose);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File, mFileCloseAll);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File, mFilePrint);
-    guiSettingsCorePlugin->addAction(GuiSettingsCoreAction::File);
+    mSettings.addAction(GuiSettingsAction::File, mFileOpen);
+    mSettings.addAction(GuiSettingsAction::File);
+    mSettings.addAction(GuiSettingsAction::File, mFileSave);
+    mSettings.addAction(GuiSettingsAction::File, mFileSaveAs);
+    mSettings.addAction(GuiSettingsAction::File, mFileSaveAll);
+    mSettings.addAction(GuiSettingsAction::File);
+    mSettings.addAction(GuiSettingsAction::File, mFileClose);
+    mSettings.addAction(GuiSettingsAction::File, mFileCloseAll);
+    mSettings.addAction(GuiSettingsAction::File);
+    mSettings.addAction(GuiSettingsAction::File, mFilePrint);
+    mSettings.addAction(GuiSettingsAction::File);
 
-    guiSettingsCorePlugin->addMenu(GuiSettingsCoreMenu::View, mEdit);
+    mSettings.addMenu(GuiSettingsMenu::View, mEdit);
 }
 
 void CorePlugin::finalize()
