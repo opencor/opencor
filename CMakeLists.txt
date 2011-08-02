@@ -157,6 +157,7 @@ ENDIF()
 
 SET(PLUGINS
     # Build the plugins which may be required by other plugins
+    # Note: the build order is important...
 
     application/Core
 
@@ -165,11 +166,10 @@ SET(PLUGINS
     editing/CoreEditing
     editing/CoreCellMLEditing
 
+    3rdparty/QScintilla
     3rdparty/QtMmlWidget
 
     # Build the remaining plugins
-
-    3rdparty/QScintilla
 
     editing/CellMLXMLView
     editing/Viewer
