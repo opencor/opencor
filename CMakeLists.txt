@@ -164,6 +164,8 @@ SET(PLUGINS
 
     # Build the remaining plugins
 
+    api/CellML
+
     3rdparty/QScintilla
 
     editing/Viewer
