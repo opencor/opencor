@@ -19,4 +19,7 @@ ADD_PLUGIN(CellMLXMLView
         src
     OPENCOR_DEPENDENCIES
         Core
+    QT_DEPENDENCIES
+        QtCore
+        QtGui
 )

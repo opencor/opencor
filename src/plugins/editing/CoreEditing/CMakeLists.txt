@@ -19,4 +19,7 @@ ADD_PLUGIN(CoreEditing
         src
     OPENCOR_DEPENDENCIES
         Core
+    QT_DEPENDENCIES
+        QtCore
+        QtGui
 )
