@@ -1,0 +1,22 @@
+PROJECT(CoreCellMLEditingPlugin)
+
+# Some in-house CMake functions/macros
+
+INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
+
+# Add the plugin
+
+ADD_PLUGIN(CoreCellMLEditing
+    SOURCES
+        ../../plugininterface.cpp
+
+        src/corecellmleditingplugin.cpp
+    HEADERS
+        ../../plugininterface.h
+    HEADERS_MOC
+        src/corecellmleditingplugin.h
+    PLUGIN_INCLUDE_DIRS
+        src
+    OPENCOR_DEPENDENCIES
+        Core
+)

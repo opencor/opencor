@@ -160,14 +160,18 @@ SET(PLUGINS
 
     application/Core
 
+    api/CellML
+
+    editing/CoreEditing
+    editing/CoreCellMLEditing
+
     3rdparty/QtMmlWidget
 
     # Build the remaining plugins
 
-    api/CellML
-
     3rdparty/QScintilla
 
+    editing/CellMLXMLView
     editing/Viewer
 
     application/Help
