@@ -115,10 +115,7 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
                 // We can't remove the rows so reset the items (i.e. the view
                 // is like a table)
 
-                QModelIndexList indexes = selection.indexes();
-
-                for (int i = 0; i < indexes.size(); ++i) {
-                    QModelIndex index = indexes.at(i);
+                foreach (const QModelIndex &index, selection.indexes()) {
                     QMap<int, QVariant> roles = model()->itemData(index);
 
                     for (QMap<int, QVariant>::Iterator iter = roles.begin();
