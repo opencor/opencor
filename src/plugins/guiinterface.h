@@ -58,7 +58,6 @@ public:
 
     void addAction(const GuiSettingsCoreAction::GuiSettingsCoreActionType &pType,
                    QAction *pAction = 0);
-    void addAction(QMenu *pMenu, QAction *pAction = 0);
 
     QList<GuiSettingsCoreMenu> menus() const;
     QList<GuiSettingsCoreAction> actions() const;
@@ -84,17 +83,6 @@ public:
 private:
     QAction *mHelpAction;
     Core::DockWidget *mHelpWindow;
-};
-
-class GuiSettingsCentralWidget
-{
-public:
-    explicit GuiSettingsCentralWidget(Core::CentralWidget *pCentralWidget);
-
-    Core::CentralWidget *centralWidget() const;
-
-private:
-    Core::CentralWidget *mCentralWidget;
 };
 
 class GuiSettingsAction
@@ -132,20 +120,16 @@ private:
 class GuiSettings
 {
 public:
-    void addCentralWidget(Core::CentralWidget *pCentralWidget);
-
     void addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
                    QAction *pAction);
 
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow);
 
-    QList<GuiSettingsCentralWidget> centralWidget() const;
     QList<GuiSettingsAction> actions() const;
     QList<GuiSettingsWindow> windows() const;
 
 private:
-    QList<GuiSettingsCentralWidget> mCentralWidget;
     QList<GuiSettingsAction> mActions;
     QList<GuiSettingsWindow> mWindows;
 };

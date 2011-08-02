@@ -111,18 +111,6 @@ Core::DockWidget * GuiSettingsHelpPlugin::helpWindow() const
     return mHelpWindow;
 }
 
-GuiSettingsCentralWidget::GuiSettingsCentralWidget(Core::CentralWidget *pCentralWidget) :
-    mCentralWidget(pCentralWidget)
-{
-}
-
-Core::CentralWidget * GuiSettingsCentralWidget::centralWidget() const
-{
-    // Return the central widget
-
-    return mCentralWidget;
-}
-
 GuiSettingsAction::GuiSettingsAction(const GuiSettingsActionType &pType,
                                      QAction *pAction) :
     mType(pType),
@@ -165,15 +153,6 @@ Core::DockWidget * GuiSettingsWindow::window() const
     return mWindow;
 }
 
-void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
-{
-    // Add the central widget
-    // Note: we can have only one central widget, so...
-
-    if (mCentralWidget.isEmpty())
-        mCentralWidget << GuiSettingsCentralWidget(pCentralWidget);
-}
-
 void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
                             QAction *pAction)
 {
@@ -188,13 +167,6 @@ void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
     // Add a new dock widget to our list
 
     mWindows << GuiSettingsWindow(pDefaultDockingArea, pWindow);
-}
-
-QList<GuiSettingsCentralWidget> GuiSettings::centralWidget() const
-{
-    // Return our central widget
-
-    return mCentralWidget;
 }
 
 QList<GuiSettingsAction> GuiSettings::actions() const
