@@ -12,7 +12,7 @@ PLUGININFO_FUNC CellMLPluginInfo()
 
     return PluginInfo(PluginInterface::V001, PluginInfo::General,
                       PluginInfo::Api, false,
-                      QStringList() << "Core",
+                      QStringList(),
                       descriptions);
 }
 

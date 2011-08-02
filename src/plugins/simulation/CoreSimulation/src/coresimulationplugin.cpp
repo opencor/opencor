@@ -12,7 +12,7 @@ PLUGININFO_FUNC CoreSimulationPluginInfo()
 
     return PluginInfo(PluginInterface::V001, PluginInfo::Gui,
                       PluginInfo::Simulation, false,
-                      QStringList() << "Core",
+                      QStringList(),
                       descriptions);
 }
 
