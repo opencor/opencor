@@ -158,7 +158,7 @@ ENDIF()
 SET(PLUGINS
     # Build the plugins which may be required by other plugins
 
-    misc/Core
+    application/Core
 
     3rdparty/QtMmlWidget
 
@@ -166,13 +166,13 @@ SET(PLUGINS
 
     3rdparty/QScintilla
 
-    edit/Viewer
+    editing/Viewer
 
-    misc/Help
+    application/Help
 
-    organise/CellMLModelRepository
-    organise/FileBrowser
-    organise/FileOrganiser
+    organisation/CellMLModelRepository
+    organisation/FileBrowser
+    organisation/FileOrganiser
 )
 
 FOREACH(PLUGIN ${PLUGINS})
