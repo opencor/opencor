@@ -97,18 +97,17 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
             const QItemSelection selection = selectionModel()->selection();
 
             if (!dragDropOverwriteMode()) {
-                for (QList<QItemSelectionRange>::const_iterator iter = selection.constBegin();
-                     iter != selection.constEnd(); ++iter) {
-                    QModelIndex parent = (*iter).parent();
+                foreach (const QItemSelectionRange &itemSelectionRange, selection) {
+                    QModelIndex parent = itemSelectionRange.parent();
 
-                    if ((*iter).left())
+                    if (itemSelectionRange.left())
                         continue;
 
-                    if ((*iter).right() != (model()->columnCount(parent)-1))
+                    if (itemSelectionRange.right() != (model()->columnCount(parent)-1))
                         continue;
 
-                    model()->removeRows((*iter).top(),
-                                        (*iter).bottom()-(*iter).top()+1,
+                    model()->removeRows(itemSelectionRange.top(),
+                                        itemSelectionRange.bottom()-itemSelectionRange.top()+1,
                                         parent);
                 }
             } else {

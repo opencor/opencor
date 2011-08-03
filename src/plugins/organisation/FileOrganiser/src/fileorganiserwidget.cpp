@@ -76,11 +76,10 @@ QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
 
         // Hierarchy to reach the various items
 
-        for (QModelIndexList::ConstIterator iter = pIndexes.begin();
-             iter != pIndexes.end(); ++iter)
+        foreach (const QModelIndex &index, pIndexes)
             // Hierarchy to reach the current item
 
-            encodeHierarchyData(*iter, stream);
+            encodeHierarchyData(index, stream);
     }
 
     // We are all done, so...
@@ -160,9 +159,8 @@ QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
     //       on to extract the name of the vavarious files the mime data
     //       contains
 
-    for (QList<QModelIndex>::const_iterator iter = pIndexes.begin();
-         iter != pIndexes.end(); ++iter) {
-        QString crtFilePath = filePath(*iter);
+    foreach (const QModelIndex &index, pIndexes) {
+        QString crtFilePath = filePath(index);
 
         if (!crtFilePath.isEmpty())
             urls << QUrl::fromLocalFile(crtFilePath);

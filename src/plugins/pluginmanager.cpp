@@ -108,16 +108,10 @@ QList<Plugin *> PluginManager::plugins(const bool &pOnlyLoadedPlugins) const
 
     QList<Plugin *> res;
 
-    QMap<QString, Plugin *>::const_iterator iter = mPlugins.begin();
-
-    while (iter != mPlugins.constEnd()) {
+    foreach (Plugin *plugin, mPlugins)
         if (   !pOnlyLoadedPlugins
-            || (   pOnlyLoadedPlugins
-                && (iter.value()->status() == Plugin::Loaded)))
-        res << iter.value();
-
-        ++iter;
-    }
+            || (pOnlyLoadedPlugins && (plugin->status() == Plugin::Loaded)))
+            res << plugin;
 
     return res;
 }
