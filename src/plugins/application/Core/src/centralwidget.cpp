@@ -31,15 +31,17 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mFileManager = new FileManager();
 
+    // By default, no mode is available
+
+    mModesEnabled.insert(Editing, false);
+    mModesEnabled.insert(Simulation, false);
+    mModesEnabled.insert(Analysis, false);
+
     // Create our modes tab bar
 
     mModes = new QTabBar(this);
 
     mModes->setShape(QTabBar::RoundedWest);
-
-    mModes->addTab("");   // Add the three tabs for our editing, simulation and
-    mModes->addTab("");   // analysis mode
-    mModes->addTab("");
 
     // Create our tab widget
 
@@ -59,10 +61,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mViews = new QTabBar(this);
 
     mViews->setShape(QTabBar::RoundedEast);
-
-    mViews->addTab("View #1");
-    mViews->addTab("View #2");
-    mViews->addTab("View #3");
 
     // Add the widgets to our horizontal layout
 
@@ -96,11 +94,9 @@ CentralWidget::~CentralWidget()
 
 void CentralWidget::retranslateUi()
 {
-    // Retranslate the modes tab bar
+    // Retranslate the modes tab bar by updating them
 
-    mModes->setTabText(0, tr("Editing"));
-    mModes->setTabText(1, tr("Simulation"));
-    mModes->setTabText(2, tr("Analysis"));
+    updateModes();
 }
 
 static const QString SettingsOpenedFiles = "OpenedFiles";
@@ -310,6 +306,17 @@ QString CentralWidget::activeFileName() const
         return QString();
 }
 
+void CentralWidget::setModeEnabled(const Mode &pMode, const bool &pEnabled)
+{
+    // Update the enabled state of the given mode
+
+    mModesEnabled.insert(pMode, pEnabled);
+
+    // Make sure that the GUI is aware of the change
+
+    updateModes();
+}
+
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are dropping
@@ -375,6 +382,25 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
     // Accept the proposed action for the event
 
     pEvent->acceptProposedAction();
+}
+
+void CentralWidget::updateModes() const
+{
+    // Remove all the modes
+
+    while (mModes->count())
+        mModes->removeTab(0);
+
+    // Add the required tabs
+
+    if (mModesEnabled.value(Editing))
+        mModes->addTab(tr("Editing"));
+
+    if (mModesEnabled.value(Simulation))
+        mModes->addTab(tr("Simulation"));
+
+    if (mModesEnabled.value(Analysis))
+        mModes->addTab(tr("Analysis"));
 }
 
 void CentralWidget::updateGui() const

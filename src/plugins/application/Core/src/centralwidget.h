@@ -3,6 +3,7 @@
 
 #include "commonwidget.h"
 
+#include <QMap>
 #include <QWidget>
 
 namespace Ui {
@@ -22,6 +23,13 @@ class CentralWidget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
+    enum Mode
+    {
+        Editing,
+        Simulation,
+        Analysis
+    };
+
     explicit CentralWidget(QWidget *pParent = 0);
     ~CentralWidget();
 
@@ -37,6 +45,8 @@ public:
 
     QString activeFileName() const;
 
+    void setModeEnabled(const Mode &pMode, const bool &pEnabled);
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
@@ -47,10 +57,13 @@ private:
 
     FileManager *mFileManager;
 
+    QMap<Mode, bool> mModesEnabled;
+
     QTabBar *mModes;
     TabWidget *mFiles;
     QTabBar *mViews;
 
+    void updateModes() const;
     void updateGui() const;
 
 Q_SIGNALS:
