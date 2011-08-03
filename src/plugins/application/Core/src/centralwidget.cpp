@@ -143,8 +143,8 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 bool CentralWidget::openFile(const QString &pFileName)
 {
-    if (!QFileInfo(pFileName).exists())
-        // The file doesn't exist, so...
+    if (!mModes->count() || !QFileInfo(pFileName).exists())
+        // No mode is available or the file doesn't exist, so...
 
         return false;
 
@@ -319,10 +319,11 @@ void CentralWidget::setModeEnabled(const Mode &pMode, const bool &pEnabled)
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
-    // Accept the proposed action for the event, but only if we are dropping
-    // URIs or items from our file organiser
+    // Accept the proposed action for the event, but only if at least one mode
+    // is available and if we are dropping URIs or items from our file organiser
 
-    if (   (pEvent->mimeData()->hasFormat(FileSystemMimeType))
+    if (   mModes->count()
+        && (pEvent->mimeData()->hasFormat(FileSystemMimeType))
         && (!pEvent->mimeData()->urls().isEmpty()))
         // Note: we test the list of URLs in case we are trying to drop one or
         //       several folders (and no file) from the file organiser, in which
