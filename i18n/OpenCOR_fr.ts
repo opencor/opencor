@@ -167,68 +167,6 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::Plugin</name>
-    <message>
-        <source>%1 could not be found</source>
-        <translation>%1 n&apos;a pas été trouvé</translation>
-    </message>
-    <message>
-        <source>%1 is not of the right type</source>
-        <translation>%1 n&apos;est pas du bon type</translation>
-    </message>
-    <message>
-        <source>%1 is not wanted</source>
-        <translation>%1 n&apos;est pas désiré</translation>
-    </message>
-    <message>
-        <source>%1 is not needed</source>
-        <translation>%1 n&apos;est pas nécessaire</translation>
-    </message>
-    <message>
-        <source>%1 is loaded and fully functional</source>
-        <translation>%1 est installé et pleinement fonctionnel</translation>
-    </message>
-    <message>
-        <source>%1 could not be loaded due to the following problem:</source>
-        <translation>%1 n&apos;a pas pu être installé à cause du problème suivant :</translation>
-    </message>
-    <message>
-        <source>%1 is not a plugin</source>
-        <translation>%1 n&apos;est pas une extension</translation>
-    </message>
-    <message>
-        <source>%1&apos;s status is undefined</source>
-        <translation>Le statut %1 est indéfini</translation>
-    </message>
-    <message>
-        <source>%1 could not be loaded due a missing dependency:</source>
-        <translation>%1 n&apos;a pas pu être installé dû à une dépendance manquante :</translation>
-    </message>
-    <message>
-        <source>%1 could not be loaded due to some missing dependencies:</source>
-        <translation>%1 n&apos;a pas pu être installé dû à des dépendances manquantes :</translation>
-    </message>
-    <message>
-        <source>%1 is not a plugin or %2 could not be loaded due to a/some missing dependency/ies</source>
-        <translation>%1 n&apos;est pas une extension ou %2 n&apos;a pas pu être installé dû à une/des dépendance/s manquante/s</translation>
-    </message>
-    <message>
-        <source>The version of the interface used by %1 (%2) is not compatible with that of %3 (%4)</source>
-        <translation>La version de l&apos;interface utilisée par %1 (%2) n&apos;est pas compatible avec celle de %3 (%4)</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::PluginManager</name>
-    <message>
-        <source>Version 001</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Unknown version</source>
-        <translation>Version inconnue</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::PluginsWindow</name>
     <message>
         <source>General</source>
@@ -277,6 +215,66 @@
     <message>
         <source>Third-party</source>
         <translation>Externe</translation>
+    </message>
+    <message>
+        <source>Version 001</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unknown version</source>
+        <translation>Version inconnue</translation>
+    </message>
+    <message>
+        <source>The %1 plugin could not be found</source>
+        <translation>L&apos;extension %1 n&apos;a pas été trouvée</translation>
+    </message>
+    <message>
+        <source>The version of the interface used by the %1 plugin (%2) is not compatible with that of %3 (%4)</source>
+        <translation>La version de l&apos;interface utilisée par l&apos;extension %1 (%2) n&apos;est pas compatible avec celle d&apos;%3 (%4)</translation>
+    </message>
+    <message>
+        <source>The %1 plugin is not of the right type</source>
+        <translation>L&apos;extension %1 n&apos;est pas du bon type</translation>
+    </message>
+    <message>
+        <source>The %1 plugin is not wanted</source>
+        <translation>L&apos;extension %1 n&apos;est pas désirée</translation>
+    </message>
+    <message>
+        <source>The %1 plugin is not needed</source>
+        <translation>L&apos;extension %1 n&apos;est pas nécessaire</translation>
+    </message>
+    <message>
+        <source>The %1 plugin is loaded and fully functional</source>
+        <translation>L&apos;extension %1 est installée et pleinement fonctionnelle</translation>
+    </message>
+    <message>
+        <source>The %1 plugin could not be loaded due to the following problem: %2</source>
+        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause du problème suivant : %2</translation>
+    </message>
+    <message>
+        <source>The %1 plugin could not be loaded due to the following problems:</source>
+        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause des problèmes suivants :</translation>
+    </message>
+    <message>
+        <source>The %1 library is not a plugin</source>
+        <translation>La librairie %1 n&apos;est pas une extension</translation>
+    </message>
+    <message>
+        <source>The %1 plugin could not be loaded due to the %2 plugin missing</source>
+        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause de l&apos;extension %2 qui manque</translation>
+    </message>
+    <message>
+        <source>The %1 plugin could not be loaded due to missing plugins:</source>
+        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause d&apos;extensions qui manquent :</translation>
+    </message>
+    <message>
+        <source>The %1 library is not a plugin or it is, but it could not be loaded due to a/some missing plugin/s</source>
+        <translation>La librairie %1 n&apos;est pas une extension ou elle en est une, mais elle n&apos;a pas pu être installée à cause d&apos;une/d&apos;extension/s qui manque/nt</translation>
+    </message>
+    <message>
+        <source>The status of the %1 plugin status is undefined</source>
+        <translation>Le statut de l&apos;extension %1 est indéfini</translation>
     </message>
 </context>
 <context>

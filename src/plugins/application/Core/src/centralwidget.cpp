@@ -33,9 +33,9 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // By default, no mode is available
 
-    mModesEnabled.insert(Editing, false);
-    mModesEnabled.insert(Simulation, false);
-    mModesEnabled.insert(Analysis, false);
+    mModesEnabled.insert(GuiInterface::Editing, false);
+    mModesEnabled.insert(GuiInterface::Simulation, false);
+    mModesEnabled.insert(GuiInterface::Analysis, false);
 
     // Create our modes tab bar
 
@@ -306,15 +306,17 @@ QString CentralWidget::activeFileName() const
         return QString();
 }
 
-void CentralWidget::setModeEnabled(const Mode &pMode, const bool &pEnabled)
+void CentralWidget::requireMode(const GuiInterface::Mode &pMode)
 {
-    // Update the enabled state of the given mode
+    if (pMode != GuiInterface::None) {
+        // Update the enabled state of the given mode
 
-    mModesEnabled.insert(pMode, pEnabled);
+        mModesEnabled.insert(pMode, true);
 
-    // Make sure that the GUI is aware of the change
+        // Make sure that the GUI is aware of the change
 
-    updateModes();
+        updateModes();
+    }
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
@@ -394,13 +396,13 @@ void CentralWidget::updateModes() const
 
     // Add the required tabs
 
-    if (mModesEnabled.value(Editing))
+    if (mModesEnabled.value(GuiInterface::Editing))
         mModes->addTab(tr("Editing"));
 
-    if (mModesEnabled.value(Simulation))
+    if (mModesEnabled.value(GuiInterface::Simulation))
         mModes->addTab(tr("Simulation"));
 
-    if (mModesEnabled.value(Analysis))
+    if (mModesEnabled.value(GuiInterface::Analysis))
         mModes->addTab(tr("Analysis"));
 }
 

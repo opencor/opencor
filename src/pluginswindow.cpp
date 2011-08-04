@@ -205,6 +205,64 @@ void PluginsWindow::retranslateUi()
     mUi->retranslateUi(this);
 }
 
+QString PluginsWindow::toString(const PluginInterface::Version &pInterfaceVersion) const
+{
+    // Return the passed interface version as a string
+    // Note: ideally, this function would be part of the PluginInterface class,
+    //       but this class is used by all the plugins and because this method
+    //       requires a translation, well... we can't have it there since a
+    //       translation will otherwise be required for each plugin, so...
+    //       another solution is to have it here...
+
+    switch (pInterfaceVersion) {
+    case PluginInterface::V001:
+        return tr("Version 001");
+    default:
+        return tr("Unknown version");
+    }
+}
+
+QString PluginsWindow::statusDescription(Plugin *pPlugin) const
+{
+    // Return the plugin's status' description, if any
+
+    switch (pPlugin->status()) {
+    case Plugin::NotFound:
+        return tr("The %1 plugin could not be found").arg(pPlugin->name());
+    case Plugin::IncompatibleInterfaceVersion:
+        return tr("The version of the interface used by the %1 plugin (%2) is not compatible with that of %3 (%4)").arg(pPlugin->name(),
+                                                                                                                        toString(pPlugin->info().interfaceVersion()),
+                                                                                                                        qApp->applicationName(),
+                                                                                                                        toString(mPluginManager->interfaceVersion()));
+    case Plugin::NotSuitable:
+        return tr("The %1 plugin is not of the right type").arg(pPlugin->name());
+    case Plugin::NotWanted:
+        return tr("The %1 plugin is not wanted").arg(pPlugin->name());
+    case Plugin::NotNeeded:
+        return tr("The %1 plugin is not needed").arg(pPlugin->name());
+    case Plugin::Loaded:
+        return tr("The %1 plugin is loaded and fully functional").arg(pPlugin->name());
+    case Plugin::NotLoaded:
+        if (pPlugin->statusError().count() == 1)
+            return  tr("The %1 plugin could not be loaded due to the following problem: %2").arg(pPlugin->name(), pPlugin->statusError());
+        else
+            return  tr("The %1 plugin could not be loaded due to the following problems:").arg(pPlugin->name())+"\n"
+                   +pPlugin->statusError();
+    case Plugin::NotPlugin:
+        return tr("The %1 library is not a plugin").arg(pPlugin->name());
+    case Plugin::MissingDependencies:
+        if (pPlugin->statusError().count() == 1)
+            return  tr("The %1 plugin could not be loaded due to the %2 plugin missing").arg(pPlugin->name(), pPlugin->statusError());
+        else
+            return  tr("The %1 plugin could not be loaded due to missing plugins:").arg(pPlugin->name())+"\n"
+                   +pPlugin->statusError();
+    case Plugin::NotPluginOrMissingDependencies:
+        return tr("The %1 library is not a plugin or it is, but it could not be loaded due to a/some missing plugin/s").arg(pPlugin->name());
+    default:   // Plugin::Undefined
+        return tr("The status of the %1 plugin status is undefined").arg(pPlugin->name());
+    }
+}
+
 void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
                                      const QModelIndex &) const
 {
@@ -280,7 +338,7 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     // The plugin's status
 
-    mUi->statusValue->setText(plugin->statusDescription());
+    mUi->statusValue->setText(statusDescription(plugin));
 }
 
 void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,

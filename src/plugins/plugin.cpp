@@ -1,5 +1,4 @@
 #include "plugin.h"
-#include "pluginmanager.h"
 
 #include <QApplication>
 #include <QDir>
@@ -9,10 +8,12 @@
 
 namespace OpenCOR {
 
-Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
+Plugin::Plugin(const QString &pFileName,
                const PluginInfo::PluginType &pGuiOrConsoleType,
-               const bool &pForceLoading) :
-    mPluginManager(pPluginManager),
+               const bool &pForceLoading,
+               const PluginInterface::Version &pExpectedInterfaceVersion,
+               QSettings *pSettings, const QString &pPluginsDir,
+               const QMap<QString, Plugin *> &pMappedPlugins) :
     mName(name(pFileName)),
     // Note: to get the name of the plugin from its file name, we must remove
     //       the plugin prefix part from it...
@@ -30,19 +31,17 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
         // Now, retrieve the plugin's full dependencies (i.e. both its direct
         // and indirect dependencies)
 
-        mInfo.mFullDependencies << requiredPlugins(mPluginManager->pluginsDir(),
-                                                   mName);
+        mInfo.mFullDependencies << requiredPlugins(pPluginsDir, mName);
 
         // Try to load the plugin, but only if it uses the right plugin
         // interface version, if it is either a general plugin or one of the
         // type we are happy with, and if it is manageable or is required by
         // another plugin
 
-        if (    (mInfo.interfaceVersion() == mPluginManager->interfaceVersion())
+        if (    (mInfo.interfaceVersion() == pExpectedInterfaceVersion)
             && (   (mInfo.type() == PluginInfo::General)
                 || (mInfo.type() == pGuiOrConsoleType))
-            && (   (   mInfo.manageable()
-                    && load(mPluginManager->settings(), mName))
+            && (   (mInfo.manageable() && load(pSettings, mName))
                 || pForceLoading)) {
             // We are dealing with the right kind of plugin, so check that all
             // of its dependencies, if any, are loaded
@@ -58,7 +57,7 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
             mStatusError = "";
 
             foreach (const QString &dependency, mInfo.dependencies()) {
-                Plugin *pluginDependency = mPluginManager->plugin(dependency);
+                Plugin *pluginDependency = pMappedPlugins.value(dependency);
 
                 if (   !pluginDependency
                     || (   pluginDependency
@@ -76,6 +75,11 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
                     mStatusError += " - "+dependency;
                 }
             }
+
+            if (mStatusError.count() == 1)
+                // There is only one error, so remove the leading " - "
+
+                mStatusError = mStatusError.remove(0, 3);
 #endif
 
             // Check whether all of the plugin's dependencies, if any, were
@@ -115,7 +119,7 @@ Plugin::Plugin(PluginManager *pPluginManager, const QString &pFileName,
 #else
             mStatus = NotPlugin;
 #endif
-        } else if (mInfo.interfaceVersion() != mPluginManager->interfaceVersion()) {
+        } else if (mInfo.interfaceVersion() != pExpectedInterfaceVersion) {
             // We are dealing with a plugin which relies on a different version
             // of the interface, so...
 
@@ -173,44 +177,11 @@ Plugin::PluginStatus Plugin::status() const
     return mStatus;
 }
 
-QString Plugin::statusDescription() const
+QString Plugin::statusError() const
 {
-    // Return the plugin's status' description, if any
+    // Return the plugin's status error
 
-    switch (mStatus) {
-    case NotFound:
-        return tr("%1 could not be found").arg(mName);
-    case IncompatibleInterfaceVersion:
-        return tr("The version of the interface used by %1 (%2) is not compatible with that of %3 (%4)").arg(mName,
-                                                                                                             mPluginManager->interfaceVersionAsString(mInfo.interfaceVersion()),
-                                                                                                             qApp->applicationName(),
-                                                                                                             mPluginManager->interfaceVersionAsString(mPluginManager->interfaceVersion()));
-    case NotSuitable:
-        return tr("%1 is not of the right type").arg(mName);
-    case NotWanted:
-        return tr("%1 is not wanted").arg(mName);
-    case NotNeeded:
-        return tr("%1 is not needed").arg(mName);
-    case Loaded:
-        return tr("%1 is loaded and fully functional").arg(mName);
-    case NotLoaded:
-        return  tr("%1 could not be loaded due to the following problem:").arg(mName)+"\n"
-               +mStatusError;
-    case NotPlugin:
-        return tr("%1 is not a plugin").arg(mName);
-    case MissingDependencies:
-        if (mStatusError.count() == 1)
-            return  tr("%1 could not be loaded due a missing dependency:").arg(mName)+"\n"
-                   +mStatusError;
-        else
-            return  tr("%1 could not be loaded due to some missing dependencies:").arg(mName)+"\n"
-                   +mStatusError;
-    case NotPluginOrMissingDependencies:
-        return tr("%1 is not a plugin or %2 could not be loaded due to a/some missing dependency/ies").arg(mName,
-                                                                                                           mName);
-    default:
-        return tr("%1's status is undefined").arg(mName);
-    }
+    return mStatusError;
 }
 
 QString Plugin::name(const QString &pFileName)

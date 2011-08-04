@@ -159,6 +159,13 @@ void GuiInterface::initialize(const QList<Plugin *> &, QMainWindow *)
     // Nothing to do by default...
 }
 
+GuiInterface::Mode GuiInterface::requiredMode() const
+{
+    // By default, we don't need any mode, so...
+
+    return None;
+}
+
 GuiSettings GuiInterface::settings() const
 {
     // Return the plugin's settings

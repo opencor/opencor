@@ -11,19 +11,6 @@ namespace OpenCOR {
 
 class Plugin;
 
-#ifdef Q_WS_WIN
-    static const QString PluginPrefix = "";
-    static const QString PluginExtension = ".dll";
-#else
-    static const QString PluginPrefix = "lib";
-
-    #ifdef Q_WS_MAC
-        static const QString PluginExtension = ".dylib";
-    #else
-        static const QString PluginExtension = ".so";
-    #endif
-#endif
-
 class PluginManager : public QObject
 {
     Q_OBJECT
@@ -37,12 +24,12 @@ public:
     QList<Plugin *> loadedPlugins() const;
 
     QString pluginsDir() const;
+    QMap<QString, Plugin *> mappedPlugins() const;
     Plugin * plugin(const QString &pName) const;
 
     QSettings * settings() const;
 
     PluginInterface::Version interfaceVersion() const;
-    static QString interfaceVersionAsString(const PluginInterface::Version &pInterfaceVersion);
 
 private:
     QSettings *mSettings;

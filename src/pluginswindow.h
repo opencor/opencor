@@ -61,6 +61,9 @@ private:
     void newPluginCategory(const PluginInfo::PluginCategory &pCategory,
                            const QString &pName);
 
+    QString toString(const PluginInterface::Version &pInterfaceVersion) const;
+    QString statusDescription(Plugin *pPlugin) const;
+
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();

@@ -1,5 +1,7 @@
+#include "centralwidget.h"
 #include "checkforupdateswindow.h"
 #include "common.h"
+#include "dockwidget.h"
 #include "guiinterface.h"
 #include "mainwindow.h"
 #include "plugin.h"

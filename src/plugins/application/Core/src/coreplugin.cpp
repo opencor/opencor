@@ -1,5 +1,6 @@
 #include "centralwidget.h"
 #include "coreplugin.h"
+#include "plugin.h"
 
 namespace OpenCOR {
 namespace Core {
@@ -24,7 +25,7 @@ CorePlugin::CorePlugin() :
 {
 }
 
-void CorePlugin::initialize(const QList<Plugin *> &, QMainWindow *pMainWindow)
+void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainWindow)
 {
     // Create our central widget
 
@@ -35,6 +36,18 @@ void CorePlugin::initialize(const QList<Plugin *> &, QMainWindow *pMainWindow)
     GuiSettingsCorePlugin *guiSettingsCorePlugin;
 
     mData = guiSettingsCorePlugin = new GuiSettingsCorePlugin(mCentralWidget);
+
+    // Check, based on the loaded plugins, which modes, if any, our central
+    // widget should support
+
+    foreach (Plugin *plugin, pPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            // The plugin implements our GUI interface, so...
+
+            mCentralWidget->requireMode(guiInterface->requiredMode());
+    }
 }
 
 void CorePlugin::finalize()

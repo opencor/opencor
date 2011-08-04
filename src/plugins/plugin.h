@@ -9,7 +9,18 @@ class QSettings;
 
 namespace OpenCOR {
 
-class PluginManager;
+#ifdef Q_WS_WIN
+    static const QString PluginPrefix = "";
+    static const QString PluginExtension = ".dll";
+#else
+    static const QString PluginPrefix = "lib";
+
+    #ifdef Q_WS_MAC
+        static const QString PluginExtension = ".dylib";
+    #else
+        static const QString PluginExtension = ".so";
+    #endif
+#endif
 
 class Plugin : public QObject
 {
@@ -31,15 +42,18 @@ public:
         NotPluginOrMissingDependencies
     };
 
-    explicit Plugin(PluginManager *pPluginManager, const QString &pFileName,
+    explicit Plugin(const QString &pFileName,
                     const PluginInfo::PluginType &pGuiOrConsoleType,
-                    const bool &pForceLoading);
+                    const bool &pForceLoading,
+                    const PluginInterface::Version &pExpectedInterfaceVersion,
+                    QSettings *pSettings, const QString &pPluginsDir,
+                    const QMap<QString, Plugin *> &pMappedPlugins);
 
     QString name() const;
     PluginInfo info() const;
     QObject * instance() const;
     PluginStatus status() const;
-    QString statusDescription() const;
+    QString statusError() const;
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pDir, const QString &pName);
@@ -54,7 +68,6 @@ public:
                                        const int &pLevel = 0);
 
 private:
-    PluginManager *mPluginManager;
     QString mName;
     PluginInfo mInfo;
     QObject *mInstance;

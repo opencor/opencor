@@ -9,6 +9,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 ADD_PLUGIN(Core
     SOURCES
         ../../guiinterface.cpp
+        ../../plugin.cpp
         ../../plugininterface.cpp
 
         src/centralwidget.cpp
@@ -28,6 +29,8 @@ ADD_PLUGIN(Core
         src/coreglobal.h
         src/coreutils.h
     HEADERS_MOC
+        ../../plugin.h
+
         src/centralwidget.h
         src/coreplugin.h
         src/docktoolbar.h

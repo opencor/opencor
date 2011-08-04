@@ -87,8 +87,10 @@ PluginManager::PluginManager(QSettings *pSettings,
 
     foreach (const QString &fileName, orderedFileNames)
         mPlugins.insert(Plugin::name(fileName),
-                        new Plugin(this, fileName, mGuiOrConsoleType,
-                                   plugins.contains(Plugin::name(fileName))));
+                        new Plugin(fileName, mGuiOrConsoleType,
+                                   plugins.contains(Plugin::name(fileName)),
+                                   interfaceVersion(), settings(), pluginsDir(),
+                                   mappedPlugins()));
 }
 
 PluginManager::~PluginManager()
@@ -130,6 +132,13 @@ QString PluginManager::pluginsDir() const
     return mPluginsDir;
 }
 
+QMap<QString, Plugin *> PluginManager::mappedPlugins() const
+{
+    // Return the mapped plugins
+
+    return mPlugins;
+}
+
 Plugin * PluginManager::plugin(const QString &pName) const
 {
     // Return the plugin which name is that we have been passed
@@ -142,23 +151,6 @@ PluginInterface::Version PluginManager::interfaceVersion() const
     // Return the interface version used by the plugin manager
 
     return mInterfaceVersion;
-}
-
-QString PluginManager::interfaceVersionAsString(const PluginInterface::Version &pInterfaceVersion)
-{
-    // Return the passed interface version as a string
-    // Note: ideally, this function would be part of the PluginInterface class,
-    //       but this class is used by all the plugins and because this method
-    //       requires a translation, well... we can't have it there since a
-    //       translation will otherwise be required for each plugin, so...
-    //       another solution is to have it here...
-
-    switch (pInterfaceVersion) {
-    case PluginInterface::V001:
-        return tr("Version 001");
-    default:
-        return tr("Unknown version");
-    }
 }
 
 QSettings * PluginManager::settings() const

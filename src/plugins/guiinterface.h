@@ -1,14 +1,16 @@
 #ifndef GUIINTERFACE_H
 #define GUIINTERFACE_H
 
-#include "centralwidget.h"
-#include "dockwidget.h"
 #include "plugininterface.h"
 
 #include <QMainWindow>
 #include <QTranslator>
 
 namespace OpenCOR {
+namespace Core {
+    class CentralWidget;
+    class DockWidget;
+}
 
 class GuiSettingsCorePlugin
 {
@@ -110,9 +112,19 @@ private:
 class GuiInterface : public PluginInterface
 {
 public:
+    enum Mode
+    {
+        None,
+        Editing,
+        Simulation,
+        Analysis
+    };
+
     explicit GuiInterface(const QString &pPluginName);
 
     virtual void initialize(const QList<Plugin *> &, QMainWindow *);
+
+    virtual Mode requiredMode() const;
 
     GuiSettings settings() const;
     void * data() const;
