@@ -8,10 +8,12 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(CellMLXMLView
     SOURCES
+        ../../guiinterface.cpp
         ../../plugininterface.cpp
 
         src/cellmlxmlviewplugin.cpp
     HEADERS
+        ../../guiinterface.h
         ../../plugininterface.h
     HEADERS_MOC
         src/cellmlxmlviewplugin.h

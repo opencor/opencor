@@ -4,14 +4,13 @@
 #include <QMainWindow>
 #include <QTranslator>
 
-class QSettings;
-
 namespace Ui {
     class MainWindow;
 }
 
-namespace OpenCOR {
+class QSettings;
 
+namespace OpenCOR {
 namespace Core {
     class DockWidget;
 }

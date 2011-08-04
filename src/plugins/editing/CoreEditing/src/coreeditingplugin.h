@@ -17,7 +17,7 @@ class CoreEditingPlugin : public GuiInterface
 public:
     explicit CoreEditingPlugin();
 
-    virtual void initialize(QMainWindow *pMainWindow);
+    virtual void initialize(const QList<Plugin *> &, QMainWindow *pMainWindow);
 
     virtual void retranslateUi();
 

@@ -154,7 +154,7 @@ GuiInterface::GuiInterface(const QString &pPluginName) :
 {
 }
 
-void GuiInterface::initialize(QMainWindow *)
+void GuiInterface::initialize(const QList<Plugin *> &, QMainWindow *)
 {
     // Nothing to do by default...
 }

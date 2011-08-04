@@ -3,11 +3,11 @@
 
 #include "dockwidget.h"
 
-class QModelIndex;
-
 namespace Ui {
     class FileBrowserWindow;
 }
+
+class QModelIndex;
 
 namespace OpenCOR {
 namespace FileBrowser {

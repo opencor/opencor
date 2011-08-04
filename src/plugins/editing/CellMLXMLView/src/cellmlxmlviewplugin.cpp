@@ -18,4 +18,9 @@ PLUGININFO_FUNC CellMLXMLViewPluginInfo()
 
 Q_EXPORT_PLUGIN2(CellMLXMLView, CellMLXMLViewPlugin)
 
+CellMLXMLViewPlugin::CellMLXMLViewPlugin() :
+    GuiInterface("CellMLXMLView")
+{
+}
+
 } }

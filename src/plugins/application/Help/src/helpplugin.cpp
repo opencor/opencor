@@ -26,7 +26,7 @@ HelpPlugin::HelpPlugin() :
 {
 }
 
-void HelpPlugin::initialize(QMainWindow *pMainWindow)
+void HelpPlugin::initialize(const QList<Plugin *> &, QMainWindow *pMainWindow)
 {
     // Create an action to show/hide our help window
 

@@ -8,6 +8,8 @@
 
 namespace OpenCOR {
 
+class Plugin;
+
 class PluginInterface : public QObject
 {
 public:
@@ -17,7 +19,7 @@ public:
         V001
     };
 
-    virtual void initialize();
+    virtual void initialize(const QList<Plugin *> &);
     virtual void finalize();
 };
 

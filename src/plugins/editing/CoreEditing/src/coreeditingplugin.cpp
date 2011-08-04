@@ -25,7 +25,8 @@ CoreEditingPlugin::CoreEditingPlugin() :
 {
 }
 
-void CoreEditingPlugin::initialize(QMainWindow *pMainWindow)
+void CoreEditingPlugin::initialize(const QList<Plugin *> &,
+                                   QMainWindow *pMainWindow)
 {
     // Create our different File actions
 

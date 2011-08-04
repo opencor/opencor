@@ -112,7 +112,7 @@ class GuiInterface : public PluginInterface
 public:
     explicit GuiInterface(const QString &pPluginName);
 
-    virtual void initialize(QMainWindow *);
+    virtual void initialize(const QList<Plugin *> &, QMainWindow *);
 
     GuiSettings settings() const;
     void * data() const;

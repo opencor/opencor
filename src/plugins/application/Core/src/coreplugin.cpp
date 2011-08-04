@@ -24,7 +24,7 @@ CorePlugin::CorePlugin() :
 {
 }
 
-void CorePlugin::initialize(QMainWindow *pMainWindow)
+void CorePlugin::initialize(const QList<Plugin *> &, QMainWindow *pMainWindow)
 {
     // Create our central widget
 

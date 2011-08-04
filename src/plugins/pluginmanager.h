@@ -7,9 +7,9 @@
 #include <QObject>
 #include <QSettings>
 
-class Plugin;
-
 namespace OpenCOR {
+
+class Plugin;
 
 #ifdef Q_WS_WIN
     static const QString PluginPrefix = "";
