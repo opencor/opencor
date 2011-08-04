@@ -53,7 +53,8 @@ public:
     PluginInfo info() const;
     QObject * instance() const;
     PluginStatus status() const;
-    QString statusError() const;
+    QString statusErrors() const;
+    int nbOfStatusErrors() const;
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pDir, const QString &pName);
@@ -72,7 +73,7 @@ private:
     PluginInfo mInfo;
     QObject *mInstance;
     PluginStatus mStatus;
-    QString mStatusError;
+    QString mStatusErrors;
 };
 
 }

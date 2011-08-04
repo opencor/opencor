@@ -54,7 +54,7 @@ Plugin::Plugin(const QString &pFileName,
 #ifndef Q_WS_WIN
             bool pluginDependenciesLoaded = true;
 
-            mStatusError = "";
+            mStatusErrors = "";
 
             foreach (const QString &dependency, mInfo.dependencies()) {
                 Plugin *pluginDependency = pMappedPlugins.value(dependency);
@@ -69,17 +69,17 @@ Plugin::Plugin(const QString &pFileName,
 
                     mStatus = MissingDependencies;
 
-                    if (!mStatusError.isEmpty())
-                        mStatusError += "\n";
+                    if (!mStatusErrors.isEmpty())
+                        mStatusErrors += "\n";
 
-                    mStatusError += " - "+dependency;
+                    mStatusErrors += " - "+dependency;
                 }
             }
 
-            if (mStatusError.count() == 1)
+            if (nbOfStatusErrors() == 1)
                 // There is only one error, so remove the leading " - "
 
-                mStatusError = mStatusError.remove(0, 3);
+                mStatusErrors = mStatusErrors.remove(0, 3);
 #endif
 
             // Check whether all of the plugin's dependencies, if any, were
@@ -104,7 +104,7 @@ Plugin::Plugin(const QString &pFileName,
                     // this should never happen...?!), so...
 
                     mStatus = NotLoaded;
-                    mStatusError = pluginLoader.errorString();
+                    mStatusErrors = pluginLoader.errorString();
                 }
 #ifndef Q_WS_WIN
             }
@@ -177,11 +177,18 @@ Plugin::PluginStatus Plugin::status() const
     return mStatus;
 }
 
-QString Plugin::statusError() const
+QString Plugin::statusErrors() const
 {
-    // Return the plugin's status error
+    // Return the plugin's status errors
 
-    return mStatusError;
+    return mStatusErrors;
+}
+
+int Plugin::nbOfStatusErrors() const
+{
+    // Return the number of plugin's status errors
+
+    return mStatusErrors.count("\n")+1;
 }
 
 QString Plugin::name(const QString &pFileName)
