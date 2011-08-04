@@ -12,7 +12,7 @@ PLUGININFO_FUNC CellMLSimulationPluginInfo()
 
     return PluginInfo(PluginInterface::V001, PluginInfo::Gui,
                       PluginInfo::Simulation, true,
-                      QStringList() << "CoreSimulation" << "CellMLXMLView",
+                      QStringList() << "CoreSimulation" << "CoreCellMLEditing",
                       descriptions);
 }
 
