@@ -39,9 +39,9 @@ public:
 
     QString activeFileName() const;
 
-    void enableMode(const GuiViewSettings::Mode &pMode);
-
     bool isModeEnabled(const GuiViewSettings::Mode &pMode) const;
+
+    void addView(const GuiViewSettings &pViewSettings);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);

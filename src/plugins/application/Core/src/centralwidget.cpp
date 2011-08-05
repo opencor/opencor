@@ -306,22 +306,26 @@ QString CentralWidget::activeFileName() const
         return QString();
 }
 
-void CentralWidget::enableMode(const GuiViewSettings::Mode &pMode)
-{
-    // Enable the given mode
-
-    mModesEnabled.insert(pMode, true);
-
-    // Make sure that the GUI is aware of the change
-
-    updateModes();
-}
-
 bool CentralWidget::isModeEnabled(const GuiViewSettings::Mode &pMode) const
 {
     // Return whether a particular mode is enabled
 
     return mModesEnabled.value(pMode);
+}
+
+void CentralWidget::addView(const GuiViewSettings &pViewSettings)
+{
+    // Enable the mode required by the view, if necessary
+
+    if (!isModeEnabled(pViewSettings.mode())) {
+        // Enable the required mode
+
+        mModesEnabled.insert(pViewSettings.mode(), true);
+
+        // Make sure that the GUI is aware of the requirement
+
+        updateModes();
+    }
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
