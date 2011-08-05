@@ -18,4 +18,16 @@ PLUGININFO_FUNC CellMLSimulationPluginInfo()
 
 Q_EXPORT_PLUGIN2(CellMLSimulation, CellMLSimulationPlugin)
 
+CellMLSimulationPlugin::CellMLSimulationPlugin() :
+    GuiInterface("CellMLXMLView")
+{
+}
+
+GuiInterface::Mode CellMLSimulationPlugin::requiredMode() const
+{
+    // We need the Simulation mode, so...
+
+    return Simulation;
+}
+
 } }

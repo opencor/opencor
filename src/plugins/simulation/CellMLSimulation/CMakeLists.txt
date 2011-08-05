@@ -8,10 +8,12 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(CellMLSimulation
     SOURCES
+        ../../guiinterface.cpp
         ../../plugininterface.cpp
 
         src/cellmlsimulationplugin.cpp
     HEADERS
+        ../../guiinterface.h
         ../../plugininterface.h
     HEADERS_MOC
         src/cellmlsimulationplugin.h
