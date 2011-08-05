@@ -48,6 +48,39 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
 
             mCentralWidget->requireMode(guiInterface->requiredMode());
     }
+
+    // Create our different File actions
+
+    mFileOpen = newAction(pMainWindow, false,
+                          ":/oxygen/actions/document-open.png");
+
+    mFileSave    = newAction(pMainWindow, false,
+                             ":/oxygen/actions/document-save.png");
+    mFileSaveAs  = newAction(pMainWindow, false,
+                             ":/oxygen/actions/document-save-all.png");
+    mFileSaveAll = newAction(pMainWindow, false,
+                             ":/oxygen/actions/document-save-as.png");
+
+    mFileClose    = newAction(pMainWindow, false,
+                              ":/oxygen/actions/document-close.png");
+    mFileCloseAll = newAction(pMainWindow);
+
+    mFilePrint = newAction(pMainWindow, false,
+                          ":/oxygen/actions/document-open.png");
+
+    // Set our settings
+
+    mSettings.addAction(GuiSettingsAction::File, mFileOpen);
+    mSettings.addAction(GuiSettingsAction::File);
+    mSettings.addAction(GuiSettingsAction::File, mFileSave);
+    mSettings.addAction(GuiSettingsAction::File, mFileSaveAs);
+    mSettings.addAction(GuiSettingsAction::File, mFileSaveAll);
+    mSettings.addAction(GuiSettingsAction::File);
+    mSettings.addAction(GuiSettingsAction::File, mFileClose);
+    mSettings.addAction(GuiSettingsAction::File, mFileCloseAll);
+    mSettings.addAction(GuiSettingsAction::File);
+    mSettings.addAction(GuiSettingsAction::File, mFilePrint);
+    mSettings.addAction(GuiSettingsAction::File);
 }
 
 void CorePlugin::finalize()
@@ -62,6 +95,30 @@ void CorePlugin::retranslateUi()
     // Retranslate our central widget
 
     mCentralWidget->retranslateUi();
+
+    // Retranslate our different File actions
+
+    retranslateAction(mFileOpen, tr("&Open..."),
+                      tr("Open a file"),
+                      tr("Ctrl+O"));
+
+    retranslateAction(mFileSave, tr("&Save"),
+                      tr("Save the current file"),
+                      tr("Ctrl+S"));
+    retranslateAction(mFileSaveAs, tr("Save &As..."),
+                      tr("Save the current file under a different name"));
+    retranslateAction(mFileSaveAll, tr("Save All"),
+                      tr("Save all the files"));
+
+    retranslateAction(mFileClose, tr("Clos&e"),
+                      tr("Close the current file"),
+                      tr("Ctrl+W"));
+    retranslateAction(mFileCloseAll, tr("Close All"),
+                      tr("Close all the files"));
+
+    retranslateAction(mFilePrint, tr("&Print..."),
+                      tr("Print the current file"),
+                      tr("Ctrl+P"));
 }
 
 } }
