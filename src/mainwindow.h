@@ -18,16 +18,13 @@ namespace Core {
 class GuiInterface;
 class PluginManager;
 
+static const int NeedRestart = 1789;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    enum ExitCode
-    {
-        NeedRestart = 1789
-    };
-
     explicit MainWindow(QWidget *pParent = 0);
     ~MainWindow();
 

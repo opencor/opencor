@@ -11,6 +11,11 @@ class QStandardItem;
 
 namespace OpenCOR {
 namespace FileOrganiser {
+namespace Item {
+    static const int Folder   = Qt::UserRole;
+    static const int Path     = Qt::UserRole+1;
+    static const int Expanded = Qt::UserRole+2;
+}
 
 static const QString FileOrganiserMimeType = "opencor/file-organiser";
 
@@ -98,7 +103,7 @@ private:
     void restoreExpandedInformation(QStandardItem *pItem);
 
     void updateFileItems(QStandardItem *pItem, const QString &pFileName,
-                         const Core::File::FileStatus &pStatus) const;
+                         const Core::File::Status &pStatus) const;
 
 Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);

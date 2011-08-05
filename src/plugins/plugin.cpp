@@ -9,7 +9,7 @@
 namespace OpenCOR {
 
 Plugin::Plugin(const QString &pFileName,
-               const PluginInfo::PluginType &pGuiOrConsoleType,
+               const PluginInfo::Type &pGuiOrConsoleType,
                const bool &pForceLoading,
                const PluginInterface::Version &pExpectedInterfaceVersion,
                QSettings *pSettings, const QString &pPluginsDir,
@@ -170,7 +170,7 @@ QObject * Plugin::instance() const
     return mInstance;
 }
 
-Plugin::PluginStatus Plugin::status() const
+Plugin::Status Plugin::status() const
 {
     // Return the plugin's status
 

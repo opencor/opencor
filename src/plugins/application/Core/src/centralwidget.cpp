@@ -33,9 +33,9 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // By default, no mode is available
 
-    mModesEnabled.insert(GuiInterface::Editing, false);
-    mModesEnabled.insert(GuiInterface::Simulation, false);
-    mModesEnabled.insert(GuiInterface::Analysis, false);
+    mModesEnabled.insert(GuiViewSettings::Editing, false);
+    mModesEnabled.insert(GuiViewSettings::Simulation, false);
+    mModesEnabled.insert(GuiViewSettings::Analysis, false);
 
     // Create our modes tab bar
 
@@ -306,11 +306,11 @@ QString CentralWidget::activeFileName() const
         return QString();
 }
 
-void CentralWidget::enableMode(const GuiInterface::Mode &pMode)
+void CentralWidget::enableMode(const GuiViewSettings::Mode &pMode)
 {
     // Enable a particular mode (as long as it isn't the None mode)
 
-    if (pMode != GuiInterface::None) {
+    if (pMode != GuiViewSettings::None) {
         // Update the enabled state of the given mode
 
         mModesEnabled.insert(pMode, true);
@@ -321,7 +321,7 @@ void CentralWidget::enableMode(const GuiInterface::Mode &pMode)
     }
 }
 
-bool CentralWidget::isModeEnabled(const GuiInterface::Mode &pMode) const
+bool CentralWidget::isModeEnabled(const GuiViewSettings::Mode &pMode) const
 {
     // Return whether a particular mode is enabled
 
@@ -405,13 +405,13 @@ void CentralWidget::updateModes() const
 
     // Add the required tabs
 
-    if (mModesEnabled.value(GuiInterface::Editing))
+    if (mModesEnabled.value(GuiViewSettings::Editing))
         mModes->addTab(tr("Editing"));
 
-    if (mModesEnabled.value(GuiInterface::Simulation))
+    if (mModesEnabled.value(GuiViewSettings::Simulation))
         mModes->addTab(tr("Simulation"));
 
-    if (mModesEnabled.value(GuiInterface::Analysis))
+    if (mModesEnabled.value(GuiViewSettings::Analysis))
         mModes->addTab(tr("Analysis"));
 }
 

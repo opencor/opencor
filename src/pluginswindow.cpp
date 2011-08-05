@@ -502,7 +502,7 @@ void PluginsWindow::apply()
     }
 }
 
-void PluginsWindow::newPluginCategory(const PluginInfo::PluginCategory &pCategory,
+void PluginsWindow::newPluginCategory(const PluginInfo::Category &pCategory,
                                       const QString &pName)
 {
     // Create the category item, disable it (but it will be seen as enabled, we

@@ -12,10 +12,10 @@ namespace Core {
     class DockWidget;
 }
 
-class GuiSettingsCorePlugin
+class GuiCoreSettings
 {
 public:
-    explicit GuiSettingsCorePlugin(Core::CentralWidget *pCentralWidget);
+    explicit GuiCoreSettings(Core::CentralWidget *pCentralWidget);
 
     Core::CentralWidget *centralWidget() const;
 
@@ -23,11 +23,11 @@ private:
     Core::CentralWidget *mCentralWidget;
 };
 
-class GuiSettingsHelpPlugin
+class GuiHelpSettings
 {
 public:
-    explicit GuiSettingsHelpPlugin(QAction *pHelpAction,
-                                   Core::DockWidget *pHelpWindow);
+    explicit GuiHelpSettings(QAction *pHelpAction,
+                             Core::DockWidget *pHelpWindow);
 
     QAction *helpAction() const;
     Core::DockWidget *helpWindow() const;
@@ -37,48 +37,70 @@ private:
     Core::DockWidget *mHelpWindow;
 };
 
-class GuiSettingsMenu
+class GuiMenuSettings
 {
 public:
-    enum GuiSettingsMenuType
+    enum GuiMenuSettingsType
     {
         View
     };
 
-    explicit GuiSettingsMenu(const GuiSettingsMenuType &pType,
+    explicit GuiMenuSettings(const GuiMenuSettingsType &pType,
                              QMenu *pMenu);
 
-    GuiSettingsMenuType type() const;
+    GuiMenuSettingsType type() const;
     QMenu *menu() const;
 
 private:
-    GuiSettingsMenuType mType;
+    GuiMenuSettingsType mType;
     QMenu *mMenu;
 };
 
-class GuiSettingsAction
+class GuiActionSettings
 {
 public:
-    enum GuiSettingsActionType
+    enum GuiActionSettingsType
     {
         File
     };
 
-    explicit GuiSettingsAction(const GuiSettingsActionType &pType,
+    explicit GuiActionSettings(const GuiActionSettingsType &pType,
                                QAction *pAction);
 
-    GuiSettingsActionType type() const;
+    GuiActionSettingsType type() const;
     QAction *action() const;
 
 private:
-    GuiSettingsActionType mType;
+    GuiActionSettingsType mType;
     QAction *mAction;
 };
 
-class GuiSettingsWindow
+class GuiViewSettings
 {
 public:
-    explicit GuiSettingsWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
+    enum Mode
+    {
+        None,
+        Editing,
+        Simulation,
+        Analysis
+    };
+
+    explicit GuiViewSettings(const Mode &pMode = None,
+                             const QString &pName = QString());
+
+    Mode mode() const;
+    QString name() const;
+
+private:
+    Mode mMode;
+    QString mName;
+};
+
+class GuiWindowSettings
+{
+public:
+    explicit GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
                                Core::DockWidget *pWindow);
 
     Qt::DockWidgetArea defaultDockingArea() const;
@@ -92,39 +114,31 @@ private:
 class GuiSettings
 {
 public:
-    void addMenu(const GuiSettingsMenu::GuiSettingsMenuType &pType,
+    void addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
                  QMenu *pMenu);
-    void addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
+    void addAction(const GuiActionSettings::GuiActionSettingsType &pType,
                    QAction *pAction = 0);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow);
 
-    QList<GuiSettingsMenu> menus() const;
-    QList<GuiSettingsAction> actions() const;
-    QList<GuiSettingsWindow> windows() const;
+    QList<GuiMenuSettings> menus() const;
+    QList<GuiActionSettings> actions() const;
+    QList<GuiWindowSettings> windows() const;
 
 private:
-    QList<GuiSettingsMenu> mMenus;
-    QList<GuiSettingsAction> mActions;
-    QList<GuiSettingsWindow> mWindows;
+    QList<GuiMenuSettings> mMenus;
+    QList<GuiActionSettings> mActions;
+    QList<GuiWindowSettings> mWindows;
 };
 
 class GuiInterface : public PluginInterface
 {
 public:
-    enum Mode
-    {
-        None,
-        Editing,
-        Simulation,
-        Analysis
-    };
-
     explicit GuiInterface(const QString &pPluginName);
 
     virtual void initialize(const QList<Plugin *> &, QMainWindow *);
 
-    virtual Mode requiredMode() const;
+    virtual GuiViewSettings::Mode requiredMode() const;
 
     GuiSettings settings() const;
     void * data() const;

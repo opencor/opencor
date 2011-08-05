@@ -21,7 +21,7 @@ QString File::fileName() const
     return mFileName;
 }
 
-File::FileStatus File::check()
+File::Status File::check()
 {
     // Get the current SHA1 value for the file and compare it to its currently
     // stored value
@@ -101,7 +101,7 @@ FileManager::~FileManager()
         delete file;
 }
 
-FileManager::ManageStatus FileManager::manage(const QString &pFileName)
+FileManager::Status FileManager::manage(const QString &pFileName)
 {
     QFileInfo fileInfo = pFileName;
 
@@ -125,7 +125,7 @@ FileManager::ManageStatus FileManager::manage(const QString &pFileName)
     }
 }
 
-FileManager::UnmanageStatus FileManager::unmanage(const QString &pFileName)
+FileManager::Status FileManager::unmanage(const QString &pFileName)
 {
     QFileInfo fileInfo = pFileName;
 

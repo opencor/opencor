@@ -39,9 +39,9 @@ public:
 
     QString activeFileName() const;
 
-    void enableMode(const GuiInterface::Mode &pMode);
+    void enableMode(const GuiViewSettings::Mode &pMode);
 
-    bool isModeEnabled(const GuiInterface::Mode &pMode) const;
+    bool isModeEnabled(const GuiViewSettings::Mode &pMode) const;
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
@@ -53,7 +53,7 @@ private:
 
     FileManager *mFileManager;
 
-    QMap<GuiInterface::Mode, bool> mModesEnabled;
+    QMap<GuiViewSettings::Mode, bool> mModesEnabled;
 
     QTabBar *mModes;
     TabWidget *mFiles;

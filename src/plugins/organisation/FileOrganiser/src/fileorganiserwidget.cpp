@@ -9,12 +9,6 @@
 namespace OpenCOR {
 namespace FileOrganiser {
 
-enum FileOrganiserItemRole {
-    FileOrganiserItemFolder   = Qt::UserRole,
-    FileOrganiserItemPath     = Qt::UserRole+1,
-    FileOrganiserItemExpanded = Qt::UserRole+2
-};
-
 static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
 static const QString ExpandedFolderIcon  = ":oxygen/actions/document-open-folder.png";
 static const QString FileIcon            = ":oxygen/mimetypes/application-x-zerosize.png";
@@ -187,8 +181,8 @@ QString FileOrganiserModel::filePath(const QModelIndex &pFileIndex) const
 
     QStandardItem *fileItem = itemFromIndex(pFileIndex);
 
-    if (fileItem && !fileItem->data(FileOrganiserItemFolder).toBool())
-        return fileItem->data(FileOrganiserItemPath).toString();
+    if (fileItem && !fileItem->data(Item::Folder).toBool())
+        return fileItem->data(Item::Path).toString();
     else
         return QString();
 }
@@ -275,7 +269,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
                 QStandardItem *folderItem = new QStandardItem(QIcon(CollapsedFolderIcon),
                                                               textOrPath);
 
-                folderItem->setData(true, FileOrganiserItemFolder);
+                folderItem->setData(true, Item::Folder);
 
                 pParentItem->appendRow(folderItem);
 
@@ -297,7 +291,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
                                                                       DeletedFileIcon),
                                                             fileInfo.fileName());
 
-                fileItem->setData(textOrPath, FileOrganiserItemPath);
+                fileItem->setData(textOrPath, Item::Path);
 
                 pParentItem->appendRow(fileItem);
 
@@ -362,7 +356,7 @@ void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
     //  - Whether the (folder) items is expanded or not
 
     if (   (pItem == mDataModel->invisibleRootItem())
-        || pItem->data(FileOrganiserItemFolder).toBool()) {
+        || pItem->data(Item::Folder).toBool()) {
         // We are dealing with a folder item (be it the root folder item or not)
 
         itemInfo << pItem->text() << QString::number(pParentItemIndex)
@@ -371,7 +365,7 @@ void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
     } else {
         // We are dealing with a file item
 
-        QString fileName = pItem->data(FileOrganiserItemPath).toString();
+        QString fileName = pItem->data(Item::Path).toString();
 
         itemInfo << fileName
                  << QString::number(pParentItemIndex) << "-1" << "0";
@@ -447,9 +441,9 @@ bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
         QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(helpEvent->pos()));
 
         if (crtItem)
-            setToolTip(QDir::toNativeSeparators(crtItem->data(FileOrganiserItemFolder).toBool()?
+            setToolTip(QDir::toNativeSeparators(crtItem->data(Item::Folder).toBool()?
                                                     "":
-                                                    crtItem->data(FileOrganiserItemPath).toString()));
+                                                    crtItem->data(Item::Path).toString()));
     }
 
     // Default handling of the event
@@ -509,7 +503,7 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
             draggingOnSelfOrChild = itemIsOrIsChildOf(dropItem, mDataModel->itemFromIndex(indexes.at(i)));
 
     if (   (pEvent->mimeData()->urls().count() || indexes.count())
-        && (   (dropItem && dropItem->data(FileOrganiserItemFolder).toBool())
+        && (   (dropItem && dropItem->data(Item::Folder).toBool())
             || (dropIndicatorPosition() != QAbstractItemView::OnItem))
         && !draggingOnSelfOrChild)
         pEvent->acceptProposedAction();
@@ -675,7 +669,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
 
             QStandardItem *crtItem = mDataModel->itemFromIndex(crtIndex);
 
-            if (crtItem && crtItem->data(FileOrganiserItemFolder).toBool())
+            if (crtItem && crtItem->data(Item::Folder).toBool())
                 for (int j = res.count()-1; j >= 0; --j)
                     if (parentIndexExists(res.at(j), res))
                         res.removeAt(j);
@@ -690,7 +684,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
     for (int i = res.count()-1; i >= 0; --i) {
         QStandardItem *crtItem = mDataModel->itemFromIndex(res.at(i));
 
-        if (crtItem && !crtItem->data(FileOrganiserItemFolder).toBool())
+        if (crtItem && !crtItem->data(Item::Folder).toBool())
             // The index corresponds to a valid file item, so check whether in
             // the cleaned list there is another file item referencing the same
             // physical file and, if so, remove it from the cleaned list and the
@@ -700,8 +694,8 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
                 QStandardItem *testItem = mDataModel->itemFromIndex(res.at(j));
 
                 if (   testItem
-                    && !testItem->data(FileOrganiserItemFolder).toBool()
-                    && !crtItem->data(FileOrganiserItemPath).toString().compare(testItem->data(FileOrganiserItemPath).toString())) {
+                    && !testItem->data(Item::Folder).toBool()
+                    && !crtItem->data(Item::Path).toString().compare(testItem->data(Item::Path).toString())) {
                     // The test item is a valid file item and references the
                     // same physical file as our current item, so remove the
                     // current item from the cleaned list
@@ -755,11 +749,11 @@ void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem) const
     // Recursively backup the expanded state of the item, should it be a folder,
     // and of any of its children, should it have some
 
-    if (pItem->data(FileOrganiserItemFolder).toBool()) {
+    if (pItem->data(Item::Folder).toBool()) {
         // Keep track of the expanded state of pItem
 
         pItem->setData(isExpanded(mDataModel->indexFromItem(pItem)),
-                       FileOrganiserItemExpanded);
+                       Item::Expanded);
 
         // Do the same with all of pItem's children, if any
 
@@ -773,11 +767,11 @@ void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
     // Recursively restore the expanded state of the item, should it be a
     // folder, and of any of its children, should it have some
 
-    if (pItem->data(FileOrganiserItemFolder).toBool()) {
+    if (pItem->data(Item::Folder).toBool()) {
         // Retrieve the expanded state of pItem
 
         setExpanded(mDataModel->indexFromItem(pItem),
-                    pItem->data(FileOrganiserItemExpanded).toBool());
+                    pItem->data(Item::Expanded).toBool());
 
         // Do the same with all of pItem's children, if any
 
@@ -788,7 +782,7 @@ void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
 
 bool FileOrganiserWidget::isFolderItem(const QModelIndex &pItemIndex) const
 {
-    return mDataModel->itemFromIndex(pItemIndex)->data(FileOrganiserItemFolder).toBool();
+    return mDataModel->itemFromIndex(pItemIndex)->data(Item::Folder).toBool();
 }
 
 QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem) const
@@ -834,14 +828,14 @@ bool FileOrganiserWidget::newFolder()
                                            mDataModel->itemFromIndex(selectedIndexes.first());
 
         if (   (crtItem == mDataModel->invisibleRootItem())
-            || crtItem->data(FileOrganiserItemFolder).toBool()) {
+            || crtItem->data(Item::Folder).toBool()) {
             // The current item is a folder item, so we can create the new
             // folder item under the root item or the existing folder item
 
             QStandardItem *newFolderItem = new QStandardItem(QIcon(CollapsedFolderIcon),
                                                              newFolderName(crtItem));
 
-            newFolderItem->setData(true, FileOrganiserItemFolder);
+            newFolderItem->setData(true, Item::Folder);
 
             crtItem->appendRow(newFolderItem);
 
@@ -914,8 +908,8 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
 
             QStandardItem *crtItem = newParentItem->child(i);
 
-            fileExists =    !crtItem->data(FileOrganiserItemFolder).toBool()
-                         && (crtItem->data(FileOrganiserItemPath).toString() == pFileName);
+            fileExists =    !crtItem->data(Item::Folder).toBool()
+                         && (crtItem->data(Item::Path).toString() == pFileName);
         }
 
         // Third, if the file is not already owned, then add it to newParentItem
@@ -925,7 +919,7 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
             QStandardItem *newFileItem = new QStandardItem(QIcon(FileIcon),
                                                            QFileInfo(pFileName).fileName());
 
-            newFileItem->setData(pFileName, FileOrganiserItemPath);
+            newFileItem->setData(pFileName, Item::Path);
 
             switch (pDropPosition) {
                 case QAbstractItemView::AboveItem:
@@ -1039,12 +1033,12 @@ bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
 
         bool fileExists = false;
 
-        if (!pItem->data(FileOrganiserItemFolder).toBool()) {
+        if (!pItem->data(Item::Folder).toBool()) {
             // The current item is a file item, so retrieve the name of the file
             // it refers to and check whether or not it's already owned by
             // newParentItem
 
-            QString fileName = pItem->data(FileOrganiserItemPath).toString();
+            QString fileName = pItem->data(Item::Path).toString();
 
             for (int i = 0; (i < newParentItem->rowCount()) && !fileExists; ++i) {
                 // Check whether the current item is a file and whether it's the one
@@ -1052,8 +1046,8 @@ bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
 
                 QStandardItem *crtItem = newParentItem->child(i);
 
-                fileExists =    !crtItem->data(FileOrganiserItemFolder).toBool()
-                             && (crtItem->data(FileOrganiserItemPath).toString() == fileName);
+                fileExists =    !crtItem->data(Item::Folder).toBool()
+                             && (crtItem->data(Item::Path).toString() == fileName);
             }
         }
 
@@ -1136,7 +1130,7 @@ void FileOrganiserWidget::collapseEmptyFolders(QStandardItem *pFolder)
     // Recursively collapse any empty child folder
 
     for (int i = 0; i < pFolder->rowCount(); ++i)
-        if (pFolder->child(i)->data(FileOrganiserItemFolder).toBool())
+        if (pFolder->child(i)->data(Item::Folder).toBool())
             collapseEmptyFolders(pFolder->child(i));
 
     // Collapse the current folder, if necessary and if it isn't the root folder
@@ -1173,8 +1167,8 @@ bool FileOrganiserWidget::deleteItems()
             QModelIndex crtIndex = selectedIndexes.first();
             QStandardItem *crtItem = mDataModel->itemFromIndex(crtIndex);
 
-            if (crtItem && !crtItem->data(FileOrganiserItemFolder).toBool())
-                mFileManager->unmanage(crtItem->data(FileOrganiserItemPath).toString());
+            if (crtItem && !crtItem->data(Item::Folder).toBool())
+                mFileManager->unmanage(crtItem->data(Item::Path).toString());
 
             // Remove the item from the model itself
 
@@ -1287,12 +1281,12 @@ void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 
 void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
                                           const QString &pFileName,
-                                          const Core::File::FileStatus &pStatus) const
+                                          const Core::File::Status &pStatus) const
 {
     // Recursively update the icon of all file items that refer to pFileName
 
-    if (   !pItem->data(FileOrganiserItemFolder).toBool()
-        && !pItem->data(FileOrganiserItemPath).toString().compare(pFileName))
+    if (   !pItem->data(Item::Folder).toBool()
+        && !pItem->data(Item::Path).toString().compare(pFileName))
         // The current item is a file item and it refers to pFileName, so update
         // its icon based on the value of pStatus
 

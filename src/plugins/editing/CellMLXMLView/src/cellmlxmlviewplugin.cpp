@@ -23,11 +23,11 @@ CellMLXMLViewPlugin::CellMLXMLViewPlugin() :
 {
 }
 
-GuiInterface::Mode CellMLXMLViewPlugin::requiredMode() const
+GuiViewSettings::Mode CellMLXMLViewPlugin::requiredMode() const
 {
     // We need the Editing mode, so...
 
-    return Editing;
+    return GuiViewSettings::Editing;
 }
 
 } }

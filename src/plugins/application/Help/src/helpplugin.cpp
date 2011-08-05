@@ -39,7 +39,7 @@ void HelpPlugin::initialize(const QList<Plugin *> &, QMainWindow *pMainWindow)
 
     // Create and set our data
 
-    mData = new GuiSettingsHelpPlugin(mHelpAction, mHelpWindow);
+    mData = new GuiHelpSettings(mHelpAction, mHelpWindow);
 
     // Some connections to handle the visibility of our help window
 
@@ -53,7 +53,7 @@ void HelpPlugin::finalize()
 {
     // Delete our data
 
-    delete (GuiSettingsHelpPlugin *) mData;
+    delete (GuiHelpSettings *) mData;
 }
 
 void HelpPlugin::retranslateUi()

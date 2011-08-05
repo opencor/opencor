@@ -6,117 +6,137 @@
 
 namespace OpenCOR {
 
-GuiSettingsCorePlugin::GuiSettingsCorePlugin(Core::CentralWidget *pCentralWidget) :
+GuiCoreSettings::GuiCoreSettings(Core::CentralWidget *pCentralWidget) :
     mCentralWidget(pCentralWidget)
 {
 }
 
-Core::CentralWidget * GuiSettingsCorePlugin::centralWidget() const
+Core::CentralWidget * GuiCoreSettings::centralWidget() const
 {
     // Return the central widget
 
     return mCentralWidget;
 }
 
-GuiSettingsHelpPlugin::GuiSettingsHelpPlugin(QAction *pHelpAction,
-                                             Core::DockWidget *pHelpWindow) :
+GuiHelpSettings::GuiHelpSettings(QAction *pHelpAction,
+                                 Core::DockWidget *pHelpWindow) :
     mHelpAction(pHelpAction),
     mHelpWindow(pHelpWindow)
 {
 }
 
-QAction * GuiSettingsHelpPlugin::helpAction() const
+QAction * GuiHelpSettings::helpAction() const
 {
     // Return the help action
 
     return mHelpAction;
 }
 
-Core::DockWidget * GuiSettingsHelpPlugin::helpWindow() const
+Core::DockWidget * GuiHelpSettings::helpWindow() const
 {
     // Return the help window
 
     return mHelpWindow;
 }
 
-GuiSettingsMenu::GuiSettingsMenu(const GuiSettingsMenuType &pType,
+GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
                                  QMenu *pMenu) :
     mType(pType),
     mMenu(pMenu)
 {
 }
 
-GuiSettingsMenu::GuiSettingsMenuType GuiSettingsMenu::type() const
+GuiMenuSettings::GuiMenuSettingsType GuiMenuSettings::type() const
 {
     // Return the menu's type
 
     return mType;
 }
 
-QMenu * GuiSettingsMenu::menu() const
+QMenu * GuiMenuSettings::menu() const
 {
     // Return the menu itsef
 
     return mMenu;
 }
 
-GuiSettingsAction::GuiSettingsAction(const GuiSettingsActionType &pType,
+GuiActionSettings::GuiActionSettings(const GuiActionSettingsType &pType,
                                      QAction *pAction) :
     mType(pType),
     mAction(pAction)
 {
 }
 
-GuiSettingsAction::GuiSettingsActionType GuiSettingsAction::type() const
+GuiActionSettings::GuiActionSettingsType GuiActionSettings::type() const
 {
     // Return the action's type
 
     return mType;
 }
 
-QAction * GuiSettingsAction::action() const
+QAction * GuiActionSettings::action() const
 {
     // Return the action itself
 
     return mAction;
 }
 
-GuiSettingsWindow::GuiSettingsWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
+GuiViewSettings::GuiViewSettings(const Mode &pMode, const QString &pName) :
+    mMode(pMode),
+    mName(pName)
+{
+}
+
+GuiViewSettings::Mode GuiViewSettings::mode() const
+{
+    // Return the view's mode
+
+    return mMode;
+}
+
+QString GuiViewSettings::name() const
+{
+    // Return the view's name
+
+    return mName;
+}
+
+GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
                                      Core::DockWidget *pWindow) :
     mDefaultDockingArea(pDefaultDockingArea),
     mWindow(pWindow)
 {
 }
 
-Qt::DockWidgetArea GuiSettingsWindow::defaultDockingArea() const
+Qt::DockWidgetArea GuiWindowSettings::defaultDockingArea() const
 {
     // Return the window's default docking area
 
     return mDefaultDockingArea;
 }
 
-Core::DockWidget * GuiSettingsWindow::window() const
+Core::DockWidget * GuiWindowSettings::window() const
 {
     // Return the window itself
 
     return mWindow;
 }
 
-void GuiSettings::addMenu(const GuiSettingsMenu::GuiSettingsMenuType &pType,
+void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
                           QMenu *pMenu)
 {
     // Add a new menu to our list
 
-    mMenus.prepend(GuiSettingsMenu(pType, pMenu));
+    mMenus.prepend(GuiMenuSettings(pType, pMenu));
 }
 
-void GuiSettings::addAction(const GuiSettingsAction::GuiSettingsActionType &pType,
+void GuiSettings::addAction(const GuiActionSettings::GuiActionSettingsType &pType,
                             QAction *pAction)
 {
     // Add a new action to our list
     // Note: a null pAction means that we want to add a separator
 
-    mActions.prepend(GuiSettingsAction(pType, pAction));
+    mActions.prepend(GuiActionSettings(pType, pAction));
 }
 
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
@@ -124,24 +144,24 @@ void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
 {
     // Add a new dock widget to our list
 
-    mWindows.prepend(GuiSettingsWindow(pDefaultDockingArea, pWindow));
+    mWindows.prepend(GuiWindowSettings(pDefaultDockingArea, pWindow));
 }
 
-QList<GuiSettingsMenu> GuiSettings::menus() const
+QList<GuiMenuSettings> GuiSettings::menus() const
 {
     // Return our menus
 
     return mMenus;
 }
 
-QList<GuiSettingsAction> GuiSettings::actions() const
+QList<GuiActionSettings> GuiSettings::actions() const
 {
     // Return our actions
 
     return mActions;
 }
 
-QList<GuiSettingsWindow> GuiSettings::windows() const
+QList<GuiWindowSettings> GuiSettings::windows() const
 {
     // Return our windows
 
@@ -159,11 +179,11 @@ void GuiInterface::initialize(const QList<Plugin *> &, QMainWindow *)
     // Nothing to do by default...
 }
 
-GuiInterface::Mode GuiInterface::requiredMode() const
+GuiViewSettings::Mode GuiInterface::requiredMode() const
 {
     // By default, we don't need any mode, so...
 
-    return None;
+    return GuiViewSettings::None;
 }
 
 GuiSettings GuiInterface::settings() const

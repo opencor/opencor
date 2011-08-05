@@ -8,7 +8,7 @@
 namespace OpenCOR {
 
 PluginManager::PluginManager(QSettings *pSettings,
-                             const PluginInfo::PluginType &pGuiOrConsoleType) :
+                             const PluginInfo::Type &pGuiOrConsoleType) :
     mSettings(pSettings),
     mInterfaceVersion(PluginInterface::V001),
     mGuiOrConsoleType(pGuiOrConsoleType)

@@ -17,7 +17,7 @@ class PluginManager : public QObject
 
 public:
     explicit PluginManager(QSettings *pSettings,
-                           const PluginInfo::PluginType &pGuiOrConsoleType);
+                           const PluginInfo::Type &pGuiOrConsoleType);
     ~PluginManager();
 
     QList<Plugin *> plugins(const bool &pOnlyLoadedPlugins = false) const;
@@ -35,7 +35,7 @@ private:
     QSettings *mSettings;
 
     PluginInterface::Version mInterfaceVersion;
-    PluginInfo::PluginType mGuiOrConsoleType;
+    PluginInfo::Type mGuiOrConsoleType;
 
     QString mPluginsDir;
     QMap<QString, Plugin *> mPlugins;

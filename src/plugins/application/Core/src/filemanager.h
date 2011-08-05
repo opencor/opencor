@@ -17,7 +17,7 @@ static const QString FileSystemMimeType = "text/uri-list";
 class File
 {
 public:
-    enum FileStatus
+    enum Status
     {
         Changed,
         Unchanged,
@@ -28,7 +28,7 @@ public:
 
     QString fileName() const;
 
-    FileStatus check();
+    Status check();
 
 private:
     QString mFileName;
@@ -42,15 +42,16 @@ class CORE_EXPORT FileManager : public QObject
     Q_OBJECT
 
 public:
-    enum ManageStatus
+    enum Status
     {
+        // As a result of managing a file
+
         DoesNotExist,
         Added,
-        AlreadyManaged
-    };
+        AlreadyManaged,
 
-    enum UnmanageStatus
-    {
+        // As a result of unmanaging a file
+
         Removed,
         NotManaged
     };
@@ -58,8 +59,8 @@ public:
     explicit FileManager(const int &pTimerInterval = 1000);
     ~FileManager();
 
-    ManageStatus manage(const QString &pFileName);
-    UnmanageStatus unmanage(const QString &pFileName);
+    Status manage(const QString &pFileName);
+    Status unmanage(const QString &pFileName);
 
     int count() const;
 

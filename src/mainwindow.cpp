@@ -236,7 +236,7 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
         // We are dealing with our special Help plugin and its data is set, so
         // we can make use of it
 
-        QAction *helpAction = ((GuiSettingsHelpPlugin *) pGuiInterface->data())->helpAction();
+        QAction *helpAction = ((GuiHelpSettings *) pGuiInterface->data())->helpAction();
 
         // Add the action to our help menu
 
@@ -255,7 +255,7 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
 
     // Add the menus to our menu bar
 
-    foreach (const GuiSettingsMenu &menuSettings, guiSettings.menus()) {
+    foreach (const GuiMenuSettings &menuSettings, guiSettings.menus()) {
         // Insert the menu in the right place
 
         switch (menuSettings.type()) {
@@ -267,7 +267,7 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
 
     // Add the actions/separators to our different menus
 
-    foreach (const GuiSettingsAction &actionSettings, guiSettings.actions()) {
+    foreach (const GuiActionSettings &actionSettings, guiSettings.actions()) {
         // Add the action/separator to the right menu
 
         switch (actionSettings.type()) {
@@ -316,7 +316,7 @@ void MainWindow::loadPluginSettings(const bool &pNeedDefaultSettings,
             // Our special Core plugin has its data set, so retrieve its central
             // widget's settings
 
-            Core::CentralWidget *centralWidget = ((GuiSettingsCorePlugin *) pGuiInterface->data())->centralWidget();
+            Core::CentralWidget *centralWidget = ((GuiCoreSettings *) pGuiInterface->data())->centralWidget();
 
             // Load the central widget's settings
 
@@ -335,16 +335,16 @@ void MainWindow::loadPluginSettings(const bool &pNeedDefaultSettings,
 
             loadPluginWindowSettings(pNeedDefaultSettings,
                                      Qt::RightDockWidgetArea,
-                                     ((GuiSettingsHelpPlugin *) pGuiInterface->data())->helpWindow());
+                                     ((GuiHelpSettings *) pGuiInterface->data())->helpWindow());
     } else {
         // Neither the Core nor the Help plugin, so retrieve all of the plugin's
         // windows' settings
 
-        foreach (const GuiSettingsWindow &guiSettingsWindow,
+        foreach (const GuiWindowSettings &windowSettings,
                  pGuiInterface->settings().windows())
             loadPluginWindowSettings(pNeedDefaultSettings,
-                                     guiSettingsWindow.defaultDockingArea(),
-                                     guiSettingsWindow.window());
+                                     windowSettings.defaultDockingArea(),
+                                     windowSettings.window());
     }
 }
 
@@ -357,7 +357,7 @@ void MainWindow::savePluginSettings(GuiInterface *pGuiInterface) const
             // Our special Core plugin has its data set, so retrieve our Core
             // plugin's central widget's settings
 
-            ((GuiSettingsCorePlugin *) pGuiInterface->data())->centralWidget()->saveSettings(mSettings);
+            ((GuiCoreSettings *) pGuiInterface->data())->centralWidget()->saveSettings(mSettings);
     } else if (!pGuiInterface->pluginName().compare(HelpPlugin)) {
         // We are dealing with our special Help plugin
 
@@ -365,14 +365,14 @@ void MainWindow::savePluginSettings(GuiInterface *pGuiInterface) const
             // Our special Help plugin has its data set, so keep track of its
             // window's settings
 
-            ((GuiSettingsHelpPlugin *) pGuiInterface->data())->helpWindow()->saveSettings(mSettings);
+            ((GuiHelpSettings *) pGuiInterface->data())->helpWindow()->saveSettings(mSettings);
     } else {
         // Neither the Core nor the Help plugin, so keep track of all of the
         // plugin's windows' settings
 
-        foreach (const GuiSettingsWindow &guiSettingsWindow,
+        foreach (const GuiWindowSettings &windowSettings,
                  pGuiInterface->settings().windows())
-            guiSettingsWindow.window()->saveSettings(mSettings);
+            windowSettings.window()->saveSettings(mSettings);
     }
 }
 
@@ -687,7 +687,7 @@ void MainWindow::restart(const bool &pSaveSettings) const
     if (pSaveSettings)
         saveSettings();
 
-    qApp->exit(MainWindow::NeedRestart);
+    qApp->exit(NeedRestart);
 }
 
 void MainWindow::resetAll()

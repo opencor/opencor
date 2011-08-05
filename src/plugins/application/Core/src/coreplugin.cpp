@@ -33,9 +33,7 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
 
     // Create and set our data
 
-    GuiSettingsCorePlugin *guiSettingsCorePlugin;
-
-    mData = guiSettingsCorePlugin = new GuiSettingsCorePlugin(mCentralWidget);
+    mData = new GuiCoreSettings(mCentralWidget);
 
     // Check, based on the loaded plugins, which modes, if any, our central
     // widget should support
@@ -58,13 +56,13 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
 
     mFileSave    = newAction(pMainWindow, false,
                              ":/oxygen/actions/document-save.png",
-                             mCentralWidget->isModeEnabled(GuiInterface::Editing));
+                             mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
     mFileSaveAs  = newAction(pMainWindow, false,
                              ":/oxygen/actions/document-save-all.png",
-                             mCentralWidget->isModeEnabled(GuiInterface::Editing));
+                             mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
     mFileSaveAll = newAction(pMainWindow, false,
                              ":/oxygen/actions/document-save-as.png",
-                             mCentralWidget->isModeEnabled(GuiInterface::Editing));
+                             mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
 
     mFileClose    = newAction(pMainWindow, false,
                               ":/oxygen/actions/document-close.png");
@@ -75,24 +73,24 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
 
     // Set our settings
 
-    mSettings.addAction(GuiSettingsAction::File, mFileOpen);
-    mSettings.addAction(GuiSettingsAction::File);
-    mSettings.addAction(GuiSettingsAction::File, mFileSave);
-    mSettings.addAction(GuiSettingsAction::File, mFileSaveAs);
-    mSettings.addAction(GuiSettingsAction::File, mFileSaveAll);
-    mSettings.addAction(GuiSettingsAction::File);
-    mSettings.addAction(GuiSettingsAction::File, mFileClose);
-    mSettings.addAction(GuiSettingsAction::File, mFileCloseAll);
-    mSettings.addAction(GuiSettingsAction::File);
-    mSettings.addAction(GuiSettingsAction::File, mFilePrint);
-    mSettings.addAction(GuiSettingsAction::File);
+    mSettings.addAction(GuiActionSettings::File, mFileOpen);
+    mSettings.addAction(GuiActionSettings::File);
+    mSettings.addAction(GuiActionSettings::File, mFileSave);
+    mSettings.addAction(GuiActionSettings::File, mFileSaveAs);
+    mSettings.addAction(GuiActionSettings::File, mFileSaveAll);
+    mSettings.addAction(GuiActionSettings::File);
+    mSettings.addAction(GuiActionSettings::File, mFileClose);
+    mSettings.addAction(GuiActionSettings::File, mFileCloseAll);
+    mSettings.addAction(GuiActionSettings::File);
+    mSettings.addAction(GuiActionSettings::File, mFilePrint);
+    mSettings.addAction(GuiActionSettings::File);
 }
 
 void CorePlugin::finalize()
 {
     // Delete our data
 
-    delete (GuiSettingsCorePlugin *) mData;
+    delete (GuiCoreSettings *) mData;
 }
 
 void CorePlugin::retranslateUi()

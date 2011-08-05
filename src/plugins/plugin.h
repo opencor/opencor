@@ -27,7 +27,7 @@ class Plugin : public QObject
     Q_OBJECT
 
 public:
-    enum PluginStatus
+    enum Status
     {
         Undefined,
         NotFound,
@@ -43,7 +43,7 @@ public:
     };
 
     explicit Plugin(const QString &pFileName,
-                    const PluginInfo::PluginType &pGuiOrConsoleType,
+                    const PluginInfo::Type &pGuiOrConsoleType,
                     const bool &pForceLoading,
                     const PluginInterface::Version &pExpectedInterfaceVersion,
                     QSettings *pSettings, const QString &pPluginsDir,
@@ -52,7 +52,7 @@ public:
     QString name() const;
     PluginInfo info() const;
     QObject * instance() const;
-    PluginStatus status() const;
+    Status status() const;
     QString statusErrors() const;
     int nbOfStatusErrors() const;
 
@@ -72,7 +72,7 @@ private:
     QString mName;
     PluginInfo mInfo;
     QObject *mInstance;
-    PluginStatus mStatus;
+    Status mStatus;
     QString mStatusErrors;
 };
 

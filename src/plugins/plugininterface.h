@@ -36,7 +36,7 @@ class PluginInfo
     friend class Plugin;
 
 public:
-    enum PluginType
+    enum Type
     {
         Undefined,
         General,
@@ -44,7 +44,7 @@ public:
         Gui
     };
 
-    enum PluginCategory
+    enum Category
     {
         Application,
         Api,
@@ -56,15 +56,15 @@ public:
     };
 
     explicit PluginInfo(const PluginInterface::Version &pInterfaceVersion = PluginInterface::Undefined,
-                        const PluginType &pType = Undefined,
-                        const PluginCategory &pCategory = Application,
+                        const Type &pType = Undefined,
+                        const Category &pCategory = Application,
                         const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
                         const PluginInfoDescriptions &pDescriptions = PluginInfoDescriptions());
 
     PluginInterface::Version interfaceVersion() const;
-    PluginType type() const;
-    PluginCategory category() const;
+    Type type() const;
+    Category category() const;
     bool manageable() const;
     QStringList dependencies() const;
     QStringList fullDependencies() const;
@@ -72,8 +72,8 @@ public:
 
 private:
     PluginInterface::Version mInterfaceVersion;
-    PluginType mType;
-    PluginCategory mCategory;
+    Type mType;
+    Category mCategory;
     bool mManageable;
     QStringList mDependencies;
     QStringList mFullDependencies;

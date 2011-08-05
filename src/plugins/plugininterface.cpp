@@ -13,7 +13,7 @@ void PluginInterface::finalize()
 }
 
 PluginInfo::PluginInfo(const PluginInterface::Version &pInterfaceVersion,
-                       const PluginType &pType, const PluginCategory &pCategory,
+                       const Type &pType, const Category &pCategory,
                        const bool &pManageable,
                        const QStringList &pDependencies,
                        const PluginInfoDescriptions &pDescriptions) :
@@ -34,14 +34,14 @@ PluginInterface::Version PluginInfo::interfaceVersion() const
     return mInterfaceVersion;
 }
 
-PluginInfo::PluginType PluginInfo::type() const
+PluginInfo::Type PluginInfo::type() const
 {
     // Return the plugin's type
 
     return mType;
 }
 
-PluginInfo::PluginCategory PluginInfo::category() const
+PluginInfo::Category PluginInfo::category() const
 {
     // Return the plugin's category
 

@@ -23,11 +23,11 @@ CellMLSimulationPlugin::CellMLSimulationPlugin() :
 {
 }
 
-GuiInterface::Mode CellMLSimulationPlugin::requiredMode() const
+GuiViewSettings::Mode CellMLSimulationPlugin::requiredMode() const
 {
     // We need the Simulation mode, so...
 
-    return Simulation;
+    return GuiViewSettings::Simulation;
 }
 
 } }

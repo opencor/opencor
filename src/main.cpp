@@ -98,14 +98,14 @@ int main(int pArgc, char *pArgv[])
     //          here since all that remains to be done is to delete app and win,
     //          and return the result of the execution of the application...
     // Note #2: ideally, we would have a do...while loop which is executed while
-    //          res equals MainWindow::NeedRestart, deleting (if necessary) and
+    //          res equals OpenCOR::NeedRestart, deleting (if necessary) and
     //          reinitialising app and win. There is, however, a bug in Qt (see
     //          http://bugreports.qt.nokia.com/browse/QTBUG-17305) which has
     //          been fixed but hasn't yet been released, so... we go for the
     //          second best solution instead...
     //          ---GRY--- TO BE DONE...
 
-    if (res == MainWindow::NeedRestart)
+    if (res == OpenCOR::NeedRestart)
         // Restart OpenCOR, but without providing any of the argument with which
         // OpenCOR was originally started, since we indeed want to reset
         // everything
