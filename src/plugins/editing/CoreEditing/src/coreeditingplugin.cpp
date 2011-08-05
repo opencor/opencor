@@ -111,7 +111,7 @@ void CoreEditingPlugin::retranslateUi()
 {
     // Retranslate our different File actions
 
-    retranslateAction(mFileOpen, tr("&Open"),
+    retranslateAction(mFileOpen, tr("&Open..."),
                       tr("Open a file"),
                       tr("Ctrl+O"));
 

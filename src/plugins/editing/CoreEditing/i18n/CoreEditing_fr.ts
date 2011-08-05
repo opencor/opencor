@@ -4,8 +4,8 @@
 <context>
     <name>OpenCOR::CoreEditing::CoreEditingPlugin</name>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Ouvrir</translation>
+        <source>&amp;Open...</source>
+        <translation>&amp;Ouvrir...</translation>
     </message>
     <message>
         <source>Open a file</source>
