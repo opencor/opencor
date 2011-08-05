@@ -16,8 +16,6 @@ class CellMLXMLViewPlugin : public GuiInterface
 
 public:
     explicit CellMLXMLViewPlugin();
-
-    virtual GuiViewSettings::Mode requiredMode() const;
 };
 
 } }

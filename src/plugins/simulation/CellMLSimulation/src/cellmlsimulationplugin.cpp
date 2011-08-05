@@ -21,13 +21,9 @@ Q_EXPORT_PLUGIN2(CellMLSimulation, CellMLSimulationPlugin)
 CellMLSimulationPlugin::CellMLSimulationPlugin() :
     GuiInterface("CellMLXMLView")
 {
-}
+    // Set our settings
 
-GuiViewSettings::Mode CellMLSimulationPlugin::requiredMode() const
-{
-    // We need the Simulation mode, so...
-
-    return GuiViewSettings::Simulation;
+    mSettings.addView(GuiViewSettings::Simulation, "CellML");
 }
 
 } }

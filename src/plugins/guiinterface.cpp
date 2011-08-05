@@ -139,10 +139,18 @@ void GuiSettings::addAction(const GuiActionSettings::GuiActionSettingsType &pTyp
     mActions.prepend(GuiActionSettings(pType, pAction));
 }
 
+void GuiSettings::addView(const GuiViewSettings::Mode &pMode,
+                          const QString &pName)
+{
+    // Add a new view to our list
+
+    mViews.prepend(GuiViewSettings(pMode, pName));
+}
+
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                             Core::DockWidget *pWindow)
 {
-    // Add a new dock widget to our list
+    // Add a new window to our list
 
     mWindows.prepend(GuiWindowSettings(pDefaultDockingArea, pWindow));
 }
@@ -161,6 +169,13 @@ QList<GuiActionSettings> GuiSettings::actions() const
     return mActions;
 }
 
+QList<GuiViewSettings> GuiSettings::views() const
+{
+    // Return our views
+
+    return mViews;
+}
+
 QList<GuiWindowSettings> GuiSettings::windows() const
 {
     // Return our windows
@@ -177,13 +192,6 @@ GuiInterface::GuiInterface(const QString &pPluginName) :
 void GuiInterface::initialize(const QList<Plugin *> &, QMainWindow *)
 {
     // Nothing to do by default...
-}
-
-GuiViewSettings::Mode GuiInterface::requiredMode() const
-{
-    // By default, we don't need any mode, so...
-
-    return GuiViewSettings::None;
 }
 
 GuiSettings GuiInterface::settings() const

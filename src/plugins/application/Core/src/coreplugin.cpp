@@ -42,9 +42,12 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface)
-            // The plugin implements our GUI interface, so...
+            // The plugin implements our GUI interface, so go through each view
+            // supported by the plugin and enable whatever mode is required
 
-            mCentralWidget->enableMode(guiInterface->requiredMode());
+            foreach (const GuiViewSettings &viewSettings,
+                     guiInterface->settings().views())
+                mCentralWidget->enableMode(viewSettings.mode());
     }
 
     // Create our different File actions

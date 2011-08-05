@@ -21,13 +21,9 @@ Q_EXPORT_PLUGIN2(CellMLXMLView, CellMLXMLViewPlugin)
 CellMLXMLViewPlugin::CellMLXMLViewPlugin() :
     GuiInterface("CellMLXMLView")
 {
-}
+    // Set our settings
 
-GuiViewSettings::Mode CellMLXMLViewPlugin::requiredMode() const
-{
-    // We need the Editing mode, so...
-
-    return GuiViewSettings::Editing;
+    mSettings.addView(GuiViewSettings::Editing, "Raw");
 }
 
 } }

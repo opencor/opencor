@@ -16,8 +16,6 @@ class CellMLSimulationPlugin : public GuiInterface
 
 public:
     explicit CellMLSimulationPlugin();
-
-    virtual GuiViewSettings::Mode requiredMode() const;
 };
 
 } }

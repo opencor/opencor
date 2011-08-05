@@ -80,14 +80,12 @@ class GuiViewSettings
 public:
     enum Mode
     {
-        None,
         Editing,
         Simulation,
         Analysis
     };
 
-    explicit GuiViewSettings(const Mode &pMode = None,
-                             const QString &pName = QString());
+    explicit GuiViewSettings(const Mode &pMode, const QString &pName);
 
     Mode mode() const;
     QString name() const;
@@ -118,16 +116,19 @@ public:
                  QMenu *pMenu);
     void addAction(const GuiActionSettings::GuiActionSettingsType &pType,
                    QAction *pAction = 0);
+    void addView(const GuiViewSettings::Mode &pMode, const QString &pName);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow);
 
     QList<GuiMenuSettings> menus() const;
     QList<GuiActionSettings> actions() const;
+    QList<GuiViewSettings> views() const;
     QList<GuiWindowSettings> windows() const;
 
 private:
     QList<GuiMenuSettings> mMenus;
     QList<GuiActionSettings> mActions;
+    QList<GuiViewSettings> mViews;
     QList<GuiWindowSettings> mWindows;
 };
 
@@ -137,8 +138,6 @@ public:
     explicit GuiInterface(const QString &pPluginName);
 
     virtual void initialize(const QList<Plugin *> &, QMainWindow *);
-
-    virtual GuiViewSettings::Mode requiredMode() const;
 
     GuiSettings settings() const;
     void * data() const;

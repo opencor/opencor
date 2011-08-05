@@ -308,17 +308,13 @@ QString CentralWidget::activeFileName() const
 
 void CentralWidget::enableMode(const GuiViewSettings::Mode &pMode)
 {
-    // Enable a particular mode (as long as it isn't the None mode)
+    // Enable the given mode
 
-    if (pMode != GuiViewSettings::None) {
-        // Update the enabled state of the given mode
+    mModesEnabled.insert(pMode, true);
 
-        mModesEnabled.insert(pMode, true);
+    // Make sure that the GUI is aware of the change
 
-        // Make sure that the GUI is aware of the change
-
-        updateModes();
-    }
+    updateModes();
 }
 
 bool CentralWidget::isModeEnabled(const GuiViewSettings::Mode &pMode) const
