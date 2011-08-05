@@ -143,7 +143,8 @@ protected:
     static QMenu * newMenu(QMainWindow *pMainWindow);
     static QAction * newAction(QMainWindow *pMainWindow,
                                const bool &pCheckable = false,
-                               const QString &pIconResource = QString());
+                               const QString &pIconResource = QString(),
+                               const bool &pVisible = true);
 
     static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
     static void retranslateAction(QAction *pAction, const QString &pText,

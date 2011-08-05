@@ -46,20 +46,25 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
         if (guiInterface)
             // The plugin implements our GUI interface, so...
 
-            mCentralWidget->requireMode(guiInterface->requiredMode());
+            mCentralWidget->enableMode(guiInterface->requiredMode());
     }
 
     // Create our different File actions
+    // Note: all the save-related actions are to be invisible unless the Editing
+    //       mode is active
 
     mFileOpen = newAction(pMainWindow, false,
                           ":/oxygen/actions/document-open.png");
 
     mFileSave    = newAction(pMainWindow, false,
-                             ":/oxygen/actions/document-save.png");
+                             ":/oxygen/actions/document-save.png",
+                             mCentralWidget->isModeEnabled(GuiInterface::Editing));
     mFileSaveAs  = newAction(pMainWindow, false,
-                             ":/oxygen/actions/document-save-all.png");
+                             ":/oxygen/actions/document-save-all.png",
+                             mCentralWidget->isModeEnabled(GuiInterface::Editing));
     mFileSaveAll = newAction(pMainWindow, false,
-                             ":/oxygen/actions/document-save-as.png");
+                             ":/oxygen/actions/document-save-as.png",
+                             mCentralWidget->isModeEnabled(GuiInterface::Editing));
 
     mFileClose    = newAction(pMainWindow, false,
                               ":/oxygen/actions/document-close.png");

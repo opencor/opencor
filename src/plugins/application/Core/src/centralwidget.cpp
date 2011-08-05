@@ -306,8 +306,10 @@ QString CentralWidget::activeFileName() const
         return QString();
 }
 
-void CentralWidget::requireMode(const GuiInterface::Mode &pMode)
+void CentralWidget::enableMode(const GuiInterface::Mode &pMode)
 {
+    // Enable a particular mode (as long as it isn't the None mode)
+
     if (pMode != GuiInterface::None) {
         // Update the enabled state of the given mode
 
@@ -317,6 +319,13 @@ void CentralWidget::requireMode(const GuiInterface::Mode &pMode)
 
         updateModes();
     }
+}
+
+bool CentralWidget::isModeEnabled(const GuiInterface::Mode &pMode) const
+{
+    // Return whether a particular mode is enabled
+
+    return mModesEnabled.value(pMode);
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)

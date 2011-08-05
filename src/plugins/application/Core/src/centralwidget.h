@@ -39,7 +39,9 @@ public:
 
     QString activeFileName() const;
 
-    void requireMode(const GuiInterface::Mode &pMode);
+    void enableMode(const GuiInterface::Mode &pMode);
+
+    bool isModeEnabled(const GuiInterface::Mode &pMode) const;
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);

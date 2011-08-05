@@ -209,7 +209,8 @@ QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow)
 
 QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
                                   const bool &pCheckable,
-                                  const QString &pIconResource)
+                                  const QString &pIconResource,
+                                  const bool &pVisible)
 {
     // Create and return an action
 
@@ -217,6 +218,7 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
 
     res->setCheckable(pCheckable);
     res->setIcon(QIcon(pIconResource));
+    res->setVisible(pVisible);
 
     return res;
 }
