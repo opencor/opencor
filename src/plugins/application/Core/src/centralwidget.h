@@ -19,6 +19,20 @@ namespace Core {
 class FileManager;
 class TabWidget;
 
+class CentralViewWidget
+{
+public:
+    explicit CentralViewWidget(Plugin *pPlugin,
+                               const GuiViewSettings &pSettings);
+
+    Plugin * plugin() const;
+    GuiViewSettings settings() const;
+
+private:
+    Plugin *mPlugin;
+    GuiViewSettings mSettings;
+};
+
 class CentralWidget : public QWidget, public CommonWidget
 {
     Q_OBJECT
@@ -41,7 +55,7 @@ public:
 
     bool isModeEnabled(const GuiViewSettings::Mode &pMode) const;
 
-    void addView(const GuiViewSettings &pViewSettings);
+    void addView(Plugin *pPlugin, const GuiViewSettings &pSettings);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
@@ -53,13 +67,14 @@ private:
 
     FileManager *mFileManager;
 
-    QMap<GuiViewSettings::Mode, bool> mModesEnabled;
-
     QTabBar *mModes;
     TabWidget *mFiles;
     QTabBar *mViews;
 
-    void updateModes() const;
+    QList<GuiViewSettings::Mode> mRequiredModes;
+
+    QList<CentralViewWidget> mSupportedViews;
+
     void updateGui() const;
 
 Q_SIGNALS:

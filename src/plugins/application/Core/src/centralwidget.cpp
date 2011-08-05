@@ -14,6 +14,27 @@
 namespace OpenCOR {
 namespace Core {
 
+CentralViewWidget::CentralViewWidget(Plugin *pPlugin,
+                                     const GuiViewSettings &pSettings) :
+    mPlugin(pPlugin),
+    mSettings(pSettings)
+{
+}
+
+Plugin * CentralViewWidget::plugin() const
+{
+    // Return the view's plugin
+
+    return mPlugin;
+}
+
+GuiViewSettings CentralViewWidget::settings() const
+{
+    // Return the view's settings
+
+    return mSettings;
+}
+
 CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
@@ -30,12 +51,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // Create our file manager
 
     mFileManager = new FileManager();
-
-    // By default, no mode is available
-
-    mModesEnabled.insert(GuiViewSettings::Editing, false);
-    mModesEnabled.insert(GuiViewSettings::Simulation, false);
-    mModesEnabled.insert(GuiViewSettings::Analysis, false);
 
     // Create our modes tab bar
 
@@ -94,9 +109,24 @@ CentralWidget::~CentralWidget()
 
 void CentralWidget::retranslateUi()
 {
-    // Retranslate the modes tab bar by updating them
+    // Retranslate the modes tab bar by first removing all of them and then
+    // adding the ones which are required
 
-    updateModes();
+    // Remove all the modes tab bar
+
+    while (mModes->count())
+        mModes->removeTab(0);
+
+    // Add the required modes tab bar
+
+    if (mRequiredModes.contains(GuiViewSettings::Editing))
+        mModes->addTab(tr("Editing"));
+
+    if (mRequiredModes.contains(GuiViewSettings::Simulation))
+        mModes->addTab(tr("Simulation"));
+
+    if (mRequiredModes.contains(GuiViewSettings::Analysis))
+        mModes->addTab(tr("Analysis"));
 }
 
 static const QString SettingsOpenedFiles = "OpenedFiles";
@@ -310,22 +340,32 @@ bool CentralWidget::isModeEnabled(const GuiViewSettings::Mode &pMode) const
 {
     // Return whether a particular mode is enabled
 
-    return mModesEnabled.value(pMode);
+    return mRequiredModes.contains(pMode);
 }
 
-void CentralWidget::addView(const GuiViewSettings &pViewSettings)
+void CentralWidget::addView(Plugin *pPlugin,
+                            const GuiViewSettings &pSettings)
 {
-    // Enable the mode required by the view, if necessary
+    // Add a new view to our list of supported views
+    // Note: the reason we are prepending rather than just appending is that
+    //       GuiInterface::addView does prepend to ensure that, when creating
+    //       menu items for a series of views from the same plugin, the order
+    //       required by the user remains intact. E.g. say that we add views A,
+    //       B and C. They will be stored as C, B and A (as opposed A, B and C
+    //       if we were just to append them to the list) which means that we can
+    //       then use a simple foreach statement to add a menu item for the view
+    //       (since we can only insert a menu item before an existing one, as
+    //       opposed to after an existing one). So, this means that by
+    //       prepending to our local list, we end up with A, B and C which is
+    //       what we want to then get the tab bars for the views in the right
+    //       order, so...
 
-    if (!isModeEnabled(pViewSettings.mode())) {
-        // Enable the required mode
+    mSupportedViews.prepend(CentralViewWidget(pPlugin, pSettings));
 
-        mModesEnabled.insert(pViewSettings.mode(), true);
+    // Make sure that our list of required modes is up-to-date
 
-        // Make sure that the GUI is aware of the requirement
-
-        updateModes();
-    }
+    if (!isModeEnabled(pSettings.mode()))
+        mRequiredModes << pSettings.mode();
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
@@ -394,25 +434,6 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
     // Accept the proposed action for the event
 
     pEvent->acceptProposedAction();
-}
-
-void CentralWidget::updateModes() const
-{
-    // Remove all the modes
-
-    while (mModes->count())
-        mModes->removeTab(0);
-
-    // Add the required tabs
-
-    if (mModesEnabled.value(GuiViewSettings::Editing))
-        mModes->addTab(tr("Editing"));
-
-    if (mModesEnabled.value(GuiViewSettings::Simulation))
-        mModes->addTab(tr("Simulation"));
-
-    if (mModesEnabled.value(GuiViewSettings::Analysis))
-        mModes->addTab(tr("Analysis"));
 }
 
 void CentralWidget::updateGui() const

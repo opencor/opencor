@@ -47,7 +47,7 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
 
             foreach (const GuiViewSettings &viewSettings,
                      guiInterface->settings().views())
-                mCentralWidget->addView(viewSettings);
+                mCentralWidget->addView(plugin, viewSettings);
     }
 
     // Create our different File actions
