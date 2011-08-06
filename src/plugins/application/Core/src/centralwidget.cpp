@@ -126,21 +126,21 @@ void CentralWidget::retranslateUi()
     while (mModes->count())
         mModes->removeTab(0);
 
-    mModeTabs.clear();
+    mTabsMode.clear();
 
     // Add a tab for the required modes and keep track of which tab corresponds
     // to which mode
 
     if (mRequiredModes.contains(GuiViewSettings::Editing))
-        mModeTabs.insert(mModes->addTab(tr("Editing")),
+        mTabsMode.insert(mModes->addTab(tr("Editing")),
                          GuiViewSettings::Editing);
 
     if (mRequiredModes.contains(GuiViewSettings::Simulation))
-        mModeTabs.insert(mModes->addTab(tr("Simulation")),
+        mTabsMode.insert(mModes->addTab(tr("Simulation")),
                          GuiViewSettings::Simulation);
 
     if (mRequiredModes.contains(GuiViewSettings::Analysis))
-        mModeTabs.insert(mModes->addTab(tr("Analysis")),
+        mTabsMode.insert(mModes->addTab(tr("Analysis")),
                          GuiViewSettings::Analysis);
 }
 
@@ -458,26 +458,32 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 void CentralWidget::updateGui() const
 {
-    // Show/hide the modes tab and the views tab bar for the currently selected
-    // mode and this depending on whether there is at least one file opened
+    // Show/hide the modes tab bar depending on whether there is at least one
+    // file opened
 
-    mModes->setVisible(mFiles->count());
+    bool atLeastOneFileOpened = mFiles->count();
 
-    int crtTab = mModes->isVisible()?mModes->currentIndex():-1;
+    mModes->setVisible(atLeastOneFileOpened);
+
+    // Show/hide the mode's corresponding views, if required
+    // Note: we first hide all of the views tab bars, since otherwise we will
+    //       see a flicker on Mac OS X
+
+    mViews.value(GuiViewSettings::Editing)->setVisible(false);
+    mViews.value(GuiViewSettings::Simulation)->setVisible(false);
+    mViews.value(GuiViewSettings::Analysis)->setVisible(false);
+
+    int crtTab = atLeastOneFileOpened?mModes->currentIndex():-1;
 
     if (crtTab != -1) {
-        // The mode tab bars are visible and one is therefore selected, so only
-        // the views which correspond to that mode
+        // The modes tab bar is visible and a tab is therefore selected, so show
+        // only the views corresponding to that mode
 
-        mViews.value(GuiViewSettings::Editing)->setVisible(mModeTabs.value(crtTab) == GuiViewSettings::Editing);
-        mViews.value(GuiViewSettings::Simulation)->setVisible(mModeTabs.value(crtTab) == GuiViewSettings::Simulation);
-        mViews.value(GuiViewSettings::Analysis)->setVisible(mModeTabs.value(crtTab) == GuiViewSettings::Analysis);
-    } else {
-        // The mode tab bars are hidden, so hide all of the views
+        GuiViewSettings::Mode crtTabMode = mTabsMode.value(crtTab);
 
-        mViews.value(GuiViewSettings::Editing)->setVisible(false);
-        mViews.value(GuiViewSettings::Simulation)->setVisible(false);
-        mViews.value(GuiViewSettings::Analysis)->setVisible(false);
+        mViews.value(GuiViewSettings::Editing)->setVisible(crtTabMode == GuiViewSettings::Editing);
+        mViews.value(GuiViewSettings::Simulation)->setVisible(crtTabMode == GuiViewSettings::Simulation);
+        mViews.value(GuiViewSettings::Analysis)->setVisible(crtTabMode == GuiViewSettings::Analysis);
     }
 }
 

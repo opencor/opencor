@@ -68,7 +68,7 @@ private:
     FileManager *mFileManager;
 
     QTabBar *mModes;
-    QMap<int, GuiViewSettings::Mode> mModeTabs;
+    QMap<int, GuiViewSettings::Mode> mTabsMode;
 
     TabWidget *mFiles;
 
