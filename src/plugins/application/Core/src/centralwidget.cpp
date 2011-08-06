@@ -463,13 +463,15 @@ void CentralWidget::updateGui() const
 
     mModes->setVisible(mFiles->count());
 
-    if (mModes->currentIndex() != -1) {
+    int crtTab = mModes->isVisible()?mModes->currentIndex():-1;
+
+    if (crtTab != -1) {
         // The mode tab bars are visible and one is therefore selected, so only
         // the views which correspond to that mode
 
-        mViews.value(GuiViewSettings::Editing)->setVisible(mModeTabs.value(mModes->currentIndex()) == GuiViewSettings::Editing);
-        mViews.value(GuiViewSettings::Simulation)->setVisible(mModeTabs.value(mModes->currentIndex()) == GuiViewSettings::Simulation);
-        mViews.value(GuiViewSettings::Analysis)->setVisible(mModeTabs.value(mModes->currentIndex()) == GuiViewSettings::Analysis);
+        mViews.value(GuiViewSettings::Editing)->setVisible(mModeTabs.value(crtTab) == GuiViewSettings::Editing);
+        mViews.value(GuiViewSettings::Simulation)->setVisible(mModeTabs.value(crtTab) == GuiViewSettings::Simulation);
+        mViews.value(GuiViewSettings::Analysis)->setVisible(mModeTabs.value(crtTab) == GuiViewSettings::Analysis);
     } else {
         // The mode tab bars are hidden, so hide all of the views
 
