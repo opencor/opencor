@@ -68,8 +68,11 @@ private:
     FileManager *mFileManager;
 
     QTabBar *mModes;
+    QMap<int, GuiViewSettings::Mode> mModeTabs;
+
     TabWidget *mFiles;
-    QTabBar *mViews;
+
+    QMap<GuiViewSettings::Mode, QTabBar *> mViews;
 
     QList<GuiViewSettings::Mode> mRequiredModes;
 
@@ -77,16 +80,19 @@ private:
 
     void updateGui() const;
 
+    void newViews(const GuiViewSettings::Mode &pMode);
+
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);
     void fileClosed(const QString &pFileName);
-    void fileActivated(const QString &pFileName);
+    void fileSelected(const QString &pFileName);
 
 public Q_SLOTS:
     void openFiles(const QStringList &pFileNames);
     bool closeFile(const int &pIndex = -1);
     void closeFiles();
-    void fileActivated(const int &pIndex);
+    void fileSelected(const int &pIndex);
+    void modeSelected(const int &);
 };
 
 } }

@@ -73,15 +73,18 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our views tab bar
 
-    mViews = new QTabBar(this);
-
-    mViews->setShape(QTabBar::RoundedEast);
+    newViews(GuiViewSettings::Editing);
+    newViews(GuiViewSettings::Simulation);
+    newViews(GuiViewSettings::Analysis);
 
     // Add the widgets to our horizontal layout
 
     mUi->horizontalLayout->addWidget(mModes);
     mUi->horizontalLayout->addWidget(mFiles);
-    mUi->horizontalLayout->addWidget(mViews);
+
+    mUi->horizontalLayout->addWidget(mViews.value(GuiViewSettings::Editing));
+    mUi->horizontalLayout->addWidget(mViews.value(GuiViewSettings::Simulation));
+    mUi->horizontalLayout->addWidget(mViews.value(GuiViewSettings::Analysis));
 
     // Update the GUI
 
@@ -90,9 +93,14 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // Some connections to handle our tab widget
 
     connect(mFiles, SIGNAL(tabCloseRequested(int)),
-            this, SLOT(closeFile(int)));
+            this, SLOT(closeFile(const int &)));
     connect(mFiles, SIGNAL(currentChanged(int)),
-            this, SLOT(fileActivated(int)));
+            this, SLOT(fileSelected(const int &)));
+
+    // A connection to handle our mode tab bars
+
+    connect(mModes, SIGNAL(currentChanged(int)),
+            this, SLOT(modeSelected(const int &)));
 }
 
 CentralWidget::~CentralWidget()
@@ -112,21 +120,28 @@ void CentralWidget::retranslateUi()
     // Retranslate the modes tab bar by first removing all of them and then
     // adding the ones which are required
 
-    // Remove all the modes tab bar
+    // Remove all the mode tabs and reset our track of which tab refers to
+    // which mode
 
     while (mModes->count())
         mModes->removeTab(0);
 
-    // Add the required modes tab bar
+    mModeTabs.clear();
+
+    // Add a tab for the required modes and keep track of which tab corresponds
+    // to which mode
 
     if (mRequiredModes.contains(GuiViewSettings::Editing))
-        mModes->addTab(tr("Editing"));
+        mModeTabs.insert(mModes->addTab(tr("Editing")),
+                         GuiViewSettings::Editing);
 
     if (mRequiredModes.contains(GuiViewSettings::Simulation))
-        mModes->addTab(tr("Simulation"));
+        mModeTabs.insert(mModes->addTab(tr("Simulation")),
+                         GuiViewSettings::Simulation);
 
     if (mRequiredModes.contains(GuiViewSettings::Analysis))
-        mModes->addTab(tr("Analysis"));
+        mModeTabs.insert(mModes->addTab(tr("Analysis")),
+                         GuiViewSettings::Analysis);
 }
 
 static const QString SettingsOpenedFiles = "OpenedFiles";
@@ -181,7 +196,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     // Check whether or not the file is already opened
 
     if (activateFile(pFileName))
-        // The file is already opened and got activated, so...
+        // The file is already opened and got selected, so...
 
         return false;
 
@@ -298,7 +313,8 @@ bool CentralWidget::activateFile(const QString &pFileName)
             mFiles->setCurrentIndex(i);
 
             // Then, give the focus to the editor
-            // Note: this will automatically trigger the fileActivated signal
+            // Note: this will automatically trigger the currentChanged signal
+            //       and therefore fileSelected slot
 
             mFiles->currentWidget()->setFocus();
 
@@ -312,11 +328,11 @@ bool CentralWidget::activateFile(const QString &pFileName)
     return false;
 }
 
-void CentralWidget::fileActivated(const int &pIndex)
+void CentralWidget::fileSelected(const int &pIndex)
 {
-    // Let people know that a file has been activated
+    // Let people know that a file has been selected
 
-    emit fileActivated(mFiles->tabToolTip(pIndex));
+    emit fileSelected(mFiles->tabToolTip(pIndex));
 }
 
 int CentralWidget::nbOfFilesOpened() const
@@ -366,6 +382,10 @@ void CentralWidget::addView(Plugin *pPlugin,
 
     if (!isModeEnabled(pSettings.mode()))
         mRequiredModes << pSettings.mode();
+
+    // Add the requested view to the mode's views tab bar
+
+    mViews.value(pSettings.mode())->addTab(pSettings.name());
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
@@ -438,11 +458,44 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 void CentralWidget::updateGui() const
 {
-    // Show/hide the modes and views tab bars depending on whether files are
-    // opened
+    // Show/hide the modes tab and the views tab bar for the currently selected
+    // mode and this depending on whether there is at least one file opened
 
     mModes->setVisible(mFiles->count());
-    mViews->setVisible(mFiles->count());
+
+    if (mModes->currentIndex() != -1) {
+        // The mode tab bars are visible and one is therefore selected, so only
+        // the views which correspond to that mode
+
+        mViews.value(GuiViewSettings::Editing)->setVisible(mModeTabs.value(mModes->currentIndex()) == GuiViewSettings::Editing);
+        mViews.value(GuiViewSettings::Simulation)->setVisible(mModeTabs.value(mModes->currentIndex()) == GuiViewSettings::Simulation);
+        mViews.value(GuiViewSettings::Analysis)->setVisible(mModeTabs.value(mModes->currentIndex()) == GuiViewSettings::Analysis);
+    } else {
+        // The mode tab bars are hidden, so hide all of the views
+
+        mViews.value(GuiViewSettings::Editing)->setVisible(false);
+        mViews.value(GuiViewSettings::Simulation)->setVisible(false);
+        mViews.value(GuiViewSettings::Analysis)->setVisible(false);
+    }
+}
+
+void CentralWidget::newViews(const GuiViewSettings::Mode &pMode)
+{
+    // Create a tab bar for the views of the requested mode
+
+    QTabBar *tabBar = new QTabBar(this);
+
+    mViews.insert(pMode, tabBar);
+
+    tabBar->setShape(QTabBar::RoundedEast);
+}
+
+void CentralWidget::modeSelected(const int &)
+{
+   // A new mode has been selected, so make sure that its corresponding views
+   // are shown
+
+    updateGui();
 }
 
 } }
