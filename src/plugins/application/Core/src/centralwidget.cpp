@@ -52,11 +52,15 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mFileManager = new FileManager();
 
-    // Create our modes tab bar
+    // Create our modes tab bar with no tabs by default
 
     mModes = new QTabBar(this);
 
     mModes->setShape(QTabBar::RoundedWest);
+
+    mModeEnabled.insert(GuiViewSettings::Editing, false);
+    mModeEnabled.insert(GuiViewSettings::Simulation, false);
+    mModeEnabled.insert(GuiViewSettings::Analysis, false);
 
     // Create our tab widget
 
@@ -121,31 +125,19 @@ CentralWidget::~CentralWidget()
 
 void CentralWidget::retranslateUi()
 {
-    // Retranslate the modes tab bar by first removing all of them and then
-    // adding the ones which are required
+    // Retranslate the modes tab bar
 
-    // Remove all the mode tabs and reset our track of which tab refers to
-    // which mode
+    if (mModeEnabled.value(GuiViewSettings::Editing))
+        mModes->setTabText(modeTabIndex(GuiViewSettings::Editing),
+                           tr("Editing"));
 
-    while (mModes->count())
-        mModes->removeTab(0);
+    if (mModeEnabled.value(GuiViewSettings::Simulation))
+        mModes->setTabText(modeTabIndex(GuiViewSettings::Simulation),
+                           tr("Simulation"));
 
-    mTabsMode.clear();
-
-    // Add a tab for the required modes and keep track of which tab corresponds
-    // to which mode
-
-    if (mRequiredModes.contains(GuiViewSettings::Editing))
-        mTabsMode.insert(mModes->addTab(tr("Editing")),
-                         GuiViewSettings::Editing);
-
-    if (mRequiredModes.contains(GuiViewSettings::Simulation))
-        mTabsMode.insert(mModes->addTab(tr("Simulation")),
-                         GuiViewSettings::Simulation);
-
-    if (mRequiredModes.contains(GuiViewSettings::Analysis))
-        mTabsMode.insert(mModes->addTab(tr("Analysis")),
-                         GuiViewSettings::Analysis);
+    if (mModeEnabled.value(GuiViewSettings::Analysis))
+        mModes->setTabText(modeTabIndex(GuiViewSettings::Analysis),
+                           tr("Analysis"));
 }
 
 static const QString SettingsOpenedFiles = "OpenedFiles";
@@ -360,7 +352,46 @@ bool CentralWidget::isModeEnabled(const GuiViewSettings::Mode &pMode) const
 {
     // Return whether a particular mode is enabled
 
-    return mRequiredModes.contains(pMode);
+    return mModeEnabled.contains(pMode);
+}
+
+int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
+{
+    // Return the tab index of the requested mode
+
+    switch (pMode) {
+    case GuiViewSettings::Simulation:
+        // If the Simulation mode exists, then it has to be the first or second
+        // tab, depending on whether the Editing mode exists
+
+        return  mModeEnabled.value(pMode)?
+                     mModeEnabled.value(GuiViewSettings::Editing)?1:0
+                    :-1;
+    case GuiViewSettings::Analysis:
+        // If the Analysis mode exists, then it has to be the first, second or
+        // third tab, depending on whether the Editing and/or Simulation modes
+        // exist
+
+        return  mModeEnabled.value(pMode)?
+                      (mModeEnabled.value(GuiViewSettings::Editing)?1:0)
+                     +(mModeEnabled.value(GuiViewSettings::Simulation)?1:0)
+                    :-1;
+    default:   // GuiViewSettings::Editing
+        // If the Editing mode exists, then it has to be the first tab
+
+        return mModeEnabled.value(pMode)?0:-1;
+    }
+}
+
+void CentralWidget::addMode(const GuiViewSettings::Mode &pMode)
+{
+    if (!mModeEnabled.value(pMode)) {
+        // There is no tab for the mode, so add one
+
+        mModes->addTab(QString());
+
+        mModeEnabled.insert(pMode, true);
+    }
 }
 
 void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
@@ -383,8 +414,7 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 
     // Make sure that our list of required modes is up-to-date
 
-    if (!isModeEnabled(pSettings->mode()))
-        mRequiredModes << pSettings->mode();
+    addMode(pSettings->mode());
 
     // Add the requested view to the mode's views tab bar
     // Note: the simulation mode doesn't need a views tab bar, since it can have
@@ -490,10 +520,8 @@ void CentralWidget::updateGui() const
         // The modes tab bar is visible and a tab is therefore selected, so show
         // only the views corresponding to that mode
 
-        GuiViewSettings::Mode crtTabMode = mTabsMode.value(crtTab);
-
-        mEditingViews->setVisible(crtTabMode == GuiViewSettings::Editing);
-        mAnalysisViews->setVisible(crtTabMode == GuiViewSettings::Analysis);
+        mEditingViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Editing));
+        mAnalysisViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Analysis));
     }
 }
 

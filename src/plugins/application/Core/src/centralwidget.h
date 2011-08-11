@@ -68,18 +68,21 @@ private:
     FileManager *mFileManager;
 
     QTabBar *mModes;
-    QMap<int, GuiViewSettings::Mode> mTabsMode;
 
     TabWidget *mFiles;
 
     QTabBar *mEditingViews;
     QTabBar *mAnalysisViews;
 
-    QList<GuiViewSettings::Mode> mRequiredModes;
+    QMap<GuiViewSettings::Mode, bool> mModeEnabled;
 
     QList<CentralWidgetViewSettings *> mViews;
 
     void updateGui() const;
+
+    int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
+
+    void addMode(const GuiViewSettings::Mode &pMode);
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);
