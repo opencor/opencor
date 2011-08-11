@@ -72,15 +72,14 @@ private:
 
     TabWidget *mFiles;
 
-    QMap<GuiViewSettings::Mode, QTabBar *> mViews;
+    QTabBar *mEditingViews;
+    QTabBar *mAnalysisViews;
 
     QList<GuiViewSettings::Mode> mRequiredModes;
 
     QList<CentralViewWidget> mSupportedViews;
 
     void updateGui() const;
-
-    void newViews(const GuiViewSettings::Mode &pMode);
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);

@@ -73,18 +73,19 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our views tab bar
 
-    newViews(GuiViewSettings::Editing);
-    newViews(GuiViewSettings::Simulation);
-    newViews(GuiViewSettings::Analysis);
+    mEditingViews  = new QTabBar(this);
+    mAnalysisViews = new QTabBar(this);
+
+    mEditingViews->setShape(QTabBar::RoundedEast);
+    mAnalysisViews->setShape(QTabBar::RoundedEast);
 
     // Add the widgets to our horizontal layout
 
     mUi->horizontalLayout->addWidget(mModes);
     mUi->horizontalLayout->addWidget(mFiles);
 
-    mUi->horizontalLayout->addWidget(mViews.value(GuiViewSettings::Editing));
-    mUi->horizontalLayout->addWidget(mViews.value(GuiViewSettings::Simulation));
-    mUi->horizontalLayout->addWidget(mViews.value(GuiViewSettings::Analysis));
+    mUi->horizontalLayout->addWidget(mEditingViews);
+    mUi->horizontalLayout->addWidget(mAnalysisViews);
 
     // Update the GUI
 
@@ -384,8 +385,13 @@ void CentralWidget::addView(Plugin *pPlugin,
         mRequiredModes << pSettings.mode();
 
     // Add the requested view to the mode's views tab bar
+    // Note: the simulation mode doesn't need a views tab bar, since it can have
+    //       only one view
 
-    mViews.value(pSettings.mode())->addTab(pSettings.name());
+    if (pSettings.mode() == GuiViewSettings::Editing)
+        mEditingViews->addTab(pSettings.name());
+    else if (pSettings.mode() == GuiViewSettings::Analysis)
+        mAnalysisViews->addTab(pSettings.name());
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
@@ -465,13 +471,13 @@ void CentralWidget::updateGui() const
 
     mModes->setVisible(atLeastOneFileOpened);
 
-    // Show/hide the mode's corresponding views, if required
+    // Show/hide the editing and simulation modes' corresponding views, if
+    // required
     // Note: we first hide all of the views tab bars, since otherwise we will
     //       see a flicker on Mac OS X
 
-    mViews.value(GuiViewSettings::Editing)->setVisible(false);
-    mViews.value(GuiViewSettings::Simulation)->setVisible(false);
-    mViews.value(GuiViewSettings::Analysis)->setVisible(false);
+    mEditingViews->setVisible(false);
+    mAnalysisViews->setVisible(false);
 
     int crtTab = atLeastOneFileOpened?mModes->currentIndex():-1;
 
@@ -481,21 +487,9 @@ void CentralWidget::updateGui() const
 
         GuiViewSettings::Mode crtTabMode = mTabsMode.value(crtTab);
 
-        mViews.value(GuiViewSettings::Editing)->setVisible(crtTabMode == GuiViewSettings::Editing);
-        mViews.value(GuiViewSettings::Simulation)->setVisible(crtTabMode == GuiViewSettings::Simulation);
-        mViews.value(GuiViewSettings::Analysis)->setVisible(crtTabMode == GuiViewSettings::Analysis);
+        mEditingViews->setVisible(crtTabMode == GuiViewSettings::Editing);
+        mAnalysisViews->setVisible(crtTabMode == GuiViewSettings::Analysis);
     }
-}
-
-void CentralWidget::newViews(const GuiViewSettings::Mode &pMode)
-{
-    // Create a tab bar for the views of the requested mode
-
-    QTabBar *tabBar = new QTabBar(this);
-
-    mViews.insert(pMode, tabBar);
-
-    tabBar->setShape(QTabBar::RoundedEast);
 }
 
 void CentralWidget::modeSelected(const int &)
