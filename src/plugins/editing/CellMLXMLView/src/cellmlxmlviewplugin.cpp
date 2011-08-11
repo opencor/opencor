@@ -1,5 +1,7 @@
 #include "cellmlxmlviewplugin.h"
 
+#include <QTabBar>
+
 namespace OpenCOR {
 namespace CellMLXMLView {
 
@@ -23,7 +25,16 @@ CellMLXMLViewPlugin::CellMLXMLViewPlugin() :
 {
     // Set our settings
 
-    mSettings.addView(GuiViewSettings::Editing, "Raw");
+    mSettings->addView(GuiViewSettings::Editing);
+}
+
+void CellMLXMLViewPlugin::retranslateUi()
+{
+    // Retranslate our view's tab
+
+    GuiViewSettings *view = mSettings->views().at(0);
+
+    view->tabBar()->setTabText(view->tabIndex(), tr("Raw"));
 }
 
 } }

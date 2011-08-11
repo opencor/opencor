@@ -14,21 +14,21 @@
 namespace OpenCOR {
 namespace Core {
 
-CentralViewWidget::CentralViewWidget(Plugin *pPlugin,
-                                     const GuiViewSettings &pSettings) :
+CentralWidgetViewSettings::CentralWidgetViewSettings(Plugin *pPlugin,
+                                                     GuiViewSettings *pSettings) :
     mPlugin(pPlugin),
     mSettings(pSettings)
 {
 }
 
-Plugin * CentralViewWidget::plugin() const
+Plugin * CentralWidgetViewSettings::plugin() const
 {
     // Return the view's plugin
 
     return mPlugin;
 }
 
-GuiViewSettings CentralViewWidget::settings() const
+GuiViewSettings * CentralWidgetViewSettings::settings() const
 {
     // Return the view's settings
 
@@ -114,6 +114,9 @@ CentralWidget::~CentralWidget()
 
     delete mFileManager;
     delete mUi;
+
+    foreach (CentralWidgetViewSettings *viewSettings, mViews)
+        delete viewSettings;
 }
 
 void CentralWidget::retranslateUi()
@@ -360,8 +363,7 @@ bool CentralWidget::isModeEnabled(const GuiViewSettings::Mode &pMode) const
     return mRequiredModes.contains(pMode);
 }
 
-void CentralWidget::addView(Plugin *pPlugin,
-                            const GuiViewSettings &pSettings)
+void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 {
     // Add a new view to our list of supported views
     // Note: the reason we are prepending rather than just appending is that
@@ -377,21 +379,24 @@ void CentralWidget::addView(Plugin *pPlugin,
     //       what we want to then get the tab bars for the views in the right
     //       order, so...
 
-    mSupportedViews.prepend(CentralViewWidget(pPlugin, pSettings));
+    mViews.prepend(new CentralWidgetViewSettings(pPlugin, pSettings));
 
     // Make sure that our list of required modes is up-to-date
 
-    if (!isModeEnabled(pSettings.mode()))
-        mRequiredModes << pSettings.mode();
+    if (!isModeEnabled(pSettings->mode()))
+        mRequiredModes << pSettings->mode();
 
     // Add the requested view to the mode's views tab bar
     // Note: the simulation mode doesn't need a views tab bar, since it can have
     //       only one view
 
-    if (pSettings.mode() == GuiViewSettings::Editing)
-        mEditingViews->addTab(pSettings.name());
-    else if (pSettings.mode() == GuiViewSettings::Analysis)
-        mAnalysisViews->addTab(pSettings.name());
+    if (pSettings->mode() == GuiViewSettings::Editing) {
+        pSettings->setTabBar(mEditingViews);
+        pSettings->setTabIndex(mEditingViews->addTab(QString()));
+    } else if (pSettings->mode() == GuiViewSettings::Analysis) {
+        pSettings->setTabBar(mAnalysisViews);
+        pSettings->setTabIndex(mAnalysisViews->addTab(QString()));
+    }
 }
 
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)

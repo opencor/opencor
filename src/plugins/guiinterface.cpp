@@ -81,9 +81,10 @@ QAction * GuiActionSettings::action() const
     return mAction;
 }
 
-GuiViewSettings::GuiViewSettings(const Mode &pMode, const QString &pName) :
+GuiViewSettings::GuiViewSettings(const Mode &pMode) :
     mMode(pMode),
-    mName(pName)
+    mTabBar(0),
+    mTabIndex(-1)
 {
 }
 
@@ -94,11 +95,32 @@ GuiViewSettings::Mode GuiViewSettings::mode() const
     return mMode;
 }
 
-QString GuiViewSettings::name() const
+void GuiViewSettings::setTabBar(QTabBar *pTabBar)
 {
-    // Return the view's name
+    // Set the view's tab bar
 
-    return mName;
+    mTabBar = pTabBar;
+}
+
+void GuiViewSettings::setTabIndex(const int &pTabIndex)
+{
+    // Set the view's tab index
+
+    mTabIndex = pTabIndex;
+}
+
+QTabBar * GuiViewSettings::tabBar() const
+{
+    // Return the view's tab bar
+
+    return mTabBar;
+}
+
+int GuiViewSettings::tabIndex() const
+{
+    // Return the view's tab index
+
+    return mTabIndex;
 }
 
 GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
@@ -122,12 +144,29 @@ Core::DockWidget * GuiWindowSettings::window() const
     return mWindow;
 }
 
+GuiSettings::~GuiSettings()
+{
+    // Delete the contents of our various lists
+
+    foreach (GuiMenuSettings *menuSettings, mMenus)
+        delete menuSettings;
+
+    foreach (GuiActionSettings *actionSettings, mActions)
+        delete actionSettings;
+
+    foreach (GuiViewSettings *viewSettings, mViews)
+        delete viewSettings;
+
+    foreach (GuiWindowSettings *windowSettings, mWindows)
+        delete windowSettings;
+}
+
 void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
                           QMenu *pMenu)
 {
     // Add a new menu to our list
 
-    mMenus.prepend(GuiMenuSettings(pType, pMenu));
+    mMenus.prepend(new GuiMenuSettings(pType, pMenu));
 }
 
 void GuiSettings::addAction(const GuiActionSettings::GuiActionSettingsType &pType,
@@ -136,15 +175,14 @@ void GuiSettings::addAction(const GuiActionSettings::GuiActionSettingsType &pTyp
     // Add a new action to our list
     // Note: a null pAction means that we want to add a separator
 
-    mActions.prepend(GuiActionSettings(pType, pAction));
+    mActions.prepend(new GuiActionSettings(pType, pAction));
 }
 
-void GuiSettings::addView(const GuiViewSettings::Mode &pMode,
-                          const QString &pName)
+void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
 {
     // Add a new view to our list
 
-    mViews.prepend(GuiViewSettings(pMode, pName));
+    mViews.prepend(new GuiViewSettings(pMode));
 }
 
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
@@ -152,31 +190,31 @@ void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
 {
     // Add a new window to our list
 
-    mWindows.prepend(GuiWindowSettings(pDefaultDockingArea, pWindow));
+    mWindows.prepend(new GuiWindowSettings(pDefaultDockingArea, pWindow));
 }
 
-QList<GuiMenuSettings> GuiSettings::menus() const
+QList<GuiMenuSettings *> GuiSettings::menus() const
 {
     // Return our menus
 
     return mMenus;
 }
 
-QList<GuiActionSettings> GuiSettings::actions() const
+QList<GuiActionSettings *> GuiSettings::actions() const
 {
     // Return our actions
 
     return mActions;
 }
 
-QList<GuiViewSettings> GuiSettings::views() const
+QList<GuiViewSettings *> GuiSettings::views() const
 {
     // Return our views
 
     return mViews;
 }
 
-QList<GuiWindowSettings> GuiSettings::windows() const
+QList<GuiWindowSettings *> GuiSettings::windows() const
 {
     // Return our windows
 
@@ -187,6 +225,16 @@ GuiInterface::GuiInterface(const QString &pPluginName) :
     mData(0),
     mPluginName(pPluginName)
 {
+    // Create our settings object
+
+    mSettings = new GuiSettings;
+}
+
+GuiInterface::~GuiInterface()
+{
+    // Delete our settings object
+
+    delete mSettings;
 }
 
 void GuiInterface::initialize(const QList<Plugin *> &, QMainWindow *)
@@ -194,7 +242,7 @@ void GuiInterface::initialize(const QList<Plugin *> &, QMainWindow *)
     // Nothing to do by default...
 }
 
-GuiSettings GuiInterface::settings() const
+GuiSettings * GuiInterface::settings() const
 {
     // Return the plugin's settings
 

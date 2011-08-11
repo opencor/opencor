@@ -73,7 +73,7 @@ void CoreEditingPlugin::initialize(const QList<Plugin *> &,
 
     // Set our settings
 
-    mSettings.addMenu(GuiMenuSettings::View, mEdit);
+    mSettings->addMenu(GuiMenuSettings::View, mEdit);
 }
 
 void CoreEditingPlugin::retranslateUi()

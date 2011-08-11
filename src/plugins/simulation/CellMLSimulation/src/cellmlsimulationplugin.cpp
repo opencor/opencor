@@ -23,7 +23,7 @@ CellMLSimulationPlugin::CellMLSimulationPlugin() :
 {
     // Set our settings
 
-    mSettings.addView(GuiViewSettings::Simulation, "CellML");
+    mSettings->addView(GuiViewSettings::Simulation);
 }
 
 } }

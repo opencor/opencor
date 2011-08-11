@@ -85,14 +85,21 @@ public:
         Analysis
     };
 
-    explicit GuiViewSettings(const Mode &pMode, const QString &pName);
+    explicit GuiViewSettings(const Mode &pMode);
 
     Mode mode() const;
-    QString name() const;
+
+    void setTabBar(QTabBar *pTabBar);
+    void setTabIndex(const int &pTabIndex);
+
+    QTabBar * tabBar() const;
+    int tabIndex() const;
 
 private:
     Mode mMode;
-    QString mName;
+
+    QTabBar *mTabBar;
+    int mTabIndex;
 };
 
 class GuiWindowSettings
@@ -112,42 +119,47 @@ private:
 class GuiSettings
 {
 public:
+    ~GuiSettings();
+
     void addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
                  QMenu *pMenu);
     void addAction(const GuiActionSettings::GuiActionSettingsType &pType,
                    QAction *pAction = 0);
-    void addView(const GuiViewSettings::Mode &pMode, const QString &pName);
+    void addView(const GuiViewSettings::Mode &pMode);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow);
 
-    QList<GuiMenuSettings> menus() const;
-    QList<GuiActionSettings> actions() const;
-    QList<GuiViewSettings> views() const;
-    QList<GuiWindowSettings> windows() const;
+    QList<GuiMenuSettings *> menus() const;
+    QList<GuiActionSettings *> actions() const;
+    QList<GuiViewSettings *> views() const;
+    QList<GuiWindowSettings *> windows() const;
 
 private:
-    QList<GuiMenuSettings> mMenus;
-    QList<GuiActionSettings> mActions;
-    QList<GuiViewSettings> mViews;
-    QList<GuiWindowSettings> mWindows;
+    QList<GuiMenuSettings *> mMenus;
+    QList<GuiActionSettings *> mActions;
+    QList<GuiViewSettings *> mViews;
+    QList<GuiWindowSettings *> mWindows;
 };
 
 class GuiInterface : public PluginInterface
 {
 public:
     explicit GuiInterface(const QString &pPluginName);
+    ~GuiInterface();
 
     virtual void initialize(const QList<Plugin *> &, QMainWindow *);
 
-    GuiSettings settings() const;
+    GuiSettings * settings() const;
     void * data() const;
 
     QString pluginName() const;
 
+    QString viewName() const;
+
     void setLocale(const QString &pLocale);
 
 protected:
-    GuiSettings mSettings;
+    GuiSettings *mSettings;
     void *mData;
     // Note: mData is used only by the Core and Help plugins which are both one
     //       of a kind and therefore require special treatment (as opposed to

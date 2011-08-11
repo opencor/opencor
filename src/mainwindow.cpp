@@ -251,30 +251,28 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
 
     // Deal with the menus and actions that the plugin may want us to add
 
-    GuiSettings guiSettings = pGuiInterface->settings();
-
-    // Add the menus to our menu bar
-
-    foreach (const GuiMenuSettings &menuSettings, guiSettings.menus()) {
+    foreach (GuiMenuSettings *menuSettings,
+             pGuiInterface->settings()->menus()) {
         // Insert the menu in the right place
 
-        switch (menuSettings.type()) {
+        switch (menuSettings->type()) {
         default:   // View
             mUi->menuBar->insertAction(mUi->menuView->menuAction(),
-                                       menuSettings.menu()->menuAction());
+                                       menuSettings->menu()->menuAction());
         }
     }
 
     // Add the actions/separators to our different menus
 
-    foreach (const GuiActionSettings &actionSettings, guiSettings.actions()) {
+    foreach (GuiActionSettings *actionSettings,
+             pGuiInterface->settings()->actions()) {
         // Add the action/separator to the right menu
 
-        switch (actionSettings.type()) {
+        switch (actionSettings->type()) {
         default:   // File
-            if(actionSettings.action())
+            if(actionSettings->action())
                 mUi->menuFile->insertAction(mUi->menuFile->actions().first(),
-                                            actionSettings.action());
+                                            actionSettings->action());
             else
                 mUi->menuFile->insertSeparator(mUi->menuFile->actions().first());
         }
@@ -340,11 +338,11 @@ void MainWindow::loadPluginSettings(const bool &pNeedDefaultSettings,
         // Neither the Core nor the Help plugin, so retrieve all of the plugin's
         // windows' settings
 
-        foreach (const GuiWindowSettings &windowSettings,
-                 pGuiInterface->settings().windows())
+        foreach (GuiWindowSettings *windowSettings,
+                 pGuiInterface->settings()->windows())
             loadPluginWindowSettings(pNeedDefaultSettings,
-                                     windowSettings.defaultDockingArea(),
-                                     windowSettings.window());
+                                     windowSettings->defaultDockingArea(),
+                                     windowSettings->window());
     }
 }
 
@@ -370,9 +368,9 @@ void MainWindow::savePluginSettings(GuiInterface *pGuiInterface) const
         // Neither the Core nor the Help plugin, so keep track of all of the
         // plugin's windows' settings
 
-        foreach (const GuiWindowSettings &windowSettings,
-                 pGuiInterface->settings().windows())
-            windowSettings.window()->saveSettings(mSettings);
+        foreach (GuiWindowSettings *windowSettings,
+                 pGuiInterface->settings()->windows())
+            windowSettings->window()->saveSettings(mSettings);
     }
 }
 

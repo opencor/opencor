@@ -16,6 +16,8 @@ class CellMLXMLViewPlugin : public GuiInterface
 
 public:
     explicit CellMLXMLViewPlugin();
+
+    virtual void retranslateUi();
 };
 
 } }

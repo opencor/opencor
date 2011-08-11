@@ -25,7 +25,8 @@ CorePlugin::CorePlugin() :
 {
 }
 
-void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainWindow)
+void CorePlugin::initialize(const QList<Plugin *> &pPlugins,
+                            QMainWindow *pMainWindow)
 {
     // Create our central widget
 
@@ -35,7 +36,7 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
 
     mData = new GuiCoreSettings(mCentralWidget);
 
-    // Check, based on the loaded plugins, which modes, if any, our central
+    // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
 
     foreach (Plugin *plugin, pPlugins) {
@@ -45,8 +46,8 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
             // The plugin implements our GUI interface, so go through each view
             // supported by the plugin and enable whatever mode is required
 
-            foreach (const GuiViewSettings &viewSettings,
-                     guiInterface->settings().views())
+            foreach (GuiViewSettings *viewSettings,
+                     guiInterface->settings()->views())
                 mCentralWidget->addView(plugin, viewSettings);
     }
 
@@ -76,17 +77,17 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins, QMainWindow *pMainW
 
     // Set our settings
 
-    mSettings.addAction(GuiActionSettings::File, mFileOpen);
-    mSettings.addAction(GuiActionSettings::File);
-    mSettings.addAction(GuiActionSettings::File, mFileSave);
-    mSettings.addAction(GuiActionSettings::File, mFileSaveAs);
-    mSettings.addAction(GuiActionSettings::File, mFileSaveAll);
-    mSettings.addAction(GuiActionSettings::File);
-    mSettings.addAction(GuiActionSettings::File, mFileClose);
-    mSettings.addAction(GuiActionSettings::File, mFileCloseAll);
-    mSettings.addAction(GuiActionSettings::File);
-    mSettings.addAction(GuiActionSettings::File, mFilePrint);
-    mSettings.addAction(GuiActionSettings::File);
+    mSettings->addAction(GuiActionSettings::File, mFileOpen);
+    mSettings->addAction(GuiActionSettings::File);
+    mSettings->addAction(GuiActionSettings::File, mFileSave);
+    mSettings->addAction(GuiActionSettings::File, mFileSaveAs);
+    mSettings->addAction(GuiActionSettings::File, mFileSaveAll);
+    mSettings->addAction(GuiActionSettings::File);
+    mSettings->addAction(GuiActionSettings::File, mFileClose);
+    mSettings->addAction(GuiActionSettings::File, mFileCloseAll);
+    mSettings->addAction(GuiActionSettings::File);
+    mSettings->addAction(GuiActionSettings::File, mFilePrint);
+    mSettings->addAction(GuiActionSettings::File);
 }
 
 void CorePlugin::finalize()
