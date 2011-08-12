@@ -1,11 +1,11 @@
-#include "cellmlxmlviewplugin.h"
+#include "rawcellmlviewplugin.h"
 
 #include <QTabBar>
 
 namespace OpenCOR {
-namespace CellMLXMLView {
+namespace RawCellMLView {
 
-PLUGININFO_FUNC CellMLXMLViewPluginInfo()
+PLUGININFO_FUNC RawCellMLViewPluginInfo()
 {
     QMap<QString, QString> descriptions;
 
@@ -18,23 +18,23 @@ PLUGININFO_FUNC CellMLXMLViewPluginInfo()
                       descriptions);
 }
 
-Q_EXPORT_PLUGIN2(CellMLXMLView, CellMLXMLViewPlugin)
+Q_EXPORT_PLUGIN2(RawCellMLView, RawCellMLViewPlugin)
 
-CellMLXMLViewPlugin::CellMLXMLViewPlugin() :
-    GuiInterface("CellMLXMLView")
+RawCellMLViewPlugin::RawCellMLViewPlugin() :
+    GuiInterface("RawCellMLView")
 {
     // Set our settings
 
     mSettings->addView(GuiViewSettings::Editing);
 }
 
-void CellMLXMLViewPlugin::retranslateUi()
+void RawCellMLViewPlugin::retranslateUi()
 {
     // Retranslate our view's tab
 
     GuiViewSettings *view = mSettings->views().at(0);
 
-    view->tabBar()->setTabText(view->tabIndex(), tr("Raw"));
+    view->tabBar()->setTabText(view->tabIndex(), tr("Raw CellML"));
 }
 
 } }

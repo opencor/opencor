@@ -179,7 +179,7 @@ SET(PLUGINS
     organisation/FileBrowser
     organisation/FileOrganiser
 
-    editing/CellMLXMLView
+    editing/RawCellMLView
     editing/Viewer
 
     simulation/CellMLSimulation

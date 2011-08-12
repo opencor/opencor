@@ -1,4 +1,4 @@
-PROJECT(CellMLXMLViewPlugin)
+PROJECT(RawCellMLViewPlugin)
 
 # Some in-house CMake functions/macros
 
@@ -6,17 +6,17 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLXMLView
+ADD_PLUGIN(RawCellMLView
     SOURCES
         ../../guiinterface.cpp
         ../../plugininterface.cpp
 
-        src/cellmlxmlviewplugin.cpp
+        src/rawcellmlviewplugin.cpp
     HEADERS
         ../../guiinterface.h
         ../../plugininterface.h
     HEADERS_MOC
-        src/cellmlxmlviewplugin.h
+        src/rawcellmlviewplugin.h
     PLUGIN_INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES

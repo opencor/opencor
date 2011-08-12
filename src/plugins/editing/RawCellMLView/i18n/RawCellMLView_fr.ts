@@ -2,10 +2,10 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::CellMLXMLView::CellMLXMLViewPlugin</name>
+    <name>OpenCOR::RawCellMLView::RawCellMLViewPlugin</name>
     <message>
-        <source>Raw</source>
-        <translation>Brut</translation>
+        <source>Raw CellML</source>
+        <translation>CellML Brut</translation>
     </message>
 </context>
 </TS>
