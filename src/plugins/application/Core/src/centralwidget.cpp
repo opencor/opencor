@@ -54,9 +54,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our modes tab bar with no tabs by default
 
-    mModes = new QTabBar(this);
-
-    mModes->setShape(QTabBar::RoundedWest);
+    mModes = newTabBar(QTabBar::RoundedWest);
 
     mModeEnabled.insert(GuiViewSettings::Editing, false);
     mModeEnabled.insert(GuiViewSettings::Simulation, false);
@@ -68,13 +66,9 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our views tab bar
 
-    mEditingViews    = new QTabBar(this);
-    mSimulationViews = new QTabBar(this);
-    mAnalysisViews   = new QTabBar(this);
-
-    mEditingViews->setShape(QTabBar::RoundedEast);
-    mSimulationViews->setShape(QTabBar::RoundedEast);
-    mAnalysisViews->setShape(QTabBar::RoundedEast);
+    mEditingViews    = newTabBar(QTabBar::RoundedEast);
+    mSimulationViews = newTabBar(QTabBar::RoundedEast);
+    mAnalysisViews   = newTabBar(QTabBar::RoundedEast);
 
     // Add the widgets to our horizontal layout
 
@@ -531,6 +525,30 @@ void CentralWidget::modeSelected(const int &)
    // are shown
 
     updateGui();
+}
+
+QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape)
+{
+    // Create and return a tab bar
+
+    QTabBar *res = new QTabBar(this);
+
+    res->setFocusPolicy(Qt::StrongFocus);
+    // Note: we give a strong focus policy to the tab widget so that it can also
+    //       get focus by being clicked on
+
+    res->setShape(pShape);
+
+    res->setUsesScrollButtons(true);
+    // Note #1: the above property is style dependent and it happens that it's
+    //          not enabled on Mac OS X, so... set it in all cases, even though
+    //          it's already set on Windows and Linux, but one can never know
+    //          what the future holds, so...
+    // Note #2: if the above property is not enabled and many files are opened,
+    //          then the central widget will widen reducing the width of any
+    //          dock window which is clearly not what we want, so...
+
+    return res;
 }
 
 } }

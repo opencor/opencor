@@ -6,12 +6,11 @@
 
 #include <QMap>
 #include <QWidget>
+#include <QTabBar>
 
 namespace Ui {
     class CentralWidget;
 }
-
-class QTabBar;
 
 namespace OpenCOR {
 namespace Core {
@@ -84,6 +83,8 @@ private:
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
     void addMode(const GuiViewSettings::Mode &pMode);
+
+    QTabBar * newTabBar(const QTabBar::Shape &pShape);
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);

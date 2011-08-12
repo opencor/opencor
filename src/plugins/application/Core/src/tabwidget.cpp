@@ -12,12 +12,13 @@ TabWidget::TabWidget(const QString &pLogoFileName, QWidget *pParent) :
     CommonWidget(pParent)
 {
     // Set some properties
+
+    setFocusPolicy(Qt::StrongFocus);
     // Note: we give a strong focus policy to the tab widget so that it can also
     //       get focus by being clicked on
 
     setMovable(true);
     setTabsClosable(true);
-    setFocusPolicy(Qt::StrongFocus);
 
     setUsesScrollButtons(true);
     // Note #1: the above property is style dependent and it happens that it's
