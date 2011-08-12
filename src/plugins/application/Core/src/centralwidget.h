@@ -5,8 +5,8 @@
 #include "guiinterface.h"
 
 #include <QMap>
-#include <QWidget>
 #include <QTabBar>
+#include <QWidget>
 
 namespace Ui {
     class CentralWidget;
@@ -19,6 +19,24 @@ namespace Core {
 
 class FileManager;
 class TabWidget;
+
+class LogoWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit LogoWidget(const QString &pLogoFileName, QWidget *pParent = 0);
+
+protected:
+    virtual void paintEvent(QPaintEvent *pEvent);
+
+private:
+    QPixmap mLogo;
+    QColor mLogoBackgroundColor;
+
+    int mLogoWidth;
+    int mLogoHeight;
+};
 
 class CentralWidgetViewSettings
 {
@@ -72,6 +90,9 @@ private:
 
     QTabBar *mFiles;
     QStackedWidget *mContents;
+
+    LogoWidget *mLogoWidget;
+    QWidget *mEmptyWidget;
 
     QTabBar *mEditingViews;
     QTabBar *mSimulationViews;
