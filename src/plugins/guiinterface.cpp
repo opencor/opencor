@@ -166,7 +166,7 @@ void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
 {
     // Add a new menu to our list
 
-    mMenus.prepend(new GuiMenuSettings(pType, pMenu));
+    mMenus << new GuiMenuSettings(pType, pMenu);
 }
 
 void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
@@ -175,14 +175,14 @@ void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettin
     // Add a new menu action to our list
     // Note: a null pAction means that we want to add a separator
 
-    mMenuActions.prepend(new GuiMenuActionSettings(pType, pAction));
+    mMenuActions << new GuiMenuActionSettings(pType, pAction);
 }
 
 void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
 {
     // Add a new view to our list
 
-    mViews.prepend(new GuiViewSettings(pMode));
+    mViews << new GuiViewSettings(pMode);
 }
 
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
@@ -190,7 +190,7 @@ void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
 {
     // Add a new window to our list
 
-    mWindows.prepend(new GuiWindowSettings(pDefaultDockingArea, pWindow));
+    mWindows << new GuiWindowSettings(pDefaultDockingArea, pWindow);
 }
 
 QList<GuiMenuSettings *> GuiSettings::menus() const

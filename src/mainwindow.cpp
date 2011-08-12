@@ -250,10 +250,20 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
     }
 
     // Deal with the menus and actions that the plugin may want us to add
+    // (insert)
 
-    foreach (GuiMenuSettings *menuSettings,
-             pGuiInterface->settings()->menus()) {
+    // Add the menus to our menu bar
+    // Note: we must do that in reverse order since we are inserting menus,
+    //       as opposed to appending menus...
+
+    QListIterator<GuiMenuSettings *> menuIter(pGuiInterface->settings()->menus());
+
+    menuIter.toBack();
+
+    while (menuIter.hasPrevious()) {
         // Insert the menu in the right place
+
+        GuiMenuSettings *menuSettings = menuIter.previous();
 
         switch (menuSettings->type()) {
         default:   // View
@@ -263,10 +273,17 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
     }
 
     // Add the actions/separators to our different menus
+    // Note: as for the menus above, we must do that in reverse order since we
+    //       are inserting actions, as opposed to appending actions...
 
-    foreach (GuiMenuActionSettings *menuActionSettings,
-             pGuiInterface->settings()->menuActions()) {
-        // Add the action/separator to the right menu
+    QListIterator<GuiMenuActionSettings *> menuActionIter(pGuiInterface->settings()->menuActions());
+
+    menuActionIter.toBack();
+
+    while (menuActionIter.hasPrevious()) {
+        // Inster the action/separator to the right menu
+
+        GuiMenuActionSettings *menuActionSettings = menuActionIter.previous();
 
         switch (menuActionSettings->type()) {
         default:   // File

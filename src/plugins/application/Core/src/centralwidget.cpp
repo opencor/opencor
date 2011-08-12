@@ -399,20 +399,8 @@ void CentralWidget::addMode(const GuiViewSettings::Mode &pMode)
 void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 {
     // Add a new view to our list of supported views
-    // Note: the reason we are prepending rather than just appending is that
-    //       GuiInterface::addView does prepend to ensure that, when creating
-    //       menu items for a series of views from the same plugin, the order
-    //       required by the user remains intact. E.g. say that we add views A,
-    //       B and C. They will be stored as C, B and A (as opposed A, B and C
-    //       if we were just to append them to the list) which means that we can
-    //       then use a simple foreach statement to add a menu item for the view
-    //       (since we can only insert a menu item before an existing one, as
-    //       opposed to after an existing one). So, this means that by
-    //       prepending to our local list, we end up with A, B and C which is
-    //       what we want to then get the tab bars for the views in the right
-    //       order, so...
 
-    mViews.prepend(new CentralWidgetViewSettings(pPlugin, pSettings));
+    mViews << new CentralWidgetViewSettings(pPlugin, pSettings);
 
     // Make sure that our list of required modes is up-to-date
 
