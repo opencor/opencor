@@ -19,7 +19,6 @@ ADD_PLUGIN(Core
         src/docktoolbar.cpp
         src/dockwidget.cpp
         src/filemanager.cpp
-        src/tabwidget.cpp
         src/treeview.cpp
     HEADERS
         ../../guiinterface.h
@@ -36,7 +35,6 @@ ADD_PLUGIN(Core
         src/docktoolbar.h
         src/dockwidget.h
         src/filemanager.h
-        src/tabwidget.h
         src/treeview.h
     UIS
         src/centralwidget.ui

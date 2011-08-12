@@ -12,6 +12,8 @@ namespace Ui {
     class CentralWidget;
 }
 
+class QStackedWidget;
+
 namespace OpenCOR {
 namespace Core {
 
@@ -68,7 +70,8 @@ private:
 
     QTabBar *mModes;
 
-    TabWidget *mFiles;
+    QTabBar *mFiles;
+    QStackedWidget *mContents;
 
     QTabBar *mEditingViews;
     QTabBar *mSimulationViews;
@@ -84,7 +87,9 @@ private:
 
     void addMode(const GuiViewSettings::Mode &pMode);
 
-    QTabBar * newTabBar(const QTabBar::Shape &pShape);
+    QTabBar * newTabBar(const QTabBar::Shape &pShape,
+                        const bool &pMovable = false,
+                        const bool &pTabsClosable = false);
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);

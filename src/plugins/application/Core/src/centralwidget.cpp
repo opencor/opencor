@@ -1,6 +1,5 @@
 #include "centralwidget.h"
 #include "filemanager.h"
-#include "tabwidget.h"
 
 #include "ui_centralwidget.h"
 
@@ -8,6 +7,7 @@
 #include <QDragEnterEvent>
 #include <QFileInfo>
 #include <QSettings>
+#include <QStackedWidget>
 #include <QTextStream>
 #include <QUrl>
 
@@ -60,21 +60,28 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mModeEnabled.insert(GuiViewSettings::Simulation, false);
     mModeEnabled.insert(GuiViewSettings::Analysis, false);
 
-    // Create our tab widget
+    // Create our files tab bar and contents
 
-    mFiles = new TabWidget(":logo", this);
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
 
-    // Create our views tab bar
+    mFiles = newTabBar(QTabBar::RoundedNorth, true, true);
+
+    mContents = new QStackedWidget(this);
+
+    verticalLayout->addWidget(mFiles);
+    verticalLayout->addWidget(mContents);
+
+    // Create our differnt views tab bars
 
     mEditingViews    = newTabBar(QTabBar::RoundedEast);
     mSimulationViews = newTabBar(QTabBar::RoundedEast);
     mAnalysisViews   = newTabBar(QTabBar::RoundedEast);
 
-    // Add the widgets to our horizontal layout
+    // Add the widgets/layout to our horizontal layout
 
     mUi->horizontalLayout->addWidget(mModes);
 
-    mUi->horizontalLayout->addWidget(mFiles);
+    mUi->horizontalLayout->addLayout(verticalLayout);
 
     mUi->horizontalLayout->addWidget(mEditingViews);
     mUi->horizontalLayout->addWidget(mSimulationViews);
@@ -84,14 +91,14 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     updateGui();
 
-    // Some connections to handle our tab widget
+    // Some connections to handle our files tab bar
 
     connect(mFiles, SIGNAL(tabCloseRequested(int)),
             this, SLOT(closeFile(const int &)));
     connect(mFiles, SIGNAL(currentChanged(int)),
             this, SLOT(fileSelected(const int &)));
 
-    // A connection to handle our mode tab bars
+    // A connection to handle our modes tab bar
 
     connect(mModes, SIGNAL(currentChanged(int)),
             this, SLOT(modeSelected(const int &)));
@@ -197,17 +204,11 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     QFileInfo fileInfo = fileName;
 
-    QWidget *dummyWidget = new QWidget(this);
-
-    mFiles->setCurrentIndex(mFiles->addTab(dummyWidget, fileInfo.fileName()));
+    mFiles->setCurrentIndex(mFiles->addTab(fileInfo.fileName()));
 
     // Set the full name of the file as the tool tip for the new tab
 
     mFiles->setTabToolTip(mFiles->currentIndex(), fileName);
-
-    // Give the focus to the newly created editor
-
-    mFiles->currentWidget()->setFocus();
 
     // Update the GUI
 
@@ -238,9 +239,7 @@ bool CentralWidget::closeFile(const int &pIndex)
 
     int realIndex = (pIndex != -1)?pIndex:mFiles->currentIndex();
 
-    QWidget *dummyWidget = qobject_cast<QWidget *>(mFiles->widget(realIndex));
-
-    if (dummyWidget) {
+    if (realIndex != -1) {
         // There is a file currently opened, so first retrieve its file name
 
         QString fileName = mFiles->tabToolTip(realIndex);
@@ -248,11 +247,6 @@ bool CentralWidget::closeFile(const int &pIndex)
         // Next, we must close the tab
 
         mFiles->removeTab(realIndex);
-
-        // Then, we must release the allocated memory for the dummy widget that
-        // the tab used to contain
-
-        delete dummyWidget;
 
         // Unregister the file from our file manager
 
@@ -296,12 +290,6 @@ bool CentralWidget::activateFile(const QString &pFileName)
             // tab
 
             mFiles->setCurrentIndex(i);
-
-            // Then, give the focus to the editor
-            // Note: this will automatically trigger the currentChanged signal
-            //       and therefore fileSelected slot
-
-            mFiles->currentWidget()->setFocus();
 
             // Everything went fine, so...
 
@@ -527,13 +515,17 @@ void CentralWidget::modeSelected(const int &)
     updateGui();
 }
 
-QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape)
+QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
+                                   const bool &pMovable,
+                                   const bool &pTabsClosable)
 {
     // Create and return a tab bar
 
     QTabBar *res = new QTabBar(this);
 
+    res->setMovable(pMovable);
     res->setShape(pShape);
+    res->setTabsClosable(pTabsClosable);
     res->setUsesScrollButtons(true);
     // Note #1: the above property is style dependent and it happens that it's
     //          not enabled on Mac OS X, so... set it in all cases, even though
