@@ -18,25 +18,6 @@ namespace OpenCOR {
 namespace Core {
 
 class FileManager;
-class TabWidget;
-
-class LogoWidget : public QWidget
-{
-    Q_OBJECT
-
-public:
-    explicit LogoWidget(const QString &pLogoFileName, QWidget *pParent = 0);
-
-protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
-
-private:
-    QPixmap mLogo;
-    QColor mLogoBackgroundColor;
-
-    int mLogoWidth;
-    int mLogoHeight;
-};
 
 class CentralWidgetViewSettings
 {
@@ -80,6 +61,7 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
+    virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
     Ui::CentralWidget *mUi;
@@ -91,7 +73,6 @@ private:
     QTabBar *mFiles;
     QStackedWidget *mContents;
 
-    LogoWidget *mLogoWidget;
     QWidget *mEmptyWidget;
 
     QTabBar *mEditingViews;
@@ -101,6 +82,12 @@ private:
     QMap<GuiViewSettings::Mode, bool> mModeEnabled;
 
     QList<CentralWidgetViewSettings *> mViews;
+
+    QPixmap mLogo;
+    QColor mLogoBackgroundColor;
+
+    int mLogoWidth;
+    int mLogoHeight;
 
     void updateGui() const;
 

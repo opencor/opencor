@@ -15,73 +15,6 @@
 namespace OpenCOR {
 namespace Core {
 
-LogoWidget::LogoWidget(const QString &pLogoFileName, QWidget *pParent) :
-    QWidget(pParent)
-{
-    // Logo settings
-
-    mLogo.load(pLogoFileName);
-
-    mLogoBackgroundColor = QImage(pLogoFileName).pixel(0, 0);
-
-    mLogoWidth  = mLogo.width();
-    mLogoHeight = mLogo.height();
-}
-
-void LogoWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Render the logo
-
-    QPainter painter(this);
-
-    // Paint the widget with the logo's background colour
-
-    int widgetWidth  = width();
-    int widgetHeight = height();
-
-    painter.fillRect(QRect(0, 0, widgetWidth, widgetHeight),
-                     mLogoBackgroundColor);
-
-    // Draw the logo itself
-
-    painter.drawPixmap(QRect(0.5*(widgetWidth-mLogoWidth),
-                             0.5*(widgetHeight-mLogoHeight),
-                             mLogoWidth, mLogoHeight),
-                       mLogo);
-
-#ifndef Q_WS_MAC
-    // Draw a border around the widget
-    // Note #1: the border actually consists of two borders. A 'dark' outer
-    //          border and a 'light' inner border. Note the way the border
-    //          coordinates were adjusted to get the right effect...
-    // Note #2: the border doesn't look good on Mac OS X, so...
-
-    QPen pen = painter.pen();
-
-    pen.setColor(palette().color(QPalette::Button));
-
-    painter.setPen(pen);
-
-    QRect border = rect();
-
-    border.adjust(0, 0, -1, 0);
-
-    painter.drawRect(border);
-
-    pen.setColor(palette().color(QPalette::Midlight));
-
-    painter.setPen(pen);
-
-    border.adjust(1, 1, -1, -1);
-
-    painter.drawRect(border);
-#endif
-
-    // Accept the event
-
-    pEvent->accept();
-}
-
 CentralWidgetViewSettings::CentralWidgetViewSettings(Plugin *pPlugin,
                                                      GuiViewSettings *pSettings) :
     mPlugin(pPlugin),
@@ -120,6 +53,17 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mFileManager = new FileManager();
 
+    // Logo settings
+
+    static const QString logoResourceName = ":logo";
+
+    mLogo.load(logoResourceName);
+
+    mLogoBackgroundColor = QImage(logoResourceName).pixel(0, 0);
+
+    mLogoWidth  = mLogo.width();
+    mLogoHeight = mLogo.height();
+
     // Create our modes tab bar with no tabs by default
 
     mModes = newTabBar(QTabBar::RoundedWest);
@@ -134,13 +78,11 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mContents = new QStackedWidget(this);
 
-    mLogoWidget  = new LogoWidget(":logo", this);
     mEmptyWidget = new QWidget(this);
 
     mEmptyWidget->setBackgroundRole(QPalette::BrightText);
     mEmptyWidget->setAutoFillBackground(true);
 
-    mContents->addWidget(mLogoWidget);
     mContents->addWidget(mEmptyWidget);
 
     QWidget *centralWidget = new QWidget(this);
@@ -154,7 +96,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     centralWidgetVBoxLayout->addWidget(mFiles);
     centralWidgetVBoxLayout->addWidget(mContents);
 
-    // Create our differnt views tab bars
+    // Create our different views tab bars
 
     mEditingViews    = newTabBar(QTabBar::RoundedEast);
     mSimulationViews = newTabBar(QTabBar::RoundedEast);
@@ -560,25 +502,80 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
     pEvent->acceptProposedAction();
 }
 
+void CentralWidget::paintEvent(QPaintEvent *pEvent)
+{
+    // Display our logo, in case no file is being managed
+
+    if (!mFileManager->count()) {
+        QPainter painter(this);
+
+        // Paint the widget with the logo's background colour
+
+        int widgetWidth  = width();
+        int widgetHeight = height();
+
+        painter.fillRect(QRect(0, 0, widgetWidth, widgetHeight),
+                         mLogoBackgroundColor);
+
+        // Draw the logo itself
+
+        painter.drawPixmap(QRect(0.5*(widgetWidth-mLogoWidth),
+                                 0.5*(widgetHeight-mLogoHeight),
+                                 mLogoWidth, mLogoHeight),
+                           mLogo);
+
+#ifndef Q_WS_MAC
+        // Draw a border around the widget
+        // Note #1: the border actually consists of two borders. A 'dark' outer
+        //          border and a 'light' inner border. Note the way the border
+        //          coordinates were adjusted to get the right effect...
+        // Note #2: the border doesn't look good on Mac OS X, so...
+
+        QPen pen = painter.pen();
+
+        pen.setColor(palette().color(QPalette::Button));
+
+        painter.setPen(pen);
+
+        QRect border = rect();
+
+        border.adjust(0, 0, -1, 0);
+
+        painter.drawRect(border);
+
+        pen.setColor(palette().color(QPalette::Midlight));
+
+        painter.setPen(pen);
+
+        border.adjust(1, 1, -1, -1);
+
+        painter.drawRect(border);
+#endif
+
+        // Accept the event
+
+        pEvent->accept();
+    } else {
+        // There is at least one managed file, so revert to the default paint
+        // handler
+
+        QWidget::paintEvent(pEvent);
+    }
+}
+
 void CentralWidget::updateGui() const
 {
-    bool atLeastOneFileOpened = mFiles->count();
+    bool atLeastOneManagedFile = mFileManager->count();
 
     // Show/hide the modes tab bar depending on whether there is at least one
-    // file opened
+    // managed file
 
-    mModes->setVisible(atLeastOneFileOpened);
+    mModes->setVisible(atLeastOneManagedFile);
 
-    // Do the same for the files tab bar
+    // Do the same for the files tab bar and contents
 
-    mFiles->setVisible(atLeastOneFileOpened);
-
-    // Show the logo widget if no file is opened or, for now, the empty view
-
-    if (atLeastOneFileOpened)
-        mContents->setCurrentWidget(mEmptyWidget);
-    else
-        mContents->setCurrentWidget(mLogoWidget);
+    mFiles->setVisible(atLeastOneManagedFile);
+    mContents->setVisible(atLeastOneManagedFile);
 
     // Show/hide the editing and simulation modes' corresponding views, if
     // required
@@ -589,7 +586,7 @@ void CentralWidget::updateGui() const
     mSimulationViews->setVisible(false);
     mAnalysisViews->setVisible(false);
 
-    int crtTab = atLeastOneFileOpened?mModes->currentIndex():-1;
+    int crtTab = atLeastOneManagedFile?mModes->currentIndex():-1;
 
     if (crtTab != -1) {
         // The modes tab bar is visible and a tab is therefore selected, so show
