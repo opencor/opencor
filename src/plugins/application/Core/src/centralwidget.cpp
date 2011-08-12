@@ -533,12 +533,7 @@ QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape)
 
     QTabBar *res = new QTabBar(this);
 
-    res->setFocusPolicy(Qt::StrongFocus);
-    // Note: we give a strong focus policy to the tab widget so that it can also
-    //       get focus by being clicked on
-
     res->setShape(pShape);
-
     res->setUsesScrollButtons(true);
     // Note #1: the above property is style dependent and it happens that it's
     //          not enabled on Mac OS X, so... set it in all cases, even though
