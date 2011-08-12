@@ -60,21 +60,21 @@ QMenu * GuiMenuSettings::menu() const
     return mMenu;
 }
 
-GuiActionSettings::GuiActionSettings(const GuiActionSettingsType &pType,
-                                     QAction *pAction) :
+GuiMenuActionSettings::GuiMenuActionSettings(const GuiMenuActionSettingsType &pType,
+                                             QAction *pAction) :
     mType(pType),
     mAction(pAction)
 {
 }
 
-GuiActionSettings::GuiActionSettingsType GuiActionSettings::type() const
+GuiMenuActionSettings::GuiMenuActionSettingsType GuiMenuActionSettings::type() const
 {
     // Return the action's type
 
     return mType;
 }
 
-QAction * GuiActionSettings::action() const
+QAction * GuiMenuActionSettings::action() const
 {
     // Return the action itself
 
@@ -151,8 +151,8 @@ GuiSettings::~GuiSettings()
     foreach (GuiMenuSettings *menuSettings, mMenus)
         delete menuSettings;
 
-    foreach (GuiActionSettings *actionSettings, mActions)
-        delete actionSettings;
+    foreach (GuiMenuActionSettings *menuActionSettings, mMenuActions)
+        delete menuActionSettings;
 
     foreach (GuiViewSettings *viewSettings, mViews)
         delete viewSettings;
@@ -169,13 +169,13 @@ void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
     mMenus.prepend(new GuiMenuSettings(pType, pMenu));
 }
 
-void GuiSettings::addAction(const GuiActionSettings::GuiActionSettingsType &pType,
-                            QAction *pAction)
+void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
+                                QAction *pAction)
 {
-    // Add a new action to our list
+    // Add a new menu action to our list
     // Note: a null pAction means that we want to add a separator
 
-    mActions.prepend(new GuiActionSettings(pType, pAction));
+    mMenuActions.prepend(new GuiMenuActionSettings(pType, pAction));
 }
 
 void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
@@ -200,11 +200,11 @@ QList<GuiMenuSettings *> GuiSettings::menus() const
     return mMenus;
 }
 
-QList<GuiActionSettings *> GuiSettings::actions() const
+QList<GuiMenuActionSettings *> GuiSettings::menuActions() const
 {
-    // Return our actions
+    // Return our menu actions
 
-    return mActions;
+    return mMenuActions;
 }
 
 QList<GuiViewSettings *> GuiSettings::views() const

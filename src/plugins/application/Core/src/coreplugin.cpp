@@ -77,17 +77,17 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins,
 
     // Set our settings
 
-    mSettings->addAction(GuiActionSettings::File, mFileOpen);
-    mSettings->addAction(GuiActionSettings::File);
-    mSettings->addAction(GuiActionSettings::File, mFileSave);
-    mSettings->addAction(GuiActionSettings::File, mFileSaveAs);
-    mSettings->addAction(GuiActionSettings::File, mFileSaveAll);
-    mSettings->addAction(GuiActionSettings::File);
-    mSettings->addAction(GuiActionSettings::File, mFileClose);
-    mSettings->addAction(GuiActionSettings::File, mFileCloseAll);
-    mSettings->addAction(GuiActionSettings::File);
-    mSettings->addAction(GuiActionSettings::File, mFilePrint);
-    mSettings->addAction(GuiActionSettings::File);
+    mSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpen);
+    mSettings->addMenuAction(GuiMenuActionSettings::File);
+    mSettings->addMenuAction(GuiMenuActionSettings::File, mFileSave);
+    mSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAs);
+    mSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAll);
+    mSettings->addMenuAction(GuiMenuActionSettings::File);
+    mSettings->addMenuAction(GuiMenuActionSettings::File, mFileClose);
+    mSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAll);
+    mSettings->addMenuAction(GuiMenuActionSettings::File);
+    mSettings->addMenuAction(GuiMenuActionSettings::File, mFilePrint);
+    mSettings->addMenuAction(GuiMenuActionSettings::File);
 }
 
 void CorePlugin::finalize()

@@ -264,15 +264,15 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
 
     // Add the actions/separators to our different menus
 
-    foreach (GuiActionSettings *actionSettings,
-             pGuiInterface->settings()->actions()) {
+    foreach (GuiMenuActionSettings *menuActionSettings,
+             pGuiInterface->settings()->menuActions()) {
         // Add the action/separator to the right menu
 
-        switch (actionSettings->type()) {
+        switch (menuActionSettings->type()) {
         default:   // File
-            if(actionSettings->action())
+            if(menuActionSettings->action())
                 mUi->menuFile->insertAction(mUi->menuFile->actions().first(),
-                                            actionSettings->action());
+                                            menuActionSettings->action());
             else
                 mUi->menuFile->insertSeparator(mUi->menuFile->actions().first());
         }

@@ -56,22 +56,22 @@ private:
     QMenu *mMenu;
 };
 
-class GuiActionSettings
+class GuiMenuActionSettings
 {
 public:
-    enum GuiActionSettingsType
+    enum GuiMenuActionSettingsType
     {
         File
     };
 
-    explicit GuiActionSettings(const GuiActionSettingsType &pType,
-                               QAction *pAction);
+    explicit GuiMenuActionSettings(const GuiMenuActionSettingsType &pType,
+                                   QAction *pAction);
 
-    GuiActionSettingsType type() const;
+    GuiMenuActionSettingsType type() const;
     QAction *action() const;
 
 private:
-    GuiActionSettingsType mType;
+    GuiMenuActionSettingsType mType;
     QAction *mAction;
 };
 
@@ -123,20 +123,20 @@ public:
 
     void addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
                  QMenu *pMenu);
-    void addAction(const GuiActionSettings::GuiActionSettingsType &pType,
-                   QAction *pAction = 0);
+    void addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
+                       QAction *pAction = 0);
     void addView(const GuiViewSettings::Mode &pMode);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow);
 
     QList<GuiMenuSettings *> menus() const;
-    QList<GuiActionSettings *> actions() const;
+    QList<GuiMenuActionSettings *> menuActions() const;
     QList<GuiViewSettings *> views() const;
     QList<GuiWindowSettings *> windows() const;
 
 private:
     QList<GuiMenuSettings *> mMenus;
-    QList<GuiActionSettings *> mActions;
+    QList<GuiMenuActionSettings *> mMenuActions;
     QList<GuiViewSettings *> mViews;
     QList<GuiWindowSettings *> mWindows;
 };
