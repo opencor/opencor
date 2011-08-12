@@ -1,5 +1,7 @@
 #include "cellmlsimulationplugin.h"
 
+#include <QTabBar>
+
 namespace OpenCOR {
 namespace CellMLSimulation {
 
@@ -24,6 +26,15 @@ CellMLSimulationPlugin::CellMLSimulationPlugin() :
     // Set our settings
 
     mSettings->addView(GuiViewSettings::Simulation);
+}
+
+void CellMLSimulationPlugin::retranslateUi()
+{
+    // Retranslate our view's tab
+
+    GuiViewSettings *view = mSettings->views().at(0);
+
+    view->tabBar()->setTabText(view->tabIndex(), tr("CellML"));
 }
 
 } }

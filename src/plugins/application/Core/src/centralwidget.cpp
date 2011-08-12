@@ -77,18 +77,22 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our views tab bar
 
-    mEditingViews  = new QTabBar(this);
-    mAnalysisViews = new QTabBar(this);
+    mEditingViews    = new QTabBar(this);
+    mSimulationViews = new QTabBar(this);
+    mAnalysisViews   = new QTabBar(this);
 
     mEditingViews->setShape(QTabBar::RoundedEast);
+    mSimulationViews->setShape(QTabBar::RoundedEast);
     mAnalysisViews->setShape(QTabBar::RoundedEast);
 
     // Add the widgets to our horizontal layout
 
     mUi->horizontalLayout->addWidget(mModes);
+
     mUi->horizontalLayout->addWidget(mFiles);
 
     mUi->horizontalLayout->addWidget(mEditingViews);
+    mUi->horizontalLayout->addWidget(mSimulationViews);
     mUi->horizontalLayout->addWidget(mAnalysisViews);
 
     // Update the GUI
@@ -423,6 +427,9 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
     if (pSettings->mode() == GuiViewSettings::Editing) {
         pSettings->setTabBar(mEditingViews);
         pSettings->setTabIndex(mEditingViews->addTab(QString()));
+    } else if (pSettings->mode() == GuiViewSettings::Simulation) {
+        pSettings->setTabBar(mSimulationViews);
+        pSettings->setTabIndex(mSimulationViews->addTab(QString()));
     } else if (pSettings->mode() == GuiViewSettings::Analysis) {
         pSettings->setTabBar(mAnalysisViews);
         pSettings->setTabIndex(mAnalysisViews->addTab(QString()));
@@ -512,6 +519,7 @@ void CentralWidget::updateGui() const
     //       see a flicker on Mac OS X
 
     mEditingViews->setVisible(false);
+    mSimulationViews->setVisible(false);
     mAnalysisViews->setVisible(false);
 
     int crtTab = atLeastOneFileOpened?mModes->currentIndex():-1;
@@ -521,6 +529,7 @@ void CentralWidget::updateGui() const
         // only the views corresponding to that mode
 
         mEditingViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Editing));
+        mSimulationViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Simulation));
         mAnalysisViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Analysis));
     }
 }
