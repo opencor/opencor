@@ -98,6 +98,8 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // Populate the data model with our different plugins
 
     foreach (Plugin *plugin, mPluginManager->plugins()) {
+        // Create the item corresponding to the current plugin
+
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?
                                                           QIcon(":oxygen/actions/dialog-ok-apply.png"):
                                                           QIcon(":oxygen/actions/edit-delete.png"),
@@ -106,8 +108,10 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
         // Only manageable plugins and plugins that are of the right type are
         // checkable
 
-        pluginItem->setCheckable(   plugin->info().manageable()
-                                 && (plugin->info().type() != PluginInfo::Console));
+        PluginInfo pluginInfo = plugin->info();
+
+        pluginItem->setCheckable(   pluginInfo.manageable()
+                                 && (pluginInfo.type() != PluginInfo::Console));
 
         if (pluginItem->isCheckable()) {
             // Retrieve the loading state of the plugin
@@ -130,7 +134,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
         // Add the plugin to the right category
 
-        mPluginCategories.value(plugin->info().category())->appendRow(pluginItem);
+        mPluginCategories.value(pluginInfo.category())->appendRow(pluginItem);
     }
 
     // Remove any category which doesn't have any plugin
@@ -287,13 +291,12 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     // Update the information view with the plugin's information
 
-    QString pluginName = pluginItem->text();
-    Plugin *plugin = mPluginManager->plugin(pluginName);
+    Plugin *plugin = mPluginManager->plugin(pluginItem->text());
     PluginInfo pluginInfo = plugin->info();
 
     // The plugin's name
 
-    mUi->nameValue->setText(pluginName);
+    mUi->nameValue->setText(plugin->name());
 
     // The plugin's type
 
