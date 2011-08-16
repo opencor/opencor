@@ -13,10 +13,12 @@ PLUGININFO_FUNC HelpPluginInfo()
     descriptions.insert("en", "A plugin to provide help");
     descriptions.insert("fr", "Une extension pour fournir de l'aide");
 
-    return PluginInfo(PluginInterface::V001, PluginInfo::Gui,
-                       PluginInfo::Application, true,
-                       QStringList() << "Core",
-                       descriptions);
+    return PluginInfo(PluginInterface::V001,
+                      PluginInfo::Gui,
+                      PluginInfo::Application,
+                      true,
+                      QStringList() << "Core",
+                      descriptions);
 }
 
 Q_EXPORT_PLUGIN2(Help, HelpPlugin)

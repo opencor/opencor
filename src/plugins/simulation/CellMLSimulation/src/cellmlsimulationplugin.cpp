@@ -12,8 +12,10 @@ PLUGININFO_FUNC CellMLSimulationPluginInfo()
     descriptions.insert("en", "A plugin to simulate <a href=\"http://www.cellml.org/\">CellML</a> files");
     descriptions.insert("fr", "Une extension pour simuler des fichiers <a href=\"http://www.cellml.org/\">CellML</a>");
 
-    return PluginInfo(PluginInterface::V001, PluginInfo::Gui,
-                      PluginInfo::Simulation, true,
+    return PluginInfo(PluginInterface::V001,
+                      PluginInfo::Gui,
+                      PluginInfo::Simulation,
+                      true,
                       QStringList() << "CoreSimulation" << "CellML",
                       descriptions);
 }
