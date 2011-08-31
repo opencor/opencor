@@ -39,6 +39,14 @@ MACRO(INITIALISE_PROJECT)
 
     FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
 
+    # Whether we are building for 32-bit or 64-bit
+
+    IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        SET(64BIT_MODE ON)
+    ELSE()
+        SET(64BIT_MODE OFF)
+    ENDIF()
+
     # Default location for third-party libraries
     # Note: this is only required so that we can quickly test third-party
     #       libraries without first having to package everything
@@ -100,16 +108,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(OPENCOR_DEPENDENCIES)
     SET(QT_DEPENDENCIES)
 
-    SET(QRC_FILE res/${PLUGIN_NAME}.qrc)
-
-    IF(EXISTS "${PROJECT_SOURCE_DIR}/${QRC_FILE}")
-        SET(RESOURCES
-            ${QRC_FILE}
-        )
-    ELSE()
-        SET(RESOURCES)
-    ENDIF()
-
     # Analyse the extra parameters
 
     SET(TYPE_OF_PARAMETER 0)
@@ -147,6 +145,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # Switch to the QT_DEPENDENCIES type of parameters
 
             SET(TYPE_OF_PARAMETER 8)
+        ELSEIF(${PARAMETER} STREQUAL "RESOURCE_DIR")
+            # Switch to the RESOURCE_DIR type of parameters
+
+            SET(TYPE_OF_PARAMETER 9)
         ELSE()
             # Add the parameter to the corresponding set
 
@@ -166,9 +168,27 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 SET(OPENCOR_DEPENDENCIES ${OPENCOR_DEPENDENCIES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
+                # Note: we only support ONE resource directory, so...
+
+                SET(QRC_FILE ${PARAMETER}/${PLUGIN_NAME}.qrc)
             ENDIF()
         ENDIF()
     ENDFOREACH()
+
+    # Resource file, if any
+
+    IF("${QRC_FILE}" STREQUAL "")
+        SET(QRC_FILE res/${PLUGIN_NAME}.qrc)
+    ENDIF()
+
+    IF(EXISTS "${PROJECT_SOURCE_DIR}/${QRC_FILE}")
+        SET(RESOURCES
+            ${QRC_FILE}
+        )
+    ELSE()
+        SET(RESOURCES)
+    ENDIF()
 
     # Various include directories
 
