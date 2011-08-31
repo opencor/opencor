@@ -20,50 +20,45 @@ ENDIF()
 
 # CellML header files
 
-SET(CELLML_HEADERS)
-SET(CELLML_HEADER_FILES
-    AnnoToolsBootstrap.hpp
-    CCGSBootstrap.hpp
-    cda_compiler_support.h
-    cda_config.h
-    CeLEDSBootstrap.hpp
-    CeLEDSExporterBootstrap.hpp
-    cellml-api-cxx-support.hpp
-    CellMLBootstrap.hpp
-    CeVASBootstrap.hpp
-    CISBootstrap.hpp
-    CUSESBootstrap.hpp
-    DOMBootstrap.hxx
-    IfaceAnnoTools.hxx
-    IfaceCCGS.hxx
-    IfaceCeLEDS.hxx
-    IfaceCeLEDSExporter.hxx
-    IfaceCellML_APISPEC.hxx
-    IfaceCellML_events.hxx
-    IfaceCeVAS.hxx
-    IfaceCIS.hxx
-    IfaceCUSES.hxx
-    IfaceDOM_APISPEC.hxx
-    IfaceDOM_events.hxx
-    IfaceMaLaES.hxx
-    IfaceMathML_content_APISPEC.hxx
-    IfaceRDF_APISPEC.hxx
-    IfaceSProS.hxx
-    IfaceSRuS.hxx
-    IfaceTeLICeMS.hxx
-    IfaceVACSS.hxx
-    Ifacexpath.hxx
-    Ifacexpcom.hxx
-    MaLaESBootstrap.hpp
-    SProSBootstrap.hpp
-    SRuSBootstrap.hpp
-    TeLICeMService.hpp
-    VACSSBootstrap.hpp
+SET(CELLML_HEADERS
+    src/${CELLML_DISTRIBUTION_DIR}/AnnoToolsBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/CCGSBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/cda_compiler_support.h
+    src/${CELLML_DISTRIBUTION_DIR}/cda_config.h
+    src/${CELLML_DISTRIBUTION_DIR}/CeLEDSBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/CeLEDSExporterBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/cellml-api-cxx-support.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/CellMLBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/CeVASBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/CISBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/CUSESBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/DOMBootstrap.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceAnnoTools.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceCCGS.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceCeLEDS.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceCeLEDSExporter.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceCellML_APISPEC.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceCellML_events.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceCeVAS.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceCIS.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceCUSES.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceDOM_APISPEC.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceDOM_events.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceMaLaES.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceMathML_content_APISPEC.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceRDF_APISPEC.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceSProS.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceSRuS.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceTeLICeMS.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/IfaceVACSS.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/Ifacexpath.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/Ifacexpcom.hxx
+    src/${CELLML_DISTRIBUTION_DIR}/MaLaESBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/SProSBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/SRuSBootstrap.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/TeLICeMService.hpp
+    src/${CELLML_DISTRIBUTION_DIR}/VACSSBootstrap.hpp
 )
-
-FOREACH(CELLML_HEADER_FILE ${CELLML_HEADER_FILES})
-    SET(CELLML_HEADERS ${CELLML_HEADERS} src/${CELLML_DISTRIBUTION_DIR}/${CELLML_HEADER_FILE})
-ENDFOREACH()
 
 # Add the plugin
 
