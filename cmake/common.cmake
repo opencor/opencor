@@ -271,6 +271,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     #       However, this is not common practice on Windows, so...
 
     IF(WIN32)
+        SET(CMAKE_IMPORT_LIBRARY_PREFIX)
         SET(CMAKE_SHARED_LIBRARY_PREFIX)
     ENDIF()
 

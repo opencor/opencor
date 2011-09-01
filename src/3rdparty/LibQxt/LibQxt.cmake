@@ -18,13 +18,6 @@ INCLUDE_DIRECTORIES(${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/LibQxt/include/QxtCo
 # Compiler settings specific to LibQxt
 
 ADD_DEFINITIONS(-DQXT_STATIC)
-# Note: the above is just to 'fool' LibQxt in believing that we want a static
-#       version of the library. In fact, we want a shared version, but if we
-#       were not to define QXT_STATIC, then LibQxt would define its classes to
-#       be imported/exported (on Windows) while we prefer to take care of that
-#       through the enable-auto-import option during linking (since this means
-#       that we don't have to worry about imports/exports of DLL functions),
-#       so...
 
 IF(WIN32)
     ADD_DEFINITIONS(-DUNICODE)

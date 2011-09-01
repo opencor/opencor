@@ -74,6 +74,7 @@ ADD_PLUGIN(CellML
         src/cellmlplugin.h
     PLUGIN_INCLUDE_DIRS
         src
+        src/${CELLML_DISTRIBUTION_DIR}
     QT_DEPENDENCIES
         QtCore
         QtGui
