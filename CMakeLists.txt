@@ -293,26 +293,41 @@ IF(APPLE)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${QT_BINARY_DIR}/macdeployqt ${MAC_OS_X_PROJECT_BINARY_DIR})
 
-    # Neither QtHelp nor QtWebKit get deployed by macdeployqt since they are
-    # not used by OpenCOR directly anymore but by some plugins. We must
+    # Some Qt libraries/frameworks don't get deployed by macdeployqt since they
+    # are not used by OpenCOR directly anymore but by some plugins. We must
     # therefore deploy them ourselves and make sure that their Qt dependencies
     # refer to our embedded version of the Qt libraries
 
+    DEPLOY_MAC_OS_X_QT_LIBRARY(libQtCLucene
+        TYPE
+            Library
+        FRAMEWORKS
+            QtCore
+    )
+
     DEPLOY_MAC_OS_X_QT_LIBRARY(QtHelp
-        QtCore
-        QtGui
-        QtNetwork
-        QtSql
-        QtXml
+        TYPE
+            Framework
+        FRAMEWORKS
+            QtCore
+            QtGui
+            QtNetwork
+            QtSql
+            QtXml
+        LIBRARIES
+            libQtCLucene
     )
 
     DEPLOY_MAC_OS_X_QT_LIBRARY(QtWebKit
-        phonon
-        QtCore
-        QtDBus
-        QtGui
-        QtNetwork
-        QtXml
+        TYPE
+            Framework
+        FRAMEWORKS
+            phonon
+            QtCore
+            QtDBus
+            QtGui
+            QtNetwork
+            QtXml
     )
 
     # Add the SQLite plugin to the bundle (required by the Help plugin)
@@ -332,6 +347,12 @@ IF(APPLE)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib ${SQLDRIVERS_DIR})
 
+    # Make sure that the SQLite plugin refers to our embedded version
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND install_name_tool -id @executable_path/../PlugIns/sqldrivers/libqsqlite.dylib
+                                                     ${SQLDRIVERS_DIR}/libqsqlite.dylib)
+
     # Make sure that the SQLite plugin refers to our embedded version of QtCore
     # and QtSql on which it depends
 
@@ -339,7 +360,7 @@ IF(APPLE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
                                                              @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
-                                                             ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers/libqsqlite.dylib)
+                                                             ${SQLDRIVERS_DIR}/libqsqlite.dylib)
     ENDFOREACH()
 ENDIF()
 
