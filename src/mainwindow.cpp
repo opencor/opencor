@@ -128,6 +128,14 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     new QShortcut(QKeySequence("Ctrl+M"),
                   this, SLOT(showMinimized()));
+
+    // A special shortcut to have OpenCOR hidden on Mac OS X when pressing
+    // Cmd+H
+    // Note: indeed, when pressing Cmd+H on Mac OS X, the active application
+    //       is expected to hide itself, so...
+
+    new QShortcut(QKeySequence("Ctrl+H"),
+                  this, SLOT(hide()));
 #endif
 
     // Retrieve the user settings from the previous session, if any
