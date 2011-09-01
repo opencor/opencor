@@ -337,7 +337,7 @@ IF(APPLE)
 
     FOREACH(LIBRARY QtCore QtSql)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
+                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
                                                              @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
                                                              ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers/libqsqlite.dylib)
     ENDFOREACH()
