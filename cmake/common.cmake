@@ -37,7 +37,7 @@ MACRO(INITIALISE_PROJECT)
 
     # Required packages
 
-    FIND_PACKAGE(Qt4 4.6.0 REQUIRED)
+    FIND_PACKAGE(Qt4 4.7.4 REQUIRED)
 
     # Whether we are building for 32-bit or 64-bit
 
