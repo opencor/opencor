@@ -401,7 +401,7 @@ MACRO(DEPLOY_MAC_OS_X_QT_LIBRARY QT_LIBRARY)
 
     IF("${TYPE}" STREQUAL "Library")
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -id @executable_path/../Frameworks/${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                           COMMAND install_name_tool -id @executable_path/../Frameworks/${QT_LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                          ${QT_LIBRARY_LIB_FILEPATH})
     ELSE()
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
@@ -415,7 +415,7 @@ MACRO(DEPLOY_MAC_OS_X_QT_LIBRARY QT_LIBRARY)
     FOREACH(LIBRARY ${LIBRARIES})
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                             @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
+                                                             @executable_path/../Frameworks/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                              ${QT_LIBRARY_LIB_FILEPATH})
     ENDFOREACH()
 
@@ -431,9 +431,9 @@ MACRO(DEPLOY_MAC_OS_X_QT_LIBRARY QT_LIBRARY)
 ENDMACRO()
 
 MACRO(FIX_MAC_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIR PLUGIN)
-    SET(PLUGIN_PATH PlugIns/${PLUGIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(PLUGIN_FILE ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND install_name_tool -id @executable_path/../${PLUGIN_PATH}
-                                                     ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/${PLUGIN_PATH})
+                       COMMAND install_name_tool -id ${PLUGIN_FILE}
+                                                     ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${PLUGIN_DIR}/${PLUGIN_FILE})
 ENDMACRO()

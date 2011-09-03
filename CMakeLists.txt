@@ -381,7 +381,7 @@ IF(APPLE)
     # Make sure that the SQLite plugin refers to our embedded version
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND install_name_tool -id @executable_path/../PlugIns/sqldrivers/libqsqlite.dylib
+                       COMMAND install_name_tool -id libqsqlite.dylib
                                                      ${SQLDRIVERS_DIR}/libqsqlite.dylib)
 
     # Make sure that the SQLite plugin refers to our embedded version of QtCore
