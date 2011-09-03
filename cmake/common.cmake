@@ -429,3 +429,11 @@ MACRO(DEPLOY_MAC_OS_X_QT_LIBRARY QT_LIBRARY)
                                                              ${QT_LIBRARY_LIB_FILEPATH})
     ENDFOREACH()
 ENDMACRO()
+
+MACRO(FIX_MAC_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIR PLUGIN)
+    SET(PLUGIN_PATH PlugIns/${PLUGIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND install_name_tool -id @executable_path/../${PLUGIN_PATH}
+                                                     ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/${PLUGIN_PATH})
+ENDMACRO()
