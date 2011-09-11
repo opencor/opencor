@@ -434,6 +434,6 @@ MACRO(FIX_MAC_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIR PLUGIN)
     SET(PLUGIN_FILE ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND install_name_tool -id ${PLUGIN_FILE}
+                       COMMAND install_name_tool -id @rpath/PlugIns/${PLUGIN_DIR}/${PLUGIN_FILE}
                                                      ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${PLUGIN_DIR}/${PLUGIN_FILE})
 ENDMACRO()
