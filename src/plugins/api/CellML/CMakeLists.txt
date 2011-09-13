@@ -75,6 +75,8 @@ ADD_PLUGIN(CellML
     PLUGIN_INCLUDE_DIRS
         src
         ${CELLML_HEADER_DIR}
+    OPENCOR_DEPENDENCIES
+        Core
     QT_DEPENDENCIES
         QtCore
         QtGui

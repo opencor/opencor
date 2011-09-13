@@ -28,10 +28,11 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     // Extract the help files
 
-    QString applicationBaseName = QFileInfo(qApp->applicationFilePath()).baseName();
+    QString applicationBaseFileName =  QDir::tempPath()+QDir::separator()
+                                      +QFileInfo(qApp->applicationFilePath()).baseName();
 
-    mQchFileName = QDir::tempPath()+QDir::separator()+applicationBaseName+".qch";
-    mQhcFileName = QDir::tempPath()+QDir::separator()+applicationBaseName+".qhc";
+    mQchFileName = applicationBaseFileName+".qch";
+    mQhcFileName = applicationBaseFileName+".qhc";
 
     Core::saveResourceAs(":qchFile", mQchFileName);
     Core::saveResourceAs(":qhcFile", mQhcFileName);
@@ -103,8 +104,7 @@ HelpWindow::~HelpWindow()
     delete mHelpEngine;
     delete mUi;
 
-    // Delete the help files and then temporary directory by deleting the
-    // temporary directory object
+    // Delete the help files
 
     QFile(mQchFileName).remove();
     QFile(mQhcFileName).remove();
