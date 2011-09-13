@@ -1,18 +1,18 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="annotools">../../../lib/linux/x86/libannotools.dylib</file>
-        <file alias="ccgs">../../../lib/linux/x86/libccgs.dylib</file>
-        <file alias="celedsexporter">../../../lib/linux/x86/libceledsexporter.dylib</file>
-        <file alias="celeds">../../../lib/linux/x86/libceleds.dylib</file>
-        <file alias="cellml">../../../lib/linux/x86/libcellml.dylib</file>
-        <file alias="cevas">../../../lib/linux/x86/libcevas.dylib</file>
-        <file alias="cis">../../../lib/linux/x86/libcis.dylib</file>
-        <file alias="cuses">../../../lib/linux/x86/libcuses.dylib</file>
-        <file alias="malaes">../../../lib/linux/x86/libmalaes.dylib</file>
-        <file alias="spros">../../../lib/linux/x86/libspros.dylib</file>
-        <file alias="srus">../../../lib/linux/x86/libsrus.dylib</file>
-        <file alias="telicems">../../../lib/linux/x86/libtelicems.dylib</file>
-        <file alias="vacss">../../../lib/linux/x86/libvacss.dylib</file>
-        <file alias="xpath">../../../lib/linux/x86/libxpath.dylib</file>
+        <file alias="annotools">../../lib/macosx/libannotools.dylib</file>
+        <file alias="ccgs">../../lib/macosx/libccgs.dylib</file>
+        <file alias="celedsexporter">../../lib/macosx/libceledsexporter.dylib</file>
+        <file alias="celeds">../../lib/macosx/libceleds.dylib</file>
+        <file alias="cellml">../../lib/macosx/libcellml.dylib</file>
+        <file alias="cevas">../../lib/macosx/libcevas.dylib</file>
+        <file alias="cis">../../lib/macosx/libcis.dylib</file>
+        <file alias="cuses">../../lib/macosx/libcuses.dylib</file>
+        <file alias="malaes">../../lib/macosx/libmalaes.dylib</file>
+        <file alias="spros">../../lib/macosx/libspros.dylib</file>
+        <file alias="srus">../../lib/macosx/libsrus.dylib</file>
+        <file alias="telicems">../../lib/macosx/libtelicems.dylib</file>
+        <file alias="vacss">../../lib/macosx/libvacss.dylib</file>
+        <file alias="xpath">../../lib/macosx/libxpath.dylib</file>
     </qresource>
 </RCC>
