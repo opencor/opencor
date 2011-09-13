@@ -107,6 +107,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(DEFINITIONS)
     SET(OPENCOR_DEPENDENCIES)
     SET(QT_DEPENDENCIES)
+    SET(EXTERNAL_DEPENDENCIES)
 
     # Analyse the extra parameters
 
@@ -129,11 +130,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 7)
         ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 8)
-        ELSEIF(${PARAMETER} STREQUAL "RESOURCE_DIR")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 9)
+        ELSEIF(${PARAMETER} STREQUAL "RESOURCE_DIR")
+            SET(TYPE_OF_PARAMETER 10)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
-            # set
+            # set
 
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
                 SET(SOURCES ${SOURCES} ${PARAMETER})
@@ -152,6 +155,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
+                SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
                 # Note: we only support ONE resource directory, so...
 
                 SET(QRC_FILE ${PARAMETER}/${PLUGIN_NAME}.qrc)
@@ -246,6 +251,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
             ${QT_LIBRARY_PATH}
+        )
+    ENDFOREACH()
+
+    # External dependencies
+
+    FOREACH(EXTERNAL_LIBRARY ${EXTERNAL_DEPENDENCIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${EXTERNAL_LIBRARY}
         )
     ENDFOREACH()
 
