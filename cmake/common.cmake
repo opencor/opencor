@@ -37,6 +37,20 @@ MACRO(INITIALISE_PROJECT)
 
     # Required packages
 
+    IF(APPLE)
+        # Note #1: the Qt SDK doesn't, by default, make the Qt binaries
+        #          available to the user, hence we must update the user's PATH.
+        #          However, this doesn't work on Mac OS X with Qt Creator, so
+        #          we must hard-code qmake's path so that CMake can find it
+        #          from within Qt Creator...
+        # Note #2: ideally, we would use EXECUTE_PROCESS to retrieve the result
+        #          of 'which qmake', but that CMake command doesn't work from
+        #          within Qt Creator, so we really have no choice but to hard-
+        #          code qmake's path...
+
+        SET(QT_QMAKE_EXECUTABLE /Developer/QtSDK/Desktop/Qt/474/gcc/bin/qmake)
+    ENDIF()
+
     FIND_PACKAGE(Qt4 4.7.4 REQUIRED)
 
     # Whether we are building for 32-bit or 64-bit
@@ -107,6 +121,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(DEFINITIONS)
     SET(OPENCOR_DEPENDENCIES)
     SET(QT_DEPENDENCIES)
+    SET(EXTERNAL_DEPENDENCIES)
 
     # Analyse the extra parameters
 
@@ -129,11 +144,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 7)
         ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 8)
-        ELSEIF(${PARAMETER} STREQUAL "RESOURCE_DIR")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 9)
+        ELSEIF(${PARAMETER} STREQUAL "RESOURCE_DIR")
+            SET(TYPE_OF_PARAMETER 10)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
-            # set
+            # set
 
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
                 SET(SOURCES ${SOURCES} ${PARAMETER})
@@ -152,6 +169,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
+                SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
                 # Note: we only support ONE resource directory, so...
 
                 SET(QRC_FILE ${PARAMETER}/${PLUGIN_NAME}.qrc)
@@ -246,6 +265,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
             ${QT_LIBRARY_PATH}
+        )
+    ENDFOREACH()
+
+    # External dependencies
+
+    FOREACH(EXTERNAL_LIBRARY ${EXTERNAL_DEPENDENCIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${EXTERNAL_LIBRARY}
         )
     ENDFOREACH()
 
