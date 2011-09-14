@@ -1,5 +1,18 @@
 <RCC>
     <qresource prefix="/">
-        <file>lib.zip</file>
+        <file alias="annotools">../../lib/macosx/libannotools.dylib</file>
+        <file alias="ccgs">../../lib/macosx/libccgs.dylib</file>
+        <file alias="celedsexporter">../../lib/macosx/libceledsexporter.dylib</file>
+        <file alias="celeds">../../lib/macosx/libceleds.dylib</file>
+        <file alias="cellml">../../lib/macosx/libcellml.dylib</file>
+        <file alias="cevas">../../lib/macosx/libcevas.dylib</file>
+        <file alias="cis">../../lib/macosx/libcis.dylib</file>
+        <file alias="cuses">../../lib/macosx/libcuses.dylib</file>
+        <file alias="malaes">../../lib/macosx/libmalaes.dylib</file>
+        <file alias="spros">../../lib/macosx/libspros.dylib</file>
+        <file alias="srus">../../lib/macosx/libsrus.dylib</file>
+        <file alias="telicems">../../lib/macosx/libtelicems.dylib</file>
+        <file alias="vacss">../../lib/macosx/libvacss.dylib</file>
+        <file alias="xpath">../../lib/macosx/libxpath.dylib</file>
     </qresource>
 </RCC>

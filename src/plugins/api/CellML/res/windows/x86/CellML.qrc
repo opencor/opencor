@@ -1,5 +1,18 @@
 <RCC>
     <qresource prefix="/">
-        <file>lib.zip</file>
+        <file alias="annotools">../../../lib/windows/x86/libannotools.dll</file>
+        <file alias="ccgs">../../../lib/windows/x86/libccgs.dll</file>
+        <file alias="celedsexporter">../../../lib/windows/x86/libceledsexporter.dll</file>
+        <file alias="celeds">../../../lib/windows/x86/libceleds.dll</file>
+        <file alias="cellml">../../../lib/windows/x86/libcellml.dll</file>
+        <file alias="cevas">../../../lib/windows/x86/libcevas.dll</file>
+        <file alias="cis">../../../lib/windows/x86/libcis.dll</file>
+        <file alias="cuses">../../../lib/windows/x86/libcuses.dll</file>
+        <file alias="malaes">../../../lib/windows/x86/libmalaes.dll</file>
+        <file alias="spros">../../../lib/windows/x86/libspros.dll</file>
+        <file alias="srus">../../../lib/windows/x86/libsrus.dll</file>
+        <file alias="telicems">../../../lib/windows/x86/libtelicems.dll</file>
+        <file alias="vacss">../../../lib/windows/x86/libvacss.dll</file>
+        <file alias="xpath">../../../lib/windows/x86/libxpath.dll</file>
     </qresource>
 </RCC>
