@@ -14,5 +14,6 @@
         <file alias="telicems">../../../lib/linux/x64/libtelicems.so</file>
         <file alias="vacss">../../../lib/linux/x64/libvacss.so</file>
         <file alias="xpath">../../../lib/linux/x64/libxpath.so</file>
+        <file alias="test_cellml_model">../../../../../../../models/van_der_pol_model_1928.cellml</file>
     </qresource>
 </RCC>

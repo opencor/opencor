@@ -14,5 +14,6 @@
         <file alias="telicems">../../../lib/windows/x86/libtelicems.dll</file>
         <file alias="vacss">../../../lib/windows/x86/libvacss.dll</file>
         <file alias="xpath">../../../lib/windows/x86/libxpath.dll</file>
+        <file alias="test_cellml_model">../../../../../../../models/van_der_pol_model_1928.cellml</file>
     </qresource>
 </RCC>

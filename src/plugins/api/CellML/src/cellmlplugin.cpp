@@ -9,6 +9,7 @@
 #include <QDir>
 
 #include <QMessageBox>
+#include <QUrl>
 
 namespace OpenCOR {
 namespace CellML {
@@ -80,13 +81,17 @@ void CellMLPlugin::initialize(const QList<Plugin *> &)
     RETURN_INTO_OBJREF(ml, iface::cellml_api::DOMModelLoader,
                        cbs->modelLoader());
 
-    // Load a model and return its cmeta:id
+    // Load our test CellML model and return its cmeta:id
     // Note: we do this within a try...catch statement since we might get an
     //       exception...
 
+    QString testCellmlModelFileName = QDir::tempPath()+QDir::separator()+"test_cellml_model.cellml";
+
+    Core::saveResourceAs(":test_cellml_model", testCellmlModelFileName);
+
     try {
         RETURN_INTO_OBJREF(model, iface::cellml_api::Model,
-                           ml->loadFromURL(L"http://www.cellml.org/models/beeler_reuter_1977_version04/download"));
+                           ml->loadFromURL(QUrl::fromLocalFile(testCellmlModelFileName).toString().toStdWString().c_str()));
         RETURN_INTO_WSTRING(cmid, model->cmetaId());
 
         QMessageBox::information(0, "CellML", QString("The model's cmeta:id is '%1'.").arg(QString::fromStdWString(cmid)));
@@ -95,6 +100,8 @@ void CellMLPlugin::initialize(const QList<Plugin *> &)
 
         QMessageBox::information(0, "CellML", QString("An error occurred while loading the mode: %1.").arg(QString::fromStdWString(msg)));
     }
+
+    QFile::remove(testCellmlModelFileName);
 }
 
 void CellMLPlugin::finalize()
