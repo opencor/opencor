@@ -8,7 +8,7 @@
 
 #include <QDir>
 
-#include <QDebug>
+#include <QMessageBox>
 
 namespace OpenCOR {
 namespace CellML {
@@ -89,11 +89,11 @@ void CellMLPlugin::initialize(const QList<Plugin *> &)
                            ml->loadFromURL(L"http://www.cellml.org/models/beeler_reuter_1977_version04/download"));
         RETURN_INTO_WSTRING(cmid, model->cmetaId());
 
-        qDebug() << "The model's cmeta:id is" << cmid.c_str();
+        QMessageBox::information(0, "CellML", QString("The model's cmeta:id is '%1'.").arg(QString::fromStdWString(cmid)));
     } catch (iface::cellml_api::CellMLException& e) {
         RETURN_INTO_WSTRING(msg, ml->lastErrorMessage());
 
-        qDebug() << "An error occurred while loading the mode: " << msg.c_str();
+        QMessageBox::information(0, "CellML", QString("An error occurred while loading the mode: %1.").arg(QString::fromStdWString(msg)));
     }
 }
 
