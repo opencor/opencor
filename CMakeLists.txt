@@ -497,11 +497,7 @@ ELSE()
 
     # Qt files required by OpenCOR
 
-    INSTALL(FILES
-            ${QT_LIBRARY_DIR}/libphonon.so.4.4.0
-            RENAME libphonon.so.4
-            DESTINATION lib
-    )
+    INSTALL(FILES ${QT_LIBRARY_DIR}/libphonon.so.4.4.0 RENAME libphonon.so.4 DESTINATION lib)
 
     FOREACH(QT_LIBRARY QtCLucene QtCore QtDBus QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
         INSTALL(FILES
