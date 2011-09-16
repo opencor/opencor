@@ -497,9 +497,15 @@ ELSE()
 
     # Qt files required by OpenCOR
 
-    FOREACH(QT_LIBRARY phonon QtCLucene QtCore QtDBus QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
+    INSTALL(FILES
+            ${QT_LIBRARY_DIR}/libphonon.so.4.4.0
+            RENAME libphonon.so.4
+            DESTINATION lib
+    )
+
+    FOREACH(QT_LIBRARY QtCLucene QtCore QtDBus QtGui QtHelp QtNetwork QtSql QtWebKit QtXml)
         INSTALL(FILES
-                ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}
+                ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
                 RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}
                 DESTINATION lib
         )
