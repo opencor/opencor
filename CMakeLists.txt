@@ -294,14 +294,14 @@ IF(APPLE)
     # therefore deploy them ourselves and make sure that their Qt dependencies
     # refer to our embedded version of the Qt libraries
 
-    DEPLOY_MAC_OS_X_QT_LIBRARY(libQtCLucene
+    DEPLOY_MAC_OS_X_LIBRARY(libQtCLucene
         TYPE
             Library
         FRAMEWORKS
             QtCore
     )
 
-    DEPLOY_MAC_OS_X_QT_LIBRARY(QtHelp
+    DEPLOY_MAC_OS_X_LIBRARY(QtHelp
         TYPE
             Framework
         FRAMEWORKS
@@ -314,7 +314,7 @@ IF(APPLE)
             libQtCLucene
     )
 
-    DEPLOY_MAC_OS_X_QT_LIBRARY(QtWebKit
+    DEPLOY_MAC_OS_X_LIBRARY(QtWebKit
         TYPE
             Framework
         FRAMEWORKS
@@ -326,7 +326,7 @@ IF(APPLE)
             QtXml
     )
 
-    DEPLOY_MAC_OS_X_QT_LIBRARY(QtXml
+    DEPLOY_MAC_OS_X_LIBRARY(QtXml
         TYPE
             Framework
         FRAMEWORKS

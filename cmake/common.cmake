@@ -121,6 +121,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(DEFINITIONS)
     SET(OPENCOR_DEPENDENCIES)
     SET(QT_DEPENDENCIES)
+    SET(EXTERNAL_DEPENDENCIES_DIR)
     SET(EXTERNAL_DEPENDENCIES)
 
     # Analyse the extra parameters
@@ -144,10 +145,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 7)
         ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 8)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES_DIR")
             SET(TYPE_OF_PARAMETER 9)
-        ELSEIF(${PARAMETER} STREQUAL "RESOURCE_DIR")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 10)
+        ELSEIF(${PARAMETER} STREQUAL "RESOURCE_DIR")
+            SET(TYPE_OF_PARAMETER 11)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -169,10 +172,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
-                SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
+                SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
-                # Note: we only support ONE resource directory, so...
-
+                SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
                 SET(QRC_FILE ${PARAMETER}/${PLUGIN_NAME}.qrc)
             ENDIF()
         ENDIF()
@@ -270,9 +273,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # External dependencies
 
-    FOREACH(EXTERNAL_LIBRARY ${EXTERNAL_DEPENDENCIES})
+    FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${EXTERNAL_LIBRARY}
+            ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
         )
     ENDFOREACH()
 
@@ -319,7 +322,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDFOREACH()
 
     # A few Mac OS X specific things
-    
+
     IF(APPLE)
         # Make sure that the plugin refers to our embedded version of itself
         # and to other plugins on which it depends
@@ -348,9 +351,18 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Package the plugin's external dependencies, if any
 
-    IF(NOT APPLE)
-        FOREACH(EXTERNAL_LIBRARY ${EXTERNAL_DEPENDENCIES})
-            INSTALL(FILES ${EXTERNAL_LIBRARY} DESTINATION lib)
+    IF(APPLE)
+        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+            DEPLOY_MAC_OS_X_LIBRARY(${EXTERNAL_DEPENDENCY}
+                TYPE
+                    Library
+                DIR
+                    ${EXTERNAL_DEPENDENCIES_DIR}
+            )
+        ENDFOREACH()
+    ELSE()
+        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+            INSTALL(FILES ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY} DESTINATION lib)
         ENDFOREACH()
     ENDIF()
 
@@ -363,10 +375,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDIF()
 ENDMACRO()
 
-MACRO(DEPLOY_MAC_OS_X_QT_LIBRARY QT_LIBRARY)
+MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY)
     # Various initialisations
 
     SET(TYPE)
+    SET(DIR)
     SET(FRAMEWORKS)
     SET(LIBRARIES)
 
@@ -377,92 +390,105 @@ MACRO(DEPLOY_MAC_OS_X_QT_LIBRARY QT_LIBRARY)
     FOREACH(PARAMETER ${ARGN})
         IF(${PARAMETER} STREQUAL "TYPE")
             SET(TYPE_OF_PARAMETER 1)
-        ELSEIF(${PARAMETER} STREQUAL "FRAMEWORKS")
+        ELSEIF(${PARAMETER} STREQUAL "DIR")
             SET(TYPE_OF_PARAMETER 2)
-        ELSEIF(${PARAMETER} STREQUAL "LIBRARIES")
+        ELSEIF(${PARAMETER} STREQUAL "FRAMEWORKS")
             SET(TYPE_OF_PARAMETER 3)
+        ELSEIF(${PARAMETER} STREQUAL "LIBRARIES")
+            SET(TYPE_OF_PARAMETER 4)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
 
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
-                # Note: we only support ONE resource directory, so...
-
                 SET(TYPE ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
-                SET(FRAMEWORKS ${FRAMEWORKS} ${PARAMETER})
+                SET(DIR ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 3)
+                SET(FRAMEWORKS ${FRAMEWORKS} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 4)
                 SET(LIBRARIES ${LIBRARIES} ${PARAMETER})
             ENDIF()
         ENDIF()
     ENDFOREACH()
 
-    # Create the folder hierarchy for the Qt library/framework
+    # Create the folder hierarchy for the library/framework
 
     IF("${TYPE}" STREQUAL "Library")
-        SET(QT_LIBRARY_LIB_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks)
+        SET(LIBRARY_LIB_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks)
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E make_directory ${QT_LIBRARY_LIB_DIR})
+                           COMMAND ${CMAKE_COMMAND} -E make_directory ${LIBRARY_LIB_DIR})
     ELSE()
-        SET(QT_LIBRARY_HOME_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${QT_LIBRARY}.framework)
-        SET(QT_LIBRARY_LIB_DIR ${QT_LIBRARY_HOME_DIR}/Versions/${QT_VERSION_MAJOR})
+        SET(QT_LIBRARY_HOME_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY}.framework)
+        SET(LIBRARY_LIB_DIR ${QT_LIBRARY_HOME_DIR}/Versions/${QT_VERSION_MAJOR})
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E make_directory ${QT_LIBRARY_HOME_DIR}/Resources
-                           COMMAND ${CMAKE_COMMAND} -E make_directory ${QT_LIBRARY_LIB_DIR})
+                           COMMAND ${CMAKE_COMMAND} -E make_directory ${LIBRARY_LIB_DIR})
     ENDIF()
 
-    # Copy the Qt library itself
+    # Copy the library itself
 
     IF("${TYPE}" STREQUAL "Library")
-        SET(QT_LIBRARY_LIB_FILEPATH ${QT_LIBRARY_LIB_DIR}/${QT_LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        IF("${DIR}" STREQUAL "")
+            SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${QT_LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} ${QT_LIBRARY_LIB_FILEPATH})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} ${LIBRARY_LIB_FILEPATH})
+        ELSE()
+            SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY})
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY} ${LIBRARY_LIB_FILEPATH})
+        ENDIF()
     ELSE()
-        SET(QT_LIBRARY_LIB_FILEPATH ${QT_LIBRARY_LIB_DIR}/${QT_LIBRARY})
+        SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY})
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY} ${QT_LIBRARY_LIB_FILEPATH})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY} ${LIBRARY_LIB_FILEPATH})
     ENDIF()
 
-    # Strip the Qt library from anything that is not essential
+    # Strip the library from anything that is not essential
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND strip -S -x ${QT_LIBRARY_LIB_FILEPATH})
+                       COMMAND strip -S -x ${LIBRARY_LIB_FILEPATH})
 
-    # Make sure that the Qt library refers to our embedded version
+    # Do things that are only related to Qt libraries
 
-    IF("${TYPE}" STREQUAL "Library")
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -id @executable_path/../Frameworks/${QT_LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                         ${QT_LIBRARY_LIB_FILEPATH})
-    ELSE()
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -id @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
-                                                         ${QT_LIBRARY_LIB_FILEPATH})
+    IF("${DIR}" STREQUAL "")
+        # Make sure that the library refers to our embedded version
+
+        IF("${TYPE}" STREQUAL "Library")
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -id @executable_path/../Frameworks/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                             ${LIBRARY_LIB_FILEPATH})
+        ELSE()
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -id @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
+                                                             ${LIBRARY_LIB_FILEPATH})
+        ENDIF()
+
+        # Make sure that the library refers to our embedded version of the Qt
+        # libraries on which it depends
+
+        FOREACH(LIBRARY ${LIBRARIES})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 @executable_path/../Frameworks/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 ${LIBRARY_LIB_FILEPATH})
+        ENDFOREACH()
+
+        # Make sure that the library refers to our embedded version of the Qt
+        # frameworks on which it depends
+
+        FOREACH(FRAMEWORK ${FRAMEWORKS})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${FRAMEWORK}.framework/Versions/${QT_VERSION_MAJOR}/${FRAMEWORK}
+                                                                 @executable_path/../Frameworks/${FRAMEWORK}.framework/Versions/${QT_VERSION_MAJOR}/${FRAMEWORK}
+                                                                 ${LIBRARY_LIB_FILEPATH})
+        ENDFOREACH()
     ENDIF()
-
-    # Make sure that the Qt library refers to our embedded version of the Qt
-    # libraries on which it depends
-
-    FOREACH(LIBRARY ${LIBRARIES})
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                             @executable_path/../Frameworks/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                             ${QT_LIBRARY_LIB_FILEPATH})
-    ENDFOREACH()
-
-    # Make sure that the Qt library refers to our embedded version of the Qt
-    # frameworks on which it depends
-
-    FOREACH(FRAMEWORK ${FRAMEWORKS})
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${FRAMEWORK}.framework/Versions/${QT_VERSION_MAJOR}/${FRAMEWORK}
-                                                             @executable_path/../Frameworks/${FRAMEWORK}.framework/Versions/${QT_VERSION_MAJOR}/${FRAMEWORK}
-                                                             ${QT_LIBRARY_LIB_FILEPATH})
-    ENDFOREACH()
 ENDMACRO()
 
 MACRO(FIX_MAC_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIR PLUGIN)
