@@ -1,13 +1,11 @@
 #include "cellmlplugin.h"
 #include "coreutils.h"
-#include "plugin.h"
 
 #include "CellMLBootstrap.hpp"
 #include "IfaceCellML_APISPEC.hxx"
 #include "cellml-api-cxx-support.hpp"
 
 #include <QDir>
-
 #include <QMessageBox>
 #include <QUrl>
 
@@ -31,46 +29,8 @@ PLUGININFO_FUNC CellMLPluginInfo()
 
 Q_EXPORT_PLUGIN2(CellML, CellMLPlugin)
 
-void CellMLPlugin::loadLibrary(const QString pLibName)
-{
-    QString libFileName = QDir::tempPath()+QDir::separator()+"lib"+pLibName+PluginExtension;
-
-    // Keep track of the library filename
-
-    mLibFileNames.append(libFileName);
-
-    // Extract the library
-
-    Core::saveResourceAs(":"+pLibName, libFileName);
-
-    // Load the library
-
-    QLibrary *lib = new QLibrary(libFileName);
-
-    mLibs.append(lib);
-
-    lib->load();
-}
-
 void CellMLPlugin::initialize(const QList<Plugin *> &)
 {
-    // Load all the CellML libraries
-
-    loadLibrary("annotools");
-    loadLibrary("ccgs");
-    loadLibrary("celedsexporter");
-    loadLibrary("celeds");
-    loadLibrary("cellml");
-    loadLibrary("cevas");
-    loadLibrary("cis");
-    loadLibrary("cuses");
-    loadLibrary("malaes");
-    loadLibrary("spros");
-    loadLibrary("srus");
-    loadLibrary("telicems");
-    loadLibrary("vacss");
-    loadLibrary("xpath");
-
     // Fetch a bootstrap object
 
     RETURN_INTO_OBJREF(cbs, iface::cellml_api::CellMLBootstrap,
@@ -102,22 +62,6 @@ void CellMLPlugin::initialize(const QList<Plugin *> &)
     }
 
     QFile::remove(testCellmlModelFileName);
-}
-
-void CellMLPlugin::finalize()
-{
-    // Unload all the CellML libraries
-
-    foreach(QLibrary *lib, mLibs) {
-        lib->unload();
-
-        delete lib;
-    }
-
-    // Delete all the CellML libraries
-
-    foreach(const QString &libFileName, mLibFileNames)
-        QFile(libFileName).remove();
 }
 
 } }

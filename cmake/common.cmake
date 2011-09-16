@@ -346,7 +346,15 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin
+    # Package the plugin's external dependencies, if any
+
+    IF(NOT APPLE)
+        FOREACH(EXTERNAL_LIBRARY ${EXTERNAL_DEPENDENCIES})
+            INSTALL(FILES ${EXTERNAL_LIBRARY} DESTINATION lib)
+        ENDFOREACH()
+    ENDIF()
+
+    # Package the plugin itself
 
     IF(WIN32)
         INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION plugins/${MAIN_PROJECT_NAME})

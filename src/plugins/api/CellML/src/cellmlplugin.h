@@ -17,13 +17,6 @@ class CellMLPlugin : public PluginInterface
 
 public:
     virtual void initialize(const QList<Plugin *> &);
-    virtual void finalize();
-
-private:
-    QStringList mLibFileNames;
-    QList<QLibrary *> mLibs;
-
-    void loadLibrary(const QString pLibName);
 };
 
 } }
