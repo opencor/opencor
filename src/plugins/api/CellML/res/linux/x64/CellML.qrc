@@ -1,19 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="annotools">../../../lib/linux/x64/libannotools.so</file>
-        <file alias="ccgs">../../../lib/linux/x64/libccgs.so</file>
-        <file alias="celedsexporter">../../../lib/linux/x64/libceledsexporter.so</file>
-        <file alias="celeds">../../../lib/linux/x64/libceleds.so</file>
-        <file alias="cellml">../../../lib/linux/x64/libcellml.so</file>
-        <file alias="cevas">../../../lib/linux/x64/libcevas.so</file>
-        <file alias="cis">../../../lib/linux/x64/libcis.so</file>
-        <file alias="cuses">../../../lib/linux/x64/libcuses.so</file>
-        <file alias="malaes">../../../lib/linux/x64/libmalaes.so</file>
-        <file alias="spros">../../../lib/linux/x64/libspros.so</file>
-        <file alias="srus">../../../lib/linux/x64/libsrus.so</file>
-        <file alias="telicems">../../../lib/linux/x64/libtelicems.so</file>
-        <file alias="vacss">../../../lib/linux/x64/libvacss.so</file>
-        <file alias="xpath">../../../lib/linux/x64/libxpath.so</file>
         <file alias="test_cellml_model">../../../../../../../models/van_der_pol_model_1928.cellml</file>
     </qresource>
 </RCC>
