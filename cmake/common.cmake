@@ -324,7 +324,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # A few Mac OS X specific things
 
     IF(APPLE)
-        # Clean our plugin
+        # Clean up our plugin's id
 
         SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
@@ -379,7 +379,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDIF()
 ENDMACRO()
 
-MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY)
+MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
     # Various initialisations
 
     SET(TYPE)
@@ -424,7 +424,7 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E make_directory ${LIBRARY_LIB_DIR})
     ELSE()
-        SET(QT_LIBRARY_HOME_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY}.framework)
+        SET(QT_LIBRARY_HOME_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY_NAME}.framework)
         SET(LIBRARY_LIB_DIR ${QT_LIBRARY_HOME_DIR}/Versions/${QT_VERSION_MAJOR})
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
@@ -436,21 +436,21 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY)
 
     IF("${TYPE}" STREQUAL "Library")
         IF("${DIR}" STREQUAL "")
-            SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX})
+            SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} ${LIBRARY_LIB_FILEPATH})
+                               COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} ${LIBRARY_LIB_FILEPATH})
         ELSE()
-            SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY})
+            SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY} ${LIBRARY_LIB_FILEPATH})
+                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME} ${LIBRARY_LIB_FILEPATH})
         ENDIF()
     ELSE()
-        SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY})
+        SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME})
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY} ${LIBRARY_LIB_FILEPATH})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY_NAME} ${LIBRARY_LIB_FILEPATH})
     ENDIF()
 
     # Strip the library from anything that is not essential
@@ -461,17 +461,17 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY)
     # Do things that are only related to Qt libraries
 
     IF("${DIR}" STREQUAL "")
-        # Make sure that the library refers to our embedded version
+        # Clean up the library's id
 
-#        IF("${TYPE}" STREQUAL "Library")
-#            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-#                               COMMAND install_name_tool -id @executable_path/../Frameworks/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
-#                                                             ${LIBRARY_LIB_FILEPATH})
-#        ELSE()
-#            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-#                               COMMAND install_name_tool -id @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
-#                                                             ${LIBRARY_LIB_FILEPATH})
-#        ENDIF()
+        IF("${TYPE}" STREQUAL "Library")
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -id ${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                             ${LIBRARY_LIB_FILEPATH})
+        ELSE()
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -id ${LIBRARY_NAME}
+                                                             ${LIBRARY_LIB_FILEPATH})
+        ENDIF()
 
         # Make sure that the library refers to our embedded version of the Qt
         # libraries on which it depends
