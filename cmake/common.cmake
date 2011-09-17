@@ -271,7 +271,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
-    # External dependencies
+    # Make sure that we link to our external dependencies
 
     FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
@@ -349,6 +349,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+        ENDFOREACH()
+
+        # Make sure that the plugin refers to our embedded version the external
+        # dependencies on which it depends
+
+        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
