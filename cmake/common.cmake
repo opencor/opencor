@@ -363,23 +363,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin's external dependencies, if any
-
-    IF(APPLE)
-        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
-            DEPLOY_MAC_OS_X_LIBRARY(${EXTERNAL_DEPENDENCY}
-                TYPE
-                    Library
-                DIR
-                    ${EXTERNAL_DEPENDENCIES_DIR}
-            )
-        ENDFOREACH()
-    ELSE()
-        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
-            INSTALL(FILES ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY} DESTINATION lib)
-        ENDFOREACH()
-    ENDIF()
-
     # Package the plugin itself
 
     IF(WIN32)
@@ -468,7 +451,7 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND strip -S -x ${LIBRARY_LIB_FILEPATH})
 
-    # Do things that are only related to Qt libraries
+    # Do things that are only related to Qt libraries or non-Qt libraries
 
     IF("${DIR}" STREQUAL "")
         # Clean up the library's id
@@ -500,6 +483,16 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${FRAMEWORK}.framework/Versions/${QT_VERSION_MAJOR}/${FRAMEWORK}
                                                                  @executable_path/../Frameworks/${FRAMEWORK}.framework/Versions/${QT_VERSION_MAJOR}/${FRAMEWORK}
+                                                                 ${LIBRARY_LIB_FILEPATH})
+        ENDFOREACH()
+    ELSE()
+        # Make sure that the library refers to our embedded version of the
+        # libraries on which it depends
+
+        FOREACH(LIBRARY ${LIBRARIES})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${LIBRARY}
+                                                                 @executable_path/../Frameworks/${LIBRARY}
                                                                  ${LIBRARY_LIB_FILEPATH})
         ENDFOREACH()
     ENDIF()
