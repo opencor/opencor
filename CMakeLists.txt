@@ -333,29 +333,29 @@ IF(APPLE)
             QtCore
     )
 
-    # macdeployqt doesn't properly deploy plugins (in Qt SDK 1.1.3 at least),
-    # so fix them (see https://bugreports.qt.nokia.com/browse/QTSDK-867)
+    # Clean up the plugins that are deployed by mmacdeployqt
+    # Note: it's not essential, it's merely to have 'clean' plugins
 
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(accessible qtaccessiblewidgets)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(accessible qtaccessiblewidgets)
 
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(bearer qgenericbearer)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(bearer qgenericbearer)
 
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qcncodecs)
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qjpcodecs)
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qkrcodecs)
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qtwcodecs)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qcncodecs)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qjpcodecs)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qkrcodecs)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qtwcodecs)
 
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(graphicssystems qtracegraphicssystem)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(graphicssystems qtracegraphicssystem)
 
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qgif)
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qico)
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qjpeg)
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qmng)
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qtiff)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qgif)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qico)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qjpeg)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qmng)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qtiff)
 
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(phonon_backend phonon_qt7)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(phonon_backend phonon_qt7)
 
-    FIX_MAC_OS_X_PLUGIN_DEPLOYMENT(qmltooling qmldbg_tcp)
+    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(qmltooling qmldbg_tcp)
 
     # Add the SQLite plugin to the bundle (required by the Help plugin)
     # Note: this would, ideally, be done as part of the packaging, but we do it
