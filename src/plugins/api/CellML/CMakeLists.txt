@@ -108,7 +108,7 @@ ADD_PLUGIN(CellML
 
 # Package the plugin's external dependencies
 # Note: it must be done here since ADD_PLUGIN doesn't support the fact that an
-#       external dependency may have dependencies of its own
+#       external dependency may have dependencies of its own
 
 IF(APPLE)
     DEPLOY_MAC_OS_X_LIBRARY(libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
