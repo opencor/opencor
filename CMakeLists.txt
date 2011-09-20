@@ -248,7 +248,7 @@ IF(NOT APPLE)
     ENDIF()
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${BIN_DIR}/${PLUGIN_FILENAME})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${BIN_DIR})
 ENDIF()
 
 # Some Mac OS X specific information, as well as some pre- and post-processing
