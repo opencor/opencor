@@ -263,7 +263,7 @@ IF(APPLE)
 
     SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/Info.plist.in ${InfoPlistFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macosx/Info.plist.in ${InfoPlistFile})
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile})
 
@@ -440,8 +440,8 @@ IF(WIN32)
     SET(BatFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat)
     SET(VbsFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.bat.in ${BatFile})
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.vbs.in ${VbsFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
 
     INSTALL(FILES ${BatFile} DESTINATION .)
     INSTALL(FILES ${VbsFile} DESTINATION .)
@@ -451,7 +451,7 @@ IF(WIN32)
     #       file icons (so that it is clear to the user that an extension has
     #       been (un)registered...
 
-    SET(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}/distrib\\\\FileAssociation.nsh")
+    SET(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh")
 
     SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
         \\\${RegisterExtension} \\\"\\\$INSTDIR\\\\bin\\\\${PROJECT_NAME}.exe\\\" \\\".cellml\\\" \\\"CellML File\\\"
@@ -466,7 +466,7 @@ ELSEIF(APPLE)
 
     SET(CPACK_GENERATOR PackageMaker ZIP)
 
-    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/welcomeForMacOSXInstaller.txt")
+    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macosx/welcome.txt")
     SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
 
@@ -482,7 +482,7 @@ ELSEIF(APPLE)
 
     SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.sh.macosx.in ${ShellFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macosx/application.sh.in ${ShellFile})
 
     INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -552,7 +552,7 @@ ELSE()
 
     # Qt configuration file to tell OpenCOR where to look for plugins
 
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/qt.conf DESTINATION bin)
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/qt.conf DESTINATION bin)
 
     # SQLite plugin (required to see the help file)
 
@@ -562,7 +562,7 @@ ELSE()
 
     SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/application.sh.linux.in ${ShellFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 
     INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ENDIF()
