@@ -188,9 +188,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDIF()
 
     IF(EXISTS "${PROJECT_SOURCE_DIR}/${QRC_FILE}")
-        SET(RESOURCES
-            ${QRC_FILE}
-        )
+        SET(RESOURCES ${QRC_FILE})
     ELSE()
         SET(RESOURCES)
     ENDIF()
