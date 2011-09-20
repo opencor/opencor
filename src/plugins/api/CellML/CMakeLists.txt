@@ -110,7 +110,11 @@ ADD_PLUGIN(CellML
 # Note: it must be done here since ADD_PLUGIN doesn't support the fact that an
 #       external dependency may have dependencies of its own
 
-IF(APPLE)
+IF(WIN32)
+    FOREACH(CELLML_LIB ${CELLML_LIBS})
+        INSTALL(FILES ${CELLML_LIBS_DIR}/${CELLML_LIB} DESTINATION bin)
+    ENDFOREACH()
+ELSEIF(APPLE)
     DEPLOY_MAC_OS_X_LIBRARY(libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
         TYPE
             Library
