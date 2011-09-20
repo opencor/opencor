@@ -383,10 +383,10 @@ IF(APPLE)
     # Make sure that the SQLite plugin refers to our embedded version of QtCore
     # and QtSql on which it depends
 
-    FOREACH(LIBRARY QtCore QtSql)
+    FOREACH(QT_LIBRARY QtCore QtSql)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
-                                                             @executable_path/../Frameworks/${LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY}
+                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
+                                                             @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                              ${SQLDRIVERS_DIR}/libqsqlite.dylib)
     ENDFOREACH()
 ENDIF()
