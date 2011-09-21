@@ -5,10 +5,6 @@
 #include "IfaceCellML_APISPEC.hxx"
 #include "cellml-api-cxx-support.hpp"
 
-#include <QDir>
-#include <QMessageBox>
-#include <QUrl>
-
 namespace OpenCOR {
 namespace CellML {
 
@@ -28,40 +24,5 @@ PLUGININFO_FUNC CellMLPluginInfo()
 }
 
 Q_EXPORT_PLUGIN2(CellML, CellMLPlugin)
-
-void CellMLPlugin::initialize(const QList<Plugin *> &)
-{
-    // Fetch a bootstrap object
-
-    RETURN_INTO_OBJREF(cbs, iface::cellml_api::CellMLBootstrap,
-                       CreateCellMLBootstrap());
-
-    // Retrieve the model loader
-
-    RETURN_INTO_OBJREF(ml, iface::cellml_api::DOMModelLoader,
-                       cbs->modelLoader());
-
-    // Load our test CellML model and return its cmeta:id
-    // Note: we do this within a try...catch statement since we might get an
-    //       exception...
-
-    QString testCellmlModelFileName = QDir::tempPath()+QDir::separator()+"test_cellml_model.cellml";
-
-    Core::saveResourceAs(":test_cellml_model", testCellmlModelFileName);
-
-    try {
-        RETURN_INTO_OBJREF(model, iface::cellml_api::Model,
-                           ml->loadFromURL(QUrl::fromLocalFile(testCellmlModelFileName).toString().toStdWString().c_str()));
-        RETURN_INTO_WSTRING(cmid, model->cmetaId());
-
-        QMessageBox::information(0, "CellML", QString("The model's cmeta:id is '%1'.").arg(QString::fromStdWString(cmid)));
-    } catch (iface::cellml_api::CellMLException& e) {
-        RETURN_INTO_WSTRING(msg, ml->lastErrorMessage());
-
-        QMessageBox::information(0, "CellML", QString("An error occurred while loading the mode: %1.").arg(QString::fromStdWString(msg)));
-    }
-
-    QFile::remove(testCellmlModelFileName);
-}
 
 } }
