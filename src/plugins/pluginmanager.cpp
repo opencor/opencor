@@ -52,21 +52,7 @@ PluginManager::PluginManager(QSettings *pSettings,
     // required by another plugin (e.g. the Viewer plugin requires the
     // QtMmlWidget plugin), in which case the unmanageable plugin must be
     // loaded. So, we must here determine which of those plugins must be
-    // loaded. This involves retrieving the plugin's information which on Linux
-    // only works if the plugins' information has been retrieved by respecting
-    // their dependencies, e.g. first retrieve the information of the Core
-    // plugin then that of the CoreSimulation plugin, since the latter has a
-    // dependency on the former. Now, somehow, we can achieve the expected
-    // result by first retrieving the information of all the plugins, and then
-    // doing what we actually need to do. Could it be that Qt (or Linux) keeps
-    // those plugins in memory even though all we are doing is to resolve a
-    // function and call it...?! Whatever the case, it does the trick, so we
-    // shall just go with it for now...
-
-#ifdef Q_WS_X11
-    foreach (const QString &fileName, fileNames)
-        Plugin::info(fileName);
-#endif
+    // loaded...
 
     QStringList plugins;
 
