@@ -210,27 +210,11 @@ QString Plugin::fileName(const QString &pDir, const QString &pName)
 PluginInfo Plugin::info(const QString &pFileName)
 {
     // Return the plugin's information
-    // Note: in order to do this, we must, on Linux, keep track of the current
-    //       directory and go to the directory where our plugin is, thus making
-    //       sure that we can retrieve the plugin's information without any
-    //       problem. Indeed, if we think of the CellMLModelRepository plugin,
-    //       it requires the Core plugin to be loaded even if all we want is to
-    //       retrieve its information, so...
 
     typedef PluginInfo (*PluginInfoFunc)();
 
-#ifdef Q_WS_X11
-    QString origPath = QDir::currentPath();
-
-    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
-#endif
-
     PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) QLibrary::resolve(pFileName,
                                                                        QString(name(pFileName)+"PluginInfo").toLatin1().constData());
-
-#ifdef Q_WS_X11
-    QDir::setCurrent(origPath);
-#endif
 
     // Check whether the plugin information function was found
 
