@@ -43,11 +43,7 @@ public:
     virtual QList<FileType> fileTypes();
 };
 
-#ifdef Q_WS_WIN
-    #define PLUGININFO_FUNC extern "C" __declspec(dllexport) PluginInfo
-#else
-    #define PLUGININFO_FUNC extern "C" PluginInfo
-#endif
+#define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT PluginInfo
 
 typedef QMap<QString, QString> PluginInfoDescriptions;
 
