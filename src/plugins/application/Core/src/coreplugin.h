@@ -2,6 +2,7 @@
 #define COREPLUGIN_H
 
 #include "guiinterface.h"
+#include "apiinterface.h"
 
 namespace OpenCOR {
 namespace Core {

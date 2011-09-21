@@ -1,9 +1,4 @@
 #include "cellmlplugin.h"
-#include "coreutils.h"
-
-#include "CellMLBootstrap.hpp"
-#include "IfaceCellML_APISPEC.hxx"
-#include "cellml-api-cxx-support.hpp"
 
 namespace OpenCOR {
 namespace CellML {
@@ -25,14 +20,15 @@ PLUGININFO_FUNC CellMLPluginInfo()
 
 Q_EXPORT_PLUGIN2(CellML, CellMLPlugin)
 
-QList<FileType> CellMLPlugin::fileTypes()
+QList<FileType> CellMLPlugin::fileTypes() const
 {
     FileDescriptions descriptions;
 
     descriptions.insert("en", "CellML File");
     descriptions.insert("fr", "Ficher CellML");
 
-    return QList<FileType>() << FileType("application/cellml+xml", ".cellml", descriptions);
+    return QList<FileType>() << FileType("application/cellml+xml", ".cellml",
+                                         descriptions);
 }
 
 } }

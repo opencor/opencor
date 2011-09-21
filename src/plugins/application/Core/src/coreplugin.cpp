@@ -30,15 +30,15 @@ CorePlugin::CorePlugin() :
 void CorePlugin::initialize(const QList<Plugin *> &pPlugins,
                             QMainWindow *pMainWindow)
 {
-    // Retrieve the supported file types
+    // Retrieve the file types supported by the plugins
 
     foreach (Plugin *plugin, pPlugins) {
-        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+        ApiInterface *apiInterface = qobject_cast<ApiInterface *>(plugin->instance());
 
-        if (pluginInterface)
-            // The plugin implements our default interface, so...
+        if (apiInterface)
+            // The plugin implements our API interface, so...
 
-            mSupportedFileTypes << pluginInterface->fileTypes();
+            mSupportedFileTypes << apiInterface->fileTypes();
     }
 
     // Create our central widget

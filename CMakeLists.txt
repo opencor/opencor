@@ -47,6 +47,7 @@ SET(SOURCES
     src/misc/utils.cpp
     src/misc/versionmanager.cpp
 
+    src/plugins/apiinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/plugin.cpp
     src/plugins/plugininterface.cpp
@@ -57,6 +58,7 @@ SET(HEADERS
     src/misc/common.h
     src/misc/utils.h
 
+    src/plugins/apiinterface.h
     src/plugins/guiinterface.h
     src/plugins/plugininterface.h
 )

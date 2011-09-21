@@ -46,11 +46,14 @@ SET(CELLML_LIBS
 
 ADD_PLUGIN(CellML
     SOURCES
+        ../../apiinterface.cpp
         ../../plugininterface.cpp
 
         src/cellmlplugin.cpp
     HEADERS
+        ../../apiinterface.h
         ../../plugininterface.h
+
         ${CELLML_HEADERS_DIR}/AnnoToolsBootstrap.hpp
         ${CELLML_HEADERS_DIR}/CCGSBootstrap.hpp
         ${CELLML_HEADERS_DIR}/cda_compiler_support.h

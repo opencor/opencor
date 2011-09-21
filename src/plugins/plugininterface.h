@@ -12,22 +12,6 @@ class Plugin;
 
 typedef QMap<QString, QString> FileDescriptions;
 
-class FileType
-{
-public:
-    explicit FileType(const QString &pMimeType, const QString &pFileExtension,
-                      const FileDescriptions &pDescriptions);
-
-    QString mimeType() const;
-    QString fileExtension() const;
-    FileDescriptions descriptions() const;
-
-private:
-    QString mMimeType;
-    QString mFileExtension;
-    FileDescriptions mDescriptions;
-};
-
 class PluginInterface : public QObject
 {
 public:
@@ -39,8 +23,6 @@ public:
 
     virtual void initialize(const QList<Plugin *> &);
     virtual void finalize();
-
-    virtual QList<FileType> fileTypes();
 };
 
 #define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT PluginInfo
