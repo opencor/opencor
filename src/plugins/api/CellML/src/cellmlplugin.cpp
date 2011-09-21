@@ -14,7 +14,7 @@ PLUGININFO_FUNC CellMLPluginInfo()
                       PluginInfo::General,
                       PluginInfo::Api,
                       false,
-                      QStringList() << "Core",
+                      QStringList(),
                       descriptions);
 }
 
