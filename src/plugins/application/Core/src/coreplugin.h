@@ -26,6 +26,8 @@ public:
     virtual void retranslateUi();
 
 private:
+    QList<FileType> mSupportedFileTypes;
+
     CentralWidget *mCentralWidget;
 
     QAction *mFileOpen;

@@ -7,7 +7,7 @@ namespace RawCellMLView {
 
 PLUGININFO_FUNC RawCellMLViewPluginInfo()
 {
-    QMap<QString, QString> descriptions;
+    PluginInfoDescriptions descriptions;
 
     descriptions.insert("en", "A plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an XML editor");
     descriptions.insert("fr", "Une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML");

@@ -14,6 +14,9 @@ class CellMLPlugin : public PluginInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::PluginInterface)
+
+public:
+    virtual QList<FileType> fileTypes();
 };
 
 } }

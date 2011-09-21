@@ -2,6 +2,35 @@
 
 namespace OpenCOR {
 
+FileType::FileType(const QString &pMimeType, const QString &pFileExtension,
+                   const FileDescriptions &pDescriptions) :
+    mMimeType(pMimeType),
+    mFileExtension(pFileExtension),
+    mDescriptions(pDescriptions)
+{
+}
+
+QString FileType::mimeType() const
+{
+    // Return the file's Mime type
+
+    return mMimeType;
+}
+
+QString FileType::fileExtension() const
+{
+    // Return the file's extension
+
+    return mFileExtension;
+}
+
+FileDescriptions FileType::descriptions() const
+{
+    // Return the file's descriptions
+
+    return mDescriptions;
+}
+
 void PluginInterface::initialize(const QList<Plugin *> &)
 {
     // Nothing to do by default...
@@ -10,6 +39,13 @@ void PluginInterface::initialize(const QList<Plugin *> &)
 void PluginInterface::finalize()
 {
     // Nothing to do by default...
+}
+
+QList<FileType> PluginInterface::fileTypes()
+{
+    // By default, there are no file types
+
+    return QList<FileType>();
 }
 
 PluginInfo::PluginInfo(const PluginInterface::Version &pInterfaceVersion,

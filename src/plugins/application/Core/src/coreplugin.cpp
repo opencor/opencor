@@ -7,7 +7,7 @@ namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo()
 {
-    QMap<QString, QString> descriptions;
+    PluginInfoDescriptions descriptions;
 
     descriptions.insert("en", "The core plugin for OpenCOR");
     descriptions.insert("fr", "L'extension de base pour OpenCOR");
@@ -30,6 +30,17 @@ CorePlugin::CorePlugin() :
 void CorePlugin::initialize(const QList<Plugin *> &pPlugins,
                             QMainWindow *pMainWindow)
 {
+    // Retrieve the supported file types
+
+    foreach (Plugin *plugin, pPlugins) {
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+
+        if (pluginInterface)
+            // The plugin implements our default interface, so...
+
+            mSupportedFileTypes << pluginInterface->fileTypes();
+    }
+
     // Create our central widget
 
     mCentralWidget = new CentralWidget(pMainWindow);

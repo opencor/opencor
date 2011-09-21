@@ -8,7 +8,7 @@ namespace Help {
 
 PLUGININFO_FUNC HelpPluginInfo()
 {
-    QMap<QString, QString> descriptions;
+    PluginInfoDescriptions descriptions;
 
     descriptions.insert("en", "A plugin to provide help");
     descriptions.insert("fr", "Une extension pour fournir de l'aide");

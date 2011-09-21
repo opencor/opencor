@@ -5,7 +5,7 @@ namespace QScintilla {
 
 PLUGININFO_FUNC QScintillaPluginInfo()
 {
-    QMap<QString, QString> descriptions;
+    PluginInfoDescriptions descriptions;
 
     descriptions.insert("en", "A plugin to use <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>");
     descriptions.insert("fr", "Une extension pour utiliser <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>");
