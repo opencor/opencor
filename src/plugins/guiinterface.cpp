@@ -405,11 +405,24 @@ void GuiInterface::setParameters(const QList<Plugin *> &pLoadedPlugins,
     mMainWindow = pMainWindow;
 }
 
-QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow)
+QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)
 {
-    // Create and return a menu
+    // Return the required menu or a new one, if it it doesn't exist
 
-    return new QMenu(pMainWindow);
+    QMenu * res = OpenCOR::menus.value(pName);
+
+    if (!res) {
+        // The menu doesn't already exist, so create a new one, add it to our
+        // list of menus, and then return it
+
+        res = new QMenu(pMainWindow);
+
+        OpenCOR::menus.insert(pName, res);
+    }
+
+    // Return the new/found menu
+
+    return res;
 }
 
 QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow)

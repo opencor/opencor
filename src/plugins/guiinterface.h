@@ -182,7 +182,7 @@ protected:
 
     virtual void retranslateUi();
 
-    static QMenu * newMenu(QMainWindow *pMainWindow);
+    static QMenu * newMenu(QMainWindow *pMainWindow, const QString &pName);
     static QToolBar * newToolBar(QMainWindow *pMainWindow);
     static QAction * newAction(QMainWindow *pMainWindow,
                                const bool &pCheckable = false,
@@ -204,6 +204,8 @@ private:
                             const Qt::DockWidgetArea &pDefaultDockingArea,
                             Core::DockWidget *pWindow);
 };
+
+static QMap<QString, QMenu *> menus;
 
 }
 

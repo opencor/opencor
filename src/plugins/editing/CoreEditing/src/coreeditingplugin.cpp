@@ -31,7 +31,7 @@ void CoreEditingPlugin::initialize()
 {
     // Create our Edit menu
 
-    mEdit = newMenu(mMainWindow);
+    mEdit = newMenu(mMainWindow, EditMenu);
 
     // Create our different Edit actions and add them to our Edit menu
 

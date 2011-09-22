@@ -8,6 +8,8 @@ namespace CoreEditing {
 
 PLUGININFO_FUNC CoreEditingPluginInfo();
 
+static const QString EditMenu = "Edit";
+
 class CoreEditingPlugin : public GuiInterface
 {
     Q_OBJECT
