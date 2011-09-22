@@ -5,6 +5,8 @@
 
 #include <QTranslator>
 
+class DockToolBar;
+
 class QAction;
 class QMainWindow;
 class QMenu;
@@ -182,6 +184,7 @@ protected:
     virtual void retranslateUi();
 
     static QMenu * newMenu(QMainWindow *pMainWindow);
+    static DockToolBar * newToolBar(QMainWindow *pMainWindow);
     static QAction * newAction(QMainWindow *pMainWindow,
                                const bool &pCheckable = false,
                                const QString &pIconResource = QString(),
