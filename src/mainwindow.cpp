@@ -1,7 +1,5 @@
-#include "centralwidget.h"
 #include "checkforupdateswindow.h"
 #include "common.h"
-#include "dockwidget.h"
 #include "guiinterface.h"
 #include "mainwindow.h"
 #include "plugin.h"
@@ -103,7 +101,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
             // Set a few parameters for the plugin
 
-            guiInterface->setParameters(loadedPlugins, this, mSettings);
+            guiInterface->setParameters(loadedPlugins, this);
 
             // Initialise the plugin
 
@@ -245,7 +243,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     QMainWindow::closeEvent(pEvent);
 }
 
-static const QString CorePlugin = "Core";
 static const QString HelpPlugin = "Help";
 
 void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
@@ -317,101 +314,6 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
     }
 }
 
-void MainWindow::loadPluginWindowSettings(const bool &pNeedDefaultSettings,
-                                          const Qt::DockWidgetArea &pDefaultDockingArea,
-                                          Core::DockWidget *pWindow)
-{
-    if (pNeedDefaultSettings) {
-        // Hide the window, so that we can set things up without having the
-        // screen flashing
-
-        pWindow->setVisible(false);
-
-        // Position the window to its default location
-
-        addDockWidget(pDefaultDockingArea, pWindow);
-    }
-
-    // Load the window's settings
-
-    pWindow->loadSettings(mSettings);
-
-    if (pNeedDefaultSettings)
-        // Make the window visible
-
-        pWindow->setVisible(true);
-}
-
-void MainWindow::loadPluginSettings(const bool &pNeedDefaultSettings,
-                                    GuiInterface *pGuiInterface)
-{
-    if (!pGuiInterface->pluginName().compare(CorePlugin)) {
-        // We are dealing with our special Core plugin
-
-        if (pGuiInterface->data()) {
-            // Our special Core plugin has its data set, so retrieve its central
-            // widget's settings
-
-            Core::CentralWidget *centralWidget = ((GuiCoreSettings *) pGuiInterface->data())->centralWidget();
-
-            // Load the central widget's settings
-
-            centralWidget->loadSettings(mSettings);
-
-            // Set the central widget
-
-            setCentralWidget(centralWidget);
-        }
-    } else if (!pGuiInterface->pluginName().compare(HelpPlugin)) {
-        // We are dealing with our special Help plugin
-
-        if (pGuiInterface->data())
-            // Our special Help plugin has its data set, so retrieve its
-            // window's settings
-
-            loadPluginWindowSettings(pNeedDefaultSettings,
-                                     Qt::RightDockWidgetArea,
-                                     ((GuiHelpSettings *) pGuiInterface->data())->helpWindow());
-    } else {
-        // Neither the Core nor the Help plugin, so retrieve all of the plugin's
-        // windows' settings
-
-        foreach (GuiWindowSettings *windowSettings,
-                 pGuiInterface->guiSettings()->windows())
-            loadPluginWindowSettings(pNeedDefaultSettings,
-                                     windowSettings->defaultDockingArea(),
-                                     windowSettings->window());
-    }
-}
-
-void MainWindow::savePluginSettings(GuiInterface *pGuiInterface) const
-{
-    if (!pGuiInterface->pluginName().compare(CorePlugin)) {
-        // We are dealing with our special Core plugin
-
-        if (pGuiInterface->data())
-            // Our special Core plugin has its data set, so retrieve our Core
-            // plugin's central widget's settings
-
-            ((GuiCoreSettings *) pGuiInterface->data())->centralWidget()->saveSettings(mSettings);
-    } else if (!pGuiInterface->pluginName().compare(HelpPlugin)) {
-        // We are dealing with our special Help plugin
-
-        if (pGuiInterface->data())
-            // Our special Help plugin has its data set, so keep track of its
-            // window's settings
-
-            ((GuiHelpSettings *) pGuiInterface->data())->helpWindow()->saveSettings(mSettings);
-    } else {
-        // Neither the Core nor the Help plugin, so keep track of all of the
-        // plugin's windows' settings
-
-        foreach (GuiWindowSettings *windowSettings,
-                 pGuiInterface->guiSettings()->windows())
-            windowSettings->window()->saveSettings(mSettings);
-    }
-}
-
 static const QString SettingsLocale              = "Locale";
 static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
@@ -462,7 +364,7 @@ void MainWindow::loadSettings()
             if (guiInterface)
                 // The plugin implements our GUI interface, so...
 
-                loadPluginSettings(needDefaultSettings, guiInterface);
+                guiInterface->loadSettings(mSettings, needDefaultSettings);
         }
     mSettings->endGroup();
 }
@@ -495,7 +397,7 @@ void MainWindow::saveSettings() const
             if (guiInterface)
                 // The plugin implements our GUI interface, so...
 
-                savePluginSettings(guiInterface);
+                guiInterface->saveSettings(mSettings);
         }
     mSettings->endGroup();
 }

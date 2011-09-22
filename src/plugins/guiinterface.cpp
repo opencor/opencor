@@ -1,3 +1,5 @@
+#include "centralwidget.h"
+#include "dockwidget.h"
 #include "guiinterface.h"
 
 #include <QAction>
@@ -238,6 +240,105 @@ GuiInterface::~GuiInterface()
     delete mGuiSettings;
 }
 
+static const QString CorePlugin = "Core";
+static const QString HelpPlugin = "Help";
+
+void GuiInterface::loadWindowSettings(QSettings *pSettings,
+                                      const bool &pNeedDefaultSettings,
+                                      const Qt::DockWidgetArea &pDefaultDockingArea,
+                                      Core::DockWidget *pWindow)
+{
+    if (pNeedDefaultSettings) {
+        // Hide the window, so that we can set things up without having the
+        // screen flashing
+
+        pWindow->setVisible(false);
+
+        // Position the window to its default location
+
+        mMainWindow->addDockWidget(pDefaultDockingArea, pWindow);
+    }
+
+    // Load the window's settings
+
+    pWindow->loadSettings(pSettings);
+
+    if (pNeedDefaultSettings)
+        // Make the window visible
+
+        pWindow->setVisible(true);
+}
+
+void GuiInterface::loadSettings(QSettings *pSettings,
+                                const bool &pNeedDefaultSettings)
+{
+    if (!mPluginName.compare(CorePlugin)) {
+        // We are dealing with our special Core plugin
+
+        if (mData) {
+            // Our special Core plugin has its data set, so retrieve its central
+            // widget's settings
+
+            Core::CentralWidget *centralWidget = ((GuiCoreSettings *) mData)->centralWidget();
+
+            // Load the central widget's settings
+
+            centralWidget->loadSettings(pSettings);
+
+            // Set the central widget
+
+            mMainWindow->setCentralWidget(centralWidget);
+        }
+    } else if (!mPluginName.compare(HelpPlugin)) {
+        // We are dealing with our special Help plugin
+
+        if (mData)
+            // Our special Help plugin has its data set, so retrieve its
+            // window's settings
+
+            loadWindowSettings(pSettings, pNeedDefaultSettings,
+                               Qt::RightDockWidgetArea,
+                               ((GuiHelpSettings *) mData)->helpWindow());
+    } else {
+        // Neither the Core nor the Help plugin, so retrieve all of the plugin's
+        // windows' settings
+
+        foreach (GuiWindowSettings *windowSettings,
+                 mGuiSettings->windows())
+            loadWindowSettings(pSettings, pNeedDefaultSettings,
+                               windowSettings->defaultDockingArea(),
+                               windowSettings->window());
+    }
+}
+
+void GuiInterface::saveSettings(QSettings *pSettings) const
+{
+    if (!mPluginName.compare(CorePlugin)) {
+        // We are dealing with our special Core plugin
+
+        if (mData)
+            // Our special Core plugin has its data set, so keep track of its
+            // central widget's settings
+
+            ((GuiCoreSettings *) mData)->centralWidget()->saveSettings(pSettings);
+    } else if (!mPluginName.compare(HelpPlugin)) {
+        // We are dealing with our special Help plugin
+
+        if (mData)
+            // Our special Help plugin has its data set, so keep track of its
+            // window's settings
+
+            ((GuiHelpSettings *) mData)->helpWindow()->saveSettings(pSettings);
+    } else {
+        // Neither the Core nor the Help plugin, so keep track of all of the
+        // plugin's windows' settings
+
+        foreach (GuiWindowSettings *windowSettings,
+                 mGuiSettings->windows())
+            windowSettings->window()->saveSettings(pSettings);
+    }
+}
+
 GuiSettings * GuiInterface::guiSettings() const
 {
     // Return the plugin's GUI settings
@@ -273,7 +374,7 @@ void GuiInterface::setLocale(const QString &pLocale)
 }
 
 void GuiInterface::setParameters(const QList<Plugin *> &pLoadedPlugins,
-                                 QMainWindow *pMainWindow, QSettings *pSettings)
+                                 QMainWindow *pMainWindow)
 {
     // Set the loaded plugins
 
@@ -282,10 +383,6 @@ void GuiInterface::setParameters(const QList<Plugin *> &pLoadedPlugins,
     // Set the main window
 
     mMainWindow = pMainWindow;
-
-    // Set the settings
-
-    mSettings = pSettings;
 }
 
 QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow)

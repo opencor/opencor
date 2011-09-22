@@ -152,8 +152,9 @@ public:
     explicit GuiInterface(const QString &pPluginName);
     ~GuiInterface();
 
-//    void loadSettings(QSettings *pSettings);
-//    void saveSettings(QSettings *pSettings) const;
+    virtual void loadSettings(QSettings *pSettings,
+                              const bool &pNeedDefaultSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
     GuiSettings * guiSettings() const;
     void * data() const;
@@ -165,11 +166,10 @@ public:
     void setLocale(const QString &pLocale);
 
     void setParameters(const QList<Plugin *> &pLoadedPlugins,
-                       QMainWindow *pMainWindow, QSettings *pSettings);
+                       QMainWindow *pMainWindow);
 
 protected:
     QMainWindow *mMainWindow;
-    QSettings *mSettings;
 
     GuiSettings *mGuiSettings;
     void *mData;
@@ -194,6 +194,11 @@ private:
     QString mPluginName;
 
     QTranslator mTranslator;
+
+    void loadWindowSettings(QSettings *pSettings,
+                            const bool &pNeedDefaultSettings,
+                            const Qt::DockWidgetArea &pDefaultDockingArea,
+                            Core::DockWidget *pWindow);
 };
 
 }

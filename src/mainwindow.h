@@ -51,14 +51,6 @@ private:
 
     void initializePlugin(GuiInterface *pGuiInterface) const;
 
-    void loadPluginWindowSettings(const bool &pNeedDefaultSettings,
-                                  const Qt::DockWidgetArea &pDefaultDockingArea,
-                                  Core::DockWidget *pWindow);
-
-    void loadPluginSettings(const bool &pNeedDefaultSettings,
-                            GuiInterface *pGuiInterface);
-    void savePluginSettings(GuiInterface *pGuiInterface) const;
-
     void loadSettings();
     void saveSettings() const;
 
