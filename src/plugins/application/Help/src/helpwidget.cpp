@@ -193,21 +193,17 @@ static const QString SettingsZoomLevel = "ZoomLevel";
 
 void HelpWidget::loadSettings(QSettings *pSettings)
 {
-    pSettings->beginGroup(objectName());
-        // Retrieve the zoom level
+    // Retrieve the zoom level
 
-        setZoomLevel(pSettings->value(SettingsZoomLevel,
-                                      defaultZoomLevel()).toInt());
-    pSettings->endGroup();
+    setZoomLevel(pSettings->value(SettingsZoomLevel,
+                                  defaultZoomLevel()).toInt());
 }
 
 void HelpWidget::saveSettings(QSettings *pSettings) const
 {
-    pSettings->beginGroup(objectName());
-        // Keep track of the text size multiplier
+    // Keep track of the text size multiplier
 
-        pSettings->setValue(SettingsZoomLevel, zoomLevel());
-    pSettings->endGroup();
+    pSettings->setValue(SettingsZoomLevel, zoomLevel());
 }
 
 QUrl HelpWidget::homePage() const

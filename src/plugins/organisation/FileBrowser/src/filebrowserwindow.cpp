@@ -99,33 +99,33 @@ void FileBrowserWindow::retranslateUi()
 
 void FileBrowserWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings->beginGroup(objectName());
-        // Retrieve the settings of the file browser widget
-        // Note: check the beginLoadingSettings and endLoadingSettings slots
+    // Retrieve the settings of the file browser widget
+    // Note: check the beginLoadingSettings and endLoadingSettings slots
 
+    pSettings->beginGroup(mFileBrowserWidget->objectName());
         mFileBrowserWidget->loadSettings(pSettings);
-
-        // Make sure that the current path is expanded
-        // Note: this is important in case the current path is that of the C:
-        //       drive or the root of the file system which, during the
-        //       loadSettings above, won't trigger a directoryLoaded signal in
-        //       the file browser widget
-
-        if (!mFileBrowserWidget->isExpanded(mFileBrowserWidget->currentIndex()))
-            mFileBrowserWidget->setExpanded(mFileBrowserWidget->currentIndex(),
-                                            true);
-
-        // Make sure that all the actions are up-to-date
-
-        updateActions();
     pSettings->endGroup();
+
+    // Make sure that the current path is expanded
+    // Note: this is important in case the current path is that of the C: drive
+    //       or the root of the file system which, during the loadSettings
+    //       above, won't trigger a directoryLoaded signal in the file browser
+    //       widget
+
+    if (!mFileBrowserWidget->isExpanded(mFileBrowserWidget->currentIndex()))
+        mFileBrowserWidget->setExpanded(mFileBrowserWidget->currentIndex(),
+                                        true);
+
+    // Make sure that all the actions are up-to-date
+
+    updateActions();
 }
 
 void FileBrowserWindow::saveSettings(QSettings *pSettings) const
 {
-    pSettings->beginGroup(objectName());
-        // Keep track of the settings of the file browser widget
+    // Keep track of the settings of the file browser widget
 
+    pSettings->beginGroup(mFileBrowserWidget->objectName());
         mFileBrowserWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }

@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QFileDialog>
 #include <QMainWindow>
+#include <QSettings>
 
 namespace OpenCOR {
 namespace Core {
@@ -43,11 +44,6 @@ void CorePlugin::initialize()
 
             mSupportedFileTypes << apiInterface->fileTypes();
     }
-
-    // Retrieve the active directory
-
-//    mActiveDir.setPath(mMainWindow->setsettings.value(SettingsFileDialogDirectory,
-//                                      QDir::currentPath()).toString());
 
     // Create our central widget
 
@@ -118,13 +114,35 @@ void CorePlugin::initialize()
 
 void CorePlugin::finalize()
 {
-    // Keep track of the active directory
-
-//    settings.setValue(SettingsFileDialogDirectory, mActiveDir.path());
-
     // Delete our data
 
     delete (GuiCoreSettings *) mData;
+}
+
+static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
+
+void CorePlugin::loadSettings(QSettings *pSettings,
+                              const bool &pNeedDefaultSettings)
+{
+    // First, call the parent implementation
+
+    GuiInterface::loadSettings(pSettings, pNeedDefaultSettings);
+
+    // Retrieve the active directory
+
+    mActiveDir.setPath(pSettings->value(SettingsFileDialogDirectory,
+                                        QDir::currentPath()).toString());
+}
+
+void CorePlugin::saveSettings(QSettings *pSettings) const
+{
+    // First, call the parent implementation
+
+    GuiInterface::saveSettings(pSettings);
+
+    // Keep track of the active directory
+
+    pSettings->setValue(SettingsFileDialogDirectory, mActiveDir.path());
 }
 
 void CorePlugin::retranslateUi()

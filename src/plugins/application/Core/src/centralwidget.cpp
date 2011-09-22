@@ -166,41 +166,37 @@ static const QString SettingsActiveFile  = "ActiveFile";
 
 void CentralWidget::loadSettings(QSettings *pSettings)
 {
-    pSettings->beginGroup(objectName());
-        // Retrieve the files that were previously opened
+    // Retrieve the files that were previously opened
 
-        QStringList openedFiles;
+    QStringList openedFiles;
 
-        openedFiles = pSettings->value(SettingsOpenedFiles).toStringList();
+    openedFiles = pSettings->value(SettingsOpenedFiles).toStringList();
 
-        for (int i = 0; i < openedFiles.count(); ++i)
-            openFile(openedFiles.at(i));
+    for (int i = 0; i < openedFiles.count(); ++i)
+        openFile(openedFiles.at(i));
 
-        // Retrieve the active file
+    // Retrieve the active file
 
-        if (openedFiles.count())
-            // There is at least one file, so we can try to activate one of them
+    if (openedFiles.count())
+        // There is at least one file, so we can try to activate one of them
 
-            activateFile(openedFiles.at(pSettings->value(SettingsActiveFile).toInt()));
-    pSettings->endGroup();
+        activateFile(openedFiles.at(pSettings->value(SettingsActiveFile).toInt()));
 }
 
 void CentralWidget::saveSettings(QSettings *pSettings) const
 {
-    pSettings->beginGroup(objectName());
-        // Keep track of the files that are opened
+    // Keep track of the files that are opened
 
-        QStringList openedFiles;
+    QStringList openedFiles;
 
-        for (int i = 0; i < mFiles->count(); ++i)
-            openedFiles << mFiles->tabToolTip(i);
+    for (int i = 0; i < mFiles->count(); ++i)
+        openedFiles << mFiles->tabToolTip(i);
 
-        pSettings->setValue(SettingsOpenedFiles, openedFiles);
+    pSettings->setValue(SettingsOpenedFiles, openedFiles);
 
-        // Keep track of the active file
+    // Keep track of the active file
 
-        pSettings->setValue(SettingsActiveFile, mFiles->currentIndex());
-    pSettings->endGroup();
+    pSettings->setValue(SettingsActiveFile, mFiles->currentIndex());
 }
 
 bool CentralWidget::openFile(const QString &pFileName)

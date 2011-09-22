@@ -17,6 +17,9 @@ namespace Core {
     class DockWidget;
 }
 
+static const QString CorePlugin = "Core";
+static const QString HelpPlugin = "Help";
+
 class GuiCoreSettings
 {
 public:
@@ -160,8 +163,6 @@ public:
     void * data() const;
 
     QString pluginName() const;
-
-    QString viewName() const;
 
     void setLocale(const QString &pLocale);
 

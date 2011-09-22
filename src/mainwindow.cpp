@@ -243,8 +243,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     QMainWindow::closeEvent(pEvent);
 }
 
-static const QString HelpPlugin = "Help";
-
 void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
 {
     // Check whether we are dealing with our special Help plugin
@@ -321,85 +319,87 @@ static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
 
 void MainWindow::loadSettings()
 {
-    mSettings->beginGroup(objectName());
-        // Retrieve the language to be used by OpenCOR
+    // Retrieve the language to be used by OpenCOR
 
-        setLocale(mSettings->value(SettingsLocale, SystemLocale).toString());
+    setLocale(mSettings->value(SettingsLocale, SystemLocale).toString());
 
-        // Retrieve the geometry and state of the main window
+    // Retrieve the geometry and state of the main window
 
-        bool needDefaultSettings =    !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
-                                   || !restoreState(mSettings->value(SettingsState).toByteArray());
+    bool needDefaultSettings =    !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
+                               || !restoreState(mSettings->value(SettingsState).toByteArray());
 
-        if (needDefaultSettings) {
-            // The geometry and/or state of the main window couldn't be
-            // retrieved, so go with some default settins
+    if (needDefaultSettings) {
+        // The geometry and/or state of the main window couldn't be
+        // retrieved, so go with some default settins
 
-            // Default size and position of the main window
+        // Default size and position of the main window
 
-            double ratio = 1.0/13.0;
-            QRect desktopGeometry = qApp->desktop()->availableGeometry();
-            int horizSpace = ratio*desktopGeometry.width();
-            int vertSpace  = ratio*desktopGeometry.height();
+        double ratio = 1.0/13.0;
+        QRect desktopGeometry = qApp->desktop()->availableGeometry();
+        int horizSpace = ratio*desktopGeometry.width();
+        int vertSpace  = ratio*desktopGeometry.height();
 
-            setGeometry(desktopGeometry.left()+horizSpace,
-                        desktopGeometry.top()+vertSpace,
-                        desktopGeometry.width()-2*horizSpace,
-                        desktopGeometry.height()-2*vertSpace);
-        } else {
-            // The geometry and state of the main window could be retrieved, so
-            // carry on with the loading of the settings
+        setGeometry(desktopGeometry.left()+horizSpace,
+                    desktopGeometry.top()+vertSpace,
+                    desktopGeometry.width()-2*horizSpace,
+                    desktopGeometry.height()-2*vertSpace);
+    } else {
+        // The geometry and state of the main window could be retrieved, so
+        // carry on with the loading of the settings
 
-            // Retrieve whether the status bar is to be shown
+        // Retrieve whether the status bar is to be shown
 
-            mUi->statusBar->setVisible(mSettings->value(SettingsStatusBarVisibility,
-                                                        true).toBool());
-        }
+        mUi->statusBar->setVisible(mSettings->value(SettingsStatusBarVisibility,
+                                                    true).toBool());
+    }
 
-        // Retrieve the settings of our various plugins
+    // Retrieve the settings of our various plugins
 
-        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-            if (guiInterface)
-                // The plugin implements our GUI interface, so...
+        if (guiInterface) {
+            // The plugin implements our GUI interface, so...
 
+            mSettings->beginGroup(guiInterface->pluginName());
                 guiInterface->loadSettings(mSettings, needDefaultSettings);
+            mSettings->endGroup();
         }
-    mSettings->endGroup();
+    }
 }
 
 void MainWindow::saveSettings() const
 {
-    mSettings->beginGroup(objectName());
-        // Keep track of the language to be used by OpenCOR
+    // Keep track of the language to be used by OpenCOR
 
-        mSettings->setValue(SettingsLocale, mLocale);
+    mSettings->setValue(SettingsLocale, mLocale);
 
-        // Keep track of the geometry of the main window
+    // Keep track of the geometry of the main window
 
-        mSettings->setValue(SettingsGeometry, saveGeometry());
+    mSettings->setValue(SettingsGeometry, saveGeometry());
 
-        // Keep track of the state of the main window
+    // Keep track of the state of the main window
 
-        mSettings->setValue(SettingsState, saveState());
+    mSettings->setValue(SettingsState, saveState());
 
-        // Keep track of whether the status bar is to be shown
+    // Keep track of whether the status bar is to be shown
 
-        mSettings->setValue(SettingsStatusBarVisibility,
-                            mUi->statusBar->isVisible());
+    mSettings->setValue(SettingsStatusBarVisibility,
+                        mUi->statusBar->isVisible());
 
-        // Keep track of the settings of our various plugins
+    // Keep track of the settings of our various plugins
 
-        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-            if (guiInterface)
-                // The plugin implements our GUI interface, so...
+        if (guiInterface) {
+            // The plugin implements our GUI interface, so...
 
+            mSettings->beginGroup(guiInterface->pluginName());
                 guiInterface->saveSettings(mSettings);
+            mSettings->endGroup();
         }
-    mSettings->endGroup();
+    }
 }
 
 QString MainWindow::locale() const

@@ -229,14 +229,14 @@ PluginInfo Plugin::info(const QString &pFileName)
         return PluginInfo();
 }
 
-static const QString PluginGroup = "Plugin";
+static const QString SettingsLoad = "Load";
 
 bool Plugin::load(QSettings *pSettings, const QString &pName)
 {
     // Retrieve the plugin's loading requirement
 
-    pSettings->beginGroup(PluginGroup);
-        bool res = pSettings->value(pName, true).toBool();
+    pSettings->beginGroup(pName);
+        bool res = pSettings->value(SettingsLoad, true).toBool();
     pSettings->endGroup();
 
     return res;
@@ -247,8 +247,8 @@ void Plugin::setLoad(QSettings *pSettings, const QString &pName,
 {
     // Keep track of the plugin's loading requirement
 
-    pSettings->beginGroup(PluginGroup);
-        pSettings->setValue(pName, pToBeLoaded);
+    pSettings->beginGroup(pName);
+        pSettings->setValue(SettingsLoad, pToBeLoaded);
     pSettings->endGroup();
 }
 

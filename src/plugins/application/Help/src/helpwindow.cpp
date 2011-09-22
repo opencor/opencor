@@ -144,18 +144,18 @@ void HelpWindow::retranslateUi()
 
 void HelpWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings->beginGroup(objectName());
-        // Retrieve the settings of the help widget
+    // Retrieve the settings of the help widget
 
+    pSettings->beginGroup(mHelpWidget->objectName());
         mHelpWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
 void HelpWindow::saveSettings(QSettings *pSettings) const
 {
-    pSettings->beginGroup(objectName());
-        // Keep track of the settings of the help widget
+    // Keep track of the settings of the help widget
 
+    pSettings->beginGroup(mHelpWidget->objectName());
         mHelpWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }

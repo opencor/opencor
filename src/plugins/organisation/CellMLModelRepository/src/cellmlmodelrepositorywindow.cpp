@@ -44,18 +44,18 @@ void CellmlModelRepositoryWindow::retranslateUi()
 
 void CellmlModelRepositoryWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings->beginGroup(objectName());
-        // Retrieve the settings of the PMR explorer widget
+    // Retrieve the settings of the PMR explorer widget
 
+    pSettings->beginGroup(mCellmlModelRepositoryWidget->objectName());
         mCellmlModelRepositoryWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
 void CellmlModelRepositoryWindow::saveSettings(QSettings *pSettings) const
 {
-    pSettings->beginGroup(objectName());
-        // Keep track of the settings of the PMR explorer widget
+    // Keep track of the settings of the PMR explorer widget
 
+    pSettings->beginGroup(mCellmlModelRepositoryWidget->objectName());
         mCellmlModelRepositoryWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }

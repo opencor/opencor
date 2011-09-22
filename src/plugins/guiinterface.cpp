@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QMenu>
+#include <QSettings>
 
 namespace OpenCOR {
 
@@ -240,9 +241,6 @@ GuiInterface::~GuiInterface()
     delete mGuiSettings;
 }
 
-static const QString CorePlugin = "Core";
-static const QString HelpPlugin = "Help";
-
 void GuiInterface::loadWindowSettings(QSettings *pSettings,
                                       const bool &pNeedDefaultSettings,
                                       const Qt::DockWidgetArea &pDefaultDockingArea,
@@ -261,7 +259,9 @@ void GuiInterface::loadWindowSettings(QSettings *pSettings,
 
     // Load the window's settings
 
-    pWindow->loadSettings(pSettings);
+    pSettings->beginGroup(pWindow->objectName());
+        pWindow->loadSettings(pSettings);
+    pSettings->endGroup();
 
     if (pNeedDefaultSettings)
         // Make the window visible
@@ -283,7 +283,9 @@ void GuiInterface::loadSettings(QSettings *pSettings,
 
             // Load the central widget's settings
 
-            centralWidget->loadSettings(pSettings);
+            pSettings->beginGroup(centralWidget->objectName());
+                centralWidget->loadSettings(pSettings);
+            pSettings->endGroup();
 
             // Set the central widget
 
@@ -316,26 +318,39 @@ void GuiInterface::saveSettings(QSettings *pSettings) const
     if (!mPluginName.compare(CorePlugin)) {
         // We are dealing with our special Core plugin
 
-        if (mData)
+        if (mData) {
             // Our special Core plugin has its data set, so keep track of its
             // central widget's settings
 
-            ((GuiCoreSettings *) mData)->centralWidget()->saveSettings(pSettings);
+            Core::CentralWidget *centralWidget = ((GuiCoreSettings *) mData)->centralWidget();
+
+            pSettings->beginGroup(centralWidget->objectName());
+                centralWidget->saveSettings(pSettings);
+            pSettings->endGroup();
+        }
     } else if (!mPluginName.compare(HelpPlugin)) {
         // We are dealing with our special Help plugin
 
-        if (mData)
+        if (mData) {
             // Our special Help plugin has its data set, so keep track of its
             // window's settings
 
-            ((GuiHelpSettings *) mData)->helpWindow()->saveSettings(pSettings);
+            Core::DockWidget *helpWindow = ((GuiHelpSettings *) mData)->helpWindow();
+
+            pSettings->beginGroup(helpWindow->objectName());
+                helpWindow->saveSettings(pSettings);
+            pSettings->endGroup();
+        }
     } else {
         // Neither the Core nor the Help plugin, so keep track of all of the
         // plugin's windows' settings
 
         foreach (GuiWindowSettings *windowSettings,
-                 mGuiSettings->windows())
-            windowSettings->window()->saveSettings(pSettings);
+                 mGuiSettings->windows()) {
+            pSettings->beginGroup(windowSettings->window()->objectName());
+                windowSettings->window()->saveSettings(pSettings);
+            pSettings->endGroup();
+        }
     }
 }
 

@@ -41,18 +41,18 @@ void ViewerWindow::retranslateUi()
 
 void ViewerWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings->beginGroup(objectName());
-        // Retrieve the settings of the viewer widget
+    // Retrieve the settings of the viewer widget
 
+    pSettings->beginGroup(mMmlViewerWidget->objectName());
         mMmlViewerWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
 void ViewerWindow::saveSettings(QSettings *pSettings) const
 {
-    pSettings->beginGroup(objectName());
-        // Keep track of the settings of the viewer widget
+    // Keep track of the settings of the viewer widget
 
+    pSettings->beginGroup(mMmlViewerWidget->objectName());
         mMmlViewerWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }

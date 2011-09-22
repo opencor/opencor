@@ -88,22 +88,22 @@ void FileOrganiserWindow::retranslateUi()
 
 void FileOrganiserWindow::loadSettings(QSettings *pSettings)
 {
-    pSettings->beginGroup(objectName());
-        // Retrieve the settings of the file organiser widget
+    // Retrieve the settings of the file organiser widget
 
+    pSettings->beginGroup(mFileOrganiserWidget->objectName());
         mFileOrganiserWidget->loadSettings(pSettings);
-
-        // Make sure that all the actions are up-to-date
-
-        updateActions();
     pSettings->endGroup();
+
+    // Make sure that all the actions are up-to-date
+
+    updateActions();
 }
 
 void FileOrganiserWindow::saveSettings(QSettings *pSettings) const
 {
-    pSettings->beginGroup(objectName());
-        // Keep track of the settings of the file organiser widget
+    // Keep track of the settings of the file organiser widget
 
+    pSettings->beginGroup(mFileOrganiserWidget->objectName());
         mFileOrganiserWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }

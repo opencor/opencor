@@ -72,123 +72,118 @@ static const QString SettingsSortOrder   = "SortOrder";
 
 void FileBrowserWidget::loadSettings(QSettings *pSettings)
 {
-    pSettings->beginGroup(objectName());
-        // Let people know that we are starting loading the settings
+    // Let people know that we are starting loading the settings
 
-        emit beginLoadingSettings();
+    emit beginLoadingSettings();
 
-        // Retrieve the width of each column
+    // Retrieve the width of each column
 
-        QString columnWidthKey;
+    QString columnWidthKey;
 
-        for (int i = 0; i < header()->count(); ++i) {
-            columnWidthKey = SettingsColumnWidth+QString::number(i);
+    for (int i = 0; i < header()->count(); ++i) {
+        columnWidthKey = SettingsColumnWidth+QString::number(i);
 
-            mNeedDefColWidth =     mNeedDefColWidth
-                               && !pSettings->contains(columnWidthKey);
+        mNeedDefColWidth =     mNeedDefColWidth
+                           && !pSettings->contains(columnWidthKey);
 
-            setColumnWidth(i, pSettings->value(columnWidthKey,
-                                               columnWidth(i)).toInt());
-        }
+        setColumnWidth(i, pSettings->value(columnWidthKey,
+                                           columnWidth(i)).toInt());
+    }
 
-        // Retrieve the sorting information
+    // Retrieve the sorting information
 
-        sortByColumn(pSettings->value(SettingsSortColumn, 0).toInt(),
-                     Qt::SortOrder(pSettings->value(SettingsSortOrder,
-                                                    Qt::AscendingOrder).toInt()));
+    sortByColumn(pSettings->value(SettingsSortColumn, 0).toInt(),
+                 Qt::SortOrder(pSettings->value(SettingsSortOrder,
+                                                Qt::AscendingOrder).toInt()));
 
-        // Retrieve the initial path
+    // Retrieve the initial path
 
-        mInitPath = pSettings->value(SettingsInitialPath,
-                                     QDir::homePath()).toString();
+    mInitPath = pSettings->value(SettingsInitialPath,
+                                 QDir::homePath()).toString();
 
-        QFileInfo initPathFileInfo = mInitPath;
+    QFileInfo initPathFileInfo = mInitPath;
 
-        if (!initPathFileInfo.exists()) {
-            // The initial path doesn't exist, so just revert to the home path
+    if (!initPathFileInfo.exists()) {
+        // The initial path doesn't exist, so just revert to the home path
 
-            mInitPathDir = QDir::homePath();
+        mInitPathDir = QDir::homePath();
+        mInitPath    = "";
+    } else {
+        // The initial path exists, so retrieve some information about the
+        // folder and/or file (depending on whether the initial path refers to a
+        // file or not)
+        // Note: indeed, should mInitPath refer to a file, then to directly set
+        //       the current index of the tree view to that of a file won't give
+        //       us the expected behaviour (i.e. the parent folder being open
+        //       and expanded, and the file selected), so instead one must set
+        //       the current index to that of the parent folder and then select
+        //       the file
+
+        if (initPathFileInfo.isDir()) {
+            // We are dealing with a folder, so...
+
+            mInitPathDir = initPathFileInfo.canonicalFilePath();
             mInitPath    = "";
         } else {
-            // The initial path exists, so retrieve some information about the
-            // folder and/or file (depending on whether the initial path refers
-            // to a file or not)
-            // Note: indeed, should mInitPath refer to a file, then to directly
-            //       set the current index of the tree view to that of a file
-            //       won't give us the expected behaviour (i.e. the parent
-            //       folder being open and expanded, and the file selected), so
-            //       instead one must set the current index to that of the
-            //       parent folder and then select the file
+            // We are dealing with a file, so...
 
-            if (initPathFileInfo.isDir()) {
-                // We are dealing with a folder, so...
-
-                mInitPathDir = initPathFileInfo.canonicalFilePath();
-                mInitPath    = "";
-            } else {
-                // We are dealing with a file, so...
-
-                mInitPathDir = initPathFileInfo.canonicalPath();
-                mInitPath    = initPathFileInfo.canonicalFilePath();
-            }
+            mInitPathDir = initPathFileInfo.canonicalPath();
+            mInitPath    = initPathFileInfo.canonicalFilePath();
         }
+    }
 
-        // On Windows, if mInitPathDir refers to the root of a particular drive
-        // (e.g. the C: drive), then it won't include a trailing separator (i.e.
-        // "C:" instead of "C:/") and this causes problems below (when wanting
-        // to retrieve the different folders), so we must make sure that that
-        // mInitPathDir contains a trailing separator
-        // Note: this is clearly not needed on Linux and Mac OS X, but it
-        //       doesn't harm doing it for these platforms too, so...
+    // On Windows, if mInitPathDir refers to the root of a particular drive
+    // (e.g. the C: drive), then it won't include a trailing separator (i.e.
+    // "C:" instead of "C:/") and this causes problems below (when wanting to
+    // retrieve the different folders), so we must make sure that that
+    // mInitPathDir contains a trailing separator
+    // Note: this is clearly not needed on Linux and Mac OS X, but it doesn't
+    //       harm doing it for these platforms too, so...
 
-        mInitPathDir = QDir(mInitPathDir+QDir::separator()).canonicalPath();
+    mInitPathDir = QDir(mInitPathDir+QDir::separator()).canonicalPath();
 
-        // Create a list of the different folders that need to be loaded to
-        // consider that the loading of the settings is finished (see just below
-        // and the directoryLoaded slot)
+    // Create a list of the different folders that need to be loaded to consider
+    // that the loading of the settings is finished (see just below and the
+    // directoryLoaded slot)
 
-        mInitPathDirs << mInitPathDir;
+    mInitPathDirs << mInitPathDir;
 
-        QDir initPathDir = mInitPathDir;
+    QDir initPathDir = mInitPathDir;
 
-        while (initPathDir.cdUp())
-            mInitPathDirs << initPathDir.canonicalPath();
+    while (initPathDir.cdUp())
+        mInitPathDirs << initPathDir.canonicalPath();
 
-        // Set the current index to that of the folder (and file, if it exists)
-        // we are interested in
-        // Note: this will result in the directoryLoaded signal being emitted
-        //       and, us, to take advantage of it to scroll to the right
-        //       directory/file
+    // Set the current index to that of the folder (and file, if it exists) we
+    // are interested in
+    // Note: this will result in the directoryLoaded signal being emitted and,
+    //       us, to take advantage of it to scroll to the right directory/file
 
-        setCurrentIndex(mDataModel->index(mInitPathDir));
+    setCurrentIndex(mDataModel->index(mInitPathDir));
 
-        if (!mInitPath.isEmpty())
-            // The initial path is that of a file, so...
+    if (!mInitPath.isEmpty())
+        // The initial path is that of a file, so...
 
-            setCurrentIndex(mDataModel->index(mInitPath));
-    pSettings->endGroup();
+        setCurrentIndex(mDataModel->index(mInitPath));
 }
 
 void FileBrowserWidget::saveSettings(QSettings *pSettings) const
 {
-    pSettings->beginGroup(objectName());
-        // Retrieve the width of each column
+    // Retrieve the width of each column
 
-        for (int i = 0; i < header()->count(); ++i)
-            pSettings->setValue(SettingsColumnWidth+QString::number(i),
-                                columnWidth(i));
+    for (int i = 0; i < header()->count(); ++i)
+        pSettings->setValue(SettingsColumnWidth+QString::number(i),
+                            columnWidth(i));
 
-        // Keep track of the sorting information
+    // Keep track of the sorting information
 
-        pSettings->setValue(SettingsSortColumn,
-                            header()->sortIndicatorSection());
-        pSettings->setValue(SettingsSortOrder, header()->sortIndicatorOrder());
+    pSettings->setValue(SettingsSortColumn,
+                        header()->sortIndicatorSection());
+    pSettings->setValue(SettingsSortOrder, header()->sortIndicatorOrder());
 
-        // Keep track of what will be our future initial folder/file path
+    // Keep track of what will be our future initial folder/file path
 
-        pSettings->setValue(SettingsInitialPath,
-                            mDataModel->filePath(currentIndex()));
-    pSettings->endGroup();
+    pSettings->setValue(SettingsInitialPath,
+                        mDataModel->filePath(currentIndex()));
 }
 
 QSize FileBrowserWidget::sizeHint() const

@@ -25,6 +25,10 @@ public:
     virtual void initialize();
     virtual void finalize();
 
+    virtual void loadSettings(QSettings *pSettings,
+                              const bool &pNeedDefaultSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
 protected:
     virtual void retranslateUi();
 

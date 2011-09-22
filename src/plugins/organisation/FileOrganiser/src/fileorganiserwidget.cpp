@@ -321,23 +321,21 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
 
 void FileOrganiserWidget::loadSettings(QSettings *pSettings)
 {
-    pSettings->beginGroup(objectName());
-        // Retrieve the data model
+    // Retrieve the data model
 
-        pSettings->beginGroup(SettingsDataModel);
-            loadItemSettings(pSettings, 0);
-        pSettings->endGroup();
-
-        // Retrieve the currently selected item, if any
-
-        QByteArray hierarchyData = pSettings->value(SettingsSelectedItem).toByteArray();
-
-        setCurrentIndex(mDataModel->decodeHierarchyData(hierarchyData));
-
-        // Resize the widget, just to be on the safe side
-
-        resizeToContents();
+    pSettings->beginGroup(SettingsDataModel);
+        loadItemSettings(pSettings, 0);
     pSettings->endGroup();
+
+    // Retrieve the currently selected item, if any
+
+    QByteArray hierarchyData = pSettings->value(SettingsSelectedItem).toByteArray();
+
+    setCurrentIndex(mDataModel->decodeHierarchyData(hierarchyData));
+
+    // Resize the widget, just to be on the safe side
+
+    resizeToContents();
 }
 
 void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
@@ -389,36 +387,34 @@ void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
 
 void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
 {
-    pSettings->beginGroup(objectName());
-        // Keep track of the data model
+    // Keep track of the data model
 
-        pSettings->remove(SettingsDataModel);
-        pSettings->beginGroup(SettingsDataModel);
-            saveItemSettings(pSettings, mDataModel->invisibleRootItem(), -1);
-        pSettings->endGroup();
-
-        // Keep track of the currently selected item, but only if it is visible
-
-        bool crtItemVisible = true;
-        QModelIndex crtIndexParent = currentIndex().parent();
-
-        while (crtIndexParent != QModelIndex())
-            if (isExpanded(crtIndexParent)) {
-                // The current parent is expanded, so check to its parent
-
-                crtIndexParent = crtIndexParent.parent();
-            } else {
-                // The current parent is not expanded, so...
-
-                crtItemVisible = false;
-
-                break;
-            }
-
-        pSettings->setValue(SettingsSelectedItem, mDataModel->encodeHierarchyData(crtItemVisible?
-                                                                                      currentIndex():
-                                                                                      QModelIndex()));
+    pSettings->remove(SettingsDataModel);
+    pSettings->beginGroup(SettingsDataModel);
+        saveItemSettings(pSettings, mDataModel->invisibleRootItem(), -1);
     pSettings->endGroup();
+
+    // Keep track of the currently selected item, but only if it is visible
+
+    bool crtItemVisible = true;
+    QModelIndex crtIndexParent = currentIndex().parent();
+
+    while (crtIndexParent != QModelIndex())
+        if (isExpanded(crtIndexParent)) {
+            // The current parent is expanded, so check to its parent
+
+            crtIndexParent = crtIndexParent.parent();
+        } else {
+            // The current parent is not expanded, so...
+
+            crtItemVisible = false;
+
+            break;
+        }
+
+    pSettings->setValue(SettingsSelectedItem, mDataModel->encodeHierarchyData(crtItemVisible?
+                                                                                  currentIndex():
+                                                                                  QModelIndex()));
 }
 
 QSize FileOrganiserWidget::sizeHint() const
