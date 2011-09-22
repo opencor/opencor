@@ -5,7 +5,7 @@ namespace FileBrowser {
 
 PLUGININFO_FUNC FileBrowserPluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to access your local files");
     descriptions.insert("fr", "Une extension pour accéder à vos fichiers locaux");

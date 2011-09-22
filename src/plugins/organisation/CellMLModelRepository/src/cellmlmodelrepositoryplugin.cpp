@@ -5,7 +5,7 @@ namespace CellMLModelRepository {
 
 PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to access the <a href=\"http://models.cellml.org/\">CellML Model Repository</a>");
     descriptions.insert("fr", "Une extension pour accéder au <a href=\"http://models.cellml.org/\">Répertoire de Modèles CellML</a>");

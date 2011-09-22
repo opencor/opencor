@@ -5,7 +5,7 @@ namespace Viewer {
 
 PLUGININFO_FUNC ViewerPluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to graphically visualise various concepts (e.g. mathematical equations)");
     descriptions.insert("fr", "Une extension pour visualiser graphiquement différents concepts (par exemple des équations mathématiques)");

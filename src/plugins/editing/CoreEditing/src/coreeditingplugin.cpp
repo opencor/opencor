@@ -7,7 +7,7 @@ namespace CoreEditing {
 
 PLUGININFO_FUNC CoreEditingPluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "The core editing plugin for OpenCOR");
     descriptions.insert("fr", "L'extension d'édition de base pour OpenCOR");

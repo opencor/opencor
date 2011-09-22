@@ -5,7 +5,7 @@ namespace CellML {
 
 PLUGININFO_FUNC CellMLPluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to use the <a href=\"http://www.cellml.org/tools/api/\">CellML API</a>");
     descriptions.insert("fr", "Une extension pour utiliser l'<a href=\"http://www.cellml.org/tools/api/\">API CellML</a>");
@@ -22,7 +22,7 @@ Q_EXPORT_PLUGIN2(CellML, CellMLPlugin)
 
 QList<FileType> CellMLPlugin::fileTypes() const
 {
-    FileDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "CellML File");
     descriptions.insert("fr", "Ficher CellML");

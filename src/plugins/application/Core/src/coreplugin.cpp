@@ -13,7 +13,7 @@ namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "The core plugin for OpenCOR");
     descriptions.insert("fr", "L'extension de base pour OpenCOR");

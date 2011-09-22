@@ -5,7 +5,7 @@ namespace FileOrganiser {
 
 PLUGININFO_FUNC FileOrganiserPluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to organise your files");
     descriptions.insert("fr", "Une extension pour organiser vos fichiers");

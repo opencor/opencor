@@ -23,7 +23,7 @@ PluginInfo::PluginInfo(const PluginInterface::Version &pInterfaceVersion,
                        const Type &pType, const Category &pCategory,
                        const bool &pManageable,
                        const QStringList &pDependencies,
-                       const PluginInfoDescriptions &pDescriptions) :
+                       const Descriptions &pDescriptions) :
     mInterfaceVersion(pInterfaceVersion),
     mType(pType),
     mCategory(pCategory),
@@ -83,7 +83,15 @@ QString PluginInfo::description(const QString &pLocale) const
     // Return the plugin's description using the provided locale or the first
     // description if no description can be found for the provided locale
 
-    if (mDescriptions.isEmpty()) {
+    return OpenCOR::description(mDescriptions, pLocale);
+}
+
+QString description(const Descriptions &pDescriptions, const QString &pLocale)
+{
+    // Return the description using the provided locale or the first description
+    // if no description can be found for the provided locale
+
+    if (pDescriptions.isEmpty()) {
         // No description is avalable, so...
 
         return QString();
@@ -91,9 +99,9 @@ QString PluginInfo::description(const QString &pLocale) const
         // At least one description is available, so return the one that
         // matches our locale our the first description if there is no match
 
-        QString res = mDescriptions.value(pLocale);
+        QString res = pDescriptions.value(pLocale);
 
-        return res.isEmpty()?mDescriptions.begin().value():res;
+        return res.isEmpty()?pDescriptions.begin().value():res;
     }
 }
 

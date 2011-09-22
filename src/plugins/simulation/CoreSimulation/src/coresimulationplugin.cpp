@@ -5,7 +5,7 @@ namespace CoreSimulation {
 
 PLUGININFO_FUNC CoreSimulationPluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "The core simulation plugin for OpenCOR");
     descriptions.insert("fr", "L'extension de simulation de base pour OpenCOR");

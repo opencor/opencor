@@ -8,22 +8,20 @@
 
 namespace OpenCOR {
 
-typedef QMap<QString, QString> FileDescriptions;
-
 class FileType
 {
 public:
     explicit FileType(const QString &pMimeType, const QString &pFileExtension,
-                      const FileDescriptions &pDescriptions);
+                      const Descriptions &pDescriptions);
 
     QString mimeType() const;
     QString fileExtension() const;
-    QString description(const QString &pLocale = "en") const;
+    QString description(const QString &pLocale = EnglishLocale) const;
 
 private:
     QString mMimeType;
     QString mFileExtension;
-    FileDescriptions mDescriptions;
+    Descriptions mDescriptions;
 };
 
 class ApiInterface : public PluginInterface

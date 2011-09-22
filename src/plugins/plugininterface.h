@@ -8,9 +8,11 @@
 
 namespace OpenCOR {
 
-class Plugin;
+static const QString SystemLocale  = "";
+static const QString EnglishLocale = "en";
+static const QString FrenchLocale  = "fr";
 
-typedef QMap<QString, QString> FileDescriptions;
+class Plugin;
 
 class PluginInterface : public QObject
 {
@@ -32,7 +34,7 @@ protected:
 
 #define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT PluginInfo
 
-typedef QMap<QString, QString> PluginInfoDescriptions;
+typedef QMap<QString, QString> Descriptions;
 
 class PluginInfo
 {
@@ -63,7 +65,7 @@ public:
                         const Category &pCategory = Application,
                         const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
-                        const PluginInfoDescriptions &pDescriptions = PluginInfoDescriptions());
+                        const Descriptions &pDescriptions = Descriptions());
 
     PluginInterface::Version interfaceVersion() const;
     Type type() const;
@@ -71,7 +73,7 @@ public:
     bool manageable() const;
     QStringList dependencies() const;
     QStringList fullDependencies() const;
-    QString description(const QString &pLocale = "en") const;
+    QString description(const QString &pLocale = EnglishLocale) const;
 
 private:
     PluginInterface::Version mInterfaceVersion;
@@ -80,8 +82,10 @@ private:
     bool mManageable;
     QStringList mDependencies;
     QStringList mFullDependencies;
-    PluginInfoDescriptions mDescriptions;
+    Descriptions mDescriptions;
 };
+
+QString description(const Descriptions &pDescriptions, const QString &pLocale);
 
 }
 

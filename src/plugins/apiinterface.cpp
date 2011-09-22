@@ -3,7 +3,7 @@
 namespace OpenCOR {
 
 FileType::FileType(const QString &pMimeType, const QString &pFileExtension,
-                   const FileDescriptions &pDescriptions) :
+                   const Descriptions &pDescriptions) :
     mMimeType(pMimeType),
     mFileExtension(pFileExtension),
     mDescriptions(pDescriptions)
@@ -29,18 +29,7 @@ QString FileType::description(const QString &pLocale) const
     // Return the file type's description using the provided locale or the first
     // description if no description can be found for the provided locale
 
-    if (mDescriptions.isEmpty()) {
-        // No description is avalable, so...
-
-        return QString();
-    } else {
-        // At least one description is available, so return the one that
-        // matches our locale our the first description if there is no match
-
-        QString res = mDescriptions.value(pLocale);
-
-        return res.isEmpty()?mDescriptions.begin().value():res;
-    }
+    return OpenCOR::description(mDescriptions, pLocale);
 }
 
 QList<FileType> ApiInterface::fileTypes() const

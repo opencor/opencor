@@ -5,7 +5,7 @@ namespace CoreCellMLEditing {
 
 PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "The core CellML editing plugin for OpenCOR");
     descriptions.insert("fr", "L'extension d'édition CellML de base pour OpenCOR");

@@ -9,7 +9,7 @@ namespace Help {
 
 PLUGININFO_FUNC HelpPluginInfo()
 {
-    PluginInfoDescriptions descriptions;
+    Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to provide help");
     descriptions.insert("fr", "Une extension pour fournir de l'aide");

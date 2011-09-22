@@ -26,10 +26,6 @@
 
 namespace OpenCOR {
 
-static const QString SystemLocale  = "";
-static const QString EnglishLocale = "en";
-static const QString FrenchLocale  = "fr";
-
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow)
