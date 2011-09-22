@@ -242,15 +242,7 @@ IF(NOT APPLE)
     # Create the bin directory if it doesn't already exist and move the OpenCOR
     # binary to it
 
-    SET(BIN_DIR ${CMAKE_BINARY_DIR}/bin)
-
-    IF(NOT EXISTS ${BIN_DIR})
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E make_directory ${BIN_DIR})
-    ENDIF()
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${BIN_DIR})
+    COPY_FILE_TO_BIN_DIR(${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 ENDIF()
 
 # Some Mac OS X specific information, as well as some pre- and post-processing

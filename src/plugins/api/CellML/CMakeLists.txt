@@ -114,14 +114,11 @@ ADD_PLUGIN(CellML
 IF(WIN32)
     # The CellML binaries
 
-    SET(BIN_DIR ${CMAKE_BINARY_DIR}/bin)
-
     FOREACH(CELLML_LIB ${CELLML_LIBS})
         # Copy them to the build/bin folder, so we can test the CellML plugin
         # without first having to deploy OpenCOR
     
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${CELLML_LIBS_DIR}/${CELLML_LIB} ${BIN_DIR})
+        COPY_FILE_TO_BIN_DIR(${CELLML_LIBS_DIR}/${CELLML_LIB})
 
         # INstall them
     
@@ -137,8 +134,7 @@ IF(WIN32)
 
     SET(LIBSTDC++-6_FILE ${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
     
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy ${LIBSTDC++-6_FILE} ${BIN_DIR})
+    COPY_FILE_TO_BIN_DIR(${LIBSTDC++-6_FILE})
 
     INSTALL(FILES ${LIBSTDC++-6_FILE} DESTINATION bin)
 ELSEIF(APPLE)
