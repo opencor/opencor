@@ -1,5 +1,4 @@
 #include "centralwidget.h"
-#include "docktoolbar.h"
 #include "dockwidget.h"
 #include "guiinterface.h"
 
@@ -8,6 +7,7 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QSettings>
+#include <QToolBar>
 
 namespace OpenCOR {
 
@@ -412,11 +412,11 @@ QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow)
     return new QMenu(pMainWindow);
 }
 
-DockToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow)
+QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow)
 {
     // Create and return a toolbar
 
-    return new DockToolBar(pMainWindow);
+    return new QToolBar(pMainWindow);
 }
 
 QAction * GuiInterface::newAction(QMainWindow *pMainWindow,

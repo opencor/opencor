@@ -5,13 +5,12 @@
 
 #include <QTranslator>
 
-class DockToolBar;
-
 class QAction;
 class QMainWindow;
 class QMenu;
 class QSettings;
 class QTabBar;
+class QToolBar;
 
 namespace OpenCOR {
 namespace Core {
@@ -184,7 +183,7 @@ protected:
     virtual void retranslateUi();
 
     static QMenu * newMenu(QMainWindow *pMainWindow);
-    static DockToolBar * newToolBar(QMainWindow *pMainWindow);
+    static QToolBar * newToolBar(QMainWindow *pMainWindow);
     static QAction * newAction(QMainWindow *pMainWindow,
                                const bool &pCheckable = false,
                                const QString &pIconResource = QString(),
