@@ -183,7 +183,7 @@ void CorePlugin::openFile()
 
     QString supportedFileTypes;
 
-    foreach(const FileType &supportedFileType, mSupportedFileTypes)
+    foreach (const FileType &supportedFileType, mSupportedFileTypes)
         supportedFileTypes +=  ";;"
                               +supportedFileType.description(mLocale)
                               +" (*."+supportedFileType.fileExtension()+")";

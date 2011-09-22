@@ -49,7 +49,7 @@ private:
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
 
-    void initializePlugin(GuiInterface *pGuiInterface) const;
+    void initializePlugin(GuiInterface *pGuiInterface);
 
     void loadSettings();
     void saveSettings() const;

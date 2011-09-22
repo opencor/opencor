@@ -1,6 +1,7 @@
 #include "coreeditingplugin.h"
 
 #include <QMenu>
+#include <QToolBar>
 
 namespace OpenCOR {
 namespace CoreEditing {
@@ -29,11 +30,13 @@ CoreEditingPlugin::CoreEditingPlugin() :
 
 void CoreEditingPlugin::initialize()
 {
-    // Create our Edit menu
+    // Create our Edit menu and toolbar
 
-    mEdit = newMenu(mMainWindow, EditMenu);
+    mEditMenu    = newMenu(mMainWindow, EditMenu);
+    mEditToolbar = newToolBar(mMainWindow, EditMenu);
 
-    // Create our different Edit actions and add them to our Edit menu
+    // Create our different Edit actions, and add them to our Edit menu and
+    // some to our Edit toolbar
 
     mEditUndo = newAction(mMainWindow, false,
                           ":/oxygen/actions/edit-undo.png");
@@ -57,31 +60,42 @@ void CoreEditingPlugin::initialize()
 
     mEditSelectAll = newAction(mMainWindow, false);
 
-    mEdit->addAction(mEditUndo);
-    mEdit->addAction(mEditRedo);
-    mEdit->addSeparator();
-    mEdit->addAction(mEditCut);
-    mEdit->addAction(mEditCopy);
-    mEdit->addAction(mEditPaste);
-    mEdit->addAction(mEditDelete);
-    mEdit->addSeparator();
-    mEdit->addAction(mEditFind);
-    mEdit->addAction(mEditFindNext);
-    mEdit->addAction(mEditPrevious);
-    mEdit->addAction(mEditReplace);
-    mEdit->addSeparator();
-    mEdit->addAction(mEditSelectAll);
+    mEditMenu->addAction(mEditUndo);
+    mEditMenu->addAction(mEditRedo);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditCut);
+    mEditMenu->addAction(mEditCopy);
+    mEditMenu->addAction(mEditPaste);
+    mEditMenu->addAction(mEditDelete);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditFind);
+    mEditMenu->addAction(mEditFindNext);
+    mEditMenu->addAction(mEditPrevious);
+    mEditMenu->addAction(mEditReplace);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditSelectAll);
+
+    mEditToolbar->addAction(mEditUndo);
+    mEditToolbar->addAction(mEditRedo);
+    mEditToolbar->addSeparator();
+    mEditToolbar->addAction(mEditCut);
+    mEditToolbar->addAction(mEditCopy);
+    mEditToolbar->addAction(mEditPaste);
+    mEditToolbar->addAction(mEditDelete);
+    mEditToolbar->addSeparator();
+    mEditToolbar->addAction(mEditFind);
 
     // Set our settings
 
-    mGuiSettings->addMenu(GuiMenuSettings::View, mEdit);
+    mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
+    mGuiSettings->addToolBar(Qt::TopToolBarArea, mEditToolbar);
 }
 
 void CoreEditingPlugin::retranslateUi()
 {
     // Retranslate our Edit menu
 
-    retranslateMenu(mEdit, tr("&Edit"));
+    retranslateMenu(mEditMenu, tr("&Edit"));
 
     // Retranslate our different Edit actions
 

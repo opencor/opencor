@@ -84,6 +84,20 @@ private:
     QAction *mAction;
 };
 
+class GuiToolBarSettings
+{
+public:
+    explicit GuiToolBarSettings(const Qt::ToolBarArea &pDefaultDockingArea,
+                                QToolBar *pToolbar);
+
+    Qt::ToolBarArea defaultDockingArea() const;
+    QToolBar *toolbar() const;
+
+private:
+    Qt::ToolBarArea mDefaultDockingArea;
+    QToolBar *mToolbar;
+};
+
 class GuiViewSettings
 {
 public:
@@ -134,18 +148,22 @@ public:
                  QMenu *pMenu);
     void addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
                        QAction *pAction = 0);
+    void addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
+                    QToolBar *pToolbar);
     void addView(const GuiViewSettings::Mode &pMode);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow);
 
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;
+    QList<GuiToolBarSettings *> toolbars() const;
     QList<GuiViewSettings *> views() const;
     QList<GuiWindowSettings *> windows() const;
 
 private:
     QList<GuiMenuSettings *> mMenus;
     QList<GuiMenuActionSettings *> mMenuActions;
+    QList<GuiToolBarSettings *> mToolbars;
     QList<GuiViewSettings *> mViews;
     QList<GuiWindowSettings *> mWindows;
 };

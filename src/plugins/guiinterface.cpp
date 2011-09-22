@@ -86,6 +86,27 @@ QAction * GuiMenuActionSettings::action() const
     return mAction;
 }
 
+GuiToolBarSettings::GuiToolBarSettings(const Qt::ToolBarArea &pDefaultDockingArea,
+                                       QToolBar *pToolbar) :
+    mDefaultDockingArea(pDefaultDockingArea),
+    mToolbar(pToolbar)
+{
+}
+
+Qt::ToolBarArea GuiToolBarSettings::defaultDockingArea() const
+{
+    // Return the toolbar's default docking area
+
+    return mDefaultDockingArea;
+}
+
+QToolBar * GuiToolBarSettings::toolbar() const
+{
+    // Return the toolbar itself
+
+    return mToolbar;
+}
+
 GuiViewSettings::GuiViewSettings(const Mode &pMode) :
     mMode(pMode),
     mTabBar(0),
@@ -169,7 +190,7 @@ GuiSettings::~GuiSettings()
 void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
                           QMenu *pMenu)
 {
-    // Add a new menu to our list
+    // Add a menu to our list
 
     mMenus << new GuiMenuSettings(pType, pMenu);
 }
@@ -177,10 +198,18 @@ void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
 void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
                                 QAction *pAction)
 {
-    // Add a new menu action to our list
+    // Add a menu action to our list
     // Note: a null pAction means that we want to add a separator
 
     mMenuActions << new GuiMenuActionSettings(pType, pAction);
+}
+
+void GuiSettings::addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
+                             QToolBar *pToolbar)
+{
+    // Add a toolbar to our list
+
+    mToolbars << new GuiToolBarSettings(pDefaultDockingArea, pToolbar);
 }
 
 void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
@@ -193,7 +222,7 @@ void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                             Core::DockWidget *pWindow)
 {
-    // Add a new window to our list
+    // Add a window to our list
 
     mWindows << new GuiWindowSettings(pDefaultDockingArea, pWindow);
 }
@@ -210,6 +239,13 @@ QList<GuiMenuActionSettings *> GuiSettings::menuActions() const
     // Return our menu actions
 
     return mMenuActions;
+}
+
+QList<GuiToolBarSettings *> GuiSettings::toolbars() const
+{
+    // Return our toolbars
+
+    return mToolbars;
 }
 
 QList<GuiViewSettings *> GuiSettings::views() const

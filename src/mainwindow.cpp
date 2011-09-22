@@ -239,7 +239,7 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     QMainWindow::closeEvent(pEvent);
 }
 
-void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
+void MainWindow::initializePlugin(GuiInterface *pGuiInterface)
 {
     // Check whether we are dealing with our special Help plugin
 
@@ -306,6 +306,13 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
                 mUi->menuFile->insertSeparator(mUi->menuFile->actions().first());
         }
     }
+
+    // Add the toolbars
+
+    foreach (GuiToolBarSettings *toolbarSettings,
+             pGuiInterface->guiSettings()->toolbars())
+        addToolBar(toolbarSettings->defaultDockingArea(),
+                   toolbarSettings->toolbar());
 }
 
 static const QString SettingsLocale              = "Locale";

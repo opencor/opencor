@@ -25,7 +25,8 @@ protected:
     virtual void retranslateUi();
 
 private:
-    QMenu *mEdit;
+    QMenu *mEditMenu;
+    QToolBar *mEditToolbar;
 
     QAction *mEditUndo;
     QAction *mEditRedo;
