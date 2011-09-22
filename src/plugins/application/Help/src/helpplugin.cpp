@@ -29,16 +29,16 @@ HelpPlugin::HelpPlugin() :
 {
 }
 
-void HelpPlugin::initialize(const QList<Plugin *> &, QMainWindow *pMainWindow)
+void HelpPlugin::initialize()
 {
     // Create an action to show/hide our help window
 
-    mHelpAction = newAction(pMainWindow, true,
+    mHelpAction = newAction(mMainWindow, true,
                             ":/oxygen/apps/help-browser.png");
 
     // Create our help window
 
-    mHelpWindow = new HelpWindow(pMainWindow);
+    mHelpWindow = new HelpWindow(mMainWindow);
 
     // Create and set our data
 

@@ -2,7 +2,7 @@
 
 namespace OpenCOR {
 
-void PluginInterface::initialize(const QList<Plugin *> &)
+void PluginInterface::initialize()
 {
     // Nothing to do by default...
 }
@@ -10,6 +10,13 @@ void PluginInterface::initialize(const QList<Plugin *> &)
 void PluginInterface::finalize()
 {
     // Nothing to do by default...
+}
+
+void PluginInterface::setParameters(const QList<Plugin *> &pLoadedPlugins)
+{
+    // Set the loaded plugins
+
+    mLoadedPlugins = pLoadedPlugins;
 }
 
 PluginInfo::PluginInfo(const PluginInterface::Version &pInterfaceVersion,

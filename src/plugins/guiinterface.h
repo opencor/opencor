@@ -152,8 +152,6 @@ public:
     explicit GuiInterface(const QString &pPluginName);
     ~GuiInterface();
 
-    virtual void initialize(const QList<Plugin *> &, QMainWindow *);
-
     GuiSettings * guiSettings() const;
     void * data() const;
 
@@ -163,7 +161,13 @@ public:
 
     void setLocale(const QString &pLocale);
 
+    void setParameters(const QList<Plugin *> &pLoadedPlugins,
+                       QMainWindow *pMainWindow, QSettings *pSettings);
+
 protected:
+    QMainWindow *mMainWindow;
+    QSettings *mSettings;
+
     GuiSettings *mGuiSettings;
     void *mData;
     // Note: mData is used only by the Core and Help plugins which are both one

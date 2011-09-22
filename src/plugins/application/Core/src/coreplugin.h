@@ -22,8 +22,7 @@ class CorePlugin : public GuiInterface
 public:
     explicit CorePlugin();
 
-    virtual void initialize(const QList<Plugin *> &pPlugins,
-                            QMainWindow *pMainWindow);
+    virtual void initialize();
     virtual void finalize();
 
     virtual void retranslateUi();

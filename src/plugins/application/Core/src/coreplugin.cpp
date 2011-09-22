@@ -31,13 +31,12 @@ CorePlugin::CorePlugin() :
 {
 }
 
-void CorePlugin::initialize(const QList<Plugin *> &pPlugins,
-                            QMainWindow *pMainWindow)
+void CorePlugin::initialize()
 {
     // Retrieve the file types supported by the plugins
 
-    foreach (Plugin *plugin, pPlugins) {
-        ApiInterface *apiInterface = qobject_cast<ApiInterface *>(plugin->instance());
+    foreach (Plugin *loadedPlugin, mLoadedPlugins) {
+        ApiInterface *apiInterface = qobject_cast<ApiInterface *>(loadedPlugin->instance());
 
         if (apiInterface)
             // The plugin implements our API interface, so...
@@ -47,11 +46,11 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins,
 
     // Retrieve the active directory
 
-//    mActiveDir.setPath(pMainWindow->settsettings.value(SettingsFileDialogDirectory,
+//    mActiveDir.setPath(mMainWindow->settsettings.value(SettingsFileDialogDirectory,
 //                                      QDir::currentPath()).toString());
     // Create our central widget
 
-    mCentralWidget = new CentralWidget(pMainWindow);
+    mCentralWidget = new CentralWidget(mMainWindow);
 
     // Create and set our data
 
@@ -60,8 +59,8 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins,
     // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
 
-    foreach (Plugin *plugin, pPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+    foreach (Plugin *loadedPlugin, mLoadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(loadedPlugin->instance());
 
         if (guiInterface)
             // The plugin implements our GUI interface, so go through each view
@@ -69,31 +68,31 @@ void CorePlugin::initialize(const QList<Plugin *> &pPlugins,
 
             foreach (GuiViewSettings *viewSettings,
                      guiInterface->guiSettings()->views())
-                mCentralWidget->addView(plugin, viewSettings);
+                mCentralWidget->addView(loadedPlugin, viewSettings);
     }
 
     // Create our different File actions
     // Note: all the save-related actions are to be invisible unless the Editing
     //       mode is active
 
-    mFileOpen = newAction(pMainWindow, false,
+    mFileOpen = newAction(mMainWindow, false,
                           ":/oxygen/actions/document-open.png");
 
-    mFileSave    = newAction(pMainWindow, false,
+    mFileSave    = newAction(mMainWindow, false,
                              ":/oxygen/actions/document-save.png",
                              mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
-    mFileSaveAs  = newAction(pMainWindow, false,
+    mFileSaveAs  = newAction(mMainWindow, false,
                              ":/oxygen/actions/document-save-all.png",
                              mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
-    mFileSaveAll = newAction(pMainWindow, false,
+    mFileSaveAll = newAction(mMainWindow, false,
                              ":/oxygen/actions/document-save-as.png",
                              mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
 
-    mFileClose    = newAction(pMainWindow, false,
+    mFileClose    = newAction(mMainWindow, false,
                               ":/oxygen/actions/document-close.png");
-    mFileCloseAll = newAction(pMainWindow);
+    mFileCloseAll = newAction(mMainWindow);
 
-    mFilePrint = newAction(pMainWindow, false,
+    mFilePrint = newAction(mMainWindow, false,
                           ":/oxygen/actions/document-open.png");
 
     // Some connections to handle our various actions
@@ -162,7 +161,7 @@ void CorePlugin::openFile()
 {
     // Ask for the file(s) to be opened
 
-    QStringList files = QFileDialog::getOpenFileNames(/*pMainWindow*/ 0,
+    QStringList files = QFileDialog::getOpenFileNames(mMainWindow,
                                                       tr("Open File"),
                                                       mActiveDir.path(),
                                                       tr("All Files")

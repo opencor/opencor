@@ -238,11 +238,6 @@ GuiInterface::~GuiInterface()
     delete mGuiSettings;
 }
 
-void GuiInterface::initialize(const QList<Plugin *> &, QMainWindow *)
-{
-    // Nothing to do by default...
-}
-
 GuiSettings * GuiInterface::guiSettings() const
 {
     // Return the plugin's GUI settings
@@ -275,6 +270,22 @@ void GuiInterface::setLocale(const QString &pLocale)
     // Retranslate the plugin
 
     retranslateUi();
+}
+
+void GuiInterface::setParameters(const QList<Plugin *> &pLoadedPlugins,
+                                 QMainWindow *pMainWindow, QSettings *pSettings)
+{
+    // Set the loaded plugins
+
+    mLoadedPlugins = pLoadedPlugins;
+
+    // Set the main window
+
+    mMainWindow = pMainWindow;
+
+    // Set the settings
+
+    mSettings = pSettings;
 }
 
 QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow)

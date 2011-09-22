@@ -27,36 +27,35 @@ CoreEditingPlugin::CoreEditingPlugin() :
 {
 }
 
-void CoreEditingPlugin::initialize(const QList<Plugin *> &,
-                                   QMainWindow *pMainWindow)
+void CoreEditingPlugin::initialize()
 {
     // Create our Edit menu
 
-    mEdit = newMenu(pMainWindow);
+    mEdit = newMenu(mMainWindow);
 
     // Create our different Edit actions and add them to our Edit menu
 
-    mEditUndo = newAction(pMainWindow, false,
+    mEditUndo = newAction(mMainWindow, false,
                           ":/oxygen/actions/edit-undo.png");
-    mEditRedo = newAction(pMainWindow, false,
+    mEditRedo = newAction(mMainWindow, false,
                           ":/oxygen/actions/edit-redo.png");
 
-    mEditCut    = newAction(pMainWindow, false,
+    mEditCut    = newAction(mMainWindow, false,
                           ":/oxygen/actions/edit-cut.png");
-    mEditCopy   = newAction(pMainWindow, false,
+    mEditCopy   = newAction(mMainWindow, false,
                           ":/oxygen/actions/edit-copy.png");
-    mEditPaste  = newAction(pMainWindow, false,
+    mEditPaste  = newAction(mMainWindow, false,
                           ":/oxygen/actions/edit-paste.png");
-    mEditDelete = newAction(pMainWindow, false,
+    mEditDelete = newAction(mMainWindow, false,
                           ":/oxygen/actions/edit-delete.png");
 
-    mEditFind     = newAction(pMainWindow, false,
+    mEditFind     = newAction(mMainWindow, false,
                           ":/oxygen/actions/edit-find.png");
-    mEditFindNext = newAction(pMainWindow, false);
-    mEditPrevious = newAction(pMainWindow, false);
-    mEditReplace  = newAction(pMainWindow, false);
+    mEditFindNext = newAction(mMainWindow, false);
+    mEditPrevious = newAction(mMainWindow, false);
+    mEditReplace  = newAction(mMainWindow, false);
 
-    mEditSelectAll = newAction(pMainWindow, false);
+    mEditSelectAll = newAction(mMainWindow, false);
 
     mEdit->addAction(mEditUndo);
     mEdit->addAction(mEditRedo);

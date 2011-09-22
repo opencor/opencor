@@ -19,7 +19,7 @@ class HelpPlugin : public GuiInterface
 public:
     explicit HelpPlugin();
 
-    virtual void initialize(const QList<Plugin *> &, QMainWindow *pMainWindow);
+    virtual void initialize();
     virtual void finalize();
 
     virtual void retranslateUi();

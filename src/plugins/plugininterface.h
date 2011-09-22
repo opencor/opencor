@@ -21,8 +21,13 @@ public:
         V001
     };
 
-    virtual void initialize(const QList<Plugin *> &);
+    virtual void initialize();
     virtual void finalize();
+
+    void setParameters(const QList<Plugin *> &pLoadedPlugins);
+
+protected:
+    QList<Plugin *> mLoadedPlugins;
 };
 
 #define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT PluginInfo

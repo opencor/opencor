@@ -101,7 +101,13 @@ MainWindow::MainWindow(QWidget *pParent) :
         if (guiInterface) {
             // The plugin implements our GUI interface, so...
 
-            guiInterface->initialize(loadedPlugins, this);
+            // Set a few parameters for the plugin
+
+            guiInterface->setParameters(loadedPlugins, this, mSettings);
+
+            // Initialise the plugin
+
+            guiInterface->initialize();
 
             // Initialise the plugin further (i.e. do things which can only be
             // done by OpenCOR itself)
@@ -113,10 +119,17 @@ MainWindow::MainWindow(QWidget *pParent) :
 
             PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-            if (pluginInterface)
+            if (pluginInterface) {
                 // The plugin implements our default interface, so...
 
-                pluginInterface->initialize(loadedPlugins);
+                // Set a few parameters for the plugin
+
+                pluginInterface->setParameters(loadedPlugins);
+
+                // Initialise the plugin
+
+                pluginInterface->initialize();
+            }
         }
     }
 
