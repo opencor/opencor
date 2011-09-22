@@ -377,6 +377,10 @@ QString GuiInterface::pluginName() const
 
 void GuiInterface::setLocale(const QString &pLocale)
 {
+    // Keep track of the new locale
+
+    mLocale = pLocale;
+
     // Update the plugin's translator
 
     qApp->removeTranslator(&mTranslator);

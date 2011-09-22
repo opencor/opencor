@@ -90,5 +90,13 @@
         <source>Ctrl+P</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Open File</source>
+        <translation>Ouvrir Fichier</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Tous Fichiers</translation>
+    </message>
 </context>
 </TS>

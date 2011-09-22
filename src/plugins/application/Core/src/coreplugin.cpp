@@ -1,3 +1,4 @@
+#include "apiinterface.h"
 #include "centralwidget.h"
 #include "coreplugin.h"
 #include "plugin.h"
@@ -180,6 +181,13 @@ void CorePlugin::openFile()
 {
     // Ask for the file(s) to be opened
 
+    QString supportedFileTypes;
+
+    foreach(const FileType &supportedFileType, mSupportedFileTypes)
+        supportedFileTypes +=  ";;"
+                              +supportedFileType.description(mLocale)
+                              +" (*."+supportedFileType.fileExtension()+")";
+
     QStringList files = QFileDialog::getOpenFileNames(mMainWindow,
                                                       tr("Open File"),
                                                       mActiveDir.path(),
@@ -188,7 +196,7 @@ void CorePlugin::openFile()
 #ifdef Q_WS_WIN
                                                       +".*"
 #endif
-                                                      +");;"+tr("CellML File")+" (*.cellml)");
+                                                      +")"+supportedFileTypes);
 
     if (files.count())
         // There is at least one file which is to be opened, so we can keep
@@ -209,7 +217,7 @@ void CorePlugin::openFile()
 
     // Open the file(s)
 
-//    mCentralWidget->openFiles(files);
+    mCentralWidget->openFiles(files);
 }
 
 } }

@@ -27,7 +27,7 @@ QList<FileType> CellMLPlugin::fileTypes() const
     descriptions.insert("en", "CellML File");
     descriptions.insert("fr", "Ficher CellML");
 
-    return QList<FileType>() << FileType("application/cellml+xml", ".cellml",
+    return QList<FileType>() << FileType("application/cellml+xml", "cellml",
                                          descriptions);
 }
 

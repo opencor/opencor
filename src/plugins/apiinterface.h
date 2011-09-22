@@ -18,7 +18,7 @@ public:
 
     QString mimeType() const;
     QString fileExtension() const;
-    FileDescriptions descriptions() const;
+    QString description(const QString &pLocale = "en") const;
 
 private:
     QString mMimeType;

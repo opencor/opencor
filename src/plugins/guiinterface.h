@@ -171,6 +171,7 @@ public:
 
 protected:
     QMainWindow *mMainWindow;
+    QString mLocale;
 
     GuiSettings *mGuiSettings;
     void *mData;
