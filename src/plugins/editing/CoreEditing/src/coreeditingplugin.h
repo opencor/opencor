@@ -19,6 +19,7 @@ public:
 
     virtual void initialize();
 
+protected:
     virtual void retranslateUi();
 
 private:

@@ -152,6 +152,9 @@ public:
     explicit GuiInterface(const QString &pPluginName);
     ~GuiInterface();
 
+//    void loadSettings(QSettings *pSettings);
+//    void saveSettings(QSettings *pSettings) const;
+
     GuiSettings * guiSettings() const;
     void * data() const;
 
@@ -174,6 +177,8 @@ protected:
     //       of a kind and therefore require special treatment (as opposed to
     //       generic treatment)
 
+    virtual void retranslateUi();
+
     static QMenu * newMenu(QMainWindow *pMainWindow);
     static QAction * newAction(QMainWindow *pMainWindow,
                                const bool &pCheckable = false,
@@ -189,8 +194,6 @@ private:
     QString mPluginName;
 
     QTranslator mTranslator;
-
-    virtual void retranslateUi();
 };
 
 }

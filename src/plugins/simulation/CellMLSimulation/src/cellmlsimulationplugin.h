@@ -17,6 +17,7 @@ class CellMLSimulationPlugin : public GuiInterface
 public:
     explicit CellMLSimulationPlugin();
 
+protected:
     virtual void retranslateUi();
 };
 

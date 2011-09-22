@@ -46,8 +46,9 @@ void CorePlugin::initialize()
 
     // Retrieve the active directory
 
-//    mActiveDir.setPath(mMainWindow->settsettings.value(SettingsFileDialogDirectory,
+//    mActiveDir.setPath(mMainWindow->setsettings.value(SettingsFileDialogDirectory,
 //                                      QDir::currentPath()).toString());
+
     // Create our central widget
 
     mCentralWidget = new CentralWidget(mMainWindow);

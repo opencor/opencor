@@ -25,6 +25,7 @@ public:
     virtual void initialize();
     virtual void finalize();
 
+protected:
     virtual void retranslateUi();
 
 private:

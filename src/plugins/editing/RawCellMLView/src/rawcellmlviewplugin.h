@@ -17,6 +17,7 @@ class RawCellMLViewPlugin : public GuiInterface
 public:
     explicit RawCellMLViewPlugin();
 
+protected:
     virtual void retranslateUi();
 };
 
