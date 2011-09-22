@@ -4,6 +4,8 @@
 #include "guiinterface.h"
 #include "apiinterface.h"
 
+#include <QDir>
+
 namespace OpenCOR {
 namespace Core {
 
@@ -38,6 +40,11 @@ private:
     QAction *mFileClose;
     QAction *mFileCloseAll;
     QAction *mFilePrint;
+
+    QDir mActiveDir;
+
+private Q_SLOTS:
+    void openFile();
 };
 
 } }

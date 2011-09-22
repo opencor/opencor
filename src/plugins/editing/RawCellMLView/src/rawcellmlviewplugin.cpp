@@ -27,14 +27,14 @@ RawCellMLViewPlugin::RawCellMLViewPlugin() :
 {
     // Set our settings
 
-    mSettings->addView(GuiViewSettings::Editing);
+    mGuiSettings->addView(GuiViewSettings::Editing);
 }
 
 void RawCellMLViewPlugin::retranslateUi()
 {
     // Retranslate our view's tab
 
-    GuiViewSettings *view = mSettings->views().at(0);
+    GuiViewSettings *view = mGuiSettings->views().at(0);
 
     view->tabBar()->setTabText(view->tabIndex(), tr("Raw CellML"));
 }

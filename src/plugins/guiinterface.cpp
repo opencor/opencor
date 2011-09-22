@@ -2,6 +2,7 @@
 
 #include <QAction>
 #include <QApplication>
+#include <QMainWindow>
 #include <QMenu>
 
 namespace OpenCOR {
@@ -225,16 +226,16 @@ GuiInterface::GuiInterface(const QString &pPluginName) :
     mData(0),
     mPluginName(pPluginName)
 {
-    // Create our settings object
+    // Create our GUI settings object
 
-    mSettings = new GuiSettings;
+    mGuiSettings = new GuiSettings;
 }
 
 GuiInterface::~GuiInterface()
 {
-    // Delete our settings object
+    // Delete our GUI settings object
 
-    delete mSettings;
+    delete mGuiSettings;
 }
 
 void GuiInterface::initialize(const QList<Plugin *> &, QMainWindow *)
@@ -242,11 +243,11 @@ void GuiInterface::initialize(const QList<Plugin *> &, QMainWindow *)
     // Nothing to do by default...
 }
 
-GuiSettings * GuiInterface::settings() const
+GuiSettings * GuiInterface::guiSettings() const
 {
-    // Return the plugin's settings
+    // Return the plugin's GUI settings
 
-    return mSettings;
+    return mGuiSettings;
 }
 
 void * GuiInterface::data() const

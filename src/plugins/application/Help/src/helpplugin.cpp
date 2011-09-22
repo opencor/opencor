@@ -2,6 +2,7 @@
 #include "helpwindow.h"
 
 #include <QAction>
+#include <QMainWindow>
 
 namespace OpenCOR {
 namespace Help {

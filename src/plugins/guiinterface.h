@@ -3,8 +3,13 @@
 
 #include "plugininterface.h"
 
-#include <QMainWindow>
 #include <QTranslator>
+
+class QAction;
+class QMainWindow;
+class QMenu;
+class QSettings;
+class QTabBar;
 
 namespace OpenCOR {
 namespace Core {
@@ -149,7 +154,7 @@ public:
 
     virtual void initialize(const QList<Plugin *> &, QMainWindow *);
 
-    GuiSettings * settings() const;
+    GuiSettings * guiSettings() const;
     void * data() const;
 
     QString pluginName() const;
@@ -159,7 +164,7 @@ public:
     void setLocale(const QString &pLocale);
 
 protected:
-    GuiSettings *mSettings;
+    GuiSettings *mGuiSettings;
     void *mData;
     // Note: mData is used only by the Core and Help plugins which are both one
     //       of a kind and therefore require special treatment (as opposed to

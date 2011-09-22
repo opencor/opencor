@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->actionStatusBar, SIGNAL(triggered(bool)),
             statusBar(), SLOT(setVisible(bool)));
 
-    // Some connections to handle various menu items
+    // Some connections to handle our various menu items
 
     connect(mUi->actionExit, SIGNAL(triggered(bool)),
             this, SLOT(close()));
@@ -264,7 +264,7 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
     // Note: we must do that in reverse order since we are inserting menus,
     //       as opposed to appending menus...
 
-    QListIterator<GuiMenuSettings *> menuIter(pGuiInterface->settings()->menus());
+    QListIterator<GuiMenuSettings *> menuIter(pGuiInterface->guiSettings()->menus());
 
     menuIter.toBack();
 
@@ -284,7 +284,7 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface) const
     // Note: as for the menus above, we must do that in reverse order since we
     //       are inserting actions, as opposed to appending actions...
 
-    QListIterator<GuiMenuActionSettings *> menuActionIter(pGuiInterface->settings()->menuActions());
+    QListIterator<GuiMenuActionSettings *> menuActionIter(pGuiInterface->guiSettings()->menuActions());
 
     menuActionIter.toBack();
 
@@ -364,7 +364,7 @@ void MainWindow::loadPluginSettings(const bool &pNeedDefaultSettings,
         // windows' settings
 
         foreach (GuiWindowSettings *windowSettings,
-                 pGuiInterface->settings()->windows())
+                 pGuiInterface->guiSettings()->windows())
             loadPluginWindowSettings(pNeedDefaultSettings,
                                      windowSettings->defaultDockingArea(),
                                      windowSettings->window());
@@ -394,7 +394,7 @@ void MainWindow::savePluginSettings(GuiInterface *pGuiInterface) const
         // plugin's windows' settings
 
         foreach (GuiWindowSettings *windowSettings,
-                 pGuiInterface->settings()->windows())
+                 pGuiInterface->guiSettings()->windows())
             windowSettings->window()->saveSettings(mSettings);
     }
 }
