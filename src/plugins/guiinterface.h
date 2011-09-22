@@ -183,7 +183,8 @@ protected:
     virtual void retranslateUi();
 
     static QMenu * newMenu(QMainWindow *pMainWindow, const QString &pName);
-    static QToolBar * newToolBar(QMainWindow *pMainWindow);
+    static QToolBar * newToolBar(QMainWindow *pMainWindow,
+                                 const QString &pName);
     static QAction * newAction(QMainWindow *pMainWindow,
                                const bool &pCheckable = false,
                                const QString &pIconResource = QString(),
@@ -206,6 +207,7 @@ private:
 };
 
 static QMap<QString, QMenu *> menus;
+static QMap<QString, QToolBar *> toolbars;
 
 }
 
