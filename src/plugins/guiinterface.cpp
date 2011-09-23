@@ -491,6 +491,10 @@ QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow,
         // Note: the object name must be set for QMainWindow::saveState() to
         //       work properly...
 
+        // Set the icon size to that used in the Help toolbar
+
+        res->setIconSize(QSize(24, 24));
+
         OpenCOR::toolbars.insert(pName, res);
     }
 
