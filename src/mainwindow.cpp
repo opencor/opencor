@@ -262,7 +262,7 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface)
     // Deal with the menus and actions that the plugin may want us to add
     // (insert)
 
-    // Add the menus to our menu bar
+    // Add the menus to our menu bar or merge them to existing menus, if needed
     // Note: we must do that in reverse order since we are inserting menus,
     //       as opposed to appending menus...
 
@@ -275,10 +275,36 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface)
 
         GuiMenuSettings *menuSettings = menuIter.previous();
 
-        switch (menuSettings->type()) {
-        default:   // View
-            mUi->menuBar->insertAction(mUi->menuView->menuAction(),
-                                       menuSettings->menu()->menuAction());
+        QMenu *newMenu = menuSettings->menu();
+        QString newMenuName = newMenu->objectName();
+
+        QMenu *oldMenu = mMenus.value(newMenuName);
+
+        if (oldMenu) {
+            // A menu with the same name already exists, so add the contents of
+            // the new menu to the existing one
+
+            oldMenu->addSeparator();
+            oldMenu->addActions(newMenu->actions());
+
+            // Delete the new menu, since we don't need it...
+            // Note: it's not critical since the menu never gets shown, but it
+            //       doesn't harm either, so...
+
+            delete newMenu;
+        } else {
+            // No menu with the same name already exists, so add the new menu to
+            // our menu bar
+
+            switch (menuSettings->type()) {
+            default:   // View
+                mUi->menuBar->insertAction(mUi->menuView->menuAction(),
+                                           newMenu->menuAction());
+            }
+
+            // Keep track of the new menu
+
+            mMenus.insert(newMenuName, newMenu);
         }
     }
 
@@ -309,14 +335,37 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface)
 
     foreach (GuiToolBarSettings *toolbarSettings,
              pGuiInterface->guiSettings()->toolbars()) {
-        // Add the toolbar itself
+        QToolBar *newToolbar = toolbarSettings->toolbar();
+        QString newToolbarName = newToolbar->objectName();
 
-        addToolBar(toolbarSettings->defaultDockingArea(),
-                   toolbarSettings->toolbar());
+        QToolBar *oldToolbar = mToolbars.value(newToolbarName);
 
-        // Add a toolbar show/hide menu to the View|Toolbars menu
+        if (oldToolbar) {
+            // A toolbar with the same name already exists, so add the contents
+            // of the new toolbar to the existing one
 
-        mUi->menuToolbars->addAction(toolbarSettings->toolbarAction());
+            oldToolbar->addSeparator();
+            oldToolbar->addActions(newToolbar->actions());
+
+            // Delete the new toolbar, since we don't need it...
+            // Note: this prevents from the toolbar from being shown in the
+            //       top-left corner of the main window
+
+            delete newToolbar;
+        } else {
+            // No toolbar with the same name already exists, so add the new
+            // toolbar
+
+            addToolBar(toolbarSettings->defaultDockingArea(), newToolbar);
+
+            // Also add a toolbar action to our View|Toolbars menu
+
+            mUi->menuToolbars->addAction(toolbarSettings->toolbarAction());
+
+            // Keep track of the new toolbar
+
+            mToolbars.insert(newToolbarName, newToolbar);
+        }
     }
 }
 

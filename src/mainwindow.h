@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMap>
 #include <QTranslator>
 
 namespace Ui {
@@ -48,6 +49,9 @@ private:
 
     QTranslator mQtTranslator;
     QTranslator mAppTranslator;
+
+    QMap<QString, QMenu *> mMenus;
+    QMap<QString, QToolBar *> mToolbars;
 
     void initializePlugin(GuiInterface *pGuiInterface);
 
