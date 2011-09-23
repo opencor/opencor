@@ -42,13 +42,13 @@ private:
     QToolBar *mFileToolbar;
     QAction *mFileToolbarAction;
 
-    QAction *mFileOpen;
-    QAction *mFileSave;
-    QAction *mFileSaveAs;
-    QAction *mFileSaveAll;
-    QAction *mFileClose;
-    QAction *mFileCloseAll;
-    QAction *mFilePrint;
+    QAction *mFileOpenAction;
+    QAction *mFileSaveAction;
+    QAction *mFileSaveAsAction;
+    QAction *mFileSaveAllAction;
+    QAction *mFileCloseAction;
+    QAction *mFileCloseAllAction;
+    QAction *mFilePrintAction;
 
     QDir mActiveDir;
 

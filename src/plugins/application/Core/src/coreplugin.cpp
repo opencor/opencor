@@ -79,53 +79,53 @@ void CorePlugin::initialize()
     // Note: all the save-related actions are to be invisible unless the Editing
     //       mode is active
 
-    mFileOpen = newAction(mMainWindow, false,
-                          ":/oxygen/actions/document-open.png");
+    mFileOpenAction = newAction(mMainWindow, false,
+                                ":/oxygen/actions/document-open.png");
 
-    mFileSave    = newAction(mMainWindow, false,
-                             ":/oxygen/actions/document-save.png",
-                             mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
-    mFileSaveAs  = newAction(mMainWindow, false,
-                             ":/oxygen/actions/document-save-as.png",
-                             mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
-    mFileSaveAll = newAction(mMainWindow, false,
-                             ":/oxygen/actions/document-save-all.png",
-                             mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
+    mFileSaveAction    = newAction(mMainWindow, false,
+                                   ":/oxygen/actions/document-save.png",
+                                   mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
+    mFileSaveAsAction  = newAction(mMainWindow, false,
+                                   ":/oxygen/actions/document-save-as.png",
+                                   mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
+    mFileSaveAllAction = newAction(mMainWindow, false,
+                                   ":/oxygen/actions/document-save-all.png",
+                                   mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
 
-    mFileClose    = newAction(mMainWindow, false,
-                              ":/oxygen/actions/document-close.png");
-    mFileCloseAll = newAction(mMainWindow);
+    mFileCloseAction    = newAction(mMainWindow, false,
+                                    ":/oxygen/actions/document-close.png");
+    mFileCloseAllAction = newAction(mMainWindow);
 
-    mFilePrint = newAction(mMainWindow, false,
-                          ":/oxygen/actions/document-print.png");
+    mFilePrintAction = newAction(mMainWindow, false,
+                                 ":/oxygen/actions/document-print.png");
 
-    mFileToolbar->addAction(mFileOpen);
+    mFileToolbar->addAction(mFileOpenAction);
     mFileToolbar->addSeparator();
-    mFileToolbar->addAction(mFileSave);
-    mFileToolbar->addAction(mFileSaveAs);
-    mFileToolbar->addAction(mFileSaveAll);
+    mFileToolbar->addAction(mFileSaveAction);
+    mFileToolbar->addAction(mFileSaveAsAction);
+    mFileToolbar->addAction(mFileSaveAllAction);
     mFileToolbar->addSeparator();
-    mFileToolbar->addAction(mFileClose);
+    mFileToolbar->addAction(mFileCloseAction);
     mFileToolbar->addSeparator();
-    mFileToolbar->addAction(mFilePrint);
+    mFileToolbar->addAction(mFilePrintAction);
 
     // Some connections to handle our various actions
 
-    connect(mFileOpen, SIGNAL(triggered(bool)),
+    connect(mFileOpenAction, SIGNAL(triggered(bool)),
             this, SLOT(openFile()));
 
     // Set our settings
 
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpen);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSave);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAs);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAll);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAsAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAllAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileClose);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAll);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAllAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFilePrint);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFilePrintAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
 
     mGuiSettings->addToolBar(Qt::TopToolBarArea, mFileToolbar,
@@ -173,25 +173,25 @@ void CorePlugin::retranslateUi()
 
     // Retranslate our different File actions
 
-    retranslateAction(mFileOpen, tr("&Open..."),
+    retranslateAction(mFileOpenAction, tr("&Open..."),
                       tr("Open a file"),
                       tr("Ctrl+O"));
 
-    retranslateAction(mFileSave, tr("&Save"),
+    retranslateAction(mFileSaveAction, tr("&Save"),
                       tr("Save the current file"),
                       tr("Ctrl+S"));
-    retranslateAction(mFileSaveAs, tr("Save &As..."),
+    retranslateAction(mFileSaveAsAction, tr("Save &As..."),
                       tr("Save the current file under a different name"));
-    retranslateAction(mFileSaveAll, tr("Save All"),
+    retranslateAction(mFileSaveAllAction, tr("Save All"),
                       tr("Save all the files"));
 
-    retranslateAction(mFileClose, tr("Clos&e"),
+    retranslateAction(mFileCloseAction, tr("Clos&e"),
                       tr("Close the current file"),
                       tr("Ctrl+W"));
-    retranslateAction(mFileCloseAll, tr("Close All"),
+    retranslateAction(mFileCloseAllAction, tr("Close All"),
                       tr("Close all the files"));
 
-    retranslateAction(mFilePrint, tr("&Print..."),
+    retranslateAction(mFilePrintAction, tr("&Print..."),
                       tr("Print the current file"),
                       tr("Ctrl+P"));
 

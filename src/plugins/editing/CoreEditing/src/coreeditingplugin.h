@@ -30,17 +30,17 @@ private:
     QToolBar *mEditToolbar;
     QAction *mEditToolbarAction;
 
-    QAction *mEditUndo;
-    QAction *mEditRedo;
-    QAction *mEditCut;
-    QAction *mEditCopy;
-    QAction *mEditPaste;
-    QAction *mEditDelete;
-    QAction *mEditFind;
-    QAction *mEditFindNext;
-    QAction *mEditPrevious;
-    QAction *mEditReplace;
-    QAction *mEditSelectAll;
+    QAction *mEditUndoAction;
+    QAction *mEditRedoAction;
+    QAction *mEditCutAction;
+    QAction *mEditCopyAction;
+    QAction *mEditPasteAction;
+    QAction *mEditDeleteAction;
+    QAction *mEditFindAction;
+    QAction *mEditFindNextAction;
+    QAction *mEditPreviousAction;
+    QAction *mEditReplaceAction;
+    QAction *mEditSelectAllAction;
 };
 
 } }
