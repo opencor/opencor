@@ -8,7 +8,7 @@ namespace CoreEditing {
 
 PLUGININFO_FUNC CoreEditingPluginInfo();
 
-static const QString EditGroup = "edit";
+static const QString EditGroup = "Edit";
 
 class CoreEditingPlugin : public GuiInterface
 {

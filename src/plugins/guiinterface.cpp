@@ -462,10 +462,11 @@ QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)
 
     // Set the name of the menu
 
-    res->setObjectName(pName+"Menu");
-    // Note: the object name must also be set for the main window to be able to
-    //       reconcile different menus with the same name (and therefore merge
-    //       their contents, if needed)
+    res->setObjectName("menu"+pName.left(1).toUpper()+pName.right(pName.size()-1));
+    // Note #1: the object name must also be set for the main window to be able
+    //          to reconcile different menus with the same name (and therefore
+    //          merge their contents, if needed)
+    // Note #2: the naming is such to respect the one used in the main window
 
     // Return the new menu
 
@@ -481,12 +482,13 @@ QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow,
 
     // Set the name of the toolbar
 
-    res->setObjectName(pName+"Toolbar");
+    res->setObjectName(pName.left(1).toLower()+pName.right(pName.size()-1)+"Toolbar");
     // Note #1: the object name must be set for QMainWindow::saveState() to work
     //          properly...
     // Note #2: the object name must also be set for the main window to be able
     //          to reconcile different toolbars with the same name (and
     //          therefore merge their contents, if needed)
+    // Note #3: the naming is such to respect the one used in the main window
 
     // Set the icon size to that used in the Help toolbar
 

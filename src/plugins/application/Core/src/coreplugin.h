@@ -11,7 +11,7 @@ namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo();
 
-static const QString FileGroup = "file";
+static const QString FileGroup = "File";
 
 class CentralWidget;
 
