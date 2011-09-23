@@ -142,7 +142,7 @@ void CoreEditingPlugin::retranslateUi()
 
     // Retranslate our show/hide actions
 
-    retranslateAction(mEditToolbarAction, tr("Edit"),
+    retranslateAction(mEditToolbarAction, tr("&Edit"),
                       tr("Show/hide the Edit toolbar"));
 }
 

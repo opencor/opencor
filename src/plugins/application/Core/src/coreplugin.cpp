@@ -197,7 +197,7 @@ void CorePlugin::retranslateUi()
 
     // Retranslate our show/hide actions
 
-    retranslateAction(mFileToolbarAction, tr("File"),
+    retranslateAction(mFileToolbarAction, tr("&File"),
                       tr("Show/hide the File toolbar"));
 }
 

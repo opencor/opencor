@@ -60,6 +60,8 @@ private:
 
     void setLocale(const QString &pLocale);
 
+    void reorderViewToolbarsMenu();
+
 public Q_SLOTS:
 #ifdef Q_WS_WIN
     void singleAppMsgRcvd(const QString &) const;

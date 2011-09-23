@@ -143,9 +143,5 @@
         <source>Show/hide the Edit toolbar</source>
         <translation>Montrer/cacher la barre d&apos;outils Éditer</translation>
     </message>
-    <message>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 </TS>

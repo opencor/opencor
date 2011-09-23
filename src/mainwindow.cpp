@@ -367,6 +367,10 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface)
             mToolbars.insert(newToolbarName, newToolbar);
         }
     }
+
+    // Reorder the View|Toolbars menu, just in case
+
+    reorderViewToolbarsMenu();
 }
 
 static const QString SettingsLocale              = "Locale";
@@ -504,6 +508,10 @@ void MainWindow::setLocale(const QString &pLocale)
 
                 guiInterface->setLocale(realLocale);
         }
+
+        // Reorder the View|Toolbars menu, just in case
+
+        reorderViewToolbarsMenu();
     }
 
     // Update the checked menu item
@@ -514,6 +522,37 @@ void MainWindow::setLocale(const QString &pLocale)
 
     mUi->actionEnglish->setChecked(mLocale == EnglishLocale);
     mUi->actionFrench->setChecked(mLocale == FrenchLocale);
+}
+
+void MainWindow::reorderViewToolbarsMenu()
+{
+    // Reorder the View|Toolbars menu
+    // Note: this is useful after having added a new menu item or after having
+    //       changed the locale
+
+    QStringList menuItemTitles;
+    QMap<QString, QAction *> menuItemActions;
+
+    // Retrieve the title of the menu items and keep track of their actions
+
+    foreach(QAction *menuItemAction, mUi->menuToolbars->actions()) {
+        QString menuItemTitle = menuItemAction->text().remove("&");
+
+        menuItemTitles.append(menuItemTitle);
+        menuItemActions.insert(menuItemTitle, menuItemAction);
+    }
+
+    // Sort the menu items
+
+    menuItemTitles.sort();
+
+    // Add the menu items actions in the new order
+    // Note: to use addAction will effectively 'move' the menu items to the end
+    //       of the menu, so since we do it in the right order, we end up with
+    //       the menu items being properly ordered...
+
+    foreach(const QString menuItemTitle, menuItemTitles)
+        mUi->menuToolbars->addAction(menuItemActions.value(menuItemTitle));
 }
 
 #ifdef Q_WS_WIN

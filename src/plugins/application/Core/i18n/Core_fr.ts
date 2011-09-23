@@ -99,8 +99,8 @@
         <translation>Tous Fichiers</translation>
     </message>
     <message>
-        <source>File</source>
-        <translation>Fichier</translation>
+        <source>&amp;File</source>
+        <translation>&amp;Fichier</translation>
     </message>
     <message>
         <source>Show/hide the File toolbar</source>
