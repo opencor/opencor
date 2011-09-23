@@ -35,7 +35,7 @@ void CoreEditingPlugin::initialize()
     mEditMenu = newMenu(mMainWindow, EditGroup);
 
     mEditToolbar = newToolBar(mMainWindow, EditGroup);
-    mEditToolbarAction = newAction(mMainWindow);
+    mEditToolbarAction = newAction(mMainWindow, true);
 
     // Create our different Edit actions, and add them to our Edit menu and
     // some to our Edit toolbar
