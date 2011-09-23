@@ -229,9 +229,6 @@ private:
                             Core::DockWidget *pWindow);
 };
 
-static QMap<QString, QMenu *> menus;
-static QMap<QString, QToolBar *> toolbars;
-
 }
 
 Q_DECLARE_INTERFACE(OpenCOR::GuiInterface, "OpenCOR.GuiInterface")

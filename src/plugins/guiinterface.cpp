@@ -456,20 +456,18 @@ void GuiInterface::setParameters(const QList<Plugin *> &pLoadedPlugins,
 
 QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)
 {
-    // Return the required menu or a new one, if it doesn't exist
+    // Create a new menu
 
-    QMenu * res = OpenCOR::menus.value(pName);
+    QMenu *res = new QMenu(pMainWindow);
 
-    if (!res) {
-        // The menu doesn't already exist, so create a new one and keep track of
-        // it
+    // Set the name of the menu
 
-        res = new QMenu(pMainWindow);
+    res->setObjectName(pName+"Menu");
+    // Note: the object name must also be set for the main window to be able to
+    //       reconcile different menus with the same name (and therefore merge
+    //       their contents, if needed)
 
-        OpenCOR::menus.insert(pName, res);
-    }
-
-    // Return the new/found menu
+    // Return the new menu
 
     return res;
 }
@@ -477,28 +475,24 @@ QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)
 QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow,
                                     const QString &pName)
 {
-    // Return the required toolbar or a new one, if it doesn't exist
+    // Create a new toolbar
 
-    QToolBar * res = OpenCOR::toolbars.value(pName);
+    QToolBar *res = new QToolBar(pMainWindow);
 
-    if (!res) {
-        // The toolbar doesn't already exist, so create a new one and keep track
-        // of it
+    // Set the name of the toolbar
 
-        res = new QToolBar(pMainWindow);
+    res->setObjectName(pName+"Toolbar");
+    // Note #1: the object name must be set for QMainWindow::saveState() to work
+    //          properly...
+    // Note #2: the object name must also be set for the main window to be able
+    //          to reconcile different toolbars with the same name (and
+    //          therefore merge their contents, if needed)
 
-        res->setObjectName(pName+"Toolbar");
-        // Note: the object name must be set for QMainWindow::saveState() to
-        //       work properly...
+    // Set the icon size to that used in the Help toolbar
 
-        // Set the icon size to that used in the Help toolbar
+    res->setIconSize(QSize(24, 24));
 
-        res->setIconSize(QSize(24, 24));
-
-        OpenCOR::toolbars.insert(pName, res);
-    }
-
-    // Return the new/found menu
+    // Return the new toolbar
 
     return res;
 }
