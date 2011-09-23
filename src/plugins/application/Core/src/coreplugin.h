@@ -11,6 +11,8 @@ namespace Core {
 
 PLUGININFO_FUNC CorePluginInfo();
 
+static const QString FileGroup = "file";
+
 class CentralWidget;
 
 class CorePlugin : public GuiInterface
@@ -36,6 +38,9 @@ private:
     QList<FileType> mSupportedFileTypes;
 
     CentralWidget *mCentralWidget;
+
+    QToolBar *mFileToolbar;
+    QAction *mFileToolbarAction;
 
     QAction *mFileOpen;
     QAction *mFileSave;

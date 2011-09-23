@@ -30,10 +30,12 @@ CoreEditingPlugin::CoreEditingPlugin() :
 
 void CoreEditingPlugin::initialize()
 {
-    // Create our Edit menu and toolbar
+    // Create our Edit menu and toolbar (and its show/hide action)
 
-    mEditMenu    = newMenu(mMainWindow, EditMenu);
-    mEditToolbar = newToolBar(mMainWindow, EditMenu);
+    mEditMenu = newMenu(mMainWindow, EditGroup);
+
+    mEditToolbar = newToolBar(mMainWindow, EditGroup);
+    mEditToolbarAction = newAction(mMainWindow);
 
     // Create our different Edit actions, and add them to our Edit menu and
     // some to our Edit toolbar
@@ -88,7 +90,9 @@ void CoreEditingPlugin::initialize()
     // Set our settings
 
     mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
-    mGuiSettings->addToolBar(Qt::TopToolBarArea, mEditToolbar);
+
+    mGuiSettings->addToolBar(Qt::TopToolBarArea, mEditToolbar,
+                             mEditToolbarAction);
 }
 
 void CoreEditingPlugin::retranslateUi()
@@ -135,6 +139,11 @@ void CoreEditingPlugin::retranslateUi()
     retranslateAction(mEditSelectAll, tr("Select &All"),
                       tr("Select all the objects"),
                       tr("Ctrl+A"));
+
+    // Retranslate our show/hide actions
+
+    retranslateAction(mEditToolbarAction, tr("Edit"),
+                      tr("Show/hide the Edit toolbar"));
 }
 
 } }

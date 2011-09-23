@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QSettings>
+#include <QToolBar>
 
 namespace OpenCOR {
 namespace Core {
@@ -69,7 +70,12 @@ void CorePlugin::initialize()
                 mCentralWidget->addView(loadedPlugin, viewSettings);
     }
 
-    // Create our different File actions
+    // Create our File toolbar (and its show/hide action)
+
+    mFileToolbar = newToolBar(mMainWindow, FileGroup);
+    mFileToolbarAction = newAction(mMainWindow, true);
+
+    // Create our different File actions, and add some to our File toolbar
     // Note: all the save-related actions are to be invisible unless the Editing
     //       mode is active
 
@@ -80,10 +86,10 @@ void CorePlugin::initialize()
                              ":/oxygen/actions/document-save.png",
                              mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
     mFileSaveAs  = newAction(mMainWindow, false,
-                             ":/oxygen/actions/document-save-all.png",
+                             ":/oxygen/actions/document-save-as.png",
                              mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
     mFileSaveAll = newAction(mMainWindow, false,
-                             ":/oxygen/actions/document-save-as.png",
+                             ":/oxygen/actions/document-save-all.png",
                              mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
 
     mFileClose    = newAction(mMainWindow, false,
@@ -91,7 +97,17 @@ void CorePlugin::initialize()
     mFileCloseAll = newAction(mMainWindow);
 
     mFilePrint = newAction(mMainWindow, false,
-                          ":/oxygen/actions/document-open.png");
+                          ":/oxygen/actions/document-print.png");
+
+    mFileToolbar->addAction(mFileOpen);
+    mFileToolbar->addSeparator();
+    mFileToolbar->addAction(mFileSave);
+    mFileToolbar->addAction(mFileSaveAs);
+    mFileToolbar->addAction(mFileSaveAll);
+    mFileToolbar->addSeparator();
+    mFileToolbar->addAction(mFileClose);
+    mFileToolbar->addSeparator();
+    mFileToolbar->addAction(mFilePrint);
 
     // Some connections to handle our various actions
 
@@ -111,6 +127,9 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFilePrint);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
+
+    mGuiSettings->addToolBar(Qt::TopToolBarArea, mFileToolbar,
+                             mFileToolbarAction);
 }
 
 void CorePlugin::finalize()
@@ -175,6 +194,11 @@ void CorePlugin::retranslateUi()
     retranslateAction(mFilePrint, tr("&Print..."),
                       tr("Print the current file"),
                       tr("Ctrl+P"));
+
+    // Retranslate our show/hide actions
+
+    retranslateAction(mFileToolbarAction, tr("File"),
+                      tr("Show/hide the File toolbar"));
 }
 
 void CorePlugin::openFile()

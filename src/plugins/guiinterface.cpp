@@ -87,10 +87,15 @@ QAction * GuiMenuActionSettings::action() const
 }
 
 GuiToolBarSettings::GuiToolBarSettings(const Qt::ToolBarArea &pDefaultDockingArea,
-                                       QToolBar *pToolbar) :
+                                       QToolBar *pToolbar,
+                                       QAction *pToolbarAction) :
     mDefaultDockingArea(pDefaultDockingArea),
-    mToolbar(pToolbar)
+    mToolbar(pToolbar),
+    mToolbarAction(pToolbarAction)
 {
+    // Connect the toolbar to its toolbar action
+
+    GuiInterface::connectToolBarToToolBarAction(pToolbar, pToolbarAction);
 }
 
 Qt::ToolBarArea GuiToolBarSettings::defaultDockingArea() const
@@ -105,6 +110,13 @@ QToolBar * GuiToolBarSettings::toolbar() const
     // Return the toolbar itself
 
     return mToolbar;
+}
+
+QAction * GuiToolBarSettings::toolbarAction() const
+{
+    // Return the show/hide action
+
+    return mToolbarAction;
 }
 
 GuiViewSettings::GuiViewSettings(const Mode &pMode) :
@@ -205,11 +217,12 @@ void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettin
 }
 
 void GuiSettings::addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
-                             QToolBar *pToolbar)
+                             QToolBar *pToolbar, QAction *pToolbarAction)
 {
     // Add a toolbar to our list
 
-    mToolbars << new GuiToolBarSettings(pDefaultDockingArea, pToolbar);
+    mToolbars << new GuiToolBarSettings(pDefaultDockingArea, pToolbar,
+                                        pToolbarAction);
 }
 
 void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
@@ -474,6 +487,10 @@ QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow,
 
         res = new QToolBar(pMainWindow);
 
+        res->setObjectName(pName+"Toolbar");
+        // Note: the object name must be set for QMainWindow::saveState() to
+        //       work properly...
+
         OpenCOR::toolbars.insert(pName, res);
     }
 
@@ -496,6 +513,17 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
     res->setVisible(pVisible);
 
     return res;
+}
+
+void GuiInterface::connectToolBarToToolBarAction(QToolBar *pToolbar,
+                                                 QAction *pToolbarAction)
+{
+    // Setup the action for the toolbar, so we can show/hide it at will
+
+    connect(pToolbarAction, SIGNAL(triggered(bool)),
+            pToolbar, SLOT(setVisible(bool)));
+    connect(pToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
+            pToolbarAction, SLOT(setChecked(bool)));
 }
 
 void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)

@@ -139,5 +139,13 @@
         <source>Ctrl+A</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation>Éditer</translation>
+    </message>
+    <message>
+        <source>Show/hide the Edit toolbar</source>
+        <translation>Montrer/cacher la barre d&apos;outils Éditer</translation>
+    </message>
 </context>
 </TS>

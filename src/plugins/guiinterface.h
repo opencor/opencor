@@ -26,7 +26,7 @@ class GuiCoreSettings
 public:
     explicit GuiCoreSettings(Core::CentralWidget *pCentralWidget);
 
-    Core::CentralWidget *centralWidget() const;
+    Core::CentralWidget * centralWidget() const;
 
 private:
     Core::CentralWidget *mCentralWidget;
@@ -38,8 +38,8 @@ public:
     explicit GuiHelpSettings(QAction *pHelpAction,
                              Core::DockWidget *pHelpWindow);
 
-    QAction *helpAction() const;
-    Core::DockWidget *helpWindow() const;
+    QAction * helpAction() const;
+    Core::DockWidget * helpWindow() const;
 
 private:
     QAction *mHelpAction;
@@ -58,7 +58,7 @@ public:
                              QMenu *pMenu);
 
     GuiMenuSettingsType type() const;
-    QMenu *menu() const;
+    QMenu * menu() const;
 
 private:
     GuiMenuSettingsType mType;
@@ -77,7 +77,7 @@ public:
                                    QAction *pAction);
 
     GuiMenuActionSettingsType type() const;
-    QAction *action() const;
+    QAction * action() const;
 
 private:
     GuiMenuActionSettingsType mType;
@@ -88,14 +88,16 @@ class GuiToolBarSettings
 {
 public:
     explicit GuiToolBarSettings(const Qt::ToolBarArea &pDefaultDockingArea,
-                                QToolBar *pToolbar);
+                                QToolBar *pToolbar, QAction *pToolbarAction);
 
     Qt::ToolBarArea defaultDockingArea() const;
-    QToolBar *toolbar() const;
+    QToolBar * toolbar() const;
+    QAction * toolbarAction() const;
 
 private:
     Qt::ToolBarArea mDefaultDockingArea;
     QToolBar *mToolbar;
+    QAction *mToolbarAction;
 };
 
 class GuiViewSettings
@@ -132,7 +134,7 @@ public:
                                Core::DockWidget *pWindow);
 
     Qt::DockWidgetArea defaultDockingArea() const;
-    Core::DockWidget *window() const;
+    Core::DockWidget * window() const;
 
 private:
     Qt::DockWidgetArea mDefaultDockingArea;
@@ -149,7 +151,7 @@ public:
     void addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
                        QAction *pAction = 0);
     void addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
-                    QToolBar *pToolbar);
+                    QToolBar *pToolbar, QAction *pToolbarAction);
     void addView(const GuiViewSettings::Mode &pMode);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow);
@@ -187,6 +189,9 @@ public:
 
     void setParameters(const QList<Plugin *> &pLoadedPlugins,
                        QMainWindow *pMainWindow);
+
+    static void connectToolBarToToolBarAction(QToolBar *pToolbar,
+                                              QAction *pToolbarAction);
 
 protected:
     QMainWindow *mMainWindow;

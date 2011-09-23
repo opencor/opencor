@@ -8,7 +8,7 @@ namespace CoreEditing {
 
 PLUGININFO_FUNC CoreEditingPluginInfo();
 
-static const QString EditMenu = "Edit";
+static const QString EditGroup = "edit";
 
 class CoreEditingPlugin : public GuiInterface
 {
@@ -26,7 +26,9 @@ protected:
 
 private:
     QMenu *mEditMenu;
+
     QToolBar *mEditToolbar;
+    QAction *mEditToolbarAction;
 
     QAction *mEditUndo;
     QAction *mEditRedo;

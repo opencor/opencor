@@ -98,5 +98,13 @@
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>
+    <message>
+        <source>File</source>
+        <translation>Fichier</translation>
+    </message>
+    <message>
+        <source>Show/hide the File toolbar</source>
+        <translation>Montrer/cacher la barre d&apos;outils Fichier</translation>
+    </message>
 </context>
 </TS>

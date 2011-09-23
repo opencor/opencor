@@ -68,10 +68,8 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Some connections to handle our Help toolbar
 
-    connect(mUi->actionHelpToolbar, SIGNAL(triggered(bool)),
-            mUi->helpToolbar, SLOT(setVisible(bool)));
-    connect(mUi->helpToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-            mUi->actionHelpToolbar, SLOT(setChecked(bool)));
+    GuiInterface::connectToolBarToToolBarAction(mUi->helpToolbar,
+                                                mUi->actionHelpToolbar);
 
     // A connection to handle the status bar
 
@@ -307,12 +305,19 @@ void MainWindow::initializePlugin(GuiInterface *pGuiInterface)
         }
     }
 
-    // Add the toolbars
+    // Add the toolbars (including to the View|Toolbars menu)
 
     foreach (GuiToolBarSettings *toolbarSettings,
-             pGuiInterface->guiSettings()->toolbars())
+             pGuiInterface->guiSettings()->toolbars()) {
+        // Add the toolbar itself
+
         addToolBar(toolbarSettings->defaultDockingArea(),
                    toolbarSettings->toolbar());
+
+        // Add a toolbar show/hide menu to the View|Toolbars menu
+
+        mUi->menuToolbars->addAction(toolbarSettings->toolbarAction());
+    }
 }
 
 static const QString SettingsLocale              = "Locale";
