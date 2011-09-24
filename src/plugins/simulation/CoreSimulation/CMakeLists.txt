@@ -8,11 +8,11 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(CoreSimulation
     SOURCES
-        ../../plugininterface.cpp
+        ../../coreinterface.cpp
 
         src/coresimulationplugin.cpp
     HEADERS
-        ../../plugininterface.h
+        ../../coreinterface.h
     HEADERS_MOC
         src/coresimulationplugin.h
     PLUGIN_INCLUDE_DIRS

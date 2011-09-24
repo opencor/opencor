@@ -1,7 +1,7 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include "plugininterface.h"
+#include "coreinterface.h"
 
 #include <QMap>
 #include <QObject>
@@ -29,12 +29,12 @@ public:
 
     QSettings * settings() const;
 
-    PluginInterface::Version interfaceVersion() const;
+    CoreInterface::Version interfaceVersion() const;
 
 private:
     QSettings *mSettings;
 
-    PluginInterface::Version mInterfaceVersion;
+    CoreInterface::Version mInterfaceVersion;
     PluginInfo::Type mGuiOrConsoleType;
 
     QString mPluginsDir;

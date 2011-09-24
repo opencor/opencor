@@ -1,7 +1,7 @@
 #ifndef APIINTERFACE_H
 #define APIINTERFACE_H
 
-#include "plugininterface.h"
+#include "coreinterface.h"
 
 #include <QMap>
 #include <QStringList>
@@ -24,7 +24,7 @@ private:
     Descriptions mDescriptions;
 };
 
-class ApiInterface : public PluginInterface
+class ApiInterface : public CoreInterface
 {
 public:
     virtual QList<FileType> fileTypes() const;

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+QT_LIBRARY_PATH=`which qmake | sed -e 's/bin\/qmake/lib/' -e 's/\//\\\\\//g'`
+
 if [ $# -le 1 ]; then
     if [ $# -eq 1 ]; then
         if [ -d $1 ]; then
@@ -13,7 +15,7 @@ if [ $# -le 1 ]; then
         FILES=.
     fi
 
-    otool -L `du -a $FILES | awk '{ print $2 }'` 2> /dev/null | grep '\.framework/Versions/4/.*compatibility' | sed -e 's/^.*\.framework\/Versions\/4\///' -e 's/ .*$//' | sort -u
+    otool -L `du -a $FILES | awk '{ print $2 }'` 2> /dev/null | grep $QT_LIBRARY_PATH | sed -e 's/^.*'$QT_LIBRARY_PATH'\///' -e 's/^.*\.framework\/Versions\/4\///' -e 's/ .*$//' | sort -u
 else
     echo "Usage: `basename $0` [<FileNameOrFolderName>]"
 fi

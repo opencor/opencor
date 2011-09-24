@@ -13,7 +13,7 @@ static const QString EditGroup = "Edit";
 class CoreEditingPlugin : public GuiInterface
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
 
 public:

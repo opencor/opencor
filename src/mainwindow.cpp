@@ -109,18 +109,18 @@ MainWindow::MainWindow(QWidget *pParent) :
             // The plugin doesn't implement our GUI interface, so let's see
             // whether it implements our default interface
 
-            PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+            CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-            if (pluginInterface) {
+            if (coreInterface) {
                 // The plugin implements our default interface, so...
 
                 // Set a few parameters for the plugin
 
-                pluginInterface->setParameters(loadedPlugins);
+                coreInterface->setParameters(loadedPlugins);
 
                 // Initialise the plugin
 
-                pluginInterface->initialize();
+                coreInterface->initialize();
             }
         }
     }
@@ -170,12 +170,12 @@ MainWindow::~MainWindow()
     //       other interface, so...
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-        if (pluginInterface)
+        if (coreInterface)
             // The plugin implements our default interface, so...
 
-            pluginInterface->finalize();
+            coreInterface->finalize();
     }
 
     // Delete some internal objects

@@ -9,14 +9,14 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 ADD_PLUGIN(FileOrganiser
     SOURCES
         ../../guiinterface.cpp
-        ../../plugininterface.cpp
+        ../../coreinterface.cpp
 
         src/fileorganiserplugin.cpp
         src/fileorganiserwidget.cpp
         src/fileorganiserwindow.cpp
     HEADERS
         ../../guiinterface.h
-        ../../plugininterface.h
+        ../../coreinterface.h
     HEADERS_MOC
         src/fileorganiserplugin.h
         src/fileorganiserwidget.h

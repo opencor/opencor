@@ -9,12 +9,12 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 ADD_PLUGIN(RawCellMLView
     SOURCES
         ../../guiinterface.cpp
-        ../../plugininterface.cpp
+        ../../coreinterface.cpp
 
         src/rawcellmlviewplugin.cpp
     HEADERS
         ../../guiinterface.h
-        ../../plugininterface.h
+        ../../coreinterface.h
     HEADERS_MOC
         src/rawcellmlviewplugin.h
     PLUGIN_INCLUDE_DIRS

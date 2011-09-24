@@ -11,7 +11,7 @@ ADD_PLUGIN(Core
         ../../apiinterface.cpp
         ../../guiinterface.cpp
         ../../plugin.cpp
-        ../../plugininterface.cpp
+        ../../coreinterface.cpp
 
         src/centralwidget.cpp
         src/commonwidget.cpp
@@ -24,7 +24,7 @@ ADD_PLUGIN(Core
     HEADERS
         ../../apiinterface.h
         ../../guiinterface.h
-        ../../plugininterface.h
+        ../../coreinterface.h
 
         src/commonwidget.h
         src/coreglobal.h

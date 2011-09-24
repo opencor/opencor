@@ -8,11 +8,11 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(CoreCellMLEditing
     SOURCES
-        ../../plugininterface.cpp
+        ../../coreinterface.cpp
 
         src/corecellmleditingplugin.cpp
     HEADERS
-        ../../plugininterface.h
+        ../../coreinterface.h
     HEADERS_MOC
         src/corecellmleditingplugin.h
     PLUGIN_INCLUDE_DIRS

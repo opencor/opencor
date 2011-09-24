@@ -8,12 +8,12 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(QtMmlWidget
     SOURCES
-        ../../plugininterface.cpp
+        ../../coreinterface.cpp
 
         src/qtmmlwidget.cpp
         src/qtmmlwidgetplugin.cpp
     HEADERS
-        ../../plugininterface.h
+        ../../coreinterface.h
 
         src/qtmmlwidget.h
     HEADERS_MOC

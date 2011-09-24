@@ -1,7 +1,7 @@
 #ifndef CORECELLMLEDITINGPLUGIN_H
 #define CORECELLMLEDITINGPLUGIN_H
 
-#include "plugininterface.h"
+#include "coreinterface.h"
 
 namespace OpenCOR {
 namespace CoreCellMLEditing {

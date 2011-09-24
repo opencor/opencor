@@ -1,7 +1,7 @@
 #ifndef PLUGINSWINDOW_H
 #define PLUGINSWINDOW_H
 
-#include "plugininterface.h"
+#include "coreinterface.h"
 
 #include <QDialog>
 #include <QStyledItemDelegate>
@@ -61,7 +61,7 @@ private:
     void newPluginCategory(const PluginInfo::Category &pCategory,
                            const QString &pName);
 
-    QString toString(const PluginInterface::Version &pInterfaceVersion) const;
+    QString toString(const CoreInterface::Version &pInterfaceVersion) const;
     QString statusDescription(Plugin *pPlugin) const;
 
 private slots:

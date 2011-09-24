@@ -1,5 +1,5 @@
-#ifndef PLUGININTERFACE_H
-#define PLUGININTERFACE_H
+#ifndef COREINTERFACE_H
+#define COREINTERFACE_H
 
 #include <QtPlugin>
 
@@ -14,7 +14,7 @@ static const QString FrenchLocale  = "fr";
 
 class Plugin;
 
-class PluginInterface : public QObject
+class CoreInterface : public QObject
 {
 public:
     enum Version
@@ -60,14 +60,14 @@ public:
         ThirdParty
     };
 
-    explicit PluginInfo(const PluginInterface::Version &pInterfaceVersion = PluginInterface::Undefined,
+    explicit PluginInfo(const CoreInterface::Version &pInterfaceVersion = CoreInterface::Undefined,
                         const Type &pType = Undefined,
                         const Category &pCategory = Application,
                         const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
                         const Descriptions &pDescriptions = Descriptions());
 
-    PluginInterface::Version interfaceVersion() const;
+    CoreInterface::Version interfaceVersion() const;
     Type type() const;
     Category category() const;
     bool manageable() const;
@@ -76,7 +76,7 @@ public:
     QString description(const QString &pLocale = EnglishLocale) const;
 
 private:
-    PluginInterface::Version mInterfaceVersion;
+    CoreInterface::Version mInterfaceVersion;
     Type mType;
     Category mCategory;
     bool mManageable;
@@ -89,6 +89,6 @@ QString description(const Descriptions &pDescriptions, const QString &pLocale);
 
 }
 
-Q_DECLARE_INTERFACE(OpenCOR::PluginInterface, "OpenCOR.PluginInterface")
+Q_DECLARE_INTERFACE(OpenCOR::CoreInterface, "OpenCOR.CoreInterface")
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef QTMMLWIDGETPLUGIN_H
 #define QTMMLWIDGETPLUGIN_H
 
-#include "plugininterface.h"
+#include "coreinterface.h"
 
 namespace OpenCOR {
 namespace QtMmlWidget {

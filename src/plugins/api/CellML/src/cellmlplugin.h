@@ -1,7 +1,7 @@
 #ifndef CELLMLPLUGIN_H
 #define CELLMLPLUGIN_H
 
-#include "plugininterface.h"
+#include "coreinterface.h"
 #include "apiinterface.h"
 
 namespace OpenCOR {
@@ -12,7 +12,7 @@ PLUGININFO_FUNC CellMLPluginInfo();
 class CellMLPlugin : public ApiInterface
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::ApiInterface)
 
 public:

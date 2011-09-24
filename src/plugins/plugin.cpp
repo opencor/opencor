@@ -11,7 +11,7 @@ namespace OpenCOR {
 Plugin::Plugin(const QString &pFileName,
                const PluginInfo::Type &pGuiOrConsoleType,
                const bool &pForceLoading,
-               const PluginInterface::Version &pExpectedInterfaceVersion,
+               const CoreInterface::Version &pExpectedInterfaceVersion,
                QSettings *pSettings, const QString &pPluginsDir,
                const QMap<QString, Plugin *> &pMappedPlugins) :
     mName(name(pFileName)),

@@ -1,25 +1,25 @@
-#include "plugininterface.h"
+#include "coreinterface.h"
 
 namespace OpenCOR {
 
-void PluginInterface::initialize()
+void CoreInterface::initialize()
 {
     // Nothing to do by default...
 }
 
-void PluginInterface::finalize()
+void CoreInterface::finalize()
 {
     // Nothing to do by default...
 }
 
-void PluginInterface::setParameters(const QList<Plugin *> &pLoadedPlugins)
+void CoreInterface::setParameters(const QList<Plugin *> &pLoadedPlugins)
 {
     // Set the loaded plugins
 
     mLoadedPlugins = pLoadedPlugins;
 }
 
-PluginInfo::PluginInfo(const PluginInterface::Version &pInterfaceVersion,
+PluginInfo::PluginInfo(const CoreInterface::Version &pInterfaceVersion,
                        const Type &pType, const Category &pCategory,
                        const bool &pManageable,
                        const QStringList &pDependencies,
@@ -34,7 +34,7 @@ PluginInfo::PluginInfo(const PluginInterface::Version &pInterfaceVersion,
 {
 }
 
-PluginInterface::Version PluginInfo::interfaceVersion() const
+CoreInterface::Version PluginInfo::interfaceVersion() const
 {
     // Return the interface version used by the plugin
 

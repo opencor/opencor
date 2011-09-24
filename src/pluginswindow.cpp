@@ -209,17 +209,17 @@ void PluginsWindow::retranslateUi()
     mUi->retranslateUi(this);
 }
 
-QString PluginsWindow::toString(const PluginInterface::Version &pInterfaceVersion) const
+QString PluginsWindow::toString(const CoreInterface::Version &pInterfaceVersion) const
 {
     // Return the passed interface version as a string
-    // Note: ideally, this function would be part of the PluginInterface class,
+    // Note: ideally, this function would be part of the CoreInterface class,
     //       but this class is used by all the plugins and because this method
     //       requires a translation, well... we can't have it there since a
     //       translation will otherwise be required for each plugin, so...
     //       another solution is to have it here...
 
     switch (pInterfaceVersion) {
-    case PluginInterface::V001:
+    case CoreInterface::V001:
         return tr("Version 001");
     default:
         return tr("Unknown version");

@@ -1,7 +1,7 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
-#include "plugininterface.h"
+#include "coreinterface.h"
 
 #include <QObject>
 
@@ -45,7 +45,7 @@ public:
     explicit Plugin(const QString &pFileName,
                     const PluginInfo::Type &pGuiOrConsoleType,
                     const bool &pForceLoading,
-                    const PluginInterface::Version &pExpectedInterfaceVersion,
+                    const CoreInterface::Version &pExpectedInterfaceVersion,
                     QSettings *pSettings, const QString &pPluginsDir,
                     const QMap<QString, Plugin *> &pMappedPlugins);
 

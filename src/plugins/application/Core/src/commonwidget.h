@@ -45,11 +45,9 @@ protected:
 
     virtual void updateActions();
 
-#ifndef OpenCOR_MAIN
     void drawBorderIfDocked(const bool &pForceDrawing = false,
                             const bool &pTop = true, const bool &pLeft = true,
                             const bool &pBottom = true, const bool &pRight = true);
-#endif
 
 private:
     QWidget *mParent;

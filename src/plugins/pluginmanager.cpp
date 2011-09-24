@@ -1,5 +1,5 @@
 #include "plugin.h"
-#include "plugininterface.h"
+#include "coreinterface.h"
 #include "pluginmanager.h"
 
 #include <QApplication>
@@ -10,7 +10,7 @@ namespace OpenCOR {
 PluginManager::PluginManager(QSettings *pSettings,
                              const PluginInfo::Type &pGuiOrConsoleType) :
     mSettings(pSettings),
-    mInterfaceVersion(PluginInterface::V001),
+    mInterfaceVersion(CoreInterface::V001),
     mGuiOrConsoleType(pGuiOrConsoleType)
 {
     mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
@@ -146,7 +146,7 @@ Plugin * PluginManager::plugin(const QString &pName) const
     return mPlugins.value(pName);
 }
 
-PluginInterface::Version PluginManager::interfaceVersion() const
+CoreInterface::Version PluginManager::interfaceVersion() const
 {
     // Return the interface version used by the plugin manager
 

@@ -1,7 +1,7 @@
 #ifndef GUIINTERFACE_H
 #define GUIINTERFACE_H
 
-#include "plugininterface.h"
+#include "coreinterface.h"
 
 #include <QTranslator>
 
@@ -170,7 +170,7 @@ private:
     QList<GuiWindowSettings *> mWindows;
 };
 
-class GuiInterface : public PluginInterface
+class GuiInterface : public CoreInterface
 {
 public:
     explicit GuiInterface(const QString &pPluginName);
