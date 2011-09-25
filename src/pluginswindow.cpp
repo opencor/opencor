@@ -209,17 +209,17 @@ void PluginsWindow::retranslateUi()
     mUi->retranslateUi(this);
 }
 
-QString PluginsWindow::toString(const CoreInterface::Version &pInterfaceVersion) const
+QString PluginsWindow::toString(const PluginInfo::Version &pVersion) const
 {
-    // Return the passed interface version as a string
+    // Return the passed version as a string
     // Note: ideally, this function would be part of the CoreInterface class,
     //       but this class is used by all the plugins and because this method
     //       requires a translation, well... we can't have it there since a
     //       translation will otherwise be required for each plugin, so...
     //       another solution is to have it here...
 
-    switch (pInterfaceVersion) {
-    case CoreInterface::V001:
+    switch (pVersion) {
+    case PluginInfo::V001:
         return tr("Version 001");
     default:
         return tr("Unknown version");
@@ -233,11 +233,11 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     switch (pPlugin->status()) {
     case Plugin::NotFound:
         return tr("The %1 plugin could not be found").arg(pPlugin->name());
-    case Plugin::IncompatibleInterfaceVersion:
-        return tr("The version of the interface used by the %1 plugin (%2) is not compatible with that of %3 (%4)").arg(pPlugin->name(),
-                                                                                                                        toString(pPlugin->info().interfaceVersion()),
-                                                                                                                        qApp->applicationName(),
-                                                                                                                        toString(mPluginManager->interfaceVersion()));
+    case Plugin::IncompatibleVersion:
+        return tr("The version used by the %1 plugin (%2) is not compatible with that of %3 (%4)").arg(pPlugin->name(),
+                                                                                                       toString(pPlugin->info().version()),
+                                                                                                       qApp->applicationName(),
+                                                                                                       toString(mPluginManager->version()));
     case Plugin::NotSuitable:
         return tr("The %1 plugin is not of the right type").arg(pPlugin->name());
     case Plugin::NotWanted:

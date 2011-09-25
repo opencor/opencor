@@ -11,7 +11,7 @@ namespace OpenCOR {
 Plugin::Plugin(const QString &pFileName,
                const PluginInfo::Type &pGuiOrConsoleType,
                const bool &pForceLoading,
-               const CoreInterface::Version &pExpectedInterfaceVersion,
+               const PluginInfo::Version &pExpectedVersion,
                QSettings *pSettings, const QString &pPluginsDir,
                const QMap<QString, Plugin *> &pMappedPlugins) :
     mName(name(pFileName)),
@@ -33,12 +33,11 @@ Plugin::Plugin(const QString &pFileName,
 
         mInfo.mFullDependencies << requiredPlugins(pPluginsDir, mName);
 
-        // Try to load the plugin, but only if it uses the right plugin
-        // interface version, if it is either a general plugin or one of the
-        // type we are happy with, and if it is manageable or is required by
-        // another plugin
+        // Try to load the plugin, but only if it uses the right plugin version,
+        // if it is either a general plugin or one of the type we are happy
+        // with, and if it is manageable or is required by another plugin
 
-        if (    (mInfo.interfaceVersion() == pExpectedInterfaceVersion)
+        if (    (mInfo.version() == pExpectedVersion)
             && (   (mInfo.type() == PluginInfo::General)
                 || (mInfo.type() == pGuiOrConsoleType))
             && (   (mInfo.manageable() && load(pSettings, mName))
@@ -109,7 +108,7 @@ Plugin::Plugin(const QString &pFileName,
 #ifndef Q_WS_WIN
             }
 #endif
-        } else if (mInfo.type() == PluginInfo::Undefined) {
+        } else if (mInfo.type() == PluginInfo::UndefinedType) {
             // We couldn't retrieve the plugin information which means that we
             // are not dealing with an OpenCOR plugin or that one or several of
             // the plugin's dependencies weren't loaded, so...
@@ -119,11 +118,11 @@ Plugin::Plugin(const QString &pFileName,
 #else
             mStatus = NotPlugin;
 #endif
-        } else if (mInfo.interfaceVersion() != pExpectedInterfaceVersion) {
-            // We are dealing with a plugin which relies on a different version
-            // of the interface, so...
+        } else if (mInfo.version() != pExpectedVersion) {
+            // We are dealing with a plugin which relies on a different version,
+            // so...
 
-            mStatus = IncompatibleInterfaceVersion;
+            mStatus = IncompatibleVersion;
         } else if (   (mInfo.type() != PluginInfo::General)
                    && (mInfo.type() != pGuiOrConsoleType)) {
             // We are dealing with a plugin which is not of the type we are

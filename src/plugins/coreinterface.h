@@ -17,12 +17,6 @@ class Plugin;
 class CoreInterface : public QObject
 {
 public:
-    enum Version
-    {
-        Undefined,
-        V001
-    };
-
     virtual void initialize();
     virtual void finalize();
 
@@ -41,9 +35,15 @@ class PluginInfo
     friend class Plugin;
 
 public:
+    enum Version
+    {
+        UndefinedVersion,
+        V001
+    };
+
     enum Type
     {
-        Undefined,
+        UndefinedType,
         General,
         Console,
         Gui
@@ -60,14 +60,14 @@ public:
         ThirdParty
     };
 
-    explicit PluginInfo(const CoreInterface::Version &pInterfaceVersion = CoreInterface::Undefined,
-                        const Type &pType = Undefined,
+    explicit PluginInfo(const Version &pVersion = UndefinedVersion,
+                        const Type &pType = UndefinedType,
                         const Category &pCategory = Application,
                         const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
                         const Descriptions &pDescriptions = Descriptions());
 
-    CoreInterface::Version interfaceVersion() const;
+    Version version() const;
     Type type() const;
     Category category() const;
     bool manageable() const;
@@ -76,7 +76,7 @@ public:
     QString description(const QString &pLocale = EnglishLocale) const;
 
 private:
-    CoreInterface::Version mInterfaceVersion;
+    Version mVersion;
     Type mType;
     Category mCategory;
     bool mManageable;

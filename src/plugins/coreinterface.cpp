@@ -19,12 +19,11 @@ void CoreInterface::setParameters(const QList<Plugin *> &pLoadedPlugins)
     mLoadedPlugins = pLoadedPlugins;
 }
 
-PluginInfo::PluginInfo(const CoreInterface::Version &pInterfaceVersion,
-                       const Type &pType, const Category &pCategory,
-                       const bool &pManageable,
+PluginInfo::PluginInfo(const Version &pVersion, const Type &pType,
+                       const Category &pCategory, const bool &pManageable,
                        const QStringList &pDependencies,
                        const Descriptions &pDescriptions) :
-    mInterfaceVersion(pInterfaceVersion),
+    mVersion(pVersion),
     mType(pType),
     mCategory(pCategory),
     mManageable(pManageable),
@@ -34,11 +33,11 @@ PluginInfo::PluginInfo(const CoreInterface::Version &pInterfaceVersion,
 {
 }
 
-CoreInterface::Version PluginInfo::interfaceVersion() const
+PluginInfo::Version PluginInfo::version() const
 {
-    // Return the interface version used by the plugin
+    // Return the version used by the plugin
 
-    return mInterfaceVersion;
+    return mVersion;
 }
 
 PluginInfo::Type PluginInfo::type() const

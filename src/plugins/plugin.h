@@ -31,7 +31,7 @@ public:
     {
         Undefined,
         NotFound,
-        IncompatibleInterfaceVersion,
+        IncompatibleVersion,
         NotSuitable,
         NotWanted,
         NotNeeded,
@@ -45,7 +45,7 @@ public:
     explicit Plugin(const QString &pFileName,
                     const PluginInfo::Type &pGuiOrConsoleType,
                     const bool &pForceLoading,
-                    const CoreInterface::Version &pExpectedInterfaceVersion,
+                    const PluginInfo::Version &pExpectedVersion,
                     QSettings *pSettings, const QString &pPluginsDir,
                     const QMap<QString, Plugin *> &pMappedPlugins);
 

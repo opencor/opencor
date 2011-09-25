@@ -10,7 +10,7 @@ PLUGININFO_FUNC CoreSimulationPluginInfo()
     descriptions.insert("en", "The core simulation plugin for OpenCOR");
     descriptions.insert("fr", "L'extension de simulation de base pour OpenCOR");
 
-    return PluginInfo(CoreInterface::V001,
+    return PluginInfo(PluginInfo::V001,
                       PluginInfo::Gui,
                       PluginInfo::Simulation,
                       false,

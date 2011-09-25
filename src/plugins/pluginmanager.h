@@ -29,12 +29,12 @@ public:
 
     QSettings * settings() const;
 
-    CoreInterface::Version interfaceVersion() const;
+    PluginInfo::Version version() const;
 
 private:
     QSettings *mSettings;
 
-    CoreInterface::Version mInterfaceVersion;
+    PluginInfo::Version mVersion;
     PluginInfo::Type mGuiOrConsoleType;
 
     QString mPluginsDir;

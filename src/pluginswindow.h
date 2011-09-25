@@ -61,7 +61,7 @@ private:
     void newPluginCategory(const PluginInfo::Category &pCategory,
                            const QString &pName);
 
-    QString toString(const CoreInterface::Version &pInterfaceVersion) const;
+    QString toString(const PluginInfo::Version &pVersion) const;
     QString statusDescription(Plugin *pPlugin) const;
 
 private slots:

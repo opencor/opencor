@@ -229,10 +229,6 @@
         <translation>L&apos;extension %1 n&apos;a pas été trouvée</translation>
     </message>
     <message>
-        <source>The version of the interface used by the %1 plugin (%2) is not compatible with that of %3 (%4)</source>
-        <translation>La version de l&apos;interface utilisée par l&apos;extension %1 (%2) n&apos;est pas compatible avec celle d&apos;%3 (%4)</translation>
-    </message>
-    <message>
         <source>The %1 plugin is not of the right type</source>
         <translation>L&apos;extension %1 n&apos;est pas du bon type</translation>
     </message>
@@ -275,6 +271,10 @@
     <message>
         <source>The status of the %1 plugin status is undefined</source>
         <translation>Le statut de l&apos;extension %1 est indéfini</translation>
+    </message>
+    <message>
+        <source>The version used by the %1 plugin (%2) is not compatible with that of %3 (%4)</source>
+        <translation>La version utilisée par l&apos;extension %1 (%2) n&apos;est pas compatible avec celle d&apos;%3 (%4)</translation>
     </message>
 </context>
 <context>

@@ -10,7 +10,7 @@ namespace OpenCOR {
 PluginManager::PluginManager(QSettings *pSettings,
                              const PluginInfo::Type &pGuiOrConsoleType) :
     mSettings(pSettings),
-    mInterfaceVersion(CoreInterface::V001),
+    mVersion(PluginInfo::V001),
     mGuiOrConsoleType(pGuiOrConsoleType)
 {
     mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
@@ -89,7 +89,7 @@ PluginManager::PluginManager(QSettings *pSettings,
         mPlugins.insert(Plugin::name(fileName),
                         new Plugin(fileName, mGuiOrConsoleType,
                                    plugins.contains(Plugin::name(fileName)),
-                                   interfaceVersion(), settings(), pluginsDir(),
+                                   version(), settings(), pluginsDir(),
                                    mappedPlugins()));
 }
 
@@ -146,11 +146,11 @@ Plugin * PluginManager::plugin(const QString &pName) const
     return mPlugins.value(pName);
 }
 
-CoreInterface::Version PluginManager::interfaceVersion() const
+PluginInfo::Version PluginManager::version() const
 {
-    // Return the interface version used by the plugin manager
+    // Return the version used by the plugin manager
 
-    return mInterfaceVersion;
+    return mVersion;
 }
 
 QSettings * PluginManager::settings() const
