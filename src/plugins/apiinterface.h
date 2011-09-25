@@ -2,6 +2,7 @@
 #define APIINTERFACE_H
 
 #include "coreinterface.h"
+#include "plugininfo.h"
 
 #include <QMap>
 #include <QStringList>

@@ -9,6 +9,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 ADD_PLUGIN(QScintilla
     SOURCES
         ../../coreinterface.cpp
+        ../../plugininfo.cpp
 
         lexers/LexCPP.cpp
         lexers/LexCSS.cpp
@@ -70,6 +71,7 @@ ADD_PLUGIN(QScintilla
         src/XPM.cpp
     HEADERS
         ../../coreinterface.h
+        ../../plugininfo.h
 
         include/ILexer.h
         include/Platform.h

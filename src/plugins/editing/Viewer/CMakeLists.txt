@@ -10,6 +10,7 @@ ADD_PLUGIN(Viewer
     SOURCES
         ../../guiinterface.cpp
         ../../coreinterface.cpp
+        ../../plugininfo.cpp
 
         src/mmlviewerwidget.cpp
         src/viewerplugin.cpp
@@ -17,6 +18,7 @@ ADD_PLUGIN(Viewer
     HEADERS
         ../../guiinterface.h
         ../../coreinterface.h
+        ../../plugininfo.h
     HEADERS_MOC
         src/mmlviewerwidget.h
         src/viewerplugin.h

@@ -2,6 +2,7 @@
 #define PLUGINSWINDOW_H
 
 #include "coreinterface.h"
+#include "plugininfo.h"
 
 #include <QDialog>
 #include <QStyledItemDelegate>

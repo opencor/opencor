@@ -10,6 +10,7 @@ ADD_PLUGIN(CellMLModelRepository
     SOURCES
         ../../guiinterface.cpp
         ../../coreinterface.cpp
+        ../../plugininfo.cpp
 
         src/cellmlmodelrepositoryplugin.cpp
         src/cellmlmodelrepositorywidget.cpp
@@ -17,6 +18,7 @@ ADD_PLUGIN(CellMLModelRepository
     HEADERS
         ../../guiinterface.h
         ../../coreinterface.h
+        ../../plugininfo.h
     HEADERS_MOC
         src/cellmlmodelrepositoryplugin.h
         src/cellmlmodelrepositorywidget.h

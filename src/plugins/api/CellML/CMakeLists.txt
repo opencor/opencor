@@ -48,11 +48,13 @@ ADD_PLUGIN(CellML
     SOURCES
         ../../apiinterface.cpp
         ../../coreinterface.cpp
+        ../../plugininfo.cpp
 
         src/cellmlplugin.cpp
     HEADERS
         ../../apiinterface.h
         ../../coreinterface.h
+        ../../plugininfo.h
 
         ${CELLML_HEADERS_DIR}/AnnoToolsBootstrap.hpp
         ${CELLML_HEADERS_DIR}/CCGSBootstrap.hpp

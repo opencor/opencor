@@ -2,6 +2,7 @@
 #define VIEWERPLUGIN_H
 
 #include "guiinterface.h"
+#include "plugininfo.h"
 
 namespace OpenCOR {
 namespace Viewer {

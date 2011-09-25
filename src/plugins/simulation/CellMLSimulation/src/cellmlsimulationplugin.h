@@ -2,6 +2,7 @@
 #define CELLMLSIMULATIONPLUGIN_H
 
 #include "guiinterface.h"
+#include "plugininfo.h"
 
 namespace OpenCOR {
 namespace CellMLSimulation {

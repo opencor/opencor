@@ -2,6 +2,7 @@
 #define CORECELLMLEDITINGPLUGIN_H
 
 #include "coreinterface.h"
+#include "plugininfo.h"
 
 namespace OpenCOR {
 namespace CoreCellMLEditing {

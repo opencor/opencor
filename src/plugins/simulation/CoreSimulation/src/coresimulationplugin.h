@@ -2,6 +2,7 @@
 #define CORESIMULATIONPLUGIN_H
 
 #include "coreinterface.h"
+#include "plugininfo.h"
 
 namespace OpenCOR {
 namespace CoreSimulation {

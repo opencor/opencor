@@ -2,6 +2,7 @@
 #define HELPPLUGIN_H
 
 #include "guiinterface.h"
+#include "plugininfo.h"
 
 namespace OpenCOR {
 namespace Help {

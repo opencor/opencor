@@ -10,11 +10,13 @@ ADD_PLUGIN(CoreEditing
     SOURCES
         ../../guiinterface.cpp
         ../../coreinterface.cpp
+        ../../plugininfo.cpp
 
         src/coreeditingplugin.cpp
     HEADERS
         ../../guiinterface.h
         ../../coreinterface.h
+        ../../plugininfo.h
     HEADERS_MOC
         src/coreeditingplugin.h
     PLUGIN_INCLUDE_DIRS

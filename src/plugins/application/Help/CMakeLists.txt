@@ -10,6 +10,7 @@ ADD_PLUGIN(Help
     SOURCES
         ../../guiinterface.cpp
         ../../coreinterface.cpp
+        ../../plugininfo.cpp
 
         src/helpplugin.cpp
         src/helpwidget.cpp
@@ -17,6 +18,7 @@ ADD_PLUGIN(Help
     HEADERS
         ../../guiinterface.h
         ../../coreinterface.h
+        ../../plugininfo.h
     HEADERS_MOC
         src/helpplugin.h
         src/helpwidget.h

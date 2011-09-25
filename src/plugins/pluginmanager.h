@@ -2,6 +2,7 @@
 #define PLUGINMANAGER_H
 
 #include "coreinterface.h"
+#include "plugininfo.h"
 
 #include <QMap>
 #include <QObject>

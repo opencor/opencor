@@ -1,7 +1,7 @@
 #ifndef QSCINTILLAPLUGIN_H
 #define QSCINTILLAPLUGIN_H
 
-#include "coreinterface.h"
+#include "plugininfo.h"
 
 namespace OpenCOR {
 namespace QScintilla {

@@ -10,11 +10,13 @@ ADD_PLUGIN(CellMLSimulation
     SOURCES
         ../../guiinterface.cpp
         ../../coreinterface.cpp
+        ../../plugininfo.cpp
 
         src/cellmlsimulationplugin.cpp
     HEADERS
         ../../guiinterface.h
         ../../coreinterface.h
+        ../../plugininfo.h
     HEADERS_MOC
         src/cellmlsimulationplugin.h
     PLUGIN_INCLUDE_DIRS

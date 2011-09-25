@@ -10,6 +10,7 @@ ADD_PLUGIN(FileBrowser
     SOURCES
         ../../guiinterface.cpp
         ../../coreinterface.cpp
+        ../../plugininfo.cpp
 
         src/filebrowserplugin.cpp
         src/filebrowserwidget.cpp
@@ -17,6 +18,7 @@ ADD_PLUGIN(FileBrowser
     HEADERS
         ../../guiinterface.h
         ../../coreinterface.h
+        ../../plugininfo.h
     HEADERS_MOC
         src/filebrowserplugin.h
         src/filebrowserwidget.h

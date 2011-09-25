@@ -10,6 +10,7 @@ ADD_PLUGIN(FileOrganiser
     SOURCES
         ../../guiinterface.cpp
         ../../coreinterface.cpp
+        ../../plugininfo.cpp
 
         src/fileorganiserplugin.cpp
         src/fileorganiserwidget.cpp
@@ -17,6 +18,7 @@ ADD_PLUGIN(FileOrganiser
     HEADERS
         ../../guiinterface.h
         ../../coreinterface.h
+        ../../plugininfo.h
     HEADERS_MOC
         src/fileorganiserplugin.h
         src/fileorganiserwidget.h

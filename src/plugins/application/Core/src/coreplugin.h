@@ -1,8 +1,8 @@
 #ifndef COREPLUGIN_H
 #define COREPLUGIN_H
 
-#include "guiinterface.h"
 #include "apiinterface.h"
+#include "guiinterface.h"
 
 #include <QDir>
 

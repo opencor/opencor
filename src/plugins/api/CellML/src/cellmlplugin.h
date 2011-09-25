@@ -1,8 +1,9 @@
 #ifndef CELLMLPLUGIN_H
 #define CELLMLPLUGIN_H
 
-#include "coreinterface.h"
 #include "apiinterface.h"
+#include "coreinterface.h"
+#include "plugininfo.h"
 
 namespace OpenCOR {
 namespace CellML {

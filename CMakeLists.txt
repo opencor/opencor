@@ -51,6 +51,7 @@ SET(SOURCES
     src/plugins/coreinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/plugin.cpp
+    src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
 )
 
@@ -61,6 +62,7 @@ SET(HEADERS
     src/plugins/apiinterface.h
     src/plugins/coreinterface.h
     src/plugins/guiinterface.h
+    src/plugins/plugininfo.h
 )
 
 SET(HEADERS_MOC

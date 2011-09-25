@@ -2,6 +2,7 @@
 #define RAWCELLMLVIEWPLUGIN_H
 
 #include "guiinterface.h"
+#include "plugininfo.h"
 
 namespace OpenCOR {
 namespace RawCellMLView {

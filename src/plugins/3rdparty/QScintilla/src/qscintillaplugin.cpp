@@ -1,5 +1,7 @@
 #include "qscintillaplugin.h"
 
+#include <QtPlugin>
+
 namespace OpenCOR {
 namespace QScintilla {
 

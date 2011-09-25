@@ -2,6 +2,7 @@
 #define PLUGIN_H
 
 #include "coreinterface.h"
+#include "plugininfo.h"
 
 #include <QObject>
 
