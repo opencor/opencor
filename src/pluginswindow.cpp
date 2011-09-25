@@ -262,7 +262,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
                    +pPlugin->statusErrors();
     case Plugin::NotPluginOrMissingDependencies:
         return tr("The %1 library is not a plugin or it is, but it could not be loaded due to a/some missing plugin/s").arg(pPlugin->name());
-    default:   // Plugin::Undefined
+    default:   // Plugin::UndefinedStatus
         return tr("The status of the %1 plugin status is undefined").arg(pPlugin->name());
     }
 }

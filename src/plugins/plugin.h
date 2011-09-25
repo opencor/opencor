@@ -29,7 +29,7 @@ class Plugin : public QObject
 public:
     enum Status
     {
-        Undefined,
+        UndefinedStatus,
         NotFound,
         IncompatibleVersion,
         NotSuitable,

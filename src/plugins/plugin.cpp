@@ -19,7 +19,7 @@ Plugin::Plugin(const QString &pFileName,
     //       the plugin prefix part from it...
     mInfo(),
     mInstance(0),
-    mStatus(Undefined)
+    mStatus(UndefinedStatus)
 {
     // Check whether the plugin physically exists
 
