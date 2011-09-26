@@ -1,8 +1,6 @@
 #ifndef APIINTERFACE_H
 #define APIINTERFACE_H
 
-#include "coreinterface.h"
-
 #include <QMap>
 #include <QStringList>
 
@@ -26,7 +24,7 @@ private:
     QString mFileExtension;
 };
 
-class ApiInterface : public CoreInterface
+class ApiInterface
 {
 public:
     virtual QList<FileType> fileTypes() const;

@@ -12,7 +12,7 @@ PLUGININFO_FUNC CellMLPluginInfo();
 
 static const QString CellmlMimeType = "application/cellml+xml";
 
-class CellMLPlugin : public ApiInterface, public I18nInterface
+class CellMLPlugin : public QObject, public ApiInterface, public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::ApiInterface)

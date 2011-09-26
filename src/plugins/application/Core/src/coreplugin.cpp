@@ -1,4 +1,3 @@
-#include "apiinterface.h"
 #include "centralwidget.h"
 #include "coreplugin.h"
 #include "plugin.h"

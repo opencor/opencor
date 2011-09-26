@@ -131,13 +131,12 @@ MainWindow::MainWindow(QWidget *pParent) :
 
         I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
 
-        if (i18nInterface) {
+        if (i18nInterface)
             // The plugin implements our internationalisation interface, so...
 
             // Keep track of some information
 
             i18nInterface->setPluginName(plugin->name());
-        }
     }
 
 #ifdef Q_WS_MAC
