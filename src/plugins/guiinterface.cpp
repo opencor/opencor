@@ -321,7 +321,7 @@ void GuiInterface::loadWindowSettings(QSettings *pSettings,
 void GuiInterface::loadSettings(QSettings *pSettings,
                                 const bool &pNeedDefaultSettings)
 {
-    if (!mPluginName.compare(CorePlugin)) {
+    if (!mGuiPluginName.compare(CorePlugin)) {
         // We are dealing with our special Core plugin
 
         if (mData) {
@@ -340,7 +340,7 @@ void GuiInterface::loadSettings(QSettings *pSettings,
 
             mMainWindow->setCentralWidget(centralWidget);
         }
-    } else if (!mPluginName.compare(HelpPlugin)) {
+    } else if (!mGuiPluginName.compare(HelpPlugin)) {
         // We are dealing with our special Help plugin
 
         if (mData)
@@ -364,7 +364,7 @@ void GuiInterface::loadSettings(QSettings *pSettings,
 
 void GuiInterface::saveSettings(QSettings *pSettings) const
 {
-    if (!mPluginName.compare(CorePlugin)) {
+    if (!mGuiPluginName.compare(CorePlugin)) {
         // We are dealing with our special Core plugin
 
         if (mData) {
@@ -377,7 +377,7 @@ void GuiInterface::saveSettings(QSettings *pSettings) const
                 centralWidget->saveSettings(pSettings);
             pSettings->endGroup();
         }
-    } else if (!mPluginName.compare(HelpPlugin)) {
+    } else if (!mGuiPluginName.compare(HelpPlugin)) {
         // We are dealing with our special Help plugin
 
         if (mData) {
@@ -424,11 +424,11 @@ void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
     mMainWindow = pMainWindow;
 }
 
-void GuiInterface::setPluginName(const QString &pPluginName)
+void GuiInterface::setGuiPluginName(const QString &pGuiPluginName)
 {
     // Set the name of the plugin
 
-    mPluginName = pPluginName;
+    mGuiPluginName = pGuiPluginName;
 }
 
 QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)

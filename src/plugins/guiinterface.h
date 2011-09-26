@@ -184,7 +184,7 @@ public:
     void * data() const;
 
     void setMainWindow(QMainWindow *pMainWindow);
-    void setPluginName(const QString &pPluginName);
+    void setGuiPluginName(const QString &pGuiPluginName);
 
     static void connectToolBarToToolBarAction(QToolBar *pToolbar,
                                               QAction *pToolbarAction);
@@ -212,7 +212,7 @@ protected:
                                   const QString &pShortcut = QString());
 
 private:
-    QString mPluginName;
+    QString mGuiPluginName;
 
     void loadWindowSettings(QSettings *pSettings,
                             const bool &pNeedDefaultSettings,

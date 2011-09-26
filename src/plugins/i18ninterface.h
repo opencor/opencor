@@ -9,13 +9,13 @@ class I18nInterface
 {
 public:
     void setLocale(const QString &pLocale);
-    void setPluginName(const QString &pPluginName);
+    void setI18nPluginName(const QString &pI18nPluginName);
 
 protected:
     virtual void retranslateUi();
 
 private:
-    QString mPluginName;
+    QString mI18nPluginName;
 
     QTranslator mTranslator;
 };

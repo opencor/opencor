@@ -104,7 +104,7 @@ MainWindow::MainWindow(QWidget *pParent) :
             // Keep track of some information
 
             guiInterface->setMainWindow(this);
-            guiInterface->setPluginName(plugin->name());
+            guiInterface->setGuiPluginName(plugin->name());
         }
 
         // Internationalisation interface
@@ -114,7 +114,7 @@ MainWindow::MainWindow(QWidget *pParent) :
         if (i18nInterface)
             // Keep track of some information
 
-            i18nInterface->setPluginName(plugin->name());
+            i18nInterface->setI18nPluginName(plugin->name());
 
         // Core interface
 
