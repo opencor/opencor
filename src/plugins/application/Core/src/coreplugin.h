@@ -2,6 +2,7 @@
 #define COREPLUGIN_H
 
 #include "apiinterface.h"
+#include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -17,7 +18,8 @@ static const QString FileGroup = "File";
 
 class CentralWidget;
 
-class CorePlugin : public GuiInterface, public I18nInterface
+class CorePlugin : public QObject, public CoreInterface, public GuiInterface,
+                   public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::CoreInterface)

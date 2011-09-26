@@ -1,14 +1,15 @@
 #ifndef COREINTERFACE_H
 #define COREINTERFACE_H
 
+#include <QtPlugin>
+
 #include <QList>
-#include <QObject>
 
 namespace OpenCOR {
 
 class Plugin;
 
-class CoreInterface : public QObject
+class CoreInterface
 {
 public:
     virtual void initialize();

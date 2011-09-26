@@ -417,20 +417,6 @@ void * GuiInterface::data() const
     return mData;
 }
 
-QString GuiInterface::pluginName() const
-{
-    // Return the plugin's name
-
-    return mPluginName;
-}
-
-void GuiInterface::setLoadedPlugins(const QList<Plugin *> &pLoadedPlugins)
-{
-    // Set the loaded plugins
-
-    mLoadedPlugins = pLoadedPlugins;
-}
-
 void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
 {
     // Set the main window
@@ -511,10 +497,10 @@ void GuiInterface::connectToolBarToToolBarAction(QToolBar *pToolbar,
 {
     // Setup the action for the toolbar, so we can show/hide it at will
 
-    connect(pToolbarAction, SIGNAL(triggered(bool)),
-            pToolbar, SLOT(setVisible(bool)));
-    connect(pToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-            pToolbarAction, SLOT(setChecked(bool)));
+    QObject::connect(pToolbarAction, SIGNAL(triggered(bool)),
+                     pToolbar, SLOT(setVisible(bool)));
+    QObject::connect(pToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
+                     pToolbarAction, SLOT(setChecked(bool)));
 }
 
 void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)

@@ -10,7 +10,8 @@ namespace CellMLSimulation {
 
 PLUGININFO_FUNC CellMLSimulationPluginInfo();
 
-class CellMLSimulationPlugin : public GuiInterface, public I18nInterface
+class CellMLSimulationPlugin : public QObject, public GuiInterface,
+                               public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)

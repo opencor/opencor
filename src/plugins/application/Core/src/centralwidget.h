@@ -15,6 +15,9 @@ namespace Ui {
 class QStackedWidget;
 
 namespace OpenCOR {
+
+class Plugin;
+
 namespace Core {
 
 class FileManager;

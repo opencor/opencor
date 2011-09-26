@@ -1,7 +1,9 @@
 #ifndef GUIINTERFACE_H
 #define GUIINTERFACE_H
 
-#include "coreinterface.h"
+#include <QtPlugin>
+
+#include <QList>
 
 class QAction;
 class QMainWindow;
@@ -168,7 +170,7 @@ private:
     QList<GuiWindowSettings *> mWindows;
 };
 
-class GuiInterface : public CoreInterface
+class GuiInterface
 {
 public:
     explicit GuiInterface();
@@ -181,9 +183,6 @@ public:
     GuiSettings * guiSettings() const;
     void * data() const;
 
-    QString pluginName() const;
-
-    void setLoadedPlugins(const QList<Plugin *> &pLoadedPlugins);
     void setMainWindow(QMainWindow *pMainWindow);
     void setPluginName(const QString &pPluginName);
 

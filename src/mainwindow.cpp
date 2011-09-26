@@ -89,42 +89,22 @@ MainWindow::MainWindow(QWidget *pParent) :
     QList<Plugin *> loadedPlugins = mPluginManager->loadedPlugins();
 
     foreach (Plugin *plugin, loadedPlugins) {
+        // Do various things that are related to our differennt plugin
+        // interfaces
+        // Note: the order in which we do those things is important since, for
+        //       example, the call to CoreInterface::initialize() may need some
+        //       information which has been set as part of the GUI interface
+        //       (e.g. the pointer to the main window)...
+
+        // GUI interface
+
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface) {
-            // The plugin implements our GUI interface, so...
-
             // Keep track of some information
 
-            guiInterface->setLoadedPlugins(loadedPlugins);
             guiInterface->setMainWindow(this);
             guiInterface->setPluginName(plugin->name());
-
-            // Initialise the plugin
-
-            guiInterface->initialize();
-
-            // Initialise the plugin further (i.e. do things which can only be
-            // done by OpenCOR itself)
-
-            initializePlugin(guiInterface);
-        } else {
-            // The plugin doesn't implement our GUI interface, so let's see
-            // whether it implements our default interface
-
-            CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
-
-            if (coreInterface) {
-                // The plugin implements our default interface, so...
-
-                // Keep track of some information
-
-                coreInterface->setLoadedPlugins(loadedPlugins);
-
-                // Initialise the plugin
-
-                coreInterface->initialize();
-            }
         }
 
         // Internationalisation interface
@@ -132,11 +112,31 @@ MainWindow::MainWindow(QWidget *pParent) :
         I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
 
         if (i18nInterface)
-            // The plugin implements our internationalisation interface, so...
-
             // Keep track of some information
 
             i18nInterface->setPluginName(plugin->name());
+
+        // Core interface
+
+        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+
+        if (coreInterface) {
+            // Keep track of some information
+
+            coreInterface->setLoadedPlugins(loadedPlugins);
+
+            // Initialise the plugin
+
+            coreInterface->initialize();
+        }
+
+        // Back to the GUI interface
+
+        if (guiInterface)
+            // Initialise the plugin further (i.e. do things which can only be
+            // done by OpenCOR itself)
+
+            initializeGuiPlugin(plugin->name(), guiInterface);
     }
 
 #ifdef Q_WS_MAC
@@ -187,8 +187,6 @@ MainWindow::~MainWindow()
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
         if (coreInterface)
-            // The plugin implements our default interface, so...
-
             coreInterface->finalize();
     }
 
@@ -251,12 +249,12 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     QMainWindow::closeEvent(pEvent);
 }
 
-void MainWindow::initializePlugin(GuiInterface *pGuiInterface)
+void MainWindow::initializeGuiPlugin(const QString &pPluginName,
+                                     GuiInterface *pGuiInterface)
 {
     // Check whether we are dealing with our special Help plugin
 
-    if (   !pGuiInterface->pluginName().compare(HelpPlugin)
-        && pGuiInterface->data()) {
+    if (!pPluginName.compare(HelpPlugin) && pGuiInterface->data()) {
         // We are dealing with our special Help plugin and its data is set, so
         // we can make use of it
 
@@ -434,9 +432,7 @@ void MainWindow::loadSettings()
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface) {
-            // The plugin implements our GUI interface, so...
-
-            mSettings->beginGroup(guiInterface->pluginName());
+            mSettings->beginGroup(plugin->name());
                 guiInterface->loadSettings(mSettings, needDefaultSettings);
             mSettings->endGroup();
         }
@@ -468,9 +464,7 @@ void MainWindow::saveSettings() const
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface) {
-            // The plugin implements our GUI interface, so...
-
-            mSettings->beginGroup(guiInterface->pluginName());
+            mSettings->beginGroup(plugin->name());
                 guiInterface->saveSettings(mSettings);
             mSettings->endGroup();
         }
@@ -518,9 +512,6 @@ void MainWindow::setLocale(const QString &pLocale)
             I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
 
             if (i18nInterface)
-                // The plugin implements our internationalisation interface,
-                // so...
-
                 i18nInterface->setLocale(realLocale);
         }
 

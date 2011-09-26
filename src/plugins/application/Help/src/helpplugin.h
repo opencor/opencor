@@ -1,6 +1,7 @@
 #ifndef HELPPLUGIN_H
 #define HELPPLUGIN_H
 
+#include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -12,9 +13,11 @@ PLUGININFO_FUNC HelpPluginInfo();
 
 class HelpWindow;
 
-class HelpPlugin : public GuiInterface, public I18nInterface
+class HelpPlugin : public QObject, public CoreInterface, public GuiInterface,
+                   public I18nInterface
 {
     Q_OBJECT
+    Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 

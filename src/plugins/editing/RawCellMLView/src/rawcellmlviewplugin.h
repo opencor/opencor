@@ -10,7 +10,8 @@ namespace RawCellMLView {
 
 PLUGININFO_FUNC RawCellMLViewPluginInfo();
 
-class RawCellMLViewPlugin : public GuiInterface, public I18nInterface
+class RawCellMLViewPlugin : public QObject, public GuiInterface,
+                            public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)

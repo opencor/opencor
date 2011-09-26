@@ -53,7 +53,8 @@ private:
     QMap<QString, QMenu *> mMenus;
     QMap<QString, QToolBar *> mToolbars;
 
-    void initializePlugin(GuiInterface *pGuiInterface);
+    void initializeGuiPlugin(const QString &pPluginName,
+                             GuiInterface *pGuiInterface);
 
     void loadSettings();
     void saveSettings() const;

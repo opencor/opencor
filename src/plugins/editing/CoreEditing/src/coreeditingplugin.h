@@ -1,6 +1,7 @@
 #ifndef COREEDITINGPLUGIN_H
 #define COREEDITINGPLUGIN_H
 
+#include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -12,7 +13,8 @@ PLUGININFO_FUNC CoreEditingPluginInfo();
 
 static const QString EditGroup = "Edit";
 
-class CoreEditingPlugin : public GuiInterface, public I18nInterface
+class CoreEditingPlugin : public QObject, public CoreInterface,
+                          public GuiInterface, public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::CoreInterface)

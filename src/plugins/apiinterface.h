@@ -1,6 +1,8 @@
 #ifndef APIINTERFACE_H
 #define APIINTERFACE_H
 
+#include <QtPlugin>
+
 #include <QMap>
 #include <QStringList>
 
