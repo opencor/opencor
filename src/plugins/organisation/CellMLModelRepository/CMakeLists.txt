@@ -8,16 +8,18 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(CellMLModelRepository
     SOURCES
-        ../../guiinterface.cpp
         ../../coreinterface.cpp
+        ../../guiinterface.cpp
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/cellmlmodelrepositoryplugin.cpp
         src/cellmlmodelrepositorywidget.cpp
         src/cellmlmodelrepositorywindow.cpp
     HEADERS
-        ../../guiinterface.h
         ../../coreinterface.h
+        ../../guiinterface.h
+        ../../i18ninterface.h
         ../../plugininfo.h
     HEADERS_MOC
         src/cellmlmodelrepositoryplugin.h

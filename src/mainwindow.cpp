@@ -1,6 +1,7 @@
 #include "checkforupdateswindow.h"
 #include "common.h"
 #include "guiinterface.h"
+#include "i18ninterface.h"
 #include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
@@ -93,9 +94,11 @@ MainWindow::MainWindow(QWidget *pParent) :
         if (guiInterface) {
             // The plugin implements our GUI interface, so...
 
-            // Set a few parameters for the plugin
+            // Keep track of some information
 
-            guiInterface->setParameters(loadedPlugins, this);
+            guiInterface->setLoadedPlugins(loadedPlugins);
+            guiInterface->setMainWindow(this);
+            guiInterface->setPluginName(plugin->name());
 
             // Initialise the plugin
 
@@ -114,14 +117,26 @@ MainWindow::MainWindow(QWidget *pParent) :
             if (coreInterface) {
                 // The plugin implements our default interface, so...
 
-                // Set a few parameters for the plugin
+                // Keep track of some information
 
-                coreInterface->setParameters(loadedPlugins);
+                coreInterface->setLoadedPlugins(loadedPlugins);
 
                 // Initialise the plugin
 
                 coreInterface->initialize();
             }
+        }
+
+        // Internationalisation interface
+
+        I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
+
+        if (i18nInterface) {
+            // The plugin implements our internationalisation interface, so...
+
+            // Keep track of some information
+
+            i18nInterface->setPluginName(plugin->name());
         }
     }
 
@@ -501,12 +516,13 @@ void MainWindow::setLocale(const QString &pLocale)
         // Update the locale of our various plugins
 
         foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+            I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
 
-            if (guiInterface)
-                // The plugin implements our GUI interface, so...
+            if (i18nInterface)
+                // The plugin implements our internationalisation interface,
+                // so...
 
-                guiInterface->setLocale(realLocale);
+                i18nInterface->setLocale(realLocale);
         }
 
         // Reorder the View|Toolbars menu, just in case

@@ -275,9 +275,8 @@ QList<GuiWindowSettings *> GuiSettings::windows() const
     return mWindows;
 }
 
-GuiInterface::GuiInterface(const QString &pPluginName) :
-    mData(0),
-    mPluginName(pPluginName)
+GuiInterface::GuiInterface() :
+    mData(0)
 {
     // Create our GUI settings object
 
@@ -425,33 +424,25 @@ QString GuiInterface::pluginName() const
     return mPluginName;
 }
 
-void GuiInterface::setLocale(const QString &pLocale)
-{
-    // Keep track of the new locale
-
-    mLocale = pLocale;
-
-    // Update the plugin's translator
-
-    qApp->removeTranslator(&mTranslator);
-    mTranslator.load(QString(":%1_%2").arg(mPluginName, pLocale));
-    qApp->installTranslator(&mTranslator);
-
-    // Retranslate the plugin
-
-    retranslateUi();
-}
-
-void GuiInterface::setParameters(const QList<Plugin *> &pLoadedPlugins,
-                                 QMainWindow *pMainWindow)
+void GuiInterface::setLoadedPlugins(const QList<Plugin *> &pLoadedPlugins)
 {
     // Set the loaded plugins
 
     mLoadedPlugins = pLoadedPlugins;
+}
 
+void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
+{
     // Set the main window
 
     mMainWindow = pMainWindow;
+}
+
+void GuiInterface::setPluginName(const QString &pPluginName)
+{
+    // Set the name of the plugin
+
+    mPluginName = pPluginName;
 }
 
 QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)
@@ -543,11 +534,6 @@ void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,
     pAction->setText(pText);
     pAction->setStatusTip(pStatusTip);
     pAction->setShortcut(pShortcut);
-}
-
-void GuiInterface::retranslateUi()
-{
-    // Nothing to do by default...
 }
 
 }

@@ -22,8 +22,7 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
 
 Q_EXPORT_PLUGIN2(RawCellMLView, RawCellMLViewPlugin)
 
-RawCellMLViewPlugin::RawCellMLViewPlugin() :
-    GuiInterface("RawCellMLView")
+RawCellMLViewPlugin::RawCellMLViewPlugin()
 {
     // Set our settings
 

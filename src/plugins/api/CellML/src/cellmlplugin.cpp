@@ -22,13 +22,23 @@ Q_EXPORT_PLUGIN2(CellML, CellMLPlugin)
 
 QList<FileType> CellMLPlugin::fileTypes() const
 {
-    Descriptions descriptions;
+    // Return the CellML file type that the CellML plugin supports
 
-    descriptions.insert("en", "CellML File");
-    descriptions.insert("fr", "Ficher CellML");
+    return QList<FileType>() << FileType(qobject_cast<ApiInterface *>(this),
+                                         CellmlMimeType, "cellml");
+}
 
-    return QList<FileType>() << FileType("application/cellml+xml", "cellml",
-                                         descriptions);
+QString CellMLPlugin::fileTypeDescription(const QString &mMimeType) const
+{
+    // Return the description for the requested Mime type, that is as long as it
+    // is for the CellML Mime type
+
+    if (!mMimeType.compare(CellmlMimeType))
+        return tr("CellML File");
+    else
+        // Not a Mime type that we can recognise, so...
+
+        return ApiInterface::fileTypeDescription(mMimeType);
 }
 
 } }

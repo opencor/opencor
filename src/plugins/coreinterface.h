@@ -15,7 +15,7 @@ public:
     virtual void initialize();
     virtual void finalize();
 
-    void setParameters(const QList<Plugin *> &pLoadedPlugins);
+    void setLoadedPlugins(const QList<Plugin *> &pLoadedPlugins);
 
 protected:
     QList<Plugin *> mLoadedPlugins;

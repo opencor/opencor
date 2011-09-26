@@ -29,11 +29,6 @@ PLUGININFO_FUNC CorePluginInfo()
 
 Q_EXPORT_PLUGIN2(Core, CorePlugin)
 
-CorePlugin::CorePlugin() :
-    GuiInterface("Core")
-{
-}
-
 void CorePlugin::initialize()
 {
     // Retrieve the file types supported by the plugins
@@ -209,7 +204,7 @@ void CorePlugin::openFile()
 
     foreach (const FileType &supportedFileType, mSupportedFileTypes)
         supportedFileTypes +=  ";;"
-                              +supportedFileType.description(mLocale)
+                              +supportedFileType.description()
                               +" (*."+supportedFileType.fileExtension()+")";
 
     QStringList files = QFileDialog::getOpenFileNames(mMainWindow,

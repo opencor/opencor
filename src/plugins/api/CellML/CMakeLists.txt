@@ -48,12 +48,14 @@ ADD_PLUGIN(CellML
     SOURCES
         ../../apiinterface.cpp
         ../../coreinterface.cpp
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/cellmlplugin.cpp
     HEADERS
         ../../apiinterface.h
         ../../coreinterface.h
+        ../../i18ninterface.h
         ../../plugininfo.h
 
         ${CELLML_HEADERS_DIR}/AnnoToolsBootstrap.hpp
@@ -105,8 +107,6 @@ ADD_PLUGIN(CellML
         ${CELLML_LIBS_DIR}
     EXTERNAL_DEPENDENCIES
         ${CELLML_LIBS}
-    RESOURCE_DIR
-        res/${CELLML_DISTRIB_DIR}
 )
 
 # Package the plugin's external dependencies

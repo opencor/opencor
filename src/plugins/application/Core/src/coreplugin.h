@@ -3,6 +3,8 @@
 
 #include "apiinterface.h"
 #include "guiinterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
 
 #include <QDir>
 
@@ -15,15 +17,14 @@ static const QString FileGroup = "File";
 
 class CentralWidget;
 
-class CorePlugin : public GuiInterface
+class CorePlugin : public GuiInterface, public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    explicit CorePlugin();
-
     virtual void initialize();
     virtual void finalize();
 

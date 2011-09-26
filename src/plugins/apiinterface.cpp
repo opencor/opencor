@@ -2,11 +2,11 @@
 
 namespace OpenCOR {
 
-FileType::FileType(const QString &pMimeType, const QString &pFileExtension,
-                   const Descriptions &pDescriptions) :
+FileType::FileType(ApiInterface *pOwner, const QString &pMimeType,
+                   const QString &pFileExtension) :
+    mOwner(pOwner),
     mMimeType(pMimeType),
-    mFileExtension(pFileExtension),
-    mDescriptions(pDescriptions)
+    mFileExtension(pFileExtension)
 {
 }
 
@@ -24,12 +24,11 @@ QString FileType::fileExtension() const
     return mFileExtension;
 }
 
-QString FileType::description(const QString &pLocale) const
+QString FileType::description() const
 {
-    // Return the file type's description using the provided locale or the first
-    // description if no description can be found for the provided locale
+    // Return the file's description
 
-    return OpenCOR::description(mDescriptions, pLocale);
+    return mOwner->fileTypeDescription(mMimeType);
 }
 
 QList<FileType> ApiInterface::fileTypes() const
@@ -37,6 +36,13 @@ QList<FileType> ApiInterface::fileTypes() const
     // By default, there are no file types
 
     return QList<FileType>();
+}
+
+QString ApiInterface::fileTypeDescription(const QString &) const
+{
+    // By default, there is no description for the requested Mime type
+
+    return QString();
 }
 
 }

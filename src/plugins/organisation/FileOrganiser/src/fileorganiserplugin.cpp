@@ -20,9 +20,4 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
 
 Q_EXPORT_PLUGIN2(FileOrganiser, FileOrganiserPlugin)
 
-FileOrganiserPlugin::FileOrganiserPlugin() :
-    GuiInterface("FileOrganiser")
-{
-}
-
 } }

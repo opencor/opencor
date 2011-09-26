@@ -22,8 +22,7 @@ PLUGININFO_FUNC CellMLSimulationPluginInfo()
 
 Q_EXPORT_PLUGIN2(CellMLSimulation, CellMLSimulationPlugin)
 
-CellMLSimulationPlugin::CellMLSimulationPlugin() :
-    GuiInterface("CellMLXMLView")
+CellMLSimulationPlugin::CellMLSimulationPlugin()
 {
     // Set our settings
 

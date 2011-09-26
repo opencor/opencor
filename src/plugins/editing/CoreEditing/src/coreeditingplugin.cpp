@@ -23,11 +23,6 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
 
 Q_EXPORT_PLUGIN2(CoreEditing, CoreEditingPlugin)
 
-CoreEditingPlugin::CoreEditingPlugin() :
-    GuiInterface("CoreEditing")
-{
-}
-
 void CoreEditingPlugin::initialize()
 {
     // Create our Edit menu and toolbar (and its show/hide action)

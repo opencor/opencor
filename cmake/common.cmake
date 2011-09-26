@@ -149,8 +149,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 9)
         ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 10)
-        ELSEIF(${PARAMETER} STREQUAL "RESOURCE_DIR")
-            SET(TYPE_OF_PARAMETER 11)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -175,17 +173,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
                 SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
-                SET(QRC_FILE ${PARAMETER}/${PLUGIN_NAME}.qrc)
             ENDIF()
         ENDIF()
     ENDFOREACH()
 
     # Resource file, if any
 
-    IF("${QRC_FILE}" STREQUAL "")
-        SET(QRC_FILE res/${PLUGIN_NAME}.qrc)
-    ENDIF()
+    SET(QRC_FILE res/${PLUGIN_NAME}.qrc)
 
     IF(EXISTS "${PROJECT_SOURCE_DIR}/${QRC_FILE}")
         SET(RESOURCES ${QRC_FILE})

@@ -3,8 +3,6 @@
 
 #include "coreinterface.h"
 
-#include <QTranslator>
-
 class QAction;
 class QMainWindow;
 class QMenu;
@@ -173,7 +171,7 @@ private:
 class GuiInterface : public CoreInterface
 {
 public:
-    explicit GuiInterface(const QString &pPluginName);
+    explicit GuiInterface();
     ~GuiInterface();
 
     virtual void loadSettings(QSettings *pSettings,
@@ -185,25 +183,21 @@ public:
 
     QString pluginName() const;
 
-    void setLocale(const QString &pLocale);
-
-    void setParameters(const QList<Plugin *> &pLoadedPlugins,
-                       QMainWindow *pMainWindow);
+    void setLoadedPlugins(const QList<Plugin *> &pLoadedPlugins);
+    void setMainWindow(QMainWindow *pMainWindow);
+    void setPluginName(const QString &pPluginName);
 
     static void connectToolBarToToolBarAction(QToolBar *pToolbar,
                                               QAction *pToolbarAction);
 
 protected:
     QMainWindow *mMainWindow;
-    QString mLocale;
 
     GuiSettings *mGuiSettings;
     void *mData;
     // Note: mData is used only by the Core and Help plugins which are both one
     //       of a kind and therefore require special treatment (as opposed to
     //       generic treatment)
-
-    virtual void retranslateUi();
 
     static QMenu * newMenu(QMainWindow *pMainWindow, const QString &pName);
     static QToolBar * newToolBar(QMainWindow *pMainWindow,
@@ -220,8 +214,6 @@ protected:
 
 private:
     QString mPluginName;
-
-    QTranslator mTranslator;
 
     void loadWindowSettings(QSettings *pSettings,
                             const bool &pNeedDefaultSettings,

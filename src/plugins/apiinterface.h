@@ -2,33 +2,35 @@
 #define APIINTERFACE_H
 
 #include "coreinterface.h"
-#include "plugininfo.h"
 
 #include <QMap>
 #include <QStringList>
 
 namespace OpenCOR {
 
+class ApiInterface;
+
 class FileType
 {
 public:
-    explicit FileType(const QString &pMimeType, const QString &pFileExtension,
-                      const Descriptions &pDescriptions);
+    explicit FileType(ApiInterface *pOwner, const QString &pMimeType,
+                      const QString &pFileExtension);
 
     QString mimeType() const;
     QString fileExtension() const;
-    QString description(const QString &pLocale = EnglishLocale) const;
+    QString description() const;
 
 private:
+    ApiInterface *mOwner;
     QString mMimeType;
     QString mFileExtension;
-    Descriptions mDescriptions;
 };
 
 class ApiInterface : public CoreInterface
 {
 public:
     virtual QList<FileType> fileTypes() const;
+    virtual QString fileTypeDescription(const QString &) const;
 };
 
 }

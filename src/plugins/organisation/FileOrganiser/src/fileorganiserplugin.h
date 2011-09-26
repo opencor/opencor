@@ -2,6 +2,7 @@
 #define FILEORGANISERPLUGIN_H
 
 #include "guiinterface.h"
+#include "i18ninterface.h"
 #include "plugininfo.h"
 
 namespace OpenCOR {
@@ -9,14 +10,12 @@ namespace FileOrganiser {
 
 PLUGININFO_FUNC FileOrganiserPluginInfo();
 
-class FileOrganiserPlugin : public GuiInterface
+class FileOrganiserPlugin : public GuiInterface, public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
-
-public:
-    explicit FileOrganiserPlugin();
+    Q_INTERFACES(OpenCOR::I18nInterface)
 };
 
 } }

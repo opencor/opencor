@@ -50,6 +50,7 @@ SET(SOURCES
     src/plugins/apiinterface.cpp
     src/plugins/coreinterface.cpp
     src/plugins/guiinterface.cpp
+    src/plugins/i18ninterface.cpp
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
@@ -62,6 +63,7 @@ SET(HEADERS
     src/plugins/apiinterface.h
     src/plugins/coreinterface.h
     src/plugins/guiinterface.h
+    src/plugins/i18ninterface.h
     src/plugins/plugininfo.h
 )
 
