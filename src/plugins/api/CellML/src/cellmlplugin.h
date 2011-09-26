@@ -2,7 +2,6 @@
 #define CELLMLPLUGIN_H
 
 #include "apiinterface.h"
-#include "coreinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 
@@ -17,7 +16,6 @@ class CellMLPlugin : public ApiInterface, public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::ApiInterface)
-    Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:

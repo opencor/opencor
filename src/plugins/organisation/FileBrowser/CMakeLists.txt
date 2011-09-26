@@ -8,8 +8,6 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 ADD_PLUGIN(FileBrowser
     SOURCES
-        ../../coreinterface.cpp
-        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
@@ -17,8 +15,6 @@ ADD_PLUGIN(FileBrowser
         src/filebrowserwidget.cpp
         src/filebrowserwindow.cpp
     HEADERS
-        ../../coreinterface.h
-        ../../guiinterface.h
         ../../i18ninterface.h
         ../../plugininfo.h
     HEADERS_MOC

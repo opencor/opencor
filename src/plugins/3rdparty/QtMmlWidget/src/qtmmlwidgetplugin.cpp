@@ -1,7 +1,5 @@
 #include "qtmmlwidgetplugin.h"
 
-#include <QtPlugin>
-
 namespace OpenCOR {
 namespace QtMmlWidget {
 

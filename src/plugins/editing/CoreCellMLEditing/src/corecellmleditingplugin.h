@@ -1,7 +1,6 @@
 #ifndef CORECELLMLEDITINGPLUGIN_H
 #define CORECELLMLEDITINGPLUGIN_H
 
-#include "coreinterface.h"
 #include "plugininfo.h"
 
 namespace OpenCOR {

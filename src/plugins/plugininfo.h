@@ -1,6 +1,8 @@
 #ifndef PLUGININFO_H
 #define PLUGININFO_H
 
+#include <QtPlugin>
+
 #include <QMap>
 #include <QStringList>
 

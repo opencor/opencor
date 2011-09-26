@@ -9,10 +9,10 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 ADD_PLUGIN(Core
     SOURCES
         ../../apiinterface.cpp
-        ../../guiinterface.cpp
-        ../../plugin.cpp
         ../../coreinterface.cpp
+        ../../guiinterface.cpp
         ../../i18ninterface.cpp
+        ../../plugin.cpp
         ../../plugininfo.cpp
 
         src/centralwidget.cpp
@@ -25,8 +25,8 @@ ADD_PLUGIN(Core
         src/treeview.cpp
     HEADERS
         ../../apiinterface.h
-        ../../guiinterface.h
         ../../coreinterface.h
+        ../../guiinterface.h
         ../../i18ninterface.h
         ../../plugininfo.h
 

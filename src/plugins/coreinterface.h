@@ -1,9 +1,8 @@
 #ifndef COREINTERFACE_H
 #define COREINTERFACE_H
 
-#include <QtPlugin>
-
 #include <QList>
+#include <QObject>
 
 namespace OpenCOR {
 

@@ -15,7 +15,6 @@ class HelpWindow;
 class HelpPlugin : public GuiInterface, public I18nInterface
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
