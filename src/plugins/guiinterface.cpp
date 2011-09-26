@@ -301,16 +301,6 @@ void GuiInterface::loadSettings(QSettings *pSettings,
 
             mMainWindow->setCentralWidget(centralWidget);
         }
-    } else if (!mGuiPluginName.compare(HelpPlugin)) {
-        // We are dealing with our special Help plugin
-
-        if (mData)
-            // Our special Help plugin has its data set, so retrieve its
-            // window's settings
-
-            loadWindowSettings(pSettings, pNeedDefaultSettings,
-                               Qt::RightDockWidgetArea,
-                               ((GuiHelpSettings *) mData)->helpWindow());
     }
 }
 
@@ -337,19 +327,6 @@ void GuiInterface::saveSettings(QSettings *pSettings) const
 
             pSettings->beginGroup(centralWidget->objectName());
                 centralWidget->saveSettings(pSettings);
-            pSettings->endGroup();
-        }
-    } else if (!mGuiPluginName.compare(HelpPlugin)) {
-        // We are dealing with our special Help plugin
-
-        if (mData) {
-            // Our special Help plugin has its data set, so keep track of its
-            // window's settings
-
-            Core::DockWidget *helpWindow = ((GuiHelpSettings *) mData)->helpWindow();
-
-            pSettings->beginGroup(helpWindow->objectName());
-                helpWindow->saveSettings(pSettings);
             pSettings->endGroup();
         }
     }

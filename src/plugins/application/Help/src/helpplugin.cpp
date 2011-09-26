@@ -54,6 +54,22 @@ void HelpPlugin::finalize()
     delete (GuiHelpSettings *) mData;
 }
 
+void HelpPlugin::loadSettings(QSettings *pSettings,
+                              const bool &pNeedDefaultSettings)
+{
+    // Retrieve our Help window settings
+
+    loadWindowSettings(pSettings, pNeedDefaultSettings, Qt::RightDockWidgetArea,
+                       mHelpWindow);
+}
+
+void HelpPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our Help window settings
+
+    saveWindowSettings(pSettings, mHelpWindow);
+}
+
 void HelpPlugin::retranslateUi()
 {
     // Retranslate our action
