@@ -1,8 +1,8 @@
-#include "apiinterface.h"
+#include "fileinterface.h"
 
 namespace OpenCOR {
 
-FileType::FileType(ApiInterface *pOwner, const QString &pMimeType,
+FileType::FileType(FileInterface *pOwner, const QString &pMimeType,
                    const QString &pFileExtension) :
     mOwner(pOwner),
     mMimeType(pMimeType),
@@ -31,14 +31,14 @@ QString FileType::description() const
     return mOwner->fileTypeDescription(mMimeType);
 }
 
-QList<FileType> ApiInterface::fileTypes() const
+QList<FileType> FileInterface::fileTypes() const
 {
     // By default, there are no file types
 
     return QList<FileType>();
 }
 
-QString ApiInterface::fileTypeDescription(const QString &) const
+QString FileInterface::fileTypeDescription(const QString &) const
 {
     // By default, there is no description for the requested Mime type
 

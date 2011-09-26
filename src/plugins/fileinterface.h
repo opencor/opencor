@@ -1,5 +1,5 @@
-#ifndef APIINTERFACE_H
-#define APIINTERFACE_H
+#ifndef FILEINTERFACE_H
+#define FILEINTERFACE_H
 
 #include <QtPlugin>
 
@@ -8,12 +8,12 @@
 
 namespace OpenCOR {
 
-class ApiInterface;
+class FileInterface;
 
 class FileType
 {
 public:
-    explicit FileType(ApiInterface *pOwner, const QString &pMimeType,
+    explicit FileType(FileInterface *pOwner, const QString &pMimeType,
                       const QString &pFileExtension);
 
     QString mimeType() const;
@@ -21,12 +21,12 @@ public:
     QString description() const;
 
 private:
-    ApiInterface *mOwner;
+    FileInterface *mOwner;
     QString mMimeType;
     QString mFileExtension;
 };
 
-class ApiInterface
+class FileInterface
 {
 public:
     virtual QList<FileType> fileTypes() const;
@@ -35,6 +35,6 @@ public:
 
 }
 
-Q_DECLARE_INTERFACE(OpenCOR::ApiInterface, "OpenCOR.ApiInterface")
+Q_DECLARE_INTERFACE(OpenCOR::FileInterface, "OpenCOR.FileInterface")
 
 #endif

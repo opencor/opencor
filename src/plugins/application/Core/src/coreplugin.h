@@ -1,7 +1,7 @@
 #ifndef COREPLUGIN_H
 #define COREPLUGIN_H
 
-#include "apiinterface.h"
+#include "fileinterface.h"
 #include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"

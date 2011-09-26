@@ -47,8 +47,8 @@ SET(SOURCES
     src/misc/utils.cpp
     src/misc/versionmanager.cpp
 
-    src/plugins/apiinterface.cpp
     src/plugins/coreinterface.cpp
+    src/plugins/fileinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
     src/plugins/plugin.cpp
@@ -60,8 +60,8 @@ SET(HEADERS
     src/misc/common.h
     src/misc/utils.h
 
-    src/plugins/apiinterface.h
     src/plugins/coreinterface.h
+    src/plugins/fileinterface.h
     src/plugins/guiinterface.h
     src/plugins/i18ninterface.h
     src/plugins/plugininfo.h

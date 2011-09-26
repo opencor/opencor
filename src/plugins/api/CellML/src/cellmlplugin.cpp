@@ -24,7 +24,7 @@ QList<FileType> CellMLPlugin::fileTypes() const
 {
     // Return the CellML file type that the CellML plugin supports
 
-    return QList<FileType>() << FileType(qobject_cast<ApiInterface *>(this),
+    return QList<FileType>() << FileType(qobject_cast<FileInterface *>(this),
                                          CellmlMimeType, "cellml");
 }
 
@@ -38,7 +38,7 @@ QString CellMLPlugin::fileTypeDescription(const QString &mMimeType) const
     else
         // Not a Mime type that we can recognise, so...
 
-        return ApiInterface::fileTypeDescription(mMimeType);
+        return FileInterface::fileTypeDescription(mMimeType);
 }
 
 } }

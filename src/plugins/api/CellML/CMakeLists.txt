@@ -46,15 +46,15 @@ SET(CELLML_LIBS
 
 ADD_PLUGIN(CellML
     SOURCES
-        ../../apiinterface.cpp
         ../../coreinterface.cpp
+        ../../fileinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/cellmlplugin.cpp
     HEADERS
-        ../../apiinterface.h
         ../../coreinterface.h
+        ../../fileinterface.h
         ../../i18ninterface.h
         ../../plugininfo.h
 

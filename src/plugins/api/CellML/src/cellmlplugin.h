@@ -1,7 +1,7 @@
 #ifndef CELLMLPLUGIN_H
 #define CELLMLPLUGIN_H
 
-#include "apiinterface.h"
+#include "fileinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 
@@ -12,10 +12,10 @@ PLUGININFO_FUNC CellMLPluginInfo();
 
 static const QString CellmlMimeType = "application/cellml+xml";
 
-class CellMLPlugin : public QObject, public ApiInterface, public I18nInterface
+class CellMLPlugin : public QObject, public FileInterface, public I18nInterface
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::ApiInterface)
+    Q_INTERFACES(OpenCOR::FileInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
