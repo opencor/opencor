@@ -161,27 +161,6 @@ int GuiViewSettings::tabIndex() const
     return mTabIndex;
 }
 
-GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
-                                     Core::DockWidget *pWindow) :
-    mDefaultDockingArea(pDefaultDockingArea),
-    mWindow(pWindow)
-{
-}
-
-Qt::DockWidgetArea GuiWindowSettings::defaultDockingArea() const
-{
-    // Return the window's default docking area
-
-    return mDefaultDockingArea;
-}
-
-Core::DockWidget * GuiWindowSettings::window() const
-{
-    // Return the window itself
-
-    return mWindow;
-}
-
 GuiSettings::~GuiSettings()
 {
     // Delete the contents of our various lists
@@ -194,9 +173,6 @@ GuiSettings::~GuiSettings()
 
     foreach (GuiViewSettings *viewSettings, mViews)
         delete viewSettings;
-
-    foreach (GuiWindowSettings *windowSettings, mWindows)
-        delete windowSettings;
 }
 
 void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
@@ -232,14 +208,6 @@ void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
     mViews << new GuiViewSettings(pMode);
 }
 
-void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
-                            Core::DockWidget *pWindow)
-{
-    // Add a window to our list
-
-    mWindows << new GuiWindowSettings(pDefaultDockingArea, pWindow);
-}
-
 QList<GuiMenuSettings *> GuiSettings::menus() const
 {
     // Return our menus
@@ -266,13 +234,6 @@ QList<GuiViewSettings *> GuiSettings::views() const
     // Return our views
 
     return mViews;
-}
-
-QList<GuiWindowSettings *> GuiSettings::windows() const
-{
-    // Return our windows
-
-    return mWindows;
 }
 
 GuiInterface::GuiInterface() :
@@ -306,7 +267,7 @@ void GuiInterface::loadWindowSettings(QSettings *pSettings,
         mMainWindow->addDockWidget(pDefaultDockingArea, pWindow);
     }
 
-    // Load the window's settings
+    // Retrieve the window's settings
 
     pSettings->beginGroup(pWindow->objectName());
         pWindow->loadSettings(pSettings);
@@ -350,16 +311,17 @@ void GuiInterface::loadSettings(QSettings *pSettings,
             loadWindowSettings(pSettings, pNeedDefaultSettings,
                                Qt::RightDockWidgetArea,
                                ((GuiHelpSettings *) mData)->helpWindow());
-    } else {
-        // Neither the Core nor the Help plugin, so retrieve all of the plugin's
-        // windows' settings
-
-        foreach (GuiWindowSettings *windowSettings,
-                 mGuiSettings->windows())
-            loadWindowSettings(pSettings, pNeedDefaultSettings,
-                               windowSettings->defaultDockingArea(),
-                               windowSettings->window());
     }
+}
+
+void GuiInterface::saveWindowSettings(QSettings *pSettings,
+                                      Core::DockWidget *pWindow) const
+{
+    // Keep track of the window's settings
+
+    pSettings->beginGroup(pWindow->objectName());
+        pWindow->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 void GuiInterface::saveSettings(QSettings *pSettings) const
@@ -388,16 +350,6 @@ void GuiInterface::saveSettings(QSettings *pSettings) const
 
             pSettings->beginGroup(helpWindow->objectName());
                 helpWindow->saveSettings(pSettings);
-            pSettings->endGroup();
-        }
-    } else {
-        // Neither the Core nor the Help plugin, so keep track of all of the
-        // plugin's windows' settings
-
-        foreach (GuiWindowSettings *windowSettings,
-                 mGuiSettings->windows()) {
-            pSettings->beginGroup(windowSettings->window()->objectName());
-                windowSettings->window()->saveSettings(pSettings);
             pSettings->endGroup();
         }
     }

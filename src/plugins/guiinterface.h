@@ -127,20 +127,6 @@ private:
     int mTabIndex;
 };
 
-class GuiWindowSettings
-{
-public:
-    explicit GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
-                               Core::DockWidget *pWindow);
-
-    Qt::DockWidgetArea defaultDockingArea() const;
-    Core::DockWidget * window() const;
-
-private:
-    Qt::DockWidgetArea mDefaultDockingArea;
-    Core::DockWidget *mWindow;
-};
-
 class GuiSettings
 {
 public:
@@ -153,21 +139,17 @@ public:
     void addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
                     QToolBar *pToolbar, QAction *pToolbarAction);
     void addView(const GuiViewSettings::Mode &pMode);
-    void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
-                   Core::DockWidget *pWindow);
 
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;
     QList<GuiToolBarSettings *> toolbars() const;
     QList<GuiViewSettings *> views() const;
-    QList<GuiWindowSettings *> windows() const;
 
 private:
     QList<GuiMenuSettings *> mMenus;
     QList<GuiMenuActionSettings *> mMenuActions;
     QList<GuiToolBarSettings *> mToolbars;
     QList<GuiViewSettings *> mViews;
-    QList<GuiWindowSettings *> mWindows;
 };
 
 class GuiInterface
@@ -211,13 +193,15 @@ protected:
                                   const QString &pStatusTip,
                                   const QString &pShortcut = QString());
 
-private:
-    QString mGuiPluginName;
-
     void loadWindowSettings(QSettings *pSettings,
                             const bool &pNeedDefaultSettings,
                             const Qt::DockWidgetArea &pDefaultDockingArea,
                             Core::DockWidget *pWindow);
+    void saveWindowSettings(QSettings *pSettings,
+                            Core::DockWidget *pWindow) const;
+
+private:
+    QString mGuiPluginName;
 };
 
 }

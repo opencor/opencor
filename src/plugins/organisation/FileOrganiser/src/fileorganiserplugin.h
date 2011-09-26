@@ -1,6 +1,8 @@
 #ifndef FILEORGANISERPLUGIN_H
 #define FILEORGANISERPLUGIN_H
 
+#include "coreinterface.h"
+#include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 
@@ -9,10 +11,28 @@ namespace FileOrganiser {
 
 PLUGININFO_FUNC FileOrganiserPluginInfo();
 
-class FileOrganiserPlugin : public QObject, public I18nInterface
+class FileOrganiserWindow;
+
+class FileOrganiserPlugin : public QObject, public CoreInterface,
+                            public GuiInterface, public I18nInterface
 {
     Q_OBJECT
+    Q_INTERFACES(OpenCOR::CoreInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+    virtual void initialize();
+
+    virtual void loadSettings(QSettings *pSettings,
+                              const bool &pNeedDefaultSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
+protected:
+    virtual void retranslateUi();
+
+private:
+    FileOrganiserWindow *mFileOrganiserWindow;
 };
 
 } }
