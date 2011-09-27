@@ -25,7 +25,7 @@ Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)
 
 void CellMLModelRepositoryPlugin::initialize()
 {
-    // Create an action to show/hide our help window
+    // Create an action to show/hide our CellML Model Repository window
 
     mCellmlModelRepositoryAction = newAction(mMainWindow, true);
 

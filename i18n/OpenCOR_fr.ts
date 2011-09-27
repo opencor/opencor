@@ -169,6 +169,10 @@
         <source>Organisation</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Editing</source>
+        <translation>Édition</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PluginsWindow</name>

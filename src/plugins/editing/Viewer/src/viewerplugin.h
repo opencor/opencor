@@ -1,6 +1,8 @@
 #ifndef VIEWERPLUGIN_H
 #define VIEWERPLUGIN_H
 
+#include "coreinterface.h"
+#include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 
@@ -9,10 +11,29 @@ namespace Viewer {
 
 PLUGININFO_FUNC ViewerPluginInfo();
 
-class ViewerPlugin : public QObject, public I18nInterface
+class ViewerWindow;
+
+class ViewerPlugin : public QObject, public CoreInterface, public GuiInterface,
+                     public I18nInterface
 {
     Q_OBJECT
+    Q_INTERFACES(OpenCOR::CoreInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+    virtual void initialize();
+
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
+protected:
+    virtual void retranslateUi();
+
+private:
+    QAction *mViewerAction;
+
+    ViewerWindow *mViewerWindow;
 };
 
 } }

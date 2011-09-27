@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "guiinterface.h"
+
 #include <QMainWindow>
 #include <QMap>
 #include <QTranslator>
@@ -53,7 +55,9 @@ private:
     QMap<QString, QMenu *> mMenus;
     QMap<QString, QToolBar *> mToolbars;
 
-    QMenu *mOrganisationMenu;
+    QMenu *mViewOrganisationMenu;
+    QMenu *mViewEditingMenu;
+    QAction *mViewSeparator;
 
     void initializeGuiPlugin(const QString &pPluginName,
                              GuiInterface *pGuiInterface);
@@ -63,7 +67,11 @@ private:
 
     void setLocale(const QString &pLocale);
 
-    void reorderViewToolbarsMenu();
+    void reorderViewMenu(QMenu *pViewMenu);
+    void reorderViewMenus();
+
+    void updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
+                        QAction *pAction);
 
 public Q_SLOTS:
 #ifdef Q_WS_WIN

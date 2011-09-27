@@ -119,6 +119,7 @@ public:
     enum GuiWindowSettingsType
     {
         Organisation,
+        Editing,
         Help
     };
 

@@ -1,6 +1,5 @@
 #include "checkforupdateswindow.h"
 #include "common.h"
-#include "guiinterface.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
 #include "plugin.h"
@@ -30,7 +29,9 @@ namespace OpenCOR {
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
-    mOrganisationMenu(0)
+    mViewOrganisationMenu(0),
+    mViewEditingMenu(0),
+    mViewSeparator(0)
 {
     // Create our settings object
 
@@ -365,10 +366,6 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         }
     }
 
-    // Reorder the View|Toolbars menu, just in case
-
-    reorderViewToolbarsMenu();
-
     // Add the windows (including to the corresponding menu)
 
     foreach (GuiWindowSettings *windowSettings,
@@ -382,6 +379,22 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         // Add an action to our menu to show/hide the menu
 
         switch (windowSettings->type()) {
+        case GuiWindowSettings::Organisation:
+            // Update the View menu by adding the action to the
+            // View|Organisation menu
+
+            updateViewMenu(GuiWindowSettings::Organisation,
+                           windowSettings->action());
+
+            break;
+        case GuiWindowSettings::Editing:
+            // Update the View menu by adding the action to the View|Editing
+            // menu
+
+            updateViewMenu(GuiWindowSettings::Editing,
+                           windowSettings->action());
+
+            break;
         case GuiWindowSettings::Help:
             mUi->menuHelp->insertAction(mUi->actionHomePage,
                                         windowSettings->action());
@@ -395,25 +408,6 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
             mUi->helpToolbar->insertSeparator(mUi->actionHomePage);
 
             break;
-        case GuiWindowSettings::Organisation:
-            if (!mOrganisationMenu) {
-                // The Organisation menu doesn't already exist, so create it
-
-                mOrganisationMenu = new QMenu(this);
-
-                // Add it to our View menu
-
-                mUi->menuView->insertMenu(mUi->actionFullScreen,
-                                          mOrganisationMenu);
-
-                // Add a separator
-
-                mUi->menuView->insertSeparator(mUi->actionFullScreen);
-            }
-
-            mOrganisationMenu->addAction(windowSettings->action());
-
-            break;
         default:
             // Unknown type, so do nothing...
 
@@ -425,6 +419,10 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         GuiInterface::connectDockWidgetToAction(dockWidget,
                                                 windowSettings->action());
     }
+
+    // Reorder our various View menus, just in case
+
+    reorderViewMenus();
 }
 
 static const QString SettingsLocale              = "Locale";
@@ -549,9 +547,12 @@ void MainWindow::setLocale(const QString &pLocale)
         // Retranslate some widgets that are not originally part of our user
         // interface
 
-        if (mOrganisationMenu)
-            GuiInterface::retranslateMenu(mOrganisationMenu,
+        if (mViewOrganisationMenu)
+            GuiInterface::retranslateMenu(mViewOrganisationMenu,
                                           tr("Organisation"));
+
+        if (mViewEditingMenu)
+            GuiInterface::retranslateMenu(mViewEditingMenu, tr("Editing"));
 
         // Update the locale of our various plugins
 
@@ -562,9 +563,9 @@ void MainWindow::setLocale(const QString &pLocale)
                 i18nInterface->setLocale(realLocale);
         }
 
-        // Reorder the View|Toolbars menu, just in case
+        // Reorder our various View menus, just in case
 
-        reorderViewToolbarsMenu();
+        reorderViewMenus();
     }
 
     // Update the checked menu item
@@ -577,18 +578,16 @@ void MainWindow::setLocale(const QString &pLocale)
     mUi->actionFrench->setChecked(mLocale == FrenchLocale);
 }
 
-void MainWindow::reorderViewToolbarsMenu()
+void MainWindow::reorderViewMenu(QMenu *pViewMenu)
 {
-    // Reorder the View|Toolbars menu
-    // Note: this is useful after having added a new menu item or after having
-    //       changed the locale
+    // Reorder the required View menu
 
     QStringList menuItemTitles;
     QMap<QString, QAction *> menuItemActions;
 
     // Retrieve the title of the menu items and keep track of their actions
 
-    foreach(QAction *menuItemAction, mUi->menuToolbars->actions()) {
+    foreach(QAction *menuItemAction, pViewMenu->actions()) {
         QString menuItemTitle = menuItemAction->text().remove("&");
 
         menuItemTitles.append(menuItemTitle);
@@ -605,7 +604,77 @@ void MainWindow::reorderViewToolbarsMenu()
     //       the menu items being properly ordered...
 
     foreach(const QString menuItemTitle, menuItemTitles)
-        mUi->menuToolbars->addAction(menuItemActions.value(menuItemTitle));
+        pViewMenu->addAction(menuItemActions.value(menuItemTitle));
+}
+
+void MainWindow::reorderViewMenus()
+{
+    // Reorder the View|Toolbars menu, as well as the View|Organisation and
+    // View|Editing menus, should they exist
+    // Note: this is useful after having added a new menu item or after having
+    //       changed the locale
+
+    reorderViewMenu(mUi->menuToolbars);
+
+    if (mViewOrganisationMenu)
+        reorderViewMenu(mViewOrganisationMenu);
+
+    if (mViewEditingMenu)
+        reorderViewMenu(mViewEditingMenu);
+}
+
+void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
+                                QAction *pAction)
+{
+    // Check whether we need to insert a separator before the Full Screen menu
+    // item
+
+    if ((pMenuType != GuiWindowSettings::Help) && !mViewSeparator)
+        // None of the menus have already been inserted which means that we need
+        // to insert a separator before the Full Screen menu item
+
+        mViewSeparator =  mUi->menuView->insertSeparator(mUi->actionFullScreen);
+
+    // Determine the menu that is to be inserted, should this be required, and
+    // the action before which it is to be inserted
+
+    QMenu **menu;
+    QAction *action;
+
+    switch (pMenuType) {
+    case GuiWindowSettings::Organisation:
+        menu   = &mViewOrganisationMenu;
+        action = mViewEditingMenu?mViewEditingMenu->menuAction():mViewSeparator;
+
+        break;
+    case GuiWindowSettings::Editing:
+        menu   = &mViewEditingMenu;
+        action = mViewSeparator;
+
+        break;
+    default:
+        // Unknown type, so just leave...
+
+        return;
+    }
+
+    // Check whether the menu already exists and create it if not
+
+    if (!*menu) {
+        // The menu doesn't already exist, so create it
+
+        *menu = new QMenu(this);
+
+        // Add the menu to our View menu
+
+        mUi->menuView->insertMenu(action, *menu);
+    }
+
+    // At this stage, the menu to which we want to add an action has been
+    // created, so we can just add the action to it
+
+    (*menu)->addAction(pAction);
+
 }
 
 #ifdef Q_WS_WIN
