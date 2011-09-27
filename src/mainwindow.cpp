@@ -588,7 +588,18 @@ void MainWindow::reorderViewMenu(QMenu *pViewMenu)
     // Retrieve the title of the menu items and keep track of their actions
 
     foreach(QAction *menuItemAction, pViewMenu->actions()) {
-        QString menuItemTitle = menuItemAction->text().remove("&");
+        // Remove any '&' present in the menu item title, as well as replace
+        // accentuated characters by non-accentuated ones, making the sorting
+        // sensible
+
+        QString menuItemTitle = menuItemAction->text().remove("&").normalized(QString::NormalizationForm_KD);
+
+        for (int i = menuItemTitle.length()-1; i >= 0; --i)
+            if (menuItemTitle[i].category() == QChar::Mark_NonSpacing)
+                menuItemTitle.remove(i, 1);
+
+        // Keep track of the menu item title and the action to which it is
+        // associated
 
         menuItemTitles.append(menuItemTitle);
         menuItemActions.insert(menuItemTitle, menuItemAction);
