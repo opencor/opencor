@@ -24,4 +24,15 @@
         <translation>Supprimer le(s) répertoire(s) et/ou le(s) lien(s) vers fichier(s) courant(s)</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::FileOrganiser::FileOrganiserPlugin</name>
+    <message>
+        <source>File Organiser</source>
+        <translation>Organisateur de Fichiers</translation>
+    </message>
+    <message>
+        <source>Show/hide the File Organiser window</source>
+        <translation>Montrer/cacher la fenêtre de l&apos;Organisateur de Fichiers</translation>
+    </message>
+</context>
 </TS>

@@ -6,6 +6,7 @@
 #include <QList>
 
 class QAction;
+class QDockWidget;
 class QMainWindow;
 class QMenu;
 class QSettings;
@@ -19,7 +20,6 @@ namespace Core {
 }
 
 static const QString CorePlugin = "Core";
-static const QString HelpPlugin = "Help";
 
 class GuiCoreSettings
 {
@@ -30,20 +30,6 @@ public:
 
 private:
     Core::CentralWidget *mCentralWidget;
-};
-
-class GuiHelpSettings
-{
-public:
-    explicit GuiHelpSettings(QAction *pHelpAction,
-                             Core::DockWidget *pHelpWindow);
-
-    QAction * helpAction() const;
-    Core::DockWidget * helpWindow() const;
-
-private:
-    QAction *mHelpAction;
-    Core::DockWidget *mHelpWindow;
 };
 
 class GuiMenuSettings
@@ -88,16 +74,16 @@ class GuiToolBarSettings
 {
 public:
     explicit GuiToolBarSettings(const Qt::ToolBarArea &pDefaultDockingArea,
-                                QToolBar *pToolbar, QAction *pToolbarAction);
+                                QToolBar *pToolbar, QAction *pAction);
 
     Qt::ToolBarArea defaultDockingArea() const;
     QToolBar * toolbar() const;
-    QAction * toolbarAction() const;
+    QAction * action() const;
 
 private:
     Qt::ToolBarArea mDefaultDockingArea;
     QToolBar *mToolbar;
-    QAction *mToolbarAction;
+    QAction *mAction;
 };
 
 class GuiViewSettings
@@ -127,6 +113,32 @@ private:
     int mTabIndex;
 };
 
+class GuiWindowSettings
+{
+public:
+    enum GuiWindowSettingsType
+    {
+        Organisation,
+        Help
+    };
+
+    explicit GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
+                               Core::DockWidget *pWindow,
+                               const GuiWindowSettingsType &pType,
+                               QAction *pAction);
+
+    Qt::DockWidgetArea defaultDockingArea() const;
+    Core::DockWidget * window() const;
+    GuiWindowSettingsType type() const;
+    QAction * action() const;
+
+private:
+    Qt::DockWidgetArea mDefaultDockingArea;
+    Core::DockWidget *mWindow;
+    GuiWindowSettingsType mType;
+    QAction *mAction;
+};
+
 class GuiSettings
 {
 public:
@@ -137,19 +149,25 @@ public:
     void addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
                        QAction *pAction = 0);
     void addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
-                    QToolBar *pToolbar, QAction *pToolbarAction);
+                    QToolBar *pToolbar, QAction *pAction);
     void addView(const GuiViewSettings::Mode &pMode);
+    void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
+                   Core::DockWidget *pWindow,
+                   const GuiWindowSettings::GuiWindowSettingsType &pType,
+                   QAction *pAction);
 
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;
     QList<GuiToolBarSettings *> toolbars() const;
     QList<GuiViewSettings *> views() const;
+    QList<GuiWindowSettings *> windows() const;
 
 private:
     QList<GuiMenuSettings *> mMenus;
     QList<GuiMenuActionSettings *> mMenuActions;
     QList<GuiToolBarSettings *> mToolbars;
     QList<GuiViewSettings *> mViews;
+    QList<GuiWindowSettings *> mWindows;
 };
 
 class GuiInterface
@@ -158,8 +176,7 @@ public:
     explicit GuiInterface();
     ~GuiInterface();
 
-    virtual void loadSettings(QSettings *pSettings,
-                              const bool &pNeedDefaultSettings);
+    virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
     GuiSettings * guiSettings() const;
@@ -168,8 +185,10 @@ public:
     void setMainWindow(QMainWindow *pMainWindow);
     void setGuiPluginName(const QString &pGuiPluginName);
 
-    static void connectToolBarToToolBarAction(QToolBar *pToolbar,
-                                              QAction *pToolbarAction);
+    static void connectToolBarToAction(QToolBar *pToolbar, QAction *pAction);
+    static void connectDockWidgetToAction(QDockWidget *pDockWidget, QAction *pAction);
+
+    static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
 
 protected:
     QMainWindow *mMainWindow;
@@ -188,14 +207,11 @@ protected:
                                const QString &pIconResource = QString(),
                                const bool &pVisible = true);
 
-    static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
     static void retranslateAction(QAction *pAction, const QString &pText,
                                   const QString &pStatusTip,
                                   const QString &pShortcut = QString());
 
     void loadWindowSettings(QSettings *pSettings,
-                            const bool &pNeedDefaultSettings,
-                            const Qt::DockWidgetArea &pDefaultDockingArea,
                             Core::DockWidget *pWindow);
     void saveWindowSettings(QSettings *pSettings,
                             Core::DockWidget *pWindow) const;

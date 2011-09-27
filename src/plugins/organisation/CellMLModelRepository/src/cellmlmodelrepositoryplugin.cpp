@@ -25,18 +25,27 @@ Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)
 
 void CellMLModelRepositoryPlugin::initialize()
 {
+    // Create an action to show/hide our help window
+
+    mCellmlModelRepositoryAction = newAction(mMainWindow, true);
+
     // Create our CellML Model Repository window
 
     mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindow(mMainWindow);
+
+    // Set our settings
+
+    mGuiSettings->addWindow(Qt::LeftDockWidgetArea,
+                            mCellmlModelRepositoryWindow,
+                            GuiWindowSettings::Organisation,
+                            mCellmlModelRepositoryAction);
 }
 
-void CellMLModelRepositoryPlugin::loadSettings(QSettings *pSettings,
-                                               const bool &pNeedDefaultSettings)
+void CellMLModelRepositoryPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our CellML Model Repository window settings
 
-    loadWindowSettings(pSettings, pNeedDefaultSettings, Qt::LeftDockWidgetArea,
-                       mCellmlModelRepositoryWindow);
+    loadWindowSettings(pSettings, mCellmlModelRepositoryWindow);
 }
 
 void CellMLModelRepositoryPlugin::saveSettings(QSettings *pSettings) const
@@ -48,6 +57,12 @@ void CellMLModelRepositoryPlugin::saveSettings(QSettings *pSettings) const
 
 void CellMLModelRepositoryPlugin::retranslateUi()
 {
+    // Retranslate our CellML Model Repository action
+
+    retranslateAction(mCellmlModelRepositoryAction,
+                      tr("CellML Model Repository"),
+                      tr("Show/hide the CellML Model Repository window"));
+
     // Retranslate our CellML Model Repository window
 
     mCellmlModelRepositoryWindow->retranslateUi();

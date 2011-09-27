@@ -23,27 +23,6 @@ Core::CentralWidget * GuiCoreSettings::centralWidget() const
     return mCentralWidget;
 }
 
-GuiHelpSettings::GuiHelpSettings(QAction *pHelpAction,
-                                 Core::DockWidget *pHelpWindow) :
-    mHelpAction(pHelpAction),
-    mHelpWindow(pHelpWindow)
-{
-}
-
-QAction * GuiHelpSettings::helpAction() const
-{
-    // Return the help action
-
-    return mHelpAction;
-}
-
-Core::DockWidget * GuiHelpSettings::helpWindow() const
-{
-    // Return the help window
-
-    return mHelpWindow;
-}
-
 GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
                                  QMenu *pMenu) :
     mType(pType),
@@ -88,14 +67,14 @@ QAction * GuiMenuActionSettings::action() const
 
 GuiToolBarSettings::GuiToolBarSettings(const Qt::ToolBarArea &pDefaultDockingArea,
                                        QToolBar *pToolbar,
-                                       QAction *pToolbarAction) :
+                                       QAction *pAction) :
     mDefaultDockingArea(pDefaultDockingArea),
     mToolbar(pToolbar),
-    mToolbarAction(pToolbarAction)
+    mAction(pAction)
 {
     // Connect the toolbar to its toolbar action
 
-    GuiInterface::connectToolBarToToolBarAction(pToolbar, pToolbarAction);
+    GuiInterface::connectToolBarToAction(pToolbar, pAction);
 }
 
 Qt::ToolBarArea GuiToolBarSettings::defaultDockingArea() const
@@ -112,11 +91,11 @@ QToolBar * GuiToolBarSettings::toolbar() const
     return mToolbar;
 }
 
-QAction * GuiToolBarSettings::toolbarAction() const
+QAction * GuiToolBarSettings::action() const
 {
     // Return the show/hide action
 
-    return mToolbarAction;
+    return mAction;
 }
 
 GuiViewSettings::GuiViewSettings(const Mode &pMode) :
@@ -161,6 +140,45 @@ int GuiViewSettings::tabIndex() const
     return mTabIndex;
 }
 
+GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
+                                     Core::DockWidget *pWindow,
+                                     const GuiWindowSettingsType &pType,
+                                     QAction *pAction) :
+    mDefaultDockingArea(pDefaultDockingArea),
+    mWindow(pWindow),
+    mType(pType),
+    mAction(pAction)
+{
+}
+
+Qt::DockWidgetArea GuiWindowSettings::defaultDockingArea() const
+{
+    // Return the window's default docking area
+
+    return mDefaultDockingArea;
+}
+
+Core::DockWidget * GuiWindowSettings::window() const
+{
+    // Return the window itself
+
+    return mWindow;
+}
+
+GuiWindowSettings::GuiWindowSettingsType GuiWindowSettings::type() const
+{
+    // Return the action's type
+
+    return mType;
+}
+
+QAction * GuiWindowSettings::action() const
+{
+    // Return the action itself
+
+    return mAction;
+}
+
 GuiSettings::~GuiSettings()
 {
     // Delete the contents of our various lists
@@ -173,6 +191,9 @@ GuiSettings::~GuiSettings()
 
     foreach (GuiViewSettings *viewSettings, mViews)
         delete viewSettings;
+
+    foreach (GuiWindowSettings *windowSettings, mWindows)
+        delete windowSettings;
 }
 
 void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
@@ -193,12 +214,11 @@ void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettin
 }
 
 void GuiSettings::addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
-                             QToolBar *pToolbar, QAction *pToolbarAction)
+                             QToolBar *pToolbar, QAction *pAction)
 {
     // Add a toolbar to our list
 
-    mToolbars << new GuiToolBarSettings(pDefaultDockingArea, pToolbar,
-                                        pToolbarAction);
+    mToolbars << new GuiToolBarSettings(pDefaultDockingArea, pToolbar, pAction);
 }
 
 void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
@@ -206,6 +226,17 @@ void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
     // Add a new view to our list
 
     mViews << new GuiViewSettings(pMode);
+}
+
+void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
+                            Core::DockWidget *pWindow,
+                            const GuiWindowSettings::GuiWindowSettingsType &pType,
+                            QAction *pAction)
+{
+    // Add a window to our list
+
+    mWindows << new GuiWindowSettings(pDefaultDockingArea, pWindow, pType,
+                                      pAction);
 }
 
 QList<GuiMenuSettings *> GuiSettings::menus() const
@@ -236,6 +267,13 @@ QList<GuiViewSettings *> GuiSettings::views() const
     return mViews;
 }
 
+QList<GuiWindowSettings *> GuiSettings::windows() const
+{
+    // Return our windows
+
+    return mWindows;
+}
+
 GuiInterface::GuiInterface() :
     mData(0)
 {
@@ -252,35 +290,16 @@ GuiInterface::~GuiInterface()
 }
 
 void GuiInterface::loadWindowSettings(QSettings *pSettings,
-                                      const bool &pNeedDefaultSettings,
-                                      const Qt::DockWidgetArea &pDefaultDockingArea,
                                       Core::DockWidget *pWindow)
 {
-    if (pNeedDefaultSettings) {
-        // Hide the window, so that we can set things up without having the
-        // screen flashing
-
-        pWindow->setVisible(false);
-
-        // Position the window to its default location
-
-        mMainWindow->addDockWidget(pDefaultDockingArea, pWindow);
-    }
-
     // Retrieve the window's settings
 
     pSettings->beginGroup(pWindow->objectName());
         pWindow->loadSettings(pSettings);
     pSettings->endGroup();
-
-    if (pNeedDefaultSettings)
-        // Make the window visible
-
-        pWindow->setVisible(true);
 }
 
-void GuiInterface::loadSettings(QSettings *pSettings,
-                                const bool &pNeedDefaultSettings)
+void GuiInterface::loadSettings(QSettings *pSettings)
 {
     if (!mGuiPluginName.compare(CorePlugin)) {
         // We are dealing with our special Core plugin
@@ -421,15 +440,25 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
     return res;
 }
 
-void GuiInterface::connectToolBarToToolBarAction(QToolBar *pToolbar,
-                                                 QAction *pToolbarAction)
+void GuiInterface::connectToolBarToAction(QToolBar *pToolbar, QAction *pAction)
 {
     // Setup the action for the toolbar, so we can show/hide it at will
 
-    QObject::connect(pToolbarAction, SIGNAL(triggered(bool)),
+    QObject::connect(pAction, SIGNAL(triggered(bool)),
                      pToolbar, SLOT(setVisible(bool)));
     QObject::connect(pToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-                     pToolbarAction, SLOT(setChecked(bool)));
+                     pAction, SLOT(setChecked(bool)));
+}
+
+void GuiInterface::connectDockWidgetToAction(QDockWidget *pDockWidget,
+                                             QAction *pAction)
+{
+    // Setup the action for the dock widget, so we can show/hide it at will
+
+    QObject::connect(pAction, SIGNAL(triggered(bool)),
+                     pDockWidget, SLOT(setVisible(bool)));
+    QObject::connect(pDockWidget->toggleViewAction(), SIGNAL(toggled(bool)),
+                     pAction, SLOT(setChecked(bool)));
 }
 
 void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)

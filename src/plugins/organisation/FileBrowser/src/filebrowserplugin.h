@@ -24,14 +24,15 @@ class FileBrowserPlugin : public QObject, public CoreInterface,
 public:
     virtual void initialize();
 
-    virtual void loadSettings(QSettings *pSettings,
-                              const bool &pNeedDefaultSettings);
+    virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
 protected:
     virtual void retranslateUi();
 
 private:
+    QAction *mFileBrowserAction;
+
     FileBrowserWindow *mFileBrowserWindow;
 };
 

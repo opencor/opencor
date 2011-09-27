@@ -40,4 +40,15 @@
         <translation>Aller au répertoire parent</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::FileBrowser::FileBrowserPlugin</name>
+    <message>
+        <source>File Browser</source>
+        <translation>Gestionnaire de Fichiers</translation>
+    </message>
+    <message>
+        <source>Show/hide the File Browser window</source>
+        <translation>Montrer/cacher la fenêtre du Gestionnaire de Fichiers</translation>
+    </message>
+</context>
 </TS>

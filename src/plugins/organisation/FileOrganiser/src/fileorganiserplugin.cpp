@@ -25,18 +25,26 @@ Q_EXPORT_PLUGIN2(FileOrganiser, FileOrganiserPlugin)
 
 void FileOrganiserPlugin::initialize()
 {
+    // Create an action to show/hide our file organiser window
+
+    mFileOrganiserAction = newAction(mMainWindow, true);
+
     // Create our file organiser window
 
     mFileOrganiserWindow = new FileOrganiserWindow(mMainWindow);
+
+    // Set our settings
+
+    mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileOrganiserWindow,
+                            GuiWindowSettings::Organisation,
+                            mFileOrganiserAction);
 }
 
-void FileOrganiserPlugin::loadSettings(QSettings *pSettings,
-                                       const bool &pNeedDefaultSettings)
+void FileOrganiserPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file organiser window settings
 
-    loadWindowSettings(pSettings, pNeedDefaultSettings, Qt::LeftDockWidgetArea,
-                       mFileOrganiserWindow);
+    loadWindowSettings(pSettings, mFileOrganiserWindow);
 }
 
 void FileOrganiserPlugin::saveSettings(QSettings *pSettings) const
@@ -48,6 +56,11 @@ void FileOrganiserPlugin::saveSettings(QSettings *pSettings) const
 
 void FileOrganiserPlugin::retranslateUi()
 {
+    // Retranslate our file organiser action
+
+    retranslateAction(mFileOrganiserAction, tr("File Organiser"),
+                      tr("Show/hide the File Organiser window"));
+
     // Retranslate our file organiser window
 
     mFileOrganiserWindow->retranslateUi();

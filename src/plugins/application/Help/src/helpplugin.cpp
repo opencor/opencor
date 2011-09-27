@@ -35,44 +35,29 @@ void HelpPlugin::initialize()
 
     mHelpWindow = new HelpWindow(mMainWindow);
 
-    // Create and set our data
+    // Set our settings
 
-    mData = new GuiHelpSettings(mHelpAction, mHelpWindow);
-
-    // Some connections to handle the visibility of our help window
-
-    connect(mHelpAction, SIGNAL(triggered(bool)),
-            mHelpWindow, SLOT(setVisible(bool)));
-    connect(mHelpWindow, SIGNAL(visibilityChanged(bool)),
-            mHelpAction, SLOT(setChecked(bool)));
+    mGuiSettings->addWindow(Qt::RightDockWidgetArea, mHelpWindow,
+                            GuiWindowSettings::Help, mHelpAction);
 }
 
-void HelpPlugin::finalize()
+void HelpPlugin::loadSettings(QSettings *pSettings)
 {
-    // Delete our data
+    // Retrieve our help window settings
 
-    delete (GuiHelpSettings *) mData;
-}
-
-void HelpPlugin::loadSettings(QSettings *pSettings,
-                              const bool &pNeedDefaultSettings)
-{
-    // Retrieve our Help window settings
-
-    loadWindowSettings(pSettings, pNeedDefaultSettings, Qt::RightDockWidgetArea,
-                       mHelpWindow);
+    loadWindowSettings(pSettings, mHelpWindow);
 }
 
 void HelpPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our Help window settings
+    // Keep track of our help window settings
 
     saveWindowSettings(pSettings, mHelpWindow);
 }
 
 void HelpPlugin::retranslateUi()
 {
-    // Retranslate our action
+    // Retranslate our help action
 
     retranslateAction(mHelpAction, tr("&Help"),
                       tr("Show/hide the OpenCOR help"),

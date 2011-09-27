@@ -135,12 +135,11 @@ void CorePlugin::finalize()
 
 static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
 
-void CorePlugin::loadSettings(QSettings *pSettings,
-                              const bool &pNeedDefaultSettings)
+void CorePlugin::loadSettings(QSettings *pSettings)
 {
     // First, call the parent implementation
 
-    GuiInterface::loadSettings(pSettings, pNeedDefaultSettings);
+    GuiInterface::loadSettings(pSettings);
 
     // Retrieve the active directory
 

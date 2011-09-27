@@ -8,4 +8,15 @@
         <translation>Répertoire de Modèles CellML</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::CellMLModelRepository::CellMLModelRepositoryPlugin</name>
+    <message>
+        <source>CellML Model Repository</source>
+        <translation>Répertoire de Modèles CellML</translation>
+    </message>
+    <message>
+        <source>Show/hide the CellML Model Repository window</source>
+        <translation>Montrer/cacher la fenêtre du Répertoire de Modèles CellML</translation>
+    </message>
+</context>
 </TS>

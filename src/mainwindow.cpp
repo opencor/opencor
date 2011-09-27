@@ -29,7 +29,8 @@ namespace OpenCOR {
 
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
-    mUi(new Ui::MainWindow)
+    mUi(new Ui::MainWindow),
+    mOrganisationMenu(0)
 {
     // Create our settings object
 
@@ -69,8 +70,8 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Some connections to handle our Help toolbar
 
-    GuiInterface::connectToolBarToToolBarAction(mUi->helpToolbar,
-                                                mUi->actionHelpToolbar);
+    GuiInterface::connectToolBarToAction(mUi->helpToolbar,
+                                         mUi->actionHelpToolbar);
 
     // A connection to handle the status bar
 
@@ -252,31 +253,9 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 void MainWindow::initializeGuiPlugin(const QString &pPluginName,
                                      GuiInterface *pGuiInterface)
 {
-    // Check whether we are dealing with our special Help plugin
-
-    if (!pPluginName.compare(HelpPlugin) && pGuiInterface->data()) {
-        // We are dealing with our special Help plugin and its data is set, so
-        // we can make use of it
-
-        QAction *helpAction = ((GuiHelpSettings *) pGuiInterface->data())->helpAction();
-
-        // Add the action to our help menu
-
-        mUi->menuHelp->insertAction(mUi->actionHomePage, helpAction);
-        mUi->menuHelp->insertSeparator(mUi->actionHomePage);
-
-        // As well as to our help tool bar
-
-        mUi->helpToolbar->insertAction(mUi->actionHomePage, helpAction);
-        mUi->helpToolbar->insertSeparator(mUi->actionHomePage);
-    }
-
-    // Deal with the menus and actions that the plugin may want us to add
-    // (insert)
-
     // Add the menus to our menu bar or merge them to existing menus, if needed
     // Note: we must do that in reverse order since we are inserting menus,
-    //       as opposed to appending menus...
+    //       as opposed to appending them...
 
     QListIterator<GuiMenuSettings *> menuIter(pGuiInterface->guiSettings()->menus());
 
@@ -322,7 +301,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
     // Add the actions/separators to our different menus
     // Note: as for the menus above, we must do that in reverse order since we
-    //       are inserting actions, as opposed to appending actions...
+    //       are inserting actions, as opposed to appending them...
 
     QListIterator<GuiMenuActionSettings *> menuActionIter(pGuiInterface->guiSettings()->menuActions());
 
@@ -334,12 +313,18 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         GuiMenuActionSettings *menuActionSettings = menuActionIter.previous();
 
         switch (menuActionSettings->type()) {
-        default:   // File
+        case GuiMenuActionSettings::File:
             if(menuActionSettings->action())
                 mUi->menuFile->insertAction(mUi->menuFile->actions().first(),
                                             menuActionSettings->action());
             else
                 mUi->menuFile->insertSeparator(mUi->menuFile->actions().first());
+
+            break;
+        default:
+            // Unknown type, so do nothing...
+
+            ;
         }
     }
 
@@ -372,7 +357,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
             // Also add a toolbar action to our View|Toolbars menu
 
-            mUi->menuToolbars->addAction(toolbarSettings->toolbarAction());
+            mUi->menuToolbars->addAction(toolbarSettings->action());
 
             // Keep track of the new toolbar
 
@@ -383,6 +368,63 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
     // Reorder the View|Toolbars menu, just in case
 
     reorderViewToolbarsMenu();
+
+    // Add the windows (including to the corresponding menu)
+
+    foreach (GuiWindowSettings *windowSettings,
+             pGuiInterface->guiSettings()->windows()) {
+        // Dock the window to its default docking area
+
+        QDockWidget *dockWidget = (QDockWidget *) windowSettings->window();
+
+        addDockWidget(windowSettings->defaultDockingArea(), dockWidget);
+
+        // Add an action to our menu to show/hide the menu
+
+        switch (windowSettings->type()) {
+        case GuiWindowSettings::Help:
+            mUi->menuHelp->insertAction(mUi->actionHomePage,
+                                        windowSettings->action());
+            mUi->menuHelp->insertSeparator(mUi->actionHomePage);
+
+            // In the case of a Help window, we also want to add the action to
+            // our Help toolbar
+
+            mUi->helpToolbar->insertAction(mUi->actionHomePage,
+                                           windowSettings->action());
+            mUi->helpToolbar->insertSeparator(mUi->actionHomePage);
+
+            break;
+        case GuiWindowSettings::Organisation:
+            if (!mOrganisationMenu) {
+                // The Organisation menu doesn't already exist, so create it
+
+                mOrganisationMenu = new QMenu(this);
+
+                // Add it to our View menu
+
+                mUi->menuView->insertMenu(mUi->actionFullScreen,
+                                          mOrganisationMenu);
+
+                // Add a separator
+
+                mUi->menuView->insertSeparator(mUi->actionFullScreen);
+            }
+
+            mOrganisationMenu->addAction(windowSettings->action());
+
+            break;
+        default:
+            // Unknown type, so do nothing...
+
+            ;
+        }
+
+        // Connect the action to the window
+
+        GuiInterface::connectDockWidgetToAction(dockWidget,
+                                                windowSettings->action());
+    }
 }
 
 static const QString SettingsLocale              = "Locale";
@@ -398,10 +440,8 @@ void MainWindow::loadSettings()
 
     // Retrieve the geometry and state of the main window
 
-    bool needDefaultSettings =    !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
-                               || !restoreState(mSettings->value(SettingsState).toByteArray());
-
-    if (needDefaultSettings) {
+    if (   !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
+        || !restoreState(mSettings->value(SettingsState).toByteArray())) {
         // The geometry and/or state of the main window couldn't be
         // retrieved, so go with some default settins
 
@@ -433,7 +473,7 @@ void MainWindow::loadSettings()
 
         if (guiInterface) {
             mSettings->beginGroup(plugin->name());
-                guiInterface->loadSettings(mSettings, needDefaultSettings);
+                guiInterface->loadSettings(mSettings);
             mSettings->endGroup();
         }
     }
@@ -505,6 +545,13 @@ void MainWindow::setLocale(const QString &pLocale)
         // Retranslate OpenCOR
 
         mUi->retranslateUi(this);
+
+        // Retranslate some widgets that are not originally part of our user
+        // interface
+
+        if (mOrganisationMenu)
+            GuiInterface::retranslateMenu(mOrganisationMenu,
+                                          tr("Organisation"));
 
         // Update the locale of our various plugins
 

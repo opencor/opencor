@@ -165,6 +165,10 @@
         <source>No plugin could be found.</source>
         <translation>Aucune extension n&apos;a été trouvée.</translation>
     </message>
+    <message>
+        <source>Organisation</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PluginsWindow</name>

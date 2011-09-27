@@ -25,18 +25,26 @@ Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)
 
 void FileBrowserPlugin::initialize()
 {
+    // Create an action to show/hide our file browser window
+
+    mFileBrowserAction = newAction(mMainWindow, true);
+
     // Create our file browser window
 
     mFileBrowserWindow = new FileBrowserWindow(mMainWindow);
+
+    // Set our settings
+
+    mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileBrowserWindow,
+                            GuiWindowSettings::Organisation,
+                            mFileBrowserAction);
 }
 
-void FileBrowserPlugin::loadSettings(QSettings *pSettings,
-                                     const bool &pNeedDefaultSettings)
+void FileBrowserPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file browser window settings
 
-    loadWindowSettings(pSettings, pNeedDefaultSettings, Qt::LeftDockWidgetArea,
-                       mFileBrowserWindow);
+    loadWindowSettings(pSettings, mFileBrowserWindow);
 }
 
 void FileBrowserPlugin::saveSettings(QSettings *pSettings) const
@@ -48,6 +56,11 @@ void FileBrowserPlugin::saveSettings(QSettings *pSettings) const
 
 void FileBrowserPlugin::retranslateUi()
 {
+    // Retranslate our file browser action
+
+    retranslateAction(mFileBrowserAction, tr("File Browser"),
+                      tr("Show/hide the File Browser window"));
+
     // Retranslate our file browser window
 
     mFileBrowserWindow->retranslateUi();
