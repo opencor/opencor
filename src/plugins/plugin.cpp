@@ -209,11 +209,28 @@ QString Plugin::fileName(const QString &pDir, const QString &pName)
 PluginInfo Plugin::info(const QString &pFileName)
 {
     // Return the plugin's information
+    // Note: to retrieve a plugin's information, we must, on both Windows and
+    //       Linux, be able to load any plugin on which a plugin depends. On
+    //       Windows, we do this (by keeping track of the current directory
+    //       and) by going to the directory where our plugins are located.
+    //       However, this approach doesn't work on Linux, so instead we rely
+    //       on LD_LIBRARY_PATH to get the result we are after (in fact, it is
+    //       probably a better approach!), so...
 
     typedef PluginInfo (*PluginInfoFunc)();
 
+#ifdef Q_WS_WIN
+    QString origPath = QDir::currentPath();
+
+    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+#endif
+
     PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) QLibrary::resolve(pFileName,
                                                                        QString(name(pFileName)+"PluginInfo").toLatin1().constData());
+
+#ifdef Q_WS_WIN
+    QDir::setCurrent(origPath);
+#endif
 
     // Check whether the plugin information function was found
 
