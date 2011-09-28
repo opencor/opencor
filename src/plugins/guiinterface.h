@@ -19,19 +19,6 @@ namespace Core {
     class DockWidget;
 }
 
-static const QString CorePlugin = "Core";
-
-class GuiCoreSettings
-{
-public:
-    explicit GuiCoreSettings(Core::CentralWidget *pCentralWidget);
-
-    Core::CentralWidget * centralWidget() const;
-
-private:
-    Core::CentralWidget *mCentralWidget;
-};
-
 class GuiMenuSettings
 {
 public:
@@ -143,6 +130,7 @@ private:
 class GuiSettings
 {
 public:
+    explicit GuiSettings();
     ~GuiSettings();
 
     void addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
@@ -151,6 +139,7 @@ public:
                        QAction *pAction = 0);
     void addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
                     QToolBar *pToolbar, QAction *pAction);
+    void addCentralWidget(Core::CentralWidget *pCentralWidget);
     void addView(const GuiViewSettings::Mode &pMode);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow,
@@ -160,6 +149,7 @@ public:
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;
     QList<GuiToolBarSettings *> toolbars() const;
+    Core::CentralWidget *centralWidget() const;
     QList<GuiViewSettings *> views() const;
     QList<GuiWindowSettings *> windows() const;
 
@@ -167,6 +157,7 @@ private:
     QList<GuiMenuSettings *> mMenus;
     QList<GuiMenuActionSettings *> mMenuActions;
     QList<GuiToolBarSettings *> mToolbars;
+    Core::CentralWidget *mCentralWidget;
     QList<GuiViewSettings *> mViews;
     QList<GuiWindowSettings *> mWindows;
 };
@@ -181,7 +172,6 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     GuiSettings * guiSettings() const;
-    void * data() const;
 
     void setMainWindow(QMainWindow *pMainWindow);
     void setGuiPluginName(const QString &pGuiPluginName);
@@ -195,10 +185,6 @@ protected:
     QMainWindow *mMainWindow;
 
     GuiSettings *mGuiSettings;
-    void *mData;
-    // Note: mData is used only by the Core and Help plugins which are both one
-    //       of a kind and therefore require special treatment (as opposed to
-    //       generic treatment)
 
     static QMenu * newMenu(QMainWindow *pMainWindow, const QString &pName);
     static QToolBar * newToolBar(QMainWindow *pMainWindow,

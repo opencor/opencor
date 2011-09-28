@@ -60,7 +60,7 @@ private:
     QAction *mViewSeparator;
 
     void initializeGuiPlugin(const QString &pPluginName,
-                             GuiInterface *pGuiInterface);
+                             GuiSettings *pGuiSettings);
 
     void loadSettings();
     void saveSettings() const;

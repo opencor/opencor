@@ -138,7 +138,7 @@ MainWindow::MainWindow(QWidget *pParent) :
             // Initialise the plugin further (i.e. do things which can only be
             // done by OpenCOR itself)
 
-            initializeGuiPlugin(plugin->name(), guiInterface);
+            initializeGuiPlugin(plugin->name(), guiInterface->guiSettings());
     }
 
 #ifdef Q_WS_MAC
@@ -252,13 +252,13 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 }
 
 void MainWindow::initializeGuiPlugin(const QString &pPluginName,
-                                     GuiInterface *pGuiInterface)
+                                     GuiSettings *pGuiSettings)
 {
     // Add the menus to our menu bar or merge them to existing menus, if needed
     // Note: we must do that in reverse order since we are inserting menus,
     //       as opposed to appending them...
 
-    QListIterator<GuiMenuSettings *> menuIter(pGuiInterface->guiSettings()->menus());
+    QListIterator<GuiMenuSettings *> menuIter(pGuiSettings->menus());
 
     menuIter.toBack();
 
@@ -304,7 +304,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
     // Note: as for the menus above, we must do that in reverse order since we
     //       are inserting actions, as opposed to appending them...
 
-    QListIterator<GuiMenuActionSettings *> menuActionIter(pGuiInterface->guiSettings()->menuActions());
+    QListIterator<GuiMenuActionSettings *> menuActionIter(pGuiSettings->menuActions());
 
     menuActionIter.toBack();
 
@@ -331,8 +331,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
     // Add the toolbars (including to the View|Toolbars menu)
 
-    foreach (GuiToolBarSettings *toolbarSettings,
-             pGuiInterface->guiSettings()->toolbars()) {
+    foreach (GuiToolBarSettings *toolbarSettings, pGuiSettings->toolbars()) {
         QToolBar *newToolbar = toolbarSettings->toolbar();
         QString newToolbarName = newToolbar->objectName();
 
@@ -366,10 +365,14 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         }
     }
 
+    // Set the central widget
+
+    if (pGuiSettings->centralWidget())
+        setCentralWidget((QWidget *) pGuiSettings->centralWidget());
+
     // Add the windows (including to the corresponding menu)
 
-    foreach (GuiWindowSettings *windowSettings,
-             pGuiInterface->guiSettings()->windows()) {
+    foreach (GuiWindowSettings *windowSettings, pGuiSettings->windows()) {
         // Dock the window to its default docking area
 
         QDockWidget *dockWidget = (QDockWidget *) windowSettings->window();

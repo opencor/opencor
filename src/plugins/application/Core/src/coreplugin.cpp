@@ -45,10 +45,6 @@ void CorePlugin::initialize()
 
     mCentralWidget = new CentralWidget(mMainWindow);
 
-    // Create and set our data
-
-    mData = new GuiCoreSettings(mCentralWidget);
-
     // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
 
@@ -124,22 +120,19 @@ void CorePlugin::initialize()
 
     mGuiSettings->addToolBar(Qt::TopToolBarArea, mFileToolbar,
                              mFileToolbarAction);
-}
 
-void CorePlugin::finalize()
-{
-    // Delete our data
-
-    delete (GuiCoreSettings *) mData;
+    mGuiSettings->addCentralWidget(mCentralWidget);
 }
 
 static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
 
 void CorePlugin::loadSettings(QSettings *pSettings)
 {
-    // First, call the parent implementation
+    // Retrieve the central widget settings
 
-    GuiInterface::loadSettings(pSettings);
+    pSettings->beginGroup(mCentralWidget->objectName());
+        mCentralWidget->loadSettings(pSettings);
+    pSettings->endGroup();
 
     // Retrieve the active directory
 
@@ -149,9 +142,11 @@ void CorePlugin::loadSettings(QSettings *pSettings)
 
 void CorePlugin::saveSettings(QSettings *pSettings) const
 {
-    // First, call the parent implementation
+    // Keep track of the central widget settings
 
-    GuiInterface::saveSettings(pSettings);
+    pSettings->beginGroup(mCentralWidget->objectName());
+        mCentralWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 
     // Keep track of the active directory
 

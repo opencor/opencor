@@ -11,18 +11,6 @@
 
 namespace OpenCOR {
 
-GuiCoreSettings::GuiCoreSettings(Core::CentralWidget *pCentralWidget) :
-    mCentralWidget(pCentralWidget)
-{
-}
-
-Core::CentralWidget * GuiCoreSettings::centralWidget() const
-{
-    // Return the central widget
-
-    return mCentralWidget;
-}
-
 GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
                                  QMenu *pMenu) :
     mType(pType),
@@ -179,6 +167,11 @@ QAction * GuiWindowSettings::action() const
     return mAction;
 }
 
+GuiSettings::GuiSettings() :
+    mCentralWidget(0)
+{
+}
+
 GuiSettings::~GuiSettings()
 {
     // Delete the contents of our various lists
@@ -221,6 +214,13 @@ void GuiSettings::addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
     mToolbars << new GuiToolBarSettings(pDefaultDockingArea, pToolbar, pAction);
 }
 
+void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
+{
+    // Set the central widget to be used
+
+    mCentralWidget = pCentralWidget;
+}
+
 void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
 {
     // Add a new view to our list
@@ -260,6 +260,13 @@ QList<GuiToolBarSettings *> GuiSettings::toolbars() const
     return mToolbars;
 }
 
+Core::CentralWidget * GuiSettings::centralWidget() const
+{
+    // Return the central widget
+
+    return mCentralWidget;
+}
+
 QList<GuiViewSettings *> GuiSettings::views() const
 {
     // Return our views
@@ -274,8 +281,7 @@ QList<GuiWindowSettings *> GuiSettings::windows() const
     return mWindows;
 }
 
-GuiInterface::GuiInterface() :
-    mData(0)
+GuiInterface::GuiInterface()
 {
     // Create our GUI settings object
 
@@ -301,26 +307,7 @@ void GuiInterface::loadWindowSettings(QSettings *pSettings,
 
 void GuiInterface::loadSettings(QSettings *pSettings)
 {
-    if (!mGuiPluginName.compare(CorePlugin)) {
-        // We are dealing with our special Core plugin
-
-        if (mData) {
-            // Our special Core plugin has its data set, so retrieve its central
-            // widget's settings
-
-            Core::CentralWidget *centralWidget = ((GuiCoreSettings *) mData)->centralWidget();
-
-            // Load the central widget's settings
-
-            pSettings->beginGroup(centralWidget->objectName());
-                centralWidget->loadSettings(pSettings);
-            pSettings->endGroup();
-
-            // Set the central widget
-
-            mMainWindow->setCentralWidget(centralWidget);
-        }
-    }
+    // Nothing to do by default...
 }
 
 void GuiInterface::saveWindowSettings(QSettings *pSettings,
@@ -335,20 +322,7 @@ void GuiInterface::saveWindowSettings(QSettings *pSettings,
 
 void GuiInterface::saveSettings(QSettings *pSettings) const
 {
-    if (!mGuiPluginName.compare(CorePlugin)) {
-        // We are dealing with our special Core plugin
-
-        if (mData) {
-            // Our special Core plugin has its data set, so keep track of its
-            // central widget's settings
-
-            Core::CentralWidget *centralWidget = ((GuiCoreSettings *) mData)->centralWidget();
-
-            pSettings->beginGroup(centralWidget->objectName());
-                centralWidget->saveSettings(pSettings);
-            pSettings->endGroup();
-        }
-    }
+    // Nothing to do by default...
 }
 
 GuiSettings * GuiInterface::guiSettings() const
@@ -356,13 +330,6 @@ GuiSettings * GuiInterface::guiSettings() const
     // Return the plugin's GUI settings
 
     return mGuiSettings;
-}
-
-void * GuiInterface::data() const
-{
-    // Return the plugin's data
-
-    return mData;
 }
 
 void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
