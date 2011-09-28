@@ -35,9 +35,10 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
 
 QSize CellmlModelRepositoryWidget::sizeHint() const
 {
-    // Suggest a default size for the PMR explorer widget
-    // Note: this is critical if we want a docked widget, with a PMR explorer
-    //       widget on it, to have a decent size when docked to the main window
+    // Suggest a default size for the CellML Model Repository widget
+    // Note: this is critical if we want a docked widget, with a CellML Model
+    //       Repository widget on it, to have a decent size when docked to the
+    //       main window
 
     return defaultSize(0.15);
 }

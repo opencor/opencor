@@ -16,7 +16,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     mUi->setupUi(this);
 
-    // Create and add the PMR explorer widget
+    // Create and add the CellML Model Repository widget
 
     mCellmlModelRepositoryWidget = new CellmlModelRepositoryWidget("CellmlModelRepositoryWidget",
                                                                    this);
@@ -37,14 +37,14 @@ void CellmlModelRepositoryWindow::retranslateUi()
 
     mUi->retranslateUi(this);
 
-    // Retranslate the PMR explorer widget
+    // Retranslate the CellML Model Repository widget
 
     mCellmlModelRepositoryWidget->retranslateUi();
 }
 
 void CellmlModelRepositoryWindow::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the settings of the PMR explorer widget
+    // Retrieve the settings of the CellML Model Repository widget
 
     pSettings->beginGroup(mCellmlModelRepositoryWidget->objectName());
         mCellmlModelRepositoryWidget->loadSettings(pSettings);
@@ -53,7 +53,7 @@ void CellmlModelRepositoryWindow::loadSettings(QSettings *pSettings)
 
 void CellmlModelRepositoryWindow::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the settings of the PMR explorer widget
+    // Keep track of the settings of the CellML Model Repository widget
 
     pSettings->beginGroup(mCellmlModelRepositoryWidget->objectName());
         mCellmlModelRepositoryWidget->saveSettings(pSettings);
