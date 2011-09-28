@@ -254,6 +254,9 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 void MainWindow::initializeGuiPlugin(const QString &pPluginName,
                                      GuiSettings *pGuiSettings)
 {
+    static const QString CorePlugin = "Core";
+    static const QString HelpPlugin = "Help";
+
     // Add the menus to our menu bar or merge them to existing menus, if needed
     // Note: we must do that in reverse order since we are inserting menus,
     //       as opposed to appending them...
@@ -365,10 +368,11 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         }
     }
 
-    // Set the central widget
+    // Set the central widget, but only if it is being done from the Core plugin
 
-    if (pGuiSettings->centralWidget())
-        setCentralWidget((QWidget *) pGuiSettings->centralWidget());
+    if (!pPluginName.compare(CorePlugin))
+        if (pGuiSettings->centralWidget())
+            setCentralWidget((QWidget *) pGuiSettings->centralWidget());
 
     // Add the windows (including to the corresponding menu)
 
@@ -380,6 +384,8 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         addDockWidget(windowSettings->defaultDockingArea(), dockWidget);
 
         // Add an action to our menu to show/hide the menu
+
+        bool doConnectDockWidgetToAction = true;
 
         switch (windowSettings->type()) {
         case GuiWindowSettings::Organisation:
@@ -399,28 +405,36 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
             break;
         case GuiWindowSettings::Help:
-            mUi->menuHelp->insertAction(mUi->actionHomePage,
-                                        windowSettings->action());
-            mUi->menuHelp->insertSeparator(mUi->actionHomePage);
+            if (!pPluginName.compare(HelpPlugin)) {
+                // We only want to add the action if we are coming here from the
+                // Help plugin
 
-            // In the case of a Help window, we also want to add the action to
-            // our Help toolbar
+                mUi->menuHelp->insertAction(mUi->actionHomePage,
+                                            windowSettings->action());
+                mUi->menuHelp->insertSeparator(mUi->actionHomePage);
 
-            mUi->helpToolbar->insertAction(mUi->actionHomePage,
-                                           windowSettings->action());
-            mUi->helpToolbar->insertSeparator(mUi->actionHomePage);
+                // In the case of a Help window, we also want to add the action
+                // to our Help toolbar
+
+                mUi->helpToolbar->insertAction(mUi->actionHomePage,
+                                               windowSettings->action());
+                mUi->helpToolbar->insertSeparator(mUi->actionHomePage);
+            } else {
+                doConnectDockWidgetToAction = false;
+            }
 
             break;
         default:
-            // Unknown type, so do nothing...
+            // Unknown type, so...
 
-            ;
+            doConnectDockWidgetToAction = false;
         }
 
         // Connect the action to the window
 
-        GuiInterface::connectDockWidgetToAction(dockWidget,
-                                                windowSettings->action());
+        if (doConnectDockWidgetToAction)
+            GuiInterface::connectDockWidgetToAction(dockWidget,
+                                                    windowSettings->action());
     }
 
     // Reorder our various View menus, just in case
