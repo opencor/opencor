@@ -35,4 +35,11 @@
         <translation>Montrer/cacher la fenêtre de l&apos;Organisateur de Fichiers</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::FileOrganiser::FileOrganiserWidget</name>
+    <message>
+        <source>New Folder</source>
+        <translation>Nouveau Répertoire</translation>
+    </message>
+</context>
 </TS>

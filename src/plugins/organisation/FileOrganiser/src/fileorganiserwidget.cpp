@@ -796,8 +796,9 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem) const
     // under pFolderItem, this until we come up with a suggested name which is
     // not already taken
 
-    static const QString baseFolderName = "New Folder";
-    static const QString templateFolderName = baseFolderName+" (%1)";
+    QString baseFolderName = tr("New Folder");
+    QString templateFolderName = baseFolderName+" (%1)";
+
     int folderNb = 1;
     QString res = baseFolderName;
 
