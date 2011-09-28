@@ -37,6 +37,8 @@
 **
 ****************************************************************************/
 
+#ifndef QTLOCALPEER_H
+#define QTLOCALPEER_H
 
 #include <QtNetwork/QLocalServer>
 #include <QtNetwork/QLocalSocket>
@@ -75,3 +77,5 @@ protected:
 private:
     static const char* ack;
 };
+
+#endif // QTLOCALPEER_H
