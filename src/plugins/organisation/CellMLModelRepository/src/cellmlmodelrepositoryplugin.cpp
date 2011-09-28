@@ -17,7 +17,7 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
                       PluginInfo::Gui,
                       PluginInfo::Organisation,
                       true,
-                      QStringList() << "Core",
+                      QStringList() << "Core" << "QJson",
                       descriptions);
 }
 
