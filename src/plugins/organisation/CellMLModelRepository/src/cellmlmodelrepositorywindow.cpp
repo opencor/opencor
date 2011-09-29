@@ -23,7 +23,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     QNetworkReply *res = internetFile.get("http://50.18.64.32/workspace/rest/contents.json");
 
-    qDebug(QString(res->readAll()).toLatin1().constData());
+    qDebug("%s", QString(res->readAll()).toLatin1().constData());
 }
 
 CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
