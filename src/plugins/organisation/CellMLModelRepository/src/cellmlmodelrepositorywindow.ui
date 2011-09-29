@@ -49,7 +49,21 @@
     </item>
    </layout>
   </widget>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="../../../application/Core/res/Core.qrc">
+     <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="statusTip">
+    <string>Copy the selection to the clipboard</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../application/Core/res/Core.qrc"/>
+ </resources>
  <connections/>
 </ui>

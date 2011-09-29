@@ -77,10 +77,10 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     mHelpWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    // Some connections
-
     connect(mHelpWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(customContextMenu(const QPoint &)));
+
+    // Some connections
 
     connect(mHelpWidget, SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(needUpdateActions()));

@@ -40,8 +40,10 @@ private:
 
 private slots:
     void on_nameValue_textChanged(const QString &text);
+    void on_actionCopy_triggered();
 
     void finished(QNetworkReply *pNetworkReply);
+    void customContextMenu(const QPoint &) const;
 };
 
 } }
