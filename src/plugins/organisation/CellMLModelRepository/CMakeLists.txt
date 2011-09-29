@@ -35,5 +35,6 @@ ADD_PLUGIN(CellMLModelRepository
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
         QtWebKit
 )
