@@ -3,14 +3,15 @@
 
 #include "dockwidget.h"
 
+#include <QEventLoop>
+#include <QNetworkReply>
+
 namespace Ui {
     class CellmlModelRepositoryWindow;
 }
 
 namespace OpenCOR {
 namespace CellMLModelRepository {
-
-class CellmlModelRepositoryWidget;
 
 class CellmlModelRepositoryWindow : public Core::DockWidget
 {
