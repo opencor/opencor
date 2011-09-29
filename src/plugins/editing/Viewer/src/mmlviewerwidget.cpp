@@ -19,11 +19,7 @@ MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
 
     // Set the background to white
 
-    QPalette pal = palette();
-
-    pal.setColor(QPalette::Window, Qt::white);
-
-    setPalette(pal);
+    setPalette(QPalette(Qt::white));
     setAutoFillBackground(true);
 
     // Set a font that we know works on Windows, Linux and Mac OS X
