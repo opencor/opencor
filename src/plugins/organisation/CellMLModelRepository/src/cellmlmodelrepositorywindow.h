@@ -13,6 +13,8 @@ namespace Ui {
 namespace OpenCOR {
 namespace CellMLModelRepository {
 
+class CellmlModelRepositoryWidget;
+
 class CellmlModelRepositoryWindow : public Core::DockWidget
 {
     Q_OBJECT
@@ -25,6 +27,8 @@ public:
 
 private:
     Ui::CellmlModelRepositoryWindow *mUi;
+
+    CellmlModelRepositoryWidget *mCellmlModelRepositoryWidget;
 };
 
 } }

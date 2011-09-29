@@ -7,6 +7,14 @@
         <source>CellML Model Repository</source>
         <translation>Répertoire de Modèles CellML</translation>
     </message>
+    <message>
+        <source>Name:</source>
+        <translation>Nom :</translation>
+    </message>
+    <message>
+        <source>&amp;Search</source>
+        <translation>&amp;Chercher</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLModelRepository::CellMLModelRepositoryPlugin</name>

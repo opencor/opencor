@@ -14,6 +14,7 @@ ADD_PLUGIN(CellMLModelRepository
         ../../plugininfo.cpp
 
         src/cellmlmodelrepositoryplugin.cpp
+        src/cellmlmodelrepositorywidget.cpp
         src/cellmlmodelrepositorywindow.cpp
     HEADERS
         ../../coreinterface.h
@@ -22,6 +23,7 @@ ADD_PLUGIN(CellMLModelRepository
         ../../plugininfo.h
     HEADERS_MOC
         src/cellmlmodelrepositoryplugin.h
+        src/cellmlmodelrepositorywidget.h
         src/cellmlmodelrepositorywindow.h
     UIS
         src/cellmlmodelrepositorywindow.ui
@@ -29,7 +31,9 @@ ADD_PLUGIN(CellMLModelRepository
         src
     OPENCOR_DEPENDENCIES
         Core
+        QJson
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtWebKit
 )
