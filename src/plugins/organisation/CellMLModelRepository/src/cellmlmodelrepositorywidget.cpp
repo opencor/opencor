@@ -27,6 +27,10 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
     // Prevent the widget from taking over the scrolling of other widgets
 
     setFocusPolicy(Qt::NoFocus);
+
+    // Reduce the size of the font a bit
+
+    setZoomFactor(0.9);
 }
 
 QSize CellmlModelRepositoryWidget::sizeHint() const

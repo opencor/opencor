@@ -54,22 +54,19 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
             // Retrieve the list of models itself
 
-            QStringList modelNames;
-            QStringList modelUrls;
-
             foreach(const QVariant &modelVariant, res["values"].toList()) {
                 QVariantList modelDetailsVariant = modelVariant.toList();
 
-                modelNames.append(modelDetailsVariant.at(0).toString());
-                modelUrls.append(modelDetailsVariant.at(1).toString());
+                mModelNames.append(modelDetailsVariant.at(0).toString());
+                mModelUrls.append(modelDetailsVariant.at(1).toString());
             }
 
             // Output the list of models
 
-            for (int i = 0; i < modelNames.count(); ++i) {
+            for (int i = 0; i < mModelNames.count(); ++i) {
                 qDebug("--------------------");
-                qDebug("Name: %s", modelNames.at(i).toLatin1().constData());
-                qDebug("URL:  %s", modelUrls.at(i).toLatin1().constData());
+                qDebug("Name: %s", mModelNames.at(i).toLatin1().constData());
+                qDebug("URL:  %s", mModelUrls.at(i).toLatin1().constData());
             }
         }
     }
@@ -87,6 +84,21 @@ void CellmlModelRepositoryWindow::retranslateUi()
     // Retranslate the whole window
 
     mUi->retranslateUi(this);
+}
+
+void CellmlModelRepositoryWindow::on_searchButton_clicked()
+{
+    // Generate a Web page that contains all the models which match our search
+    // criteria
+
+    QString list;
+
+    foreach (const QString &model, mModelNames.filter(mUi->nameValue->text()))
+        list += model+"<BR>";
+
+    QString html = "<!DOCTYPE HTML><HTML><HEAD><TITLE>Test...</TITLE></HEAD><BODY>%1</BODY></HTML>";
+
+    mCellmlModelRepositoryWidget->setHtml(html.arg(list));
 }
 
 } }

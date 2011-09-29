@@ -3,9 +3,6 @@
 
 #include "dockwidget.h"
 
-#include <QEventLoop>
-#include <QNetworkReply>
-
 namespace Ui {
     class CellmlModelRepositoryWindow;
 }
@@ -28,7 +25,13 @@ public:
 private:
     Ui::CellmlModelRepositoryWindow *mUi;
 
+    QStringList mModelNames;
+    QStringList mModelUrls;
+
     CellmlModelRepositoryWidget *mCellmlModelRepositoryWidget;
+
+private slots:
+    void on_searchButton_clicked();
 };
 
 } }

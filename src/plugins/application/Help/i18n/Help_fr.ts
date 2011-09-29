@@ -73,6 +73,25 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::Help::HelpNetworkAccessManager</name>
+    <message>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <source>The following help file could not be found:</source>
+        <translation>La page d&apos;aide suivante n&apos;a pas pu être trouvée :</translation>
+    </message>
+    <message>
+        <source>Please &lt;a href=&quot;http://www.opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
+        <translation>Veuillez &lt;a href=&quot;http://www.opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+    </message>
+    <message>
+        <source>Copyright</source>
+        <translation>Tous droits réservés</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::Help::HelpPlugin</name>
     <message>
         <source>&amp;Help</source>

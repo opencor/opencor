@@ -33,6 +33,8 @@ private:
 
 class HelpNetworkAccessManager : public QNetworkAccessManager
 {
+    Q_OBJECT
+
 public:
     explicit HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
                                       QObject *pParent);

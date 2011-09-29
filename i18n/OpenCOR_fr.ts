@@ -234,7 +234,7 @@
     </message>
     <message>
         <source>The %1 plugin could not be found</source>
-        <translation>L&apos;extension %1 n&apos;a pas été trouvée</translation>
+        <translation>L&apos;extension %1 n&apos;a pas pu être trouvée</translation>
     </message>
     <message>
         <source>The %1 plugin is not of the right type</source>
@@ -321,6 +321,13 @@
     <message>
         <source>Preferences</source>
         <translation>Préférences</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Copyright</source>
+        <translation>Tous droits réservés</translation>
     </message>
 </context>
 </TS>

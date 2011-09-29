@@ -99,7 +99,10 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
 
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
-                          QByteArray(mErrorMsgTemplate.arg("The following help file could not be found: <SPAN CLASS = \"Filename\">"+url.toString()+"</SPAN>.").toLatin1());
+                          QByteArray(mErrorMsgTemplate.arg(tr("Error"),
+                                                           tr("The following help file could not be found:")+" <span class=\"Filename\">"+url.toString()+"</span>.",
+                                                           tr("Please <a href=\"http://www.opencor.ws/user/contactUs.html\">contact us</a> about this error."),
+                                                           tr("Copyright")+" ©2011").toLatin1());
 
     // Return the requested help page or an error message
 
