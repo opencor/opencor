@@ -6,8 +6,6 @@
 
 #include <QJsonParser>
 
-#include <QDebug>
-
 namespace OpenCOR {
 namespace CellMLModelRepository {
 
@@ -60,16 +58,12 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
                 mModelNames.append(modelDetailsVariant.at(0).toString());
                 mModelUrls.append(modelDetailsVariant.at(1).toString());
             }
-
-            // Output the list of models
-
-            for (int i = 0; i < mModelNames.count(); ++i) {
-                qDebug("--------------------");
-                qDebug("Name: %s", mModelNames.at(i).toLatin1().constData());
-                qDebug("URL:  %s", mModelUrls.at(i).toLatin1().constData());
-            }
         }
     }
+
+    // Initialise the output with all of the models
+
+    outputModelList(mModelNames);
 }
 
 CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
@@ -84,21 +78,49 @@ void CellmlModelRepositoryWindow::retranslateUi()
     // Retranslate the whole window
 
     mUi->retranslateUi(this);
+
+    // Retranslate the list of models
+
+    outputModelList(mModelList);
 }
 
-void CellmlModelRepositoryWindow::on_searchButton_clicked()
+void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
+{
+    // Output a given list of models
+
+    mModelList = pModelList;
+
+    QString contents = "";
+
+    if (mModelList.count()) {
+        // We have models to list, so...
+
+        if (mModelList.count() == 1)
+            contents = tr("1 model was found:")+"\n";
+        else
+            contents = tr("%1 models were found:").arg(mModelList.count())+"\n";
+
+        contents += "        <ul>\n";
+
+        foreach (const QString &model, mModelList)
+            contents += "            <li><a href=\""+mModelUrls.at(mModelNames.indexOf(model))+"\">"+model+"</a></li>\n";
+
+        contents += "        </ul>";
+    } else {
+        // No model could be found, so...
+
+        contents = "        "+tr("No model matches your criteria");
+    }
+
+    mCellmlModelRepositoryWidget->output(contents);
+}
+
+void CellmlModelRepositoryWindow::on_nameValue_textChanged(const QString &text)
 {
     // Generate a Web page that contains all the models which match our search
     // criteria
 
-    QString list;
-
-    foreach (const QString &model, mModelNames.filter(mUi->nameValue->text()))
-        list += model+"<BR>";
-
-    QString html = "<!DOCTYPE HTML><HTML><HEAD><TITLE>Test...</TITLE></HEAD><BODY>%1</BODY></HTML>";
-
-    mCellmlModelRepositoryWidget->setHtml(html.arg(list));
+    outputModelList(mModelNames.filter(text));
 }
 
 } }

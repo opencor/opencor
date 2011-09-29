@@ -1,5 +1,7 @@
 #include "cellmlmodelrepositorywidget.h"
 
+#include <QDesktopServices>
+#include <QFile>
 #include <QPaintEvent>
 
 namespace OpenCOR {
@@ -31,6 +33,23 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
     // Reduce the size of the font a bit
 
     setZoomFactor(0.9);
+
+    // Have links opened in the user's browser rather than in our list
+
+    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+
+    connect(this, SIGNAL(linkClicked(const QUrl &)),
+            this, SLOT(openLink(const QUrl &)));
+
+    // Retrieve the output template
+
+    QFile cellmlModelRepositoryWidgetOutputFile(":cellmlModelRepositoryWidgetOutput");
+
+    cellmlModelRepositoryWidgetOutputFile.open(QIODevice::ReadOnly);
+
+    mOutputTemplate = QString(cellmlModelRepositoryWidgetOutputFile.readAll());
+
+    cellmlModelRepositoryWidgetOutputFile.close();
 }
 
 QSize CellmlModelRepositoryWidget::sizeHint() const
@@ -52,6 +71,20 @@ void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
     // Draw a border in case we are docked
 
     drawBorderIfDocked(true, true, false, false, false);
+}
+
+void CellmlModelRepositoryWidget::output(const QString &pOutput)
+{
+    // Set the page to contain pOutput using our output template
+
+    setHtml(mOutputTemplate.arg(pOutput));
+}
+
+void CellmlModelRepositoryWidget::openLink(const QUrl &pUrl)
+{
+    // Open the link in the user's browser
+
+    QDesktopServices::openUrl(pUrl);
 }
 
 } }

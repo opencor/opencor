@@ -72,6 +72,8 @@ public:
     explicit HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
                         const QUrl &pHomePage, QWidget *pParent = 0);
 
+    virtual void retranslateUi();
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 

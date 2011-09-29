@@ -45,13 +45,6 @@
       <item>
        <widget class="QLineEdit" name="nameValue"/>
       </item>
-      <item>
-       <widget class="QPushButton" name="searchButton">
-        <property name="text">
-         <string>&amp;Search</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>

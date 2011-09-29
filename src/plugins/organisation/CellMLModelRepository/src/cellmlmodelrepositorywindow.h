@@ -30,8 +30,12 @@ private:
 
     CellmlModelRepositoryWidget *mCellmlModelRepositoryWidget;
 
+    QStringList mModelList;
+
+    void outputModelList(const QStringList &pModelList);
+
 private slots:
-    void on_searchButton_clicked();
+    void on_nameValue_textChanged(const QString &text);
 };
 
 } }

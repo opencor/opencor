@@ -192,6 +192,13 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
     gotoHomePage();
 }
 
+void HelpWidget::retranslateUi()
+{
+    // Retranslate the current page (useful if it is the error page)
+
+    reload();
+}
+
 static const QString SettingsZoomLevel = "ZoomLevel";
 
 void HelpWidget::loadSettings(QSettings *pSettings)

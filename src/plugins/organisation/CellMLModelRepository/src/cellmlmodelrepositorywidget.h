@@ -16,10 +16,18 @@ public:
     explicit CellmlModelRepositoryWidget(const QString &pName,
                                          QWidget *pParent = 0);
 
+    void output(const QString &pOutput);
+
 protected:
     virtual QSize sizeHint() const;
 
     virtual void paintEvent(QPaintEvent *pEvent);
+
+private:
+    QString mOutputTemplate;
+
+private Q_SLOTS:
+    void openLink(const QUrl &pUrl);
 };
 
 } }
