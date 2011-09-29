@@ -3,6 +3,8 @@
 
 #include "dockwidget.h"
 
+#include <QNetworkReply>
+
 namespace Ui {
     class CellmlModelRepositoryWindow;
 }
@@ -32,10 +34,14 @@ private:
 
     QStringList mModelList;
 
+    QString mErrorMsg;
+
     void outputModelList(const QStringList &pModelList);
 
 private slots:
     void on_nameValue_textChanged(const QString &text);
+
+    void finished(QNetworkReply *pNetworkReply);
 };
 
 } }

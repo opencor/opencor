@@ -26,16 +26,20 @@
 <context>
     <name>OpenCOR::CellMLModelRepository::CellmlModelRepositoryWindow</name>
     <message>
-        <source>1 model was found:</source>
-        <translation>1 modèle a été trouvé :</translation>
+        <source>&lt;strong&gt;1&lt;/strong&gt; CellML model was found:</source>
+        <translation>&lt;strong&gt;1&lt;/strong&gt; modèle CellML a été trouvé :</translation>
     </message>
     <message>
-        <source>%1 models were found:</source>
-        <translation>%1 modèles ont été trouvés :</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; CellML models were found:</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; modèles CellML ont été trouvés :</translation>
     </message>
     <message>
-        <source>No model matches your criteria</source>
-        <translation>Aucun modèle ne correspond à votre critère</translation>
+        <source>No CellML model matches your criteria</source>
+        <translation>Aucun modèle CellML ne correspond à votre critère</translation>
+    </message>
+    <message>
+        <source>Please wait while the list of CellML models is being loaded...</source>
+        <translation>Veuillez patienter pendant que la liste de modèles CellML se charge...</translation>
     </message>
 </context>
 </TS>

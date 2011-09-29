@@ -22,7 +22,6 @@ ADD_PLUGIN(Core
         src/docktoolbar.cpp
         src/dockwidget.cpp
         src/filemanager.cpp
-        src/internetfile.cpp
         src/treeview.cpp
     HEADERS
         ../../coreinterface.h
@@ -42,7 +41,6 @@ ADD_PLUGIN(Core
         src/docktoolbar.h
         src/dockwidget.h
         src/filemanager.h
-        src/internetfile.h
         src/treeview.h
     UIS
         src/centralwidget.ui
@@ -51,5 +49,4 @@ ADD_PLUGIN(Core
     QT_DEPENDENCIES
         QtCore
         QtGui
-        QtNetwork
 )
