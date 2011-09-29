@@ -103,6 +103,8 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
+    QHelpEngine *mHelpEngine;
+
     QUrl mHomePage;
 
     bool mBackAvailable;

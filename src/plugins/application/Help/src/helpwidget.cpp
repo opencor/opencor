@@ -144,6 +144,7 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
                        const QUrl &pHomePage, QWidget *pParent) :
     QWebView(pParent),
     CommonWidget(pName, this, pParent),
+    mHelpEngine(pHelpEngine),
     mHomePage(pHomePage),
     mBackAvailable(false),
     mForwardAvailable(false)
@@ -194,9 +195,11 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
 
 void HelpWidget::retranslateUi()
 {
-    // Retranslate the current page (useful if it is the error page)
+    // Retranslate the current page, but only if it is the error page since a
+    // valid page is hard-coded and therefore cannot be translated
 
-    reload();
+    if (!mHelpEngine->findFile(url()).isValid())
+        reload();
 }
 
 static const QString SettingsZoomLevel = "ZoomLevel";
