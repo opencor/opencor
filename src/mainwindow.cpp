@@ -618,7 +618,7 @@ void MainWindow::reorderViewMenu(QMenu *pViewMenu)
         // Keep track of the menu item title and the action to which it is
         // associated
 
-        menuItemTitles.append(menuItemTitle);
+        menuItemTitles << menuItemTitle;
         menuItemActions.insert(menuItemTitle, menuItemAction);
     }
 

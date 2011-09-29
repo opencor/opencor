@@ -150,15 +150,15 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
             QStringList keys;
 
             foreach (const QVariant &keyVariant, res["keys"].toList())
-                keys.append(keyVariant.toString());
+                keys << keyVariant.toString();
 
             // Retrieve the list of models itself
 
             foreach(const QVariant &modelVariant, res["values"].toList()) {
                 QVariantList modelDetailsVariant = modelVariant.toList();
 
-                mModelNames.append(modelDetailsVariant.at(0).toString());
-                mModelUrls.append(modelDetailsVariant.at(1).toString());
+                mModelNames << modelDetailsVariant.at(0).toString();
+                mModelUrls << modelDetailsVariant.at(1).toString();
             }
         }
     } else {
