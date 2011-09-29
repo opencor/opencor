@@ -48,7 +48,21 @@
                 <ul>
                     <li><a href="http://qt.nokia.com/downloads/sdk-windows-cpp">Windows</a>;</li>
                     <li>Linux <a href="http://qt.nokia.com/downloads/sdk-linux-x11-32bit-cpp">32-bit</a>/<a href="http://qt.nokia.com/downloads/sdk-linux-x11-64bit-cpp">64-bit</a>; and</li>
-                    <li><a href = "http://qt.nokia.com/downloads/sdk-mac-os-cpp">Mac OS X</a>: you might want to install the SDK under <code>/Developer</code> rather than your home folder as suggested by the installer.</li>
+                    <li>
+                        <a href = "http://qt.nokia.com/downloads/sdk-mac-os-cpp">Mac OS X</a>: you might want to install the SDK under <code>/Developer</code> rather than your home folder as suggested by the installer.
+                        <div>
+                            <strong>Note:</strong> there is a <a href="https://bugreports.qt.nokia.com/browse/QTBUG-21339">very minor bug</a> in Qt 4.7.4 which, when building a Qt application on <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.7 (Lion), results in loads of warnings being generated. It is nothing to be concerned about, but if you want to get rid of those warnings, then sudo edit <code>/Developer/QtSDK/Desktop/Qt/474/gcc/include/QtCore/qglobal.h</code> (from line 319):
+                            <pre class="good prettyprint">#  if !defined(MAC_OS_X_VERSION_10_7)
+#       define MAC_OS_X_VERSION_10_7 MAC_OS_X_VERSION_10_6 + 1
+#  endif
+#  if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
+#    warning "This version of Mac OS X is unsupported"
+#  endif</pre>
+                            <pre class="bad prettyprint">#  if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_6)
+#    warning "This version of Mac OS X is unsupported"
+#  endif</pre>
+                        </div>
+                    </li>
                 </ul>
                 <div>
                     <strong>Note:</strong> the Qt SDK will, by default, install everything that is needed to build OpenCOR (except, on Windows, for the <code>MinGW 4.4</code> package which needs to be manually selected from the <code>Qt SDK|Miscellaneous</code> category), so it is pretty much up to you which package(s) you want to install (you can always add/remove packages later on, if wanted/needed). Just for reference, <a href="res/pics/QtSDK.png">here</a> are the packages that we selected for our Windows build (it is very similar on Linux and Mac OS X).
