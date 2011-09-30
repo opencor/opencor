@@ -1,7 +1,7 @@
 #ifndef FILEBROWSERWINDOW_H
 #define FILEBROWSERWINDOW_H
 
-#include "dockwidget.h"
+#include "organisationwidget.h"
 
 namespace Ui {
     class FileBrowserWindow;
@@ -14,7 +14,7 @@ namespace FileBrowser {
 
 class FileBrowserWidget;
 
-class FileBrowserWindow : public Core::DockWidget
+class FileBrowserWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
@@ -40,9 +40,6 @@ private:
 
     void gotoOtherItem(QStringList &pItems, QStringList &pOtherItems);
     void updateItems(const QString &pItemPath, QStringList &pItems) const;
-
-Q_SIGNALS:
-    void filesOpened(const QStringList &pFileNames);
 
 private Q_SLOTS:
     void on_actionHome_triggered();

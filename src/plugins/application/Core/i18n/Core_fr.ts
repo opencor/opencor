@@ -91,20 +91,20 @@
         <translation></translation>
     </message>
     <message>
-        <source>Open File</source>
-        <translation>Ouvrir Fichier</translation>
-    </message>
-    <message>
-        <source>All Files</source>
-        <translation>Tous Fichiers</translation>
-    </message>
-    <message>
         <source>&amp;File</source>
         <translation>&amp;Fichier</translation>
     </message>
     <message>
         <source>Show/hide the File toolbar</source>
         <translation>Montrer/cacher la barre d&apos;outils Fichier</translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation>Ouvrir Fichier</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Tous Fichiers</translation>
     </message>
 </context>
 </TS>

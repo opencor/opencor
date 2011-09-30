@@ -86,6 +86,24 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
+#ifdef Q_WS_MAC
+    // A special shortcut to have OpenCOR minimised on Mac OS X when pressing
+    // Cmd+M
+    // Note: indeed, when pressing Cmd+M on Mac OS X, the active application
+    //       is expected to minimise itself, so...
+
+    new QShortcut(QKeySequence("Ctrl+M"),
+                  this, SLOT(showMinimized()));
+
+    // A special shortcut to have OpenCOR hidden on Mac OS X when pressing
+    // Cmd+H
+    // Note: indeed, when pressing Cmd+H on Mac OS X, the active application
+    //       is expected to hide itself, so...
+
+    new QShortcut(QKeySequence("Ctrl+H"),
+                  this, SLOT(hide()));
+#endif
+
     // Initialise our various plugins
 
     QList<Plugin *> loadedPlugins = mPluginManager->loadedPlugins();
@@ -122,15 +140,10 @@ MainWindow::MainWindow(QWidget *pParent) :
 
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-        if (coreInterface) {
-            // Keep track of some information
-
-            coreInterface->setLoadedPlugins(loadedPlugins);
-
+        if (coreInterface)
             // Initialise the plugin
 
             coreInterface->initialize();
-        }
 
         // Back to the GUI interface
 
@@ -141,23 +154,20 @@ MainWindow::MainWindow(QWidget *pParent) :
             initializeGuiPlugin(plugin->name(), guiInterface->guiSettings());
     }
 
-#ifdef Q_WS_MAC
-    // A special shortcut to have OpenCOR minimised on Mac OS X when pressing
-    // Cmd+M
-    // Note: indeed, when pressing Cmd+M on Mac OS X, the active application
-    //       is expected to minimise itself, so...
+    // Setup our various plugins
+    // Note: this is very different from initialising our various plugins.
+    //       Indeed, to initialise a plugin is something that doesn't require to
+    //       know anything about any other plugin while to setup a plugin is for
+    //       anything that requires prior knowledge of what one or several other
+    //       plugins are about, and this is something that cannot be known until
+    //       all the plugins have been initialised...
 
-    new QShortcut(QKeySequence("Ctrl+M"),
-                  this, SLOT(showMinimized()));
+    foreach (Plugin *plugin, loadedPlugins) {
+        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-    // A special shortcut to have OpenCOR hidden on Mac OS X when pressing
-    // Cmd+H
-    // Note: indeed, when pressing Cmd+H on Mac OS X, the active application
-    //       is expected to hide itself, so...
-
-    new QShortcut(QKeySequence("Ctrl+H"),
-                  this, SLOT(hide()));
-#endif
+        if (coreInterface)
+            coreInterface->setup(loadedPlugins);
+    }
 
     // Retrieve the user settings from the previous session, if any
 

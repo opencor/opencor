@@ -12,7 +12,7 @@ namespace OpenCOR {
 namespace CellMLModelRepository {
 
 CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
-    DockWidget(pParent),
+    OrganisationWidget(pParent),
     mUi(new Ui::CellmlModelRepositoryWindow),
     mErrorMsg(QString())
 {

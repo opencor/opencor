@@ -1,5 +1,6 @@
 #include "centralwidget.h"
 #include "coreplugin.h"
+#include "organisationwidget.h"
 #include "plugin.h"
 
 #include <QAction>
@@ -30,35 +31,9 @@ Q_EXPORT_PLUGIN2(Core, CorePlugin)
 
 void CorePlugin::initialize()
 {
-    // Retrieve the file types supported by the plugins
-
-    foreach (Plugin *loadedPlugin, mLoadedPlugins) {
-        FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
-
-        if (fileInterface)
-            // The plugin implements our API interface, so...
-
-            mSupportedFileTypes << fileInterface->fileTypes();
-    }
-
     // Create our central widget
 
     mCentralWidget = new CentralWidget(mMainWindow);
-
-    // Check, based on the loaded plugins, which views, if any, our central
-    // widget should support
-
-    foreach (Plugin *loadedPlugin, mLoadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(loadedPlugin->instance());
-
-        if (guiInterface)
-            // The plugin implements our GUI interface, so go through each view
-            // supported by the plugin and enable whatever mode is required
-
-            foreach (GuiViewSettings *viewSettings,
-                     guiInterface->guiSettings()->views())
-                mCentralWidget->addView(loadedPlugin, viewSettings);
-    }
 
     // Create our File toolbar (and its show/hide action)
 
@@ -122,6 +97,60 @@ void CorePlugin::initialize()
                              mFileToolbarAction);
 
     mGuiSettings->addCentralWidget(mCentralWidget);
+}
+
+void CorePlugin::setup(const QList<Plugin *> &pLoadedPlugins)
+{
+    // Retrieve the file types supported by the plugins
+
+    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
+        FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
+
+        if (fileInterface)
+            // The plugin implements our API interface, so...
+
+            mSupportedFileTypes << fileInterface->fileTypes();
+    }
+
+    // Check, based on the loaded plugins, which views, if any, our central
+    // widget should support
+
+    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(loadedPlugin->instance());
+
+        if (guiInterface)
+            // The plugin implements our GUI interface, so go through each view
+            // supported by the plugin and enable whatever mode is required
+
+            foreach (GuiViewSettings *viewSettings,
+                     guiInterface->guiSettings()->views())
+                mCentralWidget->addView(loadedPlugin, viewSettings);
+    }
+
+    // Some connections to handle certain plugin's windows
+
+    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(loadedPlugin->instance());
+
+        if (guiInterface) {
+            foreach (GuiWindowSettings *windowSettings,
+                     guiInterface->guiSettings()->windows())
+                switch (windowSettings->type()) {
+                case GuiWindowSettings::Organisation:
+                    // The plugin's window is of organisation type, so something
+                    // we want our central widget to connect to
+
+                    connect((OrganisationWidget *) windowSettings->window(), SIGNAL(filesOpened(const QStringList &)),
+                            mCentralWidget, SLOT(openFiles(const QStringList &)));
+
+                    break;
+                default:
+                    // Uninteresting type, so...
+
+                    ;
+                }
+        }
+    }
 }
 
 static const QString SettingsFileDialogDirectory = "FileDialogDirectory";

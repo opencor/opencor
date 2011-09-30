@@ -22,6 +22,7 @@ ADD_PLUGIN(Core
         src/docktoolbar.cpp
         src/dockwidget.cpp
         src/filemanager.cpp
+        src/organisationwidget.cpp
         src/treeview.cpp
     HEADERS
         ../../coreinterface.h
@@ -41,6 +42,7 @@ ADD_PLUGIN(Core
         src/docktoolbar.h
         src/dockwidget.h
         src/filemanager.h
+        src/organisationwidget.h
         src/treeview.h
     UIS
         src/centralwidget.ui

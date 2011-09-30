@@ -12,7 +12,7 @@ namespace OpenCOR {
 namespace FileBrowser {
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
-    DockWidget(pParent),
+    OrganisationWidget(pParent),
     mUi(new Ui::FileBrowserWindow)
 {
     // Set up the UI

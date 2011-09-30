@@ -11,7 +11,7 @@ namespace OpenCOR {
 namespace FileOrganiser {
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
-    DockWidget(pParent),
+    OrganisationWidget(pParent),
     mUi(new Ui::FileOrganiserWindow)
 {
     // Set up the UI
@@ -143,8 +143,8 @@ void FileOrganiserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
     QString fileName = mFileOrganiserWidget->filePath(itemIndex);
 
     if (!fileName.isEmpty())
-        // We are dealing with a file (as opposed to a folder), so let's see
-        // whether we can let people know about it having been double clicked
+        // We are dealing with a file (as opposed to a folder), so let people
+        // know about it having been double clicked
 
         emit filesOpened(QStringList() << fileName);
 }

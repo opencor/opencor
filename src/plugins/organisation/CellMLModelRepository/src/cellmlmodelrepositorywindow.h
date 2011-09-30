@@ -1,7 +1,7 @@
 #ifndef CELLMLMODELREPOSITORYWINDOW_H
 #define CELLMLMODELREPOSITORYWINDOW_H
 
-#include "dockwidget.h"
+#include "organisationwidget.h"
 
 #include <QNetworkReply>
 
@@ -14,7 +14,7 @@ namespace CellMLModelRepository {
 
 class CellmlModelRepositoryWidget;
 
-class CellmlModelRepositoryWindow : public Core::DockWidget
+class CellmlModelRepositoryWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 

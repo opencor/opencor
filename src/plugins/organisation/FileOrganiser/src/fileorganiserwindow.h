@@ -1,7 +1,7 @@
 #ifndef FILEORGANISERWINDOW_H
 #define FILEORGANISERWINDOW_H
 
-#include "dockwidget.h"
+#include "organisationwidget.h"
 
 #include <QAbstractItemModel>
 
@@ -14,7 +14,7 @@ namespace FileOrganiser {
 
 class FileOrganiserWidget;
 
-class FileOrganiserWindow : public Core::DockWidget
+class FileOrganiserWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
@@ -34,9 +34,6 @@ private:
     Ui::FileOrganiserWindow *mUi;
 
     FileOrganiserWidget *mFileOrganiserWidget;
-
-Q_SIGNALS:
-    void filesOpened(const QStringList &pFileNames);
 
 private slots:
     void on_actionNew_triggered();

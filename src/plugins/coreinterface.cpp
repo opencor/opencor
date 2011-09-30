@@ -12,11 +12,9 @@ void CoreInterface::finalize()
     // Nothing to do by default...
 }
 
-void CoreInterface::setLoadedPlugins(const QList<Plugin *> &pLoadedPlugins)
+void CoreInterface::setup(const QList<Plugin *> &)
 {
-    // Set the loaded plugins
-
-    mLoadedPlugins = pLoadedPlugins;
+    // Nothing to do by default...
 }
 
 }
