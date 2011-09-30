@@ -29,6 +29,7 @@ namespace OpenCOR {
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
+    mFileNewMenu(0),
     mViewOrganisationMenu(0),
     mViewEditingMenu(0),
     mViewSeparator(0)
@@ -322,7 +323,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
     menuActionIter.toBack();
 
     while (menuActionIter.hasPrevious()) {
-        // Inster the action/separator to the right menu
+        // Insert the action/separator to the right menu
 
         GuiMenuActionSettings *menuActionSettings = menuActionIter.previous();
 
@@ -336,11 +337,60 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
             break;
         default:
-            // Unknown type, so do nothing...
+            // Not a type of interest, so do nothing...
 
             ;
         }
     }
+
+    // Add the actions to our different menus, but we process the actions in the
+    // right order this time, since we must add the actions rather than insert
+    // them
+
+    static QString pluginForFileNewMenu = QString();
+
+    foreach (GuiMenuActionSettings *menuActionSettings,
+             pGuiSettings->menuActions())
+        // Insert the action to the right menu
+
+        switch (menuActionSettings->type()) {
+        case GuiMenuActionSettings::FileNew:
+            // Check whether the File|New menu has been created and if not, then
+            // create it
+
+            if (!mFileNewMenu) {
+                // The menu doesn't already exist, so create it
+
+                mFileNewMenu = new QMenu(this);
+
+                mFileNewMenu->menuAction()->setIcon(QIcon(":oxygen/mimetypes/application-x-zerosize.png"));
+
+                // Add the New menu to our File menu and add a separator after
+                // it
+
+                mUi->menuFile->insertMenu(mUi->menuFile->actions().first(),
+                                          mFileNewMenu);
+                mUi->menuFile->insertSeparator(mUi->menuFile->actions().at(1));
+
+                pluginForFileNewMenu = pPluginName;
+            } else if (pluginForFileNewMenu.compare(pPluginName)) {
+                // The File|New menu already exists, so add a separator to it so
+                // that previous menu items (from a different plugin) don't get
+                // mixed up with the new one
+
+                mFileNewMenu->addSeparator();
+
+                pluginForFileNewMenu = pPluginName;
+            }
+
+            mFileNewMenu->addAction(menuActionSettings->action());
+
+            break;
+        default:
+            // Not a type of interest, so do nothing...
+
+            ;
+        }
 
     // Add the toolbars (including to the View|Toolbars menu)
 
@@ -573,6 +623,9 @@ void MainWindow::setLocale(const QString &pLocale)
 
         // Retranslate some widgets that are not originally part of our user
         // interface
+
+        if (mFileNewMenu)
+            GuiInterface::retranslateMenu(mFileNewMenu, tr("New"));
 
         if (mViewOrganisationMenu)
             GuiInterface::retranslateMenu(mViewOrganisationMenu,

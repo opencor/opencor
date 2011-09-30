@@ -42,7 +42,6 @@ private:
 
     CentralWidget *mCentralWidget;
 
-    QToolBar *mFileToolbar;
     QAction *mFileToolbarAction;
 
     QAction *mFileOpenAction;

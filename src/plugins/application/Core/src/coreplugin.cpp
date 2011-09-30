@@ -37,12 +37,13 @@ void CorePlugin::initialize()
 
     // Create our File toolbar (and its show/hide action)
 
-    mFileToolbar = newToolBar(mMainWindow, FileGroup);
+    QToolBar *fileToolbar = newToolBar(mMainWindow, FileGroup);
+
     mFileToolbarAction = newAction(mMainWindow, true);
 
     // Create our different File actions, and add some to our File toolbar
-    // Note: all the save-related actions are to be invisible unless the Editing
-    //       mode is active
+//---GRY--- ALL THE SAVE-RELATED ACTIONS SHOULD BE INVISIBLE UNLESS THE EDITING
+//          MODE IS ACTIVE
 
     mFileOpenAction = newAction(mMainWindow, false,
                                 ":/oxygen/actions/document-open.png");
@@ -64,15 +65,15 @@ void CorePlugin::initialize()
     mFilePrintAction = newAction(mMainWindow, false,
                                  ":/oxygen/actions/document-print.png");
 
-    mFileToolbar->addAction(mFileOpenAction);
-    mFileToolbar->addSeparator();
-    mFileToolbar->addAction(mFileSaveAction);
-    mFileToolbar->addAction(mFileSaveAsAction);
-    mFileToolbar->addAction(mFileSaveAllAction);
-    mFileToolbar->addSeparator();
-    mFileToolbar->addAction(mFileCloseAction);
-    mFileToolbar->addSeparator();
-    mFileToolbar->addAction(mFilePrintAction);
+    fileToolbar->addAction(mFileOpenAction);
+    fileToolbar->addSeparator();
+    fileToolbar->addAction(mFileSaveAction);
+    fileToolbar->addAction(mFileSaveAsAction);
+    fileToolbar->addAction(mFileSaveAllAction);
+    fileToolbar->addSeparator();
+    fileToolbar->addAction(mFileCloseAction);
+    fileToolbar->addSeparator();
+    fileToolbar->addAction(mFilePrintAction);
 
     // Some connections to handle our various actions
 
@@ -93,7 +94,7 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFilePrintAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
 
-    mGuiSettings->addToolBar(Qt::TopToolBarArea, mFileToolbar,
+    mGuiSettings->addToolBar(Qt::TopToolBarArea, fileToolbar,
                              mFileToolbarAction);
 
     mGuiSettings->addCentralWidget(mCentralWidget);

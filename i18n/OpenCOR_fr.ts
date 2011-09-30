@@ -146,16 +146,16 @@
 <context>
     <name>OpenCOR::MainWindow</name>
     <message>
-        <source>is a cross-platform &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
-        <translation>est un environnement de modélisation &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
+        <source>New</source>
+        <translation>Nouveau</translation>
     </message>
     <message>
-        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
-        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Êtes-vous sûr que c&apos;est ce que vous voulez ?</translation>
+        <source>Organisation</source>
+        <translation></translation>
     </message>
     <message>
-        <source>About</source>
-        <translation>A Propos</translation>
+        <source>Editing</source>
+        <translation>Édition</translation>
     </message>
     <message>
         <source>Plugins</source>
@@ -166,12 +166,16 @@
         <translation>Aucune extension n&apos;a été trouvée.</translation>
     </message>
     <message>
-        <source>Organisation</source>
-        <translation></translation>
+        <source>About</source>
+        <translation>A Propos</translation>
     </message>
     <message>
-        <source>Editing</source>
-        <translation>Édition</translation>
+        <source>is a cross-platform &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
+        <translation>est un environnement de modélisation &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
+    </message>
+    <message>
+        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
+        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Êtes-vous sûr que c&apos;est ce que vous voulez ?</translation>
     </message>
 </context>
 <context>

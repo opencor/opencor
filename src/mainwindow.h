@@ -55,6 +55,8 @@ private:
     QMap<QString, QMenu *> mMenus;
     QMap<QString, QToolBar *> mToolbars;
 
+    QMenu *mFileNewMenu;
+
     QMenu *mViewOrganisationMenu;
     QMenu *mViewEditingMenu;
     QAction *mViewSeparator;

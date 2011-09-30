@@ -43,7 +43,8 @@ class GuiMenuActionSettings
 public:
     enum GuiMenuActionSettingsType
     {
-        File
+        File,
+        FileNew
     };
 
     explicit GuiMenuActionSettings(const GuiMenuActionSettingsType &pType,
