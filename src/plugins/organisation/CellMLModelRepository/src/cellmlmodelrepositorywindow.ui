@@ -46,12 +46,12 @@
        <widget class="QLineEdit" name="nameValue"/>
       </item>
       <item>
-       <widget class="QPushButton" name="reloadButton">
+       <widget class="QPushButton" name="refreshButton">
         <property name="toolTip">
-         <string>Reload</string>
+         <string>Refresh</string>
         </property>
         <property name="statusTip">
-         <string>Reload the list of CellML models</string>
+         <string>Refresh the list of CellML models</string>
         </property>
         <property name="text">
          <string/>

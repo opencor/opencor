@@ -43,7 +43,7 @@ private:
 private slots:
     void on_nameValue_textChanged(const QString &text);
     void on_actionCopy_triggered();
-    void on_reloadButton_clicked();
+    void on_refreshButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
     void customContextMenu(const QPoint &) const;

@@ -51,7 +51,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     // Get the list of CellML models
 
-    on_reloadButton_clicked();
+    on_refreshButton_clicked();
 }
 
 CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
@@ -136,7 +136,7 @@ void CellmlModelRepositoryWindow::on_actionCopy_triggered()
     QApplication::clipboard()->setText(mCellmlModelRepositoryWidget->selectedText());
 }
 
-void CellmlModelRepositoryWindow::on_reloadButton_clicked()
+void CellmlModelRepositoryWindow::on_refreshButton_clicked()
 {
     // Clear some properties
 
