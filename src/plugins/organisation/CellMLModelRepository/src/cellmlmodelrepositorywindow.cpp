@@ -5,6 +5,9 @@
 
 #include <QClipboard>
 #include <QMenu>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
 #include <QJsonParser>
 
@@ -13,8 +16,7 @@ namespace CellMLModelRepository {
 
 CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
-    mUi(new Ui::CellmlModelRepositoryWindow),
-    mErrorMsg(QString())
+    mUi(new Ui::CellmlModelRepositoryWindow)
 {
     // Set up the UI
 
@@ -39,17 +41,17 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     // Retrieve the list of models in the CellML Model Repository as JSON code
     // from http://50.18.64.32/workspace/rest/contents.json
 
-    QNetworkAccessManager * networkAccessManager = new QNetworkAccessManager(this);
+    mNetworkAccessManager = new QNetworkAccessManager(this);
 
     // Make sure that we get told when the download of our Internet file is
     // complete
 
-    connect(networkAccessManager, SIGNAL(finished(QNetworkReply *)),
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
             this, SLOT(finished(QNetworkReply *)) );
 
-    // Get our Internet file
+    // Get the list of CellML models
 
-    networkAccessManager->get(QNetworkRequest(QUrl("http://50.18.64.32/workspace/rest/contents.json")));
+    on_reloadButton_clicked();
 }
 
 CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
@@ -113,7 +115,14 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
         contents = leadingSpaces+tr("No CellML model matches your criteria");
     }
 
+    // Output the list matching the search criteria, or a message telling the
+    // user what went wrong, if anything
+
     mCellmlModelRepositoryWidget->output(contents);
+
+    // Re-enable the GUI side
+
+    setEnabled(true);
 }
 
 void CellmlModelRepositoryWindow::on_nameValue_textChanged(const QString &text)
@@ -129,6 +138,29 @@ void CellmlModelRepositoryWindow::on_actionCopy_triggered()
     // Copy the current slection to the clipboard
 
     QApplication::clipboard()->setText(mCellmlModelRepositoryWidget->selectedText());
+}
+
+void CellmlModelRepositoryWindow::on_reloadButton_clicked()
+{
+    // Clear some properties
+
+    mModelNames.clear();
+    mModelUrls.clear();
+
+    mErrorMsg.clear();
+
+    // Output the message telling the user that the list is being downloaded
+
+    outputModelList(QStringList());
+
+    // Disable the GUI side, so that the user doesn't get confused and ask to
+    // refresh over and over again while he should just be patient
+
+    setEnabled(false);
+
+    // Get the list of CellML models
+
+    mNetworkAccessManager->get(QNetworkRequest(QUrl("http://50.18.64.32/workspace/rest/contents.json")));
 }
 
 void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
@@ -167,9 +199,13 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
         mErrorMsg = pNetworkReply->errorString();
     }
 
-    // Initialise the output with all of the models
+    // Initialise the output using whatever search criteria is present
 
-    outputModelList(mModelNames);
+    on_nameValue_textChanged(mUi->nameValue->text());
+
+    // Give the focus to the nameValue widget, just in case...
+
+    mUi->nameValue->setFocus();
 }
 
 void CellmlModelRepositoryWindow::customContextMenu(const QPoint &) const

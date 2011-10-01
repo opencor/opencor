@@ -45,6 +45,23 @@
       <item>
        <widget class="QLineEdit" name="nameValue"/>
       </item>
+      <item>
+       <widget class="QPushButton" name="reloadButton">
+        <property name="toolTip">
+         <string>Reload</string>
+        </property>
+        <property name="statusTip">
+         <string>Reload the list of CellML models</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../res/CellMLModelRepository.qrc">
+          <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -64,6 +81,7 @@
  </widget>
  <resources>
   <include location="../../../application/Core/res/Core.qrc"/>
+  <include location="../res/CellMLModelRepository.qrc"/>
  </resources>
  <connections/>
 </ui>

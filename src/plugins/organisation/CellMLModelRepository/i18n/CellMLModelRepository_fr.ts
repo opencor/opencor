@@ -19,6 +19,14 @@
         <source>Copy the selection to the clipboard</source>
         <translation>Copier la sélection dans le presse-papier</translation>
     </message>
+    <message>
+        <source>Reload the list of CellML models</source>
+        <translation>Recharge la liste de modèles CellML</translation>
+    </message>
+    <message>
+        <source>Reload</source>
+        <translation>Recharge</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLModelRepository::CellMLModelRepositoryPlugin</name>

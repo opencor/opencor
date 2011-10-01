@@ -3,11 +3,12 @@
 
 #include "organisationwidget.h"
 
-#include <QNetworkReply>
-
 namespace Ui {
     class CellmlModelRepositoryWindow;
 }
+
+class QNetworkAccessManager;
+class QNetworkReply;
 
 namespace OpenCOR {
 namespace CellMLModelRepository {
@@ -34,6 +35,7 @@ private:
 
     QStringList mModelList;
 
+    QNetworkAccessManager *mNetworkAccessManager;
     QString mErrorMsg;
 
     void outputModelList(const QStringList &pModelList);
@@ -41,6 +43,7 @@ private:
 private slots:
     void on_nameValue_textChanged(const QString &text);
     void on_actionCopy_triggered();
+    void on_reloadButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
     void customContextMenu(const QPoint &) const;
