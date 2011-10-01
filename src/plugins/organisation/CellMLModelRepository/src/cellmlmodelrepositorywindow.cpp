@@ -119,10 +119,6 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
     // user what went wrong, if anything
 
     mCellmlModelRepositoryWidget->output(contents);
-
-    // Re-enable the GUI side
-
-    setEnabled(true);
 }
 
 void CellmlModelRepositoryWindow::on_nameValue_textChanged(const QString &text)
@@ -147,11 +143,13 @@ void CellmlModelRepositoryWindow::on_reloadButton_clicked()
     mModelNames.clear();
     mModelUrls.clear();
 
+    mModelList.clear();
+
     mErrorMsg.clear();
 
     // Output the message telling the user that the list is being downloaded
 
-    outputModelList(QStringList());
+    outputModelList(mModelList);
 
     // Disable the GUI side, so that the user doesn't get confused and ask to
     // refresh over and over again while he should just be patient
@@ -206,6 +204,10 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
     // Give the focus to the nameValue widget, just in case...
 
     mUi->nameValue->setFocus();
+
+    // Re-enable the GUI side
+
+    setEnabled(true);
 }
 
 void CellmlModelRepositoryWindow::customContextMenu(const QPoint &) const
