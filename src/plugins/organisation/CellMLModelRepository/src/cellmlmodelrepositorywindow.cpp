@@ -126,7 +126,7 @@ void CellmlModelRepositoryWindow::on_nameValue_textChanged(const QString &text)
     // Generate a Web page that contains all the models which match our search
     // criteria
 
-    outputModelList(mModelNames.filter(text));
+    outputModelList(mModelNames.filter(QRegExp(text)));
 }
 
 void CellmlModelRepositoryWindow::on_actionCopy_triggered()
