@@ -187,6 +187,8 @@ protected:
 
     GuiSettings *mGuiSettings;
 
+    virtual void updateActions();
+
     static QMenu * newMenu(QMainWindow *pMainWindow, const QString &pName);
     static QToolBar * newToolBar(QMainWindow *pMainWindow,
                                  const QString &pName);

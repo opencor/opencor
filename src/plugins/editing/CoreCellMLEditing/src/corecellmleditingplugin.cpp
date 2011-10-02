@@ -1,5 +1,7 @@
 #include "corecellmleditingplugin.h"
 
+#include <QAction>
+
 namespace OpenCOR {
 namespace CoreCellMLEditing {
 
@@ -31,6 +33,10 @@ void CoreCellMLEditingPlugin::initialize()
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0Action);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1Action);
+
+    // Initialise the enabled state of our various actions
+
+    updateActions();
 }
 
 void CoreCellMLEditingPlugin::retranslateUi()
@@ -41,6 +47,14 @@ void CoreCellMLEditingPlugin::retranslateUi()
                       tr("Create a new CellML 1.0 file"));
     retranslateAction(mFileNewCellml1_1Action, tr("CellML 1.1 File"),
                       tr("Create a new CellML 1.1 file"));
+}
+
+void CoreCellMLEditingPlugin::updateActions()
+{
+    // Make sure that the various actions are properly enabled/disabled
+
+    mFileNewCellml1_0Action->setEnabled(false);
+    mFileNewCellml1_1Action->setEnabled(false);
 }
 
 } }

@@ -25,6 +25,8 @@ public:
 protected:
     virtual void retranslateUi();
 
+    virtual void updateActions();
+
 private:
     QAction *mFileNewCellml1_0Action;
     QAction *mFileNewCellml1_1Action;

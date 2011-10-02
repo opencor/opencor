@@ -67,7 +67,7 @@ void CellmlModelRepositoryWindow::retranslateUi()
 
     mUi->retranslateUi(this);
 
-    // Retranslate the list of models
+    // Retranslate our list of models
 
     outputModelList(mModelList);
 }

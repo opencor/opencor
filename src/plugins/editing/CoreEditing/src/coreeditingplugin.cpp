@@ -88,6 +88,10 @@ void CoreEditingPlugin::initialize()
 
     mGuiSettings->addToolBar(Qt::TopToolBarArea, mEditToolbar,
                              mEditToolbarAction);
+
+    // Initialise the enabled state of our various actions
+
+    updateActions();
 }
 
 void CoreEditingPlugin::retranslateUi()
@@ -139,6 +143,26 @@ void CoreEditingPlugin::retranslateUi()
 
     retranslateAction(mEditToolbarAction, tr("&Edit"),
                       tr("Show/hide the Edit toolbar"));
+}
+
+void CoreEditingPlugin::updateActions()
+{
+    // Make sure that the various actions are properly enabled/disabled
+
+    mEditUndoAction->setEnabled(false);
+    mEditRedoAction->setEnabled(false);
+
+    mEditCutAction->setEnabled(false);
+    mEditCopyAction->setEnabled(false);
+    mEditPasteAction->setEnabled(false);
+    mEditDeleteAction->setEnabled(false);
+
+    mEditFindAction->setEnabled(false);
+    mEditFindNextAction->setEnabled(false);
+    mEditPreviousAction->setEnabled(false);
+    mEditReplaceAction->setEnabled(false);
+
+    mEditSelectAllAction->setEnabled(false);
 }
 
 } }

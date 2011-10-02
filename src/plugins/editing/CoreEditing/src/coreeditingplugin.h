@@ -27,6 +27,8 @@ public:
 protected:
     virtual void retranslateUi();
 
+    virtual void updateActions();
+
 private:
     QMenu *mEditMenu;
 

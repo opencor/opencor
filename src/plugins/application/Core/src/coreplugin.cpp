@@ -85,6 +85,14 @@ void CorePlugin::initialize()
     connect(mFileCloseAllAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(closeAllFiles()));
 
+    // Some connections to handle the result of our various actions
+
+    connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
+            this, SLOT(needUpdateActions()));
+
+    connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
+            this, SLOT(needUpdateActions()));
+
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);
@@ -103,6 +111,10 @@ void CorePlugin::initialize()
                              mFileToolbarAction);
 
     mGuiSettings->addCentralWidget(mCentralWidget);
+
+    // Initialise the enabled state of our various actions
+
+    updateActions();
 }
 
 void CorePlugin::setup(const QList<Plugin *> &pLoadedPlugins)
@@ -190,10 +202,6 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
 void CorePlugin::retranslateUi()
 {
-    // Retranslate our central widget
-
-    mCentralWidget->retranslateUi();
-
     // Retranslate our different File actions
 
     retranslateAction(mFileOpenAction, tr("&Open..."),
@@ -222,6 +230,26 @@ void CorePlugin::retranslateUi()
 
     retranslateAction(mFileToolbarAction, tr("&File"),
                       tr("Show/hide the File toolbar"));
+
+    // Retranslate our central widget
+
+    mCentralWidget->retranslateUi();
+}
+
+void CorePlugin::updateActions()
+{
+    // Make sure that the various actions are properly enabled/disabled
+
+    mFileOpenAction->setEnabled(true);
+
+    mFileSaveAction->setEnabled(false);
+    mFileSaveAsAction->setEnabled(false);
+    mFileSaveAllAction->setEnabled(false);
+
+    mFileCloseAction->setEnabled(mCentralWidget->nbOfFilesOpened());
+    mFileCloseAllAction->setEnabled(mCentralWidget->nbOfFilesOpened());
+
+    mFilePrintAction->setEnabled(false);
 }
 
 void CorePlugin::openFile()
@@ -265,6 +293,13 @@ void CorePlugin::openFile()
     // Open the file(s)
 
     mCentralWidget->openFiles(files);
+}
+
+void CorePlugin::needUpdateActions()
+{
+    // Something requires the actions to be udpated
+
+    updateActions();
 }
 
 } }
