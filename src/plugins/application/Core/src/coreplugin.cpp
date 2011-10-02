@@ -80,6 +80,11 @@ void CorePlugin::initialize()
     connect(mFileOpenAction, SIGNAL(triggered(bool)),
             this, SLOT(openFile()));
 
+    connect(mFileCloseAction, SIGNAL(triggered(bool)),
+            mCentralWidget, SLOT(closeFile()));
+    connect(mFileCloseAllAction, SIGNAL(triggered(bool)),
+            mCentralWidget, SLOT(closeAllFiles()));
+
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);

@@ -110,7 +110,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void openFiles(const QStringList &pFileNames);
     bool closeFile(const int &pIndex = -1);
-    void closeFiles();
+    void closeAllFiles();
     void fileSelected(const int &pIndex);
     void modeSelected(const int &);
 };

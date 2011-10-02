@@ -133,7 +133,7 @@ CentralWidget::~CentralWidget()
 {
     // Close all the files
 
-    closeFiles();
+    closeAllFiles();
 
     // Delete some internal objects
 
@@ -291,7 +291,7 @@ bool CentralWidget::closeFile(const int &pIndex)
     }
 }
 
-void CentralWidget::closeFiles()
+void CentralWidget::closeAllFiles()
 {
     // Close all the files
 
