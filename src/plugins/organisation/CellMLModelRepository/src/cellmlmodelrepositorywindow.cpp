@@ -138,18 +138,13 @@ void CellmlModelRepositoryWindow::on_actionCopy_triggered()
 
 void CellmlModelRepositoryWindow::on_refreshButton_clicked()
 {
-    // Clear some properties
+    // Output the message telling the user that the list is being downloaded
+    // Note: to clear mModelNames ensures that we get the correct message from
+    //       outputModelList...
 
     mModelNames.clear();
-    mModelUrls.clear();
 
-    mModelList.clear();
-
-    mErrorMsg.clear();
-
-    // Output the message telling the user that the list is being downloaded
-
-    outputModelList(mModelList);
+    outputModelList(QStringList());
 
     // Disable the GUI side, so that the user doesn't get confused and ask to
     // refresh over and over again while he should just be patient
@@ -163,6 +158,13 @@ void CellmlModelRepositoryWindow::on_refreshButton_clicked()
 
 void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 {
+    // Clear some properties
+
+    mModelNames.clear();
+    mModelUrls.clear();
+
+    mErrorMsg.clear();
+
     // Output the list of models, should we have retrieved it without any
     // problem
 
