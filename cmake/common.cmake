@@ -345,7 +345,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version the external
-        # dependencies on which it depends
+        # dependencies on which it depends
 
         FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
@@ -496,6 +496,11 @@ MACRO(CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIRNAME PLUGIN_NAME)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND install_name_tool -id ${PLUGIN_FILENAME}
                                                      ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${PLUGIN_DIRNAME}/${PLUGIN_FILENAME})
+ENDMACRO()
+
+MACRO(COPY_FILE_TO_BUILD_DIR FILENAME)
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${CMAKE_BINARY_DIR})
 ENDMACRO()
 
 MACRO(COPY_FILE_TO_BIN_DIR FILENAME)

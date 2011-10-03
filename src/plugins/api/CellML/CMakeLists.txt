@@ -115,9 +115,10 @@ IF(WIN32)
     # The CellML binaries
 
     FOREACH(CELLML_LIB ${CELLML_LIBS})
-        # Copy them to the build/bin folder, so we can test the CellML plugin
-        # without first having to deploy OpenCOR
+        # Copy them to the build and build/bin folders, so we can test the
+        # CellML plugin without first having to deploy OpenCOR
     
+        COPY_FILE_TO_BUILD_DIR(${CELLML_LIBS_DIR}/${CELLML_LIB})
         COPY_FILE_TO_BIN_DIR(${CELLML_LIBS_DIR}/${CELLML_LIB})
 
         # INstall them
@@ -134,6 +135,7 @@ IF(WIN32)
 
     SET(LIBSTDC++-6_FILE ${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
     
+    COPY_FILE_TO_BUILD_DIR(${LIBSTDC++-6_FILE})
     COPY_FILE_TO_BIN_DIR(${LIBSTDC++-6_FILE})
 
     INSTALL(FILES ${LIBSTDC++-6_FILE} DESTINATION bin)
