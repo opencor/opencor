@@ -1,7 +1,9 @@
 #ifndef compiler_support_h
 #define compiler_support_h
 
+/*---GRY---
 #include "cda_config.h"
+*/
 
 #ifdef _MSC_VER
 #undef WIN32
