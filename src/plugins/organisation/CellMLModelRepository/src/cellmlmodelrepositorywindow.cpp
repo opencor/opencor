@@ -203,13 +203,13 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
     on_nameValue_textChanged(mUi->nameValue->text());
 
-    // Give the focus to the nameValue widget, just in case...
-
-    mUi->nameValue->setFocus();
-
     // Re-enable the GUI side
 
     setEnabled(true);
+
+    // Give the focus to the nameValue widget, just in case...
+
+    mUi->nameValue->setFocus();
 }
 
 void CellmlModelRepositoryWindow::customContextMenu(const QPoint &) const
