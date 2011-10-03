@@ -50,12 +50,18 @@ void CellMLPlugin::initialize()
     Core::saveResourceAs(":test_cellml_model", testCellmlModelFileName);
 
     try {
-        qDebug("Loading the CellML model...");
+        qDebug("Loading the model...");
 
         RETURN_INTO_OBJREF(model, iface::cellml_api::Model,
                            ml->loadFromURL(QUrl::fromLocalFile(testCellmlModelFileName).toString().toStdWString().c_str()));
 
-        qDebug("Retrieving the CellML model's cmeta:id...");
+        qDebug("Retrieving the model's name...");
+
+        RETURN_INTO_WSTRING(name, model->name());
+
+        qDebug("    ---> %s", QString::fromStdWString(name).toLatin1().constData());
+
+        qDebug("Retrieving the model's cmeta:id...");
 
         RETURN_INTO_WSTRING(cmid, model->cmetaId());
 
