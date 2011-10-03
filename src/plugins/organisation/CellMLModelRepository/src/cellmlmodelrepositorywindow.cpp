@@ -153,7 +153,7 @@ void CellmlModelRepositoryWindow::on_refreshButton_clicked()
 
     // Get the list of CellML models
 
-    mNetworkAccessManager->get(QNetworkRequest(QUrl("http://50.18.64.32/workspace/rest/contents.json")));
+    mNetworkAccessManager->get(QNetworkRequest(QUrl("http://models.cellml.org/workspace/rest/contents.json")));
 }
 
 void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
