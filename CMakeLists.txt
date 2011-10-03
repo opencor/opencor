@@ -186,6 +186,7 @@ SET(PLUGINS
     organisation/FileOrganiser
 
     editing/RawCellMLView
+    editing/RawView
     editing/Viewer
 
     simulation/CellMLSimulation
