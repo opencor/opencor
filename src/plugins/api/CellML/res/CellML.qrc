@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file alias="CellML_fr">../../../../../build/CellML_fr.qm</file>
+        <file alias="test_cellml_model">../../../../../models/van_der_pol_model_1928.cellml</file>
     </qresource>
 </RCC>

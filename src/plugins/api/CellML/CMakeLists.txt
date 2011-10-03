@@ -46,12 +46,14 @@ SET(CELLML_LIBS
 
 ADD_PLUGIN(CellML
     SOURCES
+        ../../coreinterface.cpp
         ../../fileinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/cellmlplugin.cpp
     HEADERS
+        ../../coreinterface.h
         ../../fileinterface.h
         ../../i18ninterface.h
         ../../plugininfo.h
@@ -98,6 +100,8 @@ ADD_PLUGIN(CellML
     PLUGIN_INCLUDE_DIRS
         src
         ${CELLML_HEADERS_DIR}
+    OPENCOR_DEPENDENCIES
+        Core
     QT_DEPENDENCIES
         QtCore
         QtGui
