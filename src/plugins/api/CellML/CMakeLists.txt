@@ -4,24 +4,19 @@ PROJECT(CellMLPlugin)
 
 INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
-# Determine the location of the CellML files
+# Determine the location of the CellML libraries
 
 IF(WIN32)
-    SET(CELLML_DISTRIB_DIR windows/x86)
+    SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/windows/x86)
 ELSEIF(APPLE)
-    SET(CELLML_DISTRIB_DIR macosx)
+    SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/macosx)
 ELSE()
     IF(64BIT_MODE)
-        SET(CELLML_DISTRIB_DIR linux/x64)
+        SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/linux/x64)
     ELSE()
-        SET(CELLML_DISTRIB_DIR linux/x86)
+        SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/linux/x86)
     ENDIF()
 ENDIF()
-
-# Determine the location of a few CellML specific directories
-
-SET(CELLML_HEADERS_DIR src/${CELLML_DISTRIB_DIR})
-SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/${CELLML_DISTRIB_DIR})
 
 # CellML libraries themselves
 
@@ -58,48 +53,47 @@ ADD_PLUGIN(CellML
         ../../i18ninterface.h
         ../../plugininfo.h
 
-        ${CELLML_HEADERS_DIR}/AnnoToolsBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/CCGSBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/cda_compiler_support.h
-        ${CELLML_HEADERS_DIR}/cda_config.h
-        ${CELLML_HEADERS_DIR}/CeLEDSBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/CeLEDSExporterBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/cellml-api-cxx-support.hpp
-        ${CELLML_HEADERS_DIR}/CellMLBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/CeVASBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/CISBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/CUSESBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/DOMBootstrap.hxx
-        ${CELLML_HEADERS_DIR}/IfaceAnnoTools.hxx
-        ${CELLML_HEADERS_DIR}/IfaceCCGS.hxx
-        ${CELLML_HEADERS_DIR}/IfaceCeLEDS.hxx
-        ${CELLML_HEADERS_DIR}/IfaceCeLEDSExporter.hxx
-        ${CELLML_HEADERS_DIR}/IfaceCellML_APISPEC.hxx
-        ${CELLML_HEADERS_DIR}/IfaceCellML_events.hxx
-        ${CELLML_HEADERS_DIR}/IfaceCeVAS.hxx
-        ${CELLML_HEADERS_DIR}/IfaceCIS.hxx
-        ${CELLML_HEADERS_DIR}/IfaceCUSES.hxx
-        ${CELLML_HEADERS_DIR}/IfaceDOM_APISPEC.hxx
-        ${CELLML_HEADERS_DIR}/IfaceDOM_events.hxx
-        ${CELLML_HEADERS_DIR}/IfaceMaLaES.hxx
-        ${CELLML_HEADERS_DIR}/IfaceMathML_content_APISPEC.hxx
-        ${CELLML_HEADERS_DIR}/IfaceRDF_APISPEC.hxx
-        ${CELLML_HEADERS_DIR}/IfaceSProS.hxx
-        ${CELLML_HEADERS_DIR}/IfaceSRuS.hxx
-        ${CELLML_HEADERS_DIR}/IfaceTeLICeMS.hxx
-        ${CELLML_HEADERS_DIR}/IfaceVACSS.hxx
-        ${CELLML_HEADERS_DIR}/Ifacexpath.hxx
-        ${CELLML_HEADERS_DIR}/Ifacexpcom.hxx
-        ${CELLML_HEADERS_DIR}/MaLaESBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/SProSBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/SRuSBootstrap.hpp
-        ${CELLML_HEADERS_DIR}/TeLICeMService.hpp
-        ${CELLML_HEADERS_DIR}/VACSSBootstrap.hpp
+        AnnoToolsBootstrap.hpp
+        CCGSBootstrap.hpp
+        cda_compiler_support.h
+        cda_config.h
+        CeLEDSBootstrap.hpp
+        CeLEDSExporterBootstrap.hpp
+        cellml-api-cxx-support.hpp
+        CellMLBootstrap.hpp
+        CeVASBootstrap.hpp
+        CISBootstrap.hpp
+        CUSESBootstrap.hpp
+        DOMBootstrap.hxx
+        IfaceAnnoTools.hxx
+        IfaceCCGS.hxx
+        IfaceCeLEDS.hxx
+        IfaceCeLEDSExporter.hxx
+        IfaceCellML_APISPEC.hxx
+        IfaceCellML_events.hxx
+        IfaceCeVAS.hxx
+        IfaceCIS.hxx
+        IfaceCUSES.hxx
+        IfaceDOM_APISPEC.hxx
+        IfaceDOM_events.hxx
+        IfaceMaLaES.hxx
+        IfaceMathML_content_APISPEC.hxx
+        IfaceRDF_APISPEC.hxx
+        IfaceSProS.hxx
+        IfaceSRuS.hxx
+        IfaceTeLICeMS.hxx
+        IfaceVACSS.hxx
+        Ifacexpath.hxx
+        Ifacexpcom.hxx
+        MaLaESBootstrap.hpp
+        SProSBootstrap.hpp
+        SRuSBootstrap.hpp
+        TeLICeMService.hpp
+        VACSSBootstrap.hpp
     HEADERS_MOC
         src/cellmlplugin.h
     PLUGIN_INCLUDE_DIRS
         src
-        ${CELLML_HEADERS_DIR}
     OPENCOR_DEPENDENCIES
         Core
     QT_DEPENDENCIES
