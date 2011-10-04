@@ -1,527 +1,599 @@
-<?xml version="1.0" encoding="utf-8"?>
-<model name="hodgkin_huxley_squid_axon_model_1952" cmeta:id="hodgkin_huxley_squid_axon_model_1952" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
-  <units name="millisecond">
-    <unit units="second" prefix="milli"/>
-  </units>
-  <units name="per_millisecond">
-    <unit units="second" prefix="milli" exponent="-1"/>
-  </units>
-  <units name="millivolt">
-    <unit units="volt" prefix="milli"/>
-  </units>
-  <units name="per_millivolt_millisecond">
-    <unit units="millivolt" exponent="-1"/>
-    <unit units="second" prefix="milli" exponent="-1"/>
-  </units>
-  <units name="milliS_per_cm2">
-    <unit units="siemens" prefix="milli"/>
-    <unit units="metre" prefix="centi" exponent="-2"/>
-  </units>
-  <units name="microF_per_cm2">
-    <unit units="farad" prefix="micro"/>
-    <unit units="metre" prefix="centi" exponent="-2"/>
-  </units>
-  <units name="microA_per_cm2">
-    <unit units="ampere" prefix="micro"/>
-    <unit units="metre" prefix="centi" exponent="-2"/>
-  </units>
-  <component name="environment">
-    <variable name="time" units="millisecond" public_interface="out"/>
-  </component>
-  <component name="membrane">
-    <variable name="V" units="millivolt" initial_value="0" public_interface="out"/>
-    <variable name="E_R" units="millivolt" initial_value="0" public_interface="out"/>
-    <variable name="Cm" units="microF_per_cm2" initial_value="1"/>
-    <variable name="time" units="millisecond" public_interface="in"/>
-    <variable name="i_Na" units="microA_per_cm2" public_interface="in"/>
-    <variable name="i_K" units="microA_per_cm2" public_interface="in"/>
-    <variable name="i_L" units="microA_per_cm2" public_interface="in"/>
-    <variable name="i_Stim" units="microA_per_cm2"/>
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
-      <apply>
-        <eq/>
-        <ci>i_Stim</ci>
-        <piecewise>
-          <piece>
+<?xml version="1.0"?>
+<!--
+This CellML file was generated on 24/09/2008 at 17:13:18 using:
+
+COR (0.9.31.1033)
+Copyright 2002-2008 Dr Alan Garny
+http://COR.physiol.ox.ac.uk/ - COR@physiol.ox.ac.uk
+
+CellML 1.0 was used to generate this model
+http://www.CellML.org/
+--><model xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xml:base="" cmeta:id="hodgkin_huxley_squid_axon_model_1952_original" name="hodgkin_huxley_squid_axon_model_1952_original"> 
+
+<documentation xmlns="http://cellml.org/tmp-documentation">
+<article>
+  <articleinfo>
+  <title>Hodgkin Huxley Squid Axon Model 1952</title>
+    <author>
+      <firstname>Catherine</firstname>
+      <surname>Lloyd</surname>
+      <affiliation>
+        <shortaffil>Auckland Bioengineering Institute</shortaffil>
+      </affiliation>
+    </author>
+  </articleinfo>
+  <section id="sec_status">
+    <title>Model Status</title>
+    <para>
+        This particular variant of the CellML model is based on the original model in the 1952 Hodgkin-Huxley published paper.  Previous versions of the CellML model description have been modified from the original model to to be consistent with the modern convention of describing cardiac models. This particular model has been tested in both PCEnv and COR.  To run the model correctly in COR you need to set the duration of the simulation to 50 ms and, to make the rendering of the results more accurate, the output to 0.1 ms.
+                  </para>
+  </section>
+  <sect1 id="sec_structure">
+  <title>Model Structure</title>
+
+<para>
+In a series of papers published in 1952, A.L. Hodgkin and A.F. Huxley presented the results of a series of experiments in which they investigated the flow of electric current through the surface membrane of the giant nerve fibre of a squid. In the summary paper of the Hodgkin and Huxley model, the authors developed a mathematical description of the behaviour of the membrane based upon these experiments, which accounts for the conduction and excitation of the fibre. The form of this description has been used as the basis for almost all other ionic current models of excitable tissues, including Purkinje fibres and cardiac atrial and ventricular muscle.
+</para>
+
+<para>
+The CellML model itself is intended to represent the original model from the published paper.  To date, all the other versions of the Hodgkin-Hulxley model have been slightly modified versions of the original published model.  In particular the current descriptions were reversed to be consistent with the modern convention proposed by Prof. Denis Noble, now commonly adopted for cardiac muscle model descriptions. 
+</para>
+
+<informalfigure float="0" id="fig_circuit_diagram">
+<mediaobject>
+  <imageobject>
+    <objectinfo>
+      <title>Electrical circuit describing the current across the cell membrane</title>
+    </objectinfo>
+    <imagedata fileref="hodgkin_1952.png"/>
+  </imageobject>
+</mediaobject>
+<caption>A schematic cell diagram describing the current flows across the cell membrane that are captured in the Hodgkin Huxley model.</caption>
+</informalfigure>
+
+<para>
+The complete original paper reference is cited below:
+</para>
+
+<para>
+A quantitative description of membrane current and its application to conduction and excitation in nerve, A.L. Hodgkin and A.F. Huxley, 1952, <emphasis>The Journal of Physiology</emphasis>, 117, 500-544.  <ulink url="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&amp;cmd=Retrieve&amp;dopt=AbstractPlus&amp;list_uids=12991237&amp;query_hl=1&amp;itool=pubmed_docsum">PubMed ID: 12991237</ulink>
+</para>
+
+</sect1>
+</article>
+</documentation>
+   
+   
+   
+   
+   <units name="millisecond">
+      <unit prefix="milli" units="second"/>
+   </units>
+   <units name="per_millisecond">
+      <unit exponent="-1" prefix="milli" units="second"/>
+   </units>
+   <units name="millivolt">
+      <unit prefix="milli" units="volt"/>
+   </units>
+   <units name="per_millivolt_millisecond">
+      <unit exponent="-1" units="millivolt"/>
+      <unit exponent="-1" prefix="milli" units="second"/>
+   </units>
+   <units name="milliS_per_cm2">
+      <unit prefix="milli" units="siemens"/>
+      <unit exponent="-2" prefix="centi" units="metre"/>
+   </units>
+   <units name="microF_per_cm2">
+      <unit prefix="micro" units="farad"/>
+      <unit exponent="-2" prefix="centi" units="metre"/>
+   </units>
+   <units name="microA_per_cm2">
+      <unit prefix="micro" units="ampere"/>
+      <unit exponent="-2" prefix="centi" units="metre"/>
+   </units>
+   <component name="environment">
+      <variable cmeta:id="environment_time" name="time" public_interface="out" units="millisecond"/>
+   </component>
+   <component name="membrane">
+      <variable cmeta:id="membrane_V" initial_value="0" name="V" public_interface="out" units="millivolt"/>
+      <variable initial_value="0" name="E_R" public_interface="out" units="millivolt"/>
+      <variable initial_value="1" name="Cm" units="microF_per_cm2"/>
+      <variable name="time" public_interface="in" units="millisecond"/>
+      <variable name="i_Na" public_interface="in" units="microA_per_cm2"/>
+      <variable name="i_K" public_interface="in" units="microA_per_cm2"/>
+      <variable name="i_L" public_interface="in" units="microA_per_cm2"/>
+      <variable name="i_Stim" units="microA_per_cm2"/>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+         <apply>
+            <eq/>
+            <ci>i_Stim</ci>
+            <piecewise>
+               <piece>
+                  <apply>
+                     <minus/>
+                     <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="microA_per_cm2">20</cn>
+                  </apply>
+                  <apply>
+                     <and/>
+                     <apply>
+                        <geq/>
+                        <ci>time</ci>
+                        <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millisecond">10</cn>
+                     </apply>
+                     <apply>
+                        <leq/>
+                        <ci>time</ci>
+                        <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millisecond">10.5</cn>
+                     </apply>
+                  </apply>
+               </piece>
+               <otherwise>
+                  <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="microA_per_cm2">0</cn>
+               </otherwise>
+            </piecewise>
+         </apply>
+         <apply>
+            <eq/>
             <apply>
-              <minus/>
-              <cn cellml:units="microA_per_cm2">20</cn>
+               <diff/>
+               <bvar>
+                  <ci>time</ci>
+               </bvar>
+               <ci>V</ci>
             </apply>
             <apply>
-              <and/>
-              <apply>
-                <geq/>
-                <ci>time</ci>
-                <cn cellml:units="millisecond">10</cn>
-              </apply>
-              <apply>
-                <leq/>
-                <ci>time</ci>
-                <cn cellml:units="millisecond">10.5</cn>
-              </apply>
+               <divide/>
+               <apply>
+                  <minus/>
+                  <apply>
+                     <plus/>
+                     <apply>
+                        <minus/>
+                        <ci>i_Stim</ci>
+                     </apply>
+                     <ci>i_Na</ci>
+                     <ci>i_K</ci>
+                     <ci>i_L</ci>
+                  </apply>
+               </apply>
+               <ci>Cm</ci>
             </apply>
-          </piece>
-          <otherwise>
-            <cn cellml:units="microA_per_cm2">0</cn>
-          </otherwise>
-        </piecewise>
-      </apply>
-      <apply>
-        <eq/>
-        <apply>
-          <diff/>
-          <bvar>
-            <ci>time</ci>
-          </bvar>
-          <ci>V</ci>
-        </apply>
-        <apply>
-          <divide/>
-          <apply>
-            <minus/>
-            <apply>
-              <plus/>
-              <apply>
-                <minus/>
-                <ci>i_Stim</ci>
-              </apply>
-              <ci>i_Na</ci>
-              <ci>i_K</ci>
-              <ci>i_L</ci>
-            </apply>
-          </apply>
-          <ci>Cm</ci>
-        </apply>
-      </apply>
-    </math>
-  </component>
-  <component name="sodium_channel">
-    <variable name="i_Na" units="microA_per_cm2" public_interface="out"/>
-    <variable name="g_Na" units="milliS_per_cm2" initial_value="120"/>
-    <variable name="E_Na" units="millivolt"/>
-    <variable name="time" units="millisecond" public_interface="in" private_interface="out"/>
-    <variable name="V" units="millivolt" public_interface="in" private_interface="out"/>
-    <variable name="E_R" units="millivolt" public_interface="in"/>
-    <variable name="m" units="dimensionless" private_interface="in"/>
-    <variable name="h" units="dimensionless" private_interface="in"/>
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
-      <apply>
-        <eq/>
-        <ci>E_Na</ci>
-        <apply>
-          <minus/>
-          <ci>E_R</ci>
-          <cn cellml:units="millivolt">115</cn>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <ci>i_Na</ci>
-        <apply>
-          <times/>
-          <ci>g_Na</ci>
-          <apply>
-            <power/>
-            <ci>m</ci>
-            <cn cellml:units="dimensionless">3</cn>
-          </apply>
-          <ci>h</ci>
-          <apply>
-            <minus/>
-            <ci>V</ci>
+         </apply>
+      </math>
+   </component>
+   <component name="sodium_channel">
+      <variable cmeta:id="sodium_channel_i_Na" name="i_Na" public_interface="out" units="microA_per_cm2"/>
+      <variable initial_value="120" name="g_Na" units="milliS_per_cm2"/>
+      <variable name="E_Na" units="millivolt"/>
+      <variable name="time" private_interface="out" public_interface="in" units="millisecond"/>
+      <variable name="V" private_interface="out" public_interface="in" units="millivolt"/>
+      <variable name="E_R" public_interface="in" units="millivolt"/>
+      <variable name="m" private_interface="in" units="dimensionless"/>
+      <variable name="h" private_interface="in" units="dimensionless"/>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+         <apply>
+            <eq/>
             <ci>E_Na</ci>
-          </apply>
-        </apply>
-      </apply>
-    </math>
-  </component>
-  <component name="sodium_channel_m_gate">
-    <variable name="m" units="dimensionless" initial_value="0.05" public_interface="out"/>
-    <variable name="alpha_m" units="per_millisecond"/>
-    <variable name="beta_m" units="per_millisecond"/>
-    <variable name="V" units="millivolt" public_interface="in"/>
-    <variable name="time" units="millisecond" public_interface="in"/>
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
-      <apply>
-        <eq/>
-        <ci>alpha_m</ci>
-        <apply>
-          <divide/>
-          <apply>
-            <times/>
-            <cn cellml:units="per_millivolt_millisecond">0.1</cn>
             <apply>
-              <plus/>
-              <ci>V</ci>
-              <cn cellml:units="millivolt">25</cn>
+               <minus/>
+               <ci>E_R</ci>
+               <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">115</cn>
             </apply>
-          </apply>
-          <apply>
-            <minus/>
+         </apply>
+         <apply>
+            <eq/>
+            <ci>i_Na</ci>
             <apply>
-              <exp/>
-              <apply>
-                <divide/>
-                <apply>
-                  <plus/>
+               <times/>
+               <ci>g_Na</ci>
+               <apply>
+                  <power/>
+                  <ci>m</ci>
+                  <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="dimensionless">3</cn>
+               </apply>
+               <ci>h</ci>
+               <apply>
+                  <minus/>
                   <ci>V</ci>
-                  <cn cellml:units="millivolt">25</cn>
-                </apply>
-                <cn cellml:units="millivolt">10</cn>
-              </apply>
+                  <ci>E_Na</ci>
+               </apply>
             </apply>
-            <cn cellml:units="dimensionless">1</cn>
-          </apply>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <ci>beta_m</ci>
-        <apply>
-          <times/>
-          <cn cellml:units="per_millisecond">4</cn>
-          <apply>
-            <exp/>
-            <apply>
-              <divide/>
-              <ci>V</ci>
-              <cn cellml:units="millivolt">18</cn>
-            </apply>
-          </apply>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <apply>
-          <diff/>
-          <bvar>
-            <ci>time</ci>
-          </bvar>
-          <ci>m</ci>
-        </apply>
-        <apply>
-          <minus/>
-          <apply>
-            <times/>
+         </apply>
+      </math>
+   </component>
+   <component name="sodium_channel_m_gate">
+      <variable initial_value="0.05" name="m" public_interface="out" units="dimensionless"/>
+      <variable name="alpha_m" units="per_millisecond"/>
+      <variable name="beta_m" units="per_millisecond"/>
+      <variable name="V" public_interface="in" units="millivolt"/>
+      <variable name="time" public_interface="in" units="millisecond"/>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+         <apply>
+            <eq/>
             <ci>alpha_m</ci>
             <apply>
-              <minus/>
-              <cn cellml:units="dimensionless">1</cn>
-              <ci>m</ci>
+               <divide/>
+               <apply>
+                  <times/>
+                  <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="per_millivolt_millisecond">0.1</cn>
+                  <apply>
+                     <plus/>
+                     <ci>V</ci>
+                     <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">25</cn>
+                  </apply>
+               </apply>
+               <apply>
+                  <minus/>
+                  <apply>
+                     <exp/>
+                     <apply>
+                        <divide/>
+                        <apply>
+                           <plus/>
+                           <ci>V</ci>
+                           <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">25</cn>
+                        </apply>
+                        <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">10</cn>
+                     </apply>
+                  </apply>
+                  <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="dimensionless">1</cn>
+               </apply>
             </apply>
-          </apply>
-          <apply>
-            <times/>
+         </apply>
+         <apply>
+            <eq/>
             <ci>beta_m</ci>
-            <ci>m</ci>
-          </apply>
-        </apply>
-      </apply>
-    </math>
-  </component>
-  <component name="sodium_channel_h_gate">
-    <variable name="h" units="dimensionless" initial_value="0.6" public_interface="out"/>
-    <variable name="alpha_h" units="per_millisecond"/>
-    <variable name="beta_h" units="per_millisecond"/>
-    <variable name="V" units="millivolt" public_interface="in"/>
-    <variable name="time" units="millisecond" public_interface="in"/>
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
-      <apply>
-        <eq/>
-        <ci>alpha_h</ci>
-        <apply>
-          <times/>
-          <cn cellml:units="per_millisecond">0.07</cn>
-          <apply>
-            <exp/>
             <apply>
-              <divide/>
-              <ci>V</ci>
-              <cn cellml:units="millivolt">20</cn>
+               <times/>
+               <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="per_millisecond">4</cn>
+               <apply>
+                  <exp/>
+                  <apply>
+                     <divide/>
+                     <ci>V</ci>
+                     <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">18</cn>
+                  </apply>
+               </apply>
             </apply>
-          </apply>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <ci>beta_h</ci>
-        <apply>
-          <divide/>
-          <cn cellml:units="per_millisecond">1</cn>
-          <apply>
-            <plus/>
+         </apply>
+         <apply>
+            <eq/>
             <apply>
-              <exp/>
-              <apply>
-                <divide/>
-                <apply>
-                  <plus/>
-                  <ci>V</ci>
-                  <cn cellml:units="millivolt">30</cn>
-                </apply>
-                <cn cellml:units="millivolt">10</cn>
-              </apply>
+               <diff/>
+               <bvar>
+                  <ci>time</ci>
+               </bvar>
+               <ci>m</ci>
             </apply>
-            <cn cellml:units="dimensionless">1</cn>
-          </apply>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <apply>
-          <diff/>
-          <bvar>
-            <ci>time</ci>
-          </bvar>
-          <ci>h</ci>
-        </apply>
-        <apply>
-          <minus/>
-          <apply>
-            <times/>
+            <apply>
+               <minus/>
+               <apply>
+                  <times/>
+                  <ci>alpha_m</ci>
+                  <apply>
+                     <minus/>
+                     <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="dimensionless">1</cn>
+                     <ci>m</ci>
+                  </apply>
+               </apply>
+               <apply>
+                  <times/>
+                  <ci>beta_m</ci>
+                  <ci>m</ci>
+               </apply>
+            </apply>
+         </apply>
+      </math>
+   </component>
+   <component name="sodium_channel_h_gate">
+      <variable initial_value="0.6" name="h" public_interface="out" units="dimensionless"/>
+      <variable name="alpha_h" units="per_millisecond"/>
+      <variable name="beta_h" units="per_millisecond"/>
+      <variable name="V" public_interface="in" units="millivolt"/>
+      <variable name="time" public_interface="in" units="millisecond"/>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+         <apply>
+            <eq/>
             <ci>alpha_h</ci>
             <apply>
-              <minus/>
-              <cn cellml:units="dimensionless">1</cn>
-              <ci>h</ci>
+               <times/>
+               <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="per_millisecond">0.07</cn>
+               <apply>
+                  <exp/>
+                  <apply>
+                     <divide/>
+                     <ci>V</ci>
+                     <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">20</cn>
+                  </apply>
+               </apply>
             </apply>
-          </apply>
-          <apply>
-            <times/>
+         </apply>
+         <apply>
+            <eq/>
             <ci>beta_h</ci>
-            <ci>h</ci>
-          </apply>
-        </apply>
-      </apply>
-    </math>
-  </component>
-  <component name="potassium_channel">
-    <variable name="i_K" units="microA_per_cm2" public_interface="out"/>
-    <variable name="g_K" units="milliS_per_cm2" initial_value="36"/>
-    <variable name="E_K" units="millivolt"/>
-    <variable name="time" units="millisecond" public_interface="in" private_interface="out"/>
-    <variable name="V" units="millivolt" public_interface="in" private_interface="out"/>
-    <variable name="E_R" units="millivolt" public_interface="in"/>
-    <variable name="n" units="dimensionless" private_interface="in"/>
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
-      <apply>
-        <eq/>
-        <ci>E_K</ci>
-        <apply>
-          <plus/>
-          <ci>E_R</ci>
-          <cn cellml:units="millivolt">12</cn>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <ci>i_K</ci>
-        <apply>
-          <times/>
-          <ci>g_K</ci>
-          <apply>
-            <power/>
-            <ci>n</ci>
-            <cn cellml:units="dimensionless">4</cn>
-          </apply>
-          <apply>
-            <minus/>
-            <ci>V</ci>
-            <ci>E_K</ci>
-          </apply>
-        </apply>
-      </apply>
-    </math>
-  </component>
-  <component name="potassium_channel_n_gate">
-    <variable name="n" units="dimensionless" initial_value="0.325" public_interface="out"/>
-    <variable name="alpha_n" units="per_millisecond"/>
-    <variable name="beta_n" units="per_millisecond"/>
-    <variable name="V" units="millivolt" public_interface="in"/>
-    <variable name="time" units="millisecond" public_interface="in"/>
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
-      <apply>
-        <eq/>
-        <ci>alpha_n</ci>
-        <apply>
-          <divide/>
-          <apply>
-            <times/>
-            <cn cellml:units="per_millivolt_millisecond">0.01</cn>
             <apply>
-              <plus/>
-              <ci>V</ci>
-              <cn cellml:units="millivolt">10</cn>
-            </apply>
-          </apply>
-          <apply>
-            <minus/>
-            <apply>
-              <exp/>
-              <apply>
-                <divide/>
-                <apply>
+               <divide/>
+               <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="per_millisecond">1</cn>
+               <apply>
                   <plus/>
-                  <ci>V</ci>
-                  <cn cellml:units="millivolt">10</cn>
-                </apply>
-                <cn cellml:units="millivolt">10</cn>
-              </apply>
+                  <apply>
+                     <exp/>
+                     <apply>
+                        <divide/>
+                        <apply>
+                           <plus/>
+                           <ci>V</ci>
+                           <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">30</cn>
+                        </apply>
+                        <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">10</cn>
+                     </apply>
+                  </apply>
+                  <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="dimensionless">1</cn>
+               </apply>
             </apply>
-            <cn cellml:units="dimensionless">1</cn>
-          </apply>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <ci>beta_n</ci>
-        <apply>
-          <times/>
-          <cn cellml:units="per_millisecond">0.125</cn>
-          <apply>
-            <exp/>
+         </apply>
+         <apply>
+            <eq/>
             <apply>
-              <divide/>
-              <ci>V</ci>
-              <cn cellml:units="millivolt">80</cn>
+               <diff/>
+               <bvar>
+                  <ci>time</ci>
+               </bvar>
+               <ci>h</ci>
             </apply>
-          </apply>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <apply>
-          <diff/>
-          <bvar>
-            <ci>time</ci>
-          </bvar>
-          <ci>n</ci>
-        </apply>
-        <apply>
-          <minus/>
-          <apply>
-            <times/>
+            <apply>
+               <minus/>
+               <apply>
+                  <times/>
+                  <ci>alpha_h</ci>
+                  <apply>
+                     <minus/>
+                     <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="dimensionless">1</cn>
+                     <ci>h</ci>
+                  </apply>
+               </apply>
+               <apply>
+                  <times/>
+                  <ci>beta_h</ci>
+                  <ci>h</ci>
+               </apply>
+            </apply>
+         </apply>
+      </math>
+   </component>
+   <component name="potassium_channel">
+      <variable cmeta:id="potassium_channel_i_K" name="i_K" public_interface="out" units="microA_per_cm2"/>
+      <variable initial_value="36" name="g_K" units="milliS_per_cm2"/>
+      <variable name="E_K" units="millivolt"/>
+      <variable name="time" private_interface="out" public_interface="in" units="millisecond"/>
+      <variable name="V" private_interface="out" public_interface="in" units="millivolt"/>
+      <variable name="E_R" public_interface="in" units="millivolt"/>
+      <variable name="n" private_interface="in" units="dimensionless"/>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+         <apply>
+            <eq/>
+            <ci>E_K</ci>
+            <apply>
+               <plus/>
+               <ci>E_R</ci>
+               <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">12</cn>
+            </apply>
+         </apply>
+         <apply>
+            <eq/>
+            <ci>i_K</ci>
+            <apply>
+               <times/>
+               <ci>g_K</ci>
+               <apply>
+                  <power/>
+                  <ci>n</ci>
+                  <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="dimensionless">4</cn>
+               </apply>
+               <apply>
+                  <minus/>
+                  <ci>V</ci>
+                  <ci>E_K</ci>
+               </apply>
+            </apply>
+         </apply>
+      </math>
+   </component>
+   <component name="potassium_channel_n_gate">
+      <variable initial_value="0.325" name="n" public_interface="out" units="dimensionless"/>
+      <variable name="alpha_n" units="per_millisecond"/>
+      <variable name="beta_n" units="per_millisecond"/>
+      <variable name="V" public_interface="in" units="millivolt"/>
+      <variable name="time" public_interface="in" units="millisecond"/>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+         <apply>
+            <eq/>
             <ci>alpha_n</ci>
             <apply>
-              <minus/>
-              <cn cellml:units="dimensionless">1</cn>
-              <ci>n</ci>
+               <divide/>
+               <apply>
+                  <times/>
+                  <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="per_millivolt_millisecond">0.01</cn>
+                  <apply>
+                     <plus/>
+                     <ci>V</ci>
+                     <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">10</cn>
+                  </apply>
+               </apply>
+               <apply>
+                  <minus/>
+                  <apply>
+                     <exp/>
+                     <apply>
+                        <divide/>
+                        <apply>
+                           <plus/>
+                           <ci>V</ci>
+                           <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">10</cn>
+                        </apply>
+                        <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">10</cn>
+                     </apply>
+                  </apply>
+                  <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="dimensionless">1</cn>
+               </apply>
             </apply>
-          </apply>
-          <apply>
-            <times/>
+         </apply>
+         <apply>
+            <eq/>
             <ci>beta_n</ci>
-            <ci>n</ci>
-          </apply>
-        </apply>
-      </apply>
-    </math>
-  </component>
-  <component name="leakage_current">
-    <variable name="i_L" units="microA_per_cm2" public_interface="out"/>
-    <variable name="g_L" units="milliS_per_cm2" initial_value="0.3"/>
-    <variable name="E_L" units="millivolt"/>
-    <variable name="time" units="millisecond" public_interface="in"/>
-    <variable name="V" units="millivolt" public_interface="in"/>
-    <variable name="E_R" units="millivolt" public_interface="in"/>
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
-      <apply>
-        <eq/>
-        <ci>E_L</ci>
-        <apply>
-          <minus/>
-          <ci>E_R</ci>
-          <cn cellml:units="millivolt">10.613</cn>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <ci>i_L</ci>
-        <apply>
-          <times/>
-          <ci>g_L</ci>
-          <apply>
-            <minus/>
-            <ci>V</ci>
+            <apply>
+               <times/>
+               <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="per_millisecond">0.125</cn>
+               <apply>
+                  <exp/>
+                  <apply>
+                     <divide/>
+                     <ci>V</ci>
+                     <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">80</cn>
+                  </apply>
+               </apply>
+            </apply>
+         </apply>
+         <apply>
+            <eq/>
+            <apply>
+               <diff/>
+               <bvar>
+                  <ci>time</ci>
+               </bvar>
+               <ci>n</ci>
+            </apply>
+            <apply>
+               <minus/>
+               <apply>
+                  <times/>
+                  <ci>alpha_n</ci>
+                  <apply>
+                     <minus/>
+                     <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="dimensionless">1</cn>
+                     <ci>n</ci>
+                  </apply>
+               </apply>
+               <apply>
+                  <times/>
+                  <ci>beta_n</ci>
+                  <ci>n</ci>
+               </apply>
+            </apply>
+         </apply>
+      </math>
+   </component>
+   <component name="leakage_current">
+      <variable cmeta:id="leakage_current_i_L" name="i_L" public_interface="out" units="microA_per_cm2"/>
+      <variable initial_value="0.3" name="g_L" units="milliS_per_cm2"/>
+      <variable name="E_L" units="millivolt"/>
+      <variable name="time" public_interface="in" units="millisecond"/>
+      <variable name="V" public_interface="in" units="millivolt"/>
+      <variable name="E_R" public_interface="in" units="millivolt"/>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+         <apply>
+            <eq/>
             <ci>E_L</ci>
-          </apply>
-        </apply>
-      </apply>
-    </math>
-  </component>
-  <group>
-    <relationship_ref relationship="containment"/>
-    <component_ref component="membrane">
+            <apply>
+               <minus/>
+               <ci>E_R</ci>
+               <cn xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:units="millivolt">10.613</cn>
+            </apply>
+         </apply>
+         <apply>
+            <eq/>
+            <ci>i_L</ci>
+            <apply>
+               <times/>
+               <ci>g_L</ci>
+               <apply>
+                  <minus/>
+                  <ci>V</ci>
+                  <ci>E_L</ci>
+               </apply>
+            </apply>
+         </apply>
+      </math>
+   </component>
+   <group>
+      <relationship_ref relationship="containment"/>
+      <component_ref component="membrane">
+         <component_ref component="sodium_channel">
+            <component_ref component="sodium_channel_m_gate"/>
+            <component_ref component="sodium_channel_h_gate"/>
+         </component_ref>
+         <component_ref component="potassium_channel">
+            <component_ref component="potassium_channel_n_gate"/>
+         </component_ref>
+         <component_ref component="leakage_current"/>
+      </component_ref>
+   </group>
+   <group>
+      <relationship_ref relationship="encapsulation"/>
       <component_ref component="sodium_channel">
-        <component_ref component="sodium_channel_m_gate"/>
-        <component_ref component="sodium_channel_h_gate"/>
+         <component_ref component="sodium_channel_m_gate"/>
+         <component_ref component="sodium_channel_h_gate"/>
       </component_ref>
       <component_ref component="potassium_channel">
-        <component_ref component="potassium_channel_n_gate"/>
+         <component_ref component="potassium_channel_n_gate"/>
       </component_ref>
-      <component_ref component="leakage_current"/>
-    </component_ref>
-  </group>
-  <group>
-    <relationship_ref relationship="encapsulation"/>
-    <component_ref component="sodium_channel">
-      <component_ref component="sodium_channel_m_gate"/>
-      <component_ref component="sodium_channel_h_gate"/>
-    </component_ref>
-    <component_ref component="potassium_channel">
-      <component_ref component="potassium_channel_n_gate"/>
-    </component_ref>
-  </group>
-  <connection>
-    <map_components component_1="membrane" component_2="environment"/>
-    <map_variables variable_1="time" variable_2="time"/>
-  </connection>
-  <connection>
-    <map_components component_1="sodium_channel" component_2="environment"/>
-    <map_variables variable_1="time" variable_2="time"/>
-  </connection>
-  <connection>
-    <map_components component_1="potassium_channel" component_2="environment"/>
-    <map_variables variable_1="time" variable_2="time"/>
-  </connection>
-  <connection>
-    <map_components component_1="leakage_current" component_2="environment"/>
-    <map_variables variable_1="time" variable_2="time"/>
-  </connection>
-  <connection>
-    <map_components component_1="membrane" component_2="sodium_channel"/>
-    <map_variables variable_1="V" variable_2="V"/>
-    <map_variables variable_1="E_R" variable_2="E_R"/>
-    <map_variables variable_1="i_Na" variable_2="i_Na"/>
-  </connection>
-  <connection>
-    <map_components component_1="membrane" component_2="potassium_channel"/>
-    <map_variables variable_1="V" variable_2="V"/>
-    <map_variables variable_1="E_R" variable_2="E_R"/>
-    <map_variables variable_1="i_K" variable_2="i_K"/>
-  </connection>
-  <connection>
-    <map_components component_1="membrane" component_2="leakage_current"/>
-    <map_variables variable_1="V" variable_2="V"/>
-    <map_variables variable_1="E_R" variable_2="E_R"/>
-    <map_variables variable_1="i_L" variable_2="i_L"/>
-  </connection>
-  <connection>
-    <map_components component_1="sodium_channel" component_2="sodium_channel_m_gate"/>
-    <map_variables variable_1="m" variable_2="m"/>
-    <map_variables variable_1="time" variable_2="time"/>
-    <map_variables variable_1="V" variable_2="V"/>
-  </connection>
-  <connection>
-    <map_components component_1="sodium_channel" component_2="sodium_channel_h_gate"/>
-    <map_variables variable_1="h" variable_2="h"/>
-    <map_variables variable_1="time" variable_2="time"/>
-    <map_variables variable_1="V" variable_2="V"/>
-  </connection>
-  <connection>
-    <map_components component_1="potassium_channel" component_2="potassium_channel_n_gate"/>
-    <map_variables variable_1="n" variable_2="n"/>
-    <map_variables variable_1="time" variable_2="time"/>
-    <map_variables variable_1="V" variable_2="V"/>
-  </connection>
-</model>
+   </group>
+   <connection>
+      <map_components component_1="membrane" component_2="environment"/>
+      <map_variables variable_1="time" variable_2="time"/>
+   </connection>
+   <connection>
+      <map_components component_1="sodium_channel" component_2="environment"/>
+      <map_variables variable_1="time" variable_2="time"/>
+   </connection>
+   <connection>
+      <map_components component_1="potassium_channel" component_2="environment"/>
+      <map_variables variable_1="time" variable_2="time"/>
+   </connection>
+   <connection>
+      <map_components component_1="leakage_current" component_2="environment"/>
+      <map_variables variable_1="time" variable_2="time"/>
+   </connection>
+   <connection>
+      <map_components component_1="membrane" component_2="sodium_channel"/>
+      <map_variables variable_1="V" variable_2="V"/>
+      <map_variables variable_1="E_R" variable_2="E_R"/>
+      <map_variables variable_1="i_Na" variable_2="i_Na"/>
+   </connection>
+   <connection>
+      <map_components component_1="membrane" component_2="potassium_channel"/>
+      <map_variables variable_1="V" variable_2="V"/>
+      <map_variables variable_1="E_R" variable_2="E_R"/>
+      <map_variables variable_1="i_K" variable_2="i_K"/>
+   </connection>
+   <connection>
+      <map_components component_1="membrane" component_2="leakage_current"/>
+      <map_variables variable_1="V" variable_2="V"/>
+      <map_variables variable_1="E_R" variable_2="E_R"/>
+      <map_variables variable_1="i_L" variable_2="i_L"/>
+   </connection>
+   <connection>
+      <map_components component_1="sodium_channel" component_2="sodium_channel_m_gate"/>
+      <map_variables variable_1="m" variable_2="m"/>
+      <map_variables variable_1="time" variable_2="time"/>
+      <map_variables variable_1="V" variable_2="V"/>
+   </connection>
+   <connection>
+      <map_components component_1="sodium_channel" component_2="sodium_channel_h_gate"/>
+      <map_variables variable_1="h" variable_2="h"/>
+      <map_variables variable_1="time" variable_2="time"/>
+      <map_variables variable_1="V" variable_2="V"/>
+   </connection>
+   <connection>
+      <map_components component_1="potassium_channel" component_2="potassium_channel_n_gate"/>
+      <map_variables variable_1="n" variable_2="n"/>
+      <map_variables variable_1="time" variable_2="time"/>
+      <map_variables variable_1="V" variable_2="V"/>
+   </connection>
+   
+   
+   
+   
+
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:nodeID="n1"><boundIntervals xmlns="http://www.cellml.org/metadata/simulation/1.0#"><rdf:Description rdf:nodeID="n2"/></boundIntervals></rdf:Description><rdf:Description rdf:about="rdf:#5d04c265-a9ed-485e-8c0b-ab94982fa4b8"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">2002-03-26T00:00:00+00:00</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#cc5497cf-0f88-495c-8722-b49a03218347"><Orgunit xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">The Bioengineering Institute</Orgunit><Orgname xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">The University of Auckland</Orgname></rdf:Description><rdf:Description rdf:about="rdf:#140c4615-dbeb-4856-aa9c-68f554470dfa"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">2007-06-20T16:01:50+12:00</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#6875edb4-a9cd-4bb6-b8f9-03b2c7cc8124"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">2007-06-15T12:32:55+12:00</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#bde7bd97-4909-4ba8-8a80-7457d90944ff"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Catherine</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Lloyd</Family><Other xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">May</Other></rdf:Description><rdf:Description rdf:about="rdf:#9402b850-7050-4483-9cc7-a84fe2f91be2"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">A</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Hodgkin</Family><Other xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">L</Other></rdf:Description><rdf:Description rdf:about="rdf:#18a9b9a3-ea24-4c7d-9df0-4f3663e434bd"><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#3b0e83c3-4898-4081-84fa-85c0d2807054"/></N></rdf:Description><rdf:Description rdf:about="rdf:#2556f93d-5625-4b8f-b6c3-20ca8ea0a4d7"><Pubmed_id xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">12991237</Pubmed_id><JournalArticle xmlns="http://www.cellml.org/bqs/1.0#"><rdf:Description rdf:about="rdf:#5255356b-232a-484d-ac27-4dbb7fd9dab2"/></JournalArticle></rdf:Description><rdf:Description rdf:about="rdf:#bd2a51c8-81c1-4015-8a10-a0ff312038a5"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">2002-11-20</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#51a60dc9-2f70-4eb6-845a-1dafe7feb919"><rdf:type><rdf:Description rdf:about="http://www.cellml.org/bqs/1.0#Person"/></rdf:type><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#9402b850-7050-4483-9cc7-a84fe2f91be2"/></N></rdf:Description><rdf:Description rdf:about="rdf:#dd19c2b0-7377-4de5-b057-b16fc09f80e1"><modified xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#a667e8d9-35da-46ed-85c3-5c2c9018eb8a"/></modified><rdf:value xml:lang="en">Version of model to match the original publication</rdf:value><cmeta:modifier><rdf:Description rdf:about="rdf:#783867e0-4773-4fd9-a07c-571f3683c91b"/></cmeta:modifier></rdf:Description><rdf:Description rdf:about="rdf:#e251fcfd-c2b7-415d-9c96-5ad6417863ec"><rdf:type><rdf:Description rdf:about="http://www.cellml.org/bqs/1.0#Person"/></rdf:type><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#5ca898bf-528f-4afc-942c-504b39ab6c52"/></N></rdf:Description><rdf:Description rdf:about="rdf:#6d8cd909-915e-4a88-96ee-33dcda056c46"><FN xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Warren Hedley</FN></rdf:Description><rdf:Description rdf:about="rdf:#85f445d5-2b20-4a8a-937a-44890e1ccf00"><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#9b923383-f1a8-48c7-b1ee-0ca41c08de54"/></N></rdf:Description><rdf:Description rdf:about="rdf:#92eb28c2-eff6-485e-82e6-5bbe9d26f3fd"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Alan</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Garny</Family><Other xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en"></Other></rdf:Description><rdf:Description rdf:about="rdf:#5bc4f7d2-1306-4281-88b5-a5afe628bc66"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">2007-06-15T12:32:55+12:00</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#2f069a61-06ba-4782-a877-f31e770cdf0d"><Pubmed_id xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">2185861</Pubmed_id><JournalArticle xmlns="http://www.cellml.org/bqs/1.0#"><rdf:Description rdf:about="rdf:#6a5c1370-80c1-4b42-aead-44170b5e073e"/></JournalArticle></rdf:Description><rdf:Description rdf:about="rdf:#645f2f0c-9134-420b-9177-df0862a7a1fc"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">David</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Nickerson</Family></rdf:Description><rdf:Description rdf:about="rdf:#5e464da0-3e8d-4137-86d1-f98e6d64c0d5"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">1952-00-00 00:00</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#eaf419ae-f4db-4ee8-93c9-d7f5ebfe0c46"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">A</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Hodgkin</Family><Other xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">L</Other></rdf:Description><rdf:Description rdf:about="rdf:#783867e0-4773-4fd9-a07c-571f3683c91b"><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#92eb28c2-eff6-485e-82e6-5bbe9d26f3fd"/></N></rdf:Description><rdf:Description rdf:about="rdf:#56197c17-2399-482e-9645-a522ed0beb31"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">James</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Lawson</Family><Other xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Richard</Other></rdf:Description><rdf:Description rdf:about="rdf:#e897f342-e771-4ae3-876d-062dfdfccc88"><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#56197c17-2399-482e-9645-a522ed0beb31"/></N></rdf:Description><rdf:Description rdf:about="rdf:#11e3f403-75e7-4da6-9f6b-c5732c0cab1d"><modified xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#140c4615-dbeb-4856-aa9c-68f554470dfa"/></modified><cmeta:modifier><rdf:Description rdf:about="rdf:#b7d9bdf8-8ab9-4b18-903c-84dc2b140727"/></cmeta:modifier></rdf:Description><rdf:Description rdf:about="rdf:#e9e44e76-9801-4440-a074-6509ae83c1b7"><rdf:type><rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"/></rdf:type><rdf:_1 xml:lang="en">Neuron</rdf:_1><rdf:_2 xml:lang="en">giant axon</rdf:_2><rdf:_3 xml:lang="en">electrophysiology</rdf:_3></rdf:Description><rdf:Description rdf:about="rdf:#c1c62bec-a4f9-4b41-91ab-bbc81d473192"><subject xmlns="http://purl.org/dc/elements/1.1/"><rdf:Description rdf:about="rdf:#34d6c118-3d31-4355-90dc-a2cb5ef18374"/></subject></rdf:Description><rdf:Description rdf:about="rdf:#70448d97-7f25-4048-8bd3-da91d466bfd1"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">2002-11-20</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#00da010f-7f66-47c5-89f7-a0d13ca1ddf4"><modified xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#9ee1d23e-9cd8-45d8-8b8f-fcf480cf5c95"/></modified><rdf:value xml:lang="en">Added more metadata.</rdf:value><cmeta:modifier><rdf:Description rdf:about="rdf:#f9a8c5a9-bc9c-4b50-bdbe-e9e5956bc3bd"/></cmeta:modifier></rdf:Description><rdf:Description rdf:about="#hodgkin_huxley_squid_axon_model_1952_original"><simulation xmlns="http://www.cellml.org/metadata/simulation/1.0#"><rdf:Description rdf:nodeID="n1"/></simulation><cmeta:comment><rdf:Description rdf:about="rdf:#57d10adf-23b4-40fc-abcf-783cee3dfbc0"/></cmeta:comment><reference xmlns="http://www.cellml.org/bqs/1.0#"><rdf:Description rdf:about="rdf:#2556f93d-5625-4b8f-b6c3-20ca8ea0a4d7"/></reference></rdf:Description><rdf:Description rdf:about="rdf:#9b923383-f1a8-48c7-b1ee-0ca41c08de54"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">David</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Nickerson</Family></rdf:Description><rdf:Description rdf:about="rdf:#dd05e416-49d3-4438-bb67-6916463b2da2"><creator xmlns="http://purl.org/dc/elements/1.1/"><rdf:Description rdf:about="rdf:#433fbbbf-151f-4ee4-a8d5-a12ee78700b3"/></creator><rdf:value xml:lang="en">This particular variant of the CellML model is based on the original model in the 1952 Hodgkin-Huxley published paper.  Previous versions of the CellML model description have been modified from the original model to to be consistent with the modern convention of describing cardiac models. This particular model has been tested in both PCEnv and COR.</rdf:value></rdf:Description><rdf:Description rdf:about="rdf:#384803b0-d02a-414d-86fe-2ead34d6ede9"><modified xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#70448d97-7f25-4048-8bd3-da91d466bfd1"/></modified><rdf:value xml:lang="en">Correcting the equation for dv/dt.</rdf:value><cmeta:modifier><rdf:Description rdf:about="rdf:#85f445d5-2b20-4a8a-937a-44890e1ccf00"/></cmeta:modifier></rdf:Description><rdf:Description rdf:about="rdf:#957446e8-2852-4457-a3f6-0e87906f21b9"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">1952-01-01</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#5ca898bf-528f-4afc-942c-504b39ab6c52"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">A</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Huxley</Family><Other xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">F</Other></rdf:Description><rdf:Description rdf:about="rdf:#70de1e12-eccf-4c2c-a514-a53a1018aeb3"><modified xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#5bc4f7d2-1306-4281-88b5-a5afe628bc66"/></modified><rdf:value xml:lang="en">Added stimulus protocol to allow simulation of trains of action potentials. The stimulus amplitude (20 microamperes per cm2) and duration (0.5 ms) were taken from the single stimulus in the previous version. Set a period of 200 ms (arbitrary) to allow visualisation of 3 action potentials together at a resonable zoom level.</rdf:value><cmeta:modifier><rdf:Description rdf:about="rdf:#e897f342-e771-4ae3-876d-062dfdfccc88"/></cmeta:modifier></rdf:Description><rdf:Description rdf:about="rdf:#b09b7354-2746-4d96-a0f2-6954edf92658"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Catherine</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Lloyd</Family><Other xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">May</Other></rdf:Description><rdf:Description rdf:nodeID="n2"><rdf:first><rdf:Description rdf:nodeID="n3"/></rdf:first><rdf:rest><rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/></rdf:rest></rdf:Description><rdf:Description rdf:about="rdf:#8fd18725-5764-4794-8857-23e4f6ce4b18"><modified xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#6875edb4-a9cd-4bb6-b8f9-03b2c7cc8124"/></modified><cmeta:modifier><rdf:Description rdf:about="rdf:#18a9b9a3-ea24-4c7d-9df0-4f3663e434bd"/></cmeta:modifier></rdf:Description><rdf:Description rdf:about="rdf:#$Tpnot2"><boundIntervals xmlns="http://www.cellml.org/metadata/simulation/1.0#"><rdf:Description rdf:about="rdf:#$Upnot2"/></boundIntervals></rdf:Description><rdf:Description rdf:about="rdf:#66bca445-cdee-4030-81ee-ed5b822bf666"><creator xmlns="http://purl.org/dc/elements/1.1/"><rdf:Description rdf:about="rdf:#6d8cd909-915e-4a88-96ee-33dcda056c46"/></creator><rdf:value xml:lang="en">This is the CellML description of Hodgkin and Huxley's inspirational work on a mathematical description of currents through the membrane of a nerve fibre (axon) in a giant squid, and their application to the modelling of excitation in the nerve. It is generally regarded as the first example of a mathematical model of biology.</rdf:value></rdf:Description><rdf:Description rdf:about="rdf:#a667e8d9-35da-46ed-85c3-5c2c9018eb8a"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">2009-03-27T05:42:33+13:00</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#926f9f08-b397-491a-ac44-76e38b182232"><modified xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#86821b4a-b64d-46a1-8aec-e3f4544cb540"/></modified><rdf:value xml:lang="en">Fixed the broken figure links.</rdf:value><cmeta:modifier><rdf:Description rdf:about="rdf:#d7dedc5f-038d-45c5-b191-69311c173c69"/></cmeta:modifier></rdf:Description><rdf:Description rdf:about="rdf:#eee0af8e-5256-4021-9426-80fe492518bc"><title xmlns="http://purl.org/dc/elements/1.1/" xml:lang="en">Journal of Physiology</title></rdf:Description><rdf:Description rdf:about="rdf:#f9a8c5a9-bc9c-4b50-bdbe-e9e5956bc3bd"><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#bde7bd97-4909-4ba8-8a80-7457d90944ff"/></N></rdf:Description><rdf:Description rdf:about="rdf:#02d585b7-b7da-4723-b23d-8ebb758d738b"><rdf:type><rdf:Description rdf:about="http://imc.org/vCard/3.0#internet"/></rdf:type><rdf:value xml:lang="en">c.lloyd@auckland.ac.nz</rdf:value></rdf:Description><rdf:Description rdf:nodeID="n3"><maximumStepSize xmlns="http://www.cellml.org/metadata/simulation/1.0#" xml:lang="en">0.1</maximumStepSize><endingValue xmlns="http://www.cellml.org/metadata/simulation/1.0#" xml:lang="en">50</endingValue></rdf:Description><rdf:Description rdf:about="rdf:#86821b4a-b64d-46a1-8aec-e3f4544cb540"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">2007-06-14T07:38:16+12:00</W3CDTF></rdf:Description><rdf:Description rdf:about="rdf:#372d59c8-494a-409d-95e7-350b2ad6c199"><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#645f2f0c-9134-420b-9177-df0862a7a1fc"/></N></rdf:Description><rdf:Description rdf:about="rdf:#1ed0379c-aefc-461e-8e5e-f78790ad0dcb"><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#b09b7354-2746-4d96-a0f2-6954edf92658"/></N><EMAIL xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#02d585b7-b7da-4723-b23d-8ebb758d738b"/></EMAIL><ORG xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#cc5497cf-0f88-495c-8722-b49a03218347"/></ORG></rdf:Description><rdf:Description rdf:about="rdf:#$Vpnot2"><maximumStepSize xmlns="http://www.cellml.org/metadata/simulation/1.0#" xml:lang="en">0.01</maximumStepSize><pointDensity xmlns="http://www.cellml.org/metadata/simulation/1.0#nonstandard-" xml:lang="en">50000</pointDensity><endingValue xmlns="http://www.cellml.org/metadata/simulation/1.0#" xml:lang="en">750</endingValue></rdf:Description><rdf:Description rdf:about="rdf:#14864a47-23d4-4c87-9f80-ebb37bfec8d5"><title xmlns="http://purl.org/dc/elements/1.1/" xml:lang="en">The Journal of Physiology</title></rdf:Description><rdf:Description rdf:about="rdf:#5255356b-232a-484d-ac27-4dbb7fd9dab2"><title xmlns="http://purl.org/dc/elements/1.1/" xml:lang="en">A quantitative description of membrane current and its application to conduction and excitation in nerve</title><creator xmlns="http://purl.org/dc/elements/1.1/"><rdf:Description rdf:about="rdf:#26ae0c74-8312-4a01-b7ec-2119d0cdda39"/></creator><volume xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">117</volume><first_page xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">500</first_page><Journal xmlns="http://www.cellml.org/bqs/1.0#"><rdf:Description rdf:about="rdf:#14864a47-23d4-4c87-9f80-ebb37bfec8d5"/></Journal><last_page xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">544</last_page><issued xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#5e464da0-3e8d-4137-86d1-f98e6d64c0d5"/></issued></rdf:Description><rdf:Description rdf:about="rdf:#c6edac45-4e25-42f6-8506-79a9a151d919"><FN xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en"></FN></rdf:Description><rdf:Description rdf:about="rdf:#26ae0c74-8312-4a01-b7ec-2119d0cdda39"><rdf:type><rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq"/></rdf:type><rdf:_1><rdf:Description rdf:about="rdf:#cd6fe364-b45b-4ddc-a71d-a228b50cf938"/></rdf:_1><rdf:_2><rdf:Description rdf:about="rdf:#e251fcfd-c2b7-415d-9c96-5ad6417863ec"/></rdf:_2></rdf:Description><rdf:Description rdf:about="rdf:#f0c9b743-d359-449c-ac0c-25d95cf30ee6"><modified xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#bd2a51c8-81c1-4015-8a10-a0ff312038a5"/></modified><rdf:value xml:lang="en">Correcting the equation for dv/dt.</rdf:value><cmeta:modifier><rdf:Description rdf:about="rdf:#372d59c8-494a-409d-95e7-350b2ad6c199"/></cmeta:modifier></rdf:Description><rdf:Description rdf:about="rdf:#34d6c118-3d31-4355-90dc-a2cb5ef18374"><rdf:value><rdf:Description rdf:about="rdf:#e9e44e76-9801-4440-a074-6509ae83c1b7"/></rdf:value><subject_type xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">keyword</subject_type></rdf:Description><rdf:Description rdf:about="rdf:#d7dedc5f-038d-45c5-b191-69311c173c69"><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#2db6628b-7f2e-4536-94e2-cbba185e47e3"/></N></rdf:Description><rdf:Description rdf:about="rdf:#5aa345d1-498a-40fe-852c-be5a6c19cb10"><rdf:type><rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq"/></rdf:type><rdf:_1><rdf:Description rdf:about="rdf:#51a60dc9-2f70-4eb6-845a-1dafe7feb919"/></rdf:_1><rdf:_2><rdf:Description rdf:about="rdf:#3e67593e-eafa-479e-8369-1879d475ea1a"/></rdf:_2></rdf:Description><rdf:Description rdf:about="rdf:#9ee1d23e-9cd8-45d8-8b8f-fcf480cf5c95"><W3CDTF xmlns="http://purl.org/dc/terms/" xml:lang="en">2002-07-19</W3CDTF></rdf:Description><rdf:Description rdf:about=""><title xmlns="http://purl.org/dc/elements/1.1/" xml:lang="en">A quantitative description of membrane current and its application to conduction and excitation in nerve (Original Model)</title><creator xmlns="http://purl.org/dc/elements/1.1/"><rdf:Description rdf:about="rdf:#1ed0379c-aefc-461e-8e5e-f78790ad0dcb"/></creator><cmeta:comment><rdf:Description rdf:about="rdf:#dd05e416-49d3-4438-bb67-6916463b2da2"/></cmeta:comment><publisher xmlns="http://purl.org/dc/elements/1.1/" xml:lang="en">The University of Auckland, Bioengineering Institute</publisher><cmeta:modification><rdf:Description rdf:about="rdf:#f0c9b743-d359-449c-ac0c-25d95cf30ee6"/></cmeta:modification><cmeta:modification><rdf:Description rdf:about="rdf:#70de1e12-eccf-4c2c-a514-a53a1018aeb3"/></cmeta:modification><cmeta:modification><rdf:Description rdf:about="rdf:#384803b0-d02a-414d-86fe-2ead34d6ede9"/></cmeta:modification><cmeta:modification><rdf:Description rdf:about="rdf:#dd19c2b0-7377-4de5-b057-b16fc09f80e1"/></cmeta:modification><cmeta:modification><rdf:Description rdf:about="rdf:#11e3f403-75e7-4da6-9f6b-c5732c0cab1d"/></cmeta:modification><cmeta:modification><rdf:Description rdf:about="rdf:#00da010f-7f66-47c5-89f7-a0d13ca1ddf4"/></cmeta:modification><cmeta:modification><rdf:Description rdf:about="rdf:#926f9f08-b397-491a-ac44-76e38b182232"/></cmeta:modification><cmeta:modification><rdf:Description rdf:about="rdf:#8fd18725-5764-4794-8857-23e4f6ce4b18"/></cmeta:modification><created xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#5d04c265-a9ed-485e-8c0b-ab94982fa4b8"/></created></rdf:Description><rdf:Description rdf:about="rdf:#433fbbbf-151f-4ee4-a8d5-a12ee78700b3"><FN xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Catherine Lloyd</FN></rdf:Description><rdf:Description rdf:about="rdf:#b7d9bdf8-8ab9-4b18-903c-84dc2b140727"><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#2513dee6-5449-443a-b035-2ff762ff3069"/></N></rdf:Description><rdf:Description rdf:about="rdf:#2db6628b-7f2e-4536-94e2-cbba185e47e3"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Catherine</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Lloyd</Family><Other xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">May</Other></rdf:Description><rdf:Description rdf:about="rdf:#57d10adf-23b4-40fc-abcf-783cee3dfbc0"><creator xmlns="http://purl.org/dc/elements/1.1/"><rdf:Description rdf:about="rdf:#c6edac45-4e25-42f6-8506-79a9a151d919"/></creator><rdf:value xml:lang="en"></rdf:value></rdf:Description><rdf:Description rdf:about="rdf:#cd6fe364-b45b-4ddc-a71d-a228b50cf938"><rdf:type><rdf:Description rdf:about="http://www.cellml.org/bqs/1.0#Person"/></rdf:type><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#eaf419ae-f4db-4ee8-93c9-d7f5ebfe0c46"/></N></rdf:Description><rdf:Description rdf:about="#hodgkin_huxley_squid_axon_1952"><title xmlns="http://purl.org/dc/elements/1.1/" xml:lang="en">The Classic Hodgkin-Huxley 1952 Model of A Squid Axon.</title><cmeta:bio_entity xml:lang="en">Neuron</cmeta:bio_entity><simulation xmlns="http://www.cellml.org/metadata/simulation/1.0#"><rdf:Description rdf:about="rdf:#$Tpnot2"/></simulation><cmeta:comment><rdf:Description rdf:about="rdf:#66bca445-cdee-4030-81ee-ed5b822bf666"/></cmeta:comment><cmeta:species xml:lang="en">Squid</cmeta:species><Pubmed_id xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">2185861</Pubmed_id><reference xmlns="http://www.cellml.org/bqs/1.0#"><rdf:Description rdf:about="rdf:#c1c62bec-a4f9-4b41-91ab-bbc81d473192"/></reference><reference xmlns="http://www.cellml.org/bqs/1.0#"><rdf:Description rdf:about="rdf:#2f069a61-06ba-4782-a877-f31e770cdf0d"/></reference></rdf:Description><rdf:Description rdf:about="rdf:#0f72a1b1-ef97-4005-ad81-81353e3383ef"><Given xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">A</Given><Family xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">Huxley</Family><Other xmlns="http://www.w3.org/2001/vcard-rdf/3.0#" xml:lang="en">F</Other></rdf:Description><rdf:Description rdf:about="rdf:#3e67593e-eafa-479e-8369-1879d475ea1a"><rdf:type><rdf:Description rdf:about="http://www.cellml.org/bqs/1.0#Person"/></rdf:type><N xmlns="http://www.w3.org/2001/vcard-rdf/3.0#"><rdf:Description rdf:about="rdf:#0f72a1b1-ef97-4005-ad81-81353e3383ef"/></N></rdf:Description><rdf:Description rdf:about="rdf:#$Upnot2"><rdf:first><rdf:Description rdf:about="rdf:#$Vpnot2"/></rdf:first><rdf:rest><rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/></rdf:rest></rdf:Description><rdf:Description rdf:about="rdf:#6a5c1370-80c1-4b42-aead-44170b5e073e"><title xmlns="http://purl.org/dc/elements/1.1/" xml:lang="en">A quantitative description of membrane current and its application to conductance and excitation in nerve</title><creator xmlns="http://purl.org/dc/elements/1.1/"><rdf:Description rdf:about="rdf:#5aa345d1-498a-40fe-852c-be5a6c19cb10"/></creator><volume xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">117</volume><first_page xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">500</first_page><Journal xmlns="http://www.cellml.org/bqs/1.0#"><rdf:Description rdf:about="rdf:#eee0af8e-5256-4021-9426-80fe492518bc"/></Journal><last_page xmlns="http://www.cellml.org/bqs/1.0#" xml:lang="en">544</last_page><issued xmlns="http://purl.org/dc/terms/"><rdf:Description rdf:about="rdf:#957446e8-2852-4457-a3f6-0e87906f21b9"/></issued></rdf:Description></rdf:RDF></model>
