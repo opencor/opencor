@@ -60,40 +60,71 @@ void CellMLPlugin::initialize()
 
         RETURN_INTO_WSTRING(name, model->name());
 
-        qDebug("    Model: %s",
+        qDebug("    Model '%s'",
                QString::fromStdWString(name).toLatin1().constData());
 
-        RETURN_INTO_OBJREF(modelComponents,
-                           iface::cellml_api::CellMLComponentSet,
+        RETURN_INTO_OBJREF(comps, iface::cellml_api::CellMLComponentSet,
                            model->modelComponents());
-        RETURN_INTO_OBJREF(compIter,
-                           iface::cellml_api::CellMLComponentIterator,
-                           modelComponents->iterateComponents());
+        RETURN_INTO_OBJREF(compIter, iface::cellml_api::CellMLComponentIterator,
+                           comps->iterateComponents());
 
-        for (int i = 0; i < modelComponents->length(); i++) {
-            RETURN_INTO_OBJREF(comp,
-                               iface::cellml_api::CellMLComponent,
+        for (int i = 0; i < comps->length(); i++) {
+            RETURN_INTO_OBJREF(comp, iface::cellml_api::CellMLComponent,
                                compIter->nextComponent());
             RETURN_INTO_WSTRING(compName, comp->name());
 
-            qDebug("        Component: %s",
+            qDebug("        Component '%s'",
                    QString::fromStdWString(compName).toLatin1().constData());
 
-            RETURN_INTO_OBJREF(variables,
-                               iface::cellml_api::CellMLVariableSet,
+            RETURN_INTO_OBJREF(variables, iface::cellml_api::CellMLVariableSet,
                                comp->variables());
             RETURN_INTO_OBJREF(varIter,
                                iface::cellml_api::CellMLVariableIterator,
                                variables->iterateVariables());
 
             for(int j = 0; j < variables->length(); ++j) {
-                RETURN_INTO_OBJREF(var,
-                                   iface::cellml_api::CellMLVariable,
+                RETURN_INTO_OBJREF(var, iface::cellml_api::CellMLVariable,
                                    varIter->nextVariable());
                 RETURN_INTO_WSTRING(varName, var->name());
 
-                qDebug("            Variable: %s",
+                qDebug("            Variable '%s'",
                        QString::fromStdWString(varName).toLatin1().constData());
+            }
+        }
+
+        RETURN_INTO_OBJREF(conns, iface::cellml_api::ConnectionSet,
+                           model->connections());
+        RETURN_INTO_OBJREF(connIter, iface::cellml_api::ConnectionIterator,
+                           conns->iterateConnections());
+
+        for (int i = 0; i < conns->length(); i++) {
+            RETURN_INTO_OBJREF(conn, iface::cellml_api::Connection,
+                               connIter->nextConnection());
+            RETURN_INTO_OBJREF(compMap, iface::cellml_api::MapComponents,
+                               conn->componentMapping());
+            RETURN_INTO_WSTRING(compMapName1, compMap->firstComponentName());
+            RETURN_INTO_WSTRING(compMapName2, compMap->secondComponentName());
+
+            qDebug("        Connection between '%s' and '%s'",
+                   QString::fromStdWString(compMapName1).toLatin1().constData(),
+                   QString::fromStdWString(compMapName2).toLatin1().constData());
+
+            RETURN_INTO_OBJREF(variables,
+                               iface::cellml_api::MapVariablesSet,
+                               conn->variableMappings());
+            RETURN_INTO_OBJREF(varIter,
+                               iface::cellml_api::MapVariablesIterator,
+                               variables->iterateMapVariables());
+
+            for(int j = 0; j < variables->length(); ++j) {
+                RETURN_INTO_OBJREF(mapVars, iface::cellml_api::MapVariables,
+                                   varIter->nextMapVariables());
+                RETURN_INTO_WSTRING(mapVarsName1, mapVars->firstVariableName());
+                RETURN_INTO_WSTRING(mapVarsName2, mapVars->secondVariableName());
+
+                qDebug("            For variables '%s' and '%s'",
+                       QString::fromStdWString(mapVarsName1).toLatin1().constData(),
+                       QString::fromStdWString(mapVarsName2).toLatin1().constData());
             }
         }
 
