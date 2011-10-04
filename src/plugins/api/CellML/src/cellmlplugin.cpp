@@ -55,18 +55,49 @@ void CellMLPlugin::initialize()
         RETURN_INTO_OBJREF(model, iface::cellml_api::Model,
                            ml->loadFromURL(QUrl::fromLocalFile(testCellmlModelFileName).toString().toStdWString().c_str()));
 
-        qDebug("Retrieving the model's name...");
+        qDebug();
+        qDebug("Retrieving some model properties...");
 
         RETURN_INTO_WSTRING(name, model->name());
 
-        qDebug("    ---> %s", QString::fromStdWString(name).toLatin1().constData());
+        qDebug("    Model: %s",
+               QString::fromStdWString(name).toLatin1().constData());
 
-        qDebug("Retrieving the model's cmeta:id...");
+        RETURN_INTO_OBJREF(modelComponents,
+                           iface::cellml_api::CellMLComponentSet,
+                           model->modelComponents());
+        RETURN_INTO_OBJREF(compIter,
+                           iface::cellml_api::CellMLComponentIterator,
+                           modelComponents->iterateComponents());
 
-        RETURN_INTO_WSTRING(cmid, model->cmetaId());
+        for (int i = 0; i < modelComponents->length(); i++) {
+            RETURN_INTO_OBJREF(comp,
+                               iface::cellml_api::CellMLComponent,
+                               compIter->nextComponent());
+            RETURN_INTO_WSTRING(compName, comp->name());
 
-        qDebug("    ---> %s", QString::fromStdWString(cmid).toLatin1().constData());
+            qDebug("        Component: %s",
+                   QString::fromStdWString(compName).toLatin1().constData());
 
+            RETURN_INTO_OBJREF(variables,
+                               iface::cellml_api::CellMLVariableSet,
+                               comp->variables());
+            RETURN_INTO_OBJREF(varIter,
+                               iface::cellml_api::CellMLVariableIterator,
+                               variables->iterateVariables());
+
+            for(int j = 0; j < variables->length(); ++j) {
+                RETURN_INTO_OBJREF(var,
+                                   iface::cellml_api::CellMLVariable,
+                                   varIter->nextVariable());
+                RETURN_INTO_WSTRING(varName, var->name());
+
+                qDebug("            Variable: %s",
+                       QString::fromStdWString(varName).toLatin1().constData());
+            }
+        }
+
+        qDebug();
         qDebug("All done...");
     } catch (iface::cellml_api::CellMLException& e) {
         RETURN_INTO_WSTRING(msg, ml->lastErrorMessage());
