@@ -31,15 +31,15 @@ Q_EXPORT_PLUGIN2(CellML, CellMLPlugin)
 
 void CellMLPlugin::initialize()
 {
+    using namespace iface::cellml_api;
+
     // Fetch a bootstrap object
 
-    RETURN_INTO_OBJREF(cbs, iface::cellml_api::CellMLBootstrap,
-                       CreateCellMLBootstrap());
+    CellMLBootstrap *cbs = CreateCellMLBootstrap();
 
     // Retrieve the model loader
 
-    RETURN_INTO_OBJREF(ml, iface::cellml_api::DOMModelLoader,
-                       cbs->modelLoader());
+    DOMModelLoader *ml = cbs->modelLoader();
 
     // Load our test CellML model and return its cmeta:id
     // Note: we do this within a try...catch statement since we might get an
@@ -52,88 +52,67 @@ void CellMLPlugin::initialize()
     try {
         qDebug("Loading the model...");
 
-        RETURN_INTO_OBJREF(model, iface::cellml_api::Model,
-                           ml->loadFromURL(QUrl::fromLocalFile(testCellmlModelFileName).toString().toStdWString().c_str()));
+        Model *model = ml->loadFromURL(QUrl::fromLocalFile(testCellmlModelFileName).toString().toStdWString().c_str());
 
         qDebug();
         qDebug("Retrieving some model properties...");
 
-        RETURN_INTO_WSTRING(name, model->name());
+        // Retrieve the model's name
 
         qDebug("    Model '%s'",
-               QString::fromStdWString(name).toLatin1().constData());
+               QString::fromWCharArray(model->name()).toLatin1().constData());
 
-        RETURN_INTO_OBJREF(comps, iface::cellml_api::CellMLComponentSet,
-                           model->modelComponents());
-        RETURN_INTO_OBJREF(compIter, iface::cellml_api::CellMLComponentIterator,
-                           comps->iterateComponents());
+        // Go through the model's components and their respective variables
+
+        CellMLComponentSet *comps = model->modelComponents();
+        CellMLComponentIterator *compsIter = comps->iterateComponents();
 
         for (int i = 0; i < comps->length(); i++) {
-            RETURN_INTO_OBJREF(comp, iface::cellml_api::CellMLComponent,
-                               compIter->nextComponent());
-            RETURN_INTO_WSTRING(compName, comp->name());
+            CellMLComponent *comp = compsIter->nextComponent();
 
             qDebug("        Component '%s'",
-                   QString::fromStdWString(compName).toLatin1().constData());
+                   QString::fromWCharArray(comp->name()).toLatin1().constData());
 
-            RETURN_INTO_OBJREF(variables, iface::cellml_api::CellMLVariableSet,
-                               comp->variables());
-            RETURN_INTO_OBJREF(varIter,
-                               iface::cellml_api::CellMLVariableIterator,
-                               variables->iterateVariables());
+            CellMLVariableSet *vars = comp->variables();
+            CellMLVariableIterator *varsIter = vars->iterateVariables();
 
-            for(int j = 0; j < variables->length(); ++j) {
-                RETURN_INTO_OBJREF(var, iface::cellml_api::CellMLVariable,
-                                   varIter->nextVariable());
-                RETURN_INTO_WSTRING(varName, var->name());
-
+            for(int j = 0; j < vars->length(); ++j)
                 qDebug("            Variable '%s'",
-                       QString::fromStdWString(varName).toLatin1().constData());
-            }
+                       QString::fromStdWString(varsIter->nextVariable()->name()).toLatin1().constData());
         }
 
-        RETURN_INTO_OBJREF(conns, iface::cellml_api::ConnectionSet,
-                           model->connections());
-        RETURN_INTO_OBJREF(connIter, iface::cellml_api::ConnectionIterator,
-                           conns->iterateConnections());
+        // Go through the model's connections and information
+
+        ConnectionSet *conns = model->connections();
+        ConnectionIterator *connsIter = conns->iterateConnections();
 
         for (int i = 0; i < conns->length(); i++) {
-            RETURN_INTO_OBJREF(conn, iface::cellml_api::Connection,
-                               connIter->nextConnection());
-            RETURN_INTO_OBJREF(compMap, iface::cellml_api::MapComponents,
-                               conn->componentMapping());
-            RETURN_INTO_WSTRING(compMapName1, compMap->firstComponentName());
-            RETURN_INTO_WSTRING(compMapName2, compMap->secondComponentName());
+            Connection *conn = connsIter->nextConnection();
+            MapComponents *compMap = conn->componentMapping();
 
             qDebug("        Connection between '%s' and '%s'",
-                   QString::fromStdWString(compMapName1).toLatin1().constData(),
-                   QString::fromStdWString(compMapName2).toLatin1().constData());
+                   QString::fromStdWString(compMap->firstComponentName()).toLatin1().constData(),
+                   QString::fromStdWString(compMap->secondComponentName()).toLatin1().constData());
 
-            RETURN_INTO_OBJREF(variables,
-                               iface::cellml_api::MapVariablesSet,
-                               conn->variableMappings());
-            RETURN_INTO_OBJREF(varIter,
-                               iface::cellml_api::MapVariablesIterator,
-                               variables->iterateMapVariables());
+            MapVariablesSet *varMaps = conn->variableMappings();
+            MapVariablesIterator *varMapsIter = varMaps->iterateMapVariables();
 
-            for(int j = 0; j < variables->length(); ++j) {
-                RETURN_INTO_OBJREF(mapVars, iface::cellml_api::MapVariables,
-                                   varIter->nextMapVariables());
-                RETURN_INTO_WSTRING(mapVarsName1, mapVars->firstVariableName());
-                RETURN_INTO_WSTRING(mapVarsName2, mapVars->secondVariableName());
+            for(int j = 0; j < varMaps->length(); ++j) {
+                MapVariables *mapVars = varMapsIter->nextMapVariables();
 
                 qDebug("            For variables '%s' and '%s'",
-                       QString::fromStdWString(mapVarsName1).toLatin1().constData(),
-                       QString::fromStdWString(mapVarsName2).toLatin1().constData());
+                       QString::fromStdWString(mapVars->firstVariableName()).toLatin1().constData(),
+                       QString::fromStdWString(mapVars->secondVariableName()).toLatin1().constData());
             }
         }
+
+        // All done...
 
         qDebug();
         qDebug("All done...");
-    } catch (iface::cellml_api::CellMLException& e) {
-        RETURN_INTO_WSTRING(msg, ml->lastErrorMessage());
-
-        qDebug("ERROR: %s.", QString::fromStdWString(msg).toLatin1().constData());
+    } catch (CellMLException &) {
+        qDebug("ERROR: %s.",
+               QString::fromWCharArray(ml->lastErrorMessage()).toLatin1().constData());
     }
 
     QFile::remove(testCellmlModelFileName);
