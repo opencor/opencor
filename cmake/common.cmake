@@ -498,30 +498,25 @@ MACRO(CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIRNAME PLUGIN_NAME)
                                                      ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${PLUGIN_DIRNAME}/${PLUGIN_FILENAME})
 ENDMACRO()
 
-MACRO(COPY_FILE_TO_BUILD_DIR FILENAME)
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${CMAKE_BINARY_DIR})
-ENDMACRO()
+MACRO(COPY_FILE_TO_BUILD_DIR DIRNAME FILENAME)
+    SET(BUILD_DIR ${CMAKE_FILES_DIR}/../build)
+    # Note: we would normally use ${CMAKE_BINARY_DIR}, but we want this macro
+    #       to work for both the main OpenCOR project and the winConsole
+    #       version of the OpenCOR project, so...
 
-MACRO(COPY_FILE_TO_BIN_DIR FILENAME)
-    SET(BIN_DIR ${CMAKE_FILES_DIR}/../build/bin)
-    # Note: we would normally use SET(BIN_DIR ${CMAKE_BINARY_DIR}/bin), but
-    #       we want this macro to work for both the main OpenCOR project and
-    #       the winConsole version of the OpenCOR project, so...
-
-    IF(NOT EXISTS ${BIN_DIR})
+    IF(NOT EXISTS ${BUILD_DIR}/${DIRNAME})
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E make_directory ${BIN_DIR})
+                           COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}/${DIRNAME})
     ENDIF()
 
     IF("${ARGN}" STREQUAL "")
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${BIN_DIR})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${BUILD_DIR}/${DIRNAME})
     ELSE()
         # An argument was passed so use it to rename the file which is to be
         # copied
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${BIN_DIR}/${ARGN})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${BUILD_DIR}/${DIRNAME}/${ARGN})
     ENDIF()
 ENDMACRO()

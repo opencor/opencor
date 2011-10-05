@@ -115,15 +115,15 @@ IF(WIN32)
     FOREACH(CELLML_LIB ${CELLML_LIBS})
         # Copy them to the build and build/bin folders, so we can test the
         # CellML plugin without first having to deploy OpenCOR
-    
-        COPY_FILE_TO_BUILD_DIR(${CELLML_LIBS_DIR}/${CELLML_LIB})
-        COPY_FILE_TO_BIN_DIR(${CELLML_LIBS_DIR}/${CELLML_LIB})
+
+        COPY_FILE_TO_BUILD_DIR(. ${CELLML_LIBS_DIR}/${CELLML_LIB})
+        COPY_FILE_TO_BUILD_DIR(bin ${CELLML_LIBS_DIR}/${CELLML_LIB})
 
         # INstall them
-    
+
         INSTALL(FILES ${CELLML_LIBS_DIR}/${CELLML_LIB} DESTINATION bin)
     ENDFOREACH()
-    
+
     # The libstdc++-6.dll file
     # Note: this DLL comes from the official version of MinGW (as opposed to
     #       the Qt patched version) and is the version that is required since
@@ -132,9 +132,9 @@ IF(WIN32)
     #       so we can safely deploy it to get the CellML plugin to work)
 
     SET(LIBSTDC++-6_FILE ${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
-    
-    COPY_FILE_TO_BUILD_DIR(${LIBSTDC++-6_FILE})
-    COPY_FILE_TO_BIN_DIR(${LIBSTDC++-6_FILE})
+
+    COPY_FILE_TO_BUILD_DIR(. ${LIBSTDC++-6_FILE})
+    COPY_FILE_TO_BUILD_DIR(bin ${LIBSTDC++-6_FILE})
 
     INSTALL(FILES ${LIBSTDC++-6_FILE} DESTINATION bin)
 ELSEIF(APPLE)
@@ -158,7 +158,7 @@ ELSEIF(APPLE)
             libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
             libcevas${CMAKE_SHARED_LIBRARY_SUFFIX}
-	        libcuses${CMAKE_SHARED_LIBRARY_SUFFIX}
+            libcuses${CMAKE_SHARED_LIBRARY_SUFFIX}
             libmalaes${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
 
