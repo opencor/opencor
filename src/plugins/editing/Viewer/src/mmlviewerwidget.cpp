@@ -17,9 +17,13 @@ MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
 
     mTestMmlWidget->setBaseFontPointSize(100);
 
-    // Set the background to white
+    // Set the background role in such a way that the background color is always
+    // that of the system's base colour
 
-    setPalette(QPalette(Qt::white));
+    setBackgroundRole(QPalette::Base);
+
+    // Have the background filled automatically
+
     setAutoFillBackground(true);
 
     // Set a font that we know works on Windows, Linux and Mac OS X

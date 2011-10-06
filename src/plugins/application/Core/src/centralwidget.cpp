@@ -59,10 +59,20 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mLogo.load(logoResourceName);
 
-    mLogoBackgroundColor = QImage(logoResourceName).pixel(0, 0);
-
     mLogoWidth  = mLogo.width();
     mLogoHeight = mLogo.height();
+
+    // Set the background colour to that of the logo's
+
+    QPalette pal = palette();
+
+    pal.setColor(QPalette::Window, QImage(logoResourceName).pixel(0, 0));
+
+    setPalette(pal);
+
+    // Have the background filled automatically
+
+    setAutoFillBackground(true);
 
     // Create our modes tab bar with no tabs by default
 
@@ -80,7 +90,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mEmptyWidget = new QWidget(this);
 
-    mEmptyWidget->setBackgroundRole(QPalette::BrightText);
+    mEmptyWidget->setBackgroundRole(QPalette::Base);
     mEmptyWidget->setAutoFillBackground(true);
 
     mContents->addWidget(mEmptyWidget);
@@ -498,9 +508,6 @@ void CentralWidget::paintEvent(QPaintEvent *pEvent)
         int widgetWidth  = width();
         int widgetHeight = height();
 
-        painter.fillRect(QRect(0, 0, widgetWidth, widgetHeight),
-                         mLogoBackgroundColor);
-
         // Draw the logo itself
 
         painter.drawPixmap(QRect(0.5*(widgetWidth-mLogoWidth),
@@ -510,28 +517,16 @@ void CentralWidget::paintEvent(QPaintEvent *pEvent)
 
 #ifndef Q_WS_MAC
         // Draw a border around the widget
-        // Note #1: the border actually consists of two borders. A 'dark' outer
-        //          border and a 'light' inner border. Note the way the border
-        //          coordinates were adjusted to get the right effect...
-        // Note #2: the border doesn't look good on Mac OS X, so...
 
         QPen pen = painter.pen();
 
-        pen.setColor(palette().color(QPalette::Button));
+        pen.setColor(qApp->palette().color(QPalette::Midlight));
 
         painter.setPen(pen);
 
         QRect border = rect();
 
-        border.adjust(0, 0, -1, 0);
-
-        painter.drawRect(border);
-
-        pen.setColor(palette().color(QPalette::Midlight));
-
-        painter.setPen(pen);
-
-        border.adjust(1, 1, -1, -1);
+        border.adjust(0, 0, -1, -1);
 
         painter.drawRect(border);
 #endif

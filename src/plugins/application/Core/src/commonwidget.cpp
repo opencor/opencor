@@ -87,7 +87,7 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
 
         QPen pen = painter.pen();
 
-        pen.setColor(widget->palette().color(QPalette::Midlight));
+        pen.setColor(qApp->palette().color(QPalette::Midlight));
 
         painter.setPen(pen);
 

@@ -87,7 +87,6 @@ private:
     QList<CentralWidgetViewSettings *> mViews;
 
     QPixmap mLogo;
-    QColor mLogoBackgroundColor;
 
     int mLogoWidth;
     int mLogoHeight;
