@@ -341,7 +341,7 @@ void CellMLPlugin::initialize()
     odeSolverRun->start();
 
     while (!progressObserver->finished())
-        SleeperThread::msleep(1000);
+        SleeperThread::msleep(1);
 
     // All done...
 
