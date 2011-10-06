@@ -82,8 +82,8 @@ void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
 
     QSize testMmlWidgetSize = mTestMmlWidget->sizeHint();
 
-    setBaseFontPointSize(round(93*fmin((double) width()/testMmlWidgetSize.width(),
-                                       (double) height()/testMmlWidgetSize.height())));
+    setBaseFontPointSize(qRound(93*qMin((double) width()/testMmlWidgetSize.width(),
+                                        (double) height()/testMmlWidgetSize.height())));
     // Note: to go for 100% of the 'optimal' size may result in the edges of
     //       the equation being clipped, hence we go for 93% of the 'optimal'
     //       size...

@@ -176,6 +176,7 @@ ADD_PLUGIN(Qwt
         src/qwtplugin.h
     PLUGIN_INCLUDE_DIRS
         src
+        textengines/mathml
     QT_DEPENDENCIES
         QtCore
         QtGui

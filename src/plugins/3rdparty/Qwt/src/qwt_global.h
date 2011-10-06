@@ -24,6 +24,7 @@
 #pragma warning(disable: 4660)
 #endif // _MSC_VER
 
+/*---GRY---
 #ifdef QWT_DLL
 
 #if defined(QWT_MAKEDLL)     // create a Qwt DLL library 
@@ -34,13 +35,23 @@
 #endif
 
 #endif // QWT_DLL
+*/
 
 #endif // Q_WS_WIN || Q_WS_S60
 
+/*---GRY---
 #ifndef QWT_EXPORT
 #define QWT_EXPORT
 #endif
+*/
 
+//---GRY--- BEGIN
+#ifdef Qwt_PLUGIN
+    #define QWT_EXPORT Q_DECL_EXPORT
+#else
+    #define QWT_EXPORT Q_DECL_IMPORT
+#endif
+//---GRY--- END
 // #define QWT_NO_COMPAT 1 // disable withdrawn functionality
 
 #endif 
