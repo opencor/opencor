@@ -19,6 +19,7 @@ ADD_PLUGIN(CoreSimulation
         src
     OPENCOR_DEPENDENCIES
         Core
+        Qwt
     QT_DEPENDENCIES
         QtCore
         QtGui

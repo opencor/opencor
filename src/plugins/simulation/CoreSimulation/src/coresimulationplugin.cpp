@@ -14,7 +14,7 @@ PLUGININFO_FUNC CoreSimulationPluginInfo()
                       PluginInfo::Gui,
                       PluginInfo::Simulation,
                       false,
-                      QStringList() << "Core",
+                      QStringList() << "Core" << "Qwt",
                       descriptions);
 }
 
