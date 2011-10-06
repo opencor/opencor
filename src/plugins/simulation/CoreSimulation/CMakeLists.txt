@@ -23,4 +23,6 @@ ADD_PLUGIN(CoreSimulation
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtSvg
+        QtXml
 )
