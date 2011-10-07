@@ -79,7 +79,6 @@ private:
     QWidget *mEmptyWidget;
 
     QTabBar *mEditingViews;
-    QTabBar *mSimulationViews;
     QTabBar *mAnalysisViews;
 
     QMap<GuiViewSettings::Mode, bool> mModeEnabled;

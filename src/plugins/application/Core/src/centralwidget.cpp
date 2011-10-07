@@ -108,9 +108,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our different views tab bars
 
-    mEditingViews    = newTabBar(QTabBar::RoundedEast);
-    mSimulationViews = newTabBar(QTabBar::RoundedEast);
-    mAnalysisViews   = newTabBar(QTabBar::RoundedEast);
+    mEditingViews  = newTabBar(QTabBar::RoundedEast);
+    mAnalysisViews = newTabBar(QTabBar::RoundedEast);
 
     // Add the widgets/layout to our horizontal layout
 
@@ -119,7 +118,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mUi->horizontalLayout->addWidget(centralWidget);
 
     mUi->horizontalLayout->addWidget(mEditingViews);
-    mUi->horizontalLayout->addWidget(mSimulationViews);
     mUi->horizontalLayout->addWidget(mAnalysisViews);
 
     // Update the GUI
@@ -369,7 +367,7 @@ int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
 
     switch (pMode) {
     case GuiViewSettings::Simulation:
-        // If the Simulation mode exists, then it has to be the first or second
+        // If the simulation mode exists, then it has to be the first or second
         // tab, depending on whether the Editing mode exists
 
         return  mModeEnabled.value(pMode)?
@@ -377,7 +375,7 @@ int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
                     :-1;
     case GuiViewSettings::Analysis:
         // If the Analysis mode exists, then it has to be the first, second or
-        // third tab, depending on whether the Editing and/or Simulation modes
+        // third tab, depending on whether the Editing and/or simulation modes
         // exist
 
         return  mModeEnabled.value(pMode)?
@@ -553,23 +551,21 @@ void CentralWidget::updateGui() const
     mFiles->setVisible(atLeastOneManagedFile);
     mContents->setVisible(atLeastOneManagedFile);
 
-    // Show/hide the editing and simulation modes' corresponding views, if
-    // required
+    // Show/hide the editing and analyiss modes' corresponding views, as needed
     // Note: we first hide all of the views tab bars, since otherwise we will
     //       see a flicker on Mac OS X
 
     mEditingViews->setVisible(false);
-    mSimulationViews->setVisible(false);
     mAnalysisViews->setVisible(false);
 
     int crtTab = atLeastOneManagedFile?mModes->currentIndex():-1;
 
     if (crtTab != -1) {
         // The modes tab bar is visible and a tab is therefore selected, so show
-        // only the views corresponding to that mode
+        // only the views corresponding to that mode, as long as it is not the
+        // simulation mode
 
         mEditingViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Editing));
-        mSimulationViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Simulation));
         mAnalysisViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Analysis));
     }
 }
