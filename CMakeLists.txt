@@ -45,7 +45,6 @@ SET(SOURCES
 
     src/misc/common.cpp
     src/misc/utils.cpp
-    src/misc/versionmanager.cpp
 
     src/plugins/coreinterface.cpp
     src/plugins/fileinterface.cpp
@@ -72,8 +71,6 @@ SET(HEADERS_MOC
     src/mainwindow.h
     src/pluginswindow.h
     src/preferenceswindow.h
-
-    src/misc/versionmanager.h
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
