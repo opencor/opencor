@@ -4,6 +4,7 @@
 #include <QtPlugin>
 
 #include <QList>
+#include <QMap>
 
 class QAction;
 class QDockWidget;
@@ -172,6 +173,9 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    virtual QWidget * viewWidget(const QString &pFileName);
+    virtual QWidget * newViewWidget(const QString &);
+
     GuiSettings * guiSettings() const;
 
     void setMainWindow(QMainWindow *pMainWindow);
@@ -208,6 +212,8 @@ protected:
 
 private:
     QString mGuiPluginName;
+
+    QMap<QString, QWidget *> mViewWidgets;
 };
 
 }

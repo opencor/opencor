@@ -325,6 +325,22 @@ void GuiInterface::saveSettings(QSettings *pSettings) const
     // Nothing to do by default...
 }
 
+QWidget * GuiInterface::viewWidget(const QString &pFileName)
+{
+    // Return the view widget associated to the given file name
+
+    QWidget *res = mViewWidgets.value(pFileName);
+
+    return res?res:newViewWidget(pFileName);
+}
+
+QWidget * GuiInterface::newViewWidget(const QString &)
+{
+    // Return no widget by default...
+
+    return 0;
+}
+
 GuiSettings * GuiInterface::guiSettings() const
 {
     // Return the plugin's GUI settings

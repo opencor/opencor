@@ -22,14 +22,4 @@ PLUGININFO_FUNC CellMLSimulationPluginInfo()
 
 Q_EXPORT_PLUGIN2(CellMLSimulation, CellMLSimulationPlugin)
 
-CellMLSimulationPlugin::CellMLSimulationPlugin()
-{
-    // Set our settings
-
-    mGuiSettings->addView(GuiViewSettings::Simulation);
-    // Note: this won't so much set a new view (since the Simulation mode should
-    //       have only one view), but ensure that the Simulation mode becomes
-    //       available
-}
-
 } }

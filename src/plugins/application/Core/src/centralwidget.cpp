@@ -1,5 +1,6 @@
 #include "centralwidget.h"
 #include "filemanager.h"
+#include "plugin.h"
 
 #include "ui_centralwidget.h"
 
@@ -9,37 +10,16 @@
 #include <QPainter>
 #include <QSettings>
 #include <QStackedWidget>
-#include <QTextStream>
 #include <QUrl>
 
 namespace OpenCOR {
 namespace Core {
 
-CentralWidgetViewSettings::CentralWidgetViewSettings(Plugin *pPlugin,
-                                                     GuiViewSettings *pSettings) :
-    mPlugin(pPlugin),
-    mSettings(pSettings)
-{
-}
-
-Plugin * CentralWidgetViewSettings::plugin() const
-{
-    // Return the view's plugin
-
-    return mPlugin;
-}
-
-GuiViewSettings * CentralWidgetViewSettings::settings() const
-{
-    // Return the view's settings
-
-    return mSettings;
-}
-
 CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
-    mUi(new Ui::CentralWidget)
+    mUi(new Ui::CentralWidget),
+    mSimulationViewInterface(0)
 {
     // Set up the UI
 
@@ -88,12 +68,12 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mContents = new QStackedWidget(this);
 
-    mEmptyWidget = new QWidget(this);
+    mEmptyView = new QWidget(this);
 
-    mEmptyWidget->setBackgroundRole(QPalette::Base);
-    mEmptyWidget->setAutoFillBackground(true);
+    mEmptyView->setBackgroundRole(QPalette::Base);
+    mEmptyView->setAutoFillBackground(true);
 
-    mContents->addWidget(mEmptyWidget);
+    mContents->addWidget(mEmptyView);
 
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *centralWidgetVBoxLayout = new QVBoxLayout(centralWidget);
@@ -147,9 +127,6 @@ CentralWidget::~CentralWidget()
 
     delete mFileManager;
     delete mUi;
-
-    foreach (CentralWidgetViewSettings *viewSettings, mViews)
-        delete viewSettings;
 }
 
 void CentralWidget::retranslateUi()
@@ -402,24 +379,41 @@ void CentralWidget::addMode(const GuiViewSettings::Mode &pMode)
 
 void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 {
-    // Add a new view to our list of supported views
-
-    mViews << new CentralWidgetViewSettings(pPlugin, pSettings);
+    static const QString CoreSimulationPlugin = "CoreSimulation";
 
     // Make sure that our list of required modes is up-to-date
 
     addMode(pSettings->mode());
 
-    // Add the requested view to the mode's views tab bar
+    // Add the requested view to the mode's views tab bar and associate the
+    // plugin to the new tab index
     // Note: the simulation mode doesn't need a views tab bar, since it should
     //       have only one view
 
     if (pSettings->mode() == GuiViewSettings::Editing) {
         pSettings->setTabBar(mEditingViews);
         pSettings->setTabIndex(mEditingViews->addTab(QString()));
+
+        mEditingViewInterfaces.insert(pSettings->tabIndex(),
+                                      qobject_cast<GuiInterface *>(pPlugin->instance()));
+    } else if (pSettings->mode() == GuiViewSettings::Simulation) {
+        if (   !mSimulationViewInterface
+            && !pPlugin->name().compare(CoreSimulationPlugin))
+            // The simulation view plugin hasn't already been set and we are
+            // dealing with the CoreSimulation plugin, so set our simulation
+            // view interface to that of the CoreSimulation plugin
+            // Note: there shouldn't be a need to test that we are indeed
+            //       dealing with the CoreSimulation plugin, but this is a
+            //       safeguard against someone creating a simulation plugin and
+            //       (stupidly) adding a view...
+
+            mSimulationViewInterface = qobject_cast<GuiInterface *>(pPlugin->instance());
     } else if (pSettings->mode() == GuiViewSettings::Analysis) {
         pSettings->setTabBar(mAnalysisViews);
         pSettings->setTabIndex(mAnalysisViews->addTab(QString()));
+
+        mAnalysisViewInterfaces.insert(pSettings->tabIndex(),
+                                       qobject_cast<GuiInterface *>(pPlugin->instance()));
     }
 }
 
@@ -551,13 +545,49 @@ void CentralWidget::updateGui() const
     mFiles->setVisible(atLeastOneManagedFile);
     mContents->setVisible(atLeastOneManagedFile);
 
-    // Show/hide the editing and analysis modes' corresponding views, as needed
+    // Show/hide the editing and analysis modes' corresponding views tab, as
+    // needed
 
     if (atLeastOneManagedFile) {
         int crtTab = mModes->currentIndex();
 
-        mEditingViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Editing));
-        mAnalysisViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Analysis));
+        bool editingMode    = crtTab == modeTabIndex(GuiViewSettings::Editing);
+        bool simulationMode = crtTab == modeTabIndex(GuiViewSettings::Simulation);
+        bool analysisMode   = crtTab == modeTabIndex(GuiViewSettings::Analysis);
+
+        mEditingViews->setVisible(editingMode);
+        mAnalysisViews->setVisible(analysisMode);
+
+        // Show/hide the required view for the current mode
+
+        // Retrieve the GUI interface for the view we are after
+
+        GuiInterface *guiInterface;
+
+        if (editingMode)
+            guiInterface = mEditingViewInterfaces.value(mEditingViews->currentIndex());
+        else if (simulationMode)
+            guiInterface = mSimulationViewInterface;
+        else if (analysisMode)
+            guiInterface = mEditingViewInterfaces.value(mAnalysisViews->currentIndex());
+
+        // Ask the GUI interface for the widget to use for the current file
+
+        QWidget *newView = guiInterface->viewWidget(mFiles->tabToolTip(mFiles->currentIndex()));
+
+        if (!newView)
+            // The interface doesn't have a view for the current file, so use
+            // our empty view instead
+
+            newView = mEmptyView;
+
+        // Replace the current view with the new one
+        // Note: the order in which the adding and removing (as well as the
+        //       showing/hiding) of view is done ensures that the replacement
+        //       looks as good as possible...
+
+        mContents->removeWidget(mContents->currentWidget());
+        mContents->addWidget(newView);
     } else {
         mEditingViews->setVisible(false);
         mAnalysisViews->setVisible(false);

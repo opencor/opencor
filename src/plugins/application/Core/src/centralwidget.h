@@ -22,20 +22,6 @@ namespace Core {
 
 class FileManager;
 
-class CentralWidgetViewSettings
-{
-public:
-    explicit CentralWidgetViewSettings(Plugin *pPlugin,
-                                       GuiViewSettings *pSettings);
-
-    Plugin * plugin() const;
-    GuiViewSettings * settings() const;
-
-private:
-    Plugin *mPlugin;
-    GuiViewSettings *mSettings;
-};
-
 class CentralWidget : public QWidget, public CommonWidget
 {
     Q_OBJECT
@@ -76,14 +62,16 @@ private:
     QTabBar *mFiles;
     QStackedWidget *mContents;
 
-    QWidget *mEmptyWidget;
+    QWidget *mEmptyView;
 
     QTabBar *mEditingViews;
     QTabBar *mAnalysisViews;
 
     QMap<GuiViewSettings::Mode, bool> mModeEnabled;
 
-    QList<CentralWidgetViewSettings *> mViews;
+    QMap<int, GuiInterface *> mEditingViewInterfaces;
+    GuiInterface *mSimulationViewInterface;
+    QMap<int, GuiInterface *> mAnalysisViewInterfaces;
 
     QPixmap mLogo;
 
