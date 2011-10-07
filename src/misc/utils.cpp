@@ -57,8 +57,8 @@ QString getOsName()
     case QSysInfo::MV_10_6:
         return "Mac OS X 10.6 (Snow Leopard)";
     case 0x0009:
-        // The value above should become QSysInfo::MV_10_7 the day Qt
-        // officially supports Mac OS X 10.7 (Lion)
+        // The value above should become QSysInfo::MV_10_7 once Qt officially
+        // supports Mac OS X 10.7 (Lion)
 
         return "Mac OS X 10.7 (Lion)";
     default:
