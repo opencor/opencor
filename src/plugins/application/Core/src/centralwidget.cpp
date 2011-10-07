@@ -551,22 +551,16 @@ void CentralWidget::updateGui() const
     mFiles->setVisible(atLeastOneManagedFile);
     mContents->setVisible(atLeastOneManagedFile);
 
-    // Show/hide the editing and analyiss modes' corresponding views, as needed
-    // Note: we first hide all of the views tab bars, since otherwise we will
-    //       see a flicker on Mac OS X
+    // Show/hide the editing and analysis modes' corresponding views, as needed
 
-    mEditingViews->setVisible(false);
-    mAnalysisViews->setVisible(false);
-
-    int crtTab = atLeastOneManagedFile?mModes->currentIndex():-1;
-
-    if (crtTab != -1) {
-        // The modes tab bar is visible and a tab is therefore selected, so show
-        // only the views corresponding to that mode, as long as it is not the
-        // simulation mode
+    if (atLeastOneManagedFile) {
+        int crtTab = mModes->currentIndex();
 
         mEditingViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Editing));
         mAnalysisViews->setVisible(crtTab == modeTabIndex(GuiViewSettings::Analysis));
+    } else {
+        mEditingViews->setVisible(false);
+        mAnalysisViews->setVisible(false);
     }
 }
 
