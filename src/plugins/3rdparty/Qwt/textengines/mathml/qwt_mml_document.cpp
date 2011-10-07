@@ -3122,7 +3122,12 @@ void QwtMmlDocument::_dump( const QwtMmlNode *node, QString &indent ) const
 {
     if ( node == 0 ) return;
 
+/*---GRY---
     qWarning( ( indent + node->toStr() ).toLatin1().data() );
+*/
+//---GRY--- BEGIN
+    qWarning( "%s", QString( indent + node->toStr() ).toLatin1().data() );
+//---GRY--- END
 
     indent += "  ";
     const QwtMmlNode *child = node->firstChild();
@@ -3702,7 +3707,12 @@ int QwtMmlNode::scriptlevel( const QwtMmlNode * ) const
         }
         else
         {
+/*---GRY---
             qWarning( ( "QwtMmlNode::scriptlevel(): bad value " + expl_sl_str ).toLatin1().data() );
+*/
+//---GRY--- BEGIN
+            qWarning( "%s", ( "QwtMmlNode::scriptlevel(): bad value " + expl_sl_str ).toLatin1().data() );
+//---GRY--- END
             return parent_sl;
         }
     }
@@ -3719,7 +3729,12 @@ int QwtMmlNode::scriptlevel( const QwtMmlNode * ) const
         return parent_sl - 1;
     else
     {
+/*---GRY---
         qWarning( ( "QwtMmlNode::scriptlevel(): could not parse value: \"" + expl_sl_str + "\"" ).toLatin1().data() );
+*/
+//---GRY--- BEGIN
+        qWarning( "%s", ( "QwtMmlNode::scriptlevel(): could not parse value: \"" + expl_sl_str + "\"" ).toLatin1().data() );
+//---GRY--- END
         return parent_sl;
     }
 }
@@ -5637,7 +5652,12 @@ static QString decodeEntityValue( QString literal )
 
         if ( !literal.startsWith( "&#" ) )
         {
+/*---GRY---
             qWarning( ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+*/
+//---GRY--- BEGIN
+            qWarning( "%s", ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+//---GRY--- END
             return QString::null;
         }
 
@@ -5646,7 +5666,12 @@ static QString decodeEntityValue( QString literal )
         int i = literal.indexOf( ';' );
         if ( i == -1 )
         {
+/*---GRY---
             qWarning( ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+*/
+//---GRY--- BEGIN
+            qWarning( "%s", ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+//---GRY--- END
             return QString::null;
         }
 
@@ -5655,7 +5680,12 @@ static QString decodeEntityValue( QString literal )
 
         if ( char_code.isEmpty() )
         {
+/*---GRY---
             qWarning( ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+*/
+//---GRY--- BEGIN
+            qWarning( "%s", ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+//---GRY--- END
             return QString::null;
         }
 
@@ -5666,7 +5696,12 @@ static QString decodeEntityValue( QString literal )
             unsigned c = char_code.toUInt( &ok, 16 );
             if ( !ok )
             {
+/*---GRY---
                 qWarning( ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+*/
+//---GRY--- BEGIN
+                qWarning( "%s", ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+//---GRY--- END
                 return QString::null;
             }
             result += QChar( c );
@@ -5677,7 +5712,12 @@ static QString decodeEntityValue( QString literal )
             unsigned c = char_code.toUInt( &ok, 10 );
             if ( !ok )
             {
+/*---GRY---
                 qWarning( ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+*/
+//---GRY--- BEGIN
+                qWarning( "%s", ( "decodeEntityValue(): bad entity literal: \"" + literal + "\"" ).toLatin1().data() );
+//---GRY--- END
                 return QString::null;
             }
             result += QChar( c );
