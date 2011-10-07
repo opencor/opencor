@@ -19,9 +19,6 @@ class CellMLSimulationPlugin : public QObject, public GuiInterface,
 
 public:
     explicit CellMLSimulationPlugin();
-
-protected:
-    virtual void retranslateUi();
 };
 
 } }

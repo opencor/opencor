@@ -413,15 +413,12 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
     addMode(pSettings->mode());
 
     // Add the requested view to the mode's views tab bar
-    // Note: the simulation mode doesn't need a views tab bar, since it can have
-    //       only one view
+    // Note: the simulation mode doesn't need a views tab bar, since it should
+    //       have only one view
 
     if (pSettings->mode() == GuiViewSettings::Editing) {
         pSettings->setTabBar(mEditingViews);
         pSettings->setTabIndex(mEditingViews->addTab(QString()));
-    } else if (pSettings->mode() == GuiViewSettings::Simulation) {
-        pSettings->setTabBar(mSimulationViews);
-        pSettings->setTabIndex(mSimulationViews->addTab(QString()));
     } else if (pSettings->mode() == GuiViewSettings::Analysis) {
         pSettings->setTabBar(mAnalysisViews);
         pSettings->setTabIndex(mAnalysisViews->addTab(QString()));

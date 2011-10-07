@@ -27,15 +27,9 @@ CellMLSimulationPlugin::CellMLSimulationPlugin()
     // Set our settings
 
     mGuiSettings->addView(GuiViewSettings::Simulation);
-}
-
-void CellMLSimulationPlugin::retranslateUi()
-{
-    // Retranslate our view's tab
-
-    GuiViewSettings *view = mGuiSettings->views().at(0);
-
-    view->tabBar()->setTabText(view->tabIndex(), tr("CellML"));
+    // Note: this won't so much set a new view (since the Simulation mode should
+    //       have only one view), but ensure that the Simulation mode becomes
+    //       available
 }
 
 } }

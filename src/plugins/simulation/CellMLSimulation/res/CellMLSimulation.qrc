@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="CellMLSimulation_fr">../../../../../build/CellMLSimulation_fr.qm</file>
-    </qresource>
-</RCC>
