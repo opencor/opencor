@@ -52,44 +52,6 @@ ADD_PLUGIN(CellML
         ../../fileinterface.h
         ../../i18ninterface.h
         ../../plugininfo.h
-
-        AnnoToolsBootstrap.hpp
-        CCGSBootstrap.hpp
-        cda_compiler_support.h
-        cda_config.h
-        CeLEDSBootstrap.hpp
-        CeLEDSExporterBootstrap.hpp
-        cellml-api-cxx-support.hpp
-        CellMLBootstrap.hpp
-        CeVASBootstrap.hpp
-        CISBootstrap.hpp
-        CUSESBootstrap.hpp
-        DOMBootstrap.hxx
-        IfaceAnnoTools.hxx
-        IfaceCCGS.hxx
-        IfaceCeLEDS.hxx
-        IfaceCeLEDSExporter.hxx
-        IfaceCellML_APISPEC.hxx
-        IfaceCellML_events.hxx
-        IfaceCeVAS.hxx
-        IfaceCIS.hxx
-        IfaceCUSES.hxx
-        IfaceDOM_APISPEC.hxx
-        IfaceDOM_events.hxx
-        IfaceMaLaES.hxx
-        IfaceMathML_content_APISPEC.hxx
-        IfaceRDF_APISPEC.hxx
-        IfaceSProS.hxx
-        IfaceSRuS.hxx
-        IfaceTeLICeMS.hxx
-        IfaceVACSS.hxx
-        Ifacexpath.hxx
-        Ifacexpcom.hxx
-        MaLaESBootstrap.hpp
-        SProSBootstrap.hpp
-        SRuSBootstrap.hpp
-        TeLICeMService.hpp
-        VACSSBootstrap.hpp
     HEADERS_MOC
         src/cellmlplugin.h
     PLUGIN_INCLUDE_DIRS
