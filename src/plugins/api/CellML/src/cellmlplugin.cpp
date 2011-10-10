@@ -266,8 +266,7 @@ void CellMLPlugin::initialize()
     odeSolverRun->setProgressObserver(progressObserver);
 
     odeSolverRun->stepType(iface::cellml_services::BDF_IMPLICIT_1_5_SOLVE);
-    odeSolverRun->setResultRange(0, 50, 0);
-    odeSolverRun->setTabulationStepControl(1, true);
+    odeSolverRun->setResultRange(0, 50, 1000);
 
     odeSolverRun->start();
 

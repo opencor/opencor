@@ -21,6 +21,7 @@ ADD_PLUGIN(CoreSimulation
         src/coresimulationplugin.h
     PLUGIN_INCLUDE_DIRS
         src
+        ../../3rdparty/Qwt/src
     OPENCOR_DEPENDENCIES
         Core
         Qwt

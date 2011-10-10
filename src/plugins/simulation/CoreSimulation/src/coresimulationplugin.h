@@ -5,6 +5,10 @@
 #include "guiinterface.h"
 #include "plugininfo.h"
 
+#include <QVector>
+
+class QwtPlot;
+
 namespace OpenCOR {
 namespace CoreSimulation {
 
@@ -23,7 +27,10 @@ public:
     virtual QWidget * viewWidget(const QString &);
 
 private:
-    QWidget *mSimulationView;
+    QwtPlot *mSimulationView;
+
+    QVector<double> mXData;
+    QVector<double> mYData;
 };
 
 } }
