@@ -89,7 +89,7 @@ void CoreSimulationPlugin::initialize()
         dataLine = mResultsFile.readLine();
     };
 
-    // Add a curve to the plotting widget
+    // Add a curve to our simulation view widget
 
     QwtPlotCurve *curve = new QwtPlotCurve;
 
