@@ -236,7 +236,7 @@ void CellMLPlugin::initialize()
     try {
         model = ml->loadFromURL(QUrl::fromLocalFile(testCellmlModelFileName).toString().toStdWString().c_str());
     } catch (iface::cellml_api::CellMLException &) {
-        qDebug("Error: %s", ml->lastErrorMessage());
+        qDebug("Error: %s", QString::fromWCharArray(ml->lastErrorMessage()).toLatin1().constData());
 
         usePrecomputedTestCellmlResults();
 
@@ -252,7 +252,7 @@ void CellMLPlugin::initialize()
     {
         compiledModel = cis->compileModelODE(model);
     } catch (iface::cellml_api::CellMLException &) {
-        qDebug("Error: %s", cis->lastError());
+        qDebug("Error: %s", QString::fromWCharArray(cis->lastError()).toLatin1().constData());
 
         usePrecomputedTestCellmlResults();
 
