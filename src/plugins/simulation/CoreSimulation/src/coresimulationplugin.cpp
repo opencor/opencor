@@ -101,13 +101,13 @@ void CoreSimulationPlugin::initialize()
 
     // Set our settings
 
-    mGuiSettings->addView(GuiViewSettings::Simulation);
+    mGuiSettings->addView(GuiViewSettings::Simulation, 0);
     // Note: this won't so much set a new view (since the simulation mode should
     //       have only one view), but ensure that the simulation mode becomes
     //       available
 }
 
-QWidget * CoreSimulationPlugin::viewWidget(const QString &)
+QWidget * CoreSimulationPlugin::viewWidget(const QString &, const int &)
 {
     // Always return our simulation view widget, no matter which file name is
     // being passed

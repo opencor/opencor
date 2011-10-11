@@ -86,10 +86,9 @@ QAction * GuiToolBarSettings::action() const
     return mAction;
 }
 
-GuiViewSettings::GuiViewSettings(const Mode &pMode) :
+GuiViewSettings::GuiViewSettings(const Mode &pMode, const int &pIndex) :
     mMode(pMode),
-    mTabBar(0),
-    mTabIndex(-1)
+    mIndex(pIndex)
 {
 }
 
@@ -100,32 +99,11 @@ GuiViewSettings::Mode GuiViewSettings::mode() const
     return mMode;
 }
 
-void GuiViewSettings::setTabBar(QTabBar *pTabBar)
+int GuiViewSettings::index() const
 {
-    // Set the view's tab bar
+    // Return the view's index
 
-    mTabBar = pTabBar;
-}
-
-void GuiViewSettings::setTabIndex(const int &pTabIndex)
-{
-    // Set the view's tab index
-
-    mTabIndex = pTabIndex;
-}
-
-QTabBar * GuiViewSettings::tabBar() const
-{
-    // Return the view's tab bar
-
-    return mTabBar;
-}
-
-int GuiViewSettings::tabIndex() const
-{
-    // Return the view's tab index
-
-    return mTabIndex;
+    return mIndex;
 }
 
 GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
@@ -221,11 +199,11 @@ void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
     mCentralWidget = pCentralWidget;
 }
 
-void GuiSettings::addView(const GuiViewSettings::Mode &pMode)
+void GuiSettings::addView(const GuiViewSettings::Mode &pMode, const int &pIndex)
 {
     // Add a new view to our list
 
-    mViews << new GuiViewSettings(pMode);
+    mViews << new GuiViewSettings(pMode, pIndex);
 }
 
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
@@ -293,6 +271,11 @@ GuiInterface::~GuiInterface()
     // Delete our GUI settings object
 
     delete mGuiSettings;
+
+    // Delete our lists of view widgets
+
+    foreach (GuiViewWidgets *viewWidgets, mViewWidgets)
+        delete viewWidgets;
 }
 
 void GuiInterface::loadWindowSettings(QSettings *pSettings,
@@ -325,20 +308,45 @@ void GuiInterface::saveSettings(QSettings *pSettings) const
     // Nothing to do by default...
 }
 
-QWidget * GuiInterface::viewWidget(const QString &pFileName)
+QWidget * GuiInterface::viewWidget(const QString &pFileName, const int &pIndex)
 {
     // Return the view widget associated to the given file name
 
-    QWidget *res = mViewWidgets.value(pFileName);
+    // Retrieve the list of view widgets associated to the view index
+
+    GuiViewWidgets *viewWidgets = mViewWidgets.value(pIndex);
+
+    if (!viewWidgets) {
+        // There is no list of view widgets associated to the view index, so
+        // create one and keep track of it
+
+        viewWidgets = new GuiViewWidgets;
+
+        mViewWidgets.insert(pIndex, viewWidgets);
+    }
+
+    // Retrieve from the list of widgets the widget associated to the file name
+
+    QWidget *res = viewWidgets->value(pFileName);
+
+    // Return either the existing widget associated to the file name or a new
+    // one if none exists
 
     return res?res:newViewWidget(pFileName);
 }
 
 QWidget * GuiInterface::newViewWidget(const QString &)
 {
-    // Return no widget by default...
+    // Create and return no widget by default...
 
     return 0;
+}
+
+QString GuiInterface::viewName(const int &)
+{
+    // Return an empty string by default...
+
+    return QString();
 }
 
 GuiSettings * GuiInterface::guiSettings() const
@@ -358,13 +366,6 @@ void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
     // Set the main window
 
     mMainWindow = pMainWindow;
-}
-
-void GuiInterface::setGuiPluginName(const QString &pGuiPluginName)
-{
-    // Set the name of the plugin
-
-    mGuiPluginName = pGuiPluginName;
 }
 
 QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)

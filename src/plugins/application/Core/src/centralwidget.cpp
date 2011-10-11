@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QDragEnterEvent>
 #include <QFileInfo>
+#include <QLabel>
 #include <QPainter>
 #include <QSettings>
 #include <QStackedWidget>
@@ -62,18 +63,38 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mModeEnabled.insert(GuiViewSettings::Simulation, false);
     mModeEnabled.insert(GuiViewSettings::Analysis, false);
 
-    // Create our files tab bar and contents
+    // Create our files tab bar widget
 
     mFiles = newTabBar(QTabBar::RoundedNorth, true, true);
 
+    // Create our contents widget
+
     mContents = new QStackedWidget(this);
 
-    mEmptyView = new QWidget(this);
+    // Create our no view widget which contains a label that will display a
+    // customised warning message to the user to let him know that there is no
+    // view for the current file using the current view
 
-    mEmptyView->setBackgroundRole(QPalette::Base);
-    mEmptyView->setAutoFillBackground(true);
+    mNoView = new QWidget(this);
 
-    mContents->addWidget(mEmptyView);
+    mNoView->setBackgroundRole(QPalette::Base);
+    mNoView->setAutoFillBackground(true);
+
+    mNoViewMsg = new QLabel(mNoView);
+
+    QFont noViewMsgFont = mNoViewMsg->font();
+
+    noViewMsgFont.setPointSize(1.5*noViewMsgFont.pointSize());
+
+    mNoViewMsg->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    mNoViewMsg->setFont(noViewMsgFont);
+
+    mNoView->setLayout(new QVBoxLayout(mNoView));
+    mNoView->layout()->addWidget(mNoViewMsg);
+
+    mContents->addWidget(mNoView);
+
+    // Create and set up our central widget
 
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *centralWidgetVBoxLayout = new QVBoxLayout(centralWidget);
@@ -114,7 +135,14 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // A connection to handle our modes tab bar
 
     connect(mModes, SIGNAL(currentChanged(int)),
-            this, SLOT(modeSelected(const int &)));
+            this, SLOT(updateGui()));
+
+    // Some connections to handle our views tab bars
+
+    connect(mEditingViews, SIGNAL(currentChanged(int)),
+            this, SLOT(updateGui()));
+    connect(mAnalysisViews, SIGNAL(currentChanged(int)),
+            this, SLOT(updateGui()));
 }
 
 CentralWidget::~CentralWidget()
@@ -144,6 +172,20 @@ void CentralWidget::retranslateUi()
     if (mModeEnabled.value(GuiViewSettings::Analysis))
         mModes->setTabText(modeTabIndex(GuiViewSettings::Analysis),
                            tr("Analysis"));
+
+    // Retranslate our views tab bar
+
+    for (int i = 0; i < mEditingViews->count(); ++i)
+        mEditingViews->setTabText(i,
+                                  mEditingViewInterfaces.value(i)->viewName(mEditingViewSettings.value(i)->index()));
+
+    for (int i = 0; i < mAnalysisViews->count(); ++i)
+        mAnalysisViews->setTabText(i,
+                                   mAnalysisViewInterfaces.value(i)->viewName(mAnalysisViewSettings.value(i)->index()));
+
+    // Retranslate our no view widget message
+
+    updateNoViewMsg();
 }
 
 static const QString SettingsOpenedFiles = "OpenedFiles";
@@ -345,14 +387,14 @@ int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
     switch (pMode) {
     case GuiViewSettings::Simulation:
         // If the simulation mode exists, then it has to be the first or second
-        // tab, depending on whether the Editing mode exists
+        // tab, depending on whether the editing mode exists
 
         return  mModeEnabled.value(pMode)?
                      mModeEnabled.value(GuiViewSettings::Editing)?1:0
                     :-1;
     case GuiViewSettings::Analysis:
-        // If the Analysis mode exists, then it has to be the first, second or
-        // third tab, depending on whether the Editing and/or simulation modes
+        // If the analysis mode exists, then it has to be the first, second or
+        // third tab, depending on whether the editing and/or simulation modes
         // exist
 
         return  mModeEnabled.value(pMode)?
@@ -360,7 +402,7 @@ int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
                      +(mModeEnabled.value(GuiViewSettings::Simulation)?1:0)
                     :-1;
     default:   // GuiViewSettings::Editing
-        // If the Editing mode exists, then it has to be the first tab
+        // If the editing mode exists, then it has to be the first tab
 
         return mModeEnabled.value(pMode)?0:-1;
     }
@@ -387,15 +429,16 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 
     // Add the requested view to the mode's views tab bar and associate the
     // plugin to the new tab index
-    // Note: the simulation mode doesn't need a views tab bar, since it should
-    //       have only one view
+    // Note: the simulation mode doesn't have and need a views tab bar, since it
+    //       should have only one view
+
+    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(pPlugin->instance());
 
     if (pSettings->mode() == GuiViewSettings::Editing) {
-        pSettings->setTabBar(mEditingViews);
-        pSettings->setTabIndex(mEditingViews->addTab(QString()));
+        int tabIndex = mEditingViews->addTab(QString());
 
-        mEditingViewInterfaces.insert(pSettings->tabIndex(),
-                                      qobject_cast<GuiInterface *>(pPlugin->instance()));
+        mEditingViewInterfaces.insert(tabIndex, guiInterface);
+        mEditingViewSettings.insert(tabIndex, pSettings);
     } else if (pSettings->mode() == GuiViewSettings::Simulation) {
         if (   !mSimulationViewInterface
             && !pPlugin->name().compare(CoreSimulationPlugin))
@@ -407,13 +450,12 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
             //       safeguard against someone creating a simulation plugin and
             //       (stupidly) adding a view...
 
-            mSimulationViewInterface = qobject_cast<GuiInterface *>(pPlugin->instance());
+            mSimulationViewInterface = guiInterface;
     } else if (pSettings->mode() == GuiViewSettings::Analysis) {
-        pSettings->setTabBar(mAnalysisViews);
-        pSettings->setTabIndex(mAnalysisViews->addTab(QString()));
+        int tabIndex = mAnalysisViews->addTab(QString());
 
-        mAnalysisViewInterfaces.insert(pSettings->tabIndex(),
-                                       qobject_cast<GuiInterface *>(pPlugin->instance()));
+        mAnalysisViewInterfaces.insert(tabIndex, guiInterface);
+        mAnalysisViewSettings.insert(tabIndex, pSettings);
     }
 }
 
@@ -531,7 +573,7 @@ void CentralWidget::paintEvent(QPaintEvent *pEvent)
     }
 }
 
-void CentralWidget::updateGui() const
+void CentralWidget::updateGui()
 {
     bool atLeastOneManagedFile = mFileManager->count();
 
@@ -563,23 +605,36 @@ void CentralWidget::updateGui() const
         // Retrieve the GUI interface for the view we are after
 
         GuiInterface *guiInterface;
+        int viewIndex;
 
-        if (editingMode)
-            guiInterface = mEditingViewInterfaces.value(mEditingViews->currentIndex());
-        else if (simulationMode)
+        if (editingMode) {
+            int tabIndex = mEditingViews->currentIndex();
+
+            guiInterface = mEditingViewInterfaces.value(tabIndex);
+            viewIndex    = mEditingViewSettings.value(tabIndex)->index();
+        } else if (simulationMode) {
             guiInterface = mSimulationViewInterface;
-        else if (analysisMode)
-            guiInterface = mEditingViewInterfaces.value(mAnalysisViews->currentIndex());
+            viewIndex    = 0;   // Since there is only one simulation view
+        } else if (analysisMode) {
+            int tabIndex = mAnalysisViews->currentIndex();
+
+            guiInterface = mAnalysisViewInterfaces.value(tabIndex);
+            viewIndex    = mAnalysisViewSettings.value(tabIndex)->index();
+        }
 
         // Ask the GUI interface for the widget to use for the current file
 
-        QWidget *newView = guiInterface->viewWidget(mFiles->tabToolTip(mFiles->currentIndex()));
+        QWidget *newView = guiInterface->viewWidget(mFiles->tabToolTip(mFiles->currentIndex()),
+                                                    viewIndex);
 
-        if (!newView)
+        if (!newView) {
             // The interface doesn't have a view for the current file, so use
-            // our empty view instead
+            // our no view widget instead and update its v
 
-            newView = mEmptyView;
+            newView = mNoView;
+
+            updateNoViewMsg();
+        }
 
         // Replace the current view with the new one
         // Note: the order in which the adding and removing (as well as the
@@ -592,14 +647,6 @@ void CentralWidget::updateGui() const
         mEditingViews->setVisible(false);
         mAnalysisViews->setVisible(false);
     }
-}
-
-void CentralWidget::modeSelected(const int &)
-{
-   // A new mode has been selected, so make sure that its corresponding views
-   // are shown
-
-    updateGui();
 }
 
 QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
@@ -624,6 +671,30 @@ QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
     //          dock window which is clearly not what we want, so...
 
     return res;
+}
+
+void CentralWidget::updateNoViewMsg()
+{
+    // Customise our no view widget so that it shows a relevant warning message
+
+    QString viewName;
+    int crtTab = mModes->currentIndex();
+
+    if (crtTab == modeTabIndex(GuiViewSettings::Editing)) {
+        int tabIndex = mEditingViews->currentIndex();
+
+        viewName = mEditingViewInterfaces.value(tabIndex)->viewName(mEditingViewSettings.value(tabIndex)->index());
+    } else if (crtTab == modeTabIndex(GuiViewSettings::Simulation)) {
+        // In the case of the simulation mode, we have only one view, so...
+
+        viewName = tr("Simulation");
+    } else if (crtTab == modeTabIndex(GuiViewSettings::Analysis)) {
+        int tabIndex = mAnalysisViews->currentIndex();
+
+        viewName = mAnalysisViewInterfaces.value(tabIndex)->viewName(mAnalysisViewSettings.value(tabIndex)->index());
+    }
+
+    mNoViewMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not currently support this type of file...").arg(viewName));
 }
 
 } }

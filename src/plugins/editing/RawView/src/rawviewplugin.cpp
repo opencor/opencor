@@ -26,16 +26,20 @@ RawViewPlugin::RawViewPlugin()
 {
     // Set our settings
 
-    mGuiSettings->addView(GuiViewSettings::Editing);
+    mGuiSettings->addView(GuiViewSettings::Editing, 0);
 }
 
-void RawViewPlugin::retranslateUi()
+QString RawViewPlugin::viewName(const int &pViewIndex)
 {
-    // Retranslate our view's tab
+    // We have only one view, so return its name otherwise call the GuiInterface
+    // implementation of viewName
 
-    GuiViewSettings *view = mGuiSettings->views().at(0);
-
-    view->tabBar()->setTabText(view->tabIndex(), tr("Raw"));
+    switch (pViewIndex) {
+    case 0:
+        return tr("Raw");
+    default:
+        return GuiInterface::viewName(pViewIndex);
+    }
 }
 
 } }

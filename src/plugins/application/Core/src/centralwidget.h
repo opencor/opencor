@@ -12,6 +12,7 @@ namespace Ui {
     class CentralWidget;
 }
 
+class QLabel;
 class QStackedWidget;
 
 namespace OpenCOR {
@@ -62,7 +63,8 @@ private:
     QTabBar *mFiles;
     QStackedWidget *mContents;
 
-    QWidget *mEmptyView;
+    QWidget *mNoView;
+    QLabel *mNoViewMsg;
 
     QTabBar *mEditingViews;
     QTabBar *mAnalysisViews;
@@ -73,12 +75,13 @@ private:
     GuiInterface *mSimulationViewInterface;
     QMap<int, GuiInterface *> mAnalysisViewInterfaces;
 
+    QMap<int, GuiViewSettings *> mEditingViewSettings;
+    QMap<int, GuiViewSettings *> mAnalysisViewSettings;
+
     QPixmap mLogo;
 
     int mLogoWidth;
     int mLogoHeight;
-
-    void updateGui() const;
 
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
@@ -87,6 +90,8 @@ private:
     QTabBar * newTabBar(const QTabBar::Shape &pShape,
                         const bool &pMovable = false,
                         const bool &pTabsClosable = false);
+
+    void updateNoViewMsg();
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);
@@ -98,7 +103,7 @@ public Q_SLOTS:
     bool closeFile(const int &pIndex = -1);
     void closeAllFiles();
     void fileSelected(const int &pIndex);
-    void modeSelected(const int &);
+    void updateGui();
 };
 
 } }

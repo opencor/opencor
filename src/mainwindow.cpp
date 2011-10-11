@@ -121,12 +121,10 @@ MainWindow::MainWindow(QWidget *pParent) :
 
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-        if (guiInterface) {
+        if (guiInterface)
             // Keep track of some information
 
             guiInterface->setMainWindow(this);
-            guiInterface->setGuiPluginName(plugin->name());
-        }
 
         // Internationalisation interface
 
@@ -634,10 +632,19 @@ void MainWindow::setLocale(const QString &pLocale)
         if (mViewEditingMenu)
             GuiInterface::retranslateMenu(mViewEditingMenu, tr("Editing"));
 
-        // Update the locale of our various plugins
+        // Update the locale of our various loaded plugins
+        // Note: we do this in reverse order of the loaded plugins since some
+        //       plugins loaded first (e.g. the Core plugin) may need an updated
+        //       translation from a plugin that depends on them (e.g. the
+        //       RawView plugin depends on the Core plugin and the Core plugin
+        //       needs the RawView plugin to be properly translated before being
+        //       translated, since it needs to know the name of the view that
+        //       was created by the RawView plugin), so...
 
-        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-            I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
+        QList<Plugin *> loadedPlugins = mPluginManager->loadedPlugins();
+
+        for (int i = loadedPlugins.count()-1; i >= 0; --i) {
+            I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(loadedPlugins.at(i)->instance());
 
             if (i18nInterface)
                 i18nInterface->setLocale(realLocale);

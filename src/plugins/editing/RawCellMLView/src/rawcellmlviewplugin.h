@@ -20,8 +20,7 @@ class RawCellMLViewPlugin : public QObject, public GuiInterface,
 public:
     explicit RawCellMLViewPlugin();
 
-protected:
-    virtual void retranslateUi();
+    virtual QString viewName(const int &pViewIndex);
 };
 
 } }

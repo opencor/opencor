@@ -19,8 +19,7 @@ class RawViewPlugin : public QObject, public GuiInterface, public I18nInterface
 public:
     explicit RawViewPlugin();
 
-protected:
-    virtual void retranslateUi();
+    virtual QString viewName(const int &pViewIndex);
 };
 
 } }

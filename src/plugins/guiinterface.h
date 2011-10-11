@@ -85,21 +85,14 @@ public:
         Analysis
     };
 
-    explicit GuiViewSettings(const Mode &pMode);
+    explicit GuiViewSettings(const Mode &pMode, const int &pIndex);
 
     Mode mode() const;
-
-    void setTabBar(QTabBar *pTabBar);
-    void setTabIndex(const int &pTabIndex);
-
-    QTabBar * tabBar() const;
-    int tabIndex() const;
+    int index() const;
 
 private:
     Mode mMode;
-
-    QTabBar *mTabBar;
-    int mTabIndex;
+    int mIndex;
 };
 
 class GuiWindowSettings
@@ -142,7 +135,7 @@ public:
     void addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
                     QToolBar *pToolbar, QAction *pAction);
     void addCentralWidget(Core::CentralWidget *pCentralWidget);
-    void addView(const GuiViewSettings::Mode &pMode);
+    void addView(const GuiViewSettings::Mode &pMode, const int &pIndex);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow,
                    const GuiWindowSettings::GuiWindowSettingsType &pType,
@@ -164,6 +157,8 @@ private:
     QList<GuiWindowSettings *> mWindows;
 };
 
+typedef QMap<QString, QWidget *> GuiViewWidgets;
+
 class GuiInterface
 {
 public:
@@ -173,13 +168,13 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual QWidget * viewWidget(const QString &pFileName);
+    virtual QWidget * viewWidget(const QString &pFileName, const int &pIndex);
     virtual QWidget * newViewWidget(const QString &);
+    virtual QString viewName(const int &);
 
     GuiSettings * guiSettings() const;
 
     void setMainWindow(QMainWindow *pMainWindow);
-    void setGuiPluginName(const QString &pGuiPluginName);
 
     static void connectToolBarToAction(QToolBar *pToolbar, QAction *pAction);
     static void connectDockWidgetToAction(QDockWidget *pDockWidget, QAction *pAction);
@@ -190,6 +185,8 @@ protected:
     QMainWindow *mMainWindow;
 
     GuiSettings *mGuiSettings;
+
+    QMap<int, GuiViewWidgets *> mViewWidgets;
 
     virtual void updateActions();
 
@@ -209,11 +206,6 @@ protected:
                             Core::DockWidget *pWindow);
     void saveWindowSettings(QSettings *pSettings,
                             Core::DockWidget *pWindow) const;
-
-private:
-    QString mGuiPluginName;
-
-    QMap<QString, QWidget *> mViewWidgets;
 };
 
 }

@@ -24,7 +24,7 @@ class CoreSimulationPlugin : public QObject, public CoreInterface,
 public:
     virtual void initialize();
 
-    virtual QWidget * viewWidget(const QString &);
+    virtual QWidget * viewWidget(const QString &, const int &);
 
 private:
     QwtPlot *mSimulationView;
