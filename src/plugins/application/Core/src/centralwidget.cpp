@@ -135,6 +135,11 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     connect(mFiles, SIGNAL(currentChanged(int)),
             this, SLOT(fileSelected(const int &)));
 
+    // A connection to handle our files tab bar
+
+    connect(mFiles, SIGNAL(currentChanged(int)),
+            this, SLOT(updateGui()));
+
     // A connection to handle our modes tab bar
 
     connect(mModes, SIGNAL(currentChanged(int)),
