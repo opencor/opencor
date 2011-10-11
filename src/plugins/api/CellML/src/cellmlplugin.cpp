@@ -7,8 +7,8 @@
 #include "IfaceCIS.hxx"
 #include "CISBootstrap.hpp"
 
+#include <QDebug>
 #include <QDir>
-#include <QMessageBox>
 #include <QThread>
 #include <QUrl>
 
@@ -187,7 +187,7 @@ public:
 
     virtual void failed(const char *pErrorMsg) throw (std::exception &)
     {
-        QMessageBox::information(0, "CellML Error", QString("Integration failed (%1)").arg(pErrorMsg));
+        qDebug("Error: Integration failed (%s)", pErrorMsg);
 
         mFinished = true;
     }
@@ -223,7 +223,7 @@ void CellMLPlugin::initialize()
 
     iface::cellml_api::DOMModelLoader *ml = cbs->modelLoader();
 
-    // Load our test CellML model and return its cmeta:id
+    // Load our test CellML model
     // Note: we do this within a try...catch statement since we might get an
     //       exception...
 
@@ -236,7 +236,7 @@ void CellMLPlugin::initialize()
     try {
         model = ml->loadFromURL(QUrl::fromLocalFile(testCellmlModelFileName).toString().toStdWString().c_str());
     } catch (iface::cellml_api::CellMLException &) {
-        QMessageBox::information(0, "CellML Error", QString::fromWCharArray(ml->lastErrorMessage()));
+        qDebug("Error: %s", ml->lastErrorMessage());
 
         return;
     }
@@ -250,11 +250,11 @@ void CellMLPlugin::initialize()
     {
         compiledModel = cis->compileModelODE(model);
     } catch (iface::cellml_api::CellMLException &) {
-        QMessageBox::information(0, "CellML Error", QString::fromWCharArray(cis->lastError()));
+        qDebug("Error: %s", cis->lastError());
 
         return;
     } catch (...) {
-        QMessageBox::information(0, "CellML Error", "Unexpected exception calling compileModel.");
+        qDebug("Error: Unexpected exception calling compileModel.");
 
         return;
     }
