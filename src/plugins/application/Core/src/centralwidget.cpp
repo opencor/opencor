@@ -683,7 +683,11 @@ void CentralWidget::updateNoViewMsg()
     QString viewName;
     int crtTab = mModes->currentIndex();
 
-    if (crtTab == modeTabIndex(GuiViewSettings::Editing)) {
+    if (crtTab == -1) {
+        // There is no tab, so...
+
+        return;
+    } else if (crtTab == modeTabIndex(GuiViewSettings::Editing)) {
         int tabIndex = mEditingViews->currentIndex();
 
         viewName = mEditingViewInterfaces.value(tabIndex)->viewName(mEditingViewSettings.value(tabIndex)->index());
