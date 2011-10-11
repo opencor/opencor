@@ -19,6 +19,7 @@ class RawViewPlugin : public QObject, public GuiInterface, public I18nInterface
 public:
     explicit RawViewPlugin();
 
+    virtual QWidget * newViewWidget(const QString &pFileName);
     virtual QString viewName(const int &pViewIndex);
 };
 

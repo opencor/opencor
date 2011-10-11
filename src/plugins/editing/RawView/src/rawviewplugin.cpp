@@ -1,6 +1,8 @@
 #include "rawviewplugin.h"
 
-#include <QTabBar>
+#include <QFile>
+#include <QMainWindow>
+#include <QTextEdit>
 
 namespace OpenCOR {
 namespace RawView {
@@ -27,6 +29,23 @@ RawViewPlugin::RawViewPlugin()
     // Set our settings
 
     mGuiSettings->addView(GuiViewSettings::Editing, 0);
+}
+
+QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
+{
+    // Create, set up and return a raw Scintilla editor
+
+    QFile file(pFileName);
+
+    if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
+        return GuiInterface::newViewWidget(pFileName);
+
+    QTextEdit *res = new QTextEdit(mMainWindow);
+
+    res->setFontPointSize(11);
+    res->setPlainText(file.readAll());
+
+    return res;
 }
 
 QString RawViewPlugin::viewName(const int &pViewIndex)

@@ -20,8 +20,9 @@ ADD_PLUGIN(CoreSimulation
     HEADERS_MOC
         src/coresimulationplugin.h
     PLUGIN_INCLUDE_DIRS
-        src
         ../../3rdparty/Qwt/src
+
+        src
     OPENCOR_DEPENDENCIES
         Core
         Qwt
