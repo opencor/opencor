@@ -71,6 +71,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mContents = new QStackedWidget(this);
 
+    mContents->setFrameStyle(QFrame::StyledPanel);
+
     // Create our no view widget which contains a label that will display a
     // customised warning message to the user to let him know that there is no
     // view for the current file using the current view
