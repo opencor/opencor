@@ -26,6 +26,9 @@ public:
 
     virtual QList<FileType> fileTypes() const;
     virtual QString fileTypeDescription(const QString &mMimeType) const;
+
+private:
+    void usePrecomputedTestCellmlResults();
 };
 
 } }

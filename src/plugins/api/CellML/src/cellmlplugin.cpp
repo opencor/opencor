@@ -238,6 +238,8 @@ void CellMLPlugin::initialize()
     } catch (iface::cellml_api::CellMLException &) {
         qDebug("Error: %s", ml->lastErrorMessage());
 
+        usePrecomputedTestCellmlResults();
+
         return;
     }
 
@@ -252,9 +254,13 @@ void CellMLPlugin::initialize()
     } catch (iface::cellml_api::CellMLException &) {
         qDebug("Error: %s", cis->lastError());
 
+        usePrecomputedTestCellmlResults();
+
         return;
     } catch (...) {
         qDebug("Error: Unexpected exception calling compileModel.");
+
+        usePrecomputedTestCellmlResults();
 
         return;
     }
@@ -295,6 +301,17 @@ QString CellMLPlugin::fileTypeDescription(const QString &mMimeType) const
         // Not a Mime type that we can recognise, so...
 
         return FileInterface::fileTypeDescription(mMimeType);
+}
+
+void CellMLPlugin::usePrecomputedTestCellmlResults()
+{
+    // Use the pre-computed test CellML results
+    // Note: this is done as a result of not being able to use the CellML API
+    //       binaries (most likely because we couldn't compile our test CellML
+    //       file)
+
+    Core::saveResourceAs(":test_cellml_results",
+                         QDir::tempPath()+QDir::separator()+"test_cellml_results.csv");
 }
 
 } }
