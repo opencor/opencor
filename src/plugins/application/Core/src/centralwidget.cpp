@@ -88,6 +88,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mNoViewMsg->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     mNoViewMsg->setFont(noViewMsgFont);
+    mNoViewMsg->setWordWrap(true);
 
     mNoView->setLayout(new QVBoxLayout(mNoView));
     mNoView->layout()->addWidget(mNoViewMsg);
