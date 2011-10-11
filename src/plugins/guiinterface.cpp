@@ -325,14 +325,26 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName, const int &pIndex)
         mViewWidgets.insert(pIndex, viewWidgets);
     }
 
-    // Retrieve from the list of widgets the widget associated to the file name
+    // Retrieve, from our list of widgets, the widget associated to the file
+    // name
 
     QWidget *res = viewWidgets->value(pFileName);
 
-    // Return either the existing widget associated to the file name or a new
-    // one if none exists
+    // Check whether we got an empty widget or not, and if so then create a
+    // widget for the file and keep track of it
 
-    return res?res:newViewWidget(pFileName);
+    if (!res) {
+        res = newViewWidget(pFileName);
+
+        if (res)
+            // Only keep track of the widget if it is a real one
+
+            viewWidgets->insert(pFileName, res);
+    }
+
+    // Return the widget
+
+    return res;
 }
 
 QWidget * GuiInterface::newViewWidget(const QString &)
