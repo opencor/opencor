@@ -187,7 +187,7 @@ public:
 
     virtual void failed(const char *pErrorMsg) throw (std::exception &)
     {
-        qDebug("Error: Integration failed (%s)", pErrorMsg);
+        qDebug("CIS error: Model integration failed (%s)", pErrorMsg);
 
         mFinished = true;
     }
@@ -236,7 +236,7 @@ void CellMLPlugin::initialize()
     try {
         model = ml->loadFromURL(QUrl::fromLocalFile(testCellmlModelFileName).toString().toStdWString().c_str());
     } catch (iface::cellml_api::CellMLException &) {
-        qDebug("Error: %s", QString::fromWCharArray(ml->lastErrorMessage()).toLatin1().constData());
+        qDebug("Model loader error: %s", QString::fromWCharArray(ml->lastErrorMessage()).toLatin1().constData());
 
         usePrecomputedTestCellmlResults();
 
@@ -252,13 +252,13 @@ void CellMLPlugin::initialize()
     {
         compiledModel = cis->compileModelODE(model);
     } catch (iface::cellml_api::CellMLException &) {
-        qDebug("Error: %s", QString::fromWCharArray(cis->lastError()).toLatin1().constData());
+        qDebug("CIS error: %s", QString::fromWCharArray(cis->lastError()).toLatin1().constData());
 
         usePrecomputedTestCellmlResults();
 
         return;
     } catch (...) {
-        qDebug("Error: Unexpected exception calling compileModel.");
+        qDebug("CIS error: Unexpected exception calling compileModel.");
 
         usePrecomputedTestCellmlResults();
 
