@@ -42,6 +42,7 @@ QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
 
     QTextEdit *res = new QTextEdit(mMainWindow);
 
+    res->setFrameStyle(QFrame::NoFrame);
     res->setFontPointSize(11);
     res->setPlainText(file.readAll());
 
