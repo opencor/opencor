@@ -1,14 +1,28 @@
+//==============================================================================
+// Some common methods between the command line and GUI version of OpenCOR
+//==============================================================================
+
 #include "common.h"
 #include "utils.h"
+
+//==============================================================================
+
+#include <iostream>
+
+//==============================================================================
 
 #include <QCoreApplication>
 #include <QFileInfo>
 
+//==============================================================================
+
 #include <QxtCommandOptions>
 
-#include <iostream>
+//==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
 
 void usage(const QCoreApplication *pApp)
 {
@@ -28,10 +42,14 @@ void usage(const QCoreApplication *pApp)
     std::cout << "for any corresponding short options." << std::endl;
 }
 
+//==============================================================================
+
 void version(const QCoreApplication *pApp)
 {
     std::cout << getAppVersion(pApp).toLatin1().constData() << std::endl;
 }
+
+//==============================================================================
 
 void about(const QCoreApplication *pApp)
 {
@@ -47,6 +65,8 @@ void about(const QCoreApplication *pApp)
               << std::endl;
 }
 
+//==============================================================================
+
 void error(const QCoreApplication *pApp, const QString &pMsg)
 {
     version(pApp);
@@ -54,6 +74,8 @@ void error(const QCoreApplication *pApp, const QString &pMsg)
     std::cout << std::endl;
     std::cout << "Error: " << pMsg.toLatin1().constData() << std::endl;
 }
+
+//==============================================================================
 
 void initApplication(const QCoreApplication *pApp)
 {
@@ -78,6 +100,8 @@ void initApplication(const QCoreApplication *pApp)
 
     pApp->setApplicationVersion(version);
 }
+
+//==============================================================================
 
 bool consoleApplication(const QCoreApplication *pApp, int *pRes)
 {
@@ -143,4 +167,10 @@ bool consoleApplication(const QCoreApplication *pApp, int *pRes)
     }
 }
 
-}
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

@@ -1,3 +1,7 @@
+//==============================================================================
+// Main window
+//==============================================================================
+
 #include "checkforupdateswindow.h"
 #include "common.h"
 #include "i18ninterface.h"
@@ -8,11 +12,17 @@
 #include "preferenceswindow.h"
 #include "utils.h"
 
+//==============================================================================
+
 #include "ui_mainwindow.h"
+
+//==============================================================================
 
 #ifdef Q_WS_WIN
     #include <windows.h>
 #endif
+
+//==============================================================================
 
 #include <QDesktopServices>
 #include <QDesktopWidget>
@@ -24,7 +34,11 @@
 #endif
 #include <QUrl>
 
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
 
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
@@ -187,6 +201,8 @@ MainWindow::MainWindow(QWidget *pParent) :
     raise();
 }
 
+//==============================================================================
+
 MainWindow::~MainWindow()
 {
     // Finalize our various plugins
@@ -208,6 +224,8 @@ MainWindow::~MainWindow()
     delete mUi;
 }
 
+//==============================================================================
+
 void MainWindow::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
@@ -221,6 +239,8 @@ void MainWindow::changeEvent(QEvent *pEvent)
         && (mUi->actionSystem->isChecked()))
         setLocale(SystemLocale);
 }
+
+//==============================================================================
 
 void MainWindow::showEvent(QShowEvent *pEvent)
 {
@@ -247,6 +267,8 @@ void MainWindow::showEvent(QShowEvent *pEvent)
     }
 }
 
+//==============================================================================
+
 void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
     // Keep track of our default settings
@@ -259,6 +281,8 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
     QMainWindow::closeEvent(pEvent);
 }
+
+//==============================================================================
 
 void MainWindow::initializeGuiPlugin(const QString &pPluginName,
                                      GuiSettings *pGuiSettings)
@@ -500,10 +524,14 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
     reorderViewMenus();
 }
 
+//==============================================================================
+
 static const QString SettingsLocale              = "Locale";
 static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
 static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
+
+//==============================================================================
 
 void MainWindow::loadSettings()
 {
@@ -552,6 +580,8 @@ void MainWindow::loadSettings()
     }
 }
 
+//==============================================================================
+
 void MainWindow::saveSettings() const
 {
     // Keep track of the language to be used by OpenCOR
@@ -584,6 +614,8 @@ void MainWindow::saveSettings() const
     }
 }
 
+//==============================================================================
+
 QString MainWindow::locale() const
 {
     // Return the current locale
@@ -592,6 +624,8 @@ QString MainWindow::locale() const
 
     return (mLocale == SystemLocale)?systemLocale:mLocale;
 }
+
+//==============================================================================
 
 void MainWindow::setLocale(const QString &pLocale)
 {
@@ -665,6 +699,8 @@ void MainWindow::setLocale(const QString &pLocale)
     mUi->actionFrench->setChecked(mLocale == FrenchLocale);
 }
 
+//==============================================================================
+
 void MainWindow::reorderViewMenu(QMenu *pViewMenu)
 {
     // Reorder the required View menu
@@ -705,6 +741,8 @@ void MainWindow::reorderViewMenu(QMenu *pViewMenu)
         pViewMenu->addAction(menuItemActions.value(menuItemTitle));
 }
 
+//==============================================================================
+
 void MainWindow::reorderViewMenus()
 {
     // Reorder the View|Toolbars menu, as well as the View|Organisation and
@@ -720,6 +758,8 @@ void MainWindow::reorderViewMenus()
     if (mViewEditingMenu)
         reorderViewMenu(mViewEditingMenu);
 }
+
+//==============================================================================
 
 void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
                                 QAction *pAction)
@@ -774,6 +814,8 @@ void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &
     (*menu)->addAction(pAction);
 
 }
+
+//==============================================================================
 
 #ifdef Q_WS_WIN
 void MainWindow::singleAppMsgRcvd(const QString &) const
@@ -846,6 +888,8 @@ void MainWindow::singleAppMsgRcvd(const QString &)
     // TODO: handle the arguments passed to the 'official' instance of OpenCOR
 }
 
+//==============================================================================
+
 void MainWindow::on_actionFullScreen_triggered()
 {
     // Switch to / back from full screen mode
@@ -856,12 +900,16 @@ void MainWindow::on_actionFullScreen_triggered()
         showNormal();
 }
 
+//==============================================================================
+
 void MainWindow::on_actionSystem_triggered()
 {
     // Select the system's language as the language used by OpenCOR
 
     setLocale(SystemLocale);
 }
+
+//==============================================================================
 
 void MainWindow::on_actionEnglish_triggered()
 {
@@ -870,12 +918,16 @@ void MainWindow::on_actionEnglish_triggered()
     setLocale(EnglishLocale);
 }
 
+//==============================================================================
+
 void MainWindow::on_actionFrench_triggered()
 {
     // Select French as the language used by OpenCOR
 
     setLocale(FrenchLocale);
 }
+
+//==============================================================================
 
 void MainWindow::on_actionPlugins_triggered()
 {
@@ -895,6 +947,8 @@ void MainWindow::on_actionPlugins_triggered()
     }
 }
 
+//==============================================================================
+
 void MainWindow::on_actionPreferences_triggered()
 {
     // User's preferences
@@ -904,12 +958,16 @@ void MainWindow::on_actionPreferences_triggered()
     preferencesWindow.exec();
 }
 
+//==============================================================================
+
 void MainWindow::on_actionHomePage_triggered()
 {
     // Look up OpenCOR home page
 
     QDesktopServices::openUrl(QUrl(OpencorHomepageUrl));
 }
+
+//==============================================================================
 
 void MainWindow::on_actionCheckForUpdates_triggered()
 {
@@ -919,6 +977,8 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 
     checkForUpdatesWindow.exec();
 }
+
+//==============================================================================
 
 void MainWindow::on_actionAbout_triggered()
 {
@@ -930,6 +990,8 @@ void MainWindow::on_actionAbout_triggered()
                        +"<p align=center><em>"+getAppCopyright(true)+"</em></p>"
                        +"<a href=\""+QString(OpencorHomepageUrl)+"\">"+qApp->applicationName()+"</a> "+tr("is a cross-platform <a href=\"http://www.cellml.org/\">CellML</a>-based modelling environment which can be used to organise, edit, simulate and analyse CellML files."));
 }
+
+//==============================================================================
 
 void MainWindow::restart(const bool &pSaveSettings) const
 {
@@ -943,6 +1005,8 @@ void MainWindow::restart(const bool &pSaveSettings) const
 
     qApp->exit(NeedRestart);
 }
+
+//==============================================================================
 
 void MainWindow::resetAll()
 {
@@ -963,4 +1027,10 @@ void MainWindow::resetAll()
     }
 }
 
-}
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

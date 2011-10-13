@@ -1,8 +1,18 @@
+//==============================================================================
+// Check for Updates window
+//==============================================================================
+
 #include "checkforupdateswindow.h"
+
+//==============================================================================
 
 #include "ui_checkforupdateswindow.h"
 
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
 
 CheckForUpdatesWindow::CheckForUpdatesWindow(QWidget *pParent) :
     QDialog(pParent),
@@ -13,12 +23,16 @@ CheckForUpdatesWindow::CheckForUpdatesWindow(QWidget *pParent) :
     mUi->setupUi(this);
 }
 
+//==============================================================================
+
 CheckForUpdatesWindow::~CheckForUpdatesWindow()
 {
     // Delete the UI
 
     delete mUi;
 }
+
+//==============================================================================
 
 void CheckForUpdatesWindow::retranslateUi()
 {
@@ -27,4 +41,10 @@ void CheckForUpdatesWindow::retranslateUi()
     mUi->retranslateUi(this);
 }
 
-}
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

@@ -1,16 +1,28 @@
+//==============================================================================
+// Plugins window
+//==============================================================================
+
 #include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 
+//==============================================================================
+
 #include "ui_pluginswindow.h"
+
+//==============================================================================
 
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QUrl>
 
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
 
 PluginDelegate::PluginDelegate(QStandardItemModel *pDataModel,
                                QObject *pParent) :
@@ -18,6 +30,8 @@ PluginDelegate::PluginDelegate(QStandardItemModel *pDataModel,
     mDataModel(pDataModel)
 {
 }
+
+//==============================================================================
 
 void PluginDelegate::paint(QPainter *pPainter,
                            const QStyleOptionViewItem &pOption,
@@ -54,6 +68,8 @@ void PluginDelegate::paint(QPainter *pPainter,
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
 }
+
+//==============================================================================
 
 PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
                              QWidget *pParent) :
@@ -193,6 +209,8 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mUi->verticalLayout->setSizeConstraint(QLayout::SetMinimumSize);
 }
 
+//==============================================================================
+
 PluginsWindow::~PluginsWindow()
 {
     // Delete some internal objects
@@ -202,12 +220,16 @@ PluginsWindow::~PluginsWindow()
     delete mUi;
 }
 
+//==============================================================================
+
 void PluginsWindow::retranslateUi()
 {
     // Retranslate the whole window
 
     mUi->retranslateUi(this);
 }
+
+//==============================================================================
 
 QString PluginsWindow::toString(const PluginInfo::Version &pVersion) const
 {
@@ -225,6 +247,8 @@ QString PluginsWindow::toString(const PluginInfo::Version &pVersion) const
         return tr("Unknown version");
     }
 }
+
+//==============================================================================
 
 QString PluginsWindow::statusDescription(Plugin *pPlugin) const
 {
@@ -266,6 +290,8 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
         return tr("The status of the %1 plugin status is undefined").arg(pPlugin->name());
     }
 }
+
+//==============================================================================
 
 void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
                                      const QModelIndex &) const
@@ -343,6 +369,8 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     mUi->statusValue->setText(statusDescription(plugin));
 }
+
+//==============================================================================
 
 void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
                                               const bool &pInitializing)
@@ -460,12 +488,16 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
             this, SLOT(updatePluginsLoadingState(QStandardItem *)));
 }
 
+//==============================================================================
+
 void PluginsWindow::openLink(const QString &pLink) const
 {
     // Open the link in the user's browser
 
     QDesktopServices::openUrl(QUrl(pLink));
 }
+
+//==============================================================================
 
 void PluginsWindow::on_buttonBox_accepted()
 {
@@ -482,12 +514,16 @@ void PluginsWindow::on_buttonBox_accepted()
     accept();
 }
 
+//==============================================================================
+
 void PluginsWindow::on_buttonBox_rejected()
 {
     // Simple cancel whatever was done here
 
     reject();
 }
+
+//==============================================================================
 
 void PluginsWindow::apply()
 {
@@ -505,6 +541,8 @@ void PluginsWindow::apply()
     }
 }
 
+//==============================================================================
+
 void PluginsWindow::newPluginCategory(const PluginInfo::Category &pCategory,
                                       const QString &pName)
 {
@@ -521,4 +559,10 @@ void PluginsWindow::newPluginCategory(const PluginInfo::Category &pCategory,
     mPluginCategories.insert(pCategory, categoryItem);
 }
 
-}
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

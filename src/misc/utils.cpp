@@ -1,4 +1,10 @@
+//==============================================================================
+// Some useful functions
+//==============================================================================
+
 #include "utils.h"
+
+//==============================================================================
 
 #include <QCoreApplication>
 #include <QDir>
@@ -8,7 +14,11 @@
 #include <QProcess>
 #include <QResource>
 
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
 
 QString exec(const QString &pProg, const QString &pArgs)
 {
@@ -27,6 +37,8 @@ QString exec(const QString &pProg, const QString &pArgs)
         return QString();
     }
 }
+
+//==============================================================================
 
 QString getOsName()
 {
@@ -76,6 +88,8 @@ QString getOsName()
 #endif
 }
 
+//==============================================================================
+
 QString getAppVersion(const QCoreApplication *pApp)
 {
     QString bitVersion;
@@ -99,9 +113,17 @@ QString getAppVersion(const QCoreApplication *pApp)
     return  pApp->applicationName()+" "+pApp->applicationVersion()+bitVersion;
 }
 
+//==============================================================================
+
 QString getAppCopyright(const bool &pHtml)
 {
     return QObject::tr("Copyright")+" "+QString(pHtml?"&copy;":"")+"2011";
 }
 
-}
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================
