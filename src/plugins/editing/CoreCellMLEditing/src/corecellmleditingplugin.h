@@ -1,15 +1,27 @@
+//==============================================================================
+// CoreCellMLEditing plugin
+//==============================================================================
+
 #ifndef CORECELLMLEDITINGPLUGIN_H
 #define CORECELLMLEDITINGPLUGIN_H
+
+//==============================================================================
 
 #include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace CoreCellMLEditing {
 
+//==============================================================================
+
 PLUGININFO_FUNC CoreCellMLEditingPluginInfo();
+
+//==============================================================================
 
 class CoreCellMLEditingPlugin : public QObject, public CoreInterface,
                                 public GuiInterface, public I18nInterface
@@ -32,6 +44,15 @@ private:
     QAction *mFileNewCellml1_1Action;
 };
 
-} }
+//==============================================================================
+
+}   // namespace CoreCellMLEditing
+}   // namespace OpenCOR
+
+//==============================================================================
 
 #endif
+
+//==============================================================================
+// End of file
+//==============================================================================

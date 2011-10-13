@@ -1,9 +1,19 @@
+//==============================================================================
+// RawCellMLView plugin
+//==============================================================================
+
 #include "rawcellmlviewplugin.h"
+
+//==============================================================================
 
 #include <QTabBar>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace RawCellMLView {
+
+//==============================================================================
 
 PLUGININFO_FUNC RawCellMLViewPluginInfo()
 {
@@ -20,7 +30,11 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(RawCellMLView, RawCellMLViewPlugin)
+
+//==============================================================================
 
 RawCellMLViewPlugin::RawCellMLViewPlugin()
 {
@@ -28,6 +42,8 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 
     mGuiSettings->addView(GuiViewSettings::Editing, 0);
 }
+
+//==============================================================================
 
 QString RawCellMLViewPlugin::viewName(const int &pViewIndex)
 {
@@ -42,4 +58,11 @@ QString RawCellMLViewPlugin::viewName(const int &pViewIndex)
     }
 }
 
-} }
+//==============================================================================
+
+}   // namespace RawCellMLView
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

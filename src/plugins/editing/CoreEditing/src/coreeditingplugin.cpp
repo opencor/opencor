@@ -1,10 +1,20 @@
+//==============================================================================
+// CoreEditing plugin
+//==============================================================================
+
 #include "coreeditingplugin.h"
+
+//==============================================================================
 
 #include <QMenu>
 #include <QToolBar>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace CoreEditing {
+
+//==============================================================================
 
 PLUGININFO_FUNC CoreEditingPluginInfo()
 {
@@ -21,7 +31,11 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(CoreEditing, CoreEditingPlugin)
+
+//==============================================================================
 
 void CoreEditingPlugin::initialize()
 {
@@ -94,6 +108,8 @@ void CoreEditingPlugin::initialize()
     updateActions();
 }
 
+//==============================================================================
+
 void CoreEditingPlugin::retranslateUi()
 {
     // Retranslate our Edit menu
@@ -145,6 +161,8 @@ void CoreEditingPlugin::retranslateUi()
                       tr("Show/hide the Edit toolbar"));
 }
 
+//==============================================================================
+
 void CoreEditingPlugin::updateActions()
 {
     // Make sure that the various actions are properly enabled/disabled
@@ -165,4 +183,11 @@ void CoreEditingPlugin::updateActions()
     mEditSelectAllAction->setEnabled(false);
 }
 
-} }
+//==============================================================================
+
+}   // namespace CoreEditing
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

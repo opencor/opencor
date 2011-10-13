@@ -1,9 +1,19 @@
+//==============================================================================
+// CoreCellMLEditing plugin
+//==============================================================================
+
 #include "corecellmleditingplugin.h"
+
+//==============================================================================
 
 #include <QAction>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace CoreCellMLEditing {
+
+//==============================================================================
 
 PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
 {
@@ -20,7 +30,11 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(CoreCellMLEditing, CoreCellMLEditingPlugin)
+
+//==============================================================================
 
 void CoreCellMLEditingPlugin::initialize()
 {
@@ -39,6 +53,8 @@ void CoreCellMLEditingPlugin::initialize()
     updateActions();
 }
 
+//==============================================================================
+
 void CoreCellMLEditingPlugin::retranslateUi()
 {
     // Retranslate our different File|New actions
@@ -49,6 +65,8 @@ void CoreCellMLEditingPlugin::retranslateUi()
                       tr("Create a new CellML 1.1 file"));
 }
 
+//==============================================================================
+
 void CoreCellMLEditingPlugin::updateActions()
 {
     // Make sure that the various actions are properly enabled/disabled
@@ -57,4 +75,11 @@ void CoreCellMLEditingPlugin::updateActions()
     mFileNewCellml1_1Action->setEnabled(false);
 }
 
-} }
+//==============================================================================
+
+}   // namespace CoreCellMLEditing
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

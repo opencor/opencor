@@ -1,10 +1,20 @@
+//==============================================================================
+// Viewer plugin
+//==============================================================================
+
 #include "viewerplugin.h"
 #include "viewerwindow.h"
 
+//==============================================================================
+
 #include <QMainWindow>
+
+//==============================================================================
 
 namespace OpenCOR {
 namespace Viewer {
+
+//==============================================================================
 
 PLUGININFO_FUNC ViewerPluginInfo()
 {
@@ -21,7 +31,11 @@ PLUGININFO_FUNC ViewerPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(Viewer, ViewerPlugin)
+
+//==============================================================================
 
 void ViewerPlugin::initialize()
 {
@@ -39,6 +53,8 @@ void ViewerPlugin::initialize()
                             GuiWindowSettings::Editing, mViewerAction);
 }
 
+//==============================================================================
+
 void ViewerPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our viewer window settings
@@ -46,12 +62,16 @@ void ViewerPlugin::loadSettings(QSettings *pSettings)
     loadWindowSettings(pSettings, mViewerWindow);
 }
 
+//==============================================================================
+
 void ViewerPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our viewer window settings
 
     saveWindowSettings(pSettings, mViewerWindow);
 }
+
+//==============================================================================
 
 void ViewerPlugin::retranslateUi()
 {
@@ -65,4 +85,11 @@ void ViewerPlugin::retranslateUi()
     mViewerWindow->retranslateUi();
 }
 
-} }
+//==============================================================================
+
+}   // namespace Viewer
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

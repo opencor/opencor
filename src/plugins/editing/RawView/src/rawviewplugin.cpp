@@ -1,11 +1,21 @@
+//==============================================================================
+// RawView plugin
+//==============================================================================
+
 #include "rawviewplugin.h"
+
+//==============================================================================
 
 #include <QFile>
 #include <QMainWindow>
 #include <QTextEdit>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace RawView {
+
+//==============================================================================
 
 PLUGININFO_FUNC RawViewPluginInfo()
 {
@@ -22,7 +32,11 @@ PLUGININFO_FUNC RawViewPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(RawView, RawViewPlugin)
+
+//==============================================================================
 
 RawViewPlugin::RawViewPlugin()
 {
@@ -30,6 +44,8 @@ RawViewPlugin::RawViewPlugin()
 
     mGuiSettings->addView(GuiViewSettings::Editing, 0);
 }
+
+//==============================================================================
 
 QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
 {
@@ -49,6 +65,8 @@ QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
     return res;
 }
 
+//==============================================================================
+
 QString RawViewPlugin::viewName(const int &pViewIndex)
 {
     // We have only one view, so return its name otherwise call the GuiInterface
@@ -62,4 +80,11 @@ QString RawViewPlugin::viewName(const int &pViewIndex)
     }
 }
 
-} }
+//==============================================================================
+
+}   // namespace RawView
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================
