@@ -1,6 +1,12 @@
+//==============================================================================
+// GUI interface
+//==============================================================================
+
 #include "centralwidget.h"
 #include "dockwidget.h"
 #include "guiinterface.h"
+
+//==============================================================================
 
 #include <QAction>
 #include <QApplication>
@@ -9,7 +15,11 @@
 #include <QSettings>
 #include <QToolBar>
 
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
 
 GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
                                  QMenu *pMenu) :
@@ -18,12 +28,16 @@ GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
 {
 }
 
+//==============================================================================
+
 GuiMenuSettings::GuiMenuSettingsType GuiMenuSettings::type() const
 {
     // Return the menu's type
 
     return mType;
 }
+
+//==============================================================================
 
 QMenu * GuiMenuSettings::menu() const
 {
@@ -32,12 +46,16 @@ QMenu * GuiMenuSettings::menu() const
     return mMenu;
 }
 
+//==============================================================================
+
 GuiMenuActionSettings::GuiMenuActionSettings(const GuiMenuActionSettingsType &pType,
                                              QAction *pAction) :
     mType(pType),
     mAction(pAction)
 {
 }
+
+//==============================================================================
 
 GuiMenuActionSettings::GuiMenuActionSettingsType GuiMenuActionSettings::type() const
 {
@@ -46,12 +64,16 @@ GuiMenuActionSettings::GuiMenuActionSettingsType GuiMenuActionSettings::type() c
     return mType;
 }
 
+//==============================================================================
+
 QAction * GuiMenuActionSettings::action() const
 {
     // Return the action itself
 
     return mAction;
 }
+
+//==============================================================================
 
 GuiToolBarSettings::GuiToolBarSettings(const Qt::ToolBarArea &pDefaultDockingArea,
                                        QToolBar *pToolbar,
@@ -65,12 +87,16 @@ GuiToolBarSettings::GuiToolBarSettings(const Qt::ToolBarArea &pDefaultDockingAre
     GuiInterface::connectToolBarToAction(pToolbar, pAction);
 }
 
+//==============================================================================
+
 Qt::ToolBarArea GuiToolBarSettings::defaultDockingArea() const
 {
     // Return the toolbar's default docking area
 
     return mDefaultDockingArea;
 }
+
+//==============================================================================
 
 QToolBar * GuiToolBarSettings::toolbar() const
 {
@@ -79,6 +105,8 @@ QToolBar * GuiToolBarSettings::toolbar() const
     return mToolbar;
 }
 
+//==============================================================================
+
 QAction * GuiToolBarSettings::action() const
 {
     // Return the show/hide action
@@ -86,11 +114,15 @@ QAction * GuiToolBarSettings::action() const
     return mAction;
 }
 
+//==============================================================================
+
 GuiViewSettings::GuiViewSettings(const Mode &pMode, const int &pIndex) :
     mMode(pMode),
     mIndex(pIndex)
 {
 }
+
+//==============================================================================
 
 GuiViewSettings::Mode GuiViewSettings::mode() const
 {
@@ -99,12 +131,16 @@ GuiViewSettings::Mode GuiViewSettings::mode() const
     return mMode;
 }
 
+//==============================================================================
+
 int GuiViewSettings::index() const
 {
     // Return the view's index
 
     return mIndex;
 }
+
+//==============================================================================
 
 GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
                                      Core::DockWidget *pWindow,
@@ -117,12 +153,16 @@ GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingAr
 {
 }
 
+//==============================================================================
+
 Qt::DockWidgetArea GuiWindowSettings::defaultDockingArea() const
 {
     // Return the window's default docking area
 
     return mDefaultDockingArea;
 }
+
+//==============================================================================
 
 Core::DockWidget * GuiWindowSettings::window() const
 {
@@ -131,12 +171,16 @@ Core::DockWidget * GuiWindowSettings::window() const
     return mWindow;
 }
 
+//==============================================================================
+
 GuiWindowSettings::GuiWindowSettingsType GuiWindowSettings::type() const
 {
     // Return the action's type
 
     return mType;
 }
+
+//==============================================================================
 
 QAction * GuiWindowSettings::action() const
 {
@@ -145,10 +189,14 @@ QAction * GuiWindowSettings::action() const
     return mAction;
 }
 
+//==============================================================================
+
 GuiSettings::GuiSettings() :
     mCentralWidget(0)
 {
 }
+
+//==============================================================================
 
 GuiSettings::~GuiSettings()
 {
@@ -167,6 +215,8 @@ GuiSettings::~GuiSettings()
         delete windowSettings;
 }
 
+//==============================================================================
+
 void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
                           QMenu *pMenu)
 {
@@ -174,6 +224,8 @@ void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
 
     mMenus << new GuiMenuSettings(pType, pMenu);
 }
+
+//==============================================================================
 
 void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
                                 QAction *pAction)
@@ -184,6 +236,8 @@ void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettin
     mMenuActions << new GuiMenuActionSettings(pType, pAction);
 }
 
+//==============================================================================
+
 void GuiSettings::addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
                              QToolBar *pToolbar, QAction *pAction)
 {
@@ -192,6 +246,8 @@ void GuiSettings::addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
     mToolbars << new GuiToolBarSettings(pDefaultDockingArea, pToolbar, pAction);
 }
 
+//==============================================================================
+
 void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
 {
     // Set the central widget to be used
@@ -199,12 +255,16 @@ void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
     mCentralWidget = pCentralWidget;
 }
 
+//==============================================================================
+
 void GuiSettings::addView(const GuiViewSettings::Mode &pMode, const int &pIndex)
 {
     // Add a new view to our list
 
     mViews << new GuiViewSettings(pMode, pIndex);
 }
+
+//==============================================================================
 
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                             Core::DockWidget *pWindow,
@@ -217,12 +277,16 @@ void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                                       pAction);
 }
 
+//==============================================================================
+
 QList<GuiMenuSettings *> GuiSettings::menus() const
 {
     // Return our menus
 
     return mMenus;
 }
+
+//==============================================================================
 
 QList<GuiMenuActionSettings *> GuiSettings::menuActions() const
 {
@@ -231,12 +295,16 @@ QList<GuiMenuActionSettings *> GuiSettings::menuActions() const
     return mMenuActions;
 }
 
+//==============================================================================
+
 QList<GuiToolBarSettings *> GuiSettings::toolbars() const
 {
     // Return our toolbars
 
     return mToolbars;
 }
+
+//==============================================================================
 
 Core::CentralWidget * GuiSettings::centralWidget() const
 {
@@ -245,12 +313,16 @@ Core::CentralWidget * GuiSettings::centralWidget() const
     return mCentralWidget;
 }
 
+//==============================================================================
+
 QList<GuiViewSettings *> GuiSettings::views() const
 {
     // Return our views
 
     return mViews;
 }
+
+//==============================================================================
 
 QList<GuiWindowSettings *> GuiSettings::windows() const
 {
@@ -259,12 +331,16 @@ QList<GuiWindowSettings *> GuiSettings::windows() const
     return mWindows;
 }
 
+//==============================================================================
+
 GuiInterface::GuiInterface()
 {
     // Create our GUI settings object
 
     mGuiSettings = new GuiSettings;
 }
+
+//==============================================================================
 
 GuiInterface::~GuiInterface()
 {
@@ -278,6 +354,8 @@ GuiInterface::~GuiInterface()
         delete viewWidgets;
 }
 
+//==============================================================================
+
 void GuiInterface::loadWindowSettings(QSettings *pSettings,
                                       Core::DockWidget *pWindow)
 {
@@ -288,10 +366,14 @@ void GuiInterface::loadWindowSettings(QSettings *pSettings,
     pSettings->endGroup();
 }
 
+//==============================================================================
+
 void GuiInterface::loadSettings(QSettings *pSettings)
 {
     // Nothing to do by default...
 }
+
+//==============================================================================
 
 void GuiInterface::saveWindowSettings(QSettings *pSettings,
                                       Core::DockWidget *pWindow) const
@@ -303,10 +385,14 @@ void GuiInterface::saveWindowSettings(QSettings *pSettings,
     pSettings->endGroup();
 }
 
+//==============================================================================
+
 void GuiInterface::saveSettings(QSettings *pSettings) const
 {
     // Nothing to do by default...
 }
+
+//==============================================================================
 
 QWidget * GuiInterface::viewWidget(const QString &pFileName, const int &pIndex)
 {
@@ -347,12 +433,16 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName, const int &pIndex)
     return res;
 }
 
+//==============================================================================
+
 QWidget * GuiInterface::newViewWidget(const QString &)
 {
     // Create and return no widget by default...
 
     return 0;
 }
+
+//==============================================================================
 
 QString GuiInterface::viewName(const int &)
 {
@@ -361,6 +451,8 @@ QString GuiInterface::viewName(const int &)
     return QString();
 }
 
+//==============================================================================
+
 GuiSettings * GuiInterface::guiSettings() const
 {
     // Return the plugin's GUI settings
@@ -368,10 +460,14 @@ GuiSettings * GuiInterface::guiSettings() const
     return mGuiSettings;
 }
 
+//==============================================================================
+
 void GuiInterface::updateActions()
 {
     // Nothing to do by default...
 }
+
+//==============================================================================
 
 void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
 {
@@ -379,6 +475,8 @@ void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
 
     mMainWindow = pMainWindow;
 }
+
+//==============================================================================
 
 QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)
 {
@@ -398,6 +496,8 @@ QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)
 
     return res;
 }
+
+//==============================================================================
 
 QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow,
                                     const QString &pName)
@@ -425,6 +525,8 @@ QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow,
     return res;
 }
 
+//==============================================================================
+
 QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
                                   const bool &pCheckable,
                                   const QString &pIconResource,
@@ -441,6 +543,8 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
     return res;
 }
 
+//==============================================================================
+
 void GuiInterface::connectToolBarToAction(QToolBar *pToolbar, QAction *pAction)
 {
     // Setup the action for the toolbar, so we can show/hide it at will
@@ -450,6 +554,8 @@ void GuiInterface::connectToolBarToAction(QToolBar *pToolbar, QAction *pAction)
     QObject::connect(pToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
                      pAction, SLOT(setChecked(bool)));
 }
+
+//==============================================================================
 
 void GuiInterface::connectDockWidgetToAction(QDockWidget *pDockWidget,
                                              QAction *pAction)
@@ -462,12 +568,16 @@ void GuiInterface::connectDockWidgetToAction(QDockWidget *pDockWidget,
                      pAction, SLOT(setChecked(bool)));
 }
 
+//==============================================================================
+
 void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
 {
     // Retranslate the menu, i.e. retranslate its title
 
     pMenu->setTitle(pTitle);
 }
+
+//==============================================================================
 
 void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,
                                      const QString &pStatusTip,
@@ -481,4 +591,10 @@ void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,
     pAction->setShortcut(pShortcut);
 }
 
-}
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

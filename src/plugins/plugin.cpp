@@ -1,4 +1,10 @@
+//==============================================================================
+// Plugin class
+//==============================================================================
+
 #include "plugin.h"
+
+//==============================================================================
 
 #include <QApplication>
 #include <QDir>
@@ -6,7 +12,11 @@
 #include <QPluginLoader>
 #include <QSettings>
 
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
 
 Plugin::Plugin(const QString &pFileName,
                const PluginInfo::Type &pGuiOrConsoleType,
@@ -148,12 +158,16 @@ Plugin::Plugin(const QString &pFileName,
     }
 }
 
+//==============================================================================
+
 QString Plugin::name() const
 {
     // Return the plugin's name
 
     return mName;
 }
+
+//==============================================================================
 
 PluginInfo Plugin::info() const
 {
@@ -162,12 +176,16 @@ PluginInfo Plugin::info() const
     return mInfo;
 }
 
+//==============================================================================
+
 QObject * Plugin::instance() const
 {
     // Return the plugin's insance
 
     return mInstance;
 }
+
+//==============================================================================
 
 Plugin::Status Plugin::status() const
 {
@@ -176,6 +194,8 @@ Plugin::Status Plugin::status() const
     return mStatus;
 }
 
+//==============================================================================
+
 QString Plugin::statusErrors() const
 {
     // Return the plugin's status errors
@@ -183,12 +203,16 @@ QString Plugin::statusErrors() const
     return mStatusErrors;
 }
 
+//==============================================================================
+
 int Plugin::nbOfStatusErrors() const
 {
     // Return the number of plugin's status errors
 
     return mStatusErrors.count("\n")+1;
 }
+
+//==============================================================================
 
 QString Plugin::name(const QString &pFileName)
 {
@@ -198,6 +222,8 @@ QString Plugin::name(const QString &pFileName)
     // Note: we must remove the plugin prefix part from the plugin file name...
 }
 
+//==============================================================================
+
 QString Plugin::fileName(const QString &pDir, const QString &pName)
 {
     // Return the plugin's file name based on its name
@@ -205,6 +231,8 @@ QString Plugin::fileName(const QString &pDir, const QString &pName)
     return pDir+QDir::separator()+PluginPrefix+pName+PluginExtension;
     // Note: we must add the plugin prefix part to the plugin file name...
 }
+
+//==============================================================================
 
 PluginInfo Plugin::info(const QString &pFileName)
 {
@@ -245,7 +273,11 @@ PluginInfo Plugin::info(const QString &pFileName)
         return PluginInfo();
 }
 
+//==============================================================================
+
 static const QString SettingsLoad = "Load";
+
+//==============================================================================
 
 bool Plugin::load(QSettings *pSettings, const QString &pName)
 {
@@ -258,6 +290,8 @@ bool Plugin::load(QSettings *pSettings, const QString &pName)
     return res;
 }
 
+//==============================================================================
+
 void Plugin::setLoad(QSettings *pSettings, const QString &pName,
                      const bool &pToBeLoaded)
 {
@@ -267,6 +301,8 @@ void Plugin::setLoad(QSettings *pSettings, const QString &pName,
         pSettings->setValue(SettingsLoad, pToBeLoaded);
     pSettings->endGroup();
 }
+
+//==============================================================================
 
 QStringList Plugin::requiredPlugins(const QString &pPluginsDir,
                                     const QString &pName,
@@ -297,4 +333,10 @@ QStringList Plugin::requiredPlugins(const QString &pPluginsDir,
     return res;
 }
 
-}
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

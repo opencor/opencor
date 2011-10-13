@@ -1,11 +1,21 @@
+//==============================================================================
+// Plugin manager class
+//==============================================================================
+
 #include "plugin.h"
 #include "coreinterface.h"
 #include "pluginmanager.h"
 
+//==============================================================================
+
 #include <QApplication>
 #include <QDir>
 
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
 
 PluginManager::PluginManager(QSettings *pSettings,
                              const PluginInfo::Type &pGuiOrConsoleType) :
@@ -93,6 +103,8 @@ PluginManager::PluginManager(QSettings *pSettings,
                                    mappedPlugins()));
 }
 
+//==============================================================================
+
 PluginManager::~PluginManager()
 {
     // Delete all of the plugins
@@ -103,6 +115,8 @@ PluginManager::~PluginManager()
         mPlugins.erase(mPlugins.begin());
     }
 }
+
+//==============================================================================
 
 QList<Plugin *> PluginManager::plugins(const bool &pOnlyLoadedPlugins) const
 {
@@ -118,12 +132,16 @@ QList<Plugin *> PluginManager::plugins(const bool &pOnlyLoadedPlugins) const
     return res;
 }
 
+//==============================================================================
+
 QList<Plugin *> PluginManager::loadedPlugins() const
 {
     // Return a list of all the loaded plugins
 
     return plugins(true);
 }
+
+//==============================================================================
 
 QString PluginManager::pluginsDir() const
 {
@@ -132,12 +150,16 @@ QString PluginManager::pluginsDir() const
     return mPluginsDir;
 }
 
+//==============================================================================
+
 QMap<QString, Plugin *> PluginManager::mappedPlugins() const
 {
     // Return the mapped plugins
 
     return mPlugins;
 }
+
+//==============================================================================
 
 Plugin * PluginManager::plugin(const QString &pName) const
 {
@@ -146,12 +168,16 @@ Plugin * PluginManager::plugin(const QString &pName) const
     return mPlugins.value(pName);
 }
 
+//==============================================================================
+
 PluginInfo::Version PluginManager::version() const
 {
     // Return the version used by the plugin manager
 
     return mVersion;
 }
+
+//==============================================================================
 
 QSettings * PluginManager::settings() const
 {
@@ -160,4 +186,10 @@ QSettings * PluginManager::settings() const
     return mSettings;
 }
 
-}
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

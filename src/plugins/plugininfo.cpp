@@ -1,6 +1,14 @@
+//==============================================================================
+// Plugin information class
+//==============================================================================
+
 #include "plugininfo.h"
 
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
 
 PluginInfo::PluginInfo(const Version &pVersion, const Type &pType,
                        const Category &pCategory, const bool &pManageable,
@@ -16,12 +24,16 @@ PluginInfo::PluginInfo(const Version &pVersion, const Type &pType,
 {
 }
 
+//==============================================================================
+
 PluginInfo::Version PluginInfo::version() const
 {
     // Return the version used by the plugin
 
     return mVersion;
 }
+
+//==============================================================================
 
 PluginInfo::Type PluginInfo::type() const
 {
@@ -30,12 +42,16 @@ PluginInfo::Type PluginInfo::type() const
     return mType;
 }
 
+//==============================================================================
+
 PluginInfo::Category PluginInfo::category() const
 {
     // Return the plugin's category
 
     return mCategory;
 }
+
+//==============================================================================
 
 bool PluginInfo::manageable() const
 {
@@ -44,12 +60,16 @@ bool PluginInfo::manageable() const
     return mManageable;
 }
 
+//==============================================================================
+
 QStringList PluginInfo::dependencies() const
 {
     // Return the plugin's dependencies
 
     return mDependencies;
 }
+
+//==============================================================================
 
 QStringList PluginInfo::fullDependencies() const
 {
@@ -60,6 +80,8 @@ QStringList PluginInfo::fullDependencies() const
     return mFullDependencies;
 }
 
+//==============================================================================
+
 QString PluginInfo::description(const QString &pLocale) const
 {
     // Return the plugin's description using the provided locale or the first
@@ -67,6 +89,8 @@ QString PluginInfo::description(const QString &pLocale) const
 
     return OpenCOR::description(mDescriptions, pLocale);
 }
+
+//==============================================================================
 
 QString description(const Descriptions &pDescriptions, const QString &pLocale)
 {
@@ -87,4 +111,10 @@ QString description(const Descriptions &pDescriptions, const QString &pLocale)
     }
 }
 
-}
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================
