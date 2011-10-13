@@ -1,17 +1,31 @@
+//==============================================================================
+// CellMLModelRepository plugin
+//==============================================================================
+
 #ifndef CELLMLMODELREPOSITORYPLUGIN_H
 #define CELLMLMODELREPOSITORYPLUGIN_H
+
+//==============================================================================
 
 #include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLModelRepository {
 
+//==============================================================================
+
 PLUGININFO_FUNC CellMLModelRepositoryPluginInfo();
 
+//==============================================================================
+
 class CellmlModelRepositoryWindow;
+
+//==============================================================================
 
 class CellMLModelRepositoryPlugin : public QObject, public CoreInterface,
                                     public GuiInterface, public I18nInterface
@@ -36,6 +50,15 @@ private:
     CellmlModelRepositoryWindow *mCellmlModelRepositoryWindow;
 };
 
-} }
+//==============================================================================
+
+}   // namespace CellMLModelRepository
+}   // namespace OpenCOR
+
+//==============================================================================
 
 #endif
+
+//==============================================================================
+// End of file
+//==============================================================================

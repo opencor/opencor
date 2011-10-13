@@ -1,17 +1,31 @@
+//==============================================================================
+// FileOrganiser plugin
+//==============================================================================
+
 #ifndef FILEORGANISERPLUGIN_H
 #define FILEORGANISERPLUGIN_H
+
+//==============================================================================
 
 #include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace FileOrganiser {
 
+//==============================================================================
+
 PLUGININFO_FUNC FileOrganiserPluginInfo();
 
+//==============================================================================
+
 class FileOrganiserWindow;
+
+//==============================================================================
 
 class FileOrganiserPlugin : public QObject, public CoreInterface,
                             public GuiInterface, public I18nInterface
@@ -36,6 +50,15 @@ private:
     FileOrganiserWindow *mFileOrganiserWindow;
 };
 
-} }
+//==============================================================================
+
+}   // namespace FileOrganiser
+}   // namespace OpenCOR
+
+//==============================================================================
 
 #endif
+
+//==============================================================================
+// End of file
+//==============================================================================

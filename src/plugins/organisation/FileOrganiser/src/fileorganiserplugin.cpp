@@ -1,10 +1,20 @@
+//==============================================================================
+// FileOrganiser plugin
+//==============================================================================
+
 #include "fileorganiserplugin.h"
 #include "fileorganiserwindow.h"
 
+//==============================================================================
+
 #include <QMainWindow>
+
+//==============================================================================
 
 namespace OpenCOR {
 namespace FileOrganiser {
+
+//==============================================================================
 
 PLUGININFO_FUNC FileOrganiserPluginInfo()
 {
@@ -21,7 +31,11 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(FileOrganiser, FileOrganiserPlugin)
+
+//==============================================================================
 
 void FileOrganiserPlugin::initialize()
 {
@@ -40,6 +54,8 @@ void FileOrganiserPlugin::initialize()
                             mFileOrganiserAction);
 }
 
+//==============================================================================
+
 void FileOrganiserPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file organiser window settings
@@ -47,12 +63,16 @@ void FileOrganiserPlugin::loadSettings(QSettings *pSettings)
     loadWindowSettings(pSettings, mFileOrganiserWindow);
 }
 
+//==============================================================================
+
 void FileOrganiserPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our file organiser window settings
 
     saveWindowSettings(pSettings, mFileOrganiserWindow);
 }
+
+//==============================================================================
 
 void FileOrganiserPlugin::retranslateUi()
 {
@@ -66,4 +86,11 @@ void FileOrganiserPlugin::retranslateUi()
     mFileOrganiserWindow->retranslateUi();
 }
 
-} }
+//==============================================================================
+
+}   // namespace FileOrganiser
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

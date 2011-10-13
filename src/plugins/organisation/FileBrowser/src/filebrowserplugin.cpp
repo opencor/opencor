@@ -1,10 +1,20 @@
+//==============================================================================
+// FileBrowser plugin
+//==============================================================================
+
 #include "filebrowserplugin.h"
 #include "filebrowserwindow.h"
 
+//==============================================================================
+
 #include <QMainWindow>
+
+//==============================================================================
 
 namespace OpenCOR {
 namespace FileBrowser {
+
+//==============================================================================
 
 PLUGININFO_FUNC FileBrowserPluginInfo()
 {
@@ -21,7 +31,11 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)
+
+//==============================================================================
 
 void FileBrowserPlugin::initialize()
 {
@@ -40,6 +54,8 @@ void FileBrowserPlugin::initialize()
                             mFileBrowserAction);
 }
 
+//==============================================================================
+
 void FileBrowserPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file browser window settings
@@ -47,12 +63,16 @@ void FileBrowserPlugin::loadSettings(QSettings *pSettings)
     loadWindowSettings(pSettings, mFileBrowserWindow);
 }
 
+//==============================================================================
+
 void FileBrowserPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our file browser window settings
 
     saveWindowSettings(pSettings, mFileBrowserWindow);
 }
+
+//==============================================================================
 
 void FileBrowserPlugin::retranslateUi()
 {
@@ -66,4 +86,11 @@ void FileBrowserPlugin::retranslateUi()
     mFileBrowserWindow->retranslateUi();
 }
 
-} }
+//==============================================================================
+
+}   // namespace FileBrowser
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

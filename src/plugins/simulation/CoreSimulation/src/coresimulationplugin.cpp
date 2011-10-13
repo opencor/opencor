@@ -1,16 +1,28 @@
+//==============================================================================
+// CoreSimulation plugin
+//==============================================================================
+
 #include "coresimulationplugin.h"
+
+//==============================================================================
 
 #include <QDir>
 #include <QFile>
 #include <QMainWindow>
 #include <QPen>
 
+//==============================================================================
+
 #include "qwt_plot.h"
 #include "qwt_plot_curve.h"
 #include "qwt_plot_grid.h"
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace CoreSimulation {
+
+//==============================================================================
 
 PLUGININFO_FUNC CoreSimulationPluginInfo()
 {
@@ -27,7 +39,11 @@ PLUGININFO_FUNC CoreSimulationPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(CoreSimulation, CoreSimulationPlugin)
+
+//==============================================================================
 
 void CoreSimulationPlugin::initialize()
 {
@@ -107,6 +123,8 @@ void CoreSimulationPlugin::initialize()
     //       available
 }
 
+//==============================================================================
+
 QWidget * CoreSimulationPlugin::viewWidget(const QString &, const int &)
 {
     // Always return our simulation view widget, no matter which file name is
@@ -115,4 +133,11 @@ QWidget * CoreSimulationPlugin::viewWidget(const QString &, const int &)
     return mSimulationView;
 }
 
-} }
+//==============================================================================
+
+}   // namespace CoreSimulation
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

@@ -1,10 +1,20 @@
+//==============================================================================
+// CellMLModelRepository plugin
+//==============================================================================
+
 #include "cellmlmodelrepositoryplugin.h"
 #include "cellmlmodelrepositorywindow.h"
 
+//==============================================================================
+
 #include <QMainWindow>
+
+//==============================================================================
 
 namespace OpenCOR {
 namespace CellMLModelRepository {
+
+//==============================================================================
 
 PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 {
@@ -21,7 +31,11 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)
+
+//==============================================================================
 
 void CellMLModelRepositoryPlugin::initialize()
 {
@@ -41,6 +55,8 @@ void CellMLModelRepositoryPlugin::initialize()
                             mCellmlModelRepositoryAction);
 }
 
+//==============================================================================
+
 void CellMLModelRepositoryPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our CellML Model Repository window settings
@@ -48,12 +64,16 @@ void CellMLModelRepositoryPlugin::loadSettings(QSettings *pSettings)
     loadWindowSettings(pSettings, mCellmlModelRepositoryWindow);
 }
 
+//==============================================================================
+
 void CellMLModelRepositoryPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our CellML Model Repository window settings
 
     saveWindowSettings(pSettings, mCellmlModelRepositoryWindow);
 }
+
+//==============================================================================
 
 void CellMLModelRepositoryPlugin::retranslateUi()
 {
@@ -68,4 +88,11 @@ void CellMLModelRepositoryPlugin::retranslateUi()
     mCellmlModelRepositoryWindow->retranslateUi();
 }
 
-} }
+//==============================================================================
+
+}   // namespace CellMLModelRepository
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================
