@@ -1,7 +1,13 @@
+//==============================================================================
+// Core plugin
+//==============================================================================
+
 #include "centralwidget.h"
 #include "coreplugin.h"
 #include "organisationwidget.h"
 #include "plugin.h"
+
+//==============================================================================
 
 #include <QAction>
 #include <QFileDialog>
@@ -9,8 +15,12 @@
 #include <QSettings>
 #include <QToolBar>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
 
 PLUGININFO_FUNC CorePluginInfo()
 {
@@ -27,7 +37,11 @@ PLUGININFO_FUNC CorePluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(Core, CorePlugin)
+
+//==============================================================================
 
 void CorePlugin::initialize()
 {
@@ -117,6 +131,8 @@ void CorePlugin::initialize()
     updateActions();
 }
 
+//==============================================================================
+
 void CorePlugin::setup(const QList<Plugin *> &pLoadedPlugins)
 {
     // Retrieve the file types supported by the plugins
@@ -171,7 +187,11 @@ void CorePlugin::setup(const QList<Plugin *> &pLoadedPlugins)
     }
 }
 
+//==============================================================================
+
 static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
+
+//==============================================================================
 
 void CorePlugin::loadSettings(QSettings *pSettings)
 {
@@ -187,6 +207,8 @@ void CorePlugin::loadSettings(QSettings *pSettings)
                                         QDir::currentPath()).toString());
 }
 
+//==============================================================================
+
 void CorePlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the central widget settings
@@ -199,6 +221,8 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsFileDialogDirectory, mActiveDir.path());
 }
+
+//==============================================================================
 
 void CorePlugin::retranslateUi()
 {
@@ -236,6 +260,8 @@ void CorePlugin::retranslateUi()
     mCentralWidget->retranslateUi();
 }
 
+//==============================================================================
+
 void CorePlugin::updateActions()
 {
     // Make sure that the various actions are properly enabled/disabled
@@ -251,6 +277,8 @@ void CorePlugin::updateActions()
 
     mFilePrintAction->setEnabled(false);
 }
+
+//==============================================================================
 
 void CorePlugin::openFile()
 {
@@ -295,6 +323,8 @@ void CorePlugin::openFile()
     mCentralWidget->openFiles(files);
 }
 
+//==============================================================================
+
 void CorePlugin::needUpdateActions()
 {
     // Something requires the actions to be udpated
@@ -302,4 +332,11 @@ void CorePlugin::needUpdateActions()
     updateActions();
 }
 
-} }
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

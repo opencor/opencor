@@ -1,11 +1,21 @@
+//==============================================================================
+// Help plugin
+//==============================================================================
+
 #include "helpplugin.h"
 #include "helpwindow.h"
+
+//==============================================================================
 
 #include <QAction>
 #include <QMainWindow>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Help {
+
+//==============================================================================
 
 PLUGININFO_FUNC HelpPluginInfo()
 {
@@ -22,7 +32,11 @@ PLUGININFO_FUNC HelpPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(Help, HelpPlugin)
+
+//==============================================================================
 
 void HelpPlugin::initialize()
 {
@@ -41,6 +55,8 @@ void HelpPlugin::initialize()
                             GuiWindowSettings::Help, mHelpAction);
 }
 
+//==============================================================================
+
 void HelpPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our help window settings
@@ -48,12 +64,16 @@ void HelpPlugin::loadSettings(QSettings *pSettings)
     loadWindowSettings(pSettings, mHelpWindow);
 }
 
+//==============================================================================
+
 void HelpPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our help window settings
 
     saveWindowSettings(pSettings, mHelpWindow);
 }
+
+//==============================================================================
 
 void HelpPlugin::retranslateUi()
 {
@@ -68,4 +88,11 @@ void HelpPlugin::retranslateUi()
     mHelpWindow->retranslateUi();
 }
 
-} }
+//==============================================================================
+
+}   // namespace Help
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

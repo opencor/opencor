@@ -1,5 +1,11 @@
+//==============================================================================
+// CellML plugin
+//==============================================================================
+
 #include "cellmlplugin.h"
 #include "coreutils.h"
+
+//==============================================================================
 
 #include "cellml-api-cxx-support.hpp"
 #include "CellMLBootstrap.hpp"
@@ -7,13 +13,19 @@
 #include "IfaceCIS.hxx"
 #include "CISBootstrap.hpp"
 
+//==============================================================================
+
 #include <QDebug>
 #include <QDir>
 #include <QThread>
 #include <QUrl>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellML {
+
+//==============================================================================
 
 PLUGININFO_FUNC CellMLPluginInfo()
 {
@@ -30,7 +42,11 @@ PLUGININFO_FUNC CellMLPluginInfo()
                       descriptions);
 }
 
+//==============================================================================
+
 Q_EXPORT_PLUGIN2(CellML, CellMLPlugin)
+
+//==============================================================================
 
 class SleeperThread : public QThread
 {
@@ -40,6 +56,8 @@ public:
         QThread::msleep(msecs);
     }
 };
+
+//==============================================================================
 
 class TestProgressObserver : public iface::cellml_services::IntegrationProgressObserver
 {
@@ -88,10 +106,14 @@ public:
         writeResults(header);
     }
 
+    //==========================================================================
+
     virtual void add_ref() throw(std::exception &)
     {
         ++mRefCount;
     }
+
+    //==========================================================================
 
     virtual void release_ref() throw(std::exception &)
     {
@@ -101,10 +123,14 @@ public:
             delete this;
     }
 
+    //==========================================================================
+
     virtual char * objid() throw (std::exception &)
     {
         return strdup("singletonTestProgressObserver");
     }
+
+    //==========================================================================
 
     virtual void * query_interface(const char *pIface) throw (std::exception &)
     {
@@ -116,10 +142,14 @@ public:
         return 0;
     }
 
+    //==========================================================================
+
     virtual void computedConstants(uint32_t, double *) throw (std::exception &)
     {
         // Do nothing...
     }
+
+    //==========================================================================
 
     virtual void results(uint32_t pNbOfValues, double *pValues) throw (std::exception&)
     {
@@ -180,10 +210,14 @@ public:
         }
     }
 
+    //==========================================================================
+
     virtual void done() throw (std::exception &)
     {
         mFinished = true;
     }
+
+    //==========================================================================
 
     virtual void failed(const char *pErrorMsg) throw (std::exception &)
     {
@@ -192,10 +226,14 @@ public:
         mFinished = true;
     }
 
+    //==========================================================================
+
     bool finished()
     {
         return mFinished;
     }
+
+    //==========================================================================
 
     void writeResults(const QString &pResults)
     {
@@ -212,6 +250,8 @@ private:
 
     QFile mResultsFile;
 };
+
+//==============================================================================
 
 void CellMLPlugin::initialize()
 {
@@ -282,6 +322,8 @@ void CellMLPlugin::initialize()
     QFile::remove(testCellmlModelFileName);
 }
 
+//==============================================================================
+
 QList<FileType> CellMLPlugin::fileTypes() const
 {
     // Return the CellML file type that the CellML plugin supports
@@ -289,6 +331,8 @@ QList<FileType> CellMLPlugin::fileTypes() const
     return QList<FileType>() << FileType(qobject_cast<FileInterface *>(this),
                                          CellmlMimeType, "cellml");
 }
+
+//==============================================================================
 
 QString CellMLPlugin::fileTypeDescription(const QString &mMimeType) const
 {
@@ -303,6 +347,8 @@ QString CellMLPlugin::fileTypeDescription(const QString &mMimeType) const
         return FileInterface::fileTypeDescription(mMimeType);
 }
 
+//==============================================================================
+
 void CellMLPlugin::usePrecomputedTestCellmlResults()
 {
     // Use the pre-computed test CellML results
@@ -314,4 +360,9 @@ void CellMLPlugin::usePrecomputedTestCellmlResults()
                          QDir::tempPath()+QDir::separator()+"test_cellml_results.csv");
 }
 
-} }
+}   // namespace CellML
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================
