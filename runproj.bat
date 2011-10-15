@@ -1,6 +1,6 @@
 @ECHO OFF
 
-TITLE Running the OpenCOR environment...
+TITLE Running OpenCOR...
 
 IF NOT EXIST build\bin\OpenCOR.com GOTO Information
 IF NOT EXIST build\bin\OpenCOR.exe GOTO Information
