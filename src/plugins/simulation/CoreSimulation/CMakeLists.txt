@@ -25,6 +25,7 @@ ADD_PLUGIN(CoreSimulation
         src
     OPENCOR_DEPENDENCIES
         Core
+        Nanojit
         Qwt
     QT_DEPENDENCIES
         QtCore

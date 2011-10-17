@@ -35,7 +35,7 @@ PLUGININFO_FUNC CoreSimulationPluginInfo()
                       PluginInfo::Gui,
                       PluginInfo::Simulation,
                       false,
-                      QStringList() << "Core" << "Qwt",
+                      QStringList() << "Core" << "Nanojit" << "Qwt",
                       descriptions);
 }
 
