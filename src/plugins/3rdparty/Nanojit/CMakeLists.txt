@@ -39,7 +39,6 @@ ADD_PLUGIN(Nanojit
         src/nanojit/Fragmento.h
         src/nanojit/LIR.h
         src/nanojit/nanojit.h
-        src/nanojit/nanojitplugin.h
         src/nanojit/Native.h
         src/nanojit/NativeCommon.h
         ${NATIVE_FILEBASE}.h
