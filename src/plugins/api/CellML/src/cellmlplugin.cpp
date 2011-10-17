@@ -360,6 +360,8 @@ void CellMLPlugin::usePrecomputedTestCellmlResults()
                          QDir::tempPath()+QDir::separator()+"test_cellml_results.csv");
 }
 
+//==============================================================================
+
 }   // namespace CellML
 }   // namespace OpenCOR
 

@@ -43,14 +43,12 @@ ADD_PLUGIN(CellML
     SOURCES
         ../../coreinterface.cpp
         ../../fileinterface.cpp
-        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/cellmlplugin.cpp
     HEADERS
         ../../coreinterface.h
         ../../fileinterface.h
-        ../../i18ninterface.h
         ../../plugininfo.h
     HEADERS_MOC
         src/cellmlplugin.h

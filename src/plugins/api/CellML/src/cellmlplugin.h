@@ -9,7 +9,6 @@
 
 #include "coreinterface.h"
 #include "fileinterface.h"
-#include "i18ninterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -27,13 +26,11 @@ static const QString CellmlMimeType = "application/cellml+xml";
 
 //==============================================================================
 
-class CellMLPlugin : public QObject, public CoreInterface, public FileInterface,
-                     public I18nInterface
+class CellMLPlugin : public QObject, public CoreInterface, public FileInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::FileInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
     virtual void initialize();
