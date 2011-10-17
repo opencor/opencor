@@ -20,7 +20,7 @@ PLUGININFO_FUNC NanojitPluginInfo()
 
     return PluginInfo(PluginInfo::V001,
                       PluginInfo::General,
-                      PluginInfo::Api,
+                      PluginInfo::ThirdParty,
                       false,
                       QStringList(),
                       descriptions);

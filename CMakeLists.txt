@@ -165,6 +165,8 @@ SET(PLUGINS
 
     application/Core
 
+    3rdparty/Nanojit
+
     api/CellML
 
     editing/CoreEditing
@@ -172,7 +174,6 @@ SET(PLUGINS
 
     simulation/CoreSimulation
 
-    3rdparty/Nanojit
     3rdparty/QJson
     3rdparty/QScintilla
     3rdparty/QtMmlWidget

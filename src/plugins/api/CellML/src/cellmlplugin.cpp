@@ -38,7 +38,7 @@ PLUGININFO_FUNC CellMLPluginInfo()
                       PluginInfo::General,
                       PluginInfo::Api,
                       false,
-                      QStringList(),
+                      QStringList() << "Nanojit",
                       descriptions);
 }
 

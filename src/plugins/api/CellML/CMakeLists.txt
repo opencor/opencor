@@ -56,6 +56,7 @@ ADD_PLUGIN(CellML
         src
     OPENCOR_DEPENDENCIES
         Core
+        Nanojit
     QT_DEPENDENCIES
         QtCore
         QtGui
