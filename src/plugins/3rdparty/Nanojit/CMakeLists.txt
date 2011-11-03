@@ -9,7 +9,7 @@ INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 
-# Determine the location of the CellML libraries
+# Determine the location of the Nanojit libraries
 
 IF(64BIT_MODE)
     SET(NANOJIT_MODE AVMPLUS_AMD64)

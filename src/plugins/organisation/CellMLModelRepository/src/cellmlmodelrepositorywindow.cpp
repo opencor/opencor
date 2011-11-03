@@ -39,7 +39,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
             this, SLOT(customContextMenu(const QPoint &)));
 
     // Retrieve the list of models in the CellML Model Repository as JSON code
-    // from http://50.18.64.32/workspace/rest/contents.json
+    // from http://models.cellml.org/workspace/rest/contents.json
 
     mNetworkAccessManager = new QNetworkAccessManager(this);
 
