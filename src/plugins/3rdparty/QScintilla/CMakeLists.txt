@@ -147,7 +147,6 @@ ADD_PLUGIN(QScintilla
         include
         lexlib
         Qt4
-        Qt4/Qsci
         src
     QT_DEPENDENCIES
         QtCore
