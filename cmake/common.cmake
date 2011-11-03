@@ -501,8 +501,7 @@ ENDMACRO()
 MACRO(COPY_FILE_TO_BUILD_DIR DIRNAME FILENAME)
     SET(BUILD_DIR ${CMAKE_FILES_DIR}/../build)
     # Note: we would normally use ${CMAKE_BINARY_DIR}, but we want this macro
-    #       to work for both the main OpenCOR project and the winConsole
-    #       version of the OpenCOR project, so...
+    #       to work for both the main OpenCOR project and winConsole, so...
 
     IF(NOT EXISTS ${BUILD_DIR}/${DIRNAME})
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
