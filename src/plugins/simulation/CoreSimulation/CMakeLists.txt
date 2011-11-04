@@ -19,6 +19,9 @@ ADD_PLUGIN(CoreSimulation
         ../../plugininfo.h
     HEADERS_MOC
         src/coresimulationplugin.h
+    DEFINITIONS
+        __STDC_LIMIT_MACROS      # These two definitions
+        __STDC_CONSTANT_MACROS   # are for LLVM
     PLUGIN_INCLUDE_DIRS
         ../../3rdparty/Qwt/src
 

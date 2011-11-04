@@ -67,6 +67,9 @@ ADD_PLUGIN(LLVM
     SOURCES
         ../../plugininfo.cpp
 
+        lib/ExecutionEngine/JIT/JIT.cpp
+        lib/Support/DynamicLibrary.cpp
+
         src/llvmplugin.cpp
     HEADERS
         ../../plugininfo.h
