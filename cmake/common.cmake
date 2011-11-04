@@ -268,7 +268,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
-    # Make sure that we link to our external dependencies
+    # External dependencies
 
     FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
