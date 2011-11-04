@@ -143,7 +143,7 @@ ADD_PLUGIN(QScintilla
     DEFINITIONS
         QT
         SCI_LEXER
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         include
         lexlib
         Qt4

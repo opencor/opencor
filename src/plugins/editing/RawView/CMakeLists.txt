@@ -21,7 +21,7 @@ ADD_PLUGIN(RawView
         ../../plugininfo.h
     HEADERS_MOC
         src/rawviewplugin.h
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core

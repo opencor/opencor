@@ -21,7 +21,7 @@ ADD_PLUGIN(CoreEditing
         ../../plugininfo.h
     HEADERS_MOC
         src/coreeditingplugin.h
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core

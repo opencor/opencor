@@ -37,7 +37,7 @@ ADD_PLUGIN(QJson
         src/serializerrunnable.h
     DEFINITIONS
         QJSON_MAKEDLL
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     QT_DEPENDENCIES
         QtCore

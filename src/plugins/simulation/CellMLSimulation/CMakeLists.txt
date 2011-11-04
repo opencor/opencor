@@ -15,7 +15,7 @@ ADD_PLUGIN(CellMLSimulation
         ../../plugininfo.h
     HEADERS_MOC
         src/cellmlsimulationplugin.h
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core

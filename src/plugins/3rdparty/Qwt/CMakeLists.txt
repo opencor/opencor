@@ -174,7 +174,7 @@ ADD_PLUGIN(Qwt
         src/qwt_thermo.h
         src/qwt_wheel.h
         src/qwtplugin.h
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
         textengines/mathml
     QT_DEPENDENCIES

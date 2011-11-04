@@ -21,7 +21,7 @@ ADD_PLUGIN(CoreCellMLEditing
         ../../plugininfo.h
     HEADERS_MOC
         src/corecellmleditingplugin.h
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core

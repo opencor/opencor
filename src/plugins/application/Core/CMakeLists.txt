@@ -46,7 +46,7 @@ ADD_PLUGIN(Core
         src/treeview.h
     UIS
         src/centralwidget.ui
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     QT_DEPENDENCIES
         QtCore

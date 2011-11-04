@@ -27,7 +27,7 @@ ADD_PLUGIN(FileBrowser
         src/filebrowserwindow.h
     UIS
         src/filebrowserwindow.ui
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core

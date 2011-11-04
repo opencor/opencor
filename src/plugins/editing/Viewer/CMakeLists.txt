@@ -27,7 +27,7 @@ ADD_PLUGIN(Viewer
         src/viewerwindow.h
     UIS
         src/viewerwindow.ui
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core

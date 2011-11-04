@@ -18,7 +18,7 @@ ADD_PLUGIN(QtMmlWidget
         src/qtmmlwidget.h
     HEADERS_MOC
         src/qtmmlwidgetplugin.h
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         include
         src
     QT_DEPENDENCIES

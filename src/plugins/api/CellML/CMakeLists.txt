@@ -52,7 +52,7 @@ ADD_PLUGIN(CellML
         ../../plugininfo.h
     HEADERS_MOC
         src/cellmlplugin.h
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core

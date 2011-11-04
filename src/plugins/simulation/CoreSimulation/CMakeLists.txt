@@ -22,7 +22,7 @@ ADD_PLUGIN(CoreSimulation
     DEFINITIONS
         __STDC_LIMIT_MACROS      # These two definitions
         __STDC_CONSTANT_MACROS   # are for LLVM
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         ../../3rdparty/Qwt/src
 
         src

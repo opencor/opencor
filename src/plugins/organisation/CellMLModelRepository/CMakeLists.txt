@@ -27,7 +27,7 @@ ADD_PLUGIN(CellMLModelRepository
         src/cellmlmodelrepositorywindow.h
     UIS
         src/cellmlmodelrepositorywindow.ui
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core

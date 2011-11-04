@@ -27,7 +27,7 @@ ADD_PLUGIN(Help
         src/helpwindow.h
     UIS
         src/helpwindow.ui
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core

@@ -27,7 +27,7 @@ ADD_PLUGIN(FileOrganiser
         src/fileorganiserwindow.h
     UIS
         src/fileorganiserwindow.ui
-    PLUGIN_INCLUDE_DIRS
+    INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
         Core
