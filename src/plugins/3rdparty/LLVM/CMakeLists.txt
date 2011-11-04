@@ -51,6 +51,16 @@ FOREACH(SUPPORT_HEADER_FILE ${SUPPORT_HEADER_FILES})
                    COPYONLY)
 ENDFOREACH()
 
+# A definition and flag specific to Windows
+
+IF(WIN32)
+    SET(NO_CTYPE_INLINE __NO_CTYPE_INLINE)
+    SET(ALLOW_MULTIPLE_DEFINITION -Wl,--allow-multiple-definition)
+ELSE()
+    SET(NO_CTYPE_INLINE)
+    SET(ALLOW_MULTIPLE_DEFINITION)
+ENDIF()
+
 # Add the plugin
 
 ADD_PLUGIN(LLVM
@@ -62,6 +72,13 @@ ADD_PLUGIN(LLVM
         ../../plugininfo.h
     HEADERS_MOC
         src/llvmplugin.h
+    DEFINITIONS
+        _GNU_SOURCE
+        __STDC_LIMIT_MACROS
+        __STDC_CONSTANT_MACROS
+        ${NO_CTYPE_INLINE}
+    FLAGS
+        ${ALLOW_MULTIPLE_DEFINITION}
     PLUGIN_INCLUDE_DIRS
         include
         src
