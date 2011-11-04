@@ -64,77 +64,77 @@ void CoreSimulationPlugin::initialize()
     // Testing the JIT compilation side of LLVM
     // Note: this is shameless copying/pasting of the How-to-use JIT example...
 
-    InitializeNativeTarget();
+    llvm::InitializeNativeTarget();
 
-    LLVMContext Context;
+    llvm::LLVMContext Context;
 
     // Create some module to put our function into it.
-    Module *M = new Module("test", Context);
+    llvm::Module *M = new llvm::Module("test", Context);
 
     // Create the add1 function entry and insert this entry into module M.  The
     // function will have a return type of "int" and take an argument of "int".
     // The '0' terminates the list of argument types.
-    Function *Add1F =
-      cast<Function>(M->getOrInsertFunction("add1", Type::getInt32Ty(Context),
-                                            Type::getInt32Ty(Context),
-                                            (Type *)0));
+    llvm::Function *Add1F =
+      llvm::cast<llvm::Function>(M->getOrInsertFunction("add1", llvm::Type::getInt32Ty(Context),
+                                            llvm::Type::getInt32Ty(Context),
+                                            (llvm::Type *)0));
 
     // Add a basic block to the function. As before, it automatically inserts
     // because of the last argument.
-    BasicBlock *BB = BasicBlock::Create(Context, "EntryBlock", Add1F);
+    llvm::BasicBlock *BB = llvm::BasicBlock::Create(Context, "EntryBlock", Add1F);
 
     // Get pointers to the constant `1'.
-    Value *One = ConstantInt::get(Type::getInt32Ty(Context), 1);
+    llvm::Value *One = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 1);
 
     // Get pointers to the integer argument of the add1 function...
     assert(Add1F->arg_begin() != Add1F->arg_end()); // Make sure there's an arg
-    Argument *ArgX = Add1F->arg_begin();  // Get the arg
+    llvm::Argument *ArgX = Add1F->arg_begin();  // Get the arg
     ArgX->setName("AnArg");            // Give it a nice symbolic name for fun.
 
     // Create the add instruction, inserting it into the end of BB.
-    Instruction *Add = BinaryOperator::CreateAdd(One, ArgX, "addresult", BB);
+    llvm::Instruction *Add = llvm::BinaryOperator::CreateAdd(One, ArgX, "addresult", BB);
 
     // Create the return instruction and add it to the basic block
-    ReturnInst::Create(Context, Add, BB);
+    llvm::ReturnInst::Create(Context, Add, BB);
 
     // Now, function add1 is ready.
 
 
     // Now we going to create function `foo', which returns an int and takes no
     // arguments.
-    Function *FooF =
-      cast<Function>(M->getOrInsertFunction("foo", Type::getInt32Ty(Context),
-                                            (Type *)0));
+    llvm::Function *FooF =
+      llvm::cast<llvm::Function>(M->getOrInsertFunction("foo", llvm::Type::getInt32Ty(Context),
+                                            (llvm::Type *)0));
 
     // Add a basic block to the FooF function.
-    BB = BasicBlock::Create(Context, "EntryBlock", FooF);
+    BB = llvm::BasicBlock::Create(Context, "EntryBlock", FooF);
 
     // Get pointers to the constant `10'.
-    Value *Ten = ConstantInt::get(Type::getInt32Ty(Context), 10);
+    llvm::Value *Ten = llvm::ConstantInt::get(llvm::Type::getInt32Ty(Context), 10);
 
     // Pass Ten to the call call:
-    CallInst *Add1CallRes = CallInst::Create(Add1F, Ten, "add1", BB);
+    llvm::CallInst *Add1CallRes = llvm::CallInst::Create(Add1F, Ten, "add1", BB);
     Add1CallRes->setTailCall(true);
 
     // Create the return instruction and add it to the basic block.
-    ReturnInst::Create(Context, Add1CallRes, BB);
+    llvm::ReturnInst::Create(Context, Add1CallRes, BB);
 
     // Now we create the JIT.
-    ExecutionEngine* EE = EngineBuilder(M).create();
+    llvm::ExecutionEngine* EE = llvm::EngineBuilder(M).create();
 
-    outs() << "We just constructed this LLVM module:\n\n" << *M;
-    outs() << "\n\nRunning foo: ";
-    outs().flush();
+    llvm::outs() << "We just constructed this LLVM module:\n\n" << *M;
+    llvm::outs() << "\n\nRunning foo: ";
+    llvm::outs().flush();
 
     // Call the `foo' function with no arguments:
-    std::vector<GenericValue> noargs;
-    GenericValue gv = EE->runFunction(FooF, noargs);
+    std::vector<llvm::GenericValue> noargs;
+    llvm::GenericValue gv = EE->runFunction(FooF, noargs);
 
     // Import result of execution:
-    outs() << "Result: " << gv.IntVal << "\n";
+    llvm::outs() << "Result: " << gv.IntVal << "\n";
     EE->freeMachineCodeForFunction(FooF);
     delete EE;
-    llvm_shutdown();
+    llvm::llvm_shutdown();
 
 
 
