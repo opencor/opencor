@@ -166,7 +166,6 @@ SET(PLUGINS
     application/Core
 
     3rdparty/LLVM
-    3rdparty/Nanojit
 
     api/CellML
 
