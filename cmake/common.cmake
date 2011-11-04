@@ -28,8 +28,8 @@ MACRO(INITIALISE_PROJECT)
 
         IF(NOT APPLE)
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
-            # Note #1: -Wl,-s strips all the symbols, thus reducing the final size
-            #          of OpenCOR of one its shared libraries
+            # Note #1: -Wl,-s strips all the symbols, thus reducing the final
+            #          size of OpenCOR or one its shared libraries
             # Note #2: the above linking option has become obsolete on Mac OS X,
             #          so...
         ENDIF()
