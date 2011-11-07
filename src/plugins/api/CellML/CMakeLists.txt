@@ -70,16 +70,16 @@ ADD_PLUGIN(CellML
 #       external dependency may have dependencies of its own
 
 IF(WIN32)
-    # The CellML binaries
+    # The CellML libraries
 
     FOREACH(CELLML_LIB ${CELLML_LIBS})
-        # Copy them to the build and build/bin folders, so we can test the
-        # CellML plugin without first having to deploy OpenCOR
+        # Copy the CellML library to the build and build/bin folders, so we can
+        # test the CellML plugin without first having to deploy OpenCOR
 
         COPY_FILE_TO_BUILD_DIR(. ${CELLML_LIBS_DIR}/${CELLML_LIB})
         COPY_FILE_TO_BUILD_DIR(bin ${CELLML_LIBS_DIR}/${CELLML_LIB})
 
-        # INstall them
+        # Install the CellML library
 
         INSTALL(FILES ${CELLML_LIBS_DIR}/${CELLML_LIB} DESTINATION bin)
     ENDFOREACH()
@@ -88,8 +88,8 @@ IF(WIN32)
     # Note: this DLL comes from the official version of MinGW (as opposed to
     #       the Qt patched version) and is the version that is required since
     #       the CellML API was built using that version of MinGW (thank god,
-    #       that DLL is not normally required when deploying a Qt application,
-    #       so we can safely deploy it to get the CellML plugin to work)
+    #       that DLL is not required when deploying a Qt application, so we can
+    #       safely deploy it to get the CellML plugin to work)
 
     SET(LIBSTDC++-6_FILE ${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
 
@@ -98,7 +98,8 @@ IF(WIN32)
 
     INSTALL(FILES ${LIBSTDC++-6_FILE} DESTINATION bin)
 ELSEIF(APPLE)
-    # Each CellML binary together with their respective CellML dependencies
+    # Deploy the CellML libraries together with their respective CellML
+    # dependencies, if any
 
     DEPLOY_MAC_OS_X_LIBRARY(libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
         TYPE
