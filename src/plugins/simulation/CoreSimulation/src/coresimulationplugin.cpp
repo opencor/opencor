@@ -72,9 +72,9 @@ void CoreSimulationPlugin::initialize()
 
     llvm::Module *module = new llvm::Module("test", context);
 
-    // Create the add1 function entry and insert it into our module M
-    // Note: the function has a return type of 'int' and takes an argument of
-    //       'int' while the '0' terminates the list of argument types...
+    // Create the add1 function entry and insert it into our module
+    // Note: the function has a return type of int and takes an argument of int
+    //       also while the 0 argument terminates the list of argument types...
 
     llvm::Function *addOneFunc = llvm::cast<llvm::Function>(module->getOrInsertFunction("addOne",
                                                                                         llvm::Type::getInt32Ty(context),
