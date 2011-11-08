@@ -526,23 +526,31 @@ MACRO(CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIRNAME PLUGIN_NAME)
 ENDMACRO()
 
 MACRO(COPY_FILE_TO_BUILD_DIR DIRNAME FILENAME)
-    SET(BUILD_DIR ${CMAKE_FILES_DIR}/../build)
-    # Note: we would normally use ${CMAKE_BINARY_DIR}, but we want this macro
-    #       to work for both the main OpenCOR project and winConsole, so...
+    IF(EXISTS ${CMAKE_BINARY_DIR}/../cmake)
+        # A cmake directory exists at the same level as the binary directory,
+        # so we are dealing with the main project
 
-    IF(NOT EXISTS ${BUILD_DIR}/${DIRNAME})
+        SET(REAL_DIRNAME ${CMAKE_BINARY_DIR}/${DIRNAME})
+    ELSE()
+        # No cmake directory exists at the same level as the binary directory,
+        # so we are dealing with a non-main project
+
+        SET(REAL_DIRNAME ${CMAKE_BINARY_DIR}/../../build/${DIRNAME})
+    ENDIF()
+
+    IF(NOT EXISTS ${REAL_DIRNAME})
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}/${DIRNAME})
+                           COMMAND ${CMAKE_COMMAND} -E make_directory ${REAL_DIRNAME})
     ENDIF()
 
     IF("${ARGN}" STREQUAL "")
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${BUILD_DIR}/${DIRNAME})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${REAL_DIRNAME})
     ELSE()
         # An argument was passed so use it to rename the file which is to be
         # copied
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${BUILD_DIR}/${DIRNAME}/${ARGN})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${REAL_DIRNAME}/${ARGN})
     ENDIF()
 ENDMACRO()

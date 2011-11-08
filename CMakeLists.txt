@@ -243,8 +243,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME}
 # Some post-processing specific to Windows and Linux
 
 IF(NOT APPLE)
-    # Create the bin directory if it doesn't already exist and move the OpenCOR
-    # binary to it
+    # Copy the OpenCOR executable to the build/bin folder
 
     COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 ENDIF()
