@@ -39,6 +39,7 @@ ADD_PLUGIN(LLVM
     HEADERS_MOC
         src/llvmplugin.h
     INCLUDE_DIRS
+        include
         src
     QT_DEPENDENCIES
         QtCore
