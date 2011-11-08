@@ -1,22 +1,7 @@
 PROJECT(LLVMPlugin)
 
 # Retrieve some header files that were generated on each of our target
-# platforms, but first determine the location of the files based on the
-# architecture we are targetting
-
-IF(WIN32)
-    SET(DISTRIB_DIR windows/x86)
-ELSEIF(APPLE)
-    SET(DISTRIB_DIR macosx)
-ELSE()
-    IF(64BIT_MODE)
-        SET(DISTRIB_DIR linux/x64)
-    ELSE()
-        SET(DISTRIB_DIR linux/x86)
-    ENDIF()
-ENDIF()
-
-# Now, we can copy the Config header files
+# platforms
 
 SET(LLVM_CONFIG_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/llvm/Config)
 SET(CONFIG_HEADER_FILES
@@ -30,21 +15,9 @@ FOREACH(CONFIG_HEADER_FILE ${CONFIG_HEADER_FILES})
                    COPYONLY)
 ENDFOREACH()
 
-# Determine the location of the LLVM libraries
+# LLVM libraries
 
-IF(WIN32)
-    SET(LLVM_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/windows/x86)
-ELSEIF(APPLE)
-    SET(LLVM_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/macosx)
-ELSE()
-    IF(64BIT_MODE)
-        SET(LLVM_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/linux/x64)
-    ELSE()
-        SET(LLVM_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/linux/x86)
-    ENDIF()
-ENDIF()
-
-# LLVM libraries themselves
+SET(LLVM_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/${DISTRIB_DIR})
 
 IF(WIN32)
     SET(CMAKE_SHARED_LIBRARY_PREFIX)

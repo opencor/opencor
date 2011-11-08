@@ -1,20 +1,8 @@
 PROJECT(CellMLPlugin)
 
-# Determine the location of the CellML libraries
+# CellML libraries
 
-IF(WIN32)
-    SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/windows/x86)
-ELSEIF(APPLE)
-    SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/macosx)
-ELSE()
-    IF(64BIT_MODE)
-        SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/linux/x64)
-    ELSE()
-        SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/linux/x86)
-    ENDIF()
-ENDIF()
-
-# CellML libraries themselves
+SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/${DISTRIB_DIR})
 
 SET(CELLML_LIBS
     libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}

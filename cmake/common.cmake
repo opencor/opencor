@@ -61,7 +61,7 @@ MACRO(INITIALISE_PROJECT)
         SET(64BIT_MODE OFF)
     ENDIF()
 
-    # Default location for third-party libraries
+    # Default location of third-party libraries
     # Note: this is only required so that we can quickly test third-party
     #       libraries without first having to package everything
 
@@ -69,6 +69,20 @@ MACRO(INITIALISE_PROJECT)
         SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
     ELSE()
         SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+    ENDIF()
+
+    # Default location of external dependencies
+
+    IF(WIN32)
+        SET(DISTRIB_DIR windows/x86)
+    ELSEIF(APPLE)
+        SET(DISTRIB_DIR macosx)
+    ELSE()
+        IF(64BIT_MODE)
+            SET(DISTRIB_DIR linux/x64)
+        ELSE()
+            SET(DISTRIB_DIR linux/x86)
+        ENDIF()
     ENDIF()
 ENDMACRO()
 
