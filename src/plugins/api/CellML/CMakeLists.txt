@@ -1,9 +1,5 @@
 PROJECT(CellMLPlugin)
 
-# Some in-house CMake functions/macros
-
-INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
-
 # Determine the location of the CellML libraries
 
 IF(WIN32)

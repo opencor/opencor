@@ -1,9 +1,5 @@
 PROJECT(LLVMPlugin)
 
-# Some in-house CMake functions/macros
-
-INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
-
 # Retrieve some header files that were generated on each of our target
 # platforms, but first determine the location of the files based on the
 # architecture we are targetting

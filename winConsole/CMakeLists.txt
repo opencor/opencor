@@ -4,13 +4,9 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-# Location of our CMake files
-
-SET(CMAKE_FILES_DIR ${CMAKE_SOURCE_DIR}/../cmake)
-
 # Some in-house CMake functions/macros
 
-INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
+INCLUDE(${CMAKE_SOURCE_DIR}/../cmake/common.cmake)
 
 # Initialise the project
 

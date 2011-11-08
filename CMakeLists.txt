@@ -12,13 +12,9 @@ SET(MAIN_PROJECT_NAME ${PROJECT_NAME})
 SET(MAC_OS_X_PROJECT_LIBRARY_DIR ${CMAKE_BINARY_DIR}/lib)
 SET(MAC_OS_X_PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
 
-# Location of our CMake files
-
-SET(CMAKE_FILES_DIR ${CMAKE_SOURCE_DIR}/cmake)
-
 # Some in-house CMake functions/macros
 
-INCLUDE(${CMAKE_FILES_DIR}/common.cmake)
+INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 # Initialise the project
 
