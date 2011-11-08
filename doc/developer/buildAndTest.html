@@ -29,14 +29,15 @@
                     <li>
                         <a href="https://github.com/opencor/opencor/blob/master/makeproj"><code>[OpenCOR]/makeproj</code></a>[<a href="https://github.com/opencor/opencor/blob/master/makeproj.bat"><code>.bat</code></a>]: compiles and links everything that is required to get a release version of OpenCOR; and
                         <div>
-                            <strong>Note:</strong> <code>makeproj[.bat]</code> does, by default, compile OpenCOR in parallel. You can, however, specify the number of jobs to be run simultaneously, thus making it possible to compile OpenCOR sequentially, if needed:
-                            <pre class="prettyprint">$ ./makeproj 1</pre>
+                            <strong>Note:</strong> <code>makeproj[.bat]</code> does, by default, compile OpenCOR sequentially. You can, however, specify the number of jobs (<code>n</code>) to be run simultaneously, making it possible to compile OpenCOR in parallel, if needed:
+                            <pre class="prettyprint">$ ./makeproj -j [n]</pre>
+                            If no <code>n</code> value is provided, then as many jobs as possible will be run simultaneously.
                         </div>
                     </li>
                     <li>
                         <a href="https://github.com/opencor/opencor/blob/master/runproj"><code>[OpenCOR]/runproj</code></a>[<a href="https://github.com/opencor/opencor/blob/master/runproj.bat"><code>.bat</code></a> | <a href="https://github.com/opencor/opencor/blob/master/runproj.vbs"><code>.vbs</code></a>]: runs OpenCOR.
                         <div>
-                            <strong>Note:</strong> on Windows, if you were to run OpenCOR from a console window by just entering <code>runproj</code>, then the <code>runproj.bat</code> file would be executed (rather than the <code>runproj.vbs</code> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking the <code>runproj.bat</code> file from within Windows Explorer, then a console window will quickly appear and disappear. To avoid this, you should double click on the <code>runproj.vbs</code> file.
+                            <strong>Note:</strong> on Windows, if you were to run OpenCOR from a console window by just entering <code>runproj</code>, then the <code>runproj.bat</code> file would be executed (rather than the <code>runproj.vbs</code> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking on the <code>runproj.bat</code> file from Windows Explorer, then a console window will quickly appear and disappear. To avoid this, you should double click on the <code>runproj.vbs</code> file.
                         </div>
                     </li>
                 </ul>
