@@ -31,4 +31,7 @@ ADD_PLUGIN(CoreSimulation
         QtGui
         QtSvg
         QtXml
+    EXTERNAL_DEPENDENCIES
+        ${CMAKE_SHARED_LIBRARY_PREFIX}LLVM-2.9${CMAKE_SHARED_LIBRARY_SUFFIX}
+        # The above external dependency is for LLVM
 )

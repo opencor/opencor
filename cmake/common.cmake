@@ -284,11 +284,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # External dependencies
 
-    FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
-        )
-    ENDFOREACH()
+    IF(NOT ${EXTERNAL_DEPENDENCIES_DIR} STREQUAL "")
+        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+            TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
+            )
+        ENDFOREACH()
+    ENDIF()
 
     # Linker settings
     # Note: by default "lib" will be prepended to the name of the target file.
@@ -371,12 +373,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
-        # Make sure that the plugin refers to our embedded version the external
-        # dependencies on which it depends
+        # Make sure that the plugin refers to our embedded version of the
+        # external dependencies on which it depends
+        # Note: we do it in two different ways, since some external libraries
+        #       we use refer to the library itself (e.g. CellML) while others
+        #       refer to some @executable_path information (e.g. LLVM), so...
 
         FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
+                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
