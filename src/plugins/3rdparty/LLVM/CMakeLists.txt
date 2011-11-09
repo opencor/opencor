@@ -15,15 +15,15 @@ FOREACH(CONFIG_HEADER_FILE ${CONFIG_HEADER_FILES})
                    COPYONLY)
 ENDFOREACH()
 
-# LLVM libraries
+# LLVM library
 
-SET(LLVM_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/${DISTRIB_DIR})
+SET(LLVM_LIB_DIR ${PROJECT_SOURCE_DIR}/lib/${DISTRIB_DIR})
 
 IF(WIN32)
     SET(CMAKE_SHARED_LIBRARY_PREFIX)
 ENDIF()
 
-SET(LLVM_LIBS
+SET(LLVM_LIB
     ${CMAKE_SHARED_LIBRARY_PREFIX}LLVM-2.9${CMAKE_SHARED_LIBRARY_SUFFIX}
 )
 
@@ -44,9 +44,9 @@ ADD_PLUGIN(LLVM
     QT_DEPENDENCIES
         QtCore
     EXTERNAL_DEPENDENCIES_DIR
-        ${LLVM_LIBS_DIR}
+        ${LLVM_LIB_DIR}
     EXTERNAL_DEPENDENCIES
-        ${LLVM_LIBS}
+        ${LLVM_LIB}
 )
 
 # Package the plugin's external dependencies
@@ -54,19 +54,15 @@ ADD_PLUGIN(LLVM
 #       external dependency may have dependencies of its own
 
 IF(WIN32)
-    # The LLVM libraries
+    # Copy the LLVM library to the build and build/bin folders, so we can
+    # test the LLVM plugin without first having to deploy OpenCOR
 
-    FOREACH(LLVM_LIB ${LLVM_LIBS})
-        # Copy the LLVM library to the build and build/bin folders, so we can
-        # test the LLVM plugin without first having to deploy OpenCOR
+    COPY_FILE_TO_BUILD_DIR(. ${LLVM_LIB_DIR}/${LLVM_LIB})
+    COPY_FILE_TO_BUILD_DIR(bin ${LLVM_LIB_DIR}/${LLVM_LIB})
 
-        COPY_FILE_TO_BUILD_DIR(. ${LLVM_LIBS_DIR}/${LLVM_LIB})
-        COPY_FILE_TO_BUILD_DIR(bin ${LLVM_LIBS_DIR}/${LLVM_LIB})
+    # Install the LLVM library
 
-        # Install the LLVM library
-
-        INSTALL(FILES ${LLVM_LIBS_DIR}/${LLVM_LIB} DESTINATION bin)
-    ENDFOREACH()
+    INSTALL(FILES ${LLVM_LIB_DIR}/${LLVM_LIB} DESTINATION bin)
 
     # The libstdc++-6.dll file
     # Note: this DLL comes from the official version of MinGW (as opposed to
@@ -90,12 +86,10 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${LLVM_LIBS_DIR}
+            ${LLVM_LIB_DIR}
     )
 ELSE()
-    # The LLVM libraries
+    # LLVM library
 
-    FOREACH(LLVM_LIB ${LLVM_LIBS})
-        INSTALL(FILES ${LLVM_LIBS_DIR}/${LLVM_LIB} DESTINATION lib)
-    ENDFOREACH()
+    INSTALL(FILES ${LLVM_LIB_DIR}/${LLVM_LIB} DESTINATION lib)
 ENDIF()

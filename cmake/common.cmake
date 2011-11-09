@@ -384,6 +384,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
