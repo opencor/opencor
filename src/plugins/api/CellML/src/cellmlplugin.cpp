@@ -305,6 +305,8 @@ void CellMLPlugin::initialize()
         return;
     }
 
+    qDebug("CIS information: The model was properly compiled and is now going to be run.");
+
     iface::cellml_services::ODESolverRun *odeSolverRun = cis->createODEIntegrationRun(compiledModel);
 
     TestProgressObserver* progressObserver = new TestProgressObserver(compiledModel);
