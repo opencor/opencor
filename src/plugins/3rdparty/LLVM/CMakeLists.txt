@@ -63,21 +63,6 @@ IF(WIN32)
     # Install the LLVM library
 
     INSTALL(FILES ${LLVM_LIB_DIR}/${LLVM_LIB} DESTINATION bin)
-
-    # The libstdc++-6.dll file
-    # Note: this DLL comes from the official version of MinGW (as opposed to
-    #       the Qt patched version) and is the version that is required since
-    #       LLVM was built using that version of MinGW (thank god, that DLL is
-    #       not required when deploying a Qt application, so we can safely
-    #       deploy it to get the LLVM plugin to work)
-#---GRY--- NEED TO CHECK WHETHER libstdc++-6.dll IS REQUIRED FOR LLVM...
-
-#    SET(LIBSTDC++-6_FILE ${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
-
-#    COPY_FILE_TO_BUILD_DIR(. ${LIBSTDC++-6_FILE})
-#    COPY_FILE_TO_BUILD_DIR(bin ${LIBSTDC++-6_FILE})
-
-#    INSTALL(FILES ${LIBSTDC++-6_FILE} DESTINATION bin)
 ELSEIF(APPLE)
     # Deploy the LLVM libraries together with their respective LLVM
     # dependencies, if any
