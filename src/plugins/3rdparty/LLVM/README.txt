@@ -5,6 +5,8 @@ To build a shared version of LLVM using CMake is not possible on Windows and is 
  - Python (see http://www.python.org/download/; you want version 2.7.2 not 3.x): make sure that Python is accessible from a shell, e.g. export PATH=/c/Python27:$PATH.
 
 From there, all you need to do is get LLVM's source code (see http://www.llvm.org/releases/), unpack it and:
-    cd <LLBM-ROOT>
-    ./configure --enable-shared
+    cd <LLVM-ROOT>
+    mkdir ../LLVM-build
+    cd ../LLVM-build
+    ../<LLVM-ROOT>/configure --enable-shared --enable-optimized --enable-targets=host-only
     make
