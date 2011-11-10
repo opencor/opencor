@@ -8,5 +8,5 @@ From there, all you need to do is get LLVM's source code (see http://www.llvm.or
     cd <LLVM-ROOT>
     mkdir ../LLVM-build
     cd ../LLVM-build
-    ../<LLVM-ROOT>/configure --enable-shared --enable-targets=host
+    ../<LLVM-ROOT>/configure --disable-docs --enable-shared --enable-targets=host
     make
