@@ -29,8 +29,6 @@ public:
     explicit PreferencesWindow(QWidget *pParent = 0);
     ~PreferencesWindow();
 
-    virtual void retranslateUi();
-
 private:
     Ui::PreferencesWindow *mUi;
 };

@@ -319,6 +319,10 @@
         <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 must be restarted for your changes to be effective.</source>
         <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 doit etre relancé pour que vos changements deviennent effectifs.</translation>
     </message>
+    <message>
+        <source>Show only selectable plugins</source>
+        <translation>Montrer seulement les extensions sélectables</translation>
+    </message>
 </context>
 <context>
     <name>PreferencesWindow</name>

@@ -34,15 +34,6 @@ PreferencesWindow::~PreferencesWindow()
 
 //==============================================================================
 
-void PreferencesWindow::retranslateUi()
-{
-    // Retranslate the whole window
-
-    mUi->retranslateUi(this);
-}
-
-//==============================================================================
-
 }   // namespace OpenCOR
 
 //==============================================================================

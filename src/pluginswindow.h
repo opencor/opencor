@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "coreinterface.h"
 #include "plugininfo.h"
 
@@ -48,7 +49,7 @@ private:
 
 //==============================================================================
 
-class PluginsWindow : public QDialog
+class PluginsWindow : public QDialog, public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -57,7 +58,8 @@ public:
                            QWidget *pParent = 0);
     ~PluginsWindow();
 
-    virtual void retranslateUi();
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
 private:
     Ui::PluginsWindow *mUi;
@@ -83,7 +85,11 @@ private:
     QString toString(const PluginInfo::Version &pVersion) const;
     QString statusDescription(Plugin *pPlugin) const;
 
+    void selectFirstVisiblePlugin();
+
 private slots:
+    void on_selectablePluginsCheckBox_toggled(bool pChecked);
+
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 

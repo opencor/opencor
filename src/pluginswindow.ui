@@ -182,6 +182,16 @@
     </layout>
    </item>
    <item>
+    <widget class="QCheckBox" name="selectablePluginsCheckBox">
+     <property name="text">
+      <string>Show only selectable plugins</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLabel" name="noteLabel">
      <property name="text">
       <string>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 must be restarted for your changes to be effective.</string>

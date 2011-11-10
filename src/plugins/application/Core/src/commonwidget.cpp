@@ -55,6 +55,7 @@ void CommonWidget::updateActions()
     // Nothing to do by default...
 }
 
+#ifndef OpenCOR_MAIN
 void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
                                       const bool &pTop, const bool &pLeft,
                                       const bool &pBottom, const bool &pRight)
@@ -120,5 +121,6 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
             painter.drawLine(border.topRight(), border.bottomRight());
     }
 }
+#endif
 
 } }

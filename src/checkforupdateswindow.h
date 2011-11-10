@@ -29,8 +29,6 @@ public:
     explicit CheckForUpdatesWindow(QWidget *pParent = 0);
     ~CheckForUpdatesWindow();
 
-    virtual void retranslateUi();
-
 private:
     Ui::CheckForUpdatesWindow *mUi;
 };

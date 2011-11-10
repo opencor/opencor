@@ -34,15 +34,6 @@ CheckForUpdatesWindow::~CheckForUpdatesWindow()
 
 //==============================================================================
 
-void CheckForUpdatesWindow::retranslateUi()
-{
-    // Retranslate the whole window
-
-    mUi->retranslateUi(this);
-}
-
-//==============================================================================
-
 }   // namespace OpenCOR
 
 //==============================================================================

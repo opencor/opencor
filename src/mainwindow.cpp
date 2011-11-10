@@ -531,6 +531,8 @@ static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
 static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
 
+static const QString SettingsPlugins = "Plugins";
+
 //==============================================================================
 
 void MainWindow::loadSettings()
@@ -573,8 +575,10 @@ void MainWindow::loadSettings()
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface) {
-            mSettings->beginGroup(plugin->name());
-                guiInterface->loadSettings(mSettings);
+            mSettings->beginGroup(SettingsPlugins);
+                mSettings->beginGroup(plugin->name());
+                    guiInterface->loadSettings(mSettings);
+                mSettings->endGroup();
             mSettings->endGroup();
         }
     }
@@ -607,8 +611,10 @@ void MainWindow::saveSettings() const
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface) {
-            mSettings->beginGroup(plugin->name());
-                guiInterface->saveSettings(mSettings);
+            mSettings->beginGroup(SettingsPlugins);
+                mSettings->beginGroup(plugin->name());
+                    guiInterface->saveSettings(mSettings);
+                mSettings->endGroup();
             mSettings->endGroup();
         }
     }
@@ -938,7 +944,11 @@ void MainWindow::on_actionPlugins_triggered()
 
         OpenCOR::PluginsWindow pluginsWindow(mPluginManager, this);
 
-        pluginsWindow.exec();
+        mSettings->beginGroup(pluginsWindow.objectName());
+            pluginsWindow.loadSettings(mSettings);
+            pluginsWindow.exec();
+            pluginsWindow.saveSettings(mSettings);
+        mSettings->endGroup();
     } else {
         // There are no plugins, so...
 
