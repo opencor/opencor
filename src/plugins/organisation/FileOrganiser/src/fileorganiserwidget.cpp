@@ -1,4 +1,10 @@
+//==============================================================================
+// File organiser widget
+//==============================================================================
+
 #include "fileorganiserwidget.h"
+
+//==============================================================================
 
 #include <QDir>
 #include <QFileInfo>
@@ -6,13 +12,19 @@
 #include <QSettings>
 #include <QUrl>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace FileOrganiser {
+
+//==============================================================================
 
 static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
 static const QString ExpandedFolderIcon  = ":oxygen/actions/document-open-folder.png";
 static const QString FileIcon            = ":oxygen/mimetypes/application-x-zerosize.png";
 static const QString DeletedFileIcon     = ":oxygen/status/image-missing.png";
+
+//==============================================================================
 
 QStringList FileOrganiserModel::mimeTypes() const
 {
@@ -20,6 +32,8 @@ QStringList FileOrganiserModel::mimeTypes() const
 
     return QStringList() << Core::FileSystemMimeType << FileOrganiserMimeType;
 }
+
+//==============================================================================
 
 void FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
                                              QDataStream &pStream,
@@ -43,6 +57,8 @@ void FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
     }
 }
 
+//==============================================================================
+
 QByteArray FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex) const
 {
     // Encode the hierarchy data
@@ -54,6 +70,8 @@ QByteArray FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex) co
 
     return res;
 }
+
+//==============================================================================
 
 QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
 {
@@ -81,6 +99,8 @@ QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
     return res;
 }
 
+//==============================================================================
+
 QModelIndex FileOrganiserModel::decodeHierarchyData(QDataStream &pStream) const
 {
     // Decode the hierarchy data
@@ -107,6 +127,8 @@ QModelIndex FileOrganiserModel::decodeHierarchyData(QDataStream &pStream) const
     return indexFromItem(crtItem);
 }
 
+//==============================================================================
+
 QModelIndex FileOrganiserModel::decodeHierarchyData(QByteArray &pData) const
 {
     // Decode the hierarchy data
@@ -115,6 +137,8 @@ QModelIndex FileOrganiserModel::decodeHierarchyData(QByteArray &pData) const
 
     return decodeHierarchyData(stream);
 }
+
+//==============================================================================
 
 QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
 {
@@ -141,6 +165,8 @@ QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
 
     return res;
 }
+
+//==============================================================================
 
 QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
 {
@@ -174,6 +200,8 @@ QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
     return res;
 }
 
+//==============================================================================
+
 QString FileOrganiserModel::filePath(const QModelIndex &pFileIndex) const
 {
     // Return the file path of pFileIndex, if it exists and corresponds to a
@@ -186,6 +214,8 @@ QString FileOrganiserModel::filePath(const QModelIndex &pFileIndex) const
     else
         return QString();
 }
+
+//==============================================================================
 
 FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
                                          QWidget *pParent) :
@@ -221,6 +251,8 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
             this, SLOT(fileDeleted(const QString &)));
 }
 
+//==============================================================================
+
 FileOrganiserWidget::~FileOrganiserWidget()
 {
     // Delete some internal objects
@@ -229,8 +261,12 @@ FileOrganiserWidget::~FileOrganiserWidget()
     delete mDataModel;
 }
 
+//==============================================================================
+
 static const QString SettingsDataModel    = "DataModel";
 static const QString SettingsSelectedItem = "SelectedItem";
+
+//==============================================================================
 
 void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
                                            QStandardItem *pParentItem)
@@ -319,6 +355,8 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
     }
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the data model
@@ -337,6 +375,8 @@ void FileOrganiserWidget::loadSettings(QSettings *pSettings)
 
     resizeToContents();
 }
+
+//==============================================================================
 
 void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
                                            QStandardItem *pItem,
@@ -385,6 +425,8 @@ void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
         saveItemSettings(pSettings, pItem->child(i), childParentItemIndex);
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the data model
@@ -417,6 +459,8 @@ void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
                                                                                   QModelIndex()));
 }
 
+//==============================================================================
+
 QSize FileOrganiserWidget::sizeHint() const
 {
     // Suggest a default size for the file organiser widget
@@ -425,6 +469,8 @@ QSize FileOrganiserWidget::sizeHint() const
 
     return defaultSize(0.15);
 }
+
+//==============================================================================
 
 bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
 {
@@ -447,6 +493,8 @@ bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
     return TreeView::viewportEvent(pEvent);
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are dropping
@@ -458,6 +506,8 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     else
         pEvent->ignore();
 }
+
+//==============================================================================
 
 void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
@@ -506,6 +556,8 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     else
         pEvent->ignore();
 }
+
+//==============================================================================
 
 void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 {
@@ -608,6 +660,8 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
     setState(QAbstractItemView::NoState);
 }
 
+//==============================================================================
+
 bool FileOrganiserWidget::parentIndexExists(const QModelIndex &pIndex,
                                             const QModelIndexList &pIndexes) const
 {
@@ -635,6 +689,8 @@ bool FileOrganiserWidget::parentIndexExists(const QModelIndex &pIndex,
         return false;
     }
 }
+
+//==============================================================================
 
 QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pIndexes) const
 {
@@ -714,6 +770,8 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
     return res;
 }
 
+//==============================================================================
+
 bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
                                             QStandardItem *pOtherItem) const
 {
@@ -740,6 +798,8 @@ bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
     }
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem) const
 {
     // Recursively backup the expanded state of the item, should it be a folder,
@@ -757,6 +817,8 @@ void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem) const
             backupExpandedInformation(pItem->child(i));
     }
 }
+
+//==============================================================================
 
 void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
 {
@@ -776,10 +838,14 @@ void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
     }
 }
 
+//==============================================================================
+
 bool FileOrganiserWidget::isFolderItem(const QModelIndex &pItemIndex) const
 {
     return mDataModel->itemFromIndex(pItemIndex)->data(Item::Folder).toBool();
 }
+
+//==============================================================================
 
 QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem) const
 {
@@ -807,6 +873,8 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem) const
 
     return res;
 }
+
+//==============================================================================
 
 bool FileOrganiserWidget::newFolder()
 {
@@ -875,6 +943,8 @@ bool FileOrganiserWidget::newFolder()
         return false;
     }
 }
+
+//==============================================================================
 
 bool FileOrganiserWidget::addFileItem(const QString &pFileName,
                                       QStandardItem *pDropItem,
@@ -971,6 +1041,8 @@ bool FileOrganiserWidget::addFileItem(const QString &pFileName,
     }
 }
 
+//==============================================================================
+
 bool FileOrganiserWidget::addFile(const QString &pFileName,
                                   QStandardItem *pDropItem,
                                   const QAbstractItemView::DropIndicatorPosition &pDropPosition)
@@ -1003,6 +1075,8 @@ bool FileOrganiserWidget::addFile(const QString &pFileName,
         return false;
     }
 }
+
+//==============================================================================
 
 bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
                                    QStandardItem *pDropItem,
@@ -1122,6 +1196,8 @@ bool FileOrganiserWidget::moveItem(QStandardItem *pItem,
     }
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::collapseEmptyFolders(QStandardItem *pFolder)
 {
     // Recursively collapse any empty child folder
@@ -1135,6 +1211,8 @@ void FileOrganiserWidget::collapseEmptyFolders(QStandardItem *pFolder)
     if ((pFolder != mDataModel->invisibleRootItem()) && !pFolder->rowCount())
         collapse(mDataModel->indexFromItem(pFolder));
 }
+
+//==============================================================================
 
 bool FileOrganiserWidget::deleteItems()
 {
@@ -1189,12 +1267,16 @@ bool FileOrganiserWidget::deleteItems()
     }
 }
 
+//==============================================================================
+
 QString FileOrganiserWidget::filePath(const QModelIndex &pFileIndex) const
 {
     // Return the file path of pFileIndex
 
     return mDataModel->filePath(pFileIndex);
 }
+
+//==============================================================================
 
 void FileOrganiserWidget::resizeToContents()
 {
@@ -1203,6 +1285,8 @@ void FileOrganiserWidget::resizeToContents()
 
     resizeColumnToContents(0);
 }
+
+//==============================================================================
 
 QStringList FileOrganiserWidget::selectedFiles() const
 {
@@ -1229,6 +1313,8 @@ QStringList FileOrganiserWidget::selectedFiles() const
     return res;
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
@@ -1254,6 +1340,8 @@ void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
         emit filesOpened(crtSelectedFiles);
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::expandedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
@@ -1265,6 +1353,8 @@ void FileOrganiserWidget::expandedFolder(const QModelIndex &pFolderIndex)
     resizeToContents();
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
@@ -1275,6 +1365,8 @@ void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 
     resizeToContents();
 }
+
+//==============================================================================
 
 void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
                                           const QString &pFileName,
@@ -1297,6 +1389,8 @@ void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
         updateFileItems(pItem->child(i), pFileName, pStatus);
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::fileContentsChanged(const QString &pFileName) const
 {
     // The contents of a file has been changed which may also mean that a file
@@ -1307,6 +1401,8 @@ void FileOrganiserWidget::fileContentsChanged(const QString &pFileName) const
                     Core::File::Changed);
 }
 
+//==============================================================================
+
 void FileOrganiserWidget::fileDeleted(const QString &pFileName) const
 {
     // A file has been deleted, so...
@@ -1315,4 +1411,11 @@ void FileOrganiserWidget::fileDeleted(const QString &pFileName) const
                     Core::File::Deleted);
 }
 
-} }
+//==============================================================================
+
+}   // namespace FileOrganiser
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

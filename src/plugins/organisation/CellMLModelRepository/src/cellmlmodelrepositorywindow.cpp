@@ -1,7 +1,15 @@
+//==============================================================================
+// CellML Model Repository window
+//==============================================================================
+
 #include "cellmlmodelrepositorywindow.h"
 #include "cellmlmodelrepositorywidget.h"
 
+//==============================================================================
+
 #include "ui_cellmlmodelrepositorywindow.h"
+
+//==============================================================================
 
 #include <QClipboard>
 #include <QMenu>
@@ -9,10 +17,16 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
+//==============================================================================
+
 #include <QJsonParser>
+
+//==============================================================================
 
 namespace OpenCOR {
 namespace CellMLModelRepository {
+
+//==============================================================================
 
 CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
@@ -54,12 +68,16 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     on_refreshButton_clicked();
 }
 
+//==============================================================================
+
 CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
 {
     // Delete the UI
 
     delete mUi;
 }
+
+//==============================================================================
 
 void CellmlModelRepositoryWindow::retranslateUi()
 {
@@ -71,6 +89,8 @@ void CellmlModelRepositoryWindow::retranslateUi()
 
     outputModelList(mModelList);
 }
+
+//==============================================================================
 
 void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
 {
@@ -121,6 +141,8 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
     mCellmlModelRepositoryWidget->output(contents);
 }
 
+//==============================================================================
+
 void CellmlModelRepositoryWindow::on_nameValue_textChanged(const QString &text)
 {
     // Generate a Web page that contains all the models which match our search
@@ -130,12 +152,16 @@ void CellmlModelRepositoryWindow::on_nameValue_textChanged(const QString &text)
                                                QRegExp::RegExp2)));
 }
 
+//==============================================================================
+
 void CellmlModelRepositoryWindow::on_actionCopy_triggered()
 {
     // Copy the current slection to the clipboard
 
     QApplication::clipboard()->setText(mCellmlModelRepositoryWidget->selectedText());
 }
+
+//==============================================================================
 
 void CellmlModelRepositoryWindow::on_refreshButton_clicked()
 {
@@ -156,6 +182,8 @@ void CellmlModelRepositoryWindow::on_refreshButton_clicked()
 
     mNetworkAccessManager->get(QNetworkRequest(QUrl("http://models.cellml.org/workspace/rest/contents.json")));
 }
+
+//==============================================================================
 
 void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 {
@@ -213,6 +241,8 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
     mUi->nameValue->setFocus();
 }
 
+//==============================================================================
+
 void CellmlModelRepositoryWindow::customContextMenu(const QPoint &) const
 {
     // Create a custom context menu for our CellML Models Repository widget
@@ -224,4 +254,11 @@ void CellmlModelRepositoryWindow::customContextMenu(const QPoint &) const
     menu.exec(QCursor::pos());
 }
 
-} }
+//==============================================================================
+
+}   // namespace CellMLModelRepository
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

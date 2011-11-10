@@ -1,19 +1,35 @@
+//==============================================================================
+// CellML Model Repository window
+//==============================================================================
+
 #ifndef CELLMLMODELREPOSITORYWINDOW_H
 #define CELLMLMODELREPOSITORYWINDOW_H
 
+//==============================================================================
+
 #include "organisationwidget.h"
+
+//==============================================================================
 
 namespace Ui {
     class CellmlModelRepositoryWindow;
 }
 
+//==============================================================================
+
 class QNetworkAccessManager;
 class QNetworkReply;
+
+//==============================================================================
 
 namespace OpenCOR {
 namespace CellMLModelRepository {
 
+//==============================================================================
+
 class CellmlModelRepositoryWidget;
+
+//==============================================================================
 
 class CellmlModelRepositoryWindow : public Core::OrganisationWidget
 {
@@ -49,6 +65,15 @@ private slots:
     void customContextMenu(const QPoint &) const;
 };
 
-} }
+//==============================================================================
+
+}   // namespace CellMLModelRepository
+}   // namespace OpenCOR
+
+//==============================================================================
 
 #endif
+
+//==============================================================================
+// End of file
+//==============================================================================

@@ -1,10 +1,20 @@
+//==============================================================================
+// Viewer window
+//==============================================================================
+
 #include "viewerwindow.h"
 #include "mmlviewerwidget.h"
 
+//==============================================================================
+
 #include "ui_viewerwindow.h"
+
+//==============================================================================
 
 namespace OpenCOR {
 namespace Viewer {
+
+//==============================================================================
 
 ViewerWindow::ViewerWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -21,12 +31,16 @@ ViewerWindow::ViewerWindow(QWidget *pParent) :
     setWidget(mMmlViewerWidget);
 }
 
+//==============================================================================
+
 ViewerWindow::~ViewerWindow()
 {
     // Delete the UI
 
     delete mUi;
 }
+
+//==============================================================================
 
 void ViewerWindow::retranslateUi()
 {
@@ -39,6 +53,8 @@ void ViewerWindow::retranslateUi()
     mMmlViewerWidget->retranslateUi();
 }
 
+//==============================================================================
+
 void ViewerWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of the viewer widget
@@ -47,6 +63,8 @@ void ViewerWindow::loadSettings(QSettings *pSettings)
         mMmlViewerWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
+
+//==============================================================================
 
 void ViewerWindow::saveSettings(QSettings *pSettings) const
 {
@@ -57,4 +75,11 @@ void ViewerWindow::saveSettings(QSettings *pSettings) const
     pSettings->endGroup();
 }
 
-} }
+//==============================================================================
+
+}   // namespace Viewer
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

@@ -1,4 +1,10 @@
+//==============================================================================
+// Help widget
+//==============================================================================
+
 #include "helpwidget.h"
+
+//==============================================================================
 
 #include <QAction>
 #include <QDesktopServices>
@@ -9,8 +15,12 @@
 #include <QTimer>
 #include <QWebHistory>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Help {
+
+//==============================================================================
 
 HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
                                    const QByteArray &pData,
@@ -31,10 +41,14 @@ HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
     QTimer::singleShot(0, this, SIGNAL(readyRead()));
 }
 
+//==============================================================================
+
 void HelpNetworkReply::abort()
 {
     // Do nothing on purpose...
 }
+
+//==============================================================================
 
 qint64 HelpNetworkReply::bytesAvailable() const
 {
@@ -42,6 +56,8 @@ qint64 HelpNetworkReply::bytesAvailable() const
 
     return mData.length()+QNetworkReply::bytesAvailable();
 }
+
+//==============================================================================
 
 qint64 HelpNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
 {
@@ -68,6 +84,8 @@ qint64 HelpNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
     return len;
 }
 
+//==============================================================================
+
 HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
                                                    QObject *pParent) :
     QNetworkAccessManager(pParent),
@@ -83,6 +101,8 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
 
     helpWidgetErrorFile.close();
 }
+
+//==============================================================================
 
 QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
                                                        const QNetworkRequest &pRequest,
@@ -109,11 +129,15 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
     return new HelpNetworkReply(pRequest, data, "text/html");
 }
 
+//==============================================================================
+
 HelpPage::HelpPage(QHelpEngine *pHelpEngine, QObject *pParent) :
     QWebPage(pParent),
     mHelpEngine(pHelpEngine)
 {
 }
+
+//==============================================================================
 
 bool HelpPage::acceptNavigationRequest(QWebFrame*,
                                        const QNetworkRequest &pRequest,
@@ -139,6 +163,8 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
         return false;
     }
 }
+
+//==============================================================================
 
 HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
                        const QUrl &pHomePage, QWidget *pParent) :
@@ -193,6 +219,8 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
     gotoHomePage();
 }
 
+//==============================================================================
+
 void HelpWidget::retranslateUi()
 {
     // Retranslate the current page, but only if it is the error page since a
@@ -202,7 +230,11 @@ void HelpWidget::retranslateUi()
         reload();
 }
 
+//==============================================================================
+
 static const QString SettingsZoomLevel = "ZoomLevel";
+
+//==============================================================================
 
 void HelpWidget::loadSettings(QSettings *pSettings)
 {
@@ -212,12 +244,16 @@ void HelpWidget::loadSettings(QSettings *pSettings)
                                   defaultZoomLevel()).toInt());
 }
 
+//==============================================================================
+
 void HelpWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the text size multiplier
 
     pSettings->setValue(SettingsZoomLevel, zoomLevel());
 }
+
+//==============================================================================
 
 QUrl HelpWidget::homePage() const
 {
@@ -226,12 +262,16 @@ QUrl HelpWidget::homePage() const
     return mHomePage;
 }
 
+//==============================================================================
+
 void HelpWidget::gotoHomePage()
 {
     // Go to the home page
 
     load(mHomePage);
 }
+
+//==============================================================================
 
 bool HelpWidget::isBackAvailable() const
 {
@@ -240,12 +280,16 @@ bool HelpWidget::isBackAvailable() const
     return mBackAvailable;
 }
 
+//==============================================================================
+
 bool HelpWidget::isForwardAvailable() const
 {
     // Return whether we can go to the next help or not
 
     return mForwardAvailable;
 }
+
+//==============================================================================
 
 int HelpWidget::minimumZoomLevel() const
 {
@@ -254,12 +298,16 @@ int HelpWidget::minimumZoomLevel() const
     return 1;
 }
 
+//==============================================================================
+
 int HelpWidget::defaultZoomLevel() const
 {
     // Return the default zoom level
 
     return 9;
 }
+
+//==============================================================================
 
 void HelpWidget::resetZoom()
 {
@@ -268,6 +316,8 @@ void HelpWidget::resetZoom()
     setZoomLevel(defaultZoomLevel());
 }
 
+//==============================================================================
+
 void HelpWidget::zoomIn()
 {
     // Zoom in the help page contents
@@ -275,12 +325,16 @@ void HelpWidget::zoomIn()
     setZoomLevel(++mZoomLevel);
 }
 
+//==============================================================================
+
 void HelpWidget::zoomOut()
 {
     // Zoom out the help page contents
 
     setZoomLevel(qMax(minimumZoomLevel(), --mZoomLevel));
 }
+
+//==============================================================================
 
 void HelpWidget::setZoomLevel(const int &pZoomLevel)
 {
@@ -293,12 +347,16 @@ void HelpWidget::setZoomLevel(const int &pZoomLevel)
     emit zoomLevelChanged(mZoomLevel);
 }
 
+//==============================================================================
+
 int HelpWidget::zoomLevel() const
 {
     // Return the current zoom level for the help page contents
 
     return mZoomLevel;
 }
+
+//==============================================================================
 
 void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
@@ -327,6 +385,8 @@ void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         QWebView::mouseReleaseEvent(pEvent);
     }
 }
+
+//==============================================================================
 
 void HelpWidget::wheelEvent(QWheelEvent *pEvent)
 {
@@ -357,6 +417,8 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
     }
 }
 
+//==============================================================================
+
 QSize HelpWidget::sizeHint() const
 {
     // Suggest a default size for the help widget
@@ -365,6 +427,8 @@ QSize HelpWidget::sizeHint() const
 
     return defaultSize(0.2);
 }
+
+//==============================================================================
 
 void HelpWidget::paintEvent(QPaintEvent *pEvent)
 {
@@ -376,6 +440,8 @@ void HelpWidget::paintEvent(QPaintEvent *pEvent)
 
     drawBorderIfDocked(true, true, false, false, false);
 }
+
+//==============================================================================
 
 void HelpWidget::webPageChanged()
 {
@@ -411,4 +477,11 @@ void HelpWidget::webPageChanged()
     }
 }
 
-} }
+//==============================================================================
+
+}   // namespace Help
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

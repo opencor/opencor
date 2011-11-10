@@ -1,10 +1,20 @@
+//==============================================================================
+// Core utilities
+//==============================================================================
+
 #include "coreutils.h"
+
+//==============================================================================
 
 #include <QFile>
 #include <QResource>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
 
 QByteArray resourceAsByteArray(const QString &pResource)
 {
@@ -33,6 +43,8 @@ QByteArray resourceAsByteArray(const QString &pResource)
     }
 }
 
+//==============================================================================
+
 void saveResourceAs(const QString &pResource, const QString &pFilename)
 {
     if (QResource(pResource).isValid()) {
@@ -47,4 +59,11 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
     }
 }
 
-} }
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

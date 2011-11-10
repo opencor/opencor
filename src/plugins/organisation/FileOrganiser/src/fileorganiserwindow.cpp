@@ -1,14 +1,26 @@
+//==============================================================================
+// File organiser window
+//==============================================================================
+
 #include "docktoolbar.h"
 #include "fileorganiserwindow.h"
 #include "fileorganiserwidget.h"
 
+//==============================================================================
+
 #include "ui_fileorganiserwindow.h"
+
+//==============================================================================
 
 #include <QMenu>
 #include <QSettings>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace FileOrganiser {
+
+//==============================================================================
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
@@ -51,12 +63,16 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
             this, SLOT(needUpdateActions()));
 }
 
+//==============================================================================
+
 FileOrganiserWindow::~FileOrganiserWindow()
 {
     // Delete the UI
 
     delete mUi;
 }
+
+//==============================================================================
 
 void FileOrganiserWindow::updateActions()
 {
@@ -75,6 +91,8 @@ void FileOrganiserWindow::updateActions()
     mUi->actionDelete->setEnabled(nbOfSelectedIndexes >= 1);
 }
 
+//==============================================================================
+
 void FileOrganiserWindow::retranslateUi()
 {
     // Retranslate the whole window
@@ -85,6 +103,8 @@ void FileOrganiserWindow::retranslateUi()
 
     mFileOrganiserWidget->retranslateUi();
 }
+
+//==============================================================================
 
 void FileOrganiserWindow::loadSettings(QSettings *pSettings)
 {
@@ -99,6 +119,8 @@ void FileOrganiserWindow::loadSettings(QSettings *pSettings)
     updateActions();
 }
 
+//==============================================================================
+
 void FileOrganiserWindow::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the settings of the file organiser widget
@@ -108,6 +130,8 @@ void FileOrganiserWindow::saveSettings(QSettings *pSettings) const
     pSettings->endGroup();
 }
 
+//==============================================================================
+
 void FileOrganiserWindow::on_actionNew_triggered()
 {
     // Create a new folder
@@ -115,12 +139,16 @@ void FileOrganiserWindow::on_actionNew_triggered()
     mFileOrganiserWidget->newFolder();
 }
 
+//==============================================================================
+
 void FileOrganiserWindow::on_actionDelete_triggered()
 {
     // Remove the current item(s)
 
     mFileOrganiserWidget->deleteItems();
 }
+
+//==============================================================================
 
 void FileOrganiserWindow::customContextMenu(const QPoint &) const
 {
@@ -134,6 +162,8 @@ void FileOrganiserWindow::customContextMenu(const QPoint &) const
 
     menu.exec(QCursor::pos());
 }
+
+//==============================================================================
 
 void FileOrganiserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
 {
@@ -149,6 +179,8 @@ void FileOrganiserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
         emit filesOpened(QStringList() << fileName);
 }
 
+//==============================================================================
+
 void FileOrganiserWindow::needUpdateActions()
 {
     // Something requires the actions to be udpated
@@ -156,4 +188,11 @@ void FileOrganiserWindow::needUpdateActions()
     updateActions();
 }
 
-} }
+//==============================================================================
+
+}   // namespace FileOrganiser
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

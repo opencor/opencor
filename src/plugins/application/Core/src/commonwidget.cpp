@@ -1,5 +1,11 @@
+//==============================================================================
+// Common widget
+//==============================================================================
+
 #include "commonwidget.h"
 #include "dockwidget.h"
+
+//==============================================================================
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -8,13 +14,19 @@
 #include <QPen>
 #include <QWidget>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
 
 CommonWidget::CommonWidget(QWidget *pParent) :
     mParent(pParent)
 {
 }
+
+//==============================================================================
 
 CommonWidget::CommonWidget(const QString &pName, QWidget *pWidget,
                            QWidget *pParent) :
@@ -24,6 +36,8 @@ CommonWidget::CommonWidget(const QString &pName, QWidget *pWidget,
 
     pWidget->setObjectName(pName);
 }
+
+//==============================================================================
 
 QSize CommonWidget::defaultSize(const double &pRatio) const
 {
@@ -35,25 +49,35 @@ QSize CommonWidget::defaultSize(const double &pRatio) const
                  pRatio*desktopGeometry.height());
 }
 
+//==============================================================================
+
 void CommonWidget::retranslateUi()
 {
     // Nothing to do by default...
 }
+
+//==============================================================================
 
 void CommonWidget::loadSettings(QSettings *)
 {
     // Nothing to do by default...
 }
 
+//==============================================================================
+
 void CommonWidget::saveSettings(QSettings *) const
 {
     // Nothing to do by default...
 }
 
+//==============================================================================
+
 void CommonWidget::updateActions()
 {
     // Nothing to do by default...
 }
+
+//==============================================================================
 
 #ifndef OpenCOR_MAIN
 void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
@@ -123,4 +147,11 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
 }
 #endif
 
-} }
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

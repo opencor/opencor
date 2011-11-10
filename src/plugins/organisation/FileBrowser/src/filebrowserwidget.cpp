@@ -1,4 +1,10 @@
+//==============================================================================
+// File browser widget
+//==============================================================================
+
 #include "filebrowserwidget.h"
+
+//==============================================================================
 
 #include <QApplication>
 #include <QDesktopServices>
@@ -8,8 +14,12 @@
 #include <QSettings>
 #include <QUrl>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace FileBrowser {
+
+//==============================================================================
 
 FileBrowserModel::FileBrowserModel(QObject *pParent) :
     QFileSystemModel(pParent)
@@ -18,6 +28,8 @@ FileBrowserModel::FileBrowserModel(QObject *pParent) :
 
     setRootPath("");
 }
+
+//==============================================================================
 
 Qt::ItemFlags FileBrowserModel::flags(const QModelIndex &pIndex) const
 {
@@ -36,6 +48,8 @@ Qt::ItemFlags FileBrowserModel::flags(const QModelIndex &pIndex) const
 
     return res;
 }
+
+//==============================================================================
 
 FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     TreeView(pName, this, pParent),
@@ -60,15 +74,21 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
             this, SLOT(directoryLoaded(const QString &)));
 }
 
+//==============================================================================
+
 FileBrowserWidget::~FileBrowserWidget()
 {
     delete mDataModel;
 }
 
+//==============================================================================
+
 static const QString SettingsColumnWidth = "ColumnWidth";
 static const QString SettingsInitialPath = "InitialPath";
 static const QString SettingsSortColumn  = "SortColumn";
 static const QString SettingsSortOrder   = "SortOrder";
+
+//==============================================================================
 
 void FileBrowserWidget::loadSettings(QSettings *pSettings)
 {
@@ -166,6 +186,8 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
         setCurrentIndex(mDataModel->index(mInitPath));
 }
 
+//==============================================================================
+
 void FileBrowserWidget::saveSettings(QSettings *pSettings) const
 {
     // Retrieve the width of each column
@@ -186,6 +208,8 @@ void FileBrowserWidget::saveSettings(QSettings *pSettings) const
                         mDataModel->filePath(currentIndex()));
 }
 
+//==============================================================================
+
 QSize FileBrowserWidget::sizeHint() const
 {
     // Suggest a default size for the file browser widget
@@ -194,6 +218,8 @@ QSize FileBrowserWidget::sizeHint() const
 
     return defaultSize(0.15);
 }
+
+//==============================================================================
 
 bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 {
@@ -210,6 +236,8 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 
     return TreeView::viewportEvent(pEvent);
 }
+
+//==============================================================================
 
 QStringList FileBrowserWidget::selectedFiles() const
 {
@@ -249,6 +277,8 @@ QStringList FileBrowserWidget::selectedFiles() const
     return res;
 }
 
+//==============================================================================
+
 void FileBrowserWidget::deselectFolders() const
 {
     // Check whether more than one item is selected with the view of dragging
@@ -271,6 +301,8 @@ void FileBrowserWidget::deselectFolders() const
         }
     }
 }
+
+//==============================================================================
 
 void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
 {
@@ -301,6 +333,8 @@ void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
         emit filesOpened(crtSelectedFiles);
 }
 
+//==============================================================================
+
 void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
@@ -312,6 +346,8 @@ void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
     deselectFolders();
 }
 
+//==============================================================================
+
 void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
@@ -322,6 +358,8 @@ void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
     deselectFolders();
 }
+
+//==============================================================================
 
 void FileBrowserWidget::directoryLoaded(const QString &pPath)
 {
@@ -386,6 +424,8 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
     }
 }
 
+//==============================================================================
+
 bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
 {
     // Set the current index to that of the provided path
@@ -408,12 +448,16 @@ bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
     }
 }
 
+//==============================================================================
+
 QString FileBrowserWidget::homeFolder() const
 {
     // Return the path to the home folder
 
     return QDir::homePath();
 }
+
+//==============================================================================
 
 void FileBrowserWidget::gotoHomeFolder(const bool &pExpand)
 {
@@ -422,12 +466,16 @@ void FileBrowserWidget::gotoHomeFolder(const bool &pExpand)
     gotoPath(QDir::homePath(), pExpand);
 }
 
+//==============================================================================
+
 QString FileBrowserWidget::currentPath() const
 {
     // Return the current path
 
     return mDataModel->filePath(currentIndex());
 }
+
+//==============================================================================
 
 QString FileBrowserWidget::currentPathDir() const
 {
@@ -441,6 +489,8 @@ QString FileBrowserWidget::currentPathDir() const
                crtIndexFileInfo.dir().canonicalPath();
 }
 
+//==============================================================================
+
 QString FileBrowserWidget::currentPathParent() const
 {
     // Return the current path parent, if any
@@ -452,6 +502,8 @@ QString FileBrowserWidget::currentPathParent() const
                "";
 }
 
+//==============================================================================
+
 QString FileBrowserWidget::pathOf(const QModelIndex &pIndex) const
 {
     // Return the file path of pIndex, if it exists
@@ -461,4 +513,11 @@ QString FileBrowserWidget::pathOf(const QModelIndex &pIndex) const
                "";
 }
 
-} }
+//==============================================================================
+
+}   // namespace FileBrowser
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

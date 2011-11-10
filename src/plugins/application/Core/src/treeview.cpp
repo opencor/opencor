@@ -1,9 +1,19 @@
+//==============================================================================
+// Enhanced tree view
+//==============================================================================
+
 #include "treeview.h"
+
+//==============================================================================
 
 #include <QDrag>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
 
 TreeView::TreeView(const QString &pName, QWidget *pWidget,
                    QWidget *pParent) :
@@ -20,6 +30,8 @@ TreeView::TreeView(const QString &pName, QWidget *pWidget,
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setUniformRowHeights(true);
 }
+
+//==============================================================================
 
 void TreeView::startDrag(Qt::DropActions pSupportedActions)
 {
@@ -128,4 +140,11 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
     }
 }
 
-} }
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

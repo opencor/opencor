@@ -1,15 +1,27 @@
+//==============================================================================
+// File browser window
+//==============================================================================
+
 #include "docktoolbar.h"
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
 
+//==============================================================================
+
 #include "ui_filebrowserwindow.h"
+
+//==============================================================================
 
 #include <QFileInfo>
 #include <QMenu>
 #include <QSettings>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace FileBrowser {
+
+//==============================================================================
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
@@ -60,12 +72,16 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
             this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 }
 
+//==============================================================================
+
 FileBrowserWindow::~FileBrowserWindow()
 {
     // Delete the UI
 
     delete mUi;
 }
+
+//==============================================================================
 
 void FileBrowserWindow::updateActions()
 {
@@ -81,6 +97,8 @@ void FileBrowserWindow::updateActions()
     mUi->actionNext->setEnabled(mNextItems.count());
 }
 
+//==============================================================================
+
 void FileBrowserWindow::retranslateUi()
 {
     // Retranslate the whole window
@@ -91,6 +109,8 @@ void FileBrowserWindow::retranslateUi()
 
     mFileBrowserWidget->retranslateUi();
 }
+
+//==============================================================================
 
 void FileBrowserWindow::loadSettings(QSettings *pSettings)
 {
@@ -116,6 +136,8 @@ void FileBrowserWindow::loadSettings(QSettings *pSettings)
     updateActions();
 }
 
+//==============================================================================
+
 void FileBrowserWindow::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the settings of the file browser widget
@@ -125,12 +147,16 @@ void FileBrowserWindow::saveSettings(QSettings *pSettings) const
     pSettings->endGroup();
 }
 
+//==============================================================================
+
 void FileBrowserWindow::on_actionHome_triggered()
 {
     // Go to the home folder (and ask for it to be expanded)
 
     mFileBrowserWidget->gotoHomeFolder(true);
 }
+
+//==============================================================================
 
 void FileBrowserWindow::on_actionParent_triggered()
 {
@@ -142,6 +168,8 @@ void FileBrowserWindow::on_actionParent_triggered()
 
     updateActions();
 }
+
+//==============================================================================
 
 void FileBrowserWindow::gotoOtherItem(QStringList &pItems,
                                       QStringList &pOtherItems)
@@ -229,15 +257,21 @@ void FileBrowserWindow::gotoOtherItem(QStringList &pItems,
     updateActions();
 }
 
+//==============================================================================
+
 void FileBrowserWindow::on_actionPrevious_triggered()
 {
     gotoOtherItem(mPrevItems, mNextItems);
 }
 
+//==============================================================================
+
 void FileBrowserWindow::on_actionNext_triggered()
 {
     gotoOtherItem(mNextItems, mPrevItems);
 }
+
+//==============================================================================
 
 void FileBrowserWindow::updateItems(const QString &pItemPath,
                                     QStringList &pItems) const
@@ -274,6 +308,8 @@ void FileBrowserWindow::updateItems(const QString &pItemPath,
     }
 }
 
+//==============================================================================
+
 void FileBrowserWindow::beginLoadingSettings() const
 {
     // We are about to begin loading the settings for the file browser widget,
@@ -283,6 +319,8 @@ void FileBrowserWindow::beginLoadingSettings() const
                this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 }
 
+//==============================================================================
+
 void FileBrowserWindow::endLoadingSettings() const
 {
     // We are now done loading the settings for the file browser widget, so we
@@ -291,6 +329,8 @@ void FileBrowserWindow::endLoadingSettings() const
     connect(mFileBrowserWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 }
+
+//==============================================================================
 
 void FileBrowserWindow::customContextMenu(const QPoint &) const
 {
@@ -303,6 +343,8 @@ void FileBrowserWindow::customContextMenu(const QPoint &) const
 
     menu.exec(QCursor::pos());
 }
+
+//==============================================================================
 
 void FileBrowserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
 {
@@ -334,6 +376,8 @@ void FileBrowserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
     }
 }
 
+//==============================================================================
+
 void FileBrowserWindow::itemChanged(const QModelIndex &,
                                     const QModelIndex &pPrevItem)
 {
@@ -351,4 +395,11 @@ void FileBrowserWindow::itemChanged(const QModelIndex &,
     updateActions();
 }
 
-} }
+//==============================================================================
+
+}   // namespace FileBrowser
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

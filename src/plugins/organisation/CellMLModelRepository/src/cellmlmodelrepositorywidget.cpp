@@ -1,11 +1,21 @@
+//==============================================================================
+// CellML Model Repository widget
+//==============================================================================
+
 #include "cellmlmodelrepositorywidget.h"
+
+//==============================================================================
 
 #include <QDesktopServices>
 #include <QFile>
 #include <QPaintEvent>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLModelRepository {
+
+//==============================================================================
 
 CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
                                                          QWidget *pParent) :
@@ -52,6 +62,8 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(const QString &pName,
     cellmlModelRepositoryWidgetOutputFile.close();
 }
 
+//==============================================================================
+
 QSize CellmlModelRepositoryWidget::sizeHint() const
 {
     // Suggest a default size for the CellML Model Repository widget
@@ -61,6 +73,8 @@ QSize CellmlModelRepositoryWidget::sizeHint() const
 
     return defaultSize(0.15);
 }
+
+//==============================================================================
 
 void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
 {
@@ -73,12 +87,16 @@ void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
     drawBorderIfDocked(true, true, false, false, false);
 }
 
+//==============================================================================
+
 void CellmlModelRepositoryWidget::output(const QString &pOutput)
 {
     // Set the page to contain pOutput using our output template
 
     setHtml(mOutputTemplate.arg(pOutput));
 }
+
+//==============================================================================
 
 void CellmlModelRepositoryWidget::openLink(const QUrl &pUrl)
 {
@@ -87,4 +105,11 @@ void CellmlModelRepositoryWidget::openLink(const QUrl &pUrl)
     QDesktopServices::openUrl(pUrl);
 }
 
-} }
+//==============================================================================
+
+}   // namespace CellMLModelRepository
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

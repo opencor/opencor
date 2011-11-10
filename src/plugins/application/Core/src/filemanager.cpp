@@ -1,12 +1,22 @@
+//==============================================================================
+// File manager
+//==============================================================================
+
 #include "filemanager.h"
+
+//==============================================================================
 
 #include <QCryptographicHash>
 #include <QFileInfo>
 #include <QTextStream>
 #include <QTimer>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
 
 File::File(const QString &pFileName) :
     mFileName(pFileName),
@@ -14,12 +24,16 @@ File::File(const QString &pFileName) :
 {
 }
 
+//==============================================================================
+
 QString File::fileName() const
 {
     // Return the file name of the file
 
     return mFileName;
 }
+
+//==============================================================================
 
 File::Status File::check()
 {
@@ -50,6 +64,8 @@ File::Status File::check()
     }
 }
 
+//==============================================================================
+
 QString File::sha1() const
 {
     // Compute the SHA1 value for the file, if it still exists
@@ -74,6 +90,8 @@ QString File::sha1() const
     }
 }
 
+//==============================================================================
+
 FileManager::FileManager(const int &pTimerInterval)
 {
     // Create our timer
@@ -89,6 +107,8 @@ FileManager::FileManager(const int &pTimerInterval)
     mTimer->start(pTimerInterval);
 }
 
+//==============================================================================
+
 FileManager::~FileManager()
 {
     // Delete the timer
@@ -100,6 +120,8 @@ FileManager::~FileManager()
     foreach (File *file, mFiles)
         delete file;
 }
+
+//==============================================================================
 
 FileManager::Status FileManager::manage(const QString &pFileName)
 {
@@ -124,6 +146,8 @@ FileManager::Status FileManager::manage(const QString &pFileName)
         return DoesNotExist;
     }
 }
+
+//==============================================================================
 
 FileManager::Status FileManager::unmanage(const QString &pFileName)
 {
@@ -150,6 +174,8 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
     }
 }
 
+//==============================================================================
+
 File * FileManager::isManaged(const QString &pFileName) const
 {
     foreach (File *file, mFiles)
@@ -163,12 +189,16 @@ File * FileManager::isManaged(const QString &pFileName) const
     return 0;
 }
 
+//==============================================================================
+
 int FileManager::count() const
 {
     // Return the number of files currently being managed
 
     return mFiles.count();
 }
+
+//==============================================================================
 
 void FileManager::checkFiles()
 {
@@ -196,4 +226,11 @@ void FileManager::checkFiles()
         }
 }
 
-} }
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

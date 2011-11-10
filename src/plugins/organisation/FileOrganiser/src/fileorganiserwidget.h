@@ -1,23 +1,42 @@
+//==============================================================================
+// File organiser widget
+//==============================================================================
+
 #ifndef FILEORGANISERWIDGET_H
 #define FILEORGANISERWIDGET_H
+
+//==============================================================================
 
 #include "filemanager.h"
 #include "treeview.h"
 
+//==============================================================================
+
 #include <QStandardItemModel>
 #include <QString>
 
+//==============================================================================
+
 class QStandardItem;
+
+//==============================================================================
 
 namespace OpenCOR {
 namespace FileOrganiser {
+
+//==============================================================================
+
 namespace Item {
     static const int Folder   = Qt::UserRole;
     static const int Path     = Qt::UserRole+1;
     static const int Expanded = Qt::UserRole+2;
 }
 
+//==============================================================================
+
 static const QString FileOrganiserMimeType = "opencor/file-organiser";
+
+//==============================================================================
 
 class FileOrganiserModel : public QStandardItemModel
 {
@@ -39,6 +58,8 @@ private:
 
     QString filePath(const QModelIndex &pFileIndex) const;
 };
+
+//==============================================================================
 
 class FileOrganiserWidget : public Core::TreeView
 {
@@ -116,6 +137,15 @@ private slots:
     void fileDeleted(const QString &pFileName) const;
 };
 
-} }
+//==============================================================================
+
+}   // namespace FileOrganiser
+}   // namespace OpenCOR
+
+//==============================================================================
 
 #endif
+
+//==============================================================================
+// End of file
+//==============================================================================

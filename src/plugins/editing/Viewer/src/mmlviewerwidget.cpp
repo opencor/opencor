@@ -1,9 +1,19 @@
+//==============================================================================
+// MathML viewer widget
+//==============================================================================
+
 #include "mmlviewerwidget.h"
+
+//==============================================================================
 
 #include <QPaintEvent>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Viewer {
+
+//==============================================================================
 
 MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
     QtMmlWidget(pParent),
@@ -34,10 +44,14 @@ MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
 setContent("<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><msub><mi>i</mi><mi>Na</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>g</mi><mi>Na</mi></msub><mo>·</mo><msup><mi>m</mi><mn>3</mn></msup><mo>·</mo><mi>h</mi><mo>·</mo><msub><mi>Na</mi><mi>o</mi></msub><mo>·</mo><mfrac><msup><mi>F</mi><mn>2</mn></msup><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac><mo>·</mo><mo>(</mo><mrow><msup><mi>e</mi><mrow><mo>(</mo><mi>V</mi><mo>-</mo><msub><mi>E</mi><mn>Na</mn></msub><mo>)</mo><mo>·</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow><mo>)</mo></mrow><mrow><msup><mi>e</mi><mrow><mi>V</mi><mo>·</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow></mfrac><mo>·</mo><mi>V</mi></mrow></math>");
 }
 
+//==============================================================================
+
 MmlViewerWidget::~MmlViewerWidget()
 {
     delete mTestMmlWidget;
 }
+
+//==============================================================================
 
 bool MmlViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
                                  int *pErrorLine, int *pErrorColumn)
@@ -50,6 +64,8 @@ bool MmlViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
                                    pErrorLine, pErrorColumn);
 }
 
+//==============================================================================
+
 QSize MmlViewerWidget::sizeHint() const
 {
     // Suggest a default size for the file browser widget
@@ -58,6 +74,8 @@ QSize MmlViewerWidget::sizeHint() const
 
     return defaultSize(0.1);
 }
+
+//==============================================================================
 
 void MmlViewerWidget::paintEvent(QPaintEvent *pEvent)
 {
@@ -69,6 +87,8 @@ void MmlViewerWidget::paintEvent(QPaintEvent *pEvent)
 
     drawBorderIfDocked();
 }
+
+//==============================================================================
 
 void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
 {
@@ -93,4 +113,11 @@ void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
     //       size...
 }
 
-} }
+//==============================================================================
+
+}   // namespace Viewer
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

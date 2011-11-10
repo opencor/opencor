@@ -1,8 +1,16 @@
+//==============================================================================
+// Central widget
+//==============================================================================
+
 #include "centralwidget.h"
 #include "filemanager.h"
 #include "plugin.h"
 
+//==============================================================================
+
 #include "ui_centralwidget.h"
+
+//==============================================================================
 
 #include <QDir>
 #include <QDragEnterEvent>
@@ -13,8 +21,12 @@
 #include <QStackedWidget>
 #include <QUrl>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
 
 CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
@@ -153,6 +165,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
             this, SLOT(updateGui()));
 }
 
+//==============================================================================
+
 CentralWidget::~CentralWidget()
 {
     // Close all the files
@@ -164,6 +178,8 @@ CentralWidget::~CentralWidget()
     delete mFileManager;
     delete mUi;
 }
+
+//==============================================================================
 
 void CentralWidget::retranslateUi()
 {
@@ -196,8 +212,12 @@ void CentralWidget::retranslateUi()
     updateNoViewMsg();
 }
 
+//==============================================================================
+
 static const QString SettingsOpenedFiles = "OpenedFiles";
 static const QString SettingsActiveFile  = "ActiveFile";
+
+//==============================================================================
 
 void CentralWidget::loadSettings(QSettings *pSettings)
 {
@@ -218,6 +238,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         activateFile(openedFiles.at(pSettings->value(SettingsActiveFile).toInt()));
 }
 
+//==============================================================================
+
 void CentralWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the files that are opened
@@ -233,6 +255,8 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsActiveFile, mFiles->currentIndex());
 }
+
+//==============================================================================
 
 bool CentralWidget::openFile(const QString &pFileName)
 {
@@ -279,6 +303,8 @@ bool CentralWidget::openFile(const QString &pFileName)
     return true;
 }
 
+//==============================================================================
+
 void CentralWidget::openFiles(const QStringList &pFileNames)
 {
     // Open the various files
@@ -286,6 +312,8 @@ void CentralWidget::openFiles(const QStringList &pFileNames)
     for (int i = 0; i < pFileNames.count(); ++i)
         openFile(pFileNames.at(i));
 }
+
+//==============================================================================
 
 bool CentralWidget::closeFile(const int &pIndex)
 {
@@ -326,12 +354,16 @@ bool CentralWidget::closeFile(const int &pIndex)
     }
 }
 
+//==============================================================================
+
 void CentralWidget::closeAllFiles()
 {
     // Close all the files
 
     while (closeFile()) {}
 }
+
+//==============================================================================
 
 bool CentralWidget::activateFile(const QString &pFileName)
 {
@@ -357,6 +389,8 @@ bool CentralWidget::activateFile(const QString &pFileName)
     return false;
 }
 
+//==============================================================================
+
 void CentralWidget::fileSelected(const int &pIndex)
 {
     // Let people know that a file has been selected
@@ -364,12 +398,16 @@ void CentralWidget::fileSelected(const int &pIndex)
     emit fileSelected(mFiles->tabToolTip(pIndex));
 }
 
+//==============================================================================
+
 int CentralWidget::nbOfFilesOpened() const
 {
     // Return the number of files currently opened
 
     return mFiles->count();
 }
+
+//==============================================================================
 
 QString CentralWidget::activeFileName() const
 {
@@ -381,12 +419,16 @@ QString CentralWidget::activeFileName() const
         return QString();
 }
 
+//==============================================================================
+
 bool CentralWidget::isModeEnabled(const GuiViewSettings::Mode &pMode) const
 {
     // Return whether a particular mode is enabled
 
     return mModeEnabled.contains(pMode);
 }
+
+//==============================================================================
 
 int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
 {
@@ -416,6 +458,8 @@ int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
     }
 }
 
+//==============================================================================
+
 void CentralWidget::addMode(const GuiViewSettings::Mode &pMode)
 {
     if (!mModeEnabled.value(pMode)) {
@@ -426,6 +470,8 @@ void CentralWidget::addMode(const GuiViewSettings::Mode &pMode)
         mModeEnabled.insert(pMode, true);
     }
 }
+
+//==============================================================================
 
 void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 {
@@ -467,6 +513,8 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
     }
 }
 
+//==============================================================================
+
 void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if at least one mode
@@ -484,6 +532,8 @@ void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
         pEvent->ignore();
 }
 
+//==============================================================================
+
 void CentralWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
     // Accept the proposed action for the event
@@ -491,6 +541,8 @@ void CentralWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
     pEvent->acceptProposedAction();
 }
+
+//==============================================================================
 
 void CentralWidget::dropEvent(QDropEvent *pEvent)
 {
@@ -534,6 +586,8 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
     pEvent->acceptProposedAction();
 }
+
+//==============================================================================
 
 void CentralWidget::paintEvent(QPaintEvent *pEvent)
 {
@@ -580,6 +634,8 @@ void CentralWidget::paintEvent(QPaintEvent *pEvent)
         QWidget::paintEvent(pEvent);
     }
 }
+
+//==============================================================================
 
 void CentralWidget::updateGui()
 {
@@ -657,6 +713,8 @@ void CentralWidget::updateGui()
     }
 }
 
+//==============================================================================
+
 QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
                                    const bool &pMovable,
                                    const bool &pTabsClosable)
@@ -680,6 +738,8 @@ QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
 
     return res;
 }
+
+//==============================================================================
 
 void CentralWidget::updateNoViewMsg()
 {
@@ -709,4 +769,11 @@ void CentralWidget::updateNoViewMsg()
     mNoViewMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not currently support this type of file...").arg(viewName));
 }
 
-} }
+//==============================================================================
+
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

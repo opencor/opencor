@@ -1,9 +1,17 @@
+//==============================================================================
+// Help window
+//==============================================================================
+
 #include "coreutils.h"
 #include "docktoolbar.h"
 #include "helpwindow.h"
 #include "helpwidget.h"
 
+//==============================================================================
+
 #include "ui_helpwindow.h"
+
+//==============================================================================
 
 #include <QClipboard>
 #include <QDir>
@@ -13,10 +21,16 @@
 #include <QPrinter>
 #include <QSettings>
 
+//==============================================================================
+
 namespace OpenCOR {
 namespace Help {
 
+//==============================================================================
+
 static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/user/index.html";
+
+//==============================================================================
 
 HelpWindow::HelpWindow(QWidget *pParent) :
     DockWidget(pParent),
@@ -97,6 +111,8 @@ HelpWindow::HelpWindow(QWidget *pParent) :
             this, SLOT(needUpdateActions()));
 }
 
+//==============================================================================
+
 HelpWindow::~HelpWindow()
 {
     // Delete some internal objects
@@ -109,6 +125,8 @@ HelpWindow::~HelpWindow()
     QFile(mQchFileName).remove();
     QFile(mQhcFileName).remove();
 }
+
+//==============================================================================
 
 void HelpWindow::updateActions()
 {
@@ -126,6 +144,8 @@ void HelpWindow::updateActions()
     mUi->actionZoomOut->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->minimumZoomLevel());
 }
 
+//==============================================================================
+
 void HelpWindow::retranslateUi()
 {
     // Retranslate the whole window
@@ -137,6 +157,8 @@ void HelpWindow::retranslateUi()
     mHelpWidget->retranslateUi();
 }
 
+//==============================================================================
+
 void HelpWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of the help widget
@@ -145,6 +167,8 @@ void HelpWindow::loadSettings(QSettings *pSettings)
         mHelpWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
+
+//==============================================================================
 
 void HelpWindow::saveSettings(QSettings *pSettings) const
 {
@@ -155,12 +179,16 @@ void HelpWindow::saveSettings(QSettings *pSettings) const
     pSettings->endGroup();
 }
 
+//==============================================================================
+
 void HelpWindow::gotoHomePage() const
 {
     // Go to the home page
 
     mHelpWidget->gotoHomePage();
 }
+
+//==============================================================================
 
 int HelpWindow::defaultZoomLevel() const
 {
@@ -169,12 +197,16 @@ int HelpWindow::defaultZoomLevel() const
     return mHelpWidget->defaultZoomLevel();
 }
 
+//==============================================================================
+
 void HelpWindow::setZoomLevel(const int &pZoomLevel) const
 {
     // Set the zoom level for the help widget
 
     mHelpWidget->setZoomLevel(pZoomLevel);
 }
+
+//==============================================================================
 
 int HelpWindow::zoomLevel() const
 {
@@ -183,12 +215,16 @@ int HelpWindow::zoomLevel() const
     return mHelpWidget->zoomLevel();
 }
 
+//==============================================================================
+
 void HelpWindow::on_actionHome_triggered()
 {
     // Go to the home page
 
     mHelpWidget->gotoHomePage();
 }
+
+//==============================================================================
 
 void HelpWindow::on_actionBack_triggered()
 {
@@ -197,12 +233,16 @@ void HelpWindow::on_actionBack_triggered()
     mHelpWidget->back();
 }
 
+//==============================================================================
+
 void HelpWindow::on_actionForward_triggered()
 {
     // Go to the next help page
 
     mHelpWidget->forward();
 }
+
+//==============================================================================
 
 void HelpWindow::on_actionCopy_triggered()
 {
@@ -211,12 +251,16 @@ void HelpWindow::on_actionCopy_triggered()
     QApplication::clipboard()->setText(mHelpWidget->selectedText());
 }
 
+//==============================================================================
+
 void HelpWindow::on_actionNormalSize_triggered()
 {
     // Reset the zoom level of the help page contents
 
     mHelpWidget->resetZoom();
 }
+
+//==============================================================================
 
 void HelpWindow::on_actionZoomIn_triggered()
 {
@@ -225,12 +269,16 @@ void HelpWindow::on_actionZoomIn_triggered()
     mHelpWidget->zoomIn();
 }
 
+//==============================================================================
+
 void HelpWindow::on_actionZoomOut_triggered()
 {
     // Zoom out the help page contents
 
     mHelpWidget->zoomOut();
 }
+
+//==============================================================================
 
 void HelpWindow::on_actionPrint_triggered()
 {
@@ -244,6 +292,8 @@ void HelpWindow::on_actionPrint_triggered()
     if ( dialog->exec() == QDialog::Accepted)
           mHelpWidget->print(&printer);
 }
+
+//==============================================================================
 
 void HelpWindow::customContextMenu(const QPoint &) const
 {
@@ -269,6 +319,8 @@ void HelpWindow::customContextMenu(const QPoint &) const
     menu.exec(QCursor::pos());
 }
 
+//==============================================================================
+
 void HelpWindow::needUpdateActions()
 {
     // Something requires the actions to be udpated
@@ -276,4 +328,11 @@ void HelpWindow::needUpdateActions()
     updateActions();
 }
 
-} }
+//==============================================================================
+
+}   // namespace Help
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================
