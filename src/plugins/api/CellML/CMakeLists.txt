@@ -74,14 +74,14 @@ IF(WIN32)
     #       required since the CellML API was built using that version of MinGW
     #       (thank god, that DLL is not required when deploying a Qt
     #       application, so we can safely deploy it to get the CellML plugin to
-    #       work)
+    #       work)...
 
-    SET(LIBSTDC++-6_FILE ${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
+    SET(DLL_FILE ${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
 
-    COPY_FILE_TO_BUILD_DIR(. ${LIBSTDC++-6_FILE})
-    COPY_FILE_TO_BUILD_DIR(bin ${LIBSTDC++-6_FILE})
+    COPY_FILE_TO_BUILD_DIR(. ${DLL_FILE})
+    COPY_FILE_TO_BUILD_DIR(bin ${DLL_FILE})
 
-    INSTALL(FILES ${LIBSTDC++-6_FILE} DESTINATION bin)
+    INSTALL(FILES ${DLL_FILE} DESTINATION bin)
 ELSEIF(APPLE)
     # Deploy the CellML libraries together with their respective CellML
     # dependencies, if any

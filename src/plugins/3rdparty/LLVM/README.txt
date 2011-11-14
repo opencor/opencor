@@ -2,11 +2,12 @@ Ideally, our LLVM plugin would work in a way similar to that of, say, the QJson 
 
 To build a shared version of LLVM using CMake is not possible on Windows and is not recommended on other operating systems (see http://llvm.org/docs/CMake.html). We therefore had to rely on LLVM's other and prefered build system: Autotools. There should not be a need for you to build LLVM. Still, should you want to build it on Linux and/or Mac OS X, then you should be fine as long as you are all set to build OpenCOR on those systems (see doc/developer/preRequirements.html). However, on Windows, your Qt environment will not be sufficient. We would therefore recommend building LLVM using a virtual machine (so as not to mess up your Qt environment) which first involves installing the following:
  - MinGW/MSYS (see http://sourceforge.net/projects/mingw/): select C++ Compiler, MSYS Basic System and MinGW Developer ToolKit in the list of components to install;
- - Python (see http://www.python.org/download/; you want version 2.7.2 not 3.x): make sure that Python is accessible from a shell, e.g. export PATH=/c/Python27:$PATH.
+ - Python (see http://www.python.org/download/; you want version 2.7.2 not 3.x): make sure that Python is accessible from a shell prompt, e.g. export PATH=/c/Python27:$PATH.
 
-From there, all you need to do is get LLVM's source code (see http://www.llvm.org/releases/), unpack it and:
-    cd <LLVM-ROOT>
-    mkdir ../LLVM-build
-    cd ../LLVM-build
-    ../<LLVM-ROOT>/configure --disable-docs --enable-shared --enable-targets=host
+From there, all you need to do is get LLVM's source code (see http://www.llvm.org/releases/) and:
+    cd <WHERE-llvm-2.9.tgz-IS>
+    tar xvzf llvm-2.9.tgz
+    mkdir llvm-build
+    cd llvm-build
+    ../llvm-2.9/configure --disable-docs --enable-shared --enable-targets=host
     make
