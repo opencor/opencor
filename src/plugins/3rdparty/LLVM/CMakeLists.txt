@@ -54,27 +54,16 @@ ADD_PLUGIN(LLVM
 #       external dependency may have dependencies of its own
 
 IF(WIN32)
-    # Copy the LLVM library to the build and build/bin folders, so we can
-    # test the LLVM plugin without first having to deploy OpenCOR
+    # LLVM library
 
-    COPY_FILE_TO_BUILD_DIR(. ${LLVM_LIB_DIR}/${LLVM_LIB})
-    COPY_FILE_TO_BUILD_DIR(bin ${LLVM_LIB_DIR}/${LLVM_LIB})
-
-    # Install the LLVM library
-
-    INSTALL(FILES ${LLVM_LIB_DIR}/${LLVM_LIB} DESTINATION bin)
+    PACKAGE_WINDOWS_BINARY_FILE(${LLVM_LIB_DIR}/${LLVM_LIB})
 
     # The libpthread-2.dll file
     # Note: this DLL comes from the official version of MinGW (as opposed to
     #       the Qt patched version which doesn't have it) and is required by
     #       LLVM...
 
-    SET(DLL_FILE ${CMAKE_SOURCE_DIR}/distrib/windows/x86/libpthread-2.dll)
-
-    COPY_FILE_TO_BUILD_DIR(. ${DLL_FILE})
-    COPY_FILE_TO_BUILD_DIR(bin ${DLL_FILE})
-
-    INSTALL(FILES ${DLL_FILE} DESTINATION bin)
+    PACKAGE_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libpthread-2.dll)
 ELSEIF(APPLE)
     # Deploy the LLVM libraries together with their respective LLVM
     # dependencies, if any

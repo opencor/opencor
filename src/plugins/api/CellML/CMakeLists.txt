@@ -57,15 +57,7 @@ IF(WIN32)
     # The CellML libraries
 
     FOREACH(CELLML_LIB ${CELLML_LIBS})
-        # Copy the CellML library to the build and build/bin folders, so we can
-        # test the CellML plugin without first having to deploy OpenCOR
-
-        COPY_FILE_TO_BUILD_DIR(. ${CELLML_LIBS_DIR}/${CELLML_LIB})
-        COPY_FILE_TO_BUILD_DIR(bin ${CELLML_LIBS_DIR}/${CELLML_LIB})
-
-        # Install the CellML library
-
-        INSTALL(FILES ${CELLML_LIBS_DIR}/${CELLML_LIB} DESTINATION bin)
+        PACKAGE_WINDOWS_BINARY_FILE(${CELLML_LIBS_DIR}/${CELLML_LIB})
     ENDFOREACH()
 
     # The libstdc++-6.dll file
@@ -76,12 +68,7 @@ IF(WIN32)
     #       application, so we can safely deploy it to get the CellML plugin to
     #       work)...
 
-    SET(DLL_FILE ${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
-
-    COPY_FILE_TO_BUILD_DIR(. ${DLL_FILE})
-    COPY_FILE_TO_BUILD_DIR(bin ${DLL_FILE})
-
-    INSTALL(FILES ${DLL_FILE} DESTINATION bin)
+    PACKAGE_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
 ELSEIF(APPLE)
     # Deploy the CellML libraries together with their respective CellML
     # dependencies, if any
