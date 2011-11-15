@@ -98,6 +98,12 @@ private:
     void updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
                         QAction *pAction);
 
+#ifdef Q_WS_WIN
+    void showSelf() const;
+#else
+    void showSelf();
+#endif
+
 public Q_SLOTS:
 #ifdef Q_WS_WIN
     void singleAppMsgRcvd(const QString &) const;

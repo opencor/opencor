@@ -198,7 +198,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     //       ourselves to the foreground when on Windows or Linux, we may as
     //       well do it on those platforms too...
 
-    raise();
+    showSelf();
 }
 
 //==============================================================================
@@ -822,17 +822,15 @@ void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &
 //==============================================================================
 
 #ifdef Q_WS_WIN
-void MainWindow::singleAppMsgRcvd(const QString &) const
+void MainWindow::showSelf() const
 #else
-void MainWindow::singleAppMsgRcvd(const QString &)
+void MainWindow::showSelf()
 #endif
 {
-    // We have just received a message from another instance of OpenCOR, so
-    // bring ourselves to the foreground
-    // Note: one would normally use activateWindow(), but depending on the
-    //       operating system it may or not bring OpenCOR to the foreground,
-    //       so... instead we do what follows, depending on the operating
-    //       system...
+    // Note: to show ourselves, one would normally use activateWindow(), but
+    //       depending on the operating system it may or not bring OpenCOR to
+    //       the foreground, so... instead we do what follows, depending on the
+    //       operating system...
 
 #ifdef Q_WS_WIN
     // Retrieve OpenCOR's window Id
@@ -880,12 +878,25 @@ void MainWindow::singleAppMsgRcvd(const QString &)
     // Do what one would normally do
 
     activateWindow();
-
     raise();   // Just to be on the safe side
     // Note: raise() never seems to be required on Mac OS X, but to use
     //       activateWindow() on its own under Linux may or not give the
     //       expected result, so...
 #endif
+}
+
+//==============================================================================
+
+#ifdef Q_WS_WIN
+void MainWindow::singleAppMsgRcvd(const QString &) const
+#else
+void MainWindow::singleAppMsgRcvd(const QString &)
+#endif
+{
+    // We have just received a message from another instance of OpenCOR, so
+    // bring ourselves to the foreground
+
+    showSelf();
 
     // Now, we must handle the arguments that were passed to OpenCOR
 

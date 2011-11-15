@@ -102,13 +102,24 @@ int main(int pArgc, char *pArgv[])
 
     res = app->exec();
 
+    // Keep track of the application file and directory paths (in case we need
+    // to restart OpenCOR)
+
+    QString appFilePath = app->applicationFilePath();
+    QString appDirPath  = app->applicationDirPath();
+
+    // Release some memory
+
+    delete win;
+    delete app;
+
     // We are done with the execution of the application, so now the question is
     // whether we need to restart or not
     // Note #1: we do this here rather than 'within' the GUI because once we
     //          have launched a new instance of OpenCOR, we want this instance
     //          of OpenCOR to finish as soon as possible which will be the case
-    //          here since all that remains to be done is to delete app and win,
-    //          and return the result of the execution of the application...
+    //          here since all that remains to be done is to return the result
+    //          of the execution of the application...
     // Note #2: ideally, we would have a do...while loop which is executed while
     //          res equals OpenCOR::NeedRestart, deleting (if necessary) and
     //          reinitialising app and win. There is, however, a bug in Qt (see
@@ -122,13 +133,7 @@ int main(int pArgc, char *pArgv[])
         // OpenCOR was originally started, since we indeed want to reset
         // everything
 
-        QProcess::startDetached(app->applicationFilePath(), QStringList(),
-                                app->applicationDirPath());
-
-    // Release some memory
-
-    delete win;
-    delete app;
+        QProcess::startDetached(appFilePath, QStringList(), appDirPath);
 
     // We are done, so...
 
