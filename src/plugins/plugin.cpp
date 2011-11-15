@@ -288,7 +288,10 @@ bool Plugin::load(const QString &pName)
     // Note: the plugin's loading requirement information is always located
     //       under ~/Plugins/<PluginName>, so to be on the safe side we use our
     //       own QSettings rather than that of MainWindow since the latter might
-    //       not point to ~ when reaching this point, so...
+    //       not point to ~ when reaching this point. Indeed, we may come here
+    //       from PluginManager::PluginManager (which points to ~) or
+    //       PluginsWindow::PluginsWindow (which points to ~/PluginsWindow),
+    //       so...
 
     QSettings settings(qApp->applicationName());
 
