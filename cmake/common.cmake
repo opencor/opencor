@@ -565,7 +565,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR DIRNAME FILENAME)
     ENDIF()
 ENDMACRO()
 
-MACRO(PACKAGE_WINDOWS_BINARY_FILE FILENAME)
+MACRO(DEPLOY_WINDOWS_BINARY_FILE FILENAME)
     # Copy the binary file to both the build and build/bin folders, so we can
     # test things without first having to deploy OpenCOR
 

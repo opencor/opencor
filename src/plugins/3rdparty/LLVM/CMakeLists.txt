@@ -49,21 +49,21 @@ ADD_PLUGIN(LLVM
         ${LLVM_LIB}
 )
 
-# Package the plugin's external dependencies
+# Deploy the plugin's external dependencies
 # Note: it must be done here since ADD_PLUGIN doesn't support the fact that an
 #       external dependency may have dependencies of its own
 
 IF(WIN32)
     # LLVM library
 
-    PACKAGE_WINDOWS_BINARY_FILE(${LLVM_LIB_DIR}/${LLVM_LIB})
+    DEPLOY_WINDOWS_BINARY_FILE(${LLVM_LIB_DIR}/${LLVM_LIB})
 
     # The libpthread-2.dll file
     # Note: this DLL comes from the official version of MinGW (as opposed to
     #       the Qt patched version which doesn't have it) and is required by
     #       LLVM...
 
-    PACKAGE_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libpthread-2.dll)
+    DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libpthread-2.dll)
 ELSEIF(APPLE)
     # Deploy the LLVM libraries together with their respective LLVM
     # dependencies, if any

@@ -49,7 +49,7 @@ ADD_PLUGIN(CellML
         ${CELLML_LIBS}
 )
 
-# Package the plugin's external dependencies
+# Deploy the plugin's external dependencies
 # Note: it must be done here since ADD_PLUGIN doesn't support the fact that an
 #       external dependency may have dependencies of its own
 
@@ -57,7 +57,7 @@ IF(WIN32)
     # The CellML libraries
 
     FOREACH(CELLML_LIB ${CELLML_LIBS})
-        PACKAGE_WINDOWS_BINARY_FILE(${CELLML_LIBS_DIR}/${CELLML_LIB})
+        DEPLOY_WINDOWS_BINARY_FILE(${CELLML_LIBS_DIR}/${CELLML_LIB})
     ENDFOREACH()
 
     # The libstdc++-6.dll file
@@ -68,7 +68,7 @@ IF(WIN32)
     #       application, so we can safely deploy it to get the CellML plugin to
     #       work)...
 
-    PACKAGE_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
+    DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
 ELSEIF(APPLE)
     # Deploy the CellML libraries together with their respective CellML
     # dependencies, if any
