@@ -1,5 +1,9 @@
 PROJECT(CoreSimulationPlugin)
 
+# Retrieve LLVM settings
+
+RETRIEVE_LLVM_SETTINGS()
+
 # Add the plugin
 
 ADD_PLUGIN(CoreSimulation
@@ -16,8 +20,7 @@ ADD_PLUGIN(CoreSimulation
     HEADERS_MOC
         src/coresimulationplugin.h
     DEFINITIONS
-        __STDC_LIMIT_MACROS      # These two definitions
-        __STDC_CONSTANT_MACROS   # are for LLVM
+        ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         ../../3rdparty/Qwt/src
 
@@ -32,6 +35,5 @@ ADD_PLUGIN(CoreSimulation
         QtSvg
         QtXml
     EXTERNAL_DEPENDENCIES
-        ${CMAKE_SHARED_LIBRARY_PREFIX}LLVM-2.9${CMAKE_SHARED_LIBRARY_SUFFIX}
-        # The above external dependency is for LLVM
+        ${LLVM_EXTERNAL_DEPENDENCIES}
 )

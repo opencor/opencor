@@ -197,11 +197,11 @@ SET(PLUGINS
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
-    SET(PLUGIN_INCLUDE_DIRS)
-    # Note: the above variable is defined here, but is actually set when
-    #       processing the CMakeLists.txt file of the plugin
 
     ADD_SUBDIRECTORY(${PLUGIN_DIR})
+    # Note: this will process the CMakeLists.txt file of the plugin resulting in
+    #       PLUGIN_INCLUDE_DIRS being set, hence we can use it below to update
+    #       our include directories
 
     FOREACH(PLUGIN_INCLUDE_DIR ${PLUGIN_INCLUDE_DIRS})
         INCLUDE_DIRECTORIES(${PLUGIN_DIR}/${PLUGIN_INCLUDE_DIR})

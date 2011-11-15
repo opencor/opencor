@@ -1,25 +1,34 @@
 PROJECT(CellMLPlugin)
 
+MACRO(RETRIEVE_CELLML_SETTINGS)
+    # Retrieve CellML settings
+
+    SET(CELLML_DEFINITIONS
+        __STDC_LIMIT_MACROS __STDC_CONSTANT_MACROS)
+
+    SET(CELLML_EXTERNAL_DEPENDENCIES
+        libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libccgs${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libceleds${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libceledsexporter${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libcevas${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libcis${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libcuses${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libmalaes${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libspros${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libsrus${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libtelicems${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libvacss${CMAKE_SHARED_LIBRARY_SUFFIX}
+        libxpath${CMAKE_SHARED_LIBRARY_SUFFIX}
+    )
+ENDMACRO()
+
 # CellML libraries
 
-SET(CELLML_LIBS_DIR ${PROJECT_SOURCE_DIR}/lib/${DISTRIB_DIR})
+SET(CELLML_EXTERNAL_DEPENDENCIES_DIR ${PROJECT_SOURCE_DIR}/lib/${DISTRIB_DIR})
 
-SET(CELLML_LIBS
-    libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libccgs${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libceleds${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libceledsexporter${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libcevas${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libcis${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libcuses${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libmalaes${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libspros${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libsrus${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libtelicems${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libvacss${CMAKE_SHARED_LIBRARY_SUFFIX}
-    libxpath${CMAKE_SHARED_LIBRARY_SUFFIX}
-)
+RETRIEVE_CELLML_SETTINGS()
 
 # Add the plugin
 
@@ -44,9 +53,9 @@ ADD_PLUGIN(CellML
         QtCore
         QtGui
     EXTERNAL_DEPENDENCIES_DIR
-        ${CELLML_LIBS_DIR}
+        ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
     EXTERNAL_DEPENDENCIES
-        ${CELLML_LIBS}
+        ${CELLML_EXTERNAL_DEPENDENCIES}
 )
 
 # Deploy the plugin's external dependencies
@@ -56,8 +65,8 @@ ADD_PLUGIN(CellML
 IF(WIN32)
     # The CellML libraries
 
-    FOREACH(CELLML_LIB ${CELLML_LIBS})
-        DEPLOY_WINDOWS_BINARY_FILE(${CELLML_LIBS_DIR}/${CELLML_LIB})
+    FOREACH(CELLML_EXTERNAL_DEPENDENCY ${CELLML_EXTERNAL_DEPENDENCIES})
+        DEPLOY_WINDOWS_BINARY_FILE(${CELLML_EXTERNAL_DEPENDENCIES_DIR}/${CELLML_EXTERNAL_DEPENDENCY})
     ENDFOREACH()
 
     # The libstdc++-6.dll file
@@ -77,7 +86,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
@@ -86,7 +95,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -99,7 +108,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
             libmalaes${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -109,7 +118,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
             libccgs${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -124,14 +133,14 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
     )
 
     DEPLOY_MAC_OS_X_LIBRARY(libcevas${CMAKE_SHARED_LIBRARY_SUFFIX}
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
@@ -140,7 +149,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
             libccgs${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -154,7 +163,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -164,7 +173,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
@@ -173,7 +182,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
@@ -182,7 +191,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
             libccgs${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -198,7 +207,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
@@ -207,7 +216,7 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libannotools${CMAKE_SHARED_LIBRARY_SUFFIX}
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -218,14 +227,14 @@ ELSEIF(APPLE)
         TYPE
             Library
         DIR
-            ${CELLML_LIBS_DIR}
+            ${CELLML_EXTERNAL_DEPENDENCIES_DIR}
         LIBRARIES
             libcellml${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
 ELSE()
     # The CellML binaries
 
-    FOREACH(CELLML_LIB ${CELLML_LIBS})
-        INSTALL(FILES ${CELLML_LIBS_DIR}/${CELLML_LIB} DESTINATION lib)
+    FOREACH(CELLML_EXTERNAL_DEPENDENCY ${CELLML_EXTERNAL_DEPENDENCIES})
+        INSTALL(FILES ${CELLML_EXTERNAL_DEPENDENCIES_DIR}/${CELLML_EXTERNAL_DEPENDENCY} DESTINATION lib)
     ENDFOREACH()
 ENDIF()
