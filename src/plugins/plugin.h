@@ -16,10 +16,6 @@
 
 //==============================================================================
 
-class QSettings;
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -36,6 +32,10 @@ namespace OpenCOR {
         static const QString PluginExtension = ".so";
     #endif
 #endif
+
+//==============================================================================
+
+static const QString SettingsPlugins = "Plugins";
 
 //==============================================================================
 
@@ -63,8 +63,11 @@ public:
                     const PluginInfo::Type &pGuiOrConsoleType,
                     const bool &pForceLoading,
                     const PluginInfo::Version &pExpectedVersion,
-                    QSettings *pSettings, const QString &pPluginsDir,
-                    const QMap<QString, Plugin *> &pMappedPlugins);
+                    const QString &pPluginsDir
+#ifndef Q_WS_WIN
+                    , const QMap<QString, Plugin *> &pMappedPlugins
+#endif
+                   );
 
     QString name() const;
     PluginInfo info() const;
@@ -77,9 +80,8 @@ public:
     static QString fileName(const QString &pDir, const QString &pName);
     static PluginInfo info(const QString &pFileName);
 
-    static bool load(QSettings *pSettings, const QString &pName);
-    static void setLoad(QSettings *pSettings, const QString &pName,
-                        const bool &pToBeLoaded);
+    static bool load(const QString &pName);
+    static void setLoad(const QString &pName, const bool &pToBeLoaded);
 
     static QStringList requiredPlugins(const QString &pPluginsDir,
                                        const QString &pName,

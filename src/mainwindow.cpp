@@ -531,8 +531,6 @@ static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
 static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
 
-static const QString SettingsPlugins = "Plugins";
-
 //==============================================================================
 
 void MainWindow::loadSettings()

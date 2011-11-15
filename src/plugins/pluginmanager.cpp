@@ -68,7 +68,7 @@ PluginManager::PluginManager(QSettings *pSettings,
 
     foreach (const QString &fileName, fileNames)
         if (   Plugin::info(fileName).manageable()
-            && Plugin::load(mSettings, Plugin::name(fileName)))
+            && Plugin::load(Plugin::name(fileName)))
             // The plugin is manageable and to be loaded, so retrieve its
             // dependencies
 
@@ -99,8 +99,11 @@ PluginManager::PluginManager(QSettings *pSettings,
         mPlugins.insert(Plugin::name(fileName),
                         new Plugin(fileName, mGuiOrConsoleType,
                                    plugins.contains(Plugin::name(fileName)),
-                                   version(), settings(), pluginsDir(),
-                                   mappedPlugins()));
+                                   version(), pluginsDir()
+#ifndef Q_WS_WIN
+                                   , mappedPlugins()
+#endif
+                                  ));
 }
 
 //==============================================================================

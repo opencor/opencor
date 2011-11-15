@@ -22,8 +22,11 @@ Plugin::Plugin(const QString &pFileName,
                const PluginInfo::Type &pGuiOrConsoleType,
                const bool &pForceLoading,
                const PluginInfo::Version &pExpectedVersion,
-               QSettings *pSettings, const QString &pPluginsDir,
-               const QMap<QString, Plugin *> &pMappedPlugins) :
+               const QString &pPluginsDir
+#ifndef Q_WS_WIN
+               , const QMap<QString, Plugin *> &pMappedPlugins
+#endif
+              ) :
     mName(name(pFileName)),
     // Note: to get the name of the plugin from its file name, we must remove
     //       the plugin prefix part from it...
@@ -50,7 +53,7 @@ Plugin::Plugin(const QString &pFileName,
         if (    (mInfo.version() == pExpectedVersion)
             && (   (mInfo.type() == PluginInfo::General)
                 || (mInfo.type() == pGuiOrConsoleType))
-            && (   (mInfo.manageable() && load(pSettings, mName))
+            && (   (mInfo.manageable() && load(mName))
                 || pForceLoading)) {
             // We are dealing with the right kind of plugin, so check that all
             // of its dependencies, if any, are loaded
@@ -279,27 +282,39 @@ static const QString SettingsLoad = "Load";
 
 //==============================================================================
 
-bool Plugin::load(QSettings *pSettings, const QString &pName)
+bool Plugin::load(const QString &pName)
 {
     // Retrieve the plugin's loading requirement
+    // Note: the plugin's loading requirement information is always located
+    //       under ~/Plugins/<PluginName>, so to be on the safe side we use our
+    //       own QSettings rather than that of MainWindow since the latter might
+    //       not point to ~ when reaching this point, so...
 
-    pSettings->beginGroup(pName);
-        bool res = pSettings->value(SettingsLoad, true).toBool();
-    pSettings->endGroup();
+    QSettings settings(qApp->applicationName());
+
+    settings.beginGroup(SettingsPlugins);
+        settings.beginGroup(pName);
+            bool res = settings.value(SettingsLoad, true).toBool();
+        settings.endGroup();
+    settings.endGroup();
 
     return res;
 }
 
 //==============================================================================
 
-void Plugin::setLoad(QSettings *pSettings, const QString &pName,
-                     const bool &pToBeLoaded)
+void Plugin::setLoad(const QString &pName, const bool &pToBeLoaded)
 {
     // Keep track of the plugin's loading requirement
+    // Note: see the Plugin::load's note...
 
-    pSettings->beginGroup(pName);
-        pSettings->setValue(SettingsLoad, pToBeLoaded);
-    pSettings->endGroup();
+    QSettings settings(qApp->applicationName());
+
+    settings.beginGroup(SettingsPlugins);
+        settings.beginGroup(pName);
+            settings.setValue(SettingsLoad, pToBeLoaded);
+        settings.endGroup();
+    settings.endGroup();
 }
 
 //==============================================================================

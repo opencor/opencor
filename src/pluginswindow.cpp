@@ -134,8 +134,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
         if (pluginItem->isCheckable()) {
             // Retrieve the loading state of the plugin
 
-            pluginItem->setCheckState((Plugin::load(mPluginManager->settings(),
-                                                    plugin->name()))?
+            pluginItem->setCheckState((Plugin::load(plugin->name()))?
                                           Qt::Checked:
                                           Qt::Unchecked);
 
@@ -562,7 +561,7 @@ void PluginsWindow::on_buttonBox_accepted()
     // Keep track of the loading state of the various manageable plugins
 
     foreach (QStandardItem *pluginItem, mManageablePlugins)
-        Plugin::setLoad(mPluginManager->settings(), pluginItem->text(),
+        Plugin::setLoad(pluginItem->text(),
                         pluginItem->checkState() == Qt::Checked);
 
     // Confirm that we accepted the changes
