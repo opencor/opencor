@@ -4,7 +4,7 @@ To build a shared version of LLVM using CMake is not possible on Windows and is 
  - MinGW/MSYS (see http://sourceforge.net/projects/mingw/): select C++ Compiler, MSYS Basic System and MinGW Developer ToolKit in the list of components to install;
  - Python (see http://www.python.org/download/; you want version 2.7.2 not 3.x): make sure that Python is accessible from a shell prompt, e.g. export PATH=/c/Python27:$PATH.
 
-From there, all you need to do is get LLVM's source code (see http://www.llvm.org/releases/) and:
+From there, all you need to do is get LLVM's source code (see http://www.llvm.org/releases/) and from a MinGW shell:
     cd <WHERE-llvm-2.9.tgz-IS>
     tar xvzf llvm-2.9.tgz
     mkdir llvm-build
