@@ -157,6 +157,7 @@ void CoreSimulationPlugin::initialize()
     // Import the result of the execution
 
     llvm::outs() << "Result: " << genericValue.IntVal << "\n";
+    llvm::outs().flush();
 
     executionEngine->freeMachineCodeForFunction(fooFunc);
 
