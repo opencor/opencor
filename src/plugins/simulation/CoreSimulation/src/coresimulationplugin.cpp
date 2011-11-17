@@ -142,7 +142,7 @@ void CoreSimulationPlugin::initialize()
 
     // Now, we can create the JIT
 
-    llvm::ExecutionEngine* executionEngine = llvm::EngineBuilder(module).create();
+    llvm::ExecutionEngine *executionEngine = llvm::EngineBuilder(module).create();
 
     llvm::outs() << "We just constructed this LLVM module:\n\n" << *module;
     llvm::outs() << "\n\nRunning foo: ";
