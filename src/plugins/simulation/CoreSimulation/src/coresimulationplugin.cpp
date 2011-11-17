@@ -159,6 +159,8 @@ void CoreSimulationPlugin::initialize()
     llvm::outs() << "Result: " << genericValue.IntVal << "\n";
     llvm::outs().flush();
 
+    // Finish things off
+
     executionEngine->freeMachineCodeForFunction(fooFunc);
 
     delete executionEngine;
