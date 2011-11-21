@@ -16,13 +16,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -30,18 +25,35 @@
 
 #include "Qsci/qscistyledtext.h"
 
+#include "Qsci/qsciscintillabase.h"
 #include "Qsci/qscistyle.h"
 
 
 // A ctor.
 QsciStyledText::QsciStyledText(const QString &text, int style)
-    : styled_text(text), style_nr(style)
+    : styled_text(text), style_nr(style), explicit_style(0)
 {
 }
 
 
 // A ctor.
 QsciStyledText::QsciStyledText(const QString &text, const QsciStyle &style)
-    : styled_text(text), style_nr(style.style())
+    : styled_text(text), style_nr(-1)
 {
+    explicit_style = new QsciStyle(style);
+}
+
+
+// Return the number of the style.
+int QsciStyledText::style() const
+{
+    return explicit_style ? explicit_style->style() : style_nr;
+}
+
+
+// Apply any explicit style to an editor.
+void QsciStyledText::apply(QsciScintillaBase *sci) const
+{
+    if (explicit_style)
+        explicit_style->apply(sci);
 }

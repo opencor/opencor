@@ -16,13 +16,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -207,6 +202,7 @@ public:
     void AlphaRectangle(PRectangle rc, int cornerSize, ColourAllocated fill,
             int alphaFill, ColourAllocated outline, int alphaOutline,
             int flags);
+    void DrawRGBAImage(PRectangle rc, int width, int height, const unsigned char *pixelsImage);
     void Ellipse(PRectangle rc, ColourAllocated fore, ColourAllocated back);
     void Copy(PRectangle rc, Point from, Surface &surfaceSource);
 
@@ -514,6 +510,20 @@ void SurfaceImpl::DrawXPM(PRectangle rc, const XPM *xpm)
     painter->drawPixmap(x, y, qpm);
 }
 
+void SurfaceImpl::DrawRGBAImage(PRectangle rc, int width, int height,
+        const unsigned char *pixelsImage)
+{
+    Q_ASSERT(painter);
+
+    int x, y;
+    const QImage *qim = reinterpret_cast<const QImage *>(pixelsImage);
+
+    x = rc.left + (rc.Width() - width) / 2;
+    y = rc.top + (rc.Height() - height) / 2;
+
+    painter->drawImage(x, y, *qim);
+}
+
 void SurfaceImpl::MeasureWidths(Font &font_, const char *s, int len,
         int *positions)
 {
@@ -522,11 +532,13 @@ void SurfaceImpl::MeasureWidths(Font &font_, const char *s, int len,
 
     // The position for each byte of a character is the offset from the start
     // where the following character should be drawn.
-    int i_byte = 0, width = 0;
+    int i_byte = 0;
 
     for (int i_char = 0; i_char < qs.length(); ++i_char)
     {
-        width += fm.width(qs.at(i_char));
+        // We can't just add the individual character widths together because
+        // of kerning.
+        int width = fm.width(qs.left(i_char + 1));
 
         if (unicodeMode)
         {

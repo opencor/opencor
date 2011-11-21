@@ -17,13 +17,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -240,9 +235,16 @@ void ListBoxQt::Sort()
 }
 
 
-void ListBoxQt::RegisterImage(int type,const char *xpm_data)
+void ListBoxQt::RegisterImage(int type, const char *xpm_data)
 {
     xset.insert(type, *reinterpret_cast<const QPixmap *>(xpm_data));
+}
+
+
+void ListBoxQt::RegisterRGBAImage(int type, int, int, const unsigned char *pixelsImage)
+{
+    xset.insert(type,
+            QPixmap::fromImage(*reinterpret_cast<const QImage *>(pixelsImage)));
 }
 
 

@@ -16,13 +16,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -40,6 +35,7 @@ extern "C++" {
 #include <Qsci/qsciglobal.h>
 
 
+class QsciScintillaBase;
 class QsciStyle;
 
 
@@ -57,15 +53,19 @@ public:
     QsciStyledText(const QString &text, const QsciStyle &style);
 
 
+    //! \internal Apply the style to a particular editor.
+    void apply(QsciScintillaBase *sci) const;
+
     //! Returns a reference to the text.
     const QString &text() const {return styled_text;}
 
     //! Returns the number of the style.
-    int style() const {return style_nr;}
+    int style() const;
 
 private:
     QString styled_text;
     int style_nr;
+    const QsciStyle *explicit_style;
 };
 
 #ifdef __APPLE__

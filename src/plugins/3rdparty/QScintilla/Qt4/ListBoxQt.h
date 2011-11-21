@@ -17,13 +17,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -63,6 +58,7 @@ public:
     virtual void GetValue(int n, char *value, int len);
     virtual void Sort();
     virtual void RegisterImage(int type, const char *xpm_data);
+    virtual void RegisterRGBAImage(int type, int width, int height, const unsigned char *pixelsImage);
     virtual void ClearRegisteredImages();
     virtual void SetDoubleClickAction(CallBackAction action, void *data);
     virtual void SetList(const char *list, char separator, char typesep);

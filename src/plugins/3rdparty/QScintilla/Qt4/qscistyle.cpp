@@ -16,13 +16,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -94,19 +89,40 @@ void QsciStyle::init(int style)
 }
 
 
+// Apply the style to a particular editor.
+void QsciStyle::apply(QsciScintillaBase *sci) const
+{
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETFORE, style_nr,
+            style_color);
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, style_nr,
+            style_paper);
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETFONT, style_nr,
+            style_font.family().toAscii().data());
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETSIZE, style_nr,
+            style_font.pointSize());
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETBOLD, style_nr,
+            style_font.bold());
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETITALIC, style_nr,
+            style_font.italic());
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETUNDERLINE, style_nr,
+            style_font.underline());
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETEOLFILLED, style_nr,
+            style_eol_fill);
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETCASE, style_nr,
+            (long)style_case);
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETVISIBLE, style_nr,
+            style_visible);
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETCHANGEABLE, style_nr,
+            style_changeable);
+    sci->SendScintilla(QsciScintillaBase::SCI_STYLESETHOTSPOT, style_nr,
+            style_hotspot);
+}
+
+
 // Set the color attribute.
 void QsciStyle::setColor(const QColor &color)
 {
     style_color = color;
-
-    if (style_nr >= 0)
-    {
-        QsciScintillaBase *sci = QsciScintillaBase::pool();
-
-        if (sci)
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETFORE, style_nr,
-                    style_color);
-    }
 }
 
 
@@ -114,15 +130,6 @@ void QsciStyle::setColor(const QColor &color)
 void QsciStyle::setPaper(const QColor &paper)
 {
     style_paper = paper;
-
-    if (style_nr >= 0)
-    {
-        QsciScintillaBase *sci = QsciScintillaBase::pool();
-
-        if (sci)
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, style_nr,
-                    style_paper);
-    }
 }
 
 
@@ -130,25 +137,6 @@ void QsciStyle::setPaper(const QColor &paper)
 void QsciStyle::setFont(const QFont &font)
 {
     style_font = font;
-
-    if (style_nr >= 0)
-    {
-        QsciScintillaBase *sci = QsciScintillaBase::pool();
-
-        if (sci)
-        {
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETFONT, style_nr,
-                    style_font.family().toAscii().data());
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETSIZE, style_nr,
-                    style_font.pointSize());
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETBOLD, style_nr,
-                    style_font.bold());
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETITALIC, style_nr,
-                    style_font.italic());
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETUNDERLINE,
-                    style_nr, style_font.underline());
-        }
-    }
 }
 
 
@@ -156,15 +144,6 @@ void QsciStyle::setFont(const QFont &font)
 void QsciStyle::setEolFill(bool eolFill)
 {
     style_eol_fill = eolFill;
-
-    if (style_nr >= 0)
-    {
-        QsciScintillaBase *sci = QsciScintillaBase::pool();
-
-        if (sci)
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETEOLFILLED,
-                    style_nr, style_eol_fill);
-    }
 }
 
 
@@ -172,15 +151,6 @@ void QsciStyle::setEolFill(bool eolFill)
 void QsciStyle::setTextCase(QsciStyle::TextCase text_case)
 {
     style_case = text_case;
-
-    if (style_nr >= 0)
-    {
-        QsciScintillaBase *sci = QsciScintillaBase::pool();
-
-        if (sci)
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETCASE, style_nr,
-                    (long)style_case);
-    }
 }
 
 
@@ -188,15 +158,6 @@ void QsciStyle::setTextCase(QsciStyle::TextCase text_case)
 void QsciStyle::setVisible(bool visible)
 {
     style_visible = visible;
-
-    if (style_nr >= 0)
-    {
-        QsciScintillaBase *sci = QsciScintillaBase::pool();
-
-        if (sci)
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETVISIBLE,
-                    style_nr, style_visible);
-    }
 }
 
 
@@ -204,15 +165,6 @@ void QsciStyle::setVisible(bool visible)
 void QsciStyle::setChangeable(bool changeable)
 {
     style_changeable = changeable;
-
-    if (style_nr >= 0)
-    {
-        QsciScintillaBase *sci = QsciScintillaBase::pool();
-
-        if (sci)
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETCHANGEABLE,
-                    style_nr, style_changeable);
-    }
 }
 
 
@@ -220,27 +172,11 @@ void QsciStyle::setChangeable(bool changeable)
 void QsciStyle::setHotspot(bool hotspot)
 {
     style_hotspot = hotspot;
-
-    if (style_nr >= 0)
-    {
-        QsciScintillaBase *sci = QsciScintillaBase::pool();
-
-        if (sci)
-            sci->SendScintilla(QsciScintillaBase::SCI_STYLESETHOTSPOT,
-                    style_nr, style_hotspot);
-    }
 }
 
 
-// Refresh the style.
+// Refresh the style.  Note that since we had to add apply() then this can't do
+// anything useful so we leave it as a no-op.
 void QsciStyle::refresh()
 {
-    setColor(color());
-    setPaper(paper());
-    setFont(font());
-    setEolFill(eolFill());
-    setTextCase(textCase());
-    setVisible(visible());
-    setChangeable(changeable());
-    setHotspot(hotspot());
 }

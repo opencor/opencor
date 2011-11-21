@@ -16,13 +16,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -41,21 +36,28 @@ static int convert(int key);
 
 
 // The ctor.
-QsciCommand::QsciCommand(QsciScintilla *qs, int msg, int key, int altkey,
-        const char *desc)
-    : qsCmd(qs), msgCmd(msg), qkey(key), qaltkey(altkey), descCmd(desc)
+QsciCommand::QsciCommand(QsciScintilla *qs, QsciCommand::Command cmd, int key,
+        int altkey, const char *desc)
+    : qsCmd(qs), scicmd(cmd), qkey(key), qaltkey(altkey), descCmd(desc)
 {
     scikey = convert(qkey);
 
     if (scikey)
         qsCmd->SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, scikey,
-                msgCmd);
+                scicmd);
 
     scialtkey = convert(qaltkey);
 
     if (scialtkey)
         qsCmd->SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, scialtkey,
-                msgCmd);
+                scicmd);
+}
+
+
+// Execute the command.
+void QsciCommand::execute()
+{
+    qsCmd->SendScintilla(scicmd);
 }
 
 
@@ -97,7 +99,7 @@ void QsciCommand::bindKey(int key,int &qk,int &scik)
     scik = new_scikey;
 
     if (scik)
-        qsCmd->SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, scik, msgCmd);
+        qsCmd->SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, scik, scicmd);
 }
 
 
@@ -125,7 +127,7 @@ static int convert(int key)
         sci_mod |= QsciScintillaBase::SCMOD_ALT;
 
     if (key & Qt::META)
-        sci_mod |= QsciScintillaBase::SCMOD_SUPER;
+        sci_mod |= QsciScintillaBase::SCMOD_META;
 
     key &= ~Qt::MODIFIER_MASK;
 

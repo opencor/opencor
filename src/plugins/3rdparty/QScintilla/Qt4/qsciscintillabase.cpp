@@ -16,13 +16,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -262,6 +257,14 @@ long QsciScintillaBase::SendScintilla(unsigned int msg, unsigned long wParam,
 }
 
 
+// Overloaded message send.
+long QsciScintillaBase::SendScintilla(unsigned int msg, unsigned long wParam,
+        const QImage &lParam) const
+{
+    return sci->WndProc(msg, wParam, reinterpret_cast<sptr_t>(&lParam));
+}
+
+
 // Send a message to the real Scintilla widget using the low level Scintilla
 // API that returns a pointer result.
 void *QsciScintillaBase::SendScintillaPtrResult(unsigned int msg) const
@@ -320,12 +323,20 @@ void QsciScintillaBase::handleSelection()
 // Handle key presses.
 void QsciScintillaBase::keyPressEvent(QKeyEvent *e)
 {
-    unsigned key;
+    unsigned key, modifiers = 0;
     QByteArray utf8;
 
-    bool shift = e->modifiers() & Qt::ShiftModifier;
-    bool ctrl = e->modifiers() & Qt::ControlModifier;
-    bool alt = e->modifiers() & Qt::AltModifier;
+    if (e->modifiers() & Qt::ShiftModifier)
+        modifiers |= SCMOD_SHIFT;
+
+    if (e->modifiers() & Qt::ControlModifier)
+        modifiers |= SCMOD_CTRL;
+
+    if (e->modifiers() & Qt::AltModifier)
+        modifiers |= SCMOD_ALT;
+
+    if (e->modifiers() & Qt::MetaModifier)
+        modifiers |= SCMOD_META;
 
     switch (e->key())
     {
@@ -384,7 +395,7 @@ void QsciScintillaBase::keyPressEvent(QKeyEvent *e)
     case Qt::Key_Backtab:
         // Scintilla assumes a backtab is shift-tab.
         key = SCK_TAB;
-        shift = true;
+        modifiers |= SCMOD_SHIFT;
         break;
 
     case Qt::Key_Return:
@@ -406,9 +417,9 @@ void QsciScintillaBase::keyPressEvent(QKeyEvent *e)
 
     default:
         // See if the input was a single ASCII key.  If so it will be passed to
-        // KeyDown to allow it to be filtered.  Correct the modifiers and key
-        // for ASCII letters as Qt uses the ASCII code of uppercase letters for
-        // Key_A etc.
+        // KeyDownWithModifiers to allow it to be filtered.  Correct the
+        // modifiers and key for ASCII letters as Qt uses the ASCII code of
+        // uppercase letters for Key_A etc.
         utf8 = e->text().toUtf8();
 
         if (utf8.length() == 0)
@@ -420,11 +431,11 @@ void QsciScintillaBase::keyPressEvent(QKeyEvent *e)
         else if (key >= 0x01 && key <= 0x1a)
             key += 0x40;
         else if (key >= 'A' && key <= 'Z')
-            shift = true;
+            modifiers |= true;
         else if (key >= 'a' && key <= 'z')
         {
             key -= 0x20;
-            shift = false;
+            modifiers &= ~SCMOD_SHIFT;
         }
     }
 
@@ -432,7 +443,7 @@ void QsciScintillaBase::keyPressEvent(QKeyEvent *e)
     {
         bool consumed = false;
 
-        sci->KeyDown(key, shift, ctrl, alt, &consumed);
+        sci->KeyDownWithModifiers(key, modifiers, &consumed);
 
         if (consumed)
         {
@@ -647,18 +658,9 @@ void QsciScintillaBase::dropEvent(QDropEvent *e)
 void QsciScintillaBase::acceptAction(QDropEvent *e)
 {
     if (sci->pdoc->IsReadOnly() || !canInsertFromMimeData(e->mimeData()))
-    {
         e->ignore();
-    }
-    else if ((e->source() == this || e->source() == viewport()) && (e->keyboardModifiers() & Qt::ControlModifier) == 0)
-    {
-        e->setDropAction(Qt::MoveAction);
-        e->accept();
-    }
     else
-    {
         e->acceptProposedAction();
-    }
 }
 
 

@@ -16,13 +16,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -40,7 +35,7 @@ QsciLexerCPP::QsciLexerCPP(QObject *parent, bool caseInsensitiveKeywords)
     : QsciLexer(parent),
       fold_atelse(false), fold_comments(false), fold_compact(true),
       fold_preproc(true), style_preproc(false), dollars(true),
-      nocase(caseInsensitiveKeywords)
+      highlight_triple(false), nocase(caseInsensitiveKeywords)
 {
 }
 
@@ -242,6 +237,8 @@ QFont QsciLexerCPP::defaultFont(int style) const
     case InactiveCommentDocKeywordError:
 #if defined(Q_OS_WIN)
         f = QFont("Comic Sans MS",9);
+#elif defined(Q_OS_MAC)
+        f = QFont("Comic Sans MS", 12);
 #else
         f = QFont("Bitstream Vera Serif",9);
 #endif
@@ -263,6 +260,8 @@ QFont QsciLexerCPP::defaultFont(int style) const
     case InactiveUnclosedString:
 #if defined(Q_OS_WIN)
         f = QFont("Courier New",10);
+#elif defined(Q_OS_MAC)
+        f = QFont("Courier", 12);
 #else
         f = QFont("Bitstream Vera Sans Mono",9);
 #endif
@@ -463,6 +462,7 @@ void QsciLexerCPP::refreshProperties()
     setPreprocProp();
     setStylePreprocProp();
     setDollarsProp();
+    setHighlightTripleProp();
 }
 
 
@@ -477,6 +477,7 @@ bool QsciLexerCPP::readProperties(QSettings &qs,const QString &prefix)
     fold_preproc = qs.value(prefix + "foldpreprocessor", true).toBool();
     style_preproc = qs.value(prefix + "stylepreprocessor", false).toBool();
     dollars = qs.value(prefix + "dollars", true).toBool();
+    highlight_triple = qs.value(prefix + "highlighttriple", false).toBool();
 
     return rc;
 }
@@ -493,6 +494,7 @@ bool QsciLexerCPP::writeProperties(QSettings &qs,const QString &prefix) const
     qs.setValue(prefix + "foldpreprocessor", fold_preproc);
     qs.setValue(prefix + "stylepreprocessor", style_preproc);
     qs.setValue(prefix + "dollars", dollars);
+    qs.setValue(prefix + "highlighttriple", highlight_triple);
 
     return rc;
 }
@@ -591,4 +593,21 @@ void QsciLexerCPP::setDollarsAllowed(bool allowed)
 void QsciLexerCPP::setDollarsProp()
 {
     emit propertyChanged("lexer.cpp.allow.dollars",(dollars ? "1" : "0"));
+}
+
+
+// Set if triple quoted strings are highlighted.
+void QsciLexerCPP::setHighlightTripleQuotedStrings(bool enabled)
+{
+    highlight_triple = enabled;
+
+    setHighlightTripleProp();
+}
+
+
+// Set the "lexer.cpp.triplequoted.strings" property.
+void QsciLexerCPP::setHighlightTripleProp()
+{
+    emit propertyChanged("lexer.cpp.triplequoted.strings",
+            (highlight_triple ? "1" : "0"));
 }

@@ -16,13 +16,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -149,10 +144,7 @@ void ScintillaQt::StartDrag()
     qdrag->setMimeData(mimeSelection(drag));
 
 # if QT_VERSION >= 0x040300
-    // The default action is to copy so that the cursor is correct when over
-    // another widget or application (when we have no control over it).  We
-    // make sure it is correct over ourself in the event handlers.
-    Qt::DropAction action = qdrag->exec(Qt::MoveAction | Qt::CopyAction, Qt::CopyAction);
+    Qt::DropAction action = qdrag->exec(Qt::MoveAction | Qt::CopyAction, Qt::MoveAction);
 # else
     Qt::DropAction action = qdrag->start(Qt::MoveAction);
 # endif

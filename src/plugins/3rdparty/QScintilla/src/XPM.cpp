@@ -8,6 +8,13 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef _MSC_VER
+#pragma warning(disable: 4786)
+#endif
+
+#include <vector>
+#include <map>
+
 #include "Platform.h"
 
 #include "XPM.h"
@@ -23,19 +30,94 @@ XPM::XPM(const char *textForm)
     qpm = *reinterpret_cast<const QPixmap *>(textForm);
 }
 
-XPM::XPM(const char * const *linesForm)
+XPM::XPM(const char *const *linesForm)
 {
     qpm = *reinterpret_cast<const QPixmap *>(linesForm);
 }
 
-void XPM::RefreshColourPalette(Palette &pal, bool want)
-{
-    // Nothing to do.
-}
-
 void XPM::Draw(Surface *surface, PRectangle &rc)
 {
-    surface->DrawXPM(rc,this);
+    surface->DrawXPM(rc, this);
+}
+
+RGBAImage::RGBAImage(int width_, int height_, const unsigned char *pixels_)
+    : height(height_), width(width_)
+{
+    if (pixels_)
+    {
+        qim = new QImage(*reinterpret_cast<const QImage *>(pixels_));
+    }
+    else
+    {
+        qim = new QImage(width_, height_, QImage::Format_ARGB32);
+        qim->fill(0);
+    }
+}
+
+RGBAImage::RGBAImage(const XPM &xpm)
+{
+    qim = new QImage(xpm.Pixmap().toImage());
+
+    width = qim->width();
+    height = qim->height();
+}
+
+RGBAImage::~RGBAImage()
+{
+    delete qim;
+}
+
+const unsigned char *RGBAImage::Pixels() const
+{
+    return reinterpret_cast<const unsigned char *>(qim);
+}
+
+void RGBAImage::SetPixel(int x, int y, ColourDesired colour, int alpha)
+{
+    QRgb rgba = qRgba(colour.GetRed(), colour.GetGreen(), colour.GetBlue(),
+            alpha);
+
+    uint index_or_rgb;
+
+    switch (qim->format())
+    {
+    case QImage::Format_RGB32:
+    case QImage::Format_ARGB32:
+        index_or_rgb = rgba;
+        break;
+
+    case QImage::Format_ARGB32_Premultiplied:
+        {
+            uint a = alpha;
+#if QT_POINTER_SIZE == 8
+            quint64 t = (((quint64(rgba)) | ((quint64(rgba)) << 24)) & 0x00ff00ff00ff00ff) * a;
+            t = (t + ((t >> 8) & 0xff00ff00ff00ff) + 0x80008000800080) >> 8;
+            t &= 0x000000ff00ff00ff;
+            index_or_rgb = (uint(t)) | (uint(t >> 24)) | (a << 24);
+#else
+            uint t = (rgba & 0xff00ff) * a;
+            t = (t + ((t >> 8) & 0xff00ff) + 0x800080) >> 8;
+            t &= 0xff00ff;
+
+            rgba = ((rgba >> 8) & 0xff) * a;
+            rgba = (rgba + ((rgba >> 8) & 0xff) + 0x80);
+            rgba &= 0xff00;
+            index_or_rgb = rgba | t | (a << 24);
+#endif
+            break;
+        }
+
+    default:
+#if QT_VERSION >= 0x040600
+        index_or_rgb = qim->colorCount();
+#else
+        index_or_rgb = qim->colorTable().count();
+#endif
+
+        qim->setColor(index_or_rgb, rgba);
+    }
+
+    qim->setPixel(x, y, index_or_rgb);
 }
 
 #else
@@ -60,6 +142,10 @@ static size_t MeasureLength(const char *s) {
 	while (s[i] && (s[i] != '\"'))
 		i++;
 	return i;
+}
+
+ColourDesired XPM::ColourDesiredFromCode(int ch) const {
+	return colourCodeTable[ch]->desired;
 }
 
 ColourAllocated XPM::ColourFromCode(int ch) const {
@@ -224,6 +310,21 @@ void XPM::Draw(Surface *surface, PRectangle &rc) {
 	}
 }
 
+void XPM::PixelAt(int x, int y, ColourDesired &colour, bool &transparent) const {
+	if (!data || !codes || !colours || !lines || (x<0) || (x >= width) || (y<0) || (y >= height)) {
+		colour = 0;
+		transparent = true;
+		return;
+	}
+	int code = lines[y+nColours+1][x];
+	transparent = code == codeTransparent;
+	if (transparent) {
+		colour = 0;
+	} else {
+		colour = ColourDesiredFromCode(code).AsLong();
+	}
+}
+
 const char **XPM::LinesFormFromTextForm(const char *textForm) {
 	// Build the lines form out of the text form
 	const char **linesForm = 0;
@@ -285,14 +386,14 @@ void XPMSet::Clear() {
 	width = -1;
 }
 
-void XPMSet::Add(int id, const char *textForm) {
+void XPMSet::Add(int ident, const char *textForm) {
 	// Invalidate cached dimensions
 	height = -1;
 	width = -1;
 
 	// Replace if this id already present
 	for (int i = 0; i < len; i++) {
-		if (set[i]->GetId() == id) {
+		if (set[i]->GetId() == ident) {
 			set[i]->Init(textForm);
 			set[i]->CopyDesiredColours();
 			return;
@@ -302,7 +403,7 @@ void XPMSet::Add(int id, const char *textForm) {
 	// Not present, so add to end
 	XPM *pxpm = new XPM(textForm);
 	if (pxpm) {
-		pxpm->SetId(id);
+		pxpm->SetId(ident);
 		pxpm->CopyDesiredColours();
 		if (len == maximum) {
 			maximum += 64;
@@ -318,9 +419,9 @@ void XPMSet::Add(int id, const char *textForm) {
 	}
 }
 
-XPM *XPMSet::Get(int id) {
+XPM *XPMSet::Get(int ident) {
 	for (int i = 0; i < len; i++) {
-		if (set[i]->GetId() == id) {
+		if (set[i]->GetId() == ident) {
 			return set[i];
 		}
 	}
@@ -343,6 +444,113 @@ int XPMSet::GetWidth() {
 		for (int i = 0; i < len; i++) {
 			if (width < set[i]->GetWidth()) {
 				width = set[i]->GetWidth();
+			}
+		}
+	}
+	return (width > 0) ? width : 0;
+}
+
+RGBAImage::RGBAImage(int width_, int height_, const unsigned char *pixels_) :
+	height(height_), width(width_) {
+	if (pixels_) {
+		pixelBytes.assign(pixels_, pixels_ + CountBytes());
+	} else {
+		pixelBytes.resize(CountBytes());
+	}
+}
+
+RGBAImage::RGBAImage(const XPM &xpm) {
+	height = xpm.GetHeight();
+	width = xpm.GetWidth();
+	pixelBytes.resize(CountBytes());
+	for (int y=0; y<height; y++) {
+		for (int x=0; x<width; x++) {
+			ColourDesired colour;
+			bool transparent = false;
+			xpm.PixelAt(x, y, colour, transparent);
+			SetPixel(x, y, colour, transparent ? 0 : 255);
+		}
+	}
+}
+
+RGBAImage::~RGBAImage() {
+}
+
+int RGBAImage::CountBytes() const {
+	return width * height * 4;
+}
+
+const unsigned char *RGBAImage::Pixels() const {
+	return &pixelBytes[0];
+}
+
+void RGBAImage::SetPixel(int x, int y, ColourDesired colour, int alpha) {
+	unsigned char *pixel = &pixelBytes[0] + (y*width+x) * 4;
+	// RGBA
+	pixel[0] = colour.GetRed();
+	pixel[1] = colour.GetGreen();
+	pixel[2] = colour.GetBlue();
+	pixel[3] = alpha;
+}
+
+RGBAImageSet::RGBAImageSet() : height(-1), width(-1){
+}
+
+RGBAImageSet::~RGBAImageSet() {
+	Clear();
+}
+
+/// Remove all images.
+void RGBAImageSet::Clear() {
+	for (ImageMap::iterator it=images.begin(); it != images.end(); ++it) {
+		delete it->second;
+		it->second = 0;
+	}
+	images.clear();
+	height = -1;
+	width = -1;
+}
+
+/// Add an image.
+void RGBAImageSet::Add(int ident, RGBAImage *image) {
+	ImageMap::iterator it=images.find(ident);
+	if (it == images.end()) {
+		images[ident] = image;
+	} else {
+		delete it->second;
+		it->second = image;
+	}
+	height = -1;
+	width = -1;
+}
+
+/// Get image by id.
+RGBAImage *RGBAImageSet::Get(int ident) {
+	ImageMap::iterator it = images.find(ident);
+	if (it != images.end()) {
+		return it->second;
+	}
+	return NULL;
+}
+
+/// Give the largest height of the set.
+int RGBAImageSet::GetHeight() const {
+	if (height < 0) {
+		for (ImageMap::const_iterator it=images.begin(); it != images.end(); ++it) {
+			if (height < it->second->GetHeight()) {
+				height = it->second->GetHeight();
+			}
+		}
+	}
+	return (height > 0) ? height : 0;
+}
+
+/// Give the largest width of the set.
+int RGBAImageSet::GetWidth() const {
+	if (width < 0) {
+		for (ImageMap::const_iterator it=images.begin(); it != images.end(); ++it) {
+			if (width < it->second->GetWidth()) {
+				width = it->second->GetWidth();
 			}
 		}
 	}

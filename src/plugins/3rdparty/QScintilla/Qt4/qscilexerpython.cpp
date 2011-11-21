@@ -16,13 +16,8 @@
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
 // 
-// Please review the following information to ensure GNU General
-// Public Licensing requirements will be met:
-// http://trolltech.com/products/qt/licenses/licensing/opensource/. If
-// you are unsure which license is appropriate for your use, please
-// review the following information:
-// http://trolltech.com/products/qt/licenses/licensing/licensingoverview
-// or contact the sales department at sales@riverbankcomputing.com.
+// If you are unsure which license is appropriate for your use, please
+// contact the sales department at sales@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -47,7 +42,7 @@ QsciLexerPython::QsciLexerPython(QObject *parent)
     : QsciLexer(parent),
       fold_comments(false), fold_compact(true), fold_quotes(false),
       indent_warn(NoWarning), strings_over_newline(false), v2_unicode(true),
-      v3_binary_octal(true), v3_bytes(true)
+      v3_binary_octal(true), v3_bytes(true), highlight_subids(true)
 {
 }
 
@@ -188,6 +183,8 @@ QFont QsciLexerPython::defaultFont(int style) const
     case Comment:
 #if defined(Q_OS_WIN)
         f = QFont("Comic Sans MS",9);
+#elif defined(Q_OS_MAC)
+        f = QFont("Comic Sans MS", 12);
 #else
         f = QFont("Bitstream Vera Serif",9);
 #endif
@@ -198,6 +195,8 @@ QFont QsciLexerPython::defaultFont(int style) const
     case UnclosedString:
 #if defined(Q_OS_WIN)
         f = QFont("Courier New",10);
+#elif defined(Q_OS_MAC)
+        f = QFont("Courier", 12);
 #else
         f = QFont("Bitstream Vera Sans Mono",9);
 #endif
@@ -308,6 +307,7 @@ void QsciLexerPython::refreshProperties()
     setV2UnicodeProp();
     setV3BinaryOctalProp();
     setV3BytesProp();
+    setHighlightSubidsProp();
 }
 
 
@@ -324,6 +324,7 @@ bool QsciLexerPython::readProperties(QSettings &qs,const QString &prefix)
     v2_unicode = qs.value(prefix + "v2unicode", true).toBool();
     v3_binary_octal = qs.value(prefix + "v3binaryoctal", true).toBool();
     v3_bytes = qs.value(prefix + "v3bytes", true).toBool();
+    highlight_subids = qs.value(prefix + "highlightsubids", true).toBool();
 
     return rc;
 }
@@ -342,6 +343,7 @@ bool QsciLexerPython::writeProperties(QSettings &qs,const QString &prefix) const
     qs.setValue(prefix + "v2unicode", v2_unicode);
     qs.setValue(prefix + "v3binaryoctal", v3_binary_octal);
     qs.setValue(prefix + "v3bytes", v3_bytes);
+    qs.setValue(prefix + "highlightsubids", highlight_subids);
 
     return rc;
 }
@@ -472,4 +474,21 @@ void QsciLexerPython::setV3BytesAllowed(bool allowed)
 void QsciLexerPython::setV3BytesProp()
 {
     emit propertyChanged("lexer.python.strings.b",(v3_bytes ? "1" : "0"));
+}
+
+
+// Set if sub-identifiers are highlighted.
+void QsciLexerPython::setHighlightSubidentifiers(bool enabled)
+{
+    highlight_subids = enabled;
+
+    setHighlightSubidsProp();
+}
+
+
+// Set the "lexer.python.keywords2.no.sub.identifiers" property.
+void QsciLexerPython::setHighlightSubidsProp()
+{
+    emit propertyChanged("lexer.python.keywords2.no.sub.identifiers",
+            (highlight_subids ? "0" : "1"));
 }
