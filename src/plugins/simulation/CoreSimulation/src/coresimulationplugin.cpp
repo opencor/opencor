@@ -62,26 +62,36 @@ Q_EXPORT_PLUGIN2(CoreSimulation, CoreSimulationPlugin)
 void CoreSimulationPlugin::initialize()
 {
     // Testing the JIT compilation side of LLVM
-    // Note: this is shameless copying/pasting of the How-to-use JIT example...
+    // Note: this is a shameless copying/pasting of the How-to-use JIT
+    //       example...
+
+#ifndef Q_WS_WIN
+    // Note #1: for some reasons, to call InitializeNativeTarget on Windows
+    //          results in an error message being displayed when closing OpenCOR
+    //          while not calling InitializeNativeTarget means that OpenCOR
+    //          closes 'properly', so...
+    // Note #2: InitializeNativeTarget should normally be called, so why does it
+    //          work when not calling it on Windows...?!
 
     llvm::InitializeNativeTarget();
+#endif
 
     llvm::LLVMContext context;
 
-    // Create some module to put our function into it
+    // Create a module
 
     llvm::Module *module = new llvm::Module("test", context);
 
-    // Create the add1 function entry and insert it into our module
+    // Create a function entry and add it to our module
     // Note: the function has a return type of int and takes an argument of int
-    //       also while the 0 argument terminates the list of argument types...
+    //       while the 0 argument terminates the list of argument types...
 
     llvm::Function *addOneFunc = llvm::cast<llvm::Function>(module->getOrInsertFunction("addOne",
                                                                                         llvm::Type::getInt32Ty(context),
                                                                                         llvm::Type::getInt32Ty(context),
                                                                                         (llvm::Type *) 0));
 
-    // Add a basic block to the function
+    // Add a basic block to addOneFunc
 
     llvm::BasicBlock *basicBlock = llvm::BasicBlock::Create(context,
                                                             "entryBlock",
@@ -92,33 +102,29 @@ void CoreSimulationPlugin::initialize()
     llvm::Value *one = llvm::ConstantInt::get(llvm::Type::getInt32Ty(context),
                                               1);
 
-    // Get pointers to the integer argument of the addOne function
+    // Get a pointer to addOne's integer argument
 
-    assert(addOneFunc->arg_begin() != addOneFunc->arg_end());
-    // Make sure that there's an argument
+    llvm::Argument *argX = addOneFunc->arg_begin();
 
-    llvm::Argument *argX = addOneFunc->arg_begin();   // Get the argument
-
-    argX->setName("argX");   // Give it a symbolic name (just for the fun of it)
-
-    // Create the add instruction, inserting it to the end of our basic block
+    // Create an add instruction and add it to our basic block
 
     llvm::Instruction *add = llvm::BinaryOperator::CreateAdd(one, argX,
                                                              "addResult",
                                                              basicBlock);
 
-    // Create the return instruction and add it to our basic block
-    // Note: after this, the addOne function is ready to be used
+    // Create a return instruction and add it to our basic block
+    // Note: after this, addOneFunc is ready to be used...
 
     llvm::ReturnInst::Create(context, add, basicBlock);
 
-    // Now, create a foo function, which returns an int and takes no arguments
+    // Create another function entry and add it to our module
+    // Note: this time, the function returns an int and takes no arguments
 
     llvm::Function *fooFunc = llvm::cast<llvm::Function>(module->getOrInsertFunction("foo",
                                                                                      llvm::Type::getInt32Ty(context),
                                                                                      (llvm::Type *) 0));
 
-    // Add a basic block to our foo function
+    // Add a basic block to fooFunc
 
     basicBlock = llvm::BasicBlock::Create(context, "entryBlock", fooFunc);
 
@@ -127,20 +133,18 @@ void CoreSimulationPlugin::initialize()
     llvm::Value *ten = llvm::ConstantInt::get(llvm::Type::getInt32Ty(context),
                                               10);
 
-    // Pass ten to the call
+    // Pass ten to fooFunc
 
     llvm::CallInst *addOneCallResult = llvm::CallInst::Create(addOneFunc,
                                                               ten,
                                                               "addOne",
                                                               basicBlock);
 
-    addOneCallResult->setTailCall(true);
-
-    // Create the return instruction and add it to our basic block
+    // Create a return instruction and add it to our basic block
 
     llvm::ReturnInst::Create(context, addOneCallResult, basicBlock);
 
-    // Now, we can create the JIT
+    // Create the JIT
 
     llvm::ExecutionEngine *executionEngine = llvm::EngineBuilder(module).create();
 
@@ -148,13 +152,13 @@ void CoreSimulationPlugin::initialize()
     llvm::outs() << "\n\nRunning foo: ";
     llvm::outs().flush();
 
-    // Call our foo function with no arguments
+    // Call fooFunc with no arguments
 
     std::vector<llvm::GenericValue> noargs;
     llvm::GenericValue genericValue = executionEngine->runFunction(fooFunc,
                                                                    noargs);
 
-    // Import the result of the execution
+    // Output the result of the execution
 
     llvm::outs() << "Result: " << genericValue.IntVal << "\n";
     llvm::outs().flush();
