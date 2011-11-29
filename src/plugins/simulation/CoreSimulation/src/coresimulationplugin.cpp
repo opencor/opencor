@@ -11,6 +11,8 @@
 #include <QMainWindow>
 #include <QPen>
 
+#include <QDebug>
+
 //==============================================================================
 
 #include "llvm/LLVMContext.h"
@@ -59,17 +61,23 @@ Q_EXPORT_PLUGIN2(CoreSimulation, CoreSimulationPlugin)
 
 //==============================================================================
 
-void CoreSimulationPlugin::initialize()
+void CoreSimulationPlugin::testLlvmJit()
 {
     // Testing the JIT compilation side of LLVM
     // Note: this is a shameless copying/pasting of the How-to-use JIT
     //       example...
 
+    qDebug() << "================================================================================";
+    qDebug();
+    qDebug() << "Testing LLVM-JIT";
+    qDebug() << "----------------";
+    qDebug();
+
 #ifndef Q_WS_WIN
     // Note #1: for some reasons, to call InitializeNativeTarget on Windows
     //          results in an error message being displayed when closing OpenCOR
-    //          while not calling InitializeNativeTarget means that OpenCOR
-    //          closes 'properly', so...
+    //          while not calling it results in OpenCOR closeing 'properly',
+    //          so...
     // Note #2: InitializeNativeTarget should normally be called, so why does it
     //          work when not calling it on Windows...?!
 
@@ -148,9 +156,9 @@ void CoreSimulationPlugin::initialize()
 
     llvm::ExecutionEngine *executionEngine = llvm::EngineBuilder(module).create();
 
-    llvm::outs() << "We just constructed this LLVM module:\n\n" << *module;
-    llvm::outs() << "\n\nRunning foo: ";
-    llvm::outs().flush();
+    llvm::errs() << "We just constructed this LLVM module:\n\n" << *module;
+    llvm::errs() << "\nRunning foo: ";
+    llvm::errs().flush();
 
     // Call fooFunc with no arguments
 
@@ -160,8 +168,8 @@ void CoreSimulationPlugin::initialize()
 
     // Output the result of the execution
 
-    llvm::outs() << "Result: " << genericValue.IntVal << "\n";
-    llvm::outs().flush();
+    llvm::errs() << "Result: " << genericValue.IntVal << "\n";
+    llvm::errs().flush();
 
     // Finish things off
 
@@ -170,14 +178,18 @@ void CoreSimulationPlugin::initialize()
     delete executionEngine;
 
     llvm::llvm_shutdown();
+}
 
+//==============================================================================
 
+void CoreSimulationPlugin::initialize()
+{
+    // Test a few third-party plugins
 
+    testLlvmJit();
 
-
-
-
-
+    qDebug();
+    qDebug() << "================================================================================";
 
     // Create our simulation view widget
 

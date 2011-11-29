@@ -45,6 +45,8 @@ private:
 
     QVector<double> mXData;
     QVector<double> mYData;
+
+    void testLlvmJit();
 };
 
 //==============================================================================
