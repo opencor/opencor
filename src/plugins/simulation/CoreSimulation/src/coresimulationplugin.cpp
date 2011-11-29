@@ -39,6 +39,14 @@
 
 //==============================================================================
 
+#include "cvode/cvode.h"
+#include "nvector/nvector_serial.h"
+#include "cvode/cvode_dense.h"
+#include "sundials/sundials_dense.h"
+#include "sundials/sundials_types.h"
+
+//==============================================================================
+
 #include "qwt_plot.h"
 #include "qwt_plot_curve.h"
 #include "qwt_plot_grid.h"
@@ -495,12 +503,305 @@ void CoreSimulationPlugin::testLlvmJit()
 
 //==============================================================================
 
+#define Ith(v,i)    NV_Ith_S(v,i-1)       /* Ith numbers components 1..NEQ */
+#define IJth(A,i,j) DENSE_ELEM(A,i-1,j-1) /* IJth numbers rows,cols 1..NEQ */
+
+//==============================================================================
+
+/*
+ * f routine. Compute function f(t,y).
+ */
+
+static int f(realtype t, N_Vector y, N_Vector ydot, void *user_data)
+{
+    realtype y1, y2, y3, yd1, yd3;
+
+    y1 = Ith(y,1); y2 = Ith(y,2); y3 = Ith(y,3);
+
+    yd1 = Ith(ydot,1) = RCONST(-0.04)*y1 + RCONST(1.0e4)*y2*y3;
+    yd3 = Ith(ydot,3) = RCONST(3.0e7)*y2*y2;
+          Ith(ydot,2) = -yd1 - yd3;
+
+    return(0);
+}
+
+//==============================================================================
+
+/*
+ * g routine. Compute functions g_i(t,y) for i = 0,1.
+ */
+
+static int g(realtype t, N_Vector y, realtype *gout, void *user_data)
+{
+    realtype y1, y3;
+
+    y1 = Ith(y,1); y3 = Ith(y,3);
+    gout[0] = y1 - RCONST(0.0001);
+    gout[1] = y3 - RCONST(0.01);
+
+    return(0);
+}
+
+//==============================================================================
+
+/*
+ * Jacobian routine. Compute J(t,y) = df/dy. *
+ */
+
+static int Jac(int N, realtype t,
+               N_Vector y, N_Vector fy, DlsMat J, void *user_data,
+               N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
+{
+    realtype y1, y2, y3;
+
+    y1 = Ith(y,1); y2 = Ith(y,2); y3 = Ith(y,3);
+
+    IJth(J,1,1) = RCONST(-0.04);
+    IJth(J,1,2) = RCONST(1.0e4)*y3;
+    IJth(J,1,3) = RCONST(1.0e4)*y2;
+    IJth(J,2,1) = RCONST(0.04);
+    IJth(J,2,2) = RCONST(-1.0e4)*y3-RCONST(6.0e7)*y2;
+    IJth(J,2,3) = RCONST(-1.0e4)*y2;
+    IJth(J,3,2) = RCONST(6.0e7)*y2;
+
+    return(0);
+}
+
+//==============================================================================
+
+/*
+ *-------------------------------
+ * Private helper functions
+ *-------------------------------
+ */
+
+static void PrintOutput(realtype t, realtype y1, realtype y2, realtype y3)
+{
+#if defined(SUNDIALS_EXTENDED_PRECISION)
+    qDebug("At t = %0.4Le      y =%14.6Le  %14.6Le  %14.6Le", t, y1, y2, y3);
+#elif defined(SUNDIALS_DOUBLE_PRECISION)
+    qDebug("At t = %0.4le      y =%14.6le  %14.6le  %14.6le", t, y1, y2, y3);
+#else
+    qDebug("At t = %0.4e      y =%14.6e  %14.6e  %14.6e", t, y1, y2, y3);
+#endif
+
+  return;
+}
+
+static void PrintRootInfo(int root_f1, int root_f2)
+{
+    qDebug("    rootsfound[] = %3d %3d", root_f1, root_f2);
+
+    return;
+}
+
+//==============================================================================
+
+/*
+ * Check function return value...
+ *   opt == 0 means SUNDIALS function allocates memory so check if
+ *            returned NULL pointer
+ *   opt == 1 means SUNDIALS function returns a flag so check if
+ *            flag >= 0
+ *   opt == 2 means function allocates memory so check if returned
+ *            NULL pointer
+ */
+
+static int check_flag(void *flagvalue, char *funcname, int opt)
+{
+    int *errflag;
+
+    /* Check if SUNDIALS function returned NULL pointer - no memory allocated */
+    if (opt == 0 && flagvalue == NULL) {
+        qDebug("SUNDIALS_ERROR: %s() failed - returned NULL pointer",
+                funcname);
+        return(1); }
+
+    /* Check if flag < 0 */
+    else if (opt == 1) {
+        errflag = (int *) flagvalue;
+        if (*errflag < 0) {
+            qDebug("SUNDIALS_ERROR: %s() failed with flag = %d",
+                    funcname, *errflag);
+        return(1); }}
+
+    /* Check if function returned NULL pointer - no memory allocated */
+    else if (opt == 2 && flagvalue == NULL) {
+        qDebug("MEMORY_ERROR: %s() failed - returned NULL pointer",
+                funcname);
+        return(1); }
+
+    return(0);
+}
+
+//==============================================================================
+
+/*
+ * Get and print some final statistics
+ */
+
+static void PrintFinalStats(void *cvode_mem)
+{
+    long int nst, nfe, nsetups, nje, nfeLS, nni, ncfn, netf, nge;
+    int flag;
+
+    flag = CVodeGetNumSteps(cvode_mem, &nst);
+    check_flag(&flag, (char *) "CVodeGetNumSteps", 1);
+    flag = CVodeGetNumRhsEvals(cvode_mem, &nfe);
+    check_flag(&flag, (char *) "CVodeGetNumRhsEvals", 1);
+    flag = CVodeGetNumLinSolvSetups(cvode_mem, &nsetups);
+    check_flag(&flag, (char *) "CVodeGetNumLinSolvSetups", 1);
+    flag = CVodeGetNumErrTestFails(cvode_mem, &netf);
+    check_flag(&flag, (char *) "CVodeGetNumErrTestFails", 1);
+    flag = CVodeGetNumNonlinSolvIters(cvode_mem, &nni);
+    check_flag(&flag, (char *) "CVodeGetNumNonlinSolvIters", 1);
+    flag = CVodeGetNumNonlinSolvConvFails(cvode_mem, &ncfn);
+    check_flag(&flag, (char *) "CVodeGetNumNonlinSolvConvFails", 1);
+
+    flag = CVDlsGetNumJacEvals(cvode_mem, &nje);
+    check_flag(&flag, (char *) "CVDlsGetNumJacEvals", 1);
+    flag = CVDlsGetNumRhsEvals(cvode_mem, &nfeLS);
+    check_flag(&flag, (char *) "CVDlsGetNumRhsEvals", 1);
+
+    flag = CVodeGetNumGEvals(cvode_mem, &nge);
+    check_flag(&flag, (char *) "CVodeGetNumGEvals", 1);
+
+    qDebug();
+    qDebug("Final Statistics:");
+    qDebug("nst = %-6ld nfe  = %-6ld nsetups = %-6ld nfeLS = %-6ld nje = %ld",
+           nst, nfe, nsetups, nfeLS, nje);
+    qDebug("nni = %-6ld ncfn = %-6ld netf = %-6ld nge = %ld",
+           nni, ncfn, netf, nge);
+}
+
+//==============================================================================
+
+void CoreSimulationPlugin::testCvode()
+{
+    // Testing CVODE
+    // Note: this is a shameless copying/pasting of the cvRoberts_dns.c code...
+
+    qDebug() << "================================================================================";
+    qDebug();
+    qDebug() << "Testing CVODE";
+    qDebug() << "----------------";
+    qDebug();
+
+    #define NEQ   3                /* number of equations  */
+    #define Y1    RCONST(1.0)      /* initial y components */
+    #define Y2    RCONST(0.0)
+    #define Y3    RCONST(0.0)
+    #define RTOL  RCONST(1.0e-4)   /* scalar relative tolerance            */
+    #define ATOL1 RCONST(1.0e-8)   /* vector absolute tolerance components */
+    #define ATOL2 RCONST(1.0e-14)
+    #define ATOL3 RCONST(1.0e-6)
+    #define T0    RCONST(0.0)      /* initial time           */
+    #define T1    RCONST(0.4)      /* first output time      */
+    #define TMULT RCONST(10.0)     /* output time factor     */
+    #define NOUT  12               /* number of output times */
+
+    realtype reltol, t, tout;
+    N_Vector y, abstol;
+    void *cvode_mem;
+    int flag, flagr, iout;
+    int rootsfound[2];
+
+    y = abstol = NULL;
+    cvode_mem = NULL;
+
+    /* Create serial vector of length NEQ for I.C. and abstol */
+    y = N_VNew_Serial(NEQ);
+    if (check_flag((void *)y, (char *) "N_VNew_Serial", 0)) return;
+    abstol = N_VNew_Serial(NEQ);
+    if (check_flag((void *)abstol, (char *) "N_VNew_Serial", 0)) return;
+
+    /* Initialize y */
+    Ith(y,1) = Y1;
+    Ith(y,2) = Y2;
+    Ith(y,3) = Y3;
+
+    /* Set the scalar relative tolerance */
+    reltol = RTOL;
+    /* Set the vector absolute tolerance */
+    Ith(abstol,1) = ATOL1;
+    Ith(abstol,2) = ATOL2;
+    Ith(abstol,3) = ATOL3;
+
+    /* Call CVodeCreate to create the solver memory and specify the
+     * Backward Differentiation Formula and the use of a Newton iteration */
+    cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON);
+    if (check_flag((void *)cvode_mem, (char *) "CVodeCreate", 0)) return;
+
+    /* Call CVodeInit to initialize the integrator memory and specify the
+     * user's right hand side function in y'=f(t,y), the inital time T0, and
+     * the initial dependent variable vector y. */
+    flag = CVodeInit(cvode_mem, f, T0, y);
+    if (check_flag(&flag, (char *) "CVodeInit", 1)) return;
+
+    /* Call CVodeSVtolerances to specify the scalar relative tolerance
+     * and vector absolute tolerances */
+    flag = CVodeSVtolerances(cvode_mem, reltol, abstol);
+    if (check_flag(&flag, (char *) "CVodeSVtolerances", 1)) return;
+
+    /* Call CVodeRootInit to specify the root function g with 2 components */
+    flag = CVodeRootInit(cvode_mem, 2, g);
+    if (check_flag(&flag, (char *) "CVodeRootInit", 1)) return;
+
+    /* Call CVDense to specify the CVDENSE dense linear solver */
+    flag = CVDense(cvode_mem, NEQ);
+    if (check_flag(&flag, (char *) "CVDense", 1)) return;
+
+    /* Set the Jacobian routine to Jac (user-supplied) */
+    flag = CVDlsSetDenseJacFn(cvode_mem, Jac);
+    if (check_flag(&flag, (char *) "CVDlsSetDenseJacFn", 1)) return;
+
+    /* In loop, call CVode, print results, and test for error.
+       Break out of loop when NOUT preset output times have been reached.  */
+    qDebug() << "3-species kinetics problem:";
+    qDebug();
+
+    iout = 0;  tout = T1;
+    while(1) {
+      flag = CVode(cvode_mem, tout, y, &t, CV_NORMAL);
+      PrintOutput(t, Ith(y,1), Ith(y,2), Ith(y,3));
+
+      if (flag == CV_ROOT_RETURN) {
+        flagr = CVodeGetRootInfo(cvode_mem, rootsfound);
+        if (check_flag(&flagr, (char *) "CVodeGetRootInfo", 1)) return;
+        PrintRootInfo(rootsfound[0],rootsfound[1]);
+      }
+
+      if (check_flag(&flag, (char *) "CVode", 1)) break;
+      if (flag == CV_SUCCESS) {
+        iout++;
+        tout *= TMULT;
+      }
+
+      if (iout == NOUT) break;
+    }
+
+    /* Print some final statistics */
+    PrintFinalStats(cvode_mem);
+
+    /* Free y and abstol vectors */
+    N_VDestroy_Serial(y);
+    N_VDestroy_Serial(abstol);
+
+    /* Free integrator memory */
+    CVodeFree(&cvode_mem);
+
+    qDebug();
+}
+
+//==============================================================================
+
 void CoreSimulationPlugin::initialize()
 {
     // Test a few third-party plugins
 
     testCellml();
     testLlvmJit();
+    testCvode();
 
     qDebug() << "================================================================================";
 

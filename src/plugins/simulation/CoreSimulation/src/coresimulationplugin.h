@@ -48,6 +48,7 @@ private:
 
     void testCellml();
     void testLlvmJit();
+    void testCvode();
 
     void usePrecomputedTestCellmlResults();
 };
