@@ -33,13 +33,8 @@ class CellMLPlugin : public QObject, public CoreInterface, public FileInterface
     Q_INTERFACES(OpenCOR::FileInterface)
 
 public:
-    virtual void initialize();
-
     virtual QList<FileType> fileTypes() const;
     virtual QString fileTypeDescription(const QString &mMimeType) const;
-
-private:
-    void usePrecomputedTestCellmlResults();
 };
 
 //==============================================================================

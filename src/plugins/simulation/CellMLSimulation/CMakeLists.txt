@@ -15,5 +15,4 @@ ADD_PLUGIN(CellMLSimulation
         Core
     QT_DEPENDENCIES
         QtCore
-        QtGui
 )

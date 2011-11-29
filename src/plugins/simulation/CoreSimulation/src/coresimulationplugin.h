@@ -46,7 +46,10 @@ private:
     QVector<double> mXData;
     QVector<double> mYData;
 
+    void testCellml();
     void testLlvmJit();
+
+    void usePrecomputedTestCellmlResults();
 };
 
 //==============================================================================
