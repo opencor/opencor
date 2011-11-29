@@ -173,8 +173,8 @@ SET(PLUGINS
     editing/CoreEditing
     editing/CoreCellMLEditing
 
-    3rdparty/CVODE
-    3rdparty/IDA
+    3rdparty/SUNDIALS/CVODE
+    3rdparty/SUNDIALS/IDA
 
     simulation/CoreSimulation
 
