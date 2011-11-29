@@ -3248,7 +3248,12 @@ void IDAProcessError(IDAMem IDA_mem,
 
 #ifndef NO_FPRINTF_OUTPUT
     fprintf(stderr, "\n[%s ERROR]  %s\n  ", module, fname);
+/*---GRY---
     fprintf(stderr, msgfmt);
+*/
+//---GRY--- BEGIN
+    vfprintf(stderr, msgfmt, ap);
+//---GRY--- END
     fprintf(stderr, "\n\n");
 #endif
 
