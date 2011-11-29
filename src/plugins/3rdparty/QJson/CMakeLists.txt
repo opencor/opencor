@@ -14,19 +14,6 @@ ADD_PLUGIN(QJson
         src/qobjecthelper.cpp
         src/serializer.cpp
         src/serializerrunnable.cpp
-    HEADERS
-        ../../plugininfo.h
-
-        src/json_parser.hh
-        src/json_scanner.h
-        src/location.hh
-        src/parser.h
-        src/position.hh
-        src/qjson_debug.h
-        src/qjson_export.h
-        src/qobjecthelper.h
-        src/serializer.h
-        src/stack.hh
     HEADERS_MOC
         src/parserrunnable.h
         src/qjsonplugin.h

@@ -20,16 +20,6 @@ ADD_PLUGIN(Core
         src/filemanager.cpp
         src/organisationwidget.cpp
         src/treeview.cpp
-    HEADERS
-        ../../coreinterface.h
-        ../../fileinterface.h
-        ../../guiinterface.h
-        ../../i18ninterface.h
-        ../../plugininfo.h
-
-        src/commonwidget.h
-        src/coreglobal.h
-        src/coreutils.h
     HEADERS_MOC
         ../../plugin.h
 

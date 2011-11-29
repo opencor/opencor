@@ -64,62 +64,6 @@ ADD_PLUGIN(QScintilla
         src/UniConversion.cpp
         src/ViewStyle.cpp
         src/XPM.cpp
-    HEADERS
-        ../../plugininfo.h
-
-        include/ILexer.h
-        include/Platform.h
-        include/SciLexer.h
-        include/Scintilla.h
-
-        lexlib/Accessor.h
-        lexlib/CharacterSet.h
-        lexlib/LexAccessor.h
-        lexlib/LexerBase.h
-        lexlib/LexerModule.h
-        lexlib/LexerSimple.h
-        lexlib/OptionSet.h
-        lexlib/PropSetSimple.h
-        lexlib/SparseState.h
-        lexlib/StyleContext.h
-        lexlib/WordList.h
-
-        Qt4/ListBoxQt.h
-        Qt4/ScintillaQt.h
-
-        Qt4/Qsci/qscicommand.h
-        Qt4/Qsci/qscicommandset.h
-        Qt4/Qsci/qscidocument.h
-        Qt4/Qsci/qsciglobal.h
-        Qt4/Qsci/qscistyle.h
-        Qt4/Qsci/qscistyledtext.h
-
-        src/Autocomplete.h
-        src/CallTip.h
-        src/Catalogue.h
-        src/CellBuffer.h
-        src/CharClassify.h
-        src/ContractionState.h
-        src/Decoration.h
-        src/Document.h
-        src/Editor.h
-        src/FontQuality.h
-        src/Indicator.h
-        src/KeyMap.h
-        src/LineMarker.h
-        src/Partitioning.h
-        src/PerLine.h
-        src/PositionCache.h
-        src/RESearch.h
-        src/RunStyles.h
-        src/ScintillaBase.h
-        src/Selection.h
-        src/SplitVector.h
-        src/Style.h
-        src/SVector.h
-        src/UniConversion.h
-        src/ViewStyle.h
-        src/XPM.h
     HEADERS_MOC
         Qt4/SciClasses.h
 

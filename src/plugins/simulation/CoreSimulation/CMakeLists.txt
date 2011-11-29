@@ -13,10 +13,6 @@ ADD_PLUGIN(CoreSimulation
         ../../plugininfo.cpp
 
         src/coresimulationplugin.cpp
-    HEADERS
-        ../../coreinterface.h
-        ../../guiinterface.h
-        ../../plugininfo.h
     HEADERS_MOC
         src/coresimulationplugin.h
     DEFINITIONS

@@ -8,10 +8,6 @@ ADD_PLUGIN(QtMmlWidget
 
         src/qtmmlwidget.cpp
         src/qtmmlwidgetplugin.cpp
-    HEADERS
-        ../../plugininfo.h
-
-        src/qtmmlwidget.h
     HEADERS_MOC
         src/qtmmlwidgetplugin.h
     INCLUDE_DIRS

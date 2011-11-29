@@ -12,11 +12,6 @@ ADD_PLUGIN(Viewer
         src/mmlviewerwidget.cpp
         src/viewerplugin.cpp
         src/viewerwindow.cpp
-    HEADERS
-        ../../coreinterface.h
-        ../../guiinterface.h
-        ../../i18ninterface.h
-        ../../plugininfo.h
     HEADERS_MOC
         src/mmlviewerwidget.h
         src/viewerplugin.h

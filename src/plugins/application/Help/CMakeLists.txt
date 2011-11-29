@@ -12,11 +12,6 @@ ADD_PLUGIN(Help
         src/helpplugin.cpp
         src/helpwidget.cpp
         src/helpwindow.cpp
-    HEADERS
-        ../../coreinterface.h
-        ../../guiinterface.h
-        ../../i18ninterface.h
-        ../../plugininfo.h
     HEADERS_MOC
         src/helpplugin.h
         src/helpwidget.h

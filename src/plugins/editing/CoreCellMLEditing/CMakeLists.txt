@@ -10,11 +10,6 @@ ADD_PLUGIN(CoreCellMLEditing
         ../../plugininfo.cpp
 
         src/corecellmleditingplugin.cpp
-    HEADERS
-        ../../coreinterface.h
-        ../../guiinterface.h
-        ../../i18ninterface.h
-        ../../plugininfo.h
     HEADERS_MOC
         src/corecellmleditingplugin.h
     INCLUDE_DIRS

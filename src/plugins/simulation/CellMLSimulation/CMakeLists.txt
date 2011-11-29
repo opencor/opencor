@@ -7,8 +7,6 @@ ADD_PLUGIN(CellMLSimulation
         ../../plugininfo.cpp
 
         src/cellmlsimulationplugin.cpp
-    HEADERS
-        ../../plugininfo.h
     HEADERS_MOC
         src/cellmlsimulationplugin.h
     INCLUDE_DIRS

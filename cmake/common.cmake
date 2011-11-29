@@ -90,11 +90,11 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files which will later on be embedded in the project
     # itself
-    # Note: this requires SOURCES, HEADERS, HEADERS_MOC and UIS to be defined
-    #       for the current CMake project, even if that means that these
-    #       variables are to be empty (the case with some plugins for example).
-    #       Indeed, since otherwise the value of these variables, as defined in
-    #       a previous project, may be used, so...
+    # Note: this requires SOURCES, HEADERS_MOC and UIS to be defined for the
+    #       current CMake project, even if that means that these variables are
+    #       to be empty (the case with some plugins for example). Indeed, since
+    #       otherwise the value of these variables, as defined in a previous
+    #       project, may be used, so...
 
     SET(LANGUAGE_FILES
         ${TARGET_NAME}_fr
@@ -105,7 +105,7 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
 
         IF(EXISTS "${PROJECT_SOURCE_DIR}/${TS_FILE}")
             EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} -no-obsolete
-                                                             ${SOURCES} ${HEADERS} ${HEADERS_MOC} ${UIS}
+                                                             ${SOURCES} ${HEADERS_MOC} ${UIS}
                                                          -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
             EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${PROJECT_SOURCE_DIR}/${TS_FILE}
@@ -128,7 +128,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
     SET(SOURCES)
-    SET(HEADERS)
     SET(HEADERS_MOC)
     SET(UIS)
     SET(INCLUDE_DIRS)
@@ -146,26 +145,24 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     FOREACH(PARAMETER ${ARGN})
         IF(${PARAMETER} STREQUAL "SOURCES")
             SET(TYPE_OF_PARAMETER 1)
-        ELSEIF(${PARAMETER} STREQUAL "HEADERS")
-            SET(TYPE_OF_PARAMETER 2)
         ELSEIF(${PARAMETER} STREQUAL "HEADERS_MOC")
-            SET(TYPE_OF_PARAMETER 3)
+            SET(TYPE_OF_PARAMETER 2)
         ELSEIF(${PARAMETER} STREQUAL "UIS")
-            SET(TYPE_OF_PARAMETER 4)
+            SET(TYPE_OF_PARAMETER 3)
         ELSEIF(${PARAMETER} STREQUAL "INCLUDE_DIRS")
-            SET(TYPE_OF_PARAMETER 5)
+            SET(TYPE_OF_PARAMETER 4)
         ELSEIF(${PARAMETER} STREQUAL "DEFINITIONS")
-            SET(TYPE_OF_PARAMETER 6)
+            SET(TYPE_OF_PARAMETER 5)
         ELSEIF(${PARAMETER} STREQUAL "FLAGS")
-            SET(TYPE_OF_PARAMETER 7)
+            SET(TYPE_OF_PARAMETER 6)
         ELSEIF(${PARAMETER} STREQUAL "OPENCOR_DEPENDENCIES")
-            SET(TYPE_OF_PARAMETER 8)
+            SET(TYPE_OF_PARAMETER 7)
         ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
-            SET(TYPE_OF_PARAMETER 9)
+            SET(TYPE_OF_PARAMETER 8)
         ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES_DIR")
-            SET(TYPE_OF_PARAMETER 10)
+            SET(TYPE_OF_PARAMETER 9)
         ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
-            SET(TYPE_OF_PARAMETER 11)
+            SET(TYPE_OF_PARAMETER 10)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -173,24 +170,22 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
                 SET(SOURCES ${SOURCES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
-                SET(HEADERS ${HEADERS} ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 3)
                 SET(HEADERS_MOC ${HEADERS_MOC} ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 4)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 3)
                 SET(UIS ${UIS} ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 5)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 4)
                 SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 6)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 5)
                 SET(DEFINITIONS ${DEFINITIONS} ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 6)
                 SET(FLAGS ${FLAGS} ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
                 SET(OPENCOR_DEPENDENCIES ${OPENCOR_DEPENDENCIES} ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
                 SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
                 SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
             ENDIF()
         ENDIF()

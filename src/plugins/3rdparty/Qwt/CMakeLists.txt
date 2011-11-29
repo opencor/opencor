@@ -85,64 +85,6 @@ ADD_PLUGIN(Qwt
 
         textengines/mathml/qwt_mathml_text_engine.cpp
         textengines/mathml/qwt_mml_document.cpp
-    HEADERS
-        ../../plugininfo.h
-
-        src/qwt_abstract_scale_draw.h
-        src/qwt_abstract_scale.h
-        src/qwt_arrow_button.h
-        src/qwt_clipper.h
-        src/qwt_color_map.h
-        src/qwt_column_symbol.h
-        src/qwt_compass_rose.h
-        src/qwt_compat.h
-        src/qwt_curve_fitter.h
-        src/qwt_dial_needle.h
-        src/qwt_double_range.h
-        src/qwt_event_pattern.h
-        src/qwt_global.h
-        src/qwt.h
-        src/qwt_interval.h
-        src/qwt_interval_symbol.h
-        src/qwt_legend_itemmanager.h
-        src/qwt_math.h
-        src/qwt_matrix_raster_data.h
-        src/qwt_null_paintdevice.h
-        src/qwt_painter.h
-        src/qwt_picker_machine.h
-        src/qwt_plot_curve.h
-        src/qwt_plot_dict.h
-        src/qwt_plot_directpainter.h
-        src/qwt_plot_grid.h
-        src/qwt_plot_histogram.h
-        src/qwt_plot_intervalcurve.h
-        src/qwt_plot_item.h
-        src/qwt_plot_layout.h
-        src/qwt_plot_marker.h
-        src/qwt_plot_rasteritem.h
-        src/qwt_plot_rescaler.h
-        src/qwt_plot_scaleitem.h
-        src/qwt_plot_seriesitem.h
-        src/qwt_plot_spectrocurve.h
-        src/qwt_plot_spectrogram.h
-        src/qwt_plot_svgitem.h
-        src/qwt_point_3d.h
-        src/qwt_point_polar.h
-        src/qwt_raster_data.h
-        src/qwt_round_scale_draw.h
-        src/qwt_scale_div.h
-        src/qwt_scale_draw.h
-        src/qwt_scale_engine.h
-        src/qwt_scale_map.h
-        src/qwt_series_data.h
-        src/qwt_spline.h
-        src/qwt_symbol.h
-        src/qwt_system_clock.h
-        src/qwt_text_engine.h
-        src/qwt_text.h
-
-        textengines/mathml/qwt_mathml_text_engine.h
-        textengines/mathml/qwt_mml_document.h
     HEADERS_MOC
         src/qwt_abstract_slider.h
         src/qwt_analog_clock.h

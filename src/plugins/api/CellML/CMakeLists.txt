@@ -39,10 +39,6 @@ ADD_PLUGIN(CellML
         ../../plugininfo.cpp
 
         src/cellmlplugin.cpp
-    HEADERS
-        ../../coreinterface.h
-        ../../fileinterface.h
-        ../../plugininfo.h
     HEADERS_MOC
         src/cellmlplugin.h
     INCLUDE_DIRS

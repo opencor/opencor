@@ -10,11 +10,6 @@ ADD_PLUGIN(RawCellMLView
         ../../plugininfo.cpp
 
         src/rawcellmlviewplugin.cpp
-    HEADERS
-        ../../coreinterface.h
-        ../../guiinterface.h
-        ../../i18ninterface.h
-        ../../plugininfo.h
     HEADERS_MOC
         src/rawcellmlviewplugin.h
     INCLUDE_DIRS

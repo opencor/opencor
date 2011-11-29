@@ -12,11 +12,6 @@ ADD_PLUGIN(FileOrganiser
         src/fileorganiserplugin.cpp
         src/fileorganiserwidget.cpp
         src/fileorganiserwindow.cpp
-    HEADERS
-        ../../coreinterface.h
-        ../../guiinterface.h
-        ../../i18ninterface.h
-        ../../plugininfo.h
     HEADERS_MOC
         src/fileorganiserplugin.h
         src/fileorganiserwidget.h

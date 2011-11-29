@@ -42,8 +42,6 @@ ADD_PLUGIN(LLVM
         ../../plugininfo.cpp
 
         src/llvmplugin.cpp
-    HEADERS
-        ../../plugininfo.h
     HEADERS_MOC
         src/llvmplugin.h
     INCLUDE_DIRS
