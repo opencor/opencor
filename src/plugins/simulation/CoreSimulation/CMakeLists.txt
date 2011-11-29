@@ -27,6 +27,8 @@ ADD_PLUGIN(CoreSimulation
         src
     OPENCOR_DEPENDENCIES
         Core
+        CVODE
+        IDA
         LLVM
         Qwt
     QT_DEPENDENCIES

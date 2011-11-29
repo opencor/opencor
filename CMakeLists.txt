@@ -173,6 +173,9 @@ SET(PLUGINS
     editing/CoreEditing
     editing/CoreCellMLEditing
 
+    3rdparty/CVODE
+    3rdparty/IDA
+
     simulation/CoreSimulation
 
     3rdparty/QJson
