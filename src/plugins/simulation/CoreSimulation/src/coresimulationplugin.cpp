@@ -40,8 +40,12 @@
 //==============================================================================
 
 #include "cvode/cvode.h"
-#include "nvector/nvector_serial.h"
 #include "cvode/cvode_dense.h"
+
+#include <ida/ida.h>
+#include <ida/ida_dense.h>
+
+#include "nvector/nvector_serial.h"
 #include "sundials/sundials_dense.h"
 #include "sundials/sundials_types.h"
 
@@ -575,7 +579,7 @@ static int Jac(int N, realtype t,
  *-------------------------------
  */
 
-static void PrintOutput(realtype t, realtype y1, realtype y2, realtype y3)
+static void PrintCvodeOutput(realtype t, realtype y1, realtype y2, realtype y3)
 {
 #if defined(SUNDIALS_EXTENDED_PRECISION)
     qDebug("At t = %0.4Le      y =%14.6Le  %14.6Le  %14.6Le", t, y1, y2, y3);
@@ -588,7 +592,7 @@ static void PrintOutput(realtype t, realtype y1, realtype y2, realtype y3)
   return;
 }
 
-static void PrintRootInfo(int root_f1, int root_f2)
+static void PrintCvodeRootInfo(int root_f1, int root_f2)
 {
     qDebug("    rootsfound[] = %3d %3d", root_f1, root_f2);
 
@@ -614,7 +618,7 @@ static int check_flag(void *flagvalue, char *funcname, int opt)
     /* Check if SUNDIALS function returned NULL pointer - no memory allocated */
     if (opt == 0 && flagvalue == NULL) {
         qDebug("SUNDIALS_ERROR: %s() failed - returned NULL pointer",
-                funcname);
+               funcname);
         return(1); }
 
     /* Check if flag < 0 */
@@ -622,13 +626,13 @@ static int check_flag(void *flagvalue, char *funcname, int opt)
         errflag = (int *) flagvalue;
         if (*errflag < 0) {
             qDebug("SUNDIALS_ERROR: %s() failed with flag = %d",
-                    funcname, *errflag);
+                   funcname, *errflag);
         return(1); }}
 
     /* Check if function returned NULL pointer - no memory allocated */
     else if (opt == 2 && flagvalue == NULL) {
         qDebug("MEMORY_ERROR: %s() failed - returned NULL pointer",
-                funcname);
+               funcname);
         return(1); }
 
     return(0);
@@ -640,7 +644,7 @@ static int check_flag(void *flagvalue, char *funcname, int opt)
  * Get and print some final statistics
  */
 
-static void PrintFinalStats(void *cvode_mem)
+static void PrintFinalCvodeStats(void *cvode_mem)
 {
     long int nst, nfe, nsetups, nje, nfeLS, nni, ncfn, netf, nge;
     int flag;
@@ -687,6 +691,8 @@ void CoreSimulationPlugin::testCvode()
     qDebug() << "----------------";
     qDebug();
 
+    /* Problem Constants */
+
     #define NEQ   3                /* number of equations  */
     #define Y1    RCONST(1.0)      /* initial y components */
     #define Y2    RCONST(0.0)
@@ -699,6 +705,26 @@ void CoreSimulationPlugin::testCvode()
     #define T1    RCONST(0.4)      /* first output time      */
     #define TMULT RCONST(10.0)     /* output time factor     */
     #define NOUT  12               /* number of output times */
+
+    /*
+     * The following is a simple example problem, with the coding
+     * needed for its solution by CVODE. The problem is from
+     * chemical kinetics, and consists of the following three rate
+     * equations:
+     *    dy1/dt = -.04*y1 + 1.e4*y2*y3
+     *    dy2/dt = .04*y1 - 1.e4*y2*y3 - 3.e7*(y2)^2
+     *    dy3/dt = 3.e7*(y2)^2
+     * on the interval from t = 0.0 to t = 4.e10, with initial
+     * conditions: y1 = 1.0, y2 = y3 = 0. The problem is stiff.
+     * While integrating the system, we also use the rootfinding
+     * feature to find the points at which y1 = 1e-4 or at which
+     * y3 = 0.01. This program solves the problem with the BDF method,
+     * Newton iteration with the CVDENSE dense linear solver, and a
+     * user-supplied Jacobian routine.
+     * It uses a scalar relative tolerance and a vector absolute
+     * tolerance. Output is printed in decades from t = .4 to t = 4.e10.
+     * Run statistics (optional outputs) are printed at the end.
+     */
 
     realtype reltol, t, tout;
     N_Vector y, abstol;
@@ -763,12 +789,12 @@ void CoreSimulationPlugin::testCvode()
     iout = 0;  tout = T1;
     while(1) {
       flag = CVode(cvode_mem, tout, y, &t, CV_NORMAL);
-      PrintOutput(t, Ith(y,1), Ith(y,2), Ith(y,3));
+      PrintCvodeOutput(t, Ith(y,1), Ith(y,2), Ith(y,3));
 
       if (flag == CV_ROOT_RETURN) {
         flagr = CVodeGetRootInfo(cvode_mem, rootsfound);
         if (check_flag(&flagr, (char *) "CVodeGetRootInfo", 1)) return;
-        PrintRootInfo(rootsfound[0],rootsfound[1]);
+        PrintCvodeRootInfo(rootsfound[0],rootsfound[1]);
       }
 
       if (check_flag(&flag, (char *) "CVode", 1)) break;
@@ -781,7 +807,7 @@ void CoreSimulationPlugin::testCvode()
     }
 
     /* Print some final statistics */
-    PrintFinalStats(cvode_mem);
+    PrintFinalCvodeStats(cvode_mem);
 
     /* Free y and abstol vectors */
     N_VDestroy_Serial(y);
@@ -795,6 +821,340 @@ void CoreSimulationPlugin::testCvode()
 
 //==============================================================================
 
+/*
+ * Print first lines of output (problem description)
+ */
+
+static void PrintHeader(realtype rtol, N_Vector avtol, N_Vector y)
+{
+    realtype *atval, *yval;
+
+    atval  = NV_DATA_S(avtol);
+    yval  = NV_DATA_S(y);
+
+    qDebug("idadenx: Robertson kinetics DAE serial example problem for IDA");
+    qDebug("         Three equation chemical kinetics problem.");
+    qDebug();
+    qDebug("Linear solver: IDADENSE, with user-supplied Jacobian.");
+#if defined(SUNDIALS_EXTENDED_PRECISION)
+    qDebug("Tolerance parameters:  rtol = %Lg   atol = %Lg %Lg %Lg",
+           rtol, atval[0],atval[1],atval[2]);
+    qDebug("Initial conditions y0 = (%Lg %Lg %Lg)",
+           yval[0], yval[1], yval[2]);
+#elif defined(SUNDIALS_DOUBLE_PRECISION)
+    qDebug("Tolerance parameters:  rtol = %lg   atol = %lg %lg %lg",
+           rtol, atval[0],atval[1],atval[2]);
+    qDebug("Initial conditions y0 = (%lg %lg %lg)",
+           yval[0], yval[1], yval[2]);
+#else
+    qDebug("Tolerance parameters:  rtol = %g   atol = %g %g %g",
+           rtol, atval[0],atval[1],atval[2]);
+    qDebug("Initial conditions y0 = (%g %g %g)",
+           yval[0], yval[1], yval[2]);
+#endif
+    qDebug("Constraints and id not used.");
+    qDebug();
+    qDebug("-----------------------------------------------------------------------");
+    qDebug("  t             y1           y2           y3      | nst  k      h");
+    qDebug("-----------------------------------------------------------------------");
+}
+
+//==============================================================================
+
+#define ZERO RCONST(0.0);
+#define ONE  RCONST(1.0);
+
+//==============================================================================
+
+/*
+ * Define the system residual function.
+ */
+
+int resrob(realtype tres, N_Vector yy, N_Vector yp, N_Vector rr, void *user_data)
+{
+    realtype *yval, *ypval, *rval;
+
+    yval = NV_DATA_S(yy);
+    ypval = NV_DATA_S(yp);
+    rval = NV_DATA_S(rr);
+
+    rval[0]  = RCONST(-0.04)*yval[0] + RCONST(1.0e4)*yval[1]*yval[2];
+    rval[1]  = -rval[0] - RCONST(3.0e7)*yval[1]*yval[1] - ypval[1];
+    rval[0] -=  ypval[0];
+    rval[2]  =  yval[0] + yval[1] + yval[2] - ONE;
+
+    return(0);
+}
+
+//==============================================================================
+
+/*
+ * Root function routine. Compute functions g_i(t,y) for i = 0,1.
+ */
+
+static int grob(realtype t, N_Vector yy, N_Vector yp, realtype *gout,
+                void *user_data)
+{
+    realtype *yval, y1, y3;
+
+    yval = NV_DATA_S(yy);
+    y1 = yval[0]; y3 = yval[2];
+    gout[0] = y1 - RCONST(0.0001);
+    gout[1] = y3 - RCONST(0.01);
+
+    return(0);
+}
+
+//==============================================================================
+
+/*
+ * Define the Jacobian function.
+ */
+
+int jacrob(int Neq, realtype tt,  realtype cj,
+           N_Vector yy, N_Vector yp, N_Vector resvec,
+           DlsMat JJ, void *user_data,
+           N_Vector tempv1, N_Vector tempv2, N_Vector tempv3)
+{
+    realtype *yval;
+
+    yval = NV_DATA_S(yy);
+
+    IJth(JJ,1,1) = RCONST(-0.04) - cj;
+    IJth(JJ,2,1) = RCONST(0.04);
+    IJth(JJ,3,1) = ONE;
+    IJth(JJ,1,2) = RCONST(1.0e4)*yval[2];
+    IJth(JJ,2,2) = RCONST(-1.0e4)*yval[2] - RCONST(6.0e7)*yval[1] - cj;
+    IJth(JJ,3,2) = ONE;
+    IJth(JJ,1,3) = RCONST(1.0e4)*yval[1];
+    IJth(JJ,2,3) = RCONST(-1.0e4)*yval[1];
+    IJth(JJ,3,3) = ONE;
+
+    return(0);
+}
+
+//==============================================================================
+
+/*
+ *--------------------------------------------------------------------
+ * Private functions
+ *--------------------------------------------------------------------
+ */
+
+static void PrintIdaOutput(void *mem, realtype t, N_Vector y)
+{
+    realtype *yval;
+    int retval, kused;
+    long int nst;
+    realtype hused;
+
+    yval  = NV_DATA_S(y);
+
+    retval = IDAGetLastOrder(mem, &kused);
+    check_flag(&retval, (char *) "IDAGetLastOrder", 1);
+    retval = IDAGetNumSteps(mem, &nst);
+    check_flag(&retval, (char *) "IDAGetNumSteps", 1);
+    retval = IDAGetLastStep(mem, &hused);
+    check_flag(&retval, (char *) "IDAGetLastStep", 1);
+#if defined(SUNDIALS_EXTENDED_PRECISION)
+    qDebug("%10.4Le %12.4Le %12.4Le %12.4Le | %3ld  %1d %12.4Le",
+           t, yval[0], yval[1], yval[2], nst, kused, hused);
+#elif defined(SUNDIALS_DOUBLE_PRECISION)
+    qDebug("%10.4le %12.4le %12.4le %12.4le | %3ld  %1d %12.4le",
+           t, yval[0], yval[1], yval[2], nst, kused, hused);
+#else
+    qDebug("%10.4e %12.4e %12.4e %12.4e | %3ld  %1d %12.4e",
+           t, yval[0], yval[1], yval[2], nst, kused, hused);
+#endif
+}
+
+static void PrintIdaRootInfo(int root_f1, int root_f2)
+{
+    qDebug("    rootsfound[] = %3d %3d", root_f1, root_f2);
+    return;
+}
+
+//==============================================================================
+
+/*
+ * Print final integrator statistics
+ */
+
+static void PrintFinalIdaStats(void *mem)
+{
+    int retval;
+    long int nst, nni, nje, nre, nreLS, netf, ncfn, nge;
+
+    retval = IDAGetNumSteps(mem, &nst);
+    check_flag(&retval, (char *) "IDAGetNumSteps", 1);
+    retval = IDAGetNumResEvals(mem, &nre);
+    check_flag(&retval, (char *) "IDAGetNumResEvals", 1);
+    retval = IDADlsGetNumJacEvals(mem, &nje);
+    check_flag(&retval, (char *) "IDADlsGetNumJacEvals", 1);
+    retval = IDAGetNumNonlinSolvIters(mem, &nni);
+    check_flag(&retval, (char *) "IDAGetNumNonlinSolvIters", 1);
+    retval = IDAGetNumErrTestFails(mem, &netf);
+    check_flag(&retval, (char *) "IDAGetNumErrTestFails", 1);
+    retval = IDAGetNumNonlinSolvConvFails(mem, &ncfn);
+    check_flag(&retval, (char *) "IDAGetNumNonlinSolvConvFails", 1);
+    retval = IDADlsGetNumResEvals(mem, &nreLS);
+    check_flag(&retval, (char *) "IDADlsGetNumResEvals", 1);
+    retval = IDAGetNumGEvals(mem, &nge);
+    check_flag(&retval, (char *) "IDAGetNumGEvals", 1);
+
+    qDebug();
+    qDebug("Final Run Statistics:");
+    qDebug("Number of steps                    = %ld", nst);
+    qDebug("Number of residual evaluations     = %ld", nre+nreLS);
+    qDebug("Number of Jacobian evaluations     = %ld", nje);
+    qDebug("Number of nonlinear iterations     = %ld", nni);
+    qDebug("Number of error test failures      = %ld", netf);
+    qDebug("Number of nonlinear conv. failures = %ld", ncfn);
+    qDebug("Number of root fn. evaluations     = %ld", nge);
+}
+
+//==============================================================================
+
+void CoreSimulationPlugin::testIda()
+{
+    // Testing IDA
+    // Note: this is a shameless copying/pasting of the idaRoberts_dns.c code...
+
+    qDebug() << "================================================================================";
+    qDebug();
+    qDebug() << "Testing IDA";
+    qDebug() << "-----------";
+    qDebug();
+
+    /* Problem Constants */
+
+    #define NEQ   3
+    #define NOUT  12
+
+    /*
+     * This simple example problem for IDA, due to Robertson,
+     * is from chemical kinetics, and consists of the following three
+     * equations:
+     *
+     *      dy1/dt = -.04*y1 + 1.e4*y2*y3
+     *      dy2/dt = .04*y1 - 1.e4*y2*y3 - 3.e7*y2**2
+     *         0   = y1 + y2 + y3 - 1
+     *
+     * on the interval from t = 0.0 to t = 4.e10, with initial
+     * conditions: y1 = 1, y2 = y3 = 0.
+     *
+     * While integrating the system, we also use the rootfinding
+     * feature to find the points at which y1 = 1e-4 or at which
+     * y3 = 0.01.
+     *
+     * The problem is solved with IDA using IDADENSE for the linear
+     * solver, with a user-supplied Jacobian. Output is printed at
+     * t = .4, 4, 40, ..., 4e10.
+     */
+
+    void *mem;
+    N_Vector yy, yp, avtol;
+    realtype rtol, *yval, *ypval, *atval;
+    realtype t0, tout1, tout, tret;
+    int iout, retval, retvalr;
+    int rootsfound[2];
+
+    mem = NULL;
+    yy = yp = avtol = NULL;
+    yval = ypval = atval = NULL;
+
+    /* Allocate N-vectors. */
+    yy = N_VNew_Serial(NEQ);
+    if(check_flag((void *)yy, (char *) "N_VNew_Serial", 0)) return;
+    yp = N_VNew_Serial(NEQ);
+    if(check_flag((void *)yp, (char *) "N_VNew_Serial", 0)) return;
+    avtol = N_VNew_Serial(NEQ);
+    if(check_flag((void *)avtol, (char *) "N_VNew_Serial", 0)) return;
+
+    /* Create and initialize  y, y', and absolute tolerance vectors. */
+    yval  = NV_DATA_S(yy);
+    yval[0] = ONE;
+    yval[1] = ZERO;
+    yval[2] = ZERO;
+
+    ypval = NV_DATA_S(yp);
+    ypval[0]  = RCONST(-0.04);
+    ypval[1]  = RCONST(0.04);
+    ypval[2]  = ZERO;
+
+    rtol = RCONST(1.0e-4);
+
+    atval = NV_DATA_S(avtol);
+    atval[0] = RCONST(1.0e-8);
+    atval[1] = RCONST(1.0e-14);
+    atval[2] = RCONST(1.0e-6);
+
+    /* Integration limits */
+    t0 = ZERO;
+    tout1 = RCONST(0.4);
+
+    PrintHeader(rtol, avtol, yy);
+
+    /* Call IDACreate and IDAMalloc to initialize IDA memory */
+    mem = IDACreate();
+    if(check_flag((void *)mem, (char *) "IDACreate", 0)) return;
+    retval = IDAInit(mem, resrob, t0, yy, yp);
+    if(check_flag(&retval, (char *) "IDAInit", 1)) return;
+    retval = IDASVtolerances(mem, rtol, avtol);
+    if(check_flag(&retval, (char *) "IDASVtolerances", 1)) return;
+
+    /* Free avtol */
+    N_VDestroy_Serial(avtol);
+
+    /* Call IDARootInit to specify the root function grob with 2 components */
+    retval = IDARootInit(mem, 2, grob);
+    if (check_flag(&retval, (char *) "IDARootInit", 1)) return;
+
+    /* Call IDADense and set up the linear solver. */
+    retval = IDADense(mem, NEQ);
+    if(check_flag(&retval, (char *) "IDADense", 1)) return;
+    retval = IDADlsSetDenseJacFn(mem, jacrob);
+    if(check_flag(&retval, (char *) "IDADlsSetDenseJacFn", 1)) return;
+
+    /* In loop, call IDASolve, print results, and test for error.
+       Break out of loop when NOUT preset output times have been reached. */
+
+    iout = 0; tout = tout1;
+    while(1) {
+
+      retval = IDASolve(mem, tout, &tret, yy, yp, IDA_NORMAL);
+
+      PrintIdaOutput(mem,tret,yy);
+
+      if(check_flag(&retval, (char *) "IDASolve", 1)) return;
+
+      if (retval == IDA_ROOT_RETURN) {
+        retvalr = IDAGetRootInfo(mem, rootsfound);
+        check_flag(&retvalr, (char *) "IDAGetRootInfo", 1);
+        PrintIdaRootInfo(rootsfound[0],rootsfound[1]);
+      }
+
+      if (retval == IDA_SUCCESS) {
+        iout++;
+        tout *= RCONST(10.0);
+      }
+
+      if (iout == NOUT) break;
+    }
+
+    PrintFinalIdaStats(mem);
+
+    /* Free memory */
+
+    IDAFree(&mem);
+    N_VDestroy_Serial(yy);
+    N_VDestroy_Serial(yp);
+
+    qDebug();
+}
+
+//==============================================================================
+
 void CoreSimulationPlugin::initialize()
 {
     // Test a few third-party plugins
@@ -802,6 +1162,7 @@ void CoreSimulationPlugin::initialize()
     testCellml();
     testLlvmJit();
     testCvode();
+    testIda();
 
     qDebug() << "================================================================================";
 

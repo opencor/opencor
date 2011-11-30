@@ -49,6 +49,7 @@ private:
     void testCellml();
     void testLlvmJit();
     void testCvode();
+    void testIda();
 
     void usePrecomputedTestCellmlResults();
 };
