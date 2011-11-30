@@ -2,13 +2,19 @@
 // RawView plugin
 //==============================================================================
 
+#include "commonwidget.h"
 #include "rawviewplugin.h"
 
 //==============================================================================
 
 #include <QFile>
 #include <QMainWindow>
-#include <QTextEdit>
+#include <QTextStream>
+
+//==============================================================================
+
+#include "Qsci/qsciscintilla.h"
+#include "Qsci/qscilexer.h"
 
 //==============================================================================
 
@@ -54,13 +60,30 @@ QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
     QFile file(pFileName);
 
     if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
+        // The file couldn't be opened for some reason, so...
+
         return GuiInterface::newViewWidget(pFileName);
 
-    QTextEdit *res = new QTextEdit(mMainWindow);
+    // The file was properly opened, so create a Scintilla editor
 
-    res->setFrameStyle(QFrame::NoFrame);
-    res->setFontPointSize(11);
-    res->setPlainText(file.readAll());
+    QsciScintilla *res = new QsciScintilla(mMainWindow);
+
+    // Specify a default font family and size for our Scintilla editor
+
+    res->setFont(QFont(OpenCOR::Core::DefaultFontFamily,
+                       OpenCOR::Core::DefaultFontSize));
+
+    // Set the text in the Scintilla editor to the contents of the file and
+    // specify whether the editor should be read-only
+
+    res->setText(QTextStream(&file).readAll());
+    res->setReadOnly(!(QFile::permissions(pFileName) & QFile::WriteUser));
+
+    // We are done with the file, so close it
+
+    file.close();
+
+    // Our raw Scintilla editor is now ready, so...
 
     return res;
 }

@@ -81,6 +81,7 @@ ADD_PLUGIN(QScintilla
 
         src/qscintillaplugin.h
     DEFINITIONS
+        QSCINTILLA_MAKE_DLL
         QT
         SCI_LEXER
     INCLUDE_DIRS

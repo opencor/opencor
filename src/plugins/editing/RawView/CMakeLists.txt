@@ -16,6 +16,7 @@ ADD_PLUGIN(RawView
         src
     OPENCOR_DEPENDENCIES
         Core
+        QScintilla
     QT_DEPENDENCIES
         QtCore
         QtGui
