@@ -14,7 +14,6 @@
 //==============================================================================
 
 #include "Qsci/qsciscintilla.h"
-#include "Qsci/qscilexer.h"
 
 //==============================================================================
 
@@ -60,13 +59,21 @@ QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
     QFile file(pFileName);
 
     if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
-        // The file couldn't be opened for some reason, so...
+        // For some reason, the file couldn't be opened, so...
 
         return GuiInterface::newViewWidget(pFileName);
 
     // The file was properly opened, so create a Scintilla editor
 
     QsciScintilla *res = new QsciScintilla(mMainWindow);
+
+    // Remove the frame around our Scintilla editor
+
+    res->setFrameShape(QFrame::NoFrame);
+
+    // Remove the margin in our Scintilla editor
+
+    res->setMarginWidth(1, 0);
 
     // Specify a default font family and size for our Scintilla editor
 

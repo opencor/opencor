@@ -32,6 +32,7 @@ class RawCellMLViewPlugin : public QObject, public GuiInterface,
 public:
     explicit RawCellMLViewPlugin();
 
+    virtual QWidget * newViewWidget(const QString &pFileName);
     virtual QString viewName(const int &pViewIndex);
 };
 

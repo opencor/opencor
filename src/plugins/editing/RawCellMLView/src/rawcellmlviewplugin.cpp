@@ -2,11 +2,19 @@
 // RawCellMLView plugin
 //==============================================================================
 
+#include "commonwidget.h"
 #include "rawcellmlviewplugin.h"
 
 //==============================================================================
 
-#include <QTabBar>
+#include <QFile>
+#include <QMainWindow>
+#include <QTextStream>
+
+//==============================================================================
+
+#include "Qsci/qsciscintilla.h"
+#include "Qsci/qscilexerxml.h"
 
 //==============================================================================
 
@@ -41,6 +49,63 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
     // Set our settings
 
     mGuiSettings->addView(GuiViewSettings::Editing, 0);
+}
+
+//==============================================================================
+
+QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
+{
+    // Create, set up and return a raw CellML Scintilla editor
+
+    QFile file(pFileName);
+
+    if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
+        // For some reason, the file couldn't be opened, so...
+
+        return GuiInterface::newViewWidget(pFileName);
+
+    // The file was properly opened, so create a Scintilla editor
+
+    QsciScintilla *res = new QsciScintilla(mMainWindow);
+
+    // Remove the frame around our Scintilla editor
+
+    res->setFrameShape(QFrame::NoFrame);
+
+    // Remove the margin in our Scintilla editor
+
+    res->setMarginWidth(1, 0);
+
+    // Associate an XML (i.e. raw CellML) lexer to our Scintilla editor and set
+    // a default font family and size to it
+
+    QsciLexerXML *xmlLexer = new QsciLexerXML(res);
+
+    QFont defaultFont = QFont(OpenCOR::Core::DefaultFontFamily,
+                              OpenCOR::Core::DefaultFontSize);
+
+    xmlLexer->setDefaultFont(defaultFont);
+    xmlLexer->setFont(defaultFont);
+
+    res->setLexer(xmlLexer);
+
+    // Specify the type of tree folding to used
+
+    res->setFolding(QsciScintilla::BoxedTreeFoldStyle);
+
+    // Set the text in the Scintilla editor to the contents of the file and
+    // specify whether the editor should be read-only
+
+    res->setText(QTextStream(&file).readAll());
+    res->setReadOnly(!(QFile::permissions(pFileName) & QFile::WriteUser));
+
+    // We are done with the file, so close it
+
+    file.close();
+
+    // Our raw Scintilla editor is now ready, so...
+
+    return res;
 }
 
 //==============================================================================

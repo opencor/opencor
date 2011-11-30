@@ -16,6 +16,7 @@ ADD_PLUGIN(RawCellMLView
         src
     OPENCOR_DEPENDENCIES
         Core
+        QScintilla
     QT_DEPENDENCIES
         QtCore
         QtGui
