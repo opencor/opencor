@@ -21,9 +21,11 @@ ADD_PLUGIN(CellMLModel
         src
     OPENCOR_DEPENDENCIES
         CellML
+        Core
         LLVM
     QT_DEPENDENCIES
         QtCore
+        QtGui
     EXTERNAL_DEPENDENCIES
         ${CELLML_EXTERNAL_DEPENDENCIES}
         ${LLVM_EXTERNAL_DEPENDENCIES}
