@@ -17,7 +17,6 @@ ADD_PLUGIN(CoreSimulation
     HEADERS_MOC
         src/coresimulationplugin.h
     DEFINITIONS
-        ${CELLML_DEFINITIONS}
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         ../../3rdparty/Qwt/src

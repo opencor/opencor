@@ -15,7 +15,6 @@ ADD_PLUGIN(CellMLModel
     HEADERS_MOC
         src/cellmlmodelplugin.h
     DEFINITIONS
-        ${CELLML_DEFINITIONS}
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
