@@ -687,26 +687,29 @@ void CentralWidget::updateGui()
         }
 
         // Ask the GUI interface for the widget to use for the current file
+        // (should there be one)
 
-        QWidget *newView = guiInterface->viewWidget(mFiles->tabToolTip(mFiles->currentIndex()),
-                                                    viewIndex);
+        if (!mFiles->tabToolTip(mFiles->currentIndex()).isEmpty()) {
+            QWidget *newView = guiInterface->viewWidget(mFiles->tabToolTip(mFiles->currentIndex()),
+                                                        viewIndex);
 
-        if (!newView) {
-            // The interface doesn't have a view for the current file, so use
-            // our no view widget instead and update its v
+            if (!newView) {
+                // The interface doesn't have a view for the current file, so
+                // use our no view widget instead and update its message
 
-            newView = mNoView;
+                newView = mNoView;
 
-            updateNoViewMsg();
+                updateNoViewMsg();
+            }
+
+            // Replace the current view with the new one
+            // Note: the order in which the adding and removing (as well as the
+            //       showing/hiding) of view is done ensures that the
+            //       replacement looks as good as possible...
+
+            mContents->removeWidget(mContents->currentWidget());
+            mContents->addWidget(newView);
         }
-
-        // Replace the current view with the new one
-        // Note: the order in which the adding and removing (as well as the
-        //       showing/hiding) of view is done ensures that the replacement
-        //       looks as good as possible...
-
-        mContents->removeWidget(mContents->currentWidget());
-        mContents->addWidget(newView);
     } else {
         mEditingViews->setVisible(false);
         mAnalysisViews->setVisible(false);
