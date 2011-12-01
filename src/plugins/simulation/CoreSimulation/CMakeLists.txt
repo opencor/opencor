@@ -25,6 +25,7 @@ ADD_PLUGIN(CoreSimulation
         src
     OPENCOR_DEPENDENCIES
         CellML
+        CellMLModel
         Core
         CVODE
         IDA
