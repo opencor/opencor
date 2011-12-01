@@ -1,7 +1,8 @@
 PROJECT(CoreSimulationPlugin)
 
-# Retrieve LLVM settings
+# Retrieve some CellML and LLVM settings
 
+RETRIEVE_CELLML_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
@@ -16,6 +17,7 @@ ADD_PLUGIN(CoreSimulation
     HEADERS_MOC
         src/coresimulationplugin.h
     DEFINITIONS
+        ${CELLML_DEFINITIONS}
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         ../../3rdparty/Qwt/src
@@ -34,5 +36,6 @@ ADD_PLUGIN(CoreSimulation
         QtSvg
         QtXml
     EXTERNAL_DEPENDENCIES
+        ${CELLML_EXTERNAL_DEPENDENCIES}
         ${LLVM_EXTERNAL_DEPENDENCIES}
 )
