@@ -323,6 +323,8 @@ void CoreSimulationPlugin::testCellml()
 
         usePrecomputedTestCellmlResults();
 
+        qDebug();
+
         return;
     }
 
@@ -339,11 +341,15 @@ void CoreSimulationPlugin::testCellml()
 
         usePrecomputedTestCellmlResults();
 
+        qDebug();
+
         return;
     } catch (...) {
         qDebug("CIS error: Unexpected exception calling compileModel.");
 
         usePrecomputedTestCellmlResults();
+
+        qDebug();
 
         return;
     }
@@ -588,15 +594,11 @@ static void PrintCvodeOutput(realtype t, realtype y1, realtype y2, realtype y3)
 #else
     qDebug("At t = %0.4e      y =%14.6e  %14.6e  %14.6e", t, y1, y2, y3);
 #endif
-
-  return;
 }
 
 static void PrintCvodeRootInfo(int root_f1, int root_f2)
 {
     qDebug("    rootsfound[] = %3d %3d", root_f1, root_f2);
-
-    return;
 }
 
 //==============================================================================
@@ -617,22 +619,25 @@ static int check_flag(void *flagvalue, char *funcname, int opt)
 
     /* Check if SUNDIALS function returned NULL pointer - no memory allocated */
     if (opt == 0 && flagvalue == NULL) {
-        qDebug("SUNDIALS_ERROR: %s() failed - returned NULL pointer",
+        qDebug("SUNDIALS_ERROR: %s() failed - returned NULL pointer.",
                funcname);
+        qDebug();
         return(1); }
 
     /* Check if flag < 0 */
     else if (opt == 1) {
         errflag = (int *) flagvalue;
         if (*errflag < 0) {
-            qDebug("SUNDIALS_ERROR: %s() failed with flag = %d",
+            qDebug("SUNDIALS_ERROR: %s() failed with flag = %d.",
                    funcname, *errflag);
+            qDebug();
         return(1); }}
 
     /* Check if function returned NULL pointer - no memory allocated */
     else if (opt == 2 && flagvalue == NULL) {
-        qDebug("MEMORY_ERROR: %s() failed - returned NULL pointer",
+        qDebug("MEMORY_ERROR: %s() failed - returned NULL pointer.",
                funcname);
+        qDebug();
         return(1); }
 
     return(0);
@@ -689,7 +694,6 @@ void CoreSimulationPlugin::testCvode()
     qDebug();
     qDebug() << "Testing CVODE";
     qDebug() << "----------------";
-    qDebug();
 
     /* Problem Constants */
 
@@ -783,6 +787,7 @@ void CoreSimulationPlugin::testCvode()
 
     /* In loop, call CVode, print results, and test for error.
        Break out of loop when NOUT preset output times have been reached.  */
+    qDebug();
     qDebug() << "3-species kinetics problem:";
     qDebug();
 
@@ -971,7 +976,6 @@ static void PrintIdaOutput(void *mem, realtype t, N_Vector y)
 static void PrintIdaRootInfo(int root_f1, int root_f2)
 {
     qDebug("    rootsfound[] = %3d %3d", root_f1, root_f2);
-    return;
 }
 
 //==============================================================================
