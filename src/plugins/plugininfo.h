@@ -57,6 +57,7 @@ public:
     {
         Application,
         Api,
+        Miscellaneous,
         Organisation,
         Editing,
         Simulation,

@@ -170,6 +170,8 @@ SET(PLUGINS
 
     api/CellML
 
+    misc/CellMLModel
+
     editing/CoreEditing
     editing/CoreCellMLEditing
 

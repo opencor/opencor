@@ -288,6 +288,10 @@
         <source>The version used by the %1 plugin (%2) is not compatible with that of %3 (%4)</source>
         <translation>La version utilisée par l&apos;extension %1 (%2) n&apos;est pas compatible avec celle d&apos;%3 (%4)</translation>
     </message>
+    <message>
+        <source>Miscellaneous</source>
+        <translation>Divers</translation>
+    </message>
 </context>
 <context>
     <name>PluginsWindow</name>

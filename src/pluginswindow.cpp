@@ -107,6 +107,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
 
     newPluginCategory(PluginInfo::Application, qApp->applicationName());
     newPluginCategory(PluginInfo::Api, tr("API"));
+    newPluginCategory(PluginInfo::Miscellaneous, tr("Miscellaneous"));
     newPluginCategory(PluginInfo::Organisation, tr("Organisation"));
     newPluginCategory(PluginInfo::Editing, tr("Editing"));
     newPluginCategory(PluginInfo::Simulation, tr("Simulation"));
