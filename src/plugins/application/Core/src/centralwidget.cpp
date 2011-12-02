@@ -262,6 +262,9 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         // Note: in case of the simulation mode, there is only one simulation
         //       view, so...
 
+        activateWindow();   // So that we can then give the focus to the current
+                            // view
+
         if (crtModeType != GuiViewSettings::Simulation) {
             QString crtViewPluginName = pSettings->value(SettingsCurrentView).toString();
             QTabBar *modeViews;
@@ -286,6 +289,10 @@ void CentralWidget::loadSettings(QSettings *pSettings)
                     break;
                 }
         }
+
+        // Set the focus to whatever is the current view by updating the GUI
+
+        updateGui();
     }
 }
 
@@ -465,6 +472,11 @@ bool CentralWidget::activateFile(const QString &pFileName)
 
 void CentralWidget::fileSelected(const int &pIndex)
 {
+    // Give the focus to the view corresponding to the newly selected file by
+    // updating the GUI
+
+    updateGui();
+
     // Let people know that a file has been selected
 
     emit fileSelected(mFiles->tabToolTip(pIndex));
@@ -770,9 +782,10 @@ void CentralWidget::updateGui()
         // Ask the GUI interface for the widget to use for the current file
         // (should there be one)
 
-        if (!mFiles->tabToolTip(mFiles->currentIndex()).isEmpty()) {
-            QWidget *newView = guiInterface->viewWidget(mFiles->tabToolTip(mFiles->currentIndex()),
-                                                        viewIndex);
+        QString crtFileName = mFiles->tabToolTip(mFiles->currentIndex());
+
+        if (!crtFileName.isEmpty()) {
+            QWidget *newView = guiInterface->viewWidget(crtFileName, viewIndex);
 
             if (!newView) {
                 // The interface doesn't have a view for the current file, so
@@ -790,6 +803,10 @@ void CentralWidget::updateGui()
 
             mContents->removeWidget(mContents->currentWidget());
             mContents->addWidget(newView);
+
+            // Set the focus to the new view
+
+            newView->setFocus();
         }
     } else {
         mEditingViews->setVisible(false);

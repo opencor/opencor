@@ -236,9 +236,15 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
     setEnabled(true);
 
-    // Give the focus to the nameValue widget, just in case...
+    // Give, within the window, the focus to the nameValue widget
+
+    QWidget *focusedWidget = QApplication::focusWidget();
 
     mUi->nameValue->setFocus();
+
+    if (focusedWidget &&
+        (QApplication::focusWidget()->parentWidget() != focusedWidget->parentWidget()))
+        focusedWidget->setFocus();
 }
 
 //==============================================================================
