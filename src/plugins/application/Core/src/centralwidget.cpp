@@ -215,7 +215,9 @@ void CentralWidget::retranslateUi()
 //==============================================================================
 
 static const QString SettingsOpenedFiles = "OpenedFiles";
-static const QString SettingsActiveFile  = "ActiveFile";
+static const QString SettingsCurrentFile = "CurrentFile";
+static const QString SettingsCurrentMode = "CurrentMode";
+static const QString SettingsCurrentView = "CurrentView";
 
 //==============================================================================
 
@@ -230,12 +232,54 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     for (int i = 0; i < openedFiles.count(); ++i)
         openFile(openedFiles.at(i));
 
-    // Retrieve the active file
+    // Retrieve the current file
 
     if (openedFiles.count())
         // There is at least one file, so we can try to activate one of them
 
-        activateFile(openedFiles.at(pSettings->value(SettingsActiveFile).toInt()));
+        activateFile(openedFiles.at(pSettings->value(SettingsCurrentFile).toInt()));
+
+    // Retrieve the current mode/view
+    // Note: if no current mode or view can be retrieved, then we use whatever
+    //       mode or view we are in...
+
+    GuiViewSettings::Mode crtModeType = (GuiViewSettings::Mode) pSettings->value(SettingsCurrentMode).toInt();
+    int crtModeTabIndex = modeTabIndex(crtModeType);
+
+    if (crtModeTabIndex != -1) {
+        // A valid current mode was retrieved, so select it
+
+        mModes->setCurrentIndex(crtModeTabIndex);
+
+        // Retrieve the current view based on the current mode
+        // Note: in case of the simulation mode, there is only one simulation
+        //       view, so...
+
+        if (crtModeType != GuiViewSettings::Simulation) {
+            QString crtViewPluginName = pSettings->value(SettingsCurrentView).toString();
+            QTabBar *modeViews;
+            QMap<int, QString> *modeViewPluginNames;
+
+            if (crtModeType == GuiViewSettings::Editing) {
+                modeViews = mEditingViews;
+                modeViewPluginNames = &mEditingViewPluginNames;
+            } else {
+                // Analysis mode
+
+                modeViews = mAnalysisViews;
+                modeViewPluginNames = &mAnalysisViewPluginNames;
+            }
+
+            for (int i = 0; i < modeViews->count(); ++i)
+                if (!modeViewPluginNames->value(i).compare(crtViewPluginName)) {
+                    // A valid current view was retrieved, so select it
+
+                    modeViews->setCurrentIndex(i);
+
+                    break;
+                }
+        }
+    }
 }
 
 //==============================================================================
@@ -251,9 +295,30 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsOpenedFiles, openedFiles);
 
-    // Keep track of the active file
+    // Keep track of the current file
 
-    pSettings->setValue(SettingsActiveFile, mFiles->currentIndex());
+    pSettings->setValue(SettingsCurrentFile, mFiles->currentIndex());
+
+    // Keep track of the current mode/view
+
+    int crtModeTabIndex = mModes->currentIndex();
+
+    bool editingMode    = crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing);
+    bool simulationMode = crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation);
+
+    if (editingMode) {
+        pSettings->setValue(SettingsCurrentMode, GuiViewSettings::Editing);
+        pSettings->setValue(SettingsCurrentView, mEditingViewPluginNames.value(mEditingViews->currentIndex()));
+    } else if (simulationMode) {
+        pSettings->setValue(SettingsCurrentMode, GuiViewSettings::Simulation);
+        pSettings->setValue(SettingsCurrentView, "");
+        // Note: there is only one simulation view, so...
+    } else {
+        // Analysis mode
+
+        pSettings->setValue(SettingsCurrentMode, GuiViewSettings::Analysis);
+        pSettings->setValue(SettingsCurrentView, mAnalysisViewPluginNames.value(mAnalysisViews->currentIndex()));
+    }
 }
 
 //==============================================================================
@@ -489,10 +554,11 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
     GuiInterface *guiInterface = qobject_cast<GuiInterface *>(pPlugin->instance());
 
     if (pSettings->mode() == GuiViewSettings::Editing) {
-        int tabIndex = mEditingViews->addTab(QString());
+        int viewTabIndex = mEditingViews->addTab(QString());
 
-        mEditingViewInterfaces.insert(tabIndex, guiInterface);
-        mEditingViewSettings.insert(tabIndex, pSettings);
+        mEditingViewPluginNames.insert(viewTabIndex, pPlugin->name());
+        mEditingViewInterfaces.insert(viewTabIndex, guiInterface);
+        mEditingViewSettings.insert(viewTabIndex, pSettings);
     } else if (pSettings->mode() == GuiViewSettings::Simulation) {
         if (   !mSimulationViewInterface
             && !pPlugin->name().compare(CoreSimulationPlugin))
@@ -506,10 +572,11 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 
             mSimulationViewInterface = guiInterface;
     } else if (pSettings->mode() == GuiViewSettings::Analysis) {
-        int tabIndex = mAnalysisViews->addTab(QString());
+        int viewTabIndex = mAnalysisViews->addTab(QString());
 
-        mAnalysisViewInterfaces.insert(tabIndex, guiInterface);
-        mAnalysisViewSettings.insert(tabIndex, pSettings);
+        mAnalysisViewPluginNames.insert(viewTabIndex, pPlugin->name());
+        mAnalysisViewInterfaces.insert(viewTabIndex, guiInterface);
+        mAnalysisViewSettings.insert(viewTabIndex, pSettings);
     }
 }
 
@@ -655,11 +722,11 @@ void CentralWidget::updateGui()
     // needed
 
     if (atLeastOneManagedFile) {
-        int crtTab = mModes->currentIndex();
+        int crtModeTabIndex = mModes->currentIndex();
 
-        bool editingMode    = crtTab == modeTabIndex(GuiViewSettings::Editing);
-        bool simulationMode = crtTab == modeTabIndex(GuiViewSettings::Simulation);
-        bool analysisMode   = crtTab == modeTabIndex(GuiViewSettings::Analysis);
+        bool editingMode    = crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing);
+        bool simulationMode = crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation);
+        bool analysisMode   = crtModeTabIndex == modeTabIndex(GuiViewSettings::Analysis);
 
         mEditingViews->setVisible(editingMode);
         mAnalysisViews->setVisible(analysisMode);
@@ -672,18 +739,18 @@ void CentralWidget::updateGui()
         int viewIndex;
 
         if (editingMode) {
-            int tabIndex = mEditingViews->currentIndex();
+            int viewTabIndex = mEditingViews->currentIndex();
 
-            guiInterface = mEditingViewInterfaces.value(tabIndex);
-            viewIndex    = mEditingViewSettings.value(tabIndex)->index();
+            guiInterface = mEditingViewInterfaces.value(viewTabIndex);
+            viewIndex    = mEditingViewSettings.value(viewTabIndex)->index();
         } else if (simulationMode) {
             guiInterface = mSimulationViewInterface;
             viewIndex    = 0;   // Since there is only one simulation view
         } else if (analysisMode) {
-            int tabIndex = mAnalysisViews->currentIndex();
+            int viewTabIndex = mAnalysisViews->currentIndex();
 
-            guiInterface = mAnalysisViewInterfaces.value(tabIndex);
-            viewIndex    = mAnalysisViewSettings.value(tabIndex)->index();
+            guiInterface = mAnalysisViewInterfaces.value(viewTabIndex);
+            viewIndex    = mAnalysisViewSettings.value(viewTabIndex)->index();
         }
 
         // Ask the GUI interface for the widget to use for the current file
@@ -749,24 +816,26 @@ void CentralWidget::updateNoViewMsg()
     // Customise our no view widget so that it shows a relevant warning message
 
     QString viewName;
-    int crtTab = mModes->currentIndex();
+    int crtModeTabIndex = mModes->currentIndex();
 
-    if (crtTab == -1) {
+    if (crtModeTabIndex == -1) {
         // There is no tab, so...
 
         return;
-    } else if (crtTab == modeTabIndex(GuiViewSettings::Editing)) {
-        int tabIndex = mEditingViews->currentIndex();
+    } else if (crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing)) {
+        int viewTabIndex = mEditingViews->currentIndex();
 
-        viewName = mEditingViewInterfaces.value(tabIndex)->viewName(mEditingViewSettings.value(tabIndex)->index());
-    } else if (crtTab == modeTabIndex(GuiViewSettings::Simulation)) {
+        viewName = mEditingViewInterfaces.value(viewTabIndex)->viewName(mEditingViewSettings.value(viewTabIndex)->index());
+    } else if (crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation)) {
         // In the case of the simulation mode, we have only one view, so...
 
         viewName = tr("Simulation");
-    } else if (crtTab == modeTabIndex(GuiViewSettings::Analysis)) {
-        int tabIndex = mAnalysisViews->currentIndex();
+    } else {
+        // Analysis mode
 
-        viewName = mAnalysisViewInterfaces.value(tabIndex)->viewName(mAnalysisViewSettings.value(tabIndex)->index());
+        int viewTabIndex = mAnalysisViews->currentIndex();
+
+        viewName = mAnalysisViewInterfaces.value(viewTabIndex)->viewName(mAnalysisViewSettings.value(viewTabIndex)->index());
     }
 
     mNoViewMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not currently support this type of file...").arg(viewName));

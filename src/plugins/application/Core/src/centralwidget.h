@@ -93,6 +93,9 @@ private:
 
     QMap<GuiViewSettings::Mode, bool> mModeEnabled;
 
+    QMap<int, QString> mEditingViewPluginNames;
+    QMap<int, QString> mAnalysisViewPluginNames;
+
     QMap<int, GuiInterface *> mEditingViewInterfaces;
     GuiInterface *mSimulationViewInterface;
     QMap<int, GuiInterface *> mAnalysisViewInterfaces;
