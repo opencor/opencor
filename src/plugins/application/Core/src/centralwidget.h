@@ -78,6 +78,8 @@ protected:
 private:
     Ui::CentralWidget *mUi;
 
+    bool mShuttingDown;
+
     FileManager *mFileManager;
 
     QTabBar *mModes;

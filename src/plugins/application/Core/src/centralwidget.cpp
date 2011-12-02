@@ -32,6 +32,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
     mUi(new Ui::CentralWidget),
+    mShuttingDown(false),
     mSimulationViewInterface(0)
 {
     // Set up the UI
@@ -169,6 +170,12 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
 CentralWidget::~CentralWidget()
 {
+    // We are shutting down, so we must let updateGui() know about it otherwise
+    // we may get a segmentation fault (should there be a need to switch from
+    // one view to another)
+
+    mShuttingDown = true;
+
     // Close all the files
 
     closeAllFiles();
@@ -706,6 +713,13 @@ void CentralWidget::paintEvent(QPaintEvent *pEvent)
 
 void CentralWidget::updateGui()
 {
+    if (mShuttingDown)
+        // We are shutting down, so we don't want to take any risk of getting a
+        // segmentation fault (should there be a need to switch from one view to
+        // another)
+
+        return;
+
     bool atLeastOneManagedFile = mFileManager->count();
 
     // Show/hide the modes tab bar depending on whether there is at least one
