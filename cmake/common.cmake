@@ -35,6 +35,15 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    IF(WIN32)
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,--enable-auto-import")
+        # Note #1: -Wl,--enable-auto-import allows to resolve vtable entries
+        #          in DLLs. This is something that we, ideally, wouldn't need
+        #          to set, but it happens that this is required for any plugin
+        #          that uses LLVM. Indeed, llvm::CallInst needs resolving,
+        #          so...
+    ENDIF()
+
     # Required packages
 
     IF(APPLE)
