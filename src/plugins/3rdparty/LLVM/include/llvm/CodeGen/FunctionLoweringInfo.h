@@ -19,11 +19,13 @@
 #include "llvm/Instructions.h"
 #include "llvm/ADT/APInt.h"
 #include "llvm/ADT/DenseMap.h"
+#include "llvm/ADT/DenseSet.h"
 #include "llvm/ADT/IndexedMap.h"
 #include "llvm/ADT/SmallVector.h"
 #ifndef NDEBUG
 #include "llvm/ADT/SmallSet.h"
 #endif
+#include "llvm/Analysis/BranchProbabilityInfo.h"
 #include "llvm/CodeGen/ValueTypes.h"
 #include "llvm/CodeGen/ISDOpcodes.h"
 #include "llvm/CodeGen/MachineBasicBlock.h"
@@ -57,7 +59,7 @@ public:
   const Function *Fn;
   MachineFunction *MF;
   MachineRegisterInfo *RegInfo;
-
+  BranchProbabilityInfo *BPI;
   /// CanLowerReturn - true iff the function's return value can be lowered to
   /// registers.
   bool CanLowerReturn;
@@ -138,7 +140,7 @@ public:
 
   unsigned CreateReg(EVT VT);
   
-  unsigned CreateRegs(const Type *Ty);
+  unsigned CreateRegs(Type *Ty);
   
   unsigned InitializeRegForValue(const Value *V) {
     unsigned &R = ValueMap[V];
@@ -197,12 +199,12 @@ public:
     LiveOutRegInfo[Reg].IsValid = false;
   }
 
-  /// setByValArgumentFrameIndex - Record frame index for the byval
+  /// setArgumentFrameIndex - Record frame index for the byval
   /// argument.
-  void setByValArgumentFrameIndex(const Argument *A, int FI);
+  void setArgumentFrameIndex(const Argument *A, int FI);
   
-  /// getByValArgumentFrameIndex - Get frame index for the byval argument.
-  int getByValArgumentFrameIndex(const Argument *A);
+  /// getArgumentFrameIndex - Get frame index for the byval argument.
+  int getArgumentFrameIndex(const Argument *A);
 
 private:
   /// LiveOutRegInfo - Information about live out vregs.
@@ -218,6 +220,11 @@ void AddCatchInfo(const CallInst &I,
 /// successors) to LPad.
 void CopyCatchInfo(const BasicBlock *SuccBB, const BasicBlock *LPad,
                    MachineModuleInfo *MMI, FunctionLoweringInfo &FLI);
+
+/// AddLandingPadInfo - Extract the exception handling information from the
+/// landingpad instruction and add them to the specified machine module info.
+void AddLandingPadInfo(const LandingPadInst &I, MachineModuleInfo &MMI,
+                       MachineBasicBlock *MBB);
 
 } // end namespace llvm
 

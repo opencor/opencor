@@ -21,7 +21,7 @@
 #define LLVM_BINDIR "/usr/local/bin"
 
 /* Time at which LLVM was configured */
-#define LLVM_CONFIGTIME "Mon Nov  7 23:07:11 NZDT 2011"
+#define LLVM_CONFIGTIME "Fri Dec  2 22:29:39 NZDT 2011"
 
 /* Installation directory for data files */
 #define LLVM_DATADIR "/usr/local/share/llvm"
@@ -31,6 +31,9 @@
 
 /* Installation directory for config files */
 #define LLVM_ETCDIR "/usr/local/etc/llvm"
+
+/* Has gcc/MSVC atomic intrinsics */
+#define LLVM_HAS_ATOMICS 1
 
 /* Host triple we were built on */
 #define LLVM_HOSTTRIPLE "i686-pc-linux-gnu"
@@ -47,11 +50,14 @@
 /* Installation directory for man pages */
 #define LLVM_MANDIR "/usr/local/man"
 
-/* Build multithreading support into LLVM */
-#define LLVM_MULTITHREADED 1
-
 /* LLVM architecture name for the native architecture, if available */
 #define LLVM_NATIVE_ARCH X86
+
+/* LLVM name for the native AsmParser init function, if available */
+#define LLVM_NATIVE_ASMPARSER LLVMInitializeX86AsmParser
+
+/* LLVM name for the native AsmPrinter init function, if available */
+#define LLVM_NATIVE_ASMPRINTER LLVMInitializeX86AsmPrinter
 
 /* LLVM name for the native Target init function, if available */
 #define LLVM_NATIVE_TARGET LLVMInitializeX86Target
@@ -59,8 +65,8 @@
 /* LLVM name for the native TargetInfo init function, if available */
 #define LLVM_NATIVE_TARGETINFO LLVMInitializeX86TargetInfo
 
-/* LLVM name for the native AsmPrinter init function, if available */
-#define LLVM_NATIVE_ASMPRINTER LLVMInitializeX86AsmPrinter
+/* LLVM name for the native target MC init function, if available */
+#define LLVM_NATIVE_TARGETMC LLVMInitializeX86TargetMC
 
 /* Define if this is Unixish platform */
 #define LLVM_ON_UNIX 1
@@ -91,6 +97,9 @@
 
 /* Define to path to twopi program if found or 'echo twopi' otherwise */
 /* #undef LLVM_PATH_TWOPI */
+
+/* Define to path to xdot.py program if found or 'echo xdot.py' otherwise */
+/* #undef LLVM_PATH_XDOT_PY */
 
 /* Installation prefix directory */
 #define LLVM_PREFIX "/usr/local"

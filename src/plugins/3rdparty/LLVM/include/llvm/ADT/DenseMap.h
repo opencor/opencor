@@ -73,7 +73,7 @@ public:
     }
 #ifndef NDEBUG
     if (NumBuckets)
-      memset(Buckets, 0x5a, sizeof(BucketT)*NumBuckets);
+      memset((void*)Buckets, 0x5a, sizeof(BucketT)*NumBuckets);
 #endif
     operator delete(Buckets);
   }
@@ -252,7 +252,7 @@ private:
 
     if (NumBuckets) {
 #ifndef NDEBUG
-      memset(Buckets, 0x5a, sizeof(BucketT)*NumBuckets);
+      memset((void*)Buckets, 0x5a, sizeof(BucketT)*NumBuckets);
 #endif
       operator delete(Buckets);
     }
@@ -289,9 +289,12 @@ private:
     // table completely filled with tombstones, no lookup would ever succeed,
     // causing infinite loops in lookup.
     ++NumEntries;
-    if (NumEntries*4 >= NumBuckets*3 ||
-        NumBuckets-(NumEntries+NumTombstones) < NumBuckets/8) {
+    if (NumEntries*4 >= NumBuckets*3) {
       this->grow(NumBuckets * 2);
+      LookupBucketFor(Key, TheBucket);
+    }
+    if (NumBuckets-(NumEntries+NumTombstones) < NumBuckets/8) {
+      this->grow(NumBuckets);
       LookupBucketFor(Key, TheBucket);
     }
 
@@ -422,7 +425,8 @@ private:
     }
 
 #ifndef NDEBUG
-    memset(OldBuckets, 0x5a, sizeof(BucketT)*OldNumBuckets);
+    if (OldNumBuckets)
+      memset((void*)OldBuckets, 0x5a, sizeof(BucketT)*OldNumBuckets);
 #endif
     // Free the old table.
     operator delete(OldBuckets);
@@ -455,12 +459,21 @@ private:
     }
 
 #ifndef NDEBUG
-    memset(OldBuckets, 0x5a, sizeof(BucketT)*OldNumBuckets);
+    memset((void*)OldBuckets, 0x5a, sizeof(BucketT)*OldNumBuckets);
 #endif
     // Free the old table.
     operator delete(OldBuckets);
 
     NumEntries = 0;
+  }
+  
+public:
+  /// Return the approximate size (in bytes) of the actual map.
+  /// This is just the raw memory used by DenseMap.
+  /// If entries are pointers to objects, the size of the referenced objects
+  /// are not included.
+  size_t getMemorySize() const {
+    return NumBuckets * sizeof(BucketT);
   }
 };
 
@@ -527,6 +540,12 @@ private:
       ++Ptr;
   }
 };
+  
+template<typename KeyT, typename ValueT, typename KeyInfoT, typename ValueInfoT>
+static inline size_t
+capacity_in_bytes(const DenseMap<KeyT, ValueT, KeyInfoT, ValueInfoT> &X) {
+  return X.getMemorySize();
+}
 
 } // end namespace llvm
 

@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file implements SlotIndex and related classes. The purpuse of SlotIndex
+// This file implements SlotIndex and related classes. The purpose of SlotIndex
 // is to describe a position at which a register can become live, or cease to
 // be live.
 //
@@ -140,6 +140,9 @@ namespace llvm {
       return lie.getPointer();
     }
 
+    /// Return true for a valid index.
+    operator bool() const { return isValid(); }
+
     /// Print this index to the given raw_ostream.
     void print(raw_ostream &os) const;
 
@@ -176,6 +179,11 @@ namespace llvm {
     /// is greater than, or equal to, the second.
     bool operator>=(SlotIndex other) const {
       return getIndex() >= other.getIndex();
+    }
+
+    /// isSameInstr - Return true if A and B refer to the same instruction.
+    static bool isSameInstr(SlotIndex A, SlotIndex B) {
+      return A.lie.getPointer() == B.lie.getPointer();
     }
 
     /// Return the distance from this index to the given one.
@@ -337,15 +345,12 @@ namespace llvm {
     typedef DenseMap<const MachineInstr*, SlotIndex> Mi2IndexMap;
     Mi2IndexMap mi2iMap;
 
-    /// MBB2IdxMap - The indexes of the first and last instructions in the
-    /// specified basic block.
-    typedef DenseMap<const MachineBasicBlock*,
-                     std::pair<SlotIndex, SlotIndex> > MBB2IdxMap;
-    MBB2IdxMap mbb2IdxMap;
+    /// MBBRanges - Map MBB number to (start, stop) indexes.
+    SmallVector<std::pair<SlotIndex, SlotIndex>, 8> MBBRanges;
 
     /// Idx2MBBMap - Sorted list of pairs of index of first instruction
     /// and MBB id.
-    std::vector<IdxMBBPair> idx2MBBMap;
+    SmallVector<IdxMBBPair, 8> idx2MBBMap;
 
     // IndexListEntry allocator.
     BumpPtrAllocator ileAllocator;
@@ -509,17 +514,65 @@ namespace llvm {
       return nextNonNull;
     }
 
+    /// getIndexBefore - Returns the index of the last indexed instruction
+    /// before MI, or the the start index of its basic block.
+    /// MI is not required to have an index.
+    SlotIndex getIndexBefore(const MachineInstr *MI) const {
+      const MachineBasicBlock *MBB = MI->getParent();
+      assert(MBB && "MI must be inserted inna basic block");
+      MachineBasicBlock::const_iterator I = MI, B = MBB->begin();
+      for (;;) {
+        if (I == B)
+          return getMBBStartIdx(MBB);
+        --I;
+        Mi2IndexMap::const_iterator MapItr = mi2iMap.find(I);
+        if (MapItr != mi2iMap.end())
+          return MapItr->second;
+      }
+    }
+
+    /// getIndexAfter - Returns the index of the first indexed instruction
+    /// after MI, or the end index of its basic block.
+    /// MI is not required to have an index.
+    SlotIndex getIndexAfter(const MachineInstr *MI) const {
+      const MachineBasicBlock *MBB = MI->getParent();
+      assert(MBB && "MI must be inserted inna basic block");
+      MachineBasicBlock::const_iterator I = MI, E = MBB->end();
+      for (;;) {
+        ++I;
+        if (I == E)
+          return getMBBEndIdx(MBB);
+        Mi2IndexMap::const_iterator MapItr = mi2iMap.find(I);
+        if (MapItr != mi2iMap.end())
+          return MapItr->second;
+      }
+    }
+
+    /// Return the (start,end) range of the given basic block number.
+    const std::pair<SlotIndex, SlotIndex> &
+    getMBBRange(unsigned Num) const {
+      return MBBRanges[Num];
+    }
+
     /// Return the (start,end) range of the given basic block.
     const std::pair<SlotIndex, SlotIndex> &
-    getMBBRange(const MachineBasicBlock *mbb) const {
-      MBB2IdxMap::const_iterator itr = mbb2IdxMap.find(mbb);
-      assert(itr != mbb2IdxMap.end() && "MBB not found in maps.");
-      return itr->second;
+    getMBBRange(const MachineBasicBlock *MBB) const {
+      return getMBBRange(MBB->getNumber());
+    }
+
+    /// Returns the first index in the given basic block number.
+    SlotIndex getMBBStartIdx(unsigned Num) const {
+      return getMBBRange(Num).first;
     }
 
     /// Returns the first index in the given basic block.
     SlotIndex getMBBStartIdx(const MachineBasicBlock *mbb) const {
       return getMBBRange(mbb).first;
+    }
+
+    /// Returns the last index in the given basic block number.
+    SlotIndex getMBBEndIdx(unsigned Num) const {
+      return getMBBRange(Num).second;
     }
 
     /// Returns the last index in the given basic block.
@@ -529,10 +582,12 @@ namespace llvm {
 
     /// Returns the basic block which the given index falls in.
     MachineBasicBlock* getMBBFromIndex(SlotIndex index) const {
-      std::vector<IdxMBBPair>::const_iterator I =
+      if (MachineInstr *MI = getInstructionFromIndex(index))
+        return MI->getParent();
+      SmallVectorImpl<IdxMBBPair>::const_iterator I =
         std::lower_bound(idx2MBBMap.begin(), idx2MBBMap.end(), index);
       // Take the pair containing the index
-      std::vector<IdxMBBPair>::const_iterator J =
+      SmallVectorImpl<IdxMBBPair>::const_iterator J =
         ((I != idx2MBBMap.end() && I->first > index) ||
          (I == idx2MBBMap.end() && idx2MBBMap.size()>0)) ? (I-1): I;
 
@@ -544,7 +599,7 @@ namespace llvm {
 
     bool findLiveInMBBs(SlotIndex start, SlotIndex end,
                         SmallVectorImpl<MachineBasicBlock*> &mbbs) const {
-      std::vector<IdxMBBPair>::const_iterator itr =
+      SmallVectorImpl<IdxMBBPair>::const_iterator itr =
         std::lower_bound(idx2MBBMap.begin(), idx2MBBMap.end(), start);
       bool resVal = false;
 
@@ -564,7 +619,7 @@ namespace llvm {
 
       assert(start < end && "Backwards ranges not allowed.");
 
-      std::vector<IdxMBBPair>::const_iterator itr =
+      SmallVectorImpl<IdxMBBPair>::const_iterator itr =
         std::lower_bound(idx2MBBMap.begin(), idx2MBBMap.end(), start);
 
       if (itr == idx2MBBMap.end()) {
@@ -586,41 +641,28 @@ namespace llvm {
 
     /// Insert the given machine instruction into the mapping. Returns the
     /// assigned index.
-    SlotIndex insertMachineInstrInMaps(MachineInstr *mi) {
+    /// If Late is set and there are null indexes between mi's neighboring
+    /// instructions, create the new index after the null indexes instead of
+    /// before them.
+    SlotIndex insertMachineInstrInMaps(MachineInstr *mi, bool Late = false) {
       assert(mi2iMap.find(mi) == mi2iMap.end() && "Instr already indexed.");
       // Numbering DBG_VALUE instructions could cause code generation to be
       // affected by debug information.
       assert(!mi->isDebugValue() && "Cannot number DBG_VALUE instructions.");
 
-      MachineBasicBlock *mbb = mi->getParent();
+      assert(mi->getParent() != 0 && "Instr must be added to function.");
 
-      assert(mbb != 0 && "Instr must be added to function.");
-
-      MBB2IdxMap::iterator mbbRangeItr = mbb2IdxMap.find(mbb);
-
-      assert(mbbRangeItr != mbb2IdxMap.end() &&
-             "Instruction's parent MBB has not been added to SlotIndexes.");
-
-      MachineBasicBlock::iterator miItr(mi);
-      IndexListEntry *newEntry;
-      // Get previous index, considering that not all instructions are indexed.
-      IndexListEntry *prevEntry;
-      for (;;) {
-        // If mi is at the mbb beginning, get the prev index from the mbb.
-        if (miItr == mbb->begin()) {
-          prevEntry = &mbbRangeItr->second.first.entry();
-          break;
-        }
-        // Otherwise rewind until we find a mapped instruction.
-        Mi2IndexMap::const_iterator itr = mi2iMap.find(--miItr);
-        if (itr != mi2iMap.end()) {
-          prevEntry = &itr->second.entry();
-          break;
-        }
+      // Get the entries where mi should be inserted.
+      IndexListEntry *prevEntry, *nextEntry;
+      if (Late) {
+        // Insert mi's index immediately before the following instruction.
+        nextEntry = &getIndexAfter(mi).entry();
+        prevEntry = nextEntry->getPrev();
+      } else {
+        // Insert mi's index immediately after the preceeding instruction.
+        prevEntry = &getIndexBefore(mi).entry();
+        nextEntry = prevEntry->getNext();
       }
-
-      // Get next entry from previous entry.
-      IndexListEntry *nextEntry = prevEntry->getNext();
 
       // Get a number for the new instr, or 0 if there's no room currently.
       // In the latter case we'll force a renumber later.
@@ -628,7 +670,7 @@ namespace llvm {
       unsigned newNumber = prevEntry->getIndex() + dist;
 
       // Insert a new list entry for mi.
-      newEntry = createEntry(mi, newNumber);
+      IndexListEntry *newEntry = createEntry(mi, newNumber);
       insert(nextEntry, newEntry);
 
       // Renumber locally if we need to.
@@ -689,21 +731,14 @@ namespace llvm {
       SlotIndex startIdx(startEntry, SlotIndex::LOAD);
       SlotIndex endIdx(nextEntry, SlotIndex::LOAD);
 
-      mbb2IdxMap.insert(
-        std::make_pair(mbb, std::make_pair(startIdx, endIdx)));
+      assert(unsigned(mbb->getNumber()) == MBBRanges.size() &&
+             "Blocks must be added in order");
+      MBBRanges.push_back(std::make_pair(startIdx, endIdx));
 
       idx2MBBMap.push_back(IdxMBBPair(startIdx, mbb));
 
-      if (MachineFunction::iterator(mbb) != mbb->getParent()->begin()) {
-        // Have to update the end index of the previous block.
-        MachineBasicBlock *priorMBB =
-          llvm::prior(MachineFunction::iterator(mbb));
-        mbb2IdxMap[priorMBB].second = startIdx;
-      }
-
       renumberIndexes();
       std::sort(idx2MBBMap.begin(), idx2MBBMap.end(), Idx2MBBCompare());
-
     }
 
   };

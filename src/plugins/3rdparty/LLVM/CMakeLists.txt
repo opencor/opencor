@@ -10,8 +10,9 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
         SET(CMAKE_SHARED_LIBRARY_PREFIX)
     ENDIF()
 
+    SET(LLVM_VERSION 3.0)
     SET(LLVM_EXTERNAL_DEPENDENCIES
-        ${CMAKE_SHARED_LIBRARY_PREFIX}LLVM-2.9${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ${CMAKE_SHARED_LIBRARY_PREFIX}LLVM-${LLVM_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 ENDMACRO()
 
 # Retrieve some header files that were generated on each of our target
@@ -64,17 +65,17 @@ IF(WIN32)
 
     DEPLOY_WINDOWS_BINARY_FILE(${LLVM_EXTERNAL_DEPENDENCIES_DIR}/${LLVM_EXTERNAL_DEPENDENCIES})
 
-    # The libpthread-2.dll file
-    # Note: this DLL comes from the official version of MinGW (as opposed to
-    #       the Qt patched version which doesn't have it) and is required by
-    #       LLVM...
+    # The libstdc++-6.dll and pthreadGC2.dll files
+    # Note: these DLLs come from the official version of MinGW (as opposed to
+    #       the Qt patched version) and are required by LLVM, so...
 
-    DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libpthread-2.dll)
+    DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
+    DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/pthreadGC2.dll)
 ELSEIF(APPLE)
     # Deploy the LLVM libraries together with their respective LLVM
     # dependencies, if any
 
-    DEPLOY_MAC_OS_X_LIBRARY(libLLVM-2.9${CMAKE_SHARED_LIBRARY_SUFFIX}
+    DEPLOY_MAC_OS_X_LIBRARY(libLLVM-${LLVM_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}
         TYPE
             Library
         DIR

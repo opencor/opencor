@@ -128,7 +128,7 @@ Pass *createLoopInstSimplifyPass();
 //
 // LoopUnroll - This pass is a simple loop unrolling pass.
 //
-Pass *createLoopUnrollPass();
+Pass *createLoopUnrollPass(int Threshold = -1, int Count = -1, int AllowPartial = -1);
 
 //===----------------------------------------------------------------------===//
 //
@@ -173,13 +173,6 @@ extern char &DemoteRegisterToMemoryID;
 // For example:  4 + (x + 5)  ->  x + (4 + 5)
 //
 FunctionPass *createReassociatePass();
-
-//===----------------------------------------------------------------------===//
-//
-// TailDuplication - Eliminate unconditional branches through controlled code
-// duplication, creating simpler CFG structures.
-//
-FunctionPass *createTailDuplicationPass();
 
 //===----------------------------------------------------------------------===//
 //
@@ -338,10 +331,36 @@ Pass *createCorrelatedValuePropagationPass();
 
 //===----------------------------------------------------------------------===//
 //
+// ObjCARCExpand - ObjC ARC preliminary simplifications.
+//
+Pass *createObjCARCExpandPass();
+
+//===----------------------------------------------------------------------===//
+//
+// ObjCARCContract - Late ObjC ARC cleanups.
+//
+Pass *createObjCARCContractPass();
+
+//===----------------------------------------------------------------------===//
+//
+// ObjCARCOpt - ObjC ARC optimization.
+//
+Pass *createObjCARCOptPass();
+
+//===----------------------------------------------------------------------===//
+//
 // InstructionSimplifier - Remove redundant instructions.
 //
 FunctionPass *createInstructionSimplifierPass();
 extern char &InstructionSimplifierID;
+
+
+//===----------------------------------------------------------------------===//
+//
+// LowerExpectIntriniscs - Removes llvm.expect intrinsics and creates
+// "block_weights" metadata.
+FunctionPass *createLowerExpectIntrinsicPass();
+
 
 } // End llvm namespace
 

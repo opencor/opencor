@@ -96,8 +96,12 @@ public:
     return DbgValues.empty() && ByvalParmDbgValues.empty();
   }
 
-  SmallVector<SDDbgValue*,2> &getSDDbgValues(const SDNode *Node) {
-    return DbgValMap[Node];
+  ArrayRef<SDDbgValue*> getSDDbgValues(const SDNode *Node) {
+    DenseMap<const SDNode*, SmallVector<SDDbgValue*, 2> >::iterator I =
+      DbgValMap.find(Node);
+    if (I != DbgValMap.end())
+      return I->second;
+    return ArrayRef<SDDbgValue*>();
   }
 
   typedef SmallVector<SDDbgValue*,32>::iterator DbgIterator;
@@ -284,7 +288,7 @@ public:
   ///
   /// Note that this is an involved process that may invalidate pointers into
   /// the graph.
-  void Legalize(CodeGenOpt::Level OptLevel);
+  void Legalize();
 
   /// LegalizeVectors - This transforms the SelectionDAG into a SelectionDAG
   /// that only uses vector math operations supported by the target.  This is
@@ -446,6 +450,10 @@ public:
   SDValue getVectorShuffle(EVT VT, DebugLoc dl, SDValue N1, SDValue N2,
                            const int *MaskElts);
 
+  /// getAnyExtOrTrunc - Convert Op, which must be of integer type, to the
+  /// integer type VT, by either any-extending or truncating it.
+  SDValue getAnyExtOrTrunc(SDValue Op, DebugLoc DL, EVT VT);
+
   /// getSExtOrTrunc - Convert Op, which must be of integer type, to the
   /// integer type VT, by either sign-extending or truncating it.
   SDValue getSExtOrTrunc(SDValue Op, DebugLoc DL, EVT VT);
@@ -556,15 +564,11 @@ public:
   ///
   SDValue getSetCC(DebugLoc DL, EVT VT, SDValue LHS, SDValue RHS,
                    ISD::CondCode Cond) {
+    assert(LHS.getValueType().isVector() == RHS.getValueType().isVector() &&
+      "Cannot compare scalars to vectors");
+    assert(LHS.getValueType().isVector() == VT.isVector() &&
+      "Cannot compare scalars to vectors");
     return getNode(ISD::SETCC, DL, VT, LHS, RHS, getCondCode(Cond));
-  }
-
-  /// getVSetCC - Helper function to make it easier to build VSetCC's nodes
-  /// if you just have an ISD::CondCode instead of an SDValue.
-  ///
-  SDValue getVSetCC(DebugLoc DL, EVT VT, SDValue LHS, SDValue RHS,
-                    ISD::CondCode Cond) {
-    return getNode(ISD::VSETCC, DL, VT, LHS, RHS, getCondCode(Cond));
   }
 
   /// getSelectCC - Helper function to make it easier to build SelectCC's if you
@@ -585,19 +589,37 @@ public:
   /// takes 3 operands
   SDValue getAtomic(unsigned Opcode, DebugLoc dl, EVT MemVT, SDValue Chain,
                     SDValue Ptr, SDValue Cmp, SDValue Swp,
-                    MachinePointerInfo PtrInfo, unsigned Alignment=0);
+                    MachinePointerInfo PtrInfo, unsigned Alignment,
+                    AtomicOrdering Ordering,
+                    SynchronizationScope SynchScope);
   SDValue getAtomic(unsigned Opcode, DebugLoc dl, EVT MemVT, SDValue Chain,
                     SDValue Ptr, SDValue Cmp, SDValue Swp,
-                    MachineMemOperand *MMO);
+                    MachineMemOperand *MMO,
+                    AtomicOrdering Ordering,
+                    SynchronizationScope SynchScope);
 
-  /// getAtomic - Gets a node for an atomic op, produces result and chain and
-  /// takes 2 operands.
+  /// getAtomic - Gets a node for an atomic op, produces result (if relevant)
+  /// and chain and takes 2 operands.
   SDValue getAtomic(unsigned Opcode, DebugLoc dl, EVT MemVT, SDValue Chain,
                     SDValue Ptr, SDValue Val, const Value* PtrVal,
-                    unsigned Alignment = 0);
+                    unsigned Alignment, AtomicOrdering Ordering,
+                    SynchronizationScope SynchScope);
   SDValue getAtomic(unsigned Opcode, DebugLoc dl, EVT MemVT, SDValue Chain,
-                    SDValue Ptr, SDValue Val,
-                    MachineMemOperand *MMO);
+                    SDValue Ptr, SDValue Val, MachineMemOperand *MMO,
+                    AtomicOrdering Ordering,
+                    SynchronizationScope SynchScope);
+
+  /// getAtomic - Gets a node for an atomic op, produces result and chain and
+  /// takes 1 operand.
+  SDValue getAtomic(unsigned Opcode, DebugLoc dl, EVT MemVT, EVT VT,
+                    SDValue Chain, SDValue Ptr, const Value* PtrVal,
+                    unsigned Alignment,
+                    AtomicOrdering Ordering,
+                    SynchronizationScope SynchScope);
+  SDValue getAtomic(unsigned Opcode, DebugLoc dl, EVT MemVT, EVT VT,
+                    SDValue Chain, SDValue Ptr, MachineMemOperand *MMO,
+                    AtomicOrdering Ordering,
+                    SynchronizationScope SynchScope);
 
   /// getMemIntrinsicNode - Creates a MemIntrinsicNode that may produce a
   /// result and takes a list of operands. Opcode may be INTRINSIC_VOID,
@@ -829,7 +851,7 @@ public:
   /// These functions only replace all existing uses. It's possible that as
   /// these replacements are being performed, CSE may cause the From node
   /// to be given new uses. These new uses of From are left in place, and
-  /// not automatically transfered to To.
+  /// not automatically transferred to To.
   ///
   void ReplaceAllUsesWith(SDValue From, SDValue Op,
                           DAGUpdateListener *UpdateListener = 0);
@@ -898,7 +920,7 @@ public:
   void AddDbgValue(SDDbgValue *DB, SDNode *SD, bool isParameter);
 
   /// GetDbgValues - Get the debug values which reference the given SDNode.
-  SmallVector<SDDbgValue*,2> &GetDbgValues(const SDNode* SD) {
+  ArrayRef<SDDbgValue*> GetDbgValues(const SDNode* SD) {
     return DbgInfo->getSDDbgValues(SD);
   }
 
@@ -984,10 +1006,6 @@ public:
   /// is true if they are the same value, or if one is negative zero and the
   /// other positive zero.
   bool isEqualTo(SDValue A, SDValue B) const;
-
-  /// isVerifiedDebugInfoDesc - Returns true if the specified SDValue has
-  /// been verified as a debug information descriptor.
-  bool isVerifiedDebugInfoDesc(SDValue Op) const;
 
   /// UnrollVectorOp - Utility function used by legalize and lowering to
   /// "unroll" a vector operation by splitting out the scalars and operating

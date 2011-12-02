@@ -33,9 +33,10 @@
 #include "llvm/ExecutionEngine/JIT.h"
 #include "llvm/ExecutionEngine/Interpreter.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
-#include "llvm/Target/TargetSelect.h"
+#include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/ManagedStatic.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/Support/IRBuilder.h"
 
 //==============================================================================
 
@@ -402,16 +403,21 @@ void CoreSimulationPlugin::testLlvmJit()
     qDebug() << "----------------";
     qDebug();
 
-#ifndef Q_WS_WIN
-    // Note #1: for some reasons, to call InitializeNativeTarget on Windows
-    //          results in an error message being displayed when closing OpenCOR
-    //          while not calling it results in OpenCOR closeing 'properly',
-    //          so...
-    // Note #2: InitializeNativeTarget should normally be called, so why does it
-    //          work when not calling it on Windows...?!
+    // The goal of this snippet is to create in the memory the LLVM module
+    // consisting of two functions as follow:
+    //
+    // int add1(int x) {
+    //   return x+1;
+    // }
+    //
+    // int foo() {
+    //   return add1(10);
+    // }
+    //
+    // then compile the module via JIT, then execute the foo function and return
+    // its result to a driver, i.e. to a host program
 
     llvm::InitializeNativeTarget();
-#endif
 
     llvm::LLVMContext context;
 
@@ -434,10 +440,14 @@ void CoreSimulationPlugin::testLlvmJit()
                                                             "entryBlock",
                                                             addOneFunc);
 
+    // Create a basic block builder with default parameters
+    // Note: the builder will automatically append instructions to basicBlock...
+
+    llvm::IRBuilder<> builder(basicBlock);
+
     // Get a pointer to the constant 1
 
-    llvm::Value *one = llvm::ConstantInt::get(llvm::Type::getInt32Ty(context),
-                                              1);
+    llvm::Value *one = builder.getInt32(1);
 
     // Get a pointer to addOne's integer argument
 
@@ -445,14 +455,12 @@ void CoreSimulationPlugin::testLlvmJit()
 
     // Create an add instruction and add it to our basic block
 
-    llvm::Instruction *add = llvm::BinaryOperator::CreateAdd(one, argX,
-                                                             "addResult",
-                                                             basicBlock);
+    llvm::Value *add = builder.CreateAdd(one, argX);
 
     // Create a return instruction and add it to our basic block
     // Note: after this, addOneFunc is ready to be used...
 
-    llvm::ReturnInst::Create(context, add, basicBlock);
+    builder.CreateRet(add);
 
     // Create another function entry and add it to our module
     // Note: this time, the function returns an int and takes no arguments
@@ -465,21 +473,21 @@ void CoreSimulationPlugin::testLlvmJit()
 
     basicBlock = llvm::BasicBlock::Create(context, "entryBlock", fooFunc);
 
+    // Tell the builder to attach itself to (the new) basicBlock
+
+    builder.SetInsertPoint(basicBlock);
+
     // Get a pointer to the constant 10
 
-    llvm::Value *ten = llvm::ConstantInt::get(llvm::Type::getInt32Ty(context),
-                                              10);
+    llvm::Value *ten = builder.getInt32(10);
 
     // Pass ten to fooFunc
 
-    llvm::CallInst *addOneCallResult = llvm::CallInst::Create(addOneFunc,
-                                                              ten,
-                                                              "addOne",
-                                                              basicBlock);
+    llvm::CallInst *addOneCallResult = builder.CreateCall(addOneFunc, ten);
 
     // Create a return instruction and add it to our basic block
 
-    llvm::ReturnInst::Create(context, addOneCallResult, basicBlock);
+    builder.CreateRet(addOneCallResult);
 
     // Create the JIT
 

@@ -4,6 +4,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+/* Bug report URL. */
+#define BUG_REPORT_URL "http://llvm.org/bugs/"
+
 /* Relative directory for resource files */
 #define CLANG_RESOURCE_DIR ""
 
@@ -467,7 +470,7 @@
 /* #undef HAVE_U_INT64_T */
 
 /* Define to 1 if you have the <valgrind/valgrind.h> header file. */
-/* #undef HAVE_VALGRIND_VALGRIND_H */
+#define HAVE_VALGRIND_VALGRIND_H 1
 
 /* Define to 1 if you have the <windows.h> header file. */
 /* #undef HAVE_WINDOWS_H */
@@ -536,7 +539,7 @@
 #define LLVM_BINDIR "/usr/local/bin"
 
 /* Time at which LLVM was configured */
-#define LLVM_CONFIGTIME "Mon Nov  7 23:07:11 NZDT 2011"
+#define LLVM_CONFIGTIME "Fri Dec  2 22:29:39 NZDT 2011"
 
 /* Installation directory for data files */
 #define LLVM_DATADIR "/usr/local/share/llvm"
@@ -546,6 +549,9 @@
 
 /* Installation directory for config files */
 #define LLVM_ETCDIR "/usr/local/etc/llvm"
+
+/* Has gcc/MSVC atomic intrinsics */
+#define LLVM_HAS_ATOMICS 1
 
 /* Host triple we were built on */
 #define LLVM_HOSTTRIPLE "i686-pc-linux-gnu"
@@ -562,11 +568,11 @@
 /* Installation directory for man pages */
 #define LLVM_MANDIR "/usr/local/man"
 
-/* Build multithreading support into LLVM */
-#define LLVM_MULTITHREADED 1
-
 /* LLVM architecture name for the native architecture, if available */
 #define LLVM_NATIVE_ARCH X86
+
+/* LLVM name for the native AsmParser init function, if available */
+#define LLVM_NATIVE_ASMPARSER LLVMInitializeX86AsmParser
 
 /* LLVM name for the native AsmPrinter init function, if available */
 #define LLVM_NATIVE_ASMPRINTER LLVMInitializeX86AsmPrinter
@@ -576,6 +582,9 @@
 
 /* LLVM name for the native TargetInfo init function, if available */
 #define LLVM_NATIVE_TARGETINFO LLVMInitializeX86TargetInfo
+
+/* LLVM name for the native target MC init function, if available */
+#define LLVM_NATIVE_TARGETMC LLVMInitializeX86TargetMC
 
 /* Define if this is Unixish platform */
 #define LLVM_ON_UNIX 1
@@ -644,13 +653,13 @@
 #define PACKAGE_NAME "llvm"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "llvm 2.9"
+#define PACKAGE_STRING "llvm 3.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "-llvm-"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.9"
+#define PACKAGE_VERSION "3.0"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
@@ -672,6 +681,9 @@
 
 /* Define if use udis86 library */
 #define USE_UDIS86 0
+
+/* Type of 1st arg on ELM Callback */
+/* #undef WIN32_ELMCB_PCSTR */
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */

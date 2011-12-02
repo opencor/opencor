@@ -64,11 +64,7 @@ IF(WIN32)
 
     # The libstdc++-6.dll file
     # Note: this DLL comes from the official version of MinGW (as opposed to
-    #       the Qt patched version) and is the version of libstdc++ which is
-    #       required since the CellML API was built using that version of MinGW
-    #       (thank god, that DLL is not required when deploying a Qt
-    #       application, so we can safely deploy it to get the CellML plugin to
-    #       work)...
+    #       the Qt patched version) and is required by the CellML API, so...
 
     DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
 ELSEIF(APPLE)
