@@ -11,6 +11,7 @@ ADD_PLUGIN(CellMLModel
     SOURCES
         ../../plugininfo.cpp
 
+        src/cellmlmodel.cpp
         src/cellmlmodelplugin.cpp
     HEADERS_MOC
         src/cellmlmodelplugin.h

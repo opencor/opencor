@@ -26,7 +26,7 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
                       PluginInfo::Gui,
                       PluginInfo::Editing,
                       false,
-                      QStringList() << "CoreEditing" << "CellML",
+                      QStringList() << "CoreEditing" << "CellMLModel",
                       descriptions);
 }
 

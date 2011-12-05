@@ -53,20 +53,6 @@ SET(SOURCES
     src/plugins/application/Core/src/commonwidget.cpp
 )
 
-SET(HEADERS
-    src/misc/common.h
-    src/misc/utils.h
-
-    src/plugins/coreinterface.h
-    src/plugins/fileinterface.h
-    src/plugins/guiinterface.h
-    src/plugins/i18ninterface.h
-    src/plugins/plugininfo.h
-
-    src/plugins/application/Core/src/commonwidget.h
-    src/plugins/application/Core/src/coreglobal.h
-)
-
 SET(HEADERS_MOC
     src/checkforupdateswindow.h
     src/mainwindow.h

@@ -2,6 +2,8 @@
 // RawCellMLView plugin
 //==============================================================================
 
+#include "cellmlmodel.h"
+#include "cellmlmodelglobal.h"
 #include "commonwidget.h"
 #include "rawcellmlviewplugin.h"
 
@@ -10,6 +12,7 @@
 #include <QFile>
 #include <QMainWindow>
 #include <QTextStream>
+#include <QUrl>
 
 //==============================================================================
 
@@ -55,6 +58,18 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 
 QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 {
+    //--- TESTING --- BEGIN ---
+
+    // Load the CellML model
+
+    CellMLModel::CellmlModel *cellmlModel = new CellMLModel::CellmlModel(QUrl::fromLocalFile(pFileName));
+
+    delete cellmlModel;
+
+    //--- TESTING --- END ---
+
+
+
     // Create, set up and return a raw CellML Scintilla editor
 
     QFile file(pFileName);
