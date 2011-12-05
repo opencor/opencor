@@ -20,7 +20,6 @@ ADD_PLUGIN(CellMLModel
         src
     OPENCOR_DEPENDENCIES
         CellML
-        Core
         LLVM
     QT_DEPENDENCIES
         QtCore

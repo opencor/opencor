@@ -15,7 +15,6 @@ ADD_PLUGIN(RawView
     INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
-        Core
         QScintilla
     QT_DEPENDENCIES
         QtCore

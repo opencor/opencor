@@ -22,6 +22,7 @@ ADD_PLUGIN(Viewer
         src
     OPENCOR_DEPENDENCIES
         Core
+        CoreEditing
         QtMmlWidget
     QT_DEPENDENCIES
         QtCore

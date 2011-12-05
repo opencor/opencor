@@ -40,8 +40,6 @@ ADD_PLUGIN(CellML
         src/cellmlplugin.h
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
-        Core
     QT_DEPENDENCIES
         QtCore
         QtGui

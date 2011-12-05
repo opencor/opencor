@@ -14,8 +14,6 @@ ADD_PLUGIN(CoreCellMLEditing
         src/corecellmleditingplugin.h
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
-        Core
     QT_DEPENDENCIES
         QtCore
         QtGui

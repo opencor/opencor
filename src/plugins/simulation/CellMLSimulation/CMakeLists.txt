@@ -11,8 +11,6 @@ ADD_PLUGIN(CellMLSimulation
         src/cellmlsimulationplugin.h
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
-        Core
     QT_DEPENDENCIES
         QtCore
         QtGui

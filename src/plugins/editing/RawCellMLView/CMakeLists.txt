@@ -15,7 +15,6 @@ ADD_PLUGIN(RawCellMLView
     INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
-        Core
         QScintilla
     QT_DEPENDENCIES
         QtCore

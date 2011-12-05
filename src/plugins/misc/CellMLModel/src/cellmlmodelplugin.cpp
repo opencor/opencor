@@ -22,7 +22,7 @@ PLUGININFO_FUNC CellMLModelPluginInfo()
                       PluginInfo::Gui,
                       PluginInfo::Miscellaneous,
                       false,
-                      QStringList(),
+                      QStringList() << "CellML" << "LLVM",
                       descriptions);
 }
 
