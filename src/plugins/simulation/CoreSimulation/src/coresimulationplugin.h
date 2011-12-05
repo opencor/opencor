@@ -42,16 +42,6 @@ public:
 
 private:
     QwtPlot *mSimulationView;
-
-    QVector<double> mXData;
-    QVector<double> mYData;
-
-    void testCellml();
-    void testLlvmJit();
-    void testCvode();
-    void testIda();
-
-    void usePrecomputedTestCellmlResults();
 };
 
 //==============================================================================
