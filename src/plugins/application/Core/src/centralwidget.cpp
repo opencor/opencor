@@ -862,7 +862,7 @@ void CentralWidget::updateNoViewMsg()
         viewName = mAnalysisViewInterfaces.value(viewTabIndex)->viewName(mAnalysisViewSettings.value(viewTabIndex)->index());
     }
 
-    mNoViewMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not currently support this type of file...").arg(viewName));
+    mNoViewMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(viewName));
 }
 
 //==============================================================================

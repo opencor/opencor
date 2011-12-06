@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlmodel.h"
+#include "cellmlsupportplugin.h"
 #include "cellmlsupportglobal.h"
 #include "commonwidget.h"
 #include "rawcellmlviewplugin.h"
@@ -10,6 +11,7 @@
 //==============================================================================
 
 #include <QFile>
+#include <QFileInfo>
 #include <QMainWindow>
 #include <QTextStream>
 #include <QUrl>
@@ -58,6 +60,15 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 
 QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 {
+    // Check that we are dealing with a CellML file
+
+    if (QFileInfo(pFileName).suffix().compare(CellMLSupport::CellmlFileExtension))
+        // Not the expected file extension, so...
+
+        return 0;
+
+
+
     //--- TESTING --- BEGIN ---
 
     // Load the CellML model

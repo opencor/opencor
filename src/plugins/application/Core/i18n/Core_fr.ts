@@ -16,8 +16,8 @@
         <translation>Analyse</translation>
     </message>
     <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not currently support this type of file...</source>
-        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas ce type de fichier pour le moment...</translation>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of file...</source>
+        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas ce type de fichier...</translation>
     </message>
 </context>
 <context>

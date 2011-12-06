@@ -23,6 +23,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo();
 //==============================================================================
 
 static const QString CellmlMimeType = "application/cellml+xml";
+static const QString CellmlFileExtension = "cellml";
 
 //==============================================================================
 
