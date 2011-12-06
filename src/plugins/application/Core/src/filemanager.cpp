@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include <QCryptographicHash>
+#include <QDir>
 #include <QFileInfo>
 #include <QTextStream>
 #include <QTimer>
@@ -19,9 +20,18 @@ namespace Core {
 //==============================================================================
 
 File::File(const QString &pFileName) :
-    mFileName(pFileName),
+    mFileName(nativeFileName(pFileName)),
     mSha1(sha1())
 {
+}
+
+//==============================================================================
+
+QString File::nativeFileName(const QString &pFileName)
+{
+    return QDir::toNativeSeparators(pFileName);
+    // Note: this ensures that we are always dealing with a file name that makes
+    //       sense on the platform on which we are
 }
 
 //==============================================================================
@@ -136,7 +146,7 @@ FileManager * FileManager::instance()
 
 FileManager::Status FileManager::manage(const QString &pFileName)
 {
-    QFileInfo fileInfo = pFileName;
+    QFileInfo fileInfo = File::nativeFileName(pFileName);
 
     if (fileInfo.exists()) {
         if (isManaged(fileInfo.canonicalFilePath())) {
@@ -162,7 +172,7 @@ FileManager::Status FileManager::manage(const QString &pFileName)
 
 FileManager::Status FileManager::unmanage(const QString &pFileName)
 {
-    QFileInfo fileInfo = pFileName;
+    QFileInfo fileInfo = File::nativeFileName(pFileName);
 
     if (fileInfo.exists()) {
         File *file = isManaged(fileInfo.canonicalFilePath());
@@ -189,8 +199,10 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
 
 File * FileManager::isManaged(const QString &pFileName) const
 {
+    QString nativeFileName = File::nativeFileName(pFileName);
+
     foreach (File *file, mFiles)
-        if (file->fileName() == pFileName)
+        if (file->fileName() == nativeFileName)
             // The file has been found meaning it is managed
 
             return file;

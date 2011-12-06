@@ -12,7 +12,6 @@
 
 //==============================================================================
 
-#include <QDir>
 #include <QDragEnterEvent>
 #include <QFileInfo>
 #include <QLabel>
@@ -348,19 +347,18 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     // Register the file with our file manager
 
-    QString fileName = QDir::toNativeSeparators(pFileName);
-    // Note: this ensures that we are always dealing with a file name that makes
-    //       sense on the platform on which we are
+    Core::FileManager::instance()->manage(pFileName);
 
-    Core::FileManager::instance()->manage(fileName);
+    // Create a new tab and make it current
 
-    // Create a new tab and have the editor as its contents
-
+    QString fileName = File::nativeFileName(pFileName);
     QFileInfo fileInfo = fileName;
 
     mFiles->setCurrentIndex(mFiles->addTab(fileInfo.fileName()));
 
     // Set the full name of the file as the tool tip for the new tab
+    // Note: this is a 'trick' which allows us to retrieve the file name for
+    //       when we want to close the file (see CentralWidget::closeFile())
 
     mFiles->setTabToolTip(mFiles->currentIndex(), fileName);
 
@@ -444,10 +442,10 @@ bool CentralWidget::activateFile(const QString &pFileName)
     // Go through the different tabs and check whether one of them corresponds
     // to the requested file
 
-    QString realFileName = QDir::toNativeSeparators(pFileName);
+    QString nativeFileName = File::nativeFileName(pFileName);
 
     for (int i = 0; i < mFiles->count(); ++i)
-        if (!mFiles->tabToolTip(i).compare(realFileName)) {
+        if (!mFiles->tabToolTip(i).compare(nativeFileName)) {
             // We have found the file, so set the current index to that of its
             // tab
 

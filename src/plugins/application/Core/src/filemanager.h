@@ -42,6 +42,8 @@ public:
 
     explicit File(const QString &pFileName);
 
+    static QString nativeFileName(const QString &pFileName);
+
     QString fileName() const;
 
     Status check();
