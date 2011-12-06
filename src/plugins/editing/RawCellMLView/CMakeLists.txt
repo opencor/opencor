@@ -1,5 +1,10 @@
 PROJECT(RawCellMLViewPlugin)
 
+# Retrieve some CellML and LLVM settings
+
+RETRIEVE_CELLML_SETTINGS()
+RETRIEVE_LLVM_SETTINGS()
+
 # Add the plugin
 
 ADD_PLUGIN(RawCellMLView
@@ -12,6 +17,8 @@ ADD_PLUGIN(RawCellMLView
         src/rawcellmlviewplugin.cpp
     HEADERS_MOC
         src/rawcellmlviewplugin.h
+    DEFINITIONS
+        ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
@@ -20,4 +27,7 @@ ADD_PLUGIN(RawCellMLView
     QT_DEPENDENCIES
         QtCore
         QtGui
+    EXTERNAL_DEPENDENCIES
+        ${CELLML_EXTERNAL_DEPENDENCIES}
+        ${LLVM_EXTERNAL_DEPENDENCIES}
 )
