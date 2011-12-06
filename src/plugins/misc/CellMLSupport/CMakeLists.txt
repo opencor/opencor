@@ -12,6 +12,7 @@ ADD_PLUGIN(CellMLSupport
         ../../plugininfo.cpp
 
         src/cellmlmodel.cpp
+        src/cellmlmodelmanager.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
         src/cellmlsupportplugin.h
