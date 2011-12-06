@@ -411,8 +411,8 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName, const int &pIndex)
         mViewWidgets.insert(pIndex, viewWidgets);
     }
 
-    // Retrieve, from our list of widgets, the widget associated to the file
-    // name
+    // Retrieve, from our list of view widgets, the view widget associated to
+    // the file name
 
     QWidget *res = viewWidgets->value(pFileName);
 

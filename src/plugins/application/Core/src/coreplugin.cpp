@@ -141,7 +141,7 @@ void CorePlugin::setup(const QList<Plugin *> &pLoadedPlugins)
         FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
 
         if (fileInterface)
-            // The plugin implements our API interface, so...
+            // The plugin implements our file interface, so...
 
             mSupportedFileTypes << fileInterface->fileTypes();
     }

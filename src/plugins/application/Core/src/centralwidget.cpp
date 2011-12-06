@@ -357,8 +357,8 @@ bool CentralWidget::openFile(const QString &pFileName)
     mFiles->setCurrentIndex(mFiles->addTab(fileInfo.fileName()));
 
     // Set the full name of the file as the tool tip for the new tab
-    // Note: this is a 'trick' which allows us to retrieve the file name for
-    //       when we want to close the file (see CentralWidget::closeFile())
+    // Note: this, for example, allows us to retrieve the name of a file which
+    //       we want to close (see CentralWidget::closeFile())
 
     mFiles->setTabToolTip(mFiles->currentIndex(), fileName);
 
@@ -782,7 +782,7 @@ void CentralWidget::updateGui()
 
             if (!newView) {
                 // The interface doesn't have a view for the current file, so
-                // use our no view widget instead and update its message
+                // use our no-view widget instead and update its message
 
                 newView = mNoView;
 
