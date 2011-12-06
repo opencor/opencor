@@ -3,7 +3,7 @@
 //==============================================================================
 
 #include "cellmlmodel.h"
-#include "cellmlmodelglobal.h"
+#include "cellmlsupportglobal.h"
 #include "commonwidget.h"
 #include "rawcellmlviewplugin.h"
 
@@ -62,7 +62,7 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 
     // Load the CellML model
 
-    CellMLModel::CellmlModel *cellmlModel = new CellMLModel::CellmlModel(QUrl::fromLocalFile(pFileName));
+    CellMLSupport::CellmlModel *cellmlModel = new CellMLSupport::CellmlModel(QUrl::fromLocalFile(pFileName));
 
     delete cellmlModel;
 

@@ -1,22 +1,22 @@
 //==============================================================================
-// CellMLModel plugin
+// CellMLSupport plugin
 //==============================================================================
 
-#include "cellmlmodelplugin.h"
+#include "cellmlsupportplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModel {
+namespace CellMLSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLModelPluginInfo()
+PLUGININFO_FUNC CellMLSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "A plugin to handle <a href=\"http://www.cellml.org/\">CellML</a> models");
-    descriptions.insert("fr", "Une extension pour manipuler des modèles <a href=\"http://www.cellml.org/\">CellML</a>");
+    descriptions.insert("en", "A plugin to support <a href=\"http://www.cellml.org/\">CellML</a>");
+    descriptions.insert("fr", "Une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>");
 
     return PluginInfo(PluginInfo::V001,
                       PluginInfo::Gui,
@@ -28,11 +28,11 @@ PLUGININFO_FUNC CellMLModelPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CellMLModel, CellMLModelPlugin)
+Q_EXPORT_PLUGIN2(CellMLSupport, CellMLSupportPlugin)
 
 //==============================================================================
 
-}   // namespace CellMLModel
+}   // namespace CellMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================

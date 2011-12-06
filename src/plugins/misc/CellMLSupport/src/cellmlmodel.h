@@ -1,33 +1,53 @@
 //==============================================================================
-// CellMLModel plugin
+// CellML model class
 //==============================================================================
 
-#ifndef CELLMLMODELPLUGIN_H
-#define CELLMLMODELPLUGIN_H
+#ifndef CELLMLMODEL_H
+#define CELLMLMODEL_H
 
 //==============================================================================
 
-#include "plugininfo.h"
+#include "cellmlsupportglobal.h"
+
+//==============================================================================
+
+#include <QUrl>
+
+//==============================================================================
+
+namespace iface {
+namespace cellml_api {
+    class Model;
+}   // namespace cellml_api
+}   // namespace iface
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModel {
+namespace CellMLSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLModelPluginInfo();
-
-//==============================================================================
-
-class CellMLModelPlugin : public QObject
+class CELLMLSUPPORT_EXPORT CellmlModel
 {
-    Q_OBJECT
+public:
+    explicit CellmlModel(const QUrl &pUrl);
+    ~CellmlModel();
+
+    bool isValid();
+    QString errorMessage();
+
+private:
+    QUrl mUrl;
+
+    iface::cellml_api::Model *mModel;
+
+    QString mErrorMessage;
 };
 
 //==============================================================================
 
-}   // namespace CellMLModel
+}   // namespace CellMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================

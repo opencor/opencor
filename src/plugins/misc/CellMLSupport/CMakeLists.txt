@@ -1,4 +1,4 @@
-PROJECT(CellMLModelPlugin)
+PROJECT(CellMLSupportPlugin)
 
 # Retrieve some CellML and LLVM settings
 
@@ -7,14 +7,14 @@ RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLModel
+ADD_PLUGIN(CellMLSupport
     SOURCES
         ../../plugininfo.cpp
 
         src/cellmlmodel.cpp
-        src/cellmlmodelplugin.cpp
+        src/cellmlsupportplugin.cpp
     HEADERS_MOC
-        src/cellmlmodelplugin.h
+        src/cellmlsupportplugin.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
