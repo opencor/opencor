@@ -123,6 +123,17 @@ FileManager::~FileManager()
 
 //==============================================================================
 
+FileManager * FileManager::instance()
+{
+    // Return our 'global' file manager
+
+    static FileManager instance;
+
+    return &instance;
+}
+
+//==============================================================================
+
 FileManager::Status FileManager::manage(const QString &pFileName)
 {
     QFileInfo fileInfo = pFileName;

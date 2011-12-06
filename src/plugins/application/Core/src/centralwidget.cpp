@@ -43,10 +43,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     setAcceptDrops(true);
 
-    // Create our file manager
-
-    mFileManager = new FileManager();
-
     // Logo settings
 
     static const QString logoResourceName = ":logo";
@@ -182,7 +178,6 @@ CentralWidget::~CentralWidget()
 
     // Delete some internal objects
 
-    delete mFileManager;
     delete mUi;
 }
 
@@ -357,7 +352,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     // Note: this ensures that we are always dealing with a file name that makes
     //       sense on the platform on which we are
 
-    mFileManager->manage(fileName);
+    Core::FileManager::instance()->manage(fileName);
 
     // Create a new tab and have the editor as its contents
 
@@ -413,7 +408,7 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         // Unregister the file from our file manager
 
-        mFileManager->unmanage(fileName);
+        Core::FileManager::instance()->unmanage(fileName);
 
         // Update the GUI
 
@@ -679,7 +674,7 @@ void CentralWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Display our logo, in case no file is being managed
 
-    if (!mFileManager->count()) {
+    if (!Core::FileManager::instance()->count()) {
         QPainter painter(this);
 
         // Paint the widget with the logo's background colour
@@ -732,7 +727,7 @@ void CentralWidget::updateGui()
 
         return;
 
-    bool atLeastOneManagedFile = mFileManager->count();
+    bool atLeastOneManagedFile = Core::FileManager::instance()->count();
 
     // Show/hide the modes tab bar depending on whether there is at least one
     // managed file

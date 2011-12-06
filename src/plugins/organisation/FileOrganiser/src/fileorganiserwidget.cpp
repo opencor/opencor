@@ -225,7 +225,8 @@ FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
 
     mDataModel = new FileOrganiserModel;
 
-    // Create our file manager
+    // Create our 'local' file manager (as opposed to the 'global' file manager
+    // that comes with the FileManager class)
 
     mFileManager = new Core::FileManager();
 

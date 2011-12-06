@@ -77,6 +77,8 @@ public:
     explicit FileManager(const int &pTimerInterval = 1000);
     ~FileManager();
 
+    static FileManager * instance();
+
     Status manage(const QString &pFileName);
     Status unmanage(const QString &pFileName);
 

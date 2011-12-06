@@ -41,10 +41,6 @@ namespace Core {
 
 //==============================================================================
 
-class FileManager;
-
-//==============================================================================
-
 class CentralWidget : public QWidget, public CommonWidget
 {
     Q_OBJECT
@@ -79,8 +75,6 @@ private:
     Ui::CentralWidget *mUi;
 
     bool mShuttingDown;
-
-    FileManager *mFileManager;
 
     QTabBar *mModes;
 
