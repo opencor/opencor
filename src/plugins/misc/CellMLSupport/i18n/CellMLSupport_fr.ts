@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::CellML::CellMLPlugin</name>
+    <name>OpenCOR::CellMLSupport::CellMLSupportPlugin</name>
     <message>
         <source>CellML File</source>
         <translation>Fichier CellML</translation>

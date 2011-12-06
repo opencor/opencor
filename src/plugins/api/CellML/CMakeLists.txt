@@ -31,8 +31,6 @@ RETRIEVE_CELLML_SETTINGS()
 
 ADD_PLUGIN(CellML
     SOURCES
-        ../../coreinterface.cpp
-        ../../fileinterface.cpp
         ../../plugininfo.cpp
 
         src/cellmlplugin.cpp

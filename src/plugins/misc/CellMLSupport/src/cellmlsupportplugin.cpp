@@ -32,6 +32,31 @@ Q_EXPORT_PLUGIN2(CellMLSupport, CellMLSupportPlugin)
 
 //==============================================================================
 
+QList<FileType> CellMLSupportPlugin::fileTypes() const
+{
+    // Return the CellML file type that the CellMLSupport plugin supports
+
+    return QList<FileType>() << FileType(qobject_cast<FileInterface *>(this),
+                                         CellmlMimeType, "cellml");
+}
+
+//==============================================================================
+
+QString CellMLSupportPlugin::fileTypeDescription(const QString &mMimeType) const
+{
+    // Return the description for the requested Mime type, that is as long as it
+    // is for the CellML Mime type
+
+    if (!mMimeType.compare(CellmlMimeType))
+        return tr("CellML File");
+    else
+        // Not a Mime type that we can recognise, so...
+
+        return FileInterface::fileTypeDescription(mMimeType);
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 

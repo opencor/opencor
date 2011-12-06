@@ -9,6 +9,8 @@ RETRIEVE_LLVM_SETTINGS()
 
 ADD_PLUGIN(CellMLSupport
     SOURCES
+        ../../fileinterface.cpp
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/cellmlmodel.cpp

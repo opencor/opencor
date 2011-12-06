@@ -7,8 +7,6 @@
 
 //==============================================================================
 
-#include "coreinterface.h"
-#include "fileinterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -22,19 +20,9 @@ PLUGININFO_FUNC CellMLPluginInfo();
 
 //==============================================================================
 
-static const QString CellmlMimeType = "application/cellml+xml";
-
-//==============================================================================
-
-class CellMLPlugin : public QObject, public CoreInterface, public FileInterface
+class CellMLPlugin : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::CoreInterface)
-    Q_INTERFACES(OpenCOR::FileInterface)
-
-public:
-    virtual QList<FileType> fileTypes() const;
-    virtual QString fileTypeDescription(const QString &mMimeType) const;
 };
 
 //==============================================================================
