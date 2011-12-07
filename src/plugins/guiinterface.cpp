@@ -581,14 +581,14 @@ void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
 
 void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,
                                      const QString &pStatusTip,
-                                     const QString &pShortcut)
+                                     const QKeySequence &pKeySequence)
 {
     // Retranslate the action, i.e. retranslate its text, status tip and
     // shortcut
 
     pAction->setText(pText);
     pAction->setStatusTip(pStatusTip);
-    pAction->setShortcut(pShortcut);
+    pAction->setShortcut(pKeySequence);
 }
 
 //==============================================================================

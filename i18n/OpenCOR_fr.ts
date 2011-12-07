@@ -43,10 +43,6 @@
         <translation>Quitter OpenCOR</translation>
     </message>
     <message>
-        <source>Ctrl+Q</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>&amp;English</source>
         <translation>&amp;Anglais</translation>
     </message>
@@ -97,10 +93,6 @@
     <message>
         <source>Select the system&apos;s language as the language used by OpenCOR</source>
         <translation>Sélectionner la langue du système comme langue utilisée par OpenCOR</translation>
-    </message>
-    <message>
-        <source>F11</source>
-        <translation></translation>
     </message>
     <message>
         <source>&amp;Full Screen</source>

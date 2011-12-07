@@ -101,9 +101,5 @@
         <source>Show/hide the OpenCOR help</source>
         <translation>Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
     </message>
-    <message>
-        <source>F1</source>
-        <translation></translation>
-    </message>
 </context>
 </TS>

@@ -120,40 +120,40 @@ void CoreEditingPlugin::retranslateUi()
 
     retranslateAction(mEditUndoAction, tr("&Undo"),
                       tr("Undo the last action"),
-                      tr("Ctrl+Z"));
+                      QKeySequence::Undo);
     retranslateAction(mEditRedoAction, tr("&Redo"),
                       tr("Redo the last action"),
-                      tr("Ctrl+Y"));
+                      QKeySequence::Redo);
 
     retranslateAction(mEditCutAction, tr("Cu&t"),
                       tr("Cut the selected object"),
-                      tr("Ctrl+X"));
+                      QKeySequence::Cut);
     retranslateAction(mEditCopyAction, tr("&Copy"),
                       tr("Copy the selected object"),
-                      tr("Ctrl+C"));
+                      QKeySequence::Copy);
     retranslateAction(mEditPasteAction, tr("&Paste"),
                       tr("Paste the contents of the clipboard"),
-                      tr("Ctrl+V"));
+                      QKeySequence::Paste);
     retranslateAction(mEditDeleteAction, tr("&Delete"),
                       tr("Delete the selected object"),
-                      tr("Del"));
+                      QKeySequence::Delete);
 
     retranslateAction(mEditFindAction, tr("&Find..."),
                       tr("Search for a specific object"),
-                      tr("Ctrl+F"));
+                      QKeySequence::Find);
     retranslateAction(mEditFindNextAction, tr("Find &Next"),
                       tr("Search forwards for the same object"),
-                      tr("F3"));
+                      QKeySequence::FindNext);
     retranslateAction(mEditPreviousAction, tr("Find Pre&vious"),
                       tr("Search backwards for the same object"),
-                      tr("Shift+F3"));
+                      QKeySequence::FindPrevious);
     retranslateAction(mEditReplaceAction, tr("Re&place"),
                       tr("Search for a specific object and replace it with another"),
-                      tr("Ctrl+H"));
+                      QKeySequence::Replace);
 
     retranslateAction(mEditSelectAllAction, tr("Select &All"),
                       tr("Select all the objects"),
-                      tr("Ctrl+A"));
+                      QKeySequence::SelectAll);
 
     // Retranslate our show/hide actions
 

@@ -13,6 +13,7 @@
 
 #include <QList>
 #include <QMap>
+#include <QKeySequence>
 
 //==============================================================================
 
@@ -231,7 +232,7 @@ protected:
 
     static void retranslateAction(QAction *pAction, const QString &pText,
                                   const QString &pStatusTip,
-                                  const QString &pShortcut = QString());
+                                  const QKeySequence &pKeySequence = QKeySequence());
 
     void loadWindowSettings(QSettings *pSettings,
                             Core::DockWidget *pWindow);

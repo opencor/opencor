@@ -16,20 +16,12 @@
         <translation>Défaire la dernière action</translation>
     </message>
     <message>
-        <source>Ctrl+Z</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>&amp;Redo</source>
         <translation>&amp;Refaire</translation>
     </message>
     <message>
         <source>Redo the last action</source>
         <translation>Refaire la dernière action</translation>
-    </message>
-    <message>
-        <source>Ctrl+Y</source>
-        <translation></translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
@@ -40,20 +32,12 @@
         <translation>Couper l&apos;objet sélectionné</translation>
     </message>
     <message>
-        <source>Ctrl+X</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>&amp;Copy</source>
         <translation>&amp;Copier</translation>
     </message>
     <message>
         <source>Copy the selected object</source>
         <translation>Copier l&apos;objet sélectionné</translation>
-    </message>
-    <message>
-        <source>Ctrl+C</source>
-        <translation></translation>
     </message>
     <message>
         <source>&amp;Paste</source>
@@ -64,20 +48,12 @@
         <translation>Coller le contenu du presse-papier</translation>
     </message>
     <message>
-        <source>Ctrl+V</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>&amp;Delete</source>
         <translation>&amp;Supprimer</translation>
     </message>
     <message>
         <source>Delete the selected object</source>
         <translation>Supprimer l&apos;objet sélectionné</translation>
-    </message>
-    <message>
-        <source>Del</source>
-        <translation></translation>
     </message>
     <message>
         <source>&amp;Find...</source>
@@ -88,20 +64,12 @@
         <translation>Chercher un objet spécifique</translation>
     </message>
     <message>
-        <source>Ctrl+F</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Find &amp;Next</source>
         <translation>Chercher &amp;Suivant</translation>
     </message>
     <message>
         <source>Search forwards for the same object</source>
         <translation>Chercher en avant le même objet</translation>
-    </message>
-    <message>
-        <source>F3</source>
-        <translation></translation>
     </message>
     <message>
         <source>Find Pre&amp;vious</source>
@@ -112,10 +80,6 @@
         <translation>Chercher en arrière le même objet</translation>
     </message>
     <message>
-        <source>Shift+F3</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Re&amp;place</source>
         <translation>Rem&amp;placer</translation>
     </message>
@@ -124,20 +88,12 @@
         <translation>Chercher un objet spécifique et le remplacer par un autre</translation>
     </message>
     <message>
-        <source>Ctrl+H</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Select &amp;All</source>
         <translation>&amp;Tout Sélectionner</translation>
     </message>
     <message>
         <source>Select all the objects</source>
         <translation>Sélectionner tous les objets</translation>
-    </message>
-    <message>
-        <source>Ctrl+A</source>
-        <translation></translation>
     </message>
     <message>
         <source>Show/hide the Edit toolbar</source>

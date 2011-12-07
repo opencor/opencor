@@ -31,20 +31,12 @@
         <translation>Ouvrir un fichier</translation>
     </message>
     <message>
-        <source>Ctrl+O</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>&amp;Save</source>
         <translation>&amp;Sauvegarder</translation>
     </message>
     <message>
         <source>Save the current file</source>
         <translation>Sauvegarder le fichier actuel</translation>
-    </message>
-    <message>
-        <source>Ctrl+S</source>
-        <translation></translation>
     </message>
     <message>
         <source>Save &amp;As...</source>
@@ -71,10 +63,6 @@
         <translation>Fermer le fichier actuel</translation>
     </message>
     <message>
-        <source>Ctrl+W</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Close All</source>
         <translation>Tout Fermer</translation>
     </message>
@@ -89,10 +77,6 @@
     <message>
         <source>Print the current file</source>
         <translation>Imprimer le fichier actuel</translation>
-    </message>
-    <message>
-        <source>Ctrl+P</source>
-        <translation></translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -119,20 +103,12 @@
         <translation>Sélectionner le fichier précédent</translation>
     </message>
     <message>
-        <source>Ctrl+Shift+Tab</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
         <source>Select the next file</source>
         <translation>Sélectionner le fichier suivant</translation>
-    </message>
-    <message>
-        <source>Ctrl+Tab</source>
-        <translation></translation>
     </message>
 </context>
 </TS>

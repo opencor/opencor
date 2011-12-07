@@ -121,9 +121,6 @@
    <property name="statusTip">
     <string>Exit OpenCOR</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+Q</string>
-   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -244,9 +241,6 @@
    </property>
    <property name="statusTip">
     <string>Switch to / back from full screen mode</string>
-   </property>
-   <property name="shortcut">
-    <string>F11</string>
    </property>
   </action>
   <action name="actionStatusBar">

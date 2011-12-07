@@ -101,6 +101,13 @@ MainWindow::MainWindow(QWidget *pParent) :
     connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
+    // Set the shortcuts of some actions
+    // Note: we do it here, so that we can use standard shortcuts (whenever
+    //       possible)...
+
+    mUi->actionFullScreen->setShortcut(Qt::Key_F11);
+    mUi->actionExit->setShortcut(QKeySequence::Quit);
+
 #ifdef Q_WS_MAC
     // A special shortcut to have OpenCOR minimised on Mac OS X when pressing
     // Cmd+M

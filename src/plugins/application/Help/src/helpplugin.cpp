@@ -81,7 +81,7 @@ void HelpPlugin::retranslateUi()
 
     retranslateAction(mHelpAction, tr("&Help"),
                       tr("Show/hide the OpenCOR help"),
-                      tr("F1"));
+                      QKeySequence::HelpContents);
 
     // Retranslate our help window
 

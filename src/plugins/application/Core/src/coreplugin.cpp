@@ -246,32 +246,33 @@ void CorePlugin::retranslateUi()
 
     retranslateAction(mFileOpenAction, tr("&Open..."),
                       tr("Open a file"),
-                      tr("Ctrl+O"));
+                      QKeySequence::Open);
 
     retranslateAction(mFileSaveAction, tr("&Save"),
                       tr("Save the current file"),
-                      tr("Ctrl+S"));
+                      QKeySequence::Save);
     retranslateAction(mFileSaveAsAction, tr("Save &As..."),
-                      tr("Save the current file under a different name"));
+                      tr("Save the current file under a different name"),
+                      QKeySequence::SaveAs);
     retranslateAction(mFileSaveAllAction, tr("Save All"),
                       tr("Save all the files"));
 
     retranslateAction(mFilePreviousAction, tr("Previous"),
                       tr("Select the previous file"),
-                      tr("Ctrl+Shift+Tab"));
+                      QKeySequence::PreviousChild);
     retranslateAction(mFileNextAction, tr("Next"),
                       tr("Select the next file"),
-                      tr("Ctrl+Tab"));
+                      QKeySequence::NextChild);
 
     retranslateAction(mFileCloseAction, tr("Clos&e"),
                       tr("Close the current file"),
-                      tr("Ctrl+W"));
+                      QKeySequence::Close);
     retranslateAction(mFileCloseAllAction, tr("Close All"),
                       tr("Close all the files"));
 
     retranslateAction(mFilePrintAction, tr("&Print..."),
                       tr("Print the current file"),
-                      tr("Ctrl+P"));
+                      QKeySequence::Print);
 
     // Retranslate our show/hide actions
 
