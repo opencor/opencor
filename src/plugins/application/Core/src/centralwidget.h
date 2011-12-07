@@ -121,6 +121,8 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void openFiles(const QStringList &pFileNames);
+    void selectPreviousFile();
+    void selectNextFile();
     bool closeFile(const int &pIndex = -1);
     void closeAllFiles();
     void fileSelected(const int &pIndex);

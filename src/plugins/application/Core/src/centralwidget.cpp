@@ -17,6 +17,7 @@
 #include <QLabel>
 #include <QPainter>
 #include <QSettings>
+#include <QShortcut>
 #include <QStackedWidget>
 #include <QUrl>
 
@@ -135,6 +136,13 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // Update the GUI
 
     updateGui();
+
+    // Some shortcuts to go to the previous/next file
+
+    new QShortcut(QKeySequence("Ctrl+Tab"),
+                  this, SLOT(selectNextFile()));
+    new QShortcut(QKeySequence("Ctrl+Shift+Tab"),
+                  this, SLOT(selectPreviousFile()));
 
     // Some connections to handle our files tab bar
 
@@ -383,6 +391,28 @@ void CentralWidget::openFiles(const QStringList &pFileNames)
 
     for (int i = 0; i < pFileNames.count(); ++i)
         openFile(pFileNames.at(i));
+}
+
+//==============================================================================
+
+void CentralWidget::selectPreviousFile()
+{
+    // Select the previous file
+
+    mFiles->setCurrentIndex(mFiles->currentIndex()?
+                                mFiles->currentIndex()-1:
+                                mFiles->count()-1);
+}
+
+//==============================================================================
+
+void CentralWidget::selectNextFile()
+{
+    // Select the next file
+
+    mFiles->setCurrentIndex((mFiles->currentIndex() == mFiles->count()-1)?
+                                0:
+                                mFiles->currentIndex()+1);
 }
 
 //==============================================================================
