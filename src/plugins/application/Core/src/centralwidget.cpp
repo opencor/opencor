@@ -137,13 +137,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     updateGui();
 
-    // Some shortcuts to go to the previous/next file
-
-    new QShortcut(QKeySequence("Ctrl+Tab"),
-                  this, SLOT(selectNextFile()));
-    new QShortcut(QKeySequence("Ctrl+Shift+Tab"),
-                  this, SLOT(selectPreviousFile()));
-
     // Some connections to handle our files tab bar
 
     connect(mFiles, SIGNAL(tabCloseRequested(int)),
@@ -395,7 +388,7 @@ void CentralWidget::openFiles(const QStringList &pFileNames)
 
 //==============================================================================
 
-void CentralWidget::selectPreviousFile()
+void CentralWidget::previousFile()
 {
     // Select the previous file
 
@@ -406,7 +399,7 @@ void CentralWidget::selectPreviousFile()
 
 //==============================================================================
 
-void CentralWidget::selectNextFile()
+void CentralWidget::nextFile()
 {
     // Select the next file
 

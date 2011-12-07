@@ -72,6 +72,11 @@ void CorePlugin::initialize()
                                    ":/oxygen/actions/document-save-all.png",
                                    mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
 
+    mFilePreviousAction = newAction(mMainWindow, false,
+                                    ":/oxygen/actions/go-previous.png");
+    mFileNextAction     = newAction(mMainWindow, false,
+                                    ":/oxygen/actions/go-next.png");
+
     mFileCloseAction    = newAction(mMainWindow, false,
                                     ":/oxygen/actions/document-close.png");
     mFileCloseAllAction = newAction(mMainWindow);
@@ -85,6 +90,9 @@ void CorePlugin::initialize()
     fileToolbar->addAction(mFileSaveAsAction);
     fileToolbar->addAction(mFileSaveAllAction);
     fileToolbar->addSeparator();
+    fileToolbar->addAction(mFilePreviousAction);
+    fileToolbar->addAction(mFileNextAction);
+    fileToolbar->addSeparator();
     fileToolbar->addAction(mFileCloseAction);
     fileToolbar->addSeparator();
     fileToolbar->addAction(mFilePrintAction);
@@ -93,6 +101,11 @@ void CorePlugin::initialize()
 
     connect(mFileOpenAction, SIGNAL(triggered(bool)),
             this, SLOT(openFile()));
+
+    connect(mFilePreviousAction, SIGNAL(triggered(bool)),
+            mCentralWidget, SLOT(previousFile()));
+    connect(mFileNextAction, SIGNAL(triggered(bool)),
+            mCentralWidget, SLOT(nextFile()));
 
     connect(mFileCloseAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(closeFile()));
@@ -114,6 +127,9 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAsAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAllAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFilePreviousAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileNextAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAllAction);
@@ -240,6 +256,13 @@ void CorePlugin::retranslateUi()
     retranslateAction(mFileSaveAllAction, tr("Save All"),
                       tr("Save all the files"));
 
+    retranslateAction(mFilePreviousAction, tr("Previous"),
+                      tr("Select the previous file"),
+                      tr("Ctrl+Shift+Tab"));
+    retranslateAction(mFileNextAction, tr("Next"),
+                      tr("Select the next file"),
+                      tr("Ctrl+Tab"));
+
     retranslateAction(mFileCloseAction, tr("Clos&e"),
                       tr("Close the current file"),
                       tr("Ctrl+W"));
@@ -271,6 +294,9 @@ void CorePlugin::updateActions()
     mFileSaveAction->setEnabled(false);
     mFileSaveAsAction->setEnabled(false);
     mFileSaveAllAction->setEnabled(false);
+
+    mFilePreviousAction->setEnabled(mCentralWidget->nbOfFilesOpened() > 1);
+    mFileNextAction->setEnabled(mCentralWidget->nbOfFilesOpened() > 1);
 
     mFileCloseAction->setEnabled(mCentralWidget->nbOfFilesOpened());
     mFileCloseAllAction->setEnabled(mCentralWidget->nbOfFilesOpened());

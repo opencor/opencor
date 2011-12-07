@@ -68,6 +68,8 @@ private:
     QAction *mFileSaveAction;
     QAction *mFileSaveAsAction;
     QAction *mFileSaveAllAction;
+    QAction *mFilePreviousAction;
+    QAction *mFileNextAction;
     QAction *mFileCloseAction;
     QAction *mFileCloseAllAction;
     QAction *mFilePrintAction;

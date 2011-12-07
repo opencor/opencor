@@ -110,5 +110,29 @@
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>
+    <message>
+        <source>Previous</source>
+        <translation>Précédent</translation>
+    </message>
+    <message>
+        <source>Select the previous file</source>
+        <translation>Sélectionner le fichier précédent</translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+Tab</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation>Suivant</translation>
+    </message>
+    <message>
+        <source>Select the next file</source>
+        <translation>Sélectionner le fichier suivant</translation>
+    </message>
+    <message>
+        <source>Ctrl+Tab</source>
+        <translation></translation>
+    </message>
 </context>
 </TS>
