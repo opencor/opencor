@@ -65,7 +65,7 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
     if (QFileInfo(pFileName).suffix().compare(CellMLSupport::CellmlFileExtension))
         // Not the expected file extension, so...
 
-        return 0;
+        return GuiInterface::newViewWidget(pFileName);
 
 
 
