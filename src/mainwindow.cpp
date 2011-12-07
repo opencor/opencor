@@ -106,7 +106,17 @@ MainWindow::MainWindow(QWidget *pParent) :
     //       possible)...
 
     mUi->actionFullScreen->setShortcut(Qt::Key_F11);
+#ifdef Q_WS_WIN
+    //---GRY--- QKeySequence::Quit CORRESPONDS TO NOTHING ON WINDOWS, YET ONE
+    //          MIGHT EXPECT IT TO CORRESPOND TO Alt+F4 AND MAYBE EVEN TO
+    //          Ctrl+Q, SO...
+
+    mUi->actionExit->setShortcuts(QList<QKeySequence>()
+                                    << QKeySequence(Qt::ALT|Qt::Key_F4)
+                                    << QKeySequence(Qt::CTRL|Qt::Key_Q));
+#else
     mUi->actionExit->setShortcut(QKeySequence::Quit);
+#endif
 
 #ifdef Q_WS_MAC
     // A special shortcut to have OpenCOR minimised on Mac OS X when pressing
