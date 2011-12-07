@@ -43,7 +43,8 @@ void HelpPlugin::initialize()
     // Create an action to show/hide our help window
 
     mHelpAction = newAction(mMainWindow, true,
-                            ":/oxygen/apps/help-browser.png");
+                            ":/oxygen/apps/help-browser.png",
+                            QKeySequence::HelpContents);
 
     // Create our help window
 
@@ -80,8 +81,7 @@ void HelpPlugin::retranslateUi()
     // Retranslate our help action
 
     retranslateAction(mHelpAction, tr("&Help"),
-                      tr("Show/hide the OpenCOR help"),
-                      QKeySequence::HelpContents);
+                      tr("Show/hide the OpenCOR help"));
 
     // Retranslate our help window
 

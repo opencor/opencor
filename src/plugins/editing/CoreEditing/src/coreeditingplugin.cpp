@@ -50,26 +50,37 @@ void CoreEditingPlugin::initialize()
     // some to our Edit toolbar
 
     mEditUndoAction = newAction(mMainWindow, false,
-                                ":/oxygen/actions/edit-undo.png");
+                                ":/oxygen/actions/edit-undo.png",
+                                QKeySequence::Undo);
     mEditRedoAction = newAction(mMainWindow, false,
-                                ":/oxygen/actions/edit-redo.png");
+                                ":/oxygen/actions/edit-redo.png",
+                                QKeySequence::Redo);
 
     mEditCutAction    = newAction(mMainWindow, false,
-                                  ":/oxygen/actions/edit-cut.png");
+                                  ":/oxygen/actions/edit-cut.png",
+                                  QKeySequence::Cut);
     mEditCopyAction   = newAction(mMainWindow, false,
-                                  ":/oxygen/actions/edit-copy.png");
+                                  ":/oxygen/actions/edit-copy.png",
+                                  QKeySequence::Copy);
     mEditPasteAction  = newAction(mMainWindow, false,
-                                  ":/oxygen/actions/edit-paste.png");
+                                  ":/oxygen/actions/edit-paste.png",
+                                  QKeySequence::Paste);
     mEditDeleteAction = newAction(mMainWindow, false,
-                                  ":/oxygen/actions/edit-delete.png");
+                                  ":/oxygen/actions/edit-delete.png",
+                                  QKeySequence::Delete);
 
     mEditFindAction     = newAction(mMainWindow, false,
-                                    ":/oxygen/actions/edit-find.png");
-    mEditFindNextAction = newAction(mMainWindow, false);
-    mEditPreviousAction = newAction(mMainWindow, false);
-    mEditReplaceAction  = newAction(mMainWindow, false);
+                                    ":/oxygen/actions/edit-find.png",
+                                    QKeySequence::Find);
+    mEditFindNextAction = newAction(mMainWindow, false, "",
+                                    QKeySequence::FindNext);
+    mEditPreviousAction = newAction(mMainWindow, false, "",
+                                    QKeySequence::FindPrevious);
+    mEditReplaceAction  = newAction(mMainWindow, false, "",
+                                    QKeySequence::Replace);
 
-    mEditSelectAllAction = newAction(mMainWindow, false);
+    mEditSelectAllAction = newAction(mMainWindow, false, "",
+                                     QKeySequence::SelectAll);
 
     mEditMenu->addAction(mEditUndoAction);
     mEditMenu->addAction(mEditRedoAction);
@@ -119,41 +130,30 @@ void CoreEditingPlugin::retranslateUi()
     // Retranslate our different Edit actions
 
     retranslateAction(mEditUndoAction, tr("&Undo"),
-                      tr("Undo the last action"),
-                      QKeySequence::Undo);
+                      tr("Undo the last action"));
     retranslateAction(mEditRedoAction, tr("&Redo"),
-                      tr("Redo the last action"),
-                      QKeySequence::Redo);
+                      tr("Redo the last action"));
 
     retranslateAction(mEditCutAction, tr("Cu&t"),
-                      tr("Cut the selected object"),
-                      QKeySequence::Cut);
+                      tr("Cut the selected object"));
     retranslateAction(mEditCopyAction, tr("&Copy"),
-                      tr("Copy the selected object"),
-                      QKeySequence::Copy);
+                      tr("Copy the selected object"));
     retranslateAction(mEditPasteAction, tr("&Paste"),
-                      tr("Paste the contents of the clipboard"),
-                      QKeySequence::Paste);
+                      tr("Paste the contents of the clipboard"));
     retranslateAction(mEditDeleteAction, tr("&Delete"),
-                      tr("Delete the selected object"),
-                      QKeySequence::Delete);
+                      tr("Delete the selected object"));
 
     retranslateAction(mEditFindAction, tr("&Find..."),
-                      tr("Search for a specific object"),
-                      QKeySequence::Find);
+                      tr("Search for a specific object"));
     retranslateAction(mEditFindNextAction, tr("Find &Next"),
-                      tr("Search forwards for the same object"),
-                      QKeySequence::FindNext);
+                      tr("Search forwards for the same object"));
     retranslateAction(mEditPreviousAction, tr("Find Pre&vious"),
-                      tr("Search backwards for the same object"),
-                      QKeySequence::FindPrevious);
+                      tr("Search backwards for the same object"));
     retranslateAction(mEditReplaceAction, tr("Re&place"),
-                      tr("Search for a specific object and replace it with another"),
-                      QKeySequence::Replace);
+                      tr("Search for a specific object and replace it with another"));
 
     retranslateAction(mEditSelectAllAction, tr("Select &All"),
-                      tr("Select all the objects"),
-                      QKeySequence::SelectAll);
+                      tr("Select all the objects"));
 
     // Retranslate our show/hide actions
 

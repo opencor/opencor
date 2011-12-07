@@ -530,6 +530,7 @@ QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow,
 QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
                                   const bool &pCheckable,
                                   const QString &pIconResource,
+                                  const QKeySequence::StandardKey &pStandardKey,
                                   const bool &pVisible)
 {
     // Create and return an action
@@ -538,6 +539,7 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
 
     res->setCheckable(pCheckable);
     res->setIcon(QIcon(pIconResource));
+    res->setShortcuts(pStandardKey);
     res->setVisible(pVisible);
 
     return res;
@@ -580,15 +582,12 @@ void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
 //==============================================================================
 
 void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,
-                                     const QString &pStatusTip,
-                                     const QKeySequence &pKeySequence)
+                                     const QString &pStatusTip)
 {
-    // Retranslate the action, i.e. retranslate its text, status tip and
-    // shortcut
+    // Retranslate the action, i.e. retranslate its text and status tip
 
     pAction->setText(pText);
     pAction->setStatusTip(pStatusTip);
-    pAction->setShortcut(pKeySequence);
 }
 
 //==============================================================================

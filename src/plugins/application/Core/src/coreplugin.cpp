@@ -60,29 +60,37 @@ void CorePlugin::initialize()
 //          MODE IS ACTIVE
 
     mFileOpenAction = newAction(mMainWindow, false,
-                                ":/oxygen/actions/document-open.png");
+                                ":/oxygen/actions/document-open.png",
+                                QKeySequence::Open);
 
     mFileSaveAction    = newAction(mMainWindow, false,
                                    ":/oxygen/actions/document-save.png",
+                                   QKeySequence::Save,
                                    mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
     mFileSaveAsAction  = newAction(mMainWindow, false,
                                    ":/oxygen/actions/document-save-as.png",
+                                   QKeySequence::SaveAs,
                                    mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
     mFileSaveAllAction = newAction(mMainWindow, false,
                                    ":/oxygen/actions/document-save-all.png",
+                                   QKeySequence::UnknownKey,
                                    mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
 
     mFilePreviousAction = newAction(mMainWindow, false,
-                                    ":/oxygen/actions/go-previous.png");
+                                    ":/oxygen/actions/go-previous.png",
+                                    QKeySequence::PreviousChild);
     mFileNextAction     = newAction(mMainWindow, false,
-                                    ":/oxygen/actions/go-next.png");
+                                    ":/oxygen/actions/go-next.png",
+                                    QKeySequence::NextChild);
 
     mFileCloseAction    = newAction(mMainWindow, false,
-                                    ":/oxygen/actions/document-close.png");
+                                    ":/oxygen/actions/document-close.png",
+                                    QKeySequence::Close);
     mFileCloseAllAction = newAction(mMainWindow);
 
     mFilePrintAction = newAction(mMainWindow, false,
-                                 ":/oxygen/actions/document-print.png");
+                                 ":/oxygen/actions/document-print.png",
+                                 QKeySequence::Print);
 
     fileToolbar->addAction(mFileOpenAction);
     fileToolbar->addSeparator();
@@ -244,35 +252,27 @@ void CorePlugin::retranslateUi()
 {
     // Retranslate our different File actions
 
-    retranslateAction(mFileOpenAction, tr("&Open..."),
-                      tr("Open a file"),
-                      QKeySequence::Open);
+    retranslateAction(mFileOpenAction, tr("&Open..."), tr("Open a file"));
 
     retranslateAction(mFileSaveAction, tr("&Save"),
-                      tr("Save the current file"),
-                      QKeySequence::Save);
+                      tr("Save the current file"));
     retranslateAction(mFileSaveAsAction, tr("Save &As..."),
-                      tr("Save the current file under a different name"),
-                      QKeySequence::SaveAs);
+                      tr("Save the current file under a different name"));
     retranslateAction(mFileSaveAllAction, tr("Save All"),
                       tr("Save all the files"));
 
     retranslateAction(mFilePreviousAction, tr("Previous"),
-                      tr("Select the previous file"),
-                      QKeySequence::PreviousChild);
+                      tr("Select the previous file"));
     retranslateAction(mFileNextAction, tr("Next"),
-                      tr("Select the next file"),
-                      QKeySequence::NextChild);
+                      tr("Select the next file"));
 
     retranslateAction(mFileCloseAction, tr("Clos&e"),
-                      tr("Close the current file"),
-                      QKeySequence::Close);
+                      tr("Close the current file"));
     retranslateAction(mFileCloseAllAction, tr("Close All"),
                       tr("Close all the files"));
 
     retranslateAction(mFilePrintAction, tr("&Print..."),
-                      tr("Print the current file"),
-                      QKeySequence::Print);
+                      tr("Print the current file"));
 
     // Retranslate our show/hide actions
 

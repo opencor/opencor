@@ -228,11 +228,11 @@ protected:
     static QAction * newAction(QMainWindow *pMainWindow,
                                const bool &pCheckable = false,
                                const QString &pIconResource = QString(),
+                               const QKeySequence::StandardKey &pStandardKey = QKeySequence::UnknownKey,
                                const bool &pVisible = true);
 
     static void retranslateAction(QAction *pAction, const QString &pText,
-                                  const QString &pStatusTip,
-                                  const QKeySequence &pKeySequence = QKeySequence());
+                                  const QString &pStatusTip);
 
     void loadWindowSettings(QSettings *pSettings,
                             Core::DockWidget *pWindow);
