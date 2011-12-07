@@ -171,6 +171,8 @@ SET(PLUGINS
     3rdparty/QtMmlWidget
     3rdparty/Qwt
 
+    misc/QScintillaSupport
+
     # Build the remaining plugins
 
     application/Help

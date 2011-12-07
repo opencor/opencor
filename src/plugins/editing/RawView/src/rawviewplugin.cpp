@@ -3,17 +3,15 @@
 //==============================================================================
 
 #include "commonwidget.h"
+#include "qscintilla.h"
 #include "rawviewplugin.h"
 
 //==============================================================================
 
 #include <QFile>
+#include <QFileInfo>
 #include <QMainWindow>
 #include <QTextStream>
-
-//==============================================================================
-
-#include "Qsci/qsciscintilla.h"
 
 //==============================================================================
 
@@ -33,7 +31,7 @@ PLUGININFO_FUNC RawViewPluginInfo()
                       PluginInfo::Gui,
                       PluginInfo::Editing,
                       true,
-                      QStringList() << "CoreEditing" << "QScintilla",
+                      QStringList() << "CoreEditing" << "QScintillaSupport",
                       descriptions);
 }
 
@@ -65,26 +63,9 @@ QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
 
     // The file was properly opened, so create a Scintilla editor
 
-    QsciScintilla *res = new QsciScintilla(mMainWindow);
-
-    // Remove the frame around our Scintilla editor
-
-    res->setFrameShape(QFrame::NoFrame);
-
-    // Remove the margin in our Scintilla editor
-
-    res->setMarginWidth(1, 0);
-
-    // Specify a default font family and size for our Scintilla editor
-
-    res->setFont(QFont(OpenCOR::Core::DefaultFontFamily,
-                       OpenCOR::Core::DefaultFontSize));
-
-    // Set the text in the Scintilla editor to the contents of the file and
-    // specify whether the editor should be read-only
-
-    res->setText(QTextStream(&file).readAll());
-    res->setReadOnly(!(QFile::permissions(pFileName) & QFile::WriteUser));
+    QsciScintilla *res = new QScintillaSupport::QScintilla(QTextStream(&file).readAll(),
+                                                           !(QFileInfo(pFileName).isWritable()),
+                                                           0, mMainWindow);
 
     // We are done with the file, so close it
 

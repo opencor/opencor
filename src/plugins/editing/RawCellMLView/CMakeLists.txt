@@ -25,7 +25,7 @@ ADD_PLUGIN(RawCellMLView
         CellML
         CellMLSupport
         LLVM
-        QScintilla
+        QScintillaSupport
     QT_DEPENDENCIES
         QtCore
         QtGui
