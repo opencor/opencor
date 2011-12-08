@@ -54,7 +54,7 @@ QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
                       OpenCOR::Core::DefaultFontSize));
     }
 
-    // Set the contents of the Scintilla editor and specify it is read-only
+    // Set the contents of our Scintilla editor and its read-only property
 
     setText(pContents);
     setReadOnly(pReadOnly);
