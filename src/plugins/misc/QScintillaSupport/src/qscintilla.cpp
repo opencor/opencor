@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "commonwidget.h"
+#include "filemanager.h"
 #include "qscintilla.h"
 
 //==============================================================================
@@ -75,7 +76,7 @@ void QScintilla::dragEnterEvent(QDragEnterEvent *pEvent)
     //       Scintilla editor will result in the text/plain version of the data
     //       (e.g. file:///home/me/myFile) to be inserted in the text, so...
 
-    if (!pEvent->mimeData()->hasFormat("text/uri-list"))
+    if (!pEvent->mimeData()->hasFormat(Core::FileSystemMimeType))
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
