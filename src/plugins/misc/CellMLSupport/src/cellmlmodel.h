@@ -15,6 +15,11 @@
 
 //==============================================================================
 
+#include "cellml-api-cxx-support.hpp"
+#include "IfaceCellML_APISPEC.hxx"
+
+//==============================================================================
+
 namespace iface {
 namespace cellml_api {
     class Model;
@@ -32,7 +37,6 @@ class CELLMLSUPPORT_EXPORT CellmlModel
 {
 public:
     explicit CellmlModel(const QUrl &pUrl);
-    ~CellmlModel();
 
     bool isValid();
     QString errorMessage();
@@ -40,7 +44,7 @@ public:
 private:
     QUrl mUrl;
 
-    iface::cellml_api::Model *mModel;
+    ObjRef<iface::cellml_api::Model> mModel;
 
     QString mErrorMessage;
 };

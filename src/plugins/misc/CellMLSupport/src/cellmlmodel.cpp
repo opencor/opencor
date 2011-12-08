@@ -6,7 +6,6 @@
 
 //==============================================================================
 
-#include "cellml-api-cxx-support.hpp"
 #include "CellMLBootstrap.hpp"
 
 //==============================================================================
@@ -17,20 +16,15 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlModel::CellmlModel(const QUrl &pUrl) :
-    mUrl(pUrl),
-    mModel(0)
+    mUrl(pUrl)
 {
     // Get a bootstrap object
 
-    RETURN_INTO_OBJREF(cellmlBootstrap,
-                       iface::cellml_api::CellMLBootstrap,
-                       CreateCellMLBootstrap());
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
 
     // Retrieve the model loader
 
-    RETURN_INTO_OBJREF(modelLoader,
-                       iface::cellml_api::DOMModelLoader,
-                       cellmlBootstrap->modelLoader());
+    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
 
     // Load the CellML model which URL we were given
 
@@ -49,16 +43,6 @@ CellmlModel::CellmlModel(const QUrl &pUrl) :
 
     if (!QString::fromWCharArray(mModel->cellmlVersion()).compare("1.0"))
         mModel->fullyInstantiateImports();
-}
-
-//==============================================================================
-
-CellmlModel::~CellmlModel()
-{
-    // Release some memory
-
-    if (mModel)
-        mModel->release_ref();
 }
 
 //==============================================================================
