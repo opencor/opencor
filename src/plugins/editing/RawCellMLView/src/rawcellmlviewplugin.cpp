@@ -79,8 +79,8 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 
     qDebug(" - %s: %s", pFileName.toLatin1().constData(),
                         QString(cellmlModel->isValid()?
-                                    QString("CellML model properly loaded."):
-                                    QString("CellML model NOT properly loaded:\n    - %1").arg(cellmlModel->errorMessages().join("\n    - "))).toLatin1().constData());
+                                    QString("the model was properly loaded."):
+                                    QString("the model was NOT properly loaded:\n    - %1").arg(cellmlModel->errorMessages().join("\n    - "))).toLatin1().constData());
 
     delete cellmlModel;
 
