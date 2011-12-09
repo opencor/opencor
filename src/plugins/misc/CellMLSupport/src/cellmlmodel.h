@@ -17,7 +17,6 @@
 
 #include "cellml-api-cxx-support.hpp"
 
-#include "IfaceCCGS.hxx"
 #include "IfaceCellML_APISPEC.hxx"
 
 //==============================================================================
@@ -52,11 +51,8 @@ private:
     QUrl mUrl;
 
     ObjRef<iface::cellml_api::Model> mModel;
-    ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;
 
     QString mErrorMessage;
-
-    void resetProperties();
 };
 
 //==============================================================================
