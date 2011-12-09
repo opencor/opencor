@@ -17,6 +17,8 @@
 #include <QTextStream>
 #include <QUrl>
 
+#include <QDebug>
+
 //==============================================================================
 
 #include "Qsci/qscilexerxml.h"
@@ -73,7 +75,12 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 
     // Load the CellML model
 
-    CellMLSupport::CellmlModel *cellmlModel = new CellMLSupport::CellmlModel(QUrl::fromLocalFile(pFileName));
+    CellMLSupport::CellmlModel *cellmlModel = new CellMLSupport::CellmlModel(pFileName);
+
+    qDebug(" - %s: %s", pFileName.toLatin1().constData(),
+                        QString(cellmlModel->isValid()?
+                                    QString("CellML model properly loaded."):
+                                    QString("CellML model NOT properly loaded:\n    - %1").arg(cellmlModel->errorMessages().join("\n    - "))).toLatin1().constData());
 
     delete cellmlModel;
 

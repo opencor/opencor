@@ -6,6 +6,10 @@
 
 //==============================================================================
 
+#include <QUrl>
+
+//==============================================================================
+
 #include "CellMLBootstrap.hpp"
 
 //==============================================================================
@@ -15,53 +19,101 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlModel::CellmlModel(const QUrl &pUrl) :
-    mUrl(pUrl),
+CellmlModel::CellmlModel(const QString &pFileName) :
+    mFileName(pFileName),
     mModel(0)
 {
     // Get a bootstrap object
 
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+    mCellmlBootstrap = CreateCellMLBootstrap();
 
     // Retrieve the model loader
 
-    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+    mModelLoader = mCellmlBootstrap->modelLoader();
+}
 
-    // Load the CellML model which URL we were given
+//==============================================================================
 
-    try {
-        mModel = modelLoader->loadFromURL(pUrl.toString().toStdWString().c_str());
-    } catch (iface::cellml_api::CellMLException &) {
-        // Something went wrong, so generate an error message
+void CellmlModel::reset()
+{
+    // Reset all of the model's properties
 
-        mErrorMessage = QString("CellML model loader error: %1").arg(QString::fromWCharArray(modelLoader->lastErrorMessage()));
+    delete mModel; mModel = 0;
+}
 
-        return;
+//==============================================================================
+
+bool CellmlModel::load()
+{
+    if (mModel) {
+        // The model is already loaded, so...
+
+        return true;
+    } else {
+        // Try to load the model
+
+        mErrorMessages.clear();
+
+        try {
+            mModel = mModelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
+        } catch (iface::cellml_api::CellMLException &) {
+            // Something went wrong with the loading of the model, generate an
+            // error message
+
+            mErrorMessages.append(QString("CellML model loader error: %1").arg(QString::fromWCharArray(mModelLoader->lastErrorMessage())));
+
+            return false;
+        }
+
+        // In the case of a non CellML 1.0 model, we want all imports to be
+        // fully instantiated
+
+        if (QString::fromWCharArray(mModel->cellmlVersion()).compare(Cellml_1_0))
+            mModel->fullyInstantiateImports();
+
+        // All done, so...
+
+        return true;
     }
+}
 
-    // In the case of a non CellML 1.0 model, we want all imports to be fully
-    // instantiated
+//==============================================================================
 
-    if (QString::fromWCharArray(mModel->cellmlVersion()).compare(Cellml_1_0))
-        mModel->fullyInstantiateImports();
+bool CellmlModel::reload()
+{
+    // We want to reload the model, so we must first reset it
+
+    reset();
+
+    // Now, we can try to load the model
+
+    return load();
 }
 
 //==============================================================================
 
 bool CellmlModel::isValid()
 {
-    // The CellML model object is valid if there is no error message
+    // Load (but not reload!) the model, if needed
 
-    return mErrorMessage.isEmpty();
+    if (load()) {
+        // Everything went as expected, so...
+
+        return true;
+    } else {
+        // Something went wrong with the loading of the model, so...
+
+        return false;
+    }
 }
 
 //==============================================================================
 
-QString CellmlModel::errorMessage()
+QStringList CellmlModel::errorMessages()
 {
-    // Return the error message
+    // Return the error message(s)
 
-    return mErrorMessage;
+    return mErrorMessages;
 }
 
 //==============================================================================
