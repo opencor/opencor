@@ -37,6 +37,34 @@ namespace CellMLSupport {
 static const QString Cellml_1_0 = "1.0";
 static const QString Cellml_1_1 = "1.1";
 
+static const uint32_t Undefined = 0;
+
+//==============================================================================
+
+class CELLMLSUPPORT_EXPORT CellmlModelIssue
+{
+public:
+    enum Type
+    {
+        Error,
+        Warning
+    };
+
+    explicit CellmlModelIssue(const Type &pType, const uint32_t &pLine,
+                              const uint32_t &pColumn, const QString &pMessage);
+
+    Type type() const;
+    uint32_t line() const;
+    uint32_t column() const;
+    QString message() const;
+
+private:
+    Type mType;
+    uint32_t mLine;
+    uint32_t mColumn;
+    QString mMessage;
+};
+
 //==============================================================================
 
 class CELLMLSUPPORT_EXPORT CellmlModel
@@ -49,7 +77,7 @@ public:
 
     bool isValid();
 
-    QStringList errorMessages();
+    QList<CellmlModelIssue> issues();
 
 private:
     ObjRef<iface::cellml_api::CellMLBootstrap> mCellmlBootstrap;
@@ -59,7 +87,7 @@ private:
 
     ObjRef<iface::cellml_api::Model> mModel;
 
-    QStringList mErrorMessages;
+    QList<CellmlModelIssue> mIssues;
 
     void reset();
 };

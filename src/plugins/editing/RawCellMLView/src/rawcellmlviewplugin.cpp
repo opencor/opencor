@@ -71,20 +71,30 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 
 
 
-    //--- TESTING --- BEGIN ---
+//--- TESTING --- BEGIN ---
 
     // Load the CellML model
 
     CellMLSupport::CellmlModel *cellmlModel = new CellMLSupport::CellmlModel(pFileName);
 
-    qDebug(" - %s: %s", pFileName.toLatin1().constData(),
-                        QString(cellmlModel->isValid()?
-                                    QString("the model was properly loaded."):
-                                    QString("the model was NOT properly loaded:\n    - %1").arg(cellmlModel->errorMessages().join("\n    - "))).toLatin1().constData());
+    // Check the model's validity
+
+    if (cellmlModel->isValid()) {
+        qDebug(" - %s: the model was properly loaded.", pFileName.toLatin1().constData());
+    } else {
+        qDebug(" - %s: the model was NOT properly loaded:", pFileName.toLatin1().constData());
+
+        foreach (const CellMLSupport::CellmlModelIssue &cellmlModelIssue,
+                 cellmlModel->issues())
+            qDebug("    [%s at %s:%s] %s.", QString((cellmlModelIssue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning").toLatin1().constData(),
+                                            QString::number(cellmlModelIssue.line()).toLatin1().constData(),
+                                            QString::number(cellmlModelIssue.column()).toLatin1().constData(),
+                                            cellmlModelIssue.message().toLatin1().constData());
+    }
 
     delete cellmlModel;
 
-    //--- TESTING --- END ---
+//--- TESTING --- END ---
 
 
 
