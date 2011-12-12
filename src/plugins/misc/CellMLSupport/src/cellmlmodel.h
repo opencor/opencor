@@ -71,6 +71,16 @@ private:
 
 //==============================================================================
 
+class CELLMLSUPPORT_EXPORT CellmlModelRuntime
+{
+    friend class CellmlModel;
+
+private:
+    void reset();
+};
+
+//==============================================================================
+
 class CELLMLSUPPORT_EXPORT CellmlModel
 {
 public:
@@ -83,6 +93,8 @@ public:
 
     QList<CellmlModelIssue> issues();
 
+    CellmlModelRuntime runtime();
+
 private:
     ObjRef<iface::cellml_api::CellMLBootstrap> mCellmlBootstrap;
     ObjRef<iface::cellml_api::DOMModelLoader> mModelLoader;
@@ -92,6 +104,8 @@ private:
     ObjRef<iface::cellml_api::Model> mModel;
 
     QList<CellmlModelIssue> mIssues;
+
+    CellmlModelRuntime mRuntime;
 
     void reset();
 };

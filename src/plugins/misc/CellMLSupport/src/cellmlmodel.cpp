@@ -81,6 +81,15 @@ QString CellmlModelIssue::importedModel() const
 
 //==============================================================================
 
+void CellmlModelRuntime::reset()
+{
+    // Reset all of the runtime's properties
+
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 CellmlModel::CellmlModel(const QString &pFileName) :
     mFileName(pFileName),
     mModel(0)
@@ -320,6 +329,24 @@ QList<CellmlModelIssue> CellmlModel::issues()
     // Return the issue(s)
 
     return mIssues;
+}
+
+//==============================================================================
+
+CellmlModelRuntime CellmlModel::runtime()
+{
+    // Reset our runtime
+
+    mRuntime.reset();
+
+    // Check that the model is valid
+
+    if (isValid()) {
+    }
+
+    // We are done, so return the resulting runtime
+
+    return mRuntime;
 }
 
 //==============================================================================
