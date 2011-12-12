@@ -85,11 +85,36 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
         qDebug(" - %s: the model was NOT properly loaded:", pFileName.toLatin1().constData());
 
         foreach (const CellMLSupport::CellmlModelIssue &cellmlModelIssue,
-                 cellmlModel->issues())
-            qDebug("    [%s at %s:%s] %s.", QString((cellmlModelIssue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning").toLatin1().constData(),
-                                            QString::number(cellmlModelIssue.line()).toLatin1().constData(),
-                                            QString::number(cellmlModelIssue.column()).toLatin1().constData(),
-                                            cellmlModelIssue.message().toLatin1().constData());
+                 cellmlModel->issues()) {
+            QString type = QString((cellmlModelIssue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
+            QString message = cellmlModelIssue.message();
+            uint32_t line = cellmlModelIssue.line();
+            uint32_t column = cellmlModelIssue.column();
+            QString importedModel = cellmlModelIssue.importedModel();
+
+            if (   (line   == CellMLSupport::Undefined)
+                && (column == CellMLSupport::Undefined)) {
+                if (importedModel.isEmpty())
+                    qDebug("    [%s] %s.", type.toLatin1().constData(),
+                                           message.toLatin1().constData());
+                else
+                    qDebug("    [%s from imported model %s] %s.", type.toLatin1().constData(),
+                                                                  importedModel.toLatin1().constData(),
+                                                                  message.toLatin1().constData());
+            } else {
+                if (importedModel.isEmpty())
+                    qDebug("    [%s at line %s column %s] %s.", type.toLatin1().constData(),
+                                                                QString::number(cellmlModelIssue.line()).toLatin1().constData(),
+                                                                QString::number(cellmlModelIssue.column()).toLatin1().constData(),
+                                                                message.toLatin1().constData());
+                else
+                    qDebug("    [%s at line %s column %s from imported model %s] %s.", type.toLatin1().constData(),
+                                                                                       QString::number(cellmlModelIssue.line()).toLatin1().constData(),
+                                                                                       QString::number(cellmlModelIssue.column()).toLatin1().constData(),
+                                                                                       importedModel.toLatin1().constData(),
+                                                                                       message.toLatin1().constData());
+            }
+        }
     }
 
     delete cellmlModel;

@@ -50,19 +50,23 @@ public:
         Warning
     };
 
-    explicit CellmlModelIssue(const Type &pType, const uint32_t &pLine,
-                              const uint32_t &pColumn, const QString &pMessage);
+    explicit CellmlModelIssue(const Type &pType, const QString &pMessage,
+                              const uint32_t &pLine = Undefined,
+                              const uint32_t &pColumn = Undefined,
+                              const QString &pImportedModel = QString());
 
     Type type() const;
+    QString message() const;
     uint32_t line() const;
     uint32_t column() const;
-    QString message() const;
+    QString importedModel() const;
 
 private:
     Type mType;
+    QString mMessage;
     uint32_t mLine;
     uint32_t mColumn;
-    QString mMessage;
+    QString mImportedModel;
 };
 
 //==============================================================================
