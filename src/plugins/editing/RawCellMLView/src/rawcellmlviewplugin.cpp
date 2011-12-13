@@ -87,7 +87,7 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
         foreach (const CellMLSupport::CellmlModelIssue &cellmlModelIssue,
                  cellmlModel->issues()) {
             QString type = QString((cellmlModelIssue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
-            QString message = cellmlModelIssue.message();
+            QString message = cellmlModelIssue.formattedMessage();
             uint32_t line = cellmlModelIssue.line();
             uint32_t column = cellmlModelIssue.column();
             QString importedModel = cellmlModelIssue.importedModel();
@@ -95,24 +95,24 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
             if (   (line   == CellMLSupport::Undefined)
                 && (column == CellMLSupport::Undefined)) {
                 if (importedModel.isEmpty())
-                    qDebug("    [%s] %s.", type.toLatin1().constData(),
-                                           message.toLatin1().constData());
+                    qDebug("    [%s] %s", type.toLatin1().constData(),
+                                          message.toLatin1().constData());
                 else
-                    qDebug("    [%s from imported model %s] %s.", type.toLatin1().constData(),
-                                                                  importedModel.toLatin1().constData(),
-                                                                  message.toLatin1().constData());
+                    qDebug("    [%s from imported model %s] %s", type.toLatin1().constData(),
+                                                                 importedModel.toLatin1().constData(),
+                                                                 message.toLatin1().constData());
             } else {
                 if (importedModel.isEmpty())
-                    qDebug("    [%s at line %s column %s] %s.", type.toLatin1().constData(),
-                                                                QString::number(cellmlModelIssue.line()).toLatin1().constData(),
-                                                                QString::number(cellmlModelIssue.column()).toLatin1().constData(),
-                                                                message.toLatin1().constData());
+                    qDebug("    [%s at line %s column %s] %s", type.toLatin1().constData(),
+                                                               QString::number(cellmlModelIssue.line()).toLatin1().constData(),
+                                                               QString::number(cellmlModelIssue.column()).toLatin1().constData(),
+                                                               message.toLatin1().constData());
                 else
-                    qDebug("    [%s at line %s column %s from imported model %s] %s.", type.toLatin1().constData(),
-                                                                                       QString::number(cellmlModelIssue.line()).toLatin1().constData(),
-                                                                                       QString::number(cellmlModelIssue.column()).toLatin1().constData(),
-                                                                                       importedModel.toLatin1().constData(),
-                                                                                       message.toLatin1().constData());
+                    qDebug("    [%s at line %s column %s from imported model %s] %s", type.toLatin1().constData(),
+                                                                                      QString::number(cellmlModelIssue.line()).toLatin1().constData(),
+                                                                                      QString::number(cellmlModelIssue.column()).toLatin1().constData(),
+                                                                                      importedModel.toLatin1().constData(),
+                                                                                      message.toLatin1().constData());
             }
         }
     }

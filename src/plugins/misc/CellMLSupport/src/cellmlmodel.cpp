@@ -63,6 +63,15 @@ QString CellmlModelIssue::message() const
 
 //==============================================================================
 
+QString CellmlModelIssue::formattedMessage() const
+{
+    // Return the issue's message fully formatted
+
+    return mMessage.left(1).toUpper()+mMessage.right(mMessage.size()-1)+".";
+}
+
+//==============================================================================
+
 uint32_t CellmlModelIssue::line() const
 {
     // Return the issue's line
@@ -137,8 +146,7 @@ bool CellmlModel::load()
         try {
             mModel = mModelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
         } catch (iface::cellml_api::CellMLException &) {
-            // Something went wrong with the loading of the model, generate an
-            // error message
+            // Something went wrong with the loading of the model, so...
 
             mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                             QString("the model could not be loaded (%1)").arg(QString::fromStdWString(mModelLoader->lastErrorMessage()))));
@@ -150,7 +158,17 @@ bool CellmlModel::load()
         // fully instantiated
 
         if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
-            mModel->fullyInstantiateImports();
+            try {
+                mModel->fullyInstantiateImports();
+        } catch (...) {
+            // Something went wrong with the full instantiation of the imports,
+            // so...
+
+            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                            "the model imports could not be fully instantiated"));
+
+            return false;
+        }
 
         // All done, so...
 

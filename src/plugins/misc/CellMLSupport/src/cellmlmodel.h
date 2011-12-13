@@ -57,6 +57,7 @@ public:
 
     Type type() const;
     QString message() const;
+    QString formattedMessage() const;
     uint32_t line() const;
     uint32_t column() const;
     QString importedModel() const;
