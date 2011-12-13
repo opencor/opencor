@@ -1,6 +1,15 @@
 //==============================================================================
 // CellML model class
 //==============================================================================
+//---GRY--- NOTE THAT OUR CURRENT USE OF THE CellML API IS *WRONG*. INDEED, WE
+//          ARE ASSUMING THAT THE BINARIES IMPLEMENT A CLEANED UP C++ INTERFACE
+//          (SEE https://tracker.physiomeproject.org/show_bug.cgi?id=3108) WHILE
+//          THIS IS NOT (YET) THE CASE. STILL, WE PREFER TO HAVE MEMORY LEAKS,
+//          ETC. AND BE READY FOR WHEN BINARIES ARE UPDATED RATHER THAN HAVE
+//          UGLY CODE, ETC. THIS BEING SAID, THERE IS STILL THE ISSUE OF
+//          DECLARE_QUERY_INTERFACE_OBJREF WHICH CAN'T BE MIMICKED AT THIS POINT
+//          (SEE https://tracker.physiomeproject.org/show_bug.cgi?id=3165)
+//==============================================================================
 
 #include "cellmlmodel.h"
 
@@ -132,7 +141,7 @@ bool CellmlModel::load()
             // error message
 
             mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            QString("the model could not be loaded (%1)").arg(QString::fromWCharArray(mModelLoader->lastErrorMessage()))));
+                                            QString("the model could not be loaded (%1)").arg(QString::fromStdWString(mModelLoader->lastErrorMessage()))));
 
             return false;
         }
@@ -140,7 +149,7 @@ bool CellmlModel::load()
         // In the case of a non CellML 1.0 model, we want all imports to be
         // fully instantiated
 
-        if (QString::fromWCharArray(mModel->cellmlVersion()).compare(Cellml_1_0))
+        if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
             mModel->fullyInstantiateImports();
 
         // All done, so...
@@ -268,9 +277,8 @@ bool CellmlModel::isValid()
                             break;
 
                         ObjRef<iface::cellml_api::URI> href = importCellmlElement->xlinkHref();
-                        RETURN_INTO_WSTRING(hrefWideString, href->asText());
 
-                        importedModel = QString::fromStdWString(hrefWideString);
+                        importedModel = QString::fromStdWString(href->asText());
 
                         break;
                     }
