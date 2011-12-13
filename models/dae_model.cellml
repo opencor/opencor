@@ -47,8 +47,7 @@
                     <apply>
                         <plus/>
                         <apply>
-                            <times/>
-                            <cn cellml:units="dimensionless">-1</cn>
+                            <minus/>
                             <ci>a</ci>
                         </apply>
                         <apply>
@@ -77,12 +76,8 @@
                         </apply>
                         <apply>
                             <times/>
-                            <cn cellml:units="dimensionless">-1</cn>
-                            <apply>
-                                <times/>
-                                <cn cellml:units="dimensionless">3</cn>
-                                <ci>c</ci>
-                            </apply>
+                            <cn cellml:units="dimensionless">-3</cn>
+                            <ci>c</ci>
                         </apply>
                     </apply>
                 </apply>
