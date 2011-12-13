@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<model name="import_model_imported" cmeta:id="import_model_imported" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <component name="sin">
+        <variable name="x" units="dimensionless" public_interface="in" private_interface="out"/>
+        <variable name="sin" initial_value="sin_initial_value" units="dimensionless" public_interface="out" private_interface="out"/>
+        <variable name="sin_initial_value" units="dimensionless" public_interface="in" private_interface="out"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar><ci>x</ci></bvar>
+                    <ci>sin</ci>
+                </apply>
+                <apply>
+                    <cos/>
+                    <ci>x</ci>
+                </apply>
+            </apply>
+        </math>
+    </component>
+</model>

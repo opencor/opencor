@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<model name="dae_model" cmeta:id="dae_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <component name="main">
+        <variable initial_value="1" name="a" units="dimensionless"/>
+        <variable name="d" units="dimensionless"/>
+        <variable name="c" units="dimensionless"/>
+        <variable name="t" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>a</ci>
+                </apply>
+                <apply>
+                    <times/>
+                    <apply>
+                        <divide/>
+                        <cn cellml:units="dimensionless">4</cn>
+                        <cn cellml:units="dimensionless">7</cn>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <cn cellml:units="dimensionless">2</cn>
+                            <apply>
+                                <power/>
+                                <ci>d</ci>
+                                <cn cellml:units="dimensionless">3</cn>
+                            </apply>
+                        </apply>
+                        <ci>c</ci>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <times/>
+                    <cn cellml:units="dimensionless">2</cn>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <cn cellml:units="dimensionless">-1</cn>
+                            <ci>a</ci>
+                        </apply>
+                        <apply>
+                            <power/>
+                            <ci>d</ci>
+                            <cn cellml:units="dimensionless">3</cn>
+                        </apply>
+                        <ci>c</ci>
+                    </apply>
+                </apply>
+                <cn cellml:units="dimensionless">0</cn>
+            </apply>
+        </math>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <times/>
+                    <cn cellml:units="dimensionless">3</cn>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <power/>
+                            <ci>d</ci>
+                            <cn cellml:units="dimensionless">3</cn>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <cn cellml:units="dimensionless">-1</cn>
+                            <apply>
+                                <times/>
+                                <cn cellml:units="dimensionless">3</cn>
+                                <ci>c</ci>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+                <cn cellml:units="dimensionless">0</cn>
+            </apply>
+        </math>
+    </component>
+</model>
