@@ -65,7 +65,8 @@ QString CellmlModelIssue::message() const
 
 QString CellmlModelIssue::formattedMessage() const
 {
-    // Return the issue's message fully formatted
+    // Return the issue's message fully formatted (i.e. the beginning of the
+    // message is capitalised and its end consists of a full stop)
 
     return mMessage.left(1).toUpper()+mMessage.right(mMessage.size()-1)+".";
 }
@@ -318,13 +319,6 @@ bool CellmlModel::isValid()
 
                 issueType = CellmlModelIssue::Error;
             }
-
-            // Address the issue of tracker item #3166
-            // https://tracker.physiomeproject.org/show_bug.cgi?id=3166
-            //---GRY--- THIS WILL HOPEFULLY GET FIXED AT SOME POINT...
-
-            if (line != Undefined)
-                ++line;
 
             // Append the issue to our list
 
