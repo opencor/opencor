@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<model name="sin_main" cmeta:id="sin_main" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <import xlink:href="sin_imported.cellml">
+        <component name="sin" component_ref="sin"/>
+    </import>
+    <component name="main" cmeta:id="main">
+        <variable name="x" initial_value="0" units="dimensionless" public_interface="out" private_interface="out"/>
+        <variable name="sin" units="dimensionless" public_interface="out" private_interface="in"/>
+        <variable name="sin_initial_value" initial_value="0" units="dimensionless" public_interface="out" private_interface="out"/>
+    </component>
+    <group>
+        <relationship_ref relationship="encapsulation"/>
+        <component_ref component="main">
+            <component_ref component="sin"/>
+        </component_ref>
+    </group>
+    <connection>
+        <map_components component_1="sin" component_2="main"/>
+        <map_variables variable_1="x" variable_2="x"/>
+        <map_variables variable_1="sin" variable_2="sin"/>
+        <map_variables variable_1="sin_initial_value" variable_2="sin_initial_value"/>
+    </connection>
+</model>
