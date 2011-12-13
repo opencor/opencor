@@ -362,6 +362,10 @@ CellmlModelRuntime CellmlModel::runtime()
     // Check that the model is valid
 
     if (isValid()) {
+        // The model is valid, so we can generate our runtime
+        // Note: this is based on CodeGenerationState::GenerateCode() from the
+        //       CellML API. Indeed, we can't use the CellML API to generate our
+        //       runtime, but we can certainly re-use it, so...
     }
 
     // We are done, so return the resulting runtime
