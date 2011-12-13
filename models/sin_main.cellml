@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <model name="sin_main" cmeta:id="sin_main" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <import xlink:href="sin_idmported.cellml">
+    <import xlink:href="sin_imported.cellml">
         <component name="sin" component_ref="sin"/>
     </import>
     <component name="main" cmeta:id="main">
