@@ -104,9 +104,9 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
 
 //==============================================================================
 
-QNetworkReply *HelpNetworkAccessManager::createRequest(Operation,
-                                                       const QNetworkRequest &pRequest,
-                                                       QIODevice*)
+QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
+                                                        const QNetworkRequest &pRequest,
+                                                        QIODevice*)
 {
     // Reqested URL
 
@@ -223,11 +223,13 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
 
 void HelpWidget::retranslateUi()
 {
-    // Retranslate the current page, but only if it is the error page since a
+    // Retranslate the current page, but only if it is an error page since a
     // valid page is hard-coded and therefore cannot be translated
+    // Note: we use setUrl() rather than reload() since the latter won't work
+    //       upon starting OpenCOR with a non-system locale, so...
 
     if (!mHelpEngine->findFile(url()).isValid())
-        reload();
+        setUrl(url());
 }
 
 //==============================================================================
@@ -267,8 +269,11 @@ QUrl HelpWidget::homePage() const
 void HelpWidget::gotoHomePage()
 {
     // Go to the home page
+    // Note: we use setUrl() rather than load() since the former will ensure
+    //       that url() becomes valid straightaway (which is important for
+    //       retranslateUi()) and that the page gets loaded immediately...
 
-    load(mHomePage);
+    setUrl(mHomePage);
 }
 
 //==============================================================================
