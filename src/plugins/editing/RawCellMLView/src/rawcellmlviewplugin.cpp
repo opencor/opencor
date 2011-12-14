@@ -73,6 +73,9 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 
 //--- TESTING --- BEGIN ---
 
+    qDebug("=======================================");
+    qDebug("%s:", pFileName.toLatin1().constData());
+
     // Load the CellML model
 
     CellMLSupport::CellmlModel *cellmlModel = new CellMLSupport::CellmlModel(pFileName);
@@ -80,9 +83,9 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
     // Check the model's validity
 
     if (cellmlModel->isValid()) {
-        qDebug(" - %s: the model was properly loaded.", pFileName.toLatin1().constData());
+        qDebug(" - The model was properly loaded.");
     } else {
-        qDebug(" - %s: the model was NOT properly loaded:", pFileName.toLatin1().constData());
+        qDebug(" - The model was NOT properly loaded:");
 
         foreach (const CellMLSupport::CellmlModelIssue &cellmlModelIssue,
                  cellmlModel->issues()) {
@@ -96,26 +99,47 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
                 && (column == CellMLSupport::Undefined)) {
                 if (importedModel.isEmpty())
                     qDebug("    [%s] %s", type.toLatin1().constData(),
-                                          message.toLatin1().constData());
+                                          message.toUtf8().constData());
                 else
                     qDebug("    [%s from imported model %s] %s", type.toLatin1().constData(),
                                                                  importedModel.toLatin1().constData(),
-                                                                 message.toLatin1().constData());
+                                                                 message.toUtf8().constData());
             } else {
                 if (importedModel.isEmpty())
                     qDebug("    [%s at line %s column %s] %s", type.toLatin1().constData(),
                                                                QString::number(cellmlModelIssue.line()).toLatin1().constData(),
                                                                QString::number(cellmlModelIssue.column()).toLatin1().constData(),
-                                                               message.toLatin1().constData());
+                                                               message.toUtf8().constData());
                 else
                     qDebug("    [%s at line %s column %s from imported model %s] %s", type.toLatin1().constData(),
                                                                                       QString::number(cellmlModelIssue.line()).toLatin1().constData(),
                                                                                       QString::number(cellmlModelIssue.column()).toLatin1().constData(),
                                                                                       importedModel.toLatin1().constData(),
-                                                                                      message.toLatin1().constData());
+                                                                                      message.toUtf8().constData());
             }
         }
     }
+
+    // Get a runtime for the model
+
+    CellMLSupport::CellmlModelRuntime *cellmlModelRuntime = cellmlModel->runtime();
+
+    if (cellmlModelRuntime->isValid()) {
+        qDebug(" - The model's runtime was properly generated.");
+    } else {
+        qDebug(" - The model's runtime was NOT properly generated:");
+
+        foreach (const CellMLSupport::CellmlModelIssue &cellmlModelIssue,
+                 cellmlModelRuntime->issues()) {
+            QString type = QString((cellmlModelIssue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
+            QString message = cellmlModelIssue.formattedMessage();
+
+            qDebug("    [%s] %s", type.toLatin1().constData(),
+                                  message.toUtf8().constData());
+        }
+    }
+
+    // Done with our testing, so...
 
     delete cellmlModel;
 

@@ -19,9 +19,13 @@
 
 //==============================================================================
 
+#include "IfaceCeVAS.hxx"
+#include "IfaceCUSES.hxx"
 #include "IfaceVACSS.hxx"
 
 #include "CellMLBootstrap.hpp"
+#include "CeVASBootstrap.hpp"
+#include "CUSESBootstrap.hpp"
 #include "VACSSBootstrap.hpp"
 
 //==============================================================================
@@ -100,6 +104,24 @@ QString CellmlModelIssue::importedModel() const
 
 //==============================================================================
 
+bool CellmlModelRuntime::isValid()
+{
+    // The runtime is valid if no issue was found
+
+    return mIssues.isEmpty();
+}
+
+//==============================================================================
+
+QList<CellmlModelIssue> CellmlModelRuntime::issues()
+{
+    // Return the issue(s)
+
+    return mIssues;
+}
+
+//==============================================================================
+
 void CellmlModelRuntime::reset()
 {
     // Reset all of the runtime's properties
@@ -113,13 +135,18 @@ CellmlModel::CellmlModel(const QString &pFileName) :
     mFileName(pFileName),
     mModel(0)
 {
-    // Get a bootstrap object
+    // Instantiate our runtime object
 
-    mCellmlBootstrap = CreateCellMLBootstrap();
+    mRuntime = new CellmlModelRuntime();
+}
 
-    // Retrieve the model loader
+//==============================================================================
 
-    mModelLoader = mCellmlBootstrap->modelLoader();
+CellmlModel::~CellmlModel()
+{
+    // Delete some internal objects
+
+    delete mRuntime;
 }
 
 //==============================================================================
@@ -128,9 +155,10 @@ void CellmlModel::reset()
 {
     // Reset all of the model's properties
 
-    delete mModel; mModel = 0;
-
-    mIssues.clear();
+    /*delete mModel;*/ mModel = 0;
+    //---GRY--- WE CANNOT delete mModel AT THIS STAGE. FOR THIS, WE WOULD NEED
+    //          TO USE THE CLEANED UP C++ INTERFACE (SEE THE MAIN COMMENT AT THE
+    //          BEGINNING OF THIS FILE)
 }
 
 //==============================================================================
@@ -142,15 +170,27 @@ bool CellmlModel::load()
 
         return true;
     } else {
+        // Reset any issues that we may have found before
+
+        mIssues.clear();
+
+        // Get a bootstrap object
+
+        ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+
+        // Get its model loader
+
+        ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+
         // Try to load the model
 
         try {
-            mModel = mModelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
+            mModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
         } catch (iface::cellml_api::CellMLException &) {
             // Something went wrong with the loading of the model, so...
 
             mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            QString("the model could not be loaded (%1)").arg(QString::fromStdWString(mModelLoader->lastErrorMessage()))));
+                                            tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage()))));
 
             return false;
         }
@@ -165,8 +205,10 @@ bool CellmlModel::load()
             // Something went wrong with the full instantiation of the imports,
             // so...
 
+            reset();
+
             mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            "the model imports could not be fully instantiated"));
+                                            tr("the model's imports could not be fully instantiated")));
 
             return false;
         }
@@ -185,7 +227,7 @@ bool CellmlModel::reload()
 
     reset();
 
-    // Now, we can try to load the model
+    // Now, we can try to (re)load the model
 
     return load();
 }
@@ -353,11 +395,11 @@ QList<CellmlModelIssue> CellmlModel::issues()
 
 //==============================================================================
 
-CellmlModelRuntime CellmlModel::runtime()
+CellmlModelRuntime * CellmlModel::runtime()
 {
     // Reset our runtime
 
-    mRuntime.reset();
+    mRuntime->reset();
 
     // Check that the model is valid
 
@@ -366,9 +408,48 @@ CellmlModelRuntime CellmlModel::runtime()
         // Note: this is based on CodeGenerationState::GenerateCode() from the
         //       CellML API. Indeed, we can't use the CellML API to generate our
         //       runtime, but we can certainly re-use it, so...
+
+        // Create a CellML Variable Association Service (CeVAS) object to help
+        // us with the treatment of interconnected CellML variables
+
+        ObjRef<iface::cellml_services::CeVASBootstrap> cevasBootstrap = CreateCeVASBootstrap();
+        ObjRef<iface::cellml_services::CeVAS> cevas = cevasBootstrap->createCeVASForModel(mModel);
+        QString cevasModelError = QString::fromStdWString(cevas->modelError());
+
+        if (!cevasModelError.isEmpty()) {
+            // Something went wrong with the creation of our CeVAS object, so...
+
+            mRuntime->mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                                      tr("the model's variables could not be fully analysed")));
+
+            return mRuntime;
+        }
+
+        // Create a CellML Units Simplification and Expansion Service (CUSES)
+        // object to help us with the processing of physical units
+
+        ObjRef<iface::cellml_services::CUSESBootstrap> cusesBootstrap = CreateCUSESBootstrap();
+        ObjRef<iface::cellml_services::CUSES> cuses = cusesBootstrap->createCUSESForModel(mModel, false);
+        QString cusesModelError = QString::fromStdWString(cuses->modelError());
+
+        if (!cusesModelError.isEmpty()) {
+            // Something went wrong with the creation of our CUSES object, so...
+
+            mRuntime->mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                                      tr("the model's units could not be fully processed")));
+
+            mRuntime->reset();
+
+            return mRuntime;
+        }
+    } else {
+        // The model is not valid, so...
+
+        mRuntime->mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                                  tr("the model is not valid")));
     }
 
-    // We are done, so return the resulting runtime
+    // We are done, so return our runtime object
 
     return mRuntime;
 }

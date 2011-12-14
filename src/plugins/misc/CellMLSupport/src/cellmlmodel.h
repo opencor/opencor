@@ -11,6 +11,7 @@
 
 //==============================================================================
 
+#include <QObject>
 #include <QStringList>
 
 //==============================================================================
@@ -18,14 +19,6 @@
 #include "cellml-api-cxx-support.hpp"
 
 #include "IfaceCellML_APISPEC.hxx"
-
-//==============================================================================
-
-namespace iface {
-namespace cellml_api {
-    class Model;
-}   // namespace cellml_api
-}   // namespace iface
 
 //==============================================================================
 
@@ -76,16 +69,26 @@ class CELLMLSUPPORT_EXPORT CellmlModelRuntime
 {
     friend class CellmlModel;
 
+public:
+    bool isValid();
+
+    QList<CellmlModelIssue> issues();
+
 private:
     void reset();
+
+    QList<CellmlModelIssue> mIssues;
 };
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlModel
+class CELLMLSUPPORT_EXPORT CellmlModel : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit CellmlModel(const QString &pFileName);
+    ~CellmlModel();
 
     bool load();
     bool reload();
@@ -94,19 +97,16 @@ public:
 
     QList<CellmlModelIssue> issues();
 
-    CellmlModelRuntime runtime();
+    CellmlModelRuntime * runtime();
 
 private:
-    ObjRef<iface::cellml_api::CellMLBootstrap> mCellmlBootstrap;
-    ObjRef<iface::cellml_api::DOMModelLoader> mModelLoader;
-
     QString mFileName;
 
     ObjRef<iface::cellml_api::Model> mModel;
 
     QList<CellmlModelIssue> mIssues;
 
-    CellmlModelRuntime mRuntime;
+    CellmlModelRuntime *mRuntime;
 
     void reset();
 };
