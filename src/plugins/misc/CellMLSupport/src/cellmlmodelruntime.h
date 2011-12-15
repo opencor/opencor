@@ -1,26 +1,18 @@
 //==============================================================================
-// CellML model class
+// CellML model runtime class
 //==============================================================================
 
-#ifndef CELLMLMODEL_H
-#define CELLMLMODEL_H
+#ifndef CELLMLMODELRUNTIME_H
+#define CELLMLMODELRUNTIME_H
 
 //==============================================================================
 
 #include "cellmlmodelcommon.h"
-#include "cellmlmodelruntime.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
 
-#include <QObject>
-#include <QStringList>
-
-//==============================================================================
-
-#include "cellml-api-cxx-support.hpp"
-
-#include "IfaceCellML_APISPEC.hxx"
+#include <QList>
 
 //==============================================================================
 
@@ -29,33 +21,19 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlModel : public QObject
+class CELLMLSUPPORT_EXPORT CellmlModelRuntime
 {
-    Q_OBJECT
+    friend class CellmlModel;
 
 public:
-    explicit CellmlModel(const QString &pFileName);
-    ~CellmlModel();
-
-    bool load();
-    bool reload();
-
     bool isValid();
 
     QList<CellmlModelIssue> issues();
 
-    CellmlModelRuntime * runtime();
-
 private:
-    QString mFileName;
-
-    ObjRef<iface::cellml_api::Model> mModel;
+    void reset();
 
     QList<CellmlModelIssue> mIssues;
-
-    CellmlModelRuntime *mRuntime;
-
-    void reset();
 };
 
 //==============================================================================

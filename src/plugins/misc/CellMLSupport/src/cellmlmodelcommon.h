@@ -1,26 +1,17 @@
 //==============================================================================
-// CellML model class
+// CellML model common
 //==============================================================================
 
-#ifndef CELLMLMODEL_H
-#define CELLMLMODEL_H
+#ifndef CELLMLMODELCOMMON_H
+#define CELLMLMODELCOMMON_H
 
 //==============================================================================
 
-#include "cellmlmodelcommon.h"
-#include "cellmlmodelruntime.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
 
-#include <QObject>
-#include <QStringList>
-
-//==============================================================================
-
-#include "cellml-api-cxx-support.hpp"
-
-#include "IfaceCellML_APISPEC.hxx"
+#include <QString>
 
 //==============================================================================
 
@@ -29,33 +20,40 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlModel : public QObject
+static const QString Cellml_1_0 = "1.0";
+static const QString Cellml_1_1 = "1.1";
+
+static const uint32_t Undefined = 0;
+
+//==============================================================================
+
+class CELLMLSUPPORT_EXPORT CellmlModelIssue
 {
-    Q_OBJECT
-
 public:
-    explicit CellmlModel(const QString &pFileName);
-    ~CellmlModel();
+    enum Type
+    {
+        Error,
+        Warning
+    };
 
-    bool load();
-    bool reload();
+    explicit CellmlModelIssue(const Type &pType, const QString &pMessage,
+                              const uint32_t &pLine = Undefined,
+                              const uint32_t &pColumn = Undefined,
+                              const QString &pImportedModel = QString());
 
-    bool isValid();
-
-    QList<CellmlModelIssue> issues();
-
-    CellmlModelRuntime * runtime();
+    Type type() const;
+    QString message() const;
+    QString formattedMessage() const;
+    uint32_t line() const;
+    uint32_t column() const;
+    QString importedModel() const;
 
 private:
-    QString mFileName;
-
-    ObjRef<iface::cellml_api::Model> mModel;
-
-    QList<CellmlModelIssue> mIssues;
-
-    CellmlModelRuntime *mRuntime;
-
-    void reset();
+    Type mType;
+    QString mMessage;
+    uint32_t mLine;
+    uint32_t mColumn;
+    QString mImportedModel;
 };
 
 //==============================================================================
