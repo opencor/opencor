@@ -18,6 +18,9 @@
         <source>the model&apos;s imports could not be fully instantiated</source>
         <translation>les importations du modèle n&apos;ont pas pu être complètement instanciées</translation>
     </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLSupport::CellmlModelRuntime</name>
     <message>
         <source>the model&apos;s variables could not be fully analysed</source>
         <translation>les variables du modèle n&apos;ont pas pu être complètement analysées</translation>

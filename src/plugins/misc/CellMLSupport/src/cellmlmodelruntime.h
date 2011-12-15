@@ -13,6 +13,11 @@
 //==============================================================================
 
 #include <QList>
+#include <QObject>
+
+//==============================================================================
+
+#include "IfaceCellML_APISPEC.hxx"
 
 //==============================================================================
 
@@ -21,14 +26,17 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlModelRuntime
+class CELLMLSUPPORT_EXPORT CellmlModelRuntime : public QObject
 {
-    friend class CellmlModel;
+    Q_OBJECT
 
 public:
     bool isValid();
 
     QList<CellmlModelIssue> issues();
+
+    CellmlModelRuntime * update(iface::cellml_api::Model *pModel,
+                                const bool &pValidModel);
 
 private:
     void reset();

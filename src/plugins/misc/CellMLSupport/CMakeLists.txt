@@ -20,6 +20,7 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
         src/cellmlmodel.h
+        src/cellmlmodelruntime.h
         src/cellmlsupportplugin.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}
