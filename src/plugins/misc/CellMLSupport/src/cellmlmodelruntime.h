@@ -42,6 +42,9 @@ private:
     void reset();
 
     QList<CellmlModelIssue> mIssues;
+
+    std::wstring getModelAsCCode(iface::cellml_api::Model *pModel/*,void* _annotations*/);
+    int customGen(iface::cellml_api::Model *pModel);
 };
 
 //==============================================================================
