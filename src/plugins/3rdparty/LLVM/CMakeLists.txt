@@ -17,8 +17,7 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
     )
 ENDMACRO()
 
-# Retrieve some header files that were generated on each of our target
-# platforms
+# Retrieve some header files that were generated on each of our target platforms
 
 SET(LLVM_CONFIG_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/llvm/Config)
 SET(CONFIG_HEADER_FILES
