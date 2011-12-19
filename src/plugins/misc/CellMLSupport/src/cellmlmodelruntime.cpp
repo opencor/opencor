@@ -71,6 +71,8 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
         //       see depending on whether the model contains algebraic equations
         //       (i.e. a DAE model) or not (i.e. a 'simple' ODE model)...
 
+        // Generate some code for the model (i.e. 'compile' the model)
+
         ObjRef<iface::cellml_services::CodeInformation> codeInformation;
 
         try {
@@ -83,6 +85,39 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
         } catch (...) {
             mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                             tr("an unexpected problem occurred while trying to compile the model")));
+
+            return this;
+        }
+
+        // Check that the code generation went fine
+
+        QString codeGenerationErrorMessage = QString::fromStdWString(codeInformation->errorMessage());
+
+        if (!codeGenerationErrorMessage.isEmpty()) {
+            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                            tr("a problem occurred during the compilation of the model: %1").arg(codeGenerationErrorMessage.toLatin1().constData())));
+
+            return this;
+        }
+
+        // Now, we have the code information, so we can check whether the
+        // model's level of constraint
+
+        iface::cellml_services::ModelConstraintLevel constraintLevel = codeInformation->constraintLevel();
+
+        if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
+            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                            tr("the model is underconstrained")));
+
+            return this;
+        } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
+            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                            tr("the model is overconstrained")));
+
+            return this;
+        } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
+            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                            tr("the model is unsuitably constrained")));
 
             return this;
         }

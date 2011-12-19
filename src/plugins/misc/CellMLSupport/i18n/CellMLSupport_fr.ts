@@ -33,5 +33,21 @@
         <source>an unexpected problem occurred while trying to compile the model</source>
         <translation>un problème inattendu s&apos;est produit lors de la compilation du modèle</translation>
     </message>
+    <message>
+        <source>a problem occurred during the compilation of the model: %1</source>
+        <translation>un problème s&apos;est produit durant la compilation du modèle : %1</translation>
+    </message>
+    <message>
+        <source>the model is unsuitably constrained</source>
+        <translation>le modèle n&apos;est pas correctement constraint</translation>
+    </message>
+    <message>
+        <source>the model is underconstrained</source>
+        <translation>le modèle n&apos;est pas assez constraint</translation>
+    </message>
+    <message>
+        <source>the model is overconstrained</source>
+        <translation>le modèle est trop constraint</translation>
+    </message>
 </context>
 </TS>
