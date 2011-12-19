@@ -142,8 +142,8 @@ bool CellmlModel::isValid()
         // The model was properly loaded (or was already loaded), so check
         // whether it is CellML valid
 
-        ObjRef<iface::cellml_services::VACSService> vacss = CreateVACSService();
-        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacss->validateModel(mModel);
+        ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
+        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mModel);
 
         // Determine the number of errors and warnings
         // Note: CellMLValidityErrorSet::nValidityErrors() returns any type of
@@ -171,9 +171,9 @@ bool CellmlModel::isValid()
 
                 ObjRef<iface::dom::Node> errorNode = cellmlRepresentationValidityError->errorNode();
 
-                line = vacss->getPositionInXML(errorNode,
-                                               cellmlRepresentationValidityError->errorNodalOffset(),
-                                               &column);
+                line = vacssService->getPositionInXML(errorNode,
+                                                      cellmlRepresentationValidityError->errorNodalOffset(),
+                                                      &column);
             } else {
                 // We are not dealing with a CellML representation issue, so
                 // check whether we are dealing with a semantic one
@@ -191,7 +191,8 @@ bool CellmlModel::isValid()
 
                     ObjRef<iface::dom::Element> domElement = cellmlDomElement->domElement();
 
-                    line = vacss->getPositionInXML(domElement, 0, &column);
+                    line = vacssService->getPositionInXML(domElement, 0,
+                                                          &column);
 
                     // Also determine its imported model, if any
 
