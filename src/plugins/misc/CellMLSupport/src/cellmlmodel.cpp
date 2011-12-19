@@ -101,17 +101,17 @@ bool CellmlModel::load()
         if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
             try {
                 mModel->fullyInstantiateImports();
-        } catch (...) {
-            // Something went wrong with the full instantiation of the imports,
-            // so...
+            } catch (...) {
+                // Something went wrong with the full instantiation of the
+                // imports, so...
 
-            reset();
+                reset();
 
-            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            tr("the model's imports could not be fully instantiated")));
+                mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                                tr("the model's imports could not be fully instantiated")));
 
-            return false;
-        }
+                return false;
+            }
 
         // All done, so...
 
