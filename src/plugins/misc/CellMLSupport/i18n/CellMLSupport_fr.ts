@@ -22,16 +22,8 @@
 <context>
     <name>OpenCOR::CellMLSupport::CellmlModelRuntime</name>
     <message>
-        <source>the model&apos;s variables could not be fully analysed</source>
-        <translation>les variables du modèle n&apos;ont pas pu être complètement analysées</translation>
-    </message>
-    <message>
         <source>the model is not valid</source>
         <translation>le modèle n&apos;est pas valide</translation>
-    </message>
-    <message>
-        <source>the model&apos;s units could not be fully processed</source>
-        <translation>les unités du modèle n&apos;ont pas pu être complètement traitées</translation>
     </message>
 </context>
 </TS>
