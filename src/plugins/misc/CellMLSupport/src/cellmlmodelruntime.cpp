@@ -107,17 +107,17 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
         if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
             mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            tr("the model is underconstrained")));
-
-            return this;
-        } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
-            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            tr("the model is overconstrained")));
+                                            tr("the model is underconstrained (i.e. some variables need to be initialised or computed):")));
 
             return this;
         } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
             mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            tr("the model is unsuitably constrained")));
+                                            tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used):")));
+
+            return this;
+        } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
+            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                            tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once):")));
 
             return this;
         }
