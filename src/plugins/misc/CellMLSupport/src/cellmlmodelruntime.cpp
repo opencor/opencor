@@ -85,11 +85,6 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
         ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
         ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
-        // Note: there is no 'direct' way to tell whether a model is a 'simple'
-        //       ODE model or a DAE model, so we must create a code generator
-        //       and then check whether the model contains algebraic equations
-        //       (i.e. it's a DAE model) or not (i.e. it's a 'simple' ODE
-        //       model)...
 
         // Generate some code for the model (i.e. 'compile' the model)
 
@@ -144,58 +139,26 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
         // The model is correctly constrained
 
-        // Set a few properties for the runtime
+        // Determine whether the model is a 'simple' ODE model or a DAE model
+        // Note: this can be done by checking whether some equations were
+        //       flagged as needing a Newton-Raphson evaluation...
 
-        mModelType = codeInformation->algebraicIndexCount()?DaeModel:OdeModel;
-        qDebug() << "codeInformation->algebraicIndexCount() =" << codeInformation->algebraicIndexCount();
+        mModelType = codeInformation->flaggedEquations()->length()?DaeModel:OdeModel;
 
-/*
-        ObjRef<iface::mathml_dom::MathMLNodeList> mathmlNodeList = codeInformation->flaggedEquations();
-        uint32_t i, l = mathmlNodeList->length();
-        if (l == 0)
-          qDebug(" * No equations needed Newton-Raphson evaluation.");
-        else
-          qDebug(" * The following equations needed Newton-Raphson evaluation:");
 
-        for (i = 0; i < l; i++)
-        {
-          iface::dom::Node* n = mathmlNodeList->item(i);
-          iface::dom::Element* el =
-            reinterpret_cast<iface::dom::Element*>(n->query_interface("dom::Element"));
-          n->release_ref();
 
-          std::wstring cmeta = el->getAttribute(L"id");
-          std::wstring str;
-          if (cmeta == L"")
-            str += L" *   <equation with no cmeta ID>\n";
-          else
-          {
-            str += L" *   ";
-            str += cmeta;
-            str += L"\n";
-          }
+//        qDebug("---------------------------------------");
+//        qDebug("\nRequired functions:");
+//        qDebug(QString::fromStdWString(codeInformation->functionsString()).toLatin1().constData());
+//        qDebug("---------------------------------------");
+//        qDebug("\nInitialisations:");
+//        qDebug(QString::fromStdWString(codeInformation->initConstsString()).toLatin1().constData());
+//        qDebug("---------------------------------------");
+//        qDebug("\nVariable evaluations:");
+//        qDebug(QString::fromStdWString(codeInformation->variablesString()).toLatin1().constData());
+//        qDebug("---------------------------------------");
 
-          n = el->parentNode();
-          el->release_ref();
 
-          el = reinterpret_cast<iface::dom::Element*>
-            (n->query_interface("dom::Element"));
-          n->release_ref();
-
-          cmeta = el->getAttribute(L"id");
-          if (cmeta == L"")
-            str += L" *   in <math with no cmeta ID>\n";
-          else
-          {
-            str += L" *   in math with cmeta:id ";
-            str += cmeta;
-            str += L"\n";
-          }
-          el->release_ref();
-
-          qDebug("---> %s\n", QString::fromStdWString(str).toLatin1().constData());
-        }
-*/
 
         // Just testing the generation of 'C code'...
 
