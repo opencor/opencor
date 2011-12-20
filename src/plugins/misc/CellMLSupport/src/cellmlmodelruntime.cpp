@@ -23,11 +23,29 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+CellmlModelRuntime::CellmlModelRuntime()
+{
+    // Initialise the runtime's properties
+
+    reset();
+}
+
+//==============================================================================
+
 bool CellmlModelRuntime::isValid()
 {
     // The runtime is valid if no issue was found
 
     return mIssues.isEmpty();
+}
+
+//==============================================================================
+
+CellmlModelRuntime::ModelType CellmlModelRuntime::modelType()
+{
+    // Return the type of model for the runtime
+
+    return mModelType;
 }
 
 //==============================================================================
@@ -46,6 +64,8 @@ void CellmlModelRuntime::reset()
     // Reset all of the runtime's properties
 
 //---GRY--- TO BE DONE...
+
+    mModelType = OdeModel;
 }
 
 //==============================================================================
@@ -53,7 +73,7 @@ void CellmlModelRuntime::reset()
 CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel,
                                                 const bool &pValidModel)
 {
-    // Reset ourselves
+    // Reset the runtime's properties
 
     reset();
 
@@ -64,12 +84,12 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
         // a code generator
 
         ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
-        ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createIDACodeGenerator();
+        ObjRef<iface::cellml_services::IDACodeGenerator> codeGenerator = codeGeneratorBootstrap->createIDACodeGenerator();
         // Note: there is, at this stage, no way to tell whether a model is a
-        //       'simple' ODE model or a DAE model, so we create an IDA code
-        //       generator (i.e. as if the model was a DAE model) and then will
-        //       see depending on whether the model contains algebraic equations
-        //       (i.e. a DAE model) or not (i.e. a 'simple' ODE model)...
+        //       'simple' ODE model or a DAE model, so we must create an IDA
+        //       code generator (i.e. as if the model was a DAE model) and then
+        //       check whether the model contains algebraic equations (i.e. it's
+        //       a DAE model) or not (i.e. it's a 'simple' ODE model)...
 
         // Generate some code for the model (i.e. 'compile' the model)
 
@@ -121,6 +141,61 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             return this;
         }
+
+        // The model is correctly constrained
+
+        // Set a few properties for the runtime
+
+        mModelType = codeInformation->algebraicIndexCount()?DaeModel:OdeModel;
+        qDebug() << "codeInformation->algebraicIndexCount() =" << codeInformation->algebraicIndexCount();
+
+/*
+        ObjRef<iface::mathml_dom::MathMLNodeList> mathmlNodeList = codeInformation->flaggedEquations();
+        uint32_t i, l = mathmlNodeList->length();
+        if (l == 0)
+          qDebug(" * No equations needed Newton-Raphson evaluation.");
+        else
+          qDebug(" * The following equations needed Newton-Raphson evaluation:");
+
+        for (i = 0; i < l; i++)
+        {
+          iface::dom::Node* n = mathmlNodeList->item(i);
+          iface::dom::Element* el =
+            reinterpret_cast<iface::dom::Element*>(n->query_interface("dom::Element"));
+          n->release_ref();
+
+          std::wstring cmeta = el->getAttribute(L"id");
+          std::wstring str;
+          if (cmeta == L"")
+            str += L" *   <equation with no cmeta ID>\n";
+          else
+          {
+            str += L" *   ";
+            str += cmeta;
+            str += L"\n";
+          }
+
+          n = el->parentNode();
+          el->release_ref();
+
+          el = reinterpret_cast<iface::dom::Element*>
+            (n->query_interface("dom::Element"));
+          n->release_ref();
+
+          cmeta = el->getAttribute(L"id");
+          if (cmeta == L"")
+            str += L" *   in <math with no cmeta ID>\n";
+          else
+          {
+            str += L" *   in math with cmeta:id ";
+            str += cmeta;
+            str += L"\n";
+          }
+          el->release_ref();
+
+          qDebug("---> %s\n", QString::fromStdWString(str).toLatin1().constData());
+        }
+*/
 
         // Just testing the generation of 'C code'...
 

@@ -31,7 +31,17 @@ class CELLMLSUPPORT_EXPORT CellmlModelRuntime : public QObject
     Q_OBJECT
 
 public:
+    enum ModelType
+    {
+        OdeModel,
+        DaeModel
+    };
+
+    explicit CellmlModelRuntime();
+
     bool isValid();
+
+    ModelType modelType();
 
     QList<CellmlModelIssue> issues();
 
@@ -39,6 +49,8 @@ public:
                                 const bool &pValidModel);
 
 private:
+    ModelType mModelType;
+
     void reset();
 
     QList<CellmlModelIssue> mIssues;
