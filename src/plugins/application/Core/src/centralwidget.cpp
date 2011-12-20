@@ -350,12 +350,14 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     Core::FileManager::instance()->manage(pFileName);
 
-    // Create a new tab and make it current
+    // Create a new tab, insert it just after the current tab and make it the
+    // new current one
 
     QString fileName = File::nativeFileName(pFileName);
     QFileInfo fileInfo = fileName;
 
-    mFiles->setCurrentIndex(mFiles->addTab(fileInfo.fileName()));
+    mFiles->setCurrentIndex(mFiles->insertTab(mFiles->currentIndex()+1,
+                                              fileInfo.fileName()));
 
     // Set the full name of the file as the tool tip for the new tab
     // Note: this, for example, allows us to retrieve the name of a file which
