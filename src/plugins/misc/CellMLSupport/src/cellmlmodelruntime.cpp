@@ -84,12 +84,12 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
         // a code generator
 
         ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
-        ObjRef<iface::cellml_services::IDACodeGenerator> codeGenerator = codeGeneratorBootstrap->createIDACodeGenerator();
-        // Note: there is, at this stage, no way to tell whether a model is a
-        //       'simple' ODE model or a DAE model, so we must create an IDA
-        //       code generator (i.e. as if the model was a DAE model) and then
-        //       check whether the model contains algebraic equations (i.e. it's
-        //       a DAE model) or not (i.e. it's a 'simple' ODE model)...
+        ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
+        // Note: there is no 'direct' way to tell whether a model is a 'simple'
+        //       ODE model or a DAE model, so we must create a code generator
+        //       and then check whether the model contains algebraic equations
+        //       (i.e. it's a DAE model) or not (i.e. it's a 'simple' ODE
+        //       model)...
 
         // Generate some code for the model (i.e. 'compile' the model)
 
