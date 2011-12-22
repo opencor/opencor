@@ -17,6 +17,9 @@
 
 //==============================================================================
 
+#include "cellml-api-cxx-support.hpp"
+
+#include "IfaceCCGS.hxx"
 #include "IfaceCellML_APISPEC.hxx"
 
 //==============================================================================
@@ -33,8 +36,9 @@ class CELLMLSUPPORT_EXPORT CellmlModelRuntime : public QObject
 public:
     enum ModelType
     {
-        OdeModel,
-        DaeModel
+        Ode,
+        Dae,
+        Undefined
     };
 
     explicit CellmlModelRuntime();
@@ -51,9 +55,16 @@ public:
 private:
     ModelType mModelType;
 
-    void reset();
+    ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
+    ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
 
     QList<CellmlModelIssue> mIssues;
+
+    void resetOdeCodeInformation();
+    void resetDaeCodeInformation();
+    void reset();
+
+    CellmlModelRuntime::ModelType getModelType(iface::cellml_api::Model *pModel);
 };
 
 //==============================================================================

@@ -126,7 +126,7 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 
     if (cellmlModelRuntime->isValid()) {
         qDebug(" - The model's runtime was properly generated.");
-        qDebug("    [Information] Model type = %s", (cellmlModelRuntime->modelType() == CellMLSupport::CellmlModelRuntime::OdeModel)?"ODE":"DAE");
+        qDebug("    [Information] Model type = %s", (cellmlModelRuntime->modelType() == CellMLSupport::CellmlModelRuntime::Ode)?"ODE":"DAE");
     } else {
         qDebug(" - The model's runtime was NOT properly generated:");
 
