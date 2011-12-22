@@ -6,6 +6,7 @@
         <variable name="x" units="dimensionless"/>
         <variable name="y" units="dimensionless" initial_value="offset"/>
         <variable name="z" units="dimensionless"/>
+        <variable name="extra" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML" cmeta:id="eq1">
             <apply><eq/>
                 <apply>
