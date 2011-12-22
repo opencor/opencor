@@ -243,30 +243,52 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             if (mModelType == Dae)
                 getDaeCodeInformation(pModel);
+
+            // Retrieve some code
+
+            if (mModelType ==Ode) {
+                qDebug("---------------------------------------");
+                qDebug("\ninitConstsString():");
+                qDebug(QString::fromStdWString(mOdeCodeInformation->initConstsString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("\nratesString():");
+                qDebug(QString::fromStdWString(mOdeCodeInformation->ratesString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("\nvariablesString():");
+                qDebug(QString::fromStdWString(mOdeCodeInformation->variablesString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("\nfunctionsString():");
+                qDebug(QString::fromStdWString(mOdeCodeInformation->functionsString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+            } else {
+                qDebug("---------------------------------------");
+                qDebug("\ninitConstsString():");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->initConstsString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("\nratesString():");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->ratesString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("\nvariablesString():");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->variablesString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("\nfunctionsString():");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->functionsString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("\nessentialVariablesString():");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("\nstateInformationString():");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->stateInformationString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("\nrootInformationString():");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->rootInformationString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+            }
         } else {
             // No ODE code information could be retrieved, so...
 
             mModelType = Undefined;
         }
-
-
-
-//        qDebug("---------------------------------------");
-//        qDebug("\nRequired functions:");
-//        qDebug(QString::fromStdWString(codeInformation->functionsString()).toLatin1().constData());
-//        qDebug("---------------------------------------");
-//        qDebug("\nInitialisations:");
-//        qDebug(QString::fromStdWString(codeInformation->initConstsString()).toLatin1().constData());
-//        qDebug("---------------------------------------");
-//        qDebug("\nVariable evaluations:");
-//        qDebug(QString::fromStdWString(codeInformation->variablesString()).toLatin1().constData());
-//        qDebug("---------------------------------------");
-
-
-
-        // Just testing the generation of 'C code'...
-
-//qDebug() << QString::fromStdWString(getModelAsCCode(pModel));
     } else {
         // The model is not valid, so...
 
