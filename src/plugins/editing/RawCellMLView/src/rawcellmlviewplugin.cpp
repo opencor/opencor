@@ -83,40 +83,49 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
     // Check the model's validity
 
     if (cellmlModel->isValid()) {
-        qDebug(" - The model was properly loaded.");
+        // The model is valid, but let's see whether warnings were generated
+
+        int nbOfWarnings = cellmlModel->issues().count();
+
+        if (nbOfWarnings)
+            qDebug(" - The model was properly loaded:");
+        else
+            qDebug(" - The model was properly loaded.");
     } else {
         qDebug(" - The model was NOT properly loaded:");
+    }
 
-        foreach (const CellMLSupport::CellmlModelIssue &cellmlModelIssue,
-                 cellmlModel->issues()) {
-            QString type = QString((cellmlModelIssue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
-            QString message = cellmlModelIssue.formattedMessage();
-            uint32_t line = cellmlModelIssue.line();
-            uint32_t column = cellmlModelIssue.column();
-            QString importedModel = cellmlModelIssue.importedModel();
+    // Output any warnings/errors that were generated
 
-            if (   (line   == CellMLSupport::Undefined)
-                && (column == CellMLSupport::Undefined)) {
-                if (importedModel.isEmpty())
-                    qDebug("    [%s] %s", type.toLatin1().constData(),
-                                          message.toUtf8().constData());
-                else
-                    qDebug("    [%s from imported model %s] %s", type.toLatin1().constData(),
-                                                                 importedModel.toLatin1().constData(),
-                                                                 message.toUtf8().constData());
-            } else {
-                if (importedModel.isEmpty())
-                    qDebug("    [%s at line %s column %s] %s", type.toLatin1().constData(),
-                                                               QString::number(cellmlModelIssue.line()).toLatin1().constData(),
-                                                               QString::number(cellmlModelIssue.column()).toLatin1().constData(),
-                                                               message.toUtf8().constData());
-                else
-                    qDebug("    [%s at line %s column %s from imported model %s] %s", type.toLatin1().constData(),
-                                                                                      QString::number(cellmlModelIssue.line()).toLatin1().constData(),
-                                                                                      QString::number(cellmlModelIssue.column()).toLatin1().constData(),
-                                                                                      importedModel.toLatin1().constData(),
-                                                                                      message.toUtf8().constData());
-            }
+    foreach (const CellMLSupport::CellmlModelIssue &cellmlModelIssue,
+             cellmlModel->issues()) {
+        QString type = QString((cellmlModelIssue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
+        QString message = cellmlModelIssue.formattedMessage();
+        uint32_t line = cellmlModelIssue.line();
+        uint32_t column = cellmlModelIssue.column();
+        QString importedModel = cellmlModelIssue.importedModel();
+
+        if (   (line   == CellMLSupport::Undefined)
+            && (column == CellMLSupport::Undefined)) {
+            if (importedModel.isEmpty())
+                qDebug("    [%s] %s", type.toLatin1().constData(),
+                                      message.toUtf8().constData());
+            else
+                qDebug("    [%s from imported model %s] %s", type.toLatin1().constData(),
+                                                             importedModel.toLatin1().constData(),
+                                                             message.toUtf8().constData());
+        } else {
+            if (importedModel.isEmpty())
+                qDebug("    [%s at line %s column %s] %s", type.toLatin1().constData(),
+                                                           QString::number(cellmlModelIssue.line()).toLatin1().constData(),
+                                                           QString::number(cellmlModelIssue.column()).toLatin1().constData(),
+                                                           message.toUtf8().constData());
+            else
+                qDebug("    [%s at line %s column %s from imported model %s] %s", type.toLatin1().constData(),
+                                                                                  QString::number(cellmlModelIssue.line()).toLatin1().constData(),
+                                                                                  QString::number(cellmlModelIssue.column()).toLatin1().constData(),
+                                                                                  importedModel.toLatin1().constData(),
+                                                                                  message.toUtf8().constData());
         }
     }
 
