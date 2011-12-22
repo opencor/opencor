@@ -64,7 +64,13 @@ private:
     void resetDaeCodeInformation();
     void reset();
 
-    CellmlModelRuntime::ModelType getModelType(iface::cellml_api::Model *pModel);
+    void couldNotCompileModelIssue();
+    void unexpectedProblemDuringModelCompilationIssue();
+
+    void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
+
+    void getOdeCodeInformation(iface::cellml_api::Model *pModel);
+    void getDaeCodeInformation(iface::cellml_api::Model *pModel);
 };
 
 //==============================================================================
