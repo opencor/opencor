@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<model name="unsuitablyconstrained_model" cmeta:id="unsuitablyconstrained_model" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <component name="main" cmeta:id="main">
+        <variable name="time" units="dimensionless"/>
+        <variable name="offset" units="dimensionless" initial_value="3"/>
+        <variable name="x" units="dimensionless"/>
+        <variable name="y" units="dimensionless" initial_value="offset"/>
+        <variable name="z" units="dimensionless"/>
+        <variable name="extra" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML" cmeta:id="eq1">
+            <apply><eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>y</ci>
+                </apply>
+                <apply>
+                    <times/>
+                    <cn cellml:units="dimensionless">2.0</cn>
+                    <ci>time</ci>
+                    <ci>extra</ci>
+                </apply>
+            </apply>
+        </math>
+        <math xmlns="http://www.w3.org/1998/Math/MathML" cmeta:id="eq2">
+            <apply><eq/>
+                <ci>x</ci>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <power/>
+                        <ci>time</ci>
+                        <cn cellml:units="dimensionless">2.0</cn>
+                    </apply>
+                    <ci>offset</ci>
+                </apply>
+            </apply>
+        </math>
+        <math xmlns="http://www.w3.org/1998/Math/MathML" cmeta:id="eq3">
+            <apply>
+                <eq/>
+                <ci>z</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <sin/>
+                            <ci>offset</ci>
+                        </apply>
+                        <apply>
+                            <and/>
+                            <apply>
+                                <gt/>
+                                <ci>offset</ci>
+                                <cn cellml:units="dimensionless">1</cn>
+                            </apply>
+                            <apply>
+                                <leq/>
+                                <ci>offset</ci>
+                                <cn cellml:units="dimensionless">3</cn>
+                            </apply>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <cn cellml:units="dimensionless">3</cn>
+                        <apply>
+                            <gt/>
+                            <ci>offset</ci>
+                            <cn cellml:units="dimensionless">3</cn>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <cn cellml:units="dimensionless">1</cn>
+                    </otherwise>
+                </piecewise>
+            </apply>
+        </math>
+    </component>
+</model>
