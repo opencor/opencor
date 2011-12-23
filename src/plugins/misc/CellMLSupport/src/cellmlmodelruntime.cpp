@@ -143,7 +143,7 @@ void CellmlModelRuntime::checkCodeInformation(iface::cellml_services::CodeInform
 
 //==============================================================================
 
-void CellmlModelRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
+iface::cellml_services::CodeInformation * CellmlModelRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
 {
     // Get a code generator bootstrap and create an ODE code generator
 
@@ -170,11 +170,15 @@ void CellmlModelRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
         // Something went wrong at some point, so...
 
         resetOdeCodeInformation();
+
+    // We are done, so return our code information
+
+    return mOdeCodeInformation;
 }
 
 //==============================================================================
 
-void CellmlModelRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
+iface::cellml_services::CodeInformation * CellmlModelRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
 {
     // Get a code generator bootstrap and create a DAE code generator
 
@@ -201,6 +205,10 @@ void CellmlModelRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
         // Something went wrong at some point, so...
 
         resetDaeCodeInformation();
+
+    // We are done, so return our code information
+
+    return mDaeCodeInformation;
 }
 
 //==============================================================================
@@ -241,39 +249,36 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             // If the model is of DAE type, then we must get the 'right' code
             // information
 
+            iface::cellml_services::CodeInformation *genericCodeInformation;
+
             if (mModelType == Dae)
-                getDaeCodeInformation(pModel);
+                genericCodeInformation = getDaeCodeInformation(pModel);
+            else
+                genericCodeInformation = mOdeCodeInformation;
 
-            // Retrieve some code
+            // Retrieve some information/code
 
-            if (mModelType ==Ode) {
-                qDebug("---------------------------------------");
-                qDebug("\ninitConstsString():");
-                qDebug(QString::fromStdWString(mOdeCodeInformation->initConstsString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-                qDebug("\nratesString():");
-                qDebug(QString::fromStdWString(mOdeCodeInformation->ratesString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-                qDebug("\nvariablesString():");
-                qDebug(QString::fromStdWString(mOdeCodeInformation->variablesString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-                qDebug("\nfunctionsString():");
-                qDebug(QString::fromStdWString(mOdeCodeInformation->functionsString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-            } else {
-                qDebug("---------------------------------------");
-                qDebug("\ninitConstsString():");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->initConstsString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-                qDebug("\nratesString():");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->ratesString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-                qDebug("\nvariablesString():");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->variablesString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-                qDebug("\nfunctionsString():");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->functionsString()).toLatin1().constData());
-                qDebug("---------------------------------------");
+            qDebug("---------------------------------------");
+            qDebug();
+            qDebug("Number of states/rates: %s", QString::number(genericCodeInformation->rateIndexCount()).toLatin1().constData());
+            qDebug("Number of algebraic variables: %s", QString::number(genericCodeInformation->algebraicIndexCount()).toLatin1().constData());
+            qDebug("Number of constants: %s", QString::number(genericCodeInformation->constantIndexCount()).toLatin1().constData());
+            qDebug();
+            qDebug("---------------------------------------");
+            qDebug("\ninitConstsString():");
+            qDebug(QString::fromStdWString(genericCodeInformation->initConstsString()).toLatin1().constData());
+            qDebug("---------------------------------------");
+            qDebug("\nratesString():");
+            qDebug(QString::fromStdWString(genericCodeInformation->ratesString()).toLatin1().constData());
+            qDebug("---------------------------------------");
+            qDebug("\nvariablesString():");
+            qDebug(QString::fromStdWString(genericCodeInformation->variablesString()).toLatin1().constData());
+            qDebug("---------------------------------------");
+            qDebug("\nfunctionsString():");
+            qDebug(QString::fromStdWString(genericCodeInformation->functionsString()).toLatin1().constData());
+            qDebug("---------------------------------------");
+
+            if (mModelType == Dae) {
                 qDebug("\nessentialVariablesString():");
                 qDebug(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString()).toLatin1().constData());
                 qDebug("---------------------------------------");

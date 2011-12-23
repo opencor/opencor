@@ -69,8 +69,8 @@ private:
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
-    void getOdeCodeInformation(iface::cellml_api::Model *pModel);
-    void getDaeCodeInformation(iface::cellml_api::Model *pModel);
+    iface::cellml_services::CodeInformation * getOdeCodeInformation(iface::cellml_api::Model *pModel);
+    iface::cellml_services::CodeInformation * getDaeCodeInformation(iface::cellml_api::Model *pModel);
 };
 
 //==============================================================================
