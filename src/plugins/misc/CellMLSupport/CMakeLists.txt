@@ -28,6 +28,7 @@ ADD_PLUGIN(CellMLSupport
         src
     OPENCOR_DEPENDENCIES
         CellML
+        Compiler
         LLVM
     QT_DEPENDENCIES
         QtCore

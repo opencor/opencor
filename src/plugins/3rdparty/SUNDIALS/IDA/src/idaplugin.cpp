@@ -19,7 +19,7 @@ PLUGININFO_FUNC IDAPluginInfo()
     descriptions.insert("fr", "Une extension pour utiliser <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a>");
 
     return PluginInfo(PluginInfo::V001,
-                      PluginInfo::Gui,
+                      PluginInfo::General,
                       PluginInfo::ThirdParty,
                       false,
                       QStringList(),

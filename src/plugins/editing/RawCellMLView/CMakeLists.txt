@@ -24,6 +24,7 @@ ADD_PLUGIN(RawCellMLView
     OPENCOR_DEPENDENCIES
         CellML
         CellMLSupport
+        Compiler
         Core
         LLVM
         QScintilla

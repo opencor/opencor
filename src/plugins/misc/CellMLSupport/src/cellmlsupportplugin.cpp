@@ -19,10 +19,10 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
     descriptions.insert("fr", "Une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>");
 
     return PluginInfo(PluginInfo::V001,
-                      PluginInfo::Gui,
+                      PluginInfo::General,
                       PluginInfo::Miscellaneous,
                       false,
-                      QStringList() << "CellML" << "LLVM",
+                      QStringList() << "CellML" << "Compiler",
                       descriptions);
 }
 

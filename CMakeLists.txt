@@ -153,6 +153,7 @@ SET(PLUGINS
     application/Core
 
     3rdparty/LLVM
+    misc/Compiler
 
     api/CellML
 
