@@ -10,9 +10,9 @@ ADD_PLUGIN(Compiler
     SOURCES
         ../../plugininfo.cpp
 
-        src/Compilerplugin.cpp
+        src/compilerplugin.cpp
     HEADERS_MOC
-        src/Compilerplugin.h
+        src/compilerplugin.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
