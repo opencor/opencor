@@ -7,8 +7,8 @@
 
 //==============================================================================
 
-#include "fileinterface.h"
 #include "coreinterface.h"
+#include "fileinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
