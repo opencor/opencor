@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlmodelruntime.h"
+#include "compilerengine.h"
 
 //==============================================================================
 
@@ -292,7 +293,9 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             // Get some binary code using the Compiler plugin
 
+            Compiler::CompilerEngine compilerEngine;
 
+            llvm::Function *test = compilerEngine.addFunction("void test() {}");
         } else {
             // No ODE code information could be retrieved, so...
 

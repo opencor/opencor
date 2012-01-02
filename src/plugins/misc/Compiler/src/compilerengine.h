@@ -11,6 +11,10 @@
 
 //==============================================================================
 
+#include "llvm/Function.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Compiler {
 
@@ -18,7 +22,16 @@ namespace Compiler {
 
 class COMPILER_EXPORT CompilerEngine
 {
+public:
+    explicit CompilerEngine();
+    ~CompilerEngine();
 
+    llvm::Module * module();
+
+    llvm::Function * addFunction(const QString &pSourceCode);
+
+private:
+    llvm::Module *mModule;
 };
 
 //==============================================================================
