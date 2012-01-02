@@ -4,6 +4,8 @@
 #ifdef OpenCOR_MAIN
     #define COMPILER_EXPORT
 #else
+    #include <QObject>
+
     #ifdef Compiler_PLUGIN
         #define COMPILER_EXPORT Q_DECL_EXPORT
     #else

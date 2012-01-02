@@ -289,6 +289,10 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 qDebug(QString::fromStdWString(mDaeCodeInformation->rootInformationString()).toLatin1().constData());
                 qDebug("---------------------------------------");
             }
+
+            // Get some binary code using the Compiler plugin
+
+
         } else {
             // No ODE code information could be retrieved, so...
 

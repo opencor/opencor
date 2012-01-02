@@ -10,7 +10,7 @@ ADD_PLUGIN(Compiler
     SOURCES
         ../../plugininfo.cpp
 
-        src/compiler.cpp
+        src/compilerengine.cpp
         src/compilerplugin.cpp
     HEADERS_MOC
         src/compilerplugin.h

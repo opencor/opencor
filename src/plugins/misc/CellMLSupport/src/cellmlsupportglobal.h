@@ -4,6 +4,8 @@
 #ifdef OpenCOR_MAIN
     #define CELLMLSUPPORT_EXPORT
 #else
+    #include <QObject>
+
     #ifdef CellMLSupport_PLUGIN
         #define CELLMLSUPPORT_EXPORT Q_DECL_EXPORT
     #else
