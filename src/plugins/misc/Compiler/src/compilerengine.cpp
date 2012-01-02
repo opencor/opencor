@@ -1,8 +1,13 @@
 //==============================================================================
 // Compiler engine class
 //==============================================================================
+// The compiler engine consists of a reduced ANSI-C parser/scanner, e.g. see
+//     http://www.lysator.liu.se/c/ANSI-C-grammar-y.html
+// and http://www.lysator.liu.se/c/ANSI-C-grammar-l.html
+//==============================================================================
 
 #include "compilerengine.h"
+#include "compilerscanner.h"
 
 //==============================================================================
 
@@ -48,12 +53,24 @@ llvm::Module * CompilerEngine::module()
 
 //==============================================================================
 
-llvm::Function * CompilerEngine::addFunction(const QString &pSourceCode)
+llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
 {
     qDebug("---------------------------------------");
     qDebug("Compilation of...");
     qDebug();
-    qDebug(pSourceCode.toLatin1().constData());
+    qDebug(pFunction.toLatin1().constData());
+
+    // Get a scanner for our source code
+
+    CompilerScanner scanner(pFunction);
+
+    CompilerScannerToken token = scanner.getToken();
+
+    qDebug("---------------------------------------");
+    qDebug("Current token:");
+    qDebug(QString("   Line: %1").arg(QString::number(token.line())).toLatin1().constData());
+    qDebug(QString("   Column: %1").arg(QString::number(token.column())).toLatin1().constData());
+    qDebug(QString("   String: %1").arg(token.string()).toLatin1().constData());
     qDebug("---------------------------------------");
     qDebug("All generated code so far:");
     mModule->dump();

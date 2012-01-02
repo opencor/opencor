@@ -12,6 +12,7 @@ ADD_PLUGIN(Compiler
 
         src/compilerengine.cpp
         src/compilerplugin.cpp
+        src/compilerscanner.cpp
     HEADERS_MOC
         src/compilerplugin.h
     DEFINITIONS

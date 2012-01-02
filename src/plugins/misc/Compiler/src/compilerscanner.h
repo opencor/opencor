@@ -1,17 +1,13 @@
 //==============================================================================
-// Compiler engine class
+// Compiler scanner class
 //==============================================================================
 
-#ifndef COMPILERENGINE_H
-#define COMPILERENGINE_H
-
-//==============================================================================
-
-#include "compilerglobal.h"
+#ifndef COMPILERSCANNER_H
+#define COMPILERSCANNER_H
 
 //==============================================================================
 
-#include "llvm/Function.h"
+#include <QString>
 
 //==============================================================================
 
@@ -20,18 +16,44 @@ namespace Compiler {
 
 //==============================================================================
 
-class COMPILER_EXPORT CompilerEngine
+class CompilerScannerToken
 {
 public:
-    explicit CompilerEngine();
-    ~CompilerEngine();
+    explicit CompilerScannerToken(const int pLine, const int pColumn);
 
-    llvm::Module * module();
+    int line() const;
+    int column() const;
 
-    llvm::Function * addFunction(const QString &pFunction);
+    QString string() const;
+    void setString(const QString &pString);
 
 private:
-    llvm::Module *mModule;
+    int mLine;
+    int mColumn;
+
+    QString mString;
+};
+
+//==============================================================================
+
+class CompilerScanner
+{
+public:
+    explicit CompilerScanner(const QString &pInput);
+
+    CompilerScannerToken getToken();
+
+private:
+    QString mInput;
+    int mPosition;
+    int mLastPosition;
+    QChar mChar;
+    int mLine;
+    int mColumn;
+
+    QChar getChar();
+
+    QString getWord();
 };
 
 //==============================================================================
