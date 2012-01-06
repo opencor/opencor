@@ -56,7 +56,7 @@
                     <li>
                         <a href = "http://qt.nokia.com/downloads/sdk-mac-os-cpp">Mac OS X</a>: you might want to install the SDK under <code>/Developer</code> rather than your home folder as suggested by the installer.
                         <div>
-                            <strong>Note:</strong> there is a <a href="https://bugreports.qt.nokia.com/browse/QTBUG-21339">very minor bug</a> in Qt 4.7.4 which, when building a Qt application on <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.7 (Lion), results in loads of warnings being generated. It is nothing to be concerned about, but if you want to get rid of those warnings, then sudo edit <code>/Developer/QtSDK/Desktop/Qt/474/gcc/include/QtCore/qglobal.h</code> (from line 319):
+                            <strong>Note:</strong> there is a <a href="https://bugreports.qt.nokia.com/browse/QTBUG-21339">very minor bug</a> in Qt 4.7.4 which, when building a Qt application on <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.7 (Lion), results in loads of warnings being generated. It is nothing to be concerned about, but if you want to get rid of those warnings, then sudo edit both <code>/Developer/QtSDK/Desktop/Qt/474/gcc/include/QtCore/qglobal.h</code> and <code>/Developer/QtSDK/Desktop/Qt/474/gcc/lib/QtCore.framework/Versions/4/Headers/qglobal.h</code> (from line 319):
                             <pre class="good prettyprint">#  if !defined(MAC_OS_X_VERSION_10_7)
 #       define MAC_OS_X_VERSION_10_7 MAC_OS_X_VERSION_10_6 + 1
 #  endif
