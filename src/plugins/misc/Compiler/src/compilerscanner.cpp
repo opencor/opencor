@@ -152,11 +152,11 @@ QChar CompilerScanner::getChar()
 
             ++mLine;
             mColumn = 0;
+        } else {
+            // Update the column number
+
+            ++mColumn;
         }
-
-        // Update the column number
-
-        ++mColumn;
 
         // Get ready for the next character
 
