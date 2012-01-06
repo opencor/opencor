@@ -132,23 +132,64 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
 
     CompilerScanner scanner(pFunction);
 
-    // Get the first token which is going to tell us whether we are dealing with
-    // a procedure or a 'proper' function
+    // Retrieve the type of function that we are dealing with, i.e. a procedure
+    // or a 'proper' function
+
+    bool voidFunction = true;
 
     CompilerScannerToken token = scanner.getToken();
-    bool procedure = true;
 
     if (token.symbol() == CompilerScannerToken::Double) {
         // We are dealing with a 'proper' function
 
-        procedure = false;
+        voidFunction = false;
     } else if (token.symbol() != CompilerScannerToken::Void) {
-        // The current symbol is neither Void nor Double, something is wrong
+        // The current symbol is neither Void nor Double, so...
 
         addIssue(token, tr("either 'void' or 'double'"));
 
         return 0;
     }
+
+    // Retrieve the name of the function
+
+    QString functionName;
+
+    token = scanner.getToken();
+
+    if (token.symbol() == CompilerScannerToken::Identifier) {
+        // We got an identifier
+
+        functionName = token.string();
+    } else {
+        addIssue(token, tr("an identifier"));
+
+        return 0;
+    }
+
+
+
+
+
+
+
+
+
+    qDebug("---------------------------------------");
+    qDebug("Function details:");
+
+    if (voidFunction)
+        qDebug("   Type: void");
+    else
+        qDebug("   Type: double");
+
+    qDebug(QString("   Name: %1").arg(functionName).toLatin1().constData());
+
+
+
+
+
+
 
 
 

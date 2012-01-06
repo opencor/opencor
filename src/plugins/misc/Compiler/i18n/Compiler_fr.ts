@@ -11,5 +11,9 @@
         <source>either &apos;void&apos; or &apos;double&apos;</source>
         <translation>soit &apos;void&apos; ou &apos;double&apos;</translation>
     </message>
+    <message>
+        <source>an identifier</source>
+        <translation>un identifiant</translation>
+    </message>
 </context>
 </TS>
