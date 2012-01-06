@@ -49,5 +49,9 @@
         <source>the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)</source>
         <translation>Le modèle est trop constraint (i.e. des variables sont soit à la fois initialisées et calculées soit calculées plus d&apos;une fois)</translation>
     </message>
+    <message>
+        <source>no code information could be retrieved for the model</source>
+        <translation>aucune information de code n&apos;a pu être trouvée pour le modèle</translation>
+    </message>
 </context>
 </TS>

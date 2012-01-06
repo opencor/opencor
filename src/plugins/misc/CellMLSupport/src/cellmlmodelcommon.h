@@ -27,8 +27,6 @@ namespace CellMLSupport {
 static const QString Cellml_1_0 = "1.0";
 static const QString Cellml_1_1 = "1.1";
 
-static const uint32_t Undefined = 0;
-
 //==============================================================================
 
 class CELLMLSUPPORT_EXPORT CellmlModelIssue
@@ -41,8 +39,8 @@ public:
     };
 
     explicit CellmlModelIssue(const Type &pType, const QString &pMessage,
-                              const uint32_t &pLine = Undefined,
-                              const uint32_t &pColumn = Undefined,
+                              const uint32_t &pLine = 0,
+                              const uint32_t &pColumn = 0,
                               const QString &pImportedModel = QString());
 
     Type type() const;

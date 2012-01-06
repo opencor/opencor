@@ -105,16 +105,7 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
         uint32_t column = cellmlModelIssue.column();
         QString importedModel = cellmlModelIssue.importedModel();
 
-        if (   (line   == CellMLSupport::Undefined)
-            && (column == CellMLSupport::Undefined)) {
-            if (importedModel.isEmpty())
-                qDebug("    [%s] %s", type.toLatin1().constData(),
-                                      message.toUtf8().constData());
-            else
-                qDebug("    [%s from imported model %s] %s", type.toLatin1().constData(),
-                                                             importedModel.toLatin1().constData(),
-                                                             message.toUtf8().constData());
-        } else {
+        if (line && column) {
             if (importedModel.isEmpty())
                 qDebug("    [%s at line %s column %s] %s", type.toLatin1().constData(),
                                                            QString::number(cellmlModelIssue.line()).toLatin1().constData(),
@@ -126,6 +117,14 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
                                                                                   QString::number(cellmlModelIssue.column()).toLatin1().constData(),
                                                                                   importedModel.toLatin1().constData(),
                                                                                   message.toUtf8().constData());
+        } else {
+            if (importedModel.isEmpty())
+                qDebug("    [%s] %s", type.toLatin1().constData(),
+                                      message.toUtf8().constData());
+            else
+                qDebug("    [%s from imported model %s] %s", type.toLatin1().constData(),
+                                                             importedModel.toLatin1().constData(),
+                                                             message.toUtf8().constData());
         }
     }
 

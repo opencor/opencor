@@ -161,8 +161,8 @@ bool CellmlModel::isValid()
             DECLARE_QUERY_INTERFACE_OBJREF(cellmlRepresentationValidityError, cellmlValidityIssue,
                                            cellml_services::CellMLRepresentationValidityError);
 
-            uint32_t line = CellMLSupport::Undefined;
-            uint32_t column = CellMLSupport::Undefined;
+            uint32_t line = 0;
+            uint32_t column = 0;
             QString importedModel = QString();
 
             if (cellmlRepresentationValidityError) {
@@ -289,7 +289,7 @@ bool CellmlModel::isValid()
 
 QList<CellmlModelIssue> CellmlModel::issues()
 {
-    // Return the issue(s)
+    // Return the model's issue(s)
 
     return mIssues;
 }

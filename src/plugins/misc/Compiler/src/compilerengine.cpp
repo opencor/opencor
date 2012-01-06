@@ -7,7 +7,6 @@
 //==============================================================================
 
 #include "compilerengine.h"
-#include "compilerscanner.h"
 
 //==============================================================================
 
@@ -22,6 +21,53 @@
 
 namespace OpenCOR {
 namespace Compiler {
+
+//==============================================================================
+
+CompilerEngineIssue::CompilerEngineIssue(const QString &pMessage,
+                                         const int &pLine, const int &pColumn) :
+    mMessage(pMessage),
+    mLine(pLine),
+    mColumn(pColumn)
+{
+}
+
+//==============================================================================
+
+QString CompilerEngineIssue::message() const
+{
+    // Return the issue's message
+
+    return mMessage;
+}
+
+//==============================================================================
+
+QString CompilerEngineIssue::formattedMessage() const
+{
+    // Return the issue's message fully formatted (i.e. the beginning of the
+    // message is capitalised and its end consists of a full stop)
+
+    return mMessage.left(1).toUpper()+mMessage.right(mMessage.size()-1)+".";
+}
+
+//==============================================================================
+
+int CompilerEngineIssue::line() const
+{
+    // Return the issue's line
+
+    return mLine;
+}
+
+//==============================================================================
+
+int CompilerEngineIssue::column() const
+{
+    // Return the issue's column
+
+    return mColumn;
+}
 
 //==============================================================================
 
@@ -53,6 +99,24 @@ llvm::Module * CompilerEngine::module()
 
 //==============================================================================
 
+QList<CompilerEngineIssue> CompilerEngine::issues()
+{
+    // Return the compiler's issue(s)
+
+    return mIssues;
+}
+
+//==============================================================================
+
+void CompilerEngine::addIssue(const CompilerScannerToken &pToken,
+                              const QString &pExpected)
+{
+    mIssues.append(CompilerEngineIssue(tr("%1 is expected, but '%2' was found instead").arg(pExpected, pToken.string()),
+                                       pToken.line(), pToken.column()));
+}
+
+//==============================================================================
+
 llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
 {
     qDebug("---------------------------------------");
@@ -60,13 +124,36 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
     qDebug();
     qDebug(pFunction.toLatin1().constData());
 
-    // Get a scanner for our source code
+    // Reset any issues that we may have found before
+
+    mIssues.clear();
+
+    // Get a scanner for our function
 
     CompilerScanner scanner(pFunction);
 
+    // Get the first token which is going to tell us whether we are dealing with
+    // a procedure or a 'proper' function
+
+    CompilerScannerToken token = scanner.getToken();
+    bool procedure = true;
+
+    if (token.symbol() == CompilerScannerToken::Double) {
+        // We are dealing with a 'proper' function
+
+        procedure = false;
+    } else if (token.symbol() != CompilerScannerToken::Void) {
+        // The current symbol is neither Void nor Double, something is wrong
+
+        addIssue(token, tr("either 'void' or 'double'"));
+
+        return 0;
+    }
+
+
+
     // Scan the whole function
 
-    CompilerScannerToken token;
     int tokenNb = 0;
 
     do {

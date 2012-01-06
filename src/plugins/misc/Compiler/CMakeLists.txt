@@ -8,12 +8,14 @@ RETRIEVE_LLVM_SETTINGS()
 
 ADD_PLUGIN(Compiler
     SOURCES
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/compilerengine.cpp
         src/compilerplugin.cpp
         src/compilerscanner.cpp
     HEADERS_MOC
+        src/compilerengine.h
         src/compilerplugin.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}

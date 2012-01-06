@@ -296,10 +296,31 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             Compiler::CompilerEngine compilerEngine;
 
             llvm::Function *test = compilerEngine.addFunction("void test() {}");
+
+            if (compilerEngine.issues().count()) {
+                // Something went wrong, so output the issue(s)
+
+                qDebug("---------------------------------------");
+
+                if (compilerEngine.issues().count() == 1)
+                    qDebug("An issue was found:");
+                else
+                    qDebug("Some issues were found:");
+
+                foreach (const Compiler::CompilerEngineIssue &issue,
+                         compilerEngine.issues())
+                    qDebug(QString(" - Line %1, column %2: %3").arg(QString::number(issue.line()), QString::number(issue.column()), issue.formattedMessage()).toLatin1().constData());
+
+                qDebug("---------------------------------------");
+
+                mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                                tr("the model could not be compiled")));
+            }
         } else {
             // No ODE code information could be retrieved, so...
 
-            mModelType = Undefined;
+            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                            tr("no code information could be retrieved for the model")));
         }
     } else {
         // The model is not valid, so...

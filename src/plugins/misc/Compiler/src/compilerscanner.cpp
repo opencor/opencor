@@ -240,6 +240,8 @@ CompilerScannerToken CompilerScanner::getToken()
     } else {
         // Not a word or a number, so it has to be a one- or two-character token
 
+        res.setString(mChar);
+
         if (mChar == OpeningBracket)
             res.setSymbol(CompilerScannerToken::OpeningBracket);
         else if (mChar == ClosingBracket)
