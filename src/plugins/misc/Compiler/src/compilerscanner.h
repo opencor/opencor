@@ -22,26 +22,24 @@ class CompilerScannerToken
 public:
     enum Symbol
     {
-        // Unknown symbol
-
-        Unknown,
-
         // Type of variable
 
-        Void,
-        Double,
+        Void, Double,
 
         // Miscellaneous
 
-        Identifier
+        OpeningBracket, ClosingBracket,
+        OpeningCurlyBracket, ClosingCurlyBracket,
+        Unknown, Identifier, Eof
     };
 
-    explicit CompilerScannerToken(const int pLine, const int pColumn);
+    explicit CompilerScannerToken(const int pLine = 0, const int pColumn = 0);
 
     int line() const;
     int column() const;
 
     Symbol symbol() const;
+    QString symbolAsString() const;
     void setSymbol(const Symbol &pSymbol);
 
     QString string() const;

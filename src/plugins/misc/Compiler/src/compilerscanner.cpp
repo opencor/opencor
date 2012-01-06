@@ -11,13 +11,19 @@ namespace Compiler {
 
 //==============================================================================
 
-static const QChar Underscore = QChar('_');
+static const QChar Underscore          = QChar('_');
+static const QChar OpeningBracket      = QChar('(');
+static const QChar ClosingBracket      = QChar(')');
+static const QChar OpeningCurlyBracket = QChar('{');
+static const QChar ClosingCurlyBracket = QChar('}');
 
 //==============================================================================
 
 CompilerScannerToken::CompilerScannerToken(const int pLine, const int pColumn) :
     mLine(pLine),
-    mColumn(pColumn)
+    mColumn(pColumn),
+    mSymbol(Eof),
+    mString(QString())
 {
 }
 
@@ -46,6 +52,36 @@ CompilerScannerToken::Symbol CompilerScannerToken::symbol() const
     // Return the token's symbol
 
     return mSymbol;
+}
+
+//==============================================================================
+
+QString CompilerScannerToken::symbolAsString() const
+{
+    // Return the token's symbol as a string
+
+    switch (mSymbol) {
+    case Void:
+        return "Void";
+    case Double:
+        return "Double";
+    case OpeningBracket:
+        return "OpeningBracket";
+    case ClosingBracket:
+        return "ClosingBracket";
+    case OpeningCurlyBracket:
+        return "OpeningCurlyBracket";
+    case ClosingCurlyBracket:
+        return "ClosingCurlyBracket";
+    case Unknown:
+        return "Unknown";
+    case Identifier:
+        return "Identifier";
+    case Eof:
+        return "Eof";
+    default:
+        return "???";
+    }
 }
 
 //==============================================================================
@@ -80,8 +116,9 @@ void CompilerScannerToken::setString(const QString &pString)
 CompilerScanner::CompilerScanner(const QString &pInput) :
     mInput(pInput),
     mPosition(0),
-    mLastPosition(pInput.length()-1),
-    mChar(),
+    mLastPosition(pInput.length()),
+    mChar(' '),   // Note: we initialise mChar with a space character, so that
+                  //       we can get our first token
     mLine(1),
     mColumn(0)
 {
@@ -182,8 +219,12 @@ void CompilerScanner::getWord(CompilerScannerToken &pToken)
 CompilerScannerToken CompilerScanner::getToken()
 {
     // Skip spaces of all sorts
+    // Note: we must test the current character first before getting a new
+    //       one in case two tokens follow one another without any space between
+    //       them...
 
-    while (getChar().isSpace());
+    if (mChar.isSpace())
+        while (getChar().isSpace());
 
     // Initialise the token
 
@@ -191,11 +232,27 @@ CompilerScannerToken CompilerScanner::getToken()
 
     // Check the type of the current character
 
-    if (mChar.isLetter() || (mChar == Underscore))
+    if (mChar.isLetter() || (mChar == Underscore)) {
         // The current character is a letter or an underscore, so we should try
         // to retrieve a word
 
         getWord(res);
+    } else {
+        // Not a word or a number, so it has to be a one- or two-character token
+
+        if (mChar == OpeningBracket)
+            res.setSymbol(CompilerScannerToken::OpeningBracket);
+        else if (mChar == ClosingBracket)
+            res.setSymbol(CompilerScannerToken::ClosingBracket);
+        else if (mChar == OpeningCurlyBracket)
+            res.setSymbol(CompilerScannerToken::OpeningCurlyBracket);
+        else if (mChar == ClosingCurlyBracket)
+            res.setSymbol(CompilerScannerToken::ClosingCurlyBracket);
+
+        // Get the next character
+
+        getChar();
+    }
 
     // Return the token
 
