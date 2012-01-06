@@ -11,6 +11,10 @@ namespace Compiler {
 
 //==============================================================================
 
+static const QChar Underscore = QChar('_');
+
+//==============================================================================
+
 CompilerScannerToken::CompilerScannerToken(const int pLine, const int pColumn) :
     mLine(pLine),
     mColumn(pColumn)
@@ -91,12 +95,12 @@ QChar CompilerScanner::getChar()
 
         ++mColumn;
 
-        // Go to the next character
+        // Get ready for the next character
 
         ++mPosition;
     }
 
-    // Return the current character
+    // Return the new current character
 
     return mChar;
 }
@@ -105,11 +109,17 @@ QChar CompilerScanner::getChar()
 
 QString CompilerScanner::getWord()
 {
-    // Retrieve a word consisting of letters and numbers
+    // Retrieve a word starting with either a letter or an underscore (which we
+    // have already scanned) followed by zero or more letters, digits and/or
+    // underscores
+    // EBNF: Letter|"_" { Letter|Digit|"_" } .
 
     QString res = QString(mChar);
 
-    while (getChar().isLetterOrNumber())
+    while (getChar().isLetter() || mChar.isDigit() || (mChar == Underscore))
+        // The new current character is either a letter, digit or underscore, so
+        // add it to our word
+
         res += mChar;
 
     // Return the word
@@ -121,7 +131,7 @@ QString CompilerScanner::getWord()
 
 CompilerScannerToken CompilerScanner::getToken()
 {
-    // Skip spaces
+    // Skip spaces of all sorts
 
     while (getChar().isSpace());
 
@@ -131,8 +141,9 @@ CompilerScannerToken CompilerScanner::getToken()
 
     // Check the type of the current character
 
-    if (mChar.isLetter())
-        // The current character is a letter, so try to get a word
+    if (mChar.isLetter() || (mChar == Underscore))
+        // The current character is a letter or an underscore, so we should try
+        // to retrieve a word
 
         res.setString(getWord());
 
