@@ -70,6 +70,7 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
     qDebug("Current token:");
     qDebug(QString("   Line: %1").arg(QString::number(token.line())).toLatin1().constData());
     qDebug(QString("   Column: %1").arg(QString::number(token.column())).toLatin1().constData());
+    qDebug(QString("   Symbol: %1").arg(QString::number(token.symbol())).toLatin1().constData());
     qDebug(QString("   String: %1").arg(token.string()).toLatin1().constData());
     qDebug("---------------------------------------");
     qDebug("All generated code so far:");

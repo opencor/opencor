@@ -41,6 +41,24 @@ int CompilerScannerToken::column() const
 
 //==============================================================================
 
+CompilerScannerToken::Symbol CompilerScannerToken::symbol() const
+{
+    // Return the token's symbol
+
+    return mSymbol;
+}
+
+//==============================================================================
+
+void CompilerScannerToken::setSymbol(const Symbol &pSymbol)
+{
+    // Set the token's symbol
+
+    mSymbol = pSymbol;
+}
+
+//==============================================================================
+
 QString CompilerScannerToken::string() const
 {
     // Return the token's string
@@ -67,6 +85,10 @@ CompilerScanner::CompilerScanner(const QString &pInput) :
     mLine(1),
     mColumn(0)
 {
+    // Keywords for our small C mathematical grammar
+
+    mKeywords.insert("void", CompilerScannerToken::Void);
+    mKeywords.insert("double", CompilerScannerToken::Double);
 }
 
 //==============================================================================
@@ -107,24 +129,52 @@ QChar CompilerScanner::getChar()
 
 //==============================================================================
 
-QString CompilerScanner::getWord()
+void CompilerScanner::getWord(CompilerScannerToken &pToken)
 {
     // Retrieve a word starting with either a letter or an underscore (which we
     // have already scanned) followed by zero or more letters, digits and/or
     // underscores
     // EBNF: Letter|"_" { Letter|Digit|"_" } .
 
-    QString res = QString(mChar);
+    QString word = QString(mChar);
 
     while (getChar().isLetter() || mChar.isDigit() || (mChar == Underscore))
         // The new current character is either a letter, digit or underscore, so
         // add it to our word
 
-        res += mChar;
+        word += mChar;
 
-    // Return the word
+    // Update the token with the word we have just scanned
 
-    return res;
+    pToken.setString(word);
+
+    // Check whether the word is a known keyword
+
+    CompilerScannerKeywords::const_iterator keyword = mKeywords.find(word);
+
+    if (keyword != mKeywords.end()) {
+        // The word we scanned is a known keyword, so retrieve its corresponding
+        // symbol
+
+        pToken.setSymbol(keyword.value());
+    } else {
+        // The word we scanned is not a keyword, so it has to be an identifier,
+        // unless it's only made of underscores, so remove all the underscores
+        // from our word and check whether we end up with an empty string
+
+        word.replace(Underscore, "");
+
+        if (word.isEmpty())
+            // The word we scanned only contains underscores, so we are dealing
+            // with an unknown symbol
+
+            pToken.setSymbol(CompilerScannerToken::Unknown);
+        else
+            // The word we scanned doesn't only contain underscores, so we are
+            // dealing with an identifier
+
+            pToken.setSymbol(CompilerScannerToken::Identifier);
+    }
 }
 
 //==============================================================================
@@ -145,7 +195,7 @@ CompilerScannerToken CompilerScanner::getToken()
         // The current character is a letter or an underscore, so we should try
         // to retrieve a word
 
-        res.setString(getWord());
+        getWord(res);
 
     // Return the token
 

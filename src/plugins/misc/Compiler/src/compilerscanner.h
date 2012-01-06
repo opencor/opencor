@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include <QMap>
 #include <QString>
 
 //==============================================================================
@@ -19,10 +20,29 @@ namespace Compiler {
 class CompilerScannerToken
 {
 public:
+    enum Symbol
+    {
+        // Unknown symbol
+
+        Unknown,
+
+        // Type of variable
+
+        Void,
+        Double,
+
+        // Miscellaneous
+
+        Identifier
+    };
+
     explicit CompilerScannerToken(const int pLine, const int pColumn);
 
     int line() const;
     int column() const;
+
+    Symbol symbol() const;
+    void setSymbol(const Symbol &pSymbol);
 
     QString string() const;
     void setString(const QString &pString);
@@ -31,10 +51,14 @@ private:
     int mLine;
     int mColumn;
 
+    Symbol mSymbol;
+
     QString mString;
 };
 
 //==============================================================================
+
+typedef QMap<QString, CompilerScannerToken::Symbol> CompilerScannerKeywords;
 
 class CompilerScanner
 {
@@ -50,10 +74,11 @@ private:
     QChar mChar;
     int mLine;
     int mColumn;
+    CompilerScannerKeywords mKeywords;
 
     QChar getChar();
 
-    QString getWord();
+    void getWord(CompilerScannerToken &pToken);
 };
 
 //==============================================================================
