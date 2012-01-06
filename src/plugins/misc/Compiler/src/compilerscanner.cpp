@@ -136,6 +136,10 @@ QChar CompilerScanner::getChar()
        // End of the input, so return an empty character
 
         mChar = QChar();
+
+        // Update the column number
+
+        ++mColumn;
     } else {
         // Not at the end of the input, so retrieve the current character
 
