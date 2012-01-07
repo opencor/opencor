@@ -172,10 +172,9 @@ QChar CompilerScanner::getChar()
 
 void CompilerScanner::getWord(CompilerScannerToken &pToken)
 {
-    // Retrieve a word starting with either a letter or an underscore (which we
-    // have already scanned) followed by zero or more letters, digits and/or
-    // underscores
-    // EBNF: Letter|"_" { Letter|Digit|"_" } .
+    // Retrieve a word which EBNF grammar is as follows:
+    //
+    //   Word = ( Letter | "_" ) { Letter | Digit | "_" } ;
 
     QString word = QString(mChar);
 

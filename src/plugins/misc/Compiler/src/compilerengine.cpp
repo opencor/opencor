@@ -132,8 +132,32 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
 
     CompilerScanner scanner(pFunction);
 
-    // Retrieve the type of function that we are dealing with, i.e. a procedure
-    // or a 'proper' function
+    // The EBNF grammar of a function is as follows:
+    //
+    //   Function       = VoidFunction | DoubleFunction ;
+    //   VoidFunction   = "void" Identifier "(" Parameters ")" "{" Equations "}" ;
+    //   DoubleFunction = "double" Type Identifier "(" Parameters ")" "{" [ Equations ] DoubleReturn "}" ;
+    //   Indentifier    = ( Letter | "_" ) { Letter | Digit | "_" } ;
+    //   Letter         = "a" | ... | "z" | "A" | ... "Z" ;
+    //   Digit          = "0" | ... | "9" ;
+    //   Parameters     = Parameter { "," Parameter } ;
+    //   Parameter      = "double" "*" Identifier ;
+    //   Equations      = Equation { Equation } ;
+    //   Equation       = EquationLHS "=" EquationRHS ;
+    //   EquationLHS    = Identifier "[" DigitSequence "]" ;
+    //   DigitSequence  = Digit | ( DigitSequence Digit ) ;
+    //   EquationRHS    = ...
+    //   DoubleReturn   = "return" ReturnValue ";" ;
+    //   ReturnValue    = DoubleValue | EquationRHS ;
+    //   DoubleValue    =   ( FractionalPart [ ExponentPart ] )
+    //                    | ( DigitSequence ExponentPart ) ;
+    //   FractionalPart =   ( [ DigitSequence ] "." DigitSequence )
+    //                    | ( DigitSequence "." ) ;
+    //   ExponentPart   =   ( "e" [ Sign ] DigitSequence )
+    //                    | ( "E" [ Sign ] DigitSequence ) ;
+
+    // Retrieve the type of function that we are dealing with, i.e. a void or a
+    // double function
 
     bool voidFunction = true;
 
@@ -167,6 +191,62 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
         return 0;
     }
 
+    // An opening bracket is now required
+
+    token = scanner.getToken();
+
+    if (token.symbol() != CompilerScannerToken::OpeningBracket) {
+        addIssue(token, tr("'('"));
+
+        return 0;
+    }
+
+    // Retrieve the different parameters (i.e. at least one array of doubles)
+
+//---GRY--- TO BE DONE...
+
+    // A closing bracket is now required
+
+    token = scanner.getToken();
+
+    if (token.symbol() != CompilerScannerToken::ClosingBracket) {
+        addIssue(token, tr("')'"));
+
+        return 0;
+    }
+
+    // An opening curly bracket is now required
+
+    token = scanner.getToken();
+
+    if (token.symbol() != CompilerScannerToken::OpeningCurlyBracket) {
+        addIssue(token, tr("'{'"));
+
+        return 0;
+    }
+
+    // Parse the different equations
+    // Note: in the case of a void function, we need 1+ equation while 0+ in the
+    //       case of a double function...
+
+//---GRY--- TO BE DONE...
+
+    // Parse the return statement, but only in the case of a double function
+
+    if (!voidFunction) {
+//---GRY--- TO BE DONE...
+    }
+
+    // A closing curly bracket is now required
+
+    token = scanner.getToken();
+
+    if (token.symbol() != CompilerScannerToken::ClosingCurlyBracket) {
+        addIssue(token, tr("'}'"));
+
+        return 0;
+    }
+
 
 
 
@@ -193,15 +273,14 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
 
 
 
-    // Scan the whole function
-
-    int tokenNb = 0;
+    // Scan anything that remains
+    // Note: this should disappear once our parser is fully implemented...
 
     do {
         token = scanner.getToken();
 
         qDebug("---------------------------------------");
-        qDebug(QString("Token #%1:").arg(QString::number(++tokenNb)).toLatin1().constData());
+        qDebug("Token:");
         qDebug(QString("   Line: %1").arg(QString::number(token.line())).toLatin1().constData());
         qDebug(QString("   Column: %1").arg(QString::number(token.column())).toLatin1().constData());
         qDebug(QString("   Symbol: %1 [%2]").arg(token.symbolAsString(), QString::number(token.symbol())).toLatin1().constData());
