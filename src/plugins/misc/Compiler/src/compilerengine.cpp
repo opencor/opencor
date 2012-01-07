@@ -149,8 +149,9 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
     //   EquationRHS    = ...
     //   DoubleReturn   = "return" ReturnValue ";" ;
     //   ReturnValue    = DoubleValue | EquationRHS ;
-    //   DoubleValue    =   ( FractionalPart [ ExponentPart ] )
-    //                    | ( DigitSequence ExponentPart ) ;
+    //   DoubleValue    =   ( [Sign] FractionalPart [ ExponentPart ] )
+    //                    | ( [Sign] DigitSequence ExponentPart ) ;
+    //   Sign           = "+" | "-" ;
     //   FractionalPart =   ( [ DigitSequence ] "." DigitSequence )
     //                    | ( DigitSequence "." ) ;
     //   ExponentPart   =   ( "e" [ Sign ] DigitSequence )
