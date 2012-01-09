@@ -408,7 +408,8 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
 
     // Scan anything that remains
-    //---GRY--- THIS SHOULD DISAPPEAR ONCE OUR PARSER IS FULLY IMPLEMENTED...
+    //---GRY--- THE BELOW CODE SHOULD DISAPPEAR ONCE OUR PARSER IS FULLY
+    //          IMPLEMENTED...
 
     do {
         token = pScanner.getNextToken();
