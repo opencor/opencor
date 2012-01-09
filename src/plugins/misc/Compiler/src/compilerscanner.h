@@ -63,8 +63,8 @@ class CompilerScanner
 public:
     explicit CompilerScanner(const QString &pInput);
 
-    CompilerScannerToken getCurrentToken();
-    CompilerScannerToken getNextToken();
+    CompilerScannerToken token();
+    void getNextToken();
 
 private:
     QString mInput;

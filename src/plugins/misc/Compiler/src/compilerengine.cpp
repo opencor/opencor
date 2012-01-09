@@ -270,52 +270,57 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
     //   ExponentPart   =   ( "e" [ Sign ] DigitSequence )
     //                    | ( "E" [ Sign ] DigitSequence ) ;
 
+    // Note that after retrieving/parsing something, we must get ready for the
+    // next task and this means getting the next token. Indeed, doing so means
+    // that the next task doesn't have to worry about whether the current token
+    // is the correct one or not...
+
     // Retrieve the type of function that we are dealing with, i.e. a void or a
     // double function
 
-    CompilerScannerToken token = pScanner.getNextToken();
-
-    if (token.symbol() == CompilerScannerToken::Void) {
+    if (pScanner.token().symbol() == CompilerScannerToken::Void) {
         // We are dealing with a void function
 
         pFunction.setType(CompilerEngineFunction::Void);
-    } else if (token.symbol() == CompilerScannerToken::Double) {
+    } else if (pScanner.token().symbol() == CompilerScannerToken::Double) {
         // We are dealing with a double function
 
         pFunction.setType(CompilerEngineFunction::Double);
     } else {
-        // We are neither dealing with a void or a double function, so...
+        // We are dealing with neither a void nor a double function, so...
 
-        addIssue(token, tr("either 'void' or 'double'"));
+        addIssue(pScanner.token(), tr("either 'void' or 'double'"));
 
         return false;
     }
+
+    pScanner.getNextToken();
 
     // Retrieve the name of the function
 
-    token = pScanner.getNextToken();
-
-    if (token.symbol() == CompilerScannerToken::Identifier) {
+    if (pScanner.token().symbol() == CompilerScannerToken::Identifier) {
         // We got an identifier, so set the name of the function
 
-        pFunction.setName(token.string());
+        pFunction.setName(pScanner.token().string());
     } else {
         // We got something else, so...
 
-        addIssue(token, tr("an identifier"));
+        addIssue(pScanner.token(), tr("an identifier"));
 
         return false;
     }
 
-    // The next token must be an opening bracket
+    pScanner.getNextToken();
 
-    token = pScanner.getNextToken();
+    // The current token must be an opening bracket
 
-    if (token.symbol() != CompilerScannerToken::OpeningBracket) {
-        addIssue(token, tr("'('"));
+    if (pScanner.token().symbol() != CompilerScannerToken::OpeningBracket) {
+        addIssue(pScanner.token(), tr("'('"));
 
         return false;
     }
+
+    pScanner.getNextToken();
 
     // Parse the different parameters
 
@@ -325,32 +330,27 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
         return false;
 
-    // The next token must be a closing bracket
+    // The current token must be a closing bracket
 
-    token = pScanner.getCurrentToken();
-    // Note: we get the current token (as opposed to the next one) since, coming
-    //       back from parseParameters, we are already dealing with the 'next'
-    //       token, so...
-
-    if (token.symbol() != CompilerScannerToken::ClosingBracket) {
-        addIssue(token, tr("')'"));
+    if (pScanner.token().symbol() != CompilerScannerToken::ClosingBracket) {
+        addIssue(pScanner.token(), tr("')'"));
 
         return false;
     }
 
-    // The next token must be an opening curly bracket
+    pScanner.getNextToken();
 
-    token = pScanner.getNextToken();
+    // The current token must be an opening curly bracket
 
-    if (token.symbol() != CompilerScannerToken::OpeningCurlyBracket) {
-        addIssue(token, tr("'{'"));
+    if (pScanner.token().symbol() != CompilerScannerToken::OpeningCurlyBracket) {
+        addIssue(pScanner.token(), tr("'{'"));
 
         return false;
     }
+
+    pScanner.getNextToken();
 
     // Parse the different equations
-    // Note: in the case of a void function, we need 1+ equation while 0+ in the
-    //       case of a double function...
 
     if (!parseEquations(pScanner, pFunction))
         // Something went wrong with the parsing of the different equations,
@@ -360,25 +360,43 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
     // Parse the return statement, but only in the case of a double function
 
-    if (pFunction.type() == CompilerEngineFunction::Double) {
-        if (!parseReturn(pScanner, pFunction))
-            // Something went wrong with the parsing of the return statement,
-            // so...
-
-            return false;
-    }
-
-    // The next token must be a closing curly bracket
-
-    token = pScanner.getCurrentToken();
-    // Note: no matter whether we are dealing with a void or double function, we
-    //       back from some parsing that we have already got the 'next' token,
-    //       so...
-
-    if (token.symbol() != CompilerScannerToken::ClosingCurlyBracket) {
-        addIssue(token, tr("'}'"));
+    if (   (pFunction.type() == CompilerEngineFunction::Double)
+        && !parseReturn(pScanner, pFunction))
+        // Something went wrong with the parsing of the return statement, so...
 
         return false;
+
+    // The current token must be a closing curly bracket
+
+    if (pScanner.token().symbol() != CompilerScannerToken::ClosingCurlyBracket) {
+        addIssue(pScanner.token(), tr("'}'"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+
+
+
+
+
+
+
+
+    // Scan anything that remains
+    //---GRY--- THE BELOW CODE SHOULD DISAPPEAR ONCE OUR PARSER IS FULLY
+    //          IMPLEMENTED...
+
+    while (pScanner.token().symbol() != CompilerScannerToken::Eof) {
+        qDebug("---------------------------------------");
+        qDebug("Token:");
+        qDebug(QString("   Line: %1").arg(QString::number(pScanner.token().line())).toLatin1().constData());
+        qDebug(QString("   Column: %1").arg(QString::number(pScanner.token().column())).toLatin1().constData());
+        qDebug(QString("   Symbol: %1 [%2]").arg(pScanner.token().symbolAsString(), QString::number(pScanner.token().symbol())).toLatin1().constData());
+        qDebug(QString("   String: %1").arg(pScanner.token().string()).toLatin1().constData());
+
+        pScanner.getNextToken();
     }
 
 
@@ -407,29 +425,6 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
 
 
-    // Scan anything that remains
-    //---GRY--- THE BELOW CODE SHOULD DISAPPEAR ONCE OUR PARSER IS FULLY
-    //          IMPLEMENTED...
-
-    do {
-        token = pScanner.getNextToken();
-
-        qDebug("---------------------------------------");
-        qDebug("Token:");
-        qDebug(QString("   Line: %1").arg(QString::number(token.line())).toLatin1().constData());
-        qDebug(QString("   Column: %1").arg(QString::number(token.column())).toLatin1().constData());
-        qDebug(QString("   Symbol: %1 [%2]").arg(token.symbolAsString(), QString::number(token.symbol())).toLatin1().constData());
-        qDebug(QString("   String: %1").arg(token.string()).toLatin1().constData());
-    } while (token.symbol() != CompilerScannerToken::Eof);
-
-
-
-
-
-
-
-
-
     // Everything went fine, so...
 
     return true;
@@ -442,8 +437,6 @@ bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
 {
     //---GRY--- TO BE DONE...
 
-    CompilerScannerToken token = pScanner.getNextToken();
-
     return true;
 }
 
@@ -454,8 +447,6 @@ bool CompilerEngine::parseEquations(CompilerScanner &pScanner,
 {
     //---GRY--- TO BE DONE...
 
-    CompilerScannerToken token = pScanner.getNextToken();
-
     return true;
 }
 
@@ -465,10 +456,6 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
                                  CompilerEngineFunction &pFunction)
 {
     //---GRY--- TO BE DONE...
-
-    CompilerScannerToken token = pScanner.getCurrentToken();
-    // Note: we come here after having parsed some equations, hence we have
-    //       already got the 'next' token, so...
 
     return true;
 }

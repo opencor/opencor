@@ -126,6 +126,10 @@ CompilerScanner::CompilerScanner(const QString &pInput) :
 
     mKeywords.insert("void", CompilerScannerToken::Void);
     mKeywords.insert("double", CompilerScannerToken::Double);
+
+    // Get the first token
+
+    getNextToken();
 }
 
 //==============================================================================
@@ -219,16 +223,16 @@ void CompilerScanner::getWord()
 
 //==============================================================================
 
-CompilerScannerToken CompilerScanner::getCurrentToken()
+CompilerScannerToken CompilerScanner::token()
 {
-    // Return the current token
+    // Return the token
 
     return mToken;
 }
 
 //==============================================================================
 
-CompilerScannerToken CompilerScanner::getNextToken()
+void CompilerScanner::getNextToken()
 {
     // Skip spaces of all sorts
     // Note: we must test the current character first before getting a new
@@ -267,10 +271,6 @@ CompilerScannerToken CompilerScanner::getNextToken()
 
         getChar();
     }
-
-    // Return the token
-
-    return mToken;
 }
 
 //==============================================================================
