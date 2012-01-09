@@ -63,20 +63,22 @@ class CompilerScanner
 public:
     explicit CompilerScanner(const QString &pInput);
 
-    CompilerScannerToken getToken();
+    CompilerScannerToken getCurrentToken();
+    CompilerScannerToken getNextToken();
 
 private:
     QString mInput;
     int mPosition;
     int mLastPosition;
     QChar mChar;
+    CompilerScannerToken mToken;
     int mLine;
     int mColumn;
     CompilerScannerKeywords mKeywords;
 
     QChar getChar();
 
-    void getWord(CompilerScannerToken &pToken);
+    void getWord();
 };
 
 //==============================================================================

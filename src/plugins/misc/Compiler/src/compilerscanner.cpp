@@ -170,7 +170,7 @@ QChar CompilerScanner::getChar()
 
 //==============================================================================
 
-void CompilerScanner::getWord(CompilerScannerToken &pToken)
+void CompilerScanner::getWord()
 {
     // Retrieve a word which EBNF grammar is as follows:
     //
@@ -186,7 +186,7 @@ void CompilerScanner::getWord(CompilerScannerToken &pToken)
 
     // Update the token with the word we have just scanned
 
-    pToken.setString(word);
+    mToken.setString(word);
 
     // Check whether the word is a known keyword
 
@@ -196,7 +196,7 @@ void CompilerScanner::getWord(CompilerScannerToken &pToken)
         // The word we scanned is a known keyword, so retrieve its corresponding
         // symbol
 
-        pToken.setSymbol(keyword.value());
+        mToken.setSymbol(keyword.value());
     } else {
         // The word we scanned is not a keyword, so it has to be an identifier,
         // unless it's only made of underscores, so remove all the underscores
@@ -208,18 +208,27 @@ void CompilerScanner::getWord(CompilerScannerToken &pToken)
             // The word we scanned only contains underscores, so we are dealing
             // with an unknown symbol
 
-            pToken.setSymbol(CompilerScannerToken::Unknown);
+            mToken.setSymbol(CompilerScannerToken::Unknown);
         else
             // The word we scanned doesn't only contain underscores, so we are
             // dealing with an identifier
 
-            pToken.setSymbol(CompilerScannerToken::Identifier);
+            mToken.setSymbol(CompilerScannerToken::Identifier);
     }
 }
 
 //==============================================================================
 
-CompilerScannerToken CompilerScanner::getToken()
+CompilerScannerToken CompilerScanner::getCurrentToken()
+{
+    // Return the current token
+
+    return mToken;
+}
+
+//==============================================================================
+
+CompilerScannerToken CompilerScanner::getNextToken()
 {
     // Skip spaces of all sorts
     // Note: we must test the current character first before getting a new
@@ -231,7 +240,7 @@ CompilerScannerToken CompilerScanner::getToken()
 
     // Initialise the token
 
-    CompilerScannerToken res = CompilerScannerToken(mLine, mColumn);
+    mToken = CompilerScannerToken(mLine, mColumn);
 
     // Check the type of the current character
 
@@ -239,20 +248,20 @@ CompilerScannerToken CompilerScanner::getToken()
         // The current character is a letter or an underscore, so we should try
         // to retrieve a word
 
-        getWord(res);
+        getWord();
     } else {
         // Not a word or a number, so it has to be a one- or two-character token
 
-        res.setString(mChar);
+        mToken.setString(mChar);
 
         if (mChar == OpeningBracket)
-            res.setSymbol(CompilerScannerToken::OpeningBracket);
+            mToken.setSymbol(CompilerScannerToken::OpeningBracket);
         else if (mChar == ClosingBracket)
-            res.setSymbol(CompilerScannerToken::ClosingBracket);
+            mToken.setSymbol(CompilerScannerToken::ClosingBracket);
         else if (mChar == OpeningCurlyBracket)
-            res.setSymbol(CompilerScannerToken::OpeningCurlyBracket);
+            mToken.setSymbol(CompilerScannerToken::OpeningCurlyBracket);
         else if (mChar == ClosingCurlyBracket)
-            res.setSymbol(CompilerScannerToken::ClosingCurlyBracket);
+            mToken.setSymbol(CompilerScannerToken::ClosingCurlyBracket);
 
         // Get the next character
 
@@ -261,7 +270,7 @@ CompilerScannerToken CompilerScanner::getToken()
 
     // Return the token
 
-    return res;
+    return mToken;
 }
 
 //==============================================================================

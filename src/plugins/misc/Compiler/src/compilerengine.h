@@ -12,6 +12,10 @@
 
 //==============================================================================
 
+#include <QStringList>
+
+//==============================================================================
+
 #include "llvm/Function.h"
 
 //==============================================================================
@@ -40,6 +44,37 @@ private:
 
 //==============================================================================
 
+class CompilerEngineFunction
+{
+public:
+    enum Type {
+        Void,
+        Double
+    };
+
+    explicit CompilerEngineFunction();
+
+    llvm::Function * jitCode() const;
+
+    Type type() const;
+    void setType(const Type &pType);
+
+    QString name() const;
+    void setName(const QString &pName);
+
+    QStringList parameterNames() const;
+    bool addParameterName(const QString &pParameterName);
+
+private:
+    llvm::Function * mJitCode;
+
+    Type mType;
+    QString mName;
+    QStringList mParameterNames;
+};
+
+//==============================================================================
+
 class COMPILER_EXPORT CompilerEngine : public QObject
 {
     Q_OBJECT
@@ -60,6 +95,17 @@ private:
     QList<CompilerEngineIssue> mIssues;
 
     void addIssue(const CompilerScannerToken &pToken, const QString &pExpected);
+
+    bool parseFunction(CompilerScanner &pScanner,
+                       CompilerEngineFunction &pFunction);
+    bool parseParameters(CompilerScanner &pScanner,
+                         CompilerEngineFunction &pFunction);
+    bool parseEquations(CompilerScanner &pScanner,
+                        CompilerEngineFunction &pFunction);
+    bool parseReturn(CompilerScanner &pScanner,
+                     CompilerEngineFunction &pFunction);
+
+    void compileFunction(CompilerEngineFunction &pFunction);
 };
 
 //==============================================================================

@@ -71,6 +71,89 @@ int CompilerEngineIssue::column() const
 
 //==============================================================================
 
+CompilerEngineFunction::CompilerEngineFunction() :
+    mJitCode(0),
+    mType(Void),
+    mName(QString()),
+    mParameterNames(QStringList())
+{
+}
+
+//==============================================================================
+
+llvm::Function * CompilerEngineFunction::jitCode() const
+{
+    // Return the function's JIT code
+
+    return mJitCode;
+}
+
+//==============================================================================
+
+CompilerEngineFunction::Type CompilerEngineFunction::type() const
+{
+    // Return the function's type
+
+    return mType;
+}
+
+//==============================================================================
+
+void CompilerEngineFunction::setType(const Type &pType)
+{
+    // Set the function's type
+
+    mType = pType;
+}
+
+//==============================================================================
+
+QString CompilerEngineFunction::name() const
+{
+    // Return the function's name
+
+    return mName;
+}
+
+//==============================================================================
+
+void CompilerEngineFunction::setName(const QString &pName)
+{
+    // Set the function's name
+
+    mName = pName;
+}
+
+//==============================================================================
+
+QStringList CompilerEngineFunction::parameterNames() const
+{
+    // Return the function's parameter names
+
+    return mParameterNames;
+}
+
+//==============================================================================
+
+bool CompilerEngineFunction::addParameterName(const QString &pParameterName)
+{
+    // Add a parameter name to our list, but only if it isn't already there
+
+    if (mParameterNames.contains(pParameterName)) {
+        // The parameter name already exists, so...
+
+        return false;
+    } else {
+        // The parameter is not yet in our list, so add it
+
+        mParameterNames.append(pParameterName);
+
+        return true;
+    }
+}
+
+//==============================================================================
+
 CompilerEngine::CompilerEngine()
 {
     static int counter = 0;
@@ -131,12 +214,42 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
     // Get a scanner for our function
 
     CompilerScanner scanner(pFunction);
+    CompilerEngineFunction function;
 
+    // Parse the function
+
+    if (parseFunction(scanner, function)) {
+        // The function was properly parsed, so we can compile it
+
+        compileFunction(function);
+
+        // Output the contents of the module so far
+
+        qDebug("---------------------------------------");
+        qDebug("All generated code so far:");
+        mModule->dump();
+        qDebug("---------------------------------------");
+
+        // Return the compiled function
+
+        return function.jitCode();
+    } else {
+        // The function wasn't properly parsed, so...
+
+        return 0;
+    }
+}
+
+//==============================================================================
+
+bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
+                                   CompilerEngineFunction &pFunction)
+{
     // The EBNF grammar of a function is as follows:
     //
     //   Function       = VoidFunction | DoubleFunction ;
     //   VoidFunction   = "void" Identifier "(" Parameters ")" "{" Equations "}" ;
-    //   DoubleFunction = "double" Type Identifier "(" Parameters ")" "{" [ Equations ] DoubleReturn "}" ;
+    //   DoubleFunction = "double" Type Identifier "(" [ Parameters ] ")" "{" [ Equations ] Return "}" ;
     //   Indentifier    = ( Letter | "_" ) { Letter | Digit | "_" } ;
     //   Letter         = "a" | ... | "z" | "A" | ... "Z" ;
     //   Digit          = "0" | ... | "9" ;
@@ -147,7 +260,7 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
     //   EquationLHS    = Identifier "[" DigitSequence "]" ;
     //   DigitSequence  = Digit | ( DigitSequence Digit ) ;
     //   EquationRHS    = ...
-    //   DoubleReturn   = "return" ReturnValue ";" ;
+    //   Return         = "return" ReturnValue ";" ;
     //   ReturnValue    = DoubleValue | EquationRHS ;
     //   DoubleValue    =   ( [Sign] FractionalPart [ ExponentPart ] )
     //                    | ( [Sign] DigitSequence ExponentPart ) ;
@@ -160,92 +273,112 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
     // Retrieve the type of function that we are dealing with, i.e. a void or a
     // double function
 
-    bool voidFunction = true;
+    CompilerScannerToken token = pScanner.getNextToken();
 
-    CompilerScannerToken token = scanner.getToken();
+    if (token.symbol() == CompilerScannerToken::Void) {
+        // We are dealing with a void function
 
-    if (token.symbol() == CompilerScannerToken::Double) {
-        // We are dealing with a 'proper' function
+        pFunction.setType(CompilerEngineFunction::Void);
+    } else if (token.symbol() == CompilerScannerToken::Double) {
+        // We are dealing with a double function
 
-        voidFunction = false;
-    } else if (token.symbol() != CompilerScannerToken::Void) {
-        // The current symbol is neither Void nor Double, so...
+        pFunction.setType(CompilerEngineFunction::Double);
+    } else {
+        // We are neither dealing with a void or a double function, so...
 
         addIssue(token, tr("either 'void' or 'double'"));
 
-        return 0;
+        return false;
     }
 
     // Retrieve the name of the function
 
-    QString functionName;
-
-    token = scanner.getToken();
+    token = pScanner.getNextToken();
 
     if (token.symbol() == CompilerScannerToken::Identifier) {
-        // We got an identifier
+        // We got an identifier, so set the name of the function
 
-        functionName = token.string();
+        pFunction.setName(token.string());
     } else {
+        // We got something else, so...
+
         addIssue(token, tr("an identifier"));
 
-        return 0;
+        return false;
     }
 
-    // An opening bracket is now required
+    // The next token must be an opening bracket
 
-    token = scanner.getToken();
+    token = pScanner.getNextToken();
 
     if (token.symbol() != CompilerScannerToken::OpeningBracket) {
         addIssue(token, tr("'('"));
 
-        return 0;
+        return false;
     }
 
-    // Retrieve the different parameters (i.e. at least one array of doubles)
+    // Parse the different parameters
 
-//---GRY--- TO BE DONE...
+    if (!parseParameters(pScanner, pFunction))
+        // Something went wrong with the parsing of the different parameters,
+        // so...
 
-    // A closing bracket is now required
+        return false;
 
-    token = scanner.getToken();
+    // The next token must be a closing bracket
+
+    token = pScanner.getCurrentToken();
+    // Note: we get the current token (as opposed to the next one) since, coming
+    //       back from parseParameters, we are already dealing with the 'next'
+    //       token, so...
 
     if (token.symbol() != CompilerScannerToken::ClosingBracket) {
         addIssue(token, tr("')'"));
 
-        return 0;
+        return false;
     }
 
-    // An opening curly bracket is now required
+    // The next token must be an opening curly bracket
 
-    token = scanner.getToken();
+    token = pScanner.getNextToken();
 
     if (token.symbol() != CompilerScannerToken::OpeningCurlyBracket) {
         addIssue(token, tr("'{'"));
 
-        return 0;
+        return false;
     }
 
     // Parse the different equations
     // Note: in the case of a void function, we need 1+ equation while 0+ in the
     //       case of a double function...
 
-//---GRY--- TO BE DONE...
+    if (!parseEquations(pScanner, pFunction))
+        // Something went wrong with the parsing of the different equations,
+        // so...
+
+        return false;
 
     // Parse the return statement, but only in the case of a double function
 
-    if (!voidFunction) {
-//---GRY--- TO BE DONE...
+    if (pFunction.type() == CompilerEngineFunction::Double) {
+        if (!parseReturn(pScanner, pFunction))
+            // Something went wrong with the parsing of the return statement,
+            // so...
+
+            return false;
     }
 
-    // A closing curly bracket is now required
+    // The next token must be a closing curly bracket
 
-    token = scanner.getToken();
+    token = pScanner.getCurrentToken();
+    // Note: no matter whether we are dealing with a void or double function, we
+    //       back from some parsing that we have already got the 'next' token,
+    //       so...
 
     if (token.symbol() != CompilerScannerToken::ClosingCurlyBracket) {
         addIssue(token, tr("'}'"));
 
-        return 0;
+        return false;
     }
 
 
@@ -259,12 +392,12 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
     qDebug("---------------------------------------");
     qDebug("Function details:");
 
-    if (voidFunction)
+    if (pFunction.type() == CompilerEngineFunction::Void)
         qDebug("   Type: void");
     else
         qDebug("   Type: double");
 
-    qDebug(QString("   Name: %1").arg(functionName).toLatin1().constData());
+    qDebug(QString("   Name: %1").arg(pFunction.name()).toLatin1().constData());
 
 
 
@@ -275,10 +408,10 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
 
 
     // Scan anything that remains
-    // Note: this should disappear once our parser is fully implemented...
+    //---GRY--- THIS SHOULD DISAPPEAR ONCE OUR PARSER IS FULLY IMPLEMENTED...
 
     do {
-        token = scanner.getToken();
+        token = pScanner.getNextToken();
 
         qDebug("---------------------------------------");
         qDebug("Token:");
@@ -288,14 +421,62 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
         qDebug(QString("   String: %1").arg(token.string()).toLatin1().constData());
     } while (token.symbol() != CompilerScannerToken::Eof);
 
-    // Output the contents of the module so far
 
-    qDebug("---------------------------------------");
-    qDebug("All generated code so far:");
-    mModule->dump();
-    qDebug("---------------------------------------");
 
-    return 0;
+
+
+
+
+
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
+                                     CompilerEngineFunction &pFunction)
+{
+    //---GRY--- TO BE DONE...
+
+    CompilerScannerToken token = pScanner.getNextToken();
+
+    return true;
+}
+
+//==============================================================================
+
+bool CompilerEngine::parseEquations(CompilerScanner &pScanner,
+                                    CompilerEngineFunction &pFunction)
+{
+    //---GRY--- TO BE DONE...
+
+    CompilerScannerToken token = pScanner.getNextToken();
+
+    return true;
+}
+
+//==============================================================================
+
+bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
+                                 CompilerEngineFunction &pFunction)
+{
+    //---GRY--- TO BE DONE...
+
+    CompilerScannerToken token = pScanner.getCurrentToken();
+    // Note: we come here after having parsed some equations, hence we have
+    //       already got the 'next' token, so...
+
+    return true;
+}
+
+//==============================================================================
+
+void CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
+{
+    //---GRY--- TO BE DONE...
 }
 
 //==============================================================================
