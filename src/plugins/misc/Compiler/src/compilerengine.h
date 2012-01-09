@@ -62,15 +62,15 @@ public:
     QString name() const;
     void setName(const QString &pName);
 
-    QStringList parameterNames() const;
-    bool addParameterName(const QString &pParameterName);
+    QStringList parameters() const;
+    bool addParameter(const QString &pParameter);
 
 private:
     llvm::Function * mJitCode;
 
     Type mType;
     QString mName;
-    QStringList mParameterNames;
+    QStringList mParameters;
 };
 
 //==============================================================================
@@ -94,10 +94,14 @@ private:
 
     QList<CompilerEngineIssue> mIssues;
 
-    void addIssue(const CompilerScannerToken &pToken, const QString &pExpected);
+    void addIssue(const CompilerScannerToken &pToken, const QString &pMessage,
+                  const bool &pExpectedMessage = true);
 
     bool parseFunction(CompilerScanner &pScanner,
                        CompilerEngineFunction &pFunction);
+    bool parseParameter(CompilerScanner &pScanner,
+                        CompilerEngineFunction &pFunction,
+                        const bool &pNeeded = true);
     bool parseParameters(CompilerScanner &pScanner,
                          CompilerEngineFunction &pFunction);
     bool parseEquations(CompilerScanner &pScanner,

@@ -12,10 +12,12 @@ namespace Compiler {
 //==============================================================================
 
 static const QChar Underscore          = QChar('_');
+static const QChar Times               = QChar('*');
 static const QChar OpeningBracket      = QChar('(');
 static const QChar ClosingBracket      = QChar(')');
 static const QChar OpeningCurlyBracket = QChar('{');
 static const QChar ClosingCurlyBracket = QChar('}');
+static const QChar Comma               = QChar(',');
 
 //==============================================================================
 
@@ -65,6 +67,8 @@ QString CompilerScannerToken::symbolAsString() const
         return "Void";
     case Double:
         return "Double";
+    case Times:
+        return "Times";
     case OpeningBracket:
         return "OpeningBracket";
     case ClosingBracket:
@@ -73,6 +77,8 @@ QString CompilerScannerToken::symbolAsString() const
         return "OpeningCurlyBracket";
     case ClosingCurlyBracket:
         return "ClosingCurlyBracket";
+    case Comma:
+        return "Comma";
     case Unknown:
         return "Unknown";
     case Identifier:
@@ -258,7 +264,9 @@ void CompilerScanner::getNextToken()
 
         mToken.setString(mChar);
 
-        if (mChar == OpeningBracket)
+        if (mChar == Times)
+            mToken.setSymbol(CompilerScannerToken::Times);
+        else if (mChar == OpeningBracket)
             mToken.setSymbol(CompilerScannerToken::OpeningBracket);
         else if (mChar == ClosingBracket)
             mToken.setSymbol(CompilerScannerToken::ClosingBracket);
@@ -266,6 +274,8 @@ void CompilerScanner::getNextToken()
             mToken.setSymbol(CompilerScannerToken::OpeningCurlyBracket);
         else if (mChar == ClosingCurlyBracket)
             mToken.setSymbol(CompilerScannerToken::ClosingCurlyBracket);
+        else if (mChar == Comma)
+            mToken.setSymbol(CompilerScannerToken::Comma);
 
         // Get the next character
 

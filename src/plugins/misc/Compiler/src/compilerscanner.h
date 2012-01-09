@@ -26,10 +26,15 @@ public:
 
         Void, Double,
 
+        // Mathematical operators
+
+        Times,
+
         // Miscellaneous
 
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
+        Comma,
         Unknown, Identifier, Eof
     };
 

@@ -75,7 +75,7 @@ CompilerEngineFunction::CompilerEngineFunction() :
     mJitCode(0),
     mType(Void),
     mName(QString()),
-    mParameterNames(QStringList())
+    mParameters(QStringList())
 {
 }
 
@@ -126,27 +126,27 @@ void CompilerEngineFunction::setName(const QString &pName)
 
 //==============================================================================
 
-QStringList CompilerEngineFunction::parameterNames() const
+QStringList CompilerEngineFunction::parameters() const
 {
-    // Return the function's parameter names
+    // Return the function's parameters
 
-    return mParameterNames;
+    return mParameters;
 }
 
 //==============================================================================
 
-bool CompilerEngineFunction::addParameterName(const QString &pParameterName)
+bool CompilerEngineFunction::addParameter(const QString &pParameter)
 {
-    // Add a parameter name to our list, but only if it isn't already there
+    // Add a parameter to our list, but only if it isn't already there
 
-    if (mParameterNames.contains(pParameterName)) {
-        // The parameter name already exists, so...
+    if (mParameters.contains(pParameter)) {
+        // The parameter already exists, so...
 
         return false;
     } else {
         // The parameter is not yet in our list, so add it
 
-        mParameterNames.append(pParameterName);
+        mParameters.append(pParameter);
 
         return true;
     }
@@ -192,10 +192,15 @@ QList<CompilerEngineIssue> CompilerEngine::issues()
 //==============================================================================
 
 void CompilerEngine::addIssue(const CompilerScannerToken &pToken,
-                              const QString &pExpected)
+                              const QString &pMessage,
+                              const bool &pExpectedMessage)
 {
-    mIssues.append(CompilerEngineIssue(tr("%1 is expected, but '%2' was found instead").arg(pExpected, pToken.string()),
-                                       pToken.line(), pToken.column()));
+    if (pExpectedMessage)
+        mIssues.append(CompilerEngineIssue(tr("%1 is expected, but '%2' was found instead").arg(pMessage, pToken.string()),
+                                           pToken.line(), pToken.column()));
+    else
+        mIssues.append(CompilerEngineIssue(pMessage,
+                                           pToken.line(), pToken.column()));
 }
 
 //==============================================================================
@@ -401,6 +406,11 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
     qDebug(QString("   Name: %1").arg(pFunction.name()).toLatin1().constData());
 
+    qDebug(QString("   Nb of params: %1").arg(QString::number(pFunction.parameters().count())).toLatin1().constData());
+
+    if (!pFunction.parameters().isEmpty())
+        foreach (const QString &parameter, pFunction.parameters())
+            qDebug(QString("    - %1").arg(parameter).toLatin1().constData());
 
 
 
@@ -416,15 +426,102 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
 //==============================================================================
 
+bool CompilerEngine::parseParameter(CompilerScanner &pScanner,
+                                    CompilerEngineFunction &pFunction,
+                                    const bool &pNeeded)
+{
+    // The EBNF grammar of a parameter is as follows:
+    //
+    //   Parameter  = "double" "*" Identifier ;
+
+    // The current token must be "double"
+
+    if (pScanner.token().symbol() != CompilerScannerToken::Double) {
+        if (pNeeded)
+            // We need a parameter definition, so...
+
+            addIssue(pScanner.token(), tr("'double'"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // The current token must be "*"
+
+    if (pScanner.token().symbol() != CompilerScannerToken::Times) {
+        addIssue(pScanner.token(), tr("'*'"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // The current token must be an identifier
+
+    if (pScanner.token().symbol() == CompilerScannerToken::Identifier) {
+        // We got an identifier, so try to add it as the name of a new parameter
+
+        if (!pFunction.addParameter(pScanner.token().string())) {
+            // The parameter already exists, so...
+
+            addIssue(pScanner.token(),
+                     tr("there is already a parameter called '%1'").arg(pScanner.token().string()),
+                     false);
+
+            return false;
+        }
+    } else {
+        // We got something else, so...
+
+        addIssue(pScanner.token(), tr("an identifier"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
 bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
                                      CompilerEngineFunction &pFunction)
 {
     // The EBNF grammar of a list of parameters is as follows:
     //
-    //   Parameters     = Parameter { "," Parameter } ;
-    //   Parameter      = "double" "*" Identifier ;
+    //   Parameters = Parameter { "," Parameter } ;
 
-    //---GRY--- TO BE DONE...
+    // We must have 1+/0+ parameters in the case of a void/double function
+
+    if (parseParameter(pScanner, pFunction,
+                       pFunction.type() == CompilerEngineFunction::Void))
+        // The first parameter was properly parsed, so look for other parameters
+
+        // The current token must be "," if we are to have another parameter
+        // definition
+
+        while (pScanner.token().symbol() == CompilerScannerToken::Comma) {
+            pScanner.getNextToken();
+
+            // We must then have the parameter definition itself
+
+            if (!parseParameter(pScanner, pFunction))
+                // Something went wrong with the parsing of the parameter
+                // definition, so...
+
+                return false;
+        }
+    else
+        // Something went wrong with the parsing of the parameter definition,
+        // so...
+
+        return false;
+
+    // Everything went fine, so...
 
     return true;
 }
@@ -436,11 +533,13 @@ bool CompilerEngine::parseEquations(CompilerScanner &pScanner,
 {
     // The EBNF grammar of a series of equations is as follows:
     //
-    //   Equations      = Equation { Equation } ;
-    //   Equation       = Identifier "[" DigitSequence "]" "=" EquationRHS ;
-    //   DigitSequence  = Digit | ( DigitSequence Digit ) ;
+    //   Equations     = Equation { Equation } ;
+    //   Equation      = Identifier "[" DigitSequence "]" "=" EquationRHS ;
+    //   DigitSequence = Digit | ( DigitSequence Digit ) ;
 
     //---GRY--- TO BE DONE...
+
+    // Everything went fine, so...
 
     return true;
 }
@@ -462,6 +561,8 @@ bool CompilerEngine::parseDoubleValue(CompilerScanner &pScanner,
 
     //---GRY--- TO BE DONE...
 
+    // Everything went fine, so...
+
     return true;
 }
 
@@ -472,9 +573,11 @@ bool CompilerEngine::parseEquationRhs(CompilerScanner &pScanner,
 {
     // The EBNF grammar of an equation's RHS is as follows:
     //
-    //   EquationRHS    = ...
+    //   EquationRHS = ...
 
     //---GRY--- TO BE DONE...
+
+    // Everything went fine, so...
 
     return true;
 }
@@ -486,10 +589,12 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
 {
     // The EBNF grammar of a return statement is as follows:
     //
-    //   Return         = "return" ReturnValue ";" ;
-    //   ReturnValue    = DoubleValue | EquationRHS ;
+    //   Return      = "return" ReturnValue ";" ;
+    //   ReturnValue = DoubleValue | EquationRHS ;
 
     //---GRY--- TO BE DONE...
+
+    // Everything went fine, so...
 
     return true;
 }
