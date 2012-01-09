@@ -102,6 +102,10 @@ private:
                          CompilerEngineFunction &pFunction);
     bool parseEquations(CompilerScanner &pScanner,
                         CompilerEngineFunction &pFunction);
+    bool parseDoubleValue(CompilerScanner &pScanner,
+                          CompilerEngineFunction &pFunction);
+    bool parseEquationRhs(CompilerScanner &pScanner,
+                          CompilerEngineFunction &pFunction);
     bool parseReturn(CompilerScanner &pScanner,
                      CompilerEngineFunction &pFunction);
 

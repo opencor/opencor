@@ -249,26 +249,10 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
     //
     //   Function       = VoidFunction | DoubleFunction ;
     //   VoidFunction   = "void" Identifier "(" Parameters ")" "{" Equations "}" ;
-    //   DoubleFunction = "double" Type Identifier "(" [ Parameters ] ")" "{" [ Equations ] Return "}" ;
+    //   DoubleFunction = "double" Identifier "(" [ Parameters ] ")" "{" [ Equations ] Return "}" ;
     //   Indentifier    = ( Letter | "_" ) { Letter | Digit | "_" } ;
     //   Letter         = "a" | ... | "z" | "A" | ... "Z" ;
     //   Digit          = "0" | ... | "9" ;
-    //   Parameters     = Parameter { "," Parameter } ;
-    //   Parameter      = "double" "*" Identifier ;
-    //   Equations      = Equation { Equation } ;
-    //   Equation       = EquationLHS "=" EquationRHS ;
-    //   EquationLHS    = Identifier "[" DigitSequence "]" ;
-    //   DigitSequence  = Digit | ( DigitSequence Digit ) ;
-    //   EquationRHS    = ...
-    //   Return         = "return" ReturnValue ";" ;
-    //   ReturnValue    = DoubleValue | EquationRHS ;
-    //   DoubleValue    =   ( [Sign] FractionalPart [ ExponentPart ] )
-    //                    | ( [Sign] DigitSequence ExponentPart ) ;
-    //   Sign           = "+" | "-" ;
-    //   FractionalPart =   ( [ DigitSequence ] "." DigitSequence )
-    //                    | ( DigitSequence "." ) ;
-    //   ExponentPart   =   ( "e" [ Sign ] DigitSequence )
-    //                    | ( "E" [ Sign ] DigitSequence ) ;
 
     // Note that after retrieving/parsing something, we must get ready for the
     // next task and this means getting the next token. Indeed, doing so means
@@ -435,6 +419,11 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
                                      CompilerEngineFunction &pFunction)
 {
+    // The EBNF grammar of a list of parameters is as follows:
+    //
+    //   Parameters     = Parameter { "," Parameter } ;
+    //   Parameter      = "double" "*" Identifier ;
+
     //---GRY--- TO BE DONE...
 
     return true;
@@ -445,6 +434,46 @@ bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
 bool CompilerEngine::parseEquations(CompilerScanner &pScanner,
                                     CompilerEngineFunction &pFunction)
 {
+    // The EBNF grammar of a series of equations is as follows:
+    //
+    //   Equations      = Equation { Equation } ;
+    //   Equation       = Identifier "[" DigitSequence "]" "=" EquationRHS ;
+    //   DigitSequence  = Digit | ( DigitSequence Digit ) ;
+
+    //---GRY--- TO BE DONE...
+
+    return true;
+}
+
+//==============================================================================
+
+bool CompilerEngine::parseDoubleValue(CompilerScanner &pScanner,
+                                      CompilerEngineFunction &pFunction)
+{
+    // The EBNF grammar of a double value is as follows:
+    //
+    //   DoubleValue    =   ( [Sign] FractionalPart [ ExponentPart ] )
+    //                    | ( [Sign] DigitSequence ExponentPart ) ;
+    //   Sign           = "+" | "-" ;
+    //   FractionalPart =   ( [ DigitSequence ] "." DigitSequence )
+    //                    | ( DigitSequence "." ) ;
+    //   ExponentPart   =   ( "e" [ Sign ] DigitSequence )
+    //                    | ( "E" [ Sign ] DigitSequence ) ;
+
+    //---GRY--- TO BE DONE...
+
+    return true;
+}
+
+//==============================================================================
+
+bool CompilerEngine::parseEquationRhs(CompilerScanner &pScanner,
+                                      CompilerEngineFunction &pFunction)
+{
+    // The EBNF grammar of an equation's RHS is as follows:
+    //
+    //   EquationRHS    = ...
+
     //---GRY--- TO BE DONE...
 
     return true;
@@ -455,6 +484,11 @@ bool CompilerEngine::parseEquations(CompilerScanner &pScanner,
 bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
                                  CompilerEngineFunction &pFunction)
 {
+    // The EBNF grammar of a return statement is as follows:
+    //
+    //   Return         = "return" ReturnValue ";" ;
+    //   ReturnValue    = DoubleValue | EquationRHS ;
+
     //---GRY--- TO BE DONE...
 
     return true;
