@@ -154,6 +154,24 @@ bool CompilerEngineFunction::addParameter(const QString &pParameter)
 
 //==============================================================================
 
+double CompilerEngineFunction::returnValue() const
+{
+    // Return the function's return value
+
+    return mReturnValue;
+}
+
+//==============================================================================
+
+void CompilerEngineFunction::setReturnValue(const double &pReturnValue)
+{
+    // Set the function's return value
+
+    mReturnValue = pReturnValue;
+}
+
+//==============================================================================
+
 CompilerEngine::CompilerEngine()
 {
     static int counter = 0;
@@ -255,9 +273,6 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
     //   Function       = VoidFunction | DoubleFunction ;
     //   VoidFunction   = "void" Identifier "(" Parameters ")" "{" Equations "}" ;
     //   DoubleFunction = "double" Identifier "(" [ Parameters ] ")" "{" [ Equations ] Return "}" ;
-    //   Indentifier    = ( Letter | "_" ) { Letter | Digit | "_" } ;
-    //   Letter         = "a" | ... | "z" | "A" | ... "Z" ;
-    //   Digit          = "0" | ... | "9" ;
 
     // Note that after retrieving/parsing something, we must get ready for the
     // next task and this means getting the next token. Indeed, doing so means
@@ -412,6 +427,10 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
         foreach (const QString &parameter, pFunction.parameters())
             qDebug(QString("    - %1").arg(parameter).toLatin1().constData());
 
+    if (pFunction.type() == CompilerEngineFunction::Double)
+        qDebug(QString("   Return value: %1").arg(QString::number(pFunction.returnValue())).toLatin1().constData());
+
+
 
 
 
@@ -546,28 +565,6 @@ bool CompilerEngine::parseEquations(CompilerScanner &pScanner,
 
 //==============================================================================
 
-bool CompilerEngine::parseDoubleValue(CompilerScanner &pScanner,
-                                      CompilerEngineFunction &pFunction)
-{
-    // The EBNF grammar of a double value is as follows:
-    //
-    //   DoubleValue    =   ( [Sign] FractionalPart [ ExponentPart ] )
-    //                    | ( [Sign] DigitSequence ExponentPart ) ;
-    //   Sign           = "+" | "-" ;
-    //   FractionalPart =   ( [ DigitSequence ] "." DigitSequence )
-    //                    | ( DigitSequence "." ) ;
-    //   ExponentPart   =   ( "e" [ Sign ] DigitSequence )
-    //                    | ( "E" [ Sign ] DigitSequence ) ;
-
-    //---GRY--- TO BE DONE...
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
 bool CompilerEngine::parseEquationRhs(CompilerScanner &pScanner,
                                       CompilerEngineFunction &pFunction)
 {
@@ -589,10 +586,44 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
 {
     // The EBNF grammar of a return statement is as follows:
     //
-    //   Return      = "return" ReturnValue ";" ;
-    //   ReturnValue = DoubleValue | EquationRHS ;
+    //   Return = "return" EquationRHS ";" ;
 
-    //---GRY--- TO BE DONE...
+    // The current token must be "return"
+
+    if (pScanner.token().symbol() != CompilerScannerToken::Return) {
+        addIssue(pScanner.token(), tr("'return'"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // Parse the equivalent of the RHS of an equation
+
+//---GRY---    if (!parseEquationRhs(pScanner, pFunction))
+//---GRY---        return false;
+
+//---GRY--- THE BELOW IS JUST FOR TESTING PURPOSES...
+if (   (pScanner.token().symbol() == CompilerScannerToken::IntegerValue)
+    || (pScanner.token().symbol() == CompilerScannerToken::DoubleValue)) {
+    pFunction.setReturnValue(pScanner.token().string().toDouble());
+} else {
+    addIssue(pScanner.token(), "a number");
+
+    return false;
+}
+
+pScanner.getNextToken();
+
+    // The current token must be ";"
+
+    if (pScanner.token().symbol() != CompilerScannerToken::SemiColon) {
+        addIssue(pScanner.token(), tr("';'"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
 
     // Everything went fine, so...
 

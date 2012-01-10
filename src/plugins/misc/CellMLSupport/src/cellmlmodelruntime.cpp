@@ -295,7 +295,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             Compiler::CompilerEngine compilerEngine;
 
-            llvm::Function *test = compilerEngine.addFunction("void test(double *param) {}");
+            llvm::Function *test = compilerEngine.addFunction("double test(double *param) { return 123; }");
 
             if (compilerEngine.issues().count()) {
                 // Something went wrong, so output the issue(s)

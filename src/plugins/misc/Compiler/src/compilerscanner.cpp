@@ -13,11 +13,17 @@ namespace Compiler {
 
 static const QChar Underscore          = QChar('_');
 static const QChar Times               = QChar('*');
+static const QChar Plus                = QChar('+');
+static const QChar Minus               = QChar('-');
 static const QChar OpeningBracket      = QChar('(');
 static const QChar ClosingBracket      = QChar(')');
 static const QChar OpeningCurlyBracket = QChar('{');
 static const QChar ClosingCurlyBracket = QChar('}');
 static const QChar Comma               = QChar(',');
+static const QChar SemiColon           = QChar(';');
+static const QChar FullStop            = QChar('.');
+static const QChar LowerCaseE          = QChar('e');
+static const QChar UpperCaseE          = QChar('E');
 
 //==============================================================================
 
@@ -79,10 +85,18 @@ QString CompilerScannerToken::symbolAsString() const
         return "ClosingCurlyBracket";
     case Comma:
         return "Comma";
+    case SemiColon:
+        return "SemiColon";
+    case Return:
+        return "Return";
     case Unknown:
         return "Unknown";
     case Identifier:
         return "Identifier";
+    case IntegerValue:
+        return "IntegerValue";
+    case DoubleValue:
+        return "DoubleValue";
     case Eof:
         return "Eof";
     default:
@@ -133,6 +147,8 @@ CompilerScanner::CompilerScanner(const QString &pInput) :
     mKeywords.insert("void", CompilerScannerToken::Void);
     mKeywords.insert("double", CompilerScannerToken::Double);
 
+    mKeywords.insert("return", CompilerScannerToken::Return);
+
     // Get the first token
 
     getNextToken();
@@ -140,7 +156,7 @@ CompilerScanner::CompilerScanner(const QString &pInput) :
 
 //==============================================================================
 
-QChar CompilerScanner::getChar()
+void CompilerScanner::getNextChar()
 {
     if (mPosition == mLastPosition) {
        // End of the input, so return an empty character
@@ -172,10 +188,6 @@ QChar CompilerScanner::getChar()
 
         ++mPosition;
     }
-
-    // Return the new current character
-
-    return mChar;
 }
 
 //==============================================================================
@@ -184,15 +196,22 @@ void CompilerScanner::getWord()
 {
     // Retrieve a word which EBNF grammar is as follows:
     //
-    //   Word = ( Letter | "_" ) { Letter | Digit | "_" } ;
+    //   Word   = ( Letter | "_" ) { Letter | Digit | "_" } ;
+    //   Letter = "a" | ... | "z" | "A" | ... "Z" ;
+    //   Digit  = "0" | ... | "9" ;
 
     QString word = QString(mChar);
 
-    while (getChar().isLetter() || mChar.isDigit() || (mChar == Underscore))
+    getNextChar();
+
+    while (mChar.isLetter() || mChar.isDigit() || (mChar == Underscore)) {
         // The new current character is either a letter, digit or underscore, so
         // add it to our word
 
         word += mChar;
+
+        getNextChar();
+    }
 
     // Update the token with the word we have just scanned
 
@@ -229,6 +248,135 @@ void CompilerScanner::getWord()
 
 //==============================================================================
 
+void CompilerScanner::getNumber()
+{
+    // Retrieve a number which EBNF grammar is as follows:
+    //
+    //   Number   =   ( { Digit } "." Digit { Digit } [ Exponent ] )
+    //              | ( Digit { Digit } [ "." { Digit } ] [ Exponent ] ) ;
+    //   Exponent = ( "e" | "E" ) [ "+" | "-" ] Digit { Digit } ;
+
+    // By default, we assume that we have got an unknown token
+
+    mToken.setSymbol(CompilerScannerToken::Unknown);
+
+    // Check whether we came here with a digit
+
+    QString number = QString();
+    bool firstCharIsDigit = mChar.isDigit();
+
+    if (firstCharIsDigit)
+        // We came here with a digit, so keep looking for more digits
+
+        do {
+            number += mChar;
+
+            getNextChar();
+        } while (mChar.isDigit());
+
+    // If the current character is a full stop, then we should have 1+ digits if
+    // the number started with a full stop or 0+ digits otherwise
+
+    bool hasFractionalPart = mChar == FullStop;
+
+    if (hasFractionalPart) {
+        number += mChar;
+
+        getNextChar();
+
+        if (!firstCharIsDigit) {
+            // The first character was a full stop, so the next character must
+            // be a digit
+
+            if (mChar.isDigit()) {
+                number += mChar;
+
+                getNextChar();
+            } else {
+                // We didn't get a digit, so...
+
+                mToken.setString(number);
+
+                return;
+            }
+        }
+
+        // We must now look for 0+ digits
+
+        while (mChar.isDigit()) {
+            number += mChar;
+
+            getNextChar();
+        }
+    }
+
+    // If we are still dealing with a number, then the next character should be
+    // either "e" or "E". If it is not, then the error processing will depend on
+    // whether an exponent was needed or not...
+
+    bool hasExponentPart = (mChar == LowerCaseE) || (mChar == UpperCaseE);
+
+    if (hasExponentPart) {
+        // We got either "e" or "E"
+
+        number += mChar;
+
+        getNextChar();
+
+        // The next character can be "+" or "-"
+
+        if ((mChar == Plus) || (mChar == Minus)) {
+            // We got either "+" or "-"
+
+            number += mChar;
+
+            getNextChar();
+        }
+
+        // Now, we should have 1+ digits
+
+        if (mChar.isDigit()) {
+            // We got a digit, so add it and keep looking for more digits
+
+            number += mChar;
+
+            getNextChar();
+
+            while (mChar.isDigit()) {
+                number += mChar;
+
+                getNextChar();
+            }
+        } else {
+            // We didn't get a digit, so...
+
+            mToken.setString(number);
+
+            return;
+        }
+    }
+
+    // At this stage, we've got a number. The question is whether it is an
+    // integer value or a double value
+
+    if (hasFractionalPart || hasExponentPart)
+        // The number has a fractional part and/or an exponential part, so it is
+        // a double number
+
+        mToken.setSymbol(CompilerScannerToken::DoubleValue);
+    else
+        // The number has neither a fractional part nor an exponential part, so
+        // it is an integer number
+
+        mToken.setSymbol(CompilerScannerToken::IntegerValue);
+
+    // Update the token's string
+
+    mToken.setString(number);
+}
+
+//==============================================================================
+
 CompilerScannerToken CompilerScanner::token()
 {
     // Return the token
@@ -246,7 +394,9 @@ void CompilerScanner::getNextToken()
     //       them...
 
     if (mChar.isSpace())
-        while (getChar().isSpace());
+        do {
+            getNextChar();
+        } while (mChar.isSpace());
 
     // Initialise the token
 
@@ -259,8 +409,14 @@ void CompilerScanner::getNextToken()
         // to retrieve a word
 
         getWord();
+    } else if (mChar.isDigit() || (mChar == FullStop)) {
+        // The current character is a digit or a full stop, so we should try to
+        // retrieve a number
+
+        getNumber();
     } else {
-        // Not a word or a number, so it has to be a one- or two-character token
+        // Neither a word nor a number, so it has to be a one- or two-character
+        // token
 
         mToken.setString(mChar);
 
@@ -276,10 +432,12 @@ void CompilerScanner::getNextToken()
             mToken.setSymbol(CompilerScannerToken::ClosingCurlyBracket);
         else if (mChar == Comma)
             mToken.setSymbol(CompilerScannerToken::Comma);
+        else if (mChar == SemiColon)
+            mToken.setSymbol(CompilerScannerToken::SemiColon);
 
         // Get the next character
 
-        getChar();
+        getNextChar();
     }
 }
 

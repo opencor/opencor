@@ -34,8 +34,9 @@ public:
 
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
-        Comma,
-        Unknown, Identifier, Eof
+        Comma, SemiColon,
+        Return,
+        Unknown, Identifier, IntegerValue, DoubleValue, Eof
     };
 
     explicit CompilerScannerToken(const int pLine = 0, const int pColumn = 0);
@@ -81,9 +82,10 @@ private:
     int mColumn;
     CompilerScannerKeywords mKeywords;
 
-    QChar getChar();
+    void getNextChar();
 
     void getWord();
+    void getNumber();
 };
 
 //==============================================================================

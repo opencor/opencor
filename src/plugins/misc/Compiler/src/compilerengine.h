@@ -65,12 +65,16 @@ public:
     QStringList parameters() const;
     bool addParameter(const QString &pParameter);
 
+    double returnValue() const;
+    void setReturnValue(const double &pReturnValue);
+
 private:
     llvm::Function * mJitCode;
 
     Type mType;
     QString mName;
     QStringList mParameters;
+    double mReturnValue;
 };
 
 //==============================================================================
@@ -106,8 +110,6 @@ private:
                          CompilerEngineFunction &pFunction);
     bool parseEquations(CompilerScanner &pScanner,
                         CompilerEngineFunction &pFunction);
-    bool parseDoubleValue(CompilerScanner &pScanner,
-                          CompilerEngineFunction &pFunction);
     bool parseEquationRhs(CompilerScanner &pScanner,
                           CompilerEngineFunction &pFunction);
     bool parseReturn(CompilerScanner &pScanner,
