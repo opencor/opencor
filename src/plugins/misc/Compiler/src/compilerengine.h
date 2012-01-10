@@ -54,8 +54,8 @@ public:
 
     explicit CompilerEngineFunction();
 
-    llvm::Function * jitCode() const;
-    void setJitCode(llvm::Function *pJitCode);
+    llvm::Function * binaryCode() const;
+    void setBinaryCode(llvm::Function *pBinaryCode);
 
     Type type() const;
     void setType(const Type &pType);
@@ -66,16 +66,16 @@ public:
     QStringList parameters() const;
     bool addParameter(const QString &pParameter);
 
-    double returnValue() const;
-    void setReturnValue(const double &pReturnValue);
+    QString returnValue() const;
+    void setReturnValue(const QString &pReturnValue);
 
 private:
-    llvm::Function * mJitCode;
+    llvm::Function * mBinaryCode;
 
     Type mType;
     QString mName;
     QStringList mParameters;
-    double mReturnValue;
+    QString mReturnValue;
 };
 
 //==============================================================================

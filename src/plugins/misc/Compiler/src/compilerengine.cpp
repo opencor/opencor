@@ -73,7 +73,7 @@ int CompilerEngineIssue::column() const
 //==============================================================================
 
 CompilerEngineFunction::CompilerEngineFunction() :
-    mJitCode(0),
+    mBinaryCode(0),
     mType(Void),
     mName(QString()),
     mParameters(QStringList())
@@ -82,20 +82,20 @@ CompilerEngineFunction::CompilerEngineFunction() :
 
 //==============================================================================
 
-llvm::Function * CompilerEngineFunction::jitCode() const
+llvm::Function * CompilerEngineFunction::binaryCode() const
 {
-    // Return the function's JIT code
+    // Return the function's binary code
 
-    return mJitCode;
+    return mBinaryCode;
 }
 
 //==============================================================================
 
-void CompilerEngineFunction::setJitCode(llvm::Function *pJitCode)
+void CompilerEngineFunction::setBinaryCode(llvm::Function *pBinaryCode)
 {
-    // Set the function's JIT code
+    // Set the function's binary code
 
-    mJitCode = pJitCode;
+    mBinaryCode = pBinaryCode;
 }
 
 //==============================================================================
@@ -164,7 +164,7 @@ bool CompilerEngineFunction::addParameter(const QString &pParameter)
 
 //==============================================================================
 
-double CompilerEngineFunction::returnValue() const
+QString CompilerEngineFunction::returnValue() const
 {
     // Return the function's return value
 
@@ -173,7 +173,7 @@ double CompilerEngineFunction::returnValue() const
 
 //==============================================================================
 
-void CompilerEngineFunction::setReturnValue(const double &pReturnValue)
+void CompilerEngineFunction::setReturnValue(const QString &pReturnValue)
 {
     // Set the function's return value
 
@@ -263,9 +263,9 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
         mModule->dump();
         qDebug("---------------------------------------");
 
-        // Return the compiled function
+        // Return the function's binary code
 
-        return function.jitCode();
+        return function.binaryCode();
     } else {
         // The function wasn't properly parsed, so...
 
@@ -438,7 +438,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
             qDebug(QString("    - %1").arg(parameter).toLatin1().constData());
 
     if (pFunction.type() == CompilerEngineFunction::Double)
-        qDebug(QString("   Return value: %1").arg(QString::number(pFunction.returnValue())).toLatin1().constData());
+        qDebug(QString("   Return value: %1").arg(pFunction.returnValue()).toLatin1().constData());
 
 
 
@@ -526,8 +526,9 @@ bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
 
     // We must have 1+/0+ parameters in the case of a void/double function
 
-    if (parseParameter(pScanner, pFunction,
-                       pFunction.type() == CompilerEngineFunction::Void))
+    bool needAtLeastOneParameter = pFunction.type() == CompilerEngineFunction::Void;
+
+    if (parseParameter(pScanner, pFunction, needAtLeastOneParameter))
         // The first parameter was properly parsed, so look for other parameters
 
         // The current token must be "," if we are to have another parameter
@@ -546,9 +547,9 @@ bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
         }
     else
         // Something went wrong with the parsing of the parameter definition,
-        // so...
+        // but it should only be reported as an error if we expected a parameter
 
-        return false;
+        return !needAtLeastOneParameter;
 
     // Everything went fine, so...
 
@@ -587,7 +588,7 @@ bool CompilerEngine::parseEquationRhs(CompilerScanner &pScanner,
 //---GRY--- THE BELOW CODE IS JUST FOR TESTING PURPOSES...
 if (   (pScanner.token().symbol() == CompilerScannerToken::IntegerValue)
     || (pScanner.token().symbol() == CompilerScannerToken::DoubleValue)) {
-    pFunction.setReturnValue(pScanner.token().string().toDouble());
+    pFunction.setReturnValue(pScanner.token().string());
 } else {
     addIssue(pScanner.token(), "a number");
 
@@ -644,9 +645,84 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
 
 void CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 {
+/*---GRY---
+    // Generate some LLVM assembly code (i.e. intermediate representation or IR)
+    // based on the contents of the function
+
+    static QString indent = QString("  ");
+    QString assemblyCode = QString();
+
+    // Define the function
+
+    assemblyCode += "define";
+
     // Type of function
 
+    if (pFunction.type() == CompilerEngineFunction::Void)
+        assemblyCode += " void";
+    else
+        assemblyCode += " double";
+
+    // Name of the function
+
+    assemblyCode += " @"+pFunction.name();
+
+    // Parameters
+
+    QString parameters = QString();
+
+    foreach (const QString &parameter, pFunction.parameters()) {
+        // Add a separator first if we already have 1+ parameters
+
+        if (!parameters.isEmpty())
+            parameters += ", ";
+
+        // Add the parameter definition
+
+        parameters += "double* nocapture %%"+parameter;
+    }
+
+    assemblyCode += "("+parameters+")";
+
+    // Additional information for the function definition
+
+    assemblyCode += " nounwind uwtable readnone {\n";
+
+    // Mathematical statements
+
+//---GRY--- TO BE DONE...
+
+    // Return statement
+
+    if (pFunction.type() == CompilerEngineFunction::Void)
+        assemblyCode += indent+"ret void\n";
+    else
+        assemblyCode += indent+"ret double "+pFunction.returnValue()+"\n";
+
+    // End the function
+
+    assemblyCode += "}";
+
+    // The LLVM assembly code has been fully generated, so we can now get its
+    // corresponding LLVM JIT code
+
+qDebug("***************************************");
+qDebug(assemblyCode.toLatin1().constData());
+qDebug("***************************************");
+*/
+
+//    mModule->setDataLayout("e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128");
+//    mModule->setTargetTriple("x86_64-unknown-linux-gnu");
+
+    // Type of function (i.e. void or double) and type of parameters (i.e.
+    // always double*)
+
     std::vector<llvm::Type *> functionTypeArgs;
+    llvm::PointerType *parameterType = llvm::PointerType::get(llvm::Type::getDoubleTy(mModule->getContext()), 0);
+
+    for (int i = 0; i < pFunction.parameters().count(); ++i)
+         functionTypeArgs.push_back(parameterType);
+
     llvm::FunctionType *functionType;
 
     if (pFunction.type() == CompilerEngineFunction::Void)
@@ -656,18 +732,40 @@ void CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
         functionType = llvm::FunctionType::get(llvm::Type::getDoubleTy(mModule->getContext()),
                                                functionTypeArgs, false);
 
-    // Create the function
+    // Create the function itself
 
     llvm::Function *function = llvm::Function::Create(functionType,
                                                       llvm::GlobalValue::ExternalLinkage,
                                                       pFunction.name().toLatin1().constData(),
                                                       mModule);
 
+    // Set the parameters' and function's attributes
+
+    llvm::SmallVector<llvm::AttributeWithIndex, 4> functionAttributes;
+    llvm::AttributeWithIndex attributesWithIndex;
+
+    for (int i = 0; i < pFunction.parameters().count(); ++i) {
+        attributesWithIndex.Index = i+1;
+        attributesWithIndex.Attrs = llvm::Attribute::NoCapture;
+
+        functionAttributes.push_back(attributesWithIndex);
+    }
+
+    attributesWithIndex.Index = ~0U;   // Note: ~0U is the function's index
+    attributesWithIndex.Attrs =   llvm::Attribute::NoUnwind
+                                | llvm::Attribute::ReadNone
+                                | llvm::Attribute::UWTable;
+
+    functionAttributes.push_back(attributesWithIndex);
+
+    function->setAttributes(llvm::AttrListPtr::get(functionAttributes.begin(),
+                                                   functionAttributes.end()));
+
     //---GRY--- TO BE FINISHED...
 
-    // Set our function
+    // Set the binary code
 
-    pFunction.setJitCode(function);
+    pFunction.setBinaryCode(function);
 }
 
 //==============================================================================
