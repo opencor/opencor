@@ -55,6 +55,7 @@ public:
     explicit CompilerEngineFunction();
 
     llvm::Function * jitCode() const;
+    void setJitCode(llvm::Function *pJitCode);
 
     Type type() const;
     void setType(const Type &pType);

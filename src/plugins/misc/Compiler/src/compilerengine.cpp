@@ -10,6 +10,7 @@
 
 //==============================================================================
 
+#include "llvm/DerivedTypes.h"
 #include "llvm/LLVMContext.h"
 #include "llvm/Module.h"
 
@@ -86,6 +87,15 @@ llvm::Function * CompilerEngineFunction::jitCode() const
     // Return the function's JIT code
 
     return mJitCode;
+}
+
+//==============================================================================
+
+void CompilerEngineFunction::setJitCode(llvm::Function *pJitCode)
+{
+    // Set the function's JIT code
+
+    mJitCode = pJitCode;
 }
 
 //==============================================================================
@@ -574,6 +584,18 @@ bool CompilerEngine::parseEquationRhs(CompilerScanner &pScanner,
 
     //---GRY--- TO BE DONE...
 
+//---GRY--- THE BELOW CODE IS JUST FOR TESTING PURPOSES...
+if (   (pScanner.token().symbol() == CompilerScannerToken::IntegerValue)
+    || (pScanner.token().symbol() == CompilerScannerToken::DoubleValue)) {
+    pFunction.setReturnValue(pScanner.token().string().toDouble());
+} else {
+    addIssue(pScanner.token(), "a number");
+
+    return false;
+}
+
+pScanner.getNextToken();
+
     // Everything went fine, so...
 
     return true;
@@ -600,20 +622,8 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
 
     // Parse the equivalent of the RHS of an equation
 
-//---GRY---    if (!parseEquationRhs(pScanner, pFunction))
-//---GRY---        return false;
-
-//---GRY--- THE BELOW IS JUST FOR TESTING PURPOSES...
-if (   (pScanner.token().symbol() == CompilerScannerToken::IntegerValue)
-    || (pScanner.token().symbol() == CompilerScannerToken::DoubleValue)) {
-    pFunction.setReturnValue(pScanner.token().string().toDouble());
-} else {
-    addIssue(pScanner.token(), "a number");
-
-    return false;
-}
-
-pScanner.getNextToken();
+    if (!parseEquationRhs(pScanner, pFunction))
+        return false;
 
     // The current token must be ";"
 
@@ -634,7 +644,30 @@ pScanner.getNextToken();
 
 void CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 {
-    //---GRY--- TO BE DONE...
+    // Type of function
+
+    std::vector<llvm::Type *> functionTypeArgs;
+    llvm::FunctionType *functionType;
+
+    if (pFunction.type() == CompilerEngineFunction::Void)
+        functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(mModule->getContext()),
+                                               functionTypeArgs, false);
+    else
+        functionType = llvm::FunctionType::get(llvm::Type::getDoubleTy(mModule->getContext()),
+                                               functionTypeArgs, false);
+
+    // Create the function
+
+    llvm::Function *function = llvm::Function::Create(functionType,
+                                                      llvm::GlobalValue::ExternalLinkage,
+                                                      pFunction.name().toLatin1().constData(),
+                                                      mModule);
+
+    //---GRY--- TO BE FINISHED...
+
+    // Set our function
+
+    pFunction.setJitCode(function);
 }
 
 //==============================================================================
