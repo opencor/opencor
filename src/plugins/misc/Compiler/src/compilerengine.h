@@ -54,8 +54,8 @@ public:
 
     explicit CompilerEngineFunction();
 
-    llvm::Function * binaryCode() const;
-    void setBinaryCode(llvm::Function *pBinaryCode);
+    llvm::Function * bitcode() const;
+    void setBitcode(llvm::Function *pBitcode);
 
     Type type() const;
     void setType(const Type &pType);
@@ -70,7 +70,7 @@ public:
     void setReturnValue(const QString &pReturnValue);
 
 private:
-    llvm::Function * mBinaryCode;
+    llvm::Function * mBitcode;
 
     Type mType;
     QString mName;

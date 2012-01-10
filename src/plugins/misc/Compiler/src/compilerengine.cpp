@@ -73,7 +73,7 @@ int CompilerEngineIssue::column() const
 //==============================================================================
 
 CompilerEngineFunction::CompilerEngineFunction() :
-    mBinaryCode(0),
+    mBitcode(0),
     mType(Void),
     mName(QString()),
     mParameters(QStringList())
@@ -82,20 +82,20 @@ CompilerEngineFunction::CompilerEngineFunction() :
 
 //==============================================================================
 
-llvm::Function * CompilerEngineFunction::binaryCode() const
+llvm::Function * CompilerEngineFunction::bitcode() const
 {
-    // Return the function's binary code
+    // Return the function's bitcode
 
-    return mBinaryCode;
+    return mBitcode;
 }
 
 //==============================================================================
 
-void CompilerEngineFunction::setBinaryCode(llvm::Function *pBinaryCode)
+void CompilerEngineFunction::setBitcode(llvm::Function *pBitcode)
 {
-    // Set the function's binary code
+    // Set the function's bitcode
 
-    mBinaryCode = pBinaryCode;
+    mBitcode = pBitcode;
 }
 
 //==============================================================================
@@ -263,9 +263,9 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
         mModule->dump();
         qDebug("---------------------------------------");
 
-        // Return the function's binary code
+        // Return the function's bitcode
 
-        return function.binaryCode();
+        return function.bitcode();
     } else {
         // The function wasn't properly parsed, so...
 
@@ -763,9 +763,9 @@ qDebug("***************************************");
 
     //---GRY--- TO BE FINISHED...
 
-    // Set the binary code
+    // Set the function's bitcode
 
-    pFunction.setBinaryCode(function);
+    pFunction.setBitcode(function);
 }
 
 //==============================================================================
