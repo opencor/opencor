@@ -16,6 +16,7 @@
 //==============================================================================
 
 #include "llvm/Module.h"
+#include "llvm/ExecutionEngine/GenericValue.h"
 
 //==============================================================================
 
@@ -299,8 +300,8 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             Compiler::CompilerEngine compilerEngine;
 
-            llvm::Function *test = compilerEngine.addFunction("void test(double *pParam) {}");
-//            llvm::Function *test = compilerEngine.addFunction("double test() { return 123.456; }");
+//            llvm::Function *test = compilerEngine.addFunction("void test(double *pParam) {}");
+            llvm::Function *test = compilerEngine.addFunction("double test() { return 123.456; }");
 
             if (compilerEngine.issues().count()) {
                 // Something went wrong, so output the issue(s)
@@ -327,6 +328,19 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
                 mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                                 tr("the model could not be compiled")));
+            } else {
+                // Test the compiled function using LLVM's JIT
+
+                llvm::Function *function = compilerEngine.function("test");
+
+                if (function) {
+                    std::vector<llvm::GenericValue> noargs;
+                    llvm::GenericValue genericValue = compilerEngine.executionEngine()->runFunction(function, noargs);
+
+                    qDebug(QString("The 'test' function returned: %1").arg(QString::number(genericValue.DoubleVal)).toLatin1().constData());
+                } else {
+                    qDebug("The 'test' function doesn't exist...?!");
+                }
             }
 
             // Output the contents of our compiler's module so far

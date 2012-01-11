@@ -17,6 +17,7 @@
 //==============================================================================
 
 #include "llvm/Function.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
 
 //==============================================================================
 
@@ -92,13 +93,16 @@ public:
     ~CompilerEngine();
 
     llvm::Module * module();
+    llvm::ExecutionEngine * executionEngine();
 
     QList<CompilerEngineIssue> issues();
 
+    llvm::Function * function(const QString &pFunction);
     llvm::Function * addFunction(const QString &pFunction);
 
 private:
     llvm::Module *mModule;
+    llvm::ExecutionEngine *mExecutionEngine;
 
     QList<CompilerEngineIssue> mIssues;
 

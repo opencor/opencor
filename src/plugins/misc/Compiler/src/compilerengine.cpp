@@ -201,6 +201,7 @@ CompilerEngine::CompilerEngine()
 
     mModule = new llvm::Module(QString("Module #%1").arg(QString::number(++counter)).toLatin1().constData(),
                                llvm::getGlobalContext());
+    mExecutionEngine = llvm::EngineBuilder(mModule).create();
 }
 
 //==============================================================================
@@ -209,7 +210,9 @@ CompilerEngine::~CompilerEngine()
 {
     // Delete some internal objects
 
-    delete mModule;
+    delete mExecutionEngine;
+    // Note: we must NOT delete mModule, since it gets deleted when deleting
+    //       mExecutionEngine...
 }
 
 //==============================================================================
@@ -219,6 +222,15 @@ llvm::Module * CompilerEngine::module()
     // Return the compiler engine's module
 
     return mModule;
+}
+
+//==============================================================================
+
+llvm::ExecutionEngine * CompilerEngine::executionEngine()
+{
+    // Return the compiler engine's execution engine
+
+    return mExecutionEngine;
 }
 
 //==============================================================================
@@ -244,6 +256,15 @@ void CompilerEngine::addIssue(const CompilerScannerToken &pToken,
         mIssues.append(CompilerEngineIssue(pMessage,
                                            pToken.line(), pToken.column(),
                                            pExtraInformation));
+}
+
+//==============================================================================
+
+llvm::Function * CompilerEngine::function(const QString &pFunction)
+{
+    // Return the required function (or null if it doesn't exist)
+
+    return mModule->getFunction(pFunction.toLatin1().constData());
 }
 
 //==============================================================================
