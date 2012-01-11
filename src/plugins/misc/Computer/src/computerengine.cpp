@@ -444,29 +444,6 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
 
 
 
-    // Scan anything that remains
-    //---GRY--- THE BELOW CODE SHOULD DISAPPEAR ONCE OUR PARSER IS FULLY
-    //          IMPLEMENTED...
-
-    while (pScanner.token().symbol() != ComputerScannerToken::Eof) {
-        qDebug("---------------------------------------");
-        qDebug("Token:");
-        qDebug(QString("   Line: %1").arg(QString::number(pScanner.token().line())).toLatin1().constData());
-        qDebug(QString("   Column: %1").arg(QString::number(pScanner.token().column())).toLatin1().constData());
-        qDebug(QString("   Symbol: %1 [%2]").arg(pScanner.token().symbolAsString(), QString::number(pScanner.token().symbol())).toLatin1().constData());
-        qDebug(QString("   String: %1").arg(pScanner.token().string()).toLatin1().constData());
-
-        pScanner.getNextToken();
-    }
-
-
-
-
-
-
-
-
-
     qDebug("---------------------------------------");
     qDebug("Function details:");
 
@@ -610,10 +587,9 @@ bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
     // The EBNF grammar of a series of equations is as follows:
     //
     //   Equations     = Equation { Equation } ;
-    //   Equation      = Identifier "[" DigitSequence "]" "=" EquationRHS ;
-    //   DigitSequence = Digit | ( DigitSequence Digit ) ;
+    //   Equation      = Identifier "[" IntegerValue "]" "=" EquationRHS ;
 
-    //---GRY--- TO BE DONE...
+//---GRY--- TO BE DONE...
 
     // Everything went fine, so...
 
@@ -629,9 +605,9 @@ bool ComputerEngine::parseEquationRhs(ComputerScanner &pScanner,
     //
     //   EquationRHS = ...
 
-    //---GRY--- TO BE DONE...
+//---GRY--- TO BE DONE...
 
-//---GRY--- THE BELOW CODE IS JUST FOR TESTING PURPOSES...
+//---GRY--- THE BELOW CODE PARSES A NUMBER AND IS ONLY FOR TESTING PURPOSES...
 if (   (pScanner.token().symbol() == ComputerScannerToken::IntegerValue)
     || (pScanner.token().symbol() == ComputerScannerToken::DoubleValue)) {
     pFunction.setReturnValue(pScanner.token().string());

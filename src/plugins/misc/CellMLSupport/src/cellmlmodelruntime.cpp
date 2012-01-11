@@ -85,8 +85,6 @@ void CellmlModelRuntime::reset()
 {
     // Reset all of the runtime's properties
 
-//---GRY--- TO BE DONE...
-
     mModelType = Undefined;
 
     resetOdeCodeInformation();

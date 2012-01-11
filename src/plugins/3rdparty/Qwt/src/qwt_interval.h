@@ -25,7 +25,7 @@ class QWT_EXPORT QwtInterval
 {
 public:
     /*!
-      Flag indicating if a border is included or excluded 
+      Flag indicating if a border is included or excluded
       \sa setBorderFlags(), borderFlags()
     */
     enum BorderFlag
@@ -91,12 +91,13 @@ public:
     bool isValid() const;
 */
 //---GRY--- BEGIN
-//---GRY--- NOTE: TO ADD inline TO THE DEFINITION AVOIDS A WARNING THAT READS:
-//---GRY---       qwt_interval.h:277: warning: 'bool QwtInterval::isValid()
-//---GRY---       const' redeclared without dllimport attribute after being
-//---GRY---       referenced with dll linkage
-//---GRY---       http://comments.gmane.org/gmane.comp.graphics.qwt.general/3248
-     inline bool isValid() const;
+    // Note: to add 'inline' to the definition avoids a warning that reads:
+    //       qwt_interval.h:277: warning: 'bool QwtInterval::isValid() const'
+    //       redeclared without dllimport attribute after being referenced with
+    //       dll linkage
+    //       http://comments.gmane.org/gmane.comp.graphics.qwt.general/3248
+
+    inline bool isValid() const;
 //---GRY--- END
     bool isNull() const;
     void invalidate();
