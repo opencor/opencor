@@ -29,17 +29,20 @@ class COMPILER_EXPORT CompilerEngineIssue
 {
 public:
     explicit CompilerEngineIssue(const QString &pMessage,
-                                 const int &pLine = 0, const int &pColumn = 0);
+                                 const int &pLine = 0, const int &pColumn = 0,
+                                 const QString &pExtraInformation = QString());
 
     QString message() const;
     QString formattedMessage() const;
     int line() const;
     int column() const;
+    QString extraInformation() const;
 
 private:
     QString mMessage;
     int mLine;
     int mColumn;
+    QString mExtraInformation;
 };
 
 //==============================================================================
@@ -100,7 +103,8 @@ private:
     QList<CompilerEngineIssue> mIssues;
 
     void addIssue(const CompilerScannerToken &pToken, const QString &pMessage,
-                  const bool &pExpectedMessage = true);
+                  const bool &pExpectedMessage = true,
+                  const QString &pExtraInformation = QString());
 
     bool parseFunction(CompilerScanner &pScanner,
                        CompilerEngineFunction &pFunction);
@@ -116,7 +120,7 @@ private:
     bool parseReturn(CompilerScanner &pScanner,
                      CompilerEngineFunction &pFunction);
 
-    void compileFunction(CompilerEngineFunction &pFunction);
+    bool compileFunction(CompilerEngineFunction &pFunction);
 };
 
 //==============================================================================

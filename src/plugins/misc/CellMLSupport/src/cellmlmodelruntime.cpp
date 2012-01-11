@@ -15,6 +15,10 @@
 
 //==============================================================================
 
+#include "llvm/Module.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -309,14 +313,28 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                     qDebug("Some issues were found:");
 
                 foreach (const Compiler::CompilerEngineIssue &issue,
-                         compilerEngine.issues())
-                    qDebug(QString(" - Line %1, column %2: %3").arg(QString::number(issue.line()), QString::number(issue.column()), issue.formattedMessage()).toLatin1().constData());
+                         compilerEngine.issues()) {
+                    if (issue.line() && issue.column())
+                        qDebug(QString(" - Line %1, column %2: %3").arg(QString::number(issue.line()), QString::number(issue.column()), issue.formattedMessage()).toLatin1().constData());
+                    else
+                        qDebug(QString(" - %1").arg(issue.formattedMessage()).toLatin1().constData());
+
+                    if (!issue.extraInformation().isEmpty())
+                        qDebug(issue.extraInformation().toLatin1().constData());
+                }
 
                 qDebug("---------------------------------------");
 
                 mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                                 tr("the model could not be compiled")));
             }
+
+            // Output the contents of our compiler's module so far
+
+            qDebug("---------------------------------------");
+            qDebug("All generated code so far:");
+            compilerEngine.module()->dump();
+            qDebug("---------------------------------------");
         } else {
             // No ODE code information could be retrieved, so...
 

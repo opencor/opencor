@@ -28,10 +28,12 @@ namespace Compiler {
 //==============================================================================
 
 CompilerEngineIssue::CompilerEngineIssue(const QString &pMessage,
-                                         const int &pLine, const int &pColumn) :
+                                         const int &pLine, const int &pColumn,
+                                         const QString &pExtraInformation) :
     mMessage(pMessage),
     mLine(pLine),
-    mColumn(pColumn)
+    mColumn(pColumn),
+    mExtraInformation(pExtraInformation)
 {
 }
 
@@ -70,6 +72,15 @@ int CompilerEngineIssue::column() const
     // Return the issue's column
 
     return mColumn;
+}
+
+//==============================================================================
+
+QString CompilerEngineIssue::extraInformation() const
+{
+    // Return the issue's extra information
+
+    return mExtraInformation;
 }
 
 //==============================================================================
@@ -223,14 +234,16 @@ QList<CompilerEngineIssue> CompilerEngine::issues()
 
 void CompilerEngine::addIssue(const CompilerScannerToken &pToken,
                               const QString &pMessage,
-                              const bool &pExpectedMessage)
+                              const bool &pExpectedMessage,
+                              const QString &pExtraInformation)
 {
     if (pExpectedMessage)
         mIssues.append(CompilerEngineIssue(tr("%1 is expected, but '%2' was found instead").arg(pMessage, pToken.string()),
                                            pToken.line(), pToken.column()));
     else
         mIssues.append(CompilerEngineIssue(pMessage,
-                                           pToken.line(), pToken.column()));
+                                           pToken.line(), pToken.column(),
+                                           pExtraInformation));
 }
 
 //==============================================================================
@@ -254,16 +267,26 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
     // Parse the function
 
     if (parseFunction(scanner, function)) {
-        // The function was properly parsed, so we can compile it
+        // The function was properly parsed, so check that we don't already
+        //  have a function with the same name in our module
 
-        compileFunction(function);
+        if (mModule->getFunction(function.name().toLatin1().constData())) {
+            // A function with the same name already exists, so...
 
-        // Output the contents of the module so far
+            addIssue(CompilerScannerToken(),
+                     tr("there is already a function called '%1'").arg(function.name()),
+                     false);
 
-        qDebug("---------------------------------------");
-        qDebug("All generated code so far:");
-        mModule->dump();
-        qDebug("---------------------------------------");
+            return 0;
+        }
+
+        // No function with the same already exists, so we can try to compile
+        // the function
+
+        if (!compileFunction(function))
+            // The function couldn't be compiled, so...
+
+            return 0;
 
         // Return the function's IR code
 
@@ -645,7 +668,7 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
 
 //==============================================================================
 
-void CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
+bool CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 {
     // Generate some LLVM assembly code based on the contents of the function
 
@@ -703,29 +726,58 @@ void CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 
     assemblyCode += "}";
 
-    // Parse the function's assembly code and generate some IR code that gets
-    // added to our module
+    // Now that we are done generating some LLVM assembly code for the function,
+    // we can parse that code and have LLVM generate some IR code that will get
+    // automatically added to our module
 
-    qDebug(QString("   Assembly:\n%1").arg(assemblyCode).toLatin1().constData());
+    QString originalAssemblyCode = QString(assemblyCode);
+    // Note: the above is required since we must replace '%' with '\%' prior to
+    //       having LLVM parse the assembly code, yet we need to keep a trace of
+    //       the original assembly code (in case the parsing goes wrong), so...
 
-    llvm::SMDiagnostic error;
+    llvm::SMDiagnostic parseError;
     llvm::ParseAssemblyString(assemblyCode.replace("%%", "\%").toLatin1().constData(),
-                              mModule, error, llvm::getGlobalContext());
+                              mModule, parseError, llvm::getGlobalContext());
 
-    if (error.getMessage().size()) {
-        qDebug("   ERROR:");
-        qDebug(QString("      Message: %1").arg(QString::fromStdString(error.getMessage()).remove("error: ")).toLatin1().constData());
-        qDebug(QString("      Line: %1").arg(QString::number(error.getLineNo())).toLatin1().constData());
-        qDebug(QString("      Column: %1").arg(QString::number(error.getColumnNo())).toLatin1().constData());
-    }
+    if (parseError.getMessage().size())
+        addIssue(CompilerScannerToken(parseError.getLineNo(), parseError.getColumnNo()),
+                 tr("the LLVM assembly code could not be parsed: %1").arg(QString::fromStdString(parseError.getMessage()).remove("error: ")),
+                 false, originalAssemblyCode);
 
-    // Retrieve the function which assembly code we have just parsed
+    // Try to retrieve the function which assembly code we have just parsed
 
     llvm::Function *function = mModule->getFunction(pFunction.name().toLatin1().constData());
 
-    // Set the function's IR code
+    if (function) {
+        // The function could be retrieved, but it should be removed in case an
+        // error of sorts occurred during the compilation
 
-    pFunction.setIrCode(function);
+        if (!mIssues.isEmpty()) {
+            // An error occurred during the compilation of the function, so...
+
+            function->eraseFromParent();
+
+            return false;
+        }
+
+        // Set the function's IR code
+
+        pFunction.setIrCode(function);
+
+        // Everything went fine, so...
+
+        return true;
+    } else {
+        // The function couldn't be retrieved, so add an issue but only if no
+        // error occurred during the compilation
+
+        if (mIssues.isEmpty())
+            addIssue(CompilerScannerToken(),
+                     tr("the function '%1' could not be found").arg(pFunction.name()),
+                     false);
+
+        return false;
+    }
 }
 
 //==============================================================================

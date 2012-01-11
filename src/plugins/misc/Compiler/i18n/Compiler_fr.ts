@@ -51,5 +51,17 @@
         <source>&apos;;&apos;</source>
         <translation></translation>
     </message>
+    <message>
+        <source>there is already a function called &apos;%1&apos;</source>
+        <translation>il y a déjà une fonction qui s&apos;appelle &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>the LLVM assembly code could not be parsed: %1</source>
+        <translation>le code assembleur LLVM n&apos;a pas pu être analysé : %1</translation>
+    </message>
+    <message>
+        <source>the function &apos;%1&apos; could not be found</source>
+        <translation>La fonction &apos;%1&apos; n&apos;a pas pu être trouvée</translation>
+    </message>
 </context>
 </TS>
