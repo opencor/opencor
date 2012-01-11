@@ -1,14 +1,14 @@
 //==============================================================================
-// Compiler engine class
+// Computer engine class
 //==============================================================================
 
-#ifndef COMPILERENGINE_H
-#define COMPILERENGINE_H
+#ifndef COMPUTERENGINE_H
+#define COMPUTERENGINE_H
 
 //==============================================================================
 
-#include "compilerglobal.h"
-#include "compilerscanner.h"
+#include "computerglobal.h"
+#include "computerscanner.h"
 
 //==============================================================================
 
@@ -22,14 +22,14 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace Compiler {
+namespace Computer {
 
 //==============================================================================
 
-class COMPILER_EXPORT CompilerEngineIssue
+class COMPUTER_EXPORT ComputerEngineIssue
 {
 public:
-    explicit CompilerEngineIssue(const QString &pMessage,
+    explicit ComputerEngineIssue(const QString &pMessage,
                                  const int &pLine = 0, const int &pColumn = 0,
                                  const QString &pExtraInformation = QString());
 
@@ -48,7 +48,7 @@ private:
 
 //==============================================================================
 
-class CompilerEngineFunction
+class ComputerEngineFunction
 {
 public:
     enum Type {
@@ -56,7 +56,7 @@ public:
         Double
     };
 
-    explicit CompilerEngineFunction();
+    explicit ComputerEngineFunction();
 
     llvm::Function * irCode() const;
     void setIrCode(llvm::Function *pIrCode);
@@ -84,18 +84,18 @@ private:
 
 //==============================================================================
 
-class COMPILER_EXPORT CompilerEngine : public QObject
+class COMPUTER_EXPORT ComputerEngine : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit CompilerEngine();
-    ~CompilerEngine();
+    explicit ComputerEngine();
+    ~ComputerEngine();
 
     llvm::Module * module();
     llvm::ExecutionEngine * executionEngine();
 
-    QList<CompilerEngineIssue> issues();
+    QList<ComputerEngineIssue> issues();
 
     llvm::Function * function(const QString &pFunction);
     llvm::Function * addFunction(const QString &pFunction);
@@ -104,32 +104,32 @@ private:
     llvm::Module *mModule;
     llvm::ExecutionEngine *mExecutionEngine;
 
-    QList<CompilerEngineIssue> mIssues;
+    QList<ComputerEngineIssue> mIssues;
 
-    void addIssue(const CompilerScannerToken &pToken, const QString &pMessage,
+    void addIssue(const ComputerScannerToken &pToken, const QString &pMessage,
                   const bool &pExpectedMessage = true,
                   const QString &pExtraInformation = QString());
 
-    bool parseFunction(CompilerScanner &pScanner,
-                       CompilerEngineFunction &pFunction);
-    bool parseParameter(CompilerScanner &pScanner,
-                        CompilerEngineFunction &pFunction,
+    bool parseFunction(ComputerScanner &pScanner,
+                       ComputerEngineFunction &pFunction);
+    bool parseParameter(ComputerScanner &pScanner,
+                        ComputerEngineFunction &pFunction,
                         const bool &pNeeded = true);
-    bool parseParameters(CompilerScanner &pScanner,
-                         CompilerEngineFunction &pFunction);
-    bool parseEquations(CompilerScanner &pScanner,
-                        CompilerEngineFunction &pFunction);
-    bool parseEquationRhs(CompilerScanner &pScanner,
-                          CompilerEngineFunction &pFunction);
-    bool parseReturn(CompilerScanner &pScanner,
-                     CompilerEngineFunction &pFunction);
+    bool parseParameters(ComputerScanner &pScanner,
+                         ComputerEngineFunction &pFunction);
+    bool parseEquations(ComputerScanner &pScanner,
+                        ComputerEngineFunction &pFunction);
+    bool parseEquationRhs(ComputerScanner &pScanner,
+                          ComputerEngineFunction &pFunction);
+    bool parseReturn(ComputerScanner &pScanner,
+                     ComputerEngineFunction &pFunction);
 
-    bool compileFunction(CompilerEngineFunction &pFunction);
+    bool compileFunction(ComputerEngineFunction &pFunction);
 };
 
 //==============================================================================
 
-}   // namespace Compiler
+}   // namespace Computer
 }   // namespace OpenCOR
 
 //==============================================================================

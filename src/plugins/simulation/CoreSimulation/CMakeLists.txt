@@ -25,7 +25,7 @@ ADD_PLUGIN(CoreSimulation
     OPENCOR_DEPENDENCIES
         CellML
         CellMLSupport
-        Compiler
+        Computer
         Core
         CVODE
         IDA

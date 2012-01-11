@@ -1,13 +1,13 @@
 //==============================================================================
-// Compiler scanner class
+// Computer scanner class
 //==============================================================================
 
-#include "compilerscanner.h"
+#include "computerscanner.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Compiler {
+namespace Computer {
 
 //==============================================================================
 
@@ -27,7 +27,7 @@ static const QChar UpperCaseE          = QChar('E');
 
 //==============================================================================
 
-CompilerScannerToken::CompilerScannerToken(const int pLine, const int pColumn) :
+ComputerScannerToken::ComputerScannerToken(const int pLine, const int pColumn) :
     mLine(pLine),
     mColumn(pColumn),
     mSymbol(Eof),
@@ -37,7 +37,7 @@ CompilerScannerToken::CompilerScannerToken(const int pLine, const int pColumn) :
 
 //==============================================================================
 
-int CompilerScannerToken::line() const
+int ComputerScannerToken::line() const
 {
     // Return the token's line
 
@@ -46,7 +46,7 @@ int CompilerScannerToken::line() const
 
 //==============================================================================
 
-int CompilerScannerToken::column() const
+int ComputerScannerToken::column() const
 {
     // Return the token's column
 
@@ -55,7 +55,7 @@ int CompilerScannerToken::column() const
 
 //==============================================================================
 
-CompilerScannerToken::Symbol CompilerScannerToken::symbol() const
+ComputerScannerToken::Symbol ComputerScannerToken::symbol() const
 {
     // Return the token's symbol
 
@@ -64,7 +64,7 @@ CompilerScannerToken::Symbol CompilerScannerToken::symbol() const
 
 //==============================================================================
 
-QString CompilerScannerToken::symbolAsString() const
+QString ComputerScannerToken::symbolAsString() const
 {
     // Return the token's symbol as a string
 
@@ -106,7 +106,7 @@ QString CompilerScannerToken::symbolAsString() const
 
 //==============================================================================
 
-void CompilerScannerToken::setSymbol(const Symbol &pSymbol)
+void ComputerScannerToken::setSymbol(const Symbol &pSymbol)
 {
     // Set the token's symbol
 
@@ -115,7 +115,7 @@ void CompilerScannerToken::setSymbol(const Symbol &pSymbol)
 
 //==============================================================================
 
-QString CompilerScannerToken::string() const
+QString ComputerScannerToken::string() const
 {
     // Return the token's string
 
@@ -124,7 +124,7 @@ QString CompilerScannerToken::string() const
 
 //==============================================================================
 
-void CompilerScannerToken::setString(const QString &pString)
+void ComputerScannerToken::setString(const QString &pString)
 {
     // Set the token's string
 
@@ -133,7 +133,7 @@ void CompilerScannerToken::setString(const QString &pString)
 
 //==============================================================================
 
-CompilerScanner::CompilerScanner(const QString &pInput) :
+ComputerScanner::ComputerScanner(const QString &pInput) :
     mInput(pInput),
     mPosition(0),
     mLastPosition(pInput.length()),
@@ -144,10 +144,10 @@ CompilerScanner::CompilerScanner(const QString &pInput) :
 {
     // Keywords for our small C mathematical grammar
 
-    mKeywords.insert("void", CompilerScannerToken::Void);
-    mKeywords.insert("double", CompilerScannerToken::Double);
+    mKeywords.insert("void", ComputerScannerToken::Void);
+    mKeywords.insert("double", ComputerScannerToken::Double);
 
-    mKeywords.insert("return", CompilerScannerToken::Return);
+    mKeywords.insert("return", ComputerScannerToken::Return);
 
     // Get the first token
 
@@ -156,7 +156,7 @@ CompilerScanner::CompilerScanner(const QString &pInput) :
 
 //==============================================================================
 
-void CompilerScanner::getNextChar()
+void ComputerScanner::getNextChar()
 {
     if (mPosition == mLastPosition) {
        // End of the input, so return an empty character
@@ -192,7 +192,7 @@ void CompilerScanner::getNextChar()
 
 //==============================================================================
 
-void CompilerScanner::getWord()
+void ComputerScanner::getWord()
 {
     // Retrieve a word which EBNF grammar is as follows:
     //
@@ -219,7 +219,7 @@ void CompilerScanner::getWord()
 
     // Check whether the word is a known keyword
 
-    CompilerScannerKeywords::const_iterator keyword = mKeywords.find(word);
+    ComputerScannerKeywords::const_iterator keyword = mKeywords.find(word);
 
     if (keyword != mKeywords.end()) {
         // The word we scanned is a known keyword, so retrieve its corresponding
@@ -237,18 +237,18 @@ void CompilerScanner::getWord()
             // The word we scanned only contains underscores, so we are dealing
             // with an unknown symbol
 
-            mToken.setSymbol(CompilerScannerToken::Unknown);
+            mToken.setSymbol(ComputerScannerToken::Unknown);
         else
             // The word we scanned doesn't only contain underscores, so we are
             // dealing with an identifier
 
-            mToken.setSymbol(CompilerScannerToken::Identifier);
+            mToken.setSymbol(ComputerScannerToken::Identifier);
     }
 }
 
 //==============================================================================
 
-void CompilerScanner::getNumber()
+void ComputerScanner::getNumber()
 {
     // Retrieve a number which EBNF grammar is as follows:
     //
@@ -258,7 +258,7 @@ void CompilerScanner::getNumber()
 
     // By default, we assume that we have got an unknown token
 
-    mToken.setSymbol(CompilerScannerToken::Unknown);
+    mToken.setSymbol(ComputerScannerToken::Unknown);
 
     // Check whether we came here with a digit
 
@@ -363,12 +363,12 @@ void CompilerScanner::getNumber()
         // The number has a fractional part and/or an exponential part, so it is
         // a double number
 
-        mToken.setSymbol(CompilerScannerToken::DoubleValue);
+        mToken.setSymbol(ComputerScannerToken::DoubleValue);
     else
         // The number has neither a fractional part nor an exponential part, so
         // it is an integer number
 
-        mToken.setSymbol(CompilerScannerToken::IntegerValue);
+        mToken.setSymbol(ComputerScannerToken::IntegerValue);
 
     // Update the token's string
 
@@ -377,7 +377,7 @@ void CompilerScanner::getNumber()
 
 //==============================================================================
 
-CompilerScannerToken CompilerScanner::token()
+ComputerScannerToken ComputerScanner::token()
 {
     // Return the token
 
@@ -386,7 +386,7 @@ CompilerScannerToken CompilerScanner::token()
 
 //==============================================================================
 
-void CompilerScanner::getNextToken()
+void ComputerScanner::getNextToken()
 {
     // Skip spaces of all sorts
     // Note: we must test the current character first before getting a new
@@ -400,7 +400,7 @@ void CompilerScanner::getNextToken()
 
     // Initialise the token
 
-    mToken = CompilerScannerToken(mLine, mColumn);
+    mToken = ComputerScannerToken(mLine, mColumn);
 
     // Check the type of the current character
 
@@ -421,19 +421,19 @@ void CompilerScanner::getNextToken()
         mToken.setString(mChar);
 
         if (mChar == Times)
-            mToken.setSymbol(CompilerScannerToken::Times);
+            mToken.setSymbol(ComputerScannerToken::Times);
         else if (mChar == OpeningBracket)
-            mToken.setSymbol(CompilerScannerToken::OpeningBracket);
+            mToken.setSymbol(ComputerScannerToken::OpeningBracket);
         else if (mChar == ClosingBracket)
-            mToken.setSymbol(CompilerScannerToken::ClosingBracket);
+            mToken.setSymbol(ComputerScannerToken::ClosingBracket);
         else if (mChar == OpeningCurlyBracket)
-            mToken.setSymbol(CompilerScannerToken::OpeningCurlyBracket);
+            mToken.setSymbol(ComputerScannerToken::OpeningCurlyBracket);
         else if (mChar == ClosingCurlyBracket)
-            mToken.setSymbol(CompilerScannerToken::ClosingCurlyBracket);
+            mToken.setSymbol(ComputerScannerToken::ClosingCurlyBracket);
         else if (mChar == Comma)
-            mToken.setSymbol(CompilerScannerToken::Comma);
+            mToken.setSymbol(ComputerScannerToken::Comma);
         else if (mChar == SemiColon)
-            mToken.setSymbol(CompilerScannerToken::SemiColon);
+            mToken.setSymbol(ComputerScannerToken::SemiColon);
 
         // Get the next character
 
@@ -443,7 +443,7 @@ void CompilerScanner::getNextToken()
 
 //==============================================================================
 
-}   // namespace Compiler
+}   // namespace Computer
 }   // namespace OpenCOR
 
 //==============================================================================

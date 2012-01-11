@@ -3,7 +3,7 @@
 //==============================================================================
 
 #include "cellmlmodelruntime.h"
-#include "compilerengine.h"
+#include "computerengine.h"
 
 //==============================================================================
 
@@ -296,25 +296,25 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 qDebug("---------------------------------------");
             }
 
-            // Get some binary code using the Compiler plugin
+            // Get some binary code using the Computer plugin
 
-            Compiler::CompilerEngine compilerEngine;
+            Computer::ComputerEngine computerEngine;
 
-//            llvm::Function *test = compilerEngine.addFunction("void test(double *pParam) {}");
-            llvm::Function *test = compilerEngine.addFunction("double test() { return 123.456; }");
+//            llvm::Function *test = computerEngine.addFunction("void test(double *pParam) {}");
+            llvm::Function *test = computerEngine.addFunction("double test() { return 123.456; }");
 
-            if (compilerEngine.issues().count()) {
+            if (computerEngine.issues().count()) {
                 // Something went wrong, so output the issue(s)
 
                 qDebug("---------------------------------------");
 
-                if (compilerEngine.issues().count() == 1)
+                if (computerEngine.issues().count() == 1)
                     qDebug("An issue was found:");
                 else
                     qDebug("Some issues were found:");
 
-                foreach (const Compiler::CompilerEngineIssue &issue,
-                         compilerEngine.issues()) {
+                foreach (const Computer::ComputerEngineIssue &issue,
+                         computerEngine.issues()) {
                     if (issue.line() && issue.column())
                         qDebug(QString(" - Line %1, column %2: %3").arg(QString::number(issue.line()), QString::number(issue.column()), issue.formattedMessage()).toLatin1().constData());
                     else
@@ -331,11 +331,11 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             } else {
                 // Test the compiled function using LLVM's JIT
 
-                llvm::Function *function = compilerEngine.function("test");
+                llvm::Function *function = computerEngine.function("test");
 
                 if (function) {
                     std::vector<llvm::GenericValue> noargs;
-                    llvm::GenericValue genericValue = compilerEngine.executionEngine()->runFunction(function, noargs);
+                    llvm::GenericValue genericValue = computerEngine.executionEngine()->runFunction(function, noargs);
 
                     qDebug(QString("The 'test' function returned: %1").arg(QString::number(genericValue.DoubleVal)).toLatin1().constData());
                 } else {
@@ -343,11 +343,11 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 }
             }
 
-            // Output the contents of our compiler's module so far
+            // Output the contents of our computer's module so far
 
             qDebug("---------------------------------------");
             qDebug("All generated code so far:");
-            compilerEngine.module()->dump();
+            computerEngine.module()->dump();
             qDebug("---------------------------------------");
         } else {
             // No ODE code information could be retrieved, so...

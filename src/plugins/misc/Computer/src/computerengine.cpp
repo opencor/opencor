@@ -1,12 +1,12 @@
 //==============================================================================
-// Compiler engine class
+// Computer engine class
 //==============================================================================
-// The compiler engine consists of a reduced ANSI-C parser/scanner, e.g. see
+// The computer engine includes a reduced ANSI-C parser/scanner, e.g. see
 //     http://www.lysator.liu.se/c/ANSI-C-grammar-y.html
 // and http://www.lysator.liu.se/c/ANSI-C-grammar-l.html
 //==============================================================================
 
-#include "compilerengine.h"
+#include "computerengine.h"
 
 //==============================================================================
 
@@ -23,11 +23,11 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace Compiler {
+namespace Computer {
 
 //==============================================================================
 
-CompilerEngineIssue::CompilerEngineIssue(const QString &pMessage,
+ComputerEngineIssue::ComputerEngineIssue(const QString &pMessage,
                                          const int &pLine, const int &pColumn,
                                          const QString &pExtraInformation) :
     mMessage(pMessage),
@@ -39,7 +39,7 @@ CompilerEngineIssue::CompilerEngineIssue(const QString &pMessage,
 
 //==============================================================================
 
-QString CompilerEngineIssue::message() const
+QString ComputerEngineIssue::message() const
 {
     // Return the issue's message
 
@@ -48,7 +48,7 @@ QString CompilerEngineIssue::message() const
 
 //==============================================================================
 
-QString CompilerEngineIssue::formattedMessage() const
+QString ComputerEngineIssue::formattedMessage() const
 {
     // Return the issue's message fully formatted (i.e. the beginning of the
     // message is capitalised and its end consists of a full stop)
@@ -58,7 +58,7 @@ QString CompilerEngineIssue::formattedMessage() const
 
 //==============================================================================
 
-int CompilerEngineIssue::line() const
+int ComputerEngineIssue::line() const
 {
     // Return the issue's line
 
@@ -67,7 +67,7 @@ int CompilerEngineIssue::line() const
 
 //==============================================================================
 
-int CompilerEngineIssue::column() const
+int ComputerEngineIssue::column() const
 {
     // Return the issue's column
 
@@ -76,7 +76,7 @@ int CompilerEngineIssue::column() const
 
 //==============================================================================
 
-QString CompilerEngineIssue::extraInformation() const
+QString ComputerEngineIssue::extraInformation() const
 {
     // Return the issue's extra information
 
@@ -85,7 +85,7 @@ QString CompilerEngineIssue::extraInformation() const
 
 //==============================================================================
 
-CompilerEngineFunction::CompilerEngineFunction() :
+ComputerEngineFunction::ComputerEngineFunction() :
     mIrCode(0),
     mType(Void),
     mName(QString()),
@@ -95,7 +95,7 @@ CompilerEngineFunction::CompilerEngineFunction() :
 
 //==============================================================================
 
-llvm::Function * CompilerEngineFunction::irCode() const
+llvm::Function * ComputerEngineFunction::irCode() const
 {
     // Return the function's IR code
 
@@ -104,7 +104,7 @@ llvm::Function * CompilerEngineFunction::irCode() const
 
 //==============================================================================
 
-void CompilerEngineFunction::setIrCode(llvm::Function *pIrCode)
+void ComputerEngineFunction::setIrCode(llvm::Function *pIrCode)
 {
     // Set the function's IR code
 
@@ -113,7 +113,7 @@ void CompilerEngineFunction::setIrCode(llvm::Function *pIrCode)
 
 //==============================================================================
 
-CompilerEngineFunction::Type CompilerEngineFunction::type() const
+ComputerEngineFunction::Type ComputerEngineFunction::type() const
 {
     // Return the function's type
 
@@ -122,7 +122,7 @@ CompilerEngineFunction::Type CompilerEngineFunction::type() const
 
 //==============================================================================
 
-void CompilerEngineFunction::setType(const Type &pType)
+void ComputerEngineFunction::setType(const Type &pType)
 {
     // Set the function's type
 
@@ -131,7 +131,7 @@ void CompilerEngineFunction::setType(const Type &pType)
 
 //==============================================================================
 
-QString CompilerEngineFunction::name() const
+QString ComputerEngineFunction::name() const
 {
     // Return the function's name
 
@@ -140,7 +140,7 @@ QString CompilerEngineFunction::name() const
 
 //==============================================================================
 
-void CompilerEngineFunction::setName(const QString &pName)
+void ComputerEngineFunction::setName(const QString &pName)
 {
     // Set the function's name
 
@@ -149,7 +149,7 @@ void CompilerEngineFunction::setName(const QString &pName)
 
 //==============================================================================
 
-QStringList CompilerEngineFunction::parameters() const
+QStringList ComputerEngineFunction::parameters() const
 {
     // Return the function's parameters
 
@@ -158,7 +158,7 @@ QStringList CompilerEngineFunction::parameters() const
 
 //==============================================================================
 
-bool CompilerEngineFunction::addParameter(const QString &pParameter)
+bool ComputerEngineFunction::addParameter(const QString &pParameter)
 {
     // Add a parameter to our list, but only if it isn't already there
 
@@ -177,7 +177,7 @@ bool CompilerEngineFunction::addParameter(const QString &pParameter)
 
 //==============================================================================
 
-QString CompilerEngineFunction::returnValue() const
+QString ComputerEngineFunction::returnValue() const
 {
     // Return the function's return value
 
@@ -186,7 +186,7 @@ QString CompilerEngineFunction::returnValue() const
 
 //==============================================================================
 
-void CompilerEngineFunction::setReturnValue(const QString &pReturnValue)
+void ComputerEngineFunction::setReturnValue(const QString &pReturnValue)
 {
     // Set the function's return value
 
@@ -195,7 +195,7 @@ void CompilerEngineFunction::setReturnValue(const QString &pReturnValue)
 
 //==============================================================================
 
-CompilerEngine::CompilerEngine()
+ComputerEngine::ComputerEngine()
 {
     static int counter = 0;
 
@@ -206,7 +206,7 @@ CompilerEngine::CompilerEngine()
 
 //==============================================================================
 
-CompilerEngine::~CompilerEngine()
+ComputerEngine::~ComputerEngine()
 {
     // Delete some internal objects
 
@@ -217,50 +217,50 @@ CompilerEngine::~CompilerEngine()
 
 //==============================================================================
 
-llvm::Module * CompilerEngine::module()
+llvm::Module * ComputerEngine::module()
 {
-    // Return the compiler engine's module
+    // Return the computer engine's module
 
     return mModule;
 }
 
 //==============================================================================
 
-llvm::ExecutionEngine * CompilerEngine::executionEngine()
+llvm::ExecutionEngine * ComputerEngine::executionEngine()
 {
-    // Return the compiler engine's execution engine
+    // Return the computer engine's execution engine
 
     return mExecutionEngine;
 }
 
 //==============================================================================
 
-QList<CompilerEngineIssue> CompilerEngine::issues()
+QList<ComputerEngineIssue> ComputerEngine::issues()
 {
-    // Return the compiler's issue(s)
+    // Return the computer's issue(s)
 
     return mIssues;
 }
 
 //==============================================================================
 
-void CompilerEngine::addIssue(const CompilerScannerToken &pToken,
+void ComputerEngine::addIssue(const ComputerScannerToken &pToken,
                               const QString &pMessage,
                               const bool &pExpectedMessage,
                               const QString &pExtraInformation)
 {
     if (pExpectedMessage)
-        mIssues.append(CompilerEngineIssue(tr("%1 is expected, but '%2' was found instead").arg(pMessage, pToken.string()),
+        mIssues.append(ComputerEngineIssue(tr("%1 is expected, but '%2' was found instead").arg(pMessage, pToken.string()),
                                            pToken.line(), pToken.column()));
     else
-        mIssues.append(CompilerEngineIssue(pMessage,
+        mIssues.append(ComputerEngineIssue(pMessage,
                                            pToken.line(), pToken.column(),
                                            pExtraInformation));
 }
 
 //==============================================================================
 
-llvm::Function * CompilerEngine::function(const QString &pFunction)
+llvm::Function * ComputerEngine::function(const QString &pFunction)
 {
     // Return the required function (or null if it doesn't exist)
 
@@ -269,7 +269,7 @@ llvm::Function * CompilerEngine::function(const QString &pFunction)
 
 //==============================================================================
 
-llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
+llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 {
     qDebug("---------------------------------------");
     qDebug("Compilation of...");
@@ -282,8 +282,8 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
 
     // Get a scanner for our function
 
-    CompilerScanner scanner(pFunction);
-    CompilerEngineFunction function;
+    ComputerScanner scanner(pFunction);
+    ComputerEngineFunction function;
 
     // Parse the function
 
@@ -294,7 +294,7 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
         if (mModule->getFunction(function.name().toLatin1().constData())) {
             // A function with the same name already exists, so...
 
-            addIssue(CompilerScannerToken(),
+            addIssue(ComputerScannerToken(),
                      tr("there is already a function called '%1'").arg(function.name()),
                      false);
 
@@ -321,8 +321,8 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
 
 //==============================================================================
 
-bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
-                                   CompilerEngineFunction &pFunction)
+bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
+                                   ComputerEngineFunction &pFunction)
 {
     // The EBNF grammar of a function is as follows:
     //
@@ -338,14 +338,14 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
     // Retrieve the type of function that we are dealing with, i.e. a void or a
     // double function
 
-    if (pScanner.token().symbol() == CompilerScannerToken::Void) {
+    if (pScanner.token().symbol() == ComputerScannerToken::Void) {
         // We are dealing with a void function
 
-        pFunction.setType(CompilerEngineFunction::Void);
-    } else if (pScanner.token().symbol() == CompilerScannerToken::Double) {
+        pFunction.setType(ComputerEngineFunction::Void);
+    } else if (pScanner.token().symbol() == ComputerScannerToken::Double) {
         // We are dealing with a double function
 
-        pFunction.setType(CompilerEngineFunction::Double);
+        pFunction.setType(ComputerEngineFunction::Double);
     } else {
         // We are dealing with neither a void nor a double function, so...
 
@@ -358,7 +358,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
     // Retrieve the name of the function
 
-    if (pScanner.token().symbol() == CompilerScannerToken::Identifier) {
+    if (pScanner.token().symbol() == ComputerScannerToken::Identifier) {
         // We got an identifier, so set the name of the function
 
         pFunction.setName(pScanner.token().string());
@@ -374,7 +374,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
     // The current token must be an opening bracket
 
-    if (pScanner.token().symbol() != CompilerScannerToken::OpeningBracket) {
+    if (pScanner.token().symbol() != ComputerScannerToken::OpeningBracket) {
         addIssue(pScanner.token(), tr("'('"));
 
         return false;
@@ -392,7 +392,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
     // The current token must be a closing bracket
 
-    if (pScanner.token().symbol() != CompilerScannerToken::ClosingBracket) {
+    if (pScanner.token().symbol() != ComputerScannerToken::ClosingBracket) {
         addIssue(pScanner.token(), tr("')'"));
 
         return false;
@@ -402,7 +402,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
     // The current token must be an opening curly bracket
 
-    if (pScanner.token().symbol() != CompilerScannerToken::OpeningCurlyBracket) {
+    if (pScanner.token().symbol() != ComputerScannerToken::OpeningCurlyBracket) {
         addIssue(pScanner.token(), tr("'{'"));
 
         return false;
@@ -420,7 +420,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
     // Parse the return statement, but only in the case of a double function
 
-    if (   (pFunction.type() == CompilerEngineFunction::Double)
+    if (   (pFunction.type() == ComputerEngineFunction::Double)
         && !parseReturn(pScanner, pFunction))
         // Something went wrong with the parsing of the return statement, so...
 
@@ -428,7 +428,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
     // The current token must be a closing curly bracket
 
-    if (pScanner.token().symbol() != CompilerScannerToken::ClosingCurlyBracket) {
+    if (pScanner.token().symbol() != ComputerScannerToken::ClosingCurlyBracket) {
         addIssue(pScanner.token(), tr("'}'"));
 
         return false;
@@ -448,7 +448,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
     //---GRY--- THE BELOW CODE SHOULD DISAPPEAR ONCE OUR PARSER IS FULLY
     //          IMPLEMENTED...
 
-    while (pScanner.token().symbol() != CompilerScannerToken::Eof) {
+    while (pScanner.token().symbol() != ComputerScannerToken::Eof) {
         qDebug("---------------------------------------");
         qDebug("Token:");
         qDebug(QString("   Line: %1").arg(QString::number(pScanner.token().line())).toLatin1().constData());
@@ -470,7 +470,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
     qDebug("---------------------------------------");
     qDebug("Function details:");
 
-    if (pFunction.type() == CompilerEngineFunction::Void)
+    if (pFunction.type() == ComputerEngineFunction::Void)
         qDebug("   Type: void");
     else
         qDebug("   Type: double");
@@ -483,7 +483,7 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
         foreach (const QString &parameter, pFunction.parameters())
             qDebug(QString("    - %1").arg(parameter).toLatin1().constData());
 
-    if (pFunction.type() == CompilerEngineFunction::Double)
+    if (pFunction.type() == ComputerEngineFunction::Double)
         qDebug(QString("   Return value: %1").arg(pFunction.returnValue()).toLatin1().constData());
 
 
@@ -501,8 +501,8 @@ bool CompilerEngine::parseFunction(CompilerScanner &pScanner,
 
 //==============================================================================
 
-bool CompilerEngine::parseParameter(CompilerScanner &pScanner,
-                                    CompilerEngineFunction &pFunction,
+bool ComputerEngine::parseParameter(ComputerScanner &pScanner,
+                                    ComputerEngineFunction &pFunction,
                                     const bool &pNeeded)
 {
     // The EBNF grammar of a parameter is as follows:
@@ -511,7 +511,7 @@ bool CompilerEngine::parseParameter(CompilerScanner &pScanner,
 
     // The current token must be "double"
 
-    if (pScanner.token().symbol() != CompilerScannerToken::Double) {
+    if (pScanner.token().symbol() != ComputerScannerToken::Double) {
         if (pNeeded)
             // We need a parameter definition, so...
 
@@ -524,7 +524,7 @@ bool CompilerEngine::parseParameter(CompilerScanner &pScanner,
 
     // The current token must be "*"
 
-    if (pScanner.token().symbol() != CompilerScannerToken::Times) {
+    if (pScanner.token().symbol() != ComputerScannerToken::Times) {
         addIssue(pScanner.token(), tr("'*'"));
 
         return false;
@@ -534,7 +534,7 @@ bool CompilerEngine::parseParameter(CompilerScanner &pScanner,
 
     // The current token must be an identifier
 
-    if (pScanner.token().symbol() == CompilerScannerToken::Identifier) {
+    if (pScanner.token().symbol() == ComputerScannerToken::Identifier) {
         // We got an identifier, so try to add it as the name of a new parameter
 
         if (!pFunction.addParameter(pScanner.token().string())) {
@@ -563,8 +563,8 @@ bool CompilerEngine::parseParameter(CompilerScanner &pScanner,
 
 //==============================================================================
 
-bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
-                                     CompilerEngineFunction &pFunction)
+bool ComputerEngine::parseParameters(ComputerScanner &pScanner,
+                                     ComputerEngineFunction &pFunction)
 {
     // The EBNF grammar of a list of parameters is as follows:
     //
@@ -572,7 +572,7 @@ bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
 
     // We must have 1+/0+ parameters in the case of a void/double function
 
-    bool needAtLeastOneParameter = pFunction.type() == CompilerEngineFunction::Void;
+    bool needAtLeastOneParameter = pFunction.type() == ComputerEngineFunction::Void;
 
     if (parseParameter(pScanner, pFunction, needAtLeastOneParameter))
         // The first parameter was properly parsed, so look for other parameters
@@ -580,7 +580,7 @@ bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
         // The current token must be "," if we are to have another parameter
         // definition
 
-        while (pScanner.token().symbol() == CompilerScannerToken::Comma) {
+        while (pScanner.token().symbol() == ComputerScannerToken::Comma) {
             pScanner.getNextToken();
 
             // We must then have the parameter definition itself
@@ -604,8 +604,8 @@ bool CompilerEngine::parseParameters(CompilerScanner &pScanner,
 
 //==============================================================================
 
-bool CompilerEngine::parseEquations(CompilerScanner &pScanner,
-                                    CompilerEngineFunction &pFunction)
+bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
+                                    ComputerEngineFunction &pFunction)
 {
     // The EBNF grammar of a series of equations is as follows:
     //
@@ -622,8 +622,8 @@ bool CompilerEngine::parseEquations(CompilerScanner &pScanner,
 
 //==============================================================================
 
-bool CompilerEngine::parseEquationRhs(CompilerScanner &pScanner,
-                                      CompilerEngineFunction &pFunction)
+bool ComputerEngine::parseEquationRhs(ComputerScanner &pScanner,
+                                      ComputerEngineFunction &pFunction)
 {
     // The EBNF grammar of an equation's RHS is as follows:
     //
@@ -632,8 +632,8 @@ bool CompilerEngine::parseEquationRhs(CompilerScanner &pScanner,
     //---GRY--- TO BE DONE...
 
 //---GRY--- THE BELOW CODE IS JUST FOR TESTING PURPOSES...
-if (   (pScanner.token().symbol() == CompilerScannerToken::IntegerValue)
-    || (pScanner.token().symbol() == CompilerScannerToken::DoubleValue)) {
+if (   (pScanner.token().symbol() == ComputerScannerToken::IntegerValue)
+    || (pScanner.token().symbol() == ComputerScannerToken::DoubleValue)) {
     pFunction.setReturnValue(pScanner.token().string());
 } else {
     addIssue(pScanner.token(), "a number");
@@ -650,8 +650,8 @@ pScanner.getNextToken();
 
 //==============================================================================
 
-bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
-                                 CompilerEngineFunction &pFunction)
+bool ComputerEngine::parseReturn(ComputerScanner &pScanner,
+                                 ComputerEngineFunction &pFunction)
 {
     // The EBNF grammar of a return statement is as follows:
     //
@@ -659,7 +659,7 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
 
     // The current token must be "return"
 
-    if (pScanner.token().symbol() != CompilerScannerToken::Return) {
+    if (pScanner.token().symbol() != ComputerScannerToken::Return) {
         addIssue(pScanner.token(), tr("'return'"));
 
         return false;
@@ -674,7 +674,7 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
 
     // The current token must be ";"
 
-    if (pScanner.token().symbol() != CompilerScannerToken::SemiColon) {
+    if (pScanner.token().symbol() != ComputerScannerToken::SemiColon) {
         addIssue(pScanner.token(), tr("';'"));
 
         return false;
@@ -689,7 +689,7 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
 
 //==============================================================================
 
-bool CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
+bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
 {
     // Generate some LLVM assembly code based on the contents of the function
 
@@ -702,7 +702,7 @@ bool CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 
     // Type of function
 
-    if (pFunction.type() == CompilerEngineFunction::Void)
+    if (pFunction.type() == ComputerEngineFunction::Void)
         assemblyCode += " void";
     else
         assemblyCode += " double";
@@ -738,7 +738,7 @@ bool CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 
     // Return statement
 
-    if (pFunction.type() == CompilerEngineFunction::Void)
+    if (pFunction.type() == ComputerEngineFunction::Void)
         assemblyCode += indent+"ret void\n";
     else
         assemblyCode += indent+"ret double "+pFunction.returnValue()+"\n";
@@ -761,7 +761,7 @@ bool CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
                               mModule, parseError, llvm::getGlobalContext());
 
     if (parseError.getMessage().size())
-        addIssue(CompilerScannerToken(parseError.getLineNo(), parseError.getColumnNo()),
+        addIssue(ComputerScannerToken(parseError.getLineNo(), parseError.getColumnNo()),
                  tr("the LLVM assembly code could not be parsed: %1").arg(QString::fromStdString(parseError.getMessage()).remove("error: ")),
                  false, originalAssemblyCode);
 
@@ -793,7 +793,7 @@ bool CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
         // error occurred during the compilation
 
         if (mIssues.isEmpty())
-            addIssue(CompilerScannerToken(),
+            addIssue(ComputerScannerToken(),
                      tr("the function '%1' could not be found").arg(pFunction.name()),
                      false);
 
@@ -803,7 +803,7 @@ bool CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 
 //==============================================================================
 
-}   // namespace Compiler
+}   // namespace Computer
 }   // namespace OpenCOR
 
 //==============================================================================

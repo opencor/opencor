@@ -1,4 +1,4 @@
-PROJECT(CompilerPlugin)
+PROJECT(ComputerPlugin)
 
 # Retrieve some LLVM settings
 
@@ -6,17 +6,17 @@ RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
 
-ADD_PLUGIN(Compiler
+ADD_PLUGIN(Computer
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/compilerengine.cpp
-        src/compilerplugin.cpp
-        src/compilerscanner.cpp
+        src/computerengine.cpp
+        src/computerplugin.cpp
+        src/computerscanner.cpp
     HEADERS_MOC
-        src/compilerengine.h
-        src/compilerplugin.h
+        src/computerengine.h
+        src/computerplugin.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS

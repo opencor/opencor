@@ -1,9 +1,9 @@
 //==============================================================================
-// Compiler scanner class
+// Computer scanner class
 //==============================================================================
 
-#ifndef COMPILERSCANNER_H
-#define COMPILERSCANNER_H
+#ifndef COMPUTERSCANNER_H
+#define COMPUTERSCANNER_H
 
 //==============================================================================
 
@@ -13,11 +13,11 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace Compiler {
+namespace Computer {
 
 //==============================================================================
 
-class CompilerScannerToken
+class ComputerScannerToken
 {
 public:
     enum Symbol
@@ -39,7 +39,7 @@ public:
         Unknown, Identifier, IntegerValue, DoubleValue, Eof
     };
 
-    explicit CompilerScannerToken(const int pLine = 0, const int pColumn = 0);
+    explicit ComputerScannerToken(const int pLine = 0, const int pColumn = 0);
 
     int line() const;
     int column() const;
@@ -62,14 +62,14 @@ private:
 
 //==============================================================================
 
-typedef QMap<QString, CompilerScannerToken::Symbol> CompilerScannerKeywords;
+typedef QMap<QString, ComputerScannerToken::Symbol> ComputerScannerKeywords;
 
-class CompilerScanner
+class ComputerScanner
 {
 public:
-    explicit CompilerScanner(const QString &pInput);
+    explicit ComputerScanner(const QString &pInput);
 
-    CompilerScannerToken token();
+    ComputerScannerToken token();
     void getNextToken();
 
 private:
@@ -77,10 +77,10 @@ private:
     int mPosition;
     int mLastPosition;
     QChar mChar;
-    CompilerScannerToken mToken;
+    ComputerScannerToken mToken;
     int mLine;
     int mColumn;
-    CompilerScannerKeywords mKeywords;
+    ComputerScannerKeywords mKeywords;
 
     void getNextChar();
 
@@ -90,7 +90,7 @@ private:
 
 //==============================================================================
 
-}   // namespace Compiler
+}   // namespace Computer
 }   // namespace OpenCOR
 
 //==============================================================================

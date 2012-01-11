@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="Computer_fr">../../../../../build/Computer_fr.qm</file>
+    </qresource>
+</RCC>
