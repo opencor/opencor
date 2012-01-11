@@ -20,40 +20,8 @@
         <translation>un identifiant</translation>
     </message>
     <message>
-        <source>&apos;(&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>&apos;)&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>&apos;{&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>&apos;}&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>&apos;double&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>&apos;*&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>there is already a parameter called &apos;%1&apos;</source>
         <translation>il y a déjà un paramètre qui s&apos;appelle &apos;%1&apos;</translation>
-    </message>
-    <message>
-        <source>&apos;return&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>&apos;;&apos;</source>
-        <translation></translation>
     </message>
     <message>
         <source>the LLVM assembly code could not be parsed: %1</source>

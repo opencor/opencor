@@ -288,6 +288,27 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
     // Parse the function
 
     if (parseFunction(scanner, function)) {
+        // Output the function's details
+
+        qDebug("---------------------------------------");
+        qDebug("Function details:");
+
+        if (function.type() == ComputerEngineFunction::Void)
+            qDebug("   Type: void");
+        else
+            qDebug("   Type: double");
+
+        qDebug(QString("   Name: %1").arg(function.name()).toLatin1().constData());
+
+        qDebug(QString("   Nb of params: %1").arg(QString::number(function.parameters().count())).toLatin1().constData());
+
+        if (!function.parameters().isEmpty())
+            foreach (const QString &parameter, function.parameters())
+                qDebug(QString("    - %1").arg(parameter).toLatin1().constData());
+
+        if (function.type() == ComputerEngineFunction::Double)
+            qDebug(QString("   Return value: %1").arg(function.returnValue()).toLatin1().constData());
+
         // The function was properly parsed, so check that we don't already
         //  have a function with the same name in our module
 
@@ -375,7 +396,7 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
     // The current token must be an opening bracket
 
     if (pScanner.token().symbol() != ComputerScannerToken::OpeningBracket) {
-        addIssue(pScanner.token(), tr("'('"));
+        addIssue(pScanner.token(), "'('");
 
         return false;
     }
@@ -393,7 +414,7 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
     // The current token must be a closing bracket
 
     if (pScanner.token().symbol() != ComputerScannerToken::ClosingBracket) {
-        addIssue(pScanner.token(), tr("')'"));
+        addIssue(pScanner.token(), "')'");
 
         return false;
     }
@@ -403,7 +424,7 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
     // The current token must be an opening curly bracket
 
     if (pScanner.token().symbol() != ComputerScannerToken::OpeningCurlyBracket) {
-        addIssue(pScanner.token(), tr("'{'"));
+        addIssue(pScanner.token(), "'{'");
 
         return false;
     }
@@ -429,47 +450,20 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
     // The current token must be a closing curly bracket
 
     if (pScanner.token().symbol() != ComputerScannerToken::ClosingCurlyBracket) {
-        addIssue(pScanner.token(), tr("'}'"));
+        addIssue(pScanner.token(), "'}'");
 
         return false;
     }
 
     pScanner.getNextToken();
 
+    // The current token must be EOF
 
+    if (pScanner.token().symbol() != ComputerScannerToken::Eof) {
+        addIssue(pScanner.token(), "EOF");
 
-
-
-
-
-
-
-    qDebug("---------------------------------------");
-    qDebug("Function details:");
-
-    if (pFunction.type() == ComputerEngineFunction::Void)
-        qDebug("   Type: void");
-    else
-        qDebug("   Type: double");
-
-    qDebug(QString("   Name: %1").arg(pFunction.name()).toLatin1().constData());
-
-    qDebug(QString("   Nb of params: %1").arg(QString::number(pFunction.parameters().count())).toLatin1().constData());
-
-    if (!pFunction.parameters().isEmpty())
-        foreach (const QString &parameter, pFunction.parameters())
-            qDebug(QString("    - %1").arg(parameter).toLatin1().constData());
-
-    if (pFunction.type() == ComputerEngineFunction::Double)
-        qDebug(QString("   Return value: %1").arg(pFunction.returnValue()).toLatin1().constData());
-
-
-
-
-
-
-
-
+        return false;
+    }
 
     // Everything went fine, so...
 
@@ -492,7 +486,7 @@ bool ComputerEngine::parseParameter(ComputerScanner &pScanner,
         if (pNeeded)
             // We need a parameter definition, so...
 
-            addIssue(pScanner.token(), tr("'double'"));
+            addIssue(pScanner.token(), "'double'");
 
         return false;
     }
@@ -502,7 +496,7 @@ bool ComputerEngine::parseParameter(ComputerScanner &pScanner,
     // The current token must be "*"
 
     if (pScanner.token().symbol() != ComputerScannerToken::Times) {
-        addIssue(pScanner.token(), tr("'*'"));
+        addIssue(pScanner.token(), "'*'");
 
         return false;
     }
@@ -636,7 +630,7 @@ bool ComputerEngine::parseReturn(ComputerScanner &pScanner,
     // The current token must be "return"
 
     if (pScanner.token().symbol() != ComputerScannerToken::Return) {
-        addIssue(pScanner.token(), tr("'return'"));
+        addIssue(pScanner.token(), "'return'");
 
         return false;
     }
@@ -651,7 +645,7 @@ bool ComputerEngine::parseReturn(ComputerScanner &pScanner,
     // The current token must be ";"
 
     if (pScanner.token().symbol() != ComputerScannerToken::SemiColon) {
-        addIssue(pScanner.token(), tr("';'"));
+        addIssue(pScanner.token(), "';'");
 
         return false;
     }
