@@ -13,6 +13,8 @@
 #include "llvm/DerivedTypes.h"
 #include "llvm/LLVMContext.h"
 #include "llvm/Module.h"
+#include "llvm/Assembly/Parser.h"
+#include "llvm/Support/SourceMgr.h"
 
 //==============================================================================
 
@@ -73,7 +75,7 @@ int CompilerEngineIssue::column() const
 //==============================================================================
 
 CompilerEngineFunction::CompilerEngineFunction() :
-    mBitcode(0),
+    mIrCode(0),
     mType(Void),
     mName(QString()),
     mParameters(QStringList())
@@ -82,20 +84,20 @@ CompilerEngineFunction::CompilerEngineFunction() :
 
 //==============================================================================
 
-llvm::Function * CompilerEngineFunction::bitcode() const
+llvm::Function * CompilerEngineFunction::irCode() const
 {
-    // Return the function's bitcode
+    // Return the function's IR code
 
-    return mBitcode;
+    return mIrCode;
 }
 
 //==============================================================================
 
-void CompilerEngineFunction::setBitcode(llvm::Function *pBitcode)
+void CompilerEngineFunction::setIrCode(llvm::Function *pIrCode)
 {
-    // Set the function's bitcode
+    // Set the function's IR code
 
-    mBitcode = pBitcode;
+    mIrCode = pIrCode;
 }
 
 //==============================================================================
@@ -263,9 +265,9 @@ llvm::Function * CompilerEngine::addFunction(const QString &pFunction)
         mModule->dump();
         qDebug("---------------------------------------");
 
-        // Return the function's bitcode
+        // Return the function's IR code
 
-        return function.bitcode();
+        return function.irCode();
     } else {
         // The function wasn't properly parsed, so...
 
@@ -645,9 +647,7 @@ bool CompilerEngine::parseReturn(CompilerScanner &pScanner,
 
 void CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 {
-/*---GRY---
-    // Generate some LLVM assembly code (i.e. intermediate representation or IR)
-    // based on the contents of the function
+    // Generate some LLVM assembly code based on the contents of the function
 
     static QString indent = QString("  ");
     QString assemblyCode = QString();
@@ -667,7 +667,7 @@ void CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 
     assemblyCode += " @"+pFunction.name();
 
-    // Parameters
+    // Parameters of the function
 
     QString parameters = QString();
 
@@ -703,69 +703,29 @@ void CompilerEngine::compileFunction(CompilerEngineFunction &pFunction)
 
     assemblyCode += "}";
 
-    // The LLVM assembly code has been fully generated, so we can now get its
-    // corresponding LLVM JIT code
+    // Parse the function's assembly code and generate some IR code that gets
+    // added to our module
 
-qDebug("***************************************");
-qDebug(assemblyCode.toLatin1().constData());
-qDebug("***************************************");
-*/
+    qDebug(QString("   Assembly:\n%1").arg(assemblyCode).toLatin1().constData());
 
-//    mModule->setDataLayout("e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-v64:64:64-v128:128:128-a0:0:64-s0:64:64-f80:128:128-n8:16:32:64-S128");
-//    mModule->setTargetTriple("x86_64-unknown-linux-gnu");
+    llvm::SMDiagnostic error;
+    llvm::ParseAssemblyString(assemblyCode.replace("%%", "\%").toLatin1().constData(),
+                              mModule, error, llvm::getGlobalContext());
 
-    // Type of function (i.e. void or double) and type of parameters (i.e.
-    // always double*)
-
-    std::vector<llvm::Type *> functionTypeArgs;
-    llvm::PointerType *parameterType = llvm::PointerType::get(llvm::Type::getDoubleTy(mModule->getContext()), 0);
-
-    for (int i = 0; i < pFunction.parameters().count(); ++i)
-         functionTypeArgs.push_back(parameterType);
-
-    llvm::FunctionType *functionType;
-
-    if (pFunction.type() == CompilerEngineFunction::Void)
-        functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(mModule->getContext()),
-                                               functionTypeArgs, false);
-    else
-        functionType = llvm::FunctionType::get(llvm::Type::getDoubleTy(mModule->getContext()),
-                                               functionTypeArgs, false);
-
-    // Create the function itself
-
-    llvm::Function *function = llvm::Function::Create(functionType,
-                                                      llvm::GlobalValue::ExternalLinkage,
-                                                      pFunction.name().toLatin1().constData(),
-                                                      mModule);
-
-    // Set the parameters' and function's attributes
-
-    llvm::SmallVector<llvm::AttributeWithIndex, 4> functionAttributes;
-    llvm::AttributeWithIndex attributesWithIndex;
-
-    for (int i = 0; i < pFunction.parameters().count(); ++i) {
-        attributesWithIndex.Index = i+1;
-        attributesWithIndex.Attrs = llvm::Attribute::NoCapture;
-
-        functionAttributes.push_back(attributesWithIndex);
+    if (error.getMessage().size()) {
+        qDebug("   ERROR:");
+        qDebug(QString("      Message: %1").arg(QString::fromStdString(error.getMessage()).remove("error: ")).toLatin1().constData());
+        qDebug(QString("      Line: %1").arg(QString::number(error.getLineNo())).toLatin1().constData());
+        qDebug(QString("      Column: %1").arg(QString::number(error.getColumnNo())).toLatin1().constData());
     }
 
-    attributesWithIndex.Index = ~0U;   // Note: ~0U is the function's index
-    attributesWithIndex.Attrs =   llvm::Attribute::NoUnwind
-                                | llvm::Attribute::ReadNone
-                                | llvm::Attribute::UWTable;
+    // Retrieve the function which assembly code we have just parsed
 
-    functionAttributes.push_back(attributesWithIndex);
+    llvm::Function *function = mModule->getFunction(pFunction.name().toLatin1().constData());
 
-    function->setAttributes(llvm::AttrListPtr::get(functionAttributes.begin(),
-                                                   functionAttributes.end()));
+    // Set the function's IR code
 
-    //---GRY--- TO BE FINISHED...
-
-    // Set the function's bitcode
-
-    pFunction.setBitcode(function);
+    pFunction.setIrCode(function);
 }
 
 //==============================================================================
