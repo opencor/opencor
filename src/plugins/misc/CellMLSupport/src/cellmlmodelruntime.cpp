@@ -332,8 +332,8 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 llvm::Function *function = computerEngine.function("test");
 
                 if (function) {
-                    std::vector<llvm::GenericValue> noargs;
-                    llvm::GenericValue genericValue = computerEngine.executionEngine()->runFunction(function, noargs);
+                    std::vector<llvm::GenericValue> args;
+                    llvm::GenericValue genericValue = computerEngine.executionEngine()->runFunction(function, args);
 
                     qDebug(QString("The 'test' function returned: %1").arg(QString::number(genericValue.DoubleVal)).toLatin1().constData());
                 } else {

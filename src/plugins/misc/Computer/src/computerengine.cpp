@@ -15,6 +15,7 @@
 #include "llvm/Module.h"
 #include "llvm/Assembly/Parser.h"
 #include "llvm/Support/SourceMgr.h"
+#include "llvm/Target/TargetData.h"
 
 //==============================================================================
 
@@ -666,6 +667,10 @@ bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
     static QString indent = QString("  ");
     QString assemblyCode = QString();
 
+    // Target data layout
+
+    assemblyCode = QString("target datalayout = \"%1\"\n\n").arg(QString::fromStdString(mExecutionEngine->getTargetData()->getStringRepresentation()));
+
     // Define the function
 
     assemblyCode += "define";
@@ -693,14 +698,14 @@ bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
 
         // Add the parameter definition
 
-        parameters += "double* nocapture %%"+parameter;
+        parameters += "double* %%"+parameter;
     }
 
     assemblyCode += "("+parameters+")";
 
     // Additional information for the function definition
 
-    assemblyCode += " nounwind uwtable readnone {\n";
+    assemblyCode += " {\n";
 
     // Mathematical statements
 
