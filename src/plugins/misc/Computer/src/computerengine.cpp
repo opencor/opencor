@@ -677,10 +677,6 @@ bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
     static QString indent = QString("  ");
     QString assemblyCode = QString();
 
-    // Target data layout
-
-    assemblyCode = QString("target datalayout = \"%1\"\n\n").arg(QString::fromStdString(mExecutionEngine->getTargetData()->getStringRepresentation()));
-
     // Define the function
 
     assemblyCode += "define";
