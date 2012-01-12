@@ -10,11 +10,11 @@
 
 //==============================================================================
 
-#include "llvm/DerivedTypes.h"
 #include "llvm/LLVMContext.h"
 #include "llvm/Module.h"
 #include "llvm/Assembly/Parser.h"
 #include "llvm/Support/SourceMgr.h"
+#include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetData.h"
 
 //==============================================================================
@@ -198,11 +198,21 @@ void ComputerEngineFunction::setReturnValue(const QString &pReturnValue)
 
 ComputerEngine::ComputerEngine()
 {
+    // Create a module
+
     static int counter = 0;
 
     mModule = new llvm::Module(QString("Module #%1").arg(QString::number(++counter)).toLatin1().constData(),
                                llvm::getGlobalContext());
-    mExecutionEngine = llvm::EngineBuilder(mModule).create();
+
+    // Initialise the native target, so we can then create a JIT execution
+    // engine
+
+    llvm::InitializeNativeTarget();
+
+    // Create a JIT execution engine
+
+    mExecutionEngine = llvm::ExecutionEngine::createJIT(mModule);
 }
 
 //==============================================================================
