@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include <QDebug>
+#include <QElapsedTimer>
 
 //==============================================================================
 
@@ -345,7 +346,34 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
                     // Call our LLVM's JIT-based function
 
-                    ((void (*)(double *))(intptr_t) computerEngine.executionEngine()->getPointerToFunction(function))(data);
+                    void (*func)(double *) = (void (*)(double *))(intptr_t) computerEngine.executionEngine()->getPointerToFunction(function);
+
+
+                    QElapsedTimer timer;
+                    int iMax = 100000;
+
+                    timer.start();
+
+                    for (int i = 0; i < iMax; ++i)
+                        func(data);
+
+                    qint64 timeElapsed1 = timer.elapsed();
+
+
+                    std::vector<llvm::GenericValue> args;
+
+                    args.push_back(llvm::GenericValue(data));
+
+                    timer.start();
+
+                    for (int i = 0; i < iMax; ++i)
+                        computerEngine.executionEngine()->runFunction(function, args);
+
+                    qint64 timeElapsed2 = timer.elapsed();
+
+
+                    qDebug() << "Time elapsed #1:" << timeElapsed1;
+                    qDebug() << "Time elapsed #2:" << timeElapsed2;
 
                     // Output the contents of our data array
 
