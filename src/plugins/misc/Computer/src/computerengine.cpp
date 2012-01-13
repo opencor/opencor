@@ -733,6 +733,18 @@ bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
     // we can parse that code and have LLVM generate some IR code that will get
     // automatically added to our module
 
+assemblyCode  = "define void @test(double* %%data) {\n";
+assemblyCode += "  %%1 = getelementptr inbounds double* %%data, i64 1\n";
+assemblyCode += "  store double 1.230000e+02, double* %%1, align 8\n";
+assemblyCode += "  %%2 = getelementptr inbounds double* %%data, i64 3\n";
+assemblyCode += "  store double 1.230000e+02, double* %%2, align 8\n";
+assemblyCode += "  %%3 = getelementptr inbounds double* %%data, i64 5\n";
+assemblyCode += "  store double 1.230000e+02, double* %%3, align 8\n";
+assemblyCode += "  ret void\n";
+assemblyCode += "}";
+
+    qDebug(QString("   LLVM assembly:\n%1").arg(assemblyCode).toLatin1().constData());
+
     QString originalAssemblyCode = QString(assemblyCode);
     // Note: the above is required since we must replace '%' with '\%' prior to
     //       having LLVM parse the assembly code, yet we need to keep a trace of

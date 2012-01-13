@@ -332,10 +332,27 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 llvm::Function *function = computerEngine.function("test");
 
                 if (function) {
+                    double data[6];
+                    data[0] = 100;
+                    data[1] = 101;
+                    data[2] = 102;
+                    data[3] = 103;
+                    data[4] = 104;
+                    data[5] = 105;
+
                     std::vector<llvm::GenericValue> args;
+                    args.push_back(llvm::GenericValue(data));
+
                     llvm::GenericValue genericValue = computerEngine.executionEngine()->runFunction(function, args);
 
                     qDebug(QString("The 'test' function returned: %1").arg(QString::number(genericValue.DoubleVal)).toLatin1().constData());
+
+                    qDebug() << "Data[0]:" << data[0];
+                    qDebug() << "Data[1]:" << data[1];
+                    qDebug() << "Data[2]:" << data[2];
+                    qDebug() << "Data[3]:" << data[3];
+                    qDebug() << "Data[4]:" << data[4];
+                    qDebug() << "Data[5]:" << data[5];
                 } else {
                     qDebug("The 'test' function doesn't exist...?!");
                 }
