@@ -205,8 +205,9 @@ ComputerEngine::ComputerEngine()
     mModule = new llvm::Module(QString("Module #%1").arg(QString::number(++counter)).toLatin1().constData(),
                                llvm::getGlobalContext());
 
-    // Initialise the native target, so we can then create a JIT execution
-    // engine
+    // Initialise the native target, so not only can we then create a JIT
+    // execution engine, but more importantly its data layout will match that of
+    // our target platform...
 
     llvm::InitializeNativeTarget();
 
