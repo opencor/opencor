@@ -723,13 +723,35 @@ bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
     // we can parse that code and have LLVM generate some IR code that will get
     // automatically added to our module
 
-assemblyCode  = "define void @test(double* %%data) {\n";
-assemblyCode += "  %%1 = getelementptr inbounds double* %%data, i64 1\n";
+assemblyCode  = "declare double @sin(double)\n";
+assemblyCode += "\n";
+assemblyCode += "define void @test(double* %%data) {\n";
+assemblyCode += "  %%1 = getelementptr inbounds double* %%data, i64 0\n";
 assemblyCode += "  store double 1.230000e+02, double* %%1, align 8\n";
-assemblyCode += "  %%2 = getelementptr inbounds double* %%data, i64 3\n";
+assemblyCode += "\n";
+assemblyCode += "  %%2 = getelementptr inbounds double* %%data, i64 2\n";
 assemblyCode += "  store double 1.230000e+02, double* %%2, align 8\n";
-assemblyCode += "  %%3 = getelementptr inbounds double* %%data, i64 5\n";
+assemblyCode += "\n";
+assemblyCode += "  %%3 = getelementptr inbounds double* %%data, i64 4\n";
 assemblyCode += "  store double 1.230000e+02, double* %%3, align 8\n";
+assemblyCode += "\n";
+assemblyCode += "  %%4 = load double* %%data, align 8\n";
+assemblyCode += "  %%5 = tail call double @sin(double %%4)\n";
+assemblyCode += "  %%6 = getelementptr inbounds double* %%data, i64 1\n";
+assemblyCode += "  store double %%5, double* %%6, align 8\n";
+assemblyCode += "\n";
+assemblyCode += "  %%7 = getelementptr inbounds double* %%data, i64 2\n";
+assemblyCode += "  %%8 = load double* %%7, align 8\n";
+assemblyCode += "  %%9 = tail call double @sin(double %%8) nounwind readnone\n";
+assemblyCode += "  %%10 = getelementptr inbounds double* %%data, i64 3\n";
+assemblyCode += "  store double %%9, double* %%10, align 8\n";
+assemblyCode += "\n";
+assemblyCode += "  %%11 = getelementptr inbounds double* %%data, i64 4\n";
+assemblyCode += "  %%12 = load double* %%11, align 8\n";
+assemblyCode += "  %%13 = tail call double @sin(double %%12) nounwind readnone\n";
+assemblyCode += "  %%14 = getelementptr inbounds double* %%data, i64 5\n";
+assemblyCode += "  store double %%13, double* %%14, align 8\n";
+assemblyCode += "\n";
 assemblyCode += "  ret void\n";
 assemblyCode += "}";
 
