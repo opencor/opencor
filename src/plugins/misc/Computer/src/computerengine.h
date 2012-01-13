@@ -48,6 +48,14 @@ private:
 
 //==============================================================================
 
+class ComputerEngineEquation
+{
+};
+
+//==============================================================================
+
+typedef QList<ComputerEngineEquation *> ComputerEngineEquations;
+
 class ComputerEngineFunction
 {
 public:
@@ -57,6 +65,7 @@ public:
     };
 
     explicit ComputerEngineFunction();
+    ~ComputerEngineFunction();
 
     llvm::Function * irCode() const;
     void setIrCode(llvm::Function *pIrCode);
@@ -70,6 +79,9 @@ public:
     QStringList parameters() const;
     bool addParameter(const QString &pParameter);
 
+    ComputerEngineEquations equations() const;
+    void addEquation(ComputerEngineEquation *pEquation);
+
     QString returnValue() const;
     void setReturnValue(const QString &pReturnValue);
 
@@ -79,6 +91,7 @@ private:
     Type mType;
     QString mName;
     QStringList mParameters;
+    ComputerEngineEquations mEquations;
     QString mReturnValue;
 };
 

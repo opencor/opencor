@@ -34,7 +34,8 @@ public:
 
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
-        Comma, SemiColon,
+        OpeningSquareBracket, ClosingSquareBracket,
+        Equal, Comma, SemiColon,
         Return,
         Unknown, Identifier, IntegerValue, DoubleValue, Eof
     };

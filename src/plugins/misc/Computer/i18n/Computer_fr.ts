@@ -4,8 +4,8 @@
 <context>
     <name>OpenCOR::Computer::ComputerEngine</name>
     <message>
-        <source>%1 is expected, but &apos;%2&apos; was found instead</source>
-        <translation>%1 est espéré, mais &apos;%2&apos; a été trouvé à la place</translation>
+        <source>%1 is expected, but &apos;%2&apos; was found</source>
+        <translation>%1 est espéré, mais &apos;%2&apos; a été trouvé</translation>
     </message>
     <message>
         <source>there is already a function called &apos;%1&apos;</source>
@@ -30,6 +30,10 @@
     <message>
         <source>the function &apos;%1&apos; could not be found</source>
         <translation>La fonction &apos;%1&apos; n&apos;a pas pu être trouvée</translation>
+    </message>
+    <message>
+        <source>an integer</source>
+        <translation>un nombre entier</translation>
     </message>
 </context>
 </TS>

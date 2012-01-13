@@ -11,19 +11,22 @@ namespace Computer {
 
 //==============================================================================
 
-static const QChar Underscore          = QChar('_');
-static const QChar Times               = QChar('*');
-static const QChar Plus                = QChar('+');
-static const QChar Minus               = QChar('-');
-static const QChar OpeningBracket      = QChar('(');
-static const QChar ClosingBracket      = QChar(')');
-static const QChar OpeningCurlyBracket = QChar('{');
-static const QChar ClosingCurlyBracket = QChar('}');
-static const QChar Comma               = QChar(',');
-static const QChar SemiColon           = QChar(';');
-static const QChar FullStop            = QChar('.');
-static const QChar LowerCaseE          = QChar('e');
-static const QChar UpperCaseE          = QChar('E');
+static const QChar Underscore           = QChar('_');
+static const QChar Times                = QChar('*');
+static const QChar Plus                 = QChar('+');
+static const QChar Minus                = QChar('-');
+static const QChar OpeningBracket       = QChar('(');
+static const QChar ClosingBracket       = QChar(')');
+static const QChar OpeningCurlyBracket  = QChar('{');
+static const QChar ClosingCurlyBracket  = QChar('}');
+static const QChar OpeningSquareBracket = QChar('[');
+static const QChar ClosingSquareBracket = QChar(']');
+static const QChar Equal                = QChar('=');
+static const QChar Comma                = QChar(',');
+static const QChar SemiColon            = QChar(';');
+static const QChar FullStop             = QChar('.');
+static const QChar LowerCaseE           = QChar('e');
+static const QChar UpperCaseE           = QChar('E');
 
 //==============================================================================
 
@@ -83,6 +86,12 @@ QString ComputerScannerToken::symbolAsString() const
         return "OpeningCurlyBracket";
     case ClosingCurlyBracket:
         return "ClosingCurlyBracket";
+    case OpeningSquareBracket:
+        return "OpeningSquareBracket";
+    case ClosingSquareBracket:
+        return "ClosingSquareBracket";
+    case Equal:
+        return "Equal";
     case Comma:
         return "Comma";
     case SemiColon:
@@ -430,6 +439,12 @@ void ComputerScanner::getNextToken()
             mToken.setSymbol(ComputerScannerToken::OpeningCurlyBracket);
         else if (mChar == ClosingCurlyBracket)
             mToken.setSymbol(ComputerScannerToken::ClosingCurlyBracket);
+        else if (mChar == OpeningSquareBracket)
+            mToken.setSymbol(ComputerScannerToken::OpeningSquareBracket);
+        else if (mChar == ClosingSquareBracket)
+            mToken.setSymbol(ComputerScannerToken::ClosingSquareBracket);
+        else if (mChar == Equal)
+            mToken.setSymbol(ComputerScannerToken::Equal);
         else if (mChar == Comma)
             mToken.setSymbol(ComputerScannerToken::Comma);
         else if (mChar == SemiColon)

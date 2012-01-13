@@ -89,8 +89,19 @@ ComputerEngineFunction::ComputerEngineFunction() :
     mIrCode(0),
     mType(Void),
     mName(QString()),
+    mEquations(ComputerEngineEquations()),
     mParameters(QStringList())
 {
+}
+
+//==============================================================================
+
+ComputerEngineFunction::~ComputerEngineFunction()
+{
+    // Delete the equations
+
+    foreach (ComputerEngineEquation *equation, mEquations)
+        delete equation;
 }
 
 //==============================================================================
@@ -173,6 +184,24 @@ bool ComputerEngineFunction::addParameter(const QString &pParameter)
 
         return true;
     }
+}
+
+//==============================================================================
+
+ComputerEngineEquations ComputerEngineFunction::equations() const
+{
+    // Return the function's equations
+
+    return mEquations;
+}
+
+//==============================================================================
+
+void ComputerEngineFunction::addEquation(ComputerEngineEquation *pEquation)
+{
+    // Add an equation to the function
+
+    mEquations.append(pEquation);
 }
 
 //==============================================================================
@@ -261,7 +290,7 @@ void ComputerEngine::addIssue(const ComputerScannerToken &pToken,
                               const QString &pExtraInformation)
 {
     if (pExpectedMessage)
-        mIssues.append(ComputerEngineIssue(tr("%1 is expected, but '%2' was found instead").arg(pMessage, pToken.string()),
+        mIssues.append(ComputerEngineIssue(tr("%1 is expected, but '%2' was found").arg(pMessage, pToken.string()),
                                            pToken.line(), pToken.column()));
     else
         mIssues.append(ComputerEngineIssue(pMessage,
@@ -350,7 +379,7 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
     // The EBNF grammar of a function is as follows:
     //
     //   Function       = VoidFunction | DoubleFunction ;
-    //   VoidFunction   = "void" Identifier "(" Parameters ")" "{" Equations "}" ;
+    //   VoidFunction   = "void" Identifier "(" Parameters ")" "{" [ Equations ] "}" ;
     //   DoubleFunction = "double" Identifier "(" [ Parameters ] ")" "{" [ Equations ] Return "}" ;
 
     // Note that after retrieving/parsing something, we must get ready for the
@@ -582,10 +611,89 @@ bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
 {
     // The EBNF grammar of a series of equations is as follows:
     //
-    //   Equations     = Equation { Equation } ;
-    //   Equation      = Identifier "[" IntegerValue "]" "=" EquationRHS ;
+    //   Equations = { Equation } ;
+    //   Equation  = Identifier "[" IntegerValue "]" "=" EquationRHS ";" ;
 
-//---GRY--- TO BE DONE...
+    while (pScanner.token().symbol() == ComputerScannerToken::Identifier) {
+        // The current token is an identifier which is what we would expect for
+        // the beginning of an equation, so we get ready for the parsing of an
+        // equation
+
+        ComputerEngineEquation *equation = new ComputerEngineEquation();
+
+        pScanner.getNextToken();
+
+        // The current token must be "["
+
+        if (pScanner.token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
+            addIssue(pScanner.token(), "'['");
+
+            delete equation;
+
+            return false;
+        }
+
+        pScanner.getNextToken();
+
+        // The current token must be an integer valud
+
+        if (pScanner.token().symbol() != ComputerScannerToken::IntegerValue) {
+            addIssue(pScanner.token(), tr("an integer"));
+
+            delete equation;
+
+            return false;
+        }
+
+        pScanner.getNextToken();
+
+        // The current token must be "]"
+
+        if (pScanner.token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
+            addIssue(pScanner.token(), "']'");
+
+            delete equation;
+
+            return false;
+        }
+
+        pScanner.getNextToken();
+
+        // The current token must be "="
+
+        if (pScanner.token().symbol() != ComputerScannerToken::Equal) {
+            addIssue(pScanner.token(), "'='");
+
+            delete equation;
+
+            return false;
+        }
+
+        pScanner.getNextToken();
+
+        // Parse the RHS of the equation
+
+        if (!parseEquationRhs(pScanner, pFunction)) {
+            delete equation;
+
+            return false;
+        }
+
+        // The current token must be ";"
+
+        if (pScanner.token().symbol() != ComputerScannerToken::SemiColon) {
+            addIssue(pScanner.token(), "';'");
+
+            return false;
+        }
+
+        pScanner.getNextToken();
+
+        // The equation was successfully parsed, so add it to the list of
+        // functions
+
+        pFunction.addEquation(equation);
+    }
 
     // Everything went fine, so...
 
@@ -723,37 +831,37 @@ bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
     // we can parse that code and have LLVM generate some IR code that will get
     // automatically added to our module
 
-assemblyCode  = "declare double @sin(double)\n";
-assemblyCode += "\n";
-assemblyCode += "define void @test(double* %%data) {\n";
-assemblyCode += "  %%1 = getelementptr inbounds double* %%data, i64 0\n";
-assemblyCode += "  store double 1.230000e+02, double* %%1, align 8\n";
-assemblyCode += "\n";
-assemblyCode += "  %%2 = getelementptr inbounds double* %%data, i64 2\n";
-assemblyCode += "  store double 1.230000e+02, double* %%2, align 8\n";
-assemblyCode += "\n";
-assemblyCode += "  %%3 = getelementptr inbounds double* %%data, i64 4\n";
-assemblyCode += "  store double 1.230000e+02, double* %%3, align 8\n";
-assemblyCode += "\n";
-assemblyCode += "  %%4 = load double* %%data, align 8\n";
-assemblyCode += "  %%5 = tail call double @sin(double %%4)\n";
-assemblyCode += "  %%6 = getelementptr inbounds double* %%data, i64 1\n";
-assemblyCode += "  store double %%5, double* %%6, align 8\n";
-assemblyCode += "\n";
-assemblyCode += "  %%7 = getelementptr inbounds double* %%data, i64 2\n";
-assemblyCode += "  %%8 = load double* %%7, align 8\n";
-assemblyCode += "  %%9 = tail call double @sin(double %%8) nounwind readnone\n";
-assemblyCode += "  %%10 = getelementptr inbounds double* %%data, i64 3\n";
-assemblyCode += "  store double %%9, double* %%10, align 8\n";
-assemblyCode += "\n";
-assemblyCode += "  %%11 = getelementptr inbounds double* %%data, i64 4\n";
-assemblyCode += "  %%12 = load double* %%11, align 8\n";
-assemblyCode += "  %%13 = tail call double @sin(double %%12) nounwind readnone\n";
-assemblyCode += "  %%14 = getelementptr inbounds double* %%data, i64 5\n";
-assemblyCode += "  store double %%13, double* %%14, align 8\n";
-assemblyCode += "\n";
-assemblyCode += "  ret void\n";
-assemblyCode += "}";
+//assemblyCode  = "declare double @sin(double)\n";
+//assemblyCode += "\n";
+//assemblyCode += "define void @test(double* %%data) {\n";
+//assemblyCode += "  %%1 = getelementptr inbounds double* %%data, i64 0\n";
+//assemblyCode += "  store double 1.230000e+02, double* %%1, align 8\n";
+//assemblyCode += "\n";
+//assemblyCode += "  %%2 = getelementptr inbounds double* %%data, i64 2\n";
+//assemblyCode += "  store double 1.230000e+02, double* %%2, align 8\n";
+//assemblyCode += "\n";
+//assemblyCode += "  %%3 = getelementptr inbounds double* %%data, i64 4\n";
+//assemblyCode += "  store double 1.230000e+02, double* %%3, align 8\n";
+//assemblyCode += "\n";
+//assemblyCode += "  %%4 = load double* %%data, align 8\n";
+//assemblyCode += "  %%5 = tail call double @sin(double %%4)\n";
+//assemblyCode += "  %%6 = getelementptr inbounds double* %%data, i64 1\n";
+//assemblyCode += "  store double %%5, double* %%6, align 8\n";
+//assemblyCode += "\n";
+//assemblyCode += "  %%7 = getelementptr inbounds double* %%data, i64 2\n";
+//assemblyCode += "  %%8 = load double* %%7, align 8\n";
+//assemblyCode += "  %%9 = tail call double @sin(double %%8) nounwind readnone\n";
+//assemblyCode += "  %%10 = getelementptr inbounds double* %%data, i64 3\n";
+//assemblyCode += "  store double %%9, double* %%10, align 8\n";
+//assemblyCode += "\n";
+//assemblyCode += "  %%11 = getelementptr inbounds double* %%data, i64 4\n";
+//assemblyCode += "  %%12 = load double* %%11, align 8\n";
+//assemblyCode += "  %%13 = tail call double @sin(double %%12) nounwind readnone\n";
+//assemblyCode += "  %%14 = getelementptr inbounds double* %%data, i64 5\n";
+//assemblyCode += "  store double %%13, double* %%14, align 8\n";
+//assemblyCode += "\n";
+//assemblyCode += "  ret void\n";
+//assemblyCode += "}";
 
     qDebug(QString("   LLVM assembly:\n%1").arg(assemblyCode).toLatin1().constData());
 

@@ -298,8 +298,8 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             Computer::ComputerEngine computerEngine;
 
-//            llvm::Function *test = computerEngine.addFunction("void test(double *pParam) {}");
-            llvm::Function *test = computerEngine.addFunction("double test() { return 123.456; }");
+            llvm::Function *test = computerEngine.addFunction("void test(double *pParam) { pParam[1] = 123.456; pParam[3] = 123.456; pParam[5] = 123.456; }");
+//            llvm::Function *test = computerEngine.addFunction("double test() { return 123.456; }");
 
             if (computerEngine.issues().count()) {
                 // Something went wrong, so output the issue(s)
