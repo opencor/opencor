@@ -329,15 +329,12 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             } else {
                 // Test the compiled function using LLVM's JIT
 
-                double data[6];
-
-                std::vector<llvm::GenericValue> args;
-                args.push_back(llvm::GenericValue(data));
-
-                Computer::VoidFunction function = computerEngine.voidFunctionStub("test", args);
+                llvm::Function *function = computerEngine.module()->getFunction("test");
 
                 if (function) {
-                    // Initialise our data array
+                    // Initialise our array of data
+
+                    double data[6];
 
                     data[0] = 100;
                     data[1] = 101;
@@ -347,14 +344,8 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                     data[5] = 105;
 
                     // Call our LLVM's JIT-based function
-                    // Note: even a void function will return an integer, so
-                    // it's fine to convert it to a double...
 
-                    double returnValue = function();
-
-                    // What the function returned
-
-                    qDebug(QString("The 'test' function returned: %1").arg(QString::number(returnValue)).toLatin1().constData());
+                    ((void (*)(double *))(intptr_t) computerEngine.executionEngine()->getPointerToFunction(function))(data);
 
                     // Output the contents of our data array
 

@@ -84,11 +84,6 @@ private:
 
 //==============================================================================
 
-typedef int (*VoidFunction)();
-typedef double (*DoubleFunction)();
-
-//==============================================================================
-
 class COMPUTER_EXPORT ComputerEngine : public QObject
 {
     Q_OBJECT
@@ -101,11 +96,6 @@ public:
     llvm::ExecutionEngine * executionEngine();
 
     QList<ComputerEngineIssue> issues();
-
-    VoidFunction voidFunctionStub(const QString &pFunctionName,
-                                  const std::vector<llvm::GenericValue> &pArguments);
-    DoubleFunction doubleFunctionStub(const QString &pFunctionName,
-                                      const std::vector<llvm::GenericValue> &pArguments);
 
     llvm::Function * addFunction(const QString &pFunction);
 
@@ -134,9 +124,6 @@ private:
                      ComputerEngineFunction &pFunction);
 
     bool compileFunction(ComputerEngineFunction &pFunction);
-
-    void * functionStub(const QString &pFunctionName,
-                        const std::vector<llvm::GenericValue> &pArguments);
 };
 
 //==============================================================================

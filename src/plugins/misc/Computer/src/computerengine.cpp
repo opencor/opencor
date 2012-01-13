@@ -10,12 +10,9 @@
 
 //==============================================================================
 
-#include "llvm/Constants.h"
-#include "llvm/Instructions.h"
 #include "llvm/LLVMContext.h"
 #include "llvm/Module.h"
 #include "llvm/Assembly/Parser.h"
-#include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/TargetSelect.h"
 
@@ -786,128 +783,6 @@ assemblyCode += "}";
 
         return false;
     }
-}
-
-//==============================================================================
-
-void * ComputerEngine::functionStub(const QString &pFunctionName,
-                                    const std::vector<llvm::GenericValue> &pArguments)
-{
-    // Note: the code that follows is based on JIT::runFunction(). The reasoning
-    //       is, that to run a function, we would normally make a call to
-    //       JIT::runFunction(), but the overhead associated with that function
-    //       is just too great, not to mention that it creates a function stub
-    //       (which it then destroys) at every call, so... it's better to have a
-    //       mechanism by which we create the function's stub once and for all
-    //       and have the user use it rather than rely on JIT::runFunction()...
-
-    // Check whether the function's stub doesn't already exist
-
-    QString functionStubName = QString("%1Stub").arg(pFunctionName);
-    llvm::Function *functionStub = mModule->getFunction(functionStubName.toLatin1().constData());
-
-    if (functionStub) {
-        // The function's stub already exists, so return its pointer
-
-        return mExecutionEngine->getPointerToFunction(functionStub);
-    } else {
-        // The function's stub doesn't already exist, so create and return it,
-        // but for this we first need to retrieve the function itself
-
-        llvm::Function *function = mModule->getFunction(pFunctionName.toLatin1().constData());
-
-        if (function) {
-            // The function exists, so retrieve the types it uses
-
-            llvm::FunctionType *functionType = function->getFunctionType();
-
-            // Create the function's stub using the function's return type as
-            // its return type
-
-            functionStub = llvm::Function::Create(llvm::FunctionType::get(functionType->getReturnType(), false),
-                                                  llvm::Function::InternalLinkage,
-                                                  functionStubName.toLatin1().constData(),
-                                                  function->getParent());
-
-            // Insert a basic block to the function's stub
-
-            llvm::BasicBlock *functionStubBasicBlock = llvm::BasicBlock::Create(function->getContext(), "",
-                                                                                functionStub);
-
-            // Convert all of the GenericValue arguments (which are all arrays
-            // to doubles) to constants
-
-            llvm::SmallVector<llvm::Value *, 8> functionStubArguments;
-
-            for (size_t i = 0, iMax = pArguments.size(); i < iMax; ++i) {
-                llvm::Constant *constantArgument;
-                const llvm::GenericValue &argumentValue = pArguments[i];
-
-#if QT_POINTER_SIZE == 4
-                constantArgument = llvm::ConstantInt::get(llvm::Type::getInt32Ty(function->getContext()),
-                                                          (int)(intptr_t) llvm::GVTOP(argumentValue));
-#else
-                constantArgument = llvm::ConstantInt::get(llvm::Type::getInt64Ty(function->getContext()),
-                                                          (intptr_t) llvm::GVTOP(argumentValue));
-#endif
-
-                // Cast the integer to a pointer
-
-                constantArgument = llvm::ConstantExpr::getIntToPtr(constantArgument,
-                                                                   functionType->getParamType(i));
-
-                // Add the constant argument to the list of arguments
-
-                functionStubArguments.push_back(constantArgument);
-            }
-
-            // Create the function's call, set some properties to it including
-            // the type of return instruction to use
-
-            llvm::CallInst *functionCall = llvm::CallInst::Create(function,
-                                                                  functionStubArguments, "",
-                                                                  functionStubBasicBlock);
-
-            functionCall->setCallingConv(function->getCallingConv());
-            functionCall->setTailCall();
-
-            if (functionCall->getType()->isVoidTy())
-                llvm::ReturnInst::Create(function->getContext(),
-                                         functionStubBasicBlock);
-            else
-                llvm::ReturnInst::Create(function->getContext(), functionCall,
-                                         functionStubBasicBlock);
-
-            // We are all done, so we can now return the pointer to the
-            // function's stub
-
-            return mExecutionEngine->getPointerToFunction(functionStub);
-        } else {
-            // The function doesn't even exist, so...
-
-            return 0;
-        }
-    }
-}
-
-//==============================================================================
-
-VoidFunction ComputerEngine::voidFunctionStub(const QString &pFunctionName,
-                                              const std::vector<llvm::GenericValue> &pArguments)
-{
-    // Return a properly cast version of the void function's stub
-
-    return (VoidFunction)(intptr_t) functionStub(pFunctionName, pArguments);
-}
-
-//==============================================================================
-
-DoubleFunction ComputerEngine::doubleFunctionStub(const QString &pFunctionName,
-                                                  const std::vector<llvm::GenericValue> &pArguments)
-{
-    // Return a properly cast version of the double function's stub
-
-    return (DoubleFunction)(intptr_t) functionStub(pFunctionName, pArguments);
 }
 
 //==============================================================================
