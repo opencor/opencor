@@ -241,7 +241,7 @@ void PluginsWindow::selectFirstVisiblePlugin()
             // We have found the first visible category, so now find its first
             // visible plugin
 
-            for (int i = 0; i < categoryItem->rowCount(); ++i)
+            for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
                 if (!mUi->treeView->isRowHidden(categoryItem->child(i)->row(),
                                                 categoryItem->index())) {
                     // We have found our first visible plugin, so...
@@ -636,7 +636,7 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
 
             bool hideCategory = true;
 
-            for (int i = 0; i < categoryItem->rowCount(); ++i)
+            for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
                 if (!mUi->treeView->isRowHidden(categoryItem->child(i)->row(),
                                                 categoryItem->index())) {
                     // There is at least one plugin which is visible, so...

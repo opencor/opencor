@@ -289,7 +289,7 @@ void FileBrowserWindow::updateItems(const QString &pItemPath,
 
         newItems << prevItem;
 
-        for (int i = 1; i < pItems.count(); ++i) {
+        for (int i = 1, iMax = pItems.count(); i < iMax; ++i) {
             QString crtItem = pItems.at(i);
 
             if (crtItem != prevItem) {

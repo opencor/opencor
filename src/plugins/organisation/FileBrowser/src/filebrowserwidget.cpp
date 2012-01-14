@@ -100,7 +100,7 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
 
     QString columnWidthKey;
 
-    for (int i = 0; i < header()->count(); ++i) {
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
         columnWidthKey = SettingsColumnWidth+QString::number(i);
 
         mNeedDefColWidth =     mNeedDefColWidth
@@ -192,7 +192,7 @@ void FileBrowserWidget::saveSettings(QSettings *pSettings) const
 {
     // Retrieve the width of each column
 
-    for (int i = 0; i < header()->count(); ++i)
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i)
         pSettings->setValue(SettingsColumnWidth+QString::number(i),
                             columnWidth(i));
 
@@ -248,7 +248,7 @@ QStringList FileBrowserWidget::selectedFiles() const
     QStringList res;
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
-    for (int i = 0; i < selectedIndexes.count(); ++i) {
+    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
         QString fileName = pathOf(selectedIndexes.at(i));
         QFileInfo fileInfo = fileName;
 
@@ -288,7 +288,7 @@ void FileBrowserWidget::deselectFolders() const
     if (selectionModel()->selectedRows().count() > 1) {
         QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
-        for (int i = 0; i < selectedIndexes.count(); ++i) {
+        for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
             QFileInfo fileInfo = pathOf(selectedIndexes.at(i));
 
             if (fileInfo.isDir() || !fileInfo.exists())

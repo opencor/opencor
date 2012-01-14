@@ -201,11 +201,11 @@ void CentralWidget::retranslateUi()
 
     // Retranslate our views tab bar
 
-    for (int i = 0; i < mEditingViews->count(); ++i)
+    for (int i = 0, iMax = mEditingViews->count(); i < iMax; ++i)
         mEditingViews->setTabText(i,
                                   mEditingViewInterfaces.value(i)->viewName(mEditingViewSettings.value(i)->index()));
 
-    for (int i = 0; i < mAnalysisViews->count(); ++i)
+    for (int i = 0, iMax = mAnalysisViews->count(); i < iMax; ++i)
         mAnalysisViews->setTabText(i,
                                    mAnalysisViewInterfaces.value(i)->viewName(mAnalysisViewSettings.value(i)->index()));
 
@@ -231,7 +231,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     openedFiles = pSettings->value(SettingsOpenedFiles).toStringList();
 
-    for (int i = 0; i < openedFiles.count(); ++i)
+    for (int i = 0, iMax = openedFiles.count(); i < iMax; ++i)
         openFile(openedFiles.at(i));
 
     // Retrieve the current file
@@ -275,7 +275,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
                 modeViewPluginNames = &mAnalysisViewPluginNames;
             }
 
-            for (int i = 0; i < modeViews->count(); ++i)
+            for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
                 if (!modeViewPluginNames->value(i).compare(crtViewPluginName)) {
                     // A valid current view was retrieved, so select it
 
@@ -299,7 +299,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     QStringList openedFiles;
 
-    for (int i = 0; i < mFiles->count(); ++i)
+    for (int i = 0, iMax = mFiles->count(); i < iMax; ++i)
         openedFiles << mFiles->tabToolTip(i);
 
     pSettings->setValue(SettingsOpenedFiles, openedFiles);
@@ -384,7 +384,7 @@ void CentralWidget::openFiles(const QStringList &pFileNames)
 {
     // Open the various files
 
-    for (int i = 0; i < pFileNames.count(); ++i)
+    for (int i = 0, iMax = pFileNames.count(); i < iMax; ++i)
         openFile(pFileNames.at(i));
 }
 
@@ -469,7 +469,7 @@ bool CentralWidget::activateFile(const QString &pFileName)
 
     QString nativeFileName = File::nativeFileName(pFileName);
 
-    for (int i = 0; i < mFiles->count(); ++i)
+    for (int i = 0, iMax = mFiles->count(); i < iMax; ++i)
         if (!mFiles->tabToolTip(i).compare(nativeFileName)) {
             // We have found the file, so set the current index to that of its
             // tab
@@ -655,7 +655,7 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
     QList<QUrl> urlList = pEvent->mimeData()->urls();
     QStringList fileNames;
 
-    for (int i = 0; i < urlList.count(); ++i)
+    for (int i = 0, iMax = urlList.count(); i < iMax; ++i)
     {
         QString fileName = urlList.at(i).toLocalFile();
         QFileInfo fileInfo = fileName;

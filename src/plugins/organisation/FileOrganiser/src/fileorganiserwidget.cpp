@@ -422,7 +422,7 @@ void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
 
     int childParentItemIndex = crtItemIndex;
 
-    for (int i = 0; i < pItem->rowCount(); ++i)
+    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
         saveItemSettings(pSettings, pItem->child(i), childParentItemIndex);
 }
 
@@ -613,7 +613,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 
         QList<QStandardItem *> items;
 
-        for (int i = 0; i < indexes.count(); ++i)
+        for (int i = 0, iMax = indexes.count(); i < iMax; ++i)
             items << mDataModel->itemFromIndex(indexes.at(i));
 
         // Move the contents of the list to its final destination
@@ -621,7 +621,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         if (dropPosition != QAbstractItemView::BelowItem)
             // Move the items in the order they were dropped
 
-            for (int i = 0; i < items.count(); ++i)
+            for (int i = 0, iMax = items.count(); i < iMax; ++i)
                 moveItem(items.at(i), dropItem, dropPosition);
         else
             // Move the items in a reverse order to that they were dropped since
@@ -638,7 +638,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         if (dropPosition != QAbstractItemView::BelowItem)
             // Add the files in the order they were dropped
 
-            for (int i = 0; i < urls.count(); ++i)
+            for (int i = 0, iMax = urls.count(); i < iMax; ++i)
                 addFile(urls.at(i).toLocalFile(), dropItem, dropPosition);
         else
             // Add the files in a reverse order to that they were dropped since
@@ -704,7 +704,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
     // contents is in the original list, then we only keep track of the index of
     // the folder
 
-    for (int i = 0; i < pIndexes.count(); ++i) {
+    for (int i = 0, iMax = pIndexes.count(); i < iMax; ++i) {
         // Check whether one of the current index's parents is already in the
         // list. If so, then skip the current index
 
@@ -783,7 +783,7 @@ bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
     } else if (pOtherItem->rowCount()) {
         // pOtherItem has children, so check against them
 
-        for (int i = 0; i < pOtherItem->rowCount(); ++i)
+        for (int i = 0, iMax = pOtherItem->rowCount(); i < iMax; ++i)
             if (itemIsOrIsChildOf(pItem, pOtherItem->child(i)))
                 // pItem is a (in)direct child of pOtherItem, so...
 
@@ -814,7 +814,7 @@ void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem) const
 
         // Do the same with all of pItem's children, if any
 
-        for (int i = 0; i < pItem->rowCount(); ++i)
+        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
             backupExpandedInformation(pItem->child(i));
     }
 }
@@ -834,7 +834,7 @@ void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
 
         // Do the same with all of pItem's children, if any
 
-        for (int i = 0; i < pItem->rowCount(); ++i)
+        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
             restoreExpandedInformation(pItem->child(i));
     }
 }
@@ -856,7 +856,7 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem) const
 
     QStringList subFolderNames;
 
-    for (int i = 0; i < pFolderItem->rowCount(); ++i)
+    for (int i = 0, iMax = pFolderItem->rowCount(); i < iMax; ++i)
         subFolderNames << pFolderItem->child(i)->text();
 
     // Compare the suggested name of our new folder with that of the folders
@@ -1203,7 +1203,7 @@ void FileOrganiserWidget::collapseEmptyFolders(QStandardItem *pFolder)
 {
     // Recursively collapse any empty child folder
 
-    for (int i = 0; i < pFolder->rowCount(); ++i)
+    for (int i = 0, iMax = pFolder->rowCount(); i < iMax; ++i)
         if (pFolder->child(i)->data(Item::Folder).toBool())
             collapseEmptyFolders(pFolder->child(i));
 
@@ -1298,7 +1298,7 @@ QStringList FileOrganiserWidget::selectedFiles() const
     QStringList res;
     QModelIndexList crtSelectedIndexes = selectedIndexes();
 
-    for (int i = 0; i < crtSelectedIndexes.count(); ++i) {
+    for (int i = 0, iMax = crtSelectedIndexes.count(); i < iMax; ++i) {
         QString fileName = filePath(crtSelectedIndexes.at(i));
 
         if (fileName.isEmpty())
@@ -1386,7 +1386,7 @@ void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
 
     // Update our child file items, if any
 
-    for (int i = 0; i < pItem->rowCount(); ++i)
+    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
         updateFileItems(pItem->child(i), pFileName, pStatus);
 }
 
