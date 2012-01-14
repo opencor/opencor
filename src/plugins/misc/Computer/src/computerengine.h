@@ -124,13 +124,15 @@ private:
 
     bool parseFunction(ComputerScanner &pScanner,
                        ComputerEngineFunction &pFunction);
+    bool parseParameters(ComputerScanner &pScanner,
+                         ComputerEngineFunction &pFunction);
     bool parseParameter(ComputerScanner &pScanner,
                         ComputerEngineFunction &pFunction,
                         const bool &pNeeded = true);
-    bool parseParameters(ComputerScanner &pScanner,
-                         ComputerEngineFunction &pFunction);
     bool parseEquations(ComputerScanner &pScanner,
                         ComputerEngineFunction &pFunction);
+    bool parseEquationParameter(ComputerScanner &pScanner,
+                                QString &pArrayName, int &pArrayIndex);
     bool parseEquationRhs(ComputerScanner &pScanner,
                           ComputerEngineFunction &pFunction);
     bool parseReturn(ComputerScanner &pScanner,

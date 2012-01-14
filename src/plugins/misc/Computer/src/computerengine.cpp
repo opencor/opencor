@@ -391,16 +391,14 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
     // double function
 
     if (pScanner.token().symbol() == ComputerScannerToken::Void) {
-        // We are dealing with a void function
+        // We are dealing with a void function, so set the function as such
 
         pFunction.setType(ComputerEngineFunction::Void);
     } else if (pScanner.token().symbol() == ComputerScannerToken::Double) {
-        // We are dealing with a double function
+        // We are dealing with a double function, so set the function as such
 
         pFunction.setType(ComputerEngineFunction::Double);
     } else {
-        // We are dealing with neither a void nor a double function, so...
-
         addIssue(pScanner.token(), tr("either 'void' or 'double'"));
 
         return false;
@@ -408,15 +406,13 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
 
     pScanner.getNextToken();
 
-    // Retrieve the name of the function
+    // The current token must be an identifier
 
     if (pScanner.token().symbol() == ComputerScannerToken::Identifier) {
         // We got an identifier, so set the name of the function
 
         pFunction.setName(pScanner.token().string());
     } else {
-        // We got something else, so...
-
         addIssue(pScanner.token(), tr("an identifier"));
 
         return false;
@@ -503,6 +499,47 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
 
 //==============================================================================
 
+bool ComputerEngine::parseParameters(ComputerScanner &pScanner,
+                                     ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of a list of parameters is as follows:
+    //
+    //   Parameters = Parameter { "," Parameter } ;
+
+    // We must have 1+/0+ parameters in the case of a void/double function
+
+    bool needAtLeastOneParameter = pFunction.type() == ComputerEngineFunction::Void;
+
+    if (parseParameter(pScanner, pFunction, needAtLeastOneParameter))
+        // The first parameter was properly parsed, so look for other parameters
+
+        // The current token must be "," if we are to have another parameter
+        // definition
+
+        while (pScanner.token().symbol() == ComputerScannerToken::Comma) {
+            pScanner.getNextToken();
+
+            // We must then have the parameter definition itself
+
+            if (!parseParameter(pScanner, pFunction))
+                // Something went wrong with the parsing of the parameter
+                // definition, so...
+
+                return false;
+        }
+    else
+        // Something went wrong with the parsing of the parameter definition,
+        // but it should only be reported as an error if we expected a parameter
+
+        return !needAtLeastOneParameter;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
 bool ComputerEngine::parseParameter(ComputerScanner &pScanner,
                                     ComputerEngineFunction &pFunction,
                                     const bool &pNeeded)
@@ -549,55 +586,12 @@ bool ComputerEngine::parseParameter(ComputerScanner &pScanner,
             return false;
         }
     } else {
-        // We got something else, so...
-
         addIssue(pScanner.token(), tr("an identifier"));
 
         return false;
     }
 
     pScanner.getNextToken();
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
-bool ComputerEngine::parseParameters(ComputerScanner &pScanner,
-                                     ComputerEngineFunction &pFunction)
-{
-    // The EBNF grammar of a list of parameters is as follows:
-    //
-    //   Parameters = Parameter { "," Parameter } ;
-
-    // We must have 1+/0+ parameters in the case of a void/double function
-
-    bool needAtLeastOneParameter = pFunction.type() == ComputerEngineFunction::Void;
-
-    if (parseParameter(pScanner, pFunction, needAtLeastOneParameter))
-        // The first parameter was properly parsed, so look for other parameters
-
-        // The current token must be "," if we are to have another parameter
-        // definition
-
-        while (pScanner.token().symbol() == ComputerScannerToken::Comma) {
-            pScanner.getNextToken();
-
-            // We must then have the parameter definition itself
-
-            if (!parseParameter(pScanner, pFunction))
-                // Something went wrong with the parsing of the parameter
-                // definition, so...
-
-                return false;
-        }
-    else
-        // Something went wrong with the parsing of the parameter definition,
-        // but it should only be reported as an error if we expected a parameter
-
-        return !needAtLeastOneParameter;
 
     // Everything went fine, so...
 
@@ -621,43 +615,19 @@ bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
 
         ComputerEngineEquation *equation = new ComputerEngineEquation();
 
-        pScanner.getNextToken();
+        // Parse the equation parameter
 
-        // The current token must be "["
+        QString arrayName;
+        int arrayIndex;
 
-        if (pScanner.token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
-            addIssue(pScanner.token(), "'['");
-
-            delete equation;
-
-            return false;
-        }
-
-        pScanner.getNextToken();
-
-        // The current token must be an integer valud
-
-        if (pScanner.token().symbol() != ComputerScannerToken::IntegerValue) {
-            addIssue(pScanner.token(), tr("an integer"));
+        if (!parseEquationParameter(pScanner, arrayName, arrayIndex)) {
+            // Something went wrong with the parsing of the equation parameter,
+            // so...
 
             delete equation;
 
             return false;
         }
-
-        pScanner.getNextToken();
-
-        // The current token must be "]"
-
-        if (pScanner.token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
-            addIssue(pScanner.token(), "']'");
-
-            delete equation;
-
-            return false;
-        }
-
-        pScanner.getNextToken();
 
         // The current token must be "="
 
@@ -674,6 +644,9 @@ bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
         // Parse the RHS of the equation
 
         if (!parseEquationRhs(pScanner, pFunction)) {
+            // Something went wrong with the parsing of the RHS of the equation,
+            // so...
+
             delete equation;
 
             return false;
@@ -694,6 +667,65 @@ bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
 
         pFunction.addEquation(equation);
     }
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool ComputerEngine::parseEquationParameter(ComputerScanner &pScanner,
+                                            QString &pArrayName,
+                                            int &pArrayIndex)
+{
+    // The current token must be an identifier
+
+    if (pScanner.token().symbol() == ComputerScannerToken::Identifier) {
+        // We got an identifier, so set the name of the array
+
+        pArrayName = pScanner.token().string();
+    } else {
+        addIssue(pScanner.token(), tr("an identifier"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // The current token must be "["
+
+    if (pScanner.token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
+        addIssue(pScanner.token(), "'['");
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // The current token must be an integer value
+
+    if (pScanner.token().symbol() == ComputerScannerToken::IntegerValue) {
+        // We got an integer value, so set the name of the array
+
+        pArrayIndex = pScanner.token().string().toInt();
+    } else {
+        addIssue(pScanner.token(), tr("an integer"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // The current token must be "]"
+
+    if (pScanner.token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
+        addIssue(pScanner.token(), "']'");
+
+        return false;
+    }
+
+    pScanner.getNextToken();
 
     // Everything went fine, so...
 
