@@ -85,6 +85,59 @@ QString ComputerEngineIssue::extraInformation() const
 
 //==============================================================================
 
+ComputerEngineExternalFunction::ComputerEngineExternalFunction(const QString &pName,
+                                                               const int &pNbOfParameters) :
+    mName(pName),
+    mNbOfParameters(pNbOfParameters)
+{
+}
+
+//==============================================================================
+
+QString ComputerEngineExternalFunction::name() const
+{
+    // Return the external function's name
+
+    return mName;
+}
+
+//==============================================================================
+
+int ComputerEngineExternalFunction::nbOfParameters() const
+{
+    // Return the external function's number of parameters
+
+    return mNbOfParameters;
+}
+
+//==============================================================================
+
+bool ComputerEngineExternalFunctions::contains(const ComputerEngineExternalFunction &pExternalFunction) const
+{
+    // Check whether an external function is already in our list of external
+    // functions needed by the function
+    // Note: we only check the name of the external function, not the number of
+    //       its parameters (since the latter should always be the same for a
+    //       given external function)
+
+    for (int i = 0, iMax = count(); i < iMax; ++i) {
+        const ComputerEngineExternalFunction &externalFunction = at(i);
+
+        if (!externalFunction.name().compare(pExternalFunction.name()))
+            // The external function is already in our list of external
+            // functions, so...
+
+            return true;
+    }
+
+    // The external function couldn't be found in our list of external
+    // functions, so...
+
+    return false;
+}
+
+//==============================================================================
+
 ComputerEngineFunction::ComputerEngineFunction() :
     mIrCode(0),
     mType(Void),
@@ -220,6 +273,29 @@ void ComputerEngineFunction::setReturnValue(const QString &pReturnValue)
     // Set the function's return value
 
     mReturnValue = pReturnValue;
+}
+
+//==============================================================================
+
+ComputerEngineExternalFunctions ComputerEngineFunction::externalFunctions() const
+{
+    // Return the function's external functions
+
+    return mExternalFunctions;
+}
+
+//==============================================================================
+
+void ComputerEngineFunction::addExternalFunction(const ComputerEngineExternalFunction &pExternalFunction)
+{
+    // Add an external function which is needed by the function, but only if the
+    // external function isn't already in our list of external functions
+
+    if (!mExternalFunctions.contains(pExternalFunction))
+        // The external function isn't already in our list of external
+        // functions, so add it
+
+        mExternalFunctions.append(pExternalFunction);
 }
 
 //==============================================================================
@@ -808,6 +884,41 @@ bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
     static QString indent = QString("  ");
     QString assemblyCode = QString();
 
+    // Declare any external function which we need and in case they are not
+    // already declared
+
+    foreach (const ComputerEngineExternalFunction &externalFunction,
+             pFunction.externalFunctions())
+        if (!mExternalFunctions.contains(externalFunction)) {
+            // The function's external function hasn't already been declared, so
+            // declare it
+
+            assemblyCode += QString("declare double @%1").arg(externalFunction.name());
+
+            QString parameters = QString();
+
+            for (int i = 0, iMax = externalFunction.nbOfParameters(); i < iMax; ++i) {
+                // Add a separator first if we already have 1+ parameters
+
+                if (!parameters.isEmpty())
+                    parameters += ", ";
+
+                // Add the parameter definition
+
+                parameters += "double";
+            }
+
+            assemblyCode += "("+parameters+") nounwind readnone\n";
+
+            // Add the extenral function to the computer engine's list of
+            // external functions
+
+            mExternalFunctions.append(externalFunction);
+        }
+
+    if (!assemblyCode.isEmpty())
+        assemblyCode += "\n";
+
     // Define the function
 
     assemblyCode += "define";
@@ -835,16 +946,18 @@ bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
 
         // Add the parameter definition
 
-        parameters += "double* %%"+parameter;
+        parameters += "double* nocapture %%"+parameter;
     }
 
     assemblyCode += "("+parameters+")";
 
     // Additional information for the function definition
 
-    assemblyCode += " {\n";
+    assemblyCode += " nounwind uwtable {\n";
 
     // Mathematical statements
+
+    bool tbaaMetadataNeeded = false;
 
 //---GRY--- TO BE DONE...
 
@@ -858,6 +971,15 @@ bool ComputerEngine::compileFunction(ComputerEngineFunction &pFunction)
     // End the function
 
     assemblyCode += "}";
+
+    // Add the TBAA metadata, if neeeded
+
+    if (tbaaMetadataNeeded) {
+        assemblyCode += "\n\n";
+        assemblyCode += "!0 = metadata !{metadata !\"double\", metadata !1}\n";
+        assemblyCode += "!1 = metadata !{metadata !\"omnipotent char\", metadata !2}\n";
+        assemblyCode += "!2 = metadata !{metadata !\"Simple C/C++ TBAA\", null}";
+    }
 
     // Now that we are done generating some LLVM assembly code for the function,
     // we can parse that code and have LLVM generate some IR code that will get

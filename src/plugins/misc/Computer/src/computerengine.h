@@ -56,6 +56,32 @@ class ComputerEngineEquation
 
 typedef QList<ComputerEngineEquation *> ComputerEngineEquations;
 
+//==============================================================================
+
+class ComputerEngineExternalFunction
+{
+public:
+    explicit ComputerEngineExternalFunction(const QString &pName,
+                                            const int &pNbOfParameters);
+
+    QString name() const;
+    int nbOfParameters() const;
+
+private:
+    QString mName;
+    int mNbOfParameters;
+};
+
+//==============================================================================
+
+class ComputerEngineExternalFunctions : public QList<ComputerEngineExternalFunction>
+{
+public:
+    bool contains(const ComputerEngineExternalFunction &pExternalFunction) const;
+};
+
+//==============================================================================
+
 class ComputerEngineFunction
 {
 public:
@@ -85,6 +111,9 @@ public:
     QString returnValue() const;
     void setReturnValue(const QString &pReturnValue);
 
+    ComputerEngineExternalFunctions externalFunctions() const;
+    void addExternalFunction(const ComputerEngineExternalFunction &pExternalFunction);
+
 private:
     llvm::Function * mIrCode;
 
@@ -93,6 +122,8 @@ private:
     QStringList mParameters;
     ComputerEngineEquations mEquations;
     QString mReturnValue;
+
+    ComputerEngineExternalFunctions mExternalFunctions;
 };
 
 //==============================================================================
@@ -117,6 +148,8 @@ private:
     llvm::ExecutionEngine *mExecutionEngine;
 
     QList<ComputerEngineIssue> mIssues;
+
+    ComputerEngineExternalFunctions mExternalFunctions;
 
     void addIssue(const ComputerScannerToken &pToken, const QString &pMessage,
                   const bool &pExpectedMessage = true,
