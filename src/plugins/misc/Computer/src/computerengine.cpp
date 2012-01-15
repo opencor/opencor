@@ -810,26 +810,213 @@ bool ComputerEngine::parseEquationParameter(ComputerScanner &pScanner,
 
 //==============================================================================
 
+typedef bool (*ParseGenericExpression)(ComputerScanner &, ComputerEngineFunction &);
+
+bool parseLogicalOrExpression(ComputerScanner &pScanner,
+                              ComputerEngineFunction &pFunction);
+bool parseLogicalAndExpression(ComputerScanner &pScanner,
+                               ComputerEngineFunction &pFunction);
+bool parseInclusiveOrExpression(ComputerScanner &pScanner,
+                                ComputerEngineFunction &pFunction);
+bool parseExclusiveOrExpression(ComputerScanner &pScanner,
+                                ComputerEngineFunction &pFunction);
+bool parseAndExpression(ComputerScanner &pScanner,
+                        ComputerEngineFunction &pFunction);
+bool parseEqualityExpression(ComputerScanner &pScanner,
+                             ComputerEngineFunction &pFunction);
+
+//==============================================================================
+
+bool parseGenericExpression(ComputerScanner &pScanner,
+                            ComputerEngineFunction &pFunction,
+                            const ComputerScannerToken::Symbol &pSymbol,
+                            ParseGenericExpression pParseGenericExpression)
+{
+    // Parse the generic expression
+
+    if (!pParseGenericExpression(pScanner, pFunction))
+        // Something went wrong with the parsing of the generic expression,
+        // so...
+
+        return false;
+
+    // Check whether the current token's symbol is of the type we are after
+
+    while (pScanner.token().symbol() == pSymbol) {
+        // We got the right symbol
+
+        pScanner.getNextToken();
+
+        // Parse the generic expression
+
+        if (!pParseGenericExpression(pScanner, pFunction))
+            // Something went wrong with the parsing of the generic expression,
+            // so...
+
+            return false;
+    }
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseLogicalOrExpression(ComputerScanner &pScanner,
+                              ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of a logical Or expression is as follows:
+    //
+    //   LogicalOrExpression =   LogicalAndExpression
+    //                         | ( LogicalOrExpression "||" LogicalAndExpression ) ;
+
+    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::LogicalOr,
+                                parseLogicalAndExpression))
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseLogicalAndExpression(ComputerScanner &pScanner,
+                               ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of a logical And expression is as follows:
+    //
+    //   LogicalAndExpression =   InclusiveOrExpression
+    //                          | ( LogicalAndExpression "&&" InclusiveOrExpression ) ;
+
+    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::LogicalAnd,
+                                parseInclusiveOrExpression))
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseInclusiveOrExpression(ComputerScanner &pScanner,
+                                ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of an inclusive Or expression is as follows:
+    //
+    //   InclusiveOrExpression =   ExclusiveOrExpression
+    //                           | ( InclusiveOrExpression "|" ExclusiveOrExpression ) ;
+
+    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::InclusiveOr,
+                                parseExclusiveOrExpression))
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseExclusiveOrExpression(ComputerScanner &pScanner,
+                                ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of an exclusive Or expression is as follows:
+    //
+    //   ExclusiveOrExpression =   AndExpression
+    //                           | ( ExclusiveOrExpression "^" AndExpression ) ;
+
+    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::ExclusiveOr,
+                                parseAndExpression))
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseAndExpression(ComputerScanner &pScanner,
+                        ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of an And expression is as follows:
+    //
+    //   AndExpression =   EqualityExpression
+    //                   | ( AndExpression "&" EqualityExpression ) ;
+
+    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::And,
+                                parseEqualityExpression))
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseEqualityExpression(ComputerScanner &pScanner,
+                             ComputerEngineFunction &pFunction)
+{
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
 bool ComputerEngine::parseEquationRhs(ComputerScanner &pScanner,
                                       ComputerEngineFunction &pFunction)
 {
     // The EBNF grammar of an equation's RHS is as follows:
     //
-    //   EquationRHS = ...
+    //   EquationRHS =   LogicalOrExpression
+    //                 | ( LogicalOrExpression "?" EquationRHS ":" EquationRHS ) ;
 
-//---GRY--- TO BE DONE...
+    // Parse a logical Or expression
 
-//---GRY--- THE BELOW CODE PARSES A NUMBER AND IS ONLY FOR TESTING PURPOSES...
-if (   (pScanner.token().symbol() == ComputerScannerToken::IntegerValue)
-    || (pScanner.token().symbol() == ComputerScannerToken::DoubleValue)) {
-    pFunction.setReturnValue(pScanner.token().string());
-} else {
-    addIssue(pScanner.token(), "a number");
+    if (!parseLogicalOrExpression(pScanner, pFunction))
+        // Something went wrong with the parsing of a logical Or expression,
+        // so...
 
-    return false;
-}
+        return false;
 
-pScanner.getNextToken();
+    // Check whether the current token is "?"
+
+    while (pScanner.token().symbol() == ComputerScannerToken::QuestionMark) {
+        // We got "?" which means that we should have a conditional statement
+
+        pScanner.getNextToken();
+
+        // Parse the RHS of the equation
+
+        if (!parseEquationRhs(pScanner, pFunction))
+            // Something went wrong with the parsing of the RHS of the equation,
+            // so...
+
+            return false;
+
+        // The current token must be ":"
+
+        if (pScanner.token().symbol() != ComputerScannerToken::Colon) {
+            addIssue(pScanner.token(), "':'");
+
+            return false;
+        }
+
+        pScanner.getNextToken();
+
+        // Parse the RHS of the equation
+
+        if (!parseEquationRhs(pScanner, pFunction))
+            // Something went wrong with the parsing of the RHS of the equation,
+            // so...
+
+            return false;
+    }
 
     // Everything went fine, so...
 

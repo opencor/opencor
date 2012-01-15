@@ -35,7 +35,8 @@ public:
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
         OpeningSquareBracket, ClosingSquareBracket,
-        Equal, Comma, SemiColon,
+        Equal, Comma, Colon, SemiColon, QuestionMark,
+        InclusiveOr, ExclusiveOr, LogicalOr, And, LogicalAnd,
         Return,
         Unknown, Identifier, IntegerValue, DoubleValue, Eof
     };
@@ -46,7 +47,6 @@ public:
     int column() const;
 
     Symbol symbol() const;
-    QString symbolAsString() const;
     void setSymbol(const Symbol &pSymbol);
 
     QString string() const;
@@ -64,6 +64,8 @@ private:
 //==============================================================================
 
 typedef QMap<QString, ComputerScannerToken::Symbol> ComputerScannerKeywords;
+
+//==============================================================================
 
 class ComputerScanner
 {

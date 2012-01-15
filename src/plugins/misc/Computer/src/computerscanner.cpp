@@ -23,7 +23,12 @@ static const QChar OpeningSquareBracket = QChar('[');
 static const QChar ClosingSquareBracket = QChar(']');
 static const QChar Equal                = QChar('=');
 static const QChar Comma                = QChar(',');
+static const QChar Colon                = QChar(':');
 static const QChar SemiColon            = QChar(';');
+static const QChar QuestionMark         = QChar('?');
+static const QChar InclusiveOr          = QChar('|');
+static const QChar ExclusiveOr          = QChar('^');
+static const QChar And                  = QChar('&');
 static const QChar FullStop             = QChar('.');
 static const QChar LowerCaseE           = QChar('e');
 static const QChar UpperCaseE           = QChar('E');
@@ -63,54 +68,6 @@ ComputerScannerToken::Symbol ComputerScannerToken::symbol() const
     // Return the token's symbol
 
     return mSymbol;
-}
-
-//==============================================================================
-
-QString ComputerScannerToken::symbolAsString() const
-{
-    // Return the token's symbol as a string
-
-    switch (mSymbol) {
-    case Void:
-        return "Void";
-    case Double:
-        return "Double";
-    case Times:
-        return "Times";
-    case OpeningBracket:
-        return "OpeningBracket";
-    case ClosingBracket:
-        return "ClosingBracket";
-    case OpeningCurlyBracket:
-        return "OpeningCurlyBracket";
-    case ClosingCurlyBracket:
-        return "ClosingCurlyBracket";
-    case OpeningSquareBracket:
-        return "OpeningSquareBracket";
-    case ClosingSquareBracket:
-        return "ClosingSquareBracket";
-    case Equal:
-        return "Equal";
-    case Comma:
-        return "Comma";
-    case SemiColon:
-        return "SemiColon";
-    case Return:
-        return "Return";
-    case Unknown:
-        return "Unknown";
-    case Identifier:
-        return "Identifier";
-    case IntegerValue:
-        return "IntegerValue";
-    case DoubleValue:
-        return "DoubleValue";
-    case Eof:
-        return "Eof";
-    default:
-        return "???";
-    }
 }
 
 //==============================================================================
@@ -429,30 +386,93 @@ void ComputerScanner::getNextToken()
 
         mToken.setString(mChar);
 
-        if (mChar == Times)
+        if (mChar == Times) {
             mToken.setSymbol(ComputerScannerToken::Times);
-        else if (mChar == OpeningBracket)
+
+            getNextChar();
+        } else if (mChar == OpeningBracket) {
             mToken.setSymbol(ComputerScannerToken::OpeningBracket);
-        else if (mChar == ClosingBracket)
+
+            getNextChar();
+        } else if (mChar == ClosingBracket) {
             mToken.setSymbol(ComputerScannerToken::ClosingBracket);
-        else if (mChar == OpeningCurlyBracket)
+
+            getNextChar();
+        } else if (mChar == OpeningCurlyBracket) {
             mToken.setSymbol(ComputerScannerToken::OpeningCurlyBracket);
-        else if (mChar == ClosingCurlyBracket)
+
+            getNextChar();
+        } else if (mChar == ClosingCurlyBracket) {
             mToken.setSymbol(ComputerScannerToken::ClosingCurlyBracket);
-        else if (mChar == OpeningSquareBracket)
+
+            getNextChar();
+        } else if (mChar == OpeningSquareBracket) {
             mToken.setSymbol(ComputerScannerToken::OpeningSquareBracket);
-        else if (mChar == ClosingSquareBracket)
+
+            getNextChar();
+        } else if (mChar == ClosingSquareBracket) {
             mToken.setSymbol(ComputerScannerToken::ClosingSquareBracket);
-        else if (mChar == Equal)
+
+            getNextChar();
+        } else if (mChar == Equal) {
             mToken.setSymbol(ComputerScannerToken::Equal);
-        else if (mChar == Comma)
+
+            getNextChar();
+        } else if (mChar == Comma) {
             mToken.setSymbol(ComputerScannerToken::Comma);
-        else if (mChar == SemiColon)
+
+            getNextChar();
+        } else if (mChar == Colon) {
+            mToken.setSymbol(ComputerScannerToken::Colon);
+
+            getNextChar();
+        } else if (mChar == SemiColon) {
             mToken.setSymbol(ComputerScannerToken::SemiColon);
 
-        // Get the next character
+            getNextChar();
+        } else if (mChar == QuestionMark) {
+            mToken.setSymbol(ComputerScannerToken::QuestionMark);
 
-        getNextChar();
+            getNextChar();
+        } else if (mChar == InclusiveOr) {
+            // Depending on the next character, the symbol may be a logical Or
+            // rather than an inclusive Or
+
+            getNextChar();
+
+            if (mChar == InclusiveOr) {
+                // We got another inclusive Or, so...
+
+                mToken.setSymbol(ComputerScannerToken::LogicalOr);
+
+                getNextChar();
+            } else {
+                // Only one bit Or, so...
+
+                mToken.setSymbol(ComputerScannerToken::InclusiveOr);
+            }
+        } else if (mChar == ExclusiveOr) {
+            mToken.setSymbol(ComputerScannerToken::ExclusiveOr);
+
+            getNextChar();
+        } else if (mChar == And) {
+            // Depending on the next character, the symbol may be a logical And
+            // rather than an And
+
+            getNextChar();
+
+            if (mChar == And) {
+                // We got another And, so...
+
+                mToken.setSymbol(ComputerScannerToken::LogicalAnd);
+
+                getNextChar();
+            } else {
+                // Only one And, so...
+
+                mToken.setSymbol(ComputerScannerToken::And);
+            }
+        }
     }
 }
 
