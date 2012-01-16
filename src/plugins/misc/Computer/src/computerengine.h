@@ -143,6 +143,13 @@ public:
 
     llvm::Function * addFunction(const QString &pFunction);
 
+    void addIssue(const ComputerScannerToken &pToken, const QString &pMessage,
+                  const bool &pExpectedMessage = true,
+                  const QString &pExtraInformation = QString());
+
+    bool parseEquationRhs(ComputerScanner &pScanner,
+                          ComputerEngineFunction &pFunction);
+
 private:
     llvm::Module *mModule;
     llvm::ExecutionEngine *mExecutionEngine;
@@ -151,23 +158,15 @@ private:
 
     ComputerEngineExternalFunctions mExternalFunctions;
 
-    void addIssue(const ComputerScannerToken &pToken, const QString &pMessage,
-                  const bool &pExpectedMessage = true,
-                  const QString &pExtraInformation = QString());
-
     bool parseFunction(ComputerScanner &pScanner,
                        ComputerEngineFunction &pFunction);
-    bool parseParameters(ComputerScanner &pScanner,
-                         ComputerEngineFunction &pFunction);
-    bool parseParameter(ComputerScanner &pScanner,
-                        ComputerEngineFunction &pFunction,
+    bool parseFunctionParameters(ComputerScanner &pScanner,
+                                 ComputerEngineFunction &pFunction);
+    bool parseFunctionParameter(ComputerScanner &pScanner,
+                                ComputerEngineFunction &pFunction,
                         const bool &pNeeded = true);
     bool parseEquations(ComputerScanner &pScanner,
                         ComputerEngineFunction &pFunction);
-    bool parseEquationParameter(ComputerScanner &pScanner,
-                                QString &pArrayName, int &pArrayIndex);
-    bool parseEquationRhs(ComputerScanner &pScanner,
-                          ComputerEngineFunction &pFunction);
     bool parseReturn(ComputerScanner &pScanner,
                      ComputerEngineFunction &pFunction);
 

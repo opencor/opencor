@@ -20,8 +20,8 @@
         <translation>un identifiant</translation>
     </message>
     <message>
-        <source>there is already a parameter called &apos;%1&apos;</source>
-        <translation>il y a déjà un paramètre qui s&apos;appelle &apos;%1&apos;</translation>
+        <source>there is already a function parameter called &apos;%1&apos;</source>
+        <translation>il y a déjà un paramètre de fonction qui s&apos;appelle &apos;%1&apos;</translation>
     </message>
     <message>
         <source>the LLVM assembly code could not be parsed: %1</source>
@@ -30,6 +30,17 @@
     <message>
         <source>the function &apos;%1&apos; could not be found</source>
         <translation>La fonction &apos;%1&apos; n&apos;a pas pu être trouvée</translation>
+    </message>
+    <message>
+        <source>an integer</source>
+        <translation>un nombre entier</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>an identifier</source>
+        <translation>un identifiant</translation>
     </message>
     <message>
         <source>an integer</source>

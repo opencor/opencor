@@ -455,8 +455,8 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
     // The EBNF grammar of a function is as follows:
     //
     //   Function       = VoidFunction | DoubleFunction ;
-    //   VoidFunction   = "void" Identifier "(" Parameters ")" "{" [ Equations ] "}" ;
-    //   DoubleFunction = "double" Identifier "(" [ Parameters ] ")" "{" [ Equations ] Return "}" ;
+    //   VoidFunction   = "void" Identifier "(" FunctionParameters ")" "{" [ Equations ] "}" ;
+    //   DoubleFunction = "double" Identifier "(" [ FunctionParameters ] ")" "{" [ Equations ] Return "}" ;
 
     // Note that after retrieving/parsing something, we must get ready for the
     // next task and this means getting the next token. Indeed, doing so means
@@ -506,11 +506,11 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
 
     pScanner.getNextToken();
 
-    // Parse the different parameters
+    // Parse the different function parameters
 
-    if (!parseParameters(pScanner, pFunction))
-        // Something went wrong with the parsing of the different parameters,
-        // so...
+    if (!parseFunctionParameters(pScanner, pFunction))
+        // Something went wrong with the parsing of the different function
+        // parameters, so...
 
         return false;
 
@@ -575,39 +575,43 @@ bool ComputerEngine::parseFunction(ComputerScanner &pScanner,
 
 //==============================================================================
 
-bool ComputerEngine::parseParameters(ComputerScanner &pScanner,
-                                     ComputerEngineFunction &pFunction)
+bool ComputerEngine::parseFunctionParameters(ComputerScanner &pScanner,
+                                             ComputerEngineFunction &pFunction)
 {
-    // The EBNF grammar of a list of parameters is as follows:
+    // The EBNF grammar of a list of function parameters is as follows:
     //
-    //   Parameters = Parameter { "," Parameter } ;
+    //   FunctionParameters = FunctionParameter { "," FunctionParameter } ;
 
-    // We must have 1+/0+ parameters in the case of a void/double function
+    // We must have 1+/0+ function parameters in the case of a void/double
+    // function
 
-    bool needAtLeastOneParameter = pFunction.type() == ComputerEngineFunction::Void;
+    bool needAtLeastOneFunctionParameter = pFunction.type() == ComputerEngineFunction::Void;
 
-    if (parseParameter(pScanner, pFunction, needAtLeastOneParameter))
-        // The first parameter was properly parsed, so look for other parameters
+    if (parseFunctionParameter(pScanner, pFunction,
+                               needAtLeastOneFunctionParameter))
+        // The first function parameter was properly parsed, so look for other
+        // function parameters
 
-        // The current token must be "," if we are to have another parameter
-        // definition
+        // The current token must be "," if we are to have another function
+        // parameter definition
 
         while (pScanner.token().symbol() == ComputerScannerToken::Comma) {
             pScanner.getNextToken();
 
-            // We must then have the parameter definition itself
+            // We must then have the function parameter definition itself
 
-            if (!parseParameter(pScanner, pFunction))
-                // Something went wrong with the parsing of the parameter
-                // definition, so...
+            if (!parseFunctionParameter(pScanner, pFunction))
+                // Something went wrong with the parsing of the function
+                // parameter definition, so...
 
                 return false;
         }
     else
-        // Something went wrong with the parsing of the parameter definition,
-        // but it should only be reported as an error if we expected a parameter
+        // Something went wrong with the parsing of the function parameter
+        // definition, but it should only be reported as an error if we expected
+        // a function parameter
 
-        return !needAtLeastOneParameter;
+        return !needAtLeastOneFunctionParameter;
 
     // Everything went fine, so...
 
@@ -616,19 +620,19 @@ bool ComputerEngine::parseParameters(ComputerScanner &pScanner,
 
 //==============================================================================
 
-bool ComputerEngine::parseParameter(ComputerScanner &pScanner,
-                                    ComputerEngineFunction &pFunction,
-                                    const bool &pNeeded)
+bool ComputerEngine::parseFunctionParameter(ComputerScanner &pScanner,
+                                            ComputerEngineFunction &pFunction,
+                                            const bool &pNeeded)
 {
-    // The EBNF grammar of a parameter is as follows:
+    // The EBNF grammar of a function parameter is as follows:
     //
-    //   Parameter  = "double" "*" Identifier ;
+    //   FunctionParameter = "double" "*" Identifier ;
 
     // The current token must be "double"
 
     if (pScanner.token().symbol() != ComputerScannerToken::Double) {
         if (pNeeded)
-            // We need a parameter definition, so...
+            // We need a function parameter definition, so...
 
             addIssue(pScanner.token(), "'double'");
 
@@ -650,13 +654,14 @@ bool ComputerEngine::parseParameter(ComputerScanner &pScanner,
     // The current token must be an identifier
 
     if (pScanner.token().symbol() == ComputerScannerToken::Identifier) {
-        // We got an identifier, so try to add it as the name of a new parameter
+        // We got an identifier, so try to add it as the name of a new function
+        // parameter
 
         if (!pFunction.addParameter(pScanner.token().string())) {
-            // The parameter already exists, so...
+            // The function parameter already exists, so...
 
             addIssue(pScanner.token(),
-                     tr("there is already a parameter called '%1'").arg(pScanner.token().string()),
+                     tr("there is already a function parameter called '%1'").arg(pScanner.token().string()),
                      false);
 
             return false;
@@ -691,19 +696,55 @@ bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
 
         ComputerEngineEquation *equation = new ComputerEngineEquation();
 
-        // Parse the equation parameter
+        // Set the name of the equation parameter array
 
         QString arrayName;
         int arrayIndex;
 
-        if (!parseEquationParameter(pScanner, arrayName, arrayIndex)) {
-            // Something went wrong with the parsing of the equation parameter,
-            // so...
+        arrayName = pScanner.token().string();
+
+        pScanner.getNextToken();
+
+        // The current token must be "["
+
+        if (pScanner.token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
+            addIssue(pScanner.token(), "'['");
 
             delete equation;
 
             return false;
         }
+
+        pScanner.getNextToken();
+
+        // The current token must be an integer value
+
+        if (pScanner.token().symbol() == ComputerScannerToken::IntegerValue) {
+            // We got an integer value, so set the index of the equation
+            // parameter array
+
+            arrayIndex = pScanner.token().string().toInt();
+        } else {
+            addIssue(pScanner.token(), tr("an integer"));
+
+            delete equation;
+
+            return false;
+        }
+
+        pScanner.getNextToken();
+
+        // The current token must be "]"
+
+        if (pScanner.token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
+            addIssue(pScanner.token(), "']'");
+
+            delete equation;
+
+            return false;
+        }
+
+        pScanner.getNextToken();
 
         // The current token must be "="
 
@@ -717,10 +758,10 @@ bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
 
         pScanner.getNextToken();
 
-        // Parse the RHS of the equation
+        // Parse the RHS of an equation
 
         if (!parseEquationRhs(pScanner, pFunction)) {
-            // Something went wrong with the parsing of the RHS of the equation,
+            // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
             delete equation;
@@ -732,6 +773,8 @@ bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
 
         if (pScanner.token().symbol() != ComputerScannerToken::SemiColon) {
             addIssue(pScanner.token(), "';'");
+
+            delete equation;
 
             return false;
         }
@@ -751,100 +794,58 @@ bool ComputerEngine::parseEquations(ComputerScanner &pScanner,
 
 //==============================================================================
 
-bool ComputerEngine::parseEquationParameter(ComputerScanner &pScanner,
-                                            QString &pArrayName,
-                                            int &pArrayIndex)
-{
-    // The current token must be an identifier
-
-    if (pScanner.token().symbol() == ComputerScannerToken::Identifier) {
-        // We got an identifier, so set the name of the array
-
-        pArrayName = pScanner.token().string();
-    } else {
-        addIssue(pScanner.token(), tr("an identifier"));
-
-        return false;
-    }
-
-    pScanner.getNextToken();
-
-    // The current token must be "["
-
-    if (pScanner.token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
-        addIssue(pScanner.token(), "'['");
-
-        return false;
-    }
-
-    pScanner.getNextToken();
-
-    // The current token must be an integer value
-
-    if (pScanner.token().symbol() == ComputerScannerToken::IntegerValue) {
-        // We got an integer value, so set the name of the array
-
-        pArrayIndex = pScanner.token().string().toInt();
-    } else {
-        addIssue(pScanner.token(), tr("an integer"));
-
-        return false;
-    }
-
-    pScanner.getNextToken();
-
-    // The current token must be "]"
-
-    if (pScanner.token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
-        addIssue(pScanner.token(), "']'");
-
-        return false;
-    }
-
-    pScanner.getNextToken();
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
-typedef bool (*ParseGenericExpression)(ComputerScanner &, ComputerEngineFunction &);
+typedef bool (*ParseGenericExpression)(ComputerScanner &,
+                                       ComputerEngineFunction &,
+                                       ComputerEngine *);
 
 bool parseLogicalOrExpression(ComputerScanner &pScanner,
-                              ComputerEngineFunction &pFunction);
+                              ComputerEngineFunction &pFunction,
+                              ComputerEngine *pEngine);
 bool parseLogicalAndExpression(ComputerScanner &pScanner,
-                               ComputerEngineFunction &pFunction);
+                               ComputerEngineFunction &pFunction,
+                               ComputerEngine *pEngine);
 bool parseInclusiveOrExpression(ComputerScanner &pScanner,
-                                ComputerEngineFunction &pFunction);
+                                ComputerEngineFunction &pFunction,
+                                ComputerEngine *pEngine);
 bool parseExclusiveOrExpression(ComputerScanner &pScanner,
-                                ComputerEngineFunction &pFunction);
+                                ComputerEngineFunction &pFunction,
+                                ComputerEngine *pEngine);
 bool parseAndExpression(ComputerScanner &pScanner,
-                        ComputerEngineFunction &pFunction);
+                        ComputerEngineFunction &pFunction,
+                        ComputerEngine *pEngine);
 bool parseEqualityExpression(ComputerScanner &pScanner,
-                             ComputerEngineFunction &pFunction);
+                             ComputerEngineFunction &pFunction,
+                             ComputerEngine *pEngine);
 bool parseRelationalExpression(ComputerScanner &pScanner,
-                               ComputerEngineFunction &pFunction);
+                               ComputerEngineFunction &pFunction,
+                               ComputerEngine *pEngine);
 bool parseAdditiveExpression(ComputerScanner &pScanner,
-                             ComputerEngineFunction &pFunction);
+                             ComputerEngineFunction &pFunction,
+                             ComputerEngine *pEngine);
 bool parseMultiplicativeExpression(ComputerScanner &pScanner,
-                                   ComputerEngineFunction &pFunction);
+                                   ComputerEngineFunction &pFunction,
+                                   ComputerEngine *pEngine);
 bool parseUnaryExpression(ComputerScanner &pScanner,
-                          ComputerEngineFunction &pFunction);
+                          ComputerEngineFunction &pFunction,
+                          ComputerEngine *pEngine);
 bool parsePostfixExpression(ComputerScanner &pScanner,
-                            ComputerEngineFunction &pFunction);
+                            ComputerEngineFunction &pFunction,
+                            ComputerEngine *pEngine);
+bool parsePrimaryExpression(ComputerScanner &pScanner,
+                            ComputerEngineFunction &pFunction,
+                            ComputerEngine *pEngine);
 
 //==============================================================================
 
 bool parseGenericExpression(ComputerScanner &pScanner,
                             ComputerEngineFunction &pFunction,
                             const ComputerScannerToken::Symbols &pSymbols,
-                            ParseGenericExpression pParseGenericExpression)
+                            ParseGenericExpression pParseGenericExpression,
+                            ComputerEngine *pEngine)
 {
     // Parse the generic expression
 
-    if (!pParseGenericExpression(pScanner, pFunction))
+    if (!pParseGenericExpression(pScanner, pFunction, pEngine))
         // Something went wrong with the parsing of the generic expression,
         // so...
 
@@ -859,7 +860,7 @@ bool parseGenericExpression(ComputerScanner &pScanner,
 
         // Parse the generic expression
 
-        if (!pParseGenericExpression(pScanner, pFunction))
+        if (!pParseGenericExpression(pScanner, pFunction, pEngine))
             // Something went wrong with the parsing of the generic expression,
             // so...
 
@@ -874,7 +875,8 @@ bool parseGenericExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseLogicalOrExpression(ComputerScanner &pScanner,
-                              ComputerEngineFunction &pFunction)
+                              ComputerEngineFunction &pFunction,
+                              ComputerEngine *pEngine)
 {
     // The EBNF grammar of a logical Or expression is as follows:
     //
@@ -883,7 +885,7 @@ bool parseLogicalOrExpression(ComputerScanner &pScanner,
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalOr,
-                                parseLogicalAndExpression))
+                                parseLogicalAndExpression, pEngine))
         return false;
 
     // Everything went fine, so...
@@ -894,7 +896,8 @@ bool parseLogicalOrExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseLogicalAndExpression(ComputerScanner &pScanner,
-                               ComputerEngineFunction &pFunction)
+                               ComputerEngineFunction &pFunction,
+                               ComputerEngine *pEngine)
 {
     // The EBNF grammar of a logical And expression is as follows:
     //
@@ -903,7 +906,7 @@ bool parseLogicalAndExpression(ComputerScanner &pScanner,
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalAnd,
-                                parseInclusiveOrExpression))
+                                parseInclusiveOrExpression, pEngine))
         return false;
 
     // Everything went fine, so...
@@ -914,7 +917,8 @@ bool parseLogicalAndExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseInclusiveOrExpression(ComputerScanner &pScanner,
-                                ComputerEngineFunction &pFunction)
+                                ComputerEngineFunction &pFunction,
+                                ComputerEngine *pEngine)
 {
     // The EBNF grammar of an inclusive Or expression is as follows:
     //
@@ -923,7 +927,7 @@ bool parseInclusiveOrExpression(ComputerScanner &pScanner,
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::InclusiveOr,
-                                parseExclusiveOrExpression))
+                                parseExclusiveOrExpression, pEngine))
         return false;
 
     // Everything went fine, so...
@@ -934,7 +938,8 @@ bool parseInclusiveOrExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseExclusiveOrExpression(ComputerScanner &pScanner,
-                                ComputerEngineFunction &pFunction)
+                                ComputerEngineFunction &pFunction,
+                                ComputerEngine *pEngine)
 {
     // The EBNF grammar of an exclusive Or expression is as follows:
     //
@@ -943,7 +948,7 @@ bool parseExclusiveOrExpression(ComputerScanner &pScanner,
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::ExclusiveOr,
-                                parseAndExpression))
+                                parseAndExpression, pEngine))
         return false;
 
     // Everything went fine, so...
@@ -954,7 +959,8 @@ bool parseExclusiveOrExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseAndExpression(ComputerScanner &pScanner,
-                        ComputerEngineFunction &pFunction)
+                        ComputerEngineFunction &pFunction,
+                        ComputerEngine *pEngine)
 {
     // The EBNF grammar of an And expression is as follows:
     //
@@ -963,7 +969,7 @@ bool parseAndExpression(ComputerScanner &pScanner,
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::And,
-                                parseEqualityExpression))
+                                parseEqualityExpression, pEngine))
         return false;
 
     // Everything went fine, so...
@@ -974,7 +980,8 @@ bool parseAndExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseEqualityExpression(ComputerScanner &pScanner,
-                             ComputerEngineFunction &pFunction)
+                             ComputerEngineFunction &pFunction,
+                             ComputerEngine *pEngine)
 {
     // The EBNF grammar of an equality expression is as follows:
     //
@@ -985,7 +992,7 @@ bool parseEqualityExpression(ComputerScanner &pScanner,
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::EqualEqual
                                                                 << ComputerScannerToken::NotEqual,
-                                parseRelationalExpression))
+                                parseRelationalExpression, pEngine))
         return false;
 
     // Everything went fine, so...
@@ -996,7 +1003,8 @@ bool parseEqualityExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseRelationalExpression(ComputerScanner &pScanner,
-                               ComputerEngineFunction &pFunction)
+                               ComputerEngineFunction &pFunction,
+                               ComputerEngine *pEngine)
 {
     // The EBNF grammar of a relational expression is as follows:
     //
@@ -1011,7 +1019,7 @@ bool parseRelationalExpression(ComputerScanner &pScanner,
                                                                 << ComputerScannerToken::GreaterThan
                                                                 << ComputerScannerToken::LowerOrEqualThan
                                                                 << ComputerScannerToken::GreaterOrEqualThan,
-                                parseAdditiveExpression))
+                                parseAdditiveExpression, pEngine))
         return false;
 
     // Everything went fine, so...
@@ -1022,7 +1030,8 @@ bool parseRelationalExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseAdditiveExpression(ComputerScanner &pScanner,
-                             ComputerEngineFunction &pFunction)
+                             ComputerEngineFunction &pFunction,
+                             ComputerEngine *pEngine)
 {
     // The EBNF grammar of an additive expression is as follows:
     //
@@ -1033,7 +1042,7 @@ bool parseAdditiveExpression(ComputerScanner &pScanner,
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
                                                                 << ComputerScannerToken::Minus,
-                                parseMultiplicativeExpression))
+                                parseMultiplicativeExpression, pEngine))
         return false;
 
     // Everything went fine, so...
@@ -1044,7 +1053,8 @@ bool parseAdditiveExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseMultiplicativeExpression(ComputerScanner &pScanner,
-                                   ComputerEngineFunction &pFunction)
+                                   ComputerEngineFunction &pFunction,
+                                   ComputerEngine *pEngine)
 {
     // The EBNF grammar of a multiplicative expression is as follows:
     //
@@ -1057,7 +1067,7 @@ bool parseMultiplicativeExpression(ComputerScanner &pScanner,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::Times
                                                                 << ComputerScannerToken::Divide
                                                                 << ComputerScannerToken::Percentage,
-                                parseUnaryExpression))
+                                parseUnaryExpression, pEngine))
         return false;
 
     // Everything went fine, so...
@@ -1068,7 +1078,8 @@ bool parseMultiplicativeExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseUnaryExpression(ComputerScanner &pScanner,
-                          ComputerEngineFunction &pFunction)
+                          ComputerEngineFunction &pFunction,
+                          ComputerEngine *pEngine)
 {
     // The EBNF grammar of a unary expression is as follows:
     //
@@ -1092,9 +1103,9 @@ bool parseUnaryExpression(ComputerScanner &pScanner,
 
         pScanner.getNextToken();
 
-        // Parse the generic expression
+        // Parse the unary expression
 
-        if (!parseUnaryExpression(pScanner, pFunction))
+        if (!parseUnaryExpression(pScanner, pFunction, pEngine))
             // Something went wrong with the parsing of the unary expression,
             // so...
 
@@ -1103,7 +1114,7 @@ bool parseUnaryExpression(ComputerScanner &pScanner,
 
     // Parse the postfix expression
 
-    if (!parsePostfixExpression(pScanner, pFunction))
+    if (!parsePostfixExpression(pScanner, pFunction, pEngine))
         // Something went wrong with the parsing of the postfix expression,
         // so...
 
@@ -1116,9 +1127,217 @@ bool parseUnaryExpression(ComputerScanner &pScanner,
 
 //==============================================================================
 
-bool parsePostfixExpression(ComputerScanner &pScanner,
-                            ComputerEngineFunction &pFunction)
+bool parseEquationParameter(ComputerScanner &pScanner,
+                            ComputerEngineFunction &pFunction,
+                            ComputerEngine *pEngine)
 {
+    // The EBNF grammar of an equation parameter is as follows:
+    //
+    //   EquationParameter = Identifier "[" IntegerValue "]" ;
+
+    // The current token must be an identifier
+
+    if (pScanner.token().symbol() != ComputerScannerToken::Identifier) {
+        pEngine->addIssue(pScanner.token(), QObject::tr("an identifier"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // The current token must be "["
+
+    if (pScanner.token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
+        pEngine->addIssue(pScanner.token(), "'['");
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // The current token must be an integer value
+
+    if (pScanner.token().symbol() != ComputerScannerToken::IntegerValue) {
+        pEngine->addIssue(pScanner.token(), QObject::tr("an integer"));
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // The current token must be "]"
+
+    if (pScanner.token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
+        pEngine->addIssue(pScanner.token(), "']'");
+
+        return false;
+    }
+
+    pScanner.getNextToken();
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseEquationParameters(ComputerScanner &pScanner,
+                             ComputerEngineFunction &pFunction,
+                             ComputerEngine *pEngine)
+{
+    // The EBNF grammar of a list of equation parameters is as follows:
+    //
+    //   EquationParameters = EquationParameter { "," EquationParameter } ;
+
+    if (parseEquationParameter(pScanner, pFunction, pEngine))
+        // The first equation parameter was properly parsed, so look for other
+        // equation parameters
+
+        // The current token must be "," if we are to have another equation
+        // parameter definition
+
+        while (pScanner.token().symbol() == ComputerScannerToken::Comma) {
+            pScanner.getNextToken();
+
+            // We must then have the equation parameter definition itself
+
+            if (!parseEquationParameter(pScanner, pFunction, pEngine))
+                // Something went wrong with the parsing of the equation
+                // parameter definition, so...
+
+                return false;
+        }
+    else
+        // Something went wrong with the parsing of the equation parameter
+        // definition, so...
+
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parsePostfixExpression(ComputerScanner &pScanner,
+                            ComputerEngineFunction &pFunction,
+                            ComputerEngine *pEngine)
+{
+    // The EBNF grammar of a postfix expression is as follows:
+    //
+    //   PostfixExpression =   PrimaryExpression
+    //                       | ( PostfixExpression "++" )
+    //                       | ( PostfixExpression "--" )
+    //                       | ( PostfixExpression "(" [ EquationParameters ] ")" )
+    //                       | ( PostfixExpression "[" IntegerValue "]" ) ;
+
+    // Parse the primary expression
+
+    while (parsePrimaryExpression(pScanner, pFunction, pEngine))
+        ;
+
+    // Check whether the current token's symbol is "++", "--" or "("
+
+    if (   (pScanner.token().symbol() == ComputerScannerToken::PlusPlus)
+        || (pScanner.token().symbol() == ComputerScannerToken::MinusMinus)) {
+        pScanner.getNextToken();
+    } else if (pScanner.token().symbol() == ComputerScannerToken::OpeningBracket) {
+        pScanner.getNextToken();
+
+        // Parse the equation parameters, but only if the current token is an
+        // identifier
+
+        if (pScanner.token().symbol() == ComputerScannerToken::Identifier)
+            if (!parseEquationParameters(pScanner, pFunction, pEngine))
+                // Something went wrong with the parsing of the equation
+                // parameters, so...
+
+                return false;
+
+        // The current token must be ")"
+
+        if (pScanner.token().symbol() != ComputerScannerToken::ClosingBracket) {
+            pEngine->addIssue(pScanner.token(), "')'");
+
+            return false;
+        }
+    } else if (pScanner.token().symbol() == ComputerScannerToken::OpeningSquareBracket) {
+        pScanner.getNextToken();
+
+        // the current token must be an integer value
+
+        if (pScanner.token().symbol() != ComputerScannerToken::IntegerValue) {
+            pEngine->addIssue(pScanner.token(), QObject::tr("an integer"));
+
+            return false;
+        }
+
+        // The current token must be "]"
+
+        if (pScanner.token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
+            pEngine->addIssue(pScanner.token(), "']'");
+
+            return false;
+        }
+    } else {
+        // We didn't get any of the above symbols, so...
+
+        return false;
+    }
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parsePrimaryExpression(ComputerScanner &pScanner,
+                            ComputerEngineFunction &pFunction,
+                            ComputerEngine *pEngine)
+{
+    // The EBNF grammar of a primary expression is as follows:
+    //
+    //   PrimaryExpression =   Identifier
+    //                       | IntegerValue
+    //                       | DoubleValue
+    //                       | ( "(" EquationRHS ")" ) ;
+
+    // Check whether the current token's symbol is an identifier, an integer
+    // value, a double value or "("
+
+    if (pScanner.token().symbol() == ComputerScannerToken::Identifier) {
+        pScanner.getNextToken();
+    } else if (pScanner.token().symbol() == ComputerScannerToken::IntegerValue) {
+        pScanner.getNextToken();
+    } else if (pScanner.token().symbol() == ComputerScannerToken::DoubleValue) {
+        pScanner.getNextToken();
+    } else if (pScanner.token().symbol() == ComputerScannerToken::OpeningBracket) {
+        pScanner.getNextToken();
+
+        // Parse the RHS of an equation
+
+        if (!pEngine->parseEquationRhs(pScanner, pFunction))
+            // Something went wrong with the parsing of the RHS of an equation,
+            // so...
+
+            return false;
+
+        // The current token must be ")"
+
+        if (pScanner.token().symbol() != ComputerScannerToken::ClosingBracket) {
+            pEngine->addIssue(pScanner.token(), "')'");
+
+            return false;
+        }
+    } else {
+        // We didn't get any of the above symbols, so...
+
+        return false;
+    }
+
     // Everything went fine, so...
 
     return true;
@@ -1136,7 +1355,7 @@ bool ComputerEngine::parseEquationRhs(ComputerScanner &pScanner,
 
     // Parse a logical Or expression
 
-    if (!parseLogicalOrExpression(pScanner, pFunction))
+    if (!parseLogicalOrExpression(pScanner, pFunction, this))
         // Something went wrong with the parsing of a logical Or expression,
         // so...
 
@@ -1149,10 +1368,10 @@ bool ComputerEngine::parseEquationRhs(ComputerScanner &pScanner,
 
         pScanner.getNextToken();
 
-        // Parse the RHS of the equation
+        // Parse the RHS of an equation
 
         if (!parseEquationRhs(pScanner, pFunction))
-            // Something went wrong with the parsing of the RHS of the equation,
+            // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
             return false;
@@ -1167,10 +1386,10 @@ bool ComputerEngine::parseEquationRhs(ComputerScanner &pScanner,
 
         pScanner.getNextToken();
 
-        // Parse the RHS of the equation
+        // Parse the RHS of an equation
 
         if (!parseEquationRhs(pScanner, pFunction))
-            // Something went wrong with the parsing of the RHS of the equation,
+            // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
             return false;
