@@ -824,12 +824,16 @@ bool parseAndExpression(ComputerScanner &pScanner,
                         ComputerEngineFunction &pFunction);
 bool parseEqualityExpression(ComputerScanner &pScanner,
                              ComputerEngineFunction &pFunction);
+bool parseRelationalExpression(ComputerScanner &pScanner,
+                               ComputerEngineFunction &pFunction);
+bool parseAdditiveExpression(ComputerScanner &pScanner,
+                             ComputerEngineFunction &pFunction);
 
 //==============================================================================
 
 bool parseGenericExpression(ComputerScanner &pScanner,
                             ComputerEngineFunction &pFunction,
-                            const ComputerScannerToken::Symbol &pSymbol,
+                            const ComputerScannerToken::Symbols &pSymbols,
                             ParseGenericExpression pParseGenericExpression)
 {
     // Parse the generic expression
@@ -842,7 +846,7 @@ bool parseGenericExpression(ComputerScanner &pScanner,
 
     // Check whether the current token's symbol is of the type we are after
 
-    while (pScanner.token().symbol() == pSymbol) {
+    while (pSymbols.contains(pScanner.token().symbol())) {
         // We got the right symbol
 
         pScanner.getNextToken();
@@ -871,7 +875,8 @@ bool parseLogicalOrExpression(ComputerScanner &pScanner,
     //   LogicalOrExpression =   LogicalAndExpression
     //                         | ( LogicalOrExpression "||" LogicalAndExpression ) ;
 
-    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::LogicalOr,
+    if (!parseGenericExpression(pScanner, pFunction,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalOr,
                                 parseLogicalAndExpression))
         return false;
 
@@ -890,7 +895,8 @@ bool parseLogicalAndExpression(ComputerScanner &pScanner,
     //   LogicalAndExpression =   InclusiveOrExpression
     //                          | ( LogicalAndExpression "&&" InclusiveOrExpression ) ;
 
-    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::LogicalAnd,
+    if (!parseGenericExpression(pScanner, pFunction,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalAnd,
                                 parseInclusiveOrExpression))
         return false;
 
@@ -909,7 +915,8 @@ bool parseInclusiveOrExpression(ComputerScanner &pScanner,
     //   InclusiveOrExpression =   ExclusiveOrExpression
     //                           | ( InclusiveOrExpression "|" ExclusiveOrExpression ) ;
 
-    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::InclusiveOr,
+    if (!parseGenericExpression(pScanner, pFunction,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::InclusiveOr,
                                 parseExclusiveOrExpression))
         return false;
 
@@ -928,7 +935,8 @@ bool parseExclusiveOrExpression(ComputerScanner &pScanner,
     //   ExclusiveOrExpression =   AndExpression
     //                           | ( ExclusiveOrExpression "^" AndExpression ) ;
 
-    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::ExclusiveOr,
+    if (!parseGenericExpression(pScanner, pFunction,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::ExclusiveOr,
                                 parseAndExpression))
         return false;
 
@@ -947,7 +955,8 @@ bool parseAndExpression(ComputerScanner &pScanner,
     //   AndExpression =   EqualityExpression
     //                   | ( AndExpression "&" EqualityExpression ) ;
 
-    if (!parseGenericExpression(pScanner, pFunction, ComputerScannerToken::And,
+    if (!parseGenericExpression(pScanner, pFunction,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::And,
                                 parseEqualityExpression))
         return false;
 
@@ -959,6 +968,54 @@ bool parseAndExpression(ComputerScanner &pScanner,
 //==============================================================================
 
 bool parseEqualityExpression(ComputerScanner &pScanner,
+                             ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of an And expression is as follows:
+    //
+    //   EqualityExpression =   RelationalExpression
+    //                        | ( EqualityExpression "==" RelationalExpression ) ;
+    //                        | ( EqualityExpression "!=" RelationalExpression ) ;
+
+    if (!parseGenericExpression(pScanner, pFunction,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::EqualEqual
+                                                                << ComputerScannerToken::NotEqual,
+                                parseRelationalExpression))
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseRelationalExpression(ComputerScanner &pScanner,
+                               ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of an And expression is as follows:
+    //
+    //   RelationalExpression =   AdditiveExpression
+    //                          | ( RelationalExpression "<" AdditiveExpression ) ;
+    //                          | ( RelationalExpression ">" AdditiveExpression ) ;
+    //                          | ( RelationalExpression "<=" AdditiveExpression ) ;
+    //                          | ( RelationalExpression ">=" AdditiveExpression ) ;
+
+    if (!parseGenericExpression(pScanner, pFunction,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::LowerThan
+                                                                << ComputerScannerToken::GreaterThan
+                                                                << ComputerScannerToken::LowerOrEqualThan
+                                                                << ComputerScannerToken::GreaterOrEqualThan,
+                                parseAdditiveExpression))
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseAdditiveExpression(ComputerScanner &pScanner,
                              ComputerEngineFunction &pFunction)
 {
     // Everything went fine, so...

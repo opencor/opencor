@@ -22,6 +22,7 @@ static const QChar ClosingCurlyBracket  = QChar('}');
 static const QChar OpeningSquareBracket = QChar('[');
 static const QChar ClosingSquareBracket = QChar(']');
 static const QChar Equal                = QChar('=');
+static const QChar Not                  = QChar('!');
 static const QChar Comma                = QChar(',');
 static const QChar Colon                = QChar(':');
 static const QChar SemiColon            = QChar(';');
@@ -29,6 +30,8 @@ static const QChar QuestionMark         = QChar('?');
 static const QChar InclusiveOr          = QChar('|');
 static const QChar ExclusiveOr          = QChar('^');
 static const QChar And                  = QChar('&');
+static const QChar LowerThan            = QChar('<');
+static const QChar GreaterThan          = QChar('>');
 static const QChar FullStop             = QChar('.');
 static const QChar LowerCaseE           = QChar('e');
 static const QChar UpperCaseE           = QChar('E');
@@ -415,9 +418,39 @@ void ComputerScanner::getNextToken()
 
             getNextChar();
         } else if (mChar == Equal) {
-            mToken.setSymbol(ComputerScannerToken::Equal);
+            // Depending on the next character, the symbol may be an EqualEqual
+            // rather than an Equal
 
             getNextChar();
+
+            if (mChar == Equal) {
+                // We got another Equal, so...
+
+                mToken.setSymbol(ComputerScannerToken::EqualEqual);
+
+                getNextChar();
+            } else {
+                // Only one Equal, so...
+
+                mToken.setSymbol(ComputerScannerToken::Equal);
+            }
+        } else if (mChar == Not) {
+            // Depending on the next character, the symbol may be a NotEqual
+            // rather than a Not
+
+            getNextChar();
+
+            if (mChar == Equal) {
+                // We got an Equal, so...
+
+                mToken.setSymbol(ComputerScannerToken::NotEqual);
+
+                getNextChar();
+            } else {
+                // Only a Not, so...
+
+                mToken.setSymbol(ComputerScannerToken::Not);
+            }
         } else if (mChar == Comma) {
             mToken.setSymbol(ComputerScannerToken::Comma);
 
@@ -471,6 +504,40 @@ void ComputerScanner::getNextToken()
                 // Only one And, so...
 
                 mToken.setSymbol(ComputerScannerToken::And);
+            }
+        } else if (mChar == LowerThan) {
+            // Depending on the next character, the symbol may be a
+            // LowerOrEqualThan rather than a LowerThan
+
+            getNextChar();
+
+            if (mChar == Equal) {
+                // We got an Equal, so...
+
+                mToken.setSymbol(ComputerScannerToken::LowerOrEqualThan);
+
+                getNextChar();
+            } else {
+                // Only a LowerThan, so...
+
+                mToken.setSymbol(ComputerScannerToken::LowerThan);
+            }
+        } else if (mChar == GreaterThan) {
+            // Depending on the next character, the symbol may be a
+            // GreaterOrEqualThan rather than a GreaterThan
+
+            getNextChar();
+
+            if (mChar == Equal) {
+                // We got an Equal, so...
+
+                mToken.setSymbol(ComputerScannerToken::GreaterOrEqualThan);
+
+                getNextChar();
+            } else {
+                // Only a GreaterThan, so...
+
+                mToken.setSymbol(ComputerScannerToken::GreaterThan);
             }
         }
     }

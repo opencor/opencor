@@ -35,11 +35,15 @@ public:
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
         OpeningSquareBracket, ClosingSquareBracket,
-        Equal, Comma, Colon, SemiColon, QuestionMark,
+        Equal, Not, Comma, Colon, SemiColon, QuestionMark,
         InclusiveOr, ExclusiveOr, LogicalOr, And, LogicalAnd,
+        EqualEqual, NotEqual,
+        LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
         Return,
         Unknown, Identifier, IntegerValue, DoubleValue, Eof
     };
+
+    typedef QList<Symbol> Symbols;
 
     explicit ComputerScannerToken(const int pLine = 0, const int pColumn = 0);
 
