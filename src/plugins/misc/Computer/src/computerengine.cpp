@@ -880,8 +880,7 @@ bool parseLogicalOrExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of a logical Or expression is as follows:
     //
-    //   LogicalOrExpression =   LogicalAndExpression
-    //                         | ( LogicalOrExpression "||" LogicalAndExpression ) ;
+    //   LogicalOrExpression = [ LogicalOrExpression "||" ] LogicalAndExpression ;
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalOr,
@@ -901,8 +900,7 @@ bool parseLogicalAndExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of a logical And expression is as follows:
     //
-    //   LogicalAndExpression =   InclusiveOrExpression
-    //                          | ( LogicalAndExpression "&&" InclusiveOrExpression ) ;
+    //   LogicalAndExpression = [ LogicalAndExpression "&&" ] InclusiveOrExpression ;
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalAnd,
@@ -922,8 +920,7 @@ bool parseInclusiveOrExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of an inclusive Or expression is as follows:
     //
-    //   InclusiveOrExpression =   ExclusiveOrExpression
-    //                           | ( InclusiveOrExpression "|" ExclusiveOrExpression ) ;
+    //   InclusiveOrExpression = [ InclusiveOrExpression "|" ] ExclusiveOrExpression ;
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::InclusiveOr,
@@ -943,8 +940,7 @@ bool parseExclusiveOrExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of an exclusive Or expression is as follows:
     //
-    //   ExclusiveOrExpression =   AndExpression
-    //                           | ( ExclusiveOrExpression "^" AndExpression ) ;
+    //   ExclusiveOrExpression = [ ExclusiveOrExpression "^" ] AndExpression ;
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::ExclusiveOr,
@@ -964,8 +960,7 @@ bool parseAndExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of an And expression is as follows:
     //
-    //   AndExpression =   EqualityExpression
-    //                   | ( AndExpression "&" EqualityExpression ) ;
+    //   AndExpression = [ AndExpression "&" EqualityExpression ] ;
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::And,
@@ -985,9 +980,7 @@ bool parseEqualityExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of an equality expression is as follows:
     //
-    //   EqualityExpression =   RelationalExpression
-    //                        | ( EqualityExpression "==" RelationalExpression )
-    //                        | ( EqualityExpression "!=" RelationalExpression ) ;
+    //   EqualityExpression = [ EqualityExpression ( "==" | "!=" ) ] RelationalExpression ;
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::EqualEqual
@@ -1008,11 +1001,7 @@ bool parseRelationalExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of a relational expression is as follows:
     //
-    //   RelationalExpression =   AdditiveExpression
-    //                          | ( RelationalExpression "<" AdditiveExpression )
-    //                          | ( RelationalExpression ">" AdditiveExpression )
-    //                          | ( RelationalExpression "<=" AdditiveExpression )
-    //                          | ( RelationalExpression ">=" AdditiveExpression ) ;
+    //   RelationalExpression = [ RelationalExpression ( "<" | ">" | "<=" | ">=" ) ] AdditiveExpression ;
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LowerThan
@@ -1035,9 +1024,7 @@ bool parseAdditiveExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of an additive expression is as follows:
     //
-    //   AdditiveExpression =   MultiplicativeExpression
-    //                        | ( AdditiveExpression "+" MultiplicativeExpression )
-    //                        | ( AdditiveExpression "-" MultiplicativeExpression ) ;
+    //   AdditiveExpression = [ AdditiveExpression ( "+" | "-" ) ] MultiplicativeExpression ;
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
@@ -1058,10 +1045,7 @@ bool parseMultiplicativeExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of a multiplicative expression is as follows:
     //
-    //   MultiplicativeExpression =   UnaryExpression
-    //                              | ( MultiplicativeExpression "*" UnaryExpression )
-    //                              | ( MultiplicativeExpression "/" UnaryExpression )
-    //                              | ( MultiplicativeExpression "%" UnaryExpression ) ;
+    //   MultiplicativeExpression = [ MultiplicativeExpression ( "*" | "/" | "%" ) ] UnaryExpression ;
 
     if (!parseGenericExpression(pScanner, pFunction,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::Times
@@ -1084,11 +1068,7 @@ bool parseUnaryExpression(ComputerScanner &pScanner,
     // The EBNF grammar of a unary expression is as follows:
     //
     //   UnaryExpression =   PostfixExpression
-    //                     | ( "+" UnaryExpression )
-    //                     | ( "-" UnaryExpression )
-    //                     | ( "++" UnaryExpression )
-    //                     | ( "--" UnaryExpression )
-    //                     | ( "!" UnaryExpression ) ;
+    //                     | ( ( "+" | "-" | "++" | "--" | "!" ) UnaryExpression ) ;
 
     static const ComputerScannerToken::Symbols unarySymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
                                                                                               << ComputerScannerToken::Minus
@@ -1228,8 +1208,7 @@ bool parsePostfixExpression(ComputerScanner &pScanner,
     // The EBNF grammar of a postfix expression is as follows:
     //
     //   PostfixExpression =   PrimaryExpression
-    //                       | ( PostfixExpression "++" )
-    //                       | ( PostfixExpression "--" )
+    //                       | ( PostfixExpression ( "++" | "--" ) )
     //                       | ( PostfixExpression "(" [ EquationParameters ] ")" )
     //                       | ( PostfixExpression "[" IntegerValue "]" ) ;
 
