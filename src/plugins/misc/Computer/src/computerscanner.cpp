@@ -24,6 +24,7 @@ static const QChar Comma                = QChar(',');
 static const QChar Colon                = QChar(':');
 static const QChar SemiColon            = QChar(';');
 static const QChar QuestionMark         = QChar('?');
+static const QChar ExclamationMark      = QChar('!');
 static const QChar InclusiveOr          = QChar('|');
 static const QChar ExclusiveOr          = QChar('^');
 static const QChar And                  = QChar('&');
@@ -463,6 +464,10 @@ void ComputerScanner::getNextToken()
             getNextChar();
         } else if (mChar == QuestionMark) {
             mToken.setSymbol(ComputerScannerToken::QuestionMark);
+
+            getNextChar();
+        } else if (mChar == ExclamationMark) {
+            mToken.setSymbol(ComputerScannerToken::ExclamationMark);
 
             getNextChar();
         } else if (mChar == InclusiveOr) {

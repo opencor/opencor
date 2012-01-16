@@ -832,6 +832,8 @@ bool parseMultiplicativeExpression(ComputerScanner &pScanner,
                                    ComputerEngineFunction &pFunction);
 bool parseUnaryExpression(ComputerScanner &pScanner,
                           ComputerEngineFunction &pFunction);
+bool parsePostfixExpression(ComputerScanner &pScanner,
+                            ComputerEngineFunction &pFunction);
 
 //==============================================================================
 
@@ -848,7 +850,7 @@ bool parseGenericExpression(ComputerScanner &pScanner,
 
         return false;
 
-    // Check whether the current token's symbol is of the type we are after
+    // Check whether the current token's symbol is one of those we are after
 
     while (pSymbols.contains(pScanner.token().symbol())) {
         // We got the right symbol
@@ -977,7 +979,7 @@ bool parseEqualityExpression(ComputerScanner &pScanner,
     // The EBNF grammar of an equality expression is as follows:
     //
     //   EqualityExpression =   RelationalExpression
-    //                        | ( EqualityExpression "==" RelationalExpression ) ;
+    //                        | ( EqualityExpression "==" RelationalExpression )
     //                        | ( EqualityExpression "!=" RelationalExpression ) ;
 
     if (!parseGenericExpression(pScanner, pFunction,
@@ -999,9 +1001,9 @@ bool parseRelationalExpression(ComputerScanner &pScanner,
     // The EBNF grammar of a relational expression is as follows:
     //
     //   RelationalExpression =   AdditiveExpression
-    //                          | ( RelationalExpression "<" AdditiveExpression ) ;
-    //                          | ( RelationalExpression ">" AdditiveExpression ) ;
-    //                          | ( RelationalExpression "<=" AdditiveExpression ) ;
+    //                          | ( RelationalExpression "<" AdditiveExpression )
+    //                          | ( RelationalExpression ">" AdditiveExpression )
+    //                          | ( RelationalExpression "<=" AdditiveExpression )
     //                          | ( RelationalExpression ">=" AdditiveExpression ) ;
 
     if (!parseGenericExpression(pScanner, pFunction,
@@ -1025,7 +1027,7 @@ bool parseAdditiveExpression(ComputerScanner &pScanner,
     // The EBNF grammar of an additive expression is as follows:
     //
     //   AdditiveExpression =   MultiplicativeExpression
-    //                        | ( AdditiveExpression "+" MultiplicativeExpression ) ;
+    //                        | ( AdditiveExpression "+" MultiplicativeExpression )
     //                        | ( AdditiveExpression "-" MultiplicativeExpression ) ;
 
     if (!parseGenericExpression(pScanner, pFunction,
@@ -1046,9 +1048,9 @@ bool parseMultiplicativeExpression(ComputerScanner &pScanner,
 {
     // The EBNF grammar of a multiplicative expression is as follows:
     //
-    //   MultiplicativeExpression =   MultiplicativeExpression
-    //                              | ( MultiplicativeExpression "*" UnaryExpression ) ;
-    //                              | ( MultiplicativeExpression "/" UnaryExpression ) ;
+    //   MultiplicativeExpression =   UnaryExpression
+    //                              | ( MultiplicativeExpression "*" UnaryExpression )
+    //                              | ( MultiplicativeExpression "/" UnaryExpression )
     //                              | ( MultiplicativeExpression "%" UnaryExpression ) ;
 
     if (!parseGenericExpression(pScanner, pFunction,
@@ -1067,6 +1069,51 @@ bool parseMultiplicativeExpression(ComputerScanner &pScanner,
 
 bool parseUnaryExpression(ComputerScanner &pScanner,
                           ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of a unary expression is as follows:
+    //
+    //   UnaryExpression =   PostfixExpression
+    //                     | ( "+" UnaryExpression )
+    //                     | ( "-" UnaryExpression )
+    //                     | ( "!" UnaryExpression ) ;
+
+    static const ComputerScannerToken::Symbols unarySymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
+                                                                                              << ComputerScannerToken::Minus
+                                                                                              << ComputerScannerToken::ExclamationMark;
+
+    // Check whether the current token's symbol is one of those we are after
+
+    while (unarySymbols.contains(pScanner.token().symbol())) {
+        // We got the right symbol
+
+        pScanner.getNextToken();
+
+        // Parse the generic expression
+
+        if (!parseUnaryExpression(pScanner, pFunction))
+            // Something went wrong with the parsing of the unary expression,
+            // so...
+
+            return false;
+    }
+
+    // Parse the postfix expression
+
+    if (!parsePostfixExpression(pScanner, pFunction))
+        // Something went wrong with the parsing of the postfix expression,
+        // so...
+
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parsePostfixExpression(ComputerScanner &pScanner,
+                            ComputerEngineFunction &pFunction)
 {
     // Everything went fine, so...
 

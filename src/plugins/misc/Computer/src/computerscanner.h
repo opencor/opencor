@@ -26,7 +26,7 @@ public:
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
         OpeningSquareBracket, ClosingSquareBracket,
-        Equal, Not, Comma, Colon, SemiColon, QuestionMark,
+        Equal, Not, Comma, Colon, SemiColon, QuestionMark, ExclamationMark,
         InclusiveOr, ExclusiveOr, LogicalOr, And, LogicalAnd,
         EqualEqual, NotEqual,
         LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
