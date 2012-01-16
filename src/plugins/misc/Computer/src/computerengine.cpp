@@ -1075,10 +1075,14 @@ bool parseUnaryExpression(ComputerScanner &pScanner,
     //   UnaryExpression =   PostfixExpression
     //                     | ( "+" UnaryExpression )
     //                     | ( "-" UnaryExpression )
+    //                     | ( "++" UnaryExpression )
+    //                     | ( "--" UnaryExpression )
     //                     | ( "!" UnaryExpression ) ;
 
     static const ComputerScannerToken::Symbols unarySymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
                                                                                               << ComputerScannerToken::Minus
+                                                                                              << ComputerScannerToken::PlusPlus
+                                                                                              << ComputerScannerToken::MinusMinus
                                                                                               << ComputerScannerToken::ExclamationMark;
 
     // Check whether the current token's symbol is one of those we are after
