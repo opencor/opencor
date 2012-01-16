@@ -1260,10 +1260,6 @@ bool parsePostfixExpression(ComputerScanner &pScanner,
 
             return false;
         }
-    } else {
-        // We didn't get any of the above symbols, so...
-
-        return false;
     }
 
     // Everything went fine, so...
