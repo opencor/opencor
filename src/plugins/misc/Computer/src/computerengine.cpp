@@ -365,13 +365,27 @@ void ComputerEngine::addIssue(const ComputerScannerToken &pToken,
                               const bool &pExpectedMessage,
                               const QString &pExtraInformation)
 {
-    if (pExpectedMessage)
+    if (pExpectedMessage) {
+        // First, check that there isn't already an issue for that line/column
+        // combination
+
+        int tokenLine = pToken.line();
+        int tokenColumn = pToken.column();
+
+        foreach (const ComputerEngineIssue &issue, mIssues)
+            if ((issue.line() == tokenLine) && (issue.column() == tokenColumn))
+                // There is already an issue for that line line/column
+                // combination, so...
+
+                return;
+
         mIssues.append(ComputerEngineIssue(tr("%1 is expected, but '%2' was found").arg(pMessage, pToken.string()),
                                            pToken.line(), pToken.column()));
-    else
+    } else {
         mIssues.append(ComputerEngineIssue(pMessage,
                                            pToken.line(), pToken.column(),
                                            pExtraInformation));
+    }
 }
 
 //==============================================================================
@@ -1107,61 +1121,6 @@ bool parseUnaryExpression(ComputerScanner &pScanner,
 
 //==============================================================================
 
-bool parseEquationParameter(ComputerScanner &pScanner,
-                            ComputerEngineFunction &pFunction,
-                            ComputerEngine *pEngine)
-{
-    // The EBNF grammar of an equation parameter is as follows:
-    //
-    //   EquationParameter = Identifier "[" IntegerValue "]" ;
-
-    // The current token must be an identifier
-
-    if (pScanner.token().symbol() != ComputerScannerToken::Identifier) {
-        pEngine->addIssue(pScanner.token(), QObject::tr("an identifier"));
-
-        return false;
-    }
-
-    pScanner.getNextToken();
-
-    // The current token must be "["
-
-    if (pScanner.token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
-        pEngine->addIssue(pScanner.token(), "'['");
-
-        return false;
-    }
-
-    pScanner.getNextToken();
-
-    // The current token must be an integer value
-
-    if (pScanner.token().symbol() != ComputerScannerToken::IntegerValue) {
-        pEngine->addIssue(pScanner.token(), QObject::tr("an integer"));
-
-        return false;
-    }
-
-    pScanner.getNextToken();
-
-    // The current token must be "]"
-
-    if (pScanner.token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
-        pEngine->addIssue(pScanner.token(), "']'");
-
-        return false;
-    }
-
-    pScanner.getNextToken();
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
 bool parseEquationParameters(ComputerScanner &pScanner,
                              ComputerEngineFunction &pFunction,
                              ComputerEngine *pEngine)
@@ -1170,9 +1129,11 @@ bool parseEquationParameters(ComputerScanner &pScanner,
     //
     //   EquationParameters = EquationParameter { "," EquationParameter } ;
 
-    if (parseEquationParameter(pScanner, pFunction, pEngine))
-        // The first equation parameter was properly parsed, so look for other
-        // equation parameters
+    // Parse the first RHS of an equation
+
+    if (pEngine->parseEquationRhs(pScanner, pFunction))
+        // The first RHS of an equation was properly parsed, so look for other
+        // RHSs of an equation
 
         // The current token must be "," if we are to have another equation
         // parameter definition
@@ -1180,11 +1141,11 @@ bool parseEquationParameters(ComputerScanner &pScanner,
         while (pScanner.token().symbol() == ComputerScannerToken::Comma) {
             pScanner.getNextToken();
 
-            // We must then have the equation parameter definition itself
+            // Parse another RHS of an equation
 
-            if (!parseEquationParameter(pScanner, pFunction, pEngine))
-                // Something went wrong with the parsing of the equation
-                // parameter definition, so...
+            if (!pEngine->parseEquationRhs(pScanner, pFunction))
+                // Something went wrong with the parsing of the RHS of an
+                // equation, so...
 
                 return false;
         }
@@ -1217,7 +1178,7 @@ bool parsePostfixExpression(ComputerScanner &pScanner,
     while (parsePrimaryExpression(pScanner, pFunction, pEngine))
         ;
 
-    // Check whether the current token's symbol is "++", "--" or "("
+    // Check whether the current token's symbol is "++", "--", "(" or "["
 
     if (   (pScanner.token().symbol() == ComputerScannerToken::PlusPlus)
         || (pScanner.token().symbol() == ComputerScannerToken::MinusMinus)) {
@@ -1242,6 +1203,8 @@ bool parsePostfixExpression(ComputerScanner &pScanner,
 
             return false;
         }
+
+        pScanner.getNextToken();
     } else if (pScanner.token().symbol() == ComputerScannerToken::OpeningSquareBracket) {
         pScanner.getNextToken();
 
@@ -1253,6 +1216,8 @@ bool parsePostfixExpression(ComputerScanner &pScanner,
             return false;
         }
 
+        pScanner.getNextToken();
+
         // The current token must be "]"
 
         if (pScanner.token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
@@ -1260,6 +1225,8 @@ bool parsePostfixExpression(ComputerScanner &pScanner,
 
             return false;
         }
+
+        pScanner.getNextToken();
     }
 
     // Everything went fine, so...
@@ -1307,6 +1274,8 @@ bool parsePrimaryExpression(ComputerScanner &pScanner,
 
             return false;
         }
+
+        pScanner.getNextToken();
     } else {
         // We didn't get any of the above symbols, so...
 

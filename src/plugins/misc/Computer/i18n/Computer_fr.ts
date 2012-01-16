@@ -39,10 +39,6 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>an identifier</source>
-        <translation>un identifiant</translation>
-    </message>
-    <message>
         <source>an integer</source>
         <translation>un nombre entier</translation>
     </message>
