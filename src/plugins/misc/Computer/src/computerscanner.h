@@ -22,16 +22,7 @@ class ComputerScannerToken
 public:
     enum Symbol
     {
-        // Type of variable
-
         Void, Double,
-
-        // Mathematical operators
-
-        Times,
-
-        // Miscellaneous
-
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
         OpeningSquareBracket, ClosingSquareBracket,
@@ -39,6 +30,7 @@ public:
         InclusiveOr, ExclusiveOr, LogicalOr, And, LogicalAnd,
         EqualEqual, NotEqual,
         LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
+        Times, Divide, Percentage, Plus, Minus,
         Return,
         Unknown, Identifier, IntegerValue, DoubleValue, Eof
     };

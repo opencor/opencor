@@ -12,9 +12,6 @@ namespace Computer {
 //==============================================================================
 
 static const QChar Underscore           = QChar('_');
-static const QChar Times                = QChar('*');
-static const QChar Plus                 = QChar('+');
-static const QChar Minus                = QChar('-');
 static const QChar OpeningBracket       = QChar('(');
 static const QChar ClosingBracket       = QChar(')');
 static const QChar OpeningCurlyBracket  = QChar('{');
@@ -32,6 +29,11 @@ static const QChar ExclusiveOr          = QChar('^');
 static const QChar And                  = QChar('&');
 static const QChar LowerThan            = QChar('<');
 static const QChar GreaterThan          = QChar('>');
+static const QChar Times                = QChar('*');
+static const QChar Divide               = QChar('/');
+static const QChar Percentage           = QChar('%');
+static const QChar Plus                 = QChar('+');
+static const QChar Minus                = QChar('-');
 static const QChar FullStop             = QChar('.');
 static const QChar LowerCaseE           = QChar('e');
 static const QChar UpperCaseE           = QChar('E');
@@ -389,11 +391,7 @@ void ComputerScanner::getNextToken()
 
         mToken.setString(mChar);
 
-        if (mChar == Times) {
-            mToken.setSymbol(ComputerScannerToken::Times);
-
-            getNextChar();
-        } else if (mChar == OpeningBracket) {
+        if (mChar == OpeningBracket) {
             mToken.setSymbol(ComputerScannerToken::OpeningBracket);
 
             getNextChar();
@@ -539,6 +537,26 @@ void ComputerScanner::getNextToken()
 
                 mToken.setSymbol(ComputerScannerToken::GreaterThan);
             }
+        } else if (mChar == Times) {
+            mToken.setSymbol(ComputerScannerToken::Times);
+
+            getNextChar();
+        } else if (mChar == Divide) {
+            mToken.setSymbol(ComputerScannerToken::Divide);
+
+            getNextChar();
+        } else if (mChar == Percentage) {
+            mToken.setSymbol(ComputerScannerToken::Percentage);
+
+            getNextChar();
+        } else if (mChar == Plus) {
+            mToken.setSymbol(ComputerScannerToken::Plus);
+
+            getNextChar();
+        } else if (mChar == Minus) {
+            mToken.setSymbol(ComputerScannerToken::Minus);
+
+            getNextChar();
         }
     }
 }

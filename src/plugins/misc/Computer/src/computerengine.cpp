@@ -828,6 +828,10 @@ bool parseRelationalExpression(ComputerScanner &pScanner,
                                ComputerEngineFunction &pFunction);
 bool parseAdditiveExpression(ComputerScanner &pScanner,
                              ComputerEngineFunction &pFunction);
+bool parseMultiplicativeExpression(ComputerScanner &pScanner,
+                                   ComputerEngineFunction &pFunction);
+bool parseUnaryExpression(ComputerScanner &pScanner,
+                          ComputerEngineFunction &pFunction);
 
 //==============================================================================
 
@@ -970,7 +974,7 @@ bool parseAndExpression(ComputerScanner &pScanner,
 bool parseEqualityExpression(ComputerScanner &pScanner,
                              ComputerEngineFunction &pFunction)
 {
-    // The EBNF grammar of an And expression is as follows:
+    // The EBNF grammar of an equality expression is as follows:
     //
     //   EqualityExpression =   RelationalExpression
     //                        | ( EqualityExpression "==" RelationalExpression ) ;
@@ -992,7 +996,7 @@ bool parseEqualityExpression(ComputerScanner &pScanner,
 bool parseRelationalExpression(ComputerScanner &pScanner,
                                ComputerEngineFunction &pFunction)
 {
-    // The EBNF grammar of an And expression is as follows:
+    // The EBNF grammar of a relational expression is as follows:
     //
     //   RelationalExpression =   AdditiveExpression
     //                          | ( RelationalExpression "<" AdditiveExpression ) ;
@@ -1017,6 +1021,52 @@ bool parseRelationalExpression(ComputerScanner &pScanner,
 
 bool parseAdditiveExpression(ComputerScanner &pScanner,
                              ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of an additive expression is as follows:
+    //
+    //   AdditiveExpression =   MultiplicativeExpression
+    //                        | ( AdditiveExpression "+" MultiplicativeExpression ) ;
+    //                        | ( AdditiveExpression "-" MultiplicativeExpression ) ;
+
+    if (!parseGenericExpression(pScanner, pFunction,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
+                                                                << ComputerScannerToken::Minus,
+                                parseMultiplicativeExpression))
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseMultiplicativeExpression(ComputerScanner &pScanner,
+                                   ComputerEngineFunction &pFunction)
+{
+    // The EBNF grammar of a multiplicative expression is as follows:
+    //
+    //   MultiplicativeExpression =   MultiplicativeExpression
+    //                              | ( MultiplicativeExpression "*" UnaryExpression ) ;
+    //                              | ( MultiplicativeExpression "/" UnaryExpression ) ;
+    //                              | ( MultiplicativeExpression "%" UnaryExpression ) ;
+
+    if (!parseGenericExpression(pScanner, pFunction,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::Times
+                                                                << ComputerScannerToken::Divide
+                                                                << ComputerScannerToken::Percentage,
+                                parseUnaryExpression))
+        return false;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseUnaryExpression(ComputerScanner &pScanner,
+                          ComputerEngineFunction &pFunction)
 {
     // Everything went fine, so...
 
