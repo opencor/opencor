@@ -12,6 +12,7 @@ ADD_PLUGIN(Computer
         ../../plugininfo.cpp
 
         src/computerengine.cpp
+        src/computerengineissue.cpp
         src/computerplugin.cpp
         src/computerscanner.cpp
     HEADERS_MOC

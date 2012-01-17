@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "computerengineissue.h"
 #include "computerglobal.h"
 #include "computerscanner.h"
 
@@ -23,28 +24,6 @@
 
 namespace OpenCOR {
 namespace Computer {
-
-//==============================================================================
-
-class COMPUTER_EXPORT ComputerEngineIssue
-{
-public:
-    explicit ComputerEngineIssue(const QString &pMessage,
-                                 const int &pLine = 0, const int &pColumn = 0,
-                                 const QString &pExtraInformation = QString());
-
-    QString message() const;
-    QString formattedMessage() const;
-    int line() const;
-    int column() const;
-    QString extraInformation() const;
-
-private:
-    QString mMessage;
-    int mLine;
-    int mColumn;
-    QString mExtraInformation;
-};
 
 //==============================================================================
 
