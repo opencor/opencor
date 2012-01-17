@@ -16,6 +16,7 @@
 //==============================================================================
 
 #include "llvm/Module.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
 
 //==============================================================================
@@ -305,18 +306,19 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 //            llvm::Function *ratesConsts = computerEngine.addFunction(QString("void initConsts(double *ALGEBRAIC, double *RATES, double *STATES, double *CONSTANTS) { %1 }").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
             llvm::Function *test = computerEngine.addFunction("void test(double *pParam) { pParam[0] = pow(pParam[1], pParam[2]+pParam[3]); }");
 
-            if (computerEngine.issues().count()) {
-                // Something went wrong, so output the issue(s)
+            if (computerEngine.parserErrors().count()) {
+                // Something went wrong with the parsing of the function, so
+                // output the issue(s) that were found
 
                 qDebug("---------------------------------------");
 
-                if (computerEngine.issues().count() == 1)
+                if (computerEngine.parserErrors().count() == 1)
                     qDebug("An issue was found:");
                 else
                     qDebug("Some issues were found:");
 
-                foreach (const Computer::ComputerEngineIssue &issue,
-                         computerEngine.issues()) {
+                foreach (const Computer::ComputerIssue &issue,
+                         computerEngine.parserErrors()) {
                     if (issue.line() && issue.column())
                         qDebug(QString(" - Line %1, column %2: %3").arg(QString::number(issue.line()), QString::number(issue.column()), issue.formattedMessage()).toLatin1().constData());
                     else
@@ -325,6 +327,18 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                     if (!issue.extraInformation().isEmpty())
                         qDebug(issue.extraInformation().toLatin1().constData());
                 }
+
+                qDebug("---------------------------------------");
+
+                mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                                tr("the model could not be compiled")));
+            } else if (!computerEngine.error().isEmpty()) {
+                // Something went wrong with the addition of the function, so
+                // output the error that was found
+
+                qDebug("---------------------------------------");
+
+                qDebug(QString("An error occurred: %1").arg(computerEngine.error().formattedMessage()).toLatin1().constData());
 
                 qDebug("---------------------------------------");
 
@@ -364,7 +378,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 }
             }
 
-            // Output the contents of our computer's module so far
+            // Output the contents of our computer engine's module so far
 
             qDebug("---------------------------------------");
             qDebug("All generated code so far:");

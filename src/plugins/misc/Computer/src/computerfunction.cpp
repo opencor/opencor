@@ -1,8 +1,8 @@
 //==============================================================================
-// Computer engine function class
+// Computer function class
 //==============================================================================
 
-#include "computerenginefunction.h"
+#include "computerfunction.h"
 
 //==============================================================================
 
@@ -11,28 +11,47 @@ namespace Computer {
 
 //==============================================================================
 
-ComputerEngineFunction::ComputerEngineFunction() :
+ComputerFunction::ComputerFunction() :
+    mIsValid(true),
     mIrCode(0),
     mType(Void),
     mName(QString()),
-    mEquations(ComputerEngineEquations()),
+    mEquations(ComputerEquations()),
     mParameters(QStringList())
 {
 }
 
 //==============================================================================
 
-ComputerEngineFunction::~ComputerEngineFunction()
+ComputerFunction::~ComputerFunction()
 {
     // Delete the equations
 
-    foreach (ComputerEngineEquation *equation, mEquations)
+    foreach (ComputerEquation *equation, mEquations)
         delete equation;
 }
 
 //==============================================================================
 
-llvm::Function * ComputerEngineFunction::irCode() const
+bool ComputerFunction::isValid() const
+{
+    // Return whether the function is valid
+
+    return mIsValid;
+}
+
+//==============================================================================
+
+void ComputerFunction::setIsValid(const bool &pIsValid)
+{
+    // Set whether the function is valid
+
+    mIsValid = pIsValid;
+}
+
+//==============================================================================
+
+llvm::Function * ComputerFunction::irCode() const
 {
     // Return the function's IR code
 
@@ -41,7 +60,7 @@ llvm::Function * ComputerEngineFunction::irCode() const
 
 //==============================================================================
 
-void ComputerEngineFunction::setIrCode(llvm::Function *pIrCode)
+void ComputerFunction::setIrCode(llvm::Function *pIrCode)
 {
     // Set the function's IR code
 
@@ -50,7 +69,7 @@ void ComputerEngineFunction::setIrCode(llvm::Function *pIrCode)
 
 //==============================================================================
 
-ComputerEngineFunction::Type ComputerEngineFunction::type() const
+ComputerFunction::Type ComputerFunction::type() const
 {
     // Return the function's type
 
@@ -59,7 +78,7 @@ ComputerEngineFunction::Type ComputerEngineFunction::type() const
 
 //==============================================================================
 
-void ComputerEngineFunction::setType(const Type &pType)
+void ComputerFunction::setType(const Type &pType)
 {
     // Set the function's type
 
@@ -68,7 +87,7 @@ void ComputerEngineFunction::setType(const Type &pType)
 
 //==============================================================================
 
-QString ComputerEngineFunction::name() const
+QString ComputerFunction::name() const
 {
     // Return the function's name
 
@@ -77,7 +96,7 @@ QString ComputerEngineFunction::name() const
 
 //==============================================================================
 
-void ComputerEngineFunction::setName(const QString &pName)
+void ComputerFunction::setName(const QString &pName)
 {
     // Set the function's name
 
@@ -86,7 +105,7 @@ void ComputerEngineFunction::setName(const QString &pName)
 
 //==============================================================================
 
-QStringList ComputerEngineFunction::parameters() const
+QStringList ComputerFunction::parameters() const
 {
     // Return the function's parameters
 
@@ -95,7 +114,7 @@ QStringList ComputerEngineFunction::parameters() const
 
 //==============================================================================
 
-bool ComputerEngineFunction::addParameter(const QString &pParameter)
+bool ComputerFunction::addParameter(const QString &pParameter)
 {
     // Add a parameter to our list, but only if it isn't already there
 
@@ -114,7 +133,7 @@ bool ComputerEngineFunction::addParameter(const QString &pParameter)
 
 //==============================================================================
 
-ComputerEngineEquations ComputerEngineFunction::equations() const
+ComputerEquations ComputerFunction::equations() const
 {
     // Return the function's equations
 
@@ -123,7 +142,7 @@ ComputerEngineEquations ComputerEngineFunction::equations() const
 
 //==============================================================================
 
-void ComputerEngineFunction::addEquation(ComputerEngineEquation *pEquation)
+void ComputerFunction::addEquation(ComputerEquation *pEquation)
 {
     // Add an equation to the function
 
@@ -132,7 +151,7 @@ void ComputerEngineFunction::addEquation(ComputerEngineEquation *pEquation)
 
 //==============================================================================
 
-QString ComputerEngineFunction::returnValue() const
+QString ComputerFunction::returnValue() const
 {
     // Return the function's return value
 
@@ -141,7 +160,7 @@ QString ComputerEngineFunction::returnValue() const
 
 //==============================================================================
 
-void ComputerEngineFunction::setReturnValue(const QString &pReturnValue)
+void ComputerFunction::setReturnValue(const QString &pReturnValue)
 {
     // Set the function's return value
 
@@ -150,7 +169,7 @@ void ComputerEngineFunction::setReturnValue(const QString &pReturnValue)
 
 //==============================================================================
 
-ComputerEngineExternalFunctions ComputerEngineFunction::externalFunctions() const
+ComputerExternalFunctions ComputerFunction::externalFunctions() const
 {
     // Return the function's external functions
 
@@ -159,7 +178,7 @@ ComputerEngineExternalFunctions ComputerEngineFunction::externalFunctions() cons
 
 //==============================================================================
 
-void ComputerEngineFunction::addExternalFunction(const ComputerEngineExternalFunction &pExternalFunction)
+void ComputerFunction::addExternalFunction(const ComputerExternalFunction &pExternalFunction)
 {
     // Add an external function which is needed by the function, but only if the
     // external function isn't already in our list of external functions

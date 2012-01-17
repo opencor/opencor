@@ -1,14 +1,14 @@
 //==============================================================================
-// Computer engine function class
+// Computer function class
 //==============================================================================
 
-#ifndef COMPUTERENGINEFUNCTION_H
-#define COMPUTERENGINEFUNCTION_H
+#ifndef COMPUTERFUNCTION_H
+#define COMPUTERFUNCTION_H
 
 //==============================================================================
 
-#include "computerengineequation.h"
-#include "computerengineexternalfunction.h"
+#include "computerequation.h"
+#include "computerexternalfunction.h"
 
 //==============================================================================
 
@@ -25,7 +25,7 @@ namespace Computer {
 
 //==============================================================================
 
-class ComputerEngineFunction
+class ComputerFunction
 {
 public:
     enum Type {
@@ -33,8 +33,11 @@ public:
         Double
     };
 
-    explicit ComputerEngineFunction();
-    ~ComputerEngineFunction();
+    explicit ComputerFunction();
+    ~ComputerFunction();
+
+    bool isValid() const;
+    void setIsValid(const bool &pIsValid);
 
     llvm::Function * irCode() const;
     void setIrCode(llvm::Function *pIrCode);
@@ -48,25 +51,27 @@ public:
     QStringList parameters() const;
     bool addParameter(const QString &pParameter);
 
-    ComputerEngineEquations equations() const;
-    void addEquation(ComputerEngineEquation *pEquation);
+    ComputerEquations equations() const;
+    void addEquation(ComputerEquation *pEquation);
 
     QString returnValue() const;
     void setReturnValue(const QString &pReturnValue);
 
-    ComputerEngineExternalFunctions externalFunctions() const;
-    void addExternalFunction(const ComputerEngineExternalFunction &pExternalFunction);
+    ComputerExternalFunctions externalFunctions() const;
+    void addExternalFunction(const ComputerExternalFunction &pExternalFunction);
 
 private:
+    bool mIsValid;
+
     llvm::Function * mIrCode;
 
     Type mType;
     QString mName;
     QStringList mParameters;
-    ComputerEngineEquations mEquations;
+    ComputerEquations mEquations;
     QString mReturnValue;
 
-    ComputerEngineExternalFunctions mExternalFunctions;
+    ComputerExternalFunctions mExternalFunctions;
 };
 
 //==============================================================================

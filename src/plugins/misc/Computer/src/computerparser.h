@@ -1,28 +1,19 @@
 //==============================================================================
-// Computer engine class
+// Computer parser class
 //==============================================================================
 
-#ifndef COMPUTERENGINE_H
-#define COMPUTERENGINE_H
+#ifndef COMPUTERPARSER_H
+#define COMPUTERPARSER_H
 
 //==============================================================================
 
-#include "computerexternalfunction.h"
 #include "computerfunction.h"
-#include "computerglobal.h"
 #include "computerissue.h"
+#include "computerscanner.h"
 
 //==============================================================================
 
-#include <QStringList>
-
-//==============================================================================
-
-namespace llvm {
-    class ExecutionEngine;
-    class Function;
-    class Module;
-}
+#include <QList>
 
 //==============================================================================
 
@@ -31,37 +22,41 @@ namespace Computer {
 
 //==============================================================================
 
-class ComputerParser;
-
-//==============================================================================
-
-class COMPUTER_EXPORT ComputerEngine : public QObject
+class ComputerParser : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ComputerEngine();
-    ~ComputerEngine();
+    explicit ComputerParser();
+    ~ComputerParser();
 
-    llvm::Module * module();
-    llvm::ExecutionEngine * executionEngine();
+    ComputerScanner * scanner();
 
-    ComputerIssue error();
-    ComputerIssues parserErrors();
+    ComputerIssues issues();
 
-    llvm::Function * addFunction(const QString &pFunction);
+    void addIssue(const QString &pMessage,
+                  const bool &pExpectedMessage = true,
+                  const bool &pUseCurrentToken = true,
+                  const ComputerScannerToken &pOtherToken = ComputerScannerToken(),
+                  const QString &pExtraInformation = QString());
+
+    ComputerFunction parseFunction(const QString &pFunction);
+    bool parseEquationRhs(ComputerFunction &pFunction);
 
 private:
-    llvm::Module *mModule;
-    llvm::ExecutionEngine *mExecutionEngine;
+    ComputerScanner *mScanner;
 
-    ComputerIssue mError;
-
-    ComputerParser *mParser;
+    ComputerIssues mIssues;
 
     ComputerExternalFunctions mExternalFunctions;
 
-    bool compileFunction(ComputerFunction &pFunction);
+    ComputerFunction invalidFunction();
+
+    bool parseFunctionParameter(ComputerFunction &pFunction,
+                                const bool &pNeeded = true);
+    bool parseFunctionParameters(ComputerFunction &pFunction);
+    bool parseEquations(ComputerFunction &pFunction);
+    bool parseReturn(ComputerFunction &pFunction);
 };
 
 //==============================================================================

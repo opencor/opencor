@@ -1,10 +1,6 @@
 //==============================================================================
 // Computer scanner class
 //==============================================================================
-// The computer engine includes a reduced ANSI-C parser/scanner, e.g. see
-//     http://www.lysator.liu.se/c/ANSI-C-grammar-y.html
-// and http://www.lysator.liu.se/c/ANSI-C-grammar-l.html
-//==============================================================================
 
 #include "computerscanner.h"
 
@@ -109,12 +105,11 @@ void ComputerScannerToken::setString(const QString &pString)
 
 //==============================================================================
 
-ComputerScanner::ComputerScanner(const QString &pInput) :
-    mInput(pInput),
+ComputerScanner::ComputerScanner() :
+    mInput(QString()),
     mPosition(0),
-    mLastPosition(pInput.length()),
-    mChar(' '),   // Note: we initialise mChar with a space character, so that
-                  //       we can get our first token
+    mLastPosition(0),
+    mChar(QChar()),
     mLine(1),
     mColumn(0)
 {
@@ -124,6 +119,21 @@ ComputerScanner::ComputerScanner(const QString &pInput) :
     mKeywords.insert("double", ComputerScannerToken::Double);
 
     mKeywords.insert("return", ComputerScannerToken::Return);
+}
+
+//==============================================================================
+
+void ComputerScanner::initialise(const QString &pInput)
+{
+    // Initialise a few things
+
+    mInput = pInput;
+    mPosition = 0;
+    mLastPosition = pInput.length();
+    mChar = QChar(' ');   // Note: we initialise mChar with a space character,
+                          //       so that we can get our first token
+    mLine = 1;
+    mColumn = 0;
 
     // Get the first token
 

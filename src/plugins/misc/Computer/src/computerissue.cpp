@@ -1,8 +1,8 @@
 //==============================================================================
-// Computer engine issue class
+// Computer issue class
 //==============================================================================
 
-#include "computerengineissue.h"
+#include "computerissue.h"
 
 //==============================================================================
 
@@ -11,9 +11,9 @@ namespace Computer {
 
 //==============================================================================
 
-ComputerEngineIssue::ComputerEngineIssue(const QString &pMessage,
-                                         const int &pLine, const int &pColumn,
-                                         const QString &pExtraInformation) :
+ComputerIssue::ComputerIssue(const QString &pMessage,
+                             const int &pLine, const int &pColumn,
+                             const QString &pExtraInformation) :
     mMessage(pMessage),
     mLine(pLine),
     mColumn(pColumn),
@@ -23,7 +23,16 @@ ComputerEngineIssue::ComputerEngineIssue(const QString &pMessage,
 
 //==============================================================================
 
-QString ComputerEngineIssue::message() const
+bool ComputerIssue::isEmpty() const
+{
+    // Return whether the issue is empty
+
+    return mMessage.isEmpty() && !mLine && !mColumn && mExtraInformation.isEmpty();
+}
+
+//==============================================================================
+
+QString ComputerIssue::message() const
 {
     // Return the issue's message
 
@@ -32,7 +41,7 @@ QString ComputerEngineIssue::message() const
 
 //==============================================================================
 
-QString ComputerEngineIssue::formattedMessage() const
+QString ComputerIssue::formattedMessage() const
 {
     // Return the issue's message fully formatted (i.e. the beginning of the
     // message is capitalised and its end consists of a full stop)
@@ -42,7 +51,7 @@ QString ComputerEngineIssue::formattedMessage() const
 
 //==============================================================================
 
-int ComputerEngineIssue::line() const
+int ComputerIssue::line() const
 {
     // Return the issue's line
 
@@ -51,7 +60,7 @@ int ComputerEngineIssue::line() const
 
 //==============================================================================
 
-int ComputerEngineIssue::column() const
+int ComputerIssue::column() const
 {
     // Return the issue's column
 
@@ -60,7 +69,7 @@ int ComputerEngineIssue::column() const
 
 //==============================================================================
 
-QString ComputerEngineIssue::extraInformation() const
+QString ComputerIssue::extraInformation() const
 {
     // Return the issue's extra information
 

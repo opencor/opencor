@@ -66,7 +66,9 @@ typedef QMap<QString, ComputerScannerToken::Symbol> ComputerScannerKeywords;
 class ComputerScanner
 {
 public:
-    explicit ComputerScanner(const QString &pInput);
+    explicit ComputerScanner();
+
+    void initialise(const QString &pInput);
 
     ComputerScannerToken token();
     void getNextToken();

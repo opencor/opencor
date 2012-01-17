@@ -12,14 +12,16 @@ ADD_PLUGIN(Computer
         ../../plugininfo.cpp
 
         src/computerengine.cpp
-        src/computerengineequation.cpp
-        src/computerengineexternalfunction.cpp
-        src/computerenginefunction.cpp
-        src/computerengineissue.cpp
+        src/computerequation.cpp
+        src/computerexternalfunction.cpp
+        src/computerfunction.cpp
+        src/computerissue.cpp
+        src/computerparser.cpp
         src/computerplugin.cpp
         src/computerscanner.cpp
     HEADERS_MOC
         src/computerengine.h
+        src/computerparser.h
         src/computerplugin.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}

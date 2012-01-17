@@ -1,9 +1,9 @@
 //==============================================================================
-// Computer engine issue class
+// Computer issue class
 //==============================================================================
 
-#ifndef COMPUTERENGINEISSUE_H
-#define COMPUTERENGINEISSUE_H
+#ifndef COMPUTERISSUE_H
+#define COMPUTERISSUE_H
 
 //==============================================================================
 
@@ -16,12 +16,14 @@ namespace Computer {
 
 //==============================================================================
 
-class COMPUTER_EXPORT ComputerEngineIssue
+class COMPUTER_EXPORT ComputerIssue
 {
 public:
-    explicit ComputerEngineIssue(const QString &pMessage,
-                                 const int &pLine = 0, const int &pColumn = 0,
-                                 const QString &pExtraInformation = QString());
+    explicit ComputerIssue(const QString &pMessage,
+                           const int &pLine = 0, const int &pColumn = 0,
+                           const QString &pExtraInformation = QString());
+
+    bool isEmpty() const;
 
     QString message() const;
     QString formattedMessage() const;
@@ -35,6 +37,10 @@ private:
     int mColumn;
     QString mExtraInformation;
 };
+
+//==============================================================================
+
+typedef QList<ComputerIssue> ComputerIssues;
 
 //==============================================================================
 

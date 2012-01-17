@@ -1,14 +1,13 @@
 //==============================================================================
-// Computer engine external function class
+// Computer equation class
 //==============================================================================
 
-#ifndef COMPUTERENGINEEXTERNALFUNCTION_H
-#define COMPUTERENGINEEXTERNALFUNCTION_H
+#ifndef COMPUTEREQUATION_H
+#define COMPUTEREQUATION_H
 
 //==============================================================================
 
 #include <QList>
-#include <QString>
 
 //==============================================================================
 
@@ -17,27 +16,13 @@ namespace Computer {
 
 //==============================================================================
 
-class ComputerEngineExternalFunction
+class ComputerEquation
 {
-public:
-    explicit ComputerEngineExternalFunction(const QString &pName,
-                                            const int &pNbOfParameters);
-
-    QString name() const;
-    int nbOfParameters() const;
-
-private:
-    QString mName;
-    int mNbOfParameters;
 };
 
 //==============================================================================
 
-class ComputerEngineExternalFunctions : public QList<ComputerEngineExternalFunction>
-{
-public:
-    bool contains(const ComputerEngineExternalFunction &pExternalFunction) const;
-};
+typedef QList<ComputerEquation *> ComputerEquations;
 
 //==============================================================================
 

@@ -1,8 +1,8 @@
 //==============================================================================
-// Computer engine function class
+// Computer function class
 //==============================================================================
 
-#include "computerengineexternalfunction.h"
+#include "computerexternalfunction.h"
 
 //==============================================================================
 
@@ -11,8 +11,8 @@ namespace Computer {
 
 //==============================================================================
 
-ComputerEngineExternalFunction::ComputerEngineExternalFunction(const QString &pName,
-                                                               const int &pNbOfParameters) :
+ComputerExternalFunction::ComputerExternalFunction(const QString &pName,
+                                                   const int &pNbOfParameters) :
     mName(pName),
     mNbOfParameters(pNbOfParameters)
 {
@@ -20,7 +20,7 @@ ComputerEngineExternalFunction::ComputerEngineExternalFunction(const QString &pN
 
 //==============================================================================
 
-QString ComputerEngineExternalFunction::name() const
+QString ComputerExternalFunction::name() const
 {
     // Return the external function's name
 
@@ -29,7 +29,7 @@ QString ComputerEngineExternalFunction::name() const
 
 //==============================================================================
 
-int ComputerEngineExternalFunction::nbOfParameters() const
+int ComputerExternalFunction::nbOfParameters() const
 {
     // Return the external function's number of parameters
 
@@ -38,7 +38,7 @@ int ComputerEngineExternalFunction::nbOfParameters() const
 
 //==============================================================================
 
-bool ComputerEngineExternalFunctions::contains(const ComputerEngineExternalFunction &pExternalFunction) const
+bool ComputerExternalFunctions::contains(const ComputerExternalFunction &pExternalFunction) const
 {
     // Check whether an external function is already in our list of external
     // functions needed by the function
@@ -47,7 +47,7 @@ bool ComputerEngineExternalFunctions::contains(const ComputerEngineExternalFunct
     //       given external function)
 
     for (int i = 0, iMax = count(); i < iMax; ++i) {
-        const ComputerEngineExternalFunction &externalFunction = at(i);
+        const ComputerExternalFunction &externalFunction = at(i);
 
         if (!externalFunction.name().compare(pExternalFunction.name()))
             // The external function is already in our list of external
