@@ -1,6 +1,10 @@
 //==============================================================================
 // Computer scanner class
 //==============================================================================
+// The computer engine includes a reduced ANSI-C parser/scanner, e.g. see
+//     http://www.lysator.liu.se/c/ANSI-C-grammar-y.html
+// and http://www.lysator.liu.se/c/ANSI-C-grammar-l.html
+//==============================================================================
 
 #include "computerscanner.h"
 

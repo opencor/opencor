@@ -1,9 +1,9 @@
 //==============================================================================
-// CellML model common
+// CellML model issue
 //==============================================================================
 
-#ifndef CELLMLMODELCOMMON_H
-#define CELLMLMODELCOMMON_H
+#ifndef CELLMLMODELISSUE_H
+#define CELLMLMODELISSUE_H
 
 //==============================================================================
 

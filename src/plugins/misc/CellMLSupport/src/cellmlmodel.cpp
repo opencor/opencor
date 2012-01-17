@@ -150,10 +150,9 @@ bool CellmlModel::isValid()
         //       validation issue, be it an error or a warning, so we need to
         //       determine the number of true errors
 
-        uint32_t nbOfCellmlIssues = cellmlValidityErrorSet->nValidityErrors();
         uint32_t nbOfCellmlErrors = 0;
 
-        for (uint32_t i = 0; i < nbOfCellmlIssues; ++i) {
+        for (uint32_t i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
             // Determine the issue's location
 
             ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);

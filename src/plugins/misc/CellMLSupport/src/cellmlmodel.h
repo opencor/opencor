@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlmodelcommon.h"
+#include "cellmlmodelissue.h"
 #include "cellmlmodelruntime.h"
 #include "cellmlsupportglobal.h"
 
