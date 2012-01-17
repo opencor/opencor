@@ -10,7 +10,7 @@
 #include "computerexternalfunction.h"
 #include "computerfunction.h"
 #include "computerglobal.h"
-#include "computerissue.h"
+#include "computererror.h"
 
 //==============================================================================
 
@@ -46,8 +46,8 @@ public:
     llvm::Module * module();
     llvm::ExecutionEngine * executionEngine();
 
-    ComputerIssue error();
-    ComputerIssues parserErrors();
+    ComputerError error();
+    ComputerErrors parserErrors();
 
     llvm::Function * addFunction(const QString &pFunction);
 
@@ -55,7 +55,7 @@ private:
     llvm::Module *mModule;
     llvm::ExecutionEngine *mExecutionEngine;
 
-    ComputerIssue mError;
+    ComputerError mError;
 
     ComputerParser *mParser;
 

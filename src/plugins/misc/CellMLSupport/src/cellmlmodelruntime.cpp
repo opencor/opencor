@@ -308,24 +308,24 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             if (computerEngine.parserErrors().count()) {
                 // Something went wrong with the parsing of the function, so
-                // output the issue(s) that were found
+                // output the error(s) that was(were) found
 
                 qDebug("---------------------------------------");
 
                 if (computerEngine.parserErrors().count() == 1)
-                    qDebug("An issue was found:");
+                    qDebug("An error occurred:");
                 else
-                    qDebug("Some issues were found:");
+                    qDebug("Some errors occurred:");
 
-                foreach (const Computer::ComputerIssue &issue,
+                foreach (const Computer::ComputerError &error,
                          computerEngine.parserErrors()) {
-                    if (issue.line() && issue.column())
-                        qDebug(QString(" - Line %1, column %2: %3").arg(QString::number(issue.line()), QString::number(issue.column()), issue.formattedMessage()).toLatin1().constData());
+                    if (error.line() && error.column())
+                        qDebug(QString(" - Line %1, column %2: %3").arg(QString::number(error.line()), QString::number(error.column()), error.formattedMessage()).toLatin1().constData());
                     else
-                        qDebug(QString(" - %1").arg(issue.formattedMessage()).toLatin1().constData());
+                        qDebug(QString(" - %1").arg(error.formattedMessage()).toLatin1().constData());
 
-                    if (!issue.extraInformation().isEmpty())
-                        qDebug(issue.extraInformation().toLatin1().constData());
+                    if (!error.extraInformation().isEmpty())
+                        qDebug(error.extraInformation().toLatin1().constData());
                 }
 
                 qDebug("---------------------------------------");

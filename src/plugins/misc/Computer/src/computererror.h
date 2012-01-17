@@ -1,9 +1,9 @@
 //==============================================================================
-// Computer issue class
+// Computer error class
 //==============================================================================
 
-#ifndef COMPUTERISSUE_H
-#define COMPUTERISSUE_H
+#ifndef COMPUTERERROR_H
+#define COMPUTERERROR_H
 
 //==============================================================================
 
@@ -16,10 +16,10 @@ namespace Computer {
 
 //==============================================================================
 
-class COMPUTER_EXPORT ComputerIssue
+class COMPUTER_EXPORT ComputerError
 {
 public:
-    explicit ComputerIssue(const QString &pMessage,
+    explicit ComputerError(const QString &pMessage,
                            const int &pLine = 0, const int &pColumn = 0,
                            const QString &pExtraInformation = QString());
 
@@ -40,7 +40,7 @@ private:
 
 //==============================================================================
 
-typedef QList<ComputerIssue> ComputerIssues;
+typedef QList<ComputerError> ComputerErrors;
 
 //==============================================================================
 

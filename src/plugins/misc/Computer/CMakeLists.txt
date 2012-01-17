@@ -13,9 +13,9 @@ ADD_PLUGIN(Computer
 
         src/computerengine.cpp
         src/computerequation.cpp
+        src/computererror.cpp
         src/computerexternalfunction.cpp
         src/computerfunction.cpp
-        src/computerissue.cpp
         src/computerparser.cpp
         src/computerplugin.cpp
         src/computerscanner.cpp

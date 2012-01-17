@@ -84,7 +84,7 @@ llvm::ExecutionEngine * ComputerEngine::executionEngine()
 
 //==============================================================================
 
-ComputerIssue ComputerEngine::error()
+ComputerError ComputerEngine::error()
 {
     // Return the computer engine's error
 
@@ -93,11 +93,11 @@ ComputerIssue ComputerEngine::error()
 
 //==============================================================================
 
-ComputerIssues ComputerEngine::parserErrors()
+ComputerErrors ComputerEngine::parserErrors()
 {
     // Return the computer engine's parser's errors
 
-    return mParser->issues();
+    return mParser->errors();
 }
 
 //==============================================================================
@@ -141,7 +141,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
         if (mModule->getFunction(function.name().toLatin1().constData())) {
             // A function with the same name already exists, so...
 
-            mError = ComputerIssue(tr("there is already a function called '%1'").arg(function.name()));
+            mError = ComputerError(tr("there is already a function called '%1'").arg(function.name()));
 
             return 0;
         }
@@ -318,7 +318,7 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
                               mModule, parseError, llvm::getGlobalContext());
 
     if (parseError.getMessage().size())
-        mError = ComputerIssue(tr("the LLVM assembly code could not be parsed: %1").arg(QString::fromStdString(parseError.getMessage()).remove("error: ")),
+        mError = ComputerError(tr("the LLVM assembly code could not be parsed: %1").arg(QString::fromStdString(parseError.getMessage()).remove("error: ")),
                                parseError.getLineNo(), parseError.getColumnNo(),
                                originalAssemblyCode);
 
@@ -346,11 +346,11 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
 
         return true;
     } else {
-        // The function couldn't be retrieved, so add an issue but only if no
+        // The function couldn't be retrieved, so add an error but only if no
         // error occurred during the compilation
 
         if (mError.isEmpty())
-            mError = ComputerIssue(tr("the function '%1' could not be found").arg(pFunction.name()));
+            mError = ComputerError(tr("the function '%1' could not be found").arg(pFunction.name()));
 
         return false;
     }

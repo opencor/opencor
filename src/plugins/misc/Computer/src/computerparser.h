@@ -8,7 +8,7 @@
 //==============================================================================
 
 #include "computerfunction.h"
-#include "computerissue.h"
+#include "computererror.h"
 #include "computerscanner.h"
 
 //==============================================================================
@@ -32,9 +32,9 @@ public:
 
     ComputerScanner * scanner();
 
-    ComputerIssues issues();
+    ComputerErrors errors();
 
-    void addIssue(const QString &pMessage,
+    void addError(const QString &pMessage,
                   const bool &pExpectedMessage = true,
                   const bool &pUseCurrentToken = true,
                   const ComputerScannerToken &pOtherToken = ComputerScannerToken(),
@@ -46,7 +46,7 @@ public:
 private:
     ComputerScanner *mScanner;
 
-    ComputerIssues mIssues;
+    ComputerErrors mErrors;
 
     ComputerExternalFunctions mExternalFunctions;
 

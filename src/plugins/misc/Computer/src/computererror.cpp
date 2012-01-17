@@ -1,8 +1,8 @@
 //==============================================================================
-// Computer issue class
+// Computer error class
 //==============================================================================
 
-#include "computerissue.h"
+#include "computererror.h"
 
 //==============================================================================
 
@@ -11,7 +11,7 @@ namespace Computer {
 
 //==============================================================================
 
-ComputerIssue::ComputerIssue(const QString &pMessage,
+ComputerError::ComputerError(const QString &pMessage,
                              const int &pLine, const int &pColumn,
                              const QString &pExtraInformation) :
     mMessage(pMessage),
@@ -23,27 +23,27 @@ ComputerIssue::ComputerIssue(const QString &pMessage,
 
 //==============================================================================
 
-bool ComputerIssue::isEmpty() const
+bool ComputerError::isEmpty() const
 {
-    // Return whether the issue is empty
+    // Return whether the error is empty
 
     return mMessage.isEmpty() && !mLine && !mColumn && mExtraInformation.isEmpty();
 }
 
 //==============================================================================
 
-QString ComputerIssue::message() const
+QString ComputerError::message() const
 {
-    // Return the issue's message
+    // Return the error's message
 
     return mMessage;
 }
 
 //==============================================================================
 
-QString ComputerIssue::formattedMessage() const
+QString ComputerError::formattedMessage() const
 {
-    // Return the issue's message fully formatted (i.e. the beginning of the
+    // Return the error's message fully formatted (i.e. the beginning of the
     // message is capitalised and its end consists of a full stop)
 
     return mMessage.left(1).toUpper()+mMessage.right(mMessage.size()-1)+".";
@@ -51,27 +51,27 @@ QString ComputerIssue::formattedMessage() const
 
 //==============================================================================
 
-int ComputerIssue::line() const
+int ComputerError::line() const
 {
-    // Return the issue's line
+    // Return the error's line
 
     return mLine;
 }
 
 //==============================================================================
 
-int ComputerIssue::column() const
+int ComputerError::column() const
 {
-    // Return the issue's column
+    // Return the error's column
 
     return mColumn;
 }
 
 //==============================================================================
 
-QString ComputerIssue::extraInformation() const
+QString ComputerError::extraInformation() const
 {
-    // Return the issue's extra information
+    // Return the error's extra information
 
     return mExtraInformation;
 }

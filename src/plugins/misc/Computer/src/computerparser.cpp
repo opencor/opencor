@@ -19,7 +19,7 @@ namespace Computer {
 //==============================================================================
 
 ComputerParser::ComputerParser() :
-    mIssues(ComputerIssues()),
+    mErrors(ComputerErrors()),
     mExternalFunctions(ComputerExternalFunctions())
 {
     // Create a scanner
@@ -47,16 +47,16 @@ ComputerScanner * ComputerParser::scanner()
 
 //==============================================================================
 
-ComputerIssues ComputerParser::issues()
+ComputerErrors ComputerParser::errors()
 {
-    // Return the computer parser's issue(s)
+    // Return the computer parser's error(s)
 
-    return mIssues;
+    return mErrors;
 }
 
 //==============================================================================
 
-void ComputerParser::addIssue(const QString &pMessage,
+void ComputerParser::addError(const QString &pMessage,
                               const bool &pExpectedMessage,
                               const bool &pUseCurrentToken,
                               const ComputerScannerToken &pOtherToken,
@@ -65,23 +65,23 @@ void ComputerParser::addIssue(const QString &pMessage,
     ComputerScannerToken token = pUseCurrentToken?mScanner->token():pOtherToken;
 
     if (pExpectedMessage) {
-        // First, check that there isn't already an issue for that line/column
+        // First, check that there isn't already an error for that line/column
         // combination
 
         int tokenLine = token.line();
         int tokenColumn = token.column();
 
-        foreach (const ComputerIssue &issue, mIssues)
-            if ((issue.line() == tokenLine) && (issue.column() == tokenColumn))
-                // There is already an issue for that line line/column
+        foreach (const ComputerError &error, mErrors)
+            if ((error.line() == tokenLine) && (error.column() == tokenColumn))
+                // There is already an error for that line line/column
                 // combination, so...
 
                 return;
 
-        mIssues.append(ComputerIssue(tr("%1 is expected, but '%2' was found").arg(pMessage, token.string()),
+        mErrors.append(ComputerError(tr("%1 is expected, but '%2' was found").arg(pMessage, token.string()),
                                      tokenLine, tokenColumn));
     } else {
-        mIssues.append(ComputerIssue(pMessage, token.line(), token.column(),
+        mErrors.append(ComputerError(pMessage, token.line(), token.column(),
                                      pExtraInformation));
     }
 }
@@ -127,7 +127,7 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
 
         res.setType(ComputerFunction::Double);
     } else {
-        addIssue(tr("either 'void' or 'double'"));
+        addError(tr("either 'void' or 'double'"));
 
         return invalidFunction();
     }
@@ -141,7 +141,7 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
 
         res.setName(mScanner->token().string());
     } else {
-        addIssue(tr("an identifier"));
+        addError(tr("an identifier"));
 
         return invalidFunction();
     }
@@ -151,7 +151,7 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be an opening bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::OpeningBracket) {
-        addIssue("'('");
+        addError("'('");
 
         return invalidFunction();
     }
@@ -169,7 +169,7 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be a closing bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::ClosingBracket) {
-        addIssue("')'");
+        addError("')'");
 
         return invalidFunction();
     }
@@ -179,7 +179,7 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be an opening curly bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::OpeningCurlyBracket) {
-        addIssue("'{'");
+        addError("'{'");
 
         return invalidFunction();
     }
@@ -204,7 +204,7 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be a closing curly bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::ClosingCurlyBracket) {
-        addIssue("'}'");
+        addError("'}'");
 
         return invalidFunction();
     }
@@ -214,7 +214,7 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be EOF
 
     if (mScanner->token().symbol() != ComputerScannerToken::Eof) {
-        addIssue("EOF");
+        addError("EOF");
 
         return invalidFunction();
     }
@@ -239,7 +239,7 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction &pFunction,
         if (pNeeded)
             // We need a function parameter definition, so...
 
-            addIssue("'double'");
+            addError("'double'");
 
         return false;
     }
@@ -249,7 +249,7 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction &pFunction,
     // The current token must be "*"
 
     if (mScanner->token().symbol() != ComputerScannerToken::Times) {
-        addIssue("'*'");
+        addError("'*'");
 
         return false;
     }
@@ -265,13 +265,13 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction &pFunction,
         if (!pFunction.addParameter(mScanner->token().string())) {
             // The function parameter already exists, so...
 
-            addIssue(tr("there is already a function parameter called '%1'").arg(mScanner->token().string()),
+            addError(tr("there is already a function parameter called '%1'").arg(mScanner->token().string()),
                      false);
 
             return false;
         }
     } else {
-        addIssue(tr("an identifier"));
+        addError(tr("an identifier"));
 
         return false;
     }
@@ -354,7 +354,7 @@ bool ComputerParser::parseEquations(ComputerFunction &pFunction)
         // The current token must be "["
 
         if (mScanner->token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
-            addIssue("'['");
+            addError("'['");
 
             delete equation;
 
@@ -371,7 +371,7 @@ bool ComputerParser::parseEquations(ComputerFunction &pFunction)
 
             arrayIndex = mScanner->token().string().toInt();
         } else {
-            addIssue(tr("an integer"));
+            addError(tr("an integer"));
 
             delete equation;
 
@@ -383,7 +383,7 @@ bool ComputerParser::parseEquations(ComputerFunction &pFunction)
         // The current token must be "]"
 
         if (mScanner->token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
-            addIssue("']'");
+            addError("']'");
 
             delete equation;
 
@@ -395,7 +395,7 @@ bool ComputerParser::parseEquations(ComputerFunction &pFunction)
         // The current token must be "="
 
         if (mScanner->token().symbol() != ComputerScannerToken::Equal) {
-            addIssue("'='");
+            addError("'='");
 
             delete equation;
 
@@ -418,7 +418,7 @@ bool ComputerParser::parseEquations(ComputerFunction &pFunction)
         // The current token must be ";"
 
         if (mScanner->token().symbol() != ComputerScannerToken::SemiColon) {
-            addIssue("';'");
+            addError("';'");
 
             delete equation;
 
@@ -802,7 +802,7 @@ bool parsePostfixExpression(ComputerParser *pParser,
         // The current token must be ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
-            pParser->addIssue("')'");
+            pParser->addError("')'");
 
             return false;
         }
@@ -814,7 +814,7 @@ bool parsePostfixExpression(ComputerParser *pParser,
         // the current token must be an integer value
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::IntegerValue) {
-            pParser->addIssue(QObject::tr("an integer"));
+            pParser->addError(QObject::tr("an integer"));
 
             return false;
         }
@@ -824,7 +824,7 @@ bool parsePostfixExpression(ComputerParser *pParser,
         // The current token must be "]"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
-            pParser->addIssue("']'");
+            pParser->addError("']'");
 
             return false;
         }
@@ -872,7 +872,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // The current token must be ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
-            pParser->addIssue("')'");
+            pParser->addError("')'");
 
             return false;
         }
@@ -924,7 +924,7 @@ bool ComputerParser::parseEquationRhs(ComputerFunction &pFunction)
         // The current token must be ":"
 
         if (mScanner->token().symbol() != ComputerScannerToken::Colon) {
-            addIssue("':'");
+            addError("':'");
 
             return false;
         }
@@ -956,7 +956,7 @@ bool ComputerParser::parseReturn(ComputerFunction &pFunction)
     // The current token must be "return"
 
     if (mScanner->token().symbol() != ComputerScannerToken::Return) {
-        addIssue("'return'");
+        addError("'return'");
 
         return false;
     }
@@ -971,7 +971,7 @@ bool ComputerParser::parseReturn(ComputerFunction &pFunction)
     // The current token must be ";"
 
     if (mScanner->token().symbol() != ComputerScannerToken::SemiColon) {
-        addIssue("';'");
+        addError("';'");
 
         return false;
     }
