@@ -12,6 +12,9 @@ ADD_PLUGIN(Computer
         ../../plugininfo.cpp
 
         src/computerengine.cpp
+        src/computerengineequation.cpp
+        src/computerengineexternalfunction.cpp
+        src/computerenginefunction.cpp
         src/computerengineissue.cpp
         src/computerplugin.cpp
         src/computerscanner.cpp

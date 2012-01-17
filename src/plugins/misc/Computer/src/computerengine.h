@@ -7,6 +7,9 @@
 
 //==============================================================================
 
+#include "computerengineequation.h"
+#include "computerengineexternalfunction.h"
+#include "computerenginefunction.h"
 #include "computerengineissue.h"
 #include "computerglobal.h"
 #include "computerscanner.h"
@@ -24,86 +27,6 @@
 
 namespace OpenCOR {
 namespace Computer {
-
-//==============================================================================
-
-class ComputerEngineEquation
-{
-};
-
-//==============================================================================
-
-typedef QList<ComputerEngineEquation *> ComputerEngineEquations;
-
-//==============================================================================
-
-class ComputerEngineExternalFunction
-{
-public:
-    explicit ComputerEngineExternalFunction(const QString &pName,
-                                            const int &pNbOfParameters);
-
-    QString name() const;
-    int nbOfParameters() const;
-
-private:
-    QString mName;
-    int mNbOfParameters;
-};
-
-//==============================================================================
-
-class ComputerEngineExternalFunctions : public QList<ComputerEngineExternalFunction>
-{
-public:
-    bool contains(const ComputerEngineExternalFunction &pExternalFunction) const;
-};
-
-//==============================================================================
-
-class ComputerEngineFunction
-{
-public:
-    enum Type {
-        Void,
-        Double
-    };
-
-    explicit ComputerEngineFunction();
-    ~ComputerEngineFunction();
-
-    llvm::Function * irCode() const;
-    void setIrCode(llvm::Function *pIrCode);
-
-    Type type() const;
-    void setType(const Type &pType);
-
-    QString name() const;
-    void setName(const QString &pName);
-
-    QStringList parameters() const;
-    bool addParameter(const QString &pParameter);
-
-    ComputerEngineEquations equations() const;
-    void addEquation(ComputerEngineEquation *pEquation);
-
-    QString returnValue() const;
-    void setReturnValue(const QString &pReturnValue);
-
-    ComputerEngineExternalFunctions externalFunctions() const;
-    void addExternalFunction(const ComputerEngineExternalFunction &pExternalFunction);
-
-private:
-    llvm::Function * mIrCode;
-
-    Type mType;
-    QString mName;
-    QStringList mParameters;
-    ComputerEngineEquations mEquations;
-    QString mReturnValue;
-
-    ComputerEngineExternalFunctions mExternalFunctions;
-};
 
 //==============================================================================
 
