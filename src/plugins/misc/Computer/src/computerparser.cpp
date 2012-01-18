@@ -80,12 +80,26 @@ void ComputerParser::addError(const QString &pMessage,
 
                 return;
 
-        mErrors.append(ComputerError(tr("%1 is expected, but '%2' was found").arg(pMessage, token.string()),
+        mErrors.append(ComputerError(tr("%1 was expected, but '%2' was found instead").arg(pMessage, token.string()),
                                      tokenLine, tokenColumn));
     } else {
         mErrors.append(ComputerError(pMessage, token.line(), token.column(),
                                      pExtraInformation));
     }
+}
+
+//==============================================================================
+
+void ComputerParser::reset(const QString &pFunction)
+{
+    // Reset a few things
+
+    mErrors.clear();
+    mExternalFunctions.clear();
+
+    // Initialise our scanner
+
+    mScanner->initialise(pFunction);
 }
 
 //==============================================================================
@@ -98,9 +112,9 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     //   VoidFunction   = "void" Identifier "(" FunctionParameters ")" "{" [ Equations ] "}" ;
     //   DoubleFunction = "double" Identifier "(" [ FunctionParameters ] ")" "{" [ Equations ] Return "}" ;
 
-    // Initialise our scanner
+    // Reset ourselves
 
-    mScanner->initialise(pFunction);
+    reset(pFunction);
 
     // Retrieve the type of function that we are dealing with, i.e. a void or a
     // double function

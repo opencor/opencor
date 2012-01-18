@@ -19,8 +19,8 @@
 <context>
     <name>OpenCOR::Computer::ComputerParser</name>
     <message>
-        <source>%1 is expected, but &apos;%2&apos; was found</source>
-        <translation>%1 est espéré, mais &apos;%2&apos; a été trouvé</translation>
+        <source>%1 was expected, but &apos;%2&apos; was found instead</source>
+        <translation>%1 était espéré, mais &apos;%2&apos; a été trouvé à la place</translation>
     </message>
     <message>
         <source>either &apos;void&apos; or &apos;double&apos;</source>
