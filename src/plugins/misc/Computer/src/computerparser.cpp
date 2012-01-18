@@ -705,12 +705,10 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction)
     // The EBNF grammar of a unary expression is as follows:
     //
     //   UnaryExpression =   PostfixExpression
-    //                     | ( ( "+" | "-" | "++" | "--" | "!" ) UnaryExpression ) ;
+    //                     | ( ( "+" | "-" | "!" ) UnaryExpression ) ;
 
     static const ComputerScannerToken::Symbols unarySymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
                                                                                               << ComputerScannerToken::Minus
-                                                                                              << ComputerScannerToken::PlusPlus
-                                                                                              << ComputerScannerToken::MinusMinus
                                                                                               << ComputerScannerToken::ExclamationMark;
 
     // Check whether the current token's symbol is one of those we are after
@@ -790,7 +788,6 @@ bool parsePostfixExpression(ComputerParser *pParser,
     // The EBNF grammar of a postfix expression is as follows:
     //
     //   PostfixExpression =   PrimaryExpression
-    //                       | ( PostfixExpression ( "++" | "--" ) )
     //                       | ( PostfixExpression "(" [ EquationParameters ] ")" )
     //                       | ( PostfixExpression "[" IntegerValue "]" ) ;
 
@@ -799,12 +796,9 @@ bool parsePostfixExpression(ComputerParser *pParser,
     while (parsePrimaryExpression(pParser, pFunction))
         ;
 
-    // Check whether the current token's symbol is "++", "--", "(" or "["
+    // Check whether the current token's symbol is "(" or "["
 
-    if (   (pParser->scanner()->token().symbol() == ComputerScannerToken::PlusPlus)
-        || (pParser->scanner()->token().symbol() == ComputerScannerToken::MinusMinus)) {
-        pParser->scanner()->getNextToken();
-    } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningBracket) {
+    if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningBracket) {
         pParser->scanner()->getNextToken();
 
         // Parse the equation parameters, but only if the current token is an

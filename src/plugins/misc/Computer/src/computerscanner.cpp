@@ -569,39 +569,13 @@ void ComputerScanner::getNextToken()
 
             getNextChar();
         } else if (mChar == Plus) {
-            // Depending on the next character, the symbol may be a PlusPlus
-            // rather than a Plus
+            mToken.setSymbol(ComputerScannerToken::Plus);
 
             getNextChar();
-
-            if (mChar == InclusiveOr) {
-                // We got another Plus, so...
-
-                mToken.setSymbol(ComputerScannerToken::PlusPlus);
-
-                getNextChar();
-            } else {
-                // Only one Plus, so...
-
-                mToken.setSymbol(ComputerScannerToken::Plus);
-            }
         } else if (mChar == Minus) {
-            // Depending on the next character, the symbol may be a MinusMinus
-            // rather than a Minus
+            mToken.setSymbol(ComputerScannerToken::Minus);
 
             getNextChar();
-
-            if (mChar == InclusiveOr) {
-                // We got another Minus, so...
-
-                mToken.setSymbol(ComputerScannerToken::MinusMinus);
-
-                getNextChar();
-            } else {
-                // Only one Minus, so...
-
-                mToken.setSymbol(ComputerScannerToken::Minus);
-            }
         }
     }
 }

@@ -30,7 +30,7 @@ public:
         InclusiveOr, ExclusiveOr, LogicalOr, And, LogicalAnd,
         EqualEqual, NotEqual,
         LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
-        Times, Divide, Percentage, Plus, PlusPlus, Minus, MinusMinus,
+        Times, Divide, Percentage, Plus, Minus,
         Return,
         Unknown, Identifier, IntegerValue, DoubleValue, Eof
     };
