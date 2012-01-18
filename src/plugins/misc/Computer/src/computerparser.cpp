@@ -713,19 +713,10 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction)
 
     // Check whether the current token's symbol is one of those we are after
 
-    while (unaryOperatorSymbols.contains(pParser->scanner()->token().symbol())) {
-        // We got the right symbol
+    while (unaryOperatorSymbols.contains(pParser->scanner()->token().symbol()))
+        // We got the right symbol, so carry on...
 
         pParser->scanner()->getNextToken();
-
-        // Parse the unary expression
-
-        if (!parseUnaryExpression(pParser, pFunction))
-            // Something went wrong with the parsing of the unary expression,
-            // so...
-
-            return false;
-    }
 
     // Parse the primary expression
 
@@ -764,7 +755,6 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                                                                                                             << ComputerScannerToken::Cos
                                                                                                             << ComputerScannerToken::Tan;
     static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Pow;
-
 
     if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {
         pParser->scanner()->getNextToken();
