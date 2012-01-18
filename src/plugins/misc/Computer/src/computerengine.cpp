@@ -125,7 +125,6 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
             qDebug("   Type: double");
 
         qDebug(QString("   Name: %1").arg(function.name()).toLatin1().constData());
-
         qDebug(QString("   Nb of params: %1").arg(QString::number(function.parameters().count())).toLatin1().constData());
 
         if (!function.parameters().isEmpty())
@@ -135,8 +134,8 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
         if (function.type() == ComputerFunction::Double)
             qDebug(QString("   Return value: %1").arg(function.returnValue()).toLatin1().constData());
 
-        // The function was properly parsed, so check that we don't already
-        //  have a function with the same name in our module
+        // The function was properly parsed, so check that we don't already have
+        // a function with the same name in our module
 
         if (mModule->getFunction(function.name().toLatin1().constData())) {
             // A function with the same name already exists, so...
@@ -146,8 +145,8 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
             return 0;
         }
 
-        // No function with the same already exists, so we can try to compile
-        // the function
+        // No function with the same name already exists, so we can try to
+        // compile the function
 
         if (!compileFunction(function))
             // The function couldn't be compiled, so...
@@ -173,8 +172,8 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
     static QString indent = QString("  ");
     QString assemblyCode = QString();
 
-    // Declare any external function which we need and in case they are not
-    // already declared
+    // Declare any external function which we need and which are not already
+    // declared
 
     foreach (const ComputerExternalFunction &externalFunction,
              pFunction.externalFunctions())
@@ -321,6 +320,9 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
         mError = ComputerError(tr("the LLVM assembly code could not be parsed: %1").arg(QString::fromStdString(parseError.getMessage()).remove("error: ")),
                                parseError.getLineNo(), parseError.getColumnNo(),
                                originalAssemblyCode);
+        // Note: we must not exit straightaway since LLVM may have generated
+        //       some IR code, so we first need to check whether part of the
+        //       function has already been generated and, if so, remove it...
 
     // Try to retrieve the function which assembly code we have just parsed
 
@@ -328,10 +330,11 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
 
     if (function) {
         // The function could be retrieved, but it should be removed in case an
-        // error of sorts occurred during the compilation
+        // error of sorts occurred during the parsing of the assembly code
 
         if (!mError.isEmpty()) {
-            // An error occurred during the compilation of the function, so...
+            // An error occurred during the parsing of the assembly code, so
+            // remove the function
 
             function->eraseFromParent();
 
@@ -347,7 +350,7 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
         return true;
     } else {
         // The function couldn't be retrieved, so add an error but only if no
-        // error occurred during the compilation
+        // error occurred during the parsing of the assembly code
 
         if (mError.isEmpty())
             mError = ComputerError(tr("the function '%1' could not be found").arg(pFunction.name()));
