@@ -36,12 +36,6 @@ public:
     explicit ComputerFunction();
     ~ComputerFunction();
 
-    bool isValid() const;
-    void setIsValid(const bool &pIsValid);
-
-    llvm::Function * irCode() const;
-    void setIrCode(llvm::Function *pIrCode);
-
     Type type() const;
     void setType(const Type &pType);
 
@@ -61,10 +55,6 @@ public:
     void addExternalFunction(const ComputerExternalFunction &pExternalFunction);
 
 private:
-    bool mIsValid;
-
-    llvm::Function * mIrCode;
-
     Type mType;
     QString mName;
     QStringList mParameters;

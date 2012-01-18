@@ -111,36 +111,36 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 
     // Parse the function
 
-    ComputerFunction function = mParser->parseFunction(pFunction);
+    ComputerFunction *function = mParser->parseFunction(pFunction);
 
-    if (function.isValid()) {
+    if (function) {
         // Output the function's details
 
         qDebug("---------------------------------------");
         qDebug("Function details:");
 
-        if (function.type() == ComputerFunction::Void)
+        if (function->type() == ComputerFunction::Void)
             qDebug("   Type: void");
         else
             qDebug("   Type: double");
 
-        qDebug(QString("   Name: %1").arg(function.name()).toLatin1().constData());
-        qDebug(QString("   Nb of params: %1").arg(QString::number(function.parameters().count())).toLatin1().constData());
+        qDebug(QString("   Name: %1").arg(function->name()).toLatin1().constData());
+        qDebug(QString("   Nb of params: %1").arg(QString::number(function->parameters().count())).toLatin1().constData());
 
-        if (!function.parameters().isEmpty())
-            foreach (const QString &parameter, function.parameters())
+        if (!function->parameters().isEmpty())
+            foreach (const QString &parameter, function->parameters())
                 qDebug(QString("    - %1").arg(parameter).toLatin1().constData());
 
-        if (function.type() == ComputerFunction::Double)
-            qDebug(QString("   Return value: %1").arg(function.returnValue()).toLatin1().constData());
+        if (function->type() == ComputerFunction::Double)
+            qDebug(QString("   Return value: %1").arg(function->returnValue()).toLatin1().constData());
 
         // The function was properly parsed, so check that we don't already have
         // a function with the same name in our module
 
-        if (mModule->getFunction(function.name().toLatin1().constData())) {
+        if (mModule->getFunction(function->name().toLatin1().constData())) {
             // A function with the same name already exists, so...
 
-            mError = ComputerError(tr("there is already a function called '%1'").arg(function.name()));
+            mError = ComputerError(tr("there is already a function called '%1'").arg(function->name()));
 
             return 0;
         }
@@ -148,14 +148,13 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
         // No function with the same name already exists, so we can try to
         // compile the function
 
-        if (!compileFunction(function))
-            // The function couldn't be compiled, so...
+        llvm::Function *compiledFunction = compileFunction(function);
 
-            return 0;
+        delete function;
 
-        // Return the function's IR code
-
-        return function.irCode();
+        return compiledFunction;
+        // Note: it's still fine if the compilation failed, since
+        //       compileFunction() will then return 0...
     } else {
         // The function wasn't properly parsed, so...
 
@@ -165,7 +164,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 
 //==============================================================================
 
-bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
+llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 {
     // Generate some LLVM assembly code based on the contents of the function
 
@@ -176,7 +175,7 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
     // declared
 
     foreach (const ComputerExternalFunction &externalFunction,
-             pFunction.externalFunctions())
+             pFunction->externalFunctions())
         if (!mExternalFunctions.contains(externalFunction)) {
             // The function's external function hasn't already been declared, so
             // declare it
@@ -213,20 +212,20 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
 
     // Type of function
 
-    if (pFunction.type() == ComputerFunction::Void)
+    if (pFunction->type() == ComputerFunction::Void)
         assemblyCode += " void";
     else
         assemblyCode += " double";
 
     // Name of the function
 
-    assemblyCode += " @"+pFunction.name();
+    assemblyCode += " @"+pFunction->name();
 
     // Parameters of the function
 
     QString parameters = QString();
 
-    foreach (const QString &parameter, pFunction.parameters()) {
+    foreach (const QString &parameter, pFunction->parameters()) {
         // Add a separator first if we already have 1+ parameters
 
         if (!parameters.isEmpty())
@@ -251,10 +250,10 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
 
     // Return statement
 
-    if (pFunction.type() == ComputerFunction::Void)
+    if (pFunction->type() == ComputerFunction::Void)
         assemblyCode += indent+"ret void\n";
     else
-        assemblyCode += indent+"ret double "+pFunction.returnValue()+"\n";
+        assemblyCode += indent+"ret double "+pFunction->returnValue()+"\n";
 
     // End the function
 
@@ -326,7 +325,7 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
 
     // Try to retrieve the function which assembly code we have just parsed
 
-    llvm::Function *function = mModule->getFunction(pFunction.name().toLatin1().constData());
+    llvm::Function *function = mModule->getFunction(pFunction->name().toLatin1().constData());
 
     if (function) {
         // The function could be retrieved, but it should be removed in case an
@@ -338,24 +337,20 @@ bool ComputerEngine::compileFunction(ComputerFunction &pFunction)
 
             function->eraseFromParent();
 
-            return false;
+            return 0;
         }
-
-        // Set the function's IR code
-
-        pFunction.setIrCode(function);
 
         // Everything went fine, so...
 
-        return true;
+        return function;
     } else {
         // The function couldn't be retrieved, so add an error but only if no
         // error occurred during the parsing of the assembly code
 
         if (mError.isEmpty())
-            mError = ComputerError(tr("the function '%1' could not be found").arg(pFunction.name()));
+            mError = ComputerError(tr("the function '%1' could not be found").arg(pFunction->name()));
 
-        return false;
+        return 0;
     }
 }
 

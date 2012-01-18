@@ -61,7 +61,7 @@ private:
 
     ComputerExternalFunctions mExternalFunctions;
 
-    bool compileFunction(ComputerFunction &pFunction);
+    llvm::Function * compileFunction(ComputerFunction *pFunction);
 };
 
 //==============================================================================

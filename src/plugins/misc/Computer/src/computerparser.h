@@ -40,8 +40,10 @@ public:
                   const ComputerScannerToken &pOtherToken = ComputerScannerToken(),
                   const QString &pExtraInformation = QString());
 
-    ComputerFunction parseFunction(const QString &pFunction);
-    bool parseEquationRhs(ComputerFunction &pFunction);
+    ComputerFunction * parseFunction(const QString &pFunction);
+    ComputerEquation * parseEquation(const QString &pEquation);
+
+    bool parseEquationRhs(ComputerFunction *pFunction);
 
 private:
     ComputerScanner *mScanner;
@@ -50,13 +52,11 @@ private:
 
     ComputerExternalFunctions mExternalFunctions;
 
-    ComputerFunction invalidFunction();
-
-    bool parseFunctionParameter(ComputerFunction &pFunction,
+    bool parseFunctionParameters(ComputerFunction *pFunction);
+    bool parseFunctionParameter(ComputerFunction *pFunction,
                                 const bool &pNeeded = true);
-    bool parseFunctionParameters(ComputerFunction &pFunction);
-    bool parseEquations(ComputerFunction &pFunction);
-    bool parseReturn(ComputerFunction &pFunction);
+    bool parseEquations(ComputerFunction *pFunction);
+    bool parseReturn(ComputerFunction *pFunction);
 };
 
 //==============================================================================

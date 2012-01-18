@@ -12,8 +12,6 @@ namespace Computer {
 //==============================================================================
 
 ComputerFunction::ComputerFunction() :
-    mIsValid(true),
-    mIrCode(0),
     mType(Void),
     mName(QString()),
     mEquations(ComputerEquations()),
@@ -29,42 +27,6 @@ ComputerFunction::~ComputerFunction()
 
     foreach (ComputerEquation *equation, mEquations)
         delete equation;
-}
-
-//==============================================================================
-
-bool ComputerFunction::isValid() const
-{
-    // Return whether the function is valid
-
-    return mIsValid;
-}
-
-//==============================================================================
-
-void ComputerFunction::setIsValid(const bool &pIsValid)
-{
-    // Set whether the function is valid
-
-    mIsValid = pIsValid;
-}
-
-//==============================================================================
-
-llvm::Function * ComputerFunction::irCode() const
-{
-    // Return the function's IR code
-
-    return mIrCode;
-}
-
-//==============================================================================
-
-void ComputerFunction::setIrCode(llvm::Function *pIrCode)
-{
-    // Set the function's IR code
-
-    mIrCode = pIrCode;
 }
 
 //==============================================================================

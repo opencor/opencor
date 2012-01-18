@@ -88,20 +88,7 @@ void ComputerParser::addError(const QString &pMessage,
 
 //==============================================================================
 
-ComputerFunction ComputerParser::invalidFunction()
-{
-    // Create and return an (empty) invalid function
-
-    ComputerFunction res;
-
-    res.setIsValid(false);
-
-    return res;
-}
-
-//==============================================================================
-
-ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
+ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
 {
     // The EBNF grammar of a function is as follows:
     //
@@ -116,20 +103,22 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     // Retrieve the type of function that we are dealing with, i.e. a void or a
     // double function
 
-    ComputerFunction res;
+    ComputerFunction *function = new ComputerFunction;
 
     if (mScanner->token().symbol() == ComputerScannerToken::Void) {
         // We are dealing with a void function, so set the function as such
 
-        res.setType(ComputerFunction::Void);
+        function->setType(ComputerFunction::Void);
     } else if (mScanner->token().symbol() == ComputerScannerToken::Double) {
         // We are dealing with a double function, so set the function as such
 
-        res.setType(ComputerFunction::Double);
+        function->setType(ComputerFunction::Double);
     } else {
         addError(tr("either 'void' or 'double'"));
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
     }
 
     mScanner->getNextToken();
@@ -139,11 +128,13 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     if (mScanner->token().symbol() == ComputerScannerToken::Identifier) {
         // We got an identifier, so set the name of the function
 
-        res.setName(mScanner->token().string());
+        function->setName(mScanner->token().string());
     } else {
         addError(tr("an identifier"));
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
     }
 
     mScanner->getNextToken();
@@ -153,25 +144,32 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     if (mScanner->token().symbol() != ComputerScannerToken::OpeningBracket) {
         addError("'('");
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
     }
 
     mScanner->getNextToken();
 
     // Parse the different function parameters
 
-    if (!parseFunctionParameters(res))
+    if (!parseFunctionParameters(function)) {
         // Something went wrong with the parsing of the different function
         // parameters, so...
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
+    }
 
     // The current token must be a closing bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::ClosingBracket) {
         addError("')'");
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
     }
 
     mScanner->getNextToken();
@@ -181,32 +179,43 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     if (mScanner->token().symbol() != ComputerScannerToken::OpeningCurlyBracket) {
         addError("'{'");
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
     }
 
     mScanner->getNextToken();
 
     // Parse the different equations
 
-    if (!parseEquations(res))
+    if (!parseEquations(function)) {
         // Something went wrong with the parsing of the different equations,
         // so...
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
+    }
 
     // Parse the return statement, but only in the case of a double function
 
-    if ((res.type() == ComputerFunction::Double) && !parseReturn(res))
+    if (   (function->type() == ComputerFunction::Double)
+        && !parseReturn(function)) {
         // Something went wrong with the parsing of the return statement, so...
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
+    }
 
     // The current token must be a closing curly bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::ClosingCurlyBracket) {
         addError("'}'");
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
     }
 
     mScanner->getNextToken();
@@ -216,17 +225,69 @@ ComputerFunction ComputerParser::parseFunction(const QString &pFunction)
     if (mScanner->token().symbol() != ComputerScannerToken::Eof) {
         addError("EOF");
 
-        return invalidFunction();
+        delete function;
+
+        return 0;
     }
 
     // Everything went fine, so...
 
-    return res;
+    return function;
 }
 
 //==============================================================================
 
-bool ComputerParser::parseFunctionParameter(ComputerFunction &pFunction,
+ComputerEquation * ComputerParser::parseEquation(const QString &pEquation)
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+bool ComputerParser::parseFunctionParameters(ComputerFunction *pFunction)
+{
+    // The EBNF grammar of a list of function parameters is as follows:
+    //
+    //   FunctionParameters = FunctionParameter { "," FunctionParameter } ;
+
+    // We must have 1+/0+ function parameters in the case of a void/double
+    // function
+
+    bool needAtLeastOneFunctionParameter = pFunction->type() == ComputerFunction::Void;
+
+    if (parseFunctionParameter(pFunction, needAtLeastOneFunctionParameter))
+        // The first function parameter was properly parsed, so look for other
+        // function parameters
+
+        // The current token must be "," if we are to have another function
+        // parameter definition
+
+        while (mScanner->token().symbol() == ComputerScannerToken::Comma) {
+            mScanner->getNextToken();
+
+            // We must then have the function parameter definition itself
+
+            if (!parseFunctionParameter(pFunction))
+                // Something went wrong with the parsing of the function
+                // parameter definition, so...
+
+                return false;
+        }
+    else
+        // Something went wrong with the parsing of the function parameter
+        // definition, but it should only be reported as an error if we expected
+        // a function parameter
+
+        return !needAtLeastOneFunctionParameter;
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool ComputerParser::parseFunctionParameter(ComputerFunction *pFunction,
                                             const bool &pNeeded)
 {
     // The EBNF grammar of a function parameter is as follows:
@@ -262,7 +323,7 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction &pFunction,
         // We got an identifier, so try to add it as the name of a new function
         // parameter
 
-        if (!pFunction.addParameter(mScanner->token().string())) {
+        if (!pFunction->addParameter(mScanner->token().string())) {
             // The function parameter already exists, so...
 
             addError(tr("there is already a function parameter called '%1'").arg(mScanner->token().string()),
@@ -285,50 +346,7 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction &pFunction,
 
 //==============================================================================
 
-bool ComputerParser::parseFunctionParameters(ComputerFunction &pFunction)
-{
-    // The EBNF grammar of a list of function parameters is as follows:
-    //
-    //   FunctionParameters = FunctionParameter { "," FunctionParameter } ;
-
-    // We must have 1+/0+ function parameters in the case of a void/double
-    // function
-
-    bool needAtLeastOneFunctionParameter = pFunction.type() == ComputerFunction::Void;
-
-    if (parseFunctionParameter(pFunction, needAtLeastOneFunctionParameter))
-        // The first function parameter was properly parsed, so look for other
-        // function parameters
-
-        // The current token must be "," if we are to have another function
-        // parameter definition
-
-        while (mScanner->token().symbol() == ComputerScannerToken::Comma) {
-            mScanner->getNextToken();
-
-            // We must then have the function parameter definition itself
-
-            if (!parseFunctionParameter(pFunction))
-                // Something went wrong with the parsing of the function
-                // parameter definition, so...
-
-                return false;
-        }
-    else
-        // Something went wrong with the parsing of the function parameter
-        // definition, but it should only be reported as an error if we expected
-        // a function parameter
-
-        return !needAtLeastOneFunctionParameter;
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
-bool ComputerParser::parseEquations(ComputerFunction &pFunction)
+bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 {
     // The EBNF grammar of a series of equations is as follows:
     //
@@ -430,7 +448,7 @@ bool ComputerParser::parseEquations(ComputerFunction &pFunction)
         // The equation was successfully parsed, so add it to the list of
         // functions
 
-        pFunction.addEquation(equation);
+        pFunction->addEquation(equation);
     }
 
     // Everything went fine, so...
@@ -440,37 +458,37 @@ bool ComputerParser::parseEquations(ComputerFunction &pFunction)
 
 //==============================================================================
 
-typedef bool (*ParseGenericExpression)(ComputerParser *, ComputerFunction &);
+typedef bool (*ParseGenericExpression)(ComputerParser *, ComputerFunction *);
 
 bool parseLogicalOrExpression(ComputerParser *pParser,
-                              ComputerFunction &pFunction);
+                              ComputerFunction *pFunction);
 bool parseLogicalAndExpression(ComputerParser *pParser,
-                               ComputerFunction &pFunction);
+                               ComputerFunction *pFunction);
 bool parseInclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction &pFunction);
+                                ComputerFunction *pFunction);
 bool parseExclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction &pFunction);
+                                ComputerFunction *pFunction);
 bool parseAndExpression(ComputerParser *pParser,
-                        ComputerFunction &pFunction);
+                        ComputerFunction *pFunction);
 bool parseEqualityExpression(ComputerParser *pParser,
-                             ComputerFunction &pFunction);
+                             ComputerFunction *pFunction);
 bool parseRelationalExpression(ComputerParser *pParser,
-                               ComputerFunction &pFunction);
+                               ComputerFunction *pFunction);
 bool parseAdditiveExpression(ComputerParser *pParser,
-                             ComputerFunction &pFunction);
+                             ComputerFunction *pFunction);
 bool parseMultiplicativeExpression(ComputerParser *pParser,
-                                   ComputerFunction &pFunction);
+                                   ComputerFunction *pFunction);
 bool parseUnaryExpression(ComputerParser *pParser,
-                          ComputerFunction &pFunction);
+                          ComputerFunction *pFunction);
 bool parsePostfixExpression(ComputerParser *pParser,
-                            ComputerFunction &pFunction);
+                            ComputerFunction *pFunction);
 bool parsePrimaryExpression(ComputerParser *pParser,
-                            ComputerFunction &pFunction);
+                            ComputerFunction *pFunction);
 
 //==============================================================================
 
 bool parseGenericExpression(ComputerParser *pParser,
-                            ComputerFunction &pFunction,
+                            ComputerFunction *pFunction,
                             const ComputerScannerToken::Symbols &pSymbols,
                             ParseGenericExpression pParseGenericExpression)
 {
@@ -506,7 +524,7 @@ bool parseGenericExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseLogicalOrExpression(ComputerParser *pParser,
-                              ComputerFunction &pFunction)
+                              ComputerFunction *pFunction)
 {
     // The EBNF grammar of a logical Or expression is as follows:
     //
@@ -525,7 +543,7 @@ bool parseLogicalOrExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseLogicalAndExpression(ComputerParser *pParser,
-                               ComputerFunction &pFunction)
+                               ComputerFunction *pFunction)
 {
     // The EBNF grammar of a logical And expression is as follows:
     //
@@ -544,7 +562,7 @@ bool parseLogicalAndExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseInclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction &pFunction)
+                                ComputerFunction *pFunction)
 {
     // The EBNF grammar of an inclusive Or expression is as follows:
     //
@@ -563,7 +581,7 @@ bool parseInclusiveOrExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseExclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction &pFunction)
+                                ComputerFunction *pFunction)
 {
     // The EBNF grammar of an exclusive Or expression is as follows:
     //
@@ -581,7 +599,7 @@ bool parseExclusiveOrExpression(ComputerParser *pParser,
 
 //==============================================================================
 
-bool parseAndExpression(ComputerParser *pParser, ComputerFunction &pFunction)
+bool parseAndExpression(ComputerParser *pParser, ComputerFunction *pFunction)
 {
     // The EBNF grammar of an And expression is as follows:
     //
@@ -600,7 +618,7 @@ bool parseAndExpression(ComputerParser *pParser, ComputerFunction &pFunction)
 //==============================================================================
 
 bool parseEqualityExpression(ComputerParser *pParser,
-                             ComputerFunction &pFunction)
+                             ComputerFunction *pFunction)
 {
     // The EBNF grammar of an equality expression is as follows:
     //
@@ -620,7 +638,7 @@ bool parseEqualityExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseRelationalExpression(ComputerParser *pParser,
-                               ComputerFunction &pFunction)
+                               ComputerFunction *pFunction)
 {
     // The EBNF grammar of a relational expression is as follows:
     //
@@ -642,7 +660,7 @@ bool parseRelationalExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseAdditiveExpression(ComputerParser *pParser,
-                             ComputerFunction &pFunction)
+                             ComputerFunction *pFunction)
 {
     // The EBNF grammar of an additive expression is as follows:
     //
@@ -662,7 +680,7 @@ bool parseAdditiveExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseMultiplicativeExpression(ComputerParser *pParser,
-                                   ComputerFunction &pFunction)
+                                   ComputerFunction *pFunction)
 {
     // The EBNF grammar of a multiplicative expression is as follows:
     //
@@ -682,7 +700,7 @@ bool parseMultiplicativeExpression(ComputerParser *pParser,
 
 //==============================================================================
 
-bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction &pFunction)
+bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction)
 {
     // The EBNF grammar of a unary expression is as follows:
     //
@@ -727,7 +745,7 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction &pFunction)
 //==============================================================================
 
 bool parseEquationParameters(ComputerParser *pParser,
-                             ComputerFunction &pFunction)
+                             ComputerFunction *pFunction)
 {
     // The EBNF grammar of a list of equation parameters is as follows:
     //
@@ -767,7 +785,7 @@ bool parseEquationParameters(ComputerParser *pParser,
 //==============================================================================
 
 bool parsePostfixExpression(ComputerParser *pParser,
-                            ComputerFunction &pFunction)
+                            ComputerFunction *pFunction)
 {
     // The EBNF grammar of a postfix expression is as follows:
     //
@@ -840,7 +858,7 @@ bool parsePostfixExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parsePrimaryExpression(ComputerParser *pParser,
-                            ComputerFunction &pFunction)
+                            ComputerFunction *pFunction)
 {
     // The EBNF grammar of a primary expression is as follows:
     //
@@ -891,7 +909,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
 //==============================================================================
 
-bool ComputerParser::parseEquationRhs(ComputerFunction &pFunction)
+bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction)
 {
     // The EBNF grammar of an equation's RHS is as follows:
     //
@@ -947,7 +965,7 @@ bool ComputerParser::parseEquationRhs(ComputerFunction &pFunction)
 
 //==============================================================================
 
-bool ComputerParser::parseReturn(ComputerFunction &pFunction)
+bool ComputerParser::parseReturn(ComputerFunction *pFunction)
 {
     // The EBNF grammar of a return statement is as follows:
     //
