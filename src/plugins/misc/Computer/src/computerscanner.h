@@ -22,15 +22,31 @@ class ComputerScannerToken
 public:
     enum Symbol
     {
+        // Type of function/argument
+
         Void, Double,
+
+        // Mathematical operators
+
+        Times, Divide, Percentage, Plus, Minus,
+        InclusiveOr, ExclusiveOr, LogicalOr, And, LogicalAnd,
+        EqualEqual, NotEqual,
+        LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
+
+        // Mathematical functions with 1 argument
+
+        Sin, Cos, Tan,
+
+        // Mathematical functions with 2 arguments
+
+        Pow,
+
+        // Miscellaneous
+
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
         OpeningSquareBracket, ClosingSquareBracket,
         Equal, Not, Comma, Colon, SemiColon, QuestionMark, ExclamationMark,
-        InclusiveOr, ExclusiveOr, LogicalOr, And, LogicalAnd,
-        EqualEqual, NotEqual,
-        LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
-        Times, Divide, Percentage, Plus, Minus,
         Return,
         Unknown, Identifier, IntegerValue, DoubleValue, Eof
     };

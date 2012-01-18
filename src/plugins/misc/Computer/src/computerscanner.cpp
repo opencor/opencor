@@ -1,6 +1,9 @@
 //==============================================================================
 // Computer scanner class
 //==============================================================================
+// Note: the lexer is based on the LEX description of the ANSI C language:
+//       http://www.lysator.liu.se/c/ANSI-C-grammar-l.html
+//==============================================================================
 
 #include "computerscanner.h"
 
@@ -117,6 +120,12 @@ ComputerScanner::ComputerScanner() :
 
     mKeywords.insert("void", ComputerScannerToken::Void);
     mKeywords.insert("double", ComputerScannerToken::Double);
+
+    mKeywords.insert("sin", ComputerScannerToken::Sin);
+    mKeywords.insert("cos", ComputerScannerToken::Cos);
+    mKeywords.insert("tan", ComputerScannerToken::Tan);
+
+    mKeywords.insert("pow", ComputerScannerToken::Pow);
 
     mKeywords.insert("return", ComputerScannerToken::Return);
 }

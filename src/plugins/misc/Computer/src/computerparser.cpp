@@ -1,10 +1,12 @@
 //==============================================================================
 // Computer parser class
 //==============================================================================
-// Note that after retrieving/parsing something, we must get ready for the next
-// task and this means getting the next token. Indeed, doing so means that the
-// next task doesn't have to worry about whether the current token is the
-// correct one or not...
+// Note #1: after retrieving/parsing something, we must get ready for the next
+//          task and this means getting the next token. Indeed, doing so means
+//          that the next task doesn't have to worry about whether the current
+//          token is the correct one or not...
+// Note #2: the parser is based on the YACC description of the ANSI C language:
+//          http://www.lysator.liu.se/c/ANSI-C-grammar-y.html
 //==============================================================================
 
 
@@ -480,8 +482,6 @@ bool parseMultiplicativeExpression(ComputerParser *pParser,
                                    ComputerFunction *pFunction);
 bool parseUnaryExpression(ComputerParser *pParser,
                           ComputerFunction *pFunction);
-bool parsePostfixExpression(ComputerParser *pParser,
-                            ComputerFunction *pFunction);
 bool parsePrimaryExpression(ComputerParser *pParser,
                             ComputerFunction *pFunction);
 
@@ -704,16 +704,16 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction)
 {
     // The EBNF grammar of a unary expression is as follows:
     //
-    //   UnaryExpression =   PostfixExpression
+    //   UnaryExpression =   PrimaryExpression
     //                     | ( ( "+" | "-" | "!" ) UnaryExpression ) ;
 
-    static const ComputerScannerToken::Symbols unarySymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
-                                                                                              << ComputerScannerToken::Minus
-                                                                                              << ComputerScannerToken::ExclamationMark;
+    static const ComputerScannerToken::Symbols unaryOperatorSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
+                                                                                                      << ComputerScannerToken::Minus
+                                                                                                      << ComputerScannerToken::ExclamationMark;
 
     // Check whether the current token's symbol is one of those we are after
 
-    while (unarySymbols.contains(pParser->scanner()->token().symbol())) {
+    while (unaryOperatorSymbols.contains(pParser->scanner()->token().symbol())) {
         // We got the right symbol
 
         pParser->scanner()->getNextToken();
@@ -727,122 +727,13 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction)
             return false;
     }
 
-    // Parse the postfix expression
+    // Parse the primary expression
 
-    if (!parsePostfixExpression(pParser, pFunction))
-        // Something went wrong with the parsing of the postfix expression,
+    if (!parsePrimaryExpression(pParser, pFunction))
+        // Something went wrong with the parsing of the primary expression,
         // so...
 
         return false;
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
-bool parseEquationParameters(ComputerParser *pParser,
-                             ComputerFunction *pFunction)
-{
-    // The EBNF grammar of a list of equation parameters is as follows:
-    //
-    //   EquationParameters = EquationParameter { "," EquationParameter } ;
-
-    // Parse the first RHS of an equation
-
-    if (pParser->parseEquationRhs(pFunction))
-        // The first RHS of an equation was properly parsed, so look for other
-        // RHSs of an equation
-
-        // The current token must be "," if we are to have another equation
-        // parameter definition
-
-        while (pParser->scanner()->token().symbol() == ComputerScannerToken::Comma) {
-            pParser->scanner()->getNextToken();
-
-            // Parse another RHS of an equation
-
-            if (!pParser->parseEquationRhs(pFunction))
-                // Something went wrong with the parsing of the RHS of an
-                // equation, so...
-
-                return false;
-        }
-    else
-        // Something went wrong with the parsing of the equation parameter
-        // definition, so...
-
-        return false;
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
-bool parsePostfixExpression(ComputerParser *pParser,
-                            ComputerFunction *pFunction)
-{
-    // The EBNF grammar of a postfix expression is as follows:
-    //
-    //   PostfixExpression =   PrimaryExpression
-    //                       | ( PostfixExpression "(" [ EquationParameters ] ")" )
-    //                       | ( PostfixExpression "[" IntegerValue "]" ) ;
-
-    // Parse the primary expression
-
-    while (parsePrimaryExpression(pParser, pFunction))
-        ;
-
-    // Check whether the current token's symbol is "(" or "["
-
-    if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningBracket) {
-        pParser->scanner()->getNextToken();
-
-        // Parse the equation parameters, but only if the current token is an
-        // identifier
-
-        if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier)
-            if (!parseEquationParameters(pParser, pFunction))
-                // Something went wrong with the parsing of the equation
-                // parameters, so...
-
-                return false;
-
-        // The current token must be ")"
-
-        if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
-            pParser->addError("')'");
-
-            return false;
-        }
-
-        pParser->scanner()->getNextToken();
-    } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningSquareBracket) {
-        pParser->scanner()->getNextToken();
-
-        // the current token must be an integer value
-
-        if (pParser->scanner()->token().symbol() != ComputerScannerToken::IntegerValue) {
-            pParser->addError(QObject::tr("an integer"));
-
-            return false;
-        }
-
-        pParser->scanner()->getNextToken();
-
-        // The current token must be "]"
-
-        if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
-            pParser->addError("']'");
-
-            return false;
-        }
-
-        pParser->scanner()->getNextToken();
-    }
 
     // Everything went fine, so...
 
@@ -856,19 +747,134 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 {
     // The EBNF grammar of a primary expression is as follows:
     //
-    //   PrimaryExpression =   Identifier
-    //                       | IntegerValue
-    //                       | DoubleValue
-    //                       | ( "(" EquationRHS ")" ) ;
+    //   PrimaryExpression        =   Identifier [ "[" IntegerValue "]" ]
+    //                              | IntegerValue
+    //                              | DoubleValue
+    //                              | ( FunctionWithOneArgument "(" EquationRHS ")" ) ;
+    //                              | ( FunctionWithTwoArguments "(" EquationRHS "," EquationRHS ")" ) ;
+    //                              | ( "(" EquationRHS ")" ) ;
+    //   FunctionWithOneArgument  = "sin" | "cos" | "tan" ;
+    //   FunctionWithTwoArguments = "pow" ;
 
     // Check whether the current token's symbol is an identifier, an integer
-    // value, a double value or "("
+    // value, a double value, a function with one argument, a function with two
+    // arguments or "("
+
+    static const ComputerScannerToken::Symbols oneArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Sin
+                                                                                                            << ComputerScannerToken::Cos
+                                                                                                            << ComputerScannerToken::Tan;
+    static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Pow;
+
 
     if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {
         pParser->scanner()->getNextToken();
+
+        // Check whether the current token is "["
+
+        if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningSquareBracket) {
+            pParser->scanner()->getNextToken();
+
+            // The current token must be an integer value
+
+            if (pParser->scanner()->token().symbol() != ComputerScannerToken::IntegerValue) {
+                pParser->addError(QObject::tr("an integer"));
+
+                return false;
+            }
+
+            pParser->scanner()->getNextToken();
+
+            // The current token must be "]"
+
+            if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
+                pParser->addError("']'");
+
+                return false;
+            }
+
+            pParser->scanner()->getNextToken();
+        }
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::IntegerValue) {
         pParser->scanner()->getNextToken();
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::DoubleValue) {
+        pParser->scanner()->getNextToken();
+    } else if (oneArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
+        pParser->scanner()->getNextToken();
+
+        // The current token must "("
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
+            pParser->addError("'('");
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // Parse the RHS of an equation
+
+        if (!pParser->parseEquationRhs(pFunction))
+            // Something went wrong with the parsing of the RHS of an equation,
+            // so...
+
+            return false;
+
+        // The current token must ")"
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
+            pParser->addError("')'");
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+    } else if (twoArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
+        pParser->scanner()->getNextToken();
+
+        // The current token must "("
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
+            pParser->addError("'('");
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // Parse the RHS of an equation
+
+        if (!pParser->parseEquationRhs(pFunction))
+            // Something went wrong with the parsing of the RHS of an equation,
+            // so...
+
+            return false;
+
+        // The current token must ","
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
+            pParser->addError("','");
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // Parse the RHS of an equation
+
+        if (!pParser->parseEquationRhs(pFunction))
+            // Something went wrong with the parsing of the RHS of an equation,
+            // so...
+
+            return false;
+
+        // The current token must ")"
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
+            pParser->addError("')'");
+
+            return false;
+        }
+
         pParser->scanner()->getNextToken();
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningBracket) {
         pParser->scanner()->getNextToken();
