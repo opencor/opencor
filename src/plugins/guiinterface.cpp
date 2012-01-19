@@ -118,7 +118,17 @@ QAction * GuiToolBarSettings::action() const
 
 GuiViewSettings::GuiViewSettings(const Mode &pMode, const int &pIndex) :
     mMode(pMode),
-    mIndex(pIndex)
+    mIndex(pIndex),
+    mMimeType(QString())
+{
+}
+
+//==============================================================================
+
+GuiViewSettings::GuiViewSettings(const Mode &pMode, const QString &pMimeType) :
+    mMode(pMode),
+    mIndex(-1),
+    mMimeType(pMimeType)
 {
 }
 
@@ -138,6 +148,15 @@ int GuiViewSettings::index() const
     // Return the view's index
 
     return mIndex;
+}
+
+//==============================================================================
+
+QString GuiViewSettings::mimeType() const
+{
+    // Return the view's MIME type
+
+    return mMimeType;
 }
 
 //==============================================================================
@@ -262,6 +281,16 @@ void GuiSettings::addView(const GuiViewSettings::Mode &pMode, const int &pIndex)
     // Add a new view to our list
 
     mViews << new GuiViewSettings(pMode, pIndex);
+}
+
+//==============================================================================
+
+void GuiSettings::addView(const GuiViewSettings::Mode &pMode,
+                          const QString &pMimeType)
+{
+    // Add a new view to our list
+
+    mViews << new GuiViewSettings(pMode, pMimeType);
 }
 
 //==============================================================================

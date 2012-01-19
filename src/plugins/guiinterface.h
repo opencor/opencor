@@ -110,13 +110,16 @@ public:
     };
 
     explicit GuiViewSettings(const Mode &pMode, const int &pIndex);
+    explicit GuiViewSettings(const Mode &pMode, const QString &pMimeType);
 
     Mode mode() const;
     int index() const;
+    QString mimeType() const;
 
 private:
     Mode mMode;
     int mIndex;
+    QString mMimeType;
 };
 
 //==============================================================================
@@ -164,6 +167,7 @@ public:
                     QToolBar *pToolbar, QAction *pAction);
     void addCentralWidget(Core::CentralWidget *pCentralWidget);
     void addView(const GuiViewSettings::Mode &pMode, const int &pIndex);
+    void addView(const GuiViewSettings::Mode &pMode, const QString &pMimeType);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow,
                    const GuiWindowSettings::GuiWindowSettingsType &pType,
