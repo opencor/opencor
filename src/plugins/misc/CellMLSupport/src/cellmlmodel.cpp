@@ -153,12 +153,12 @@ bool CellmlModel::isValid()
         uint32_t nbOfCellmlErrors = 0;
 
         for (uint32_t i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
-            // Determine the issue's location
-
             ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
 
             DECLARE_QUERY_INTERFACE_OBJREF(cellmlRepresentationValidityError, cellmlValidityIssue,
                                            cellml_services::CellMLRepresentationValidityError);
+
+            // Determine the issue's location
 
             uint32_t line = 0;
             uint32_t column = 0;
