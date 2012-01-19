@@ -148,11 +148,11 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
         // No function with the same name already exists, so we can try to
         // compile the function
 
-        llvm::Function *compiledFunction = compileFunction(function);
+        llvm::Function *res = compileFunction(function);
 
         delete function;
 
-        return compiledFunction;
+        return res;
         // Note: it's still fine if the compilation failed, since
         //       compileFunction() will then return 0...
     } else {
@@ -325,9 +325,9 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
     // Try to retrieve the function which assembly code we have just parsed
 
-    llvm::Function *function = mModule->getFunction(pFunction->name().toLatin1().constData());
+    llvm::Function *res = mModule->getFunction(pFunction->name().toLatin1().constData());
 
-    if (function) {
+    if (res) {
         // The function could be retrieved, but it should be removed in case an
         // error of sorts occurred during the parsing of the assembly code
 
@@ -335,14 +335,14 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
             // An error occurred during the parsing of the assembly code, so
             // remove the function
 
-            function->eraseFromParent();
+            res->eraseFromParent();
 
             return 0;
         }
 
         // Everything went fine, so...
 
-        return function;
+        return res;
     } else {
         // The function couldn't be retrieved, so add an error but only if no
         // error occurred during the parsing of the assembly code

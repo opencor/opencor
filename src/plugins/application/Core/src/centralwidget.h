@@ -41,6 +41,10 @@ namespace Core {
 
 //==============================================================================
 
+class LogoWidget;
+
+//==============================================================================
+
 class CentralWidget : public QWidget, public CommonWidget
 {
     Q_OBJECT
@@ -69,17 +73,24 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
-    virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
+    enum Status {
+        Starting,
+        Running,
+        Stopping
+    };
+
     Ui::CentralWidget *mUi;
 
-    bool mShuttingDown;
+    Status mStatus;
 
     QTabBar *mModes;
 
     QTabBar *mFiles;
     QStackedWidget *mContents;
+
+    LogoWidget *mLogoView;
 
     QWidget *mNoView;
     QLabel *mNoViewMsg;
@@ -98,11 +109,6 @@ private:
 
     QMap<int, GuiViewSettings *> mEditingViewSettings;
     QMap<int, GuiViewSettings *> mAnalysisViewSettings;
-
-    QPixmap mLogo;
-
-    int mLogoWidth;
-    int mLogoHeight;
 
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 

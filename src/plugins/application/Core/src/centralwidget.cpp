@@ -4,6 +4,7 @@
 
 #include "centralwidget.h"
 #include "filemanager.h"
+#include "logowidget.h"
 #include "plugin.h"
 
 //==============================================================================
@@ -15,9 +16,7 @@
 #include <QDragEnterEvent>
 #include <QFileInfo>
 #include <QLabel>
-#include <QPainter>
 #include <QSettings>
-#include <QShortcut>
 #include <QStackedWidget>
 #include <QUrl>
 
@@ -32,7 +31,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
     mUi(new Ui::CentralWidget),
-    mShuttingDown(false),
+    mStatus(Starting),
     mSimulationViewInterface(0)
 {
     // Set up the UI
@@ -42,27 +41,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // Allow for things to be dropped on us
 
     setAcceptDrops(true);
-
-    // Logo settings
-
-    static const QString logoResourceName = ":logo";
-
-    mLogo.load(logoResourceName);
-
-    mLogoWidth  = mLogo.width();
-    mLogoHeight = mLogo.height();
-
-    // Set the background colour to that of the logo's
-
-    QPalette pal = palette();
-
-    pal.setColor(QPalette::Window, QImage(logoResourceName).pixel(0, 0));
-
-    setPalette(pal);
-
-    // Have the background filled automatically
-
-    setAutoFillBackground(true);
 
     // Create our modes tab bar with no tabs by default
 
@@ -81,6 +59,12 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mContents = new QStackedWidget(this);
 
     mContents->setFrameStyle(QFrame::StyledPanel);
+
+    // Create our logo view which simply display OpenCOR's logo
+
+    mLogoView = new LogoWidget(this);
+
+    mContents->addWidget(mLogoView);
 
     // Create our no view widget which contains a label that will display a
     // customised warning message to the user to let him know that there is no
@@ -104,7 +88,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mNoView->setLayout(new QVBoxLayout(mNoView));
     mNoView->layout()->addWidget(mNoViewMsg);
 
-    mContents->addWidget(mNoView);
+    mNoView->setVisible(false);
+    // Note: we don't initially want to see our no-view widget...
 
     // Create and set up our central widget
 
@@ -132,10 +117,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mUi->horizontalLayout->addWidget(mEditingViews);
     mUi->horizontalLayout->addWidget(mAnalysisViews);
-
-    // Update the GUI
-
-    updateGui();
 
     // Some connections to handle our files tab bar
 
@@ -170,7 +151,7 @@ CentralWidget::~CentralWidget()
     // we may get a segmentation fault (should there be a need to switch from
     // one view to another)
 
-    mShuttingDown = true;
+    mStatus = Stopping;
 
     // Close all the files
 
@@ -284,11 +265,15 @@ void CentralWidget::loadSettings(QSettings *pSettings)
                     break;
                 }
         }
-
-        // Set the focus to whatever is the current view by updating the GUI
-
-        updateGui();
     }
+
+    // Update our status now that we are fully ready
+
+    mStatus = Running;
+
+    // Update the GUI
+
+    updateGui();
 }
 
 //==============================================================================
@@ -693,142 +678,82 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
-void CentralWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Display our logo, in case no file is being managed
-
-    if (!Core::FileManager::instance()->count()) {
-        QPainter painter(this);
-
-        // Paint the widget with the logo's background colour
-
-        int widgetWidth  = width();
-        int widgetHeight = height();
-
-        // Draw the logo itself
-
-        painter.drawPixmap(QRect(0.5*(widgetWidth-mLogoWidth),
-                                 0.5*(widgetHeight-mLogoHeight),
-                                 mLogoWidth, mLogoHeight),
-                           mLogo);
-
-#ifndef Q_WS_MAC
-        // Draw a border around the widget
-
-        QPen pen = painter.pen();
-
-        pen.setColor(qApp->palette().color(QPalette::Midlight));
-
-        painter.setPen(pen);
-
-        QRect border = rect();
-
-        border.adjust(0, 0, -1, -1);
-
-        painter.drawRect(border);
-#endif
-
-        // Accept the event
-
-        pEvent->accept();
-    } else {
-        // There is at least one managed file, so revert to the default paint
-        // handler
-
-        QWidget::paintEvent(pEvent);
-    }
-}
-
-//==============================================================================
-
 void CentralWidget::updateGui()
 {
-    if (mShuttingDown)
-        // We are shutting down, so we don't want to take any risk of getting a
-        // segmentation fault (should there be a need to switch from one view to
-        // another)
+    if (mStatus != Running)
+        // We are either starting or stopping, so too risky to update the GUI
+        // during that time (e.g. things may not be fully initialised)
 
         return;
-
-    bool atLeastOneManagedFile = Core::FileManager::instance()->count();
-
-    // Show/hide the modes tab bar depending on whether there is at least one
-    // managed file
-
-    mModes->setVisible(atLeastOneManagedFile);
-
-    // Do the same for the files tab bar and contents
-
-    mFiles->setVisible(atLeastOneManagedFile);
-    mContents->setVisible(atLeastOneManagedFile);
 
     // Show/hide the editing and analysis modes' corresponding views tab, as
     // needed
 
-    if (atLeastOneManagedFile) {
-        int crtModeTabIndex = mModes->currentIndex();
+    int crtModeTabIndex = mModes->currentIndex();
 
-        bool editingMode    = crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing);
-        bool simulationMode = crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation);
-        bool analysisMode   = crtModeTabIndex == modeTabIndex(GuiViewSettings::Analysis);
+    bool editingMode    = crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing);
+    bool simulationMode = crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation);
+    bool analysisMode   = crtModeTabIndex == modeTabIndex(GuiViewSettings::Analysis);
 
-        mEditingViews->setVisible(editingMode);
-        mAnalysisViews->setVisible(analysisMode);
+    mEditingViews->setVisible(editingMode);
+    mAnalysisViews->setVisible(analysisMode);
 
-        // Show/hide the required view for the current mode
+    // Retrieve the GUI interface for the view we are after
 
-        // Retrieve the GUI interface for the view we are after
+    GuiInterface *guiInterface;
+    int viewIndex;
 
-        GuiInterface *guiInterface;
-        int viewIndex;
+    if (editingMode) {
+        int viewTabIndex = mEditingViews->currentIndex();
 
-        if (editingMode) {
-            int viewTabIndex = mEditingViews->currentIndex();
+        guiInterface = mEditingViewInterfaces.value(viewTabIndex);
+        viewIndex    = mEditingViewSettings.value(viewTabIndex)->index();
+    } else if (simulationMode) {
+        guiInterface = mSimulationViewInterface;
+        viewIndex    = 0;   // Since there is only one simulation view
+    } else if (analysisMode) {
+        int viewTabIndex = mAnalysisViews->currentIndex();
 
-            guiInterface = mEditingViewInterfaces.value(viewTabIndex);
-            viewIndex    = mEditingViewSettings.value(viewTabIndex)->index();
-        } else if (simulationMode) {
-            guiInterface = mSimulationViewInterface;
-            viewIndex    = 0;   // Since there is only one simulation view
-        } else if (analysisMode) {
-            int viewTabIndex = mAnalysisViews->currentIndex();
+        guiInterface = mAnalysisViewInterfaces.value(viewTabIndex);
+        viewIndex    = mAnalysisViewSettings.value(viewTabIndex)->index();
+    }
 
-            guiInterface = mAnalysisViewInterfaces.value(viewTabIndex);
-            viewIndex    = mAnalysisViewSettings.value(viewTabIndex)->index();
-        }
+    // Ask the GUI interface for the widget to use for the current file (should
+    // there be one)
 
-        // Ask the GUI interface for the widget to use for the current file
-        // (should there be one)
+    int crtFileIndex = mFiles->currentIndex();
+    QString crtFileName = (crtFileIndex == -1)?QString():mFiles->tabToolTip(mFiles->currentIndex());
 
-        QString crtFileName = mFiles->tabToolTip(mFiles->currentIndex());
+    if (crtFileName.isEmpty()) {
+        // There is no current file, so show our logo instead
 
-        if (!crtFileName.isEmpty()) {
-            QWidget *newView = guiInterface->viewWidget(crtFileName, viewIndex);
-
-            if (!newView) {
-                // The interface doesn't have a view for the current file, so
-                // use our no-view widget instead and update its message
-
-                newView = mNoView;
-
-                updateNoViewMsg();
-            }
-
-            // Replace the current view with the new one
-            // Note: the order in which the adding and removing (as well as the
-            //       showing/hiding) of view is done ensures that the
-            //       replacement looks as good as possible...
-
-            mContents->removeWidget(mContents->currentWidget());
-            mContents->addWidget(newView);
-
-            // Set the focus to the new view
-
-            newView->setFocus();
-        }
+        mContents->removeWidget(mContents->currentWidget());
+        mContents->addWidget(mLogoView);
     } else {
-        mEditingViews->setVisible(false);
-        mAnalysisViews->setVisible(false);
+        // There is a current file, so retrieve its view
+
+        QWidget *newView = guiInterface->viewWidget(crtFileName, viewIndex);
+
+        if (!newView) {
+            // The interface doesn't have a view for the current file, so use
+            // our no-view widget instead and update its message
+
+            newView = mNoView;
+
+            updateNoViewMsg();
+        }
+
+        // Replace the current view with the new one
+        // Note: the order in which the adding and removing (as well as the
+        //       showing/hiding) of view is done ensures that the replacement
+        //       looks as good as possible...
+
+        mContents->removeWidget(mContents->currentWidget());
+        mContents->addWidget(newView);
+
+        // Set the focus to the new view
+
+        newView->setFocus();
     }
 }
 
