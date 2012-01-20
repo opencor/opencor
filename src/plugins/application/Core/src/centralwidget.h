@@ -45,6 +45,42 @@ class LogoWidget;
 
 //==============================================================================
 
+typedef QMap<int, QString> CentralWidgetViewNames;
+
+typedef QMap<int, GuiInterface *> CentralWidgetViewInterfaces;
+typedef QMap<int, GuiViewSettings *> CentralWidgetViewSettings;
+
+//==============================================================================
+
+class CentralWidgetMode
+{
+public:
+    explicit CentralWidgetMode(CentralWidget *pOwner);
+    ~CentralWidgetMode();
+
+    bool isEnabled() const;
+    void setIsEnabled(const bool &pIsEnabled);
+
+    QTabBar * views() const;
+
+    CentralWidgetViewNames * viewNames() const;
+
+    CentralWidgetViewInterfaces * viewInterfaces() const;
+    CentralWidgetViewSettings * viewSettings() const;
+
+private:
+    bool mIsEnabled;
+
+    QTabBar *mViews;
+
+    CentralWidgetViewNames * mViewNames;
+
+    CentralWidgetViewInterfaces * mViewInterfaces;
+    CentralWidgetViewSettings * mViewSettings;
+};
+
+//==============================================================================
+
 class CentralWidget : public QWidget, public CommonWidget
 {
     Q_OBJECT
@@ -69,6 +105,10 @@ public:
 
     void addView(Plugin *pPlugin, GuiViewSettings *pSettings);
 
+    QTabBar * newTabBar(const QTabBar::Shape &pShape,
+                        const bool &pMovable = false,
+                        const bool &pTabsClosable = false);
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
@@ -85,9 +125,9 @@ private:
 
     Status mStatus;
 
-    QTabBar *mModes;
+    QTabBar *mModeTabs;
+    QTabBar *mFileTabs;
 
-    QTabBar *mFiles;
     QStackedWidget *mContents;
 
     LogoWidget *mLogoView;
@@ -95,31 +135,22 @@ private:
     QWidget *mNoView;
     QLabel *mNoViewMsg;
 
-    QTabBar *mEditingViews;
-    QTabBar *mSimulationViews;
-    QTabBar *mAnalysisViews;
-
-    QMap<GuiViewSettings::Mode, bool> mModeEnabled;
-
-    QMap<int, QString> mEditingViewPluginNames;
-    QMap<int, QString> mSimulationViewPluginNames;
-    QMap<int, QString> mAnalysisViewPluginNames;
-
-    QMap<int, GuiInterface *> mEditingViewInterfaces;
-    QMap<int, GuiInterface *> mSimulationViewInterfaces;
-    QMap<int, GuiInterface *> mAnalysisViewInterfaces;
-
-    QMap<int, GuiViewSettings *> mEditingViewSettings;
-    QMap<int, GuiViewSettings *> mSimulationViewSettings;
-    QMap<int, GuiViewSettings *> mAnalysisViewSettings;
+    QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
 
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
     void addMode(const GuiViewSettings::Mode &pMode);
 
-    QTabBar * newTabBar(const QTabBar::Shape &pShape,
-                        const bool &pMovable = false,
-                        const bool &pTabsClosable = false);
+    void saveModeSettings(QSettings *pSettings,
+                          const GuiViewSettings::Mode &pMode) const;
+
+    void addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
+                     const GuiViewSettings::Mode &pMode);
+
+    void updateModeGui(const GuiViewSettings::Mode &pMode,
+                       GuiInterface * &pGuiInterface, int &pViewIndex);
+
+    QString modeViewName(const GuiViewSettings::Mode &pMode);
 
     void updateNoViewMsg();
 

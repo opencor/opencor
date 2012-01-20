@@ -27,6 +27,89 @@ namespace Core {
 
 //==============================================================================
 
+CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner) :
+    mIsEnabled(false)
+{
+    // Initialise a few internal objects
+
+    mViews = pOwner->newTabBar(QTabBar::RoundedEast);
+
+    mViewNames = new CentralWidgetViewNames;
+
+    mViewInterfaces = new CentralWidgetViewInterfaces;
+    mViewSettings   = new CentralWidgetViewSettings;
+}
+
+//==============================================================================
+
+CentralWidgetMode::~CentralWidgetMode()
+{
+    // Delete some internal objects
+
+    delete mViewSettings;
+    delete mViewInterfaces;
+
+    delete mViewNames;
+
+    delete mViews;
+}
+
+//==============================================================================
+
+bool CentralWidgetMode::isEnabled() const
+{
+    // Return whether the mode is enabled
+
+    return mIsEnabled;
+}
+
+//==============================================================================
+
+void CentralWidgetMode::setIsEnabled(const bool &pIsEnabled)
+{
+    // Set whether a mode is enabled
+
+    mIsEnabled = pIsEnabled;
+}
+
+//==============================================================================
+
+QTabBar * CentralWidgetMode::views() const
+{
+    // Return the mode's views
+
+    return mViews;
+}
+
+//==============================================================================
+
+CentralWidgetViewNames * CentralWidgetMode::viewNames() const
+{
+    // Return the mode's view names
+
+    return mViewNames;
+}
+
+//==============================================================================
+
+CentralWidgetViewInterfaces * CentralWidgetMode::viewInterfaces() const
+{
+    // Return the mode's view interfaces
+
+    return mViewInterfaces;
+}
+
+//==============================================================================
+
+CentralWidgetViewSettings * CentralWidgetMode::viewSettings() const
+{
+    // Return the mode's view settings
+
+    return mViewSettings;
+}
+
+//==============================================================================
+
 CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
@@ -43,15 +126,17 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our modes tab bar with no tabs by default
 
-    mModes = newTabBar(QTabBar::RoundedWest);
+    mModeTabs = newTabBar(QTabBar::RoundedWest);
 
-    mModeEnabled.insert(GuiViewSettings::Editing, false);
-    mModeEnabled.insert(GuiViewSettings::Simulation, false);
-    mModeEnabled.insert(GuiViewSettings::Analysis, false);
+    // Create our modes
+
+    mModes.insert(GuiViewSettings::Editing, new CentralWidgetMode(this));
+    mModes.insert(GuiViewSettings::Simulation, new CentralWidgetMode(this));
+    mModes.insert(GuiViewSettings::Analysis, new CentralWidgetMode(this));
 
     // Create our files tab bar widget
 
-    mFiles = newTabBar(QTabBar::RoundedNorth, true, true);
+    mFileTabs = newTabBar(QTabBar::RoundedNorth, true, true);
 
     // Create our contents widget
 
@@ -100,50 +185,36 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     centralWidget->setLayout(centralWidgetVBoxLayout);
 
-    centralWidgetVBoxLayout->addWidget(mFiles);
+    centralWidgetVBoxLayout->addWidget(mFileTabs);
     centralWidgetVBoxLayout->addWidget(mContents);
 
-    // Create our different views tab bars
+    // Add the widgets to our horizontal layout
 
-    mEditingViews    = newTabBar(QTabBar::RoundedEast);
-    mSimulationViews = newTabBar(QTabBar::RoundedEast);
-    mAnalysisViews   = newTabBar(QTabBar::RoundedEast);
-
-    // Add the widgets/layout to our horizontal layout
-
-    mUi->horizontalLayout->addWidget(mModes);
-
+    mUi->horizontalLayout->addWidget(mModeTabs);
     mUi->horizontalLayout->addWidget(centralWidget);
 
-    mUi->horizontalLayout->addWidget(mEditingViews);
-    mUi->horizontalLayout->addWidget(mSimulationViews);
-    mUi->horizontalLayout->addWidget(mAnalysisViews);
+    foreach (CentralWidgetMode *mode, mModes)
+        mUi->horizontalLayout->addWidget(mode->views());
 
     // Some connections to handle our files tab bar
 
-    connect(mFiles, SIGNAL(tabCloseRequested(int)),
+    connect(mFileTabs, SIGNAL(tabCloseRequested(int)),
             this, SLOT(closeFile(const int &)));
-    connect(mFiles, SIGNAL(currentChanged(int)),
+    connect(mFileTabs, SIGNAL(currentChanged(int)),
             this, SLOT(fileSelected(const int &)));
-
-    // A connection to handle our files tab bar
-
-    connect(mFiles, SIGNAL(currentChanged(int)),
+    connect(mFileTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
 
     // A connection to handle our modes tab bar
 
-    connect(mModes, SIGNAL(currentChanged(int)),
+    connect(mModeTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
 
-    // Some connections to handle our views tab bars
+    // Some connections to handle our mode views tab bar
 
-    connect(mEditingViews, SIGNAL(currentChanged(int)),
-            this, SLOT(updateGui()));
-    connect(mSimulationViews, SIGNAL(currentChanged(int)),
-            this, SLOT(updateGui()));
-    connect(mAnalysisViews, SIGNAL(currentChanged(int)),
-            this, SLOT(updateGui()));
+    foreach (CentralWidgetMode *mode, mModes)
+        connect(mode->views(), SIGNAL(currentChanged(int)),
+                this, SLOT(updateGui()));
 }
 
 //==============================================================================
@@ -171,31 +242,21 @@ void CentralWidget::retranslateUi()
 {
     // Retranslate the modes tab bar
 
-    if (mModeEnabled.value(GuiViewSettings::Editing))
-        mModes->setTabText(modeTabIndex(GuiViewSettings::Editing),
-                           tr("Editing"));
+    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Editing),
+                          tr("Editing"));
+    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Simulation),
+                          tr("Simulation"));
+    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Analysis),
+                          tr("Analysis"));
 
-    if (mModeEnabled.value(GuiViewSettings::Simulation))
-        mModes->setTabText(modeTabIndex(GuiViewSettings::Simulation),
-                           tr("Simulation"));
+    // Retranslate our mode views tab bar
 
-    if (mModeEnabled.value(GuiViewSettings::Analysis))
-        mModes->setTabText(modeTabIndex(GuiViewSettings::Analysis),
-                           tr("Analysis"));
+    foreach (CentralWidgetMode *mode, mModes) {
+        QTabBar *modeViews = mode->views();
 
-    // Retranslate our views tab bar
-
-    for (int i = 0, iMax = mEditingViews->count(); i < iMax; ++i)
-        mEditingViews->setTabText(i,
-                                  mEditingViewInterfaces.value(i)->viewName(mEditingViewSettings.value(i)->index()));
-
-    for (int i = 0, iMax = mSimulationViews->count(); i < iMax; ++i)
-        mSimulationViews->setTabText(i,
-                                  mSimulationViewInterfaces.value(i)->viewName(mSimulationViewSettings.value(i)->index()));
-
-    for (int i = 0, iMax = mAnalysisViews->count(); i < iMax; ++i)
-        mAnalysisViews->setTabText(i,
-                                   mAnalysisViewInterfaces.value(i)->viewName(mAnalysisViewSettings.value(i)->index()));
+        for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
+            modeViews->setTabText(i, mode->viewInterfaces()->value(i)->viewName(mode->viewSettings()->value(i)->index()));
+    }
 
     // Retranslate our no view widget message
 
@@ -233,13 +294,13 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Note: if no current mode or view can be retrieved, then we use whatever
     //       mode or view we are in...
 
-    GuiViewSettings::Mode crtModeType = (GuiViewSettings::Mode) pSettings->value(SettingsCurrentMode).toInt();
-    int crtModeTabIndex = modeTabIndex(crtModeType);
+    GuiViewSettings::Mode modeType = (GuiViewSettings::Mode) pSettings->value(SettingsCurrentMode).toInt();
+    int modeTypeTabIndex = modeTabIndex(modeType);
 
-    if (crtModeTabIndex != -1) {
+    if (modeTypeTabIndex != -1) {
         // A valid current mode was retrieved, so select it
 
-        mModes->setCurrentIndex(crtModeTabIndex);
+        mModeTabs->setCurrentIndex(modeTypeTabIndex);
 
         // Retrieve the current view based on the current mode
         // Note: in case of the simulation mode, there is only one simulation
@@ -248,33 +309,19 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         activateWindow();   // So that we can then give the focus to the current
                             // view
 
-        if (crtModeType != GuiViewSettings::Simulation) {
-            QString crtViewPluginName = pSettings->value(SettingsCurrentView).toString();
-            QTabBar *modeViews;
-            QMap<int, QString> *modeViewPluginNames;
+        QString modeViewName = pSettings->value(SettingsCurrentView).toString();
+        CentralWidgetMode *mode = mModes.value(modeType);
+        QTabBar *modeViews = mode->views();
+        CentralWidgetViewNames *modeViewNames = mode->viewNames();
 
-            if (crtModeType == GuiViewSettings::Editing) {
-                modeViews = mEditingViews;
-                modeViewPluginNames = &mEditingViewPluginNames;
-            } else if (crtModeType == GuiViewSettings::Simulation) {
-                modeViews = mSimulationViews;
-                modeViewPluginNames = &mSimulationViewPluginNames;
-            } else {
-                // Analysis mode
+        for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
+            if (!modeViewNames->value(i).compare(modeViewName)) {
+                // A valid current mode view was retrieved, so select it
 
-                modeViews = mAnalysisViews;
-                modeViewPluginNames = &mAnalysisViewPluginNames;
+                modeViews->setCurrentIndex(i);
+
+                break;
             }
-
-            for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
-                if (!modeViewPluginNames->value(i).compare(crtViewPluginName)) {
-                    // A valid current view was retrieved, so select it
-
-                    modeViews->setCurrentIndex(i);
-
-                    break;
-                }
-        }
     }
 
     // Update our status now that we are fully ready
@@ -288,44 +335,52 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
+void CentralWidget::saveModeSettings(QSettings *pSettings,
+                                     const GuiViewSettings::Mode &pMode) const
+{
+    // Keep track of the mode/view
+
+    CentralWidgetMode *mode = mModes.value(pMode);
+
+    pSettings->setValue(SettingsCurrentMode, pMode);
+    pSettings->setValue(SettingsCurrentView,
+                        mode->viewNames()->value(mode->views()->currentIndex()));
+}
+
+//==============================================================================
+
 void CentralWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the files that are opened
 
     QStringList openedFiles;
 
-    for (int i = 0, iMax = mFiles->count(); i < iMax; ++i)
-        openedFiles << mFiles->tabToolTip(i);
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+        openedFiles << mFileTabs->tabToolTip(i);
 
     pSettings->setValue(SettingsOpenedFiles, openedFiles);
 
     // Keep track of the current file
 
-    pSettings->setValue(SettingsCurrentFile, mFiles->currentIndex());
+    pSettings->setValue(SettingsCurrentFile, mFileTabs->currentIndex());
 
     // Keep track of the current mode/view
 
-    int crtModeTabIndex = mModes->currentIndex();
+    int modeTabsCrtIndex =  mModeTabs->currentIndex();
 
-    if (crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing)) {
-        pSettings->setValue(SettingsCurrentMode, GuiViewSettings::Editing);
-        pSettings->setValue(SettingsCurrentView, mEditingViewPluginNames.value(mEditingViews->currentIndex()));
-    } else if (crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation)) {
-        pSettings->setValue(SettingsCurrentMode, GuiViewSettings::Simulation);
-        pSettings->setValue(SettingsCurrentView, mSimulationViewPluginNames.value(mSimulationViews->currentIndex()));
-    } else {
-        // Analysis mode
-
-        pSettings->setValue(SettingsCurrentMode, GuiViewSettings::Analysis);
-        pSettings->setValue(SettingsCurrentView, mAnalysisViewPluginNames.value(mAnalysisViews->currentIndex()));
-    }
+    if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Editing))
+        saveModeSettings(pSettings, GuiViewSettings::Editing);
+    else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Simulation))
+        saveModeSettings(pSettings, GuiViewSettings::Simulation);
+    else
+        saveModeSettings(pSettings, GuiViewSettings::Analysis);
 }
 
 //==============================================================================
 
 bool CentralWidget::openFile(const QString &pFileName)
 {
-    if (!mModes->count() || !QFileInfo(pFileName).exists())
+    if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
         // No mode is available or the file doesn't exist, so...
 
         return false;
@@ -347,14 +402,14 @@ bool CentralWidget::openFile(const QString &pFileName)
     QString fileName = File::nativeFileName(pFileName);
     QFileInfo fileInfo = fileName;
 
-    mFiles->setCurrentIndex(mFiles->insertTab(mFiles->currentIndex()+1,
-                                              fileInfo.fileName()));
+    mFileTabs->setCurrentIndex(mFileTabs->insertTab(mFileTabs->currentIndex()+1,
+                                                    fileInfo.fileName()));
 
     // Set the full name of the file as the tool tip for the new tab
     // Note: this, for example, allows us to retrieve the name of a file which
     //       we want to close (see CentralWidget::closeFile())
 
-    mFiles->setTabToolTip(mFiles->currentIndex(), fileName);
+    mFileTabs->setTabToolTip(mFileTabs->currentIndex(), fileName);
 
     // Update the GUI
 
@@ -385,9 +440,9 @@ void CentralWidget::previousFile()
 {
     // Select the previous file
 
-    mFiles->setCurrentIndex(mFiles->currentIndex()?
-                                mFiles->currentIndex()-1:
-                                mFiles->count()-1);
+    mFileTabs->setCurrentIndex(mFileTabs->currentIndex()?
+                                   mFileTabs->currentIndex()-1:
+                                   mFileTabs->count()-1);
 }
 
 //==============================================================================
@@ -396,9 +451,9 @@ void CentralWidget::nextFile()
 {
     // Select the next file
 
-    mFiles->setCurrentIndex((mFiles->currentIndex() == mFiles->count()-1)?
-                                0:
-                                mFiles->currentIndex()+1);
+    mFileTabs->setCurrentIndex((mFileTabs->currentIndex() == mFileTabs->count()-1)?
+                                   0:
+                                   mFileTabs->currentIndex()+1);
 }
 
 //==============================================================================
@@ -409,16 +464,16 @@ bool CentralWidget::closeFile(const int &pIndex)
     // index is provided, and then return the name of the file that was closed,
     // if any
 
-    int realIndex = (pIndex != -1)?pIndex:mFiles->currentIndex();
+    int realIndex = (pIndex != -1)?pIndex:mFileTabs->currentIndex();
 
     if (realIndex != -1) {
         // There is a file currently opened, so first retrieve its file name
 
-        QString fileName = mFiles->tabToolTip(realIndex);
+        QString fileName = mFileTabs->tabToolTip(realIndex);
 
         // Next, we must close the tab
 
-        mFiles->removeTab(realIndex);
+        mFileTabs->removeTab(realIndex);
 
         // Unregister the file from our file manager
 
@@ -460,12 +515,12 @@ bool CentralWidget::activateFile(const QString &pFileName)
 
     QString nativeFileName = File::nativeFileName(pFileName);
 
-    for (int i = 0, iMax = mFiles->count(); i < iMax; ++i)
-        if (!mFiles->tabToolTip(i).compare(nativeFileName)) {
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+        if (!mFileTabs->tabToolTip(i).compare(nativeFileName)) {
             // We have found the file, so set the current index to that of its
             // tab
 
-            mFiles->setCurrentIndex(i);
+            mFileTabs->setCurrentIndex(i);
 
             // Everything went fine, so...
 
@@ -488,7 +543,7 @@ void CentralWidget::fileSelected(const int &pIndex)
 
     // Let people know that a file has been selected
 
-    emit fileSelected(mFiles->tabToolTip(pIndex));
+    emit fileSelected(mFileTabs->tabToolTip(pIndex));
 }
 
 //==============================================================================
@@ -497,7 +552,7 @@ int CentralWidget::nbOfFilesOpened() const
 {
     // Return the number of files currently opened
 
-    return mFiles->count();
+    return mFileTabs->count();
 }
 
 //==============================================================================
@@ -506,8 +561,8 @@ QString CentralWidget::activeFileName() const
 {
     // Return the name of the file currently active, if any
 
-    if (mFiles->count())
-        return mFiles->tabToolTip(mFiles->currentIndex());
+    if (mFileTabs->count())
+        return mFileTabs->tabToolTip(mFileTabs->currentIndex());
     else
         return QString();
 }
@@ -518,7 +573,7 @@ bool CentralWidget::isModeEnabled(const GuiViewSettings::Mode &pMode) const
 {
     // Return whether a particular mode is enabled
 
-    return mModeEnabled.contains(pMode);
+    return mModes.value(pMode)->isEnabled();
 }
 
 //==============================================================================
@@ -532,22 +587,22 @@ int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
         // If the simulation mode exists, then it has to be the first or second
         // tab, depending on whether the editing mode exists
 
-        return  mModeEnabled.value(pMode)?
-                     mModeEnabled.value(GuiViewSettings::Editing)?1:0
+        return  mModes.value(pMode)->isEnabled()?
+                     mModes.value(GuiViewSettings::Editing)->isEnabled()?1:0
                     :-1;
     case GuiViewSettings::Analysis:
         // If the analysis mode exists, then it has to be the first, second or
         // third tab, depending on whether the editing and/or simulation modes
         // exist
 
-        return  mModeEnabled.value(pMode)?
-                      (mModeEnabled.value(GuiViewSettings::Editing)?1:0)
-                     +(mModeEnabled.value(GuiViewSettings::Simulation)?1:0)
+        return  mModes.value(pMode)->isEnabled()?
+                      (mModes.value(GuiViewSettings::Editing)->isEnabled()?1:0)
+                     +(mModes.value(GuiViewSettings::Simulation)->isEnabled()?1:0)
                     :-1;
     default:   // GuiViewSettings::Editing
         // If the editing mode exists, then it has to be the first tab
 
-        return mModeEnabled.value(pMode)?0:-1;
+        return mModes.value(pMode)->isEnabled()?0:-1;
     }
 }
 
@@ -555,51 +610,52 @@ int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
 
 void CentralWidget::addMode(const GuiViewSettings::Mode &pMode)
 {
-    if (!mModeEnabled.value(pMode)) {
+    if (!mModes.value(pMode)->isEnabled()) {
         // There is no tab for the mode, so add one
 
-        mModes->addTab(QString());
+        mModeTabs->addTab(QString());
 
-        mModeEnabled.insert(pMode, true);
+        mModes.value(pMode)->setIsEnabled(true);
     }
+}
+
+//==============================================================================
+
+void CentralWidget::addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
+                                const GuiViewSettings::Mode &pMode)
+{
+    // Add a mode view
+
+    CentralWidgetMode *mode = mModes.value(pMode);
+    int modeViewTabIndex = mode->views()->addTab(QString());
+
+    mode->viewNames()->insert(modeViewTabIndex, pPlugin->name());
+    mode->viewInterfaces()->insert(modeViewTabIndex,
+                                   qobject_cast<GuiInterface *>(pPlugin->instance()));
+    mode->viewSettings()->insert(modeViewTabIndex, pSettings);
 }
 
 //==============================================================================
 
 void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 {
-    static const QString CoreSimulationPlugin = "CoreSimulation";
-
     // Make sure that our list of required modes is up-to-date
 
-    addMode(pSettings->mode());
+    GuiViewSettings::Mode mode = pSettings->mode();
+
+    addMode(mode);
 
     // Add the requested view to the mode's views tab bar and associate the
     // plugin to the new tab index
     // Note: the simulation mode doesn't have and need a views tab bar, since it
     //       should have only one view
 
-    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(pPlugin->instance());
-
-    if (pSettings->mode() == GuiViewSettings::Editing) {
-        int viewTabIndex = mEditingViews->addTab(QString());
-
-        mEditingViewPluginNames.insert(viewTabIndex, pPlugin->name());
-        mEditingViewInterfaces.insert(viewTabIndex, guiInterface);
-        mEditingViewSettings.insert(viewTabIndex, pSettings);
-    } if (pSettings->mode() == GuiViewSettings::Simulation) {
-        int viewTabIndex = mSimulationViews->addTab(QString());
-
-        mSimulationViewPluginNames.insert(viewTabIndex, pPlugin->name());
-        mSimulationViewInterfaces.insert(viewTabIndex, guiInterface);
-        mSimulationViewSettings.insert(viewTabIndex, pSettings);
-    } else if (pSettings->mode() == GuiViewSettings::Analysis) {
-        int viewTabIndex = mAnalysisViews->addTab(QString());
-
-        mAnalysisViewPluginNames.insert(viewTabIndex, pPlugin->name());
-        mAnalysisViewInterfaces.insert(viewTabIndex, guiInterface);
-        mAnalysisViewSettings.insert(viewTabIndex, pSettings);
-    }
+    if (mode == GuiViewSettings::Editing)
+        addModeView(pPlugin, pSettings, GuiViewSettings::Editing);
+    else if (mode == GuiViewSettings::Simulation)
+        addModeView(pPlugin, pSettings, GuiViewSettings::Simulation);
+    else
+        addModeView(pPlugin, pSettings, GuiViewSettings::Analysis);
 }
 
 //==============================================================================
@@ -609,7 +665,7 @@ void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     // Accept the proposed action for the event, but only if at least one mode
     // is available and if we are dropping URIs or items from our file organiser
 
-    if (   mModes->count()
+    if (   mModeTabs->count()
         && (pEvent->mimeData()->hasFormat(FileSystemMimeType))
         && (!pEvent->mimeData()->urls().isEmpty()))
         // Note: we test the list of URLs in case we are trying to drop one or
@@ -678,6 +734,30 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
+void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
+                                  GuiInterface * &pGuiInterface,
+                                  int &pViewIndex)
+{
+    // Show/hide the mode's corresponding views tab, as needed
+
+    bool modeActive = mModeTabs->currentIndex() == modeTabIndex(pMode);
+    CentralWidgetMode *mode = mModes.value(pMode);
+
+    mode->views()->setVisible(modeActive);
+
+    // Retrieve the GUI interface for the view we are after, should the mode be
+    // active
+
+    if (modeActive) {
+        int modeViewsCrtIndex = mode->views()->currentIndex();
+
+        pGuiInterface = mode->viewInterfaces()->value(modeViewsCrtIndex);
+        pViewIndex    = mode->viewSettings()->value(modeViewsCrtIndex)->index();
+    }
+}
+
+//==============================================================================
+
 void CentralWidget::updateGui()
 {
     if (mStatus != Running)
@@ -687,45 +767,20 @@ void CentralWidget::updateGui()
         return;
 
     // Show/hide the editing, simulation and analysis modes' corresponding views
-    // tab, as needed
-
-    int crtModeTabIndex = mModes->currentIndex();
-
-    bool editingMode    = crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing);
-    bool simulationMode = crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation);
-    bool analysisMode   = crtModeTabIndex == modeTabIndex(GuiViewSettings::Analysis);
-
-    mEditingViews->setVisible(editingMode);
-    mSimulationViews->setVisible(simulationMode);
-    mAnalysisViews->setVisible(analysisMode);
-
-    // Retrieve the GUI interface for the view we are after
+    // tab, as needed, and retrieve the GUI interface for the view we are after
 
     GuiInterface *guiInterface;
     int viewIndex;
 
-    if (editingMode) {
-        int viewTabIndex = mEditingViews->currentIndex();
-
-        guiInterface = mEditingViewInterfaces.value(viewTabIndex);
-        viewIndex    = mEditingViewSettings.value(viewTabIndex)->index();
-    } else if (simulationMode) {
-        int viewTabIndex = mSimulationViews->currentIndex();
-
-        guiInterface = mSimulationViewInterfaces.value(viewTabIndex);
-        viewIndex    = mSimulationViewSettings.value(viewTabIndex)->index();
-    } else if (analysisMode) {
-        int viewTabIndex = mAnalysisViews->currentIndex();
-
-        guiInterface = mAnalysisViewInterfaces.value(viewTabIndex);
-        viewIndex    = mAnalysisViewSettings.value(viewTabIndex)->index();
-    }
+    updateModeGui(GuiViewSettings::Editing, guiInterface, viewIndex);
+    updateModeGui(GuiViewSettings::Simulation, guiInterface, viewIndex);
+    updateModeGui(GuiViewSettings::Analysis, guiInterface, viewIndex);
 
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
 
-    int crtFileIndex = mFiles->currentIndex();
-    QString crtFileName = (crtFileIndex == -1)?QString():mFiles->tabToolTip(mFiles->currentIndex());
+    int crtFileIndex = mFileTabs->currentIndex();
+    QString crtFileName = (crtFileIndex == -1)?QString():mFileTabs->tabToolTip(mFileTabs->currentIndex());
 
     if (crtFileName.isEmpty()) {
         // There is no current file, so show our logo instead
@@ -791,32 +846,35 @@ QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
 
 //==============================================================================
 
+QString CentralWidget::modeViewName(const GuiViewSettings::Mode &pMode)
+{
+    // Return the name of the mode's current view
+
+    CentralWidgetMode *mode = mModes.value(pMode);
+    int modeViewsCrtIndex = mode->views()->currentIndex();
+
+    return mode->viewInterfaces()->value(modeViewsCrtIndex)->viewName(mode->viewSettings()->value(modeViewsCrtIndex)->index());
+}
+
+//==============================================================================
+
 void CentralWidget::updateNoViewMsg()
 {
     // Customise our no view widget so that it shows a relevant warning message
 
     QString viewName;
-    int crtModeTabIndex = mModes->currentIndex();
+    int modeTabsCrtIndex = mModeTabs->currentIndex();
 
-    if (crtModeTabIndex == -1) {
+    if (modeTabsCrtIndex == -1)
         // There is no tab, so...
 
         return;
-    } else if (crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing)) {
-        int viewTabIndex = mEditingViews->currentIndex();
-
-        viewName = mEditingViewInterfaces.value(viewTabIndex)->viewName(mEditingViewSettings.value(viewTabIndex)->index());
-    } else if (crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation)) {
-        int viewTabIndex = mSimulationViews->currentIndex();
-
-        viewName = mSimulationViewInterfaces.value(viewTabIndex)->viewName(mSimulationViewSettings.value(viewTabIndex)->index());
-    } else {
-        // Analysis mode
-
-        int viewTabIndex = mAnalysisViews->currentIndex();
-
-        viewName = mAnalysisViewInterfaces.value(viewTabIndex)->viewName(mAnalysisViewSettings.value(viewTabIndex)->index());
-    }
+    else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Editing))
+        viewName = modeViewName(GuiViewSettings::Editing);
+    else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Simulation))
+        viewName = modeViewName(GuiViewSettings::Simulation);
+    else
+        viewName = modeViewName(GuiViewSettings::Analysis);
 
     mNoViewMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(viewName));
 }
