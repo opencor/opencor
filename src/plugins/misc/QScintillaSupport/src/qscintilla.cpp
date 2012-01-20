@@ -36,7 +36,7 @@ QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
     // Associate a lexer to our Scintilla editor, should one be available
 
     if (pLexer) {
-        // A lexer was provided, so specify its fonts and associate it to our
+        // A lexer was provided, so specify its fonts and associate it with our
         // Scintilla editor
 
         QFont defaultFont = QFont(OpenCOR::Core::DefaultFontFamily,

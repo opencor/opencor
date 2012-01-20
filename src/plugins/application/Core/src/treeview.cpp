@@ -76,7 +76,7 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
         if (!mimeData)
             return;
 
-        // Create the pixmap that will be associated to the dragging action
+        // Create the pixmap that will be associated with the dragging action
 
         QPixmap pixmap((selectedDraggableIndexes.count() == 1)?
                            ":oxygen/mimetypes/application-x-zerosize.png":

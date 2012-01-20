@@ -200,7 +200,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual QWidget * viewWidget(const QString &pFileName, const int &pIndex);
+    virtual QWidget * viewWidget(const QString &pFileName,
+                                 const int &pViewIndex);
     virtual QWidget * newViewWidget(const QString &);
     virtual QString viewName(const int &);
 

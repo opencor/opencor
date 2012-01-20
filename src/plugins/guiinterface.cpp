@@ -394,41 +394,42 @@ void GuiInterface::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QWidget * GuiInterface::viewWidget(const QString &pFileName, const int &pIndex)
+QWidget * GuiInterface::viewWidget(const QString &pFileName,
+                                   const int &pViewIndex)
 {
-    // Return the view widget associated to the given file name
+    // Return the view widget associated with the given file name
 
-    // Retrieve the list of view widgets associated to the view index
+    // Retrieve the list of view widgets associated with the view index
 
-    GuiViewWidgets *viewWidgets = mViewWidgets.value(pIndex);
+    GuiViewWidgets *viewWidgets = mViewWidgets.value(pViewIndex);
 
     if (!viewWidgets) {
-        // There is no list of view widgets associated to the view index, so
+        // There is no list of view widgets associated with the view index, so
         // create one and keep track of it
 
         viewWidgets = new GuiViewWidgets;
 
-        mViewWidgets.insert(pIndex, viewWidgets);
+        mViewWidgets.insert(pViewIndex, viewWidgets);
     }
 
-    // Retrieve, from our list of view widgets, the view widget associated to
+    // Retrieve, from our list of view widgets, the view widget associated with
     // the file name
 
     QWidget *res = viewWidgets->value(pFileName);
 
-    // Check whether we got an empty widget or not, and if so then create a
-    // widget for the file and keep track of it
+    // Check whether we got an empty view widget or not, and if so then create a
+    // view widget for the file and keep track of it
 
     if (!res) {
         res = newViewWidget(pFileName);
 
         if (res)
-            // Only keep track of the widget if it is a real one
+            // Only keep track of the view widget if it is a real one
 
             viewWidgets->insert(pFileName, res);
     }
 
-    // Return the widget
+    // Return the view widget
 
     return res;
 }

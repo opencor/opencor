@@ -22,7 +22,7 @@ PLUGININFO_FUNC CoreSimulationPluginInfo()
                       PluginInfo::Gui,
                       PluginInfo::Simulation,
                       false,
-                      QStringList() << "Core" << "LLVM" << "Qwt",
+                      QStringList() << "Core",
                       descriptions);
 }
 

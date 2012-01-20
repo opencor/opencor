@@ -646,7 +646,7 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
     addMode(mode);
 
     // Add the requested view to the mode's views tab bar and associate the
-    // plugin to the new tab index
+    // plugin with the new tab index
     // Note: the simulation mode doesn't have and need a views tab bar, since it
     //       should have only one view
 
@@ -736,7 +736,7 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
                                   GuiInterface * &pGuiInterface,
-                                  int &pViewIndex)
+                                  int &pModeViewIndex)
 {
     // Show/hide the mode's corresponding views tab, as needed
 
@@ -751,8 +751,8 @@ void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
     if (modeActive) {
         int modeViewsCrtIndex = mode->views()->currentIndex();
 
-        pGuiInterface = mode->viewInterfaces()->value(modeViewsCrtIndex);
-        pViewIndex    = mode->viewSettings()->value(modeViewsCrtIndex)->index();
+        pGuiInterface  = mode->viewInterfaces()->value(modeViewsCrtIndex);
+        pModeViewIndex = mode->viewSettings()->value(modeViewsCrtIndex)->index();
     }
 }
 
@@ -770,19 +770,19 @@ void CentralWidget::updateGui()
     // tab, as needed, and retrieve the GUI interface for the view we are after
 
     GuiInterface *guiInterface;
-    int viewIndex;
+    int modeViewIndex;
 
-    updateModeGui(GuiViewSettings::Editing, guiInterface, viewIndex);
-    updateModeGui(GuiViewSettings::Simulation, guiInterface, viewIndex);
-    updateModeGui(GuiViewSettings::Analysis, guiInterface, viewIndex);
+    updateModeGui(GuiViewSettings::Editing, guiInterface, modeViewIndex);
+    updateModeGui(GuiViewSettings::Simulation, guiInterface, modeViewIndex);
+    updateModeGui(GuiViewSettings::Analysis, guiInterface, modeViewIndex);
 
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
 
-    int crtFileIndex = mFileTabs->currentIndex();
-    QString crtFileName = (crtFileIndex == -1)?QString():mFileTabs->tabToolTip(mFileTabs->currentIndex());
+    int fileTabsCrtIndex = mFileTabs->currentIndex();
+    QString fileName = (fileTabsCrtIndex == -1)?QString():mFileTabs->tabToolTip(mFileTabs->currentIndex());
 
-    if (crtFileName.isEmpty()) {
+    if (fileName.isEmpty()) {
         // There is no current file, so show our logo instead
 
         mContents->removeWidget(mContents->currentWidget());
@@ -790,7 +790,7 @@ void CentralWidget::updateGui()
     } else {
         // There is a current file, so retrieve its view
 
-        QWidget *newView = guiInterface->viewWidget(crtFileName, viewIndex);
+        QWidget *newView = guiInterface->viewWidget(fileName, modeViewIndex);
 
         if (!newView) {
             // The interface doesn't have a view for the current file, so use

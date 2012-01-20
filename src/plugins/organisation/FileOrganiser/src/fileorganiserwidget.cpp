@@ -28,7 +28,7 @@ static const QString DeletedFileIcon     = ":oxygen/status/image-missing.png";
 
 QStringList FileOrganiserModel::mimeTypes() const
 {
-    // Return the mime types supported by our model
+    // Return the MIME types supported by our model
 
     return QStringList() << Core::FileSystemMimeType << FileOrganiserMimeType;
 }
@@ -78,7 +78,7 @@ QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
     QByteArray res;
 
     if (pIndexes.count()) {
-        // Encode the mime data
+        // Encode the MIME data
 
         QDataStream stream(&res, QIODevice::WriteOnly);
 
@@ -145,7 +145,7 @@ QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
     QModelIndexList res;
 
     if (pData.size()) {
-        // Decode the mime data
+        // Decode the MIME data
 
         QDataStream stream(&pData, QIODevice::ReadOnly);
 
@@ -175,8 +175,8 @@ QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
 
     // Retrieve the URL of the different file (not folder) items
     // Note: this list of URLs is useful with regards to the FileSystemMimeType
-    //       mime type on which external widgets (e.g. the central widget) rely
-    //       on to extract the name of the vavarious files the mime data
+    //       MIME type on which external widgets (e.g. the central widget) rely
+    //       on to extract the name of the vavarious files the MIME data
     //       contains
 
     foreach (const QModelIndex &index, pIndexes) {
@@ -189,7 +189,7 @@ QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
     res->setUrls(urls);
 
     // Set the data which contains information on both the folder and file items
-    // Note: this data is useful with regards to the FileOrganiserMimeType mime
+    // Note: this data is useful with regards to the FileOrganiserMimeType MIME
     //       type on which the file organiser widget relies for moving folder
     //       and file items around
 
@@ -532,8 +532,8 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     // file item
     // Note #1: for the number of objects being dropped, we have to check the
     //          number of URLs information (i.e. external objects), as well as
-    //          the mime data associated to FileOrganiserMimeType (i.e. objects
-    //          from the file organiser widget, after we have )
+    //          the MIME data associated with FileOrganiserMimeType (i.e.
+    //          objects from the file organiser widget, after we have )
     // Note #2: for the dropping location, it can be either a folder or a file
     //          (as long as the indicator position isn't on the item itself),
     //          but not above/on/below any of the objects (or any of their
@@ -562,9 +562,9 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 {
-    // Note: the mime data definitely contains the FileSystemMimeType mime type
+    // Note: the MIME data definitely contains the FileSystemMimeType MIME type
     //       (for objects originating from outside this widget), but it may also
-    //       contain the FileOrganiserMimeType mime type (for objects
+    //       contain the FileOrganiserMimeType MIME type (for objects
     //       originating from within this widget). FileOrganiserMimeType is used
     //       by this widget while FileSystemMimeType by external widgets. So,
     //       this means that we must check for FileOrganiserMimeType first
@@ -595,7 +595,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         dropItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
     }
 
-    // Check the type of mime data to be dropped
+    // Check the type of MIME data to be dropped
 
     if (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)) {
         // The user is dropping folders/files from ourselves, i.e. s/he wants

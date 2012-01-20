@@ -22,7 +22,7 @@ FileType::FileType(FileInterface *pOwner, const QString &pMimeType,
 
 QString FileType::mimeType() const
 {
-    // Return the file's Mime type
+    // Return the file's MIME type
 
     return mMimeType;
 }
@@ -58,7 +58,7 @@ QList<FileType> FileInterface::fileTypes() const
 
 QString FileInterface::fileTypeDescription(const QString &) const
 {
-    // By default, there is no description for the requested Mime type
+    // By default, there is no description for the requested MIME type
 
     return QString();
 }
