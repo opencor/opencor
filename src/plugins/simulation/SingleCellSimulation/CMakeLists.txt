@@ -1,8 +1,9 @@
 PROJECT(SingleCellSimulationPlugin)
 
-# Retrieve some CellML settings
+# Retrieve some CellML and LLVM settings
 
 RETRIEVE_CELLML_SETTINGS()
+RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
 
@@ -16,17 +17,25 @@ ADD_PLUGIN(SingleCellSimulation
         src/singlecellsimulationplugin.cpp
     HEADERS_MOC
         src/singlecellsimulationplugin.h
+    DEFINITIONS
+        ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         ../../3rdparty/Qwt/src
 
         src
     OPENCOR_DEPENDENCIES
+        CellML
         CellMLSupport
+        Computer
         Core
+        LLVM
         Qwt
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtSvg
+        QtXml
     EXTERNAL_DEPENDENCIES
         ${CELLML_EXTERNAL_DEPENDENCIES}
+        ${LLVM_EXTERNAL_DEPENDENCIES}
 )
