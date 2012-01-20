@@ -96,18 +96,21 @@ private:
     QLabel *mNoViewMsg;
 
     QTabBar *mEditingViews;
+    QTabBar *mSimulationViews;
     QTabBar *mAnalysisViews;
 
     QMap<GuiViewSettings::Mode, bool> mModeEnabled;
 
     QMap<int, QString> mEditingViewPluginNames;
+    QMap<int, QString> mSimulationViewPluginNames;
     QMap<int, QString> mAnalysisViewPluginNames;
 
     QMap<int, GuiInterface *> mEditingViewInterfaces;
-    GuiInterface *mSimulationViewInterface;
+    QMap<int, GuiInterface *> mSimulationViewInterfaces;
     QMap<int, GuiInterface *> mAnalysisViewInterfaces;
 
     QMap<int, GuiViewSettings *> mEditingViewSettings;
+    QMap<int, GuiViewSettings *> mSimulationViewSettings;
     QMap<int, GuiViewSettings *> mAnalysisViewSettings;
 
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;

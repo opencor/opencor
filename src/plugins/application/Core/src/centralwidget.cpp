@@ -31,8 +31,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
     mUi(new Ui::CentralWidget),
-    mStatus(Starting),
-    mSimulationViewInterface(0)
+    mStatus(Starting)
 {
     // Set up the UI
 
@@ -106,8 +105,9 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our different views tab bars
 
-    mEditingViews  = newTabBar(QTabBar::RoundedEast);
-    mAnalysisViews = newTabBar(QTabBar::RoundedEast);
+    mEditingViews    = newTabBar(QTabBar::RoundedEast);
+    mSimulationViews = newTabBar(QTabBar::RoundedEast);
+    mAnalysisViews   = newTabBar(QTabBar::RoundedEast);
 
     // Add the widgets/layout to our horizontal layout
 
@@ -116,6 +116,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mUi->horizontalLayout->addWidget(centralWidget);
 
     mUi->horizontalLayout->addWidget(mEditingViews);
+    mUi->horizontalLayout->addWidget(mSimulationViews);
     mUi->horizontalLayout->addWidget(mAnalysisViews);
 
     // Some connections to handle our files tab bar
@@ -138,6 +139,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // Some connections to handle our views tab bars
 
     connect(mEditingViews, SIGNAL(currentChanged(int)),
+            this, SLOT(updateGui()));
+    connect(mSimulationViews, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
     connect(mAnalysisViews, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
@@ -185,6 +188,10 @@ void CentralWidget::retranslateUi()
     for (int i = 0, iMax = mEditingViews->count(); i < iMax; ++i)
         mEditingViews->setTabText(i,
                                   mEditingViewInterfaces.value(i)->viewName(mEditingViewSettings.value(i)->index()));
+
+    for (int i = 0, iMax = mSimulationViews->count(); i < iMax; ++i)
+        mSimulationViews->setTabText(i,
+                                  mSimulationViewInterfaces.value(i)->viewName(mSimulationViewSettings.value(i)->index()));
 
     for (int i = 0, iMax = mAnalysisViews->count(); i < iMax; ++i)
         mAnalysisViews->setTabText(i,
@@ -249,6 +256,9 @@ void CentralWidget::loadSettings(QSettings *pSettings)
             if (crtModeType == GuiViewSettings::Editing) {
                 modeViews = mEditingViews;
                 modeViewPluginNames = &mEditingViewPluginNames;
+            } else if (crtModeType == GuiViewSettings::Simulation) {
+                modeViews = mSimulationViews;
+                modeViewPluginNames = &mSimulationViewPluginNames;
             } else {
                 // Analysis mode
 
@@ -297,16 +307,12 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     int crtModeTabIndex = mModes->currentIndex();
 
-    bool editingMode    = crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing);
-    bool simulationMode = crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation);
-
-    if (editingMode) {
+    if (crtModeTabIndex == modeTabIndex(GuiViewSettings::Editing)) {
         pSettings->setValue(SettingsCurrentMode, GuiViewSettings::Editing);
         pSettings->setValue(SettingsCurrentView, mEditingViewPluginNames.value(mEditingViews->currentIndex()));
-    } else if (simulationMode) {
+    } else if (crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation)) {
         pSettings->setValue(SettingsCurrentMode, GuiViewSettings::Simulation);
-        pSettings->setValue(SettingsCurrentView, "");
-        // Note: there is only one simulation view, so...
+        pSettings->setValue(SettingsCurrentView, mSimulationViewPluginNames.value(mSimulationViews->currentIndex()));
     } else {
         // Analysis mode
 
@@ -581,18 +587,12 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
         mEditingViewPluginNames.insert(viewTabIndex, pPlugin->name());
         mEditingViewInterfaces.insert(viewTabIndex, guiInterface);
         mEditingViewSettings.insert(viewTabIndex, pSettings);
-    } else if (pSettings->mode() == GuiViewSettings::Simulation) {
-        if (   !mSimulationViewInterface
-            && !pPlugin->name().compare(CoreSimulationPlugin))
-            // The simulation view plugin hasn't already been set and we are
-            // dealing with the CoreSimulation plugin, so set our simulation
-            // view interface to that of the CoreSimulation plugin
-            // Note: there shouldn't be a need to test that we are indeed
-            //       dealing with the CoreSimulation plugin, but this is a
-            //       safeguard against someone creating a simulation plugin and
-            //       (stupidly) adding a view...
+    } if (pSettings->mode() == GuiViewSettings::Simulation) {
+        int viewTabIndex = mSimulationViews->addTab(QString());
 
-            mSimulationViewInterface = guiInterface;
+        mSimulationViewPluginNames.insert(viewTabIndex, pPlugin->name());
+        mSimulationViewInterfaces.insert(viewTabIndex, guiInterface);
+        mSimulationViewSettings.insert(viewTabIndex, pSettings);
     } else if (pSettings->mode() == GuiViewSettings::Analysis) {
         int viewTabIndex = mAnalysisViews->addTab(QString());
 
@@ -686,8 +686,8 @@ void CentralWidget::updateGui()
 
         return;
 
-    // Show/hide the editing and analysis modes' corresponding views tab, as
-    // needed
+    // Show/hide the editing, simulation and analysis modes' corresponding views
+    // tab, as needed
 
     int crtModeTabIndex = mModes->currentIndex();
 
@@ -696,6 +696,7 @@ void CentralWidget::updateGui()
     bool analysisMode   = crtModeTabIndex == modeTabIndex(GuiViewSettings::Analysis);
 
     mEditingViews->setVisible(editingMode);
+    mSimulationViews->setVisible(simulationMode);
     mAnalysisViews->setVisible(analysisMode);
 
     // Retrieve the GUI interface for the view we are after
@@ -709,8 +710,10 @@ void CentralWidget::updateGui()
         guiInterface = mEditingViewInterfaces.value(viewTabIndex);
         viewIndex    = mEditingViewSettings.value(viewTabIndex)->index();
     } else if (simulationMode) {
-        guiInterface = mSimulationViewInterface;
-        viewIndex    = 0;   // Since there is only one simulation view
+        int viewTabIndex = mSimulationViews->currentIndex();
+
+        guiInterface = mSimulationViewInterfaces.value(viewTabIndex);
+        viewIndex    = mSimulationViewSettings.value(viewTabIndex)->index();
     } else if (analysisMode) {
         int viewTabIndex = mAnalysisViews->currentIndex();
 
@@ -804,9 +807,9 @@ void CentralWidget::updateNoViewMsg()
 
         viewName = mEditingViewInterfaces.value(viewTabIndex)->viewName(mEditingViewSettings.value(viewTabIndex)->index());
     } else if (crtModeTabIndex == modeTabIndex(GuiViewSettings::Simulation)) {
-        // In the case of the simulation mode, we have only one view, so...
+        int viewTabIndex = mSimulationViews->currentIndex();
 
-        viewName = tr("Simulation");
+        viewName = mSimulationViewInterfaces.value(viewTabIndex)->viewName(mSimulationViewSettings.value(viewTabIndex)->index());
     } else {
         // Analysis mode
 
