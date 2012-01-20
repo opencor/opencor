@@ -7,17 +7,7 @@
 
 //==============================================================================
 
-#include "coreinterface.h"
-#include "guiinterface.h"
 #include "plugininfo.h"
-
-//==============================================================================
-
-#include <QVector>
-
-//==============================================================================
-
-class QwtPlot;
 
 //==============================================================================
 
@@ -28,20 +18,11 @@ namespace CoreSimulation {
 
 PLUGININFO_FUNC CoreSimulationPluginInfo();
 
-class CoreSimulationPlugin : public QObject, public CoreInterface,
-                             public GuiInterface
+//==============================================================================
+
+class CoreSimulationPlugin : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::CoreInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-
-public:
-    virtual void initialize();
-
-    virtual QWidget * viewWidget(const QString &, const int &);
-
-private:
-    QwtPlot *mSimulationView;
 };
 
 //==============================================================================
