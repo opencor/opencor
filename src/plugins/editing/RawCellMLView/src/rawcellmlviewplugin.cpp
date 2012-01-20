@@ -2,10 +2,7 @@
 // RawCellMLView plugin
 //==============================================================================
 
-#include "cellmlmodel.h"
 #include "cellmlsupportplugin.h"
-#include "cellmlsupportglobal.h"
-#include "commonwidget.h"
 #include "qscintilla.h"
 #include "rawcellmlviewplugin.h"
 
@@ -16,8 +13,6 @@
 #include <QMainWindow>
 #include <QTextStream>
 #include <QUrl>
-
-#include <QDebug>
 
 //==============================================================================
 
@@ -68,92 +63,6 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
         // Not the expected file extension, so...
 
         return GuiInterface::newViewWidget(pFileName);
-
-
-
-//--- TESTING --- BEGIN ---
-
-    qDebug("=======================================");
-    qDebug("%s:", pFileName.toLatin1().constData());
-
-    // Load the CellML model
-
-    CellMLSupport::CellmlModel *cellmlModel = new CellMLSupport::CellmlModel(pFileName);
-
-    // Check the model's validity
-
-    if (cellmlModel->isValid()) {
-        // The model is valid, but let's see whether warnings were generated
-
-        int nbOfWarnings = cellmlModel->issues().count();
-
-        if (nbOfWarnings)
-            qDebug(" - The model was properly loaded:");
-        else
-            qDebug(" - The model was properly loaded.");
-    } else {
-        qDebug(" - The model was NOT properly loaded:");
-    }
-
-    // Output any warnings/errors that were generated
-
-    foreach (const CellMLSupport::CellmlModelIssue &issue, cellmlModel->issues()) {
-        QString type = QString((issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
-        QString message = issue.formattedMessage();
-        uint32_t line = issue.line();
-        uint32_t column = issue.column();
-        QString importedModel = issue.importedModel();
-
-        if (line && column) {
-            if (importedModel.isEmpty())
-                qDebug("    [%s at line %s column %s] %s", type.toLatin1().constData(),
-                                                           QString::number(issue.line()).toLatin1().constData(),
-                                                           QString::number(issue.column()).toLatin1().constData(),
-                                                           message.toUtf8().constData());
-            else
-                qDebug("    [%s at line %s column %s from imported model %s] %s", type.toLatin1().constData(),
-                                                                                  QString::number(issue.line()).toLatin1().constData(),
-                                                                                  QString::number(issue.column()).toLatin1().constData(),
-                                                                                  importedModel.toLatin1().constData(),
-                                                                                  message.toUtf8().constData());
-        } else {
-            if (importedModel.isEmpty())
-                qDebug("    [%s] %s", type.toLatin1().constData(),
-                                      message.toUtf8().constData());
-            else
-                qDebug("    [%s from imported model %s] %s", type.toLatin1().constData(),
-                                                             importedModel.toLatin1().constData(),
-                                                             message.toUtf8().constData());
-        }
-    }
-
-    // Get a runtime for the model
-
-    CellMLSupport::CellmlModelRuntime *cellmlModelRuntime = cellmlModel->runtime();
-
-    if (cellmlModelRuntime->isValid()) {
-        qDebug(" - The model's runtime was properly generated.");
-        qDebug("    [Information] Model type = %s", (cellmlModelRuntime->modelType() == CellMLSupport::CellmlModelRuntime::Ode)?"ODE":"DAE");
-    } else {
-        qDebug(" - The model's runtime was NOT properly generated:");
-
-        foreach (const CellMLSupport::CellmlModelIssue &issue,
-                 cellmlModelRuntime->issues()) {
-            QString type = QString((issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
-            QString message = issue.formattedMessage();
-
-            qDebug("    [%s] %s", type.toLatin1().constData(),
-                                  message.toUtf8().constData());
-        }
-    }
-
-    // Done with our testing, so...
-
-    delete cellmlModel;
-
-//--- TESTING --- END ---
-
-
 
     // Create, set up and return a raw CellML Scintilla editor
 
