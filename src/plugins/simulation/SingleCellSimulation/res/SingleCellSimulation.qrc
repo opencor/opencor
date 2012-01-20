@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="SingleCellSimulation_fr">../../../../../build/SingleCellSimulation_fr.qm</file>
+    </qresource>
+</RCC>

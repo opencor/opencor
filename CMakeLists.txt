@@ -186,7 +186,7 @@ SET(PLUGINS
     editing/RawView
     editing/Viewer
 
-    simulation/CellMLSimulation
+    simulation/SingleCellSimulation
 )
 
 FOREACH(PLUGIN ${PLUGINS})

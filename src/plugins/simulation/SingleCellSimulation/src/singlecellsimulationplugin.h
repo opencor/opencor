@@ -1,14 +1,15 @@
 //==============================================================================
-// CellMLSimulation plugin
+// SingleCellSimulation plugin
 //==============================================================================
 
-#ifndef CELLMLSIMULATIONPLUGIN_H
-#define CELLMLSIMULATIONPLUGIN_H
+#ifndef SINGLECELLSIMULATIONPLUGIN_H
+#define SINGLECELLSIMULATIONPLUGIN_H
 
 //==============================================================================
 
 #include "coreinterface.h"
 #include "guiinterface.h"
+#include "i18ninterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -18,21 +19,22 @@ class QwtPlot;
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSimulation {
+namespace SingleCellSimulation {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSimulationPluginInfo();
+PLUGININFO_FUNC SingleCellSimulationPluginInfo();
 
-class CellMLSimulationPlugin : public QObject, public CoreInterface,
-                               public GuiInterface
+class SingleCellSimulationPlugin : public QObject, public CoreInterface,
+                                   public GuiInterface, public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    explicit CellMLSimulationPlugin();
+    explicit SingleCellSimulationPlugin();
 
     virtual void initialize();
 
@@ -45,7 +47,7 @@ private:
 
 //==============================================================================
 
-}   // namespace CellMLSimulation
+}   // namespace SingleCellSimulation
 }   // namespace OpenCOR
 
 //==============================================================================

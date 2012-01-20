@@ -1,4 +1,4 @@
-PROJECT(CellMLSimulationPlugin)
+PROJECT(SingleCellSimulationPlugin)
 
 # Retrieve some CellML settings
 
@@ -6,15 +6,16 @@ RETRIEVE_CELLML_SETTINGS()
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLSimulation
+ADD_PLUGIN(SingleCellSimulation
     SOURCES
         ../../coreinterface.cpp
         ../../guiinterface.cpp
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/cellmlsimulationplugin.cpp
+        src/singlecellsimulationplugin.cpp
     HEADERS_MOC
-        src/cellmlsimulationplugin.h
+        src/singlecellsimulationplugin.h
     INCLUDE_DIRS
         ../../3rdparty/Qwt/src
 

@@ -1,8 +1,8 @@
 //==============================================================================
-// CellMLSimulation plugin
+// SingleCellSimulation plugin
 //==============================================================================
 
-#include "cellmlsimulationplugin.h"
+#include "singlecellsimulationplugin.h"
 #include "cellmlsupportplugin.h"
 
 //==============================================================================
@@ -19,16 +19,16 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSimulation {
+namespace SingleCellSimulation {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSimulationPluginInfo()
+PLUGININFO_FUNC SingleCellSimulationPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "A plugin to simulate <a href=\"http://www.cellml.org/\">CellML</a> files");
-    descriptions.insert("fr", "Une extension pour simuler des fichiers <a href=\"http://www.cellml.org/\">CellML</a>");
+    descriptions.insert("en", "A plugin to run single cell simulations");
+    descriptions.insert("fr", "Une extension pour exécuter des simulations unicellulaires");
 
     return PluginInfo(PluginInfo::V001,
                       PluginInfo::Gui,
@@ -40,11 +40,11 @@ PLUGININFO_FUNC CellMLSimulationPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CellMLSimulation, CellMLSimulationPlugin)
+Q_EXPORT_PLUGIN2(SingleCellSimulation, SingleCellSimulationPlugin)
 
 //==============================================================================
 
-CellMLSimulationPlugin::CellMLSimulationPlugin()
+SingleCellSimulationPlugin::SingleCellSimulationPlugin()
 {
     // Set our settings
 
@@ -53,7 +53,7 @@ CellMLSimulationPlugin::CellMLSimulationPlugin()
 
 //==============================================================================
 
-void CellMLSimulationPlugin::initialize()
+void SingleCellSimulationPlugin::initialize()
 {
     // Create our simulation view widget
 
@@ -84,8 +84,8 @@ void CellMLSimulationPlugin::initialize()
 
 //==============================================================================
 
-QWidget * CellMLSimulationPlugin::viewWidget(const QString &pFileName,
-                                             const int &)
+QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
+                                                 const int &)
 {
     // Check that we are dealing with a CellML file and, if so, return our
     // generic simulation view widget
@@ -103,14 +103,14 @@ QWidget * CellMLSimulationPlugin::viewWidget(const QString &pFileName,
 
 //==============================================================================
 
-QString CellMLSimulationPlugin::viewName(const int &pViewIndex)
+QString SingleCellSimulationPlugin::viewName(const int &pViewIndex)
 {
     // We have only one view, so return its name otherwise call the GuiInterface
     // implementation of viewName
 
     switch (pViewIndex) {
     case 0:
-        return tr("CellML");
+        return tr("Single Cell");
     default:
         return GuiInterface::viewName(pViewIndex);
     }
@@ -118,7 +118,7 @@ QString CellMLSimulationPlugin::viewName(const int &pViewIndex)
 
 //==============================================================================
 
-}   // namespace CellMLSimulation
+}   // namespace SingleCellSimulation
 }   // namespace OpenCOR
 
 //==============================================================================
