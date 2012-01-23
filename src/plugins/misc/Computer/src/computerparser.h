@@ -43,7 +43,8 @@ public:
     ComputerFunction * parseFunction(const QString &pFunction);
     ComputerEquation * parseEquation(const QString &pEquation);
 
-    bool parseEquationRhs(ComputerFunction *pFunction);
+    bool parseEquationRhs(ComputerFunction *pFunction,
+                          ComputerEquation * &pRhsEquation);
 
 private:
     ComputerScanner *mScanner;

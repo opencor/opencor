@@ -376,8 +376,6 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         // the beginning of an equation, so we get ready for the parsing of an
         // equation
 
-        ComputerEquation *equation = new ComputerEquation();
-
         // Set the name of the equation parameter array
 
         QString arrayName;
@@ -391,8 +389,6 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 
         if (mScanner->token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
             addError("'['");
-
-            delete equation;
 
             return false;
         }
@@ -409,8 +405,6 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         } else {
             addError(tr("an integer"));
 
-            delete equation;
-
             return false;
         }
 
@@ -420,8 +414,6 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 
         if (mScanner->token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
             addError("']'");
-
-            delete equation;
 
             return false;
         }
@@ -433,8 +425,6 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         if (mScanner->token().symbol() != ComputerScannerToken::Equal) {
             addError("'='");
 
-            delete equation;
-
             return false;
         }
 
@@ -442,11 +432,11 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 
         // Parse the RHS of an equation
 
-        if (!parseEquationRhs(pFunction)) {
+        ComputerEquation *rhsEquation;
+
+        if (!parseEquationRhs(pFunction, rhsEquation)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
-
-            delete equation;
 
             return false;
         }
@@ -456,7 +446,7 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         if (mScanner->token().symbol() != ComputerScannerToken::SemiColon) {
             addError("';'");
 
-            delete equation;
+            delete rhsEquation;
 
             return false;
         }
@@ -466,7 +456,10 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         // The equation was successfully parsed, so add it to the list of
         // functions
 
-        pFunction->addEquation(equation);
+        ComputerEquation *lhsEquation = new ComputerEquation(arrayName, arrayIndex);
+
+        pFunction->addEquation(new ComputerEquation(ComputerEquation::Equal,
+                                                    lhsEquation, rhsEquation));
     }
 
     // Everything went fine, so...
@@ -819,7 +812,9 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         // Parse the RHS of an equation
 
-        if (!pParser->parseEquationRhs(pFunction))
+        ComputerEquation *argument;
+
+        if (!pParser->parseEquationRhs(pFunction, argument))
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -829,6 +824,8 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
             pParser->addError("')'");
+
+            delete argument;
 
             return false;
         }
@@ -849,7 +846,9 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         // Parse the RHS of an equation
 
-        if (!pParser->parseEquationRhs(pFunction))
+        ComputerEquation *argumentOne;
+
+        if (!pParser->parseEquationRhs(pFunction, argumentOne))
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -860,6 +859,8 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
             pParser->addError("','");
 
+            delete argumentOne;
+
             return false;
         }
 
@@ -867,16 +868,24 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         // Parse the RHS of an equation
 
-        if (!pParser->parseEquationRhs(pFunction))
+        ComputerEquation *argumentTwo;
+
+        if (!pParser->parseEquationRhs(pFunction, argumentTwo)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
+            delete argumentOne;
+
             return false;
+        }
 
         // The current token must ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
             pParser->addError("')'");
+
+            delete argumentOne;
+            delete argumentTwo;
 
             return false;
         }
@@ -887,7 +896,9 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         // Parse the RHS of an equation
 
-        if (!pParser->parseEquationRhs(pFunction))
+        ComputerEquation *equation;
+
+        if (!pParser->parseEquationRhs(pFunction, equation))
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -897,6 +908,8 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
             pParser->addError("')'");
+
+            delete equation;
 
             return false;
         }
@@ -915,12 +928,18 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
 //==============================================================================
 
-bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction)
+bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
+                                      ComputerEquation * &pRhsEquation)
 {
     // The EBNF grammar of an equation's RHS is as follows:
     //
     //   EquationRHS =   LogicalOrExpression
     //                 | ( LogicalOrExpression "?" EquationRHS ":" EquationRHS ) ;
+
+    // This is a top parsing function, so we must initialise pRhsEquation, just
+    // in case something goes wrong with the parsing...
+
+    pRhsEquation = 0;
 
     // Parse a logical Or expression
 
@@ -939,7 +958,9 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction)
 
         // Parse the RHS of an equation
 
-        if (!parseEquationRhs(pFunction))
+        ComputerEquation *trueCaseEquation;
+
+        if (!parseEquationRhs(pFunction, trueCaseEquation))
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -950,6 +971,8 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction)
         if (mScanner->token().symbol() != ComputerScannerToken::Colon) {
             addError("':'");
 
+            delete trueCaseEquation;
+
             return false;
         }
 
@@ -957,11 +980,16 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction)
 
         // Parse the RHS of an equation
 
-        if (!parseEquationRhs(pFunction))
+        ComputerEquation *falseCaseEquation;
+
+        if (!parseEquationRhs(pFunction, falseCaseEquation)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
+            delete trueCaseEquation;
+
             return false;
+        }
     }
 
     // Everything went fine, so...
@@ -989,13 +1017,17 @@ bool ComputerParser::parseReturn(ComputerFunction *pFunction)
 
     // Parse the equivalent of the RHS of an equation
 
-    if (!parseEquationRhs(pFunction))
+    ComputerEquation *equation;
+
+    if (!parseEquationRhs(pFunction, equation))
         return false;
 
     // The current token must be ";"
 
     if (mScanner->token().symbol() != ComputerScannerToken::SemiColon) {
         addError("';'");
+
+        delete equation;
 
         return false;
     }

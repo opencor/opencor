@@ -129,8 +129,8 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
             foreach (const ComputerParameter &parameter, parameters)
                 qDebug(QString("    - %1 [Pointer: %2]").arg(parameter.name(), parameter.pointer()?"Yes":"No").toLatin1().constData());
 
-        if (function->type() == ComputerFunction::Double)
-            qDebug(QString("   Return value: %1").arg(function->returnValue()).toLatin1().constData());
+//        if (function->type() == ComputerFunction::Double)
+//            qDebug(QString("   Return value: %1").arg(function->returnValue()).toLatin1().constData());
 
         // The function was properly parsed, so check that we don't already have
         // a function with the same name in our module
@@ -151,8 +151,8 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
         delete function;
 
         return res;
-        // Note: it's still fine if the compilation failed, since
-        //       compileFunction() will then return 0...
+        // Note: it's fine if the compilation failed, since compileFunction()
+        //       will then return 0...
     } else {
         // The function wasn't properly parsed, so...
 
@@ -236,7 +236,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
         if (parameter.pointer())
             // The parameter is a pointer, so...
 
-            parameters += "* nocapture";
+            parameters += "*";
 
         parameters += " %%"+parameter.name();
     }
@@ -245,11 +245,9 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
     // Additional information for the function definition
 
-    assemblyCode += " nounwind uwtable {\n";
+    assemblyCode += " {\n";
 
     // Mathematical statements
-
-    bool tbaaMetadataNeeded = false;
 
 //---GRY--- TO BE DONE...
 
@@ -258,20 +256,14 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     if (pFunction->type() == ComputerFunction::Void)
         assemblyCode += indent+"ret void\n";
     else
+/*---GRY--- TO BE DONE...
         assemblyCode += indent+"ret double "+pFunction->returnValue()+"\n";
+*/
+        assemblyCode += indent+"ret double 0\n";
 
     // End the function
 
     assemblyCode += "}";
-
-    // Add the TBAA metadata, if neeeded
-
-    if (tbaaMetadataNeeded) {
-        assemblyCode += "\n\n";
-        assemblyCode += "!0 = metadata !{metadata !\"double\", metadata !1}\n";
-        assemblyCode += "!1 = metadata !{metadata !\"omnipotent char\", metadata !2}\n";
-        assemblyCode += "!2 = metadata !{metadata !\"Simple C/C++ TBAA\", null}";
-    }
 
     // Now that we are done generating some LLVM assembly code for the function,
     // we can parse that code and have LLVM generate some IR code that will get

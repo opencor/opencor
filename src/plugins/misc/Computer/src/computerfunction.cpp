@@ -113,7 +113,7 @@ void ComputerFunction::addEquation(ComputerEquation *pEquation)
 
 //==============================================================================
 
-QString ComputerFunction::returnValue() const
+ComputerEquation * ComputerFunction::returnValue()
 {
     // Return the function's return value
 
@@ -122,7 +122,7 @@ QString ComputerFunction::returnValue() const
 
 //==============================================================================
 
-void ComputerFunction::setReturnValue(const QString &pReturnValue)
+void ComputerFunction::setReturnValue(ComputerEquation *pReturnValue)
 {
     // Set the function's return value
 
