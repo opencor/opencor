@@ -6,10 +6,6 @@
 
 //==============================================================================
 
-#include <QDebug>
-
-//==============================================================================
-
 #include "CCGSBootstrap.hpp"
 
 //==============================================================================
@@ -263,11 +259,11 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             // Retrieve some information/code
 
             qDebug("---------------------------------------");
-            qDebug();
+            qDebug("");
             qDebug("Number of states/rates: %s", QString::number(genericCodeInformation->rateIndexCount()).toLatin1().constData());
             qDebug("Number of algebraic variables: %s", QString::number(genericCodeInformation->algebraicIndexCount()).toLatin1().constData());
             qDebug("Number of constants: %s", QString::number(genericCodeInformation->constantIndexCount()).toLatin1().constData());
-            qDebug();
+            qDebug("");
             qDebug("---------------------------------------");
             qDebug("\ninitConstsString():");
             qDebug(QString::fromStdWString(genericCodeInformation->initConstsString()).toLatin1().constData());
@@ -396,12 +392,12 @@ void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
 
 //            // Output the contents of our data array
 
-//            qDebug() << "Data[0]:" << data[0];
-//            qDebug() << "Data[1]:" << data[1];
-//            qDebug() << "Data[2]:" << data[2];
-//            qDebug() << "Data[3]:" << data[3];
-//            qDebug() << "Data[4]:" << data[4];
-//            qDebug() << "Data[5]:" << data[5];
+//            qDebug(QString("Data[0]: %1").arg(QString::number(data[0])).toLatin1().constData());
+//            qDebug(QString("Data[1]: %1").arg(QString::number(data[1])).toLatin1().constData());
+//            qDebug(QString("Data[2]: %1").arg(QString::number(data[2])).toLatin1().constData());
+//            qDebug(QString("Data[3]: %1").arg(QString::number(data[3])).toLatin1().constData());
+//            qDebug(QString("Data[4]: %1").arg(QString::number(data[4])).toLatin1().constData());
+//            qDebug(QString("Data[5]: %1").arg(QString::number(data[5])).toLatin1().constData());
         } else {
             qDebug(QString("The '%1' function doesn't exist...?!").arg(pFunctionName).toLatin1().constData());
         }

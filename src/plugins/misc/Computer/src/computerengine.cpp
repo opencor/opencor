@@ -16,10 +16,6 @@
 
 //==============================================================================
 
-#include <QDebug>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace Computer {
 
@@ -106,7 +102,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 {
     qDebug("---------------------------------------");
     qDebug("Compilation of...");
-    qDebug();
+    qDebug("");
     qDebug(pFunction.toLatin1().constData());
 
     // Parse the function
