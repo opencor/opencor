@@ -141,6 +141,17 @@ bool CellmlModel::isValid()
     if (load()) {
         // The model was properly loaded (or was already loaded), so check
         // whether it is CellML valid
+        // Note: validateModel() is somewhat slow, but there is (unfortunately)
+        //       nothing we can do about it. Then, there is getPositionInXML()
+        //       which is painfully slow, but unlike for validateModel() its use
+        //       is not essential (even though it would be nice from an
+        //       end-user's perspective). So, rather than retrieve the
+        //       line/column of every single warning/error, we only keep track
+        //       of the various warnings/errors and only retrieve their
+        //       corresponding line/column when requested (definitely not neat
+        //       from an end-user's perspective, but we just can't afford the
+        //       time it takes to fully validate a model that has many
+        //       warnings/errors)...
 
         ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
         ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mModel);
@@ -168,11 +179,15 @@ bool CellmlModel::isValid()
                 // We are dealing with a CellML representation issue, so
                 // determine its line and column
 
+/*---GRY--- THE BELOW CODE IS TO BE COMMENTED OUT UNTIL getPositionInXML()
+            BECOMES FAST ENOUGH TO USE
+
                 ObjRef<iface::dom::Node> errorNode = cellmlRepresentationValidityError->errorNode();
 
                 line = vacssService->getPositionInXML(errorNode,
                                                       cellmlRepresentationValidityError->errorNodalOffset(),
                                                       &column);
+*/
             } else {
                 // We are not dealing with a CellML representation issue, so
                 // check whether we are dealing with a semantic one
@@ -186,12 +201,16 @@ bool CellmlModel::isValid()
 
                     ObjRef<iface::cellml_api::CellMLElement> cellmlElement = cellmlSemanticValidityError->errorElement();
 
+/*---GRY--- THE BELOW CODE IS TO BE COMMENTED OUT UNTIL getPositionInXML()
+            BECOMES FAST ENOUGH TO USE
+
                     DECLARE_QUERY_INTERFACE_OBJREF(cellmlDomElement, cellmlElement, cellml_api::CellMLDOMElement);
 
                     ObjRef<iface::dom::Element> domElement = cellmlDomElement->domElement();
 
                     line = vacssService->getPositionInXML(domElement, 0,
                                                           &column);
+*/
 
                     // Also determine its imported model, if any
 
