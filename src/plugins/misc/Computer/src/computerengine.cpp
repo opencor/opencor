@@ -123,9 +123,11 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
         qDebug(QString("   Name: %1").arg(function->name()).toLatin1().constData());
         qDebug(QString("   Nb of params: %1").arg(QString::number(function->parameters().count())).toLatin1().constData());
 
-        if (!function->parameters().isEmpty())
-            foreach (const QString &parameter, function->parameters())
-                qDebug(QString("    - %1").arg(parameter).toLatin1().constData());
+        ComputerParameters parameters = function->parameters();
+
+        if (!parameters.isEmpty())
+            foreach (const ComputerParameter &parameter, parameters)
+                qDebug(QString("    - %1 [Pointer: %2]").arg(parameter.name(), parameter.pointer()?"Yes":"No").toLatin1().constData());
 
         if (function->type() == ComputerFunction::Double)
             qDebug(QString("   Return value: %1").arg(function->returnValue()).toLatin1().constData());
@@ -221,7 +223,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
     QString parameters = QString();
 
-    foreach (const QString &parameter, pFunction->parameters()) {
+    foreach (const ComputerParameter &parameter, pFunction->parameters()) {
         // Add a separator first if we already have 1+ parameters
 
         if (!parameters.isEmpty())
@@ -229,7 +231,14 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
         // Add the parameter definition
 
-        parameters += "double* nocapture %%"+parameter;
+        parameters += "double";
+
+        if (parameter.pointer())
+            // The parameter is a pointer, so...
+
+            parameters += "* nocapture";
+
+        parameters += " %%"+parameter.name();
     }
 
     assemblyCode += "("+parameters+")";

@@ -308,7 +308,7 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction *pFunction,
 {
     // The EBNF grammar of a function parameter is as follows:
     //
-    //   FunctionParameter = "double" "*" Identifier ;
+    //   FunctionParameter = "double" [ "*" ] Identifier ;
 
     // The current token must be "double"
 
@@ -323,15 +323,17 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction *pFunction,
 
     mScanner->getNextToken();
 
-    // The current token must be "*"
+    // Check whether the current token is "*"
 
-    if (mScanner->token().symbol() != ComputerScannerToken::Times) {
-        addError("'*'");
+    bool pointer = false;
 
-        return false;
+    if (mScanner->token().symbol() == ComputerScannerToken::Times) {
+        // We got "*" which means that the function parameter is a pointer
+
+        pointer = true;
+
+        mScanner->getNextToken();
     }
-
-    mScanner->getNextToken();
 
     // The current token must be an identifier
 
@@ -339,7 +341,7 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction *pFunction,
         // We got an identifier, so try to add it as the name of a new function
         // parameter
 
-        if (!pFunction->addParameter(mScanner->token().string())) {
+        if (!pFunction->addParameter(ComputerParameter(mScanner->token().string(), pointer))) {
             // The function parameter already exists, so...
 
             addError(tr("there is already a function parameter called '%1'").arg(mScanner->token().string()),

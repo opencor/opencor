@@ -1,5 +1,5 @@
 //==============================================================================
-// Computer function class
+// Computer external function class
 //==============================================================================
 
 #include "computerexternalfunction.h"
@@ -44,7 +44,7 @@ bool ComputerExternalFunctions::contains(const ComputerExternalFunction &pExtern
     // functions needed by the function
     // Note: we only check the name of the external function, not the number of
     //       its parameters (since the latter should always be the same for a
-    //       given external function)
+    //       given external function)...
 
     for (int i = 0, iMax = count(); i < iMax; ++i) {
         const ComputerExternalFunction &externalFunction = at(i);

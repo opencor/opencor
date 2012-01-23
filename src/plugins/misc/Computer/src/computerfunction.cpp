@@ -15,7 +15,7 @@ ComputerFunction::ComputerFunction() :
     mType(Void),
     mName(QString()),
     mEquations(ComputerEquations()),
-    mParameters(QStringList())
+    mParameters(ComputerParameters())
 {
 }
 
@@ -67,7 +67,7 @@ void ComputerFunction::setName(const QString &pName)
 
 //==============================================================================
 
-QStringList ComputerFunction::parameters() const
+ComputerParameters ComputerFunction::parameters() const
 {
     // Return the function's parameters
 
@@ -76,7 +76,7 @@ QStringList ComputerFunction::parameters() const
 
 //==============================================================================
 
-bool ComputerFunction::addParameter(const QString &pParameter)
+bool ComputerFunction::addParameter(const ComputerParameter &pParameter)
 {
     // Add a parameter to our list, but only if it isn't already there
 
@@ -140,16 +140,21 @@ ComputerExternalFunctions ComputerFunction::externalFunctions() const
 
 //==============================================================================
 
-void ComputerFunction::addExternalFunction(const ComputerExternalFunction &pExternalFunction)
+bool ComputerFunction::addExternalFunction(const ComputerExternalFunction &pExternalFunction)
 {
-    // Add an external function which is needed by the function, but only if the
-    // external function isn't already in our list of external functions
+    // Add an external function to our list, but only if i isn't already there
 
-    if (!mExternalFunctions.contains(pExternalFunction))
-        // The external function isn't already in our list of external
-        // functions, so add it
+    if (mExternalFunctions.contains(pExternalFunction)) {
+        // The external function already exists, so...
+
+        return false;
+    } else {
+        // The external function is not yet in our list, so add it
 
         mExternalFunctions.append(pExternalFunction);
+
+        return true;
+    }
 }
 
 //==============================================================================

@@ -294,11 +294,14 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             Computer::ComputerEngine computerEngine;
 
-            computerEngine.addFunction(QString("void initConsts(double *STATES, double *CONSTANTS) { %1 }").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
+            computerEngine.addFunction(QString("void initConsts(double *pConstants, double *pRates, double *pStates) { %1 }").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
             handleErrors(computerEngine, "initConsts");
 
-            computerEngine.addFunction(QString("void rates(double *ALGEBRAIC, double *RATES, double *STATES, double *CONSTANTS) { %1 }").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
+            computerEngine.addFunction(QString("void rates(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic) { %1 }").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
             handleErrors(computerEngine, "rates");
+
+            computerEngine.addFunction(QString("void variables(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic) { %1 }").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
+            handleErrors(computerEngine, "variables");
 
             // Output the contents of our computer engine's module so far
 

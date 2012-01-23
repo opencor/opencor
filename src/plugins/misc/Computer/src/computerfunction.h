@@ -9,14 +9,7 @@
 
 #include "computerequation.h"
 #include "computerexternalfunction.h"
-
-//==============================================================================
-
-#include <QStringList>
-
-//==============================================================================
-
-#include "llvm/Function.h"
+#include "computerparameter.h"
 
 //==============================================================================
 
@@ -42,8 +35,8 @@ public:
     QString name() const;
     void setName(const QString &pName);
 
-    QStringList parameters() const;
-    bool addParameter(const QString &pParameter);
+    ComputerParameters parameters() const;
+    bool addParameter(const ComputerParameter &pParameter);
 
     ComputerEquations equations() const;
     void addEquation(ComputerEquation *pEquation);
@@ -52,12 +45,12 @@ public:
     void setReturnValue(const QString &pReturnValue);
 
     ComputerExternalFunctions externalFunctions() const;
-    void addExternalFunction(const ComputerExternalFunction &pExternalFunction);
+    bool addExternalFunction(const ComputerExternalFunction &pExternalFunction);
 
 private:
     Type mType;
     QString mName;
-    QStringList mParameters;
+    ComputerParameters mParameters;
     ComputerEquations mEquations;
     QString mReturnValue;
 
