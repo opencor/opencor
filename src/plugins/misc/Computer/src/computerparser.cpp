@@ -509,7 +509,8 @@ bool parseGenericExpression(ComputerParser *pParser,
 
         return false;
 
-    // Check whether the current token's symbol is one of those we are after
+    // Check whether the current token's symbol is one of those we are after and
+    // if so parse the generic expression and start over
 
     while (pSymbols.contains(pParser->scanner()->token().symbol())) {
         // We got the right symbol
@@ -951,7 +952,7 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
 
     // Check whether the current token is "?"
 
-    while (mScanner->token().symbol() == ComputerScannerToken::QuestionMark) {
+    if (mScanner->token().symbol() == ComputerScannerToken::QuestionMark) {
         // We got "?" which means that we should have a conditional statement
 
         mScanner->getNextToken();
