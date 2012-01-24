@@ -432,7 +432,7 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 
         // Parse the RHS of an equation
 
-        ComputerEquation *rhsEquation;
+        ComputerEquation *rhsEquation = 0;
 
         if (!parseEquationRhs(pFunction, rhsEquation)) {
             // Something went wrong with the parsing of the RHS of an equation,
@@ -534,7 +534,7 @@ bool parseGenericExpression(ComputerParser *pParser,
 
         // Parse the generic expression
 
-        ComputerEquation *otherExpression;
+        ComputerEquation *otherExpression = 0;
 
         if (pParseGenericExpression(pParser, pFunction, otherExpression)) {
             // The parsing of the generic expression went fine, so update our
@@ -566,11 +566,6 @@ bool parseLogicalOrExpression(ComputerParser *pParser,
     // The EBNF grammar of a logical Or expression is as follows:
     //
     //   LogicalOrExpression = [ LogicalOrExpression "||" ] LogicalAndExpression ;
-
-    // This is a top parsing function, so we must initialise pRhsEquation, just
-    // in case something goes wrong with the parsing...
-
-    pExression = 0;
 
     if (!parseGenericExpression(pParser, pFunction, pExression,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalOr,
@@ -855,7 +850,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         // Parse the RHS of an equation
 
-        ComputerEquation *argument;
+        ComputerEquation *argument = 0;
 
         if (!pParser->parseEquationRhs(pFunction, argument))
             // Something went wrong with the parsing of the RHS of an equation,
@@ -889,7 +884,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         // Parse the RHS of an equation
 
-        ComputerEquation *argumentOne;
+        ComputerEquation *argumentOne = 0;
 
         if (!pParser->parseEquationRhs(pFunction, argumentOne))
             // Something went wrong with the parsing of the RHS of an equation,
@@ -911,7 +906,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         // Parse the RHS of an equation
 
-        ComputerEquation *argumentTwo;
+        ComputerEquation *argumentTwo = 0;
 
         if (!pParser->parseEquationRhs(pFunction, argumentTwo)) {
             // Something went wrong with the parsing of the RHS of an equation,
@@ -939,7 +934,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         // Parse the RHS of an equation
 
-        ComputerEquation *equation;
+        ComputerEquation *equation = 0;
 
         if (!pParser->parseEquationRhs(pFunction, equation))
             // Something went wrong with the parsing of the RHS of an equation,
@@ -979,14 +974,9 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
     //   EquationRHS =   LogicalOrExpression
     //                 | ( LogicalOrExpression "?" EquationRHS ":" EquationRHS ) ;
 
-    // This is a top parsing function, so we must initialise pRhsEquation, just
-    // in case something goes wrong with the parsing...
-
-    pRhsEquation = 0;
-
     // Parse a logical Or expression
 
-    ComputerEquation *mainOrConditionEquation;
+    ComputerEquation *mainOrConditionEquation = 0;
 
     if (!parseLogicalOrExpression(this, pFunction, mainOrConditionEquation)) {
         // Something went wrong with the parsing of a logical Or expression,
@@ -1006,7 +996,7 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
 
         // Parse the RHS of an equation
 
-        ComputerEquation *trueCaseEquation;
+        ComputerEquation *trueCaseEquation = 0;
 
         if (!parseEquationRhs(pFunction, trueCaseEquation)) {
             // Something went wrong with the parsing of the RHS of an equation,
@@ -1033,7 +1023,7 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
 
         // Parse the RHS of an equation
 
-        ComputerEquation *falseCaseEquation;
+        ComputerEquation *falseCaseEquation = 0;
 
         if (!parseEquationRhs(pFunction, falseCaseEquation)) {
             // Something went wrong with the parsing of the RHS of an equation,
@@ -1072,7 +1062,7 @@ bool ComputerParser::parseReturn(ComputerFunction *pFunction)
 
     // Parse the equivalent of the RHS of an equation
 
-    ComputerEquation *equation;
+    ComputerEquation *equation = 0;
 
     if (!parseEquationRhs(pFunction, equation)) {
         // Something went wrong with the parsing of the RHS of an equation,
