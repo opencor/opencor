@@ -28,6 +28,7 @@ ComputerEquation::ComputerEquation(const QString &pParameterName) :
     mType(DirectParameter),
     mParameterName(pParameterName),
     mParameterIndex(-1),
+    mNumber(0),
     mLeft(0),
     mRight(0)
 {
@@ -40,6 +41,19 @@ ComputerEquation::ComputerEquation(const QString &pParameterName,
     mType(IndirectParameter),
     mParameterName(pParameterName),
     mParameterIndex(pParameterIndex),
+    mNumber(0),
+    mLeft(0),
+    mRight(0)
+{
+}
+
+//==============================================================================
+
+ComputerEquation::ComputerEquation(const double &pNumber) :
+    mType(Number),
+    mParameterName(QString()),
+    mParameterIndex(-1),
+    mNumber(pNumber),
     mLeft(0),
     mRight(0)
 {
@@ -80,6 +94,15 @@ int ComputerEquation::parameterIndex() const
     // Return the equation's parameter index
 
     return mParameterIndex;
+}
+
+//==============================================================================
+
+double ComputerEquation::number() const
+{
+    // Return the equation's number
+
+    return mNumber;
 }
 
 //==============================================================================

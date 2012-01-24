@@ -28,7 +28,7 @@ public:
 
         // Type of parameter
 
-        DirectParameter, IndirectParameter,
+        DirectParameter, IndirectParameter, Number,
 
         // Mathematical operators
 
@@ -45,12 +45,15 @@ public:
     explicit ComputerEquation(const QString &pParameterName);
     explicit ComputerEquation(const QString &pParameterName,
                               const int &pParameterIndex);
+    explicit ComputerEquation(const double &pNumber);
     ~ComputerEquation();
 
     Type type() const;
 
     QString parameterName() const;
     int parameterIndex() const;
+
+    double number() const;
 
     ComputerEquation * left() const;
     ComputerEquation * right() const;
@@ -60,6 +63,8 @@ private:
 
     QString mParameterName;
     int mParameterIndex;
+
+    double mNumber;
 
     ComputerEquation *mLeft;
     ComputerEquation *mRight;

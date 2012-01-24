@@ -807,8 +807,8 @@ bool parsePrimaryExpression(ComputerParser *pParser,
     static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Pow;
 
     if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {
-        // We found an identifier which corresponds to the name of a parameter,
-        // so keep track of it and get the next token
+        // We are dealing with an identifier which corresponds to the name of a
+        // parameter, so keep track of it and get the next token
 
         QString parameterName = pParser->scanner()->token().string();
 
@@ -857,8 +857,16 @@ bool parsePrimaryExpression(ComputerParser *pParser,
             pExpression = new ComputerEquation(parameterName);
         }
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::IntegerValue) {
+        // We are dealing with an integer value, i.e. a number, so...
+
+        pExpression = new ComputerEquation(pParser->scanner()->token().string().toDouble());
+
         pParser->scanner()->getNextToken();
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::DoubleValue) {
+        // We are dealing with a double value, i.e. a number, so...
+
+        pExpression = new ComputerEquation(pParser->scanner()->token().string().toDouble());
+
         pParser->scanner()->getNextToken();
     } else if (oneArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
         pParser->scanner()->getNextToken();
