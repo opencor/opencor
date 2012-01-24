@@ -7,6 +7,10 @@
 
 //==============================================================================
 
+#include "computerequation.h"
+
+//==============================================================================
+
 #include <QMap>
 #include <QString>
 
@@ -57,6 +61,8 @@ public:
 
     int line() const;
     int column() const;
+
+    ComputerEquation::Type equationType() const;
 
     Symbol symbol() const;
     void setSymbol(const Symbol &pSymbol);

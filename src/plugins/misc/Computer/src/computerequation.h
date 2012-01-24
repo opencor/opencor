@@ -22,6 +22,9 @@ class ComputerEquation
 public:
     enum Type
     {
+        Unknown,   // Note: not used, but necessary for converting a
+                   //       ComputerScannerToken::Symbol to a
+                   //       ComputerEquation::Type...
         IndirectParameter,
         Equal
     };

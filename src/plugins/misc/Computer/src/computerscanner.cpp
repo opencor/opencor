@@ -72,6 +72,18 @@ int ComputerScannerToken::column() const
 
 //==============================================================================
 
+ComputerEquation::Type ComputerScannerToken::equationType() const
+{
+    // Return the token's equation type equivalent
+
+    switch (mSymbol) {
+    default:
+        return ComputerEquation::Unknown;
+    }
+}
+
+//==============================================================================
+
 ComputerScannerToken::Symbol ComputerScannerToken::symbol() const
 {
     // Return the token's symbol
