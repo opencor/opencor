@@ -458,10 +458,9 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         // The equation was successfully parsed, so add it to the list of
         // functions
 
-        ComputerEquation *lhsEquation = new ComputerEquation(arrayName, arrayIndex);
-
         pFunction->addEquation(new ComputerEquation(ComputerEquation::Equal,
-                                                    lhsEquation, rhsEquation));
+                                                    new ComputerEquation(arrayName, arrayIndex),
+                                                    rhsEquation));
     }
 
     // Everything went fine, so...
@@ -869,9 +868,14 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         pParser->scanner()->getNextToken();
     } else if (oneArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
+        // We are dealing with a one-argument function, so keep track of it (as
+        // an equation type) and get the next token
+
+        ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
+
         pParser->scanner()->getNextToken();
 
-        // The current token must "("
+        // The current token must be "("
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
             pParser->addError("'('");
@@ -885,13 +889,16 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         ComputerEquation *argument = 0;
 
-        if (!pParser->parseEquationRhs(pFunction, argument))
+        if (!pParser->parseEquationRhs(pFunction, argument)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
-            return false;
+            delete argument;
 
-        // The current token must ")"
+            return false;
+        }
+
+        // The current token must be ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
             pParser->addError("')'");
@@ -902,10 +909,19 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         }
 
         pParser->scanner()->getNextToken();
+
+        // The parsing of our one-argument function went fine, so...
+
+        pExpression = new ComputerEquation(equationType, argument);
     } else if (twoArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
+        // We are dealing with a two-argument function, so keep track of it (as
+        // an equation type) and get the next token
+
+        ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
+
         pParser->scanner()->getNextToken();
 
-        // The current token must "("
+        // The current token must be "("
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
             pParser->addError("'('");
@@ -919,13 +935,16 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         ComputerEquation *argumentOne = 0;
 
-        if (!pParser->parseEquationRhs(pFunction, argumentOne))
+        if (!pParser->parseEquationRhs(pFunction, argumentOne)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
-            return false;
+            delete argumentOne;
 
-        // The current token must ","
+            return false;
+        }
+
+        // The current token must be ","
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
             pParser->addError("','");
@@ -946,11 +965,12 @@ bool parsePrimaryExpression(ComputerParser *pParser,
             // so...
 
             delete argumentOne;
+            delete argumentTwo;
 
             return false;
         }
 
-        // The current token must ")"
+        // The current token must be ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
             pParser->addError("')'");
@@ -962,6 +982,11 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         }
 
         pParser->scanner()->getNextToken();
+
+        // The parsing of our two-argument function went fine, so...
+
+        pExpression = new ComputerEquation(equationType,
+                                           argumentOne, argumentTwo);
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningBracket) {
         pParser->scanner()->getNextToken();
 
@@ -969,11 +994,14 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         ComputerEquation *equation = 0;
 
-        if (!pParser->parseEquationRhs(pFunction, equation))
+        if (!pParser->parseEquationRhs(pFunction, equation)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
+            delete equation;
+
             return false;
+        }
 
         // The current token must be ")"
 
@@ -986,6 +1014,11 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         }
 
         pParser->scanner()->getNextToken();
+
+        // The parsing of the RHS of an equation surrounded by parentheses went
+        // fine, so...
+
+        pExpression = equation;
     } else {
         // We didn't get any of the above symbols, so...
 

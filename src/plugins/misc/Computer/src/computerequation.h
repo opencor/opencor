@@ -34,6 +34,10 @@ public:
 
         Times, Minus,
 
+        // Mathematical functions with 2 arguments
+
+        Pow,
+
         // Miscellaneous
 
         Equal, Piecewise, PiecewiseCases
@@ -41,7 +45,7 @@ public:
 
     explicit ComputerEquation(const Type &pType,
                               ComputerEquation *pLeft,
-                              ComputerEquation *pRight);
+                              ComputerEquation *pRight = 0);
     explicit ComputerEquation(const QString &pParameterName);
     explicit ComputerEquation(const QString &pParameterName,
                               const int &pParameterIndex);

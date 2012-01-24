@@ -81,6 +81,8 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Times;
     case Minus:
         return ComputerEquation::Minus;
+    case Pow:
+        return ComputerEquation::Pow;
     default:
 qDebug(QString(">>> Couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
 
