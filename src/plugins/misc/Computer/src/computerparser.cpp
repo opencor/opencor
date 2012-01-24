@@ -538,13 +538,7 @@ bool parseGenericExpression(ComputerParser *pParser,
 
         ComputerEquation *otherExpression = 0;
 
-        if (pParseGenericExpression(pParser, pFunction, otherExpression)) {
-            // The parsing of the generic expression went fine, so update our
-            // expression
-
-            pExpression = new ComputerEquation(equationType,
-                                               pExpression, otherExpression);
-        } else {
+        if (!pParseGenericExpression(pParser, pFunction, otherExpression)) {
             // Something went wrong with the parsing of the generic expression,
             // so...
 
@@ -552,6 +546,12 @@ bool parseGenericExpression(ComputerParser *pParser,
 
             return false;
         }
+
+        // The parsing of the generic expression went fine, so update our
+        // expression
+
+        pExpression = new ComputerEquation(equationType,
+                                           pExpression, otherExpression);
     }
 
     // Everything went fine, so...
@@ -757,14 +757,39 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction,
 
     static const ComputerScannerToken::Symbols unaryOperatorSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
                                                                                                       << ComputerScannerToken::Minus
-                                                                                                      << ComputerScannerToken::ExclamationMark;
+                                                                                                      << ComputerScannerToken::Not;
 
     // Check whether the current token's symbol is one of those we are after
 
-    while (unaryOperatorSymbols.contains(pParser->scanner()->token().symbol()))
-        // We got the right symbol, so carry on...
+    static const QChar Minus = QChar('-');
+    static const QChar Not = QChar('!');
+
+    QString unaryOperators = QString();
+
+    while (unaryOperatorSymbols.contains(pParser->scanner()->token().symbol())) {
+        // We got the right symbol, so keep track of it, but only if it isn't a
+        // "+", and then carry on...
+        // Note: we preprend (rather than append) since we later on want to use
+        //       the list in reverse order, so...
+
+        switch (pParser->scanner()->token().symbol()) {
+        case ComputerScannerToken::Minus:
+            unaryOperators = Minus+unaryOperators;
+
+            break;
+        case ComputerScannerToken::Not:
+            unaryOperators = Not+unaryOperators;
+
+            break;
+        }
 
         pParser->scanner()->getNextToken();
+    }
+
+    // Simplify our list of unary operators by cancelling any two consecutive
+    // "-"s
+
+    unaryOperators = unaryOperators.replace("--", "");
 
     // Parse the primary expression
 
@@ -773,6 +798,16 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction,
         // so...
 
         return false;
+
+    // The parsing of our unary expression went fine, so apply the unary
+    // operators, if any
+
+    if (!unaryOperators.isEmpty())
+        foreach (const QChar &unaryOperator, unaryOperators)
+            if (unaryOperator == Minus)
+                pExpression = new ComputerEquation(ComputerEquation::Minus, pExpression);
+            else
+                pExpression = new ComputerEquation(ComputerEquation::Not, pExpression);
 
     // Everything went fine, so...
 

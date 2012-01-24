@@ -22,7 +22,6 @@ static const QChar ClosingCurlyBracket  = QChar('}');
 static const QChar OpeningSquareBracket = QChar('[');
 static const QChar ClosingSquareBracket = QChar(']');
 static const QChar Equal                = QChar('=');
-static const QChar Not                  = QChar('!');
 static const QChar Comma                = QChar(',');
 static const QChar Colon                = QChar(':');
 static const QChar SemiColon            = QChar(';');
@@ -79,10 +78,14 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     switch (mSymbol) {
     case Times:
         return ComputerEquation::Times;
+    case Plus:
+        return ComputerEquation::Plus;
     case Minus:
         return ComputerEquation::Minus;
     case Pow:
         return ComputerEquation::Pow;
+    case Not:
+        return ComputerEquation::Not;
     default:
 qDebug(QString(">>> Couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
 
@@ -176,8 +179,6 @@ QString ComputerScannerToken::symbolAsString() const
         return "SemiColon";
     case QuestionMark:
         return "QuestionMark";
-    case ExclamationMark:
-        return "ExclamationMark";
     case Unknown:
         return "Unknown";
     case Identifier:
@@ -572,7 +573,7 @@ void ComputerScanner::getNextToken()
 
                 mToken.setSymbol(ComputerScannerToken::Equal);
             }
-        } else if (mChar == Not) {
+        } else if (mChar == ExclamationMark) {
             // Depending on the next character, the symbol may be a NotEqual
             // rather than a Not
 
@@ -603,10 +604,6 @@ void ComputerScanner::getNextToken()
             getNextChar();
         } else if (mChar == QuestionMark) {
             mToken.setSymbol(ComputerScannerToken::QuestionMark);
-
-            getNextChar();
-        } else if (mChar == ExclamationMark) {
-            mToken.setSymbol(ComputerScannerToken::ExclamationMark);
 
             getNextChar();
         } else if (mChar == InclusiveOr) {

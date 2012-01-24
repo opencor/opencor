@@ -32,7 +32,7 @@ public:
 
         // Mathematical operators
 
-        Times, Minus,
+        Times, Plus, Minus,
 
         // Mathematical functions with 2 arguments
 
@@ -40,7 +40,8 @@ public:
 
         // Miscellaneous
 
-        Equal, Piecewise, PiecewiseCases
+        Equal, Not,
+        Piecewise, PiecewiseCases
     };
 
     explicit ComputerEquation(const Type &pType,

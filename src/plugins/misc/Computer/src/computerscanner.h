@@ -50,7 +50,7 @@ public:
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
         OpeningSquareBracket, ClosingSquareBracket,
-        Equal, Not, Comma, Colon, SemiColon, QuestionMark, ExclamationMark,
+        Equal, Not, Comma, Colon, SemiColon, QuestionMark,
         Unknown, Identifier, IntegerValue, DoubleValue, Return, Eof
     };
 
