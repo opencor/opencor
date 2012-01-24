@@ -469,41 +469,54 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 
 //==============================================================================
 
-typedef bool (*ParseGenericExpression)(ComputerParser *, ComputerFunction *);
+typedef bool (*ParseGenericExpression)(ComputerParser *, ComputerFunction *,
+                                       ComputerEquation * &);
 
 bool parseLogicalOrExpression(ComputerParser *pParser,
-                              ComputerFunction *pFunction);
+                              ComputerFunction *pFunction,
+                              ComputerEquation * &pEquation);
 bool parseLogicalAndExpression(ComputerParser *pParser,
-                               ComputerFunction *pFunction);
+                               ComputerFunction *pFunction,
+                               ComputerEquation * &pEquation);
 bool parseInclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction *pFunction);
+                                ComputerFunction *pFunction,
+                                ComputerEquation * &pEquation);
 bool parseExclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction *pFunction);
+                                ComputerFunction *pFunction,
+                                ComputerEquation * &pEquation);
 bool parseAndExpression(ComputerParser *pParser,
-                        ComputerFunction *pFunction);
+                        ComputerFunction *pFunction,
+                        ComputerEquation * &pEquation);
 bool parseEqualityExpression(ComputerParser *pParser,
-                             ComputerFunction *pFunction);
+                             ComputerFunction *pFunction,
+                             ComputerEquation * &pEquation);
 bool parseRelationalExpression(ComputerParser *pParser,
-                               ComputerFunction *pFunction);
+                               ComputerFunction *pFunction,
+                               ComputerEquation * &pEquation);
 bool parseAdditiveExpression(ComputerParser *pParser,
-                             ComputerFunction *pFunction);
+                             ComputerFunction *pFunction,
+                             ComputerEquation * &pEquation);
 bool parseMultiplicativeExpression(ComputerParser *pParser,
-                                   ComputerFunction *pFunction);
+                                   ComputerFunction *pFunction,
+                                   ComputerEquation * &pEquation);
 bool parseUnaryExpression(ComputerParser *pParser,
-                          ComputerFunction *pFunction);
+                          ComputerFunction *pFunction,
+                          ComputerEquation * &pEquation);
 bool parsePrimaryExpression(ComputerParser *pParser,
-                            ComputerFunction *pFunction);
+                            ComputerFunction *pFunction,
+                            ComputerEquation * &pEquation);
 
 //==============================================================================
 
 bool parseGenericExpression(ComputerParser *pParser,
                             ComputerFunction *pFunction,
+                            ComputerEquation * &pEquation,
                             const ComputerScannerToken::Symbols &pSymbols,
                             ParseGenericExpression pParseGenericExpression)
 {
     // Parse the generic expression
 
-    if (!pParseGenericExpression(pParser, pFunction))
+    if (!pParseGenericExpression(pParser, pFunction, pEquation))
         // Something went wrong with the parsing of the generic expression,
         // so...
 
@@ -519,7 +532,7 @@ bool parseGenericExpression(ComputerParser *pParser,
 
         // Parse the generic expression
 
-        if (!pParseGenericExpression(pParser, pFunction))
+        if (!pParseGenericExpression(pParser, pFunction, pEquation))
             // Something went wrong with the parsing of the generic expression,
             // so...
 
@@ -534,13 +547,19 @@ bool parseGenericExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseLogicalOrExpression(ComputerParser *pParser,
-                              ComputerFunction *pFunction)
+                              ComputerFunction *pFunction,
+                              ComputerEquation * &pEquation)
 {
     // The EBNF grammar of a logical Or expression is as follows:
     //
     //   LogicalOrExpression = [ LogicalOrExpression "||" ] LogicalAndExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction,
+    // This is a top parsing function, so we must initialise pRhsEquation, just
+    // in case something goes wrong with the parsing...
+
+    pEquation = 0;
+
+    if (!parseGenericExpression(pParser, pFunction, pEquation,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalOr,
                                 parseLogicalAndExpression))
         return false;
@@ -553,13 +572,14 @@ bool parseLogicalOrExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseLogicalAndExpression(ComputerParser *pParser,
-                               ComputerFunction *pFunction)
+                               ComputerFunction *pFunction,
+                               ComputerEquation * &pEquation)
 {
     // The EBNF grammar of a logical And expression is as follows:
     //
     //   LogicalAndExpression = [ LogicalAndExpression "&&" ] InclusiveOrExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction,
+    if (!parseGenericExpression(pParser, pFunction, pEquation,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalAnd,
                                 parseInclusiveOrExpression))
         return false;
@@ -572,13 +592,14 @@ bool parseLogicalAndExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseInclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction *pFunction)
+                                ComputerFunction *pFunction,
+                                ComputerEquation * &pEquation)
 {
     // The EBNF grammar of an inclusive Or expression is as follows:
     //
     //   InclusiveOrExpression = [ InclusiveOrExpression "|" ] ExclusiveOrExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction,
+    if (!parseGenericExpression(pParser, pFunction, pEquation,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::InclusiveOr,
                                 parseExclusiveOrExpression))
         return false;
@@ -591,13 +612,14 @@ bool parseInclusiveOrExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseExclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction *pFunction)
+                                ComputerFunction *pFunction,
+                                ComputerEquation * &pEquation)
 {
     // The EBNF grammar of an exclusive Or expression is as follows:
     //
     //   ExclusiveOrExpression = [ ExclusiveOrExpression "^" ] AndExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction,
+    if (!parseGenericExpression(pParser, pFunction, pEquation,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::ExclusiveOr,
                                 parseAndExpression))
         return false;
@@ -609,13 +631,14 @@ bool parseExclusiveOrExpression(ComputerParser *pParser,
 
 //==============================================================================
 
-bool parseAndExpression(ComputerParser *pParser, ComputerFunction *pFunction)
+bool parseAndExpression(ComputerParser *pParser, ComputerFunction *pFunction,
+                        ComputerEquation * &pEquation)
 {
     // The EBNF grammar of an And expression is as follows:
     //
     //   AndExpression = [ AndExpression "&" EqualityExpression ] ;
 
-    if (!parseGenericExpression(pParser, pFunction,
+    if (!parseGenericExpression(pParser, pFunction, pEquation,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::And,
                                 parseEqualityExpression))
         return false;
@@ -628,13 +651,14 @@ bool parseAndExpression(ComputerParser *pParser, ComputerFunction *pFunction)
 //==============================================================================
 
 bool parseEqualityExpression(ComputerParser *pParser,
-                             ComputerFunction *pFunction)
+                             ComputerFunction *pFunction,
+                             ComputerEquation * &pEquation)
 {
     // The EBNF grammar of an equality expression is as follows:
     //
     //   EqualityExpression = [ EqualityExpression ( "==" | "!=" ) ] RelationalExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction,
+    if (!parseGenericExpression(pParser, pFunction, pEquation,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::EqualEqual
                                                                 << ComputerScannerToken::NotEqual,
                                 parseRelationalExpression))
@@ -648,13 +672,14 @@ bool parseEqualityExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseRelationalExpression(ComputerParser *pParser,
-                               ComputerFunction *pFunction)
+                               ComputerFunction *pFunction,
+                               ComputerEquation * &pEquation)
 {
     // The EBNF grammar of a relational expression is as follows:
     //
     //   RelationalExpression = [ RelationalExpression ( "<" | ">" | "<=" | ">=" ) ] AdditiveExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction,
+    if (!parseGenericExpression(pParser, pFunction, pEquation,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LowerThan
                                                                 << ComputerScannerToken::GreaterThan
                                                                 << ComputerScannerToken::LowerOrEqualThan
@@ -670,13 +695,14 @@ bool parseRelationalExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseAdditiveExpression(ComputerParser *pParser,
-                             ComputerFunction *pFunction)
+                             ComputerFunction *pFunction,
+                             ComputerEquation * &pEquation)
 {
     // The EBNF grammar of an additive expression is as follows:
     //
     //   AdditiveExpression = [ AdditiveExpression ( "+" | "-" ) ] MultiplicativeExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction,
+    if (!parseGenericExpression(pParser, pFunction, pEquation,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
                                                                 << ComputerScannerToken::Minus,
                                 parseMultiplicativeExpression))
@@ -690,13 +716,14 @@ bool parseAdditiveExpression(ComputerParser *pParser,
 //==============================================================================
 
 bool parseMultiplicativeExpression(ComputerParser *pParser,
-                                   ComputerFunction *pFunction)
+                                   ComputerFunction *pFunction,
+                                   ComputerEquation * &pEquation)
 {
     // The EBNF grammar of a multiplicative expression is as follows:
     //
     //   MultiplicativeExpression = [ MultiplicativeExpression ( "*" | "/" | "%" ) ] UnaryExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction,
+    if (!parseGenericExpression(pParser, pFunction, pEquation,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::Times
                                                                 << ComputerScannerToken::Divide
                                                                 << ComputerScannerToken::Percentage,
@@ -710,7 +737,8 @@ bool parseMultiplicativeExpression(ComputerParser *pParser,
 
 //==============================================================================
 
-bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction)
+bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction,
+                          ComputerEquation * &pEquation)
 {
     // The EBNF grammar of a unary expression is as follows:
     //
@@ -730,7 +758,7 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction)
 
     // Parse the primary expression
 
-    if (!parsePrimaryExpression(pParser, pFunction))
+    if (!parsePrimaryExpression(pParser, pFunction, pEquation))
         // Something went wrong with the parsing of the primary expression,
         // so...
 
@@ -744,7 +772,8 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction)
 //==============================================================================
 
 bool parsePrimaryExpression(ComputerParser *pParser,
-                            ComputerFunction *pFunction)
+                            ComputerFunction *pFunction,
+                            ComputerEquation * &pEquation)
 {
     // The EBNF grammar of a primary expression is as follows:
     //
@@ -944,7 +973,9 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
 
     // Parse a logical Or expression
 
-    if (!parseLogicalOrExpression(this, pFunction))
+    ComputerEquation *mainOrConditionEquation;
+
+    if (!parseLogicalOrExpression(this, pFunction, mainOrConditionEquation))
         // Something went wrong with the parsing of a logical Or expression,
         // so...
 
@@ -961,17 +992,21 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
 
         ComputerEquation *trueCaseEquation;
 
-        if (!parseEquationRhs(pFunction, trueCaseEquation))
+        if (!parseEquationRhs(pFunction, trueCaseEquation)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
+            delete mainOrConditionEquation;
+
             return false;
+        }
 
         // The current token must be ":"
 
         if (mScanner->token().symbol() != ComputerScannerToken::Colon) {
             addError("':'");
 
+            delete mainOrConditionEquation;
             delete trueCaseEquation;
 
             return false;
@@ -987,6 +1022,7 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
+            delete mainOrConditionEquation;
             delete trueCaseEquation;
 
             return false;
