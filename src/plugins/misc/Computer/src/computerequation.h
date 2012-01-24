@@ -36,7 +36,7 @@ public:
 
         // Miscellaneous
 
-        Equal
+        Equal, Piecewise, PiecewiseCases
     };
 
     explicit ComputerEquation(const Type &pType,
