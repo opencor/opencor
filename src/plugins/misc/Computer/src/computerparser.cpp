@@ -528,7 +528,10 @@ bool parseGenericExpression(ComputerParser *pParser,
     // if so parse the generic expression and start over
 
     while (pSymbols.contains(pParser->scanner()->token().symbol())) {
-        // We got the right symbol
+        // We got the right symbol, so keep track of it (as an equation type)
+        // and get the next token
+
+        ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
 
         pParser->scanner()->getNextToken();
 
@@ -540,7 +543,7 @@ bool parseGenericExpression(ComputerParser *pParser,
             // The parsing of the generic expression went fine, so update our
             // expression
 
-            pExpression = new ComputerEquation(pParser->scanner()->token().equationType(),
+            pExpression = new ComputerEquation(equationType,
                                                pExpression, otherExpression);
         } else {
             // Something went wrong with the parsing of the generic expression,
