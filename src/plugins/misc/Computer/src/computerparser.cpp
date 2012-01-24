@@ -512,13 +512,13 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
 bool parseGenericExpression(ComputerParser *pParser,
                             ComputerFunction *pFunction,
-                            ComputerEquation * &pExression,
+                            ComputerEquation * &pExpression,
                             const ComputerScannerToken::Symbols &pSymbols,
                             ParseGenericExpression pParseGenericExpression)
 {
     // Parse the generic expression
 
-    if (!pParseGenericExpression(pParser, pFunction, pExression))
+    if (!pParseGenericExpression(pParser, pFunction, pExpression))
         // Something went wrong with the parsing of the generic expression,
         // so...
 
