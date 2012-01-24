@@ -77,6 +77,10 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     // Return the token's equation type equivalent
 
     switch (mSymbol) {
+    case Times:
+        return ComputerEquation::Times;
+    case Minus:
+        return ComputerEquation::Minus;
     default:
 qDebug(QString(">>> Couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
 
@@ -172,8 +176,6 @@ QString ComputerScannerToken::symbolAsString() const
         return "QuestionMark";
     case ExclamationMark:
         return "ExclamationMark";
-    case Return:
-        return "Return";
     case Unknown:
         return "Unknown";
     case Identifier:
@@ -182,6 +184,8 @@ QString ComputerScannerToken::symbolAsString() const
         return "IntegerValue";
     case DoubleValue:
         return "DoubleValue";
+    case Return:
+        return "Return";
     case Eof:
         return "Eof";
     default:

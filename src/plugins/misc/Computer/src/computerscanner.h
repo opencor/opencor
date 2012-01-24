@@ -51,8 +51,7 @@ public:
         OpeningCurlyBracket, ClosingCurlyBracket,
         OpeningSquareBracket, ClosingSquareBracket,
         Equal, Not, Comma, Colon, SemiColon, QuestionMark, ExclamationMark,
-        Return,
-        Unknown, Identifier, IntegerValue, DoubleValue, Eof
+        Unknown, Identifier, IntegerValue, DoubleValue, Return, Eof
     };
 
     typedef QList<Symbol> Symbols;

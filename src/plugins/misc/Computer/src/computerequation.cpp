@@ -24,6 +24,17 @@ ComputerEquation::ComputerEquation(const Type &pType,
 
 //==============================================================================
 
+ComputerEquation::ComputerEquation(const QString &pParameterName) :
+    mType(DirectParameter),
+    mParameterName(pParameterName),
+    mParameterIndex(-1),
+    mLeft(0),
+    mRight(0)
+{
+}
+
+//==============================================================================
+
 ComputerEquation::ComputerEquation(const QString &pParameterName,
                                    const int &pParameterIndex) :
     mType(IndirectParameter),

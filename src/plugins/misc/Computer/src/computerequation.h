@@ -25,13 +25,24 @@ public:
         Unknown,   // Note: not used, but necessary for converting a
                    //       ComputerScannerToken::Symbol to a
                    //       ComputerEquation::Type...
-        IndirectParameter,
+
+        // Type of parameter
+
+        DirectParameter, IndirectParameter,
+
+        // Mathematical operators
+
+        Times, Minus,
+
+        // Miscellaneous
+
         Equal
     };
 
     explicit ComputerEquation(const Type &pType,
                               ComputerEquation *pLeft,
                               ComputerEquation *pRight);
+    explicit ComputerEquation(const QString &pParameterName);
     explicit ComputerEquation(const QString &pParameterName,
                               const int &pParameterIndex);
     ~ComputerEquation();
