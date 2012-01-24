@@ -78,6 +78,8 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
 
     switch (mSymbol) {
     default:
+qDebug(QString(">>> Couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
+
         return ComputerEquation::Unknown;
     }
 }
@@ -89,6 +91,102 @@ ComputerScannerToken::Symbol ComputerScannerToken::symbol() const
     // Return the token's symbol
 
     return mSymbol;
+}
+
+//==============================================================================
+
+QString ComputerScannerToken::symbolAsString() const
+{
+    // Return the token's symbol as a string
+    // Note: this method is mainly used for debugging purposes, though who knows
+    //       it may someday prove useful in some other cases...
+
+    switch (mSymbol) {
+    case Void:
+        return "Void";
+    case Double:
+        return "Double";
+    case Times:
+        return "Times";
+    case Divide:
+        return "Divide";
+    case Percentage:
+        return "Percentage";
+    case Plus:
+        return "Plus";
+    case Minus:
+        return "Minus";
+    case InclusiveOr:
+        return "InclusiveOr";
+    case ExclusiveOr:
+        return "ExclusiveOr";
+    case LogicalOr:
+        return "LogicalOr";
+    case And:
+        return "And";
+    case LogicalAnd:
+        return "LogicalAnd";
+    case EqualEqual:
+        return "EqualEqual";
+    case NotEqual:
+        return "NotEqual";
+    case LowerThan:
+        return "LowerThan";
+    case GreaterThan:
+        return "GreaterThan";
+    case LowerOrEqualThan:
+        return "LowerOrEqualThan";
+    case GreaterOrEqualThan:
+        return "GreaterOrEqualThan";
+    case Sin:
+        return "Sin";
+    case Cos:
+        return "Cos";
+    case Tan:
+        return "Tan";
+    case Pow:
+        return "Pow";
+    case OpeningBracket:
+        return "OpeningBracket";
+    case ClosingBracket:
+        return "ClosingBracket";
+    case OpeningCurlyBracket:
+        return "OpeningCurlyBracket";
+    case ClosingCurlyBracket:
+        return "ClosingCurlyBracket";
+    case OpeningSquareBracket:
+        return "OpeningSquareBracket";
+    case ClosingSquareBracket:
+        return "ClosingSquareBracket";
+    case Equal:
+        return "Equal";
+    case Not:
+        return "Not";
+    case Comma:
+        return "Comma";
+    case Colon:
+        return "Colon";
+    case SemiColon:
+        return "SemiColon";
+    case QuestionMark:
+        return "QuestionMark";
+    case ExclamationMark:
+        return "ExclamationMark";
+    case Return:
+        return "Return";
+    case Unknown:
+        return "Unknown";
+    case Identifier:
+        return "Identifier";
+    case IntegerValue:
+        return "IntegerValue";
+    case DoubleValue:
+        return "DoubleValue";
+    case Eof:
+        return "Eof";
+    default:
+        return "???";
+    }
 }
 
 //==============================================================================

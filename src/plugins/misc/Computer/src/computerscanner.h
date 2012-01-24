@@ -65,6 +65,7 @@ public:
     ComputerEquation::Type equationType() const;
 
     Symbol symbol() const;
+    QString symbolAsString() const;
     void setSymbol(const Symbol &pSymbol);
 
     QString string() const;
