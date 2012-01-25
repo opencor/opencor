@@ -6,6 +6,10 @@
 
 //==============================================================================
 
+#include <math.h>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Computer {
 
@@ -201,7 +205,8 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
 
         if (   (pNode->left()->type() == Number)
             && (pNode->right()->type() == Number))
-            resetNodeAsNumber(pNode, pNode->left()->number()*pNode->right()->number());
+            resetNodeAsNumber(pNode,
+                              pNode->left()->number()*pNode->right()->number());
 
         break;
     case Divide:
@@ -210,7 +215,8 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
 
         if (   (pNode->left()->type() == Number)
             && (pNode->right()->type() == Number))
-            resetNodeAsNumber(pNode, pNode->left()->number()/pNode->right()->number());
+            resetNodeAsNumber(pNode,
+                              pNode->left()->number()/pNode->right()->number());
 
         break;
     case Plus:
@@ -222,7 +228,8 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             && pNode->right() && (pNode->right()->type() == Number))
             // Normal addition, so...
 
-            resetNodeAsNumber(pNode, pNode->left()->number()+pNode->right()->number());
+            resetNodeAsNumber(pNode,
+                              pNode->left()->number()+pNode->right()->number());
         else if ((pNode->left()->type() == Number) && !pNode->right())
             // Unary "+", so...
 
@@ -238,11 +245,24 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             && pNode->right() && (pNode->right()->type() == Number))
             // Normal subtraction, so...
 
-            resetNodeAsNumber(pNode, pNode->left()->number()-pNode->right()->number());
+            resetNodeAsNumber(pNode,
+                              pNode->left()->number()-pNode->right()->number());
         else if ((pNode->left()->type() == Number) && !pNode->right())
             // Unary "-", so...
 
             resetNodeAsNumber(pNode, -pNode->left()->number());
+
+        break;
+    case Pow:
+        // Simplification of the power function requires requires both the left
+        // and right nodes to be numbers
+        // Note: we could support further simplifications (well, optimisations)
+        //       such as pow(x, 2) = x*x, but well... maybe someday...
+
+        if (   (pNode->left()->type() == Number)
+            && (pNode->right()->type() == Number))
+            resetNodeAsNumber(pNode,
+                              pow(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Not:
