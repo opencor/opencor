@@ -311,7 +311,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 //                handleErrors(computerEngine, "stateInformation");
 //            }
 
-computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = 3*5;\n}");
+computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = 3*5+5/9-7;\n}");
 handleErrors(computerEngine, "test");
 
             // Output the contents of our computer engine's module so far

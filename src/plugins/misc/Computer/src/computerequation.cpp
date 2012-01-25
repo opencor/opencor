@@ -206,6 +206,39 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             resetNodeAsNumber(pNode, pNode->left()->number()*pNode->right()->number());
 
         break;
+    case Divide:
+        // Simplification of a multiplication requires both the left and right
+        // nodes to be numbers
+
+        if (   (pNode->left()->type() == Number)
+            && (pNode->right()->type() == Number))
+            // We can simplify, so...
+
+            resetNodeAsNumber(pNode, pNode->left()->number()/pNode->right()->number());
+
+        break;
+    case Plus:
+        // Simplification of a multiplication requires both the left and right
+        // nodes to be numbers
+
+        if (   (pNode->left()->type() == Number)
+            && (pNode->right()->type() == Number))
+            // We can simplify, so...
+
+            resetNodeAsNumber(pNode, pNode->left()->number()+pNode->right()->number());
+
+        break;
+    case Minus:
+        // Simplification of a multiplication requires both the left and right
+        // nodes to be numbers
+
+        if (   (pNode->left()->type() == Number)
+            && (pNode->right()->type() == Number))
+            // We can simplify, so...
+
+            resetNodeAsNumber(pNode, pNode->left()->number()-pNode->right()->number());
+
+        break;
     }
 }
 
