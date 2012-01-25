@@ -62,6 +62,10 @@ private:
     ComputerExternalFunctions mExternalFunctions;
 
     llvm::Function * compileFunction(ComputerFunction *pFunction);
+    void compileEquation(ComputerEquation *pEquation,
+                         QString &pAssemblyCode);
+    int compileRhsEquation(ComputerEquation *pRhsEquation,
+                           QString &pAssemblyCode);
 };
 
 //==============================================================================

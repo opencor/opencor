@@ -113,20 +113,20 @@ void ComputerFunction::addEquation(ComputerEquation *pEquation)
 
 //==============================================================================
 
-ComputerEquation * ComputerFunction::returnValue()
+ComputerEquation * ComputerFunction::returnEquation()
 {
-    // Return the function's return value
+    // Return the function's return equation
 
-    return mReturnValue;
+    return mReturnEquation;
 }
 
 //==============================================================================
 
-void ComputerFunction::setReturnValue(ComputerEquation *pReturnValue)
+void ComputerFunction::setReturnEquation(ComputerEquation *pReturnEquation)
 {
-    // Set the function's return value
+    // Set the function's return equation
 
-    mReturnValue = pReturnValue;
+    mReturnEquation = pReturnEquation;
 }
 
 //==============================================================================

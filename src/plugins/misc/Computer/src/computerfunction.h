@@ -41,8 +41,8 @@ public:
     ComputerEquations equations() const;
     void addEquation(ComputerEquation *pEquation);
 
-    ComputerEquation * returnValue();
-    void setReturnValue(ComputerEquation *pReturnValue);
+    ComputerEquation * returnEquation();
+    void setReturnEquation(ComputerEquation *pReturnEquation);
 
     ComputerExternalFunctions externalFunctions() const;
     bool addExternalFunction(const ComputerExternalFunction &pExternalFunction);
@@ -52,7 +52,7 @@ private:
     QString mName;
     ComputerParameters mParameters;
     ComputerEquations mEquations;
-    ComputerEquation * mReturnValue;
+    ComputerEquation * mReturnEquation;
 
     ComputerExternalFunctions mExternalFunctions;
 };

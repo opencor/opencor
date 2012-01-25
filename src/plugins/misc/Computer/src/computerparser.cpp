@@ -1198,6 +1198,10 @@ bool ComputerParser::parseReturn(ComputerFunction *pFunction)
 
     mScanner->getNextToken();
 
+    // The parsing of our return statement went fine, so...
+
+    pFunction->setReturnEquation(equation);
+
     // Everything went fine, so...
 
     return true;

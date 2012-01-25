@@ -130,7 +130,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
                 qDebug(QString("    - %1 [Pointer: %2]").arg(parameter.name(), parameter.pointer()?"Yes":"No").toLatin1().constData());
 
 //        if (function->type() == ComputerFunction::Double)
-//            qDebug(QString("   Return value: %1").arg(function->returnValue()).toLatin1().constData());
+//            qDebug(QString("   Return value: %1").arg(function->returnEquation()).toLatin1().constData());
 
         // The function was properly parsed, so check that we don't already have
         // a function with the same name in our module
@@ -249,17 +249,43 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
     // Mathematical statements
 
-//---GRY--- TO BE DONE...
+    foreach (ComputerEquation *equation, pFunction->equations())
+        compileEquation(equation, assemblyCode);
 
     // Return statement
 
-    if (pFunction->type() == ComputerFunction::Void)
+    if (pFunction->type() == ComputerFunction::Void) {
+        // We are dealing with a void function, so...
+
         assemblyCode += indent+"ret void\n";
-    else
-/*---GRY--- TO BE DONE...
-        assemblyCode += indent+"ret double "+pFunction->returnValue()+"\n";
-*/
-        assemblyCode += indent+"ret double 0\n";
+    } else {
+        // We are dealing with a double function, so check whether the return
+        // equation is, in fact, a number or a 'proper' equation. If it is
+        // 'only' a number, then return it as such, otherwise compile the return
+        // equation as if it was the RHS of an equation and return its result
+
+        if (pFunction->returnEquation()->type() == ComputerEquation::Number) {
+            // We are dealing with a number as a retun equation, so...
+
+            double returnValue = pFunction->returnEquation()->number();
+            QString returnValueAsString =  QString::number(returnValue)
+                                          +QString((returnValue == qRound(returnValue))?".0":"");
+            // Note: if the return value is an integer, then we must append ".0"
+            //       otherwise LLVM won't be able to parse the assembly code,
+            //       so...
+
+            assemblyCode += indent+"ret double "+returnValueAsString+"\n";
+        } else {
+            // We are dealing with a 'proper' return equation, so compile it as
+            // if it was the RHS of an equation
+
+            int returnEquationIndex = compileRhsEquation(pFunction->returnEquation(), assemblyCode);
+
+            // Return the result of the return equation
+
+            assemblyCode += indent+"ret double %%"+QString::number(returnEquationIndex)+"\n";
+        }
+    }
 
     // End the function
 
@@ -349,6 +375,24 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
         return 0;
     }
+}
+
+//==============================================================================
+
+void ComputerEngine::compileEquation(ComputerEquation *pEquation,
+                                     QString &pAssemblyCode)
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+int ComputerEngine::compileRhsEquation(ComputerEquation *pRhsEquation,
+                                        QString &pAssemblyCode)
+{
+//---GRY--- TO BE DONE...
+
+    return 0;
 }
 
 //==============================================================================
