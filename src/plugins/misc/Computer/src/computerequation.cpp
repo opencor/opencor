@@ -201,42 +201,56 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
 
         if (   (pNode->left()->type() == Number)
             && (pNode->right()->type() == Number))
-            // We can simplify, so...
-
             resetNodeAsNumber(pNode, pNode->left()->number()*pNode->right()->number());
 
         break;
     case Divide:
-        // Simplification of a multiplication requires both the left and right
-        // nodes to be numbers
+        // Simplification of a division requires both the left and right nodes
+        // to be numbers
 
         if (   (pNode->left()->type() == Number)
             && (pNode->right()->type() == Number))
-            // We can simplify, so...
-
             resetNodeAsNumber(pNode, pNode->left()->number()/pNode->right()->number());
 
         break;
     case Plus:
-        // Simplification of a multiplication requires both the left and right
-        // nodes to be numbers
+        // Simplification of a normal addition requires both the left and right
+        // nodes to be numbers while simplification of a unary "+" requires the
+        // left node to be a number
 
         if (   (pNode->left()->type() == Number)
-            && (pNode->right()->type() == Number))
-            // We can simplify, so...
+            && pNode->right() && (pNode->right()->type() == Number))
+            // Normal addition, so...
 
             resetNodeAsNumber(pNode, pNode->left()->number()+pNode->right()->number());
+        else if ((pNode->left()->type() == Number) && !pNode->right())
+            // Unary "+", so...
+
+            resetNodeAsNumber(pNode, pNode->left()->number());
 
         break;
     case Minus:
-        // Simplification of a multiplication requires both the left and right
-        // nodes to be numbers
+        // Simplification of a normal subtraction requires both the left and
+        // right nodes to be numbers while simplification of a unary "-"
+        // requires the left node to be a number
 
         if (   (pNode->left()->type() == Number)
-            && (pNode->right()->type() == Number))
-            // We can simplify, so...
+            && pNode->right() && (pNode->right()->type() == Number))
+            // Normal subtraction, so...
 
             resetNodeAsNumber(pNode, pNode->left()->number()-pNode->right()->number());
+        else if ((pNode->left()->type() == Number) && !pNode->right())
+            // Unary "-", so...
+
+            resetNodeAsNumber(pNode, -pNode->left()->number());
+
+        break;
+    case Not:
+        // Simplification of a unary "!" requires the left node to be a number
+        // (or a boolean stored as a number)
+
+        if ((pNode->left()->type() == Number) && !pNode->right())
+            resetNodeAsNumber(pNode, pNode->left()->number()?0:1);
 
         break;
     }
