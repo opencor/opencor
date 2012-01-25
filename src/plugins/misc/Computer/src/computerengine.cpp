@@ -140,11 +140,27 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 
 //==============================================================================
 
+static QString Indent = QString("  ");
+
+//==============================================================================
+
+QString ComputerEngine::numberAsString(const double &pNumber)
+{
+    // Return a number as a string
+    // Note: if the number is effectively an integer, then we must append ".0"
+    //       to it otherwise LLVM won't be able to parse the assembly code,
+    //       so...
+
+    return  QString::number(pNumber)
+           +QString((pNumber == qRound(pNumber))?".0":"");
+}
+
+//==============================================================================
+
 llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 {
     // Generate some LLVM assembly code based on the contents of the function
 
-    static QString indent = QString("  ");
     QString assemblyCode = QString();
 
     // Declare any external function which we need and which are not already
@@ -227,15 +243,17 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
     // Mathematical statements
 
+    int assemblyCodeIndex = 0;
+
     foreach (ComputerEquation *equation, pFunction->equations())
-        compileEquation(equation, assemblyCode);
+        compileEquation(equation, assemblyCode, assemblyCodeIndex);
 
     // Return statement
 
     if (pFunction->type() == ComputerFunction::Void) {
         // We are dealing with a void function, so...
 
-        assemblyCode += indent+"ret void\n";
+        assemblyCode += Indent+"ret void\n";
     } else {
         // We are dealing with a double function, so check whether the return
         // equation is, in fact, a number or a 'proper' equation. If it is
@@ -243,25 +261,18 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
         // equation as if it was the RHS of an equation and return its result
 
         if (pFunction->returnEquation()->type() == ComputerEquation::Number) {
-            // We are dealing with a number as a retun equation, so...
+            // We are dealing with a number as a return equation, so...
 
-            double returnValue = pFunction->returnEquation()->number();
-            QString returnValueAsString =  QString::number(returnValue)
-                                          +QString((returnValue == qRound(returnValue))?".0":"");
-            // Note: if the return value is an integer, then we must append ".0"
-            //       otherwise LLVM won't be able to parse the assembly code,
-            //       so...
-
-            assemblyCode += indent+"ret double "+returnValueAsString+"\n";
+            assemblyCode += Indent+"ret double "+numberAsString(pFunction->returnEquation()->number())+"\n";
         } else {
             // We are dealing with a 'proper' return equation, so compile it as
             // if it was the RHS of an equation
 
-            int returnEquationIndex = compileRhsEquation(pFunction->returnEquation(), assemblyCode);
+            int returnEquationIndex = compileRhsEquation(pFunction->returnEquation(), assemblyCode, assemblyCodeIndex);
 
             // Return the result of the return equation
 
-            assemblyCode += indent+"ret double %%"+QString::number(returnEquationIndex)+"\n";
+            assemblyCode += Indent+"ret double %%"+QString::number(returnEquationIndex)+"\n";
         }
     }
 
@@ -360,11 +371,67 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
 //==============================================================================
 
-void ComputerEngine::compileEquation(ComputerEquation *pEquation,
-                                     QString &pAssemblyCode)
+void ComputerEngine::assignEquation(ComputerEquation *pIndirectParameter,
+                                    ComputerEquation *pRhsEquation,
+                                    QString &pAssemblyCode,
+                                    int &pAssemblyCodeIndex)
 {
-//---GRY--- TO BE DONE...
+    // Keep track of the RHS equation assembly code index
 
+    int rhsEquationAssemblyCodeIndex = pAssemblyCodeIndex;
+
+    // Retrieve, for the indirect parameter and if necessary, a pointer to the
+    // correct entry in the array of doubles
+
+    int indirectParameterAssemblyCodeIndex = 0;
+
+    if (pIndirectParameter->parameterIndex()) {
+        // We are not dealing with the first entry in the array of doubles,
+        // so...
+
+        indirectParameterAssemblyCodeIndex = ++pAssemblyCodeIndex;
+
+        pAssemblyCode += Indent+"%%"+QString::number(indirectParameterAssemblyCodeIndex)+" = getelementptr inbounds double* %%"+pIndirectParameter->parameterName()+", i64 "+QString::number(pIndirectParameter->parameterIndex())+"\n";
+    }
+
+    // Store the RHS of the equation...
+    // Note: we try optimise this by checking whether the RHS of the equation is
+    //       a number...
+
+    pAssemblyCode += Indent+"store double ";
+
+    if (pRhsEquation->type() == ComputerEquation::Number)
+        // We are dealing with a number, so...
+
+        pAssemblyCode += numberAsString(pRhsEquation->number());
+    else
+        // We are not dealing with a number, but a 'proper' RHS equation, so...
+//---GRY--- THIS PART NEEDS TO BE TESTED, BUT FOR THIS WE NEED compileRhsEquation TO BE COMPLETED...
+
+        pAssemblyCode += "%%"+QString::number(rhsEquationAssemblyCodeIndex);
+
+    // ... to the LHS of the equation
+
+    pAssemblyCode += ", double* %%";
+
+    if (indirectParameterAssemblyCodeIndex)
+        // We got a pointer to the correct entry in the array of doubles, so...
+
+        pAssemblyCode += QString::number(indirectParameterAssemblyCodeIndex);
+    else
+        // We are dealing with the first entry in the array of doubles, so...
+
+        pAssemblyCode += pIndirectParameter->parameterName();
+
+    pAssemblyCode += "\n";
+}
+
+//==============================================================================
+
+void ComputerEngine::compileEquation(ComputerEquation *pEquation,
+                                     QString &pAssemblyCode,
+                                     int &pAssemblyCodeIndex)
+{
     // An equation must consist of an assignment, so just make sure that it is
     // the case
 
@@ -379,17 +446,30 @@ void ComputerEngine::compileEquation(ComputerEquation *pEquation,
 
     equation->right()->simplify();
 
+    // Compile the RHS of the equation
+
+    compileRhsEquation(equation->right(), pAssemblyCode, pAssemblyCodeIndex);
+
+    // Assign the result of the RHS of the equation to the indirect parameter
+    // which information can be found the LHS of the equation
+
+    assignEquation(equation->left(), equation->right(),
+                   pAssemblyCode, pAssemblyCodeIndex);
+
+    // We are now done with the copy of the equation, so...
+
     delete equation;
 }
 
 //==============================================================================
 
 int ComputerEngine::compileRhsEquation(ComputerEquation *pRhsEquation,
-                                        QString &pAssemblyCode)
+                                        QString &pAssemblyCode,
+                                       int &pAssemblyCodeIndex)
 {
 //---GRY--- TO BE DONE...
 
-    return 0;
+    return pAssemblyCodeIndex;
 }
 
 //==============================================================================

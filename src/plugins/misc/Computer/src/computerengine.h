@@ -61,11 +61,17 @@ private:
 
     ComputerExternalFunctions mExternalFunctions;
 
+    QString numberAsString(const double &pNumber);
+
     llvm::Function * compileFunction(ComputerFunction *pFunction);
+
+    void assignEquation(ComputerEquation *pIndirectParameter,
+                        ComputerEquation *pRhsEquation,
+                        QString &pAssemblyCode, int &pAssemblyCodeIndex);
     void compileEquation(ComputerEquation *pEquation,
-                         QString &pAssemblyCode);
+                         QString &pAssemblyCode, int &pAssemblyCodeIndex);
     int compileRhsEquation(ComputerEquation *pRhsEquation,
-                           QString &pAssemblyCode);
+                           QString &pAssemblyCode, int &pAssemblyCodeIndex);
 };
 
 //==============================================================================
