@@ -761,37 +761,34 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction,
 
     // Check whether the current token's symbol is one of those we are after
 
+    static const QChar Plus  = QChar('+');
     static const QChar Minus = QChar('-');
-    static const QChar Not = QChar('!');
+    static const QChar Not   = QChar('!');
 
     QString unaryOperators = QString();
 
     while (unaryOperatorSymbols.contains(pParser->scanner()->token().symbol())) {
-        // We got the right symbol, so keep track of it, but only if it isn't a
-        // "+", and then carry on...
+        // We got the right symbol, so keep track of it and get the next token
         // Note: we preprend (rather than append) since we later on want to use
         //       the list in reverse order, so...
 
         switch (pParser->scanner()->token().symbol()) {
+        case ComputerScannerToken::Plus:
+            unaryOperators = Plus+unaryOperators;
+
+            break;
         case ComputerScannerToken::Minus:
             unaryOperators = Minus+unaryOperators;
 
             break;
-        case ComputerScannerToken::Not:
+        default:   // Not
             unaryOperators = Not+unaryOperators;
-
-            break;
         }
 
         pParser->scanner()->getNextToken();
     }
 
-    // Simplify our list of unary operators by cancelling any two consecutive
-    // "-"s
-
-    unaryOperators = unaryOperators.replace("--", "");
-
-    // Parse the primary expression
+   // Parse the primary expression
 
     if (!parsePrimaryExpression(pParser, pFunction, pExpression))
         // Something went wrong with the parsing of the primary expression,
@@ -804,9 +801,11 @@ bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction,
 
     if (!unaryOperators.isEmpty())
         foreach (const QChar &unaryOperator, unaryOperators)
-            if (unaryOperator == Minus)
+            if (unaryOperator == Plus)
+                pExpression = new ComputerEquation(ComputerEquation::Plus, pExpression);
+            else if (unaryOperator == Minus)
                 pExpression = new ComputerEquation(ComputerEquation::Minus, pExpression);
-            else
+            else   // Not
                 pExpression = new ComputerEquation(ComputerEquation::Not, pExpression);
 
     // Everything went fine, so...
