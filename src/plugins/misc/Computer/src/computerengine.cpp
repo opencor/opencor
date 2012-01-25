@@ -110,28 +110,6 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
     ComputerFunction *function = mParser->parseFunction(pFunction);
 
     if (function) {
-        // Output the function's details
-
-        qDebug("---------------------------------------");
-        qDebug("Function details:");
-
-        if (function->type() == ComputerFunction::Void)
-            qDebug("   Type: void");
-        else
-            qDebug("   Type: double");
-
-        qDebug(QString("   Name: %1").arg(function->name()).toLatin1().constData());
-        qDebug(QString("   Nb of params: %1").arg(QString::number(function->parameters().count())).toLatin1().constData());
-
-        ComputerParameters parameters = function->parameters();
-
-        if (!parameters.isEmpty())
-            foreach (const ComputerParameter &parameter, parameters)
-                qDebug(QString("    - %1 [Pointer: %2]").arg(parameter.name(), parameter.pointer()?"Yes":"No").toLatin1().constData());
-
-//        if (function->type() == ComputerFunction::Double)
-//            qDebug(QString("   Return value: %1").arg(function->returnEquation()).toLatin1().constData());
-
         // The function was properly parsed, so check that we don't already have
         // a function with the same name in our module
 
@@ -327,7 +305,10 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 //assemblyCode += "  ret void\n";
 //assemblyCode += "}";
 
-    qDebug(QString("   LLVM assembly:\n%1").arg(assemblyCode).toLatin1().constData());
+    qDebug("");
+    qDebug("LLVM assembly:");
+    qDebug("");
+    qDebug(QString(assemblyCode).toLatin1().constData());
 
     QString originalAssemblyCode = QString(assemblyCode);
     // Note: the above is required since we must replace '%' with '\%' prior to

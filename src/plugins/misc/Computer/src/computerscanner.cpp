@@ -76,6 +76,8 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     // Return the token's equation type equivalent
 
     switch (mSymbol) {
+    case Divide:
+        return ComputerEquation::Divide;
     case Times:
         return ComputerEquation::Times;
     case Plus:
@@ -87,7 +89,7 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     case Not:
         return ComputerEquation::Not;
     default:
-qDebug(QString(">>> Couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
+qDebug(QString(">>> ERROR: couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
 
         return ComputerEquation::Unknown;
     }

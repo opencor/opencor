@@ -32,7 +32,7 @@ public:
 
         // Mathematical operators
 
-        Times, Plus, Minus,
+        Times, Divide, Plus, Minus,
 
         // Mathematical functions with 2 arguments
 

@@ -294,14 +294,22 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             Computer::ComputerEngine computerEngine;
 
-            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES) { %1 }").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
+            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
             handleErrors(computerEngine, "initConsts");
 
-            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC) { %1 }").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
+            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
             handleErrors(computerEngine, "rates");
 
-            computerEngine.addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC) { %1 }").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
+            computerEngine.addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
             handleErrors(computerEngine, "variables");
+
+            if (mModelType == Dae) {
+                computerEngine.addFunction(QString("void essentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
+                handleErrors(computerEngine, "essentialVariables");
+
+                computerEngine.addFunction(QString("void stateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
+                handleErrors(computerEngine, "stateInformation");
+            }
 
             // Output the contents of our computer engine's module so far
 
@@ -376,6 +384,7 @@ void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
         llvm::Function *function = pComputerEngine.module()->getFunction(pFunctionName.toLatin1().constData());
 
         if (function) {
+            qDebug("");
             qDebug(QString("The '%1' function was found...").arg(pFunctionName).toLatin1().constData());
 
 //            // Initialise our array of data
