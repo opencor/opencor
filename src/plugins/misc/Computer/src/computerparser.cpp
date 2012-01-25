@@ -455,10 +455,9 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 
         mScanner->getNextToken();
 
-        // The equation was successfully parsed, so add it to the list of
-        // functions
+        // The equation was successfully parsed, so add it to our list
 
-        pFunction->addEquation(new ComputerEquation(ComputerEquation::Equal,
+        pFunction->addEquation(new ComputerEquation(ComputerEquation::Assign,
                                                     new ComputerEquation(arrayName, arrayIndex),
                                                     rhsEquation));
     }

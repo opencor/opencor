@@ -294,22 +294,25 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             Computer::ComputerEngine computerEngine;
 
-            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
-            handleErrors(computerEngine, "initConsts");
+//            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
+//            handleErrors(computerEngine, "initConsts");
 
-            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
-            handleErrors(computerEngine, "rates");
+//            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
+//            handleErrors(computerEngine, "rates");
 
-            computerEngine.addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
-            handleErrors(computerEngine, "variables");
+//            computerEngine.addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
+//            handleErrors(computerEngine, "variables");
 
-            if (mModelType == Dae) {
-                computerEngine.addFunction(QString("void essentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
-                handleErrors(computerEngine, "essentialVariables");
+//            if (mModelType == Dae) {
+//                computerEngine.addFunction(QString("void essentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
+//                handleErrors(computerEngine, "essentialVariables");
 
-                computerEngine.addFunction(QString("void stateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
-                handleErrors(computerEngine, "stateInformation");
-            }
+//                computerEngine.addFunction(QString("void stateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
+//                handleErrors(computerEngine, "stateInformation");
+//            }
+
+computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = 3*5;\n}");
+handleErrors(computerEngine, "test");
 
             // Output the contents of our computer engine's module so far
 

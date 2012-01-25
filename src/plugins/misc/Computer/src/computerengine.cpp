@@ -364,6 +364,22 @@ void ComputerEngine::compileEquation(ComputerEquation *pEquation,
                                      QString &pAssemblyCode)
 {
 //---GRY--- TO BE DONE...
+
+    // An equation must consist of an assignment, so just make sure that it is
+    // the case
+
+    if (pEquation->type() != ComputerEquation::Assign)
+        // Not an assignment, so...
+
+        return;
+
+    // Make a copy of the equation and simplify its RHS, if possible
+
+    ComputerEquation *equation = new ComputerEquation(pEquation);
+
+    equation->right()->simplify();
+
+    delete equation;
 }
 
 //==============================================================================

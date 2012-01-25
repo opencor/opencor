@@ -40,10 +40,11 @@ public:
 
         // Miscellaneous
 
-        Equal, Not,
+        Assign, Not,
         Piecewise, PiecewiseCases
     };
 
+    explicit ComputerEquation(ComputerEquation *pEquation = 0);
     explicit ComputerEquation(const Type &pType,
                               ComputerEquation *pLeft,
                               ComputerEquation *pRight = 0);
@@ -63,6 +64,8 @@ public:
     ComputerEquation * left() const;
     ComputerEquation * right() const;
 
+    void simplify();
+
 private:
     Type mType;
 
@@ -73,6 +76,11 @@ private:
 
     ComputerEquation *mLeft;
     ComputerEquation *mRight;
+
+    void initialiseFrom(ComputerEquation *pEquation);
+
+    void simplifyNode(ComputerEquation *pNode);
+    void resetNodeAsNumber(ComputerEquation *pNode, const double &pNumber);
 };
 
 //==============================================================================
