@@ -62,7 +62,8 @@ private:
 
     ComputerExternalFunctions mExternalFunctions;
 
-    QMap<QString, int> mIndirectParameterAssemblyCodeIndexes;
+    QMap<QString, int> mIndirectParameterPointerAssemblyCodeIndexes;
+    QMap<QString, int> mIndirectParameterLoadAssemblyCodeIndexes;
     QMap<ComputerEquation *, int> mEquationAssemblyCodeIndexes;
 
     QString numberAsString(const double &pNumber);

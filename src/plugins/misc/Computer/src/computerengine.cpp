@@ -107,7 +107,8 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 
     // Reset our lists of assembly code indexes
 
-    mIndirectParameterAssemblyCodeIndexes.clear();
+    mIndirectParameterPointerAssemblyCodeIndexes.clear();
+    mIndirectParameterLoadAssemblyCodeIndexes.clear();
     mEquationAssemblyCodeIndexes.clear();
 
     // Parse the function
@@ -390,48 +391,90 @@ int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEquation *pIndire
                                                        const bool &pOperand)
 {
     // Retrieve the assembly code index associated with an indirect parameter or
-    // create one, if needed
+    // create one, if needed. Two assembly code indexes exist for a given
+    // indirect parameter depending on whether it is used as an operand (as on
+    // the RHS of an equation) or not (as on the LHS of an equation, i.e. for an
+    // assignment). In both cases, we first need to retrieve the assembly code
+    // index which gives us a direct pointer to the indirect parameter we are
+    // after. Then, depending on whether the indirect parameter is used as an
+    // operand, we need to load the indirect parameter and return the
+    // corresponding assembly code index
 
-    // Check whether there is a potential need for an assembly code index
+    // Key used to retrieve existing assembly code indexes for the independent
+    // parameter
+
+    QString key = pIndirectParameter->parameterName()+"|"+pIndirectParameter->parameterIndex();
+
+    // Get the assembly code index for the direct pointer to the indirect
+    // parameter
+
+    int pointerAssemblyCodeIndex;
 
     if (pIndirectParameter->parameterIndex()) {
         // We are not dealing with the first entry in the array of doubles,
-        // so we need to retrieve an assembly code index or create one, if
-        // needed
+        // so we need to retrieve an assembly code index for the direct pointer
+        // to the indirect parameter or create one, if needed
 
-        QString key = pIndirectParameter->parameterName()+"|"+pIndirectParameter->parameterIndex();
+        if (mIndirectParameterPointerAssemblyCodeIndexes.contains(key)) {
+            // An assembly code index already exists, so retrieve its value
 
-        if (mIndirectParameterAssemblyCodeIndexes.contains(key)) {
-            // An assembly code index already exists, so just retrieve and
-            // return it
-
-            return mIndirectParameterAssemblyCodeIndexes.value(key);
+            pointerAssemblyCodeIndex = mIndirectParameterPointerAssemblyCodeIndexes.value(key);
         } else {
-            // No assembly code index exists for the indirect parameter, so we
-            // need to create one
+            // No assembly code index for the direct pointer to the indirect
+            // parameter exists, so create one
 
             pAssemblyCode += Indent+"%%"+QString::number(++pAssemblyCodeIndex)+" = getelementptr inbounds double* %%"+pIndirectParameter->parameterName()+", i64 "+QString::number(pIndirectParameter->parameterIndex())+"\n";
 
-            if (pOperand) {
-                // The indirect parameter for which we want an assembly code
-                // index is used as an operand, so we need load it
+            // Keep track of the assembly code index
 
-                pAssemblyCode += Indent+"%%"+QString::number(++pAssemblyCodeIndex)+" = load double* %%"+QString::number(pAssemblyCodeIndex)+", align 8, !tbaa !0\n";
+            pointerAssemblyCodeIndex = pAssemblyCodeIndex;
+        }
+    } else {
+        // We are dealing with the first entry in the array of doubles, so there
+        // is no need for an assembly code index for the direct pointer to the
+        // indirect parameter
 
-                // Keep track of the assembly code index
+        pointerAssemblyCodeIndex = 0;
+    }
 
-                mIndirectParameterAssemblyCodeIndexes.insert(key, pAssemblyCodeIndex);
-            }
+    // Check whether we want an assembly code index for an operand
 
-            // Return the assembly code index
+    if (pOperand) {
+        // The indirect parameter is to be used as an operand, so we need to
+        // retrieve an assembly code index for the loading of the indirect
+        // parameter or create one, if needed
+
+        if (mIndirectParameterLoadAssemblyCodeIndexes.contains(key)) {
+            // An assembly code index already exists, so return its value
+
+            return mIndirectParameterLoadAssemblyCodeIndexes.value(key);
+        } else {
+            // No assembly code index for the loading of the indirect  parameter
+            // exists, so create one
+
+            pAssemblyCode += Indent+"%%"+QString::number(++pAssemblyCodeIndex)+" = load double* %%";
+
+            if (pointerAssemblyCodeIndex)
+                pAssemblyCode += QString::number(pointerAssemblyCodeIndex);
+            else
+                pAssemblyCode += pIndirectParameter->parameterName();
+
+            pAssemblyCode += ", align 8, !tbaa !0\n";
+
+            // Keep track of the assembly code index
+
+            mIndirectParameterLoadAssemblyCodeIndexes.insert(key, pAssemblyCodeIndex);
+
+            // Return the assembly code index for the loading of the indirect
+            // parameter
 
             return pAssemblyCodeIndex;
         }
     } else {
-        // We are dealing with the first entry in the array of doubles, so we
-        // don't need an assembly code index as such, so...
+        // We only want an assembly code index for the direct pointer to the
+        // indirect parameter, so...
 
-        return 0;
+        return pointerAssemblyCodeIndex;
     }
 }
 
@@ -622,6 +665,15 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
         // Compilation of an addition
 
         compileMathematicalOperator("fadd",
+                                    pEquationNode->left(),
+                                    pEquationNode->right(),
+                                    pAssemblyCode, pAssemblyCodeIndex);
+
+        break;
+    case ComputerEquation::Minus:
+        // Compilation of a subtraction
+
+        compileMathematicalOperator("fsub",
                                     pEquationNode->left(),
                                     pEquationNode->right(),
                                     pAssemblyCode, pAssemblyCodeIndex);

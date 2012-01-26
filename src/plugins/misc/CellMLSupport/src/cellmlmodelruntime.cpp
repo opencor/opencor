@@ -256,12 +256,46 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             else
                 genericCodeInformation = mOdeCodeInformation;
 
+            // Retrieve some information/code
+
+            qDebug("---------------------------------------");
+            qDebug("initConstsString():");
+            qDebug("");
+            qDebug(QString::fromStdWString(genericCodeInformation->initConstsString()).toLatin1().constData());
+            qDebug("---------------------------------------");
+            qDebug("ratesString():");
+            qDebug("");
+            qDebug(QString::fromStdWString(genericCodeInformation->ratesString()).toLatin1().constData());
+            qDebug("---------------------------------------");
+            qDebug("variablesString():");
+            qDebug("");
+            qDebug(QString::fromStdWString(genericCodeInformation->variablesString()).toLatin1().constData());
+            qDebug("---------------------------------------");
+            qDebug("functionsString():");
+            qDebug("");
+            qDebug(QString::fromStdWString(genericCodeInformation->functionsString()).toLatin1().constData());
+
+            if (mModelType == Dae) {
+                qDebug("---------------------------------------");
+                qDebug("essentialVariablesString():");
+                qDebug("");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("stateInformationString():");
+                qDebug("");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->stateInformationString()).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("rootInformationString():");
+                qDebug("");
+                qDebug(QString::fromStdWString(mDaeCodeInformation->rootInformationString()).toLatin1().constData());
+            }
+
             // Get some binary code using the Computer plugin
 
             Computer::ComputerEngine computerEngine;
 
-//            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
-//            handleErrors(computerEngine, "initConsts");
+            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
+            handleErrors(computerEngine, "initConsts");
 
 //            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
 //            handleErrors(computerEngine, "rates");
