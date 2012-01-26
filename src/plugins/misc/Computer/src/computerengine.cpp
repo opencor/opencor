@@ -427,6 +427,8 @@ int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEquation *pIndire
 
             // Keep track of the assembly code index
 
+            mIndirectParameterPointerAssemblyCodeIndexes.insert(key, pAssemblyCodeIndex);
+
             pointerAssemblyCodeIndex = pAssemblyCodeIndex;
         }
     } else {
@@ -661,6 +663,24 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
     // Compilation of the current node
 
     switch (pEquationNode->type()) {
+    case ComputerEquation::Times:
+        // Compilation of a multiplication
+
+        compileMathematicalOperator("fmul",
+                                    pEquationNode->left(),
+                                    pEquationNode->right(),
+                                    pAssemblyCode, pAssemblyCodeIndex);
+
+        break;
+    case ComputerEquation::Divide:
+        // Compilation of a division
+
+        compileMathematicalOperator("fdiv",
+                                    pEquationNode->left(),
+                                    pEquationNode->right(),
+                                    pAssemblyCode, pAssemblyCodeIndex);
+
+        break;
     case ComputerEquation::Plus:
         // Compilation of an addition
 

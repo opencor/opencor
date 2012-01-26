@@ -311,7 +311,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 //                handleErrors(computerEngine, "stateInformation");
 //            }
 
-            computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pow(2, 3);\n  pData[1] = 3*5+9+pData[3];\n  pData[2] = 5-9/7;\n}");
+            computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pow(2, 3);\n  pData[1] = 3*5+9+pData[3]*pData[3]/pData[4];\n  pData[2] = 5-9/7;\n}");
             handleErrors(computerEngine, "test");
 
             // Output the contents of our computer engine's module so far
@@ -393,13 +393,14 @@ void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
             if (!pFunctionName.compare("test")) {
                 // Initialise our array of data
 
-                static const int dataSize = 4;
+                static const int dataSize = 5;
                 double data[dataSize];
 
                 for (int i = 0; i < dataSize; ++i)
                     data[i] = 0;
 
                 data[3] = 5;
+                data[4] = 7;
 
                 // Output the contents of our original array of data
 
