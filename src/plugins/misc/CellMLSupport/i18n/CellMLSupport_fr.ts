@@ -26,10 +26,6 @@
         <translation>le modèle n&apos;est pas valide</translation>
     </message>
     <message>
-        <source>the model could not be compiled</source>
-        <translation>le modèle n&apos;a pas pu être compilé</translation>
-    </message>
-    <message>
         <source>an unexpected problem occurred while trying to compile the model</source>
         <translation>un problème inattendu s&apos;est produit lors de la compilation du modèle</translation>
     </message>
@@ -52,6 +48,18 @@
     <message>
         <source>no code information could be retrieved for the model</source>
         <translation>aucune information de code n&apos;a pu être trouvée pour le modèle</translation>
+    </message>
+    <message>
+        <source>the function &apos;%1&apos; could not be parsed</source>
+        <translation>La fonction &apos;%1&apos; n&apos;a pas pu être analysée</translation>
+    </message>
+    <message>
+        <source>the function &apos;%1&apos; could not be compiled</source>
+        <translation>La fonction &apos;%1&apos; n&apos;a pas pu être compilée</translation>
+    </message>
+    <message>
+        <source>the model code could not be generated</source>
+        <translation>Le code pour le modèle n&apos;a pas pu être généré</translation>
     </message>
 </context>
 </TS>

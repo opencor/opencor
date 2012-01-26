@@ -230,12 +230,12 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
         if (parameter.pointer())
             // The parameter is a pointer, so...
 
-            parameters += "*";
+            parameters += "* nocapture";
 
         parameters += " %%"+parameter.name();
     }
 
-    assemblyCode += "("+parameters+")";
+    assemblyCode += "("+parameters+") nounwind uwtable";
 
     // Additional information for the function definition
 
@@ -278,7 +278,18 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
     // End the function
 
-    assemblyCode += "}";
+    assemblyCode += "}\n";
+
+    // TBAA information
+    // Note: should LLVM deem the TBAA information unnecessary, then it won't
+    //       get converted to IR code, so it's fine to add it everytime to our
+    //       assembly code, not least because it saves us the trouble of having
+    //       to determine when it would have been necessary to add it...
+
+    assemblyCode += "\n";
+    assemblyCode += "!0 = metadata !{metadata !\"double\", metadata !1}\n";
+    assemblyCode += "!1 = metadata !{metadata !\"omnipotent char\", metadata !2}\n";
+    assemblyCode += "!2 = metadata !{metadata !\"Simple C/C++ TBAA\", null}";
 
     // Now that we are done generating some LLVM assembly code for the function,
     // we can parse that code and have LLVM generate some IR code that will get
@@ -423,7 +434,7 @@ void ComputerEngine::assignEquation(ComputerEquation *pIndirectParameter,
 
         pAssemblyCode += pIndirectParameter->parameterName();
 
-    pAssemblyCode += "\n";
+    pAssemblyCode += ", align 8, !tbaa !0\n";
 }
 
 //==============================================================================

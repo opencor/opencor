@@ -65,7 +65,7 @@ private:
     void resetDaeCodeInformation();
     void reset();
 
-    void couldNotCompileModelIssue();
+    void couldNotGenerateModelCodeIssue();
     void unexpectedProblemDuringModelCompilationIssue();
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);

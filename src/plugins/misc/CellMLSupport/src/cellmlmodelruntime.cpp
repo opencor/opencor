@@ -91,10 +91,10 @@ void CellmlModelRuntime::reset()
 
 //==============================================================================
 
-void CellmlModelRuntime::couldNotCompileModelIssue()
+void CellmlModelRuntime::couldNotGenerateModelCodeIssue()
 {
     mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                    tr("the model could not be compiled")));
+                                    tr("the model code could not be generated")));
 }
 
 //==============================================================================
@@ -159,7 +159,7 @@ iface::cellml_services::CodeInformation * CellmlModelRuntime::getOdeCodeInformat
 
         checkCodeInformation(mOdeCodeInformation);
     } catch (iface::cellml_api::CellMLException &) {
-        couldNotCompileModelIssue();
+        couldNotGenerateModelCodeIssue();
     } catch (...) {
         unexpectedProblemDuringModelCompilationIssue();
     }
@@ -194,7 +194,7 @@ iface::cellml_services::CodeInformation * CellmlModelRuntime::getDaeCodeInformat
 
         checkCodeInformation(mDaeCodeInformation);
     } catch (iface::cellml_api::CellMLException &) {
-        couldNotCompileModelIssue();
+        couldNotGenerateModelCodeIssue();
     } catch (...) {
         unexpectedProblemDuringModelCompilationIssue();
     }
@@ -256,46 +256,12 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             else
                 genericCodeInformation = mOdeCodeInformation;
 
-            // Retrieve some information/code
-
-            qDebug("---------------------------------------");
-            qDebug("");
-            qDebug("Number of states/rates: %s", QString::number(genericCodeInformation->rateIndexCount()).toLatin1().constData());
-            qDebug("Number of algebraic variables: %s", QString::number(genericCodeInformation->algebraicIndexCount()).toLatin1().constData());
-            qDebug("Number of constants: %s", QString::number(genericCodeInformation->constantIndexCount()).toLatin1().constData());
-            qDebug("");
-            qDebug("---------------------------------------");
-            qDebug("\ninitConstsString():");
-            qDebug(QString::fromStdWString(genericCodeInformation->initConstsString()).toLatin1().constData());
-            qDebug("---------------------------------------");
-            qDebug("\nratesString():");
-            qDebug(QString::fromStdWString(genericCodeInformation->ratesString()).toLatin1().constData());
-            qDebug("---------------------------------------");
-            qDebug("\nvariablesString():");
-            qDebug(QString::fromStdWString(genericCodeInformation->variablesString()).toLatin1().constData());
-            qDebug("---------------------------------------");
-            qDebug("\nfunctionsString():");
-            qDebug(QString::fromStdWString(genericCodeInformation->functionsString()).toLatin1().constData());
-            qDebug("---------------------------------------");
-
-            if (mModelType == Dae) {
-                qDebug("\nessentialVariablesString():");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-                qDebug("\nstateInformationString():");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->stateInformationString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-                qDebug("\nrootInformationString():");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->rootInformationString()).toLatin1().constData());
-                qDebug("---------------------------------------");
-            }
-
             // Get some binary code using the Computer plugin
 
             Computer::ComputerEngine computerEngine;
 
-//            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
-//            handleErrors(computerEngine, "initConsts");
+            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
+            handleErrors(computerEngine, "initConsts");
 
 //            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
 //            handleErrors(computerEngine, "rates");
@@ -311,13 +277,14 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 //                handleErrors(computerEngine, "stateInformation");
 //            }
 
-            computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pow(2, 3);\n  pData[1] = 3*5+9;\npData[2] = 5-9/7;\n}");
+            computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pow(2, 3);\n  pData[1] = 3*5+9;\n  pData[2] = 5-9/7;\n}");
             handleErrors(computerEngine, "test");
 
             // Output the contents of our computer engine's module so far
 
             qDebug("---------------------------------------");
             qDebug("All generated code so far:");
+            qDebug("");
             computerEngine.module()->dump();
             qDebug("---------------------------------------");
         } else {
@@ -368,55 +335,58 @@ void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
         qDebug("---------------------------------------");
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("the model could not be compiled")));
+                                        tr("the function '%1' could not be parsed").arg(pFunctionName)));
     } else if (!pComputerEngine.error().isEmpty()) {
-        // Something went wrong with the addition of the function, so
-        // output the error that was found
+        // Something went wrong with the addition of the function, so output the
+        // error that was found
 
         qDebug("---------------------------------------");
         qDebug(QString("An error occurred: %1").arg(pComputerEngine.error().formattedMessage()).toLatin1().constData());
-        qDebug("---------------------------------------");
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("the model could not be compiled")));
+                                        tr("the function '%1' could not be compiled").arg(pFunctionName)));
     } else {
         // Test the compiled function using LLVM's JIT
 
         llvm::Function *function = pComputerEngine.module()->getFunction(pFunctionName.toLatin1().constData());
 
         if (function) {
-            qDebug("");
+            qDebug("---------------------------------------");
             qDebug(QString("The '%1' function was found...").arg(pFunctionName).toLatin1().constData());
 
-            // Initialise our array of data
+            // Test the "test" function
 
-            static const int dataSize = 3;
-            double data[dataSize];
+            if (!pFunctionName.compare("test")) {
+                // Initialise our array of data
 
-            for (int i = 0; i < dataSize; ++i)
-                data[i] = 0;
+                static const int dataSize = 3;
+                double data[dataSize];
 
-            // Output the contents of our original array of data
+                for (int i = 0; i < dataSize; ++i)
+                    data[i] = 0;
 
-            qDebug("---------------------------------------");
-            qDebug("Before:");
-            qDebug("");
+                // Output the contents of our original array of data
 
-            for (int i = 0; i < dataSize; ++i)
-                qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("Before:");
+                qDebug("");
 
-            // Call our LLVM's JIT-based function
+                for (int i = 0; i < dataSize; ++i)
+                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
 
-            ((void (*)(double *))(intptr_t) pComputerEngine.executionEngine()->getPointerToFunction(function))(data);
+                // Call our LLVM's JIT-based function
 
-            // Output the contents of our updated array of data
+                ((void (*)(double *))(intptr_t) pComputerEngine.executionEngine()->getPointerToFunction(function))(data);
 
-            qDebug("---------------------------------------");
-            qDebug("After:");
-            qDebug("");
+                // Output the contents of our updated array of data
 
-            for (int i = 0; i < dataSize; ++i)
-                qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
+                qDebug("---------------------------------------");
+                qDebug("After:");
+                qDebug("");
+
+                for (int i = 0; i < dataSize; ++i)
+                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
+            }
         } else {
             qDebug("---------------------------------------");
             qDebug(QString("The '%1' function doesn't exist...?!").arg(pFunctionName).toLatin1().constData());
