@@ -314,6 +314,56 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pow(2, 3);\n  pData[1] = 3*5+9+pData[3]*pData[3]/pData[4];\n  pData[2] = 5-9/7;\n}");
             handleErrors(computerEngine, "test");
 
+            computerEngine.addFunction("double test2(double *pData)\n{\n  return 3*pData[0]+pData[1]/pData[2];\n}");
+            handleErrors(computerEngine, "test2");
+
+            // Test our "test" and "test2" functions
+
+            llvm::Function *testFunction  = computerEngine.module()->getFunction("test");
+            llvm::Function *test2Function = computerEngine.module()->getFunction("test2");
+
+            if (testFunction && test2Function) {
+                // Initialise our array of data
+
+                static const int dataSize = 5;
+                double data[dataSize];
+
+                for (int i = 0; i < dataSize; ++i)
+                    data[i] = 0;
+
+                data[3] = 5;
+                data[4] = 7;
+
+                // Output the contents of our original array of data
+
+                qDebug("---------------------------------------");
+                qDebug("Before:");
+                qDebug("");
+
+                for (int i = 0; i < dataSize; ++i)
+                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
+
+                // Call our LLVM's JIT-based "test" function
+
+                ((void (*)(double *))(intptr_t) computerEngine.executionEngine()->getPointerToFunction(testFunction))(data);
+
+                // Output the contents of our updated array of data
+
+                qDebug("---------------------------------------");
+                qDebug("After:");
+                qDebug("");
+
+                for (int i = 0; i < dataSize; ++i)
+                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
+
+                // Call our LLVM's JIT-based "test2" function
+
+                double test2Result = ((double (*)(double *))(intptr_t) computerEngine.executionEngine()->getPointerToFunction(test2Function))(data);
+
+                qDebug("---------------------------------------");
+                qDebug(QString("Result: %1").arg(QString::number(test2Result)).toLatin1().constData());
+            }
+
             // Output the contents of our computer engine's module so far
 
             qDebug("---------------------------------------");
@@ -380,50 +430,13 @@ void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                         tr("the function '%1' could not be compiled").arg(pFunctionName)));
     } else {
-        // Test the compiled function using LLVM's JIT
+        // Check that we can find the LLVM function
 
         llvm::Function *function = pComputerEngine.module()->getFunction(pFunctionName.toLatin1().constData());
 
         if (function) {
             qDebug("---------------------------------------");
             qDebug(QString("The '%1' function was found...").arg(pFunctionName).toLatin1().constData());
-
-            // Test the "test" function
-
-            if (!pFunctionName.compare("test")) {
-                // Initialise our array of data
-
-                static const int dataSize = 5;
-                double data[dataSize];
-
-                for (int i = 0; i < dataSize; ++i)
-                    data[i] = 0;
-
-                data[3] = 5;
-                data[4] = 7;
-
-                // Output the contents of our original array of data
-
-                qDebug("---------------------------------------");
-                qDebug("Before:");
-                qDebug("");
-
-                for (int i = 0; i < dataSize; ++i)
-                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
-
-                // Call our LLVM's JIT-based function
-
-                ((void (*)(double *))(intptr_t) pComputerEngine.executionEngine()->getPointerToFunction(function))(data);
-
-                // Output the contents of our updated array of data
-
-                qDebug("---------------------------------------");
-                qDebug("After:");
-                qDebug("");
-
-                for (int i = 0; i < dataSize; ++i)
-                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
-            }
         } else {
             qDebug("---------------------------------------");
             qDebug(QString("The '%1' function doesn't exist...?!").arg(pFunctionName).toLatin1().constData());

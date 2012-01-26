@@ -21,6 +21,132 @@ namespace Computer {
 
 //==============================================================================
 
+ComputerEngineData::ComputerEngineData() :
+    mAssemblyCode(QString()),
+    mAssemblyCodeIndex(0),
+    mNeedTbaaInformation(false),
+    mIndirectParameterPointerAssemblyCodeIndexes(ComputerEngineIndirectParameterAssemblyCodeIndexes()),
+    mIndirectParameterLoadAssemblyCodeIndexes(ComputerEngineIndirectParameterAssemblyCodeIndexes()),
+    mEquationAssemblyCodeIndexes(ComputerEngineEquationAssemblyCodeIndexes())
+{
+}
+
+//==============================================================================
+
+QString ComputerEngineData::assemblyCode() const
+{
+    // Return the data's assembly code
+
+    return mAssemblyCode;
+}
+
+//==============================================================================
+
+void ComputerEngineData::appendAssemblyCode(const QString &pAssemblyCode)
+{
+    // Append some assembly code
+
+    mAssemblyCode += pAssemblyCode;
+}
+
+//==============================================================================
+
+int ComputerEngineData::assemblyCodeIndex() const
+{
+    // Return the data's assembly code index
+
+    return mAssemblyCodeIndex;
+}
+
+//==============================================================================
+
+int ComputerEngineData::nextAssemblyCodeIndex()
+{
+    // Increment and return the data's assembly code index
+
+    return ++mAssemblyCodeIndex;
+}
+
+//==============================================================================
+
+bool ComputerEngineData::needTbaaInformation() const
+{
+    // Return whether the data needs TBAA information
+
+    return mNeedTbaaInformation;
+}
+
+//==============================================================================
+
+void ComputerEngineData::setNeedTbaaInformation(const bool &pNeedTbaaInformation)
+{
+    // Set the data's need for TBAA information
+
+    mNeedTbaaInformation = pNeedTbaaInformation;
+}
+
+//==============================================================================
+
+ComputerEngineIndirectParameterAssemblyCodeIndexes ComputerEngineData::indirectParameterPointerAssemblyCodeIndexes() const
+{
+    // Return the data's list of indirect parameter pointer assembly code
+    // indexes
+
+    return mIndirectParameterPointerAssemblyCodeIndexes;
+}
+
+//==============================================================================
+
+void ComputerEngineData::addIndirectParameterPointerAssemblyCodeIndex(const QString &pKey,
+                                                                      const int &pValue)
+{
+    // Add the key/value pair to our list of indirect parameter pointer assembly
+    // code indexes
+
+    mIndirectParameterPointerAssemblyCodeIndexes.insert(pKey, pValue);
+}
+
+//==============================================================================
+
+ComputerEngineIndirectParameterAssemblyCodeIndexes ComputerEngineData::indirectParameterLoadAssemblyCodeIndexes() const
+{
+    // Return the data's list of indirect parameter load assembly code indexes
+
+    return mIndirectParameterLoadAssemblyCodeIndexes;
+}
+
+//==============================================================================
+
+void ComputerEngineData::addIndirectParameterLoadAssemblyCodeIndex(const QString &pKey,
+                                                                   const int &pValue)
+{
+    // Add the key/value pair to our list of indirect parameter load assembly
+    // code indexes
+
+    mIndirectParameterLoadAssemblyCodeIndexes.insert(pKey, pValue);
+}
+
+//==============================================================================
+
+ComputerEngineEquationAssemblyCodeIndexes ComputerEngineData::equationAssemblyCodeIndexes() const
+{
+    // Return the data's list of equation assembly code indexes
+
+    return mEquationAssemblyCodeIndexes;
+}
+
+//==============================================================================
+
+void ComputerEngineData::addEquationAssemblyCodeIndex(ComputerEquation *pKey,
+                                                      const int &pValue)
+{
+    // Add the key/value pair to our list of equation assembly code indexes
+
+    mEquationAssemblyCodeIndexes.insert(pKey, pValue);
+}
+
+//==============================================================================
+
 ComputerEngine::ComputerEngine() :
     mError(QString()),
     mExternalFunctions(ComputerExternalFunctions())
@@ -105,12 +231,6 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
     qDebug("");
     qDebug(pFunction.toLatin1().constData());
 
-    // Reset a few things that are specific to the addition of a function
-
-    mIndirectParameterPointerAssemblyCodeIndexes.clear();
-    mIndirectParameterLoadAssemblyCodeIndexes.clear();
-    mEquationAssemblyCodeIndexes.clear();
-
     // Parse the function
 
     ComputerFunction *function = mParser->parseFunction(pFunction);
@@ -163,8 +283,12 @@ QString ComputerEngine::numberAsString(const double &pNumber)
 llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 {
     // Generate some LLVM assembly code based on the contents of the function
+    // and then have LLVM generate some IR code out of it, before returning the
+    // resulting LLVM function
 
-    QString assemblyCode = QString();
+    // Data that will be needed for the compilation of our function
+
+    ComputerEngineData data;
 
     // Declare any external function which we need and which are not already
     // declared
@@ -175,7 +299,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
             // The function's external function hasn't already been declared, so
             // declare it
 
-            assemblyCode += QString("declare double @%1").arg(externalFunction.name());
+            data.appendAssemblyCode(QString("declare double @%1").arg(externalFunction.name()));
 
             QString parameters = QString();
 
@@ -190,7 +314,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
                 parameters += "double";
             }
 
-            assemblyCode += "("+parameters+") nounwind readnone\n";
+            data.appendAssemblyCode("("+parameters+") nounwind readnone\n");
 
             // Add the extenral function to the computer engine's list of
             // external functions
@@ -198,23 +322,23 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
             mExternalFunctions.append(externalFunction);
         }
 
-    if (!assemblyCode.isEmpty())
-        assemblyCode += "\n";
+    if (!data.assemblyCode().isEmpty())
+        data.appendAssemblyCode("\n");
 
     // Define the function
 
-    assemblyCode += "define";
+    data.appendAssemblyCode("define");
 
     // Type of function
 
     if (pFunction->type() == ComputerFunction::Void)
-        assemblyCode += " void";
+        data.appendAssemblyCode(" void");
     else
-        assemblyCode += " double";
+        data.appendAssemblyCode(" double");
 
     // Name of the function
 
-    assemblyCode += " @"+pFunction->name();
+    data.appendAssemblyCode(" @"+pFunction->name());
 
     // Parameters of the function
 
@@ -238,28 +362,23 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
         parameters += " %%"+parameter.name();
     }
 
-    assemblyCode += "("+parameters+") nounwind uwtable";
+    data.appendAssemblyCode("("+parameters+") nounwind uwtable");
 
     // Additional information for the function definition
 
-    assemblyCode += " {\n";
+    data.appendAssemblyCode(" {\n");
 
     // Mathematical statements
 
-    bool needTbaaInformation = false;
-    int assemblyCodeIndex = 0;
-
     foreach (ComputerEquation *equation, pFunction->equations())
-        compileEquation(equation,
-                        assemblyCode, assemblyCodeIndex,
-                        needTbaaInformation);
+        compileEquation(equation, data);
 
     // Return statement
 
     if (pFunction->type() == ComputerFunction::Void) {
         // We are dealing with a void function, so...
 
-        assemblyCode += Indent+"ret void\n";
+        data.appendAssemblyCode(Indent+"ret void\n");
     } else {
         // We are dealing with a double function, so check whether the return
         // equation is, in fact, a number or a 'proper' equation. If it is
@@ -269,89 +388,51 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
         if (pFunction->returnEquation()->type() == ComputerEquation::Number) {
             // We are dealing with a number as a return equation, so...
 
-            assemblyCode += Indent+"ret double "+numberAsString(pFunction->returnEquation()->number())+"\n";
+            data.appendAssemblyCode(Indent+"ret double "+numberAsString(pFunction->returnEquation()->number())+"\n");
         } else {
             // We are dealing with a 'proper' return equation, so compile it as
             // if it was the RHS of an equation
 
-            int returnEquationIndex = compileRhsEquation(pFunction->returnEquation(),
-                                                         assemblyCode,
-                                                         assemblyCodeIndex,
-                                                         needTbaaInformation);
+            compileRhsEquation(pFunction->returnEquation(), data);
 
             // Return the result of the return equation
 
-            assemblyCode += Indent+"ret double %%"+QString::number(returnEquationIndex)+"\n";
+            data.appendAssemblyCode(Indent+"ret double %%"+QString::number(data.assemblyCodeIndex())+"\n");
         }
     }
 
     // End the function
 
-    assemblyCode += "}";
+    data.appendAssemblyCode("}");
 
     // Add the TBAA information, if needed
 
-    if (needTbaaInformation) {
-        assemblyCode += "\n\n";
-        assemblyCode += "!0 = metadata !{metadata !\"double\", metadata !1}\n";
-        assemblyCode += "!1 = metadata !{metadata !\"omnipotent char\", metadata !2}\n";
-        assemblyCode += "!2 = metadata !{metadata !\"Simple C/C++ TBAA\", null}";
+    if (data.needTbaaInformation()) {
+        data.appendAssemblyCode("\n\n");
+        data.appendAssemblyCode("!0 = metadata !{metadata !\"double\", metadata !1}\n");
+        data.appendAssemblyCode("!1 = metadata !{metadata !\"omnipotent char\", metadata !2}\n");
+        data.appendAssemblyCode("!2 = metadata !{metadata !\"Simple C/C++ TBAA\", null}");
     }
 
     // Now that we are done generating some LLVM assembly code for the function,
     // we can parse that code and have LLVM generate some IR code that will get
     // automatically added to our module
 
-//assemblyCode  = "declare double @sin(double)\n";
-//assemblyCode += "\n";
-//assemblyCode += "define void @test(double* %%data) {\n";
-//assemblyCode += "  %%1 = getelementptr inbounds double* %%data, i64 0\n";
-//assemblyCode += "  store double 1.230000e+02, double* %%1, align 8\n";
-//assemblyCode += "\n";
-//assemblyCode += "  %%2 = getelementptr inbounds double* %%data, i64 2\n";
-//assemblyCode += "  store double 1.230000e+02, double* %%2, align 8\n";
-//assemblyCode += "\n";
-//assemblyCode += "  %%3 = getelementptr inbounds double* %%data, i64 4\n";
-//assemblyCode += "  store double 1.230000e+02, double* %%3, align 8\n";
-//assemblyCode += "\n";
-//assemblyCode += "  %%4 = load double* %%data, align 8\n";
-//assemblyCode += "  %%5 = tail call double @sin(double %%4)\n";
-//assemblyCode += "  %%6 = getelementptr inbounds double* %%data, i64 1\n";
-//assemblyCode += "  store double %%5, double* %%6, align 8\n";
-//assemblyCode += "\n";
-//assemblyCode += "  %%7 = getelementptr inbounds double* %%data, i64 2\n";
-//assemblyCode += "  %%8 = load double* %%7, align 8\n";
-//assemblyCode += "  %%9 = tail call double @sin(double %%8) nounwind readnone\n";
-//assemblyCode += "  %%10 = getelementptr inbounds double* %%data, i64 3\n";
-//assemblyCode += "  store double %%9, double* %%10, align 8\n";
-//assemblyCode += "\n";
-//assemblyCode += "  %%11 = getelementptr inbounds double* %%data, i64 4\n";
-//assemblyCode += "  %%12 = load double* %%11, align 8\n";
-//assemblyCode += "  %%13 = tail call double @sin(double %%12) nounwind readnone\n";
-//assemblyCode += "  %%14 = getelementptr inbounds double* %%data, i64 5\n";
-//assemblyCode += "  store double %%13, double* %%14, align 8\n";
-//assemblyCode += "\n";
-//assemblyCode += "  ret void\n";
-//assemblyCode += "}";
-
     qDebug("");
     qDebug("LLVM assembly:");
     qDebug("");
-    qDebug(QString(assemblyCode).toLatin1().constData());
-
-    QString originalAssemblyCode = QString(assemblyCode);
-    // Note: the above is required since we must replace '%' with '\%' prior to
-    //       having LLVM parse the assembly code, yet we need to keep a trace of
-    //       the original assembly code (in case the parsing goes wrong), so...
+    qDebug(QString(data.assemblyCode()).toLatin1().constData());
 
     llvm::SMDiagnostic parseError;
-    llvm::ParseAssemblyString(assemblyCode.replace("%%", "\%").toLatin1().constData(),
+    llvm::ParseAssemblyString(data.assemblyCode().replace("%%", "\%").toLatin1().constData(),
                               mModule, parseError, llvm::getGlobalContext());
+    // Note: for LLVM to be able to parse the assembly code properly, we must
+    //       replace '%' with '\%', so...
 
     if (parseError.getMessage().size())
         mError = ComputerError(tr("the LLVM assembly code could not be parsed: %1").arg(QString::fromStdString(parseError.getMessage()).remove("error: ")),
                                parseError.getLineNo(), parseError.getColumnNo(),
-                               originalAssemblyCode);
+                               data.assemblyCode());
         // Note: we must not exit straightaway since LLVM may have generated
         //       some IR code, so we first need to check whether part of the
         //       function has already been generated and, if so, remove it...
@@ -390,9 +471,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 //==============================================================================
 
 int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEquation *pIndirectParameter,
-                                                       QString &pAssemblyCode,
-                                                       int &pAssemblyCodeIndex,
-                                                       bool &pNeedTbaaInformation,
+                                                       ComputerEngineData &pData,
                                                        const bool &pOperand)
 {
     // Retrieve the assembly code index associated with an indirect parameter or
@@ -420,21 +499,21 @@ int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEquation *pIndire
         // so we need to retrieve an assembly code index for the direct pointer
         // to the indirect parameter or create one, if needed
 
-        if (mIndirectParameterPointerAssemblyCodeIndexes.contains(key)) {
+        if (pData.indirectParameterPointerAssemblyCodeIndexes().contains(key)) {
             // An assembly code index already exists, so retrieve its value
 
-            pointerAssemblyCodeIndex = mIndirectParameterPointerAssemblyCodeIndexes.value(key);
+            pointerAssemblyCodeIndex = pData.indirectParameterPointerAssemblyCodeIndexes().value(key);
         } else {
             // No assembly code index for the direct pointer to the indirect
             // parameter exists, so create one
 
-            pAssemblyCode += Indent+"%%"+QString::number(++pAssemblyCodeIndex)+" = getelementptr inbounds double* %%"+pIndirectParameter->parameterName()+", i64 "+QString::number(pIndirectParameter->parameterIndex())+"\n";
+            pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = getelementptr inbounds double* %%"+pIndirectParameter->parameterName()+", i64 "+QString::number(pIndirectParameter->parameterIndex())+"\n");
 
             // Keep track of the assembly code index
 
-            mIndirectParameterPointerAssemblyCodeIndexes.insert(key, pAssemblyCodeIndex);
+            pointerAssemblyCodeIndex = pData.assemblyCodeIndex();
 
-            pointerAssemblyCodeIndex = pAssemblyCodeIndex;
+            pData.addIndirectParameterPointerAssemblyCodeIndex(key, pointerAssemblyCodeIndex);
         }
     } else {
         // We are dealing with the first entry in the array of doubles, so there
@@ -451,35 +530,35 @@ int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEquation *pIndire
         // retrieve an assembly code index for the loading of the indirect
         // parameter or create one, if needed
 
-        if (mIndirectParameterLoadAssemblyCodeIndexes.contains(key)) {
+        if (pData.indirectParameterLoadAssemblyCodeIndexes().contains(key)) {
             // An assembly code index already exists, so return its value
 
-            return mIndirectParameterLoadAssemblyCodeIndexes.value(key);
+            return pData.indirectParameterLoadAssemblyCodeIndexes().value(key);
         } else {
             // No assembly code index for the loading of the indirect  parameter
             // exists, so create one
 
-            pAssemblyCode += Indent+"%%"+QString::number(++pAssemblyCodeIndex)+" = load double* %%";
+            pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = load double* %%");
 
             if (pointerAssemblyCodeIndex)
-                pAssemblyCode += QString::number(pointerAssemblyCodeIndex);
+                pData.appendAssemblyCode(QString::number(pointerAssemblyCodeIndex));
             else
-                pAssemblyCode += pIndirectParameter->parameterName();
+                pData.appendAssemblyCode(pIndirectParameter->parameterName());
 
-            pAssemblyCode += ", align 8, !tbaa !0\n";
+            pData.appendAssemblyCode(", align 8, !tbaa !0\n");
 
             // Keep track of the fact that we need TBAA information
 
-            pNeedTbaaInformation = true;
+            pData.setNeedTbaaInformation(true);
 
             // Keep track of the assembly code index
 
-            mIndirectParameterLoadAssemblyCodeIndexes.insert(key, pAssemblyCodeIndex);
+            pData.addIndirectParameterLoadAssemblyCodeIndex(key, pData.assemblyCodeIndex());
 
             // Return the assembly code index for the loading of the indirect
             // parameter
 
-            return pAssemblyCodeIndex;
+            return pData.assemblyCodeIndex();
         }
     } else {
         // We only want an assembly code index for the direct pointer to the
@@ -492,9 +571,7 @@ int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEquation *pIndire
 //==============================================================================
 
 QString ComputerEngine::compileOperand(ComputerEquation *pOperand,
-                                       QString &pAssemblyCode,
-                                       int &pAssemblyCodeIndex,
-                                       bool &pNeedTbaaInformation)
+                                       ComputerEngineData &pData)
 {
     switch (pOperand->type()) {
     case ComputerEquation::DirectParameter:
@@ -505,9 +582,7 @@ QString ComputerEngine::compileOperand(ComputerEquation *pOperand,
         // An indirect parameter, so...
 
         return "%%"+QString::number(indirectParameterAssemblyCodeIndex(pOperand,
-                                                                       pAssemblyCode,
-                                                                       pAssemblyCodeIndex,
-                                                                       pNeedTbaaInformation,
+                                                                       pData,
                                                                        true));
 
         break;
@@ -518,7 +593,7 @@ QString ComputerEngine::compileOperand(ComputerEquation *pOperand,
     default:
         // Part of a computed equation, so...
 
-        return "%%"+QString::number(mEquationAssemblyCodeIndexes.value(pOperand));
+        return "%%"+QString::number(pData.equationAssemblyCodeIndexes().value(pOperand));
     }
 }
 
@@ -526,66 +601,59 @@ QString ComputerEngine::compileOperand(ComputerEquation *pOperand,
 
 void ComputerEngine::compileAssignmentEquation(ComputerEquation *pIndirectParameter,
                                                ComputerEquation *pRhsEquation,
-                                               QString &pAssemblyCode,
-                                               int &pAssemblyCodeIndex,
-                                               bool &pNeedTbaaInformation)
+                                               ComputerEngineData &pData)
 {
     // Keep track of the RHS equation assembly code index
 
-    int rhsEquationAssemblyCodeIndex = pAssemblyCodeIndex;
+    int rhsEquationAssemblyCodeIndex = pData.assemblyCodeIndex();
 
     // Retrieve, for the indirect parameter and if necessary, a pointer to the
     // correct entry in the array of doubles
 
     int assemblyCodeIndex = indirectParameterAssemblyCodeIndex(pIndirectParameter,
-                                                               pAssemblyCode,
-                                                               pAssemblyCodeIndex,
-                                                               pNeedTbaaInformation,
-                                                               false);
+                                                               pData, false);
 
     // Store the RHS of the equation...
     // Note: we try optimise this by checking whether the RHS of the equation is
     //       a number...
 
-    pAssemblyCode += Indent+"store double ";
+    pData.appendAssemblyCode(Indent+"store double ");
 
     if (pRhsEquation->type() == ComputerEquation::Number)
         // We are dealing with a number, so...
 
-        pAssemblyCode += numberAsString(pRhsEquation->number());
+        pData.appendAssemblyCode(numberAsString(pRhsEquation->number()));
     else
-        // We are not dealing with a number, but a 'proper' RHS equation, so...
-//---GRY--- THIS PART NEEDS TO BE TESTED, BUT FOR THIS WE NEED compileRhsEquation TO BE COMPLETED...
+        // We are not dealing with a number, but with a 'proper' RHS equation,
+        // so...
 
-        pAssemblyCode += "%%"+QString::number(rhsEquationAssemblyCodeIndex);
+        pData.appendAssemblyCode("%%"+QString::number(rhsEquationAssemblyCodeIndex));
 
     // ... to the LHS of the equation
 
-    pAssemblyCode += ", double* %%";
+    pData.appendAssemblyCode(", double* %%");
 
     if (assemblyCodeIndex)
         // We have an assembly code index for the indirect parameter, so...
 
-        pAssemblyCode += QString::number(assemblyCodeIndex);
+        pData.appendAssemblyCode(QString::number(assemblyCodeIndex));
     else
         // We don't have an assembly code index for the indirect parameter,
         // so...
 
-        pAssemblyCode += pIndirectParameter->parameterName();
+        pData.appendAssemblyCode(pIndirectParameter->parameterName());
 
-    pAssemblyCode += ", align 8, !tbaa !0\n";
+    pData.appendAssemblyCode(", align 8, !tbaa !0\n");
 
     // Keep track of the fact that we need TBAA information
 
-    pNeedTbaaInformation = true;
+    pData.setNeedTbaaInformation(true);
 }
 
 //==============================================================================
 
 void ComputerEngine::compileEquation(ComputerEquation *pEquation,
-                                     QString &pAssemblyCode,
-                                     int &pAssemblyCodeIndex,
-                                     bool &pNeedTbaaInformation)
+                                     ComputerEngineData &pData)
 {
     // An equation must consist of an assignment, so just make sure that it is
     // the case
@@ -603,15 +671,12 @@ void ComputerEngine::compileEquation(ComputerEquation *pEquation,
 
     // Compile the RHS of the equation
 
-    compileRhsEquation(equation->right(), pAssemblyCode, pAssemblyCodeIndex,
-                       pNeedTbaaInformation);
+    compileRhsEquation(equation->right(), pData);
 
     // Assign the result of the RHS of the equation to the indirect parameter
     // which information can be found the LHS of the equation
 
-    compileAssignmentEquation(equation->left(), equation->right(),
-                              pAssemblyCode, pAssemblyCodeIndex,
-                              pNeedTbaaInformation);
+    compileAssignmentEquation(equation->left(), equation->right(), pData);
 
     // We are now done with the copy of the equation, so...
 
@@ -620,46 +685,31 @@ void ComputerEngine::compileEquation(ComputerEquation *pEquation,
 
 //==============================================================================
 
-int ComputerEngine::compileRhsEquation(ComputerEquation *pRhsEquation,
-                                        QString &pAssemblyCode,
-                                       int &pAssemblyCodeIndex,
-                                       bool &pNeedTbaaInformation)
+void ComputerEngine::compileRhsEquation(ComputerEquation *pRhsEquation,
+                                        ComputerEngineData &pData)
 {
     // Compile the RHS of the equation starting from its top node
 
-    compileEquationNode(pRhsEquation, pAssemblyCode, pAssemblyCodeIndex,
-                        pNeedTbaaInformation);
-
-    // We are done, so return the latest assembly code index
-
-    return pAssemblyCodeIndex;
+    compileEquationNode(pRhsEquation, pData);
 }
 
 //==============================================================================
 
-void ComputerEngine::compileMathematicalOperator(const QString &pOperator,
-                                                 ComputerEquation *pOperandOne,
+void ComputerEngine::compileMathematicalOperator(ComputerEquation *pOperandOne,
                                                  ComputerEquation *pOperandTwo,
-                                                 QString &pAssemblyCode,
-                                                 int &pAssemblyCodeIndex,
-                                                 bool &pNeedTbaaInformation)
+                                                 const QString &pOperator,
+                                                 ComputerEngineData &pData)
 {
-    QString operandOne = compileOperand(pOperandOne,
-                                        pAssemblyCode, pAssemblyCodeIndex,
-                                        pNeedTbaaInformation);
-    QString operandTwo = compileOperand(pOperandTwo,
-                                        pAssemblyCode, pAssemblyCodeIndex,
-                                        pNeedTbaaInformation);
+    QString operandOne = compileOperand(pOperandOne, pData);
+    QString operandTwo = compileOperand(pOperandTwo, pData);
 
-    pAssemblyCode += Indent+"%%"+QString::number(++pAssemblyCodeIndex)+" = "+pOperator+" double "+operandOne+", "+operandTwo+"\n";
+    pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = "+pOperator+" double "+operandOne+", "+operandTwo+"\n");
 }
 
 //==============================================================================
 
 void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
-                                         QString &pAssemblyCode,
-                                         int &pAssemblyCodeIndex,
-                                         bool &pNeedTbaaInformation)
+                                         ComputerEngineData &pData)
 {
     // Make sure that the node is valid
 
@@ -681,15 +731,11 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
 
     // Compile the left node
 
-    compileEquationNode(pEquationNode->left(),
-                        pAssemblyCode, pAssemblyCodeIndex,
-                        pNeedTbaaInformation);
+    compileEquationNode(pEquationNode->left(), pData);
 
     // Compile the right node
 
-    compileEquationNode(pEquationNode->right(),
-                        pAssemblyCode, pAssemblyCodeIndex,
-                        pNeedTbaaInformation);
+    compileEquationNode(pEquationNode->right(), pData);
 
     // Compilation of the current node
 
@@ -697,48 +743,41 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
     case ComputerEquation::Times:
         // Compilation of a multiplication
 
-        compileMathematicalOperator("fmul",
-                                    pEquationNode->left(),
+        compileMathematicalOperator(pEquationNode->left(),
                                     pEquationNode->right(),
-                                    pAssemblyCode, pAssemblyCodeIndex,
-                                    pNeedTbaaInformation);
+                                    "fmul", pData);
 
         break;
     case ComputerEquation::Divide:
         // Compilation of a division
 
-        compileMathematicalOperator("fdiv",
-                                    pEquationNode->left(),
+        compileMathematicalOperator(pEquationNode->left(),
                                     pEquationNode->right(),
-                                    pAssemblyCode, pAssemblyCodeIndex,
-                                    pNeedTbaaInformation);
+                                    "fdiv", pData);
 
         break;
     case ComputerEquation::Plus:
         // Compilation of an addition
 
-        compileMathematicalOperator("fadd",
-                                    pEquationNode->left(),
+        compileMathematicalOperator(pEquationNode->left(),
                                     pEquationNode->right(),
-                                    pAssemblyCode, pAssemblyCodeIndex,
-                                    pNeedTbaaInformation);
+                                    "fadd", pData);
 
         break;
     case ComputerEquation::Minus:
         // Compilation of a subtraction
 
-        compileMathematicalOperator("fsub",
-                                    pEquationNode->left(),
+        compileMathematicalOperator(pEquationNode->left(),
                                     pEquationNode->right(),
-                                    pAssemblyCode, pAssemblyCodeIndex,
-                                    pNeedTbaaInformation);
+                                    "fsub", pData);
 
         break;
     }
 
     // Keep track of the assembly code index of the current node
 
-    mEquationAssemblyCodeIndexes.insert(pEquationNode, pAssemblyCodeIndex);
+    pData.addEquationAssemblyCodeIndex(pEquationNode,
+                                       pData.assemblyCodeIndex());
 }
 
 //==============================================================================

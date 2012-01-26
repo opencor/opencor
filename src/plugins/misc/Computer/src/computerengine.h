@@ -36,6 +36,51 @@ class ComputerParser;
 
 //==============================================================================
 
+typedef QMap<QString, int> ComputerEngineIndirectParameterAssemblyCodeIndexes;
+typedef QMap<ComputerEquation *, int> ComputerEngineEquationAssemblyCodeIndexes;
+
+//==============================================================================
+
+struct ComputerEngineData
+{
+public:
+    explicit ComputerEngineData();
+
+    QString assemblyCode() const;
+    void appendAssemblyCode(const QString &pAssemblyCode);
+
+    int assemblyCodeIndex() const;
+    int nextAssemblyCodeIndex();
+
+    bool needTbaaInformation() const;
+    void setNeedTbaaInformation(const bool &pNeedTbaaInformation);
+
+    ComputerEngineIndirectParameterAssemblyCodeIndexes indirectParameterPointerAssemblyCodeIndexes() const;
+    void addIndirectParameterPointerAssemblyCodeIndex(const QString &pKey,
+                                                      const int &pValue);
+
+    ComputerEngineIndirectParameterAssemblyCodeIndexes indirectParameterLoadAssemblyCodeIndexes() const;
+    void addIndirectParameterLoadAssemblyCodeIndex(const QString &pKey,
+                                                   const int &pValue);
+
+    ComputerEngineEquationAssemblyCodeIndexes equationAssemblyCodeIndexes() const;
+    void addEquationAssemblyCodeIndex(ComputerEquation *pKey,
+                                      const int &pValue);
+
+private:
+    QString mAssemblyCode;
+    int mAssemblyCodeIndex;
+
+    bool mNeedTbaaInformation;
+
+    ComputerEngineIndirectParameterAssemblyCodeIndexes mIndirectParameterPointerAssemblyCodeIndexes;
+    ComputerEngineIndirectParameterAssemblyCodeIndexes mIndirectParameterLoadAssemblyCodeIndexes;
+
+    ComputerEngineEquationAssemblyCodeIndexes mEquationAssemblyCodeIndexes;
+};
+
+//==============================================================================
+
 class COMPUTER_EXPORT ComputerEngine : public QObject
 {
     Q_OBJECT
@@ -62,41 +107,28 @@ private:
 
     ComputerExternalFunctions mExternalFunctions;
 
-    QMap<QString, int> mIndirectParameterPointerAssemblyCodeIndexes;
-    QMap<QString, int> mIndirectParameterLoadAssemblyCodeIndexes;
-    QMap<ComputerEquation *, int> mEquationAssemblyCodeIndexes;
-
     QString numberAsString(const double &pNumber);
 
     llvm::Function * compileFunction(ComputerFunction *pFunction);
 
     int indirectParameterAssemblyCodeIndex(ComputerEquation *pIndirectParameter,
-                                           QString &pAssemblyCode,
-                                           int &pAssemblyCodeIndex,
-                                           bool &pNeedTbaaInformation,
+                                           ComputerEngineData &pData,
                                            const bool &pOperand);
     QString compileOperand(ComputerEquation *pOperand,
-                           QString &pAssemblyCode, int &pAssemblyCodeIndex,
-                           bool &pNeedTbaaInformation);
+                           ComputerEngineData &pData);
     void compileAssignmentEquation(ComputerEquation *pIndirectParameter,
                                    ComputerEquation *pRhsEquation,
-                                   QString &pAssemblyCode, int &pAssemblyCodeIndex,
-                                   bool &pNeedTbaaInformation);
+                                   ComputerEngineData &pData);
     void compileEquation(ComputerEquation *pEquation,
-                         QString &pAssemblyCode, int &pAssemblyCodeIndex,
-                         bool &pNeedTbaaInformation);
-    int compileRhsEquation(ComputerEquation *pRhsEquation,
-                           QString &pAssemblyCode, int &pAssemblyCodeIndex,
-                           bool &pNeedTbaaInformation);
-    void compileMathematicalOperator(const QString &pOperator,
-                                     ComputerEquation *pOperandOne,
+                         ComputerEngineData &pData);
+    void compileRhsEquation(ComputerEquation *pRhsEquation,
+                            ComputerEngineData &pData);
+    void compileMathematicalOperator(ComputerEquation *pOperandOne,
                                      ComputerEquation *pOperandTwo,
-                                     QString &pAssemblyCode,
-                                     int &pAssemblyCodeIndex,
-                                     bool &pNeedTbaaInformation);
+                                     const QString &pOperator,
+                                     ComputerEngineData &pData);
     void compileEquationNode(ComputerEquation *pEquationNode,
-                             QString &pAssemblyCode, int &pAssemblyCodeIndex,
-                             bool &pNeedTbaaInformation);
+                             ComputerEngineData &pData);
 };
 
 //==============================================================================
