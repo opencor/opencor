@@ -105,9 +105,10 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
     qDebug("");
     qDebug(pFunction.toLatin1().constData());
 
-    // Reset our list of assembly code indexes
+    // Reset our lists of assembly code indexes
 
-    mAssemblyCodeIndexes.clear();
+    mIndirectParameterAssemblyCodeIndexes.clear();
+    mEquationAssemblyCodeIndexes.clear();
 
     // Parse the function
 
@@ -151,12 +152,9 @@ static QString Indent = QString("  ");
 QString ComputerEngine::numberAsString(const double &pNumber)
 {
     // Return a number as a string
-    // Note: if the number is effectively an integer, then we must append ".0"
-    //       to it otherwise LLVM won't be able to parse the assembly code,
-    //       so...
+    // Note: the number will have the following formating: [-]9.9e[+|-]999
 
-    return  QString::number(pNumber)
-           +QString((pNumber == qRound(pNumber))?".0":"");
+    return  QString::number(pNumber, 'e');
 }
 
 //==============================================================================
@@ -386,42 +384,48 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
 //==============================================================================
 
-int ComputerEngine::assemblyCodeIndex(ComputerEquation *pNode,
-                                      QString &pAssemblyCode,
-                                      int &pAssemblyCodeIndex)
+int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEquation *pIndirectParameter,
+                                                       QString &pAssemblyCode,
+                                                       int &pAssemblyCodeIndex,
+                                                       const bool &pOperand)
 {
     // Retrieve the assembly code index associated with an indirect parameter or
     // create one, if needed
 
     // Check whether there is a potential need for an assembly code index
 
-    if (pNode->parameterIndex()) {
+    if (pIndirectParameter->parameterIndex()) {
         // We are not dealing with the first entry in the array of doubles,
         // so we need to retrieve an assembly code index or create one, if
         // needed
 
-        QString key = pNode->parameterName()+"|"+pNode->parameterIndex();
+        QString key = pIndirectParameter->parameterName()+"|"+pIndirectParameter->parameterIndex();
 
-        if (mAssemblyCodeIndexes.contains(key)) {
+        if (mIndirectParameterAssemblyCodeIndexes.contains(key)) {
             // An assembly code index already exists, so just retrieve and
             // return it
 
-            return mAssemblyCodeIndexes.value(key);
+            return mIndirectParameterAssemblyCodeIndexes.value(key);
         } else {
             // No assembly code index exists for the indirect parameter, so we
             // need to create one
 
-            int res = ++pAssemblyCodeIndex;
+            pAssemblyCode += Indent+"%%"+QString::number(++pAssemblyCodeIndex)+" = getelementptr inbounds double* %%"+pIndirectParameter->parameterName()+", i64 "+QString::number(pIndirectParameter->parameterIndex())+"\n";
 
-            pAssemblyCode += Indent+"%%"+QString::number(res)+" = getelementptr inbounds double* %%"+pNode->parameterName()+", i64 "+QString::number(pNode->parameterIndex())+"\n";
+            if (pOperand) {
+                // The indirect parameter for which we want an assembly code
+                // index is used as an operand, so we need load it
 
-            // Keep track of the assembly code index
+                pAssemblyCode += Indent+"%%"+QString::number(++pAssemblyCodeIndex)+" = load double* %%"+QString::number(pAssemblyCodeIndex)+", align 8, !tbaa !0\n";
 
-            mAssemblyCodeIndexes.insert(key, res);
+                // Keep track of the assembly code index
+
+                mIndirectParameterAssemblyCodeIndexes.insert(key, pAssemblyCodeIndex);
+            }
 
             // Return the assembly code index
 
-            return res;
+            return pAssemblyCodeIndex;
         }
     } else {
         // We are dealing with the first entry in the array of doubles, so we
@@ -433,10 +437,40 @@ int ComputerEngine::assemblyCodeIndex(ComputerEquation *pNode,
 
 //==============================================================================
 
-void ComputerEngine::assignEquation(ComputerEquation *pIndirectParameter,
-                                    ComputerEquation *pRhsEquation,
-                                    QString &pAssemblyCode,
-                                    int &pAssemblyCodeIndex)
+QString ComputerEngine::compileOperand(ComputerEquation *pOperand,
+                                       QString &pAssemblyCode, int &pAssemblyCodeIndex)
+{
+    switch (pOperand->type()) {
+    case ComputerEquation::DirectParameter:
+        // A direct parameter, so...
+
+        return "%%"+pOperand->parameterName();
+    case ComputerEquation::IndirectParameter:
+        // An indirect parameter, so...
+
+        return "%%"+QString::number(indirectParameterAssemblyCodeIndex(pOperand,
+                                                                       pAssemblyCode,
+                                                                       pAssemblyCodeIndex,
+                                                                       true));
+
+        break;
+    case ComputerEquation::Number:
+        // A number, so...
+
+        return numberAsString(pOperand->number());
+    default:
+        // Part of a computed equation, so...
+
+        return "%%"+QString::number(mEquationAssemblyCodeIndexes.value(pOperand));
+    }
+}
+
+//==============================================================================
+
+void ComputerEngine::compileAssignmentEquation(ComputerEquation *pIndirectParameter,
+                                               ComputerEquation *pRhsEquation,
+                                               QString &pAssemblyCode,
+                                               int &pAssemblyCodeIndex)
 {
     // Keep track of the RHS equation assembly code index
 
@@ -445,9 +479,10 @@ void ComputerEngine::assignEquation(ComputerEquation *pIndirectParameter,
     // Retrieve, for the indirect parameter and if necessary, a pointer to the
     // correct entry in the array of doubles
 
-    int indirectParameterAssemblyCodeIndex = assemblyCodeIndex(pIndirectParameter,
+    int assemblyCodeIndex = indirectParameterAssemblyCodeIndex(pIndirectParameter,
                                                                pAssemblyCode,
-                                                               pAssemblyCodeIndex);
+                                                               pAssemblyCodeIndex,
+                                                               false);
 
     // Store the RHS of the equation...
     // Note: we try optimise this by checking whether the RHS of the equation is
@@ -469,10 +504,10 @@ void ComputerEngine::assignEquation(ComputerEquation *pIndirectParameter,
 
     pAssemblyCode += ", double* %%";
 
-    if (indirectParameterAssemblyCodeIndex)
+    if (assemblyCodeIndex)
         // We have an assembly code index for the indirect parameter, so...
 
-        pAssemblyCode += QString::number(indirectParameterAssemblyCodeIndex);
+        pAssemblyCode += QString::number(assemblyCodeIndex);
     else
         // We don't have an assembly code index for the indirect parameter,
         // so...
@@ -509,8 +544,8 @@ void ComputerEngine::compileEquation(ComputerEquation *pEquation,
     // Assign the result of the RHS of the equation to the indirect parameter
     // which information can be found the LHS of the equation
 
-    assignEquation(equation->left(), equation->right(),
-                   pAssemblyCode, pAssemblyCodeIndex);
+    compileAssignmentEquation(equation->left(), equation->right(),
+                              pAssemblyCode, pAssemblyCodeIndex);
 
     // We are now done with the copy of the equation, so...
 
@@ -534,49 +569,69 @@ int ComputerEngine::compileRhsEquation(ComputerEquation *pRhsEquation,
 
 //==============================================================================
 
-int ComputerEngine::compileEquationNode(ComputerEquation *pNode,
-                                        QString &pAssemblyCode,
-                                        int &pAssemblyCodeIndex)
+void ComputerEngine::compileMathematicalOperator(const QString &pOperator,
+                                                 ComputerEquation *pOperandOne,
+                                                 ComputerEquation *pOperandTwo,
+                                                 QString &pAssemblyCode,
+                                                 int &pAssemblyCodeIndex)
+{
+    QString operandOne = compileOperand(pOperandOne,
+                                        pAssemblyCode, pAssemblyCodeIndex);
+    QString operandTwo = compileOperand(pOperandTwo,
+                                        pAssemblyCode, pAssemblyCodeIndex);
+
+    pAssemblyCode += Indent+"%%"+QString::number(++pAssemblyCodeIndex)+" = "+pOperator+" double "+operandOne+", "+operandTwo+"\n";
+}
+
+//==============================================================================
+
+void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
+                                         QString &pAssemblyCode,
+                                         int &pAssemblyCodeIndex)
 {
     // Make sure that the node is valid
 
-    if (!pNode)
+    if (!pEquationNode)
         // It isn't, so...
 
-        return pAssemblyCodeIndex;
+        return;
 
     // Check whether the current node is a direct parameter or a number
 
-    if (   (pNode->type() == ComputerEquation::DirectParameter)
-        || (pNode->type() == ComputerEquation::IndirectParameter)
-        || (pNode->type() == ComputerEquation::Number))
+    if (   (pEquationNode->type() == ComputerEquation::DirectParameter)
+        || (pEquationNode->type() == ComputerEquation::IndirectParameter)
+        || (pEquationNode->type() == ComputerEquation::Number))
         // It is either a direct parameter or a number, so nothing to compile
-        // (since this will be done as part of the compilation of another node)
+        // (since this will be done as part of the compilation of another node),
+        // so...
 
-        return pAssemblyCodeIndex;
+        return;
 
     // Compile the left node
 
-    compileEquationNode(pNode->left(), pAssemblyCode, pAssemblyCodeIndex);
+    compileEquationNode(pEquationNode->left(), pAssemblyCode, pAssemblyCodeIndex);
 
     // Compile the right node
 
-    compileEquationNode(pNode->right(), pAssemblyCode, pAssemblyCodeIndex);
+    compileEquationNode(pEquationNode->right(), pAssemblyCode, pAssemblyCodeIndex);
 
     // Compilation of the current node
 
-    switch (pNode->type()) {
+    switch (pEquationNode->type()) {
     case ComputerEquation::Plus:
         // Compilation of an addition
 
-//---GRY--- TO BE DONE...
+        compileMathematicalOperator("fadd",
+                                    pEquationNode->left(),
+                                    pEquationNode->right(),
+                                    pAssemblyCode, pAssemblyCodeIndex);
 
         break;
     }
 
-    // We are done, so return the latest assembly code index
+    // Keep track of the assembly code index of the current node
 
-    return pAssemblyCodeIndex;
+    mEquationAssemblyCodeIndexes.insert(pEquationNode, pAssemblyCodeIndex);
 }
 
 //==============================================================================

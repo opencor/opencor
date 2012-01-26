@@ -260,8 +260,8 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             Computer::ComputerEngine computerEngine;
 
-            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
-            handleErrors(computerEngine, "initConsts");
+//            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
+//            handleErrors(computerEngine, "initConsts");
 
 //            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
 //            handleErrors(computerEngine, "rates");
@@ -277,7 +277,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 //                handleErrors(computerEngine, "stateInformation");
 //            }
 
-            computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pow(2, 3);\n  pData[1] = 3*5+9;\n  pData[2] = 5-9/7;\n}");
+            computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pow(2, 3);\n  pData[1] = 3*5+9+pData[3];\n  pData[2] = 5-9/7;\n}");
             handleErrors(computerEngine, "test");
 
             // Output the contents of our computer engine's module so far
@@ -359,11 +359,13 @@ void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
             if (!pFunctionName.compare("test")) {
                 // Initialise our array of data
 
-                static const int dataSize = 3;
+                static const int dataSize = 4;
                 double data[dataSize];
 
                 for (int i = 0; i < dataSize; ++i)
                     data[i] = 0;
+
+                data[3] = 5;
 
                 // Output the contents of our original array of data
 

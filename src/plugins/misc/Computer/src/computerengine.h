@@ -62,23 +62,33 @@ private:
 
     ComputerExternalFunctions mExternalFunctions;
 
-    QMap<QString, int> mAssemblyCodeIndexes;
+    QMap<QString, int> mIndirectParameterAssemblyCodeIndexes;
+    QMap<ComputerEquation *, int> mEquationAssemblyCodeIndexes;
 
     QString numberAsString(const double &pNumber);
 
     llvm::Function * compileFunction(ComputerFunction *pFunction);
 
-    int assemblyCodeIndex(ComputerEquation *pNode,
-                          QString &pAssemblyCode, int &pAssemblyCodeIndex);
-    void assignEquation(ComputerEquation *pIndirectParameter,
-                        ComputerEquation *pRhsEquation,
-                        QString &pAssemblyCode, int &pAssemblyCodeIndex);
+    int indirectParameterAssemblyCodeIndex(ComputerEquation *pIndirectParameter,
+                                           QString &pAssemblyCode,
+                                           int &pAssemblyCodeIndex,
+                                           const bool &pOperand);
+    QString compileOperand(ComputerEquation *pOperand,
+                           QString &pAssemblyCode, int &pAssemblyCodeIndex);
+    void compileAssignmentEquation(ComputerEquation *pIndirectParameter,
+                                   ComputerEquation *pRhsEquation,
+                                   QString &pAssemblyCode, int &pAssemblyCodeIndex);
     void compileEquation(ComputerEquation *pEquation,
                          QString &pAssemblyCode, int &pAssemblyCodeIndex);
     int compileRhsEquation(ComputerEquation *pRhsEquation,
                            QString &pAssemblyCode, int &pAssemblyCodeIndex);
-    int compileEquationNode(ComputerEquation *pNode,
-                            QString &pAssemblyCode, int &pAssemblyCodeIndex);
+    void compileMathematicalOperator(const QString &pOperator,
+                                     ComputerEquation *pOperandOne,
+                                     ComputerEquation *pOperandTwo,
+                                     QString &pAssemblyCode,
+                                     int &pAssemblyCodeIndex);
+    void compileEquationNode(ComputerEquation *pEquationNode,
+                             QString &pAssemblyCode, int &pAssemblyCodeIndex);
 };
 
 //==============================================================================
