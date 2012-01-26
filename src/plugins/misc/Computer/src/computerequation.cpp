@@ -195,7 +195,7 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
 
     simplifyNode(pNode->right());
 
-    // Simplify the current node based on the contents of the left and right
+    // Simplify the current node based on the contents of its left and right
     // nodes
 
     switch (pNode->type()) {

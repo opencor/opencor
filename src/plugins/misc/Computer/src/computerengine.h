@@ -14,6 +14,7 @@
 
 //==============================================================================
 
+#include <QMap>
 #include <QStringList>
 
 //==============================================================================
@@ -61,10 +62,14 @@ private:
 
     ComputerExternalFunctions mExternalFunctions;
 
+    QMap<QString, int> mAssemblyCodeIndexes;
+
     QString numberAsString(const double &pNumber);
 
     llvm::Function * compileFunction(ComputerFunction *pFunction);
 
+    int assemblyCodeIndex(ComputerEquation *pNode,
+                          QString &pAssemblyCode, int &pAssemblyCodeIndex);
     void assignEquation(ComputerEquation *pIndirectParameter,
                         ComputerEquation *pRhsEquation,
                         QString &pAssemblyCode, int &pAssemblyCodeIndex);
@@ -72,6 +77,8 @@ private:
                          QString &pAssemblyCode, int &pAssemblyCodeIndex);
     int compileRhsEquation(ComputerEquation *pRhsEquation,
                            QString &pAssemblyCode, int &pAssemblyCodeIndex);
+    int compileEquationNode(ComputerEquation *pNode,
+                            QString &pAssemblyCode, int &pAssemblyCodeIndex);
 };
 
 //==============================================================================
