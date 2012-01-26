@@ -297,19 +297,19 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
             handleErrors(computerEngine, "initConsts");
 
-//            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
-//            handleErrors(computerEngine, "rates");
+            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
+            handleErrors(computerEngine, "rates");
 
-//            computerEngine.addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
-//            handleErrors(computerEngine, "variables");
+            computerEngine.addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
+            handleErrors(computerEngine, "variables");
 
-//            if (mModelType == Dae) {
-//                computerEngine.addFunction(QString("void essentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
-//                handleErrors(computerEngine, "essentialVariables");
+            if (mModelType == Dae) {
+                computerEngine.addFunction(QString("void essentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
+                handleErrors(computerEngine, "essentialVariables");
 
-//                computerEngine.addFunction(QString("void stateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
-//                handleErrors(computerEngine, "stateInformation");
-//            }
+                computerEngine.addFunction(QString("void stateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
+                handleErrors(computerEngine, "stateInformation");
+            }
 
             computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pow(2, 3);\n  pData[1] = 3*5+9+pData[3]*pData[3]/pData[4];\n  pData[2] = 5-9/7;\n}");
             handleErrors(computerEngine, "test");

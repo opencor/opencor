@@ -73,23 +73,30 @@ private:
     int indirectParameterAssemblyCodeIndex(ComputerEquation *pIndirectParameter,
                                            QString &pAssemblyCode,
                                            int &pAssemblyCodeIndex,
+                                           bool &pNeedTbaaInformation,
                                            const bool &pOperand);
     QString compileOperand(ComputerEquation *pOperand,
-                           QString &pAssemblyCode, int &pAssemblyCodeIndex);
+                           QString &pAssemblyCode, int &pAssemblyCodeIndex,
+                           bool &pNeedTbaaInformation);
     void compileAssignmentEquation(ComputerEquation *pIndirectParameter,
                                    ComputerEquation *pRhsEquation,
-                                   QString &pAssemblyCode, int &pAssemblyCodeIndex);
+                                   QString &pAssemblyCode, int &pAssemblyCodeIndex,
+                                   bool &pNeedTbaaInformation);
     void compileEquation(ComputerEquation *pEquation,
-                         QString &pAssemblyCode, int &pAssemblyCodeIndex);
+                         QString &pAssemblyCode, int &pAssemblyCodeIndex,
+                         bool &pNeedTbaaInformation);
     int compileRhsEquation(ComputerEquation *pRhsEquation,
-                           QString &pAssemblyCode, int &pAssemblyCodeIndex);
+                           QString &pAssemblyCode, int &pAssemblyCodeIndex,
+                           bool &pNeedTbaaInformation);
     void compileMathematicalOperator(const QString &pOperator,
                                      ComputerEquation *pOperandOne,
                                      ComputerEquation *pOperandTwo,
                                      QString &pAssemblyCode,
-                                     int &pAssemblyCodeIndex);
+                                     int &pAssemblyCodeIndex,
+                                     bool &pNeedTbaaInformation);
     void compileEquationNode(ComputerEquation *pEquationNode,
-                             QString &pAssemblyCode, int &pAssemblyCodeIndex);
+                             QString &pAssemblyCode, int &pAssemblyCodeIndex,
+                             bool &pNeedTbaaInformation);
 };
 
 //==============================================================================
