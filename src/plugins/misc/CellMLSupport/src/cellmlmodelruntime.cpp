@@ -337,7 +337,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 // Output the contents of our original array of data
 
                 qDebug("---------------------------------------");
-                qDebug("Before:");
+                qDebug("Original data value:");
                 qDebug("");
 
                 for (int i = 0; i < dataSize; ++i)
@@ -350,7 +350,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 // Output the contents of our updated array of data
 
                 qDebug("---------------------------------------");
-                qDebug("After:");
+                qDebug("Data values after running the \"test\" function:");
                 qDebug("");
 
                 for (int i = 0; i < dataSize; ++i)
@@ -361,7 +361,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 double test2Result = ((double (*)(double *))(intptr_t) computerEngine.executionEngine()->getPointerToFunction(test2Function))(data);
 
                 qDebug("---------------------------------------");
-                qDebug(QString("Result: %1").arg(QString::number(test2Result)).toLatin1().constData());
+                qDebug(QString("Return value from the \"test2\" function: %1").arg(QString::number(test2Result)).toLatin1().constData());
             }
 
             // Output the contents of our computer engine's module so far
