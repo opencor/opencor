@@ -11,11 +11,13 @@
 #include <QFileInfo>
 #include <QMainWindow>
 #include <QPen>
+#include <QVector>
 
 //==============================================================================
 
 #include "qwt_plot.h"
 #include "qwt_plot_grid.h"
+#include "qwt_plot_curve.h"
 
 //==============================================================================
 
@@ -172,6 +174,31 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                                       message.toUtf8().constData());
             }
         }
+
+        // Compute the model
+
+        typedef QVector<double> Doubles;
+
+        static const int NbOfDataPoints = 100;
+        static const double Factor      = 6.28/double(NbOfDataPoints-1);
+
+        Doubles xData;
+        Doubles yData;
+
+        for (int i = 0; i < NbOfDataPoints; ++i) {
+            xData.append(i*Factor);
+            yData.append(sin(xData.last()));
+        }
+
+        // Add a curve to our view
+
+        QwtPlotCurve *curve = new QwtPlotCurve;
+
+        curve->setRenderHint(QwtPlotItem::RenderAntialiased);
+        curve->setPen(QPen(Qt::darkBlue));
+        curve->setSamples(xData, yData);
+
+        curve->attach(mSimulationView);
 
         // Done with our testing, so...
 
