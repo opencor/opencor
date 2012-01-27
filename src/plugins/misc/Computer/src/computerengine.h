@@ -52,6 +52,10 @@ public:
     int assemblyCodeIndex() const;
     int nextAssemblyCodeIndex();
 
+    ComputerExternalFunctions externalFunctions() const;
+    bool addExternalFunction(const QString &pExternalFunctionName,
+                             const int &pNbOfArguments);
+
     bool needTbaaInformation() const;
     void setNeedTbaaInformation(const bool &pNeedTbaaInformation);
 
@@ -70,6 +74,8 @@ public:
 private:
     QString mAssemblyCode;
     int mAssemblyCodeIndex;
+
+    ComputerExternalFunctions mExternalFunctions;
 
     bool mNeedTbaaInformation;
 
@@ -119,14 +125,17 @@ private:
     void compileAssignmentEquation(ComputerEquation *pIndirectParameter,
                                    ComputerEquation *pRhsEquation,
                                    ComputerEngineData &pData);
-    void compileEquation(ComputerEquation *pEquation,
-                         ComputerEngineData &pData);
-    void compileRhsEquation(ComputerEquation *pRhsEquation,
-                            ComputerEngineData &pData);
     void compileMathematicalOperator(ComputerEquation *pOperandOne,
                                      ComputerEquation *pOperandTwo,
                                      const QString &pOperator,
                                      ComputerEngineData &pData);
+    void compileOneArgumentFunction(ComputerEquation *pOperand,
+                                     const QString &pFunctionName,
+                                     ComputerEngineData &pData);
+    void compileTwoArgumentFunction(ComputerEquation *pOperandOne,
+                                    ComputerEquation *pOperandTwo,
+                                    const QString &pFunctionName,
+                                    ComputerEngineData &pData);
     void compileEquationNode(ComputerEquation *pEquationNode,
                              ComputerEngineData &pData);
 };

@@ -21,8 +21,7 @@ namespace Computer {
 //==============================================================================
 
 ComputerParser::ComputerParser() :
-    mErrors(ComputerErrors()),
-    mExternalFunctions(ComputerExternalFunctions())
+    mErrors(ComputerErrors())
 {
     // Create a scanner
 
@@ -90,20 +89,6 @@ void ComputerParser::addError(const QString &pMessage,
 
 //==============================================================================
 
-void ComputerParser::reset(const QString &pFunction)
-{
-    // Reset a few things
-
-    mErrors.clear();
-    mExternalFunctions.clear();
-
-    // Initialise our scanner
-
-    mScanner->initialise(pFunction);
-}
-
-//==============================================================================
-
 ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
 {
     // The EBNF grammar of a function is as follows:
@@ -112,9 +97,10 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     //   VoidFunction   = "void" Identifier "(" FunctionParameters ")" "{" [ Equations ] "}" ;
     //   DoubleFunction = "double" Identifier "(" [ FunctionParameters ] ")" "{" [ Equations ] Return "}" ;
 
-    // Reset ourselves
+    // Reset/initialise ourselves
 
-    reset(pFunction);
+    mErrors.clear();
+    mScanner->initialise(pFunction);
 
     // Retrieve the type of function that we are dealing with, i.e. a void or a
     // double function
@@ -826,7 +812,8 @@ bool parsePrimaryExpression(ComputerParser *pParser,
     //                              | ( FunctionWithOneArgument "(" EquationRHS ")" ) ;
     //                              | ( FunctionWithTwoArguments "(" EquationRHS "," EquationRHS ")" ) ;
     //                              | ( "(" EquationRHS ")" ) ;
-    //   FunctionWithOneArgument  = "sin" | "cos" | "tan" ;
+    //   FunctionWithOneArgument  =   "sin" | "cos" | "tan"
+    //                              | "exp" ;
     //   FunctionWithTwoArguments = "pow" ;
 
     // Check whether the current token's symbol is an identifier, an integer
@@ -835,7 +822,8 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
     static const ComputerScannerToken::Symbols oneArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Sin
                                                                                                             << ComputerScannerToken::Cos
-                                                                                                            << ComputerScannerToken::Tan;
+                                                                                                            << ComputerScannerToken::Tan
+                                                                                                            << ComputerScannerToken::Exp;
     static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Pow;
 
     if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {

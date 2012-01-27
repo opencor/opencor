@@ -200,77 +200,83 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
 
     switch (pNode->type()) {
     case Times:
-        // Simplification of a multiplication requires both the left and right
-        // nodes to be numbers
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1*N2
 
-        if (   (pNode->left()->type() == Number)
-            && (pNode->right()->type() == Number))
-            resetNodeAsNumber(pNode,
-                              pNode->left()->number()*pNode->right()->number());
+            replaceNodeWithNumber(pNode, pNode->left()->number()*pNode->right()->number());
+        else if ((pNode->left()->type() == Number) && (pNode->left()->number() == 1))
+            // 1*X ---> X
+
+            replaceNodeWithChildNode(pNode, pNode->right());
+        else if ((pNode->right()->type() == Number) && (pNode->right()->number() == 1))
+            // X*1 ---> X
+
+            replaceNodeWithChildNode(pNode, pNode->left());
 
         break;
     case Divide:
-        // Simplification of a division requires both the left and right nodes
-        // to be numbers
-
         if (   (pNode->left()->type() == Number)
             && (pNode->right()->type() == Number))
-            resetNodeAsNumber(pNode,
-                              pNode->left()->number()/pNode->right()->number());
+            // N1/N2
+
+            replaceNodeWithNumber(pNode, pNode->left()->number()/pNode->right()->number());
+        else if ((pNode->right()->type() == Number) && (pNode->right()->number() == 1))
+            // X/1 ---> X
+
+            replaceNodeWithChildNode(pNode, pNode->left());
 
         break;
     case Plus:
-        // Simplification of a normal addition requires both the left and right
-        // nodes to be numbers while simplification of a unary "+" requires the
-        // left node to be a number
+        if (!pNode->right())
+            // +X ---> X
 
-        if (   (pNode->left()->type() == Number)
-            && pNode->right() && (pNode->right()->type() == Number))
-            // Normal addition, so...
+            replaceNodeWithChildNode(pNode, pNode->left());
+        else if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1+N2
 
-            resetNodeAsNumber(pNode,
-                              pNode->left()->number()+pNode->right()->number());
-        else if ((pNode->left()->type() == Number) && !pNode->right())
-            // Unary "+", so...
+            replaceNodeWithNumber(pNode, pNode->left()->number()+pNode->right()->number());
+        else if ((pNode->left()->type() == Number) && (pNode->left()->number() == 0))
+            // 0+X ---> X
 
-            resetNodeAsNumber(pNode, pNode->left()->number());
+            replaceNodeWithChildNode(pNode, pNode->right());
+        else if ((pNode->right()->type() == Number) && (pNode->right()->number() == 0))
+            // X+0 ---> X
+
+            replaceNodeWithChildNode(pNode, pNode->left());
 
         break;
     case Minus:
-        // Simplification of a normal subtraction requires both the left and
-        // right nodes to be numbers while simplification of a unary "-"
-        // requires the left node to be a number
+        if (!pNode->right()) {
+            if (pNode->left()->type() == Number)
+                // -N
 
-        if (   (pNode->left()->type() == Number)
-            && pNode->right() && (pNode->right()->type() == Number))
-            // Normal subtraction, so...
+                replaceNodeWithNumber(pNode, -pNode->left()->number());
+        } else if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number)) {
+            // N1-N2
 
-            resetNodeAsNumber(pNode,
-                              pNode->left()->number()-pNode->right()->number());
-        else if ((pNode->left()->type() == Number) && !pNode->right())
-            // Unary "-", so...
+            replaceNodeWithNumber(pNode, pNode->left()->number()-pNode->right()->number());
+        } else if ((pNode->right()->type() == Number) && (pNode->right()->number() == 0)) {
+            // X-0 ---> X
 
-            resetNodeAsNumber(pNode, -pNode->left()->number());
+            replaceNodeWithChildNode(pNode, pNode->left());
+        }
 
         break;
     case Pow:
-        // Simplification of the power function requires requires both the left
-        // and right nodes to be numbers
         // Note: we could support further simplifications (well, optimisations)
         //       such as pow(x, 2) = x*x, but well... maybe someday...
 
-        if (   (pNode->left()->type() == Number)
-            && (pNode->right()->type() == Number))
-            resetNodeAsNumber(pNode,
-                              pow(pNode->left()->number(), pNode->right()->number()));
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1^N2
+
+            replaceNodeWithNumber(pNode, pow(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Not:
-        // Simplification of a unary "!" requires the left node to be a number
-        // (or a boolean stored as a number)
+        if (pNode->left()->type() == Number)
+            // !N
 
-        if ((pNode->left()->type() == Number) && !pNode->right())
-            resetNodeAsNumber(pNode, pNode->left()->number()?0:1);
+            replaceNodeWithNumber(pNode, pNode->left()->number()?0:1);
 
         break;
     }
@@ -278,10 +284,10 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
 
 //==============================================================================
 
-void ComputerEquation::resetNodeAsNumber(ComputerEquation *pNode,
-                                         const double &pNumber)
+void ComputerEquation::replaceNodeWithNumber(ComputerEquation *pNode,
+                                             const double &pNumber)
 {
-    // Reset the given node as a number
+    // Replace the given node with a number
 
     pNode->mType = Number;
 
@@ -292,6 +298,35 @@ void ComputerEquation::resetNodeAsNumber(ComputerEquation *pNode,
 
     pNode->mLeft  = 0;
     pNode->mRight = 0;
+}
+
+//==============================================================================
+
+void ComputerEquation::replaceNodeWithChildNode(ComputerEquation *pNode,
+                                                ComputerEquation *pChildNode)
+{
+    // Replace the given node with one of its child nodes
+
+    // Keep track of the node's child nodes
+
+    ComputerEquation *leftChildNode  = pNode->left();
+    ComputerEquation *rightChildNode = pNode->right();
+
+    // Make sure that pChildNode is indeed one of the node's child nodes
+
+    if ((pChildNode != leftChildNode) && (pChildNode != rightChildNode))
+        // pChildNode is not one of the node's child nodes, so...
+
+        return;
+
+    // Initialise the node using its child node
+
+    pNode->initialiseFrom(pChildNode);
+
+    // Delete the child nodes now that they are not needed anymore
+
+    delete leftChildNode;
+    delete rightChildNode;
 }
 
 //==============================================================================

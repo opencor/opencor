@@ -32,7 +32,15 @@ public:
 
         // Mathematical operators
 
-        Times, Divide, Plus, Minus,
+        Times, Divide, Modulo, Plus, Minus,
+        InclusiveOr, ExclusiveOr, LogicalOr, And, LogicalAnd,
+        EqualEqual, NotEqual,
+        LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
+
+        // Mathematical functions with 1 argument
+
+        Sin, Cos, Tan,
+        Exp,
 
         // Mathematical functions with 2 arguments
 
@@ -80,7 +88,9 @@ private:
     void initialiseFrom(ComputerEquation *pEquation);
 
     void simplifyNode(ComputerEquation *pNode);
-    void resetNodeAsNumber(ComputerEquation *pNode, const double &pNumber);
+    void replaceNodeWithNumber(ComputerEquation *pNode, const double &pNumber);
+    void replaceNodeWithChildNode(ComputerEquation *pNode,
+                                  ComputerEquation *pChildNode);
 };
 
 //==============================================================================

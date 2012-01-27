@@ -76,16 +76,59 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     // Return the token's equation type equivalent
 
     switch (mSymbol) {
-    case Divide:
-        return ComputerEquation::Divide;
+    // Mathematical operators
+
     case Times:
         return ComputerEquation::Times;
+    case Divide:
+        return ComputerEquation::Divide;
+    case Percentage:
+        return ComputerEquation::Modulo;
     case Plus:
         return ComputerEquation::Plus;
     case Minus:
         return ComputerEquation::Minus;
+    case InclusiveOr:
+        return ComputerEquation::InclusiveOr;
+    case ExclusiveOr:
+        return ComputerEquation::ExclusiveOr;
+    case LogicalOr:
+        return ComputerEquation::LogicalOr;
+    case And:
+        return ComputerEquation::And;
+    case LogicalAnd:
+        return ComputerEquation::LogicalAnd;
+    case EqualEqual:
+        return ComputerEquation::EqualEqual;
+    case NotEqual:
+        return ComputerEquation::NotEqual;
+    case LowerThan:
+        return ComputerEquation::LowerThan;
+    case GreaterThan:
+        return ComputerEquation::GreaterThan;
+    case LowerOrEqualThan:
+        return ComputerEquation::LowerOrEqualThan;
+    case GreaterOrEqualThan:
+        return ComputerEquation::GreaterOrEqualThan;
+
+    // Mathematical functions with 1 argument
+
+    case Sin:
+        return ComputerEquation::Sin;
+    case Cos:
+        return ComputerEquation::Cos;
+    case Tan:
+        return ComputerEquation::Tan;
+    case Exp:
+        return ComputerEquation::Exp;
+
+    // Mathematical functions with 2 arguments
+
     case Pow:
         return ComputerEquation::Pow;
+
+    // Miscellaneous
+
     case Not:
         return ComputerEquation::Not;
     default:
@@ -155,6 +198,8 @@ QString ComputerScannerToken::symbolAsString() const
         return "Cos";
     case Tan:
         return "Tan";
+    case Exp:
+        return "Exp";
     case Pow:
         return "Pow";
     case OpeningBracket:
@@ -243,6 +288,8 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("sin", ComputerScannerToken::Sin);
     mKeywords.insert("cos", ComputerScannerToken::Cos);
     mKeywords.insert("tan", ComputerScannerToken::Tan);
+
+    mKeywords.insert("exp", ComputerScannerToken::Exp);
 
     mKeywords.insert("pow", ComputerScannerToken::Pow);
 

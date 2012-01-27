@@ -51,10 +51,6 @@ private:
 
     ComputerErrors mErrors;
 
-    ComputerExternalFunctions mExternalFunctions;
-
-    void reset(const QString &pFunction);
-
     bool parseFunctionParameters(ComputerFunction *pFunction);
     bool parseFunctionParameter(ComputerFunction *pFunction,
                                 const bool &pNeeded = true);
