@@ -384,7 +384,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
         compileAssignmentEquation(equation->left(), simplifiedRhsEquation, data);
 
-        // We are now done with the simplified equation, so...
+        // We are now done with the simplified RHS equation, so...
 
         delete simplifiedRhsEquation;
     }
@@ -413,6 +413,10 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
         QString returnEquationValue = compileOperand(simplifiedReturnEquation, data);
 
         data.appendAssemblyCode(Indent+"ret double "+returnEquationValue+"\n");
+
+        // We are now done with the simplified return equation, so...
+
+        delete simplifiedReturnEquation;
     }
 
     // End the function
@@ -790,11 +794,16 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
 
         break;
     case ComputerEquation::Plus:
-        // Note: there is no need to test whether we are dealing with a normal
-        //       addition or a unary "+" since the latter will never happen (due
-        //       to the fact that the equation was first simplified)
+        if (pEquationNode->right())
+            // Normal addition, so...
 
-        compileMathematicalOperator(pEquationNode->left(), pEquationNode->right(), "fadd", pData);
+            compileMathematicalOperator(pEquationNode->left(), pEquationNode->right(), "fadd", pData);
+        else
+            // Unary "+", so...
+            // Note: we can only come here if the equation wasn't first
+            //       simplified, hence we need to test for the unary "+"...
+
+            compileOperand(pEquationNode->left(), pData);
 
         break;
     case ComputerEquation::Minus:

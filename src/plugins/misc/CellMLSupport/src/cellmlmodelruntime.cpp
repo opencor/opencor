@@ -314,7 +314,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
             handleErrors(computerEngine, "test");
 
-            computerEngine.addFunction("double test2(double *pData)\n{\n  return pow(0+-3*-pData[0]-0+exp(pData[1]*1)/-pData[2]/-1e6, pData[3]/3+0);\n}");
+            computerEngine.addFunction("double test2(double *pData)\n{\n  return pow(0+-3*-pData[0]-0+exp(+pData[1]*1)/-pData[2]/-1e6, pData[3]/3+0);\n}");
             handleErrors(computerEngine, "test2");
 
             // Test our "test" and "test2" functions
