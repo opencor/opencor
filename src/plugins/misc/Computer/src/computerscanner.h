@@ -40,6 +40,7 @@ public:
         // Mathematical functions with 1 argument
 
         Sin, Cos, Tan,
+        Exp,
 
         // Mathematical functions with 2 arguments
 

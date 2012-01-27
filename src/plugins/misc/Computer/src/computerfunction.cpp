@@ -131,34 +131,6 @@ void ComputerFunction::setReturnEquation(ComputerEquation *pReturnEquation)
 
 //==============================================================================
 
-ComputerExternalFunctions ComputerFunction::externalFunctions() const
-{
-    // Return the function's external functions
-
-    return mExternalFunctions;
-}
-
-//==============================================================================
-
-bool ComputerFunction::addExternalFunction(const ComputerExternalFunction &pExternalFunction)
-{
-    // Add an external function to our list, but only if i isn't already there
-
-    if (mExternalFunctions.contains(pExternalFunction)) {
-        // The external function already exists, so...
-
-        return false;
-    } else {
-        // The external function is not yet in our list, so add it
-
-        mExternalFunctions.append(pExternalFunction);
-
-        return true;
-    }
-}
-
-//==============================================================================
-
 }   // namespace Computer
 }   // namespace OpenCOR
 

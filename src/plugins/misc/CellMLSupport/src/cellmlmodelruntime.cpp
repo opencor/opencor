@@ -311,10 +311,10 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 handleErrors(computerEngine, "stateInformation");
             }
 
-            computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pow(2, 3);\n  pData[1] = 3*5+9+pData[3]*pData[3]/pData[4];\n  pData[2] = 5-9/7;\n}");
+            computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
             handleErrors(computerEngine, "test");
 
-            computerEngine.addFunction("double test2(double *pData)\n{\n  return 3*pData[0]+pData[1]/pData[2];\n}");
+            computerEngine.addFunction("double test2(double *pData)\n{\n  return pow(0+-3*-pData[0]-0+exp(pData[1]*1)/-pData[2]/-1e6, pData[3]/3+0);\n}");
             handleErrors(computerEngine, "test2");
 
             // Test our "test" and "test2" functions
@@ -398,7 +398,7 @@ void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
         // Something went wrong with the parsing of the function, so output the
         // error(s) that was(were) found
 
-        qDebug("---------------------------------------");
+        qDebug("");
 
         if (pComputerEngine.parserErrors().count() == 1)
             qDebug("An error occurred:");
@@ -416,15 +416,13 @@ void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
                 qDebug(error.extraInformation().toLatin1().constData());
         }
 
-        qDebug("---------------------------------------");
-
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                         tr("the function '%1' could not be parsed").arg(pFunctionName)));
     } else if (!pComputerEngine.error().isEmpty()) {
         // Something went wrong with the addition of the function, so output the
         // error that was found
 
-        qDebug("---------------------------------------");
+        qDebug("");
         qDebug(QString("An error occurred: %1").arg(pComputerEngine.error().formattedMessage()).toLatin1().constData());
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,

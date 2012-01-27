@@ -8,7 +8,6 @@
 //==============================================================================
 
 #include "computerequation.h"
-#include "computerexternalfunction.h"
 #include "computerparameter.h"
 
 //==============================================================================
@@ -44,17 +43,12 @@ public:
     ComputerEquation * returnEquation();
     void setReturnEquation(ComputerEquation *pReturnEquation);
 
-    ComputerExternalFunctions externalFunctions() const;
-    bool addExternalFunction(const ComputerExternalFunction &pExternalFunction);
-
 private:
     Type mType;
     QString mName;
     ComputerParameters mParameters;
     ComputerEquations mEquations;
     ComputerEquation * mReturnEquation;
-
-    ComputerExternalFunctions mExternalFunctions;
 };
 
 //==============================================================================
