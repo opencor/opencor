@@ -48,6 +48,8 @@ public:
 
     ModelType modelType();
 
+    Computer::ComputerEngine *computerEngine();
+
     QList<CellmlModelIssue> issues();
 
     CellmlModelRuntime * update(iface::cellml_api::Model *pModel,
@@ -58,6 +60,8 @@ private:
 
     ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
     ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
+
+    Computer::ComputerEngine *mComputerEngine;
 
     QList<CellmlModelIssue> mIssues;
 
@@ -73,8 +77,7 @@ private:
     iface::cellml_services::CodeInformation * getOdeCodeInformation(iface::cellml_api::Model *pModel);
     iface::cellml_services::CodeInformation * getDaeCodeInformation(iface::cellml_api::Model *pModel);
 
-    void handleErrors(Computer::ComputerEngine &pComputerEngine,
-                      const QString &pFunctionName);
+    void handleErrors(const QString &pFunctionName);
 };
 
 //==============================================================================

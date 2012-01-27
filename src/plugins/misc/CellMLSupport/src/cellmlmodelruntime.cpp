@@ -21,7 +21,8 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlModelRuntime::CellmlModelRuntime()
+CellmlModelRuntime::CellmlModelRuntime() :
+    mComputerEngine(0)
 {
     // Initialise the runtime's properties
 
@@ -44,6 +45,15 @@ CellmlModelRuntime::ModelType CellmlModelRuntime::modelType()
     // Return the type of model for the runtime
 
     return mModelType;
+}
+
+//==============================================================================
+
+Computer::ComputerEngine * CellmlModelRuntime::computerEngine()
+{
+    // Return the computer engine
+
+    return mComputerEngine;
 }
 
 //==============================================================================
@@ -85,6 +95,10 @@ void CellmlModelRuntime::reset()
 
     resetOdeCodeInformation();
     resetDaeCodeInformation();
+
+    delete mComputerEngine;
+
+    mComputerEngine = new Computer::ComputerEngine;
 
     mIssues.clear();
 }
@@ -292,35 +306,33 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             // Get some binary code using the Computer plugin
 
-            Computer::ComputerEngine computerEngine;
+            mComputerEngine->addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
+            handleErrors("initConsts");
 
-            computerEngine.addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
-            handleErrors(computerEngine, "initConsts");
+            mComputerEngine->addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
+            handleErrors("rates");
 
-            computerEngine.addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
-            handleErrors(computerEngine, "rates");
-
-            computerEngine.addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
-            handleErrors(computerEngine, "variables");
+            mComputerEngine->addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
+            handleErrors("variables");
 
             if (mModelType == Dae) {
-                computerEngine.addFunction(QString("void essentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
-                handleErrors(computerEngine, "essentialVariables");
+                mComputerEngine->addFunction(QString("void essentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
+                handleErrors("essentialVariables");
 
-                computerEngine.addFunction(QString("void stateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
-                handleErrors(computerEngine, "stateInformation");
+                mComputerEngine->addFunction(QString("void stateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
+                handleErrors("stateInformation");
             }
 
-            computerEngine.addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
-            handleErrors(computerEngine, "test");
+            mComputerEngine->addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
+            handleErrors("test");
 
-            computerEngine.addFunction("double test2(double *pData)\n{\n  return pow(0+-3*-pData[0]-0+exp(+pData[1]*1)/-pData[2]/-1e6, pData[3]/3+0);\n}");
-            handleErrors(computerEngine, "test2");
+            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return pow(0+-3*-pData[0]-0+exp(+pData[1]*1)/-pData[2]/-1e6, pData[3]/3+0);\n}");
+            handleErrors("test2");
 
             // Test our "test" and "test2" functions
 
-            llvm::Function *testFunction  = computerEngine.module()->getFunction("test");
-            llvm::Function *test2Function = computerEngine.module()->getFunction("test2");
+            llvm::Function *testFunction  = mComputerEngine->module()->getFunction("test");
+            llvm::Function *test2Function = mComputerEngine->module()->getFunction("test2");
 
             if (testFunction && test2Function) {
                 // Initialise our array of data
@@ -345,7 +357,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
                 // Call our LLVM's JIT-based "test" function
 
-                ((void (*)(double *))(intptr_t) computerEngine.executionEngine()->getPointerToFunction(testFunction))(data);
+                ((void (*)(double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(testFunction))(data);
 
                 // Output the contents of our updated array of data
 
@@ -358,7 +370,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
                 // Call our LLVM's JIT-based "test2" function
 
-                double test2Result = ((double (*)(double *))(intptr_t) computerEngine.executionEngine()->getPointerToFunction(test2Function))(data);
+                double test2Result = ((double (*)(double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(test2Function))(data);
 
                 qDebug("---------------------------------------");
                 qDebug(QString("Return value from the \"test2\" function: %1").arg(QString::number(test2Result)).toLatin1().constData());
@@ -369,7 +381,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             qDebug("---------------------------------------");
             qDebug("All generated code so far:");
             qDebug("");
-            computerEngine.module()->dump();
+            mComputerEngine->module()->dump();
             qDebug("---------------------------------------");
         } else {
             // No ODE code information could be retrieved, so...
@@ -391,22 +403,21 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
 //==============================================================================
 
-void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
-                                      const QString &pFunctionName)
+void CellmlModelRuntime::handleErrors(const QString &pFunctionName)
 {
-    if (pComputerEngine.parserErrors().count()) {
+    if (mComputerEngine->parserErrors().count()) {
         // Something went wrong with the parsing of the function, so output the
         // error(s) that was(were) found
 
         qDebug("");
 
-        if (pComputerEngine.parserErrors().count() == 1)
+        if (mComputerEngine->parserErrors().count() == 1)
             qDebug("An error occurred:");
         else
             qDebug("Some errors occurred:");
 
         foreach (const Computer::ComputerError &error,
-                 pComputerEngine.parserErrors()) {
+                 mComputerEngine->parserErrors()) {
             if (error.line() && error.column())
                 qDebug(QString(" - Line %1, column %2: %3").arg(QString::number(error.line()), QString::number(error.column()), error.formattedMessage()).toLatin1().constData());
             else
@@ -418,19 +429,19 @@ void CellmlModelRuntime::handleErrors(Computer::ComputerEngine &pComputerEngine,
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                         tr("the function '%1' could not be parsed").arg(pFunctionName)));
-    } else if (!pComputerEngine.error().isEmpty()) {
+    } else if (!mComputerEngine->error().isEmpty()) {
         // Something went wrong with the addition of the function, so output the
         // error that was found
 
         qDebug("");
-        qDebug(QString("An error occurred: %1").arg(pComputerEngine.error().formattedMessage()).toLatin1().constData());
+        qDebug(QString("An error occurred: %1").arg(mComputerEngine->error().formattedMessage()).toLatin1().constData());
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                         tr("the function '%1' could not be compiled").arg(pFunctionName)));
     } else {
         // Check that we can find the LLVM function
 
-        llvm::Function *function = pComputerEngine.module()->getFunction(pFunctionName.toLatin1().constData());
+        llvm::Function *function = mComputerEngine->module()->getFunction(pFunctionName.toLatin1().constData());
 
         if (function) {
             qDebug("---------------------------------------");

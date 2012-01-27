@@ -21,6 +21,11 @@
 
 //==============================================================================
 
+#include "llvm/Module.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulation {
 
@@ -177,28 +182,73 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
         // Compute the model
 
-        typedef QVector<double> Doubles;
+        if (!QFileInfo(pFileName).baseName().compare("van_der_pol_model_1928")) {
+            typedef QVector<double> Doubles;
 
-        static const int NbOfDataPoints = 100;
-        static const double Factor      = 6.28/double(NbOfDataPoints-1);
+            static const int nbOfStates = 2;
 
-        Doubles xData;
-        Doubles yData;
+            Doubles xData;
+            Doubles yData[nbOfStates];
 
-        for (int i = 0; i < NbOfDataPoints; ++i) {
-            xData.append(i*Factor);
-            yData.append(sin(xData.last()));
+            typedef void (*InitConstsFunction)(double *, double *, double *);
+            typedef void (*RatesFunction)(double, double *, double *, double *, double *);
+
+            llvm::Function *initConstsFunction = cellmlModelRuntime->computerEngine()->module()->getFunction("initConsts");
+            llvm::Function *ratesFunction      = cellmlModelRuntime->computerEngine()->module()->getFunction("rates");
+
+            double voi = 0;   // ms
+            static const double voiStep = 10;   // ms
+            static const double voiMax = 10000;   // ms
+            double constants[nbOfStates];
+            double rates[nbOfStates];
+            double states[nbOfStates];
+            int voiNbOfSteps = 0;
+
+            InitConstsFunction initConstsFunc = (InitConstsFunction)(intptr_t) cellmlModelRuntime->computerEngine()->executionEngine()->getPointerToFunction(initConstsFunction);
+            RatesFunction ratesFunc           = (RatesFunction)(intptr_t) cellmlModelRuntime->computerEngine()->executionEngine()->getPointerToFunction(ratesFunction);
+
+            initConstsFunc(constants, rates, states);
+
+            do {
+                // Output the current data
+
+                xData.append(voi);
+
+                for (int i = 0; i < nbOfStates; ++i)
+                    yData[i].append(states[i]);
+
+                // Compute the rates
+
+                ratesFunc(voi, constants, rates, states, 0);
+
+                // Go to the next voiStep and integrate the states
+
+                voi = ++voiNbOfSteps*voiStep;
+
+                for (int i = 0; i < nbOfStates; ++i)
+                    states[i] += 0.001*voiStep*rates[i];
+            } while (voi < voiMax);
+
+            xData.append(voi);
+
+            for (int i = 0; i < nbOfStates; ++i)
+                yData[i].append(states[i]);
+
+            // Add a curve to our view
+
+            QwtPlotCurve *curve[nbOfStates];
+
+            for (int i = 0; i < nbOfStates; ++i) {
+                curve[i] = new QwtPlotCurve();
+
+                curve[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
+                curve[i]->setPen(QPen(i?Qt::darkBlue:Qt::darkRed));
+
+                curve[i]->setSamples(xData, yData[i]);
+
+                curve[i]->attach(mSimulationView);
+            }
         }
-
-        // Add a curve to our view
-
-        QwtPlotCurve *curve = new QwtPlotCurve;
-
-        curve->setRenderHint(QwtPlotItem::RenderAntialiased);
-        curve->setPen(QPen(Qt::darkBlue));
-        curve->setSamples(xData, yData);
-
-        curve->attach(mSimulationView);
 
         // Done with our testing, so...
 
