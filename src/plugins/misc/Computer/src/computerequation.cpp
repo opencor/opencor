@@ -262,6 +262,27 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         }
 
         break;
+    case Sin:
+        if (pNode->left()->type() == Number)
+            // sin(N)
+
+            replaceNodeWithNumber(pNode, sin(pNode->left()->number()));
+
+        break;
+    case Cos:
+        if (pNode->left()->type() == Number)
+            // cos(N)
+
+            replaceNodeWithNumber(pNode, cos(pNode->left()->number()));
+
+        break;
+    case Tan:
+        if (pNode->left()->type() == Number)
+            // tan(N)
+
+            replaceNodeWithNumber(pNode, tan(pNode->left()->number()));
+
+        break;
     case Pow:
         // Note: we could support further simplifications (well, optimisations)
         //       such as pow(x, 2) = x*x, but well... maybe someday...
