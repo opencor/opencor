@@ -132,7 +132,7 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     case Not:
         return ComputerEquation::Not;
     default:
-qDebug(QString(">>> ERROR: couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
+        qDebug(QString(">>> ERROR: couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
 
         return ComputerEquation::Unknown;
     }

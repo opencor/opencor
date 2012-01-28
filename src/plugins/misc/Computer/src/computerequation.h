@@ -63,6 +63,7 @@ public:
     ~ComputerEquation();
 
     Type type() const;
+    QString typeAsString() const;
 
     QString parameterName() const;
     int parameterIndex() const;

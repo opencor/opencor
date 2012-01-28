@@ -94,6 +94,78 @@ ComputerEquation::Type ComputerEquation::type() const
 
 //==============================================================================
 
+QString ComputerEquation::typeAsString() const
+{
+    // Return the equation's type as a string
+    // Note: this method is mainly used for debugging purposes, though who knows
+    //       it may someday prove useful in some other cases...
+
+    switch (mType) {
+    case Unknown:
+        return "Unknown";
+    case DirectParameter:
+        return "DirectParameter";
+    case IndirectParameter:
+        return "IndirectParameter";
+    case Number:
+        return "Number";
+    case Times:
+        return "Times";
+    case Divide:
+        return "Divide";
+    case Modulo:
+        return "Modulo";
+    case Plus:
+        return "Plus";
+    case Minus:
+        return "Minus";
+    case InclusiveOr:
+        return "InclusiveOr";
+    case ExclusiveOr:
+        return "ExclusiveOr";
+    case LogicalOr:
+        return "LogicalOr";
+    case And:
+        return "And";
+    case LogicalAnd:
+        return "LogicalAnd";
+    case EqualEqual:
+        return "EqualEqual";
+    case NotEqual:
+        return "NotEqual";
+    case LowerThan:
+        return "LowerThan";
+    case GreaterThan:
+        return "GreaterThan";
+    case LowerOrEqualThan:
+        return "LowerOrEqualThan";
+    case GreaterOrEqualThan:
+        return "GreaterOrEqualThan";
+    case Sin:
+        return "Sin";
+    case Cos:
+        return "Cos";
+    case Tan:
+        return "Tan";
+    case Exp:
+        return "Exp";
+    case Pow:
+        return "Pow";
+    case Assign:
+        return "Assign";
+    case Not:
+        return "Not";
+    case Piecewise:
+        return "Piecewise";
+    case PiecewiseCases:
+        return "PiecewiseCases";
+    default:
+        return "???";
+    }
+}
+
+//==============================================================================
+
 QString ComputerEquation::parameterName() const
 {
     // Return the equation's parameter name

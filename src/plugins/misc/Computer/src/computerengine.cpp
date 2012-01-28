@@ -831,6 +831,8 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
         compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "pow", pData);
 
         break;
+    default:
+        qDebug(QString(">>> ERROR: untreated equation type '%1'...").arg(pEquationNode->typeAsString()).toLatin1().constData());
     }
 
     // Keep track of the assembly code index of the current node
