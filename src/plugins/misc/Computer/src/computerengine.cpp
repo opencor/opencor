@@ -369,24 +369,18 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     // Mathematical statements
 
     foreach (ComputerEquation *equation, pFunction->equations()) {
-        // Make a copy of the equation and simplify its RHS, if possible
+        // Simplify the RHS of the equation, if possible
 
-        ComputerEquation *simplifiedRhsEquation = new ComputerEquation(equation->right());
-
-        simplifiedRhsEquation->simplify();
+        equation->right()->simplify();
 
         // Compile the RHS of the equation
 
-        compileEquationNode(simplifiedRhsEquation, data);
+        compileEquationNode(equation->right(), data);
 
         // Assign the result of the RHS of the equation to the indirect parameter
         // which information can be found the LHS of the equation
 
-        compileAssignmentEquation(equation->left(), simplifiedRhsEquation, data);
-
-        // We are now done with the simplified RHS equation, so...
-
-        delete simplifiedRhsEquation;
+        compileAssignmentEquation(equation->left(), equation->right(), data);
     }
 
     // Return statement
@@ -398,25 +392,19 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     } else {
         // We are dealing with a double function
 
-        // Make a copy of the return equation and simplify it, if possible
+        // Simplify the return equation, if possible
 
-        ComputerEquation *simplifiedReturnEquation = new ComputerEquation(pFunction->returnEquation());
-
-        simplifiedReturnEquation->simplify();
+        pFunction->returnEquation()->simplify();
 
         // Compile the return equation
 
-        compileEquationNode(simplifiedReturnEquation, data);
+        compileEquationNode(pFunction->returnEquation(), data);
 
         // Return the value of the return equation
 
-        QString returnEquationValue = compileOperand(simplifiedReturnEquation, data);
+        QString returnEquationValue = compileOperand(pFunction->returnEquation(), data);
 
         data.appendAssemblyCode(Indent+"ret double "+returnEquationValue+"\n");
-
-        // We are now done with the simplified return equation, so...
-
-        delete simplifiedReturnEquation;
     }
 
     // End the function

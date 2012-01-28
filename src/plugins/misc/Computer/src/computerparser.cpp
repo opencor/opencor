@@ -420,7 +420,7 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 
         ComputerEquation *rhsEquation = 0;
 
-        if (!parseEquationRhs(pFunction, rhsEquation)) {
+        if (!parseRhsEquation(pFunction, rhsEquation)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -910,7 +910,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         ComputerEquation *argument = 0;
 
-        if (!pParser->parseEquationRhs(pFunction, argument)) {
+        if (!pParser->parseRhsEquation(pFunction, argument)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -956,7 +956,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         ComputerEquation *argumentOne = 0;
 
-        if (!pParser->parseEquationRhs(pFunction, argumentOne)) {
+        if (!pParser->parseRhsEquation(pFunction, argumentOne)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -981,7 +981,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         ComputerEquation *argumentTwo = 0;
 
-        if (!pParser->parseEquationRhs(pFunction, argumentTwo)) {
+        if (!pParser->parseRhsEquation(pFunction, argumentTwo)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -1015,7 +1015,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         ComputerEquation *equation = 0;
 
-        if (!pParser->parseEquationRhs(pFunction, equation)) {
+        if (!pParser->parseRhsEquation(pFunction, equation)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -1053,7 +1053,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
 //==============================================================================
 
-bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
+bool ComputerParser::parseRhsEquation(ComputerFunction *pFunction,
                                       ComputerEquation * &pRhsEquation)
 {
     // The EBNF grammar of an equation's RHS is as follows:
@@ -1085,7 +1085,7 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
 
         ComputerEquation *trueCaseEquation = 0;
 
-        if (!parseEquationRhs(pFunction, trueCaseEquation)) {
+        if (!parseRhsEquation(pFunction, trueCaseEquation)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -1112,7 +1112,7 @@ bool ComputerParser::parseEquationRhs(ComputerFunction *pFunction,
 
         ComputerEquation *falseCaseEquation = 0;
 
-        if (!parseEquationRhs(pFunction, falseCaseEquation)) {
+        if (!parseRhsEquation(pFunction, falseCaseEquation)) {
             // Something went wrong with the parsing of the RHS of an equation,
             // so...
 
@@ -1164,7 +1164,7 @@ bool ComputerParser::parseReturn(ComputerFunction *pFunction)
 
     ComputerEquation *equation = 0;
 
-    if (!parseEquationRhs(pFunction, equation)) {
+    if (!parseRhsEquation(pFunction, equation)) {
         // Something went wrong with the parsing of the RHS of an equation,
         // so...
 
