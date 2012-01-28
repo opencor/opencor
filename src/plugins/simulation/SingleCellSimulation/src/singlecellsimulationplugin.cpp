@@ -227,6 +227,8 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
                 for (int i = 0; i < nbOfStates; ++i)
                     states[i] += 0.001*voiStep*rates[i];
+                    // Note: the scaling factor is because we need to go from
+                    //       seconds to milliseconds...
             } while (voi < voiMax);
 
             xData.append(voi);
@@ -234,7 +236,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             for (int i = 0; i < nbOfStates; ++i)
                 yData[i].append(states[i]);
 
-            // Add a curve to our view
+            // Add some curves to our plotting area
 
             QwtPlotCurve *curve[nbOfStates];
 
@@ -248,6 +250,10 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
                 curve[i]->attach(mSimulationView);
             }
+
+            // Update the range for the axes
+
+            mSimulationView->updateAxes();
         }
 
         // Done with our testing, so...
