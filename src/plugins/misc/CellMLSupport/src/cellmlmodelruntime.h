@@ -30,6 +30,37 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+typedef void (*CellmlModelRuntimeInitConstsFunction)(double *, double *, double *);
+typedef void (*CellmlModelRuntimeOdeRatesFunction)(double, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeDaeRatesFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeVariablesFunction)(double, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeDaeStateInformationFunction)(double *);
+
+//==============================================================================
+
+struct CellmlModelRuntimeOdeFunctions
+{
+    CellmlModelRuntimeInitConstsFunction initConsts;
+    CellmlModelRuntimeOdeRatesFunction rates;
+    CellmlModelRuntimeVariablesFunction variables;
+};
+
+//==============================================================================
+
+struct CellmlModelRuntimeDaeFunctions
+{
+    CellmlModelRuntimeInitConstsFunction initConsts;
+    CellmlModelRuntimeDaeRatesFunction rates;
+    CellmlModelRuntimeVariablesFunction variables;
+    CellmlModelRuntimeDaeEssentialVariablesFunction essentialVariables;
+    CellmlModelRuntimeDaeRootInformationFunction rootInformation;
+    CellmlModelRuntimeDaeStateInformationFunction stateInformation;
+};
+
+//==============================================================================
+
 class CELLMLSUPPORT_EXPORT CellmlModelRuntime : public QObject
 {
     Q_OBJECT
@@ -48,9 +79,10 @@ public:
 
     ModelType modelType();
 
-    Computer::ComputerEngine *computerEngine();
+    CellmlModelRuntimeOdeFunctions odeFunctions();
+    CellmlModelRuntimeDaeFunctions daeFunctions();
 
-    QList<CellmlModelIssue> issues();
+    CellmlModelIssues issues();
 
     CellmlModelRuntime * update(iface::cellml_api::Model *pModel);
 
@@ -62,10 +94,17 @@ private:
 
     Computer::ComputerEngine *mComputerEngine;
 
-    QList<CellmlModelIssue> mIssues;
+    CellmlModelRuntimeOdeFunctions mOdeFunctions;
+    CellmlModelRuntimeDaeFunctions mDaeFunctions;
+
+    CellmlModelIssues mIssues;
 
     void resetOdeCodeInformation();
     void resetDaeCodeInformation();
+
+    void resetOdeFunctions();
+    void resetDaeFunctions();
+
     void reset();
 
     void couldNotGenerateModelCodeIssue();

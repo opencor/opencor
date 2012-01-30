@@ -42,7 +42,7 @@ public:
 
     bool isValid();
 
-    QList<CellmlModelIssue> issues();
+    CellmlModelIssues issues();
 
     CellmlModelRuntime * runtime();
 
@@ -51,7 +51,7 @@ private:
 
     ObjRef<iface::cellml_api::Model> mModel;
 
-    QList<CellmlModelIssue> mIssues;
+    CellmlModelIssues mIssues;
 
     CellmlModelRuntime *mRuntime;
 

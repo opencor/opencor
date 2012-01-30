@@ -49,16 +49,25 @@ CellmlModelRuntime::ModelType CellmlModelRuntime::modelType()
 
 //==============================================================================
 
-Computer::ComputerEngine * CellmlModelRuntime::computerEngine()
+CellmlModelRuntimeOdeFunctions CellmlModelRuntime::odeFunctions()
 {
-    // Return the computer engine
+    // Return the ODE functions
 
-    return mComputerEngine;
+    return mOdeFunctions;
 }
 
 //==============================================================================
 
-QList<CellmlModelIssue> CellmlModelRuntime::issues()
+CellmlModelRuntimeDaeFunctions CellmlModelRuntime::daeFunctions()
+{
+    // Return the DAE functions
+
+    return mDaeFunctions;
+}
+
+//==============================================================================
+
+CellmlModelIssues CellmlModelRuntime::issues()
 {
     // Return the issue(s)
 
@@ -69,6 +78,8 @@ QList<CellmlModelIssue> CellmlModelRuntime::issues()
 
 void CellmlModelRuntime::resetOdeCodeInformation()
 {
+    // Reset the ODE code information
+
     /*delete mOdeCodeInformation;*/ mOdeCodeInformation = 0;
     //---GRY--- WE CANNOT delete mOdeCodeInformation AT THIS STAGE. FOR THIS, WE
     //          WOULD NEED TO USE THE CLEANED UP C++ INTERFACE (SEE THE MAIN
@@ -79,10 +90,37 @@ void CellmlModelRuntime::resetOdeCodeInformation()
 
 void CellmlModelRuntime::resetDaeCodeInformation()
 {
+    // Reset the DAE code information
+
     /*delete mDaeCodeInformation;*/ mDaeCodeInformation = 0;
     //---GRY--- WE CANNOT delete mDaeCodeInformation AT THIS STAGE. FOR THIS, WE
     //          WOULD NEED TO USE THE CLEANED UP C++ INTERFACE (SEE THE MAIN
     //          COMMENT AT THE BEGINNING OF THE cellmlmodel.cpp FILE)
+}
+
+//==============================================================================
+
+void CellmlModelRuntime::resetOdeFunctions()
+{
+    // Reset the ODE functions
+
+    mOdeFunctions.initConsts = 0;
+    mOdeFunctions.rates      = 0;
+    mOdeFunctions.variables  = 0;
+}
+
+//==============================================================================
+
+void CellmlModelRuntime::resetDaeFunctions()
+{
+    // Reset the DEA functions
+
+    mDaeFunctions.initConsts         = 0;
+    mDaeFunctions.rates              = 0;
+    mDaeFunctions.variables          = 0;
+    mDaeFunctions.essentialVariables = 0;
+    mDaeFunctions.rootInformation    = 0;
+    mDaeFunctions.stateInformation   = 0;
 }
 
 //==============================================================================
@@ -99,6 +137,9 @@ void CellmlModelRuntime::reset()
     delete mComputerEngine;
 
     mComputerEngine = new Computer::ComputerEngine;
+
+    resetOdeFunctions();
+    resetDaeFunctions();
 
     mIssues.clear();
 }
@@ -325,6 +366,8 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 handleErrors("stateInformation");
             }
 
+//--- TESTING --- BEGIN ---
+
             mComputerEngine->addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
             handleErrors("test");
 
@@ -385,6 +428,32 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             qDebug("");
             mComputerEngine->module()->dump();
             qDebug("---------------------------------------");
+
+//--- TESTING --- END ---
+
+            // Keep track of the ODE/DAE functions, but only if no issues were
+            // reported
+
+            if (mIssues.count()) {
+                // Some issues were reported, so...
+
+                reset();
+            } else if (mModelType == Ode) {
+                // ODE functions
+
+                mOdeFunctions.initConsts = (CellmlModelRuntimeInitConstsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initConsts"));
+                mOdeFunctions.rates      = (CellmlModelRuntimeOdeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("rates"));
+                mOdeFunctions.variables  = (CellmlModelRuntimeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("variables"));
+            } else {
+                // DAE functions
+
+                mDaeFunctions.initConsts         = (CellmlModelRuntimeInitConstsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initConsts"));
+                mDaeFunctions.rates              = (CellmlModelRuntimeDaeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("rates"));
+                mDaeFunctions.variables          = (CellmlModelRuntimeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("variables"));
+                mDaeFunctions.essentialVariables = (CellmlModelRuntimeDaeEssentialVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("essentialVariables"));
+                mDaeFunctions.rootInformation    = (CellmlModelRuntimeDaeRootInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("rootInformation"));
+                mDaeFunctions.stateInformation   = (CellmlModelRuntimeDaeStateInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("stateInformation"));
+            }
         } else {
             // No ODE code information could be retrieved, so...
 

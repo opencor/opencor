@@ -60,6 +60,10 @@ private:
 
 //==============================================================================
 
+typedef QList<CellmlModelIssue> CellmlModelIssues;
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 

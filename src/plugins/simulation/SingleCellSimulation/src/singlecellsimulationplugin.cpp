@@ -193,9 +193,6 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             typedef void (*InitConstsFunction)(double *, double *, double *);
             typedef void (*RatesFunction)(double, double *, double *, double *, double *);
 
-            llvm::Function *initConstsFunction = cellmlModelRuntime->computerEngine()->module()->getFunction("initConsts");
-            llvm::Function *ratesFunction      = cellmlModelRuntime->computerEngine()->module()->getFunction("rates");
-
             double voi = 0;   // ms
             static const double voiStep = 10;   // ms
             static const double voiMax = 10000;   // ms
@@ -204,10 +201,9 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             double states[nbOfStates];
             int voiNbOfSteps = 0;
 
-            InitConstsFunction initConstsFunc = (InitConstsFunction)(intptr_t) cellmlModelRuntime->computerEngine()->executionEngine()->getPointerToFunction(initConstsFunction);
-            RatesFunction ratesFunc           = (RatesFunction)(intptr_t) cellmlModelRuntime->computerEngine()->executionEngine()->getPointerToFunction(ratesFunction);
+            CellMLSupport::CellmlModelRuntimeOdeFunctions odeFunctions = cellmlModelRuntime->odeFunctions();
 
-            initConstsFunc(constants, rates, states);
+            odeFunctions.initConsts(constants, rates, states);
 
             do {
                 // Output the current data
@@ -219,7 +215,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
                 // Compute the rates
 
-                ratesFunc(voi, constants, rates, states, 0);
+                odeFunctions.rates(voi, constants, rates, states, 0);
 
                 // Go to the next voiStep and integrate the states
 

@@ -297,7 +297,7 @@ bool CellmlModel::isValid()
 
 //==============================================================================
 
-QList<CellmlModelIssue> CellmlModel::issues()
+CellmlModelIssues CellmlModel::issues()
 {
     // Return the model's issue(s)
 
