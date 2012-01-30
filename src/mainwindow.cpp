@@ -972,7 +972,14 @@ void MainWindow::on_actionPlugins_triggered()
 
         mSettings->beginGroup(pluginsWindow.objectName());
             pluginsWindow.loadSettings(mSettings);
-            pluginsWindow.exec();
+        mSettings->endGroup();
+
+        pluginsWindow.exec();
+        // Note: the execution of the plugins window may result in the saving of
+        //       the application's settings, so for this to work we must ensure
+        //       that any opened settings group has first been closed...
+
+        mSettings->beginGroup(pluginsWindow.objectName());
             pluginsWindow.saveSettings(mSettings);
         mSettings->endGroup();
     } else {

@@ -591,7 +591,8 @@ void PluginsWindow::apply()
 
         on_buttonBox_accepted();
 
-        // Exit OpenCOR with the request to restart it after having saved its settings
+        // Exit OpenCOR with the request to restart it after having saved its
+        // settings
 
         mMainWindow->restart(true);
     }

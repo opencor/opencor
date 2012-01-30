@@ -353,7 +353,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the files that are opened
 
-    QStringList openedFiles;
+    QStringList openedFiles = QStringList();
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
         openedFiles << mFileTabs->tabToolTip(i);
@@ -400,7 +400,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     // new current one
 
     QString fileName = File::nativeFileName(pFileName);
-    QFileInfo fileInfo = fileName;
+    QFileInfo fileInfo = QFileInfo(fileName);
 
     mFileTabs->setCurrentIndex(mFileTabs->insertTab(mFileTabs->currentIndex()+1,
                                                     fileInfo.fileName()));
