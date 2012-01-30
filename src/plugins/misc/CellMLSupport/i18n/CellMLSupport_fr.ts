@@ -22,10 +22,6 @@
 <context>
     <name>OpenCOR::CellMLSupport::CellmlModelRuntime</name>
     <message>
-        <source>the model is not valid</source>
-        <translation>le modèle n&apos;est pas valide</translation>
-    </message>
-    <message>
         <source>an unexpected problem occurred while trying to compile the model</source>
         <translation>un problème inattendu s&apos;est produit lors de la compilation du modèle</translation>
     </message>

@@ -227,32 +227,31 @@ iface::cellml_services::CodeInformation * CellmlModelRuntime::getDaeCodeInformat
 
 //==============================================================================
 
-CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel,
-                                                const bool &pValidModel)
+CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel)
 {
     // Reset the runtime's properties
 
     reset();
 
-    // Check that the model is valid
+    // Check that the model is either a 'simple' ODE model or a DAE model
+    // Note #1: we don't check whether a model is valid, since all we want is to
+    //          update its runtime (which has nothing to do with editing or even
+    //          validating a model), so if it can be done then great otherwise
+    //          tough luck (so to speak)...
+    // Note #2: in order to do so, we need to get a 'normal' code generator (as
+    //          opposed to an IDA, i.e. DAE, code generator) since if the model
+    //          is correctly constrained, then we can check whether some of its
+    //          equations were flagged as needing a Newton-Raphson evaluation,
+    //          in which case we would be dealing with a DAE model...
+    // Note #3: ideally, there would be a more convenient way to determine the
+    //          type of a model, but well... there isn't, so...
 
-    if (pValidModel) {
-        // The model is valid, so make sure that it's either a 'simple' ODE
-        // model or a DAE model
-        // Note #1: in order to do so, we need to get a 'normal' code generator
-        //          (as opposed to an IDA, i.e. DAE, code generator) since if
-        //          the model is correctly constrained, then we can check
-        //          whether some of its equations were flagged as needing a
-        //          Newton-Raphson evaluation, in which case we would be dealing
-        //          with a DAE model...
-        // Note #2: ideally, there would be a more convenient way to determine
-        //          the type of a model, but well... there isn't, so...
-
-        getOdeCodeInformation(pModel);
-
+    if (pModel) {
         // Retrieve the model's type
         // Note: this can be done by checking whether some equations were
         //       flagged as needing a Newton-Raphson evaluation...
+
+        getOdeCodeInformation(pModel);
 
         if (mOdeCodeInformation) {
             // An ODE code information could be retrieved, so we can determine
@@ -389,11 +388,6 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                             tr("no code information could be retrieved for the model")));
         }
-    } else {
-        // The model is not valid, so...
-
-        mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("the model is not valid")));
     }
 
     // We are done, so return ourselves

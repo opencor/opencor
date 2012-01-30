@@ -179,15 +179,11 @@ bool CellmlModel::isValid()
                 // We are dealing with a CellML representation issue, so
                 // determine its line and column
 
-/*---GRY--- THE BELOW CODE IS TO BE COMMENTED OUT UNTIL getPositionInXML()
-            BECOMES FAST ENOUGH TO USE
-
                 ObjRef<iface::dom::Node> errorNode = cellmlRepresentationValidityError->errorNode();
 
                 line = vacssService->getPositionInXML(errorNode,
                                                       cellmlRepresentationValidityError->errorNodalOffset(),
                                                       &column);
-*/
             } else {
                 // We are not dealing with a CellML representation issue, so
                 // check whether we are dealing with a semantic one
@@ -201,16 +197,12 @@ bool CellmlModel::isValid()
 
                     ObjRef<iface::cellml_api::CellMLElement> cellmlElement = cellmlSemanticValidityError->errorElement();
 
-/*---GRY--- THE BELOW CODE IS TO BE COMMENTED OUT UNTIL getPositionInXML()
-            BECOMES FAST ENOUGH TO USE
-
                     DECLARE_QUERY_INTERFACE_OBJREF(cellmlDomElement, cellmlElement, cellml_api::CellMLDOMElement);
 
                     ObjRef<iface::dom::Element> domElement = cellmlDomElement->domElement();
 
                     line = vacssService->getPositionInXML(domElement, 0,
                                                           &column);
-*/
 
                     // Also determine its imported model, if any
 
@@ -316,9 +308,16 @@ QList<CellmlModelIssue> CellmlModel::issues()
 
 CellmlModelRuntime * CellmlModel::runtime()
 {
+    // Load (but not reload!) the model, if needed
+
+    load();
+
     // Return an updated version of our runtime object
 
-    return mRuntime->update(mModel, isValid());
+    return mRuntime->update(mModel);
+    // Note: if the model didn't get properly loaded, then mModel will be equal
+    //       to zero, meaning that the runtime will just have been reset (as
+    //       part of the call to update())...
 }
 
 //==============================================================================

@@ -52,8 +52,7 @@ public:
 
     QList<CellmlModelIssue> issues();
 
-    CellmlModelRuntime * update(iface::cellml_api::Model *pModel,
-                                const bool &pValidModel);
+    CellmlModelRuntime * update(iface::cellml_api::Model *pModel);
 
 private:
     ModelType mModelType;
