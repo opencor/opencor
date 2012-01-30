@@ -119,14 +119,8 @@ QString ComputerEquation::typeAsString() const
         return "Plus";
     case Minus:
         return "Minus";
-    case InclusiveOr:
-        return "InclusiveOr";
-    case ExclusiveOr:
-        return "ExclusiveOr";
     case LogicalOr:
         return "LogicalOr";
-    case And:
-        return "And";
     case LogicalAnd:
         return "LogicalAnd";
     case EqualEqual:

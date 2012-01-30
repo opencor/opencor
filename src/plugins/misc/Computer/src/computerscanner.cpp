@@ -27,8 +27,7 @@ static const QChar Colon                = QChar(':');
 static const QChar SemiColon            = QChar(';');
 static const QChar QuestionMark         = QChar('?');
 static const QChar ExclamationMark      = QChar('!');
-static const QChar InclusiveOr          = QChar('|');
-static const QChar ExclusiveOr          = QChar('^');
+static const QChar Or                   = QChar('|');
 static const QChar And                  = QChar('&');
 static const QChar LowerThan            = QChar('<');
 static const QChar GreaterThan          = QChar('>');
@@ -88,14 +87,8 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Plus;
     case Minus:
         return ComputerEquation::Minus;
-    case InclusiveOr:
-        return ComputerEquation::InclusiveOr;
-    case ExclusiveOr:
-        return ComputerEquation::ExclusiveOr;
     case LogicalOr:
         return ComputerEquation::LogicalOr;
-    case And:
-        return ComputerEquation::And;
     case LogicalAnd:
         return ComputerEquation::LogicalAnd;
     case EqualEqual:
@@ -170,14 +163,8 @@ QString ComputerScannerToken::symbolAsString() const
         return "Plus";
     case Minus:
         return "Minus";
-    case InclusiveOr:
-        return "InclusiveOr";
-    case ExclusiveOr:
-        return "ExclusiveOr";
     case LogicalOr:
         return "LogicalOr";
-    case And:
-        return "And";
     case LogicalAnd:
         return "LogicalAnd";
     case EqualEqual:
@@ -655,30 +642,26 @@ void ComputerScanner::getNextToken()
             mToken.setSymbol(ComputerScannerToken::QuestionMark);
 
             getNextChar();
-        } else if (mChar == InclusiveOr) {
-            // Depending on the next character, the symbol may be a logical Or
-            // rather than an inclusive Or
+        } else if (mChar == Or) {
+            // We don't support only one Or character, so we need a second one
+            // to get a logical Or symbol
 
             getNextChar();
 
-            if (mChar == InclusiveOr) {
-                // We got another inclusive Or, so...
+            if (mChar == Or) {
+                // We got another Or, so...
 
                 mToken.setSymbol(ComputerScannerToken::LogicalOr);
 
                 getNextChar();
             } else {
-                // Only one bit Or, so...
+                // Only one Or, so...
 
-                mToken.setSymbol(ComputerScannerToken::InclusiveOr);
+                mToken.setSymbol(ComputerScannerToken::Unknown);
             }
-        } else if (mChar == ExclusiveOr) {
-            mToken.setSymbol(ComputerScannerToken::ExclusiveOr);
-
-            getNextChar();
         } else if (mChar == And) {
-            // Depending on the next character, the symbol may be a logical And
-            // rather than an And
+            // We don't support only one And character, so we need a second one
+            // to get a logical And symbol
 
             getNextChar();
 
@@ -691,7 +674,7 @@ void ComputerScanner::getNextToken()
             } else {
                 // Only one And, so...
 
-                mToken.setSymbol(ComputerScannerToken::And);
+                mToken.setSymbol(ComputerScannerToken::Unknown);
             }
         } else if (mChar == LowerThan) {
             // Depending on the next character, the symbol may be a

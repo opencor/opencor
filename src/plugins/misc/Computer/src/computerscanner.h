@@ -33,8 +33,7 @@ public:
         // Mathematical operators
 
         Times, Divide, Percentage, Plus, Minus,
-        InclusiveOr, ExclusiveOr, LogicalOr, And, LogicalAnd,
-        EqualEqual, NotEqual,
+        LogicalOr, LogicalAnd, EqualEqual, NotEqual,
         LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
 
         // Mathematical functions with 1 argument

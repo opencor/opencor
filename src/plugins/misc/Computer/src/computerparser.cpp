@@ -464,15 +464,6 @@ bool parseLogicalOrExpression(ComputerParser *pParser,
 bool parseLogicalAndExpression(ComputerParser *pParser,
                                ComputerFunction *pFunction,
                                ComputerEquation * &pExpression);
-bool parseInclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction *pFunction,
-                                ComputerEquation * &pExpression);
-bool parseExclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction *pFunction,
-                                ComputerEquation * &pExpression);
-bool parseAndExpression(ComputerParser *pParser,
-                        ComputerFunction *pFunction,
-                        ComputerEquation * &pExpression);
 bool parseEqualityExpression(ComputerParser *pParser,
                              ComputerFunction *pFunction,
                              ComputerEquation * &pExpression);
@@ -572,69 +563,10 @@ bool parseLogicalAndExpression(ComputerParser *pParser,
 {
     // The EBNF grammar of a logical And expression is as follows:
     //
-    //   LogicalAndExpression = [ LogicalAndExpression "&&" ] InclusiveOrExpression ;
+    //   LogicalAndExpression = [ LogicalAndExpression "&&" ] EqualityExpression ;
 
     if (!parseGenericExpression(pParser, pFunction, pExpression,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalAnd,
-                                parseInclusiveOrExpression))
-        return false;
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
-bool parseInclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction *pFunction,
-                                ComputerEquation * &pExpression)
-{
-    // The EBNF grammar of an inclusive Or expression is as follows:
-    //
-    //   InclusiveOrExpression = [ InclusiveOrExpression "|" ] ExclusiveOrExpression ;
-
-    if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::InclusiveOr,
-                                parseExclusiveOrExpression))
-        return false;
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
-bool parseExclusiveOrExpression(ComputerParser *pParser,
-                                ComputerFunction *pFunction,
-                                ComputerEquation * &pExpression)
-{
-    // The EBNF grammar of an exclusive Or expression is as follows:
-    //
-    //   ExclusiveOrExpression = [ ExclusiveOrExpression "^" ] AndExpression ;
-
-    if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::ExclusiveOr,
-                                parseAndExpression))
-        return false;
-
-    // Everything went fine, so...
-
-    return true;
-}
-
-//==============================================================================
-
-bool parseAndExpression(ComputerParser *pParser, ComputerFunction *pFunction,
-                        ComputerEquation * &pExpression)
-{
-    // The EBNF grammar of an And expression is as follows:
-    //
-    //   AndExpression = [ AndExpression "&" EqualityExpression ] ;
-
-    if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::And,
                                 parseEqualityExpression))
         return false;
 
