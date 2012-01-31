@@ -122,6 +122,18 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::CosH;
     case TanH:
         return ComputerEquation::TanH;
+    case ASin:
+        return ComputerEquation::ASin;
+    case ACos:
+        return ComputerEquation::ACos;
+    case ATan:
+        return ComputerEquation::ATan;
+    case ASinH:
+        return ComputerEquation::ASinH;
+    case ACosH:
+        return ComputerEquation::ACosH;
+    case ATanH:
+        return ComputerEquation::ATanH;
 
     // Mathematical functions with 2 arguments
 
@@ -203,6 +215,18 @@ QString ComputerScannerToken::symbolAsString() const
         return "CosH";
     case TanH:
         return "TanH";
+    case ASin:
+        return "ASin";
+    case ACos:
+        return "ACos";
+    case ATan:
+        return "ATan";
+    case ASinH:
+        return "ASinH";
+    case ACosH:
+        return "ACosH";
+    case ATanH:
+        return "ATanH";
     case Pow:
         return "Pow";
     case OpeningBracket:
@@ -290,13 +314,18 @@ ComputerScanner::ComputerScanner() :
 
     mKeywords.insert("fabs", ComputerScannerToken::Abs);
     mKeywords.insert("exp", ComputerScannerToken::Exp);
-
     mKeywords.insert("sin", ComputerScannerToken::Sin);
     mKeywords.insert("cos", ComputerScannerToken::Cos);
     mKeywords.insert("tan", ComputerScannerToken::Tan);
     mKeywords.insert("sinh", ComputerScannerToken::SinH);
     mKeywords.insert("cosh", ComputerScannerToken::CosH);
     mKeywords.insert("tanh", ComputerScannerToken::TanH);
+    mKeywords.insert("asin", ComputerScannerToken::ASin);
+    mKeywords.insert("acos", ComputerScannerToken::ACos);
+    mKeywords.insert("atan", ComputerScannerToken::ATan);
+    mKeywords.insert("asinh", ComputerScannerToken::ASinH);
+    mKeywords.insert("acosh", ComputerScannerToken::ACosH);
+    mKeywords.insert("atanh", ComputerScannerToken::ATanH);
 
     mKeywords.insert("pow", ComputerScannerToken::Pow);
 

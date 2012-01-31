@@ -40,6 +40,7 @@ public:
 
         Abs, Exp,
         Sin, Cos, Tan, SinH, CosH, TanH,
+        ASin, ACos, ATan, ASinH, ACosH, ATanH,
 
         // Mathematical functions with 2 arguments
 

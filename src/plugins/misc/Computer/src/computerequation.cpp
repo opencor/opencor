@@ -151,6 +151,18 @@ QString ComputerEquation::typeAsString() const
         return "CosH";
     case TanH:
         return "TanH";
+    case ASin:
+        return "ASin";
+    case ACos:
+        return "ACos";
+    case ATan:
+        return "ATan";
+    case ASinH:
+        return "ASinH";
+    case ACosH:
+        return "ACosH";
+    case ATanH:
+        return "ATanH";
     case Pow:
         return "Pow";
     case Assign:
@@ -390,6 +402,48 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // tanh(N)
 
             replaceNodeWithNumber(pNode, tanh(pNode->left()->number()));
+
+        break;
+    case ASin:
+        if (pNode->left()->type() == Number)
+            // asin(N)
+
+            replaceNodeWithNumber(pNode, asin(pNode->left()->number()));
+
+        break;
+    case ACos:
+        if (pNode->left()->type() == Number)
+            // acos(N)
+
+            replaceNodeWithNumber(pNode, acos(pNode->left()->number()));
+
+        break;
+    case ATan:
+        if (pNode->left()->type() == Number)
+            // atan(N)
+
+            replaceNodeWithNumber(pNode, atan(pNode->left()->number()));
+
+        break;
+    case ASinH:
+        if (pNode->left()->type() == Number)
+            // asinh(N)
+
+            replaceNodeWithNumber(pNode, asinh(pNode->left()->number()));
+
+        break;
+    case ACosH:
+        if (pNode->left()->type() == Number)
+            // acosh(N)
+
+            replaceNodeWithNumber(pNode, acosh(pNode->left()->number()));
+
+        break;
+    case ATanH:
+        if (pNode->left()->type() == Number)
+            // atanh(N)
+
+            replaceNodeWithNumber(pNode, atanh(pNode->left()->number()));
 
         break;
     case Pow:
