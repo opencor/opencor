@@ -414,6 +414,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     // Declare any external function which we need
 
     bool hasExternalFunctions = data.externalFunctions().count();
+    int oldNbOfExternalFunctions = mExternalFunctions.count();
 
     if (hasExternalFunctions)
         data.appendAssemblyCode("\n\n");
@@ -449,10 +450,12 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     // Add the TBAA information, if needed
 
     if (data.needTbaaInformation()) {
-        if (hasExternalFunctions)
-            data.appendAssemblyCode("\n");
-        else
+        if (hasExternalFunctions) {
+            if (oldNbOfExternalFunctions != mExternalFunctions.count())
+                data.appendAssemblyCode("\n");
+        } else {
             data.appendAssemblyCode("\n\n");
+        }
 
         data.appendAssemblyCode("!0 = metadata !{metadata !\"double\", metadata !1}\n");
         data.appendAssemblyCode("!1 = metadata !{metadata !\"omnipotent char\", metadata !2}\n");
