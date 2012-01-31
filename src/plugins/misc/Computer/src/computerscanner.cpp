@@ -116,6 +116,12 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Cos;
     case Tan:
         return ComputerEquation::Tan;
+    case SinH:
+        return ComputerEquation::SinH;
+    case CosH:
+        return ComputerEquation::CosH;
+    case TanH:
+        return ComputerEquation::TanH;
 
     // Mathematical functions with 2 arguments
 
@@ -191,6 +197,12 @@ QString ComputerScannerToken::symbolAsString() const
         return "Cos";
     case Tan:
         return "Tan";
+    case SinH:
+        return "SinH";
+    case CosH:
+        return "CosH";
+    case TanH:
+        return "TanH";
     case Pow:
         return "Pow";
     case OpeningBracket:
@@ -282,6 +294,9 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("sin", ComputerScannerToken::Sin);
     mKeywords.insert("cos", ComputerScannerToken::Cos);
     mKeywords.insert("tan", ComputerScannerToken::Tan);
+    mKeywords.insert("sinh", ComputerScannerToken::SinH);
+    mKeywords.insert("cosh", ComputerScannerToken::CosH);
+    mKeywords.insert("tanh", ComputerScannerToken::TanH);
 
     mKeywords.insert("pow", ComputerScannerToken::Pow);
 

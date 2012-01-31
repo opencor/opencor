@@ -135,14 +135,22 @@ QString ComputerEquation::typeAsString() const
         return "LowerOrEqualThan";
     case GreaterOrEqualThan:
         return "GreaterOrEqualThan";
+    case Abs:
+        return "Abs";
+    case Exp:
+        return "Exp";
     case Sin:
         return "Sin";
     case Cos:
         return "Cos";
     case Tan:
         return "Tan";
-    case Exp:
-        return "Exp";
+    case SinH:
+        return "SinH";
+    case CosH:
+        return "CosH";
+    case TanH:
+        return "TanH";
     case Pow:
         return "Pow";
     case Assign:
@@ -328,6 +336,20 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         }
 
         break;
+    case Abs:
+        if (pNode->left()->type() == Number)
+            // abs(N)
+
+            replaceNodeWithNumber(pNode, fabs(pNode->left()->number()));
+
+        break;
+    case Exp:
+        if (pNode->left()->type() == Number)
+            // exp(N)
+
+            replaceNodeWithNumber(pNode, exp(pNode->left()->number()));
+
+        break;
     case Sin:
         if (pNode->left()->type() == Number)
             // sin(N)
@@ -347,6 +369,27 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // tan(N)
 
             replaceNodeWithNumber(pNode, tan(pNode->left()->number()));
+
+        break;
+    case SinH:
+        if (pNode->left()->type() == Number)
+            // sinh(N)
+
+            replaceNodeWithNumber(pNode, sinh(pNode->left()->number()));
+
+        break;
+    case CosH:
+        if (pNode->left()->type() == Number)
+            // cosh(N)
+
+            replaceNodeWithNumber(pNode, cosh(pNode->left()->number()));
+
+        break;
+    case TanH:
+        if (pNode->left()->type() == Number)
+            // tanh(N)
+
+            replaceNodeWithNumber(pNode, tanh(pNode->left()->number()));
 
         break;
     case Pow:
