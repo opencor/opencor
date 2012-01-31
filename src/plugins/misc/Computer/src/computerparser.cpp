@@ -754,9 +754,20 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
     static const ComputerScannerToken::Symbols oneArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Abs
                                                                                                             << ComputerScannerToken::Exp
+                                                                                                            << ComputerScannerToken::Ceil
+                                                                                                            << ComputerScannerToken::Floor
                                                                                                             << ComputerScannerToken::Sin
                                                                                                             << ComputerScannerToken::Cos
-                                                                                                            << ComputerScannerToken::Tan;
+                                                                                                            << ComputerScannerToken::Tan
+                                                                                                            << ComputerScannerToken::SinH
+                                                                                                            << ComputerScannerToken::CosH
+                                                                                                            << ComputerScannerToken::TanH
+                                                                                                            << ComputerScannerToken::ASin
+                                                                                                            << ComputerScannerToken::ACos
+                                                                                                            << ComputerScannerToken::ATan
+                                                                                                            << ComputerScannerToken::ASinH
+                                                                                                            << ComputerScannerToken::ACosH
+                                                                                                            << ComputerScannerToken::ATanH;
     static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Pow;
 
     if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {

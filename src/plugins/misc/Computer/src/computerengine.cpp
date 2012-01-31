@@ -819,6 +819,14 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
         compileOneArgumentFunction(pEquationNode->left(), "exp", pData);
 
         break;
+    case ComputerEquation::Ceil:
+        compileOneArgumentFunction(pEquationNode->left(), "ceil", pData);
+
+        break;
+    case ComputerEquation::Floor:
+        compileOneArgumentFunction(pEquationNode->left(), "floor", pData);
+
+        break;
     case ComputerEquation::Sin:
         compileOneArgumentFunction(pEquationNode->left(), "sin", pData);
 
@@ -829,6 +837,42 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
         break;
     case ComputerEquation::Tan:
         compileOneArgumentFunction(pEquationNode->left(), "tan", pData);
+
+        break;
+    case ComputerEquation::SinH:
+        compileOneArgumentFunction(pEquationNode->left(), "sinh", pData);
+
+        break;
+    case ComputerEquation::CosH:
+        compileOneArgumentFunction(pEquationNode->left(), "cosh", pData);
+
+        break;
+    case ComputerEquation::TanH:
+        compileOneArgumentFunction(pEquationNode->left(), "tanh", pData);
+
+        break;
+    case ComputerEquation::ASin:
+        compileOneArgumentFunction(pEquationNode->left(), "asin", pData);
+
+        break;
+    case ComputerEquation::ACos:
+        compileOneArgumentFunction(pEquationNode->left(), "acos", pData);
+
+        break;
+    case ComputerEquation::ATan:
+        compileOneArgumentFunction(pEquationNode->left(), "atan", pData);
+
+        break;
+    case ComputerEquation::ASinH:
+        compileOneArgumentFunction(pEquationNode->left(), "asinh", pData);
+
+        break;
+    case ComputerEquation::ACosH:
+        compileOneArgumentFunction(pEquationNode->left(), "acosh", pData);
+
+        break;
+    case ComputerEquation::ATanH:
+        compileOneArgumentFunction(pEquationNode->left(), "atanh", pData);
 
         break;
 
