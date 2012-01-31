@@ -139,6 +139,10 @@ QString ComputerEquation::typeAsString() const
         return "Abs";
     case Exp:
         return "Exp";
+    case Ceil:
+        return "Ceil";
+    case Floor:
+        return "Floor";
     case Sin:
         return "Sin";
     case Cos:
@@ -350,7 +354,7 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         break;
     case Abs:
         if (pNode->left()->type() == Number)
-            // abs(N)
+            // fabs(N)
 
             replaceNodeWithNumber(pNode, fabs(pNode->left()->number()));
 
@@ -360,6 +364,20 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // exp(N)
 
             replaceNodeWithNumber(pNode, exp(pNode->left()->number()));
+
+        break;
+    case Ceil:
+        if (pNode->left()->type() == Number)
+            // ceil(N)
+
+            replaceNodeWithNumber(pNode, ceil(pNode->left()->number()));
+
+        break;
+    case Floor:
+        if (pNode->left()->type() == Number)
+            // floor(N)
+
+            replaceNodeWithNumber(pNode, floor(pNode->left()->number()));
 
         break;
     case Sin:
