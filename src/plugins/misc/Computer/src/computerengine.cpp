@@ -811,6 +811,14 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
 
     // Mathematical functions with 1 argument
 
+    case ComputerEquation::Abs:
+        compileOneArgumentFunction(pEquationNode->left(), "fabs", pData);
+
+        break;
+    case ComputerEquation::Exp:
+        compileOneArgumentFunction(pEquationNode->left(), "exp", pData);
+
+        break;
     case ComputerEquation::Sin:
         compileOneArgumentFunction(pEquationNode->left(), "sin", pData);
 
@@ -821,10 +829,6 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
         break;
     case ComputerEquation::Tan:
         compileOneArgumentFunction(pEquationNode->left(), "tan", pData);
-
-        break;
-    case ComputerEquation::Exp:
-        compileOneArgumentFunction(pEquationNode->left(), "exp", pData);
 
         break;
 

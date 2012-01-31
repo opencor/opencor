@@ -106,14 +106,16 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
 
     // Mathematical functions with 1 argument
 
+    case Abs:
+        return ComputerEquation::Abs;
+    case Exp:
+        return ComputerEquation::Exp;
     case Sin:
         return ComputerEquation::Sin;
     case Cos:
         return ComputerEquation::Cos;
     case Tan:
         return ComputerEquation::Tan;
-    case Exp:
-        return ComputerEquation::Exp;
 
     // Mathematical functions with 2 arguments
 
@@ -179,14 +181,16 @@ QString ComputerScannerToken::symbolAsString() const
         return "LowerOrEqualThan";
     case GreaterOrEqualThan:
         return "GreaterOrEqualThan";
+    case Abs:
+        return "Abs";
+    case Exp:
+        return "Exp";
     case Sin:
         return "Sin";
     case Cos:
         return "Cos";
     case Tan:
         return "Tan";
-    case Exp:
-        return "Exp";
     case Pow:
         return "Pow";
     case OpeningBracket:
@@ -272,11 +276,12 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("void", ComputerScannerToken::Void);
     mKeywords.insert("double", ComputerScannerToken::Double);
 
+    mKeywords.insert("fabs", ComputerScannerToken::Abs);
+    mKeywords.insert("exp", ComputerScannerToken::Exp);
+
     mKeywords.insert("sin", ComputerScannerToken::Sin);
     mKeywords.insert("cos", ComputerScannerToken::Cos);
     mKeywords.insert("tan", ComputerScannerToken::Tan);
-
-    mKeywords.insert("exp", ComputerScannerToken::Exp);
 
     mKeywords.insert("pow", ComputerScannerToken::Pow);
 

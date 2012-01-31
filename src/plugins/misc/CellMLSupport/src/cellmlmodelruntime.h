@@ -105,7 +105,7 @@ private:
     void resetOdeFunctions();
     void resetDaeFunctions();
 
-    void reset();
+    void reset(const bool &pResetIssues = true);
 
     void couldNotGenerateModelCodeIssue();
     void unexpectedProblemDuringModelCompilationIssue();

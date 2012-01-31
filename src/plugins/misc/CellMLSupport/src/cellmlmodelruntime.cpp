@@ -125,7 +125,7 @@ void CellmlModelRuntime::resetDaeFunctions()
 
 //==============================================================================
 
-void CellmlModelRuntime::reset()
+void CellmlModelRuntime::reset(const bool &pResetIssues)
 {
     // Reset all of the runtime's properties
 
@@ -141,7 +141,8 @@ void CellmlModelRuntime::reset()
     resetOdeFunctions();
     resetDaeFunctions();
 
-    mIssues.clear();
+    if (pResetIssues)
+        mIssues.clear();
 }
 
 //==============================================================================
@@ -371,7 +372,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             mComputerEngine->addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
             handleErrors("test");
 
-            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return pow(0+-3*-pData[0]-0+exp(+pData[1]*1)/-pData[2]/-1e6, pData[3]/3+0);\n}");
+            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return pow(0+fabs(-3)*-pData[0]-0+exp(+pData[1]*1)/-pData[2]/-1e6, pData[3]/3+0);\n}");
             handleErrors("test2");
 
             // Test our "test" and "test2" functions
@@ -437,7 +438,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             if (mIssues.count()) {
                 // Some issues were reported, so...
 
-                reset();
+                reset(false);
             } else if (mModelType == Ode) {
                 // ODE functions
 

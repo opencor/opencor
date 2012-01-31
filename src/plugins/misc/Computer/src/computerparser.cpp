@@ -744,18 +744,19 @@ bool parsePrimaryExpression(ComputerParser *pParser,
     //                              | ( FunctionWithOneArgument "(" EquationRHS ")" ) ;
     //                              | ( FunctionWithTwoArguments "(" EquationRHS "," EquationRHS ")" ) ;
     //                              | ( "(" EquationRHS ")" ) ;
-    //   FunctionWithOneArgument  =   "sin" | "cos" | "tan"
-    //                              | "exp" ;
+    //   FunctionWithOneArgument  =   "fabs" | "exp"
+    //                              | "sin" | "cos" | "tan" ;
     //   FunctionWithTwoArguments = "pow" ;
 
     // Check whether the current token's symbol is an identifier, an integer
     // value, a double value, a function with one argument, a function with two
     // arguments or "("
 
-    static const ComputerScannerToken::Symbols oneArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Sin
+    static const ComputerScannerToken::Symbols oneArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Abs
+                                                                                                            << ComputerScannerToken::Exp
+                                                                                                            << ComputerScannerToken::Sin
                                                                                                             << ComputerScannerToken::Cos
-                                                                                                            << ComputerScannerToken::Tan
-                                                                                                            << ComputerScannerToken::Exp;
+                                                                                                            << ComputerScannerToken::Tan;
     static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Pow;
 
     if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {
