@@ -47,15 +47,11 @@ MACRO(INITIALISE_PROJECT)
     # Required packages
 
     IF(APPLE)
-        # Note #1: the Qt SDK doesn't, by default, make the Qt binaries
-        #          available to the user, hence we must update the user's PATH.
-        #          However, this doesn't work on Mac OS X with Qt Creator, so
-        #          we must hard-code qmake's path so that CMake can find it
-        #          from within Qt Creator...
-        # Note #2: ideally, we would use EXECUTE_PROCESS to retrieve the result
-        #          of 'which qmake', but that CMake command doesn't work from
-        #          within Qt Creator, so we really have no choice but to hard-
-        #          code qmake's path...
+        # Note: the Qt SDK doesn't, by default, make the Qt binaries available
+        #       to the user, hence we must update the user's PATH. However, this
+        #       doesn't work on Mac OS X when using Qt Creator, so we must
+        #       hard-code qmake's path so that CMake can find Qt from within
+        #       Qt Creator...
 
         SET(QT_QMAKE_EXECUTABLE /Developer/QtSDK/Desktop/Qt/4.8.0/gcc/bin/qmake)
     ENDIF()
