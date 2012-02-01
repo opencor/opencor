@@ -44,7 +44,7 @@
                 </ul>
             </li>
             <li>
-                <a href="http://qt.nokia.com/">Qt</a> SDK 1.1.4: this combines Qt 4.7.4 (a cross-platform application and UI framework) and Qt Creator 2.4.0 (a cross-platform environment for Qt), among other things:
+                <a href="http://qt.nokia.com/">Qt</a> SDK 1.1.4: this combines Qt 4.8.0 (a cross-platform application and UI framework) and Qt Creator 2.4.0 (a cross-platform environment for Qt), among other things:
                 <ul>
                     <li><a href="http://qt.nokia.com/downloads/sdk-windows-cpp">Windows</a>;</li>
                     <li>
@@ -53,21 +53,7 @@
                             <strong>Note:</strong> we would recommend sudo installing the SDK, so that it gets installed under under <code>/opt/QtSDK</code> rather than under your home directory.
                         </div>
                     </li>
-                    <li>
-                        <a href = "http://qt.nokia.com/downloads/sdk-mac-os-cpp">Mac OS X</a>: you might want to install the SDK under <code>/Developer</code> rather than your home folder as suggested by the installer.
-                        <div>
-                            <strong>Note:</strong> there is a <a href="https://bugreports.qt.nokia.com/browse/QTBUG-21339">very minor bug</a> in Qt 4.7.4 which, when building a Qt application on <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.7 (Lion), results in loads of warnings being generated. It is nothing to be concerned about, but if you want to get rid of those warnings, then sudo edit both <code>/Developer/QtSDK/Desktop/Qt/474/gcc/include/QtCore/qglobal.h</code> and <code>/Developer/QtSDK/Desktop/Qt/474/gcc/lib/QtCore.framework/Versions/4/Headers/qglobal.h</code> (from line 319):
-                            <pre class="good prettyprint">#  if !defined(MAC_OS_X_VERSION_10_7)
-#       define MAC_OS_X_VERSION_10_7 MAC_OS_X_VERSION_10_6 + 1
-#  endif
-#  if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
-#    warning "This version of Mac OS X is unsupported"
-#  endif</pre>
-                            <pre class="bad prettyprint">#  if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_6)
-#    warning "This version of Mac OS X is unsupported"
-#  endif</pre>
-                        </div>
-                    </li>
+                    <li><a href = "http://qt.nokia.com/downloads/sdk-mac-os-cpp">Mac OS X</a>: you might want to install the SDK under <code>/Developer</code> rather than your home folder as suggested by the installer.</li>
                 </ul>
                 <div>
                     <strong>Note:</strong> the Qt SDK will, by default, install everything that is needed to build OpenCOR (except, on Windows, for the <code>MinGW 4.4</code> package which needs to be manually selected from the <code>Qt SDK|Miscellaneous</code> category), so it is pretty much up to you which package(s) you want to install (you can always add/remove packages later on, if wanted/needed). Just for reference, <a href="res/pics/QtSDK.png">here</a> are the packages that we selected for our Windows build (it is very similar on Linux and Mac OS X).
@@ -77,7 +63,7 @@
         </ul>
 
         <p>
-            Note that our build environment requires the version of Qt mentioned above, i.e. 4.7.4. It may be that OpenCOR could be built using an earlier version of Qt, but this is not supported (and not recommended either). Still, should you want to give it a try, then look for <code>FIND_PACKAGE(Qt4 4.7.4 REQUIRED)</code> in <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a> and replace <code>4.7.4</code> with whatever version of Qt that you want to use.
+            Note that our build environment requires the version of Qt mentioned above, i.e. 4.8.0. It may be that OpenCOR could be built using an earlier version of Qt, but this is not supported (and not recommended either). Still, should you want to give it a try, then look for <code>FIND_PACKAGE(Qt4 4.8.0 REQUIRED)</code> in <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a> and replace <code>4.8.0</code> with whatever version of Qt that you want to use.
         </p>
 
         <p>
@@ -85,9 +71,9 @@
         </p>
 
         <ul>
-            <li>Windows: <code>C:\Program Files (x86)\CMake 2.8\bin</code> (or <code>C:\Program Files\CMake 2.8\bin</code> if you are running a 32-bit version of Windows), <code>C:\QtSDK\mingw\bin</code> and <code>C:\QtSDK\Desktop\Qt\4.7.4\mingw\bin</code>;</li>
-            <li>Linux: <code>/opt/QtSDK/Desktop/Qt/474/gcc/bin</code> (in <code>/etc/environment</code> on Ubuntu); and</li>
-            <li>Mac OS X: <code>/Developer/QtSDK/Desktop/Qt/474/gcc/bin</code> (in <code>/etc/profile</code>).</li>
+            <li>Windows: <code>C:\Program Files (x86)\CMake 2.8\bin</code> (or <code>C:\Program Files\CMake 2.8\bin</code> if you are running a 32-bit version of Windows), <code>C:\QtSDK\mingw\bin</code> and <code>C:\QtSDK\Desktop\Qt\4.8.0\mingw\bin</code>;</li>
+            <li>Linux: <code>/opt/QtSDK/Desktop/Qt/4.8.0/gcc/bin</code> (in <code>/etc/environment</code> on Ubuntu); and</li>
+            <li>Mac OS X: <code>/Developer/QtSDK/Desktop/Qt/4.8.0/gcc/bin</code> (in <code>/etc/profile</code>).</li>
         </ul>
 
         <div class="copyright">
