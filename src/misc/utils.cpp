@@ -117,7 +117,7 @@ QString getAppVersion(const QCoreApplication *pApp)
 
 QString getAppCopyright(const bool &pHtml)
 {
-    return QObject::tr("Copyright")+" "+QString(pHtml?"&copy;":"")+"2011";
+    return QObject::tr("Copyright")+" "+QString(pHtml?"&copy;":"")+"2011-2012";
 }
 
 //==============================================================================

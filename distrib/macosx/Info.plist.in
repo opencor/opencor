@@ -18,7 +18,7 @@
         </dict>
     </array>
     <key>NSHumanReadableCopyright</key>
-    <string>(C) 2011</string>
+    <string>(C) 2011-2012</string>
     <key>CFBundleIconFile</key>
     <string>${PROJECT_NAME}.icns</string>
     <key>CFBundlePackageType</key>

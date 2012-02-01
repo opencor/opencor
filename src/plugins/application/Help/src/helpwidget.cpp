@@ -122,7 +122,7 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
                           QByteArray(mErrorMsgTemplate.arg(tr("Error"),
                                                            tr("The following help file could not be found:")+" <span class=\"Filename\">"+url.toString()+"</span>.",
                                                            tr("Please <a href=\"http://www.opencor.ws/user/contactUs.html\">contact us</a> about this error."),
-                                                           tr("Copyright")+" ©2011").toLatin1());
+                                                           tr("Copyright")+" ©2011-2012").toLatin1());
 
     // Return the requested help page or an error message
 
