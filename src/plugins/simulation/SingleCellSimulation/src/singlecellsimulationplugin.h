@@ -15,6 +15,7 @@
 //==============================================================================
 
 class QwtPlot;
+class QwtPlotCurve;
 
 //==============================================================================
 
@@ -37,12 +38,17 @@ public:
     explicit SingleCellSimulationPlugin();
 
     virtual void initialize();
+    virtual void finalize();
 
     virtual QWidget * viewWidget(const QString & pFileName, const int &);
     virtual QString viewName(const int &pViewIndex);
 
 private:
     QwtPlot *mSimulationView;
+
+    QList<QwtPlotCurve *> mCurves;
+
+    void resetCurves();
 };
 
 //==============================================================================

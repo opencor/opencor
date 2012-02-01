@@ -92,6 +92,29 @@ void SingleCellSimulationPlugin::initialize()
 
 //==============================================================================
 
+void SingleCellSimulationPlugin::finalize()
+{
+    // Delete some internal objects
+
+    resetCurves();
+}
+//==============================================================================
+
+void SingleCellSimulationPlugin::resetCurves()
+{
+    // Remove any existing curve
+
+    foreach (QwtPlotCurve *curve, mCurves) {
+        curve->detach();
+
+        delete curve;
+    }
+
+    mCurves.clear();
+}
+
+//==============================================================================
+
 QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                                                  const int &)
 {
@@ -182,36 +205,42 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
         // Compute the model
 
-        if (!QFileInfo(pFileName).baseName().compare("van_der_pol_model_1928")) {
+        if (   !QFileInfo(pFileName).baseName().compare("van_der_pol_model_1928")
+            || !QFileInfo(pFileName).baseName().compare("zhang_SAN_model_2000_1D_capable")) {
+            bool vanDerPolModel = !QFileInfo(pFileName).baseName().compare("van_der_pol_model_1928");
+
             typedef QVector<double> Doubles;
 
-            static const int nbOfStates = 2;
+            int statesCount = cellmlModelRuntime->statesCount();
 
             Doubles xData;
-            Doubles yData[nbOfStates];
+            Doubles yData[statesCount];
 
             typedef void (*InitConstsFunction)(double *, double *, double *);
             typedef void (*RatesFunction)(double, double *, double *, double *, double *);
 
             double voi = 0;   // ms
-            static const double voiStep = 10;   // ms
-            static const double voiMax = 10000;   // ms
-            double constants[nbOfStates];
-            double rates[nbOfStates];
-            double states[nbOfStates];
-            int voiNbOfSteps = 0;
+            double voiStep = vanDerPolModel?10:0.01;   // ms
+            double voiMax = vanDerPolModel?10000:10;   // ms
+            double constants[cellmlModelRuntime->constantsCount()];
+            double rates[cellmlModelRuntime->ratesCount()];
+            double states[statesCount];
+            int voiCount = 0;
+            int voiOutputCount = vanDerPolModel?1:100;
 
             CellMLSupport::CellmlModelRuntimeOdeFunctions odeFunctions = cellmlModelRuntime->odeFunctions();
 
             odeFunctions.initConsts(constants, rates, states);
 
             do {
-                // Output the current data
+                // Output the current data, if needed
 
-                xData.append(voi);
+                if(voiCount % voiOutputCount == 0) {
+                    xData.append(voi);
 
-                for (int i = 0; i < nbOfStates; ++i)
-                    yData[i].append(states[i]);
+                    for (int i = 0; i < statesCount; ++i)
+                        yData[i].append(states[i]);
+                }
 
                 // Compute the rates
 
@@ -219,9 +248,9 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
                 // Go to the next voiStep and integrate the states
 
-                voi = ++voiNbOfSteps*voiStep;
+                voi = ++voiCount*voiStep;
 
-                for (int i = 0; i < nbOfStates; ++i)
+                for (int i = 0; i < statesCount; ++i)
                     states[i] += 0.001*voiStep*rates[i];
                     // Note: the scaling factor is because we need to go from
                     //       seconds to milliseconds...
@@ -229,27 +258,33 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
             xData.append(voi);
 
-            for (int i = 0; i < nbOfStates; ++i)
+            for (int i = 0; i < statesCount; ++i)
                 yData[i].append(states[i]);
+
+            // Remove any existing curve
+
+            resetCurves();
 
             // Add some curves to our plotting area
 
-            QwtPlotCurve *curve[nbOfStates];
+            for (int i = 0; i < statesCount; ++i) {
+                QwtPlotCurve *curve = new QwtPlotCurve();
 
-            for (int i = 0; i < nbOfStates; ++i) {
-                curve[i] = new QwtPlotCurve();
+                curve->setRenderHint(QwtPlotItem::RenderAntialiased);
+                curve->setPen(QPen(i%2?Qt::darkBlue:Qt::darkRed));
 
-                curve[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
-                curve[i]->setPen(QPen(i?Qt::darkBlue:Qt::darkRed));
+                curve->setSamples(xData, yData[i]);
 
-                curve[i]->setSamples(xData, yData[i]);
+                curve->attach(mSimulationView);
 
-                curve[i]->attach(mSimulationView);
+                // Keep track of the curve
+
+                mCurves.append(curve);
             }
 
             // Update the range for the axes
 
-            mSimulationView->updateAxes();
+            mSimulationView->replot();
         }
 
         // Done with our testing, so...
