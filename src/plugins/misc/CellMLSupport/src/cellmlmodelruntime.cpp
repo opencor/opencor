@@ -372,7 +372,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             mComputerEngine->addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
             handleErrors("test");
 
-            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return atanh(tanh(acosh(cosh(asinh(sinh(floor(atan(tan(fabs(acos(cos(ceil(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+pData[1]*1)/-pData[2]/-1e6, floor(pData[3]/3+0)+1))))))))))))))));\n}");
+            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+pData[1]*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n}");
             handleErrors("test2");
 
             // Test our "test" and "test2" functions
