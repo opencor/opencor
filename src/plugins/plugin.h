@@ -74,7 +74,7 @@ public:
     QObject * instance() const;
     Status status() const;
     QString statusErrors() const;
-    int nbOfStatusErrors() const;
+    int statusErrorsCount() const;
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pDir, const QString &pName);

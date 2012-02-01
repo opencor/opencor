@@ -54,7 +54,7 @@ public:
 
     ComputerExternalFunctions externalFunctions() const;
     bool addExternalFunction(const QString &pExternalFunctionName,
-                             const int &pNbOfArguments, void *pFunction);
+                             const int &pArgumentsCount, void *pFunction);
 
     bool needTbaaInformation() const;
     void setNeedTbaaInformation(const bool &pNeedTbaaInformation);

@@ -161,7 +161,7 @@ bool CellmlModel::isValid()
         //       validation issue, be it an error or a warning, so we need to
         //       determine the number of true errors
 
-        uint32_t nbOfCellmlErrors = 0;
+        uint32_t cellmlErrorsCount = 0;
 
         for (uint32_t i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
             ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
@@ -268,7 +268,7 @@ bool CellmlModel::isValid()
             } else {
                 // We are dealing with an error
 
-                ++nbOfCellmlErrors;
+                ++cellmlErrorsCount;
 
                 issueType = CellmlModelIssue::Error;
             }
@@ -280,7 +280,7 @@ bool CellmlModel::isValid()
                                             line, column, importedModel));
         }
 
-        if (nbOfCellmlErrors)
+        if (cellmlErrorsCount)
             // There are CellML errors, so...
 
             return false;

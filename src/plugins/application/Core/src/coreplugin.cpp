@@ -305,11 +305,11 @@ void CorePlugin::updateActions()
     mFileSaveAsAction->setEnabled(false);
     mFileSaveAllAction->setEnabled(false);
 
-    mFilePreviousAction->setEnabled(mCentralWidget->nbOfFilesOpened() > 1);
-    mFileNextAction->setEnabled(mCentralWidget->nbOfFilesOpened() > 1);
+    mFilePreviousAction->setEnabled(mCentralWidget->openedFilesCount() > 1);
+    mFileNextAction->setEnabled(mCentralWidget->openedFilesCount() > 1);
 
-    mFileCloseAction->setEnabled(mCentralWidget->nbOfFilesOpened());
-    mFileCloseAllAction->setEnabled(mCentralWidget->nbOfFilesOpened());
+    mFileCloseAction->setEnabled(mCentralWidget->openedFilesCount());
+    mFileCloseAllAction->setEnabled(mCentralWidget->openedFilesCount());
 
     mFilePrintAction->setEnabled(false);
 }

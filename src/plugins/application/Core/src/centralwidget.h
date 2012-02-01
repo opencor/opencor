@@ -97,7 +97,7 @@ public:
     bool openFile(const QString &pFileName);
     bool activateFile(const QString &pFileName);
 
-    int nbOfFilesOpened() const;
+    int openedFilesCount() const;
 
     QString activeFileName() const;
 

@@ -107,16 +107,16 @@ QModelIndex FileOrganiserModel::decodeHierarchyData(QDataStream &pStream) const
 
     // The number of levels
 
-    int nbOfLevels;
+    int levelsCount;
 
-    pStream >> nbOfLevels;
+    pStream >> levelsCount;
 
     // Hierarchy to reach the item
 
     int row;
     QStandardItem *crtItem = invisibleRootItem();
 
-    for (int j = 0; j < nbOfLevels; ++j) {
+    for (int j = 0; j < levelsCount; ++j) {
         pStream >> row;
 
         crtItem = crtItem->child(row, 0);
@@ -151,13 +151,13 @@ QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
 
         // The number of items
 
-        int nbOfItems;
+        int itemsCount;
 
-        stream >> nbOfItems;
+        stream >> itemsCount;
 
         // Hierarchy to reach the various items
 
-        for (int i = 0; i < nbOfItems; ++i)
+        for (int i = 0; i < itemsCount; ++i)
             res << decodeHierarchyData(stream);
     }
 
@@ -282,7 +282,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
     if (itemInfo != QStringList()) {
         QString textOrPath  = itemInfo.at(0);
         int parentItemIndex = itemInfo.at(1).toInt();
-        int nbOfChildItems  = itemInfo.at(2).toInt();
+        int childItemsCount = itemInfo.at(2).toInt();
         bool expanded       = itemInfo.at(3).toInt();
 
         // Create the item, in case we are not dealing with the root folder item
@@ -300,7 +300,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
             // is either a folder or a file, depending on its number of child
             // items
 
-            if (nbOfChildItems >= 0) {
+            if (childItemsCount >= 0) {
                 // We are dealing with a folder item
 
                 QStandardItem *folderItem = new QStandardItem(QIcon(CollapsedFolderIcon),
@@ -347,11 +347,11 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
 
         // Retrieve any child item
         // Note: the test on childParentItem is not necessary (since
-        //       nbOfChildItems will be equal to -1 in the case of a file item),
-        //       but it doesn't harm having it, so...
+        //       childItemsCount will be equal to -1 in the case of a file
+        //       item), but it doesn't harm having it, so...
 
         if (childParentItem)
-            for (int i = 0; i < nbOfChildItems; ++i)
+            for (int i = 0; i < childItemsCount; ++i)
                 loadItemSettings(pSettings, childParentItem);
     }
 }
@@ -883,15 +883,15 @@ bool FileOrganiserWidget::newFolder()
     // depending on the situation
 
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
-    int nbOfSelectedIndexes = selectedIndexes.count();
+    int selectedIndexesCount = selectedIndexes.count();
 
-    if (nbOfSelectedIndexes <= 1) {
+    if (selectedIndexesCount <= 1) {
         // Either no or one item is currently selected, so retrieve that item
         // and check that it is a folder item
 
-        QStandardItem *crtItem = !nbOfSelectedIndexes?
-                                           mDataModel->invisibleRootItem():
-                                           mDataModel->itemFromIndex(selectedIndexes.first());
+        QStandardItem *crtItem = !selectedIndexesCount?
+                                     mDataModel->invisibleRootItem():
+                                     mDataModel->itemFromIndex(selectedIndexes.first());
 
         if (   (crtItem == mDataModel->invisibleRootItem())
             || crtItem->data(Item::Folder).toBool()) {
@@ -914,7 +914,7 @@ bool FileOrganiserWidget::newFolder()
                 //       being currently selected (i.e. it's not the root folder
                 //       item)
 
-                if (nbOfSelectedIndexes == 1)
+                if (selectedIndexesCount == 1)
                     setExpanded(crtItem->index(), true);
 
                 // Offer the user to edit the newly added folder item

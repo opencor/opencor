@@ -79,16 +79,16 @@ void FileOrganiserWindow::updateActions()
     // Make sure that the various actions are properly enabled/disabled
 
     QModelIndexList selectedIndexes = mFileOrganiserWidget->selectionModel()->selectedIndexes();
-    int nbOfSelectedIndexes = selectedIndexes.count();
-    bool actionNewEnabled = nbOfSelectedIndexes <= 1;
+    int selectedIndexesCount = selectedIndexes.count();
+    bool actionNewEnabled = selectedIndexesCount <= 1;
 
-    if (nbOfSelectedIndexes == 1)
+    if (selectedIndexesCount == 1)
         // One item is selected, but is it a folder item?
 
         actionNewEnabled = mFileOrganiserWidget->isFolderItem(selectedIndexes.at(0));
 
     mUi->actionNew->setEnabled(actionNewEnabled);
-    mUi->actionDelete->setEnabled(nbOfSelectedIndexes >= 1);
+    mUi->actionDelete->setEnabled(selectedIndexesCount >= 1);
 }
 
 //==============================================================================

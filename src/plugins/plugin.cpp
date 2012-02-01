@@ -88,7 +88,7 @@ Plugin::Plugin(const QString &pFileName,
                 }
             }
 
-            if (nbOfStatusErrors() == 1)
+            if (statusErrorsCount() == 1)
                 // There is only one error, so remove the leading " - "
 
                 mStatusErrors = mStatusErrors.remove(0, 3);
@@ -208,7 +208,7 @@ QString Plugin::statusErrors() const
 
 //==============================================================================
 
-int Plugin::nbOfStatusErrors() const
+int Plugin::statusErrorsCount() const
 {
     // Return the number of plugin's status errors
 

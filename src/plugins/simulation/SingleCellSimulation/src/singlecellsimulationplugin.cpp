@@ -141,9 +141,9 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
         if (cellmlModel->isValid()) {
             // The model is valid, but let's see whether warnings were generated
 
-            int nbOfWarnings = cellmlModel->issues().count();
+            int warningsCount = cellmlModel->issues().count();
 
-            if (nbOfWarnings)
+            if (warningsCount)
                 qDebug(" - The model was properly loaded:");
             else
                 qDebug(" - The model was properly loaded.");

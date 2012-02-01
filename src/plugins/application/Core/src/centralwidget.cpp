@@ -548,7 +548,7 @@ void CentralWidget::fileSelected(const int &pIndex)
 
 //==============================================================================
 
-int CentralWidget::nbOfFilesOpened() const
+int CentralWidget::openedFilesCount() const
 {
     // Return the number of files currently opened
 

@@ -21,16 +21,16 @@ class ComputerExternalFunction
 {
 public:
     explicit ComputerExternalFunction(const QString &pName,
-                                      const int &pNbOfParameters,
+                                      const int &pParametersCount,
                                       void *pFunction);
 
     QString name() const;
-    int nbOfParameters() const;
+    int parametersCount() const;
     void * function() const;
 
 private:
     QString mName;
-    int mNbOfParameters;
+    int mParametersCount;
     void *mFunction;
 };
 

@@ -82,13 +82,13 @@ ComputerExternalFunctions ComputerEngineData::externalFunctions() const
 //==============================================================================
 
 bool ComputerEngineData::addExternalFunction(const QString &pExternalFunctionName,
-                                             const int &pNbOfArguments,
+                                             const int &pArgumentsCount,
                                              void *pFunction)
 {
     // Add an external function to our list, but only if i isn't already there
 
     ComputerExternalFunction externalFunction = ComputerExternalFunction(pExternalFunctionName,
-                                                                         pNbOfArguments,
+                                                                         pArgumentsCount,
                                                                          pFunction);
 
     if (mExternalFunctions.contains(externalFunction)) {
@@ -418,7 +418,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     // Declare any external function which we need
 
     bool hasExternalFunctions = data.externalFunctions().count();
-    int oldNbOfExternalFunctions = mExternalFunctions.count();
+    int oldExternalFunctionsCount = mExternalFunctions.count();
 
     if (hasExternalFunctions)
         data.appendAssemblyCode("\n\n");
@@ -432,7 +432,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
             QString parameters = QString();
 
-            for (int i = 0, iMax = externalFunction.nbOfParameters(); i < iMax; ++i) {
+            for (int i = 0, iMax = externalFunction.parametersCount(); i < iMax; ++i) {
                 // Add a separator first if we already have 1+ parameters
 
                 if (!parameters.isEmpty())
@@ -466,7 +466,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
     if (data.needTbaaInformation()) {
         if (hasExternalFunctions) {
-            if (oldNbOfExternalFunctions != mExternalFunctions.count())
+            if (oldExternalFunctionsCount != mExternalFunctions.count())
                 data.appendAssemblyCode("\n");
         } else {
             data.appendAssemblyCode("\n\n");
