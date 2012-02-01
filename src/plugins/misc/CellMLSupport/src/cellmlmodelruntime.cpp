@@ -31,7 +31,7 @@ CellmlModelRuntime::CellmlModelRuntime() :
 
 //==============================================================================
 
-bool CellmlModelRuntime::isValid()
+bool CellmlModelRuntime::isValid() const
 {
     // The runtime is valid if no issue was found
 
@@ -40,7 +40,7 @@ bool CellmlModelRuntime::isValid()
 
 //==============================================================================
 
-CellmlModelRuntime::ModelType CellmlModelRuntime::modelType()
+CellmlModelRuntime::ModelType CellmlModelRuntime::modelType() const
 {
     // Return the type of model for the runtime
 
@@ -49,7 +49,66 @@ CellmlModelRuntime::ModelType CellmlModelRuntime::modelType()
 
 //==============================================================================
 
-CellmlModelRuntimeOdeFunctions CellmlModelRuntime::odeFunctions()
+int CellmlModelRuntime::constantsCount() const
+{
+    // Return the number of constants in the model
+
+    if (mModelType == Ode)
+        return mOdeCodeInformation?mOdeCodeInformation->constantIndexCount():0;
+    else
+        return mDaeCodeInformation?mDaeCodeInformation->constantIndexCount():0;
+}
+
+//==============================================================================
+
+int CellmlModelRuntime::statesCount() const
+{
+    // Return the number of states in the model
+
+    if (mModelType == Ode)
+        return mOdeCodeInformation?mOdeCodeInformation->rateIndexCount():0;
+    else
+        return mDaeCodeInformation?mDaeCodeInformation->rateIndexCount():0;
+}
+
+//==============================================================================
+
+int CellmlModelRuntime::ratesCount() const
+{
+    // Return the number of rates in the model
+    // Note: it is obviously the same as the number of states, so this function
+    //       is only for user convenience...
+
+    return statesCount();
+}
+
+//==============================================================================
+
+int CellmlModelRuntime::agebraicCount() const
+{
+    // Return the number of algebraic equations in the model
+
+    if (mModelType == Ode)
+        return mOdeCodeInformation?mOdeCodeInformation->algebraicIndexCount():0;
+    else
+        return mDaeCodeInformation?mDaeCodeInformation->algebraicIndexCount():0;
+}
+
+//==============================================================================
+
+int CellmlModelRuntime::condVarCount() const
+{
+    // Return the number of conditional variables in the model
+
+    if (mModelType == Ode)
+        return 0;
+    else
+        return mDaeCodeInformation?mDaeCodeInformation->conditionVariableCount():0;
+}
+
+//==============================================================================
+
+CellmlModelRuntimeOdeFunctions CellmlModelRuntime::odeFunctions() const
 {
     // Return the ODE functions
 
@@ -58,7 +117,7 @@ CellmlModelRuntimeOdeFunctions CellmlModelRuntime::odeFunctions()
 
 //==============================================================================
 
-CellmlModelRuntimeDaeFunctions CellmlModelRuntime::daeFunctions()
+CellmlModelRuntimeDaeFunctions CellmlModelRuntime::daeFunctions() const
 {
     // Return the DAE functions
 
@@ -67,7 +126,7 @@ CellmlModelRuntimeDaeFunctions CellmlModelRuntime::daeFunctions()
 
 //==============================================================================
 
-CellmlModelIssues CellmlModelRuntime::issues()
+CellmlModelIssues CellmlModelRuntime::issues() const
 {
     // Return the issue(s)
 
@@ -304,27 +363,27 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             // If the model is of DAE type, then we must get the 'right' code
             // information
 
-            iface::cellml_services::CodeInformation *genericCodeInformation;
+            iface::cellml_services::CodeInformation *genericOdeCodeInformation;
 
             if (mModelType == Dae)
-                genericCodeInformation = getDaeCodeInformation(pModel);
+                genericOdeCodeInformation = getDaeCodeInformation(pModel);
             else
-                genericCodeInformation = mOdeCodeInformation;
+                genericOdeCodeInformation = mOdeCodeInformation;
 
             // Retrieve some information/code
 
             qDebug("---------------------------------------");
             qDebug("initConstsString():");
             qDebug("");
-            qDebug(QString::fromStdWString(genericCodeInformation->initConstsString()).toLatin1().constData());
+            qDebug(QString::fromStdWString(genericOdeCodeInformation->initConstsString()).toLatin1().constData());
             qDebug("---------------------------------------");
             qDebug("ratesString():");
             qDebug("");
-            qDebug(QString::fromStdWString(genericCodeInformation->ratesString()).toLatin1().constData());
+            qDebug(QString::fromStdWString(genericOdeCodeInformation->ratesString()).toLatin1().constData());
             qDebug("---------------------------------------");
             qDebug("variablesString():");
             qDebug("");
-            qDebug(QString::fromStdWString(genericCodeInformation->variablesString()).toLatin1().constData());
+            qDebug(QString::fromStdWString(genericOdeCodeInformation->variablesString()).toLatin1().constData());
 
             if (mModelType == Dae) {
                 qDebug("---------------------------------------");
@@ -343,17 +402,17 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             // Get some binary code
 
-            mComputerEngine->addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
+            mComputerEngine->addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->initConstsString())));
             handleErrors("initConsts");
 
             if (mModelType == Ode)
-                mComputerEngine->addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
+                mComputerEngine->addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
             else
-                mComputerEngine->addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->ratesString())));
+                mComputerEngine->addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
 
             handleErrors("rates");
 
-            mComputerEngine->addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
+            mComputerEngine->addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->variablesString())));
             handleErrors("variables");
 
             if (mModelType == Dae) {

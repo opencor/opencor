@@ -75,14 +75,20 @@ public:
 
     explicit CellmlModelRuntime();
 
-    bool isValid();
+    bool isValid() const;
 
-    ModelType modelType();
+    ModelType modelType() const;
 
-    CellmlModelRuntimeOdeFunctions odeFunctions();
-    CellmlModelRuntimeDaeFunctions daeFunctions();
+    int constantsCount() const;
+    int statesCount() const;
+    int ratesCount() const;
+    int agebraicCount() const;
+    int condVarCount() const;
 
-    CellmlModelIssues issues();
+    CellmlModelRuntimeOdeFunctions odeFunctions() const;
+    CellmlModelRuntimeDaeFunctions daeFunctions() const;
+
+    CellmlModelIssues issues() const;
 
     CellmlModelRuntime * update(iface::cellml_api::Model *pModel);
 
