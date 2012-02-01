@@ -927,6 +927,14 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
         compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "pow", pData);
 
         break;
+    case ComputerEquation::ArbitraryLog:
+        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "arbitrary_log", pData,
+                                   (void *)(intptr_t) arbitrary_log);
+
+        break;
+
+    // We should never reach this point...
+
     default:
         qDebug(QString(">>> ERROR: untreated equation type '%1'...").arg(pEquationNode->typeAsString()).toLatin1().constData());
     }

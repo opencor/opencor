@@ -44,7 +44,7 @@ public:
 
         // Mathematical functions with 2 arguments
 
-        Pow,
+        Pow, ArbitraryLog,
 
         // Miscellaneous
 

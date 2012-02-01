@@ -172,6 +172,8 @@ QString ComputerEquation::typeAsString() const
         return "ATanH";
     case Pow:
         return "Pow";
+    case ArbitraryLog:
+        return "ArbitraryLog";
     case Assign:
         return "Assign";
     case Not:
@@ -308,8 +310,7 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
 
         break;
     case Divide:
-        if (   (pNode->left()->type() == Number)
-            && (pNode->right()->type() == Number))
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
             // N1/N2
 
             replaceNodeWithNumber(pNode, pNode->left()->number()/pNode->right()->number());
@@ -489,6 +490,13 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // N1^N2
 
             replaceNodeWithNumber(pNode, pow(pNode->left()->number(), pNode->right()->number()));
+
+        break;
+    case ArbitraryLog:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // log(N1)/log(N2)
+
+            replaceNodeWithNumber(pNode, arbitrary_log(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Not:

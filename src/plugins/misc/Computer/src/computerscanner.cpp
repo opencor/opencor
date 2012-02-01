@@ -147,11 +147,16 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
 
     case Pow:
         return ComputerEquation::Pow;
+    case ArbitraryLog:
+        return ComputerEquation::ArbitraryLog;
 
     // Miscellaneous
 
     case Not:
         return ComputerEquation::Not;
+
+    // We should never reach this point...
+
     default:
         qDebug(QString(">>> ERROR: couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
 
@@ -245,6 +250,8 @@ QString ComputerScannerToken::symbolAsString() const
         return "ATanH";
     case Pow:
         return "Pow";
+    case ArbitraryLog:
+        return "ArbitraryLog";
     case OpeningBracket:
         return "OpeningBracket";
     case ClosingBracket:
@@ -348,6 +355,7 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("atanh", ComputerScannerToken::ATanH);
 
     mKeywords.insert("pow", ComputerScannerToken::Pow);
+    mKeywords.insert("arbitrary_log", ComputerScannerToken::ArbitraryLog);
 
     mKeywords.insert("return", ComputerScannerToken::Return);
 }
