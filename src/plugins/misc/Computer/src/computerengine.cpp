@@ -446,9 +446,11 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
             data.appendAssemblyCode("("+parameters+") nounwind\n");
 
             // Add a symbol for the function, if needed
-            // Note: this is required for certain math functions (e.g. asinh())
-            //       and some CellML-related math functions (e.g. factorial()),
-            //       so...
+            // Note: by default, LLVM adds a symbol for some known functions
+            //       (e.g. sin()), but not for some other (math) functions (e.g.
+            //       asinh()) and obviously not for our CellML-related math
+            //       functions (e.g. factorial()), so in all of those cases we
+            //       need to 'manually' add a symbol...
 
             if (externalFunction.function())
                 llvm::sys::DynamicLibrary::AddSymbol(externalFunction.name().toLatin1().constData(),
