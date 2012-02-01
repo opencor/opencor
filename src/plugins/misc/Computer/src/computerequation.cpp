@@ -140,6 +140,8 @@ QString ComputerEquation::typeAsString() const
         return "Abs";
     case Exp:
         return "Exp";
+    case Log:
+        return "Log";
     case Ceil:
         return "Ceil";
     case Floor:
@@ -365,6 +367,13 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // exp(N)
 
             replaceNodeWithNumber(pNode, exp(pNode->left()->number()));
+
+        break;
+    case Log:
+        if (pNode->left()->type() == Number)
+            // log(N)
+
+            replaceNodeWithNumber(pNode, log(pNode->left()->number()));
 
         break;
     case Ceil:

@@ -852,6 +852,10 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
         compileOneArgumentFunction(pEquationNode->left(), "exp", pData);
 
         break;
+    case ComputerEquation::Log:
+        compileOneArgumentFunction(pEquationNode->left(), "log", pData);
+
+        break;
     case ComputerEquation::Ceil:
         compileOneArgumentFunction(pEquationNode->left(), "ceil", pData);
 

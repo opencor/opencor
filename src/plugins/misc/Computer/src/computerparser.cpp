@@ -744,7 +744,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
     //                              | ( FunctionWithOneArgument "(" EquationRHS ")" ) ;
     //                              | ( FunctionWithTwoArguments "(" EquationRHS "," EquationRHS ")" ) ;
     //                              | ( "(" EquationRHS ")" ) ;
-    //   FunctionWithOneArgument  =   "fabs" | "exp" | "ceil" | "floor" | "factorial"
+    //   FunctionWithOneArgument  =   "fabs" | "exp" | "log" | "ceil" | "floor" | "factorial"
     //                              | "sin" | "cos" | "tan" | "sinh" | "cosh" | "tanh"
     //                              | "asin" | "acos" | "atan" | "asinh" | "acosh" | "atanh" ;
     //   FunctionWithTwoArguments = "pow" ;
@@ -755,6 +755,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
     static const ComputerScannerToken::Symbols oneArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Abs
                                                                                                             << ComputerScannerToken::Exp
+                                                                                                            << ComputerScannerToken::Log
                                                                                                             << ComputerScannerToken::Ceil
                                                                                                             << ComputerScannerToken::Floor
                                                                                                             << ComputerScannerToken::Factorial

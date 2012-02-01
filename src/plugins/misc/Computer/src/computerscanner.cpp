@@ -110,6 +110,8 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Abs;
     case Exp:
         return ComputerEquation::Exp;
+    case Log:
+        return ComputerEquation::Log;
     case Ceil:
         return ComputerEquation::Ceil;
     case Floor:
@@ -209,6 +211,8 @@ QString ComputerScannerToken::symbolAsString() const
         return "Abs";
     case Exp:
         return "Exp";
+    case Log:
+        return "Log";
     case Ceil:
         return "Ceil";
     case Floor:
@@ -326,6 +330,7 @@ ComputerScanner::ComputerScanner() :
 
     mKeywords.insert("fabs", ComputerScannerToken::Abs);
     mKeywords.insert("exp", ComputerScannerToken::Exp);
+    mKeywords.insert("log", ComputerScannerToken::Log);
     mKeywords.insert("ceil", ComputerScannerToken::Ceil);
     mKeywords.insert("floor", ComputerScannerToken::Floor);
     mKeywords.insert("factorial", ComputerScannerToken::Factorial);

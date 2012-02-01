@@ -38,7 +38,7 @@ public:
 
         // Mathematical functions with 1 argument
 
-        Abs, Exp, Ceil, Floor, Factorial,
+        Abs, Exp, Log, Ceil, Floor, Factorial,
         Sin, Cos, Tan, SinH, CosH, TanH,
         ASin, ACos, ATan, ASinH, ACosH, ATanH,
 
