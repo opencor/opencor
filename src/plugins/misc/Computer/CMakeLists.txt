@@ -16,6 +16,7 @@ ADD_PLUGIN(Computer
         src/computererror.cpp
         src/computerexternalfunction.cpp
         src/computerfunction.cpp
+        src/computermath.cpp
         src/computerparameter.cpp
         src/computerparser.cpp
         src/computerplugin.cpp

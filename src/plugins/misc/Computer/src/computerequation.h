@@ -38,7 +38,7 @@ public:
 
         // Mathematical functions with 1 argument
 
-        Abs, Exp, Ceil, Floor,
+        Abs, Exp, Ceil, Floor, Factorial,
         Sin, Cos, Tan, SinH, CosH, TanH,
         ASin, ACos, ATan, ASinH, ACosH, ATanH,
 
@@ -51,6 +51,16 @@ public:
         Assign, Not,
         Piecewise, PiecewiseCases
     };
+
+//---GRY--- THE FOLLOWING STILL NEED TO BE IMPLEMENTED IN ComputeEngine...
+//
+//          Modulo,
+//          LogicalOr, LogicalAnd, EqualEqual, NotEqual,
+//          LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
+//
+//          Not,
+//          Piecewise, PiecewiseCases
+//
 
     explicit ComputerEquation(ComputerEquation *pEquation = 0);
     explicit ComputerEquation(const Type &pType,

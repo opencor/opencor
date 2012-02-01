@@ -12,9 +12,11 @@ namespace Computer {
 //==============================================================================
 
 ComputerExternalFunction::ComputerExternalFunction(const QString &pName,
-                                                   const int &pNbOfParameters) :
+                                                   const int &pNbOfParameters,
+                                                   void *pFunction) :
     mName(pName),
-    mNbOfParameters(pNbOfParameters)
+    mNbOfParameters(pNbOfParameters),
+    mFunction(pFunction)
 {
 }
 
@@ -34,6 +36,15 @@ int ComputerExternalFunction::nbOfParameters() const
     // Return the external function's number of parameters
 
     return mNbOfParameters;
+}
+
+//==============================================================================
+
+void * ComputerExternalFunction::function() const
+{
+    // Return the external function's function
+
+    return mFunction;
 }
 
 //==============================================================================

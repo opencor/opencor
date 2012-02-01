@@ -114,6 +114,8 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Ceil;
     case Floor:
         return ComputerEquation::Floor;
+    case Factorial:
+        return ComputerEquation::Factorial;
     case Sin:
         return ComputerEquation::Sin;
     case Cos:
@@ -211,6 +213,8 @@ QString ComputerScannerToken::symbolAsString() const
         return "Ceil";
     case Floor:
         return "Floor";
+    case Factorial:
+        return "Factorial";
     case Sin:
         return "Sin";
     case Cos:
@@ -324,6 +328,7 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("exp", ComputerScannerToken::Exp);
     mKeywords.insert("ceil", ComputerScannerToken::Ceil);
     mKeywords.insert("floor", ComputerScannerToken::Floor);
+    mKeywords.insert("factorial", ComputerScannerToken::Factorial);
     mKeywords.insert("sin", ComputerScannerToken::Sin);
     mKeywords.insert("cos", ComputerScannerToken::Cos);
     mKeywords.insert("tan", ComputerScannerToken::Tan);

@@ -744,8 +744,9 @@ bool parsePrimaryExpression(ComputerParser *pParser,
     //                              | ( FunctionWithOneArgument "(" EquationRHS ")" ) ;
     //                              | ( FunctionWithTwoArguments "(" EquationRHS "," EquationRHS ")" ) ;
     //                              | ( "(" EquationRHS ")" ) ;
-    //   FunctionWithOneArgument  =   "fabs" | "exp"
-    //                              | "sin" | "cos" | "tan" ;
+    //   FunctionWithOneArgument  =   "fabs" | "exp" | "ceil" | "floor" | "factorial"
+    //                              | "sin" | "cos" | "tan" | "sinh" | "cosh" | "tanh"
+    //                              | "asin" | "acos" | "atan" | "asinh" | "acosh" | "atanh" ;
     //   FunctionWithTwoArguments = "pow" ;
 
     // Check whether the current token's symbol is an identifier, an integer
@@ -756,6 +757,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                                                                                                             << ComputerScannerToken::Exp
                                                                                                             << ComputerScannerToken::Ceil
                                                                                                             << ComputerScannerToken::Floor
+                                                                                                            << ComputerScannerToken::Factorial
                                                                                                             << ComputerScannerToken::Sin
                                                                                                             << ComputerScannerToken::Cos
                                                                                                             << ComputerScannerToken::Tan

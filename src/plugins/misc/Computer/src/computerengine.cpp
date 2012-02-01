@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "computerengine.h"
+#include "computermath.h"
 #include "computerparser.h"
 
 //==============================================================================
@@ -13,6 +14,7 @@
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/TargetSelect.h"
+#include "llvm/Support/DynamicLibrary.h"
 
 //==============================================================================
 
@@ -80,12 +82,14 @@ ComputerExternalFunctions ComputerEngineData::externalFunctions() const
 //==============================================================================
 
 bool ComputerEngineData::addExternalFunction(const QString &pExternalFunctionName,
-                                             const int &pNbOfArguments)
+                                             const int &pNbOfArguments,
+                                             void *pFunction)
 {
     // Add an external function to our list, but only if i isn't already there
 
     ComputerExternalFunction externalFunction = ComputerExternalFunction(pExternalFunctionName,
-                                                                         pNbOfArguments);
+                                                                         pNbOfArguments,
+                                                                         pFunction);
 
     if (mExternalFunctions.contains(externalFunction)) {
         // The external function already exists, so...
@@ -441,6 +445,15 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
             data.appendAssemblyCode("("+parameters+") nounwind\n");
 
+            // Add a symbol for the function, if needed
+            // Note: this is required for certain math functions (e.g. asinh())
+            //       and some CellML-related math functions (e.g. factorial()),
+            //       so...
+
+            if (externalFunction.function())
+                llvm::sys::DynamicLibrary::AddSymbol(externalFunction.name().toLatin1().constData(),
+                                                     externalFunction.function());
+
             // Keep track of the fact that we have already defined the external
             // function
 
@@ -632,10 +645,26 @@ QString ComputerEngine::compileOperand(ComputerEquation *pOperand,
         return "%%"+QString::number(indirectParameterAssemblyCodeIndex(pOperand, pData, true));
 
         break;
-    case ComputerEquation::Number:
+    case ComputerEquation::Number: {
         // A number, so...
 
-        return numberAsString(pOperand->number());
+        double number = pOperand->number();
+
+        if (number != number)
+            // NaN
+
+            return "0x7ff8000000000000";
+        else if (number > std::numeric_limits<double>::max())
+            // +Inf
+
+            return "0x7ff0000000000000";
+        else if (number < -std::numeric_limits<double>::max())
+            // -Inf
+
+            return "0xfff0000000000000";
+        else
+            return numberAsString(number);
+    }
     default:
         // Part of a computed equation, so...
 
@@ -701,7 +730,8 @@ void ComputerEngine::compileMathematicalOperator(ComputerEquation *pOperandOne,
 
 void ComputerEngine::compileOneArgumentFunction(ComputerEquation *pOperand,
                                                 const QString &pFunctionName,
-                                                ComputerEngineData &pData)
+                                                ComputerEngineData &pData,
+                                                void *pFunction)
 {
     // Compile the operand
 
@@ -713,7 +743,7 @@ void ComputerEngine::compileOneArgumentFunction(ComputerEquation *pOperand,
 
     // Keep track of the need for the one-argument function
 
-    pData.addExternalFunction(pFunctionName, 1);
+    pData.addExternalFunction(pFunctionName, 1, pFunction);
 }
 
 //==============================================================================
@@ -721,7 +751,8 @@ void ComputerEngine::compileOneArgumentFunction(ComputerEquation *pOperand,
 void ComputerEngine::compileTwoArgumentFunction(ComputerEquation *pOperandOne,
                                                 ComputerEquation *pOperandTwo,
                                                 const QString &pFunctionName,
-                                                ComputerEngineData &pData)
+                                                ComputerEngineData &pData,
+                                                void *pFunction)
 {
     // Compile the two operands
 
@@ -734,7 +765,7 @@ void ComputerEngine::compileTwoArgumentFunction(ComputerEquation *pOperandOne,
 
     // Keep track of the need for the two-argument function
 
-    pData.addExternalFunction(pFunctionName, 2);
+    pData.addExternalFunction(pFunctionName, 2, pFunction);
 }
 
 //==============================================================================
@@ -827,6 +858,11 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
         compileOneArgumentFunction(pEquationNode->left(), "floor", pData);
 
         break;
+    case ComputerEquation::Factorial:
+        compileOneArgumentFunction(pEquationNode->left(), "factorial", pData,
+                                   (void *)(intptr_t) factorial);
+
+        break;
     case ComputerEquation::Sin:
         compileOneArgumentFunction(pEquationNode->left(), "sin", pData);
 
@@ -864,15 +900,18 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
 
         break;
     case ComputerEquation::ASinH:
-        compileOneArgumentFunction(pEquationNode->left(), "asinh", pData);
+        compileOneArgumentFunction(pEquationNode->left(), "asinh", pData,
+                                   (void *)(intptr_t) asinh);
 
         break;
     case ComputerEquation::ACosH:
-        compileOneArgumentFunction(pEquationNode->left(), "acosh", pData);
+        compileOneArgumentFunction(pEquationNode->left(), "acosh", pData,
+                                   (void *)(intptr_t) acosh);
 
         break;
     case ComputerEquation::ATanH:
-        compileOneArgumentFunction(pEquationNode->left(), "atanh", pData);
+        compileOneArgumentFunction(pEquationNode->left(), "atanh", pData,
+                                   (void *)(intptr_t) atanh);
 
         break;
 

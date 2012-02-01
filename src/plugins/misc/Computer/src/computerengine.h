@@ -54,7 +54,7 @@ public:
 
     ComputerExternalFunctions externalFunctions() const;
     bool addExternalFunction(const QString &pExternalFunctionName,
-                             const int &pNbOfArguments);
+                             const int &pNbOfArguments, void *pFunction);
 
     bool needTbaaInformation() const;
     void setNeedTbaaInformation(const bool &pNeedTbaaInformation);
@@ -130,12 +130,14 @@ private:
                                      const QString &pOperator,
                                      ComputerEngineData &pData);
     void compileOneArgumentFunction(ComputerEquation *pOperand,
-                                     const QString &pFunctionName,
-                                     ComputerEngineData &pData);
+                                    const QString &pFunctionName,
+                                    ComputerEngineData &pData,
+                                    void *pFunction = 0);
     void compileTwoArgumentFunction(ComputerEquation *pOperandOne,
                                     ComputerEquation *pOperandTwo,
                                     const QString &pFunctionName,
-                                    ComputerEngineData &pData);
+                                    ComputerEngineData &pData,
+                                    void *pFunction = 0);
     void compileEquationNode(ComputerEquation *pEquationNode,
                              ComputerEngineData &pData);
 };

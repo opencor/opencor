@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "computerequation.h"
+#include "computermath.h"
 
 //==============================================================================
 
@@ -378,6 +379,13 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // floor(N)
 
             replaceNodeWithNumber(pNode, floor(pNode->left()->number()));
+
+        break;
+    case Factorial:
+        if (pNode->left()->type() == Number)
+            // N!
+
+            replaceNodeWithNumber(pNode, factorial(pNode->left()->number()));
 
         break;
     case Sin:

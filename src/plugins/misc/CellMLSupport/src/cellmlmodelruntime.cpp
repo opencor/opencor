@@ -372,7 +372,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             mComputerEngine->addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
             handleErrors("test");
 
-            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return pow(0+fabs(-3)*-pData[0]-0+exp(+pData[1]*1)/-pData[2]/-1e6, pData[3]/3+0);\n}");
+            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return atanh(tanh(acosh(cosh(asinh(sinh(floor(atan(tan(fabs(acos(cos(ceil(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+pData[1]*1)/-pData[2]/-1e6, floor(pData[3]/3+0)+1))))))))))))))));\n}");
             handleErrors("test2");
 
             // Test our "test" and "test2" functions
@@ -399,7 +399,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 qDebug("");
 
                 for (int i = 0; i < dataSize; ++i)
-                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
+                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i], 'g', 19)).toLatin1().constData());
 
                 // Call our LLVM's JIT-based "test" function
 
@@ -412,14 +412,14 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 qDebug("");
 
                 for (int i = 0; i < dataSize; ++i)
-                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i])).toLatin1().constData());
+                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i], 'g', 19)).toLatin1().constData());
 
                 // Call our LLVM's JIT-based "test2" function
 
                 double test2Result = ((double (*)(double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(test2Function))(data);
 
                 qDebug("---------------------------------------");
-                qDebug(QString("Return value from the \"test2\" function: %1").arg(QString::number(test2Result)).toLatin1().constData());
+                qDebug(QString("Return value from the \"test2\" function: %1").arg(QString::number(test2Result, 'g', 19)).toLatin1().constData());
             }
 
             // Output the contents of our computer engine's module so far
