@@ -55,12 +55,12 @@ public:
 
     enum Category
     {
-        Api,
-        Miscellaneous,
         Organisation,
         Editing,
         Simulation,
         Analysis,
+        Miscellaneous,
+        Api,
         ThirdParty
     };
 
