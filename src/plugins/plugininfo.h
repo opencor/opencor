@@ -55,7 +55,6 @@ public:
 
     enum Category
     {
-        Application,
         Api,
         Miscellaneous,
         Organisation,
@@ -67,7 +66,7 @@ public:
 
     explicit PluginInfo(const Version &pVersion = UndefinedVersion,
                         const Type &pType = UndefinedType,
-                        const Category &pCategory = Application,
+                        const Category &pCategory = Miscellaneous,
                         const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
                         const Descriptions &pDescriptions = Descriptions());

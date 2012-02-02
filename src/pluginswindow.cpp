@@ -105,13 +105,12 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
     // Note: we create all of them in one go (rather than when required), so
     //       that they are in the order we want them to be
 
-    newPluginCategory(PluginInfo::Application, qApp->applicationName());
-    newPluginCategory(PluginInfo::Api, tr("API"));
-    newPluginCategory(PluginInfo::Miscellaneous, tr("Miscellaneous"));
     newPluginCategory(PluginInfo::Organisation, tr("Organisation"));
     newPluginCategory(PluginInfo::Editing, tr("Editing"));
     newPluginCategory(PluginInfo::Simulation, tr("Simulation"));
     newPluginCategory(PluginInfo::Analysis, tr("Analysis"));
+    newPluginCategory(PluginInfo::Miscellaneous, tr("Miscellaneous"));
+    newPluginCategory(PluginInfo::Api, tr("API"));
     newPluginCategory(PluginInfo::ThirdParty, tr("Third-party"));
 
     // Populate the data model with our different plugins
@@ -289,7 +288,7 @@ void PluginsWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QString PluginsWindow::toString(const PluginInfo::Version &pVersion) const
+QString PluginsWindow::versionAsString(const PluginInfo::Version &pVersion) const
 {
     // Return the passed version as a string
     // Note: ideally, this function would be part of the CoreInterface class,
@@ -317,9 +316,9 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
         return tr("The %1 plugin could not be found").arg(pPlugin->name());
     case Plugin::IncompatibleVersion:
         return tr("The version used by the %1 plugin (%2) is not compatible with that of %3 (%4)").arg(pPlugin->name(),
-                                                                                                       toString(pPlugin->info().version()),
+                                                                                                       versionAsString(pPlugin->info().version()),
                                                                                                        qApp->applicationName(),
-                                                                                                       toString(mPluginManager->version()));
+                                                                                                       versionAsString(mPluginManager->version()));
     case Plugin::NotSuitable:
         return tr("The %1 plugin is not of the right type").arg(pPlugin->name());
     case Plugin::NotWanted:

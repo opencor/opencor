@@ -31,7 +31,7 @@ PLUGININFO_FUNC CorePluginInfo()
 
     return PluginInfo(PluginInfo::V001,
                       PluginInfo::Gui,
-                      PluginInfo::Application,
+                      PluginInfo::Miscellaneous,
                       false,
                       QStringList(),
                       descriptions);
