@@ -50,7 +50,7 @@ SET(SOURCES
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
 
-    src/plugins/application/Core/src/commonwidget.cpp
+    src/plugins/misc/Core/src/commonwidget.cpp
 )
 
 SET(HEADERS_MOC
@@ -144,7 +144,7 @@ SET(PLUGINS
     # Build the plugins which may be required by other plugins
     # Note: the build order is important...
 
-    application/Core
+    misc/Core
 
     3rdparty/LLVM
     misc/Computer
@@ -170,7 +170,7 @@ SET(PLUGINS
 
     # Build the remaining plugins
 
-    application/Help
+    misc/Help
 
     organisation/CellMLModelRepository
     organisation/FileBrowser
