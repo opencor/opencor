@@ -266,7 +266,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
     qDebug("---------------------------------------");
     qDebug("Compilation of...");
     qDebug("");
-    qDebug(qPrintable(pFunction));
+    qDebug("%s", qPrintable(pFunction));
 
     // Parse the function
 
@@ -484,7 +484,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     qDebug("");
     qDebug("LLVM assembly:");
     qDebug("");
-    qDebug(qPrintable(data.assemblyCode()));
+    qDebug("%s", qPrintable(data.assemblyCode()));
 
     llvm::SMDiagnostic parseError;
     llvm::ParseAssemblyString(qPrintable(data.assemblyCode().replace("%%", "\%")),
