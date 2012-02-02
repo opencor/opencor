@@ -503,7 +503,7 @@ ELSE()
 
     # Qt files required by OpenCOR
     # Note: QtWebKit would normally be installed in the same way as the other
-    #       Qt libraries, but its minor version is 9 (!?) and not 8, so...
+    #       Qt libraries, but its minor version is 9 (!?) rather than 8, so...
 
     INSTALL(FILES ${QT_LIBRARY_DIR}/libphonon.so.4.4.0 RENAME libphonon.so.4 DESTINATION lib)
     INSTALL(FILES ${QT_LIBRARY_DIR}/libQtWebKit.so.4.9.0 RENAME libQtWebKit.so.4.9.0 DESTINATION lib)
