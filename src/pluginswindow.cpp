@@ -444,7 +444,8 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
     mUi->treeView->setUpdatesEnabled(false);
 
     // Check whether we came here as a result of checking a plugin and, if so,
-    // then make sure that all of that plugin's dependencies are also checked
+    // then make sure that all of that plugin's dependencies (i.e. both direct
+    // and indirect dependencies) are also checked
 
     if (   pChangedPluginItem
         && (pChangedPluginItem->checkState() == Qt::Checked))

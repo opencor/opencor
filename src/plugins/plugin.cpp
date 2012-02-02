@@ -44,7 +44,7 @@ Plugin::Plugin(const QString &pFileName,
         // Now, retrieve the plugin's full dependencies (i.e. both its direct
         // and indirect dependencies)
 
-        mInfo.mFullDependencies << requiredPlugins(pPluginsDir, mName);
+        mInfo.mFullDependencies = requiredPlugins(pPluginsDir, mName);
 
         // Try to load the plugin, but only if it uses the right plugin version,
         // if it is either a general plugin or one of the type we are happy

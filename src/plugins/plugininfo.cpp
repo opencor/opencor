@@ -64,7 +64,7 @@ bool PluginInfo::manageable() const
 
 QStringList PluginInfo::dependencies() const
 {
-    // Return the plugin's dependencies
+    // Return the plugin's (direct) dependencies
 
     return mDependencies;
 }
@@ -73,9 +73,8 @@ QStringList PluginInfo::dependencies() const
 
 QStringList PluginInfo::fullDependencies() const
 {
-    // Return the plugin's full dependencies
-    // Note: they are determined by the plugin itself (i.e. during the
-    //       construction of a Plugin object)
+    // Return the plugin's full dependencies (i.e. both its direct and indirect
+    // dependencies)
 
     return mFullDependencies;
 }
