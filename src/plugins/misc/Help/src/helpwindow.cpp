@@ -55,8 +55,6 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     mHelpEngine = new QHelpEngine(mQhcFileName);
 
-    mHelpEngine->setupData();
-
     // Create a toolbar with different buttons
     // Note: this sadly can't be done using the design mode, so...
 
