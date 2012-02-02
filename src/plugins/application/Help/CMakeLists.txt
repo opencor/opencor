@@ -2,7 +2,7 @@ PROJECT(HelpPlugin)
 
 # Generate the help files which will be embedded in the executable as a
 # resource
-MESSAGE(">>> COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} ${CMAKE_SOURCE_DIR}/doc/${MAIN_PROJECT_NAME}.qhcp -o ${CMAKE_BINARY_DIR}/${MAIN_PROJECT_NAME}.qhc")
+
 EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} ${CMAKE_SOURCE_DIR}/doc/${MAIN_PROJECT_NAME}.qhcp
                                                            -o ${CMAKE_BINARY_DIR}/${MAIN_PROJECT_NAME}.qhc)
 
