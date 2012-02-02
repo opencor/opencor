@@ -252,7 +252,7 @@ void CellmlModelRuntime::checkCodeInformation(iface::cellml_services::CodeInform
         // The code generation didn't go fine, so...
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("a problem occurred during the compilation of the model: %1").arg(codeGenerationErrorMessage.toLatin1().constData())));
+                                        tr("a problem occurred during the compilation of the model: %1").arg(codeGenerationErrorMessage)));
     }
 }
 
@@ -567,7 +567,7 @@ void CellmlModelRuntime::handleErrors(const QString &pFunctionName)
     } else {
         // Check that we can find the LLVM function
 
-        llvm::Function *function = mComputerEngine->module()->getFunction(pFunctionName.toLatin1().constData());
+        llvm::Function *function = mComputerEngine->module()->getFunction(qPrintable(pFunctionName));
 
         if (function) {
             qDebug("---------------------------------------");

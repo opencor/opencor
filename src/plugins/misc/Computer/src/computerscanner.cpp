@@ -158,7 +158,7 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     // We should never reach this point...
 
     default:
-        qDebug(QString(">>> ERROR: couldn't convert '%1' to ComputerEquation::Type...").arg(symbolAsString()).toLatin1().constData());
+        qDebug(">>> ERROR: couldn't convert '%1' to ComputerEquation::Type...", qPrintable(symbolAsString()));
 
         return ComputerEquation::Unknown;
     }

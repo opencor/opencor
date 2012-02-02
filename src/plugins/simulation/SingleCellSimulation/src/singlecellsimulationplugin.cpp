@@ -130,7 +130,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 //--- TESTING --- BEGIN ---
 
         qDebug("=======================================");
-        qDebug("%s:", pFileName.toLatin1().constData());
+        qDebug("%s:", qPrintable(pFileName));
 
         // Load the CellML model
 
@@ -162,24 +162,24 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
             if (line && column) {
                 if (importedModel.isEmpty())
-                    qDebug("    [%s at line %s column %s] %s", type.toLatin1().constData(),
-                                                               QString::number(issue.line()).toLatin1().constData(),
-                                                               QString::number(issue.column()).toLatin1().constData(),
-                                                               message.toUtf8().constData());
+                    qDebug("    [%s at line %s column %s] %s", qPrintable(type),
+                                                               qPrintable(QString::number(issue.line())),
+                                                               qPrintable(QString::number(issue.column())),
+                                                               qPrintable(message));
                 else
-                    qDebug("    [%s at line %s column %s from imported model %s] %s", type.toLatin1().constData(),
-                                                                                      QString::number(issue.line()).toLatin1().constData(),
-                                                                                      QString::number(issue.column()).toLatin1().constData(),
-                                                                                      importedModel.toLatin1().constData(),
-                                                                                      message.toUtf8().constData());
+                    qDebug("    [%s at line %s column %s from imported model %s] %s", qPrintable(type),
+                                                                                      qPrintable(QString::number(issue.line())),
+                                                                                      qPrintable(QString::number(issue.column())),
+                                                                                      qPrintable(importedModel),
+                                                                                      qPrintable(message));
             } else {
                 if (importedModel.isEmpty())
-                    qDebug("    [%s] %s", type.toLatin1().constData(),
-                                          message.toUtf8().constData());
+                    qDebug("    [%s] %s", qPrintable(type),
+                                          qPrintable(message));
                 else
-                    qDebug("    [%s from imported model %s] %s", type.toLatin1().constData(),
-                                                                 importedModel.toLatin1().constData(),
-                                                                 message.toUtf8().constData());
+                    qDebug("    [%s from imported model %s] %s", qPrintable(type),
+                                                                 qPrintable(importedModel),
+                                                                 qPrintable(message));
             }
         }
 
@@ -198,8 +198,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                 QString type = QString((issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
                 QString message = issue.formattedMessage();
 
-                qDebug("    [%s] %s", type.toLatin1().constData(),
-                                      message.toUtf8().constData());
+                qDebug("    [%s] %s", qPrintable(type), qPrintable(message));
             }
         }
 

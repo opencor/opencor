@@ -192,7 +192,7 @@ ComputerEngine::ComputerEngine() :
 
     static int counter = 0;
 
-    mModule = new llvm::Module(QString("Module #%1").arg(QString::number(++counter)).toLatin1().constData(),
+    mModule = new llvm::Module(qPrintable(QString("Module #%1").arg(QString::number(++counter))),
                                llvm::getGlobalContext());
 
     // Initialise the native target, so not only can we then create a JIT
@@ -266,7 +266,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
     qDebug("---------------------------------------");
     qDebug("Compilation of...");
     qDebug("");
-    qDebug(pFunction.toLatin1().constData());
+    qDebug(qPrintable(pFunction));
 
     // Parse the function
 
@@ -276,7 +276,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
         // The function was properly parsed, so check that we don't already have
         // a function with the same name in our module
 
-        if (mModule->getFunction(function->name().toLatin1().constData())) {
+        if (mModule->getFunction(qPrintable(function->name()))) {
             // A function with the same name already exists, so...
 
             mError = ComputerError(tr("there is already a function called '%1'").arg(function->name()));
@@ -453,7 +453,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
             //       need to 'manually' add a symbol...
 
             if (externalFunction.function())
-                llvm::sys::DynamicLibrary::AddSymbol(externalFunction.name().toLatin1().constData(),
+                llvm::sys::DynamicLibrary::AddSymbol(qPrintable(externalFunction.name()),
                                                      externalFunction.function());
 
             // Keep track of the fact that we have already defined the external
@@ -484,10 +484,10 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     qDebug("");
     qDebug("LLVM assembly:");
     qDebug("");
-    qDebug(data.assemblyCode().toLatin1().constData());
+    qDebug(qPrintable(data.assemblyCode()));
 
     llvm::SMDiagnostic parseError;
-    llvm::ParseAssemblyString(data.assemblyCode().replace("%%", "\%").toLatin1().constData(),
+    llvm::ParseAssemblyString(qPrintable(data.assemblyCode().replace("%%", "\%")),
                               mModule, parseError, llvm::getGlobalContext());
     // Note: for LLVM to be able to parse the assembly code properly, we must
     //       replace '%' with '\%', so...
@@ -502,7 +502,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
     // Try to retrieve the function which assembly code we have just parsed
 
-    llvm::Function *res = mModule->getFunction(pFunction->name().toLatin1().constData());
+    llvm::Function *res = mModule->getFunction(qPrintable(pFunction->name()));
 
     if (res) {
         // The function could be retrieved, but it should be removed in case an
@@ -936,7 +936,7 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
     // We should never reach this point...
 
     default:
-        qDebug(QString(">>> ERROR: untreated equation type '%1'...").arg(pEquationNode->typeAsString()).toLatin1().constData());
+        qDebug(">>> ERROR: untreated equation type '%s'...", qPrintable(pEquationNode->typeAsString()));
     }
 
     // Keep track of the assembly code index of the current node

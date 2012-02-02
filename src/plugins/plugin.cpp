@@ -257,7 +257,7 @@ PluginInfo Plugin::info(const QString &pFileName)
 #endif
 
     PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) QLibrary::resolve(pFileName,
-                                                                       QString(name(pFileName)+"PluginInfo").toLatin1().constData());
+                                                                       qPrintable(name(pFileName)+"PluginInfo"));
 
 #ifdef Q_WS_WIN
     QDir::setCurrent(origPath);

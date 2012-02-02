@@ -26,9 +26,9 @@ namespace OpenCOR {
 
 void usage(const QCoreApplication *pApp)
 {
-    std::cout << "Usage: " << pApp->applicationName().toLatin1().constData()
+    std::cout << "Usage: " << qPrintable(pApp->applicationName())
               << " [OPTION]... [FILE]..." << std::endl;
-    std::cout << "Start " << pApp->applicationName().toLatin1().constData()
+    std::cout << "Start " << qPrintable(pApp->applicationName())
               << " and open the FILE(s) passed as argument(s)." << std::endl;
     std::cout << std::endl;
     std::cout << " -a, --about     Display OpenCOR about information"
@@ -46,7 +46,7 @@ void usage(const QCoreApplication *pApp)
 
 void version(const QCoreApplication *pApp)
 {
-    std::cout << getAppVersion(pApp).toLatin1().constData() << std::endl;
+    std::cout << qPrintable(getAppVersion(pApp)) << std::endl;
 }
 
 //==============================================================================
@@ -55,10 +55,10 @@ void about(const QCoreApplication *pApp)
 {
     version(pApp);
 
-    std::cout << getOsName().toLatin1().constData() << std::endl;
-    std::cout << getAppCopyright(false).toLatin1().constData() << std::endl;
+    std::cout << qPrintable(getOsName()) << std::endl;
+    std::cout << qPrintable(getAppCopyright(false)) << std::endl;
     std::cout << std::endl;
-    std::cout << pApp->applicationName().toLatin1().constData()
+    std::cout << qPrintable(pApp->applicationName())
               << " is a cross-platform CellML-based modelling environment"
               << " which can be" << std::endl;
     std::cout << "used to organise, edit, simulate and analyse CellML files."
@@ -72,7 +72,7 @@ void error(const QCoreApplication *pApp, const QString &pMsg)
     version(pApp);
 
     std::cout << std::endl;
-    std::cout << "Error: " << pMsg.toLatin1().constData() << std::endl;
+    std::cout << "Error: " << qPrintable(pMsg) << std::endl;
 }
 
 //==============================================================================
