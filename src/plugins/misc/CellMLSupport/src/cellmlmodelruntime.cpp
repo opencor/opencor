@@ -375,29 +375,29 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             qDebug("---------------------------------------");
             qDebug("initConstsString():");
             qDebug("");
-            qDebug(QString::fromStdWString(genericOdeCodeInformation->initConstsString()).toLatin1().constData());
+            qDebug("%s", qPrintable(QString::fromStdWString(genericOdeCodeInformation->initConstsString())));
             qDebug("---------------------------------------");
             qDebug("ratesString():");
             qDebug("");
-            qDebug(QString::fromStdWString(genericOdeCodeInformation->ratesString()).toLatin1().constData());
+            qDebug("%s", qPrintable(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
             qDebug("---------------------------------------");
             qDebug("variablesString():");
             qDebug("");
-            qDebug(QString::fromStdWString(genericOdeCodeInformation->variablesString()).toLatin1().constData());
+            qDebug("%s", qPrintable(QString::fromStdWString(genericOdeCodeInformation->variablesString())));
 
             if (mModelType == Dae) {
                 qDebug("---------------------------------------");
                 qDebug("essentialVariablesString():");
                 qDebug("");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString()).toLatin1().constData());
+                qDebug("%s", qPrintable(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
                 qDebug("---------------------------------------");
                 qDebug("rootInformationString():");
                 qDebug("");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->rootInformationString()).toLatin1().constData());
+                qDebug("%s", qPrintable(QString::fromStdWString(mDaeCodeInformation->rootInformationString())));
                 qDebug("---------------------------------------");
                 qDebug("stateInformationString():");
                 qDebug("");
-                qDebug(QString::fromStdWString(mDaeCodeInformation->stateInformationString()).toLatin1().constData());
+                qDebug("%s", qPrintable(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
             }
 
             // Get some binary code
@@ -458,7 +458,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 qDebug("");
 
                 for (int i = 0; i < dataSize; ++i)
-                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i], 'g', 19)).toLatin1().constData());
+                    qDebug("data[%s] = %s", qPrintable(QString::number(i)), qPrintable(QString::number(data[i], 'g', 19)));
 
                 // Call our LLVM's JIT-based "test" function
 
@@ -471,14 +471,14 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 qDebug("");
 
                 for (int i = 0; i < dataSize; ++i)
-                    qDebug(QString("data[%1] = %2").arg(QString::number(i), QString::number(data[i], 'g', 19)).toLatin1().constData());
+                    qDebug("data[%s] = %s", qPrintable(QString::number(i)), qPrintable(QString::number(data[i], 'g', 19)));
 
                 // Call our LLVM's JIT-based "test2" function
 
                 double test2Result = ((double (*)(double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(test2Function))(data);
 
                 qDebug("---------------------------------------");
-                qDebug(QString("Return value from the \"test2\" function: %1").arg(QString::number(test2Result, 'g', 19)).toLatin1().constData());
+                qDebug("Return value from the \"test2\" function: %s", qPrintable(QString::number(test2Result, 'g', 19)));
             }
 
             // Output the contents of our computer engine's module so far
@@ -545,12 +545,12 @@ void CellmlModelRuntime::handleErrors(const QString &pFunctionName)
         foreach (const Computer::ComputerError &error,
                  mComputerEngine->parserErrors()) {
             if (error.line() && error.column())
-                qDebug(QString(" - Line %1, column %2: %3").arg(QString::number(error.line()), QString::number(error.column()), error.formattedMessage()).toLatin1().constData());
+                qDebug(" - Line %s, column %s: %s", qPrintable(QString::number(error.line())), qPrintable(QString::number(error.column())), qPrintable(error.formattedMessage()));
             else
-                qDebug(QString(" - %1").arg(error.formattedMessage()).toLatin1().constData());
+                qDebug(" - %s", qPrintable(error.formattedMessage()));
 
             if (!error.extraInformation().isEmpty())
-                qDebug(error.extraInformation().toLatin1().constData());
+                qDebug("%s", qPrintable(error.extraInformation()));
         }
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
@@ -560,7 +560,7 @@ void CellmlModelRuntime::handleErrors(const QString &pFunctionName)
         // error that was found
 
         qDebug("");
-        qDebug(QString("An error occurred: %1").arg(mComputerEngine->error().formattedMessage()).toLatin1().constData());
+        qDebug("An error occurred: %s", qPrintable(mComputerEngine->error().formattedMessage()));
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                         tr("the function '%1' could not be compiled").arg(pFunctionName)));
@@ -571,10 +571,10 @@ void CellmlModelRuntime::handleErrors(const QString &pFunctionName)
 
         if (function) {
             qDebug("---------------------------------------");
-            qDebug(QString("The '%1' function was found...").arg(pFunctionName).toLatin1().constData());
+            qDebug("The '%s' function was found...", qPrintable(pFunctionName));
         } else {
             qDebug("---------------------------------------");
-            qDebug(QString("The '%1' function doesn't exist...?!").arg(pFunctionName).toLatin1().constData());
+            qDebug("The '%s' function doesn't exist...?!", qPrintable(pFunctionName));
         }
     }
 }

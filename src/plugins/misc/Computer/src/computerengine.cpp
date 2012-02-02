@@ -484,7 +484,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     qDebug("");
     qDebug("LLVM assembly:");
     qDebug("");
-    qDebug(QString(data.assemblyCode()).toLatin1().constData());
+    qDebug(data.assemblyCode().toLatin1().constData());
 
     llvm::SMDiagnostic parseError;
     llvm::ParseAssemblyString(data.assemblyCode().replace("%%", "\%").toLatin1().constData(),
