@@ -82,7 +82,7 @@ public:
     int constantsCount() const;
     int statesCount() const;
     int ratesCount() const;
-    int agebraicCount() const;
+    int algebraicCount() const;
     int condVarCount() const;
 
     CellmlModelRuntimeOdeFunctions odeFunctions() const;

@@ -84,7 +84,7 @@ int CellmlModelRuntime::ratesCount() const
 
 //==============================================================================
 
-int CellmlModelRuntime::agebraicCount() const
+int CellmlModelRuntime::algebraicCount() const
 {
     // Return the number of algebraic equations in the model
 
