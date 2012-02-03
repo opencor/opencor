@@ -302,7 +302,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             for (int i = 0; i < statesCount; ++i)
                 yData[i].append(states[i]);
 
-            qDebug("Simulation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+            qDebug(" - Simulation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 
             // Remove any existing curve
 
