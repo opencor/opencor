@@ -58,9 +58,9 @@ public:
                                       QObject *pParent);
 
 protected:
-    virtual QNetworkReply *createRequest(Operation pOperation,
-                                         const QNetworkRequest &pRequest,
-                                         QIODevice *pOutgoingData = 0);
+    virtual QNetworkReply * createRequest(Operation pOperation,
+                                          const QNetworkRequest &pRequest,
+                                          QIODevice *pOutgoingData = 0);
 
 private:
     QHelpEngine *mHelpEngine;

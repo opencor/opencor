@@ -108,15 +108,9 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
                                                         const QNetworkRequest &pRequest,
                                                         QIODevice*)
 {
-    // Reqested URL
-
-    QUrl url = pRequest.url().toString();
-    // Note: the conversion to a string shouldn't be necessary, but for some
-    //       reason it's required if we want the help engine to find the URL
-    //      (?!), so...
-
     // Retrieve, if possible, the requested help page
 
+    QUrl url = QUrl(pRequest.url());
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
                           QByteArray(mErrorMsgTemplate.arg(tr("Error"),
