@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <QtHelpProject version="1.0">
     <namespace>opencor</namespace>
-    <virtualFolder>doc/user</virtualFolder>
+    <virtualFolder>doc</virtualFolder>
     <filterSection>
         <files>
             <file>3rdparty/googleCodePrettify/prettify.css</file>
