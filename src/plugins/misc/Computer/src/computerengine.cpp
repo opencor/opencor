@@ -947,6 +947,11 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
                                    (void *)(intptr_t) rem);
 
         break;
+    case ComputerEquation::XOr:
+        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "xOr", pData,
+                                   (void *)(intptr_t) xOr);
+
+        break;
 
     // We should never reach this point...
 

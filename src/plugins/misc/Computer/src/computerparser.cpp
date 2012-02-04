@@ -746,7 +746,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
     //   FunctionWithOneArgument  =   "fabs" | "exp" | "log" | "ceil" | "floor" | "factorial"
     //                              | "sin" | "cos" | "tan" | "sinh" | "cosh" | "tanh"
     //                              | "asin" | "acos" | "atan" | "asinh" | "acosh" | "atanh" ;
-    //   FunctionWithTwoArguments = "arbitraryLog" | "factorOf" | "pow" | "quotient" | "rem" ;
+    //   FunctionWithTwoArguments = "arbitraryLog" | "factorOf" | "pow" | "quotient" | "rem" | "xOr" ;
 
     // Check whether the current token's symbol is an identifier, an integer
     // value, a double value, a function with one argument, a function with two
@@ -774,7 +774,8 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                                                                                                             << ComputerScannerToken::FactorOf
                                                                                                             << ComputerScannerToken::Pow
                                                                                                             << ComputerScannerToken::Quotient
-                                                                                                            << ComputerScannerToken::Rem;
+                                                                                                            << ComputerScannerToken::Rem
+                                                                                                            << ComputerScannerToken::XOr;
 
     if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {
         // We are dealing with an identifier which corresponds to the name of a

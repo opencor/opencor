@@ -152,6 +152,8 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Quotient;
     case Rem:
         return ComputerEquation::Rem;
+    case XOr:
+        return ComputerEquation::XOr;
 
     // Miscellaneous
 
@@ -259,6 +261,8 @@ QString ComputerScannerToken::symbolAsString() const
         return "Quotient";
     case Rem:
         return "Rem";
+    case XOr:
+        return "XOr";
     case OpeningBracket:
         return "OpeningBracket";
     case ClosingBracket:
@@ -366,6 +370,7 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("pow", ComputerScannerToken::Pow);
     mKeywords.insert("quotient", ComputerScannerToken::Quotient);
     mKeywords.insert("rem", ComputerScannerToken::Rem);
+    mKeywords.insert("xOr", ComputerScannerToken::XOr);
 
     mKeywords.insert("return", ComputerScannerToken::Return);
 }

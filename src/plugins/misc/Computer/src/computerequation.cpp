@@ -178,6 +178,8 @@ QString ComputerEquation::typeAsString() const
         return "Quotient";
     case Rem:
         return "Rem";
+    case XOr:
+        return "XOr";
     case Assign:
         return "Assign";
     case Not:
@@ -522,6 +524,13 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // rem(N1, N2)
 
             replaceNodeWithNumber(pNode, rem(pNode->left()->number(), pNode->right()->number()));
+
+        break;
+    case XOr:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // xOr(N1, N2)
+
+            replaceNodeWithNumber(pNode, xOr(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Not:
