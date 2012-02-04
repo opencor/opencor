@@ -38,21 +38,21 @@ double factorOf(double pNb1, double pNb2)
 
 double quotient(double pNb1, double pNb2)
 {
-    return ((int) pNb2 == 0)?pNb1/0.0:(int) pNb1/(int) pNb2;
+    return pNb2?(int) pNb1/(int) pNb2:pNb1/0.0;
 }
 
 //==============================================================================
 
 double rem(double pNb1, double pNb2)
 {
-    return ((int) pNb2 == 0)?pNb1/0.0:(int) pNb1 % (int) pNb2;
+    return pNb2?(int) pNb1 % (int) pNb2:pNb1/0.0;
 }
 
 //==============================================================================
 
 double xOr(double pNb1, double pNb2)
 {
-    return (pNb1 != 0) ^ (pNb2 != 0);
+    return (pNb1 != 0)^(pNb2 != 0);
 }
 
 //==============================================================================
