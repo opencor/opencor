@@ -11,8 +11,9 @@
 
 //==============================================================================
 
+extern "C" double arbitraryLog(double pNb, double pBase);
 extern "C" double factorial(double pNb);
-extern "C" double arbitrary_log(double pNb, double pBase);
+extern "C" double factorOf(double pNb1, double pNb2);
 
 //==============================================================================
 

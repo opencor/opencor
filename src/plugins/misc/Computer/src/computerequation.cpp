@@ -114,8 +114,6 @@ QString ComputerEquation::typeAsString() const
         return "Times";
     case Divide:
         return "Divide";
-    case Modulo:
-        return "Modulo";
     case Plus:
         return "Plus";
     case Minus:
@@ -170,10 +168,12 @@ QString ComputerEquation::typeAsString() const
         return "ACosH";
     case ATanH:
         return "ATanH";
-    case Pow:
-        return "Pow";
     case ArbitraryLog:
         return "ArbitraryLog";
+    case FactorOf:
+        return "FactorOf";
+    case Pow:
+        return "Pow";
     case Assign:
         return "Assign";
     case Not:
@@ -482,21 +482,28 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             replaceNodeWithNumber(pNode, atanh(pNode->left()->number()));
 
         break;
+    case ArbitraryLog:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // arbitraryLog(N1, N2)
+
+            replaceNodeWithNumber(pNode, arbitraryLog(pNode->left()->number(), pNode->right()->number()));
+
+        break;
+    case FactorOf:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // factorOf(N1, N2)
+
+            replaceNodeWithNumber(pNode, factorOf(pNode->left()->number(), pNode->right()->number()));
+
+        break;
     case Pow:
         // Note: we could support further simplifications (well, optimisations)
         //       such as pow(x, 2) = x*x, but well... maybe someday...
 
         if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
-            // N1^N2
+            // pow(N1, N2)
 
             replaceNodeWithNumber(pNode, pow(pNode->left()->number(), pNode->right()->number()));
-
-        break;
-    case ArbitraryLog:
-        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
-            // log(N1)/log(N2)
-
-            replaceNodeWithNumber(pNode, arbitrary_log(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Not:

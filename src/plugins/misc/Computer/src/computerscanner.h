@@ -32,7 +32,7 @@ public:
 
         // Mathematical operators
 
-        Times, Divide, Percentage, Plus, Minus,
+        Times, Divide, Plus, Minus,
         LogicalOr, LogicalAnd, EqualEqual, NotEqual,
         LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
 
@@ -44,7 +44,7 @@ public:
 
         // Mathematical functions with 2 arguments
 
-        Pow, ArbitraryLog,
+        ArbitraryLog, FactorOf, Pow,
 
         // Miscellaneous
 

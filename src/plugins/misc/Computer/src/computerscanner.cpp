@@ -33,7 +33,6 @@ static const QChar LowerThan            = QChar('<');
 static const QChar GreaterThan          = QChar('>');
 static const QChar Times                = QChar('*');
 static const QChar Divide               = QChar('/');
-static const QChar Percentage           = QChar('%');
 static const QChar Plus                 = QChar('+');
 static const QChar Minus                = QChar('-');
 static const QChar FullStop             = QChar('.');
@@ -81,8 +80,6 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Times;
     case Divide:
         return ComputerEquation::Divide;
-    case Percentage:
-        return ComputerEquation::Modulo;
     case Plus:
         return ComputerEquation::Plus;
     case Minus:
@@ -145,10 +142,12 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
 
     // Mathematical functions with 2 arguments
 
-    case Pow:
-        return ComputerEquation::Pow;
     case ArbitraryLog:
         return ComputerEquation::ArbitraryLog;
+    case FactorOf:
+        return ComputerEquation::FactorOf;
+    case Pow:
+        return ComputerEquation::Pow;
 
     // Miscellaneous
 
@@ -190,8 +189,6 @@ QString ComputerScannerToken::symbolAsString() const
         return "Times";
     case Divide:
         return "Divide";
-    case Percentage:
-        return "Percentage";
     case Plus:
         return "Plus";
     case Minus:
@@ -248,10 +245,12 @@ QString ComputerScannerToken::symbolAsString() const
         return "ACosH";
     case ATanH:
         return "ATanH";
-    case Pow:
-        return "Pow";
     case ArbitraryLog:
         return "ArbitraryLog";
+    case FactorOf:
+        return "FactorOf";
+    case Pow:
+        return "Pow";
     case OpeningBracket:
         return "OpeningBracket";
     case ClosingBracket:
@@ -354,8 +353,9 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("acosh", ComputerScannerToken::ACosH);
     mKeywords.insert("atanh", ComputerScannerToken::ATanH);
 
+    mKeywords.insert("arbitraryLog", ComputerScannerToken::ArbitraryLog);
+    mKeywords.insert("factorOf", ComputerScannerToken::FactorOf);
     mKeywords.insert("pow", ComputerScannerToken::Pow);
-    mKeywords.insert("arbitrary_log", ComputerScannerToken::ArbitraryLog);
 
     mKeywords.insert("return", ComputerScannerToken::Return);
 }
@@ -793,10 +793,6 @@ void ComputerScanner::getNextToken()
             getNextChar();
         } else if (mChar == Divide) {
             mToken.setSymbol(ComputerScannerToken::Divide);
-
-            getNextChar();
-        } else if (mChar == Percentage) {
-            mToken.setSymbol(ComputerScannerToken::Percentage);
 
             getNextChar();
         } else if (mChar == Plus) {

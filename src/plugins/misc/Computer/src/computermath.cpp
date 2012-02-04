@@ -10,6 +10,13 @@
 
 //==============================================================================
 
+double arbitraryLog(double pNb, double pBase)
+{
+    return log(pNb)/log(pBase);
+}
+
+//==============================================================================
+
 double factorial(double pNb)
 {
     double res = 1.0;
@@ -22,9 +29,9 @@ double factorial(double pNb)
 
 //==============================================================================
 
-double arbitrary_log(double pNb, double pBase)
+double factorOf(double pNb1, double pNb2)
 {
-    return log(pNb)/log(pBase);
+    return !((int) pNb1 % (int) pNb2);
 }
 
 //==============================================================================

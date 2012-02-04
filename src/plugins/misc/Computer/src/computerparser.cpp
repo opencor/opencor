@@ -648,12 +648,11 @@ bool parseMultiplicativeExpression(ComputerParser *pParser,
 {
     // The EBNF grammar of a multiplicative expression is as follows:
     //
-    //   MultiplicativeExpression = [ MultiplicativeExpression ( "*" | "/" | "%" ) ] UnaryExpression ;
+    //   MultiplicativeExpression = [ MultiplicativeExpression ( "*" | "/" ) ] UnaryExpression ;
 
     if (!parseGenericExpression(pParser, pFunction, pExpression,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::Times
-                                                                << ComputerScannerToken::Divide
-                                                                << ComputerScannerToken::Percentage,
+                                                                << ComputerScannerToken::Divide,
                                 parseUnaryExpression))
         return false;
 
@@ -747,7 +746,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
     //   FunctionWithOneArgument  =   "fabs" | "exp" | "log" | "ceil" | "floor" | "factorial"
     //                              | "sin" | "cos" | "tan" | "sinh" | "cosh" | "tanh"
     //                              | "asin" | "acos" | "atan" | "asinh" | "acosh" | "atanh" ;
-    //   FunctionWithTwoArguments = "pow" | "arbitrary_log" ;
+    //   FunctionWithTwoArguments = "arbitraryLog" | "factorOf" | "pow" ;
 
     // Check whether the current token's symbol is an identifier, an integer
     // value, a double value, a function with one argument, a function with two
@@ -771,8 +770,9 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                                                                                                             << ComputerScannerToken::ASinH
                                                                                                             << ComputerScannerToken::ACosH
                                                                                                             << ComputerScannerToken::ATanH;
-    static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Pow
-                                                                                                            << ComputerScannerToken::ArbitraryLog;
+    static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::ArbitraryLog
+                                                                                                            << ComputerScannerToken::FactorOf
+                                                                                                            << ComputerScannerToken::Pow;
 
     if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {
         // We are dealing with an identifier which corresponds to the name of a

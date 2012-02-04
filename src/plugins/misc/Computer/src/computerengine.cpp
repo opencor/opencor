@@ -923,13 +923,18 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
 
     // Mathematical functions with 2 arguments
 
-    case ComputerEquation::Pow:
-        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "pow", pData);
+    case ComputerEquation::ArbitraryLog:
+        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "arbitraryLog", pData,
+                                   (void *)(intptr_t) arbitraryLog);
 
         break;
-    case ComputerEquation::ArbitraryLog:
-        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "arbitrary_log", pData,
-                                   (void *)(intptr_t) arbitrary_log);
+    case ComputerEquation::FactorOf:
+        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "factorOf", pData,
+                                   (void *)(intptr_t) factorOf);
+
+        break;
+    case ComputerEquation::Pow:
+        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "pow", pData);
 
         break;
 
