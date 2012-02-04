@@ -937,6 +937,16 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
         compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "pow", pData);
 
         break;
+    case ComputerEquation::Quotient:
+        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "quotient", pData,
+                                   (void *)(intptr_t) quotient);
+
+        break;
+    case ComputerEquation::Rem:
+        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "rem", pData,
+                                   (void *)(intptr_t) rem);
+
+        break;
 
     // We should never reach this point...
 

@@ -174,6 +174,10 @@ QString ComputerEquation::typeAsString() const
         return "FactorOf";
     case Pow:
         return "Pow";
+    case Quotient:
+        return "Quotient";
+    case Rem:
+        return "Rem";
     case Assign:
         return "Assign";
     case Not:
@@ -504,6 +508,20 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // pow(N1, N2)
 
             replaceNodeWithNumber(pNode, pow(pNode->left()->number(), pNode->right()->number()));
+
+        break;
+    case Quotient:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // quotient(N1, N2)
+
+            replaceNodeWithNumber(pNode, quotient(pNode->left()->number(), pNode->right()->number()));
+
+        break;
+    case Rem:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // rem(N1, N2)
+
+            replaceNodeWithNumber(pNode, rem(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Not:

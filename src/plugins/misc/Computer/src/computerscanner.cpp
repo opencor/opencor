@@ -148,6 +148,10 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::FactorOf;
     case Pow:
         return ComputerEquation::Pow;
+    case Quotient:
+        return ComputerEquation::Quotient;
+    case Rem:
+        return ComputerEquation::Rem;
 
     // Miscellaneous
 
@@ -251,6 +255,10 @@ QString ComputerScannerToken::symbolAsString() const
         return "FactorOf";
     case Pow:
         return "Pow";
+    case Quotient:
+        return "Quotient";
+    case Rem:
+        return "Rem";
     case OpeningBracket:
         return "OpeningBracket";
     case ClosingBracket:
@@ -356,6 +364,8 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("arbitraryLog", ComputerScannerToken::ArbitraryLog);
     mKeywords.insert("factorOf", ComputerScannerToken::FactorOf);
     mKeywords.insert("pow", ComputerScannerToken::Pow);
+    mKeywords.insert("quotient", ComputerScannerToken::Quotient);
+    mKeywords.insert("rem", ComputerScannerToken::Rem);
 
     mKeywords.insert("return", ComputerScannerToken::Return);
 }

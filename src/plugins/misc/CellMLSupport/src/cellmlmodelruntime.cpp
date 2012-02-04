@@ -265,7 +265,8 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
     // Note #1: idealy we wouly only specify what needs to be customised, but
     //          that's not the way the CellML API works, so instead we need to
     //          'customise' everything...
-    // Note #2: for things that don't need customising, we must make sure that
+    // Note #2: the customised functions are 'factorof', 'quotient' and 'rem'...
+    // Note #3: for things that don't need customising, we must make sure that
     //          it's in synch with CDA_CodeGenerator::makeCodeGenerationState in
     //          [CellML_API]/CCGS/sources/CCGSImplementation.cpp...
 
@@ -299,7 +300,7 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"eq: #prec[30]#exprs[==]\r\n"
                                                                           L"exp: #prec[H]exp(#expr1)\r\n"
                                                                           L"factorial: #prec[H]factorial(#expr1)\r\n"
-                                                                          L"factorof: #prec[30(900)]factorof(#expr1, #expr2)\r\n"   // Customised version
+                                                                          L"factorof: #prec[30(900)]factorOf(#expr1, #expr2)\r\n"   // Customised version
                                                                           L"floor: #prec[H]floor(#expr1)\r\n"
                                                                           L"gcd: #prec[H]gcd_multi(#count, #exprs[, ])\r\n"
                                                                           L"geq: #prec[30]#exprs[>=]\r\n"
@@ -321,8 +322,8 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"or: #prec[10]#exprs[||]\r\n"
                                                                           L"plus: #prec[500]#exprs[+]\r\n"
                                                                           L"power: #prec[H]pow(#expr1, #expr2)\r\n"
-                                                                          L"quotient: #prec[1000(0)] (double)(((int)#expr2) == 0 ? #expr1 / 0.0 : (int)(#expr1) / (int)(#expr2))\r\n"
-                                                                          L"rem: #prec[1000(0)] (double)(((int)#expr2) == 0 ? (#expr1) / 0.0 : (int)(#expr1) % (int)(#expr2))\r\n"
+                                                                          L"quotient: #prec[1000(0)]quotient(#expr1, #expr2))\r\n"   // Customised version
+                                                                          L"rem: #prec[1000(0)]rem(#expr1, #expr2)\r\n"   // Customised version
                                                                           L"root: #prec[1000(900)] pow(#expr1, 1.0 / #degree)\r\n"
                                                                           L"sec: #prec[900(0)]1.0 / cos(#expr1)\r\n"
                                                                           L"sech: #prec[900(0)]1.0 / cosh(#expr1)\r\n"
@@ -533,7 +534,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             mComputerEngine->addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
             handleErrors("test");
 
-            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return factorOf(15, pData[3])*factorOf(9, 3)*arbitraryLog(pData[4], pData[3])*atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n}");
+            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return rem(pData[3], pData[4])*rem(5, 3)*quotient(pData[4], pData[3])*quotient(17, 5)*factorOf(15, pData[3])*factorOf(9, 3)*arbitraryLog(pData[4], pData[3])*atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n}");
             handleErrors("test2");
 
             // Test our "test" and "test2" functions

@@ -44,7 +44,7 @@ public:
 
         // Mathematical functions with 2 arguments
 
-        ArbitraryLog, FactorOf, Pow,
+        ArbitraryLog, FactorOf, Pow, Quotient, Rem,
 
         // Miscellaneous
 
