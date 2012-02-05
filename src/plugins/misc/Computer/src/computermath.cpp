@@ -108,46 +108,13 @@ double gcd(int pCount, ...)
         return 1.0;
 
     va_list parameters;
-    double *storage1, *storage2, *tempStorage;
-    int i, iMax, j = 0;
-
-    storage1 = new double[pCount];
-    storage2 = new double[pCount >> 1];
 
     va_start(parameters, pCount);
-        for (i = 0, iMax = pCount-1; i < iMax; i += 2) {
-            double param1, param2;
+        double res = va_arg(parameters, double);
 
-            param1 = va_arg(parameters, double);
-            param2 = va_arg(parameters, double);
-
-            storage1[j++] = gcdPair(param1, param2);
-        }
-
-        if (i < pCount)
-            storage1[j++] = va_arg(parameters, double);
+        while (--pCount)
+            res = gcdPair(res, va_arg(parameters, double));
     va_end(parameters);
-
-    while (j != 1) {
-        pCount = j;
-        j = 0;
-
-        for (i = 0, iMax = j-1; i < iMax; i += 2)
-            storage2[j++] = gcdPair(storage1[i], storage1[i+1]);
-
-        if (i < j)
-            storage2[j++] = storage1[i];
-
-        tempStorage = storage1;
-
-        storage1 = storage2;
-        storage2 = tempStorage;
-    }
-
-    double res = storage1[0];
-
-    delete[] storage1;
-    delete[] storage2;
 
     return res;
 }
@@ -160,46 +127,13 @@ double lcm(int pCount, ...)
         return 1.0;
 
     va_list parameters;
-    double *storage1, *storage2, *tempStorage;
-    int i, iMax, j = 0;
-
-    storage1 = new double[pCount];
-    storage2 = new double[pCount >> 1];
 
     va_start(parameters, pCount);
-        for (i = 0, iMax = pCount-1; i < iMax; i += 2) {
-            double param1, param2;
+        double res = va_arg(parameters, double);
 
-            param1 = va_arg(parameters, double);
-            param2 = va_arg(parameters, double);
-
-            storage1[j++] = lcmPair(param1, param2);
-        }
-
-        if (i < pCount)
-            storage1[j++] = va_arg(parameters, double);
+        while (--pCount)
+            res = lcmPair(res, va_arg(parameters, double));
     va_end(parameters);
-
-    while (j != 1) {
-        pCount = j;
-        j = 0;
-
-        for (i = 0, iMax = j-1; i < iMax; i += 2)
-            storage2[j++] = lcmPair(storage1[i], storage1[i+1]);
-
-        if (i < j)
-            storage2[j++] = storage1[i];
-
-        tempStorage = storage1;
-
-        storage1 = storage2;
-        storage2 = tempStorage;
-    }
-
-    double res = storage1[0];
-
-    delete[] storage1;
-    delete[] storage2;
 
     return res;
 }
@@ -212,20 +146,20 @@ double max(int pCount, ...)
         return strtod("NAN", NULL);
 
     va_list parameters;
-    double best, attempt;
 
     va_start(parameters, pCount);
-        best = va_arg(parameters, double);
+        double res = va_arg(parameters, double);
+        double otherParameter;
 
         while (--pCount) {
-            attempt = va_arg(parameters, double);
+            otherParameter = va_arg(parameters, double);
 
-            if (attempt > best)
-                best = attempt;
+            if (otherParameter > res)
+                res = otherParameter;
         }
     va_end(parameters);
 
-    return best;
+    return res;
 }
 
 //==============================================================================
@@ -236,20 +170,20 @@ double min(int pCount, ...)
         return strtod("NAN", NULL);
 
     va_list parameters;
-    double best, attempt;
 
     va_start(parameters, pCount);
-        best = va_arg(parameters, double);
+        double res = va_arg(parameters, double);
+        double otherParameter;
 
         while (--pCount) {
-            attempt = va_arg(parameters, double);
+            otherParameter = va_arg(parameters, double);
 
-            if (attempt < best)
-                best = attempt;
+            if (otherParameter < res)
+                res = otherParameter;
         }
     va_end(parameters);
 
-    return best;
+    return res;
 }
 
 //==============================================================================
