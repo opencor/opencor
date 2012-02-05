@@ -265,8 +265,8 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
     // Note #1: idealy we wouly only specify what needs to be customised, but
     //          that's not the way the CellML API works, so instead we need to
     //          'customise' everything...
-    // Note #2: the customised functions are 'factorof', 'quotient', 'rem' and
-    //          'xor'...
+    // Note #2: the customised functions are 'factorof', 'gcd', 'lcm', 'max',
+    //          'min', 'quotient', 'rem' and 'xor'...
     // Note #3: for things that don't need customising, we must make sure that
     //          it's in synch with CDA_CodeGenerator::makeCodeGenerationState in
     //          [CellML_API]/CCGS/sources/CCGSImplementation.cpp...
@@ -303,20 +303,20 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"factorial: #prec[H]factorial(#expr1)\r\n"
                                                                           L"factorof: #prec[30(900)]factorOf(#expr1, #expr2)\r\n"   // Customised version
                                                                           L"floor: #prec[H]floor(#expr1)\r\n"
-                                                                          L"gcd: #prec[H]gcd_multi(#count, #exprs[, ])\r\n"
+                                                                          L"gcd: #prec[H]gcd(#count, #exprs[, ])\r\n"   // Customised version
                                                                           L"geq: #prec[30]#exprs[>=]\r\n"
                                                                           L"gt: #prec[30]#exprs[>]\r\n"
                                                                           L"implies: #prec[10(950)] !#expr1 || #expr2\r\n"
                                                                           L"int: #prec[H]defint(func#unique1, VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, &#bvarIndex, #lowlimit, #uplimit, "
                                                                           L"pret)#supplement double func#unique1(double VOI, "
                                                                           L"double* CONSTANTS, double* RATES, double* STATES, double* ALGEBRAIC, int* pret) { return #expr1; }\r\n"
-                                                                          L"lcm: #prec[H]lcm_multi(#count, #exprs[, ])\r\n"
+                                                                          L"lcm: #prec[H]lcm(#count, #exprs[, ])\r\n"   // Customised version
                                                                           L"leq: #prec[30]#exprs[<=]\r\n"
                                                                           L"ln: #prec[H]log(#expr1)\r\n"
                                                                           L"log: #prec[H]arbitrary_log(#expr1, #logbase)\r\n"
                                                                           L"lt: #prec[30]#exprs[<]\r\n"
-                                                                          L"max: #prec[H]multi_max(#count, #exprs[, ])\r\n"
-                                                                          L"min: #prec[H]multi_min(#count, #exprs[, ])\r\n"
+                                                                          L"max: #prec[H]max(#count, #exprs[, ])\r\n"   // Customised version
+                                                                          L"min: #prec[H]min(#count, #exprs[, ])\r\n"   // Customised version
                                                                           L"minus: #prec[500]#expr1 - #expr2\r\n"
                                                                           L"neq: #prec[30]#expr1 != #expr2\r\n"
                                                                           L"not: #prec[950]!#expr1\r\n"
@@ -535,7 +535,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             mComputerEngine->addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
             handleErrors("test");
 
-            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return xOr(pData[3], 0)*xOr(3, 0)*rem(pData[3], pData[4])*rem(5, 3)*quotient(pData[4], pData[3])*quotient(17, 5)*factorOf(15, pData[3])*factorOf(9, 3)*arbitraryLog(pData[4], pData[3])*atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n}");
+            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return min(3, 15, 35, 55)/min(5, 21, 35, 7*pData[3], pData[4], 49)*max(3, 15, 35, 55)/max(5, 21, 35, 7*pData[3], pData[4], 49)*lcm(3, 15, 35, 55)/lcm(5, 21, 35, 7*pData[3], pData[4], 49)*gcd(3, 15, 35, 55)/gcd(5, 21, 35, 7*pData[3], pData[4], 49)*xor(pData[3], 0)*xor(3, 0)*rem(pData[3], pData[4])*rem(5, 3)*quotient(pData[4], pData[3])*quotient(17, 5)*factorOf(15, pData[3])*factorOf(9, 3)*arbitraryLog(pData[4], pData[3])*atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n}");
             handleErrors("test2");
 
             // Test our "test" and "test2" functions

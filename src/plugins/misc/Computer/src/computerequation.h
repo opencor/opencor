@@ -46,10 +46,15 @@ public:
 
         ArbitraryLog, FactorOf, Pow, Quotient, Rem, XOr,
 
+        // Mathematical functions with 2+ arguments
+
+        GCD, LCM, Max, Min,
+
         // Miscellaneous
 
         Assign, Not,
-        Piecewise, PiecewiseCases
+        Piecewise, PiecewiseCases,
+        OtherArguments
     };
 
 //---GRY--- THE FOLLOWING STILL NEED TO BE IMPLEMENTED IN ComputeEngine...
@@ -65,6 +70,9 @@ public:
     explicit ComputerEquation(const Type &pType,
                               ComputerEquation *pLeft,
                               ComputerEquation *pRight = 0);
+    explicit ComputerEquation(const Type &pType,
+                              const int &pArgumentsCount,
+                              ComputerEquation **pArguments);
     explicit ComputerEquation(const QString &pParameterName);
     explicit ComputerEquation(const QString &pParameterName,
                               const int &pParameterIndex);
@@ -96,6 +104,13 @@ private:
     ComputerEquation *mRight;
 
     void initialiseFrom(ComputerEquation *pEquation);
+
+    bool numberArguments(ComputerEquation *pArguments);
+
+    double gcd(ComputerEquation *pLeftNode, ComputerEquation *pRightNode);
+    double lcm(ComputerEquation *pLeftNode, ComputerEquation *pRightNode);
+    double max(ComputerEquation *pLeftNode, ComputerEquation *pRightNode);
+    double min(ComputerEquation *pLeftNode, ComputerEquation *pRightNode);
 
     void simplifyNode(ComputerEquation *pNode);
     void replaceNodeWithNumber(ComputerEquation *pNode, const double &pNumber);

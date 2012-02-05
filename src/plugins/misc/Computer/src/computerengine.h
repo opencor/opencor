@@ -117,29 +117,33 @@ private:
 
     llvm::Function * compileFunction(ComputerFunction *pFunction);
 
-    int indirectParameterAssemblyCodeIndex(ComputerEquation *pIndirectParameter,
-                                           ComputerEngineData &pData,
+    int indirectParameterAssemblyCodeIndex(ComputerEngineData &pData,
+                                           ComputerEquation *pIndirectParameter,
                                            const bool &pOperand);
-    QString compileOperand(ComputerEquation *pOperand,
-                           ComputerEngineData &pData);
-    void compileAssignmentEquation(ComputerEquation *pIndirectParameter,
-                                   ComputerEquation *pRhsEquation,
-                                   ComputerEngineData &pData);
-    void compileMathematicalOperator(ComputerEquation *pOperandOne,
-                                     ComputerEquation *pOperandTwo,
+
+    QString compileOperand(ComputerEngineData &pData,
+                           ComputerEquation *pOperand);
+    void compileAssignmentEquation(ComputerEngineData &pData,
+                                   ComputerEquation *pAssignmentEquation);
+    void compileMathematicalOperator(ComputerEngineData &pData,
                                      const QString &pOperator,
-                                     ComputerEngineData &pData);
-    void compileOneArgumentFunction(ComputerEquation *pOperand,
-                                    const QString &pFunctionName,
-                                    ComputerEngineData &pData,
-                                    void *pFunction = 0);
-    void compileTwoArgumentFunction(ComputerEquation *pOperandOne,
-                                    ComputerEquation *pOperandTwo,
-                                    const QString &pFunctionName,
-                                    ComputerEngineData &pData,
-                                    void *pFunction = 0);
-    void compileEquationNode(ComputerEquation *pEquationNode,
-                             ComputerEngineData &pData);
+                                     ComputerEquation *pOperand1,
+                                     ComputerEquation *pOperand2);
+    void compileMathematicalOperator(ComputerEngineData &pData,
+                                     const QString &pOperator,
+                                     ComputerEquation *pOperands);
+
+    QStringList compileMathematicalFunctionArguments(ComputerEngineData &pData,
+                                                     ComputerEquation *pArguments,
+                                                     const int &pLevel = 0);
+    void compileMathematicalFunction(ComputerEngineData &pData,
+                                     const QString &pFunctionName,
+                                     const int &pArgumentsCount,
+                                     ComputerEquation *pArguments,
+                                     void *pFunction = 0);
+
+    void compileEquationNode(ComputerEngineData &pData,
+                             ComputerEquation *pEquationNode);
 };
 
 //==============================================================================

@@ -379,12 +379,12 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
         // Compile the RHS of the equation
 
-        compileEquationNode(equation->right(), data);
+        compileEquationNode(data, equation->right());
 
-        // Assign the result of the RHS of the equation to the indirect parameter
-        // which information can be found the LHS of the equation
+        // Assign the result of the RHS of the equation to the indirect
+        // parameter which information can be found the LHS of the equation
 
-        compileAssignmentEquation(equation->left(), equation->right(), data);
+        compileAssignmentEquation(data, equation);
     }
 
     // Return statement
@@ -402,11 +402,11 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
         // Compile the return equation
 
-        compileEquationNode(pFunction->returnEquation(), data);
+        compileEquationNode(data, pFunction->returnEquation());
 
         // Return the value of the return equation
 
-        QString returnEquationValue = compileOperand(pFunction->returnEquation(), data);
+        QString returnEquationValue = compileOperand(data, pFunction->returnEquation());
 
         data.appendAssemblyCode(Indent+"ret double "+returnEquationValue+"\n");
     }
@@ -432,16 +432,23 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
             QString parameters = QString();
 
-            for (int i = 0, iMax = externalFunction.parametersCount(); i < iMax; ++i) {
-                // Add a separator first if we already have 1+ parameters
+            if (externalFunction.parametersCount() == -1)
+                // A function with X parameters
 
-                if (!parameters.isEmpty())
-                    parameters += ", ";
+                parameters = "i32, ...";
+            else
+                // A function with a finite number of parameters
 
-                // Add the parameter definition
+                for (int i = 0, iMax = externalFunction.parametersCount(); i < iMax; ++i) {
+                    // Add a separator first if we already have 1+ parameters
 
-                parameters += "double";
-            }
+                    if (!parameters.isEmpty())
+                        parameters += ", ";
+
+                    // Add the parameter definition
+
+                    parameters += "double";
+                }
 
             data.appendAssemblyCode("("+parameters+") nounwind\n");
 
@@ -533,8 +540,8 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
 //==============================================================================
 
-int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEquation *pIndirectParameter,
-                                                       ComputerEngineData &pData,
+int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEngineData &pData,
+                                                       ComputerEquation *pIndirectParameter,
                                                        const bool &pOperand)
 {
     // Retrieve the assembly code index associated with an indirect parameter or
@@ -633,8 +640,8 @@ int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEquation *pIndire
 
 //==============================================================================
 
-QString ComputerEngine::compileOperand(ComputerEquation *pOperand,
-                                       ComputerEngineData &pData)
+QString ComputerEngine::compileOperand(ComputerEngineData &pData,
+                                       ComputerEquation *pOperand)
 {
     switch (pOperand->type()) {
     case ComputerEquation::DirectParameter:
@@ -644,7 +651,7 @@ QString ComputerEngine::compileOperand(ComputerEquation *pOperand,
     case ComputerEquation::IndirectParameter:
         // An indirect parameter, so...
 
-        return "%%"+QString::number(indirectParameterAssemblyCodeIndex(pOperand, pData, true));
+        return "%%"+QString::number(indirectParameterAssemblyCodeIndex(pData, pOperand, true));
 
         break;
     case ComputerEquation::Number: {
@@ -676,19 +683,17 @@ QString ComputerEngine::compileOperand(ComputerEquation *pOperand,
 
 //==============================================================================
 
-void ComputerEngine::compileAssignmentEquation(ComputerEquation *pIndirectParameter,
-                                               ComputerEquation *pRhsEquation,
-                                               ComputerEngineData &pData)
+void ComputerEngine::compileAssignmentEquation(ComputerEngineData &pData,
+                                               ComputerEquation *pAssignmentEquation)
 {
     // Get the RHS equation as an operand
 
-    QString rhsEquation = compileOperand(pRhsEquation, pData);
+    QString rhsEquation = compileOperand(pData, pAssignmentEquation->right());
 
     // Retrieve, for the indirect parameter and if necessary, a pointer to the
     // correct entry in the array of doubles
 
-    int assemblyCodeIndex = indirectParameterAssemblyCodeIndex(pIndirectParameter,
-                                                               pData, false);
+    int assemblyCodeIndex = indirectParameterAssemblyCodeIndex(pData, pAssignmentEquation->left(), false);
 
     // Store the RHS of the equation to the LHS of the equation
 
@@ -702,7 +707,7 @@ void ComputerEngine::compileAssignmentEquation(ComputerEquation *pIndirectParame
         // We don't have an assembly code index for the indirect parameter,
         // so...
 
-        pData.appendAssemblyCode(pIndirectParameter->parameterName());
+        pData.appendAssemblyCode(pAssignmentEquation->left()->parameterName());
 
     pData.appendAssemblyCode(", align 8, !tbaa !0\n");
 
@@ -713,15 +718,15 @@ void ComputerEngine::compileAssignmentEquation(ComputerEquation *pIndirectParame
 
 //==============================================================================
 
-void ComputerEngine::compileMathematicalOperator(ComputerEquation *pOperandOne,
-                                                 ComputerEquation *pOperandTwo,
+void ComputerEngine::compileMathematicalOperator(ComputerEngineData &pData,
                                                  const QString &pOperator,
-                                                 ComputerEngineData &pData)
+                                                 ComputerEquation *pOperand1,
+                                                 ComputerEquation *pOperand2)
 {
     // Compile the two operands
 
-    QString operandOne = compileOperand(pOperandOne, pData);
-    QString operandTwo = compileOperand(pOperandTwo, pData);
+    QString operandOne = compileOperand(pData, pOperand1);
+    QString operandTwo = compileOperand(pData, pOperand2);
 
     // Apply the mathematical operator
 
@@ -730,50 +735,82 @@ void ComputerEngine::compileMathematicalOperator(ComputerEquation *pOperandOne,
 
 //==============================================================================
 
-void ComputerEngine::compileOneArgumentFunction(ComputerEquation *pOperand,
-                                                const QString &pFunctionName,
-                                                ComputerEngineData &pData,
-                                                void *pFunction)
+void ComputerEngine::compileMathematicalOperator(ComputerEngineData &pData,
+                                                 const QString &pOperator,
+                                                 ComputerEquation *pOperands)
 {
-    // Compile the operand
+    // Compile the mathematical operator
 
-    QString operand = compileOperand(pOperand, pData);
-
-    // Apply the one-argument function
-
-    pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = tail call double @"+pFunctionName+"(double "+operand+") nounwind\n");
-
-    // Keep track of the need for the one-argument function
-
-    pData.addExternalFunction(pFunctionName, 1, pFunction);
+    compileMathematicalOperator(pData, pOperator,
+                                pOperands->left(), pOperands->right());
 }
 
 //==============================================================================
 
-void ComputerEngine::compileTwoArgumentFunction(ComputerEquation *pOperandOne,
-                                                ComputerEquation *pOperandTwo,
-                                                const QString &pFunctionName,
-                                                ComputerEngineData &pData,
-                                                void *pFunction)
+QStringList ComputerEngine::compileMathematicalFunctionArguments(ComputerEngineData &pData,
+                                                                 ComputerEquation *pArguments,
+                                                                 const int &pLevel)
 {
-    // Compile the two operands
-
-    QString operandOne = compileOperand(pOperandOne, pData);
-    QString operandTwo = compileOperand(pOperandTwo, pData);
-
-    // Apply the two-argument function
-
-    pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = tail call double @"+pFunctionName+"(double "+operandOne+", double "+operandTwo+") nounwind\n");
-
-    // Keep track of the need for the two-argument function
-
-    pData.addExternalFunction(pFunctionName, 2, pFunction);
+    if (!pLevel || (pArguments->type() == ComputerEquation::OtherArguments))
+        return QStringList() << compileMathematicalFunctionArguments(pData, pArguments->left(), pLevel+1)
+                             << compileMathematicalFunctionArguments(pData, pArguments->right(), pLevel+1);
+    else
+        return QStringList() << compileOperand(pData, pArguments);
 }
 
 //==============================================================================
 
-void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
-                                         ComputerEngineData &pData)
+void ComputerEngine::compileMathematicalFunction(ComputerEngineData &pData,
+                                                 const QString &pFunctionName,
+                                                 const int &pArgumentsCount,
+                                                 ComputerEquation *pArguments,
+                                                 void *pFunction)
+{
+    // Compile the different arguments
+
+    QStringList arguments = QStringList();
+
+    if (pArgumentsCount == 1) {
+        arguments << compileOperand(pData, pArguments->left());
+    } else if (pArgumentsCount == 2) {
+        arguments << compileOperand(pData, pArguments->left());
+        arguments << compileOperand(pData, pArguments->right());
+    } else {
+        // X arguments
+
+        arguments << compileMathematicalFunctionArguments(pData, pArguments);
+    }
+
+    // Apply the mathematical function
+
+    pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = tail call double ");
+
+    if (pArgumentsCount == -1)
+        pData.appendAssemblyCode("(i32, ...)* ");
+
+    pData.appendAssemblyCode("@"+pFunctionName+"(");
+
+    if (pArgumentsCount == -1)
+        pData.appendAssemblyCode("i32 "+QString::number(arguments.count())+", ");
+
+    for (int i = 0, iMax = arguments.count(); i < iMax; ++i) {
+        if (i)
+            pData.appendAssemblyCode(", ");
+
+        pData.appendAssemblyCode("double "+arguments.at(i));
+    }
+
+    pData.appendAssemblyCode(") nounwind\n");
+
+    // Keep track of the need for the mathematical function
+
+    pData.addExternalFunction(pFunctionName, pArgumentsCount, pFunction);
+}
+
+//==============================================================================
+
+void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
+                                         ComputerEquation *pEquationNode)
 {
     static const double zeroNumber = 0;
     static ComputerEquation zeroNumberEquation = ComputerEquation(zeroNumber);
@@ -785,24 +822,21 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
 
         return;
 
-    // Check whether the current node is a direct parameter or a number
+    // Check whether the current node is a direct parameter, an indirect
+    // parameter, a number or a set of other arguments
 
     if (   (pEquationNode->type() == ComputerEquation::DirectParameter)
         || (pEquationNode->type() == ComputerEquation::IndirectParameter)
         || (pEquationNode->type() == ComputerEquation::Number))
-        // It is either a direct parameter or a number, so nothing to compile
-        // (since this will be done as part of the compilation of another node),
-        // so...
+        // It is, so nothing to compile (since this will be done as part of the
+        // compilation of another node), so...
 
         return;
 
-    // Compile the left node
+    // Compile both the left and right nodes
 
-    compileEquationNode(pEquationNode->left(), pData);
-
-    // Compile the right node
-
-    compileEquationNode(pEquationNode->right(), pData);
+    compileEquationNode(pData, pEquationNode->left());
+    compileEquationNode(pData, pEquationNode->right());
 
     // Compilation of the current node
 
@@ -810,146 +844,176 @@ void ComputerEngine::compileEquationNode(ComputerEquation *pEquationNode,
     // Mathematical operators
 
     case ComputerEquation::Times:
-        compileMathematicalOperator(pEquationNode->left(), pEquationNode->right(), "fmul", pData);
+        compileMathematicalOperator(pData, "fmul", pEquationNode);
 
         break;
     case ComputerEquation::Divide:
-        compileMathematicalOperator(pEquationNode->left(), pEquationNode->right(), "fdiv", pData);
+        compileMathematicalOperator(pData, "fdiv", pEquationNode);
 
         break;
     case ComputerEquation::Plus:
         if (pEquationNode->right())
             // Normal addition, so...
 
-            compileMathematicalOperator(pEquationNode->left(), pEquationNode->right(), "fadd", pData);
+            compileMathematicalOperator(pData, "fadd", pEquationNode);
         else
             // Unary "+", so...
             // Note: we can only come here if the equation wasn't first
             //       simplified, hence we need to test for the unary "+"...
 
-            compileOperand(pEquationNode->left(), pData);
+            compileOperand(pData, pEquationNode->left());
 
         break;
     case ComputerEquation::Minus:
         if (pEquationNode->right())
             // Normal subtraction, so...
 
-            compileMathematicalOperator(pEquationNode->left(), pEquationNode->right(), "fsub", pData);
+            compileMathematicalOperator(pData, "fsub", pEquationNode);
         else
             // Unary "-", so...
 
-            compileMathematicalOperator(&zeroNumberEquation, pEquationNode->left(), "fsub", pData);
+            compileMathematicalOperator(pData, "fsub", &zeroNumberEquation, pEquationNode->left());
 
         break;
 
     // Mathematical functions with 1 argument
 
     case ComputerEquation::Abs:
-        compileOneArgumentFunction(pEquationNode->left(), "fabs", pData);
+        compileMathematicalFunction(pData, "fabs", 1, pEquationNode);
 
         break;
     case ComputerEquation::Exp:
-        compileOneArgumentFunction(pEquationNode->left(), "exp", pData);
+        compileMathematicalFunction(pData, "exp", 1, pEquationNode);
 
         break;
     case ComputerEquation::Log:
-        compileOneArgumentFunction(pEquationNode->left(), "log", pData);
+        compileMathematicalFunction(pData, "log", 1, pEquationNode);
 
         break;
     case ComputerEquation::Ceil:
-        compileOneArgumentFunction(pEquationNode->left(), "ceil", pData);
+        compileMathematicalFunction(pData, "ceil", 1, pEquationNode);
 
         break;
     case ComputerEquation::Floor:
-        compileOneArgumentFunction(pEquationNode->left(), "floor", pData);
+        compileMathematicalFunction(pData, "floor", 1, pEquationNode);
 
         break;
     case ComputerEquation::Factorial:
-        compileOneArgumentFunction(pEquationNode->left(), "factorial", pData,
-                                   (void *)(intptr_t) factorial);
+        compileMathematicalFunction(pData, "factorial", 1, pEquationNode,
+                                    (void *)(intptr_t) factorial);
 
         break;
     case ComputerEquation::Sin:
-        compileOneArgumentFunction(pEquationNode->left(), "sin", pData);
+        compileMathematicalFunction(pData, "sin", 1, pEquationNode);
 
         break;
     case ComputerEquation::Cos:
-        compileOneArgumentFunction(pEquationNode->left(), "cos", pData);
+        compileMathematicalFunction(pData, "cos", 1, pEquationNode);
 
         break;
     case ComputerEquation::Tan:
-        compileOneArgumentFunction(pEquationNode->left(), "tan", pData);
+        compileMathematicalFunction(pData, "tan", 1, pEquationNode);
 
         break;
     case ComputerEquation::SinH:
-        compileOneArgumentFunction(pEquationNode->left(), "sinh", pData);
+        compileMathematicalFunction(pData, "sinh", 1, pEquationNode);
 
         break;
     case ComputerEquation::CosH:
-        compileOneArgumentFunction(pEquationNode->left(), "cosh", pData);
+        compileMathematicalFunction(pData, "cosh", 1, pEquationNode);
 
         break;
     case ComputerEquation::TanH:
-        compileOneArgumentFunction(pEquationNode->left(), "tanh", pData);
+        compileMathematicalFunction(pData, "tanh", 1, pEquationNode);
 
         break;
     case ComputerEquation::ASin:
-        compileOneArgumentFunction(pEquationNode->left(), "asin", pData);
+        compileMathematicalFunction(pData, "asin", 1, pEquationNode);
 
         break;
     case ComputerEquation::ACos:
-        compileOneArgumentFunction(pEquationNode->left(), "acos", pData);
+        compileMathematicalFunction(pData, "acos", 1, pEquationNode);
 
         break;
     case ComputerEquation::ATan:
-        compileOneArgumentFunction(pEquationNode->left(), "atan", pData);
+        compileMathematicalFunction(pData, "atan", 1, pEquationNode);
 
         break;
     case ComputerEquation::ASinH:
-        compileOneArgumentFunction(pEquationNode->left(), "asinh", pData,
-                                   (void *)(intptr_t) asinh);
+        compileMathematicalFunction(pData, "asinh", 1, pEquationNode,
+                                    (void *)(intptr_t) asinh);
 
         break;
     case ComputerEquation::ACosH:
-        compileOneArgumentFunction(pEquationNode->left(), "acosh", pData,
-                                   (void *)(intptr_t) acosh);
+        compileMathematicalFunction(pData, "acosh", 1, pEquationNode,
+                                    (void *)(intptr_t) acosh);
 
         break;
     case ComputerEquation::ATanH:
-        compileOneArgumentFunction(pEquationNode->left(), "atanh", pData,
-                                   (void *)(intptr_t) atanh);
+        compileMathematicalFunction(pData, "atanh", 1, pEquationNode,
+                                    (void *)(intptr_t) atanh);
 
         break;
 
     // Mathematical functions with 2 arguments
 
     case ComputerEquation::ArbitraryLog:
-        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "arbitraryLog", pData,
-                                   (void *)(intptr_t) arbitraryLog);
+        compileMathematicalFunction(pData, "arbitraryLog", 2, pEquationNode,
+                                    (void *)(intptr_t) arbitraryLog);
 
         break;
     case ComputerEquation::FactorOf:
-        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "factorOf", pData,
-                                   (void *)(intptr_t) factorOf);
+        compileMathematicalFunction(pData, "factorOf", 2, pEquationNode,
+                                    (void *)(intptr_t) factorOf);
 
         break;
     case ComputerEquation::Pow:
-        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "pow", pData);
+        compileMathematicalFunction(pData, "pow", 2, pEquationNode);
 
         break;
     case ComputerEquation::Quotient:
-        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "quotient", pData,
-                                   (void *)(intptr_t) quotient);
+        compileMathematicalFunction(pData, "quotient", 2, pEquationNode,
+                                    (void *)(intptr_t) quotient);
 
         break;
     case ComputerEquation::Rem:
-        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "rem", pData,
-                                   (void *)(intptr_t) rem);
+        compileMathematicalFunction(pData, "rem", 2, pEquationNode,
+                                    (void *)(intptr_t) rem);
 
         break;
     case ComputerEquation::XOr:
-        compileTwoArgumentFunction(pEquationNode->left(), pEquationNode->right(), "xOr", pData,
-                                   (void *)(intptr_t) xOr);
+        compileMathematicalFunction(pData, "xOr", 2, pEquationNode,
+                                    (void *)(intptr_t) xOr);
+
+        break;
+
+    // Mathematical functions with 2+ arguments
+
+    case ComputerEquation::GCD:
+        compileMathematicalFunction(pData, "gcd", -1, pEquationNode,
+                                    (void *)(intptr_t) gcd);
+
+        break;
+    case ComputerEquation::LCM:
+        compileMathematicalFunction(pData, "lcm", -1, pEquationNode,
+                                    (void *)(intptr_t) lcm);
+
+        break;
+    case ComputerEquation::Max:
+        compileMathematicalFunction(pData, "max", -1, pEquationNode,
+                                    (void *)(intptr_t) max);
+
+        break;
+    case ComputerEquation::Min:
+        compileMathematicalFunction(pData, "min", -1, pEquationNode,
+                                    (void *)(intptr_t) min);
+
+        break;
+
+    // Miscellaneous
+
+    case ComputerEquation::OtherArguments:
+        // Nothing to do...
 
         break;
 

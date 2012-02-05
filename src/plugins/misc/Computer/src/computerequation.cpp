@@ -39,6 +39,37 @@ ComputerEquation::ComputerEquation(const Type &pType,
 
 //==============================================================================
 
+ComputerEquation::ComputerEquation(const Type &pType,
+                                   const int &pArgumentsCount,
+                                   ComputerEquation **pArguments) :
+    mType(pType),
+    mParameterName(QString()),
+    mParameterIndex(-1),
+    mNumber(0),
+    mLeft(pArguments[0]),
+    mRight(0)
+{
+    // Initialise the left and right nodes based on pArguments
+
+    ComputerEquation **crtRight = &mRight;
+
+    for (int i = 1, iMax = pArgumentsCount-1; i <= iMax; ++i)
+        if (i != iMax) {
+            // We are not dealing with the last argument, so need to create a
+            // new node
+
+            *crtRight = new ComputerEquation(OtherArguments, pArguments[i]);
+
+            crtRight = &(*crtRight)->mRight;
+        } else {
+            // We are dealing with the last argument, so...
+
+            *crtRight = pArguments[i];
+        }
+}
+
+//==============================================================================
+
 ComputerEquation::ComputerEquation(const QString &pParameterName) :
     mType(DirectParameter),
     mParameterName(pParameterName),
@@ -180,6 +211,14 @@ QString ComputerEquation::typeAsString() const
         return "Rem";
     case XOr:
         return "XOr";
+    case GCD:
+        return "GCD";
+    case LCM:
+        return "LCM";
+    case Max:
+        return "Max";
+    case Min:
+        return "Min";
     case Assign:
         return "Assign";
     case Not:
@@ -188,6 +227,8 @@ QString ComputerEquation::typeAsString() const
         return "Piecewise";
     case PiecewiseCases:
         return "PiecewiseCases";
+    case OtherArguments:
+        return "OtherArguments";
     default:
         return "???";
     }
@@ -267,6 +308,90 @@ void ComputerEquation::initialiseFrom(ComputerEquation *pEquation)
         mRight = 0;
     }
 }
+
+//==============================================================================
+
+bool ComputerEquation::numberArguments(ComputerEquation *pArguments)
+{
+    // Return whether all of the arguments (i.e. including any children nodes of
+    // pArguments, if applicable) are numbers
+
+    if (pArguments->left()->type() != Number)
+        // The left node is not a number, so...
+
+        return false;
+    else if (pArguments->right()->type() == Number)
+        // The right node is a number and so is the left node, so...
+
+        return true;
+    else if (pArguments->right()->type() == OtherArguments)
+        // The right node contains other arguments and the left node is a
+        // number, so...
+
+        return numberArguments(pArguments->right());
+    else
+        // The right node neither is a number nor consists of other operands,
+        // so...
+
+        return false;
+}
+
+//==============================================================================
+
+double ComputerEquation::gcd(ComputerEquation *pLeftNode,
+                             ComputerEquation *pRightNode)
+{
+    // Return the greatest common divisor of the two nodes
+
+    if (pRightNode->type() == Number)
+        return ::gcd(2, pLeftNode->number(), pRightNode->number());
+    else
+        return ::gcd(2, pLeftNode->number(),
+                        gcd(pRightNode->left(), pRightNode->right()));
+}
+
+//==============================================================================
+
+double ComputerEquation::lcm(ComputerEquation *pLeftNode,
+                             ComputerEquation *pRightNode)
+{
+    // Return the lowest common multiplicator of the two nodes
+
+    if (pRightNode->type() == Number)
+        return ::lcm(2, pLeftNode->number(), pRightNode->number());
+    else
+        return ::lcm(2, pLeftNode->number(),
+                        lcm(pRightNode->left(), pRightNode->right()));
+}
+
+//==============================================================================
+
+double ComputerEquation::max(ComputerEquation *pLeftNode,
+                             ComputerEquation *pRightNode)
+{
+    // Return the maximum of the two nodes
+
+    if (pRightNode->type() == Number)
+        return ::max(2, pLeftNode->number(), pRightNode->number());
+    else
+        return ::max(2, pLeftNode->number(),
+                        max(pRightNode->left(), pRightNode->right()));
+}
+
+//==============================================================================
+
+double ComputerEquation::min(ComputerEquation *pLeftNode,
+                             ComputerEquation *pRightNode)
+{
+    // Return the minimum of the two nodes
+
+    if (pRightNode->type() == Number)
+        return ::min(2, pLeftNode->number(), pRightNode->number());
+    else
+        return ::min(2, pLeftNode->number(),
+                        min(pRightNode->left(), pRightNode->right()));
+}
+
 
 //==============================================================================
 
@@ -531,6 +656,34 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // xOr(N1, N2)
 
             replaceNodeWithNumber(pNode, xOr(pNode->left()->number(), pNode->right()->number()));
+
+        break;
+    case GCD:
+        if (numberArguments(pNode))
+            // gcd(N1, N2, ...)
+
+            replaceNodeWithNumber(pNode, gcd(pNode->left(), pNode->right()));
+
+        break;
+    case LCM:
+        if (numberArguments(pNode))
+            // lcm(N1, N2, ...)
+
+            replaceNodeWithNumber(pNode, lcm(pNode->left(), pNode->right()));
+
+        break;
+    case Max:
+        if (numberArguments(pNode))
+            // max(N1, N2, ...)
+
+            replaceNodeWithNumber(pNode, max(pNode->left(), pNode->right()));
+
+        break;
+    case Min:
+        if (numberArguments(pNode))
+            // min(N1, N2, ...)
+
+            replaceNodeWithNumber(pNode, min(pNode->left(), pNode->right()));
 
         break;
     case Not:

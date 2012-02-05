@@ -46,6 +46,10 @@ public:
 
         ArbitraryLog, FactorOf, Pow, Quotient, Rem, XOr,
 
+        // Mathematical functions with 2+ arguments
+
+        GCD, LCM, Max, Min,
+
         // Miscellaneous
 
         OpeningBracket, ClosingBracket,

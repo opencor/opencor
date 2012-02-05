@@ -35,15 +35,15 @@
         <translation>il y a déjà un paramètre de fonction qui s&apos;appelle &apos;%1&apos;</translation>
     </message>
     <message>
-        <source>an integer</source>
-        <translation>un nombre entier</translation>
+        <source>a positive integer</source>
+        <translation>un nombre entier positif</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <source>an integer</source>
-        <translation>un nombre entier</translation>
+        <source>a positive integer</source>
+        <translation>un nombre entier positif</translation>
     </message>
 </context>
 </TS>

@@ -155,6 +155,17 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     case XOr:
         return ComputerEquation::XOr;
 
+    // Mathematical functions with 2+ arguments
+
+    case GCD:
+        return ComputerEquation::GCD;
+    case LCM:
+        return ComputerEquation::LCM;
+    case Max:
+        return ComputerEquation::Max;
+    case Min:
+        return ComputerEquation::Min;
+
     // Miscellaneous
 
     case Not:
@@ -263,6 +274,14 @@ QString ComputerScannerToken::symbolAsString() const
         return "Rem";
     case XOr:
         return "XOr";
+    case GCD:
+        return "GCD";
+    case LCM:
+        return "LCM";
+    case Max:
+        return "Max";
+    case Min:
+        return "Min";
     case OpeningBracket:
         return "OpeningBracket";
     case ClosingBracket:
@@ -370,7 +389,12 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("pow", ComputerScannerToken::Pow);
     mKeywords.insert("quotient", ComputerScannerToken::Quotient);
     mKeywords.insert("rem", ComputerScannerToken::Rem);
-    mKeywords.insert("xOr", ComputerScannerToken::XOr);
+    mKeywords.insert("xor", ComputerScannerToken::XOr);
+
+    mKeywords.insert("gcd", ComputerScannerToken::GCD);
+    mKeywords.insert("lcm", ComputerScannerToken::LCM);
+    mKeywords.insert("max", ComputerScannerToken::Max);
+    mKeywords.insert("min", ComputerScannerToken::Min);
 
     mKeywords.insert("return", ComputerScannerToken::Return);
 }
