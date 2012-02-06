@@ -100,16 +100,20 @@ double factorOf(double pNb1, double pNb2)
 
 //==============================================================================
 
+static double zero = 0.0;
+
+//==============================================================================
+
 double quotient(double pNb1, double pNb2)
 {
-    return pNb2?(int) pNb1/(int) pNb2:pNb1/0.0;
+    return pNb2?(int) pNb1/(int) pNb2:pNb1/zero;
 }
 
 //==============================================================================
 
 double rem(double pNb1, double pNb2)
 {
-    return pNb2?(int) pNb1 % (int) pNb2:pNb1/0.0;
+    return pNb2?(int) pNb1 % (int) pNb2:pNb1/zero;
 }
 
 //==============================================================================
