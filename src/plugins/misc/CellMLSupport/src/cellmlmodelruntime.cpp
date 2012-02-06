@@ -550,7 +550,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 "         *gcd(3, 15, 35, 55)/gcd(5, 21, 35, 7*pData[3], pData[4], 49)"
                 "         *xor(pData[3], 0)*xor(3, 0)"
                 "         *rem(pData[3], pData[4])*rem(5, 3)*quotient(pData[4], pData[3])"
-                "         *quotient(17, 5)"
+                "         *quotient(pData[4], pData[3])*quotient(17, 5)"
                 "         *factorOf(15, pData[3])*factorOf(9, 3)"
                 "         *arbitraryLog(pData[4], pData[3])"
                 "         *atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n"
