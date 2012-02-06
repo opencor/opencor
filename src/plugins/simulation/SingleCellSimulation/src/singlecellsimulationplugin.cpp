@@ -312,17 +312,6 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                 if(voiCount % voiOutputCount == 0) {
                     xData.append(voi);
 
-if (model == Noble1998)
-    qDebug("Time: %s        i_Ca_L_Ca_cyt = %s        i_Ca_L_K_cyt = %s        i_Ca_L_Na_cyt = %s        i_Ca_L_Ca_ds = %s        i_Ca_L_K_ds = %s        i_Ca_L_Na_ds = %s        dV/dt = %s",
-           qPrintable(QString::number(voi)),
-           qPrintable(QString::number(algebraic[39])),
-           qPrintable(QString::number(algebraic[40])),
-           qPrintable(QString::number(algebraic[41])),
-           qPrintable(QString::number(algebraic[42])),
-           qPrintable(QString::number(algebraic[43])),
-           qPrintable(QString::number(algebraic[44])),
-           qPrintable(QString::number(rates[0])));
-
                     for (int i = 0; i < statesCount; ++i)
                         yData[i].append(states[i]);
                 }
