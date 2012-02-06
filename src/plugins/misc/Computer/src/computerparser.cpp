@@ -364,10 +364,7 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 
         // Set the name of the equation parameter array
 
-        QString arrayName;
-        int arrayIndex;
-
-        arrayName = mScanner->token().string();
+        QString arrayName = mScanner->token().string();
 
         mScanner->getNextToken();
 
@@ -383,13 +380,16 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 
         // The current token must be an integer value
 
-        if (mScanner->token().symbol() == ComputerScannerToken::IntegerValue) {
+        int arrayIndex = -1;
+
+        if (mScanner->token().symbol() == ComputerScannerToken::IntegerValue)
             // We got an integer value, so set the index of the equation
             // parameter array
 
             arrayIndex = mScanner->token().string().toInt();
-        } else {
-            addError(tr("an integer"));
+
+        if (arrayIndex < 0) {
+            addError(tr("a positive integer"));
 
             return false;
         }
@@ -648,12 +648,11 @@ bool parseMultiplicativeExpression(ComputerParser *pParser,
 {
     // The EBNF grammar of a multiplicative expression is as follows:
     //
-    //   MultiplicativeExpression = [ MultiplicativeExpression ( "*" | "/" | "%" ) ] UnaryExpression ;
+    //   MultiplicativeExpression = [ MultiplicativeExpression ( "*" | "/" ) ] UnaryExpression ;
 
     if (!parseGenericExpression(pParser, pFunction, pExpression,
                                 ComputerScannerToken::Symbols() << ComputerScannerToken::Times
-                                                                << ComputerScannerToken::Divide
-                                                                << ComputerScannerToken::Percentage,
+                                                                << ComputerScannerToken::Divide,
                                 parseUnaryExpression))
         return false;
 
@@ -738,16 +737,17 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 {
     // The EBNF grammar of a primary expression is as follows:
     //
-    //   PrimaryExpression        =   Identifier [ "[" IntegerValue "]" ]
-    //                              | IntegerValue
-    //                              | DoubleValue
-    //                              | ( FunctionWithOneArgument "(" EquationRHS ")" ) ;
-    //                              | ( FunctionWithTwoArguments "(" EquationRHS "," EquationRHS ")" ) ;
-    //                              | ( "(" EquationRHS ")" ) ;
-    //   FunctionWithOneArgument  =   "fabs" | "exp" | "log" | "ceil" | "floor" | "factorial"
-    //                              | "sin" | "cos" | "tan" | "sinh" | "cosh" | "tanh"
-    //                              | "asin" | "acos" | "atan" | "asinh" | "acosh" | "atanh" ;
-    //   FunctionWithTwoArguments = "pow" | "arbitrary_log" ;
+    //   PrimaryExpression              =   Identifier [ "[" IntegerValue "]" ]
+    //                                    | IntegerValue
+    //                                    | DoubleValue
+    //                                    | ( FunctionWithOneArgument "(" EquationRHS ")" ) ;
+    //                                    | ( FunctionWithTwoArguments "(" EquationRHS "," EquationRHS ")" ) ;
+    //                                    | ( "(" EquationRHS ")" ) ;
+    //   FunctionWithOneArgument        =   "fabs" | "exp" | "log" | "ceil" | "floor" | "factorial"
+    //                                    | "sin" | "cos" | "tan" | "sinh" | "cosh" | "tanh"
+    //                                    | "asin" | "acos" | "atan" | "asinh" | "acosh" | "atanh" ;
+    //   FunctionWithTwoArguments       = "arbitraryLog" | "factorOf" | "pow" | "quotient" | "rem" | "xor" ;
+    //   FunctionWithTwoOrMoreArguments = "gcd" | "lcm" | "max" | "min" ;
 
     // Check whether the current token's symbol is an identifier, an integer
     // value, a double value, a function with one argument, a function with two
@@ -771,8 +771,16 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                                                                                                             << ComputerScannerToken::ASinH
                                                                                                             << ComputerScannerToken::ACosH
                                                                                                             << ComputerScannerToken::ATanH;
-    static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Pow
-                                                                                                            << ComputerScannerToken::ArbitraryLog;
+    static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::ArbitraryLog
+                                                                                                            << ComputerScannerToken::FactorOf
+                                                                                                            << ComputerScannerToken::Pow
+                                                                                                            << ComputerScannerToken::Quotient
+                                                                                                            << ComputerScannerToken::Rem
+                                                                                                            << ComputerScannerToken::XOr;
+    static const ComputerScannerToken::Symbols xArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::GCD
+                                                                                                          << ComputerScannerToken::LCM
+                                                                                                          << ComputerScannerToken::Max
+                                                                                                          << ComputerScannerToken::Min;
 
     if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {
         // We are dealing with an identifier which corresponds to the name of a
@@ -793,12 +801,13 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
             int parameterIndex = -1;
 
-            if (pParser->scanner()->token().symbol() == ComputerScannerToken::IntegerValue) {
+            if (pParser->scanner()->token().symbol() == ComputerScannerToken::IntegerValue)
                 // We got an integer value, so keep track of it
 
                 parameterIndex = pParser->scanner()->token().string().toInt();
-            } else {
-                pParser->addError(QObject::tr("an integer"));
+
+            if (parameterIndex < 0) {
+                pParser->addError(QObject::tr("a positive integer"));
 
                 return false;
             }
@@ -837,8 +846,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         pParser->scanner()->getNextToken();
     } else if (oneArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
-        // We are dealing with a one-argument function, so keep track of it (as
-        // an equation type) and get the next token
+        // We are dealing with a one-argument function, so...
 
         ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
 
@@ -883,8 +891,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         pExpression = new ComputerEquation(equationType, argument);
     } else if (twoArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
-        // We are dealing with a two-argument function, so keep track of it (as
-        // an equation type) and get the next token
+        // We are dealing with a two-argument function, so...
 
         ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
 
@@ -956,6 +963,91 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         pExpression = new ComputerEquation(equationType,
                                            argumentOne, argumentTwo);
+    } else if (xArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
+        // We are dealing with an X-argument function, so...
+
+        ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
+
+        pParser->scanner()->getNextToken();
+
+        // The current token must be "("
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
+            pParser->addError("'('");
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // The current token must an integer
+
+        int argumentsCount = -1;
+
+        if (pParser->scanner()->token().symbol() == ComputerScannerToken::IntegerValue)
+            // We got an integer value, so set the number of arguments with it
+
+            argumentsCount = pParser->scanner()->token().string().toInt();
+
+        if (argumentsCount < 0) {
+            pParser->addError(QObject::tr("a positive integer"));
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // Parse the RHS of an equation and this as many times as there are
+        // arguments according to argumentsCount
+
+        ComputerEquation * arguments[argumentsCount];
+
+        for (int i = 0; i < argumentsCount; ++i) {
+            arguments[i] = 0;
+
+            // The current token must be ","
+
+            if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
+                pParser->addError("','");
+
+                for (int j = 0; j < i; ++j)
+                    delete arguments[j];
+
+                return false;
+            }
+
+            pParser->scanner()->getNextToken();
+
+            // Parse the RHS of an equation
+
+            if (!pParser->parseRhsEquation(pFunction, arguments[i])) {
+                // Something went wrong with the parsing of the RHS of an
+                // equation, so...
+
+                for (int j = 0; j <= i; ++j)
+                    delete arguments[j];
+
+                return false;
+            }
+        }
+
+        // The current token must be ")"
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
+            pParser->addError("')'");
+
+            for (int i = 0; i < argumentsCount; ++i)
+                delete arguments[i];
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // The parsing of our X-argument function went fine, so...
+
+        pExpression = new ComputerEquation(equationType,
+                                           argumentsCount, arguments);
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningBracket) {
         pParser->scanner()->getNextToken();
 

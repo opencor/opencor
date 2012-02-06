@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include "CCGSBootstrap.hpp"
+#include "MaLaESBootstrap.hpp"
 
 //==============================================================================
 
@@ -258,12 +259,112 @@ void CellmlModelRuntime::checkCodeInformation(iface::cellml_services::CodeInform
 
 //==============================================================================
 
+void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGenerator *pCodeGenerator)
+{
+    // Customise our code generator
+    // Note #1: idealy we wouly only specify what needs to be customised, but
+    //          that's not the way the CellML API works, so instead we need to
+    //          'customise' everything...
+    // Note #2: the customised functions are 'factorof', 'gcd', 'lcm', 'max',
+    //          'min', 'quotient', 'rem' and 'xor'...
+    // Note #3: for things that don't need customising, we must make sure that
+    //          it's in synch with CDA_CodeGenerator::makeCodeGenerationState in
+    //          [CellML_API]/CCGS/sources/CCGSImplementation.cpp...
+
+    ObjRef<iface::cellml_services::MaLaESBootstrap> malaesBootstrap = CreateMaLaESBootstrap();
+    ObjRef<iface::cellml_services::MaLaESTransform> malaesTransform = malaesBootstrap->compileTransformer(
+                                                                          L"opengroup: (\r\n"
+                                                                          L"closegroup: )\r\n"
+                                                                          L"abs: #prec[H]fabs(#expr1)\r\n"
+                                                                          L"and: #prec[20]#exprs[&&]\r\n"
+                                                                          L"arccos: #prec[H]acos(#expr1)\r\n"
+                                                                          L"arccosh: #prec[H]acosh(#expr1)\r\n"
+                                                                          L"arccot: #prec[1000(900)]atan(1.0/#expr1)\r\n"
+                                                                          L"arccoth: #prec[1000(900)]atanh(1.0/#expr1)\r\n"
+                                                                          L"arccsc: #prec[1000(900)]asin(1/#expr1)\r\n"
+                                                                          L"arccsch: #prec[1000(900)]asinh(1/#expr1)\r\n"
+                                                                          L"arcsec: #prec[1000(900)]acos(1/#expr1)\r\n"
+                                                                          L"arcsech: #prec[1000(900)]acosh(1/#expr1)\r\n"
+                                                                          L"arcsin: #prec[H]asin(#expr1)\r\n"
+                                                                          L"arcsinh: #prec[H]asinh(#expr1)\r\n"
+                                                                          L"arctan: #prec[H]atan(#expr1)\r\n"
+                                                                          L"arctanh: #prec[H]atanh(#expr1)\r\n"
+                                                                          L"ceiling: #prec[H]ceil(#expr1)\r\n"
+                                                                          L"cos: #prec[H]cos(#expr1)\r\n"
+                                                                          L"cosh: #prec[H]cosh(#expr1)\r\n"
+                                                                          L"cot: #prec[900(0)]1.0/tan(#expr1)\r\n"
+                                                                          L"coth: #prec[900(0)]1.0/tanh(#expr1)\r\n"
+                                                                          L"csc: #prec[900(0)]1.0/sin(#expr1)\r\n"
+                                                                          L"csch: #prec[900(0)]1.0/sinh(#expr1)\r\n"
+                                                                          L"diff: #lookupDiffVariable\r\n"
+                                                                          L"divide: #prec[900]#expr1/#expr2\r\n"
+                                                                          L"eq: #prec[30]#exprs[==]\r\n"
+                                                                          L"exp: #prec[H]exp(#expr1)\r\n"
+                                                                          L"factorial: #prec[H]factorial(#expr1)\r\n"
+                                                                          L"factorof: #prec[30(900)]factorOf(#expr1, #expr2)\r\n"   // Customised version
+                                                                          L"floor: #prec[H]floor(#expr1)\r\n"
+                                                                          L"gcd: #prec[H]gcd(#count, #exprs[, ])\r\n"   // Customised version
+                                                                          L"geq: #prec[30]#exprs[>=]\r\n"
+                                                                          L"gt: #prec[30]#exprs[>]\r\n"
+                                                                          L"implies: #prec[10(950)] !#expr1 || #expr2\r\n"
+                                                                          L"int: #prec[H]defint(func#unique1, VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, &#bvarIndex, #lowlimit, #uplimit, "
+                                                                          L"pret)#supplement double func#unique1(double VOI, "
+                                                                          L"double* CONSTANTS, double* RATES, double* STATES, double* ALGEBRAIC, int* pret) { return #expr1; }\r\n"
+                                                                          L"lcm: #prec[H]lcm(#count, #exprs[, ])\r\n"   // Customised version
+                                                                          L"leq: #prec[30]#exprs[<=]\r\n"
+                                                                          L"ln: #prec[H]log(#expr1)\r\n"
+                                                                          L"log: #prec[H]arbitrary_log(#expr1, #logbase)\r\n"
+                                                                          L"lt: #prec[30]#exprs[<]\r\n"
+                                                                          L"max: #prec[H]max(#count, #exprs[, ])\r\n"   // Customised version
+                                                                          L"min: #prec[H]min(#count, #exprs[, ])\r\n"   // Customised version
+                                                                          L"minus: #prec[500]#expr1 - #expr2\r\n"
+                                                                          L"neq: #prec[30]#expr1 != #expr2\r\n"
+                                                                          L"not: #prec[950]!#expr1\r\n"
+                                                                          L"or: #prec[10]#exprs[||]\r\n"
+                                                                          L"plus: #prec[500]#exprs[+]\r\n"
+                                                                          L"power: #prec[H]pow(#expr1, #expr2)\r\n"
+                                                                          L"quotient: #prec[1000(0)]quotient(#expr1, #expr2))\r\n"   // Customised version
+                                                                          L"rem: #prec[1000(0)]rem(#expr1, #expr2)\r\n"   // Customised version
+                                                                          L"root: #prec[1000(900)] pow(#expr1, 1.0 / #degree)\r\n"
+                                                                          L"sec: #prec[900(0)]1.0 / cos(#expr1)\r\n"
+                                                                          L"sech: #prec[900(0)]1.0 / cosh(#expr1)\r\n"
+                                                                          L"sin: #prec[H] sin(#expr1)\r\n"
+                                                                          L"sinh: #prec[H] sinh(#expr1)\r\n"
+                                                                          L"tan: #prec[H] tan(#expr1)\r\n"
+                                                                          L"tanh: #prec[H] tanh(#expr1)\r\n"
+                                                                          L"times: #prec[900] #exprs[*]\r\n"
+                                                                          L"unary_minus: #prec[950]- #expr1\r\n"
+                                                                          L"units_conversion: #prec[500(900)]#expr1*#expr2 + #expr3\r\n"
+                                                                          L"units_conversion_factor: #prec[900]#expr1*#expr2\r\n"
+                                                                          L"units_conversion_offset: #prec[500]#expr1+#expr2\r\n"
+                                                                          L"xor: #prec[25(30)]xOr(#expr1, #expr2)\r\n"   // Customised version
+                                                                          L"piecewise_first_case: #prec[1000(5)](#expr1 ? #expr2 : \r\n"
+                                                                          L"piecewise_extra_case: #prec[1000(5)]#expr1 ? #expr2 : \r\n"
+                                                                          L"piecewise_otherwise: #prec[1000(5)]#expr1)\r\n"
+                                                                          L"piecewise_no_otherwise: #prec[1000(5)]0.0/0.0)\r\n"
+                                                                          L"eulergamma: #prec[999]0.577215664901533\r\n"
+                                                                          L"exponentiale: #prec[999]2.71828182845905\r\n"
+                                                                          L"false: #prec[999]0.0\r\n"
+                                                                          L"infinity: #prec[900]1.0/0.0\r\n"
+                                                                          L"notanumber: #prec[999]0.0/0.0\r\n"
+                                                                          L"pi: #prec[999] 3.14159265358979\r\n"
+                                                                          L"true: #prec[999]1.0\r\n"
+                                                                      );
+
+    pCodeGenerator->transform(malaesTransform);
+}
+
+//==============================================================================
+
 iface::cellml_services::CodeInformation * CellmlModelRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
 {
-    // Get a code generator bootstrap and create an ODE code generator
+    // Get a code generator bootstrap, create an ODE code generator and
+    // customise it
 
     ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
     ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
+
+    customizeCodeGenerator(codeGenerator);
 
     // Generate some code for the model (i.e. 'compile' the model)
 
@@ -295,10 +396,13 @@ iface::cellml_services::CodeInformation * CellmlModelRuntime::getOdeCodeInformat
 
 iface::cellml_services::CodeInformation * CellmlModelRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
 {
-    // Get a code generator bootstrap and create a DAE code generator
+    // Get a code generator bootstrap, create a DAE code generator and customise
+    // it
 
     ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
     ObjRef<iface::cellml_services::IDACodeGenerator> codeGenerator = codeGeneratorBootstrap->createIDACodeGenerator();
+
+    customizeCodeGenerator(codeGenerator);
 
     // Generate some code for the model (i.e. 'compile' the model)
 
@@ -431,7 +535,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             mComputerEngine->addFunction("void test(double *pData)\n{\n  pData[0] = pData[4];\n  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n  pData[2] = 5-9/7;\n}");
             handleErrors("test");
 
-            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return arbitrary_log(pData[4], pData[3])*atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n}");
+            mComputerEngine->addFunction("double test2(double *pData)\n{\n  return min(3, 15, 35, 55)/min(5, 21, 35, 7*pData[3], pData[4], 49)*max(3, 15, 35, 55)/max(5, 21, 35, 7*pData[3], pData[4], 49)*lcm(3, 15, 35, 55)/lcm(5, 21, 35, 7*pData[3], pData[4], 49)*gcd(3, 15, 35, 55)/gcd(5, 21, 35, 7*pData[3], pData[4], 49)*xor(pData[3], 0)*xor(3, 0)*rem(pData[3], pData[4])*rem(5, 3)*quotient(pData[4], pData[3])*quotient(17, 5)*factorOf(15, pData[3])*factorOf(9, 3)*arbitraryLog(pData[4], pData[3])*atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n}");
             handleErrors("test2");
 
             // Test our "test" and "test2" functions
