@@ -841,6 +841,54 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
     // Compilation of the current node
 
     switch (pEquationNode->type()) {
+    // Logical operators
+
+    case ComputerEquation::Not:
+        compileMathematicalFunction(pData, "not", 1, pEquationNode,
+                                    (void *)(intptr_t) _not);
+
+        break;
+    case ComputerEquation::Or:
+        compileMathematicalFunction(pData, "_or", 2, pEquationNode,
+                                    (void *)(intptr_t) _or);
+
+        break;
+    case ComputerEquation::And:
+        compileMathematicalFunction(pData, "_and", 2, pEquationNode,
+                                    (void *)(intptr_t) _and);
+
+        break;
+    case ComputerEquation::EqualEqual:
+        compileMathematicalFunction(pData, "eq", 2, pEquationNode,
+                                    (void *)(intptr_t) eq);
+
+        break;
+    case ComputerEquation::NotEqual:
+        compileMathematicalFunction(pData, "neq", 2, pEquationNode,
+                                    (void *)(intptr_t) neq);
+
+        break;
+    case ComputerEquation::LowerThan:
+        compileMathematicalFunction(pData, "lt", 2, pEquationNode,
+                                    (void *)(intptr_t) lt);
+
+        break;
+    case ComputerEquation::GreaterThan:
+        compileMathematicalFunction(pData, "gt", 2, pEquationNode,
+                                    (void *)(intptr_t) gt);
+
+        break;
+    case ComputerEquation::LowerOrEqualThan:
+        compileMathematicalFunction(pData, "le", 2, pEquationNode,
+                                    (void *)(intptr_t) le);
+
+        break;
+    case ComputerEquation::GreaterOrEqualThan:
+        compileMathematicalFunction(pData, "ge", 2, pEquationNode,
+                                    (void *)(intptr_t) ge);
+
+        break;
+
     // Mathematical operators
 
     case ComputerEquation::Times:
@@ -982,8 +1030,8 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
 
         break;
     case ComputerEquation::XOr:
-        compileMathematicalFunction(pData, "xOr", 2, pEquationNode,
-                                    (void *)(intptr_t) xOr);
+        compileMathematicalFunction(pData, "_xor", 2, pEquationNode,
+                                    (void *)(intptr_t) _xor);
 
         break;
 

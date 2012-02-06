@@ -33,7 +33,10 @@ public:
         // Mathematical operators
 
         Times, Divide, Plus, Minus,
-        LogicalOr, LogicalAnd, EqualEqual, NotEqual,
+
+        // Logical operators
+
+        Not, Or, And, EqualEqual, NotEqual,
         LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
 
         // Mathematical functions with 1 argument
@@ -52,17 +55,13 @@ public:
 
         // Miscellaneous
 
-        Assign, Not,
+        Assign,
         Piecewise, PiecewiseCases,
         OtherArguments
     };
 
 //---GRY--- THE FOLLOWING STILL NEED TO BE IMPLEMENTED IN ComputeEngine...
 //
-//          LogicalOr, LogicalAnd, EqualEqual, NotEqual,
-//          LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
-//
-//          Not,
 //          Piecewise, PiecewiseCases
 //
 

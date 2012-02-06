@@ -33,7 +33,10 @@ public:
         // Mathematical operators
 
         Times, Divide, Plus, Minus,
-        LogicalOr, LogicalAnd, EqualEqual, NotEqual,
+
+        // Logical operators
+
+        Not, Or, And, EqualEqual, NotEqual,
         LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
 
         // Mathematical functions with 1 argument
@@ -55,7 +58,7 @@ public:
         OpeningBracket, ClosingBracket,
         OpeningCurlyBracket, ClosingCurlyBracket,
         OpeningSquareBracket, ClosingSquareBracket,
-        Equal, Not, Comma, Colon, SemiColon, QuestionMark,
+        Equal, Comma, Colon, SemiColon, QuestionMark,
         Unknown, Identifier, IntegerValue, DoubleValue, Return, Eof
     };
 

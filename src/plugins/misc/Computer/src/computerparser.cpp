@@ -458,12 +458,12 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 typedef bool (*ParseGenericExpression)(ComputerParser *, ComputerFunction *,
                                        ComputerEquation * &);
 
-bool parseLogicalOrExpression(ComputerParser *pParser,
-                              ComputerFunction *pFunction,
-                              ComputerEquation * &pExpression);
-bool parseLogicalAndExpression(ComputerParser *pParser,
-                               ComputerFunction *pFunction,
-                               ComputerEquation * &pExpression);
+bool parseOrExpression(ComputerParser *pParser,
+                       ComputerFunction *pFunction,
+                       ComputerEquation * &pExpression);
+bool parseAndExpression(ComputerParser *pParser,
+                        ComputerFunction *pFunction,
+                        ComputerEquation * &pExpression);
 bool parseEqualityExpression(ComputerParser *pParser,
                              ComputerFunction *pFunction,
                              ComputerEquation * &pExpression);
@@ -537,17 +537,17 @@ bool parseGenericExpression(ComputerParser *pParser,
 
 //==============================================================================
 
-bool parseLogicalOrExpression(ComputerParser *pParser,
-                              ComputerFunction *pFunction,
-                              ComputerEquation * &pExpression)
+bool parseOrExpression(ComputerParser *pParser,
+                       ComputerFunction *pFunction,
+                       ComputerEquation * &pExpression)
 {
-    // The EBNF grammar of a logical Or expression is as follows:
+    // The EBNF grammar of a Or expression is as follows:
     //
-    //   LogicalOrExpression = [ LogicalOrExpression "||" ] LogicalAndExpression ;
+    //   OrExpression = [ OrExpression "||" ] AndExpression ;
 
     if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalOr,
-                                parseLogicalAndExpression))
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::Or,
+                                parseAndExpression))
         return false;
 
     // Everything went fine, so...
@@ -557,16 +557,16 @@ bool parseLogicalOrExpression(ComputerParser *pParser,
 
 //==============================================================================
 
-bool parseLogicalAndExpression(ComputerParser *pParser,
-                               ComputerFunction *pFunction,
-                               ComputerEquation * &pExpression)
+bool parseAndExpression(ComputerParser *pParser,
+                        ComputerFunction *pFunction,
+                        ComputerEquation * &pExpression)
 {
-    // The EBNF grammar of a logical And expression is as follows:
+    // The EBNF grammar of a And expression is as follows:
     //
-    //   LogicalAndExpression = [ LogicalAndExpression "&&" ] EqualityExpression ;
+    //   AndExpression = [ AndExpression "&&" ] EqualityExpression ;
 
     if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::LogicalAnd,
+                                ComputerScannerToken::Symbols() << ComputerScannerToken::And,
                                 parseEqualityExpression))
         return false;
 
@@ -1098,16 +1098,15 @@ bool ComputerParser::parseRhsEquation(ComputerFunction *pFunction,
 {
     // The EBNF grammar of an equation's RHS is as follows:
     //
-    //   EquationRHS =   LogicalOrExpression
-    //                 | ( LogicalOrExpression "?" EquationRHS ":" EquationRHS ) ;
+    //   EquationRHS =   OrExpression
+    //                 | ( OrExpression "?" EquationRHS ":" EquationRHS ) ;
 
-    // Parse a logical Or expression
+    // Parse a Or expression
 
     ComputerEquation *mainOrConditionEquation = 0;
 
-    if (!parseLogicalOrExpression(this, pFunction, mainOrConditionEquation)) {
-        // Something went wrong with the parsing of a logical Or expression,
-        // so...
+    if (!parseOrExpression(this, pFunction, mainOrConditionEquation)) {
+        // Something went wrong with the parsing of a Or expression, so...
 
         delete mainOrConditionEquation;
 

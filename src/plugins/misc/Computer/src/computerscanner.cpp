@@ -84,10 +84,10 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Plus;
     case Minus:
         return ComputerEquation::Minus;
-    case LogicalOr:
-        return ComputerEquation::LogicalOr;
-    case LogicalAnd:
-        return ComputerEquation::LogicalAnd;
+    case Or:
+        return ComputerEquation::Or;
+    case And:
+        return ComputerEquation::And;
     case EqualEqual:
         return ComputerEquation::EqualEqual;
     case NotEqual:
@@ -210,10 +210,10 @@ QString ComputerScannerToken::symbolAsString() const
         return "Plus";
     case Minus:
         return "Minus";
-    case LogicalOr:
-        return "LogicalOr";
-    case LogicalAnd:
-        return "LogicalAnd";
+    case Or:
+        return "Or";
+    case And:
+        return "And";
     case EqualEqual:
         return "EqualEqual";
     case NotEqual:
@@ -738,7 +738,7 @@ void ComputerScanner::getNextToken()
 
                 getNextChar();
             } else {
-                // Only a Not, so...
+                // Only an exclamation mark, so...
 
                 mToken.setSymbol(ComputerScannerToken::Not);
             }
@@ -760,14 +760,14 @@ void ComputerScanner::getNextToken()
             getNextChar();
         } else if (mChar == Or) {
             // We don't support only one Or character, so we need a second one
-            // to get a logical Or symbol
+            // to get a Or symbol
 
             getNextChar();
 
             if (mChar == Or) {
                 // We got another Or, so...
 
-                mToken.setSymbol(ComputerScannerToken::LogicalOr);
+                mToken.setSymbol(ComputerScannerToken::Or);
 
                 getNextChar();
             } else {
@@ -777,14 +777,14 @@ void ComputerScanner::getNextToken()
             }
         } else if (mChar == And) {
             // We don't support only one And character, so we need a second one
-            // to get a logical And symbol
+            // to get a And symbol
 
             getNextChar();
 
             if (mChar == And) {
                 // We got another And, so...
 
-                mToken.setSymbol(ComputerScannerToken::LogicalAnd);
+                mToken.setSymbol(ComputerScannerToken::And);
 
                 getNextChar();
             } else {

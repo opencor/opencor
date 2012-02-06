@@ -149,10 +149,12 @@ QString ComputerEquation::typeAsString() const
         return "Plus";
     case Minus:
         return "Minus";
-    case LogicalOr:
-        return "LogicalOr";
-    case LogicalAnd:
-        return "LogicalAnd";
+    case Not:
+        return "Not";
+    case Or:
+        return "Or";
+    case And:
+        return "And";
     case EqualEqual:
         return "EqualEqual";
     case NotEqual:
@@ -221,8 +223,6 @@ QString ComputerEquation::typeAsString() const
         return "Min";
     case Assign:
         return "Assign";
-    case Not:
-        return "Not";
     case Piecewise:
         return "Piecewise";
     case PiecewiseCases:
@@ -413,18 +413,17 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
 
         return;
 
-    // Simplify the left node
+    // Simplify both the left and right nodes
 
     simplifyNode(pNode->left());
-
-    // Simplify the right node
-
     simplifyNode(pNode->right());
 
     // Simplify the current node based on the contents of its left and right
     // nodes
 
     switch (pNode->type()) {
+    // Mathematical operators
+
     case Times:
         if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
             // N1*N2
@@ -487,6 +486,75 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         }
 
         break;
+
+    // Logical operators
+
+    case Not:
+        if (pNode->left()->type() == Number)
+            // !N
+
+            replaceNodeWithNumber(pNode, !pNode->left()->number());
+
+        break;
+    case Or:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1 || N2
+
+            replaceNodeWithNumber(pNode, pNode->left()->number() || pNode->right()->number());
+
+        break;
+    case And:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1 && N2
+
+            replaceNodeWithNumber(pNode, pNode->left()->number() && pNode->right()->number());
+
+        break;
+    case EqualEqual:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1 == N2
+
+            replaceNodeWithNumber(pNode, pNode->left()->number() == pNode->right()->number());
+
+        break;
+    case NotEqual:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1 != N2
+
+            replaceNodeWithNumber(pNode, pNode->left()->number() != pNode->right()->number());
+
+        break;
+    case LowerThan:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1 < N2
+
+            replaceNodeWithNumber(pNode, pNode->left()->number() < pNode->right()->number());
+
+        break;
+    case GreaterThan:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1 > N2
+
+            replaceNodeWithNumber(pNode, pNode->left()->number() > pNode->right()->number());
+
+        break;
+    case LowerOrEqualThan:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1 <= N2
+
+            replaceNodeWithNumber(pNode, pNode->left()->number() <= pNode->right()->number());
+
+        break;
+    case GreaterOrEqualThan:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1 >= N2
+
+            replaceNodeWithNumber(pNode, pNode->left()->number() >= pNode->right()->number());
+
+        break;
+
+    // Mathematical functions with 1 argument
+
     case Abs:
         if (pNode->left()->type() == Number)
             // fabs(N)
@@ -613,6 +681,9 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             replaceNodeWithNumber(pNode, atanh(pNode->left()->number()));
 
         break;
+
+    // Mathematical functions with 2 arguments
+
     case ArbitraryLog:
         if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
             // arbitraryLog(N1, N2)
@@ -655,9 +726,12 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
             // xOr(N1, N2)
 
-            replaceNodeWithNumber(pNode, xOr(pNode->left()->number(), pNode->right()->number()));
+            replaceNodeWithNumber(pNode, _xor(pNode->left()->number(), pNode->right()->number()));
 
         break;
+
+    // Mathematical functions with 2+ arguments
+
     case GCD:
         if (numberArguments(pNode))
             // gcd(N1, N2, ...)
@@ -684,13 +758,6 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // min(N1, N2, ...)
 
             replaceNodeWithNumber(pNode, min(pNode->left(), pNode->right()));
-
-        break;
-    case Not:
-        if (pNode->left()->type() == Number)
-            // !N
-
-            replaceNodeWithNumber(pNode, pNode->left()->number()?0:1);
 
         break;
     }
