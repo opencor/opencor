@@ -775,6 +775,10 @@ void ComputerEngine::compileMathematicalFunction(ComputerEngineData &pData,
     } else if (pArgumentsCount == 2) {
         arguments << compileOperand(pData, pArguments->left());
         arguments << compileOperand(pData, pArguments->right());
+    } else if (pArgumentsCount == 3) {
+        arguments << compileOperand(pData, pArguments->left());
+        arguments << compileOperand(pData, pArguments->right()->left());
+        arguments << compileOperand(pData, pArguments->right()->right());
     } else {
         // X arguments
 
@@ -1060,6 +1064,12 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
 
     // Miscellaneous
 
+    case ComputerEquation::Piecewise:
+        compileMathematicalFunction(pData, "piecewise", 3, pEquationNode,
+                                    (void *)(intptr_t) piecewise);
+
+        break;
+    case ComputerEquation::PiecewiseCases:
     case ComputerEquation::OtherArguments:
         // Nothing to do...
 

@@ -545,6 +545,7 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 "double test2(double *pData)\n"
                 "{\n"
                 "  return  1"
+                "         *((pData[4] > pData[3])?(pData[4] < pData[3])?0:1:0)"
                 "         *(!5 || 7)*(!pData[3] || pData[4])\n"
                 "         *!(!5 || !7)*!(!pData[3] || !pData[4])\n"
                 "         *(5 && 7)*(pData[3] && pData[4])\n"

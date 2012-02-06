@@ -60,11 +60,6 @@ public:
         OtherArguments
     };
 
-//---GRY--- THE FOLLOWING STILL NEED TO BE IMPLEMENTED IN ComputeEngine...
-//
-//          Piecewise, PiecewiseCases
-//
-
     explicit ComputerEquation(ComputerEquation *pEquation = 0);
     explicit ComputerEquation(const Type &pType,
                               ComputerEquation *pLeft,

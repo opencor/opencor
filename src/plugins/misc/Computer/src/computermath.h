@@ -34,6 +34,8 @@ extern "C" double lcm(int pCount, ...);
 extern "C" double max(int pCount, ...);
 extern "C" double min(int pCount, ...);
 
+extern "C" double piecewise(double pCondition, double pTrue, double pFalse);
+
 //==============================================================================
 
 #endif
