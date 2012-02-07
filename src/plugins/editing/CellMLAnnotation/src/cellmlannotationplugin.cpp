@@ -57,7 +57,7 @@ QWidget * CellMLAnnotationPlugin::newViewWidget(const QString &pFileName)
 
     // Create, set up and return a CellML annotation widget
 
-    QWidget *res = new QWidget::QWidget(mMainWindow);
+    QWidget *res = new QWidget(mMainWindow);
 
     res->setStyleSheet("background-color: white;"
                        "background-image: url(':ricordoLogo');"
