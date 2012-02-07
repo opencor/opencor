@@ -164,9 +164,9 @@ void CellmlModelRuntime::resetOdeFunctions()
 {
     // Reset the ODE functions
 
-    mOdeFunctions.initConsts = 0;
-    mOdeFunctions.rates      = 0;
-    mOdeFunctions.variables  = 0;
+    mOdeFunctions.initializeConstants = 0;
+    mOdeFunctions.computeRates        = 0;
+    mOdeFunctions.computeVariables    = 0;
 }
 
 //==============================================================================
@@ -175,12 +175,12 @@ void CellmlModelRuntime::resetDaeFunctions()
 {
     // Reset the DEA functions
 
-    mDaeFunctions.initConsts         = 0;
-    mDaeFunctions.rates              = 0;
-    mDaeFunctions.variables          = 0;
-    mDaeFunctions.essentialVariables = 0;
-    mDaeFunctions.rootInformation    = 0;
-    mDaeFunctions.stateInformation   = 0;
+    mDaeFunctions.initializeConstants       = 0;
+    mDaeFunctions.computeRates              = 0;
+    mDaeFunctions.computeVariables          = 0;
+    mDaeFunctions.computeEssentialVariables = 0;
+    mDaeFunctions.computeRootInformation    = 0;
+    mDaeFunctions.computeStateInformation   = 0;
 }
 
 //==============================================================================
@@ -506,27 +506,27 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             // Get some binary code
 
-            mComputerEngine->addFunction(QString("void initConsts(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->initConstsString())));
+            mComputerEngine->addFunction(QString("void initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->initConstsString())));
             handleErrors("initConsts");
 
             if (mModelType == Ode)
-                mComputerEngine->addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
+                mComputerEngine->addFunction(QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
             else
-                mComputerEngine->addFunction(QString("void rates(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
+                mComputerEngine->addFunction(QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
 
             handleErrors("rates");
 
-            mComputerEngine->addFunction(QString("void variables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->variablesString())));
+            mComputerEngine->addFunction(QString("void computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->variablesString())));
             handleErrors("variables");
 
             if (mModelType == Dae) {
-                mComputerEngine->addFunction(QString("void essentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
+                mComputerEngine->addFunction(QString("void computeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
                 handleErrors("essentialVariables");
 
-                mComputerEngine->addFunction(QString("void rootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->rootInformationString())));
+                mComputerEngine->addFunction(QString("void computeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->rootInformationString())));
                 handleErrors("rootInformation");
 
-                mComputerEngine->addFunction(QString("void stateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
+                mComputerEngine->addFunction(QString("void computeStateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
                 handleErrors("stateInformation");
             }
 
@@ -640,18 +640,18 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             } else if (mModelType == Ode) {
                 // ODE functions
 
-                mOdeFunctions.initConsts = (CellmlModelRuntimeInitConstsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initConsts"));
-                mOdeFunctions.rates      = (CellmlModelRuntimeOdeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("rates"));
-                mOdeFunctions.variables  = (CellmlModelRuntimeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("variables"));
+                mOdeFunctions.initializeConstants = (CellmlModelRuntimeInitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
+                mOdeFunctions.computeRates        = (CellmlModelRuntimeComputeOdeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
+                mOdeFunctions.computeVariables    = (CellmlModelRuntimeComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
             } else {
                 // DAE functions
 
-                mDaeFunctions.initConsts         = (CellmlModelRuntimeInitConstsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initConsts"));
-                mDaeFunctions.rates              = (CellmlModelRuntimeDaeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("rates"));
-                mDaeFunctions.variables          = (CellmlModelRuntimeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("variables"));
-                mDaeFunctions.essentialVariables = (CellmlModelRuntimeDaeEssentialVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("essentialVariables"));
-                mDaeFunctions.rootInformation    = (CellmlModelRuntimeDaeRootInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("rootInformation"));
-                mDaeFunctions.stateInformation   = (CellmlModelRuntimeDaeStateInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("stateInformation"));
+                mDaeFunctions.initializeConstants       = (CellmlModelRuntimeInitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
+                mDaeFunctions.computeRates              = (CellmlModelRuntimeComputeDaeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
+                mDaeFunctions.computeVariables          = (CellmlModelRuntimeComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
+                mDaeFunctions.computeEssentialVariables = (CellmlModelRuntimeComputeDaeEssentialVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeEssentialVariables"));
+                mDaeFunctions.computeRootInformation    = (CellmlModelRuntimeComputeDaeRootInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRootInformation"));
+                mDaeFunctions.computeStateInformation   = (CellmlModelRuntimeComputeDaeStateInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeStateInformation"));
             }
         } else {
             // No ODE code information could be retrieved, so...

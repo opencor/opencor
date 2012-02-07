@@ -295,9 +295,9 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
             // Initialise the constants and compute the rates and variables
 
-            odeFunctions.initConsts(constants, rates, states);
-            odeFunctions.rates(voi, constants, rates, states, algebraic);
-            odeFunctions.variables(voi, constants, rates, states, algebraic);
+            odeFunctions.initializeConstants(constants, rates, states);
+            odeFunctions.computeRates(voi, constants, rates, states, algebraic);
+            odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
 
             do {
                 // Output the current data, if needed
@@ -311,8 +311,8 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
                 // Compute the rates and variables
 
-                odeFunctions.rates(voi, constants, rates, states, algebraic);
-                odeFunctions.variables(voi, constants, rates, states, algebraic);
+                odeFunctions.computeRates(voi, constants, rates, states, algebraic);
+                odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
 
                 // Go to the next voiStep and integrate the states
 

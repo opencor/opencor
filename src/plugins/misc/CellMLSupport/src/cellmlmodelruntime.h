@@ -30,33 +30,33 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-typedef void (*CellmlModelRuntimeInitConstsFunction)(double *, double *, double *);
-typedef void (*CellmlModelRuntimeOdeRatesFunction)(double, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeDaeRatesFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeVariablesFunction)(double, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeDaeStateInformationFunction)(double *);
+typedef void (*CellmlModelRuntimeInitializeConstantsFunction)(double *, double *, double *);
+typedef void (*CellmlModelRuntimeComputeOdeRatesFunction)(double, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeComputeDaeRatesFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeComputeVariablesFunction)(double, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeComputeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeComputeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+typedef void (*CellmlModelRuntimeComputeDaeStateInformationFunction)(double *);
 
 //==============================================================================
 
 struct CellmlModelRuntimeOdeFunctions
 {
-    CellmlModelRuntimeInitConstsFunction initConsts;
-    CellmlModelRuntimeOdeRatesFunction rates;
-    CellmlModelRuntimeVariablesFunction variables;
+    CellmlModelRuntimeInitializeConstantsFunction initializeConstants;
+    CellmlModelRuntimeComputeOdeRatesFunction computeRates;
+    CellmlModelRuntimeComputeVariablesFunction computeVariables;
 };
 
 //==============================================================================
 
 struct CellmlModelRuntimeDaeFunctions
 {
-    CellmlModelRuntimeInitConstsFunction initConsts;
-    CellmlModelRuntimeDaeRatesFunction rates;
-    CellmlModelRuntimeVariablesFunction variables;
-    CellmlModelRuntimeDaeEssentialVariablesFunction essentialVariables;
-    CellmlModelRuntimeDaeRootInformationFunction rootInformation;
-    CellmlModelRuntimeDaeStateInformationFunction stateInformation;
+    CellmlModelRuntimeInitializeConstantsFunction initializeConstants;
+    CellmlModelRuntimeComputeDaeRatesFunction computeRates;
+    CellmlModelRuntimeComputeVariablesFunction computeVariables;
+    CellmlModelRuntimeComputeDaeEssentialVariablesFunction computeEssentialVariables;
+    CellmlModelRuntimeComputeDaeRootInformationFunction computeRootInformation;
+    CellmlModelRuntimeComputeDaeStateInformationFunction computeStateInformation;
 };
 
 //==============================================================================
