@@ -176,6 +176,7 @@ SET(PLUGINS
     organisation/FileBrowser
     organisation/FileOrganiser
 
+    editing/CellMLAnnotation
     editing/RawCellMLView
     editing/RawView
     editing/Viewer

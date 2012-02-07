@@ -1,51 +1,43 @@
 //==============================================================================
-// RawCellMLView plugin
+// CellMLAnnotation plugin
 //==============================================================================
 
+#include "cellmlannotationplugin.h"
 #include "cellmlsupportplugin.h"
-#include "qscintilla.h"
-#include "rawcellmlviewplugin.h"
 
 //==============================================================================
 
-#include <QFileInfo>
 #include <QMainWindow>
-#include <QTextStream>
-#include <QUrl>
-
-//==============================================================================
-
-#include "Qsci/qscilexerxml.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace RawCellMLView {
+namespace CellMLAnnotation {
 
 //==============================================================================
 
-PLUGININFO_FUNC RawCellMLViewPluginInfo()
+PLUGININFO_FUNC CellMLAnnotationPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "A plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an XML editor");
-    descriptions.insert("fr", "Une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML");
+    descriptions.insert("en", "A plugin to annotate CellML files");
+    descriptions.insert("fr", "Une extension pour annoter des fichiers CellML");
 
     return PluginInfo(PluginInfo::V001,
                       PluginInfo::Gui,
                       PluginInfo::Editing,
                       true,
-                      QStringList() << "CoreCellMLEditing" << "QScintillaSupport",
+                      QStringList() << "CoreCellMLEditing",
                       descriptions);
 }
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(RawCellMLView, RawCellMLViewPlugin)
+Q_EXPORT_PLUGIN2(CellMLAnnotation, CellMLAnnotationPlugin)
 
 //==============================================================================
 
-RawCellMLViewPlugin::RawCellMLViewPlugin()
+CellMLAnnotationPlugin::CellMLAnnotationPlugin()
 {
     // Set our settings
 
@@ -54,7 +46,7 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 
 //==============================================================================
 
-QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
+QWidget * CellMLAnnotationPlugin::newViewWidget(const QString &pFileName)
 {
     // Check that we are dealing with a CellML file
 
@@ -63,42 +55,30 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 
         return GuiInterface::newViewWidget(pFileName);
 
-    // Create, set up and return a raw CellML Scintilla editor
+    // Create, set up and return a CellML annotation widget
 
-    QFile file(pFileName);
+    QWidget *res = new QWidget::QWidget(mMainWindow);
 
-    if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
-        // For some reason, the file couldn't be opened, so...
+    res->setStyleSheet("background-color: white;"
+                       "background-image: url(':ricordoLogo');"
+                       "background-position: center;"
+                       "background-repeat: no-repeat;");
 
-        return GuiInterface::newViewWidget(pFileName);
-
-    // The file was properly opened, so create a Scintilla editor and associate
-    // an XML (i.e. raw CellML) lexer to it
-
-    QsciScintilla *res = new QScintillaSupport::QScintilla(QTextStream(&file).readAll(),
-                                                           !(QFileInfo(pFileName).isWritable()),
-                                                           new QsciLexerXML(mMainWindow),
-                                                           mMainWindow);
-
-    // We are done with the file, so close it
-
-    file.close();
-
-    // Our raw CellML Scintilla editor is now ready, so...
+    // Our CellML annotation widget is now ready, so...
 
     return res;
 }
 
 //==============================================================================
 
-QString RawCellMLViewPlugin::viewName(const int &pViewIndex)
+QString CellMLAnnotationPlugin::viewName(const int &pViewIndex)
 {
     // We have only one view, so return its name otherwise call the GuiInterface
     // implementation of viewName
 
     switch (pViewIndex) {
     case 0:
-        return tr("Raw CellML");
+        return tr("CellML Annotation");
     default:
         return GuiInterface::viewName(pViewIndex);
     }
@@ -106,7 +86,7 @@ QString RawCellMLViewPlugin::viewName(const int &pViewIndex)
 
 //==============================================================================
 
-}   // namespace RawCellMLView
+}   // namespace CellMLAnnotation
 }   // namespace OpenCOR
 
 //==============================================================================

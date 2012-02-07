@@ -6,6 +6,10 @@
 
 //==============================================================================
 
+#include <QFileInfo>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -53,6 +57,15 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &mMimeType) const
         // Not a MIME type that we can recognise, so...
 
         return FileInterface::fileTypeDescription(mMimeType);
+}
+
+//==============================================================================
+
+bool isCellmlFile(const QString &pFileName)
+{
+    // Return whether the file is a CellML file
+
+    return QFileInfo(pFileName).suffix().compare(CellMLSupport::CellmlFileExtension);
 }
 
 //==============================================================================

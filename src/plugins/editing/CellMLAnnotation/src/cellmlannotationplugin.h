@@ -1,52 +1,44 @@
 //==============================================================================
-// CellMLSupport plugin
+// CellMLAnnotation plugin
 //==============================================================================
 
-#ifndef CELLMLSUPPORTPLUGIN_H
-#define CELLMLSUPPORTPLUGIN_H
+#ifndef CELLMLANNOTATIONPLUGIN_H
+#define CELLMLANNOTATIONPLUGIN_H
 
 //==============================================================================
 
-#include "cellmlsupportglobal.h"
-#include "plugininfo.h"
-#include "fileinterface.h"
+#include "guiinterface.h"
 #include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace CellMLAnnotation {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSupportPluginInfo();
+PLUGININFO_FUNC CellMLAnnotationPluginInfo();
 
 //==============================================================================
 
-static const QString CellmlMimeType = "application/cellml+xml";
-static const QString CellmlFileExtension = "cellml";
-
-//==============================================================================
-
-class CellMLSupportPlugin : public QObject, public FileInterface,
-                            public I18nInterface
+class CellMLAnnotationPlugin : public QObject, public GuiInterface,
+                               public I18nInterface
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::FileInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    virtual QList<FileType> fileTypes() const;
-    virtual QString fileTypeDescription(const QString &mMimeType) const;
+    explicit CellMLAnnotationPlugin();
+
+    virtual QWidget * newViewWidget(const QString &pFileName);
+    virtual QString viewName(const int &pViewIndex);
 };
 
 //==============================================================================
 
-bool CELLMLSUPPORT_EXPORT isCellmlFile(const QString &pFileName);
-
-//==============================================================================
-
-}   // namespace CellMLSupport
+}   // namespace CellMLAnnotation
 }   // namespace OpenCOR
 
 //==============================================================================
