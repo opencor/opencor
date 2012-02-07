@@ -213,6 +213,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             Noble1991,
             Noble1998,
             Zhang2000,
+            Mitchell2003,
             Unknown
         } model;
 
@@ -236,6 +237,8 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                  || !fileBaseName.compare("zhang_SAN_model_2000_all")
                  || !fileBaseName.compare("zhang_SAN_model_2000_published"))
             model = Zhang2000;
+        else if (!fileBaseName.compare("mitchell_schaeffer_2003"))
+            model = Mitchell2003;
 
         if (model != Unknown) {
             typedef QVector<double> Doubles;
@@ -267,6 +270,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
                 break;
             case Noble1962:
+            case Mitchell2003:
                 voiStep        = 0.01;   // ms
                 voiMax         = 1000;   // ms
                 voiOutputCount = 100;
