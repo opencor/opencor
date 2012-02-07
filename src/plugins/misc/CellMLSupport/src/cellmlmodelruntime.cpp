@@ -337,7 +337,7 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"units_conversion: #prec[500(900)]#expr1*#expr2 + #expr3\r\n"
                                                                           L"units_conversion_factor: #prec[900]#expr1*#expr2\r\n"
                                                                           L"units_conversion_offset: #prec[500]#expr1+#expr2\r\n"
-                                                                          L"xor: #prec[25(30)]xOr(#expr1, #expr2)\r\n"                      // Customised version
+                                                                          L"xor: #prec[25(30)]xor(#expr1, #expr2)\r\n"                      // Customised version
                                                                           L"piecewise_first_case: #prec[1000(5)](#expr1 ? #expr2 : \r\n"
                                                                           L"piecewise_extra_case: #prec[1000(5)]#expr1 ? #expr2 : \r\n"
                                                                           L"piecewise_otherwise: #prec[1000(5)]#expr1)\r\n"

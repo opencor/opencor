@@ -249,9 +249,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             Doubles yData[statesCount];
 
             double voi = 0;   // ms
-            double voiCorrected = voi;
             double voiStep;   // ms
-            double voiStepCorrected;
             double voiMax;    // ms
             double constants[cellmlModelRuntime->constantsCount()];
             double rates[cellmlModelRuntime->ratesCount()];
@@ -259,14 +257,12 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             double algebraic[cellmlModelRuntime->algebraicCount()];
             int voiCount = 0;
             int voiOutputCount;   // ms
-            double timeConversion;
 
             switch (model) {
             case Hodgkin1952:
                 voiStep        = 0.01;   // ms
                 voiMax         = 50;     // ms
                 voiOutputCount = 10;
-                timeConversion = 1;      // ms/ms
 
                 break;
             case Noble1962:
@@ -274,29 +270,22 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                 voiStep        = 0.01;   // ms
                 voiMax         = 1000;   // ms
                 voiOutputCount = 100;
-                timeConversion = 1;      // ms/ms
 
                 break;
             case Noble1984:
             case Noble1991:
             case Noble1998:
             case Zhang2000:
-                voiStep        = 0.01;    // ms
-                voiMax         = 1000;    // ms
+                voiStep        = 0.00001;   // s
+                voiMax         = 1;         // s
                 voiOutputCount = 100;
-                timeConversion = 0.001;   // s/ms
 
                 break;
             default:   // van der Pol 1928
-                voiStep        = 10;      // ms
-                voiMax         = 10000;   // ms
+                voiStep        = 0.01;   // s
+                voiMax         = 10;     // s
                 voiOutputCount = 1;
-                timeConversion = 0.001;   // s/ms
             }
-
-            voiStepCorrected = timeConversion*voiStep;
-            // Note: the time conversion is because we may need to convert from,
-            //       say, seconds to milliseconds...
 
             CellMLSupport::CellmlModelRuntimeOdeFunctions odeFunctions = cellmlModelRuntime->odeFunctions();
 
@@ -307,8 +296,8 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             // Initialise the constants and compute the rates and variables
 
             odeFunctions.initConsts(constants, rates, states);
-            odeFunctions.rates(voiCorrected, constants, rates, states, algebraic);
-            odeFunctions.variables(voiCorrected, constants, rates, states, algebraic);
+            odeFunctions.rates(voi, constants, rates, states, algebraic);
+            odeFunctions.variables(voi, constants, rates, states, algebraic);
 
             do {
                 // Output the current data, if needed
@@ -322,16 +311,15 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
                 // Compute the rates and variables
 
-                odeFunctions.rates(voiCorrected, constants, rates, states, algebraic);
-                odeFunctions.variables(voiCorrected, constants, rates, states, algebraic);
+                odeFunctions.rates(voi, constants, rates, states, algebraic);
+                odeFunctions.variables(voi, constants, rates, states, algebraic);
 
                 // Go to the next voiStep and integrate the states
 
                 voi = ++voiCount*voiStep;
-                voiCorrected = timeConversion*voi;
 
                 for (int i = 0; i < statesCount; ++i)
-                    states[i] += voiStepCorrected*rates[i];
+                    states[i] += voiStep*rates[i];
             } while (voi < voiMax);
 
             xData.append(voi);
