@@ -25,6 +25,13 @@ double _or(double pNb1, double pNb2)
 
 //==============================================================================
 
+double _xor(double pNb1, double pNb2)
+{
+    return (pNb1 != 0) ^ (pNb2 != 0);
+}
+
+//==============================================================================
+
 double _and(double pNb1, double pNb2)
 {
     return pNb1 && pNb2;
@@ -93,13 +100,6 @@ double arbitraryLog(double pNb, double pBase)
 
 //==============================================================================
 
-double factorOf(double pNb1, double pNb2)
-{
-    return !((int) pNb1 % (int) pNb2);
-}
-
-//==============================================================================
-
 static double zero = 0.0;
 
 //==============================================================================
@@ -114,13 +114,6 @@ double quotient(double pNb1, double pNb2)
 double rem(double pNb1, double pNb2)
 {
     return pNb2?(int) pNb1 % (int) pNb2:pNb1/zero;
-}
-
-//==============================================================================
-
-double _xor(double pNb1, double pNb2)
-{
-    return (pNb1 != 0)^(pNb2 != 0);
 }
 
 //==============================================================================

@@ -28,11 +28,13 @@ static const QChar SemiColon            = QChar(';');
 static const QChar QuestionMark         = QChar('?');
 static const QChar ExclamationMark      = QChar('!');
 static const QChar Or                   = QChar('|');
+static const QChar Xor                  = QChar('^');
 static const QChar And                  = QChar('&');
 static const QChar LowerThan            = QChar('<');
 static const QChar GreaterThan          = QChar('>');
 static const QChar Times                = QChar('*');
 static const QChar Divide               = QChar('/');
+static const QChar Modulo               = QChar('%');
 static const QChar Plus                 = QChar('+');
 static const QChar Minus                = QChar('-');
 static const QChar FullStop             = QChar('.');
@@ -80,12 +82,16 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Times;
     case Divide:
         return ComputerEquation::Divide;
+    case Modulo:
+        return ComputerEquation::Modulo;
     case Plus:
         return ComputerEquation::Plus;
     case Minus:
         return ComputerEquation::Minus;
     case Or:
         return ComputerEquation::Or;
+    case Xor:
+        return ComputerEquation::Xor;
     case And:
         return ComputerEquation::And;
     case EqualEqual:
@@ -121,46 +127,42 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::Cos;
     case Tan:
         return ComputerEquation::Tan;
-    case SinH:
-        return ComputerEquation::SinH;
-    case CosH:
-        return ComputerEquation::CosH;
-    case TanH:
-        return ComputerEquation::TanH;
-    case ASin:
-        return ComputerEquation::ASin;
-    case ACos:
-        return ComputerEquation::ACos;
-    case ATan:
-        return ComputerEquation::ATan;
-    case ASinH:
-        return ComputerEquation::ASinH;
-    case ACosH:
-        return ComputerEquation::ACosH;
-    case ATanH:
-        return ComputerEquation::ATanH;
+    case Sinh:
+        return ComputerEquation::Sinh;
+    case Cosh:
+        return ComputerEquation::Cosh;
+    case Tanh:
+        return ComputerEquation::Tanh;
+    case Asin:
+        return ComputerEquation::Asin;
+    case Acos:
+        return ComputerEquation::Acos;
+    case Atan:
+        return ComputerEquation::Atan;
+    case Asinh:
+        return ComputerEquation::Asinh;
+    case Acosh:
+        return ComputerEquation::Acosh;
+    case Atanh:
+        return ComputerEquation::Atanh;
 
     // Mathematical functions with 2 arguments
 
     case ArbitraryLog:
         return ComputerEquation::ArbitraryLog;
-    case FactorOf:
-        return ComputerEquation::FactorOf;
     case Pow:
         return ComputerEquation::Pow;
     case Quotient:
         return ComputerEquation::Quotient;
     case Rem:
         return ComputerEquation::Rem;
-    case XOr:
-        return ComputerEquation::XOr;
 
     // Mathematical functions with 2+ arguments
 
-    case GCD:
-        return ComputerEquation::GCD;
-    case LCM:
-        return ComputerEquation::LCM;
+    case Gcd:
+        return ComputerEquation::Gcd;
+    case Lcm:
+        return ComputerEquation::Lcm;
     case Max:
         return ComputerEquation::Max;
     case Min:
@@ -206,12 +208,16 @@ QString ComputerScannerToken::symbolAsString() const
         return "Times";
     case Divide:
         return "Divide";
+    case Modulo:
+        return "Modulo";
     case Plus:
         return "Plus";
     case Minus:
         return "Minus";
     case Or:
         return "Or";
+    case Xor:
+        return "Xor";
     case And:
         return "And";
     case EqualEqual:
@@ -244,40 +250,36 @@ QString ComputerScannerToken::symbolAsString() const
         return "Cos";
     case Tan:
         return "Tan";
-    case SinH:
-        return "SinH";
-    case CosH:
-        return "CosH";
-    case TanH:
-        return "TanH";
-    case ASin:
-        return "ASin";
-    case ACos:
-        return "ACos";
-    case ATan:
-        return "ATan";
-    case ASinH:
-        return "ASinH";
-    case ACosH:
-        return "ACosH";
-    case ATanH:
-        return "ATanH";
+    case Sinh:
+        return "Sinh";
+    case Cosh:
+        return "Cosh";
+    case Tanh:
+        return "Tanh";
+    case Asin:
+        return "Asin";
+    case Acos:
+        return "Acos";
+    case Atan:
+        return "Atan";
+    case Asinh:
+        return "Asinh";
+    case Acosh:
+        return "Acosh";
+    case Atanh:
+        return "Atanh";
     case ArbitraryLog:
         return "ArbitraryLog";
-    case FactorOf:
-        return "FactorOf";
     case Pow:
         return "Pow";
     case Quotient:
         return "Quotient";
     case Rem:
         return "Rem";
-    case XOr:
-        return "XOr";
-    case GCD:
-        return "GCD";
-    case LCM:
-        return "LCM";
+    case Gcd:
+        return "Gcd";
+    case Lcm:
+        return "Lcm";
     case Max:
         return "Max";
     case Min:
@@ -374,25 +376,23 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("sin", ComputerScannerToken::Sin);
     mKeywords.insert("cos", ComputerScannerToken::Cos);
     mKeywords.insert("tan", ComputerScannerToken::Tan);
-    mKeywords.insert("sinh", ComputerScannerToken::SinH);
-    mKeywords.insert("cosh", ComputerScannerToken::CosH);
-    mKeywords.insert("tanh", ComputerScannerToken::TanH);
-    mKeywords.insert("asin", ComputerScannerToken::ASin);
-    mKeywords.insert("acos", ComputerScannerToken::ACos);
-    mKeywords.insert("atan", ComputerScannerToken::ATan);
-    mKeywords.insert("asinh", ComputerScannerToken::ASinH);
-    mKeywords.insert("acosh", ComputerScannerToken::ACosH);
-    mKeywords.insert("atanh", ComputerScannerToken::ATanH);
+    mKeywords.insert("sinh", ComputerScannerToken::Sinh);
+    mKeywords.insert("cosh", ComputerScannerToken::Cosh);
+    mKeywords.insert("tanh", ComputerScannerToken::Tanh);
+    mKeywords.insert("asin", ComputerScannerToken::Asin);
+    mKeywords.insert("acos", ComputerScannerToken::Acos);
+    mKeywords.insert("atan", ComputerScannerToken::Atan);
+    mKeywords.insert("asinh", ComputerScannerToken::Asinh);
+    mKeywords.insert("acosh", ComputerScannerToken::Acosh);
+    mKeywords.insert("atanh", ComputerScannerToken::Atanh);
 
     mKeywords.insert("arbitraryLog", ComputerScannerToken::ArbitraryLog);
-    mKeywords.insert("factorOf", ComputerScannerToken::FactorOf);
     mKeywords.insert("pow", ComputerScannerToken::Pow);
     mKeywords.insert("quotient", ComputerScannerToken::Quotient);
     mKeywords.insert("rem", ComputerScannerToken::Rem);
-    mKeywords.insert("xor", ComputerScannerToken::XOr);
 
-    mKeywords.insert("gcd", ComputerScannerToken::GCD);
-    mKeywords.insert("lcm", ComputerScannerToken::LCM);
+    mKeywords.insert("gcd", ComputerScannerToken::Gcd);
+    mKeywords.insert("lcm", ComputerScannerToken::Lcm);
     mKeywords.insert("max", ComputerScannerToken::Max);
     mKeywords.insert("min", ComputerScannerToken::Min);
 
@@ -758,6 +758,26 @@ void ComputerScanner::getNextToken()
             mToken.setSymbol(ComputerScannerToken::QuestionMark);
 
             getNextChar();
+        } else if (mChar == Times) {
+            mToken.setSymbol(ComputerScannerToken::Times);
+
+            getNextChar();
+        } else if (mChar == Divide) {
+            mToken.setSymbol(ComputerScannerToken::Divide);
+
+            getNextChar();
+        } else if (mChar == Modulo) {
+            mToken.setSymbol(ComputerScannerToken::Modulo);
+
+            getNextChar();
+        } else if (mChar == Plus) {
+            mToken.setSymbol(ComputerScannerToken::Plus);
+
+            getNextChar();
+        } else if (mChar == Minus) {
+            mToken.setSymbol(ComputerScannerToken::Minus);
+
+            getNextChar();
         } else if (mChar == Or) {
             // We don't support only one Or character, so we need a second one
             // to get a Or symbol
@@ -775,6 +795,10 @@ void ComputerScanner::getNextToken()
 
                 mToken.setSymbol(ComputerScannerToken::Unknown);
             }
+        } else if (mChar == Xor) {
+            mToken.setSymbol(ComputerScannerToken::Xor);
+
+            getNextChar();
         } else if (mChar == And) {
             // We don't support only one And character, so we need a second one
             // to get a And symbol
@@ -826,22 +850,6 @@ void ComputerScanner::getNextToken()
 
                 mToken.setSymbol(ComputerScannerToken::GreaterThan);
             }
-        } else if (mChar == Times) {
-            mToken.setSymbol(ComputerScannerToken::Times);
-
-            getNextChar();
-        } else if (mChar == Divide) {
-            mToken.setSymbol(ComputerScannerToken::Divide);
-
-            getNextChar();
-        } else if (mChar == Plus) {
-            mToken.setSymbol(ComputerScannerToken::Plus);
-
-            getNextChar();
-        } else if (mChar == Minus) {
-            mToken.setSymbol(ComputerScannerToken::Minus);
-
-            getNextChar();
         }
     }
 }

@@ -464,6 +464,9 @@ bool parseOrExpression(ComputerParser *pParser,
 bool parseAndExpression(ComputerParser *pParser,
                         ComputerFunction *pFunction,
                         ComputerEquation * &pExpression);
+bool parseXorExpression(ComputerParser *pParser,
+                        ComputerFunction *pFunction,
+                        ComputerEquation * &pExpression);
 bool parseEqualityExpression(ComputerParser *pParser,
                              ComputerFunction *pFunction,
                              ComputerEquation * &pExpression);
@@ -545,14 +548,9 @@ bool parseOrExpression(ComputerParser *pParser,
     //
     //   OrExpression = [ OrExpression "||" ] AndExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::Or,
-                                parseAndExpression))
-        return false;
-
-    // Everything went fine, so...
-
-    return true;
+    return parseGenericExpression(pParser, pFunction, pExpression,
+                                  ComputerScannerToken::Symbols() << ComputerScannerToken::Or,
+                                  parseAndExpression);
 }
 
 //==============================================================================
@@ -563,16 +561,26 @@ bool parseAndExpression(ComputerParser *pParser,
 {
     // The EBNF grammar of a And expression is as follows:
     //
-    //   AndExpression = [ AndExpression "&&" ] EqualityExpression ;
+    //   AndExpression = [ AndExpression "&&" ] XorExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::And,
-                                parseEqualityExpression))
-        return false;
+    return parseGenericExpression(pParser, pFunction, pExpression,
+                                  ComputerScannerToken::Symbols() << ComputerScannerToken::And,
+                                  parseXorExpression);
+}
 
-    // Everything went fine, so...
+//==============================================================================
 
-    return true;
+bool parseXorExpression(ComputerParser *pParser,
+                        ComputerFunction *pFunction,
+                        ComputerEquation * &pExpression)
+{
+    // The EBNF grammar of a And expression is as follows:
+    //
+    //   XorExpression = [ XorExpression "^" ] EqualityExpression ;
+
+    return parseGenericExpression(pParser, pFunction, pExpression,
+                                  ComputerScannerToken::Symbols() << ComputerScannerToken::Xor,
+                                  parseEqualityExpression);
 }
 
 //==============================================================================
@@ -585,15 +593,10 @@ bool parseEqualityExpression(ComputerParser *pParser,
     //
     //   EqualityExpression = [ EqualityExpression ( "==" | "!=" ) ] RelationalExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::EqualEqual
-                                                                << ComputerScannerToken::NotEqual,
-                                parseRelationalExpression))
-        return false;
-
-    // Everything went fine, so...
-
-    return true;
+    return parseGenericExpression(pParser, pFunction, pExpression,
+                                  ComputerScannerToken::Symbols() << ComputerScannerToken::EqualEqual
+                                                                  << ComputerScannerToken::NotEqual,
+                                  parseRelationalExpression);
 }
 
 //==============================================================================
@@ -606,17 +609,12 @@ bool parseRelationalExpression(ComputerParser *pParser,
     //
     //   RelationalExpression = [ RelationalExpression ( "<" | ">" | "<=" | ">=" ) ] AdditiveExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::LowerThan
-                                                                << ComputerScannerToken::GreaterThan
-                                                                << ComputerScannerToken::LowerOrEqualThan
-                                                                << ComputerScannerToken::GreaterOrEqualThan,
-                                parseAdditiveExpression))
-        return false;
-
-    // Everything went fine, so...
-
-    return true;
+    return parseGenericExpression(pParser, pFunction, pExpression,
+                                  ComputerScannerToken::Symbols() << ComputerScannerToken::LowerThan
+                                                                  << ComputerScannerToken::GreaterThan
+                                                                  << ComputerScannerToken::LowerOrEqualThan
+                                                                  << ComputerScannerToken::GreaterOrEqualThan,
+                                  parseAdditiveExpression);
 }
 
 //==============================================================================
@@ -629,15 +627,10 @@ bool parseAdditiveExpression(ComputerParser *pParser,
     //
     //   AdditiveExpression = [ AdditiveExpression ( "+" | "-" ) ] MultiplicativeExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
-                                                                << ComputerScannerToken::Minus,
-                                parseMultiplicativeExpression))
-        return false;
-
-    // Everything went fine, so...
-
-    return true;
+    return parseGenericExpression(pParser, pFunction, pExpression,
+                                  ComputerScannerToken::Symbols() << ComputerScannerToken::Plus
+                                                                  << ComputerScannerToken::Minus,
+                                  parseMultiplicativeExpression);
 }
 
 //==============================================================================
@@ -648,17 +641,13 @@ bool parseMultiplicativeExpression(ComputerParser *pParser,
 {
     // The EBNF grammar of a multiplicative expression is as follows:
     //
-    //   MultiplicativeExpression = [ MultiplicativeExpression ( "*" | "/" ) ] UnaryExpression ;
+    //   MultiplicativeExpression = [ MultiplicativeExpression ( "*" | "/" | "%" ) ] UnaryExpression ;
 
-    if (!parseGenericExpression(pParser, pFunction, pExpression,
-                                ComputerScannerToken::Symbols() << ComputerScannerToken::Times
-                                                                << ComputerScannerToken::Divide,
-                                parseUnaryExpression))
-        return false;
-
-    // Everything went fine, so...
-
-    return true;
+    return parseGenericExpression(pParser, pFunction, pExpression,
+                                  ComputerScannerToken::Symbols() << ComputerScannerToken::Times
+                                                                  << ComputerScannerToken::Divide
+                                                                  << ComputerScannerToken::Modulo,
+                                  parseUnaryExpression);
 }
 
 //==============================================================================
@@ -746,7 +735,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
     //   FunctionWithOneArgument        =   "fabs" | "exp" | "log" | "ceil" | "floor" | "factorial"
     //                                    | "sin" | "cos" | "tan" | "sinh" | "cosh" | "tanh"
     //                                    | "asin" | "acos" | "atan" | "asinh" | "acosh" | "atanh" ;
-    //   FunctionWithTwoArguments       = "arbitraryLog" | "factorOf" | "pow" | "quotient" | "rem" | "xor" ;
+    //   FunctionWithTwoArguments       = "arbitraryLog" | "pow" | "quotient" | "rem" ;
     //   FunctionWithTwoOrMoreArguments = "gcd" | "lcm" | "max" | "min" ;
 
     // Check whether the current token's symbol is an identifier, an integer
@@ -762,23 +751,21 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                                                                                                             << ComputerScannerToken::Sin
                                                                                                             << ComputerScannerToken::Cos
                                                                                                             << ComputerScannerToken::Tan
-                                                                                                            << ComputerScannerToken::SinH
-                                                                                                            << ComputerScannerToken::CosH
-                                                                                                            << ComputerScannerToken::TanH
-                                                                                                            << ComputerScannerToken::ASin
-                                                                                                            << ComputerScannerToken::ACos
-                                                                                                            << ComputerScannerToken::ATan
-                                                                                                            << ComputerScannerToken::ASinH
-                                                                                                            << ComputerScannerToken::ACosH
-                                                                                                            << ComputerScannerToken::ATanH;
+                                                                                                            << ComputerScannerToken::Sinh
+                                                                                                            << ComputerScannerToken::Cosh
+                                                                                                            << ComputerScannerToken::Tanh
+                                                                                                            << ComputerScannerToken::Asin
+                                                                                                            << ComputerScannerToken::Acos
+                                                                                                            << ComputerScannerToken::Atan
+                                                                                                            << ComputerScannerToken::Asinh
+                                                                                                            << ComputerScannerToken::Acosh
+                                                                                                            << ComputerScannerToken::Atanh;
     static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::ArbitraryLog
-                                                                                                            << ComputerScannerToken::FactorOf
                                                                                                             << ComputerScannerToken::Pow
                                                                                                             << ComputerScannerToken::Quotient
-                                                                                                            << ComputerScannerToken::Rem
-                                                                                                            << ComputerScannerToken::XOr;
-    static const ComputerScannerToken::Symbols xArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::GCD
-                                                                                                          << ComputerScannerToken::LCM
+                                                                                                            << ComputerScannerToken::Rem;
+    static const ComputerScannerToken::Symbols xArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Gcd
+                                                                                                          << ComputerScannerToken::Lcm
                                                                                                           << ComputerScannerToken::Max
                                                                                                           << ComputerScannerToken::Min;
 

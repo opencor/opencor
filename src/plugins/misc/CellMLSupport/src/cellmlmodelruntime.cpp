@@ -265,8 +265,8 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
     // Note #1: idealy we wouly only specify what needs to be customised, but
     //          that's not the way the CellML API works, so instead we need to
     //          'customise' everything...
-    // Note #2: the customised functions are 'factorof', 'gcd', 'lcm', 'max',
-    //          'min', 'quotient', 'rem' and 'xor'...
+    // Note #2: the customised functions are 'gcd', 'lcm', 'max', 'min',
+    //          'quotient' and 'rem'...
     // Note #3: for things that don't need customising, we must make sure that
     //          it's in synch with CDA_CodeGenerator::makeCodeGenerationState in
     //          [CellML_API]/CCGS/sources/CCGSImplementation.cpp...
@@ -301,7 +301,7 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"eq: #prec[30]#exprs[==]\r\n"
                                                                           L"exp: #prec[H]exp(#expr1)\r\n"
                                                                           L"factorial: #prec[H]factorial(#expr1)\r\n"
-                                                                          L"factorof: #prec[30(900)]factorOf(#expr1, #expr2)\r\n"           // Customised version
+                                                                          L"factorof: #prec[30(900)]#expr1 % #expr2 == 0\r\n"
                                                                           L"floor: #prec[H]floor(#expr1)\r\n"
                                                                           L"gcd: #prec[H]gcd(#count, #exprs[, ])\r\n"                       // Customised version
                                                                           L"geq: #prec[30]#exprs[>=]\r\n"
@@ -337,7 +337,7 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"units_conversion: #prec[500(900)]#expr1*#expr2 + #expr3\r\n"
                                                                           L"units_conversion_factor: #prec[900]#expr1*#expr2\r\n"
                                                                           L"units_conversion_offset: #prec[500]#expr1+#expr2\r\n"
-                                                                          L"xor: #prec[25(30)]xor(#expr1, #expr2)\r\n"                      // Customised version
+                                                                          L"xor: #prec[25(30)] (#expr1 != 0) ^ (#expr2 != 0)\r\n"
                                                                           L"piecewise_first_case: #prec[1000(5)](#expr1 ? #expr2 : \r\n"
                                                                           L"piecewise_extra_case: #prec[1000(5)]#expr1 ? #expr2 : \r\n"
                                                                           L"piecewise_otherwise: #prec[1000(5)]#expr1)\r\n"
@@ -564,10 +564,10 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 "         *max(3, 15, 35, 55)/max(5, 21, 35, 7*pData[3], pData[4], 49)\n"
                 "         *lcm(3, 15, 35, 55)/lcm(5, 21, 35, 7*pData[3], pData[4], 49)\n"
                 "         *gcd(3, 15, 35, 55)/gcd(5, 21, 35, 7*pData[3], pData[4], 49)\n"
-                "         *xor(pData[3], 0)*xor(3, 0)\n"
+                "         *(pData[3] != 0 ^ 0 != 0)*(3 != 0 ^ 0 != 0)\n"
                 "         *rem(pData[3], pData[4])*rem(5, 3)*quotient(pData[4], pData[3])\n"
                 "         *quotient(pData[4], pData[3])*quotient(17, 5)\n"
-                "         *factorOf(15, pData[3])*factorOf(9, 3)\n"
+                "         *(15 % pData[3] == 0)*(9 % 3 == 0)\n"
                 "         *arbitraryLog(pData[4], pData[3])\n"
                 "         *atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n"
                 "}");

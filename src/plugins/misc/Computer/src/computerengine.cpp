@@ -857,6 +857,11 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
                                     (void *)(intptr_t) _or);
 
         break;
+    case ComputerEquation::Xor:
+        compileMathematicalFunction(pData, "_xor", 2, pEquationNode,
+                                    (void *)(intptr_t) _xor);
+
+        break;
     case ComputerEquation::And:
         compileMathematicalFunction(pData, "_and", 2, pEquationNode,
                                     (void *)(intptr_t) _and);
@@ -901,6 +906,10 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
         break;
     case ComputerEquation::Divide:
         compileMathematicalOperator(pData, "fdiv", pEquationNode);
+
+        break;
+    case ComputerEquation::Modulo:
+        compileMathematicalFunction(pData, "fmod", 2, pEquationNode);
 
         break;
     case ComputerEquation::Plus:
@@ -967,41 +976,41 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
         compileMathematicalFunction(pData, "tan", 1, pEquationNode);
 
         break;
-    case ComputerEquation::SinH:
+    case ComputerEquation::Sinh:
         compileMathematicalFunction(pData, "sinh", 1, pEquationNode);
 
         break;
-    case ComputerEquation::CosH:
+    case ComputerEquation::Cosh:
         compileMathematicalFunction(pData, "cosh", 1, pEquationNode);
 
         break;
-    case ComputerEquation::TanH:
+    case ComputerEquation::Tanh:
         compileMathematicalFunction(pData, "tanh", 1, pEquationNode);
 
         break;
-    case ComputerEquation::ASin:
+    case ComputerEquation::Asin:
         compileMathematicalFunction(pData, "asin", 1, pEquationNode);
 
         break;
-    case ComputerEquation::ACos:
+    case ComputerEquation::Acos:
         compileMathematicalFunction(pData, "acos", 1, pEquationNode);
 
         break;
-    case ComputerEquation::ATan:
+    case ComputerEquation::Atan:
         compileMathematicalFunction(pData, "atan", 1, pEquationNode);
 
         break;
-    case ComputerEquation::ASinH:
+    case ComputerEquation::Asinh:
         compileMathematicalFunction(pData, "asinh", 1, pEquationNode,
                                     (void *)(intptr_t) asinh);
 
         break;
-    case ComputerEquation::ACosH:
+    case ComputerEquation::Acosh:
         compileMathematicalFunction(pData, "acosh", 1, pEquationNode,
                                     (void *)(intptr_t) acosh);
 
         break;
-    case ComputerEquation::ATanH:
+    case ComputerEquation::Atanh:
         compileMathematicalFunction(pData, "atanh", 1, pEquationNode,
                                     (void *)(intptr_t) atanh);
 
@@ -1012,11 +1021,6 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
     case ComputerEquation::ArbitraryLog:
         compileMathematicalFunction(pData, "arbitraryLog", 2, pEquationNode,
                                     (void *)(intptr_t) arbitraryLog);
-
-        break;
-    case ComputerEquation::FactorOf:
-        compileMathematicalFunction(pData, "factorOf", 2, pEquationNode,
-                                    (void *)(intptr_t) factorOf);
 
         break;
     case ComputerEquation::Pow:
@@ -1033,20 +1037,15 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
                                     (void *)(intptr_t) rem);
 
         break;
-    case ComputerEquation::XOr:
-        compileMathematicalFunction(pData, "_xor", 2, pEquationNode,
-                                    (void *)(intptr_t) _xor);
-
-        break;
 
     // Mathematical functions with 2+ arguments
 
-    case ComputerEquation::GCD:
+    case ComputerEquation::Gcd:
         compileMathematicalFunction(pData, "gcd", -1, pEquationNode,
                                     (void *)(intptr_t) gcd);
 
         break;
-    case ComputerEquation::LCM:
+    case ComputerEquation::Lcm:
         compileMathematicalFunction(pData, "lcm", -1, pEquationNode,
                                     (void *)(intptr_t) lcm);
 

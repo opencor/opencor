@@ -145,6 +145,8 @@ QString ComputerEquation::typeAsString() const
         return "Times";
     case Divide:
         return "Divide";
+    case Modulo:
+        return "Modulo";
     case Plus:
         return "Plus";
     case Minus:
@@ -153,6 +155,8 @@ QString ComputerEquation::typeAsString() const
         return "Not";
     case Or:
         return "Or";
+    case Xor:
+        return "Xor";
     case And:
         return "And";
     case EqualEqual:
@@ -183,40 +187,36 @@ QString ComputerEquation::typeAsString() const
         return "Cos";
     case Tan:
         return "Tan";
-    case SinH:
-        return "SinH";
-    case CosH:
-        return "CosH";
-    case TanH:
-        return "TanH";
-    case ASin:
-        return "ASin";
-    case ACos:
-        return "ACos";
-    case ATan:
-        return "ATan";
-    case ASinH:
-        return "ASinH";
-    case ACosH:
-        return "ACosH";
-    case ATanH:
-        return "ATanH";
+    case Sinh:
+        return "Sinh";
+    case Cosh:
+        return "Cosh";
+    case Tanh:
+        return "Tanh";
+    case Asin:
+        return "Asin";
+    case Acos:
+        return "Acos";
+    case Atan:
+        return "Atan";
+    case Asinh:
+        return "Asinh";
+    case Acosh:
+        return "Acosh";
+    case Atanh:
+        return "Atanh";
     case ArbitraryLog:
         return "ArbitraryLog";
-    case FactorOf:
-        return "FactorOf";
     case Pow:
         return "Pow";
     case Quotient:
         return "Quotient";
     case Rem:
         return "Rem";
-    case XOr:
-        return "XOr";
-    case GCD:
-        return "GCD";
-    case LCM:
-        return "LCM";
+    case Gcd:
+        return "Gcd";
+    case Lcm:
+        return "Lcm";
     case Max:
         return "Max";
     case Min:
@@ -450,6 +450,13 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             replaceNodeWithChildNode(pNode, pNode->left());
 
         break;
+    case Modulo:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // fmod(N1, N2)
+
+            replaceNodeWithNumber(pNode, fmod(pNode->left()->number(), pNode->right()->number()));
+
+        break;
     case Plus:
         if (!pNode->right())
             // +X ---> X
@@ -501,6 +508,13 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // N1 || N2
 
             replaceNodeWithNumber(pNode, pNode->left()->number() || pNode->right()->number());
+
+        break;
+    case Xor:
+        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
+            // N1 ^ N2
+
+            replaceNodeWithNumber(pNode, (pNode->left()->number() != 0) ^ (pNode->right()->number() != 0));
 
         break;
     case And:
@@ -618,63 +632,63 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             replaceNodeWithNumber(pNode, tan(pNode->left()->number()));
 
         break;
-    case SinH:
+    case Sinh:
         if (pNode->left()->type() == Number)
             // sinh(N)
 
             replaceNodeWithNumber(pNode, sinh(pNode->left()->number()));
 
         break;
-    case CosH:
+    case Cosh:
         if (pNode->left()->type() == Number)
             // cosh(N)
 
             replaceNodeWithNumber(pNode, cosh(pNode->left()->number()));
 
         break;
-    case TanH:
+    case Tanh:
         if (pNode->left()->type() == Number)
             // tanh(N)
 
             replaceNodeWithNumber(pNode, tanh(pNode->left()->number()));
 
         break;
-    case ASin:
+    case Asin:
         if (pNode->left()->type() == Number)
             // asin(N)
 
             replaceNodeWithNumber(pNode, asin(pNode->left()->number()));
 
         break;
-    case ACos:
+    case Acos:
         if (pNode->left()->type() == Number)
             // acos(N)
 
             replaceNodeWithNumber(pNode, acos(pNode->left()->number()));
 
         break;
-    case ATan:
+    case Atan:
         if (pNode->left()->type() == Number)
             // atan(N)
 
             replaceNodeWithNumber(pNode, atan(pNode->left()->number()));
 
         break;
-    case ASinH:
+    case Asinh:
         if (pNode->left()->type() == Number)
             // asinh(N)
 
             replaceNodeWithNumber(pNode, asinh(pNode->left()->number()));
 
         break;
-    case ACosH:
+    case Acosh:
         if (pNode->left()->type() == Number)
             // acosh(N)
 
             replaceNodeWithNumber(pNode, acosh(pNode->left()->number()));
 
         break;
-    case ATanH:
+    case Atanh:
         if (pNode->left()->type() == Number)
             // atanh(N)
 
@@ -689,13 +703,6 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             // arbitraryLog(N1, N2)
 
             replaceNodeWithNumber(pNode, arbitraryLog(pNode->left()->number(), pNode->right()->number()));
-
-        break;
-    case FactorOf:
-        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
-            // factorOf(N1, N2)
-
-            replaceNodeWithNumber(pNode, factorOf(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Pow:
@@ -722,24 +729,17 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             replaceNodeWithNumber(pNode, rem(pNode->left()->number(), pNode->right()->number()));
 
         break;
-    case XOr:
-        if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
-            // xOr(N1, N2)
-
-            replaceNodeWithNumber(pNode, _xor(pNode->left()->number(), pNode->right()->number()));
-
-        break;
 
     // Mathematical functions with 2+ arguments
 
-    case GCD:
+    case Gcd:
         if (numberArguments(pNode))
             // gcd(N1, N2, ...)
 
             replaceNodeWithNumber(pNode, gcd(pNode->left(), pNode->right()));
 
         break;
-    case LCM:
+    case Lcm:
         if (numberArguments(pNode))
             // lcm(N1, N2, ...)
 

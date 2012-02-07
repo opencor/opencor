@@ -32,26 +32,26 @@ public:
 
         // Mathematical operators
 
-        Times, Divide, Plus, Minus,
+        Times, Divide, Modulo, Plus, Minus,
 
         // Logical operators
 
-        Not, Or, And, EqualEqual, NotEqual,
+        Not, Or, Xor, And, EqualEqual, NotEqual,
         LowerThan, GreaterThan, LowerOrEqualThan, GreaterOrEqualThan,
 
         // Mathematical functions with 1 argument
 
         Abs, Exp, Log, Ceil, Floor, Factorial,
-        Sin, Cos, Tan, SinH, CosH, TanH,
-        ASin, ACos, ATan, ASinH, ACosH, ATanH,
+        Sin, Cos, Tan, Sinh, Cosh, Tanh,
+        Asin, Acos, Atan, Asinh, Acosh, Atanh,
 
         // Mathematical functions with 2 arguments
 
-        ArbitraryLog, FactorOf, Pow, Quotient, Rem, XOr,
+        ArbitraryLog, Pow, Quotient, Rem,
 
         // Mathematical functions with 2+ arguments
 
-        GCD, LCM, Max, Min,
+        Gcd, Lcm, Max, Min,
 
         // Miscellaneous
 
