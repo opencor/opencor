@@ -18,7 +18,6 @@ ADD_PLUGIN(Core
         src/docktoolbar.cpp
         src/dockwidget.cpp
         src/filemanager.cpp
-        src/logowidget.cpp
         src/organisationwidget.cpp
         src/treeview.cpp
     HEADERS_MOC
@@ -29,12 +28,10 @@ ADD_PLUGIN(Core
         src/docktoolbar.h
         src/dockwidget.h
         src/filemanager.h
-        src/logowidget.h
         src/organisationwidget.h
         src/treeview.h
     UIS
         src/centralwidget.ui
-        src/logowidget.ui
     INCLUDE_DIRS
         src
     QT_DEPENDENCIES

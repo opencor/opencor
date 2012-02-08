@@ -41,10 +41,6 @@ namespace Core {
 
 //==============================================================================
 
-class LogoWidget;
-
-//==============================================================================
-
 typedef QMap<int, QString> CentralWidgetViewNames;
 
 typedef QMap<int, GuiInterface *> CentralWidgetViewInterfaces;
@@ -130,7 +126,7 @@ private:
 
     QStackedWidget *mContents;
 
-    LogoWidget *mLogoView;
+    QWidget *mLogoView;
 
     QWidget *mNoView;
     QLabel *mNoViewMsg;

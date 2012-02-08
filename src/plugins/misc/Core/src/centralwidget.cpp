@@ -4,7 +4,6 @@
 
 #include "centralwidget.h"
 #include "filemanager.h"
-#include "logowidget.h"
 #include "plugin.h"
 
 //==============================================================================
@@ -146,7 +145,12 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our logo view which simply display OpenCOR's logo
 
-    mLogoView = new LogoWidget(this);
+    mLogoView = new QWidget(this);
+
+    mLogoView->setStyleSheet("background-color: white;"
+                             "background-image: url(':logo');"
+                             "background-position: center;"
+                             "background-repeat: no-repeat;");
 
     mContents->addWidget(mLogoView);
 
