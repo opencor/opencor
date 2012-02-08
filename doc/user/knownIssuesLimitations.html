@@ -18,7 +18,7 @@
         </h1>
 
         <p>
-            Please note that the following known issues/limitations have been observed on <a href="http://windows.microsoft.com/">Windows</a> 7, <a href="http://www.ubuntu.com/">Ubuntu</a> 11.04 (Natty Narwhal; both 32-bit and 64-bit) and <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.7 (Lion). So, if you use a different operating system, these issues/limitations may or not be relevant to you.
+            The following known issues/limitations have been observed on <a href="http://windows.microsoft.com/">Windows</a> 7, <a href="http://www.ubuntu.com/">Ubuntu</a> 11.04 (Natty Narwhal; both 32-bit and 64-bit) and/or <a href="http://www.apple.com/macosx/">Mac OS X</a> 10.7 (Lion). So, if you use a different operating system, these issues/limitations may or not be relevant to you.
         </p>
         
         <h2>
@@ -26,23 +26,16 @@
         </h2>
 
         <p>
-            By default, OpenCOR uses your system's language for menus, dialog boxes, etc., as long as it is either English or French (please <a href="user/contactUs.html">contact us</a> if you would like another language to be added). If your system uses another language, then OpenCOR will default to English. Otherwise, if you specifically specify English or French as the language to be used by OpenCOR, then please be aware that system messages, dialog boxes, etc. will still be displayed in your system's language.
+            By default, OpenCOR uses your system's language for menus, dialog boxes, etc., as long as it is either English or French (please <a href="user/contactUs.html">contact us</a> if you would like another language to be added). If your system uses another language, then OpenCOR will default to English. Otherwise, if you specifically specify English or French, then please be aware that system messages, dialog boxes, etc. will still be displayed in your system's language.
         </p>
 
         <h2>
             Windows
         </h2>
 
-        <p>
-            
-        </p>
-
         <ul>
             <li>
-                OpenCOR's embedded file browser may, on some computers, result in OpenCOR being slow to respond at startup. Unfortunately, this is a very well-known problem with Windows, but thankfully there are <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">several known causes and solutions</a> which you might find useful.
-            </li>
-            <li>
-                Resetting all the user settings (by selecting the <code>Tools|Reset All</code> menu) and applying plugin changes (by selecting the <code>Tools|Plugins...</code> menu) requires restarting OpenCOR. There may, however, be times when OpenCOR will have to be restarted manually. We believe this to be a problem with Windows itself (since this does not happen on either Linux or Mac OS X), even though we have yet to determine its exact cause.
+                OpenCOR's embedded file browser may, in some cases, result in OpenCOR being slow to respond at startup. This problem has nothing to do with OpenCOR, but with Windows or a program which you use and which tightly integrates with Windows. It may not be an easy problem to fix, even though there <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">several known causes and solutions</a> which you might find useful.
             </li>
         </ul>
 
@@ -50,22 +43,12 @@
             Linux
         </h2>
 
-        <p>
-            Depending on your window manager (e.g. <a href="http://www.compiz.org/">Compiz</a>) and or desktop theme, OpenCOR may or not experience one of the following issues/limitations (none of which affect the good functioning of OpenCOR itself):
-        </p>
-
         <ul>
-            <li>Upon starting OpenCOR, the software will try to retrieve your previous session's settings which may result in the main window's position being slightly shifted.</li>
-            <li>To show the help window by pressing the <code>F1</code> key may, if the help window is floating (as opposed to being docked to the main window), result in OpenCOR not being the active application anymore. This means that if you were to press the <code>F1</code> key one more time, then the help window would remain visible while it should have disappeared.</li>
             <li>
-                Menu items that have sub-menus may not, on some versions of <a href="http://www.gnome.org/">Gnome</a>, have their icon displayed (should they normally have one). This has been discussed in many places, such as <a href="http://www.omgubuntu.co.uk/2010/02/missing-menu-icons-what-are-gnome-playing-at/">here</a> and <a href="http://ubuntuforums.org/showthread.php?t=1505270">here</a>. Anyway, one way to change this behaviour is to enter the following on the command line:
+                Menu items that have sub-menus may not, on some versions of <a href="http://www.gnome.org/">Gnome</a>, have their icon displayed (should they normally have one). This has nothing to do with OpenCOR and has been discussed in places such as <a href="http://www.omgubuntu.co.uk/2010/02/missing-menu-icons-what-are-gnome-playing-at/">here</a> and <a href="http://ubuntuforums.org/showthread.php?t=1505270">here</a>. You can, however, change this behaviour by entering the following on the command line:
                 <pre class="prettyprint">$ gconftool-2 --type Boolean --set /desktop/gnome/interface/menus_have_icons True</pre>
             </li>
         </ul>
-
-        <p>
-            Note that the above issues have nothing to do with OpenCOR itself (everything works fine on both Windows and Mac OS X), but with the window manager that you use. Indeed, there is a lack of compliancy between the various window managers, so something that works with one window manager may or not work with another, as is unfortunately the case here.
-        </p>
 
         <div class="copyright">
             Copyright ©2011-2012
