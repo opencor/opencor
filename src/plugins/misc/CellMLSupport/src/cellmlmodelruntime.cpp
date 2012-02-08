@@ -265,7 +265,7 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
     // Note #1: idealy we wouly only specify what needs to be customised, but
     //          that's not the way the CellML API works, so instead we need to
     //          'customise' everything...
-    // Note #2: the customised functions are 'gcd', 'lcm', 'max', 'min',
+    // Note #2: the customised functions are 'gcd', 'lcm', 'log', 'max', 'min',
     //          'quotient' and 'rem'...
     // Note #3: for things that don't need customising, we must make sure that
     //          it's in synch with CDA_CodeGenerator::makeCodeGenerationState in
@@ -313,7 +313,7 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"lcm: #prec[H]lcm(#count, #exprs[, ])\r\n"                       // Customised version
                                                                           L"leq: #prec[30]#exprs[<=]\r\n"
                                                                           L"ln: #prec[H]log(#expr1)\r\n"
-                                                                          L"log: #prec[H]arbitrary_log(#expr1, #logbase)\r\n"
+                                                                          L"log: #prec[H]arbitraryLog(#expr1, #logbase)\r\n"                // Customised version
                                                                           L"lt: #prec[30]#exprs[<]\r\n"
                                                                           L"max: #prec[H]max(#count, #exprs[, ])\r\n"                       // Customised version
                                                                           L"min: #prec[H]min(#count, #exprs[, ])\r\n"                       // Customised version
@@ -507,27 +507,27 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             // Get some binary code
 
             mComputerEngine->addFunction(QString("void initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->initConstsString())));
-            handleErrors("initConsts");
+            handleErrors("initializeConstants");
 
             if (mModelType == Ode)
                 mComputerEngine->addFunction(QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
             else
                 mComputerEngine->addFunction(QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
 
-            handleErrors("rates");
+            handleErrors("computeRates");
 
             mComputerEngine->addFunction(QString("void computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->variablesString())));
-            handleErrors("variables");
+            handleErrors("computeVariables");
 
             if (mModelType == Dae) {
                 mComputerEngine->addFunction(QString("void computeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
-                handleErrors("essentialVariables");
+                handleErrors("computeEssentialVariables");
 
                 mComputerEngine->addFunction(QString("void computeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->rootInformationString())));
-                handleErrors("rootInformation");
+                handleErrors("computeRootInformation");
 
                 mComputerEngine->addFunction(QString("void computeStateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
-                handleErrors("stateInformation");
+                handleErrors("computeStateInformation");
             }
 
 //--- TESTING --- BEGIN ---

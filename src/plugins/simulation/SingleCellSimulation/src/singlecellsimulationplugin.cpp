@@ -203,9 +203,14 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             }
         }
 
+        // Remove any existing curve
+
+        resetCurves();
+
         // Compute the model, if supported
 
         enum Model {
+            Unknown,
             VanDerPol1928,
             Hodgkin1952,
             Noble1962,
@@ -213,8 +218,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             Noble1991,
             Noble1998,
             Zhang2000,
-            Mitchell2003,
-            Unknown
+            Mitchell2003
         } model;
 
         QString fileBaseName = QFileInfo(pFileName).baseName();
@@ -328,10 +332,6 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                 yData[i].append(states[i]);
 
             qDebug(" - Simulation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-
-            // Remove any existing curve
-
-            resetCurves();
 
             // Add some curves to our plotting area
 
