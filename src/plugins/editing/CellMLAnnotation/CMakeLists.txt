@@ -27,6 +27,7 @@ ADD_PLUGIN(CellMLAnnotation
         Computer
         Core
         LLVM
+        RICORDOSupport
     QT_DEPENDENCIES
         QtCore
         QtGui

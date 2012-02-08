@@ -152,6 +152,7 @@ SET(PLUGINS
     api/CellML
 
     misc/CellMLSupport
+    misc/RICORDOSupport
 
     editing/CoreEditing
     editing/CoreCellMLEditing

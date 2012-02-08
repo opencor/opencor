@@ -27,7 +27,7 @@ PLUGININFO_FUNC CellMLAnnotationPluginInfo()
                       PluginInfo::Gui,
                       PluginInfo::Editing,
                       true,
-                      QStringList() << "CoreCellMLEditing",
+                      QStringList() << "CoreCellMLEditing" << "RICORDOSupport",
                       descriptions);
 }
 
