@@ -412,7 +412,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${QT_QTGUI_LIBRARY}
                 )
 
-                # Copy the test to our tests directory
+                # Copy the test to our tests directory which we create if
+                # needed
 
                 IF(NOT EXISTS ${DEST_TESTS_DIR})
                     ADD_CUSTOM_COMMAND(TARGET ${TEST} POST_BUILD

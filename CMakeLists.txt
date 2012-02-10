@@ -156,7 +156,13 @@ IF(ENABLE_TESTING)
         ${QT_QTCORE_LIBRARY}
     )
 
-    # Copy our main test program to our tests directory
+    # Copy our main test program to our tests directory which we create if
+    # needed
+
+    IF(NOT EXISTS ${DEST_TESTS_DIR})
+        ADD_CUSTOM_COMMAND(TARGET ${TEST} POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_TESTS_DIR})
+    ENDIF()
 
     SET(MAIN_TEST_FILENAME ${RUNTESTS_PROGRAM}${CMAKE_EXECUTABLE_SUFFIX})
 
