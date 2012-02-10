@@ -1,0 +1,19 @@
+#!/bin/sh
+
+OS=`uname -s`
+
+if [ $OS = "Linux" ]; then
+    echo "\033[44;37;1mRunning OpenCOR's tests...\033[0m"
+fi
+
+WMsg="OpenCOR's tests must first be built before being run."
+
+if [ -f build/tests/run ]; then
+    build/tests/run $*
+else
+    echo $WMsg
+fi
+
+if [ $OS = "Linux" ]; then
+    echo "\033[42;37;1mAll done!\033[0m"
+fi

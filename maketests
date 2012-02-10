@@ -1,0 +1,18 @@
+#!/bin/sh
+
+OS=`uname -s`
+
+if [ $OS = "Linux" ]; then
+    echo "\033[44;37;1mMaking OpenCOR and its tests...\033[0m"
+fi
+
+cd build
+
+cmake -DENABLE_TESTING=True ..
+make $*
+
+cd ..
+
+if [ $OS = "Linux" ]; then
+    echo "\033[42;37;1mAll done!\033[0m"
+fi

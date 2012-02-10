@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Tests
+        </title>
+
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+
+        <link href="../res/stylesheet.css" rel="stylesheet" type="text/css" />
+
+        <link href="../../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="../../3rdparty/googleCodePrettify/prettify.js"></script>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>
+            Tests
+        </h1>
+
+        <p>
+            As already mentioned, OpenCOR uses a <a href="plugins.html">plugin approach</a>. Tests are therefore created at the plugin level, and every test must respect the following:
+        </p>
+
+        <ul>
+            <li>The test must be located under the <code>test</code> folder of a plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/CellMLSupport/test"><code>[OpenCOR]/src/plugins/misc/CellMLSupport/test</code></a>);</li>
+            <li>The test must consist of both a <code>.cpp</code> and a <code>.h</code> file (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/CellMLSupport/test/test.cpp"><code>[OpenCOR]/src/plugins/misc/CellMLSupport/test/test.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/CellMLSupport/test/test.h"><code>[OpenCOR]/src/plugins/misc/CellMLSupport/test/test.h</code></a>);</li>
+            <li>
+                The test must be listed under the <code>TESTS</code> header in the call to the CMake's <code>ADD_PLUGIN</code> macro (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/CellMLSupport/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/CellMLSupport/CMakeLists.txt</code></a>):
+                <pre class="prettyprint">PROJECT(MyPlugin)
+
+# Add the plugin
+
+ADD_PLUGIN(MyPlugin
+    ...
+    TESTS
+        test1
+        test2
+        test3
+        ...
+)</pre>
+            </li>
+            <li>The test must be referenced in the <a href="https://github.com/opencor/opencor/blob/master/test/main.cpp"><code>main test program</code></a>.</li>
+        </ul>
+
+        <div class="copyright">
+            Copyright ©2011-2012
+        </div>
+    </body>
+</html>

@@ -138,6 +138,32 @@ ELSEIF(APPLE)
     SET(SOURCES ${SOURCES} res/boomy/${IconFile})
 ENDIF()
 
+# Check whether tests are required and, if so, set the destination tests
+# directory and build our main test program
+
+IF(ENABLE_TESTING)
+    # Destination tests directory
+
+    SET(DEST_TESTS_DIR ${CMAKE_BINARY_DIR}/tests)
+
+    # Build our main test program
+
+    SET(MAIN_TEST_PROGRAM run)
+
+    ADD_EXECUTABLE(${MAIN_TEST_PROGRAM} test/main.cpp)
+
+    TARGET_LINK_LIBRARIES(${MAIN_TEST_PROGRAM}
+        ${QT_QTCORE_LIBRARY}
+    )
+
+    # Copy our main test program to our tests directory
+
+    SET(MAIN_TEST_FILENAME ${MAIN_TEST_PROGRAM}${CMAKE_EXECUTABLE_SUFFIX})
+
+    ADD_CUSTOM_COMMAND(TARGET ${MAIN_TEST_PROGRAM} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME} ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
+ENDIF()
+
 # Build the plugins used by either the GUI and/or console version of OpenCOR
 
 SET(PLUGINS

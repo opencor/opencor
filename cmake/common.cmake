@@ -141,6 +141,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(QT_DEPENDENCIES)
     SET(EXTERNAL_DEPENDENCIES_DIR)
     SET(EXTERNAL_DEPENDENCIES)
+    SET(TESTS)
 
     # Analyse the extra parameters
 
@@ -165,6 +166,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 8)
         ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 9)
+        ELSEIF(${PARAMETER} STREQUAL "TESTS")
+            SET(TYPE_OF_PARAMETER 10)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -187,6 +190,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
                 SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
+                SET(TESTS ${TESTS} ${PARAMETER})
             ENDIF()
         ENDIF()
     ENDFOREACH()
@@ -302,7 +307,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Create the plugins directory if it doesn't already exist and move the
     # plugin to it
-    # Note: this is so that we can, on Windows and Linux, test the use of
+    # Note: this is done so that we can, on Windows and Linux, test the use of
     #       plugins in OpenCOR without first having to package OpenCOR
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -385,6 +390,41 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION plugins/${MAIN_PROJECT_NAME})
     ELSEIF(NOT APPLE)
         INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins/${MAIN_PROJECT_NAME})
+    ENDIF()
+
+    # Create some tests, if any and if required
+
+    IF(ENABLE_TESTING)
+        FOREACH(TEST ${TESTS})
+            SET(TEST_SOURCE_FILE test/${TEST}.cpp)
+            SET(TEST_HEADER_MOC_FILE test/${TEST}.h)
+
+            IF(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE_FILE}
+               AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC_FILE})
+                # The test exists, so build it
+
+                QT4_WRAP_CPP(TEST_SOURCES_MOC ${TEST_HEADER_MOC_FILE})
+                ADD_EXECUTABLE(${TEST} ${TEST_SOURCE_FILE} ${TEST_SOURCES_MOC})
+
+                TARGET_LINK_LIBRARIES(${TEST}
+                    ${QT_QTCORE_LIBRARY}
+                    ${QT_QTTEST_LIBRARY}
+                    ${QT_QTGUI_LIBRARY}
+                )
+
+                # Copy the test to our tests directory
+
+                IF(NOT EXISTS ${DEST_TESTS_DIR})
+                    ADD_CUSTOM_COMMAND(TARGET ${TEST} POST_BUILD
+                                       COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_TESTS_DIR})
+                ENDIF()
+
+                ADD_CUSTOM_COMMAND(TARGET ${TEST} POST_BUILD
+                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST}${CMAKE_EXECUTABLE_SUFFIX} ${DEST_TESTS_DIR}/${PLUGIN_NAME}_${TEST}${CMAKE_EXECUTABLE_SUFFIX})
+            ELSE()
+                MESSAGE(AUTHOR_WARNING "The '${TEST}' test for the '${PLUGIN_NAME}' plugin doesn't exist")
+            ENDIF()
+        ENDFOREACH()
     ENDIF()
 ENDMACRO()
 
