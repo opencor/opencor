@@ -8,8 +8,8 @@ fi
 
 WMsg="OpenCOR's tests must first be built before being run."
 
-if [ -f build/tests/run ]; then
-    build/tests/run $*
+if [ -f build/tests/runtests ]; then
+    build/tests/runtests $*
 else
     echo $WMsg
 fi

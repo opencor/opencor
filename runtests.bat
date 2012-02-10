@@ -2,9 +2,9 @@
 
 TITLE Running OpenCOR's tests...
 
-IF NOT EXIST build\tests\run.exe GOTO Information
+IF NOT EXIST build\tests\runtests.exe GOTO Information
 
-build\tests\run %*
+build\tests\runtests %*
 
 GOTO End
 
