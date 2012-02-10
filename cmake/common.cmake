@@ -416,19 +416,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Copy the test to our tests directory which we create if
                 # needed
-MESSAGE("01")
 
                 IF(NOT EXISTS ${DEST_TESTS_DIR})
                     ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
                                        COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_TESTS_DIR})
                 ENDIF()
-MESSAGE("21")
 
                 SET(TEST_NAME_FILEPATH ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
                 ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_NAME_FILEPATH} ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
-MESSAGE("03")
             ELSE()
                 MESSAGE(AUTHOR_WARNING "The '${TEST}' test for the '${PLUGIN_NAME}' plugin doesn't exist")
             ENDIF()
