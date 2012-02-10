@@ -34,9 +34,10 @@ int main(int pArgc, char *pArgv[])
 
     // Run the different tests
 
+    QString exePath = QFileInfo(QDir::currentPath()+QDir::separator()+QString(pArgv[0])).absolutePath();
+    QStringList failedTests;
     int res = 0;
 
-    QString exePath = QFileInfo(QDir::currentPath()+QDir::separator()+QString(pArgv[0])).absolutePath();
     Tests::const_iterator iter = tests.constBegin();
 
     while (iter != tests.constEnd()) {
@@ -50,7 +51,14 @@ int main(int pArgc, char *pArgv[])
         std::cout << std::endl;
 
         foreach (const QString &test, iter.value()) {
-            res = res?res:QProcess::execute(QString("%1/%2_%3").arg(exePath, iter.key(), test), args);
+            QString testName = QString("%1_%2").arg(iter.key(), test);
+
+            int testRes = QProcess::execute(QString("%1/%2").arg(exePath, testName), args);
+
+            if (testRes)
+                failedTests << testName;
+
+            res = res?res:testRes;
 
             std::cout << std::endl;
         }
@@ -59,6 +67,29 @@ int main(int pArgc, char *pArgv[])
 
         ++iter;
     }
+
+    // Reporting
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << "********* Reporting *********" << std::endl;
+    std::cout << std::endl;
+
+    if (failedTests.isEmpty()) {
+        std::cout << "All the tests passed!" << std::endl;
+    } else {
+        if (failedTests.count() == 1)
+            std::cout << "The following test failed:" << std::endl;
+        else
+            std::cout << "The following tests failed:" << std::endl;
+
+        foreach (const QString &failedTest, failedTests)
+            std::cout << " - " << qPrintable(failedTest) << std::endl;
+    }
+
+    std::cout << std::endl;
+    std::cout << "*****************************" << std::endl;
 
     // Return the overall outcome of the tests
 
