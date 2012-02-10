@@ -396,6 +396,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     IF(ENABLE_TESTING)
         FOREACH(TEST ${TESTS})
+            SET(TEST_NAME ${PLUGIN_NAME}_${TEST})
+
             SET(TEST_SOURCE_FILE test/${TEST}.cpp)
             SET(TEST_HEADER_MOC_FILE test/${TEST}.h)
 
@@ -404,9 +406,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 # The test exists, so build it
 
                 QT4_WRAP_CPP(TEST_SOURCES_MOC ${TEST_HEADER_MOC_FILE})
-                ADD_EXECUTABLE(${TEST} ${TEST_SOURCE_FILE} ${TEST_SOURCES_MOC})
+                ADD_EXECUTABLE(${TEST_NAME} ${TEST_SOURCE_FILE} ${TEST_SOURCES_MOC})
 
-                TARGET_LINK_LIBRARIES(${TEST}
+                TARGET_LINK_LIBRARIES(${TEST_NAME}
                     ${QT_QTCORE_LIBRARY}
                     ${QT_QTTEST_LIBRARY}
                     ${QT_QTGUI_LIBRARY}
@@ -414,14 +416,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Copy the test to our tests directory which we create if
                 # needed
+MESSAGE("01")
 
                 IF(NOT EXISTS ${DEST_TESTS_DIR})
-                    ADD_CUSTOM_COMMAND(TARGET ${TEST} POST_BUILD
+                    ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
                                        COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_TESTS_DIR})
                 ENDIF()
+MESSAGE("21")
 
-                ADD_CUSTOM_COMMAND(TARGET ${TEST} POST_BUILD
-                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST}${CMAKE_EXECUTABLE_SUFFIX} ${DEST_TESTS_DIR}/${PLUGIN_NAME}_${TEST}${CMAKE_EXECUTABLE_SUFFIX})
+                SET(TEST_NAME_FILEPATH ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+
+                ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
+                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_NAME_FILEPATH} ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
+MESSAGE("03")
             ELSE()
                 MESSAGE(AUTHOR_WARNING "The '${TEST}' test for the '${PLUGIN_NAME}' plugin doesn't exist")
             ENDIF()
