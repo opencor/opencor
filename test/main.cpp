@@ -2,7 +2,7 @@
 // Main source file
 //==============================================================================
 
-#include <QDir>
+#include <QFileInfo>
 #include <QMap>
 #include <QProcess>
 #include <QString>
@@ -34,7 +34,7 @@ int main(int pArgc, char *pArgv[])
 
     // Run the different tests
 
-    QString exePath = QFileInfo(QDir::currentPath()+QDir::separator()+QString(pArgv[0])).absolutePath();
+    QString exePath = QFileInfo(pArgv[0]).canonicalPath();
     QStringList failedTests;
     int res = 0;
 
