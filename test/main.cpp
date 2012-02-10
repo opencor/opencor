@@ -2,6 +2,7 @@
 // Main source file
 //==============================================================================
 
+#include <QDir>
 #include <QMap>
 #include <QProcess>
 #include <QString>
@@ -34,6 +35,8 @@ int main(int pArgc, char *pArgv[])
     // Run the different tests
 
     int res = 0;
+
+    QString exePath = QFileInfo(QDir::currentPath()+QDir::separator()+QString(pArgv[0])).absolutePath();
     Tests::const_iterator iter = tests.constBegin();
 
     while (iter != tests.constEnd()) {
@@ -47,7 +50,7 @@ int main(int pArgc, char *pArgv[])
         std::cout << std::endl;
 
         foreach (const QString &test, iter.value()) {
-            res = res?res:QProcess::execute(iter.key()+QString("_")+test, args);
+            res = res?res:QProcess::execute(QString("%1/%2_%3").arg(exePath, iter.key(), test), args);
 
             std::cout << std::endl;
         }
