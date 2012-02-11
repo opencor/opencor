@@ -540,11 +540,6 @@ bool CentralWidget::activateFile(const QString &pFileName)
 
 void CentralWidget::fileSelected(const int &pIndex)
 {
-    // Give the focus to the view corresponding to the newly selected file by
-    // updating the GUI
-
-    updateGui();
-
     // Let people know that a file has been selected
 
     emit fileSelected(mFileTabs->tabToolTip(pIndex));

@@ -225,7 +225,8 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
         if (!fileBaseName.compare("van_der_pol_model_1928"))
             model = VanDerPol1928;
-        else if (   !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_modified")
+        else if (   !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952")
+                 || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_modified")
                  || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_original"))
             model = Hodgkin1952;
         else if (!fileBaseName.compare("noble_model_1962"))
@@ -350,7 +351,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                 mCurves.append(curve);
             }
 
-            // Update the range for the axes
+            // Update the axes range
 
             mSimulationView->replot();
         }
