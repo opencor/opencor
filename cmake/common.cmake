@@ -405,8 +405,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC_FILE})
                 # The test exists, so build it
 
-                QT4_WRAP_CPP(TEST_SOURCES_MOC ${TEST_HEADER_MOC_FILE})
-                ADD_EXECUTABLE(${TEST_NAME} ${TEST_SOURCE_FILE} ${TEST_SOURCES_MOC})
+                QT4_WRAP_CPP(TEST_SOURCES_MOC
+                    ${TEST_HEADER_MOC_FILE}
+                    ../../plugin.h
+                )
+
+                ADD_EXECUTABLE(${TEST_NAME}
+                    ${TEST_SOURCE_FILE}
+                    ../../../../test/testutils.cpp
+                    ../../coreinterface.cpp
+                    ../../plugin.cpp
+                    ../../plugininfo.cpp
+                    ${TEST_SOURCES_MOC}
+                )
 
                 TARGET_LINK_LIBRARIES(${TEST_NAME}
                     ${QT_QTCORE_LIBRARY}
