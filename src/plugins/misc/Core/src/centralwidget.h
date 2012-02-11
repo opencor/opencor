@@ -137,6 +137,9 @@ private:
 
     void addMode(const GuiViewSettings::Mode &pMode);
 
+    void loadModeSettings(QSettings *pSettings,
+                          const GuiViewSettings::Mode &pCurrentMode,
+                          const GuiViewSettings::Mode &pMode);
     void saveModeSettings(QSettings *pSettings,
                           const GuiViewSettings::Mode &pMode) const;
 

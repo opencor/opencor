@@ -269,10 +269,50 @@ void CentralWidget::retranslateUi()
 
 //==============================================================================
 
-static const QString SettingsOpenedFiles = "OpenedFiles";
-static const QString SettingsCurrentFile = "CurrentFile";
-static const QString SettingsCurrentMode = "CurrentMode";
-static const QString SettingsCurrentView = "CurrentView";
+static const QString SettingsOpenedFiles        = "OpenedFiles";
+static const QString SettingsCurrentFile        = "CurrentFile";
+static const QString SettingsCurrentMode        = "CurrentMode";
+static const QString SettingsCurrentViewForMode = "CurrentViewForMode";
+
+//==============================================================================
+
+void CentralWidget::loadModeSettings(QSettings *pSettings,
+                                     const GuiViewSettings::Mode &pCurrentMode,
+                                     const GuiViewSettings::Mode &pMode)
+{
+    // Select the given mode, if it is the currently active one
+
+    if (pCurrentMode == pMode) {
+        int currentModeTabIndex = modeTabIndex(pCurrentMode);
+
+        if (currentModeTabIndex != -1) {
+            // A valid current mode was retrieved, so select it
+
+            mModeTabs->setCurrentIndex(currentModeTabIndex);
+
+            // Activate the window so that we can then give the focus to the
+            // current view
+
+            activateWindow();
+        }
+    }
+
+    // Retrieve the currently active view for the given mode
+
+    QString modeViewName = pSettings->value(SettingsCurrentViewForMode+QString::number(pMode)).toString();
+    CentralWidgetMode *mode = mModes.value(pMode);
+    QTabBar *modeViews = mode->views();
+    CentralWidgetViewNames *modeViewNames = mode->viewNames();
+
+    for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
+        if (!modeViewNames->value(i).compare(modeViewName)) {
+            // A valid current mode view was retrieved, so select it
+
+            modeViews->setCurrentIndex(i);
+
+            break;
+        }
+}
 
 //==============================================================================
 
@@ -294,39 +334,15 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
         activateFile(openedFiles.at(pSettings->value(SettingsCurrentFile).toInt()));
 
-    // Retrieve the current mode/view
+    // Retrieve the currently active mode and views
     // Note: if no current mode or view can be retrieved, then we use whatever
     //       mode or view we are in...
 
-    GuiViewSettings::Mode modeType = (GuiViewSettings::Mode) pSettings->value(SettingsCurrentMode).toInt();
-    int modeTypeTabIndex = modeTabIndex(modeType);
+    GuiViewSettings::Mode currentMode = (GuiViewSettings::Mode) pSettings->value(SettingsCurrentMode).toInt();
 
-    if (modeTypeTabIndex != -1) {
-        // A valid current mode was retrieved, so select it
-
-        mModeTabs->setCurrentIndex(modeTypeTabIndex);
-
-        // Retrieve the current view based on the current mode
-        // Note: in case of the simulation mode, there is only one simulation
-        //       view, so...
-
-        activateWindow();   // So that we can then give the focus to the current
-                            // view
-
-        QString modeViewName = pSettings->value(SettingsCurrentView).toString();
-        CentralWidgetMode *mode = mModes.value(modeType);
-        QTabBar *modeViews = mode->views();
-        CentralWidgetViewNames *modeViewNames = mode->viewNames();
-
-        for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
-            if (!modeViewNames->value(i).compare(modeViewName)) {
-                // A valid current mode view was retrieved, so select it
-
-                modeViews->setCurrentIndex(i);
-
-                break;
-            }
-    }
+    loadModeSettings(pSettings, currentMode, GuiViewSettings::Editing);
+    loadModeSettings(pSettings, currentMode, GuiViewSettings::Simulation);
+    loadModeSettings(pSettings, currentMode, GuiViewSettings::Analysis);
 
     // Update our status now that we are fully ready
 
@@ -342,12 +358,18 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 void CentralWidget::saveModeSettings(QSettings *pSettings,
                                      const GuiViewSettings::Mode &pMode) const
 {
-    // Keep track of the mode/view
+    // Keep track of the mode, should it be the currently active one
+
+    int modeTabsCrtIndex = mModeTabs->currentIndex();
+
+    if (modeTabsCrtIndex == modeTabIndex(pMode))
+        pSettings->setValue(SettingsCurrentMode, pMode);
+
+    // Keep track of the currently active view for the given mode
 
     CentralWidgetMode *mode = mModes.value(pMode);
 
-    pSettings->setValue(SettingsCurrentMode, pMode);
-    pSettings->setValue(SettingsCurrentView,
+    pSettings->setValue(SettingsCurrentViewForMode+QString::number(pMode),
                         mode->viewNames()->value(mode->views()->currentIndex()));
 }
 
@@ -368,16 +390,11 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsCurrentFile, mFileTabs->currentIndex());
 
-    // Keep track of the current mode/view
+    // Keep track of the currently active mode and views
 
-    int modeTabsCrtIndex =  mModeTabs->currentIndex();
-
-    if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Editing))
-        saveModeSettings(pSettings, GuiViewSettings::Editing);
-    else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Simulation))
-        saveModeSettings(pSettings, GuiViewSettings::Simulation);
-    else
-        saveModeSettings(pSettings, GuiViewSettings::Analysis);
+    saveModeSettings(pSettings, GuiViewSettings::Editing);
+    saveModeSettings(pSettings, GuiViewSettings::Simulation);
+    saveModeSettings(pSettings, GuiViewSettings::Analysis);
 }
 
 //==============================================================================
