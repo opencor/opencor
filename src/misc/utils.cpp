@@ -27,7 +27,7 @@ QString exec(const QString &pProg, const QString &pArgs)
 
         QProcess process;
 
-        process.start(pProg,  QStringList() << pArgs);
+        process.start(pProg,  pArgs.split(' '));
         process.waitForFinished();
 
         return process.readAll().trimmed();
