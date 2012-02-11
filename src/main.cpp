@@ -24,12 +24,10 @@ using namespace OpenCOR;
 int main(int pArgc, char *pArgv[])
 {
     int res;
-    QPointer<QtSingleApplication> app;
-    QPointer<MainWindow> win;
 
     // Create the application
 
-    app = new QtSingleApplication(pArgc, pArgv);
+    QtSingleApplication app(pArgc, pArgv);
 
     // Some general initialisations
 
@@ -48,10 +46,8 @@ int main(int pArgc, char *pArgv[])
     //       Windows, hence the ../winConsole/main.cpp file which is used to
     //       generate the console version of OpenCOR...
 
-    if (consoleApplication(app, &res)) {
+    if (consoleApplication(app, res)) {
         // OpenCOR was run as a proper console application, so...
-
-        delete app;
 
         return res;
     }
@@ -63,10 +59,8 @@ int main(int pArgc, char *pArgv[])
     // on as normal, otherwise exit since we only want one instance of OpenCOR
     // at any given time
 
-    if (app->isRunning()) {
-        app->sendMessage(app->arguments().join(" "));
-
-        delete app;
+    if (app.isRunning()) {
+        app.sendMessage(app.arguments().join(" "));
 
         return 0;
     }
@@ -74,44 +68,39 @@ int main(int pArgc, char *pArgv[])
     // Specify where to find non-OpenCOR plugins (only required on Windows)
 
 #ifdef Q_WS_WIN
-    app->addLibraryPath( QDir(app->applicationDirPath()).canonicalPath()
-                        +QDir::separator()+QString("..")
-                        +QDir::separator()+"plugins");
+    app.addLibraryPath( QDir(app.applicationDirPath()).canonicalPath()
+                       +QDir::separator()+QString("..")
+                       +QDir::separator()+"plugins");
 #endif
 
     // Create the main window
 
-    win = new MainWindow;
+    MainWindow win;
 
     // Keep track of the main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)
 
-    app->setActivationWindow(win);
-
-    // Make sure that OpenCOR can handle the message sent by another
-    // instance of itself
-
-    QObject::connect(app, SIGNAL(messageReceived(const QString &)),
-                     win, SLOT(singleAppMsgRcvd(const QString &)));
-
-    // Show the main window
-
-    win->show();
-
-    // Execute the application
-
-    res = app->exec();
+    app.setActivationWindow(&win);
 
     // Keep track of the application file and directory paths (in case we need
     // to restart OpenCOR)
 
-    QString appFilePath = app->applicationFilePath();
-    QString appDirPath  = app->applicationDirPath();
+    QString appFilePath = app.applicationFilePath();
+    QString appDirPath  = app.applicationDirPath();
 
-    // Release some memory
+    // Make sure that OpenCOR can handle the message sent by another
+    // instance of itself
 
-    delete win;
-    delete app;
+    QObject::connect(&app, SIGNAL(messageReceived(const QString &)),
+                     &win, SLOT(singleAppMsgRcvd(const QString &)));
+
+    // Show the main window
+
+    win.show();
+
+    // Execute the application
+
+    res = app.exec();
 
     // We are done with the execution of the application, so now the question is
     // whether we need to restart or not

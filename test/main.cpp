@@ -2,7 +2,7 @@
 // Main source file
 //==============================================================================
 
-#include <QFileInfo>
+#include <QCoreApplication>
 #include <QMap>
 #include <QProcess>
 #include <QString>
@@ -34,8 +34,8 @@ int main(int pArgc, char *pArgv[])
 
     // Run the different tests
 
-    QString exePath = QFileInfo(pArgv[0]).canonicalPath();
-    QStringList failedTests;
+    QString exePath = QCoreApplication(pArgc, pArgv).applicationDirPath();
+    QStringList failedTests = QStringList();
     int res = 0;
 
     Tests::const_iterator iter = tests.constBegin();

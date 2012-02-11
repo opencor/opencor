@@ -90,7 +90,7 @@ QString getOsName()
 
 //==============================================================================
 
-QString getAppVersion(const QCoreApplication *pApp)
+QString getAppVersion(const QCoreApplication &pApp)
 {
     QString bitVersion;
     int sizeOfPointer = sizeof(void *);
@@ -110,7 +110,7 @@ QString getAppVersion(const QCoreApplication *pApp)
         bitVersion = "";
     }
 
-    return  pApp->applicationName()+" "+pApp->applicationVersion()+bitVersion;
+    return  pApp.applicationName()+" "+pApp.applicationVersion()+bitVersion;
 }
 
 //==============================================================================
