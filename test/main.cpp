@@ -55,7 +55,7 @@ int main(int pArgc, char *pArgv[])
 
 #ifdef Q_WS_X11
             // On Linux, if we want to load plugins, we must execute the test
-            // from its directory
+            // from its directory, so...
 
             ::chdir(qPrintable(exePath));
 #endif
