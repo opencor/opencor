@@ -85,6 +85,13 @@ MACRO(INITIALISE_PROJECT)
             SET(DISTRIB_DIR linux/x86)
         ENDIF()
     ENDIF()
+
+    # Set the RPATH information on Linux
+    # Note: this prevent us from having to use the uncool LD_LIBRARY_PATH
+
+    IF(NOT WIN32 AND NOT APPLE)
+        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../plugins/${PROJECT_NAME}")
+    ENDIF()
 ENDMACRO()
 
 MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)

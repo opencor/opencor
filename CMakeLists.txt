@@ -592,10 +592,6 @@ ELSE()
         ENDIF()
     ENDFOREACH()
 
-    # Qt configuration file to tell OpenCOR where to look for plugins
-
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/qt.conf DESTINATION bin)
-
     # SQLite plugin (required to see the help file)
 
     INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.so DESTINATION plugins/sqldrivers)
