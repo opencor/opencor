@@ -53,6 +53,13 @@ int main(int pArgc, char *pArgv[])
         foreach (const QString &test, iter.value()) {
             QString testName = QString("%1_%2").arg(iter.key(), test);
 
+#ifdef Q_WS_X11
+            // On Linux, if we want to load plugins, we must execute the test
+            // from its directory
+
+            ::chdir(qPrintable(exePath));
+#endif
+
             int testRes = QProcess::execute(QString("%1/%2").arg(exePath, testName), args);
 
             if (testRes)
