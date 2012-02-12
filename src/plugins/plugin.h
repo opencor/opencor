@@ -77,7 +77,7 @@ public:
     int statusErrorsCount() const;
 
     static QString name(const QString &pFileName);
-    static QString fileName(const QString &pDir, const QString &pName);
+    static QString fileName(const QString &pPluginsDir, const QString &pName);
     static PluginInfo info(const QString &pFileName);
 
     static bool load(const QString &pName);
