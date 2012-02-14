@@ -436,11 +436,45 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${TEST_SOURCES_MOC}
                 )
 
-                TARGET_LINK_LIBRARIES(${TEST_NAME}
-                    ${QT_QTCORE_LIBRARY}
-                    ${QT_QTTEST_LIBRARY}
-                    ${QT_QTGUI_LIBRARY}
-                )
+                # OpenCOR dependencies
+
+                FOREACH(OPENCOR_DEPENDENCY ${OPENCOR_DEPENDENCIES})
+                    TARGET_LINK_LIBRARIES(${TEST_NAME}
+                        ${OPENCOR_DEPENDENCY}Plugin
+                    )
+                ENDFOREACH()
+
+                # Qt dependencies
+
+                FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES} QtTest)
+                    IF(WIN32)
+                        IF(DEBUG_MODE)
+                            SET(QT_DEPENDENCY_VERSION d)
+                        ELSE()
+                            SET(QT_DEPENDENCY_VERSION)
+                        ENDIF()
+
+                        SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${QT_DEPENDENCY}${QT_DEPENDENCY_VERSION}${QT_VERSION_MAJOR}${CMAKE_STATIC_LIBRARY_SUFFIX})
+                    ELSEIF(APPLE)
+                        SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework)
+                    ELSE()
+                        SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                    ENDIF()
+
+                    TARGET_LINK_LIBRARIES(${TEST_NAME}
+                        ${QT_LIBRARY_PATH}
+                    )
+                ENDFOREACH()
+
+                # External dependencies
+
+                IF(NOT ${EXTERNAL_DEPENDENCIES_DIR} STREQUAL "")
+                    FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+                        TARGET_LINK_LIBRARIES(${TEST_NAME}
+                            ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
+                        )
+                    ENDFOREACH()
+                ENDIF()
 
                 # Copy the test to our tests directory which we create if
                 # needed
@@ -454,6 +488,23 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_NAME_FILEPATH} ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
+
+                # Make sure that, on Mac OS X, the test refers to our test
+                # version of the external libraries on which it depends
+
+                IF(APPLE)
+                    FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+                        ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
+                                           COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                                                             ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
+
+                        ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
+                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                                                             ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
+                    ENDFOREACH()
+                ENDIF()
             ELSE()
                 MESSAGE(AUTHOR_WARNING "The '${TEST}' test for the '${PLUGIN_NAME}' plugin doesn't exist")
             ENDIF()
