@@ -176,7 +176,7 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     // We should never reach this point...
 
     default:
-        qDebug(">>> ERROR: couldn't convert '%s' to ComputerEquation::Type...", qPrintable(symbolAsString()));
+        qCritical("ComputerScannerToken::equationType: the symbol '%s' could not be converted to an equation node type. This is a bug! Please fix it!", qPrintable(symbolAsString()));
 
         return ComputerEquation::Unknown;
     }

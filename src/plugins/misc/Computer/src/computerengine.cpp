@@ -1077,7 +1077,7 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
     // We should never reach this point...
 
     default:
-        qDebug(">>> ERROR: untreated equation type '%s'...", qPrintable(pEquationNode->typeAsString()));
+        qCritical("ComputerEngine::compileEquationNode: the equation node of type '%s' could not be compiled. This is a bug! Please fix it!", qPrintable(pEquationNode->typeAsString()));
     }
 
     // Keep track of the assembly code index of the current node
