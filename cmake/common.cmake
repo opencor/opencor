@@ -482,7 +482,7 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
         ENDIF()
     ENDFOREACH()
 
-    # Create the folder hierarchy for the library/framework
+    # Create the folder hierarchy where the library/framework is to be deployed
 
     IF("${TYPE}" STREQUAL "Library")
         SET(LIBRARY_LIB_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks)
@@ -498,21 +498,27 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
                            COMMAND ${CMAKE_COMMAND} -E make_directory ${LIBRARY_LIB_DIR})
     ENDIF()
 
-    # Copy the library itself
+    # Deploy the library itself
 
     IF("${TYPE}" STREQUAL "Library")
         IF("${DIR}" STREQUAL "")
+            # We must deploy a Qt library
+
             SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} ${LIBRARY_LIB_FILEPATH})
         ELSE()
+            # We must deploy a third-party library
+
             SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME} ${LIBRARY_LIB_FILEPATH})
         ENDIF()
     ELSE()
+        # We must deploy a library which is bundled in a Qt framework
+
         SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME})
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
