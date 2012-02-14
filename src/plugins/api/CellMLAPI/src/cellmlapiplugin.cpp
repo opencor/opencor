@@ -1,17 +1,17 @@
 //==============================================================================
-// CellML plugin
+// CellML API plugin
 //==============================================================================
 
-#include "cellmlplugin.h"
+#include "cellmlapiplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellML {
+namespace CellMLAPI {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLPluginInfo()
+PLUGININFO_FUNC CellMLAPIPluginInfo()
 {
     Descriptions descriptions;
 
@@ -28,11 +28,11 @@ PLUGININFO_FUNC CellMLPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CellML, CellMLPlugin)
+Q_EXPORT_PLUGIN2(CellMLAPI, CellMLAPIPlugin)
 
 //==============================================================================
 
-}   // namespace CellML
+}   // namespace CellMLAPI
 }   // namespace OpenCOR
 
 //==============================================================================

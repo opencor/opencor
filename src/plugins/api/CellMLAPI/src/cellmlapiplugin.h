@@ -1,9 +1,9 @@
 //==============================================================================
-// CellML plugin
+// CellML API plugin
 //==============================================================================
 
-#ifndef CELLMLPLUGIN_H
-#define CELLMLPLUGIN_H
+#ifndef CELLMLAPIPLUGIN_H
+#define CELLMLAPIPLUGIN_H
 
 //==============================================================================
 
@@ -12,22 +12,22 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellML {
+namespace CellMLAPI {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLPluginInfo();
+PLUGININFO_FUNC CellMLAPIPluginInfo();
 
 //==============================================================================
 
-class CellMLPlugin : public QObject
+class CellMLAPIPlugin : public QObject
 {
     Q_OBJECT
 };
 
 //==============================================================================
 
-}   // namespace CellML
+}   // namespace CellMLAPI
 }   // namespace OpenCOR
 
 //==============================================================================
