@@ -180,7 +180,7 @@ SET(PLUGINS
     3rdparty/LLVM
     misc/Computer
 
-    api/CellML
+    api/CellMLAPI
 
     misc/CellMLSupport
     misc/RICORDOSupport

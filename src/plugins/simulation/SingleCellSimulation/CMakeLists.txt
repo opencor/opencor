@@ -1,8 +1,8 @@
 PROJECT(SingleCellSimulationPlugin)
 
-# Retrieve some CellML and LLVM settings
+# Retrieve some CellML API and LLVM settings
 
-RETRIEVE_CELLML_SETTINGS()
+RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
@@ -24,7 +24,7 @@ ADD_PLUGIN(SingleCellSimulation
 
         src
     OPENCOR_DEPENDENCIES
-        CellML
+        CellMLAPI
         CellMLSupport
         Computer
         Core
@@ -36,6 +36,6 @@ ADD_PLUGIN(SingleCellSimulation
         QtSvg
         QtXml
     EXTERNAL_DEPENDENCIES
-        ${CELLML_EXTERNAL_DEPENDENCIES}
+        ${CELLML_API_EXTERNAL_DEPENDENCIES}
         ${LLVM_EXTERNAL_DEPENDENCIES}
 )

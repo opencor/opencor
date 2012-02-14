@@ -26,7 +26,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
                       PluginInfo::General,
                       PluginInfo::Miscellaneous,
                       false,
-                      QStringList() << "CellML" << "Computer",
+                      QStringList() << "CellMLAPI" << "Computer",
                       descriptions);
 }
 
