@@ -515,6 +515,15 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME} ${LIBRARY_LIB_FILEPATH})
+
+            # In the case of a third-party library, we must also copy the
+            # library to the build directory, so that we can test any plugin
+            # that has a dependency on it
+
+            SET(LIBRARY_LIB_TEST_FILEPATH ${CMAKE_BINARY_DIR}/${LIBRARY_NAME})
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME} ${LIBRARY_LIB_TEST_FILEPATH})
         ENDIF()
     ELSE()
         # We must deploy a library which is bundled in a Qt framework
@@ -565,14 +574,21 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
                                                                  ${LIBRARY_LIB_FILEPATH})
         ENDFOREACH()
     ELSE()
-        # Make sure that the library refers to our embedded version of the
-        # libraries on which it depends
+        # Make sure that the third-party library refers to our embedded version
+        # of the libraries on which it depends
+        # Note: we need to do that for both the deployed and 'test' versions of
+        #       the third-party library...
 
         FOREACH(LIBRARY ${LIBRARIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${LIBRARY}
                                                                  @executable_path/../Frameworks/${LIBRARY}
                                                                  ${LIBRARY_LIB_FILEPATH})
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${LIBRARY}
+                                                                 ${CMAKE_BINARY_DIR}/${LIBRARY}
+                                                                 ${LIBRARY_LIB_TEST_FILEPATH})
         ENDFOREACH()
     ENDIF()
 ENDMACRO()
