@@ -9,7 +9,6 @@
 
 #include "cellmlmodelissue.h"
 #include "cellmlsupportglobal.h"
-#include "computerengine.h"
 
 //==============================================================================
 
@@ -26,6 +25,10 @@
 //==============================================================================
 
 namespace OpenCOR {
+namespace Computer {
+    class ComputerEngine;
+}   // namespace Computer
+
 namespace CellMLSupport {
 
 //==============================================================================
