@@ -368,11 +368,15 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         # Make sure that the plugin refers to our embedded version of the
         # external dependencies on which it depends
-        # Note: we do it in two different ways, since some external libraries
-        #       we use refer to the library itself (e.g. CellML) while others
-        #       refer to some @executable_path information (e.g. LLVM), so...
+        # Note #1: we do it in two different ways, since some external libraries
+        #          we use refer to the library itself (e.g. CellML) while others
+        #          refer to some @executable_path information (e.g. LLVM), so...
+        # Note #2: we must do it for both the deployed and 'test' versions of
+        #          the plugin...
 
         FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+            # First, for the deployed version of the plugin
+
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
@@ -382,6 +386,18 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+
+            # Second, for the 'test' version of the plugin
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
+                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                                                 ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
+                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                                                 ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
 
@@ -576,8 +592,8 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
     ELSE()
         # Make sure that the third-party library refers to our embedded version
         # of the libraries on which it depends
-        # Note: we need to do that for both the deployed and 'test' versions of
-        #       the third-party library...
+        # Note: we must do it for both the deployed and 'test' versions of the
+        #       third-party library...
 
         FOREACH(LIBRARY ${LIBRARIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
