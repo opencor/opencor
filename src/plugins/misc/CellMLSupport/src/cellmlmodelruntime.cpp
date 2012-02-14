@@ -474,36 +474,6 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             else
                 genericOdeCodeInformation = mOdeCodeInformation;
 
-            // Retrieve some information/code
-
-            qDebug("---------------------------------------");
-            qDebug("initConstsString():");
-            qDebug("");
-            qDebug("%s", qPrintable(QString::fromStdWString(genericOdeCodeInformation->initConstsString())));
-            qDebug("---------------------------------------");
-            qDebug("ratesString():");
-            qDebug("");
-            qDebug("%s", qPrintable(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
-            qDebug("---------------------------------------");
-            qDebug("variablesString():");
-            qDebug("");
-            qDebug("%s", qPrintable(QString::fromStdWString(genericOdeCodeInformation->variablesString())));
-
-            if (mModelType == Dae) {
-                qDebug("---------------------------------------");
-                qDebug("essentialVariablesString():");
-                qDebug("");
-                qDebug("%s", qPrintable(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
-                qDebug("---------------------------------------");
-                qDebug("rootInformationString():");
-                qDebug("");
-                qDebug("%s", qPrintable(QString::fromStdWString(mDaeCodeInformation->rootInformationString())));
-                qDebug("---------------------------------------");
-                qDebug("stateInformationString():");
-                qDebug("");
-                qDebug("%s", qPrintable(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
-            }
-
             // Get some binary code
 
             mComputerEngine->addFunction(QString("void initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->initConstsString())));
