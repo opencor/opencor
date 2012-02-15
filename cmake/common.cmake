@@ -438,7 +438,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # OpenCOR dependencies
 
-                FOREACH(OPENCOR_DEPENDENCY ${OPENCOR_DEPENDENCIES})
+                FOREACH(OPENCOR_DEPENDENCY ${OPENCOR_DEPENDENCIES} ${PLUGIN_NAME})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
                         ${OPENCOR_DEPENDENCY}Plugin
                     )
