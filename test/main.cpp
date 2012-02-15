@@ -56,7 +56,9 @@ int main(int pArgc, char *pArgv[])
             // On Linux and Mac OS X, if we want to load plugins, we must
             // execute the test from the directory where the test is, so...
 
+#ifndef Q_WS_WIN
             ::chdir(qPrintable(exePath));
+#endif
 
             // Execute the test itself
 
