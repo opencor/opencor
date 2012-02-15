@@ -32,6 +32,7 @@ int main(int pArgc, char *pArgv[])
     Tests tests;
 
     tests["CellMLSupport"] = QStringList() << "test";
+    tests["Computer"] = QStringList() << "test";
 
     // Run the different tests
 

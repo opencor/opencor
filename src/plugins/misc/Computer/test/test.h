@@ -1,25 +1,30 @@
 //==============================================================================
-// CellML support test
+// Computer test
 //==============================================================================
 
-#include "test.h"
-
-//==============================================================================
-
-#include "../../../../test/testutils.h"
+#include <QtTest/QtTest>
 
 //==============================================================================
 
-void Test::initTestCase()
+namespace OpenCOR {
+namespace Computer {
+    class ComputerEngine;
+}   // namespace Computer
+}   // namespace OpenCOR
+
+//==============================================================================
+
+class Test : public QObject
 {
-    // Load the CellMLModelSupport plugin
+    Q_OBJECT
 
-    OpenCOR::loadPlugin("CellMLSupport");
-}
+private:
+    OpenCOR::Computer::ComputerEngine *mComputerEngine;
 
-//==============================================================================
-
-QTEST_MAIN(Test)
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
+};
 
 //==============================================================================
 // End of file

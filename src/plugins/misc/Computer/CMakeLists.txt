@@ -36,4 +36,6 @@ ADD_PLUGIN(Computer
         QtGui
     EXTERNAL_DEPENDENCIES
         ${LLVM_EXTERNAL_DEPENDENCIES}
+    TESTS
+        test
 )
