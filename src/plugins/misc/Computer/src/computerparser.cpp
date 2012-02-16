@@ -94,8 +94,8 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     // The EBNF grammar of a function is as follows:
     //
     //   Function       = VoidFunction | DoubleFunction ;
-    //   VoidFunction   = "void" Identifier "(" FunctionParameters ")" "{" [ Equations ] "}" ;
-    //   DoubleFunction = "double" Identifier "(" [ FunctionParameters ] ")" "{" [ Equations ] Return "}" ;
+    //   VoidFunction   = "void" Identifier "(" FunctionParameters ")" "{" Equations "}" ;
+    //   DoubleFunction = "double" Identifier "(" FunctionParameters ")" "{" Equations ReturnStatement "}" ;
 
     // Reset/initialise ourselves
 
@@ -202,7 +202,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     // Parse the return statement, but only in the case of a double function
 
     if (   (function->type() == ComputerFunction::Double)
-        && !parseReturn(function)) {
+        && !parseReturnStatement(function)) {
         // Something went wrong with the parsing of the return statement, so...
 
         delete function;
@@ -250,14 +250,11 @@ bool ComputerParser::parseFunctionParameters(ComputerFunction *pFunction)
 {
     // The EBNF grammar of a list of function parameters is as follows:
     //
-    //   FunctionParameters = FunctionParameter { "," FunctionParameter } ;
+    //   FunctionParameters = [ FunctionParameter { "," FunctionParameter } ] ;
 
-    // We must have 1+/0+ function parameters in the case of a void/double
-    // function
+    int oldNbOfErrors = mErrors.count();
 
-    bool needAtLeastOneFunctionParameter = pFunction->type() == ComputerFunction::Void;
-
-    if (parseFunctionParameter(pFunction, needAtLeastOneFunctionParameter))
+    if (parseFunctionParameter(pFunction, false))
         // The first function parameter was properly parsed, so look for other
         // function parameters
 
@@ -277,10 +274,10 @@ bool ComputerParser::parseFunctionParameters(ComputerFunction *pFunction)
         }
     else
         // Something went wrong with the parsing of the function parameter
-        // definition, but it should only be reported as an error if we expected
-        // a function parameter
+        // definition, but it should only be reported as an error if the number
+        // of errors has gone up
 
-        return !needAtLeastOneFunctionParameter;
+        return oldNbOfErrors == mErrors.count();
 
     // Everything went fine, so...
 
@@ -336,7 +333,7 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction *pFunction,
             return false;
         }
     } else {
-        addError(tr("an identifier"));
+        addError(tr("a '*' or an identifier"));
 
         return false;
     }
@@ -1170,7 +1167,7 @@ bool ComputerParser::parseRhsEquation(ComputerFunction *pFunction,
 
 //==============================================================================
 
-bool ComputerParser::parseReturn(ComputerFunction *pFunction)
+bool ComputerParser::parseReturnStatement(ComputerFunction *pFunction)
 {
     // The EBNF grammar of a return statement is as follows:
     //

@@ -38,6 +38,10 @@
         <source>a positive integer</source>
         <translation>un nombre entier positif</translation>
     </message>
+    <message>
+        <source>a &apos;*&apos; or an identifier</source>
+        <translation>un &apos;*&apos; ou un identifiant</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

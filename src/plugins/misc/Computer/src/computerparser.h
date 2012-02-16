@@ -55,7 +55,7 @@ private:
     bool parseFunctionParameter(ComputerFunction *pFunction,
                                 const bool &pNeeded = true);
     bool parseEquations(ComputerFunction *pFunction);
-    bool parseReturn(ComputerFunction *pFunction);
+    bool parseReturnStatement(ComputerFunction *pFunction);
 };
 
 //==============================================================================
