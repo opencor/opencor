@@ -13,12 +13,13 @@ ADD_PLUGIN(CellMLSupport
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
+        src/cellmlfilemanager.cpp
         src/cellmlmodel.cpp
         src/cellmlmodelissue.cpp
         src/cellmlmodelruntime.cpp
-        src/cellmlmodelmanager.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
+        src/cellmlfilemanager.h
         src/cellmlmodel.h
         src/cellmlmodelruntime.h
         src/cellmlsupportplugin.h
@@ -29,6 +30,7 @@ ADD_PLUGIN(CellMLSupport
     OPENCOR_DEPENDENCIES
         CellMLAPI
         Computer
+        Core
         LLVM
     QT_DEPENDENCIES
         QtCore

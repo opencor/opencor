@@ -12,6 +12,7 @@
 
 //==============================================================================
 
+#include <QDir>
 #include <QDragEnterEvent>
 #include <QFileInfo>
 #include <QLabel>
@@ -420,8 +421,8 @@ bool CentralWidget::openFile(const QString &pFileName)
     // Create a new tab, insert it just after the current tab and make it the
     // new current one
 
-    QString fileName = File::nativeFileName(pFileName);
-    QFileInfo fileInfo = QFileInfo(fileName);
+    QString nativeFileName = QDir::toNativeSeparators(pFileName);
+    QFileInfo fileInfo = QFileInfo(nativeFileName);
 
     mFileTabs->setCurrentIndex(mFileTabs->insertTab(mFileTabs->currentIndex()+1,
                                                     fileInfo.fileName()));
@@ -430,7 +431,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     // Note: this, for example, allows us to retrieve the name of a file which
     //       we want to close (see CentralWidget::closeFile())
 
-    mFileTabs->setTabToolTip(mFileTabs->currentIndex(), fileName);
+    mFileTabs->setTabToolTip(mFileTabs->currentIndex(), nativeFileName);
 
     // Update the GUI
 
@@ -438,7 +439,7 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     // Everything went fine, so let people know that the file has been opened
 
-    emit fileOpened(fileName);
+    emit fileOpened(nativeFileName);
 
     // Everything went fine, so...
 
@@ -534,7 +535,7 @@ bool CentralWidget::activateFile(const QString &pFileName)
     // Go through the different tabs and check whether one of them corresponds
     // to the requested file
 
-    QString nativeFileName = File::nativeFileName(pFileName);
+    QString nativeFileName = QDir::toNativeSeparators(pFileName);
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
         if (!mFileTabs->tabToolTip(i).compare(nativeFileName)) {
