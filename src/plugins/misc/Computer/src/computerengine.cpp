@@ -263,11 +263,6 @@ ComputerErrors ComputerEngine::parserErrors()
 
 llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 {
-    qDebug("---------------------------------------");
-    qDebug("Compilation of...");
-    qDebug("");
-    qDebug("%s", qPrintable(pFunction));
-
     // Parse the function
 
     ComputerFunction *function = mParser->parseFunction(pFunction);
@@ -487,11 +482,6 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     // Now that we are done generating some LLVM assembly code for the function,
     // we can parse that code and have LLVM generate some IR code that will get
     // automatically added to our module
-
-    qDebug("");
-    qDebug("LLVM assembly:");
-    qDebug("");
-    qDebug("%s", qPrintable(data.assemblyCode()));
 
     llvm::SMDiagnostic parseError;
     llvm::ParseAssemblyString(qPrintable(data.assemblyCode().replace("%%", "\%")),
