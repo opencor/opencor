@@ -79,7 +79,7 @@ void ComputerParser::addError(const QString &pMessage,
 
                 return;
 
-        mErrors.append(ComputerError(tr("%1 was expected, but '%2' was found instead").arg(pMessage, token.string()),
+        mErrors.append(ComputerError(tr("%1 was expected, but '%2' was found instead").arg(pMessage, (token.symbol() == ComputerScannerToken::Eof)?"EoF":token.string()),
                                      tokenLine, tokenColumn));
     } else {
         mErrors.append(ComputerError(pMessage, token.line(), token.column(),
