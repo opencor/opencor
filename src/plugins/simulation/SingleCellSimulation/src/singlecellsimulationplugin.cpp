@@ -155,7 +155,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
         // Output any warnings/errors that were generated
 
         foreach (const CellMLSupport::CellmlModelIssue &issue, cellmlModel->issues()) {
-            QString type = QString((issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
+            QString type = QString((issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warning");
             QString message = issue.formattedMessage();
             uint32_t line = issue.line();
             uint32_t column = issue.column();
@@ -196,7 +196,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
             foreach (const CellMLSupport::CellmlModelIssue &issue,
                      cellmlModelRuntime->issues()) {
-                QString type = QString((issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warrning");
+                QString type = QString((issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warning");
                 QString message = issue.formattedMessage();
 
                 qDebug("    [%s] %s", qPrintable(type), qPrintable(message));
