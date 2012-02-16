@@ -42,6 +42,14 @@
         <source>a &apos;*&apos; or an identifier</source>
         <translation>un &apos;*&apos; ou un identifiant</translation>
     </message>
+    <message>
+        <source>the RHS of an equation</source>
+        <translation>le côté droit d&apos;une équation</translation>
+    </message>
+    <message>
+        <source>an identifier or &apos;return&apos;</source>
+        <translation>un identifiant ou &apos;return&apos;</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

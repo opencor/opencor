@@ -167,7 +167,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be a closing bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::ClosingBracket) {
-        addError("')'");
+        addError("'double' or ')'");
 
         delete function;
 
@@ -1090,7 +1090,9 @@ bool ComputerParser::parseRhsEquation(ComputerFunction *pFunction,
     ComputerEquation *mainOrConditionEquation = 0;
 
     if (!parseOrExpression(this, pFunction, mainOrConditionEquation)) {
-        // Something went wrong with the parsing of a Or expression, so...
+        // Something went wrong with the parsing of an Or expression, so...
+
+        addError(tr("the RHS of an equation"));
 
         delete mainOrConditionEquation;
 
@@ -1176,7 +1178,7 @@ bool ComputerParser::parseReturnStatement(ComputerFunction *pFunction)
     // The current token must be "return"
 
     if (mScanner->token().symbol() != ComputerScannerToken::Return) {
-        addError("'return'");
+        addError(tr("an identifier or 'return'"));
 
         return false;
     }
