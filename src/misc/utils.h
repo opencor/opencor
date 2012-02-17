@@ -22,7 +22,7 @@ namespace OpenCOR {
 QString exec(const QString &pProg, const QString &pArgs);
 
 QString getOsName();
-QString getAppVersion(const QCoreApplication &pApp);
+QString getAppVersion(QCoreApplication *pApp);
 QString getAppCopyright(const bool &pHtml);
 
 //==============================================================================
