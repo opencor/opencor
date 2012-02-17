@@ -4,7 +4,7 @@
 #ifdef OpenCOR_MAIN
     #define CORE_EXPORT
 #else
-    #include <QObject>
+    #include <QtGlobal>
 
     #ifdef Core_PLUGIN
         #define CORE_EXPORT Q_DECL_EXPORT

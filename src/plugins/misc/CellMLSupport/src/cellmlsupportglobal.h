@@ -4,7 +4,7 @@
 #ifdef OpenCOR_MAIN
     #define CELLMLSUPPORT_EXPORT
 #else
-    #include <QObject>
+    #include <QtGlobal>
 
     #ifdef CellMLSupport_PLUGIN
         #define CELLMLSUPPORT_EXPORT Q_DECL_EXPORT

@@ -1,7 +1,7 @@
 #ifndef QSCINTILLASUPPORTGLOBAL_H
 #define QSCINTILLASUPPORTGLOBAL_H
 
-#include <QObject>
+#include <QtGlobal>
 
 #ifdef QScintillaSupport_PLUGIN
     #define QSCINTILLASUPPORT_EXPORT Q_DECL_EXPORT

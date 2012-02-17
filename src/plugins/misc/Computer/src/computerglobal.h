@@ -1,7 +1,7 @@
 #ifndef COMPUTERGLOBAL_H
 #define COMPUTERGLOBAL_H
 
-#include <QObject>
+#include <QtGlobal>
 
 #ifdef Computer_PLUGIN
     #define COMPUTER_EXPORT Q_DECL_EXPORT
