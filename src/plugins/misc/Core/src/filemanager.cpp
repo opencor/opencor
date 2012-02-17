@@ -130,7 +130,7 @@ FileManager * FileManager::instance()
 
     static FileManager instance;
 
-qDebug(">>> FileManager::instance() -- %d", &instance);
+qDebug(">>> FileManager::instance() -- %ld", (long) &instance);
 
     return &instance;
 }

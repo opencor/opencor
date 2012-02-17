@@ -33,8 +33,8 @@ CellmlFileManager::CellmlFileManager()
 {
     // Create some connections to keep track of some events related to our
     // 'global' file manager
-qDebug(">>> CellmlFileManager::CellmlFileManager() -- 1 -- %d", this);
-qDebug(">>> CellmlFileManager::CellmlFileManager() -- 2 -- %d", Core::FileManager::instance());
+qDebug(">>> CellmlFileManager::CellmlFileManager() -- 1 -- %ld", (long) this);
+qDebug(">>> CellmlFileManager::CellmlFileManager() -- 2 -- %ld", (long) Core::FileManager::instance());
     connect(Core::FileManager::instance(), SIGNAL(fileManaged(const QString &)),
             this, SLOT(fileManaged(const QString &)));
     connect(Core::FileManager::instance(), SIGNAL(fileUnmanaged(const QString &)),
@@ -58,7 +58,7 @@ CellmlFileManager * CellmlFileManager::instance()
     // Return our 'global' CellML file manager
 
     static CellmlFileManager instance;
-qDebug(">>> CellmlFileManager::instance() -- %d", &instance);
+qDebug(">>> CellmlFileManager::instance() -- %ld", (long) &instance);
 
     return &instance;
 }
