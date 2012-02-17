@@ -3,10 +3,8 @@
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-
-//==============================================================================
-
-#include <QTimer>
+#include "cellmlsupportplugin.h"
+#include "filemanager.h"
 
 //==============================================================================
 
@@ -15,62 +13,85 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileManager::CellmlFileManager(const int &pTimerInterval)
+CellmlFile::CellmlFile(const QString &pFileName) :
+    mFileName(pFileName)
 {
-    //
+}
 
-    // Create our timer
+//==============================================================================
 
-    mTimer = new QTimer(this);
+QString CellmlFile::fileName() const
+{
+    // Return the file name of the CellML file
 
-    // A connection to handle the timing out of our timer
+    return mFileName;
+}
 
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(checkFiles()));
+//==============================================================================
 
-    // Start our timer
-
-    mTimer->start(pTimerInterval);
+CellmlFileManager::CellmlFileManager()
+{
+    // Create some connections to keep track of some events related to our
+    // 'global' file manager
+qDebug(">>> CellmlFileManager::CellmlFileManager() -- 1 -- %d", this);
+qDebug(">>> CellmlFileManager::CellmlFileManager() -- 2 -- %d", Core::FileManager::instance());
+    connect(Core::FileManager::instance(), SIGNAL(fileManaged(const QString &)),
+            this, SLOT(fileManaged(const QString &)));
+    connect(Core::FileManager::instance(), SIGNAL(fileUnmanaged(const QString &)),
+            this, SLOT(fileUnmanaged(const QString &)));
 }
 
 //==============================================================================
 
 CellmlFileManager::~CellmlFileManager()
 {
-    // Delete the timer
+    // Remove all the managed files
 
-    delete mTimer;
+    foreach (CellmlFile *cellmlFile, mCellmlFiles)
+        delete cellmlFile;
 }
 
 //==============================================================================
 
 CellmlFileManager * CellmlFileManager::instance()
 {
-    // Return our 'global' CellML model manager
+    // Return our 'global' CellML file manager
 
     static CellmlFileManager instance;
+qDebug(">>> CellmlFileManager::instance() -- %d", &instance);
 
     return &instance;
 }
 
 //==============================================================================
 
-void CellmlFileManager::checkFiles()
+void CellmlFileManager::fileManaged(const QString &pFileName)
 {
-    // Check that our various CellML models are still referenced in our 'global'
-    // file manager
+qDebug(">>> CellmlFileManager::fileManaged(%s)", qPrintable(pFileName));
 
-    for (int i = mCellmlFiles.count()-1; i >= 0; --i) {
-        CellmlFile *cellmlFile = mCellmlFiles.at(i);
+    if (isCellmlFile(pFileName))
+        // We are dealing with a CellML file, so we can add it to our list of
+        // managed CellML files
 
-        if (!Core::FileManager::instance()->isManaged(cellmlFile->fileName())) {
-            // The CellML file is not managed by our 'global' file manager, so
-            // remove it
+        mCellmlFiles << new CellmlFile(pFileName);
+}
 
-            mCellmlFiles.removeAt(i);
+//==============================================================================
 
-            delete cellmlFile;
-        }
-    }
+void CellmlFileManager::fileUnmanaged(const QString &pFileName)
+{
+    if (isCellmlFile(pFileName))
+        // We are dealing with a CellML file, so we can remove it from our list
+        // of managed CellML files
+
+        foreach (CellmlFile *cellmlFile, mCellmlFiles)
+            if (cellmlFile->fileName() == pFileName) {
+                // The CellML file has been found, so remove it
+
+                mCellmlFiles.removeAt(mCellmlFiles.indexOf(cellmlFile));
+
+                delete cellmlFile;
+            }
 }
 
 //==============================================================================

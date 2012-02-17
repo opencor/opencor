@@ -123,7 +123,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
     // generic simulation view widget
 
     if (CellMLSupport::isCellmlFile(pFileName))
-        // Not the expected file extension, so...
+        // We are dealing with a CellML file, so...
 
         return 0;
     else

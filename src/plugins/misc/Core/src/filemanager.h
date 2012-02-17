@@ -30,7 +30,7 @@ static const QString FileSystemMimeType = "text/uri-list";
 
 //==============================================================================
 
-class CORE_EXPORT File
+class File
 {
 public:
     enum Status
@@ -91,6 +91,9 @@ private:
     QList<File *> mFiles;
 
 Q_SIGNALS:
+    void fileManaged(const QString &pFileName);
+    void fileUnmanaged(const QString &pFileName);
+
     void fileContentsChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
 

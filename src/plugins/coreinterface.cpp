@@ -24,7 +24,7 @@ void CoreInterface::finalize()
 
 //==============================================================================
 
-void CoreInterface::setup(const QList<Plugin *> &)
+void CoreInterface::setup(const Plugins &)
 {
     // Nothing to do by default...
 }

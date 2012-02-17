@@ -35,8 +35,8 @@ public:
                            const PluginInfo::Type &pGuiOrConsoleType);
     ~PluginManager();
 
-    QList<Plugin *> plugins(const bool &pOnlyLoadedPlugins = false) const;
-    QList<Plugin *> loadedPlugins() const;
+    Plugins plugins(const bool &pOnlyLoadedPlugins = false) const;
+    Plugins loadedPlugins() const;
 
     QString pluginsDir() const;
     QMap<QString, Plugin *> mappedPlugins() const;

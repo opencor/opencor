@@ -47,7 +47,7 @@ class CorePlugin : public QObject, public CoreInterface, public GuiInterface,
 public:
     virtual void initialize();
 
-    virtual void setup(const QList<Plugin *> &pLoadedPlugins);
+    virtual void setup(const Plugins &pLoadedPlugins);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;

@@ -160,6 +160,8 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void openFiles(const QStringList &pFileNames);
+
+private Q_SLOTS:
     void previousFile();
     void nextFile();
     bool closeFile(const int &pIndex = -1);

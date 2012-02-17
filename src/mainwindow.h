@@ -104,14 +104,13 @@ private:
     void showSelf();
 #endif
 
-public Q_SLOTS:
+private Q_SLOTS:
 #ifdef Q_WS_WIN
     void singleAppMsgRcvd(const QString &) const;
 #else
     void singleAppMsgRcvd(const QString &);
 #endif
 
-private Q_SLOTS:
     void on_actionFullScreen_triggered();
     void on_actionSystem_triggered();
     void on_actionEnglish_triggered();

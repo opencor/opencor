@@ -123,11 +123,11 @@ PluginManager::~PluginManager()
 
 //==============================================================================
 
-QList<Plugin *> PluginManager::plugins(const bool &pOnlyLoadedPlugins) const
+Plugins PluginManager::plugins(const bool &pOnlyLoadedPlugins) const
 {
     // Return a list of all the plugins
 
-    QList<Plugin *> res;
+    Plugins res;
 
     foreach (Plugin *plugin, mPlugins)
         if (   !pOnlyLoadedPlugins
@@ -139,7 +139,7 @@ QList<Plugin *> PluginManager::plugins(const bool &pOnlyLoadedPlugins) const
 
 //==============================================================================
 
-QList<Plugin *> PluginManager::loadedPlugins() const
+Plugins PluginManager::loadedPlugins() const
 {
     // Return a list of all the loaded plugins
 

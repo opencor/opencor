@@ -138,7 +138,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     // Initialise our various plugins
 
-    QList<Plugin *> loadedPlugins = mPluginManager->loadedPlugins();
+    Plugins loadedPlugins = mPluginManager->loadedPlugins();
 
     foreach (Plugin *plugin, loadedPlugins) {
         // Do various things that are related to our differennt plugin
@@ -696,7 +696,7 @@ void MainWindow::setLocale(const QString &pLocale)
         //       translated, since it needs to know the name of the view that
         //       was created by the RawView plugin), so...
 
-        QList<Plugin *> loadedPlugins = mPluginManager->loadedPlugins();
+        Plugins loadedPlugins = mPluginManager->loadedPlugins();
 
         for (int i = loadedPlugins.count()-1; i >= 0; --i) {
             I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(loadedPlugins.at(i)->instance());

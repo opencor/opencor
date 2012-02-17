@@ -112,7 +112,7 @@ FileManager::FileManager(const int &pTimerInterval)
 
 FileManager::~FileManager()
 {
-    // Delete the timer
+    // Delete some internal objects
 
     delete mTimer;
 
@@ -130,6 +130,8 @@ FileManager * FileManager::instance()
 
     static FileManager instance;
 
+qDebug(">>> FileManager::instance() -- %d", &instance);
+
     return &instance;
 }
 
@@ -137,10 +139,10 @@ FileManager * FileManager::instance()
 
 FileManager::Status FileManager::manage(const QString &pFileName)
 {
-    QFileInfo fileInfo = QDir::toNativeSeparators(pFileName);
+    QString nativeFileName = QDir::toNativeSeparators(pFileName);
 
-    if (fileInfo.exists()) {
-        if (isManaged(fileInfo.canonicalFilePath())) {
+    if (QFileInfo(nativeFileName).exists()) {
+        if (isManaged(nativeFileName)) {
             // The file is already managed, so...
 
             return AlreadyManaged;
@@ -148,7 +150,9 @@ FileManager::Status FileManager::manage(const QString &pFileName)
             // The file isn't already managed, so add it to our list of managed
             // files
 
-            mFiles << new File(fileInfo.canonicalFilePath());
+            mFiles << new File(nativeFileName);
+
+            emit fileManaged(nativeFileName);
 
             return Added;
         }
@@ -163,10 +167,10 @@ FileManager::Status FileManager::manage(const QString &pFileName)
 
 FileManager::Status FileManager::unmanage(const QString &pFileName)
 {
-    QFileInfo fileInfo = QDir::toNativeSeparators(pFileName);
+    QString nativeFileName = QDir::toNativeSeparators(pFileName);
 
-    if (fileInfo.exists()) {
-        File *file = isManaged(fileInfo.canonicalFilePath());
+    if (QFileInfo(nativeFileName).exists()) {
+        File *file = isManaged(nativeFileName);
 
         if (file) {
             // The file is managed, so we can remove it
@@ -174,6 +178,8 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
             mFiles.removeAt(mFiles.indexOf(file));
 
             delete file;
+
+            emit fileUnmanaged(nativeFileName);
 
             return Removed;
         } else {

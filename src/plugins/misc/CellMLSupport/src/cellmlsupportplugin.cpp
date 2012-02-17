@@ -2,6 +2,7 @@
 // CellMLSupport plugin
 //==============================================================================
 
+#include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 
 //==============================================================================
@@ -33,6 +34,16 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 //==============================================================================
 
 Q_EXPORT_PLUGIN2(CellMLSupport, CellMLSupportPlugin)
+
+//==============================================================================
+
+void CellMLSupportPlugin::setup(const Plugins &)
+{
+    // Make a call to the instance of the CellML file manager so that it get
+    // setup and can then do its job
+
+    CellmlFileManager::instance();
+}
 
 //==============================================================================
 

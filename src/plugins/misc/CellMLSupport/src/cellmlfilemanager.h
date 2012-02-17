@@ -8,11 +8,6 @@
 //==============================================================================
 
 #include "cellmlmodel.h"
-#include "filemanager.h"
-
-//==============================================================================
-
-class QTimer;
 
 //==============================================================================
 
@@ -21,8 +16,15 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CellmlFile : public Core::File
+class CellmlFile
 {
+public:
+    explicit CellmlFile(const QString &pFileName);
+
+    QString fileName() const;
+
+private:
+    QString mFileName;
 };
 
 //==============================================================================
@@ -32,17 +34,17 @@ class CellmlFileManager : public QObject
     Q_OBJECT
 
 public:
-    explicit CellmlFileManager(const int &pTimerInterval = 1000);
-    ~CellmlFileManager();
-
     static CellmlFileManager * instance();
 
 private:
-    QTimer *mTimer;
     QList<CellmlFile *> mCellmlFiles;
 
+    explicit CellmlFileManager();
+    ~CellmlFileManager();
+
 private Q_SLOTS:
-    void checkFiles();
+    void fileManaged(const QString &pFileName);
+    void fileUnmanaged(const QString &pFileName);
 };
 
 //==============================================================================

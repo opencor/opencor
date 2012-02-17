@@ -166,7 +166,7 @@ void CorePlugin::initialize()
 
 //==============================================================================
 
-void CorePlugin::setup(const QList<Plugin *> &pLoadedPlugins)
+void CorePlugin::setup(const Plugins &pLoadedPlugins)
 {
     // Retrieve the file types supported by the plugins
 

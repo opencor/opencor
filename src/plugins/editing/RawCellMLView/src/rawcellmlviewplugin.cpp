@@ -59,7 +59,7 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
     // Check that we are dealing with a CellML file
 
     if (CellMLSupport::isCellmlFile(pFileName))
-        // Not the expected file extension, so...
+        // We are dealing with a CellML file, so...
 
         return GuiInterface::newViewWidget(pFileName);
 
