@@ -37,9 +37,7 @@ INCLUDE_DIRECTORIES(../src/misc)
 # Third-party library which must be directly embedded in the console version of
 # OpenCOR
 
-INCLUDE_THIRD_PARTY_LIBRARIES(..
-    LibQxt
-)
+INCLUDE_THIRD_PARTY_LIBRARY(.. LibQxt)
 
 # Qt specific
 

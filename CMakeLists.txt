@@ -110,10 +110,8 @@ UPDATE_LANGUAGE_FILES(${PROJECT_NAME} FALSE)
 # Third-party libraries which must be directly embedded in the GUI version of
 # OpenCOR
 
-INCLUDE_THIRD_PARTY_LIBRARIES(.
-    LibQxt
-    QtSingleApplication
-)
+INCLUDE_THIRD_PARTY_LIBRARY(. LibQxt)
+INCLUDE_THIRD_PARTY_LIBRARY(. QtSingleApplication)
 
 # Set the application icon, but only for Windows and Mac OS X, since in the
 # case of Linux, it's done through res/OpenCOR.qrc
