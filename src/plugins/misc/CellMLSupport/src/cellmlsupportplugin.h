@@ -8,11 +8,9 @@
 //==============================================================================
 
 #include "cellmlsupportglobal.h"
-#include "coreinterface.h"
-#include "plugin.h"
-#include "plugininfo.h"
 #include "fileinterface.h"
 #include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
@@ -30,17 +28,14 @@ static const QString CellmlFileExtension = "cellml";
 
 //==============================================================================
 
-class CellMLSupportPlugin : public QObject, public CoreInterface,
-                            public FileInterface, public I18nInterface
+class CellMLSupportPlugin : public QObject, public FileInterface,
+                            public I18nInterface
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::FileInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    virtual void setup(const Plugins &);
-
     virtual QList<FileType> fileTypes() const;
     virtual QString fileTypeDescription(const QString &mMimeType) const;
 };
