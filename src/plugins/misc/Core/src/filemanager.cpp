@@ -2,6 +2,7 @@
 // File manager
 //==============================================================================
 
+#include "application.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -130,9 +131,10 @@ FileManager * FileManager::instance()
 
     static FileManager instance;
 
-qDebug(">>> FileManager::instance() -- %ld", (long) &instance);
+FileManager *res = (FileManager *) ((Application *) qApp)->singleton("OpenCOR::Core::FileManager", &instance);
+qDebug(">>> FileManager::instance() -- %ld", (long) &res);
 
-    return &instance;
+    return (FileManager *) ((Application *) qApp)->singleton("OpenCOR::Core::FileManager", &instance);
 }
 
 //==============================================================================

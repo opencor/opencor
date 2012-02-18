@@ -2,6 +2,7 @@
 // CellML file manager
 //==============================================================================
 
+#include "application.h"
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "filemanager.h"
@@ -58,9 +59,11 @@ CellmlFileManager * CellmlFileManager::instance()
     // Return our 'global' CellML file manager
 
     static CellmlFileManager instance;
-qDebug(">>> CellmlFileManager::instance() -- %ld", (long) &instance);
 
-    return &instance;
+CellmlFileManager *res = (CellmlFileManager *) ((Application *) qApp)->singleton("OpenCOR::Core::CellmlFileManager", &instance);
+qDebug(">>> CellmlFileManager::instance() -- %ld", (long) &res);
+
+    return (CellmlFileManager *) ((Application *) qApp)->singleton("OpenCOR::Core::CellmlFileManager", &instance);
 }
 
 //==============================================================================

@@ -11,12 +11,15 @@
 
 //==============================================================================
 
+#include <QMap>
+
+//==============================================================================
+
 #include <QtSingleApplication>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
 
 //==============================================================================
 
@@ -26,11 +29,15 @@ class CORE_EXPORT Application : public QtSingleApplication
 
 public:
     explicit Application(int pArgc, char *pArgv[]);
+
+    void * singleton(const QString &pClassName, void *pDefaultClassInstance);
+
+private:
+    QMap<QString, void *> mSingletons;
 };
 
 //==============================================================================
 
-}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

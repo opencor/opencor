@@ -24,8 +24,7 @@ int main(int pArgc, char *pArgv[])
 
     // Create the application
 
-    Core::Application *app = new Core::Application(pArgc, pArgv);
-//    QtSingleApplication *app = new QtSingleApplication(pArgc, pArgv);
+    Application *app = new Application(pArgc, pArgv);
 
     // Some general initialisations
 
