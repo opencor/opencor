@@ -35,9 +35,6 @@ CellmlFileManager::CellmlFileManager()
     // Create some connections to keep track of some events related to our
     // 'global' file manager
 
-qDebug(">>> CellmlFileManager::CellmlFileManager() -- CellmlFileManager -- %ld", (long) this);
-qDebug(">>> CellmlFileManager::CellmlFileManager() -- FileManager -- %ld", (long) Core::FileManager::instance());
-
     connect(Core::FileManager::instance(), SIGNAL(fileManaged(const QString &)),
             this, SLOT(fileManaged(const QString &)));
     connect(Core::FileManager::instance(), SIGNAL(fileUnmanaged(const QString &)),
@@ -62,8 +59,6 @@ CellmlFileManager * CellmlFileManager::instance()
 
     static CellmlFileManager instance;
 
-qDebug(">>> CellmlFileManager::instance() -- %ld", (long) Core::singleton("OpenCOR::CellMLSupport::CellmlFileManager", &instance));
-
     return (CellmlFileManager *) Core::singleton("OpenCOR::CellMLSupport::CellmlFileManager", &instance);
 }
 
@@ -71,8 +66,6 @@ qDebug(">>> CellmlFileManager::instance() -- %ld", (long) Core::singleton("OpenC
 
 void CellmlFileManager::fileManaged(const QString &pFileName)
 {
-qDebug(">>> CellmlFileManager::fileManaged(%s)", qPrintable(pFileName));
-
     if (isCellmlFile(pFileName))
         // We are dealing with a CellML file, so we can add it to our list of
         // managed CellML files

@@ -131,8 +131,6 @@ FileManager * FileManager::instance()
 
     static FileManager instance;
 
-qDebug(">>> FileManager::instance() -- %ld", (long) singleton("OpenCOR::Core::FileManager", &instance));
-
     return (FileManager *) singleton("OpenCOR::Core::FileManager", &instance);
 }
 
