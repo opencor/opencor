@@ -49,7 +49,6 @@ SET(SOURCES
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
 
-    src/plugins/misc/Core/src/application.cpp
     src/plugins/misc/Core/src/commonwidget.cpp
 )
 
@@ -61,8 +60,6 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
-
-    src/plugins/misc/Core/src/application.h
 )
 
 SET(UIS

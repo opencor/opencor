@@ -2,7 +2,6 @@
 // Main
 //==============================================================================
 
-#include "application.h"
 #include "mainwindow.h"
 #include "common.h"
 
@@ -11,10 +10,26 @@
 #include <QDir>
 #include <QPointer>
 #include <QProcess>
+#include <QSettings>
+
+//==============================================================================
+
+#include <QtSingleApplication>
 
 //==============================================================================
 
 using namespace OpenCOR;
+
+//==============================================================================
+
+void removeSingletons()
+{
+    // Remove all the singletons that we may have created and used, or may have
+    // inherited from a previous instance of OpenCOR (e.g. as a result of a
+    // crash or something)
+
+    QSettings(qApp->applicationName()).remove("Singletons");
+}
 
 //==============================================================================
 
@@ -24,7 +39,7 @@ int main(int pArgc, char *pArgv[])
 
     // Create the application
 
-    Application *app = new Application(pArgc, pArgv);
+    QtSingleApplication *app = new QtSingleApplication(pArgc, pArgv);
 
     // Some general initialisations
 
@@ -74,6 +89,10 @@ int main(int pArgc, char *pArgv[])
                         +QDir::separator()+"plugins");
 #endif
 
+    // Remove singletons, in case OpenCOR previously crashed or something
+
+    removeSingletons();
+
     // Create the main window
 
     MainWindow *win = new MainWindow;
@@ -103,9 +122,17 @@ int main(int pArgc, char *pArgv[])
     QString appFilePath = app->applicationFilePath();
     QString appDirPath  = app->applicationDirPath();
 
-    // Delete some internal objects
+    // Delete the main window
 
     delete win;
+
+    // Remove any trace of the singletons that were created and used during this
+    // instance of OpenCOR
+
+    removeSingletons();
+
+    // Delete the application
+
     delete app;
 
     // We are done with the execution of the application, so now the question is

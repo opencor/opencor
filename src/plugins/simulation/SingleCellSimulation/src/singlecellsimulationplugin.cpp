@@ -122,8 +122,8 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
     // Check that we are dealing with a CellML file and, if so, return our
     // generic simulation view widget
 
-    if (CellMLSupport::isCellmlFile(pFileName))
-        // We are dealing with a CellML file, so...
+    if (!CellMLSupport::isCellmlFile(pFileName))
+        // We are not dealing with a CellML file, so...
 
         return 0;
     else

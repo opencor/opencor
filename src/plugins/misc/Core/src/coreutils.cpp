@@ -6,8 +6,10 @@
 
 //==============================================================================
 
+#include <QApplication>
 #include <QFile>
 #include <QResource>
+#include <QSettings>
 
 //==============================================================================
 
@@ -57,6 +59,33 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
         file.write(resourceAsByteArray(pResource));
         file.close();
     }
+}
+
+//==============================================================================
+
+void * singleton(const QString &pClassName, void *pClassDefaultInstance)
+{
+    // Retrieve the singleton associated with a given class
+
+    QSettings settings(qApp->applicationName());
+    qlonglong singleton;
+
+    settings.beginGroup("Singletons");
+        singleton = settings.value(pClassName, 0).toLongLong();
+
+        if (!singleton) {
+            // There is no singleton associated with the given class, so use
+            // the class's default instance we were given
+
+            singleton = (qlonglong) pClassDefaultInstance;
+
+            settings.setValue(pClassName, singleton);
+        }
+    settings.endGroup();
+
+    // Return the class's singleton
+
+    return (void *) singleton;
 }
 
 //==============================================================================

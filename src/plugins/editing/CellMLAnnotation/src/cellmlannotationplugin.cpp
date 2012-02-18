@@ -50,8 +50,8 @@ QWidget * CellMLAnnotationPlugin::newViewWidget(const QString &pFileName)
 {
     // Check that we are dealing with a CellML file
 
-    if (CellMLSupport::isCellmlFile(pFileName))
-        // We are dealing with a CellML file, so...
+    if (!CellMLSupport::isCellmlFile(pFileName))
+        // We are not dealing with a CellML file, so...
 
         return GuiInterface::newViewWidget(pFileName);
 

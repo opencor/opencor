@@ -2,9 +2,9 @@
 // CellML file manager
 //==============================================================================
 
-#include "application.h"
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "coreutils.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -34,8 +34,7 @@ CellmlFileManager::CellmlFileManager()
 {
     // Create some connections to keep track of some events related to our
     // 'global' file manager
-qDebug(">>> CellmlFileManager::CellmlFileManager() -- 1 -- %ld", (long) this);
-qDebug(">>> CellmlFileManager::CellmlFileManager() -- 2 -- %ld", (long) Core::FileManager::instance());
+
     connect(Core::FileManager::instance(), SIGNAL(fileManaged(const QString &)),
             this, SLOT(fileManaged(const QString &)));
     connect(Core::FileManager::instance(), SIGNAL(fileUnmanaged(const QString &)),
@@ -60,10 +59,7 @@ CellmlFileManager * CellmlFileManager::instance()
 
     static CellmlFileManager instance;
 
-CellmlFileManager *res = (CellmlFileManager *) ((Application *) qApp)->singleton("OpenCOR::Core::CellmlFileManager", &instance);
-qDebug(">>> CellmlFileManager::instance() -- %ld", (long) &res);
-
-    return (CellmlFileManager *) ((Application *) qApp)->singleton("OpenCOR::Core::CellmlFileManager", &instance);
+    return (CellmlFileManager *) Core::singleton("OpenCOR::CellMLSupport::CellmlFileManager", &instance);
 }
 
 //==============================================================================
@@ -94,6 +90,8 @@ void CellmlFileManager::fileUnmanaged(const QString &pFileName)
                 mCellmlFiles.removeAt(mCellmlFiles.indexOf(cellmlFile));
 
                 delete cellmlFile;
+
+                break;
             }
 }
 
