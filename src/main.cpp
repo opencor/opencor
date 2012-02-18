@@ -22,13 +22,11 @@ using namespace OpenCOR;
 
 //==============================================================================
 
-void removeSingletons()
+void removeInstances()
 {
-    // Remove all the singletons that we may have created and used, or may have
-    // inherited from a previous instance of OpenCOR (e.g. as a result of a
-    // crash or something)
+    // Remove all 'global' instances
 
-    QSettings(qApp->applicationName()).remove("Singletons");
+    QSettings(qApp->applicationName()).remove("Instances");
 }
 
 //==============================================================================
@@ -89,9 +87,10 @@ int main(int pArgc, char *pArgv[])
                         +QDir::separator()+"plugins");
 #endif
 
-    // Remove singletons, in case OpenCOR previously crashed or something
+    // Remove all 'global' instances, in case OpenCOR previously crashed or
+    // something (and therefore didn't remove all of them before quitting)
 
-    removeSingletons();
+    removeInstances();
 
     // Create the main window
 
@@ -126,10 +125,10 @@ int main(int pArgc, char *pArgv[])
 
     delete win;
 
-    // Remove any trace of the singletons that were created and used during this
-    // instance of OpenCOR
+    // Remove all 'global' instances that were created and used during this
+    // session
 
-    removeSingletons();
+    removeInstances();
 
     // Delete the application
 

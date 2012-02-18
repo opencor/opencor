@@ -127,11 +127,11 @@ FileManager::~FileManager()
 
 FileManager * FileManager::instance()
 {
-    // Return our 'global' file manager
+    // Return the 'global' instance of our file manager class
 
     static FileManager instance;
 
-    return (FileManager *) singleton("OpenCOR::Core::FileManager", &instance);
+    return (FileManager *) Core::instance("OpenCOR::Core::FileManager", &instance);
 }
 
 //==============================================================================

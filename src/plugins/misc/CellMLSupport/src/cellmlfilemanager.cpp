@@ -55,11 +55,11 @@ CellmlFileManager::~CellmlFileManager()
 
 CellmlFileManager * CellmlFileManager::instance()
 {
-    // Return our 'global' CellML file manager
+    // Return the 'global' instance of our CellML file manager class
 
     static CellmlFileManager instance;
 
-    return (CellmlFileManager *) Core::singleton("OpenCOR::CellMLSupport::CellmlFileManager", &instance);
+    return (CellmlFileManager *) Core::instance("OpenCOR::CellMLSupport::CellmlFileManager", &instance);
 }
 
 //==============================================================================

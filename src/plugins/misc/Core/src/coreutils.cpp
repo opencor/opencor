@@ -63,37 +63,51 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
 
 //==============================================================================
 
-void * singleton(const QString &pClassName, void *pClassDefaultInstance)
+#ifdef Q_WS_MAC
+void * instance(const QString &, void *pDefaultGlobalInstance)
+#else
+void * instance(const QString &pClassName, void *pDefaultGlobalInstance)
+#endif
 {
-    // Retrieve the singleton associated with a given class
-    // Note: on Mac OS X, there seems to be read/write conflicts, so ideally we
-    //       would be using a mutex, but the question is then how to share that
-    //       mutex between all the plugins (i.e. exactly the problem we are
-    //       trying to solve with the singletons!), but since again the
-    //       singleton doesn't apply to Mac OS X, so...
+    // Retrieve the 'global' instance associated with a given class
+    // Note: initially, the plan was to have a static instance of a given class
+    //       and return its address. However, this approach doesn't work on
+    //       Windows and Linux (but does on Mac OS X). Indeed, say that the Core
+    //       plugin is required by two other plugins, then these two plugins
+    //       won't get the same 'copy' of the Core plugin. (It seems like) each
+    //       'copy' gets its own address space. (This is not the case on Mac OS
+    //       X, (most likely) because of the way applications are bundled on
+    //       that platform.) To address this issue, we keep track of the address
+    //       of a 'global' instance using QSettings. Now, this approach works
+    //       fine on both Windows and Linux, but... not on Mac OS X (!!). (It
+    //       would seem that) there are some read/write conflicts (when using
+    //       QSettings). These conflicts would normally be addressed using a
+    //       mutex, but then we would be back to the issue of being able to
+    //       share something between different plugins. So, instead, we, on Mac
+    //       OS X, revert to our original plan...
 
 #ifdef Q_WS_MAC
-    return (void *) pClassDefaultInstance;
+    return (void *) pDefaultGlobalInstance;
 #else
     QSettings settings(qApp->applicationName());
-    qlonglong singleton;
+    qlonglong globalInstance;
 
-    settings.beginGroup("Singletons");
-        singleton = settings.value(pClassName, 0).toLongLong();
+    settings.beginGroup("Instances");
+        globalInstance = settings.value(pClassName, 0).toLongLong();
 
-        if (!singleton) {
-            // There is no singleton associated with the given class, so use
-            // the class's default instance we were given
+        if (!globalInstance) {
+            // There is no 'global' instance associated with the given class, so
+            // use the class's default 'global' instance we were given
 
-            singleton = (qlonglong) pClassDefaultInstance;
+            globalInstance = (qlonglong) pDefaultGlobalInstance;
 
-            settings.setValue(pClassName, singleton);
+            settings.setValue(pClassName, globalInstance);
         }
     settings.endGroup();
 
-    // Return the class's singleton
+    // Return the class's 'global' instance
 
-    return (void *) singleton;
+    return (void *) globalInstance;
 #endif
 }
 

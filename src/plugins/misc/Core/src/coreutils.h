@@ -24,8 +24,8 @@ QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 void CORE_EXPORT saveResourceAs(const QString &pResource,
                                 const QString &pFilename);
 
-void CORE_EXPORT * singleton(const QString &pClassName,
-                             void *pClassDefaultInstance);
+void CORE_EXPORT * instance(const QString &pClassName,
+                            void *pDefaultGlobalInstance);
 
 //==============================================================================
 
