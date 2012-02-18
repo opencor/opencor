@@ -66,7 +66,15 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
 void * singleton(const QString &pClassName, void *pClassDefaultInstance)
 {
     // Retrieve the singleton associated with a given class
+    // Note: on Mac OS X, there seems to be read/write conflicts, so ideally we
+    //       would be using a mutex, but the question is then how to share that
+    //       mutex between all the plugins (i.e. exactly the problem we are
+    //       trying to solve with the singletons!), but since again the
+    //       singleton doesn't apply to Mac OS X, so...
 
+#ifdef Q_WS_MAC
+    return (void *) pClassDefaultInstance;
+#else
     QSettings settings(qApp->applicationName());
     qlonglong singleton;
 
@@ -86,6 +94,7 @@ void * singleton(const QString &pClassName, void *pClassDefaultInstance)
     // Return the class's singleton
 
     return (void *) singleton;
+#endif
 }
 
 //==============================================================================
