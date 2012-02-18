@@ -4,6 +4,9 @@ PROJECT(CorePlugin)
 
 ADD_PLUGIN(Core
     SOURCES
+        ../../../3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
+        ../../../3rdparty/QtSingleApplication/src/qtsingleapplication.cpp
+
         ../../coreinterface.cpp
         ../../fileinterface.cpp
         ../../guiinterface.cpp
@@ -11,6 +14,7 @@ ADD_PLUGIN(Core
         ../../plugin.cpp
         ../../plugininfo.cpp
 
+        src/application.cpp
         src/centralwidget.cpp
         src/commonwidget.cpp
         src/coreplugin.cpp
@@ -21,8 +25,12 @@ ADD_PLUGIN(Core
         src/organisationwidget.cpp
         src/treeview.cpp
     HEADERS_MOC
+        ../../../3rdparty/QtSingleApplication/src/qtlocalpeer.h
+        ../../../3rdparty/QtSingleApplication/src/qtsingleapplication.h
+
         ../../plugin.h
 
+        src/application.h
         src/centralwidget.h
         src/coreplugin.h
         src/docktoolbar.h
@@ -33,8 +41,11 @@ ADD_PLUGIN(Core
     UIS
         src/centralwidget.ui
     INCLUDE_DIRS
+        ../../../3rdparty/QtSingleApplication/src
+
         src
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
 )

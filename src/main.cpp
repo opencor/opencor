@@ -2,6 +2,7 @@
 // Main
 //==============================================================================
 
+#include "application.h"
 #include "mainwindow.h"
 #include "common.h"
 
@@ -10,10 +11,6 @@
 #include <QDir>
 #include <QPointer>
 #include <QProcess>
-
-//==============================================================================
-
-#include <QtSingleApplication>
 
 //==============================================================================
 
@@ -27,7 +24,8 @@ int main(int pArgc, char *pArgv[])
 
     // Create the application
 
-    QtSingleApplication *app = new QtSingleApplication(pArgc, pArgv);
+    Core::Application *app = new Core::Application(pArgc, pArgv);
+//    QtSingleApplication *app = new QtSingleApplication(pArgc, pArgv);
 
     // Some general initialisations
 
