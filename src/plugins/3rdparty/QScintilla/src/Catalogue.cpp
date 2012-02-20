@@ -102,14 +102,10 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmCmake);
 	LINK_LEXER(lmCOBOL);
 	LINK_LEXER(lmConf);
-*/
 	LINK_LEXER(lmCPP);
-/*---GRY---
 	LINK_LEXER(lmCPPNoCase);
 	LINK_LEXER(lmCsound);
-*/
 	LINK_LEXER(lmCss);
-/*---GRY---
 	LINK_LEXER(lmD);
 	LINK_LEXER(lmDiff);
 	LINK_LEXER(lmEiffel);
@@ -125,9 +121,7 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmGAP);
 	LINK_LEXER(lmGui4Cli);
 	LINK_LEXER(lmHaskell);
-*/
 	LINK_LEXER(lmHTML);
-/*---GRY---
 	LINK_LEXER(lmInno);
 	LINK_LEXER(lmKix);
 	LINK_LEXER(lmLatex);
@@ -163,9 +157,7 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmProps);
 	LINK_LEXER(lmPS);
 	LINK_LEXER(lmPureBasic);
-*/
 	LINK_LEXER(lmPython);
-/*---GRY---
 	LINK_LEXER(lmR);
 	LINK_LEXER(lmREBOL);
 	LINK_LEXER(lmRuby);

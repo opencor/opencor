@@ -6,10 +6,7 @@ ADD_PLUGIN(QScintilla
     SOURCES
         ../../plugininfo.cpp
 
-        lexers/LexCPP.cpp
-        lexers/LexCSS.cpp
         lexers/LexHTML.cpp
-        lexers/LexPython.cpp
 
         lexlib/Accessor.cpp
         lexlib/CharacterSet.cpp
