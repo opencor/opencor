@@ -32,7 +32,9 @@
 
 #include <Qsci/qsciglobal.h>
 
-// These are needed because scintilla class header files don't manage their own
+#include "SciNamespace.h"
+
+// These are needed because Scintilla class header files don't manage their own
 // dependencies properly.
 #include <assert.h>
 #include <ctype.h>
@@ -73,19 +75,22 @@ class QMimeData;
 QT_END_NAMESPACE
 
 class QsciScintillaBase;
-class SciCallTip;
-class SciPopup;
+class QsciSciCallTip;
+class QsciSciPopup;
 
 
-class ScintillaQt : public ScintillaBase
+// This is an internal class but it is referenced by a public class so it has
+// to have a Qsci prefix rather than being put in the Scintilla namespace
+// which would mean exposing the SCI_NAMESPACE mechanism).
+class QsciScintillaQt : public QSCI_SCI_NAMESPACE(ScintillaBase)
 {
 	friend class QsciScintillaBase;
-	friend class SciCallTip;
-	friend class SciPopup;
+	friend class QsciSciCallTip;
+	friend class QsciSciPopup;
 
 public:
-	ScintillaQt(QsciScintillaBase *qsb_);
-	virtual ~ScintillaQt();
+	QsciScintillaQt(QsciScintillaBase *qsb_);
+	virtual ~QsciScintillaQt();
 
 	virtual sptr_t WndProc(unsigned int iMessage, uptr_t wParam,
             sptr_t lParam);
@@ -103,18 +108,20 @@ private:
 	bool ModifyScrollBars(int nMax, int nPage);
 	void ReconfigureScrollBars();
 	void NotifyChange();
-	void NotifyParent(SCNotification scn);
-	void CopyToClipboard(const SelectionText &selectedText);
+	void NotifyParent(QSCI_SCI_NAMESPACE(SCNotification) scn);
+	void CopyToClipboard(
+            const QSCI_SCI_NAMESPACE(SelectionText) &selectedText);
 	void Copy();
 	void Paste();
-	void CreateCallTipWindow(PRectangle rc);
+	void CreateCallTipWindow(QSCI_SCI_NAMESPACE(PRectangle) rc);
 	void AddToPopUp(const char *label, int cmd = 0, bool enabled = true);
 	void ClaimSelection();
 	void UnclaimSelection();
-	static sptr_t DirectFunction(ScintillaQt *sci, unsigned int iMessage,
+	static sptr_t DirectFunction(QsciScintillaQt *sci, unsigned int iMessage,
             uptr_t wParam,sptr_t lParam);
 
-	QMimeData *mimeSelection(const SelectionText &text) const;
+	QMimeData *mimeSelection(
+            const QSCI_SCI_NAMESPACE(SelectionText) &text) const;
 	void paintEvent(QPaintEvent *e);
     void pasteFromClipboard(QClipboard::Mode mode);
 

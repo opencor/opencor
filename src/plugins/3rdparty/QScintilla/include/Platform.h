@@ -31,6 +31,12 @@
 #elif defined(QT)
 #undef PLAT_QT
 #define PLAT_QT  1
+
+#include <Qsci/qsciglobal.h>
+QT_BEGIN_NAMESPACE
+class QPainter;
+QT_END_NAMESPACE
+
 // This is needed to work around an HP-UX bug with Qt4.
 #include <qnamespace.h>
 
@@ -327,9 +333,7 @@ public:
  */
 #if defined(PLAT_QT)
 class XPM;
-class QPainter;
 #endif
-
 class Surface {
 private:
 	// Private so Surface objects can not be copied

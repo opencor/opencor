@@ -46,6 +46,7 @@ extern "C++" {
 
 QT_BEGIN_NAMESPACE
 class QAction;
+class QImage;
 class QIODevice;
 class QMenu;
 class QPoint;
@@ -55,7 +56,7 @@ class QsciCommandSet;
 class QsciLexer;
 class QsciStyle;
 class QsciStyledText;
-class ListBoxQt;
+class QsciListBoxQt;
 
 
 //! \brief The QsciScintilla class implements a higher level, more Qt-like,
@@ -2000,10 +2001,10 @@ private:
     QByteArray explicit_fillups;
     bool fillups_enabled;
 
-    // The following allow ListBoxQt to distinguish between an auto-completion
-    // list and a user list, and to return the full selection of an
-    // auto-completion list.
-    friend class ListBoxQt;
+    // The following allow QsciListBoxQt to distinguish between an
+    // auto-completion list and a user list, and to return the full selection
+    // of an auto-completion list.
+    friend class QsciListBoxQt;
 
     QString acSelection;
     bool isAutoCompletionList() const;

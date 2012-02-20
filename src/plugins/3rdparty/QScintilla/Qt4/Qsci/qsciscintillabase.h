@@ -48,7 +48,7 @@ class QPixmap;
 class QMimeData;
 QT_END_NAMESPACE
 
-class ScintillaQt;
+class QsciScintillaQt;
 
 
 //! \brief The QsciScintillaBase class implements the Scintilla editor widget
@@ -3190,10 +3190,10 @@ private slots:
     void handleSelection();
 
 private:
-    // This is needed to allow ScintillaQt to emit this class's signals.
-    friend class ScintillaQt;
+    // This is needed to allow QsciScintillaQt to emit this class's signals.
+    friend class QsciScintillaQt;
 
-    ScintillaQt *sci;
+    QsciScintillaQt *sci;
     QPoint triple_click_at;
     QTimer triple_click;
 

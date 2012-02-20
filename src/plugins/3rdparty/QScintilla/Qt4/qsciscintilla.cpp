@@ -32,10 +32,12 @@
 #include <qapplication.h>
 #include <qcolor.h>
 #include <qevent.h>
+#include <qimage.h>
 #include <qiodevice.h>
 #include <qkeysequence.h>
-#include <qmenu.h>
 #include <qpoint.h>
+
+#include <qmenu.h>
 
 #include "Qsci/qsciabstractapis.h"
 #include "Qsci/qscicommandset.h"
@@ -4037,15 +4039,6 @@ bool QsciScintilla::event(QEvent *e)
 
         if (ke->key())
         {
-            // We want any of the standard context menu shortcuts.
-            if (ke == QKeySequence::Undo || ke == QKeySequence::Redo ||
-                ke == QKeySequence::Cut || ke == QKeySequence::Copy ||
-                ke == QKeySequence::Paste || ke == QKeySequence::SelectAll)
-            {
-                ke->accept();
-                return true;
-            }
-
             // We want ordinary characters.
             if ((ke->modifiers() == Qt::NoModifier || ke->modifiers() == Qt::ShiftModifier || ke->modifiers() == Qt::KeypadModifier) && ke->key() < Qt::Key_Escape)
             {

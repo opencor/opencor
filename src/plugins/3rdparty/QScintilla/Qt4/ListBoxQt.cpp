@@ -32,13 +32,13 @@
 #include "Qsci/qsciscintilla.h"
 
 
-ListBoxQt::ListBoxQt()
+QsciListBoxQt::QsciListBoxQt()
     : cb_action(0), cb_data(0), slb(0), visible_rows(5), utf8(false)
 {
 }
 
 
-void ListBoxQt::SetFont(Font &font)
+void QsciListBoxQt::SetFont(QSCI_SCI_NAMESPACE(Font) &font)
 {
     QFont *f = reinterpret_cast<QFont *>(font.GetID());
 
@@ -47,16 +47,17 @@ void ListBoxQt::SetFont(Font &font)
 }
 
 
-void ListBoxQt::Create(Window &parent, int, Point, int, bool unicodeMode)
+void QsciListBoxQt::Create(QSCI_SCI_NAMESPACE(Window) &parent, int,
+        QSCI_SCI_NAMESPACE(Point), int, bool unicodeMode)
 {
     utf8 = unicodeMode;
 
     // The parent we want is the QsciScintillaBase, not the text area.
-    wid = slb = new SciListBox(reinterpret_cast<QWidget *>(parent.GetID())->parentWidget(), this);
+    wid = slb = new QsciSciListBox(reinterpret_cast<QWidget *>(parent.GetID())->parentWidget(), this);
 }
 
 
-void ListBoxQt::SetAverageCharWidth(int)
+void QsciListBoxQt::SetAverageCharWidth(int)
 {
     // We rely on sizeHint() for the size of the list box rather than make
     // calculations based on the average character width and the number of
@@ -64,22 +65,22 @@ void ListBoxQt::SetAverageCharWidth(int)
 }
 
 
-void ListBoxQt::SetVisibleRows(int vrows)
+void QsciListBoxQt::SetVisibleRows(int vrows)
 {
     // We only pretend to implement this.
     visible_rows = vrows;
 }
 
 
-int ListBoxQt::GetVisibleRows() const
+int QsciListBoxQt::GetVisibleRows() const
 {
     return visible_rows;
 }
 
 
-PRectangle ListBoxQt::GetDesiredRect()
+QSCI_SCI_NAMESPACE(PRectangle) QsciListBoxQt::GetDesiredRect()
 {
-    PRectangle rc(0, 0, 100, 100);
+    QSCI_SCI_NAMESPACE(PRectangle) rc(0, 0, 100, 100);
 
     if (slb)
     {
@@ -93,7 +94,7 @@ PRectangle ListBoxQt::GetDesiredRect()
 }
 
 
-int ListBoxQt::CaretFromEdge()
+int QsciListBoxQt::CaretFromEdge()
 {
     int dist = 0;
 
@@ -116,7 +117,7 @@ int ListBoxQt::CaretFromEdge()
 }
 
 
-void ListBoxQt::Clear()
+void QsciListBoxQt::Clear()
 {
     Q_ASSERT(slb);
 
@@ -124,7 +125,7 @@ void ListBoxQt::Clear()
 }
 
 
-void ListBoxQt::Append(char *s, int type)
+void QsciListBoxQt::Append(char *s, int type)
 {
     Q_ASSERT(slb);
 
@@ -144,7 +145,7 @@ void ListBoxQt::Append(char *s, int type)
 }
 
 
-int ListBoxQt::Length()
+int QsciListBoxQt::Length()
 {
     Q_ASSERT(slb);
 
@@ -152,7 +153,7 @@ int ListBoxQt::Length()
 }
 
 
-void ListBoxQt::Select(int n)
+void QsciListBoxQt::Select(int n)
 {
     Q_ASSERT(slb);
 
@@ -160,7 +161,7 @@ void ListBoxQt::Select(int n)
 }
 
 
-int ListBoxQt::GetSelection()
+int QsciListBoxQt::GetSelection()
 {
     Q_ASSERT(slb);
 
@@ -168,7 +169,7 @@ int ListBoxQt::GetSelection()
 }
 
 
-int ListBoxQt::Find(const char *prefix)
+int QsciListBoxQt::Find(const char *prefix)
 {
     Q_ASSERT(slb);
 
@@ -176,7 +177,7 @@ int ListBoxQt::Find(const char *prefix)
 }
 
 
-void ListBoxQt::GetValue(int n, char *value, int len)
+void QsciListBoxQt::GetValue(int n, char *value, int len)
 {
     Q_ASSERT(slb);
 
@@ -227,7 +228,7 @@ void ListBoxQt::GetValue(int n, char *value, int len)
 }
 
 
-void ListBoxQt::Sort()
+void QsciListBoxQt::Sort()
 {
     Q_ASSERT(slb);
 
@@ -235,33 +236,37 @@ void ListBoxQt::Sort()
 }
 
 
-void ListBoxQt::RegisterImage(int type, const char *xpm_data)
+void QsciListBoxQt::RegisterImage(int type, const char *xpm_data)
 {
     xset.insert(type, *reinterpret_cast<const QPixmap *>(xpm_data));
 }
 
 
-void ListBoxQt::RegisterRGBAImage(int type, int, int, const unsigned char *pixelsImage)
+void QsciListBoxQt::RegisterRGBAImage(int type, int, int,
+        const unsigned char *pixelsImage)
 {
-    xset.insert(type,
-            QPixmap::fromImage(*reinterpret_cast<const QImage *>(pixelsImage)));
+    QPixmap pm;
+
+    pm.convertFromImage(*reinterpret_cast<const QImage *>(pixelsImage));
+    xset.insert(type, pm);
 }
 
 
-void ListBoxQt::ClearRegisteredImages()
+void QsciListBoxQt::ClearRegisteredImages()
 {
     xset.clear();
 }
 
 
-void ListBoxQt::SetDoubleClickAction(CallBackAction action, void *data)
+void QsciListBoxQt::SetDoubleClickAction(
+        QSCI_SCI_NAMESPACE(CallBackAction) action, void *data)
 {
     cb_action = action;
     cb_data = data;
 }
 
 
-void ListBoxQt::SetList(const char *list, char separator, char typesep)
+void QsciListBoxQt::SetList(const char *list, char separator, char typesep)
 {
     char *words;
 
@@ -307,17 +312,17 @@ void ListBoxQt::SetList(const char *list, char separator, char typesep)
 
 // The ListBox methods that need to be implemented explicitly.
 
-ListBox::ListBox()
+QSCI_SCI_NAMESPACE(ListBox)::ListBox()
 {
 }
 
 
-ListBox::~ListBox()
+QSCI_SCI_NAMESPACE(ListBox)::~ListBox()
 {
 }
 
 
-ListBox *ListBox::Allocate()
+QSCI_SCI_NAMESPACE(ListBox) *QSCI_SCI_NAMESPACE(ListBox)::Allocate()
 {
-    return new ListBoxQt();
+    return new QsciListBoxQt();
 }

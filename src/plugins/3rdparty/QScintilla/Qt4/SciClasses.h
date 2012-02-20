@@ -38,67 +38,71 @@ class QMouseEvent;
 class QPaintEvent;
 QT_END_NAMESPACE
 
-class ScintillaQt;
+class QsciScintillaQt;
+class QsciListBoxQt;
 
 
-// A simple QWidget sub-class to implement a call tip.
-class SciCallTip : public QWidget
+// A simple QWidget sub-class to implement a call tip.  This is not put into
+// the Scintilla namespace because of moc's problems with preprocessor macros.
+class QsciSciCallTip : public QWidget
 {
     Q_OBJECT
 
 public:
-    SciCallTip(QWidget *parent, ScintillaQt *sci_);
-    ~SciCallTip();
+    QsciSciCallTip(QWidget *parent, QsciScintillaQt *sci_);
+    ~QsciSciCallTip();
 
 protected:
     void paintEvent(QPaintEvent *e);
     void mousePressEvent(QMouseEvent *e);
 
 private:
-    ScintillaQt *sci;
+    QsciScintillaQt *sci;
 };
 
 
-// A popup menu where options correspond to a numeric command.
+// A popup menu where options correspond to a numeric command.  This is not put
+// into the Scintilla namespace because of moc's problems with preprocessor
+// macros.
 
 #include <QMenu>
 #include <QSignalMapper>
 
-class SciPopup : public QMenu
+class QsciSciPopup : public QMenu
 {
     Q_OBJECT
 
 public:
-    SciPopup();
+    QsciSciPopup();
 
     void addItem(const QString &label, int cmd, bool enabled,
-            ScintillaQt *sci_);
+            QsciScintillaQt *sci_);
 
 private slots:
     void on_triggered(int cmd);
 
 private:
-    ScintillaQt *sci;
+    QsciScintillaQt *sci;
     QSignalMapper mapper;
 };
 
 
 
 // This sub-class of QListBox is needed to provide slots from which we can call
-// ListBox's double-click callback.  (And you thought this was a C++ program.)
-
-class ListBoxQt;
+// QsciListBox's double-click callback (and you thought this was a C++
+// program).  This is not put into the Scintilla namespace because of moc's
+// problems with preprocessor macros.
 
 
 #include <QListWidget>
 
-class SciListBox : public QListWidget
+class QsciSciListBox : public QListWidget
 {
     Q_OBJECT
 
 public:
-    SciListBox(QWidget *parent, ListBoxQt *lbx_);
-    virtual ~SciListBox();
+    QsciSciListBox(QWidget *parent, QsciListBoxQt *lbx_);
+    virtual ~QsciSciListBox();
 
     void addItemPixmap(const QPixmap &pm, const QString &txt);
 
@@ -112,7 +116,7 @@ private slots:
     void handleSelection();
 
 private:
-    ListBoxQt *lbx;
+    QsciListBoxQt *lbx;
 };
 
 

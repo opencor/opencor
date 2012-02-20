@@ -24,6 +24,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
+#include "SciNamespace.h"
 #include "SciClasses.h"
 
 #include <qevent.h>
@@ -35,7 +36,7 @@
 
 
 // Create a call tip.
-SciCallTip::SciCallTip(QWidget *parent, ScintillaQt *sci_)
+QsciSciCallTip::QsciSciCallTip(QWidget *parent, QsciScintillaQt *sci_)
     : QWidget(parent, Qt::WindowFlags(Qt::Popup|Qt::FramelessWindowHint|Qt::WA_StaticContents)),
       sci(sci_)
 {
@@ -46,7 +47,7 @@ SciCallTip::SciCallTip(QWidget *parent, ScintillaQt *sci_)
 
 
 // Destroy a call tip.
-SciCallTip::~SciCallTip()
+QsciSciCallTip::~QsciSciCallTip()
 {
     // Ensure that the main window doesn't receive a focus out event when
     // this is destroyed.
@@ -55,9 +56,9 @@ SciCallTip::~SciCallTip()
 
 
 // Paint a call tip.
-void SciCallTip::paintEvent(QPaintEvent *)
+void QsciSciCallTip::paintEvent(QPaintEvent *)
 {
-    Surface *surfaceWindow = Surface::Allocate();
+    QSCI_SCI_NAMESPACE(Surface) *surfaceWindow = QSCI_SCI_NAMESPACE(Surface)::Allocate();
 
     if (!surfaceWindow)
         return;
@@ -72,9 +73,9 @@ void SciCallTip::paintEvent(QPaintEvent *)
 
 
 // Handle a mouse press in a call tip.
-void SciCallTip::mousePressEvent(QMouseEvent *e)
+void QsciSciCallTip::mousePressEvent(QMouseEvent *e)
 {
-    Point pt;
+    QSCI_SCI_NAMESPACE(Point) pt;
 
     pt.x = e->x();
     pt.y = e->y();
@@ -88,7 +89,7 @@ void SciCallTip::mousePressEvent(QMouseEvent *e)
 
 
 // Create the popup instance.
-SciPopup::SciPopup()
+QsciSciPopup::QsciSciPopup()
 {
     // Set up the mapper.
     connect(&mapper, SIGNAL(mapped(int)), this, SLOT(on_triggered(int)));
@@ -96,8 +97,8 @@ SciPopup::SciPopup()
 
 
 // Add an item and associated command to the popup and enable it if required.
-void SciPopup::addItem(const QString &label, int cmd, bool enabled,
-        ScintillaQt *sci_)
+void QsciSciPopup::addItem(const QString &label, int cmd, bool enabled,
+        QsciScintillaQt *sci_)
 {
     QAction *act = addAction(label, &mapper, SLOT(map()));
     mapper.setMapping(act, cmd);
@@ -107,7 +108,7 @@ void SciPopup::addItem(const QString &label, int cmd, bool enabled,
 
 
 // A slot to handle a menu action being triggered.
-void SciPopup::on_triggered(int cmd)
+void QsciSciPopup::on_triggered(int cmd)
 {
     sci->Command(cmd);
 }
@@ -117,9 +118,18 @@ void SciPopup::on_triggered(int cmd)
 #include <QListWidgetItem>
 
 
-SciListBox::SciListBox(QWidget *parent, ListBoxQt *lbx_)
+QsciSciListBox::QsciSciListBox(QWidget *parent, QsciListBoxQt *lbx_)
     : QListWidget(parent), lbx(lbx_)
 {
+    setAttribute(Qt::WA_StaticContents);
+
+#if defined(Q_WS_WIN32)
+    setWindowFlags(Qt::Tool|Qt::FramelessWindowHint);
+
+    // This stops the main widget losing focus when the user clicks on this one
+    // (which prevents this one being destroyed).
+    setFocusPolicy(Qt::NoFocus);
+#else
     // This is the root of the focus problems under Gnome's window manager.  We
     // have tried many flag combinations in the past.  The consensus now seems
     // to be that the following works.  However it might now work because of a
@@ -130,9 +140,10 @@ SciListBox::SciListBox(QWidget *parent, ListBoxQt *lbx_)
 #else
     setWindowFlags(Qt::Tool|Qt::FramelessWindowHint);
 #endif
-    setAttribute(Qt::WA_StaticContents);
 
+    // This may not be needed.
     setFocusProxy(parent);
+#endif
 
     setFrameShape(StyledPanel);
     setFrameShadow(Plain);
@@ -144,13 +155,13 @@ SciListBox::SciListBox(QWidget *parent, ListBoxQt *lbx_)
 }
 
 
-void SciListBox::addItemPixmap(const QPixmap &pm, const QString &txt)
+void QsciSciListBox::addItemPixmap(const QPixmap &pm, const QString &txt)
 {
     new QListWidgetItem(pm, txt, this);
 }
 
 
-int SciListBox::find(const QString &prefix)
+int QsciSciListBox::find(const QString &prefix)
 {
     QList<QListWidgetItem *> itms = findItems(prefix,
             Qt::MatchStartsWith|Qt::MatchCaseSensitive);
@@ -162,7 +173,7 @@ int SciListBox::find(const QString &prefix)
 }
 
 
-QString SciListBox::text(int n)
+QString QsciSciListBox::text(int n)
 {
     QListWidgetItem *itm = item(n);
 
@@ -174,7 +185,7 @@ QString SciListBox::text(int n)
 
 
 // Reimplemented to close the list when the user presses Escape.
-void SciListBox::keyPressEvent(QKeyEvent *e)
+void QsciSciListBox::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Escape)
     {
@@ -192,7 +203,7 @@ void SciListBox::keyPressEvent(QKeyEvent *e)
 
 
 
-SciListBox::~SciListBox()
+QsciSciListBox::~QsciSciListBox()
 {
     // Ensure that the main widget doesn't get a focus out event when this is
     // destroyed.
@@ -200,7 +211,7 @@ SciListBox::~SciListBox()
 }
 
 
-void SciListBox::handleSelection()
+void QsciSciListBox::handleSelection()
 {
     if (lbx && lbx->cb_action)
         lbx->cb_action(lbx->cb_data);

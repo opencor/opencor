@@ -101,7 +101,7 @@ QString QsciAPIsPrepared::apiBaseName(const QString &api)
     if (tail >= 0)
         base.truncate(tail);
 
-    return base;
+    return base.simplified();
 }
 
 

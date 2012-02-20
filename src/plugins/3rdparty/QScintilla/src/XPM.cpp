@@ -49,14 +49,23 @@ RGBAImage::RGBAImage(int width_, int height_, const unsigned char *pixels_)
     }
     else
     {
+#if QT_VERSION >= 0x040000
         qim = new QImage(width_, height_, QImage::Format_ARGB32);
+#else
+        qim = new QImage(width_, height_, 32);
+        qim->setAlphaBuffer(true);
+#endif
         qim->fill(0);
     }
 }
 
 RGBAImage::RGBAImage(const XPM &xpm)
 {
+#if QT_VERSION >= 0x040000
     qim = new QImage(xpm.Pixmap().toImage());
+#else
+    qim = new QImage(xpm.Pixmap().convertToImage());
+#endif
 
     width = qim->width();
     height = qim->height();
@@ -79,6 +88,7 @@ void RGBAImage::SetPixel(int x, int y, ColourDesired colour, int alpha)
 
     uint index_or_rgb;
 
+#if QT_VERSION >= 0x040000
     switch (qim->format())
     {
     case QImage::Format_RGB32:
@@ -116,6 +126,19 @@ void RGBAImage::SetPixel(int x, int y, ColourDesired colour, int alpha)
 
         qim->setColor(index_or_rgb, rgba);
     }
+#else
+    if (qim->depth() == 32)
+    {
+        index_or_rgb = rgba;
+    }
+    else
+    {
+        index_or_rgb = qim->numColors();
+        qim->setNumColors(index_or_rgb + 1);
+
+        qim->setColor(index_or_rgb, rgba);
+    }
+#endif
 
     qim->setPixel(x, y, index_or_rgb);
 }

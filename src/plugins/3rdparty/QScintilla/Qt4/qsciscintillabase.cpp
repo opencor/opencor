@@ -98,7 +98,7 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
 
     triple_click.setSingleShot(true);
 
-    sci = new ScintillaQt(this);
+    sci = new QsciScintillaQt(this);
 
     SendScintilla(SCI_SETCARETPERIOD, QApplication::cursorFlashTime() / 2);
 
@@ -199,7 +199,7 @@ long QsciScintillaBase::SendScintilla(unsigned int msg, int wParam) const
 long QsciScintillaBase::SendScintilla(unsigned int msg, long cpMin, long cpMax,
         char *lpstrText) const
 {
-    TextRange tr;
+    QSCI_SCI_NAMESPACE(TextRange) tr;
 
     tr.chrg.cpMin = cpMin;
     tr.chrg.cpMax = cpMax;
@@ -233,9 +233,9 @@ long QsciScintillaBase::SendScintilla(unsigned int msg, const QColor &col) const
 long QsciScintillaBase::SendScintilla(unsigned int msg, unsigned long wParam,
         QPainter *hdc, const QRect &rc, long cpMin, long cpMax) const
 {
-    RangeToFormat rf;
+    QSCI_SCI_NAMESPACE(RangeToFormat) rf;
 
-    rf.hdc = rf.hdcTarget = reinterpret_cast<SurfaceID>(hdc);
+    rf.hdc = rf.hdcTarget = reinterpret_cast<QSCI_SCI_NAMESPACE(SurfaceID)>(hdc);
 
     rf.rc.left = rc.left();
     rf.rc.top = rc.top();
@@ -274,7 +274,7 @@ void *QsciScintillaBase::SendScintillaPtrResult(unsigned int msg) const
 }
 
 
-// Handle the timer on behalf of the ScintillaQt instance.
+// Handle the timer on behalf of the QsciScintillaQt instance.
 void QsciScintillaBase::handleTimer()
 {
     sci->Tick();
@@ -284,7 +284,7 @@ void QsciScintillaBase::handleTimer()
 // Re-implemented to handle the context menu.
 void QsciScintillaBase::contextMenuEvent(QContextMenuEvent *e)
 {
-    sci->ContextMenu(Point(e->globalX(), e->globalY()));
+    sci->ContextMenu(QSCI_SCI_NAMESPACE(Point)(e->globalX(), e->globalY()));
 }
 
 
@@ -487,13 +487,14 @@ void QsciScintillaBase::mouseDoubleClickEvent(QMouseEvent *e)
     setFocus();
 
     // Make sure Scintilla will interpret this as a double-click.
-    unsigned clickTime = sci->lastClickTime + Platform::DoubleClickTime() - 1;
+    unsigned clickTime = sci->lastClickTime + QSCI_SCI_NAMESPACE(Platform)::DoubleClickTime() - 1;
 
     bool shift = e->modifiers() & Qt::ShiftModifier;
     bool ctrl = e->modifiers() & Qt::ControlModifier;
     bool alt = e->modifiers() & Qt::AltModifier;
 
-    sci->ButtonDown(Point(e->x(), e->y()), clickTime, shift, ctrl, alt);
+    sci->ButtonDown(QSCI_SCI_NAMESPACE(Point)(e->x(), e->y()), clickTime,
+            shift, ctrl, alt);
 
     // Remember the current position and time in case it turns into a triple
     // click.
@@ -505,7 +506,7 @@ void QsciScintillaBase::mouseDoubleClickEvent(QMouseEvent *e)
 // Handle a mouse move.
 void QsciScintillaBase::mouseMoveEvent(QMouseEvent *e)
 {
-    sci->ButtonMove(Point(e->x(), e->y()));
+    sci->ButtonMove(QSCI_SCI_NAMESPACE(Point)(e->x(), e->y()));
 }
 
 
@@ -514,7 +515,7 @@ void QsciScintillaBase::mousePressEvent(QMouseEvent *e)
 {
     setFocus();
 
-    Point pt(e->x(), e->y());
+    QSCI_SCI_NAMESPACE(Point) pt(e->x(), e->y());
 
     if (e->button() == Qt::LeftButton)
     {
@@ -523,9 +524,9 @@ void QsciScintillaBase::mousePressEvent(QMouseEvent *e)
         // It is a triple click if the timer is running and the mouse hasn't
         // moved too much.
         if (triple_click.isActive() && (e->globalPos() - triple_click_at).manhattanLength() < QApplication::startDragDistance())
-            clickTime = sci->lastClickTime + Platform::DoubleClickTime() - 1;
+            clickTime = sci->lastClickTime + QSCI_SCI_NAMESPACE(Platform)::DoubleClickTime() - 1;
         else
-            clickTime = sci->lastClickTime + Platform::DoubleClickTime() + 1;
+            clickTime = sci->lastClickTime + QSCI_SCI_NAMESPACE(Platform)::DoubleClickTime() + 1;
 
         triple_click.stop();
 
@@ -567,7 +568,7 @@ void QsciScintillaBase::mouseReleaseEvent(QMouseEvent *e)
     {
         bool ctrl = e->modifiers() & Qt::ControlModifier;
 
-        sci->ButtonUp(Point(e->x(), e->y()), 0, ctrl);
+        sci->ButtonUp(QSCI_SCI_NAMESPACE(Point)(e->x(), e->y()), 0, ctrl);
     }
 }
 
@@ -617,7 +618,7 @@ void QsciScintillaBase::dragEnterEvent(QDragEnterEvent *e)
 // Handle drag leaves.
 void QsciScintillaBase::dragLeaveEvent(QDragLeaveEvent *)
 {
-    sci->SetDragPosition(SelectionPosition());
+    sci->SetDragPosition(QSCI_SCI_NAMESPACE(SelectionPosition)());
 }
 
 
@@ -625,7 +626,8 @@ void QsciScintillaBase::dragLeaveEvent(QDragLeaveEvent *)
 void QsciScintillaBase::dragMoveEvent(QDragMoveEvent *e)
 {
     sci->SetDragPosition(
-            sci->SPositionFromLocation(Point(e->pos().x(), e->pos().y()),
+            sci->SPositionFromLocation(
+                    QSCI_SCI_NAMESPACE(Point)(e->pos().x(), e->pos().y()),
                     false, false, sci->UserVirtualSpace()));
 
     acceptAction(e);

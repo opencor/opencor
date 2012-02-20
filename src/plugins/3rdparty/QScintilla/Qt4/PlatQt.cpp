@@ -41,6 +41,8 @@
 #include <qdesktopwidget.h>
 #include <qpolygon.h>
 
+#include "SciNamespace.h"
+
 #include "Platform.h"
 #include "XPM.h"
 
@@ -49,6 +51,8 @@
 
 #include "FontQuality.h"
 
+
+QSCI_BEGIN_SCI_NAMESPACE
 
 // Type convertors.
 static QFont *PFont(FontID fid)
@@ -61,9 +65,9 @@ static QWidget *PWindow(WindowID wid)
     return reinterpret_cast<QWidget *>(wid);
 }
 
-static SciPopup *PMenu(MenuID mid)
+static QsciSciPopup *PMenu(MenuID mid)
 {
-    return reinterpret_cast<SciPopup *>(mid);
+    return reinterpret_cast<QsciSciPopup *>(mid);
 }
 
 
@@ -800,12 +804,12 @@ Menu::Menu() : mid(0)
 void Menu::CreatePopUp()
 {
     Destroy();
-    mid = new SciPopup();
+    mid = new QsciSciPopup();
 }
 
 void Menu::Destroy()
 {
-    SciPopup *m = PMenu(mid);
+    QsciSciPopup *m = PMenu(mid);
 
     if (m)
     {
@@ -1027,3 +1031,5 @@ void Platform::Assert(const char *c, const char *file, int line)
 {
     qFatal("Assertion [%s] failed at %s %d\n", c, file, line);
 }
+
+QSCI_END_SCI_NAMESPACE

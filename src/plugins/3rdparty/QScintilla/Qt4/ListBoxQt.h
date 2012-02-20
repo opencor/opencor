@@ -28,26 +28,32 @@
 #include <qpixmap.h>
 #include <qstring.h>
 
+#include "SciNamespace.h"
+
 #include "Platform.h"
 
 
-class SciListBox;
+class QsciSciListBox;
 
 
-class ListBoxQt : public ListBox
+// This is an internal class but it is referenced by a public class so it has
+// to have a Qsci prefix rather than being put in the Scintilla namespace
+// which would mean exposing the SCI_NAMESPACE mechanism).
+class QsciListBoxQt : public QSCI_SCI_NAMESPACE(ListBox)
 {
 public:
-    ListBoxQt();
+    QsciListBoxQt();
 
-    CallBackAction cb_action;
+    QSCI_SCI_NAMESPACE(CallBackAction) cb_action;
     void *cb_data;
 
-    virtual void SetFont(Font &font);
-    virtual void Create(Window &parent, int, Point, int, bool unicodeMode);
+    virtual void SetFont(QSCI_SCI_NAMESPACE(Font) &font);
+    virtual void Create(QSCI_SCI_NAMESPACE(Window) &parent, int,
+            QSCI_SCI_NAMESPACE(Point), int, bool unicodeMode);
     virtual void SetAverageCharWidth(int);
     virtual void SetVisibleRows(int);
     virtual int GetVisibleRows() const;
-    virtual PRectangle GetDesiredRect();
+    virtual QSCI_SCI_NAMESPACE(PRectangle) GetDesiredRect();
     virtual int CaretFromEdge();
     virtual void Clear();
     virtual void Append(char *s, int type = -1);
@@ -58,13 +64,15 @@ public:
     virtual void GetValue(int n, char *value, int len);
     virtual void Sort();
     virtual void RegisterImage(int type, const char *xpm_data);
-    virtual void RegisterRGBAImage(int type, int width, int height, const unsigned char *pixelsImage);
+    virtual void RegisterRGBAImage(int type, int width, int height,
+            const unsigned char *pixelsImage);
     virtual void ClearRegisteredImages();
-    virtual void SetDoubleClickAction(CallBackAction action, void *data);
+    virtual void SetDoubleClickAction(
+            QSCI_SCI_NAMESPACE(CallBackAction) action, void *data);
     virtual void SetList(const char *list, char separator, char typesep);
 
 private:
-    SciListBox *slb;
+    QsciSciListBox *slb;
     int visible_rows;
     bool utf8;
 
