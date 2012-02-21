@@ -2,9 +2,7 @@
 
 OS=`uname -s`
 
-if [ $OS = "Linux" ]; then
-    echo "\033[44;37;1mMaking OpenCOR...\033[0m"
-fi
+echo "\033[44;37;1mMaking OpenCOR...\033[0m"
 
 cd build
 
@@ -13,6 +11,4 @@ make $*
 
 cd ..
 
-if [ $OS = "Linux" ]; then
-    echo "\033[42;37;1mAll done!\033[0m"
-fi
+echo "\033[42;37;1mAll done!\033[0m"
