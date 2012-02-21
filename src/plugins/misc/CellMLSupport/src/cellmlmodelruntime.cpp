@@ -271,6 +271,7 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
     // Note #3: for things that don't need customising, we must make sure that
     //          it's in synch with CDA_CodeGenerator::makeCodeGenerationState in
     //          [CellML_API]/CCGS/sources/CCGSImplementation.cpp...
+    // Note #4: we don't currently support definite integrals...
 
     ObjRef<iface::cellml_services::MaLaESBootstrap> malaesBootstrap = CreateMaLaESBootstrap();
     ObjRef<iface::cellml_services::MaLaESTransform> malaesTransform = malaesBootstrap->compileTransformer(
