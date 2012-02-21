@@ -263,6 +263,10 @@ ComputerErrors ComputerEngine::parserErrors()
 
 llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 {
+    // Reset the engine's error
+
+    mError = ComputerError();
+
     // Parse the function
 
     ComputerFunction *function = mParser->parseFunction(pFunction);

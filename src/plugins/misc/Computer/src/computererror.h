@@ -23,7 +23,7 @@ namespace Computer {
 class COMPUTER_EXPORT ComputerError
 {
 public:
-    explicit ComputerError(const QString &pMessage,
+    explicit ComputerError(const QString &pMessage = QString(),
                            const int &pLine = 0, const int &pColumn = 0,
                            const QString &pExtraInformation = QString());
 

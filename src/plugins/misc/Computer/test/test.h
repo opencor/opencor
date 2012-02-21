@@ -26,6 +26,8 @@ private slots:
     void cleanupTestCase();
 
     void basicTests();
+    void voidFunctionTests();
+    void mathematicalOperatorTests();
 };
 
 //==============================================================================
