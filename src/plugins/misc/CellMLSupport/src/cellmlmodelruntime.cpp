@@ -309,9 +309,6 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"geq: #prec[30]#exprs[>=]\r\n"
                                                                           L"gt: #prec[30]#exprs[>]\r\n"
                                                                           L"implies: #prec[10(950)] !#expr1 || #expr2\r\n"
-                                                                          L"int: #prec[H]defint(func#unique1, VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, &#bvarIndex, #lowlimit, #uplimit, "
-                                                                          L"pret)#supplement double func#unique1(double VOI, "
-                                                                          L"double* CONSTANTS, double* RATES, double* STATES, double* ALGEBRAIC, int* pret) { return #expr1; }\r\n"
                                                                           L"lcm: #prec[H]lcm(#count, #exprs[, ])\r\n"                       // Customised version
                                                                           L"leq: #prec[30]#exprs[<=]\r\n"
                                                                           L"ln: #prec[H]log(#expr1)\r\n"
