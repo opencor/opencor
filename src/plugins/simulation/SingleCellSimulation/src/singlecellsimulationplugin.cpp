@@ -112,6 +112,10 @@ void SingleCellSimulationPlugin::resetCurves()
     }
 
     mCurves.clear();
+
+    // Refresh the view
+
+    mSimulationView->replot();
 }
 
 //==============================================================================
@@ -195,12 +199,10 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             qDebug(" - The model's runtime was NOT properly generated:");
 
             foreach (const CellMLSupport::CellmlModelIssue &issue,
-                     cellmlModelRuntime->issues()) {
-                QString type = QString((issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warning");
-                QString message = issue.formattedMessage();
-
-                qDebug("    [%s] %s", qPrintable(type), qPrintable(message));
-            }
+                     cellmlModelRuntime->issues())
+                qDebug("    [%s] %s",
+                       (issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warning",
+                       qPrintable(issue.formattedMessage()));
         }
 
         // Remove any existing curve
@@ -244,6 +246,8 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             model = Zhang2000;
         else if (!fileBaseName.compare("mitchell_schaeffer_2003"))
             model = Mitchell2003;
+        else
+            model = Unknown;
 
         if (model != Unknown) {
             typedef QVector<double> Doubles;
@@ -351,7 +355,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                 mCurves.append(curve);
             }
 
-            // Update the axes range
+            // Make sure that the view is up-to-date
 
             mSimulationView->replot();
         }
