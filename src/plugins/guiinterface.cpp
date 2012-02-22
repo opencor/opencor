@@ -454,6 +454,13 @@ QString GuiInterface::viewName(const int &)
 
 //==============================================================================
 
+void GuiInterface::setFocus()
+{
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
 GuiSettings * GuiInterface::guiSettings() const
 {
     // Return the plugin's GUI settings

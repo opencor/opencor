@@ -205,6 +205,8 @@ public:
     virtual QWidget * newViewWidget(const QString &);
     virtual QString viewName(const int &);
 
+    virtual void setFocus();
+
     GuiSettings * guiSettings() const;
 
     void setMainWindow(QMainWindow *pMainWindow);

@@ -257,6 +257,15 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+void CorePlugin::setFocus()
+{
+    // Set the focus to the central widget
+
+    mCentralWidget->setFocus();
+}
+
+//==============================================================================
+
 void CorePlugin::retranslateUi()
 {
     // Retranslate our different File actions

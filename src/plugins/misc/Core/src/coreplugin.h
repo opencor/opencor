@@ -52,6 +52,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    virtual void setFocus();
+
 protected:
     virtual void retranslateUi();
 

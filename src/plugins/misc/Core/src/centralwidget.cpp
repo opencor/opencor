@@ -400,6 +400,15 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+void CentralWidget::setFocus()
+{
+    // Set the focus to the contents' top widget
+
+    mContents->currentWidget()->setFocus();
+}
+
+//==============================================================================
+
 bool CentralWidget::openFile(const QString &pFileName)
 {
     if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
@@ -826,13 +835,6 @@ void CentralWidget::updateGui()
         mContents->removeWidget(mContents->currentWidget());
         mContents->addWidget(newView);
     }
-
-    // Set the focus to the top widget in mContents
-    // Note: in addition to (rightly) giving the focus to the view, it also
-    //       ensures that, on Linux (since it doesn't happen on Windows or Mac
-    //       OS X), none of the mode tabs is shown as being visibly selected
-
-    mContents->currentWidget()->setFocus();
 }
 
 //==============================================================================

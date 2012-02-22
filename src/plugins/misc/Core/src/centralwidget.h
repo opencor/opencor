@@ -90,6 +90,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    void setFocus();
+
     bool openFile(const QString &pFileName);
     bool activateFile(const QString &pFileName);
 

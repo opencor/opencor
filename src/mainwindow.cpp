@@ -40,6 +40,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
+static const QString CorePlugin = "Core";
+static const QString HelpPlugin = "Help";
+
+//==============================================================================
+
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
@@ -203,6 +208,16 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     loadSettings();
 
+    // Let the Core plugin decide what widget should get the focus
+
+    foreach (Plugin *plugin, loadedPlugins)
+        if (!plugin->name().compare(CorePlugin)) {
+            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+            if (guiInterface)
+                guiInterface->setFocus();
+        }
+
     // Initialise the checking state of the full screen action, since OpenCOR
     // may (re)start in full screen mode
 
@@ -304,9 +319,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 void MainWindow::initializeGuiPlugin(const QString &pPluginName,
                                      GuiSettings *pGuiSettings)
 {
-    static const QString CorePlugin = "Core";
-    static const QString HelpPlugin = "Help";
-
     // Add the menus to our menu bar or merge them to existing menus, if needed
     // Note: we must do that in reverse order since we are inserting menus,
     //       as opposed to appending them...
@@ -467,7 +479,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         }
     }
 
-    // Set the central widget, but only if it is being done from the Core plugin
+    // Set the central widget, but only if we are dealing with the Core plugin
 
     if (!pPluginName.compare(CorePlugin))
         if (pGuiSettings->centralWidget())
