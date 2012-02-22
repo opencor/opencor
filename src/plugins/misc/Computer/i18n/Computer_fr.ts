@@ -57,5 +57,9 @@
         <source>a positive integer</source>
         <translation>un nombre entier positif</translation>
     </message>
+    <message>
+        <source>an identifier</source>
+        <translation>un identifiant</translation>
+    </message>
 </context>
 </TS>

@@ -70,6 +70,22 @@ ComputerEquation::ComputerEquation(const Type &pType,
 
 //==============================================================================
 
+ComputerEquation::ComputerEquation(const Type &pType,
+                                   ComputerEquation *pLeftLeft,
+                                   ComputerEquation *pLeftRight,
+                                   ComputerEquation *pRightLeft,
+                                   ComputerEquation *pRightRight) :
+    mType(pType),
+    mParameterName(QString()),
+    mParameterIndex(-1),
+    mNumber(0),
+    mLeft(new ComputerEquation(TwoArguments, pLeftLeft, pLeftRight)),
+    mRight(new ComputerEquation(TwoArguments, pRightLeft, pRightRight))
+{
+}
+
+//==============================================================================
+
 ComputerEquation::ComputerEquation(const QString &pParameterName) :
     mType(DirectParameter),
     mParameterName(pParameterName),
@@ -221,6 +237,8 @@ QString ComputerEquation::typeAsString() const
         return "Max";
     case Min:
         return "Min";
+    case DefInt:
+        return "DefInt";
     case Assign:
         return "Assign";
     case Piecewise:
@@ -229,6 +247,8 @@ QString ComputerEquation::typeAsString() const
         return "PiecewiseCases";
     case OtherArguments:
         return "OtherArguments";
+    case TwoArguments:
+        return "TwoArguments";
     default:
         return "???";
     }

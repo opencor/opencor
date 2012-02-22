@@ -53,11 +53,15 @@ public:
 
         Gcd, Lcm, Max, Min,
 
+        // Definite integral function
+
+        DefInt,
+
         // Miscellaneous
 
         Assign,
         Piecewise, PiecewiseCases,
-        OtherArguments
+        OtherArguments, TwoArguments
     };
 
     explicit ComputerEquation(ComputerEquation *pEquation = 0);
@@ -67,6 +71,11 @@ public:
     explicit ComputerEquation(const Type &pType,
                               const int &pArgumentsCount,
                               ComputerEquation **pArguments);
+    explicit ComputerEquation(const Type &pType,
+                              ComputerEquation *pLeftLeft,
+                              ComputerEquation *pLeftRight,
+                              ComputerEquation *pRightLeft,
+                              ComputerEquation *pRightRight);
     explicit ComputerEquation(const QString &pParameterName);
     explicit ComputerEquation(const QString &pParameterName,
                               const int &pParameterIndex);

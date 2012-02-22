@@ -168,6 +168,11 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
     case Min:
         return ComputerEquation::Min;
 
+    // Definite integral function
+
+    case DefInt:
+        return ComputerEquation::DefInt;
+
     // Miscellaneous
 
     case Not:
@@ -284,6 +289,8 @@ QString ComputerScannerToken::symbolAsString() const
         return "Max";
     case Min:
         return "Min";
+    case DefInt:
+        return "DefInt";
     case OpeningBracket:
         return "OpeningBracket";
     case ClosingBracket:
@@ -395,6 +402,8 @@ ComputerScanner::ComputerScanner() :
     mKeywords.insert("lcm", ComputerScannerToken::Lcm);
     mKeywords.insert("max", ComputerScannerToken::Max);
     mKeywords.insert("min", ComputerScannerToken::Min);
+
+    mKeywords.insert("defint", ComputerScannerToken::DefInt);
 
     mKeywords.insert("return", ComputerScannerToken::Return);
 }

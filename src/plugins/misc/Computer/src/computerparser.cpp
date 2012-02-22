@@ -239,13 +239,6 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
 
 //==============================================================================
 
-ComputerEquation * ComputerParser::parseEquation(const QString &pEquation)
-{
-//---GRY--- TO BE DONE...
-}
-
-//==============================================================================
-
 bool ComputerParser::parseFunctionParameters(ComputerFunction *pFunction)
 {
     // The EBNF grammar of a list of function parameters is as follows:
@@ -455,14 +448,11 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
 typedef bool (*ParseGenericExpression)(ComputerParser *, ComputerFunction *,
                                        ComputerEquation * &);
 
-bool parseOrExpression(ComputerParser *pParser,
-                       ComputerFunction *pFunction,
+bool parseOrExpression(ComputerParser *pParser, ComputerFunction *pFunction,
                        ComputerEquation * &pExpression);
-bool parseAndExpression(ComputerParser *pParser,
-                        ComputerFunction *pFunction,
+bool parseAndExpression(ComputerParser *pParser, ComputerFunction *pFunction,
                         ComputerEquation * &pExpression);
-bool parseXorExpression(ComputerParser *pParser,
-                        ComputerFunction *pFunction,
+bool parseXorExpression(ComputerParser *pParser, ComputerFunction *pFunction,
                         ComputerEquation * &pExpression);
 bool parseEqualityExpression(ComputerParser *pParser,
                              ComputerFunction *pFunction,
@@ -476,11 +466,12 @@ bool parseAdditiveExpression(ComputerParser *pParser,
 bool parseMultiplicativeExpression(ComputerParser *pParser,
                                    ComputerFunction *pFunction,
                                    ComputerEquation * &pExpression);
-bool parseUnaryExpression(ComputerParser *pParser,
-                          ComputerFunction *pFunction,
+bool parseUnaryExpression(ComputerParser *pParser, ComputerFunction *pFunction,
                           ComputerEquation * &pExpression);
 bool parsePrimaryExpression(ComputerParser *pParser,
                             ComputerFunction *pFunction,
+                            ComputerEquation * &pExpression);
+bool parseParameter(ComputerParser *pParser, ComputerFunction *pFunction,
                             ComputerEquation * &pExpression);
 
 //==============================================================================
@@ -723,11 +714,13 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 {
     // The EBNF grammar of a primary expression is as follows:
     //
-    //   PrimaryExpression              =   Identifier [ "[" IntegerValue "]" ]
+    //   PrimaryExpression              =   Parameter
     //                                    | IntegerValue
     //                                    | DoubleValue
     //                                    | ( FunctionWithOneArgument "(" EquationRHS ")" ) ;
     //                                    | ( FunctionWithTwoArguments "(" EquationRHS "," EquationRHS ")" ) ;
+    //                                    | ( FunctionWithTwoOrMoreArguments "(" EquationRHS "," EquationRHS { "," Equation } ")" ) ;
+    //                                    | ( "defint" "(" EquationRHS "," EquationRHS "," EquationRHS "," Identifier ")" ) ;
     //                                    | ( "(" EquationRHS ")" ) ;
     //   FunctionWithOneArgument        =   "fabs" | "exp" | "log" | "ceil" | "floor" | "factorial"
     //                                    | "sin" | "cos" | "tan" | "sinh" | "cosh" | "tanh"
@@ -761,7 +754,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                                                                                                             << ComputerScannerToken::Pow
                                                                                                             << ComputerScannerToken::Quotient
                                                                                                             << ComputerScannerToken::Rem;
-    static const ComputerScannerToken::Symbols xArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Gcd
+    static const ComputerScannerToken::Symbols twoOrMoreArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Gcd
                                                                                                           << ComputerScannerToken::Lcm
                                                                                                           << ComputerScannerToken::Max
                                                                                                           << ComputerScannerToken::Min;
@@ -770,53 +763,10 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // We are dealing with an identifier which corresponds to the name of a
         // parameter, so keep track of it and get the next token
 
-        QString parameterName = pParser->scanner()->token().string();
+        if (!parseParameter(pParser, pFunction, pExpression))
+            // Something went wrong with the parsing of a parameter, so...
 
-        pParser->scanner()->getNextToken();
-
-        // Check whether the current token is "["
-
-        if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningSquareBracket) {
-            // We are dealing with an indirect parameter
-
-            pParser->scanner()->getNextToken();
-
-            // The current token must be an integer value
-
-            int parameterIndex = -1;
-
-            if (pParser->scanner()->token().symbol() == ComputerScannerToken::IntegerValue)
-                // We got an integer value, so keep track of it
-
-                parameterIndex = pParser->scanner()->token().string().toInt();
-
-            if (parameterIndex < 0) {
-                pParser->addError(QObject::tr("a positive integer"));
-
-                return false;
-            }
-
-            pParser->scanner()->getNextToken();
-
-            // The current token must be "]"
-
-            if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
-                pParser->addError("']'");
-
-                return false;
-            }
-
-            pParser->scanner()->getNextToken();
-
-            // Everything went fine with the parsing of our indirect parameter,
-            // so...
-
-            pExpression = new ComputerEquation(parameterName, parameterIndex);
-        } else {
-            // We are dealing with a direct parameter, so...
-
-            pExpression = new ComputerEquation(parameterName);
-        }
+            return false;
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::IntegerValue) {
         // We are dealing with an integer value, i.e. a number, so...
 
@@ -947,8 +897,8 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         pExpression = new ComputerEquation(equationType,
                                            argumentOne, argumentTwo);
-    } else if (xArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
-        // We are dealing with an X-argument function, so...
+    } else if (twoOrMoreArgumentFunctionSymbols.contains(pParser->scanner()->token().symbol())) {
+        // We are dealing with a two or more arguments function, so...
 
         ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
 
@@ -1032,6 +982,144 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         pExpression = new ComputerEquation(equationType,
                                            argumentsCount, arguments);
+    } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::DefInt) {
+        // We are dealing with a definite integral function, so...
+
+//---GRY--- THE BELOW CODE IS TO REMOVED ONCE DEFINITE INTEGRALS ARE SUPPORTED
+//          BY OpenCOR...
+
+pParser->addError("definite integrals are not yet supported", false);
+
+        ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
+
+        pParser->scanner()->getNextToken();
+
+        // The current token must be "("
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
+            pParser->addError("'('");
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // Parse the RHS of an equation
+
+        ComputerEquation *argumentOne = 0;
+
+        if (!pParser->parseRhsEquation(pFunction, argumentOne)) {
+            // Something went wrong with the parsing of the RHS of an equation,
+            // so...
+
+            delete argumentOne;
+
+            return false;
+        }
+
+        // The current token must be ","
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
+            pParser->addError("','");
+
+            delete argumentOne;
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // Parse the RHS of an equation
+
+        ComputerEquation *argumentTwo = 0;
+
+        if (!pParser->parseRhsEquation(pFunction, argumentTwo)) {
+            // Something went wrong with the parsing of the RHS of an equation,
+            // so...
+
+            delete argumentOne;
+            delete argumentTwo;
+
+            return false;
+        }
+
+        // The current token must be ","
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
+            pParser->addError("','");
+
+            delete argumentOne;
+            delete argumentTwo;
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // Parse the RHS of an equation
+
+        ComputerEquation *argumentThree = 0;
+
+        if (!pParser->parseRhsEquation(pFunction, argumentThree)) {
+            // Something went wrong with the parsing of the RHS of an equation,
+            // so...
+
+            delete argumentOne;
+            delete argumentTwo;
+            delete argumentThree;
+
+            return false;
+        }
+
+        // The current token must be ","
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
+            pParser->addError("','");
+
+            delete argumentOne;
+            delete argumentTwo;
+            delete argumentThree;
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // Parse the RHS of an equation
+
+        ComputerEquation *argumentFour = 0;
+
+        if (!parseParameter(pParser, pFunction, argumentFour)) {
+            // Something went wrong with the parsing of a parameter, so...
+
+            delete argumentOne;
+            delete argumentTwo;
+            delete argumentThree;
+            delete argumentFour;
+
+            return false;
+        }
+
+        // The current token must be ")"
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
+            pParser->addError("')'");
+
+            delete argumentOne;
+            delete argumentTwo;
+            delete argumentThree;
+            delete argumentFour;
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // The parsing of our two-argument function went fine, so...
+
+        pExpression = new ComputerEquation(equationType,
+                                           argumentOne, argumentTwo,
+                                           argumentThree, argumentFour);
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningBracket) {
         pParser->scanner()->getNextToken();
 
@@ -1068,6 +1156,80 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // We didn't get any of the above symbols, so...
 
         return false;
+    }
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
+bool parseParameter(ComputerParser *pParser, ComputerFunction *pFunction,
+                    ComputerEquation * &pExpression)
+{
+    // The EBNF grammar of a function parameter is as follows:
+    //
+    //   Parameter = Identifier [ "[" IntegerValue "]" ]
+
+    // The current token must be an identifier
+
+    QString parameterName = QString();
+
+    if (pParser->scanner()->token().symbol() == ComputerScannerToken::Identifier) {
+        // We got an identifier, so retrieve its name
+
+        parameterName = pParser->scanner()->token().string();
+    } else {
+        pParser->addError(QObject::tr("an identifier"));
+
+        return false;
+    }
+
+    pParser->scanner()->getNextToken();
+
+    // Check whether the current token is "["
+
+    if (pParser->scanner()->token().symbol() == ComputerScannerToken::OpeningSquareBracket) {
+        // We are dealing with an indirect parameter
+
+        pParser->scanner()->getNextToken();
+
+        // The current token must be an integer value
+
+        int parameterIndex = -1;
+
+        if (pParser->scanner()->token().symbol() == ComputerScannerToken::IntegerValue)
+            // We got an integer value, so keep track of it
+
+            parameterIndex = pParser->scanner()->token().string().toInt();
+
+        if (parameterIndex < 0) {
+            pParser->addError(QObject::tr("a positive integer"));
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // The current token must be "]"
+
+        if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
+            pParser->addError("']'");
+
+            return false;
+        }
+
+        pParser->scanner()->getNextToken();
+
+        // Everything went fine with the parsing of our indirect parameter,
+        // so...
+
+        pExpression = new ComputerEquation(parameterName, parameterIndex);
+    } else {
+        // We are dealing with a direct parameter, so...
+
+        pExpression = new ComputerEquation(parameterName);
     }
 
     // Everything went fine, so...

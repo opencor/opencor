@@ -266,8 +266,8 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
     // Note #1: idealy we wouly only specify what needs to be customised, but
     //          that's not the way the CellML API works, so instead we need to
     //          'customise' everything...
-    // Note #2: the customised functions are 'gcd', 'lcm', 'log', 'max', 'min',
-    //          'quotient' and 'rem'...
+    // Note #2: the customised elements are 'gcd', 'int', 'lcm', 'log', 'max',
+    //          'min', 'quotient' and 'rem'...
     // Note #3: for things that don't need customising, we must make sure that
     //          it's in synch with CDA_CodeGenerator::makeCodeGenerationState in
     //          [CellML_API]/CCGS/sources/CCGSImplementation.cpp...
@@ -305,25 +305,26 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"factorial: #prec[H]factorial(#expr1)\r\n"
                                                                           L"factorof: #prec[30(900)]#expr1 % #expr2 == 0\r\n"
                                                                           L"floor: #prec[H]floor(#expr1)\r\n"
-                                                                          L"gcd: #prec[H]gcd(#count, #exprs[, ])\r\n"                       // Customised version
+                                                                          L"gcd: #prec[H]gcd(#count, #exprs[, ])\r\n"                           // Customised version
                                                                           L"geq: #prec[30]#exprs[>=]\r\n"
                                                                           L"gt: #prec[30]#exprs[>]\r\n"
                                                                           L"implies: #prec[10(950)] !#expr1 || #expr2\r\n"
-                                                                          L"lcm: #prec[H]lcm(#count, #exprs[, ])\r\n"                       // Customised version
+                                                                          L"int: #prec[H]defint(#lowlimit, #uplimit, #expr1, #bvarIndex)\r\n"   // Customised version
+                                                                          L"lcm: #prec[H]lcm(#count, #exprs[, ])\r\n"                           // Customised version
                                                                           L"leq: #prec[30]#exprs[<=]\r\n"
                                                                           L"ln: #prec[H]log(#expr1)\r\n"
-                                                                          L"log: #prec[H]arbitraryLog(#expr1, #logbase)\r\n"                // Customised version
+                                                                          L"log: #prec[H]arbitraryLog(#expr1, #logbase)\r\n"                    // Customised version
                                                                           L"lt: #prec[30]#exprs[<]\r\n"
-                                                                          L"max: #prec[H]max(#count, #exprs[, ])\r\n"                       // Customised version
-                                                                          L"min: #prec[H]min(#count, #exprs[, ])\r\n"                       // Customised version
+                                                                          L"max: #prec[H]max(#count, #exprs[, ])\r\n"                           // Customised version
+                                                                          L"min: #prec[H]min(#count, #exprs[, ])\r\n"                           // Customised version
                                                                           L"minus: #prec[500]#expr1 - #expr2\r\n"
                                                                           L"neq: #prec[30]#expr1 != #expr2\r\n"
                                                                           L"not: #prec[950]!#expr1\r\n"
                                                                           L"or: #prec[10]#exprs[||]\r\n"
                                                                           L"plus: #prec[500]#exprs[+]\r\n"
                                                                           L"power: #prec[H]pow(#expr1, #expr2)\r\n"
-                                                                          L"quotient: #prec[1000(0)]quotient(#expr1, #expr2))\r\n"          // Customised version
-                                                                          L"rem: #prec[1000(0)]rem(#expr1, #expr2)\r\n"                     // Customised version
+                                                                          L"quotient: #prec[1000(0)]quotient(#expr1, #expr2))\r\n"              // Customised version
+                                                                          L"rem: #prec[1000(0)]rem(#expr1, #expr2)\r\n"                         // Customised version
                                                                           L"root: #prec[1000(900)] pow(#expr1, 1.0 / #degree)\r\n"
                                                                           L"sec: #prec[900(0)]1.0 / cos(#expr1)\r\n"
                                                                           L"sech: #prec[900(0)]1.0 / cosh(#expr1)\r\n"
@@ -513,8 +514,8 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             mComputerEngine->addFunction(
                 "double test2(double *pData)\n"
                 "{\n"
-                "  return  1"
-                "         *((pData[4] > pData[3])?(pData[4] < pData[3])?0:1:0)"
+                "  return  1\n"
+                "         *((pData[4] > pData[3])?(pData[4] < pData[3])?0:1:0)\n"
                 "         *(!5 || 7)*(!pData[3] || pData[4])\n"
                 "         *!(!5 || !7)*!(!pData[3] || !pData[4])\n"
                 "         *(5 && 7)*(pData[3] && pData[4])\n"

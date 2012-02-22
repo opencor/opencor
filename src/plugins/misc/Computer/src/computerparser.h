@@ -42,7 +42,6 @@ public:
                   const QString &pExtraInformation = QString());
 
     ComputerFunction * parseFunction(const QString &pFunction);
-    ComputerEquation * parseEquation(const QString &pEquation);
 
     bool parseRhsEquation(ComputerFunction *pFunction,
                           ComputerEquation * &pRhsEquation);

@@ -53,6 +53,10 @@ public:
 
         Gcd, Lcm, Max, Min,
 
+        // Definite integral function
+
+        DefInt,
+
         // Miscellaneous
 
         OpeningBracket, ClosingBracket,

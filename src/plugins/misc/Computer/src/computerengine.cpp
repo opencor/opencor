@@ -302,7 +302,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 
 //==============================================================================
 
-static QString Indent = QString("  ");
+static const QString Indent = QString("  ");
 
 //==============================================================================
 
@@ -1055,6 +1055,13 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
 
         break;
 
+    // Definite integral function
+
+    case ComputerEquation::DefInt:
+        //---GRY--- DEFINITE INTEGRALS ARE NOT YET SUPPORTED BY OpenCOR, SO...
+
+        break;
+
     // Miscellaneous
 
     case ComputerEquation::Piecewise:
@@ -1064,6 +1071,7 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
         break;
     case ComputerEquation::PiecewiseCases:
     case ComputerEquation::OtherArguments:
+    case ComputerEquation::TwoArguments:
         // Nothing to do...
 
         break;
