@@ -239,12 +239,13 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
     // Give, within the window, the focus to the nameValue widget, but then set
     // the focus to whoever had it before, if needed
 
-    QWidget *focusedWidget = QApplication::focusWidget();
+    QWidget *focusedWidget = ((QWidget *) parent())->focusWidget();
+    // Note: the parent of this window is OpenCOR's main window, so that allows
+    //       us to 'safely' retrieve OpenCOR's currently focused widget...
 
     mUi->nameValue->setFocus();
 
-    if (focusedWidget &&
-        (QApplication::focusWidget()->parentWidget() != focusedWidget->parentWidget()))
+    if (focusedWidget && (parentWidget() != focusedWidget->parentWidget()))
         focusedWidget->setFocus();
 }
 
