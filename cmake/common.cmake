@@ -5,6 +5,7 @@ MACRO(INITIALISE_PROJECT)
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
 
+    SET(CMAKE_CXX_FLAGS "-Werror")
     SET(LINK_FLAGS_PROPERTIES)
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -14,7 +15,7 @@ MACRO(INITIALISE_PROJECT)
 
         # Default compiler settings
 
-        SET(CMAKE_CXX_FLAGS "-g -O0")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
     ELSE()
         SET(CMAKE_BUILD_TYPE "Release")
 
@@ -24,7 +25,7 @@ MACRO(INITIALISE_PROJECT)
 
         # Default compiler and linker settings
 
-        SET(CMAKE_CXX_FLAGS "-O2 -ffast-math")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
 
         IF(NOT APPLE)
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
