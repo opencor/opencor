@@ -11,6 +11,10 @@
 
 //==============================================================================
 
+#include <QMap>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -29,6 +33,10 @@ private:
 
 //==============================================================================
 
+typedef QMap<QString, CellmlFile *> CellmlFiles;
+
+//==============================================================================
+
 class CellmlFileManager : public QObject
 {
     Q_OBJECT
@@ -36,8 +44,10 @@ class CellmlFileManager : public QObject
 public:
     static CellmlFileManager * instance();
 
+    CellmlFile * cellmlFile(const QString &pFileName);
+
 private:
-    QList<CellmlFile *> mCellmlFiles;
+    CellmlFiles mCellmlFiles;
 
     explicit CellmlFileManager();
     ~CellmlFileManager();

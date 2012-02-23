@@ -9,6 +9,10 @@
 
 //==============================================================================
 
+#include <QDir>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -30,7 +34,8 @@ QString CellmlFile::fileName() const
 
 //==============================================================================
 
-CellmlFileManager::CellmlFileManager()
+CellmlFileManager::CellmlFileManager() :
+    mCellmlFiles(CellmlFiles())
 {
     // Create some connections to keep track of some events related to our
     // 'global' file manager
@@ -64,13 +69,22 @@ CellmlFileManager * CellmlFileManager::instance()
 
 //==============================================================================
 
+CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
+{
+    // Return the CellmlFile object, if any, associated with the requested file
+
+    return mCellmlFiles.value(QDir::toNativeSeparators(pFileName));
+}
+
+//==============================================================================
+
 void CellmlFileManager::fileManaged(const QString &pFileName)
 {
     if (isCellmlFile(pFileName))
         // We are dealing with a CellML file, so we can add it to our list of
         // managed CellML files
 
-        mCellmlFiles << new CellmlFile(pFileName);
+        mCellmlFiles.insert(pFileName, new CellmlFile(pFileName));
 }
 
 //==============================================================================
@@ -81,16 +95,7 @@ void CellmlFileManager::fileUnmanaged(const QString &pFileName)
         // We are dealing with a CellML file, so we can remove it from our list
         // of managed CellML files
 
-        foreach (CellmlFile *cellmlFile, mCellmlFiles)
-            if (cellmlFile->fileName() == pFileName) {
-                // The CellML file has been found, so remove it
-
-                mCellmlFiles.removeAt(mCellmlFiles.indexOf(cellmlFile));
-
-                delete cellmlFile;
-
-                break;
-            }
+        mCellmlFiles.remove(pFileName);
 }
 
 //==============================================================================
