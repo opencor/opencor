@@ -551,7 +551,7 @@ void CellmlModelRuntime::checkFunction(const QString &pFunctionName)
         // error that was found
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("the function '%1' could not be compiled").arg(pFunctionName)));
+                                        tr("the function '%1' could not be compiled: %2").arg(pFunctionName, mComputerEngine->error().message())));
 }
 
 //==============================================================================

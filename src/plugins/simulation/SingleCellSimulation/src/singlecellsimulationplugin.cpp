@@ -249,7 +249,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
         else
             model = Unknown;
 
-        if (model != Unknown) {
+        if (cellmlModelRuntime->isValid() && (model != Unknown)) {
             typedef QVector<double> Doubles;
 
             int statesCount = cellmlModelRuntime->statesCount();
