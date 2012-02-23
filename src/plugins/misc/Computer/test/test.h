@@ -14,6 +14,12 @@ namespace Computer {
 
 //==============================================================================
 
+namespace llvm {
+    class Function;
+}
+
+//==============================================================================
+
 class Test : public QObject
 {
     Q_OBJECT
@@ -21,13 +27,22 @@ class Test : public QObject
 private:
     OpenCOR::Computer::ComputerEngine *mComputerEngine;
 
+    llvm::Function * mFunction;
+    double mResult;
+
 private slots:
     void initTestCase();
     void cleanupTestCase();
 
     void basicTests();
     void voidFunctionTests();
-    void mathematicalOperatorTests();
+    void timesOperatorTests();
+    void divideOperatorTests();
+    void moduloOperatorTests();
+    void plusOperatorTests();
+    void minusOperatorTests();
+    void notOperatorTests();
+    void orOperatorTests();
 };
 
 //==============================================================================

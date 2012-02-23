@@ -15,6 +15,11 @@
 
 //==============================================================================
 
+static const double A = 5;
+static const double B = 7.9;
+
+//==============================================================================
+
 void Test::initTestCase()
 {
     // Load the CellMLModelSupport plugin
@@ -39,15 +44,14 @@ void Test::cleanupTestCase()
 
 void Test::basicTests()
 {
-    llvm::Function * function;
     OpenCOR::Computer::ComputerErrors parserErrors;
 
     // Check what happens when using an empty string to add a function
 
-    function = mComputerEngine->addFunction("");
+    mFunction = mComputerEngine->addFunction("");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("either 'void' or 'double' was expected, but 'EoF' was found instead"),
@@ -55,10 +59,10 @@ void Test::basicTests()
 
     // Add 'void' to our string
 
-    function = mComputerEngine->addFunction("void");
+    mFunction = mComputerEngine->addFunction("void");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("an identifier was expected, but 'EoF' was found instead"),
@@ -66,10 +70,10 @@ void Test::basicTests()
 
     // Add an identifier to our string
 
-    function = mComputerEngine->addFunction("void voidFunction");
+    mFunction = mComputerEngine->addFunction("void voidFunc");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("'(' was expected, but 'EoF' was found instead"),
@@ -77,10 +81,10 @@ void Test::basicTests()
 
     // Add a '(' to our string
 
-    function = mComputerEngine->addFunction("void voidFunction(");
+    mFunction = mComputerEngine->addFunction("void voidFunc(");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("'double' or ')' was expected, but 'EoF' was found instead"),
@@ -88,10 +92,10 @@ void Test::basicTests()
 
     // Add a ')' to our string
 
-    function = mComputerEngine->addFunction("void voidFunction()");
+    mFunction = mComputerEngine->addFunction("void voidFunc()");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("'{' was expected, but 'EoF' was found instead"),
@@ -99,10 +103,10 @@ void Test::basicTests()
 
     // Add a '{' to our string
 
-    function = mComputerEngine->addFunction("void voidFunction() {");
+    mFunction = mComputerEngine->addFunction("void voidFunc() {");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("'}' was expected, but 'EoF' was found instead"),
@@ -110,16 +114,16 @@ void Test::basicTests()
 
     // Add a '}' to our string which should make it a valid void function
 
-    function = mComputerEngine->addFunction("void voidFunction() {}");
+    mFunction = mComputerEngine->addFunction("void voidFunc() {}");
 
-    QVERIFY(function);
+    QVERIFY(mFunction);
 
     // Make the function a double function
 
-    function = mComputerEngine->addFunction("double doubleFunction() {}");
+    mFunction = mComputerEngine->addFunction("double doubleFunc() {}");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("an identifier or 'return' was expected, but '}' was found instead"),
@@ -127,10 +131,10 @@ void Test::basicTests()
 
     // Add 'return' to our string
 
-    function = mComputerEngine->addFunction("double doubleFunction() { return");
+    mFunction = mComputerEngine->addFunction("double doubleFunc() { return");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("the RHS of an equation was expected, but 'EoF' was found instead"),
@@ -138,10 +142,10 @@ void Test::basicTests()
 
     // Add '3' (as the RHS of an equation) to our string
 
-    function = mComputerEngine->addFunction("double doubleFunction() { return 3");
+    mFunction = mComputerEngine->addFunction("double doubleFunc() { return 3");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("';' was expected, but 'EoF' was found instead"),
@@ -149,10 +153,10 @@ void Test::basicTests()
 
     // Add ';' to our string
 
-    function = mComputerEngine->addFunction("double doubleFunction() { return 3;");
+    mFunction = mComputerEngine->addFunction("double doubleFunc() { return 3;");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("'}' was expected, but 'EoF' was found instead"),
@@ -160,24 +164,24 @@ void Test::basicTests()
 
     // Add a '}' to our string which should make it a valid double function
 
-    function = mComputerEngine->addFunction("double doubleFunction() { return 3; }");
+    mFunction = mComputerEngine->addFunction("double doubleFunc() { return 3; }");
 
-    QVERIFY(function);
+    QVERIFY(mFunction);
 
     // Check that we cannot redefine a function with the same function name
 
-    function = mComputerEngine->addFunction("double doubleFunction() { return 3; }");
+    mFunction = mComputerEngine->addFunction("double doubleFunc() { return 3; }");
 
-    QVERIFY(!function);
-    QVERIFY2(!mComputerEngine->error().message().compare("there is already a function called 'doubleFunction'"),
+    QVERIFY(!mFunction);
+    QVERIFY2(!mComputerEngine->error().message().compare("there is already a function called 'doubleFunc'"),
              qPrintable(QString("mComputerEngine->error().message() = %1").arg(mComputerEngine->error().message())));
 
     // Check that the function cannot work as an integer function
 
-    function = mComputerEngine->addFunction("int intFunction() { return 3; }");
+    mFunction = mComputerEngine->addFunction("int intFunc() { return 3; }");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("either 'void' or 'double' was expected, but 'int' was found instead"),
@@ -185,10 +189,10 @@ void Test::basicTests()
 
     // Check what happens when using an invalid function name
 
-    function = mComputerEngine->addFunction("double .doubleFunction() { return 3; }");
+    mFunction = mComputerEngine->addFunction("double .doubleFunc() { return 3; }");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("an identifier was expected, but '.' was found instead"),
@@ -196,10 +200,10 @@ void Test::basicTests()
 
     // Check what happens when using an invalid RHS of an equation
 
-    function = mComputerEngine->addFunction("double doubleFunction() { return 3*/a; }");
+    mFunction = mComputerEngine->addFunction("double doubleFunc() { return 3*/a; }");
     parserErrors = mComputerEngine->parserErrors();
 
-    QVERIFY(!function);
+    QVERIFY(!mFunction);
     QVERIFY2(parserErrors.count() == 1,
              qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
     QVERIFY2(!parserErrors.at(0).message().compare("the RHS of an equation was expected, but '/' was found instead"),
@@ -210,24 +214,23 @@ void Test::basicTests()
 
 void Test::voidFunctionTests()
 {
-    llvm::Function * function;
     double arrayA[3];
     double arrayB[3];
 
     // Initialise arrayA
 
-    function = mComputerEngine->addFunction(
-                   "void initA(double *pArrayA)\n"
-                   "{\n"
-                   "    pArrayA[0] = 123;\n"
-                   "    pArrayA[1] = 456;\n"
-                   "    pArrayA[2] = 789;\n"
-                   "}"
-               );
+    mFunction = mComputerEngine->addFunction(
+                    "void aInitFunc(double *pArrayA)\n"
+                    "{\n"
+                    "    pArrayA[0] = 123;\n"
+                    "    pArrayA[1] = 456;\n"
+                    "    pArrayA[2] = 789;\n"
+                    "}"
+                );
 
-    QVERIFY(function);
+    QVERIFY(mFunction);
 
-    ((void (*)(double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(arrayA);
+    ((void (*)(double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(arrayA);
 
     QVERIFY2(arrayA[0] == 123,
              qPrintable(QString("arrayA[0] = %1").arg(arrayA[0])));
@@ -238,18 +241,18 @@ void Test::voidFunctionTests()
 
     // Initialise arrayB in reverse order of arrayA
 
-    function = mComputerEngine->addFunction(
-                   "void initB(double *pArrayA, double *pArrayB)\n"
-                   "{\n"
-                   "    pArrayB[0] = pArrayA[2];\n"
-                   "    pArrayB[1] = pArrayA[1];\n"
-                   "    pArrayB[2] = pArrayA[0];\n"
-                   "}"
-               );
+    mFunction = mComputerEngine->addFunction(
+                    "void bInitFunc(double *pArrayA, double *pArrayB)\n"
+                    "{\n"
+                    "    pArrayB[0] = pArrayA[2];\n"
+                    "    pArrayB[1] = pArrayA[1];\n"
+                    "    pArrayB[2] = pArrayA[0];\n"
+                    "}"
+                );
 
-    QVERIFY(function);
+    QVERIFY(mFunction);
 
-    ((void (*)(double *, double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(arrayA, arrayB);
+    ((void (*)(double *, double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(arrayA, arrayB);
 
     QVERIFY2(arrayB[0] == 789,
              qPrintable(QString("arrayB[0] = %1").arg(arrayB[0])));
@@ -261,107 +264,188 @@ void Test::voidFunctionTests()
 
 //==============================================================================
 
-void Test::mathematicalOperatorTests()
+void Test::timesOperatorTests()
 {
-    llvm::Function * function;
-    static const double A = 5;
-    static const double B = 7.9;
-    double res;
+    mFunction = mComputerEngine->addFunction(
+                    "double multFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                     "    return pNb1*pNb2;\n"
+                    "}"
+                );
 
-    // Compute and return the sum of two numbers
+    QVERIFY(mFunction);
 
-    function = mComputerEngine->addFunction(
-                   "double add(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1+pNb2;\n"
-                   "}"
-               );
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY(function);
+    QVERIFY2(mResult == 3*5.7, qPrintable(QString("res = %1").arg(mResult)));
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3, 5.7);
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(res == 3+5.7, qPrintable(QString("res = %1").arg(res)));
+    QVERIFY2(mResult == A*B, qPrintable(QString("res = %1").arg(mResult)));
+}
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B);
+//==============================================================================
 
-    QVERIFY2(res == A+B, qPrintable(QString("res = %1").arg(res)));
+void Test::divideOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double divFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pNb1/pNb2;\n"
+                    "}"
+                );
 
-    // Compute and return the subtraction of two numbers
+    QVERIFY(mFunction);
 
-    function = mComputerEngine->addFunction(
-                   "double sub(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1-pNb2;\n"
-                   "}"
-               );
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY(function);
+    QVERIFY2(mResult == 3/5.7, qPrintable(QString("res = %1").arg(mResult)));
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3, 5.7);
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(res == 3-5.7, qPrintable(QString("res = %1").arg(res)));
+    QVERIFY2(mResult == A/B, qPrintable(QString("res = %1 != %2").arg(mResult)));
+}
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B);
+//==============================================================================
 
-    QVERIFY2(res == A-B, qPrintable(QString("res = %1").arg(res)));
+void Test::moduloOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double modFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pNb1%pNb2;\n"
+                    "}"
+                );
 
-    // Compute and return the product of two numbers
+    QVERIFY(mFunction);
 
-    function = mComputerEngine->addFunction(
-                   "double mult(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1*pNb2;\n"
-                   "}"
-               );
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*3, 5);
 
-    QVERIFY(function);
+    QVERIFY2(mResult == fmod(11*3, 5), qPrintable(QString("res = %1").arg(mResult)));
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3, 5.7);
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*A, B);
 
-    QVERIFY2(res == 3*5.7, qPrintable(QString("res = %1").arg(res)));
+    QVERIFY2(mResult == fmod(11*A, B), qPrintable(QString("res = %1").arg(mResult)));
+}
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B);
+//==============================================================================
 
-    QVERIFY2(res == A*B, qPrintable(QString("res = %1").arg(res)));
+void Test::plusOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double addFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pNb1+pNb2;\n"
+                    "}"
+                );
 
-    // Compute and return the division of two numbers
+    QVERIFY(mFunction);
 
-    function = mComputerEngine->addFunction(
-                   "double div(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1/pNb2;\n"
-                   "}"
-               );
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY(function);
+    QVERIFY2(mResult == 3+5.7, qPrintable(QString("res = %1").arg(mResult)));
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3, 5.7);
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(res == 3/5.7, qPrintable(QString("res = %1").arg(res)));
+    QVERIFY2(mResult == A+B, qPrintable(QString("res = %1").arg(mResult)));
+}
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B);
+//==============================================================================
 
-    QVERIFY2(res == A/B, qPrintable(QString("res = %1 != %2").arg(res)));
+void Test::minusOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double subFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pNb1-pNb2;\n"
+                    "}"
+                );
 
-    // Compute and return the modulo of two numbers
+    QVERIFY(mFunction);
 
-    function = mComputerEngine->addFunction(
-                   "double mod(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1%pNb2;\n"
-                   "}"
-               );
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY(function);
+    QVERIFY2(mResult == 3-5.7, qPrintable(QString("res = %1").arg(mResult)));
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(11*3, 5);
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(res == fmod(11*3, 5), qPrintable(QString("res = %1").arg(res)));
+    QVERIFY2(mResult == A-B, qPrintable(QString("res = %1").arg(mResult)));
+}
 
-    res = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(11*A, B);
+//==============================================================================
 
-    QVERIFY2(res == fmod(11*A, B), qPrintable(QString("res = %1").arg(res)));
+void Test::notOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double notFunc(double pNb)\n"
+                    "{\n"
+                    "    return !pNb;\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::orOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double orFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pNb1 || pNb2;\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3, 5);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, !5);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3, !5);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A, B);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, !B);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A, !B);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
 }
 
 //==============================================================================
