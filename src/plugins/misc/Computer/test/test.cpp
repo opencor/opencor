@@ -913,6 +913,270 @@ void Test::factorialFunctionTests()
 
 //==============================================================================
 
+void Test::sinFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double sinFunc(double pNb)\n"
+                    "{\n"
+                    "    return sin(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == sin(3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == sin(A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::cosFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double cosFunc(double pNb)\n"
+                    "{\n"
+                    "    return cos(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == cos(3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == cos(A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::tanFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double tanFunc(double pNb)\n"
+                    "{\n"
+                    "    return tan(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == tan(3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == tan(A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::sinhFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double sinhFunc(double pNb)\n"
+                    "{\n"
+                    "    return sinh(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == sinh(3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == sinh(A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::coshFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double coshFunc(double pNb)\n"
+                    "{\n"
+                    "    return cosh(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == cosh(3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == cosh(A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::tanhFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double tanhFunc(double pNb)\n"
+                    "{\n"
+                    "    return tanh(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == tanh(3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == tanh(A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::asinFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double asinFunc(double pNb)\n"
+                    "{\n"
+                    "    return asin(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/3);
+
+    QVERIFY2(mResult == asin(1/3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/A);
+
+    QVERIFY2(mResult == asin(1/A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::acosFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double acosFunc(double pNb)\n"
+                    "{\n"
+                    "    return acos(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/3);
+
+    QVERIFY2(mResult == acos(1/3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/A);
+
+    QVERIFY2(mResult == acos(1/A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::atanFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double atanFunc(double pNb)\n"
+                    "{\n"
+                    "    return atan(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == atan(3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == atan(A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::asinhFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double asinhFunc(double pNb)\n"
+                    "{\n"
+                    "    return asinh(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == asinh(3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == asinh(A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::acoshFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double acoshFunc(double pNb)\n"
+                    "{\n"
+                    "    return acosh(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
+
+    QVERIFY2(mResult == acosh(3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
+
+    QVERIFY2(mResult == acosh(A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::atanhFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double atanhFunc(double pNb)\n"
+                    "{\n"
+                    "    return atanh(pNb);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/3);
+
+    QVERIFY2(mResult == atanh(1/3), qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/A);
+
+    QVERIFY2(mResult == atanh(1/A), qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
 QTEST_MAIN(Test)
 
 //==============================================================================

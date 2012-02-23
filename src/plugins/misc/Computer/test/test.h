@@ -61,6 +61,18 @@ private slots:
     void ceilFunctionTests();
     void floorFunctionTests();
     void factorialFunctionTests();
+    void sinFunctionTests();
+    void cosFunctionTests();
+    void tanFunctionTests();
+    void sinhFunctionTests();
+    void coshFunctionTests();
+    void tanhFunctionTests();
+    void asinFunctionTests();
+    void acosFunctionTests();
+    void atanFunctionTests();
+    void asinhFunctionTests();
+    void acoshFunctionTests();
+    void atanhFunctionTests();
 };
 
 //==============================================================================
