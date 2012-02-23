@@ -545,7 +545,7 @@ void CellmlModelRuntime::checkFunction(const QString &pFunctionName)
         // error(s) that was(were) found
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("the function '%1' could not be parsed").arg(pFunctionName)));
+                                        tr("the '%1' function could not be parsed").arg(pFunctionName)));
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                         mComputerEngine->parserError().message(),
@@ -556,12 +556,7 @@ void CellmlModelRuntime::checkFunction(const QString &pFunctionName)
         // error that was found
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("the function '%1' could not be compiled")));
-
-        mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        mComputerEngine->error().message(),
-                                        mComputerEngine->error().line(),
-                                        mComputerEngine->error().column()));
+                                        tr("the '%1' function could not be compiled (%2)").arg(pFunctionName, mComputerEngine->error().message())));
     }
 }
 

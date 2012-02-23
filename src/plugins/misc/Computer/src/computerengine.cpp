@@ -494,8 +494,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     //       replace '%' with '\%', so...
 
     if (parseError.getMessage().size())
-        mError = ComputerError(tr("the LLVM assembly code could not be parsed: %1").arg(QString::fromStdString(parseError.getMessage()).remove("error: ")),
-                               parseError.getLineNo(), parseError.getColumnNo());
+        mError = ComputerError(tr("the LLVM assembly code for the '%1' function could not be parsed").arg(pFunction->name()));
         // Note: we must not exit straightaway since LLVM may have generated
         //       some IR code, so we first need to check whether part of the
         //       function has already been generated and, if so, remove it...
@@ -522,10 +521,10 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
         return res;
     } else {
         // The function couldn't be retrieved, so add an error but only if no
-        // error occurred during the parsing of the assembly code
+        // error occurred during the parsing of the LLVM assembly code
 
         if (mError.isEmpty())
-            mError = ComputerError(tr("the function '%1' could not be found").arg(pFunction->name()));
+            mError = ComputerError(tr("the '%1' function could not be found").arg(pFunction->name()));
 
         return 0;
     }
