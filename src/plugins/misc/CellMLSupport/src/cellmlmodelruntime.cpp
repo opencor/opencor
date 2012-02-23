@@ -323,7 +323,7 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
                                                                           L"or: #prec[10]#exprs[||]\r\n"
                                                                           L"plus: #prec[500]#exprs[+]\r\n"
                                                                           L"power: #prec[H]pow(#expr1, #expr2)\r\n"
-                                                                          L"quotient: #prec[1000(0)]quotient(#expr1, #expr2))\r\n"              // Customised version
+                                                                          L"quotient: #prec[1000(0)]quot(#expr1, #expr2))\r\n"                  // Customised version
                                                                           L"rem: #prec[1000(0)]rem(#expr1, #expr2)\r\n"                         // Customised version
                                                                           L"root: #prec[1000(900)] pow(#expr1, 1.0 / #degree)\r\n"
                                                                           L"sec: #prec[900(0)]1.0 / cos(#expr1)\r\n"
@@ -535,8 +535,8 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
                 "         *lcm(3, 15, 35, 55)/lcm(5, 21, 35, 7*pData[3], pData[4], 49)\n"
                 "         *gcd(3, 15, 35, 55)/gcd(5, 21, 35, 7*pData[3], pData[4], 49)\n"
                 "         *(pData[3] != 0 ^ 0 != 0)*(3 != 0 ^ 0 != 0)\n"
-                "         *rem(pData[3], pData[4])*rem(5, 3)*quotient(pData[4], pData[3])\n"
-                "         *quotient(pData[4], pData[3])*quotient(17, 5)\n"
+                "         *rem(pData[3], pData[4])*rem(5, 3)*quot(pData[4], pData[3])\n"
+                "         *quot(pData[4], pData[3])*quot(17, 5)\n"
                 "         *(15 % pData[3] == 0)*(9 % 3 == 0)\n"
                 "         *arbitraryLog(pData[4], pData[3])\n"
                 "         *atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n"

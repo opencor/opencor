@@ -1021,9 +1021,9 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
         compileMathematicalFunction(pData, "pow", 2, pEquationNode);
 
         break;
-    case ComputerEquation::Quotient:
-        compileMathematicalFunction(pData, "quotient", 2, pEquationNode,
-                                    (void *)(intptr_t) quotient);
+    case ComputerEquation::Quot:
+        compileMathematicalFunction(pData, "quot", 2, pEquationNode,
+                                    (void *)(intptr_t) quot);
 
         break;
     case ComputerEquation::Rem:

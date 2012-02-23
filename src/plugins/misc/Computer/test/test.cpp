@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "computerengine.h"
+#include "computermath.h"
 #include "test.h"
 
 //==============================================================================
@@ -20,6 +21,10 @@ static const double B = 7.9;
 
 static const double MinusA = -5;
 static const double MinusB = -7.9;
+
+static const double BigA = 3*5*7*11*13;
+static const double BigB = 2*3*7*13*17;
+static const double BigC = 5*7*17;
 
 //==============================================================================
 
@@ -1154,6 +1159,271 @@ void Test::atanhFunctionTests()
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/A);
 
     QCOMPARE(mResult, atanh(1/A));
+}
+
+//==============================================================================
+
+void Test::arbitraryLogFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double arbitraryLogFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return arbitraryLog(pNb1, pNb2);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5);
+
+    QCOMPARE(mResult, log(3)/log(5));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
+
+    QCOMPARE(mResult, log(A)/log(B));
+}
+
+//==============================================================================
+
+void Test::powFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double powFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pow(pNb1, pNb2);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5);
+
+    QCOMPARE(mResult, pow(3, 5));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
+
+    QCOMPARE(mResult, pow(A, B));
+}
+
+//==============================================================================
+
+void Test::quotFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double quotFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return quot(pNb1, pNb2);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*3, 5);
+
+    QCOMPARE(mResult, 6.0);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*A, B);
+
+    QCOMPARE(mResult, 7.0);
+}
+
+//==============================================================================
+
+void Test::remFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double remFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return rem(pNb1, pNb2);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*3, 5);
+
+    QCOMPARE(mResult, 3.0);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*A, B);
+
+    QCOMPARE(mResult, 6.0);
+}
+
+//==============================================================================
+
+void Test::gcdFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double gcdFunc2(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return gcd(2, pNb1, pNb2);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3*5*7*11*13, 2*3*7*13*17);
+
+    QCOMPARE(mResult, 273.0);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(BigA, BigB);
+
+    QCOMPARE(mResult, 273.0);
+
+    mFunction = mComputerEngine->addFunction(
+                    "double gcdFunc3(double pNb1, double pNb2, double pNb3)\n"
+                    "{\n"
+                    "    return gcd(3, pNb1, pNb2, pNb3);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3*5*7*11*13, 2*3*7*13*17, 5*7*17);
+
+    QCOMPARE(mResult, 7.0);
+
+    mResult = ((double (*)(double, double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(BigA, BigB, BigC);
+
+    QCOMPARE(mResult, 7.0);
+}
+
+//==============================================================================
+
+void Test::lcmFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double lcmFunc2(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return lcm(2, pNb1, pNb2);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3*5*7*11*13, 2*3*7*13*17);
+
+    QCOMPARE(mResult, 510510.0);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(BigA, BigB);
+
+    QCOMPARE(mResult, 510510.0);
+
+    mFunction = mComputerEngine->addFunction(
+                    "double lcmFunc3(double pNb1, double pNb2, double pNb3)\n"
+                    "{\n"
+                    "    return lcm(3, pNb1, pNb2, pNb3);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3*5*7*11*13, 2*3*7*13*17, 5*7*17);
+
+    QCOMPARE(mResult, 510510.0);
+
+    mResult = ((double (*)(double, double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(BigA, BigB, BigC);
+
+    QCOMPARE(mResult, 510510.0);
+}
+
+//==============================================================================
+
+void Test::maxFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double maxFunc2(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return max(2, pNb1, pNb2);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3*5*7*11*13, 2*3*7*13*17);
+
+    QCOMPARE(mResult, 15015.0);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(BigA, BigB);
+
+    QCOMPARE(mResult, 15015.0);
+
+    mFunction = mComputerEngine->addFunction(
+                    "double maxFunc3(double pNb1, double pNb2, double pNb3)\n"
+                    "{\n"
+                    "    return max(3, pNb1, pNb2, pNb3);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3*5*7*11*13, 2*3*7*13*17, 5*7*17);
+
+    QCOMPARE(mResult, 15015.0);
+
+    mResult = ((double (*)(double, double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(BigA, BigB, BigC);
+
+    QCOMPARE(mResult, 15015.0);
+}
+
+//==============================================================================
+
+void Test::minFunctionTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double minFunc2(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return min(2, pNb1, pNb2);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3*5*7*11*13, 2*3*7*13*17);
+
+    QCOMPARE(mResult, 9282.0);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(BigA, BigB);
+
+    QCOMPARE(mResult, 9282.0);
+
+    mFunction = mComputerEngine->addFunction(
+                    "double minFunc3(double pNb1, double pNb2, double pNb3)\n"
+                    "{\n"
+                    "    return min(3, pNb1, pNb2, pNb3);\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3*5*7*11*13, 2*3*7*13*17, 5*7*17);
+
+    QCOMPARE(mResult, 595.0);
+
+    mResult = ((double (*)(double, double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(BigA, BigB, BigC);
+
+    QCOMPARE(mResult, 595.0);
+}
+
+//==============================================================================
+
+void Test::defIntFunctionTests()
+{
+    OpenCOR::Computer::ComputerErrors parserErrors;
+
+    mFunction = mComputerEngine->addFunction(
+                    "double defIntFunc()\n"
+                    "{\n"
+                    "    return defint(0, 2, x, x);\n"
+                    "}"
+                );
+    parserErrors = mComputerEngine->parserErrors();
+
+    QVERIFY(!mFunction);
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "definite integrals are not yet supported");
+
 }
 
 //==============================================================================

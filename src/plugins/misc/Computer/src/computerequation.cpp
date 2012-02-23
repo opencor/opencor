@@ -225,8 +225,8 @@ QString ComputerEquation::typeAsString() const
         return "ArbitraryLog";
     case Pow:
         return "Pow";
-    case Quotient:
-        return "Quotient";
+    case Quot:
+        return "Quot";
     case Rem:
         return "Rem";
     case Gcd:
@@ -735,11 +735,11 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             replaceNodeWithNumber(pNode, pow(pNode->left()->number(), pNode->right()->number()));
 
         break;
-    case Quotient:
+    case Quot:
         if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
-            // quotient(N1, N2)
+            // quot(N1, N2)
 
-            replaceNodeWithNumber(pNode, quotient(pNode->left()->number(), pNode->right()->number()));
+            replaceNodeWithNumber(pNode, quot(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Rem:

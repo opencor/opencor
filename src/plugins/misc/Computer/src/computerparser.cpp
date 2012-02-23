@@ -708,7 +708,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
     //   FunctionWithOneArgument        =   "fabs" | "exp" | "log" | "ceil" | "floor" | "factorial"
     //                                    | "sin" | "cos" | "tan" | "sinh" | "cosh" | "tanh"
     //                                    | "asin" | "acos" | "atan" | "asinh" | "acosh" | "atanh" ;
-    //   FunctionWithTwoArguments       = "arbitraryLog" | "pow" | "quotient" | "rem" ;
+    //   FunctionWithTwoArguments       = "arbitraryLog" | "pow" | "quot" | "rem" ;
     //   FunctionWithTwoOrMoreArguments = "gcd" | "lcm" | "max" | "min" ;
 
     // Check whether the current token's symbol is an identifier, an integer
@@ -735,7 +735,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                                                                                                             << ComputerScannerToken::Atanh;
     static const ComputerScannerToken::Symbols twoArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::ArbitraryLog
                                                                                                             << ComputerScannerToken::Pow
-                                                                                                            << ComputerScannerToken::Quotient
+                                                                                                            << ComputerScannerToken::Quot
                                                                                                             << ComputerScannerToken::Rem;
     static const ComputerScannerToken::Symbols twoOrMoreArgumentFunctionSymbols = ComputerScannerToken::Symbols() << ComputerScannerToken::Gcd
                                                                                                           << ComputerScannerToken::Lcm
@@ -971,7 +971,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 //---GRY--- THE BELOW CODE IS TO REMOVED ONCE DEFINITE INTEGRALS ARE SUPPORTED
 //          BY OpenCOR...
 
-pParser->addError("definite integrals are not yet supported", false);
+pParser->addError(QObject::tr("definite integrals are not yet supported"), false);
 
         ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
 

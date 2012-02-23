@@ -47,7 +47,7 @@ public:
 
         // Mathematical functions with 2 arguments
 
-        ArbitraryLog, Pow, Quotient, Rem,
+        ArbitraryLog, Pow, Quot, Rem,
 
         // Mathematical functions with 2+ arguments
 

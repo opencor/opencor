@@ -61,5 +61,9 @@
         <source>an identifier</source>
         <translation>un identifiant</translation>
     </message>
+    <message>
+        <source>definite integrals are not yet supported</source>
+        <translation>intégrales définies ne sont pas encore supportées</translation>
+    </message>
 </context>
 </TS>

@@ -25,7 +25,7 @@ extern "C" double ge(double pNb1, double pNb2);
 extern "C" double factorial(double pNb);
 
 extern "C" double arbitraryLog(double pNb, double pBase);
-extern "C" double quotient(double pNb1, double pNb2);
+extern "C" double quot(double pNb1, double pNb2);
 extern "C" double rem(double pNb1, double pNb2);
 
 extern "C" double gcd(int pCount, ...);

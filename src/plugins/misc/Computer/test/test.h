@@ -73,6 +73,18 @@ private slots:
     void asinhFunctionTests();
     void acoshFunctionTests();
     void atanhFunctionTests();
+
+    void arbitraryLogFunctionTests();
+    void powFunctionTests();
+    void quotFunctionTests();
+    void remFunctionTests();
+
+    void gcdFunctionTests();
+    void lcmFunctionTests();
+    void maxFunctionTests();
+    void minFunctionTests();
+
+    void defIntFunctionTests();
 };
 
 //==============================================================================

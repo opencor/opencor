@@ -105,7 +105,7 @@ static double zero = 0.0;
 
 //==============================================================================
 
-double quotient(double pNb1, double pNb2)
+double quot(double pNb1, double pNb2)
 {
     return pNb2?(int) pNb1/(int) pNb2:pNb1/zero;
 }

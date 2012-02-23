@@ -152,8 +152,8 @@ ComputerEquation::Type ComputerScannerToken::equationType() const
         return ComputerEquation::ArbitraryLog;
     case Pow:
         return ComputerEquation::Pow;
-    case Quotient:
-        return ComputerEquation::Quotient;
+    case Quot:
+        return ComputerEquation::Quot;
     case Rem:
         return ComputerEquation::Rem;
 
@@ -277,8 +277,8 @@ QString ComputerScannerToken::symbolAsString() const
         return "ArbitraryLog";
     case Pow:
         return "Pow";
-    case Quotient:
-        return "Quotient";
+    case Quot:
+        return "Quot";
     case Rem:
         return "Rem";
     case Gcd:
@@ -395,7 +395,7 @@ ComputerScanner::ComputerScanner() :
 
     mKeywords.insert("arbitraryLog", ComputerScannerToken::ArbitraryLog);
     mKeywords.insert("pow", ComputerScannerToken::Pow);
-    mKeywords.insert("quotient", ComputerScannerToken::Quotient);
+    mKeywords.insert("quot", ComputerScannerToken::Quot);
     mKeywords.insert("rem", ComputerScannerToken::Rem);
 
     mKeywords.insert("gcd", ComputerScannerToken::Gcd);
