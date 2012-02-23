@@ -1,8 +1,8 @@
 //==============================================================================
-// CellML model runtime class
+// CellML file runtime class
 //==============================================================================
 
-#include "cellmlmodelruntime.h"
+#include "cellmlfileruntime.h"
 #include "computerengine.h"
 
 //==============================================================================
@@ -23,7 +23,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlModelRuntime::CellmlModelRuntime() :
+CellmlFileRuntime::CellmlFileRuntime() :
     mComputerEngine(0)
 {
     // Initialise the runtime's properties
@@ -33,25 +33,25 @@ CellmlModelRuntime::CellmlModelRuntime() :
 
 //==============================================================================
 
-bool CellmlModelRuntime::isValid() const
+bool CellmlFileRuntime::isValid() const
 {
-    // The runtime is valid if no issue was found
+    // The runtime is valid if no issues were found
 
     return mIssues.isEmpty();
 }
 
 //==============================================================================
 
-CellmlModelRuntime::ModelType CellmlModelRuntime::modelType() const
+CellmlFileRuntime::ModelType CellmlFileRuntime::modelType() const
 {
-    // Return the type of model for the runtime
+    // Return the type of model the runtime is for
 
     return mModelType;
 }
 
 //==============================================================================
 
-int CellmlModelRuntime::constantsCount() const
+int CellmlFileRuntime::constantsCount() const
 {
     // Return the number of constants in the model
 
@@ -63,7 +63,7 @@ int CellmlModelRuntime::constantsCount() const
 
 //==============================================================================
 
-int CellmlModelRuntime::statesCount() const
+int CellmlFileRuntime::statesCount() const
 {
     // Return the number of states in the model
 
@@ -75,7 +75,7 @@ int CellmlModelRuntime::statesCount() const
 
 //==============================================================================
 
-int CellmlModelRuntime::ratesCount() const
+int CellmlFileRuntime::ratesCount() const
 {
     // Return the number of rates in the model
     // Note: it is obviously the same as the number of states, so this function
@@ -86,7 +86,7 @@ int CellmlModelRuntime::ratesCount() const
 
 //==============================================================================
 
-int CellmlModelRuntime::algebraicCount() const
+int CellmlFileRuntime::algebraicCount() const
 {
     // Return the number of algebraic equations in the model
 
@@ -98,7 +98,7 @@ int CellmlModelRuntime::algebraicCount() const
 
 //==============================================================================
 
-int CellmlModelRuntime::condVarCount() const
+int CellmlFileRuntime::condVarCount() const
 {
     // Return the number of conditional variables in the model
 
@@ -110,7 +110,7 @@ int CellmlModelRuntime::condVarCount() const
 
 //==============================================================================
 
-CellmlModelRuntimeOdeFunctions CellmlModelRuntime::odeFunctions() const
+CellmlFileRuntimeOdeFunctions CellmlFileRuntime::odeFunctions() const
 {
     // Return the ODE functions
 
@@ -119,7 +119,7 @@ CellmlModelRuntimeOdeFunctions CellmlModelRuntime::odeFunctions() const
 
 //==============================================================================
 
-CellmlModelRuntimeDaeFunctions CellmlModelRuntime::daeFunctions() const
+CellmlFileRuntimeDaeFunctions CellmlFileRuntime::daeFunctions() const
 {
     // Return the DAE functions
 
@@ -128,7 +128,7 @@ CellmlModelRuntimeDaeFunctions CellmlModelRuntime::daeFunctions() const
 
 //==============================================================================
 
-CellmlModelIssues CellmlModelRuntime::issues() const
+CellmlFileIssues CellmlFileRuntime::issues() const
 {
     // Return the issue(s)
 
@@ -137,31 +137,31 @@ CellmlModelIssues CellmlModelRuntime::issues() const
 
 //==============================================================================
 
-void CellmlModelRuntime::resetOdeCodeInformation()
+void CellmlFileRuntime::resetOdeCodeInformation()
 {
     // Reset the ODE code information
 
     /*delete mOdeCodeInformation;*/ mOdeCodeInformation = 0;
     //---GRY--- WE CANNOT delete mOdeCodeInformation AT THIS STAGE. FOR THIS, WE
     //          WOULD NEED TO USE THE CLEANED UP C++ INTERFACE (SEE THE MAIN
-    //          COMMENT AT THE BEGINNING OF THE cellmlmodel.cpp FILE)
+    //          COMMENT AT THE BEGINNING OF THE cellmlfile.cpp FILE)
 }
 
 //==============================================================================
 
-void CellmlModelRuntime::resetDaeCodeInformation()
+void CellmlFileRuntime::resetDaeCodeInformation()
 {
     // Reset the DAE code information
 
     /*delete mDaeCodeInformation;*/ mDaeCodeInformation = 0;
     //---GRY--- WE CANNOT delete mDaeCodeInformation AT THIS STAGE. FOR THIS, WE
     //          WOULD NEED TO USE THE CLEANED UP C++ INTERFACE (SEE THE MAIN
-    //          COMMENT AT THE BEGINNING OF THE cellmlmodel.cpp FILE)
+    //          COMMENT AT THE BEGINNING OF THE cellmlfile.cpp FILE)
 }
 
 //==============================================================================
 
-void CellmlModelRuntime::resetOdeFunctions()
+void CellmlFileRuntime::resetOdeFunctions()
 {
     // Reset the ODE functions
 
@@ -172,7 +172,7 @@ void CellmlModelRuntime::resetOdeFunctions()
 
 //==============================================================================
 
-void CellmlModelRuntime::resetDaeFunctions()
+void CellmlFileRuntime::resetDaeFunctions()
 {
     // Reset the DEA functions
 
@@ -186,7 +186,7 @@ void CellmlModelRuntime::resetDaeFunctions()
 
 //==============================================================================
 
-void CellmlModelRuntime::reset(const bool &pResetIssues)
+void CellmlFileRuntime::reset(const bool &pResetIssues)
 {
     // Reset all of the runtime's properties
 
@@ -208,23 +208,23 @@ void CellmlModelRuntime::reset(const bool &pResetIssues)
 
 //==============================================================================
 
-void CellmlModelRuntime::couldNotGenerateModelCodeIssue()
+void CellmlFileRuntime::couldNotGenerateModelCodeIssue()
 {
-    mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                    tr("the model code could not be generated")));
+    mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                   tr("the model code could not be generated")));
 }
 
 //==============================================================================
 
-void CellmlModelRuntime::unexpectedProblemDuringModelCompilationIssue()
+void CellmlFileRuntime::unexpectedProblemDuringModelCompilationIssue()
 {
-    mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                    tr("an unexpected problem occurred while trying to compile the model")));
+    mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                   tr("an unexpected problem occurred while trying to compile the model")));
 }
 
 //==============================================================================
 
-void CellmlModelRuntime::checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation)
+void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation)
 {
     if (!pCodeInformation)
         // No code information was provided, so...
@@ -241,26 +241,26 @@ void CellmlModelRuntime::checkCodeInformation(iface::cellml_services::CodeInform
         iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
 
         if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
-            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            tr("the model is underconstrained (i.e. some variables need to be initialised or computed)")));
+            mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                           tr("the model is underconstrained (i.e. some variables need to be initialised or computed)")));
         } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
-            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)")));
+            mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                           tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)")));
         } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
-            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)")));
+            mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                           tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)")));
         }
     } else {
         // The code generation didn't go fine, so...
 
-        mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("a problem occurred during the compilation of the model: %1").arg(codeGenerationErrorMessage)));
+        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("a problem occurred during the compilation of the model: %1").arg(codeGenerationErrorMessage)));
     }
 }
 
 //==============================================================================
 
-void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGenerator *pCodeGenerator)
+void CellmlFileRuntime::customizeCodeGenerator(iface::cellml_services::CodeGenerator *pCodeGenerator)
 {
     // Customise our code generator
     // Note #1: idealy we wouly only specify what needs to be customised, but
@@ -356,7 +356,7 @@ void CellmlModelRuntime::customizeCodeGenerator(iface::cellml_services::CodeGene
 
 //==============================================================================
 
-iface::cellml_services::CodeInformation * CellmlModelRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
+iface::cellml_services::CodeInformation * CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
 {
     // Get a code generator bootstrap, create an ODE code generator and
     // customise it
@@ -394,7 +394,7 @@ iface::cellml_services::CodeInformation * CellmlModelRuntime::getOdeCodeInformat
 
 //==============================================================================
 
-iface::cellml_services::CodeInformation * CellmlModelRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
+iface::cellml_services::CodeInformation * CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
 {
     // Get a code generator bootstrap, create a DAE code generator and customise
     // it
@@ -432,7 +432,7 @@ iface::cellml_services::CodeInformation * CellmlModelRuntime::getDaeCodeInformat
 
 //==============================================================================
 
-CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel)
+CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
 {
     // Reset the runtime's properties
 
@@ -510,24 +510,24 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
             } else if (mModelType == Ode) {
                 // ODE functions
 
-                mOdeFunctions.initializeConstants = (CellmlModelRuntimeInitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
-                mOdeFunctions.computeRates        = (CellmlModelRuntimeComputeOdeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
-                mOdeFunctions.computeVariables    = (CellmlModelRuntimeComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
+                mOdeFunctions.initializeConstants = (CellmlFileRuntimeInitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
+                mOdeFunctions.computeRates        = (CellmlFileRuntimeComputeOdeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
+                mOdeFunctions.computeVariables    = (CellmlFileRuntimeComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
             } else {
                 // DAE functions
 
-                mDaeFunctions.initializeConstants       = (CellmlModelRuntimeInitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
-                mDaeFunctions.computeRates              = (CellmlModelRuntimeComputeDaeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
-                mDaeFunctions.computeVariables          = (CellmlModelRuntimeComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
-                mDaeFunctions.computeEssentialVariables = (CellmlModelRuntimeComputeDaeEssentialVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeEssentialVariables"));
-                mDaeFunctions.computeRootInformation    = (CellmlModelRuntimeComputeDaeRootInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRootInformation"));
-                mDaeFunctions.computeStateInformation   = (CellmlModelRuntimeComputeDaeStateInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeStateInformation"));
+                mDaeFunctions.initializeConstants       = (CellmlFileRuntimeInitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
+                mDaeFunctions.computeRates              = (CellmlFileRuntimeComputeDaeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
+                mDaeFunctions.computeVariables          = (CellmlFileRuntimeComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
+                mDaeFunctions.computeEssentialVariables = (CellmlFileRuntimeComputeDaeEssentialVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeEssentialVariables"));
+                mDaeFunctions.computeRootInformation    = (CellmlFileRuntimeComputeDaeRootInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRootInformation"));
+                mDaeFunctions.computeStateInformation   = (CellmlFileRuntimeComputeDaeStateInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeStateInformation"));
             }
         } else {
             // No ODE code information could be retrieved, so...
 
-            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            tr("no code information could be retrieved for the model")));
+            mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                           tr("no code information could be retrieved for the model")));
         }
     }
 
@@ -538,25 +538,25 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
 //==============================================================================
 
-void CellmlModelRuntime::checkFunction(const QString &pFunctionName)
+void CellmlFileRuntime::checkFunction(const QString &pFunctionName)
 {
     if (!mComputerEngine->parserError().isEmpty()) {
         // Something went wrong with the parsing of the function, so output the
         // error(s) that was(were) found
 
-        mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("the '%1' function could not be parsed").arg(pFunctionName)));
+        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the '%1' function could not be parsed").arg(pFunctionName)));
 
-        mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        mComputerEngine->parserError().message(),
-                                        mComputerEngine->parserError().line(),
-                                        mComputerEngine->parserError().column()));
+        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                       mComputerEngine->parserError().message(),
+                                       mComputerEngine->parserError().line(),
+                                       mComputerEngine->parserError().column()));
     } else if (!mComputerEngine->error().isEmpty()) {
         // Something went wrong with the addition of the function, so output the
         // error that was found
 
-        mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("the '%1' function could not be compiled (%2)").arg(pFunctionName, mComputerEngine->error().message())));
+        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the '%1' function could not be compiled (%2)").arg(pFunctionName, mComputerEngine->error().message())));
     }
 }
 

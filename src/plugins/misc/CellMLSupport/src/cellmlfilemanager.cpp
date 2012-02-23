@@ -36,7 +36,7 @@ CellmlFileManager::~CellmlFileManager()
 {
     // Remove all the managed files
 
-    foreach (CellmlModel *cellmlFile, mCellmlFiles)
+    foreach (CellmlFile *cellmlFile, mCellmlFiles)
         delete cellmlFile;
 }
 
@@ -53,7 +53,7 @@ CellmlFileManager * CellmlFileManager::instance()
 
 //==============================================================================
 
-CellmlModel *CellmlFileManager::cellmlFile(const QString &pFileName)
+CellmlFile *CellmlFileManager::cellmlFile(const QString &pFileName)
 {
     // Return the CellmlFile object, if any, associated with the requested file
 
@@ -68,7 +68,7 @@ void CellmlFileManager::fileManaged(const QString &pFileName)
         // We are dealing with a CellML file, so we can add it to our list of
         // managed CellML files
 
-        mCellmlFiles.insert(pFileName, new CellmlModel(pFileName));
+        mCellmlFiles.insert(pFileName, new CellmlFile(pFileName));
 }
 
 //==============================================================================

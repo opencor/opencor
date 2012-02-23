@@ -1,5 +1,5 @@
 //==============================================================================
-// CellML model class
+// CellML file class
 //==============================================================================
 //---GRY--- NOTE THAT OUR CURRENT USE OF THE CellML API IS *WRONG*. INDEED, WE
 //          ARE ASSUMING THAT THE BINARIES IMPLEMENT A CLEANED UP C++ INTERFACE
@@ -11,7 +11,7 @@
 //          (SEE https://tracker.physiomeproject.org/show_bug.cgi?id=3165)
 //==============================================================================
 
-#include "cellmlmodel.h"
+#include "cellmlfile.h"
 
 //==============================================================================
 
@@ -31,18 +31,18 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlModel::CellmlModel(const QString &pFileName) :
+CellmlFile::CellmlFile(const QString &pFileName) :
     mFileName(pFileName),
     mModel(0)
 {
     // Instantiate our runtime object
 
-    mRuntime = new CellmlModelRuntime();
+    mRuntime = new CellmlFileRuntime();
 }
 
 //==============================================================================
 
-CellmlModel::~CellmlModel()
+CellmlFile::~CellmlFile()
 {
     // Delete some internal objects
 
@@ -51,9 +51,9 @@ CellmlModel::~CellmlModel()
 
 //==============================================================================
 
-void CellmlModel::reset()
+void CellmlFile::reset()
 {
-    // Reset all of the model's properties
+    // Reset all of the file's properties
 
     /*delete mModel;*/ mModel = 0;
     //---GRY--- WE CANNOT delete mModel AT THIS STAGE. FOR THIS, WE WOULD NEED
@@ -63,10 +63,10 @@ void CellmlModel::reset()
 
 //==============================================================================
 
-bool CellmlModel::load()
+bool CellmlFile::load()
 {
     if (mModel) {
-        // The model is already loaded, so...
+        // The file is already loaded, so...
 
         return true;
     } else {
@@ -89,8 +89,8 @@ bool CellmlModel::load()
         } catch (iface::cellml_api::CellMLException &) {
             // Something went wrong with the loading of the model, so...
 
-            mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                            tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage()))));
+            mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                           tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage()))));
 
             return false;
         }
@@ -107,8 +107,8 @@ bool CellmlModel::load()
 
                 reset();
 
-                mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                                tr("the model's imports could not be fully instantiated")));
+                mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                               tr("the model's imports could not be fully instantiated")));
 
                 return false;
             }
@@ -121,25 +121,25 @@ bool CellmlModel::load()
 
 //==============================================================================
 
-bool CellmlModel::reload()
+bool CellmlFile::reload()
 {
-    // We want to reload the model, so we must first reset it
+    // We want to reload the file, so we must first reset it
 
     reset();
 
-    // Now, we can try to (re)load the model
+    // Now, we can try to (re)load the file
 
     return load();
 }
 
 //==============================================================================
 
-bool CellmlModel::isValid()
+bool CellmlFile::isValid()
 {
-    // Load (but not reload!) the model, if needed
+    // Load (but not reload!) the file, if needed
 
     if (load()) {
-        // The model was properly loaded (or was already loaded), so check
+        // The file was properly loaded (or was already loaded), so check
         // whether it is CellML valid
         // Note: validateModel() is somewhat slow, but there is (unfortunately)
         //       nothing we can do about it. Then, there is getPositionInXML()
@@ -173,7 +173,7 @@ bool CellmlModel::isValid()
 
             uint32_t line = 0;
             uint32_t column = 0;
-            QString importedModel = QString();
+            QString importedFile = QString();
 
             if (cellmlRepresentationValidityError) {
                 // We are dealing with a CellML representation issue, so
@@ -204,7 +204,7 @@ bool CellmlModel::isValid()
                     line = vacssService->getPositionInXML(domElement, 0,
                                                           &column);
 
-                    // Also determine its imported model, if any
+                    // Also determine its imported file, if any
 
                     while (true) {
                         // Retrieve the CellML element's parent
@@ -216,20 +216,20 @@ bool CellmlModel::isValid()
 
                             break;
 
-                        // Check whether the parent is an imported model
+                        // Check whether the parent is an imported file
 
-                        DECLARE_QUERY_INTERFACE_OBJREF(importedCellmlModel,
+                        DECLARE_QUERY_INTERFACE_OBJREF(importedCellmlFile,
                                                        cellmlElementParent,
                                                        cellml_api::Model);
 
-                        if (!importedCellmlModel)
-                            // This is not a model, so...
+                        if (!importedCellmlFile)
+                            // This is not an imported file, so...
 
                             continue;
 
                         // Retrieve the imported CellML element
 
-                        ObjRef<iface::cellml_api::CellMLElement> importedCellmlElement = importedCellmlModel->parentElement();
+                        ObjRef<iface::cellml_api::CellMLElement> importedCellmlElement = importedCellmlFile->parentElement();
 
                         if (!importedCellmlElement)
                             // This is not an imported CellML element, so...
@@ -250,7 +250,7 @@ bool CellmlModel::isValid()
 
                         ObjRef<iface::cellml_api::URI> href = importCellmlElement->xlinkHref();
 
-                        importedModel = QString::fromStdWString(href->asText());
+                        importedFile = QString::fromStdWString(href->asText());
 
                         break;
                     }
@@ -259,25 +259,25 @@ bool CellmlModel::isValid()
 
             // Determine the issue's type
 
-            CellmlModelIssue::Type issueType;
+            CellmlFileIssue::Type issueType;
 
             if (cellmlValidityIssue->isWarningOnly()) {
                 // We are dealing with a warning
 
-                issueType = CellmlModelIssue::Warning;
+                issueType = CellmlFileIssue::Warning;
             } else {
                 // We are dealing with an error
 
                 ++cellmlErrorsCount;
 
-                issueType = CellmlModelIssue::Error;
+                issueType = CellmlFileIssue::Error;
             }
 
             // Append the issue to our list
 
-            mIssues.append(CellmlModelIssue(issueType,
-                                            QString::fromStdWString(cellmlValidityIssue->description()),
-                                            line, column, importedModel));
+            mIssues.append(CellmlFileIssue(issueType,
+                                           QString::fromStdWString(cellmlValidityIssue->description()),
+                                           line, column, importedFile));
         }
 
         if (cellmlErrorsCount)
@@ -289,7 +289,7 @@ bool CellmlModel::isValid()
 
         return true;
     } else {
-        // Something went wrong with the loading of the model, so...
+        // Something went wrong with the loading of the file, so...
 
         return false;
     }
@@ -297,25 +297,25 @@ bool CellmlModel::isValid()
 
 //==============================================================================
 
-CellmlModelIssues CellmlModel::issues()
+CellmlFileIssues CellmlFile::issues()
 {
-    // Return the model's issue(s)
+    // Return the file's issue(s)
 
     return mIssues;
 }
 
 //==============================================================================
 
-CellmlModelRuntime * CellmlModel::runtime()
+CellmlFileRuntime * CellmlFile::runtime()
 {
-    // Load (but not reload!) the model, if needed
+    // Load (but not reload!) the file, if needed
 
     load();
 
     // Return an updated version of our runtime object
 
     return mRuntime->update(mModel);
-    // Note: if the model didn't get properly loaded, then mModel will be equal
+    // Note: if the file didn't get properly loaded, then mModel will be equal
     //       to zero, meaning that the runtime will just have been reset (as
     //       part of the call to update())...
 }

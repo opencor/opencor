@@ -9,7 +9,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLSupport::CellmlModel</name>
+    <name>OpenCOR::CellMLSupport::CellmlFile</name>
     <message>
         <source>the model could not be loaded (%1)</source>
         <translation>le modèle n&apos;a pas pu être chargé (%1)</translation>
@@ -20,7 +20,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLSupport::CellmlModelRuntime</name>
+    <name>OpenCOR::CellMLSupport::CellmlFileRuntime</name>
     <message>
         <source>an unexpected problem occurred while trying to compile the model</source>
         <translation>un problème inattendu s&apos;est produit lors de la compilation du modèle</translation>

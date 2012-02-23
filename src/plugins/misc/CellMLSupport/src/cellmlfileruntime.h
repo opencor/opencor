@@ -1,13 +1,13 @@
 //==============================================================================
-// CellML model runtime class
+// CellML file runtime class
 //==============================================================================
 
-#ifndef CELLMLMODELRUNTIME_H
-#define CELLMLMODELRUNTIME_H
+#ifndef CELLMLFILERUNTIME_H
+#define CELLMLFILERUNTIME_H
 
 //==============================================================================
 
-#include "cellmlmodelissue.h"
+#include "cellmlfileissue.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -33,38 +33,38 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-typedef void (*CellmlModelRuntimeInitializeConstantsFunction)(double *, double *, double *);
-typedef void (*CellmlModelRuntimeComputeOdeRatesFunction)(double, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeComputeDaeRatesFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeComputeVariablesFunction)(double, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeComputeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeComputeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *, double *, double *);
-typedef void (*CellmlModelRuntimeComputeDaeStateInformationFunction)(double *);
+typedef void (*CellmlFileRuntimeInitializeConstantsFunction)(double *, double *, double *);
+typedef void (*CellmlFileRuntimeComputeOdeRatesFunction)(double, double *, double *, double *, double *);
+typedef void (*CellmlFileRuntimeComputeDaeRatesFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
+typedef void (*CellmlFileRuntimeComputeVariablesFunction)(double, double *, double *, double *, double *);
+typedef void (*CellmlFileRuntimeComputeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+typedef void (*CellmlFileRuntimeComputeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+typedef void (*CellmlFileRuntimeComputeDaeStateInformationFunction)(double *);
 
 //==============================================================================
 
-struct CellmlModelRuntimeOdeFunctions
+struct CellmlFileRuntimeOdeFunctions
 {
-    CellmlModelRuntimeInitializeConstantsFunction initializeConstants;
-    CellmlModelRuntimeComputeOdeRatesFunction computeRates;
-    CellmlModelRuntimeComputeVariablesFunction computeVariables;
+    CellmlFileRuntimeInitializeConstantsFunction initializeConstants;
+    CellmlFileRuntimeComputeOdeRatesFunction computeRates;
+    CellmlFileRuntimeComputeVariablesFunction computeVariables;
 };
 
 //==============================================================================
 
-struct CellmlModelRuntimeDaeFunctions
+struct CellmlFileRuntimeDaeFunctions
 {
-    CellmlModelRuntimeInitializeConstantsFunction initializeConstants;
-    CellmlModelRuntimeComputeDaeRatesFunction computeRates;
-    CellmlModelRuntimeComputeVariablesFunction computeVariables;
-    CellmlModelRuntimeComputeDaeEssentialVariablesFunction computeEssentialVariables;
-    CellmlModelRuntimeComputeDaeRootInformationFunction computeRootInformation;
-    CellmlModelRuntimeComputeDaeStateInformationFunction computeStateInformation;
+    CellmlFileRuntimeInitializeConstantsFunction initializeConstants;
+    CellmlFileRuntimeComputeDaeRatesFunction computeRates;
+    CellmlFileRuntimeComputeVariablesFunction computeVariables;
+    CellmlFileRuntimeComputeDaeEssentialVariablesFunction computeEssentialVariables;
+    CellmlFileRuntimeComputeDaeRootInformationFunction computeRootInformation;
+    CellmlFileRuntimeComputeDaeStateInformationFunction computeStateInformation;
 };
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlModelRuntime : public QObject
+class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
 {
     Q_OBJECT
 
@@ -76,7 +76,7 @@ public:
         Undefined
     };
 
-    explicit CellmlModelRuntime();
+    explicit CellmlFileRuntime();
 
     bool isValid() const;
 
@@ -88,12 +88,12 @@ public:
     int algebraicCount() const;
     int condVarCount() const;
 
-    CellmlModelRuntimeOdeFunctions odeFunctions() const;
-    CellmlModelRuntimeDaeFunctions daeFunctions() const;
+    CellmlFileRuntimeOdeFunctions odeFunctions() const;
+    CellmlFileRuntimeDaeFunctions daeFunctions() const;
 
-    CellmlModelIssues issues() const;
+    CellmlFileIssues issues() const;
 
-    CellmlModelRuntime * update(iface::cellml_api::Model *pModel);
+    CellmlFileRuntime * update(iface::cellml_api::Model *pModel);
 
 private:
     ModelType mModelType;
@@ -103,10 +103,10 @@ private:
 
     Computer::ComputerEngine *mComputerEngine;
 
-    CellmlModelRuntimeOdeFunctions mOdeFunctions;
-    CellmlModelRuntimeDaeFunctions mDaeFunctions;
+    CellmlFileRuntimeOdeFunctions mOdeFunctions;
+    CellmlFileRuntimeDaeFunctions mDaeFunctions;
 
-    CellmlModelIssues mIssues;
+    CellmlFileIssues mIssues;
 
     void resetOdeCodeInformation();
     void resetDaeCodeInformation();

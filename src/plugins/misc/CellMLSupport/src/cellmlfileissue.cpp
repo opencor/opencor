@@ -1,8 +1,8 @@
 //==============================================================================
-// CellML model issue
+// CellML file issue
 //==============================================================================
 
-#include "cellmlmodelissue.h"
+#include "cellmlfileissue.h"
 
 //==============================================================================
 
@@ -11,21 +11,21 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlModelIssue::CellmlModelIssue(const Type &pType, const QString &pMessage,
-                                   const uint32_t &pLine,
-                                   const uint32_t &pColumn,
-                                   const QString &pImportedModel) :
+CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage,
+                                 const uint32_t &pLine, 
+                                 const uint32_t &pColumn,
+                                 const QString &pImportedFile) :
     mType(pType),
     mMessage(pMessage),
     mLine(pLine),
     mColumn(pColumn),
-    mImportedModel(pImportedModel)
+    mImportedFile(pImportedFile)
 {
 }
 
 //==============================================================================
 
-CellmlModelIssue::Type CellmlModelIssue::type() const
+CellmlFileIssue::Type CellmlFileIssue::type() const
 {
     // Return the issue's type
 
@@ -34,7 +34,7 @@ CellmlModelIssue::Type CellmlModelIssue::type() const
 
 //==============================================================================
 
-QString CellmlModelIssue::message() const
+QString CellmlFileIssue::message() const
 {
     // Return the issue's message
 
@@ -43,7 +43,7 @@ QString CellmlModelIssue::message() const
 
 //==============================================================================
 
-QString CellmlModelIssue::formattedMessage() const
+QString CellmlFileIssue::formattedMessage() const
 {
     // Return the issue's message fully formatted (i.e. the beginning of the
     // message is capitalised and its end consists of a full stop)
@@ -53,7 +53,7 @@ QString CellmlModelIssue::formattedMessage() const
 
 //==============================================================================
 
-uint32_t CellmlModelIssue::line() const
+uint32_t CellmlFileIssue::line() const
 {
     // Return the issue's line
 
@@ -62,7 +62,7 @@ uint32_t CellmlModelIssue::line() const
 
 //==============================================================================
 
-uint32_t CellmlModelIssue::column() const
+uint32_t CellmlFileIssue::column() const
 {
     // Return the issue's column
 
@@ -71,11 +71,11 @@ uint32_t CellmlModelIssue::column() const
 
 //==============================================================================
 
-QString CellmlModelIssue::importedModel() const
+QString CellmlFileIssue::importedFile() const
 {
-    // Return the issue's imported model
+    // Return the issue's imported file
 
-    return mImportedModel;
+    return mImportedFile;
 }
 
 //==============================================================================

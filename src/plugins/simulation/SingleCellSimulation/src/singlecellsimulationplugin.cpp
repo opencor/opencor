@@ -3,7 +3,7 @@
 //==============================================================================
 
 #include "singlecellsimulationplugin.h"
-#include "cellmlmodel.h"
+#include "cellmlfile.h"
 #include "cellmlsupportplugin.h"
 
 //==============================================================================
@@ -137,71 +137,71 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
         qDebug("=======================================");
         qDebug("%s:", qPrintable(pFileName));
 
-        // Load the CellML model
+        // Load the CellML file
 
-        CellMLSupport::CellmlModel *cellmlModel = new CellMLSupport::CellmlModel(pFileName);
+        CellMLSupport::CellmlFile *cellmlFile = new CellMLSupport::CellmlFile(pFileName);
 
-        // Check the model's validity
+        // Check the file's validity
 
-        if (cellmlModel->isValid()) {
-            // The model is valid, but let's see whether warnings were generated
+        if (cellmlFile->isValid()) {
+            // The file is valid, but let's see whether warnings were generated
 
-            int warningsCount = cellmlModel->issues().count();
+            int warningsCount = cellmlFile->issues().count();
 
             if (warningsCount)
-                qDebug(" - The model was properly loaded:");
+                qDebug(" - The file was properly loaded:");
             else
-                qDebug(" - The model was properly loaded.");
+                qDebug(" - The file was properly loaded.");
         } else {
-            qDebug(" - The model was NOT properly loaded:");
+            qDebug(" - The file was NOT properly loaded:");
         }
 
         // Output any warnings/errors that were generated
 
-        foreach (const CellMLSupport::CellmlModelIssue &issue, cellmlModel->issues()) {
-            QString type = QString((issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warning");
+        foreach (const CellMLSupport::CellmlFileIssue &issue, cellmlFile->issues()) {
+            QString type = QString((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning");
             QString message = issue.formattedMessage();
             uint32_t line = issue.line();
             uint32_t column = issue.column();
-            QString importedModel = issue.importedModel();
+            QString importedFile = issue.importedFile();
 
             if (line && column) {
-                if (importedModel.isEmpty())
+                if (importedFile.isEmpty())
                     qDebug("    [%s at line %s column %s] %s", qPrintable(type),
                                                                qPrintable(QString::number(issue.line())),
                                                                qPrintable(QString::number(issue.column())),
                                                                qPrintable(message));
                 else
-                    qDebug("    [%s at line %s column %s from imported model %s] %s", qPrintable(type),
-                                                                                      qPrintable(QString::number(issue.line())),
-                                                                                      qPrintable(QString::number(issue.column())),
-                                                                                      qPrintable(importedModel),
-                                                                                      qPrintable(message));
+                    qDebug("    [%s at line %s column %s from imported file %s] %s", qPrintable(type),
+                                                                                     qPrintable(QString::number(issue.line())),
+                                                                                     qPrintable(QString::number(issue.column())),
+                                                                                     qPrintable(importedFile),
+                                                                                     qPrintable(message));
             } else {
-                if (importedModel.isEmpty())
+                if (importedFile.isEmpty())
                     qDebug("    [%s] %s", qPrintable(type),
                                           qPrintable(message));
                 else
-                    qDebug("    [%s from imported model %s] %s", qPrintable(type),
-                                                                 qPrintable(importedModel),
-                                                                 qPrintable(message));
+                    qDebug("    [%s from imported file %s] %s", qPrintable(type),
+                                                                qPrintable(importedFile),
+                                                                qPrintable(message));
             }
         }
 
-        // Get a runtime for the model
+        // Get a runtime for the file
 
-        CellMLSupport::CellmlModelRuntime *cellmlModelRuntime = cellmlModel->runtime();
+        CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
 
-        if (cellmlModelRuntime->isValid()) {
-            qDebug(" - The model's runtime was properly generated.");
-            qDebug("    [Information] Model type = %s", (cellmlModelRuntime->modelType() == CellMLSupport::CellmlModelRuntime::Ode)?"ODE":"DAE");
+        if (cellmlFileRuntime->isValid()) {
+            qDebug(" - The file's runtime was properly generated.");
+            qDebug("    [Information] Model type = %s", (cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE");
         } else {
-            qDebug(" - The model's runtime was NOT properly generated:");
+            qDebug(" - The file's runtime was NOT properly generated:");
 
-            foreach (const CellMLSupport::CellmlModelIssue &issue,
-                     cellmlModelRuntime->issues())
+            foreach (const CellMLSupport::CellmlFileIssue &issue,
+                     cellmlFileRuntime->issues())
                 qDebug("    [%s] %s",
-                       (issue.type() == CellMLSupport::CellmlModelIssue::Error)?"Error":"Warning",
+                       (issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
                        qPrintable(issue.formattedMessage()));
         }
 
@@ -249,10 +249,10 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
         else
             model = Unknown;
 
-        if (cellmlModelRuntime->isValid() && (model != Unknown)) {
+        if (cellmlFileRuntime->isValid() && (model != Unknown)) {
             typedef QVector<double> Doubles;
 
-            int statesCount = cellmlModelRuntime->statesCount();
+            int statesCount = cellmlFileRuntime->statesCount();
 
             Doubles xData;
             Doubles yData[statesCount];
@@ -260,10 +260,10 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
             double voi = 0;   // ms
             double voiStep;   // ms
             double voiMax;    // ms
-            double constants[cellmlModelRuntime->constantsCount()];
-            double rates[cellmlModelRuntime->ratesCount()];
+            double constants[cellmlFileRuntime->constantsCount()];
+            double rates[cellmlFileRuntime->ratesCount()];
             double states[statesCount];
-            double algebraic[cellmlModelRuntime->algebraicCount()];
+            double algebraic[cellmlFileRuntime->algebraicCount()];
             int voiCount = 0;
             int voiOutputCount;   // ms
 
@@ -296,7 +296,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                 voiOutputCount = 1;
             }
 
-            CellMLSupport::CellmlModelRuntimeOdeFunctions odeFunctions = cellmlModelRuntime->odeFunctions();
+            CellMLSupport::CellmlFileRuntimeOdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
 
             QTime time;
 
@@ -362,7 +362,7 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
         // Done with our testing, so...
 
-        delete cellmlModel;
+        delete cellmlFile;
 
 //--- TESTING --- END ---
 

@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlmodel.h"
+#include "cellmlfile.h"
 
 //==============================================================================
 
@@ -20,7 +20,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlModel *> CellmlFiles;
+typedef QMap<QString, CellmlFile *> CellmlFiles;
 
 //==============================================================================
 
@@ -31,7 +31,7 @@ class CellmlFileManager : public QObject
 public:
     static CellmlFileManager * instance();
 
-    CellmlModel * cellmlFile(const QString &pFileName);
+    CellmlFile * cellmlFile(const QString &pFileName);
 
 private:
     CellmlFiles mCellmlFiles;

@@ -14,15 +14,15 @@ ADD_PLUGIN(CellMLSupport
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
+        src/cellmlfile.cpp
+        src/cellmlfileissue.cpp
         src/cellmlfilemanager.cpp
-        src/cellmlmodel.cpp
-        src/cellmlmodelissue.cpp
-        src/cellmlmodelruntime.cpp
+        src/cellmlfileruntime.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
+        src/cellmlfile.h
         src/cellmlfilemanager.h
-        src/cellmlmodel.h
-        src/cellmlmodelruntime.h
+        src/cellmlfileruntime.h
         src/cellmlsupportplugin.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}
