@@ -21,7 +21,7 @@ namespace Computer {
 //==============================================================================
 
 ComputerParser::ComputerParser() :
-    mErrors(ComputerErrors())
+    mError(ComputerError())
 {
     // Create a scanner
 
@@ -48,43 +48,27 @@ ComputerScanner * ComputerParser::scanner()
 
 //==============================================================================
 
-ComputerErrors ComputerParser::errors()
+ComputerError ComputerParser::error()
 {
-    // Return the computer parser's error(s)
+    // Return the computer parser's error
 
-    return mErrors;
+    return mError;
 }
 
 //==============================================================================
 
-void ComputerParser::addError(const QString &pMessage,
+void ComputerParser::setError(const QString &pMessage,
                               const bool &pExpectedMessage,
                               const bool &pUseCurrentToken,
-                              const ComputerScannerToken &pOtherToken,
-                              const QString &pExtraInformation)
+                              const ComputerScannerToken &pOtherToken)
 {
     ComputerScannerToken token = pUseCurrentToken?mScanner->token():pOtherToken;
 
-    if (pExpectedMessage) {
-        // First, check that there isn't already an error for that line/column
-        // combination
-
-        int tokenLine = token.line();
-        int tokenColumn = token.column();
-
-        foreach (const ComputerError &error, mErrors)
-            if ((error.line() == tokenLine) && (error.column() == tokenColumn))
-                // There is already an error for that line line/column
-                // combination, so...
-
-                return;
-
-        mErrors.append(ComputerError(tr("%1 was expected, but '%2' was found instead").arg(pMessage, (token.symbol() == ComputerScannerToken::Eof)?"EoF":token.string()),
-                                     tokenLine, tokenColumn));
-    } else {
-        mErrors.append(ComputerError(pMessage, token.line(), token.column(),
-                                     pExtraInformation));
-    }
+    if (pExpectedMessage)
+        mError = ComputerError(tr("%1 was expected, but '%2' was found instead").arg(pMessage, (token.symbol() == ComputerScannerToken::Eof)?"EoF":token.string()),
+                               token.line(), token.column());
+    else
+        mError = ComputerError(pMessage, token.line(), token.column());
 }
 
 //==============================================================================
@@ -99,7 +83,8 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
 
     // Reset/initialise ourselves
 
-    mErrors.clear();
+    mError = ComputerError();
+
     mScanner->initialise(pFunction);
 
     // Retrieve the type of function that we are dealing with, i.e. a void or a
@@ -116,7 +101,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
 
         function->setType(ComputerFunction::Double);
     } else {
-        addError(tr("either 'void' or 'double'"));
+        setError(tr("either 'void' or 'double'"));
 
         delete function;
 
@@ -132,7 +117,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
 
         function->setName(mScanner->token().string());
     } else {
-        addError(tr("an identifier"));
+        setError(tr("an identifier"));
 
         delete function;
 
@@ -144,7 +129,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be an opening bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::OpeningBracket) {
-        addError("'('");
+        setError("'('");
 
         delete function;
 
@@ -167,7 +152,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be a closing bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::ClosingBracket) {
-        addError("'double' or ')'");
+        setError("'double' or ')'");
 
         delete function;
 
@@ -179,7 +164,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be an opening curly bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::OpeningCurlyBracket) {
-        addError("'{'");
+        setError("'{'");
 
         delete function;
 
@@ -213,7 +198,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be a closing curly bracket
 
     if (mScanner->token().symbol() != ComputerScannerToken::ClosingCurlyBracket) {
-        addError("'}'");
+        setError("'}'");
 
         delete function;
 
@@ -225,7 +210,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     // The current token must be EOF
 
     if (mScanner->token().symbol() != ComputerScannerToken::Eof) {
-        addError("EOF");
+        setError("EOF");
 
         delete function;
 
@@ -237,7 +222,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
 //          DON'T CURRENTLY SUPPORT DEFINITE INTEGRALS (BUT STILL ALLOW THEIR
 //          PARSING), WE NEED TO CHECK THAT 'NO PARSING ERRORS' WERE FOUND...
 
-return mErrors.empty()?function:0;
+return mError.isEmpty()?function:0;
 
 //    return function;
 }
@@ -249,8 +234,6 @@ bool ComputerParser::parseFunctionParameters(ComputerFunction *pFunction)
     // The EBNF grammar of a list of function parameters is as follows:
     //
     //   FunctionParameters = [ FunctionParameter { "," FunctionParameter } ] ;
-
-    int oldNbOfErrors = mErrors.count();
 
     if (parseFunctionParameter(pFunction, false))
         // The first function parameter was properly parsed, so look for other
@@ -272,10 +255,10 @@ bool ComputerParser::parseFunctionParameters(ComputerFunction *pFunction)
         }
     else
         // Something went wrong with the parsing of the function parameter
-        // definition, but it should only be reported as an error if the number
-        // of errors has gone up
+        // definition, but it should only be reported if an error has been
+        // generated
 
-        return oldNbOfErrors == mErrors.count();
+        return mError.isEmpty();
 
     // Everything went fine, so...
 
@@ -297,7 +280,7 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction *pFunction,
         if (pNeeded)
             // We need a function parameter definition, so...
 
-            addError("'double'");
+            setError("'double'");
 
         return false;
     }
@@ -325,13 +308,12 @@ bool ComputerParser::parseFunctionParameter(ComputerFunction *pFunction,
         if (!pFunction->addParameter(ComputerParameter(mScanner->token().string(), pointer))) {
             // The function parameter already exists, so...
 
-            addError(tr("there is already a function parameter called '%1'").arg(mScanner->token().string()),
-                     false);
+            setError(tr("there is already a function parameter called '%1'").arg(mScanner->token().string()), false);
 
             return false;
         }
     } else {
-        addError(tr("a '*' or an identifier"));
+        setError(tr("a '*' or an identifier"));
 
         return false;
     }
@@ -366,7 +348,7 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         // The current token must be "["
 
         if (mScanner->token().symbol() != ComputerScannerToken::OpeningSquareBracket) {
-            addError("'['");
+            setError("'['");
 
             return false;
         }
@@ -384,7 +366,7 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
             arrayIndex = mScanner->token().string().toInt();
 
         if (arrayIndex < 0) {
-            addError(tr("a positive integer"));
+            setError(tr("a positive integer"));
 
             return false;
         }
@@ -394,7 +376,7 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         // The current token must be "]"
 
         if (mScanner->token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
-            addError("']'");
+            setError("']'");
 
             return false;
         }
@@ -404,7 +386,7 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         // The current token must be "="
 
         if (mScanner->token().symbol() != ComputerScannerToken::Equal) {
-            addError("'='");
+            setError("'='");
 
             return false;
         }
@@ -427,7 +409,7 @@ bool ComputerParser::parseEquations(ComputerFunction *pFunction)
         // The current token must be ";"
 
         if (mScanner->token().symbol() != ComputerScannerToken::SemiColon) {
-            addError("';'");
+            setError("';'");
 
             delete rhsEquation;
 
@@ -777,7 +759,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // The current token must be "("
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
-            pParser->addError("'('");
+            pParser->setError("'('");
 
             return false;
         }
@@ -800,7 +782,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // The current token must be ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
-            pParser->addError("')'");
+            pParser->setError("')'");
 
             delete argument;
 
@@ -822,7 +804,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // The current token must be "("
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
-            pParser->addError("'('");
+            pParser->setError("'('");
 
             return false;
         }
@@ -845,7 +827,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // The current token must be ","
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
-            pParser->addError("','");
+            pParser->setError("','");
 
             delete argumentOne;
 
@@ -871,7 +853,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // The current token must be ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
-            pParser->addError("')'");
+            pParser->setError("')'");
 
             delete argumentOne;
             delete argumentTwo;
@@ -895,7 +877,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // The current token must be "("
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
-            pParser->addError("'('");
+            pParser->setError("'('");
 
             return false;
         }
@@ -912,7 +894,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
             argumentsCount = pParser->scanner()->token().string().toInt();
 
         if (argumentsCount < 0) {
-            pParser->addError(QObject::tr("a positive integer"));
+            pParser->setError(QObject::tr("a positive integer"));
 
             return false;
         }
@@ -930,7 +912,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
             // The current token must be ","
 
             if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
-                pParser->addError("','");
+                pParser->setError("','");
 
                 for (int j = 0; j < i; ++j)
                     delete arguments[j];
@@ -956,7 +938,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // The current token must be ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
-            pParser->addError("')'");
+            pParser->setError("')'");
 
             for (int i = 0; i < argumentsCount; ++i)
                 delete arguments[i];
@@ -976,7 +958,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 //---GRY--- THE BELOW CODE IS TO REMOVED ONCE DEFINITE INTEGRALS ARE SUPPORTED
 //          BY OpenCOR...
 
-pParser->addError(QObject::tr("definite integrals are not yet supported"), false);
+pParser->setError(QObject::tr("definite integrals are not yet supported"), false);
 
         ComputerEquation::Type equationType = pParser->scanner()->token().equationType();
 
@@ -985,7 +967,7 @@ pParser->addError(QObject::tr("definite integrals are not yet supported"), false
         // The current token must be "("
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::OpeningBracket) {
-            pParser->addError("'('");
+            pParser->setError("'('");
 
             return false;
         }
@@ -1008,7 +990,7 @@ pParser->addError(QObject::tr("definite integrals are not yet supported"), false
         // The current token must be ","
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
-            pParser->addError("','");
+            pParser->setError("','");
 
             delete argumentOne;
 
@@ -1034,7 +1016,7 @@ pParser->addError(QObject::tr("definite integrals are not yet supported"), false
         // The current token must be ","
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
-            pParser->addError("','");
+            pParser->setError("','");
 
             delete argumentOne;
             delete argumentTwo;
@@ -1062,7 +1044,7 @@ pParser->addError(QObject::tr("definite integrals are not yet supported"), false
         // The current token must be ","
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::Comma) {
-            pParser->addError("','");
+            pParser->setError("','");
 
             delete argumentOne;
             delete argumentTwo;
@@ -1091,7 +1073,7 @@ pParser->addError(QObject::tr("definite integrals are not yet supported"), false
         // The current token must be ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
-            pParser->addError("')'");
+            pParser->setError("')'");
 
             delete argumentOne;
             delete argumentTwo;
@@ -1127,7 +1109,7 @@ pParser->addError(QObject::tr("definite integrals are not yet supported"), false
         // The current token must be ")"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingBracket) {
-            pParser->addError("')'");
+            pParser->setError("')'");
 
             delete equation;
 
@@ -1168,7 +1150,7 @@ bool parseParameter(ComputerParser *pParser, ComputerEquation * &pExpression)
 
         parameterName = pParser->scanner()->token().string();
     } else {
-        pParser->addError(QObject::tr("an identifier"));
+        pParser->setError(QObject::tr("an identifier"));
 
         return false;
     }
@@ -1192,7 +1174,7 @@ bool parseParameter(ComputerParser *pParser, ComputerEquation * &pExpression)
             parameterIndex = pParser->scanner()->token().string().toInt();
 
         if (parameterIndex < 0) {
-            pParser->addError(QObject::tr("a positive integer"));
+            pParser->setError(QObject::tr("a positive integer"));
 
             return false;
         }
@@ -1202,7 +1184,7 @@ bool parseParameter(ComputerParser *pParser, ComputerEquation * &pExpression)
         // The current token must be "]"
 
         if (pParser->scanner()->token().symbol() != ComputerScannerToken::ClosingSquareBracket) {
-            pParser->addError("']'");
+            pParser->setError("']'");
 
             return false;
         }
@@ -1240,7 +1222,7 @@ bool ComputerParser::parseRhsEquation(ComputerEquation * &pRhsEquation)
     if (!parseOrExpression(this, mainOrConditionEquation)) {
         // Something went wrong with the parsing of an Or expression, so...
 
-        addError(tr("the RHS of an equation"));
+        setError(tr("the RHS of an equation"));
 
         delete mainOrConditionEquation;
 
@@ -1271,7 +1253,7 @@ bool ComputerParser::parseRhsEquation(ComputerEquation * &pRhsEquation)
         // The current token must be ":"
 
         if (mScanner->token().symbol() != ComputerScannerToken::Colon) {
-            addError("':'");
+            setError("':'");
 
             delete mainOrConditionEquation;
             delete trueCaseEquation;
@@ -1326,7 +1308,7 @@ bool ComputerParser::parseReturnStatement(ComputerFunction *pFunction)
     // The current token must be "return"
 
     if (mScanner->token().symbol() != ComputerScannerToken::Return) {
-        addError(tr("an identifier or 'return'"));
+        setError(tr("an identifier or 'return'"));
 
         return false;
     }
@@ -1349,7 +1331,7 @@ bool ComputerParser::parseReturnStatement(ComputerFunction *pFunction)
     // The current token must be ";"
 
     if (mScanner->token().symbol() != ComputerScannerToken::SemiColon) {
-        addError("';'");
+        setError("';'");
 
         delete equation;
 

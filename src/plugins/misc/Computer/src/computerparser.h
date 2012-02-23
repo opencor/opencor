@@ -33,13 +33,12 @@ public:
 
     ComputerScanner * scanner();
 
-    ComputerErrors errors();
+    ComputerError error();
 
-    void addError(const QString &pMessage,
+    void setError(const QString &pMessage,
                   const bool &pExpectedMessage = true,
                   const bool &pUseCurrentToken = true,
-                  const ComputerScannerToken &pOtherToken = ComputerScannerToken(),
-                  const QString &pExtraInformation = QString());
+                  const ComputerScannerToken &pOtherToken = ComputerScannerToken());
 
     ComputerFunction * parseFunction(const QString &pFunction);
 
@@ -48,7 +47,7 @@ public:
 private:
     ComputerScanner *mScanner;
 
-    ComputerErrors mErrors;
+    ComputerError mError;
 
     bool parseFunctionParameters(ComputerFunction *pFunction);
     bool parseFunctionParameter(ComputerFunction *pFunction,

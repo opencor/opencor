@@ -185,7 +185,7 @@ void ComputerEngineData::addEquationAssemblyCodeIndex(ComputerEquation *pKey,
 //==============================================================================
 
 ComputerEngine::ComputerEngine() :
-    mError(QString()),
+    mError(ComputerError()),
     mExternalFunctions(ComputerExternalFunctions())
 {
     // Create a module
@@ -252,11 +252,11 @@ ComputerError ComputerEngine::error()
 
 //==============================================================================
 
-ComputerErrors ComputerEngine::parserErrors()
+ComputerError ComputerEngine::parserError()
 {
-    // Return the computer engine's parser's errors
+    // Return the computer engine's parser's error
 
-    return mParser->errors();
+    return mParser->error();
 }
 
 //==============================================================================
@@ -495,8 +495,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
     if (parseError.getMessage().size())
         mError = ComputerError(tr("the LLVM assembly code could not be parsed: %1").arg(QString::fromStdString(parseError.getMessage()).remove("error: ")),
-                               parseError.getLineNo(), parseError.getColumnNo(),
-                               data.assemblyCode());
+                               parseError.getLineNo(), parseError.getColumnNo());
         // Note: we must not exit straightaway since LLVM may have generated
         //       some IR code, so we first need to check whether part of the
         //       function has already been generated and, if so, remove it...

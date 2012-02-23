@@ -12,12 +12,10 @@ namespace Computer {
 //==============================================================================
 
 ComputerError::ComputerError(const QString &pMessage,
-                             const int &pLine, const int &pColumn,
-                             const QString &pExtraInformation) :
+                             const int &pLine, const int &pColumn) :
     mMessage(pMessage),
     mLine(pLine),
-    mColumn(pColumn),
-    mExtraInformation(pExtraInformation)
+    mColumn(pColumn)
 {
 }
 
@@ -27,7 +25,7 @@ bool ComputerError::isEmpty() const
 {
     // Return whether the error is empty
 
-    return mMessage.isEmpty() && !mLine && !mColumn && mExtraInformation.isEmpty();
+    return mMessage.isEmpty() && !mLine && !mColumn;
 }
 
 //==============================================================================
@@ -65,15 +63,6 @@ int ComputerError::column() const
     // Return the error's column
 
     return mColumn;
-}
-
-//==============================================================================
-
-QString ComputerError::extraInformation() const
-{
-    // Return the error's extra information
-
-    return mExtraInformation;
 }
 
 //==============================================================================

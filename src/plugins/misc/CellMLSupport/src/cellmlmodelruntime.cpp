@@ -540,18 +540,29 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
 void CellmlModelRuntime::checkFunction(const QString &pFunctionName)
 {
-    if (mComputerEngine->parserErrors().count())
+    if (!mComputerEngine->parserError().isEmpty()) {
         // Something went wrong with the parsing of the function, so output the
         // error(s) that was(were) found
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                         tr("the function '%1' could not be parsed").arg(pFunctionName)));
-    else if (!mComputerEngine->error().isEmpty())
+
+        mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                        mComputerEngine->parserError().message(),
+                                        mComputerEngine->parserError().line(),
+                                        mComputerEngine->parserError().column()));
+    } else if (!mComputerEngine->error().isEmpty()) {
         // Something went wrong with the addition of the function, so output the
         // error that was found
 
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
-                                        tr("the function '%1' could not be compiled: %2").arg(pFunctionName, mComputerEngine->error().message())));
+                                        tr("the function '%1' could not be compiled")));
+
+        mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
+                                        mComputerEngine->error().message(),
+                                        mComputerEngine->error().line(),
+                                        mComputerEngine->error().column()));
+    }
 }
 
 //==============================================================================

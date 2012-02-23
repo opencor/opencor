@@ -24,8 +24,7 @@ class COMPUTER_EXPORT ComputerError
 {
 public:
     explicit ComputerError(const QString &pMessage = QString(),
-                           const int &pLine = 0, const int &pColumn = 0,
-                           const QString &pExtraInformation = QString());
+                           const int &pLine = 0, const int &pColumn = 0);
 
     bool isEmpty() const;
 
@@ -33,18 +32,12 @@ public:
     QString formattedMessage() const;
     int line() const;
     int column() const;
-    QString extraInformation() const;
 
 private:
     QString mMessage;
     int mLine;
     int mColumn;
-    QString mExtraInformation;
 };
-
-//==============================================================================
-
-typedef QList<ComputerError> ComputerErrors;
 
 //==============================================================================
 

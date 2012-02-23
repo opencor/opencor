@@ -99,7 +99,7 @@ public:
     llvm::ExecutionEngine * executionEngine();
 
     ComputerError error();
-    ComputerErrors parserErrors();
+    ComputerError parserError();
 
     llvm::Function * addFunction(const QString &pFunction);
 

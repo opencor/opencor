@@ -52,66 +52,52 @@ void Test::cleanupTestCase()
 
 void Test::basicTests()
 {
-    OpenCOR::Computer::ComputerErrors parserErrors;
-
     // Check what happens when using an empty string to add a function
 
     mFunction = mComputerEngine->addFunction("");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "either 'void' or 'double' was expected, but 'EoF' was found instead");
 
     // Add 'void' to our string
 
     mFunction = mComputerEngine->addFunction("void");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "an identifier was expected, but 'EoF' was found instead");
 
     // Add an identifier to our string
 
     mFunction = mComputerEngine->addFunction("void voidFunc");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "'(' was expected, but 'EoF' was found instead");
 
     // Add a '(' to our string
 
     mFunction = mComputerEngine->addFunction("void voidFunc(");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "'double' or ')' was expected, but 'EoF' was found instead");
 
     // Add a ')' to our string
 
     mFunction = mComputerEngine->addFunction("void voidFunc()");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "'{' was expected, but 'EoF' was found instead");
 
     // Add a '{' to our string
 
     mFunction = mComputerEngine->addFunction("void voidFunc() {");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "'}' was expected, but 'EoF' was found instead");
 
     // Add a '}' to our string which should make it a valid void function
@@ -123,41 +109,33 @@ void Test::basicTests()
     // Make the function a double function
 
     mFunction = mComputerEngine->addFunction("double doubleFunc() {}");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "an identifier or 'return' was expected, but '}' was found instead");
 
     // Add 'return' to our string
 
     mFunction = mComputerEngine->addFunction("double doubleFunc() { return");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "the RHS of an equation was expected, but 'EoF' was found instead");
 
     // Add '3' (as the RHS of an equation) to our string
 
     mFunction = mComputerEngine->addFunction("double doubleFunc() { return 3");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "';' was expected, but 'EoF' was found instead");
 
     // Add ';' to our string
 
     mFunction = mComputerEngine->addFunction("double doubleFunc() { return 3;");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "'}' was expected, but 'EoF' was found instead");
 
     // Add a '}' to our string which should make it a valid double function
@@ -177,31 +155,25 @@ void Test::basicTests()
     // Check that the function cannot work as an integer function
 
     mFunction = mComputerEngine->addFunction("int intFunc() { return 3; }");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "either 'void' or 'double' was expected, but 'int' was found instead");
 
     // Check what happens when using an invalid function name
 
     mFunction = mComputerEngine->addFunction("double .doubleFunc() { return 3; }");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "an identifier was expected, but '.' was found instead");
 
     // Check what happens when using an invalid RHS of an equation
 
     mFunction = mComputerEngine->addFunction("double doubleFunc() { return 3*/a; }");
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "the RHS of an equation was expected, but '/' was found instead");
 }
 
@@ -1409,19 +1381,15 @@ void Test::minFunctionTests()
 
 void Test::defIntFunctionTests()
 {
-    OpenCOR::Computer::ComputerErrors parserErrors;
-
     mFunction = mComputerEngine->addFunction(
                     "double defIntFunc()\n"
                     "{\n"
                     "    return defint(0, 2, x, x);\n"
                     "}"
                 );
-    parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QCOMPARE(parserErrors.count(), 1);
-    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+    QCOMPARE(qPrintable(mComputerEngine->parserError().message()),
              "definite integrals are not yet supported");
 
 }

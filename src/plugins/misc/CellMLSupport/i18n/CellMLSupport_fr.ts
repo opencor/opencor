@@ -50,8 +50,8 @@
         <translation>La fonction &apos;%1&apos; n&apos;a pas pu être analysée</translation>
     </message>
     <message>
-        <source>the function &apos;%1&apos; could not be compiled: %2</source>
-        <translation>La fonction &apos;%1&apos; n&apos;a pas pu être compilée : %2</translation>
+        <source>the function &apos;%1&apos; could not be compiled</source>
+        <translation>La fonction &apos;%1&apos; n&apos;a pas pu être compilée</translation>
     </message>
     <message>
         <source>the model code could not be generated</source>
