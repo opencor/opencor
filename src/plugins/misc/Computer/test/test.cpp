@@ -55,10 +55,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("either 'void' or 'double' was expected, but 'EoF' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "either 'void' or 'double' was expected, but 'EoF' was found instead");
 
     // Add 'void' to our string
 
@@ -66,10 +65,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("an identifier was expected, but 'EoF' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "an identifier was expected, but 'EoF' was found instead");
 
     // Add an identifier to our string
 
@@ -77,10 +75,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("'(' was expected, but 'EoF' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "'(' was expected, but 'EoF' was found instead");
 
     // Add a '(' to our string
 
@@ -88,10 +85,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("'double' or ')' was expected, but 'EoF' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "'double' or ')' was expected, but 'EoF' was found instead");
 
     // Add a ')' to our string
 
@@ -99,10 +95,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("'{' was expected, but 'EoF' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "'{' was expected, but 'EoF' was found instead");
 
     // Add a '{' to our string
 
@@ -110,10 +105,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("'}' was expected, but 'EoF' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "'}' was expected, but 'EoF' was found instead");
 
     // Add a '}' to our string which should make it a valid void function
 
@@ -127,10 +121,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("an identifier or 'return' was expected, but '}' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "an identifier or 'return' was expected, but '}' was found instead");
 
     // Add 'return' to our string
 
@@ -138,10 +131,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("the RHS of an equation was expected, but 'EoF' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "the RHS of an equation was expected, but 'EoF' was found instead");
 
     // Add '3' (as the RHS of an equation) to our string
 
@@ -149,10 +141,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("';' was expected, but 'EoF' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "';' was expected, but 'EoF' was found instead");
 
     // Add ';' to our string
 
@@ -160,10 +151,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("'}' was expected, but 'EoF' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "'}' was expected, but 'EoF' was found instead");
 
     // Add a '}' to our string which should make it a valid double function
 
@@ -176,8 +166,8 @@ void Test::basicTests()
     mFunction = mComputerEngine->addFunction("double doubleFunc() { return 3; }");
 
     QVERIFY(!mFunction);
-    QVERIFY2(!mComputerEngine->error().message().compare("there is already a function called 'doubleFunc'"),
-             qPrintable(QString("mComputerEngine->error().message() = %1").arg(mComputerEngine->error().message())));
+    QCOMPARE(qPrintable(mComputerEngine->error().message()),
+            "there is already a function called 'doubleFunc'");
 
     // Check that the function cannot work as an integer function
 
@@ -185,10 +175,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("either 'void' or 'double' was expected, but 'int' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "either 'void' or 'double' was expected, but 'int' was found instead");
 
     // Check what happens when using an invalid function name
 
@@ -196,10 +185,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("an identifier was expected, but '.' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "an identifier was expected, but '.' was found instead");
 
     // Check what happens when using an invalid RHS of an equation
 
@@ -207,10 +195,9 @@ void Test::basicTests()
     parserErrors = mComputerEngine->parserErrors();
 
     QVERIFY(!mFunction);
-    QVERIFY2(parserErrors.count() == 1,
-             qPrintable(QString("parserErrors.count() = %1").arg(parserErrors.count())));
-    QVERIFY2(!parserErrors.at(0).message().compare("the RHS of an equation was expected, but '/' was found instead"),
-             qPrintable(QString("parserErrors.at(0).message() = %1").arg(parserErrors.at(0).message())));
+    QCOMPARE(parserErrors.count(), 1);
+    QCOMPARE(qPrintable(parserErrors.at(0).message()),
+             "the RHS of an equation was expected, but '/' was found instead");
 }
 
 //==============================================================================
@@ -235,12 +222,9 @@ void Test::voidFunctionTests()
 
     ((void (*)(double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(arrayA);
 
-    QVERIFY2(arrayA[0] == 123,
-             qPrintable(QString("arrayA[0] = %1").arg(arrayA[0])));
-    QVERIFY2(arrayA[1] == 456,
-             qPrintable(QString("arrayA[1] = %1").arg(arrayA[1])));
-    QVERIFY2(arrayA[2] == 789,
-             qPrintable(QString("arrayA[2] = %1").arg(arrayA[2])));
+    QCOMPARE(arrayA[0], 123.0);
+    QCOMPARE(arrayA[1], 456.0);
+    QCOMPARE(arrayA[2], 789.0);
 
     // Initialise arrayB in reverse order of arrayA
 
@@ -257,12 +241,9 @@ void Test::voidFunctionTests()
 
     ((void (*)(double *, double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(arrayA, arrayB);
 
-    QVERIFY2(arrayB[0] == 789,
-             qPrintable(QString("arrayB[0] = %1").arg(arrayB[0])));
-    QVERIFY2(arrayB[1] == 456,
-             qPrintable(QString("arrayB[1] = %1").arg(arrayB[1])));
-    QVERIFY2(arrayB[2] == 123,
-             qPrintable(QString("arrayB[2] = %1").arg(arrayB[2])));
+    QCOMPARE(arrayB[0], 789.0);
+    QCOMPARE(arrayB[1], 456.0);
+    QCOMPARE(arrayB[2], 123.0);
 }
 
 //==============================================================================
@@ -280,11 +261,11 @@ void Test::timesOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 3*5.7, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 3*5.7);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == A*B, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, A*B);
 }
 
 //==============================================================================
@@ -302,11 +283,11 @@ void Test::divideOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 3/5.7, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 3/5.7);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == A/B, qPrintable(QString("res = %1 != %2").arg(mResult)));
+    QCOMPARE(mResult, A/B);
 }
 
 //==============================================================================
@@ -324,11 +305,11 @@ void Test::moduloOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*3, 5);
 
-    QVERIFY2(mResult == fmod(11*3, 5), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, fmod(11*3, 5));
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*A, B);
 
-    QVERIFY2(mResult == fmod(11*A, B), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, fmod(11*A, B));
 }
 
 //==============================================================================
@@ -346,11 +327,11 @@ void Test::plusOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 3+5.7, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 3+5.7);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == A+B, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, A+B);
 }
 
 //==============================================================================
@@ -368,11 +349,11 @@ void Test::minusOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 3-5.7, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 3-5.7);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == A-B, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, A-B);
 }
 
 //==============================================================================
@@ -390,19 +371,19 @@ void Test::notOperatorTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 }
 
 //==============================================================================
@@ -420,35 +401,35 @@ void Test::orOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, !5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3, !5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, !B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A, !B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 }
 
 //==============================================================================
@@ -466,35 +447,35 @@ void Test::xorOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, !5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3, !5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, !B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A, !B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 }
 
 //==============================================================================
@@ -512,35 +493,35 @@ void Test::andOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3, 5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, !5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!3, !5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A, B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, !B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(!A, !B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 }
 
 //==============================================================================
@@ -558,19 +539,19 @@ void Test::equalEqualOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2.7, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 }
 
 //==============================================================================
@@ -588,19 +569,19 @@ void Test::notEqualOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2.7, 5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 }
 
 //==============================================================================
@@ -618,27 +599,27 @@ void Test::lowerThanOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2.7, 5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5.7, 3);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B, A);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 }
 
 //==============================================================================
@@ -656,27 +637,27 @@ void Test::greaterThanOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2.7, 5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5.7, 3);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B, A);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 }
 
 //==============================================================================
@@ -694,27 +675,27 @@ void Test::lowerOrEqualThanOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2.7, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5.7, 3);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B, A);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 }
 
 //==============================================================================
@@ -732,27 +713,27 @@ void Test::greaterOrEqualThanOperatorTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5.7);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2.7, 5.7);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5.7, 3);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
 
-    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 0.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B, A);
 
-    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 1.0);
 }
 
 //==============================================================================
@@ -770,19 +751,19 @@ void Test::absFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == 3, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 3.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(-3);
 
-    QVERIFY2(mResult == 3, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 3.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == 5, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 5.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(MinusA);
 
-    QVERIFY2(mResult == 5, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 5.0);
 }
 
 //==============================================================================
@@ -800,11 +781,11 @@ void Test::expFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == exp(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, exp(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == exp(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, exp(A));
 }
 
 //==============================================================================
@@ -822,11 +803,11 @@ void Test::logFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == log(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, log(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == log(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, log(A));
 }
 
 //==============================================================================
@@ -844,19 +825,19 @@ void Test::ceilFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5.7);
 
-    QVERIFY2(mResult == 6, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 6.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B);
 
-    QVERIFY2(mResult == 8, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 8.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(-5.7);
 
-    QVERIFY2(mResult == -5, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, -5.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(MinusB);
 
-    QVERIFY2(mResult == -7, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, -7.0);
 }
 
 //==============================================================================
@@ -874,19 +855,19 @@ void Test::floorFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5.7);
 
-    QVERIFY2(mResult == 5, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 5.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B);
 
-    QVERIFY2(mResult == 7, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 7.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(-5.7);
 
-    QVERIFY2(mResult == -6, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, -6.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(MinusB);
 
-    QVERIFY2(mResult == -8, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, -8.0);
 }
 
 //==============================================================================
@@ -904,11 +885,11 @@ void Test::factorialFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == 6, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 6.0);
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == 120, qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, 120.0);
 }
 
 //==============================================================================
@@ -926,11 +907,11 @@ void Test::sinFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == sin(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, sin(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == sin(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, sin(A));
 }
 
 //==============================================================================
@@ -948,11 +929,11 @@ void Test::cosFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == cos(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, cos(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == cos(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, cos(A));
 }
 
 //==============================================================================
@@ -970,11 +951,11 @@ void Test::tanFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == tan(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, tan(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == tan(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, tan(A));
 }
 
 //==============================================================================
@@ -992,11 +973,11 @@ void Test::sinhFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == sinh(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, sinh(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == sinh(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, sinh(A));
 }
 
 //==============================================================================
@@ -1014,11 +995,11 @@ void Test::coshFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == cosh(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, cosh(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == cosh(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, cosh(A));
 }
 
 //==============================================================================
@@ -1036,11 +1017,11 @@ void Test::tanhFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == tanh(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, tanh(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == tanh(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, tanh(A));
 }
 
 //==============================================================================
@@ -1058,11 +1039,11 @@ void Test::asinFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/3);
 
-    QVERIFY2(mResult == asin(1/3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, asin(1/3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/A);
 
-    QVERIFY2(mResult == asin(1/A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, asin(1/A));
 }
 
 //==============================================================================
@@ -1080,11 +1061,11 @@ void Test::acosFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/3);
 
-    QVERIFY2(mResult == acos(1/3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, acos(1/3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/A);
 
-    QVERIFY2(mResult == acos(1/A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, acos(1/A));
 }
 
 //==============================================================================
@@ -1102,11 +1083,11 @@ void Test::atanFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == atan(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, atan(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == atan(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, atan(A));
 }
 
 //==============================================================================
@@ -1124,11 +1105,11 @@ void Test::asinhFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == asinh(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, asinh(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == asinh(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, asinh(A));
 }
 
 //==============================================================================
@@ -1146,11 +1127,11 @@ void Test::acoshFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3);
 
-    QVERIFY2(mResult == acosh(3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, acosh(3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A);
 
-    QVERIFY2(mResult == acosh(A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, acosh(A));
 }
 
 //==============================================================================
@@ -1168,11 +1149,11 @@ void Test::atanhFunctionTests()
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/3);
 
-    QVERIFY2(mResult == atanh(1/3), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, atanh(1/3));
 
     mResult = ((double (*)(double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(1/A);
 
-    QVERIFY2(mResult == atanh(1/A), qPrintable(QString("res = %1").arg(mResult)));
+    QCOMPARE(mResult, atanh(1/A));
 }
 
 //==============================================================================
