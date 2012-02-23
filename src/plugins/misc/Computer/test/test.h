@@ -54,6 +54,13 @@ private slots:
     void greaterThanOperatorTests();
     void lowerOrEqualThanOperatorTests();
     void greaterOrEqualThanOperatorTests();
+
+    void absFunctionTests();
+    void expFunctionTests();
+    void logFunctionTests();
+    void ceilFunctionTests();
+    void floorFunctionTests();
+    void factorialFunctionTests();
 };
 
 //==============================================================================
