@@ -233,8 +233,13 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     }
 
     // Everything went fine, so...
+//---GRY--- NORMALLY, ALL WE WOULD DO IS RETURN THE FUNCTION, BUT BECAUSE WE
+//          DON'T CURRENTLY SUPPORT DEFINITE INTEGRALS (BUT STILL ALLOW THEIR
+//          PARSING), WE NEED TO CHECK THAT 'NO PARSING ERRORS' WERE FOUND...
 
-    return function;
+return mErrors.empty()?function:0;
+
+//    return function;
 }
 
 //==============================================================================

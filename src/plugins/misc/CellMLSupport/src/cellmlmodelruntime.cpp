@@ -469,136 +469,36 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
             iface::cellml_services::CodeInformation *genericOdeCodeInformation;
 
-            if (mModelType == Dae)
-                genericOdeCodeInformation = getDaeCodeInformation(pModel);
-            else
+            if (mModelType == Ode)
                 genericOdeCodeInformation = mOdeCodeInformation;
+            else
+                genericOdeCodeInformation = getDaeCodeInformation(pModel);
 
             // Get some binary code
 
             mComputerEngine->addFunction(QString("void initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->initConstsString())));
-            handleErrors("initializeConstants");
+            checkFunction("initializeConstants");
 
             if (mModelType == Ode)
                 mComputerEngine->addFunction(QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
             else
                 mComputerEngine->addFunction(QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
 
-            handleErrors("computeRates");
+            checkFunction("computeRates");
 
             mComputerEngine->addFunction(QString("void computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->variablesString())));
-            handleErrors("computeVariables");
+            checkFunction("computeVariables");
 
             if (mModelType == Dae) {
                 mComputerEngine->addFunction(QString("void computeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
-                handleErrors("computeEssentialVariables");
+                checkFunction("computeEssentialVariables");
 
                 mComputerEngine->addFunction(QString("void computeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->rootInformationString())));
-                handleErrors("computeRootInformation");
+                checkFunction("computeRootInformation");
 
                 mComputerEngine->addFunction(QString("void computeStateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
-                handleErrors("computeStateInformation");
+                checkFunction("computeStateInformation");
             }
-
-//--- TESTING --- BEGIN ---
-
-            mComputerEngine->addFunction(
-                "void test(double *pData)\n"
-                "{\n"
-                "  pData[0] = pData[4];\n"
-                "  pData[1] = -pow(2, 3)*1+3*5+9+1*pData[3]*pData[3]/pData[4]/1;\n"
-                "  pData[2] = 5-9/7;\n"
-                "}");
-            handleErrors("test");
-
-            mComputerEngine->addFunction(
-                "double test2(double *pData)\n"
-                "{\n"
-                "  return  1\n"
-                "         *((pData[4] > pData[3])?(pData[4] < pData[3])?0:1:0)\n"
-                "         *(!5 || 7)*(!pData[3] || pData[4])\n"
-                "         *!(!5 || !7)*!(!pData[3] || !pData[4])\n"
-                "         *(5 && 7)*(pData[3] && pData[4])\n"
-                "         *!(5 && !7)*!(pData[3] && !pData[4])\n"
-                "         *(5+2 == 7)*(pData[3]+2 == pData[4])\n"
-                "         *!(5+2 != 7)*!(pData[3]+2 != pData[4])\n"
-                "         *(5 < 7)*(pData[3] < pData[4])\n"
-                "         *!(7 < 5)*!(pData[4] < pData[3])\n"
-                "         *(7 > 5)*(pData[4] > pData[3])\n"
-                "         *!(5 > 7)*!(pData[3] > pData[4])\n"
-                "         *(5+2 <= 7)*(pData[3]+2 <= pData[4])\n"
-                "         *!(5+2 <= 7-2)*!(pData[3]+2 <= pData[4]-2)\n"
-                "         *(7 >= 5+2)*(pData[4] >= pData[3]+2)\n"
-                "         *!(7-2 >= 5+2)*!(pData[4]-2 >= pData[3]+2)\n"
-                "         *min(3, 15, 35, 55)/min(5, 21, 35, 7*pData[3], pData[4], 49)\n"
-                "         *max(3, 15, 35, 55)/max(5, 21, 35, 7*pData[3], pData[4], 49)\n"
-                "         *lcm(3, 15, 35, 55)/lcm(5, 21, 35, 7*pData[3], pData[4], 49)\n"
-                "         *gcd(3, 15, 35, 55)/gcd(5, 21, 35, 7*pData[3], pData[4], 49)\n"
-                "         *(pData[3] != 0 ^ 0 != 0)*(3 != 0 ^ 0 != 0)\n"
-                "         *rem(pData[3], pData[4])*rem(5, 3)*quot(pData[4], pData[3])\n"
-                "         *quot(pData[4], pData[3])*quot(17, 5)\n"
-                "         *(15 % pData[3] == 0)*(9 % 3 == 0)\n"
-                "         *arbitraryLog(pData[4], pData[3])\n"
-                "         *atanh(tanh(acosh(cosh(asinh(sinh(atan(tan(acos(cos(asin(sin(factorial(pData[3])/factorial(4)*pow(0+fabs(-3)*-pData[0]-0+exp(+log(pData[1])*1)/-ceil(pData[2])/-1e6, floor(fabs(pData[3])/3+0)+1)))))))))))));\n"
-                "}");
-            handleErrors("test2");
-
-            // Test our "test" and "test2" functions
-
-            llvm::Function *testFunction  = mComputerEngine->module()->getFunction("test");
-            llvm::Function *test2Function = mComputerEngine->module()->getFunction("test2");
-
-            if (testFunction && test2Function) {
-                // Initialise our array of data
-
-                static const int dataSize = 5;
-                double data[dataSize];
-
-                for (int i = 0; i < dataSize; ++i)
-                    data[i] = 0;
-
-                data[3] = 5;
-                data[4] = 7;
-
-                // Output the contents of our original array of data
-
-                qDebug("---------------------------------------");
-                qDebug("Original data value:");
-                qDebug("");
-
-                for (int i = 0; i < dataSize; ++i)
-                    qDebug("data[%s] = %s", qPrintable(QString::number(i)), qPrintable(QString::number(data[i], 'g', 19)));
-
-                // Call our LLVM's JIT-based "test" function
-
-                ((void (*)(double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(testFunction))(data);
-
-                // Output the contents of our updated array of data
-
-                qDebug("---------------------------------------");
-                qDebug("Data values after running the \"test\" function:");
-                qDebug("");
-
-                for (int i = 0; i < dataSize; ++i)
-                    qDebug("data[%s] = %s", qPrintable(QString::number(i)), qPrintable(QString::number(data[i], 'g', 19)));
-
-                // Call our LLVM's JIT-based "test2" function
-
-                double test2Result = ((double (*)(double *))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(test2Function))(data);
-
-                qDebug("---------------------------------------");
-                qDebug("Return value from the \"test2\" function: %s", qPrintable(QString::number(test2Result, 'g', 19)));
-            }
-
-            // Output the contents of our computer engine's module so far
-
-            qDebug("---------------------------------------");
-            qDebug("All generated code so far:");
-            qDebug("");
-            mComputerEngine->module()->dump();
-            qDebug("---------------------------------------");
-
-//--- TESTING --- END ---
 
             // Keep track of the ODE/DAE functions, but only if no issues were
             // reported
@@ -638,54 +538,20 @@ CellmlModelRuntime * CellmlModelRuntime::update(iface::cellml_api::Model *pModel
 
 //==============================================================================
 
-void CellmlModelRuntime::handleErrors(const QString &pFunctionName)
+void CellmlModelRuntime::checkFunction(const QString &pFunctionName)
 {
-    if (mComputerEngine->parserErrors().count()) {
+    if (mComputerEngine->parserErrors().count())
         // Something went wrong with the parsing of the function, so output the
         // error(s) that was(were) found
 
-        qDebug("");
-
-        if (mComputerEngine->parserErrors().count() == 1)
-            qDebug("An error occurred:");
-        else
-            qDebug("Some errors occurred:");
-
-        foreach (const Computer::ComputerError &error,
-                 mComputerEngine->parserErrors()) {
-            if (error.line() && error.column())
-                qDebug(" - Line %s, column %s: %s", qPrintable(QString::number(error.line())), qPrintable(QString::number(error.column())), qPrintable(error.formattedMessage()));
-            else
-                qDebug(" - %s", qPrintable(error.formattedMessage()));
-
-            if (!error.extraInformation().isEmpty())
-                qDebug("%s", qPrintable(error.extraInformation()));
-        }
-
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                         tr("the function '%1' could not be parsed").arg(pFunctionName)));
-    } else if (!mComputerEngine->error().isEmpty()) {
+    else if (!mComputerEngine->error().isEmpty())
         // Something went wrong with the addition of the function, so output the
         // error that was found
 
-        qDebug("");
-        qDebug("An error occurred: %s", qPrintable(mComputerEngine->error().formattedMessage()));
-
         mIssues.append(CellmlModelIssue(CellmlModelIssue::Error,
                                         tr("the function '%1' could not be compiled").arg(pFunctionName)));
-    } else {
-        // Check that we can find the LLVM function
-
-        llvm::Function *function = mComputerEngine->module()->getFunction(qPrintable(pFunctionName));
-
-        if (function) {
-            qDebug("---------------------------------------");
-            qDebug("The '%s' function was found...", qPrintable(pFunctionName));
-        } else {
-            qDebug("---------------------------------------");
-            qDebug("The '%s' function doesn't exist...?!", qPrintable(pFunctionName));
-        }
-    }
 }
 
 //==============================================================================
