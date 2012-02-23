@@ -35,14 +35,21 @@ private slots:
     void cleanupTestCase();
 
     void basicTests();
+
     void voidFunctionTests();
+
     void timesOperatorTests();
     void divideOperatorTests();
     void moduloOperatorTests();
     void plusOperatorTests();
     void minusOperatorTests();
+
     void notOperatorTests();
     void orOperatorTests();
+    void xorOperatorTests();
+    void andOperatorTests();
+    void equalEqualOperatorTests();
+    void notEqualOperatorTests();
 };
 
 //==============================================================================
