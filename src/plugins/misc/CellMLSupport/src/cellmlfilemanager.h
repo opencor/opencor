@@ -20,20 +20,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CellmlFile
-{
-public:
-    explicit CellmlFile(const QString &pFileName);
-
-    QString fileName() const;
-
-private:
-    QString mFileName;
-};
-
-//==============================================================================
-
-typedef QMap<QString, CellmlFile *> CellmlFiles;
+typedef QMap<QString, CellmlModel *> CellmlFiles;
 
 //==============================================================================
 
@@ -44,7 +31,7 @@ class CellmlFileManager : public QObject
 public:
     static CellmlFileManager * instance();
 
-    CellmlFile * cellmlFile(const QString &pFileName);
+    CellmlModel * cellmlFile(const QString &pFileName);
 
 private:
     CellmlFiles mCellmlFiles;
