@@ -602,6 +602,158 @@ void Test::notEqualOperatorTests()
 
 //==============================================================================
 
+void Test::lowerThanOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double lowerThanFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pNb1 < pNb2;\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2, 5);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5, 3);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B, A);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::greaterThanOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double greaterThanFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pNb1 > pNb2;\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2, 5);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5, 3);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B, A);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::lowerOrEqualThanOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double lowerOrEqualThanFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pNb1 <= pNb2;\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2, 5);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5, 3);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B, A);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
+void Test::greaterOrEqualThanOperatorTests()
+{
+    mFunction = mComputerEngine->addFunction(
+                    "double greaterOrEqualThanFunc(double pNb1, double pNb2)\n"
+                    "{\n"
+                    "    return pNb1 >= pNb2;\n"
+                    "}"
+                );
+
+    QVERIFY(mFunction);
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3, 5);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(3+2, 5);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(5, 3);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A, B);
+
+    QVERIFY2(mResult == 0, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(A+2.9, B);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+
+    mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(B, A);
+
+    QVERIFY2(mResult == 1, qPrintable(QString("res = %1").arg(mResult)));
+}
+
+//==============================================================================
+
 QTEST_MAIN(Test)
 
 //==============================================================================

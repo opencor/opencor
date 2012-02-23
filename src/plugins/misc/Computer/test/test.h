@@ -50,6 +50,10 @@ private slots:
     void andOperatorTests();
     void equalEqualOperatorTests();
     void notEqualOperatorTests();
+    void lowerThanOperatorTests();
+    void greaterThanOperatorTests();
+    void lowerOrEqualThanOperatorTests();
+    void greaterOrEqualThanOperatorTests();
 };
 
 //==============================================================================
