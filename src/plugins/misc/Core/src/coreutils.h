@@ -15,6 +15,10 @@
 
 //==============================================================================
 
+class QWidget;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 
@@ -26,6 +30,9 @@ void CORE_EXPORT saveResourceAs(const QString &pResource,
 
 void CORE_EXPORT * instance(const QString &pClassName,
                             void *pDefaultGlobalInstance);
+
+void CORE_EXPORT setFocusTo(QWidget *pWindow, QWidget *pWidget,
+                            const bool &pForceFocus = true);
 
 //==============================================================================
 

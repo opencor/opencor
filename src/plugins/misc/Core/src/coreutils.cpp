@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QResource>
 #include <QSettings>
+#include <QWidget>
 
 //==============================================================================
 
@@ -109,6 +110,32 @@ void * instance(const QString &pClassName, void *pDefaultGlobalInstance)
 
     return (void *) globalInstance;
 #endif
+}
+
+//==============================================================================
+
+void setFocusTo(QWidget *pWindow, QWidget *pWidget, const bool &pForceFocus)
+{
+    // Give the focus to pWidget, but then revert the focus back to whoever had
+    // it before, if needed and required
+
+    QWidget *focusedWidget = pForceFocus?
+                                 0:
+                                 pWindow?
+                                     pWindow->parent()?
+                                         ((QWidget *) pWindow->parent())->focusWidget():
+                                         0:
+                                     0;
+    // Note: we assume that the parent of pWindow is OpenCOR's main window which
+    //       means that we can retrieve OpenCOR's currently focused widget...
+
+    pWidget->setFocus();
+
+    if (focusedWidget && (pWindow != focusedWidget->parentWidget()))
+        // There was a 'previously' focused widget and its parent window is not
+        // pWindow, so revert the focus back to that 'previously' focused widget
+
+        focusedWidget->setFocus();
 }
 
 //==============================================================================
