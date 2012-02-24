@@ -357,10 +357,6 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
         mSimulationView->replot();
     }
 
-    // Done with our testing, so...
-
-    delete cellmlFile;
-
 //--- TESTING --- END ---
 
     // The expected file extension, so return our generic simulation view
