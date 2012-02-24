@@ -202,6 +202,7 @@ SET(PLUGINS
     # Build the remaining plugins
 
     misc/Help
+    misc/Viewer
 
     organisation/CellMLModelRepository
     organisation/FileBrowser
@@ -210,7 +211,6 @@ SET(PLUGINS
     editing/CellMLAnnotation
     editing/RawCellMLView
     editing/RawView
-    editing/Viewer
 
     simulation/SingleCellSimulation
 )
