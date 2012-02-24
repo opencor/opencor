@@ -4,7 +4,6 @@
 
 #include "singlecellsimulationplugin.h"
 #include "cellmlfilemanager.h"
-//#include "cellmlsupportplugin.h"
 
 //==============================================================================
 
