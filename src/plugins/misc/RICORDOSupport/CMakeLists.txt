@@ -4,8 +4,6 @@ PROJECT(RICORDOSupportPlugin)
 
 ADD_PLUGIN(RICORDOSupport
     SOURCES
-        ../../fileinterface.cpp
-        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/ricordosupportplugin.cpp
