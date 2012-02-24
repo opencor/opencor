@@ -93,7 +93,7 @@ public:
 
     CellmlFileIssues issues() const;
 
-    CellmlFileRuntime * update(iface::cellml_api::Model *pModel);
+    CellmlFileRuntime * update(iface::cellml_api::Model *pModel = 0);
 
 private:
     ModelType mModelType;

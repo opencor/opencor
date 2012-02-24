@@ -34,6 +34,8 @@ void CORE_EXPORT * instance(const QString &pClassName,
 void CORE_EXPORT setFocusTo(QWidget *pWindow, QWidget *pWidget,
                             const bool &pForceFocus = true);
 
+QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
+
 //==============================================================================
 
 }   // namespace Core

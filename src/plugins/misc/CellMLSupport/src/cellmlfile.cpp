@@ -32,12 +32,15 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFile::CellmlFile(const QString &pFileName) :
-    mFileName(pFileName),
-    mModel(0)
+    mFileName(pFileName)
 {
     // Instantiate our runtime object
 
     mRuntime = new CellmlFileRuntime();
+
+    // Reset ourselves
+
+    reset();
 }
 
 //==============================================================================
@@ -59,64 +62,71 @@ void CellmlFile::reset()
     //---GRY--- WE CANNOT delete mModel AT THIS STAGE. FOR THIS, WE WOULD NEED
     //          TO USE THE CLEANED UP C++ INTERFACE (SEE THE MAIN COMMENT AT THE
     //          BEGINNING OF THIS FILE)
+
+    mIssues.clear();
+
+    mLoadingNeeded       = true;
+    mIsValidNeeded       = true;
+    mRuntimeUpdateNeeded = true;
 }
 
 //==============================================================================
 
 bool CellmlFile::load()
 {
-    if (mModel) {
+    if (!mLoadingNeeded)
         // The file is already loaded, so...
 
         return true;
-    } else {
-        // Reset any issues that we may have found before
 
-        mIssues.clear();
+    // Reset any issues that we may have found before
 
-        // Get a bootstrap object
+    mIssues.clear();
 
-        ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+    // Get a bootstrap object
 
-        // Get its model loader
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
 
-        ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+    // Get its model loader
 
-        // Try to load the model
+    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
 
+    // Try to load the model
+
+    try {
+        mModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
+    } catch (iface::cellml_api::CellMLException &) {
+        // Something went wrong with the loading of the model, so...
+
+        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage()))));
+
+        return false;
+    }
+
+    // In the case of a non CellML 1.0 model, we want all imports to be fully
+    // instantiated
+
+    if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
         try {
-            mModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
-        } catch (iface::cellml_api::CellMLException &) {
-            // Something went wrong with the loading of the model, so...
+            mModel->fullyInstantiateImports();
+        } catch (...) {
+            // Something went wrong with the full instantiation of the imports,
+            // so...
+
+            reset();
 
             mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                           tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage()))));
+                                           tr("the model's imports could not be fully instantiated")));
 
             return false;
         }
 
-        // In the case of a non CellML 1.0 model, we want all imports to be
-        // fully instantiated
+    // All done, so...
 
-        if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
-            try {
-                mModel->fullyInstantiateImports();
-            } catch (...) {
-                // Something went wrong with the full instantiation of the
-                // imports, so...
+    mLoadingNeeded = false;
 
-                reset();
-
-                mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                               tr("the model's imports could not be fully instantiated")));
-
-                return false;
-            }
-
-        // All done, so...
-
-        return true;
-    }
+    return true;
 }
 
 //==============================================================================
@@ -136,6 +146,11 @@ bool CellmlFile::reload()
 
 bool CellmlFile::isValid()
 {
+    if (!mIsValidNeeded)
+        // The file has already been validated, so...
+
+        return mIsValid;
+
     // Load (but not reload!) the file, if needed
 
     if (load()) {
@@ -283,11 +298,15 @@ bool CellmlFile::isValid()
         if (cellmlErrorsCount)
             // There are CellML errors, so...
 
-            return false;
+            mIsValid = false;
+        else
+            // Everything went as expected, so...
 
-        // Everything went as expected, so...
+            mIsValid = true;
 
-        return true;
+        mIsValidNeeded = false;
+
+        return mIsValid;
     } else {
         // Something went wrong with the loading of the file, so...
 
@@ -308,16 +327,24 @@ CellmlFileIssues CellmlFile::issues()
 
 CellmlFileRuntime * CellmlFile::runtime()
 {
-    // Load (but not reload!) the file, if needed
+    if (!mRuntimeUpdateNeeded)
+        // There is no need for the runtime to be updated, so...
 
-    load();
+        return mRuntime;
 
-    // Return an updated version of our runtime object
+    // Check whether the file is valid
 
-    return mRuntime->update(mModel);
-    // Note: if the file didn't get properly loaded, then mModel will be equal
-    //       to zero, meaning that the runtime will just have been reset (as
-    //       part of the call to update())...
+    if (isValid()) {
+        // The file is valid, so return an updated version of its runtime
+
+        mRuntimeUpdateNeeded = false;
+
+        return mRuntime->update(mModel);
+    } else {
+        // The file isn't valid, so reset its runtime
+
+        return mRuntime->update();
+    }
 }
 
 //==============================================================================

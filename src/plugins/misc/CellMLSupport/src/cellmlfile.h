@@ -51,9 +51,15 @@ private:
 
     ObjRef<iface::cellml_api::Model> mModel;
 
+    bool mIsValid;
+
     CellmlFileIssues mIssues;
 
     CellmlFileRuntime *mRuntime;
+
+    bool mLoadingNeeded;
+    bool mIsValidNeeded;
+    bool mRuntimeUpdateNeeded;
 
     void reset();
 };

@@ -2,12 +2,13 @@
 // File
 //==============================================================================
 
+#include "coreutils.h"
 #include "file.h"
 
 //==============================================================================
 
 #include <QCryptographicHash>
-#include <QDir>
+#include <QFileInfo>
 #include <QTextStream>
 
 //==============================================================================
@@ -18,7 +19,7 @@ namespace Core {
 //==============================================================================
 
 File::File(const QString &pFileName) :
-    mFileName(QDir::toNativeSeparators(pFileName)),
+    mFileName(nativeCanonicalFileName(pFileName)),
     mSha1(sha1())
 {
 }

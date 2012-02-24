@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include "cellmlfile.h"
+#include "cellmlsupportglobal.h"
 
 //==============================================================================
 
@@ -24,7 +25,7 @@ typedef QMap<QString, CellmlFile *> CellmlFiles;
 
 //==============================================================================
 
-class CellmlFileManager : public QObject
+class CELLMLSUPPORT_EXPORT CellmlFileManager : public QObject
 {
     Q_OBJECT
 

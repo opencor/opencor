@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "centralwidget.h"
+#include "coreutils.h"
 #include "filemanager.h"
 #include "plugin.h"
 
@@ -12,7 +13,6 @@
 
 //==============================================================================
 
-#include <QDir>
 #include <QDragEnterEvent>
 #include <QFileInfo>
 #include <QLabel>
@@ -430,7 +430,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     // Create a new tab, insert it just after the current tab and make it the
     // new current one
 
-    QString nativeFileName = QDir::toNativeSeparators(pFileName);
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
     QFileInfo fileInfo = QFileInfo(nativeFileName);
 
     mFileTabs->setCurrentIndex(mFileTabs->insertTab(mFileTabs->currentIndex()+1,
@@ -544,7 +544,7 @@ bool CentralWidget::activateFile(const QString &pFileName)
     // Go through the different tabs and check whether one of them corresponds
     // to the requested file
 
-    QString nativeFileName = QDir::toNativeSeparators(pFileName);
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
         if (!mFileTabs->tabToolTip(i).compare(nativeFileName)) {

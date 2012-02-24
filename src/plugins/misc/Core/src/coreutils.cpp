@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include <QApplication>
+#include <QDir>
 #include <QFile>
 #include <QResource>
 #include <QSettings>
@@ -136,6 +137,15 @@ void setFocusTo(QWidget *pWindow, QWidget *pWidget, const bool &pForceFocus)
         // pWindow, so revert the focus back to that 'previously' focused widget
 
         focusedWidget->setFocus();
+}
+
+//==============================================================================
+
+QString nativeCanonicalFileName(const QString &pFileName)
+{
+    // Return a native and canonical version of the file's name
+
+    return QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
 }
 
 //==============================================================================

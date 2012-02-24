@@ -61,7 +61,7 @@ FileManager * FileManager::instance()
 
 FileManager::Status FileManager::manage(const QString &pFileName)
 {
-    QString nativeFileName = QDir::toNativeSeparators(pFileName);
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     if (QFileInfo(nativeFileName).exists()) {
         if (isManaged(nativeFileName)) {
@@ -89,7 +89,7 @@ FileManager::Status FileManager::manage(const QString &pFileName)
 
 FileManager::Status FileManager::unmanage(const QString &pFileName)
 {
-    QString nativeFileName = QDir::toNativeSeparators(pFileName);
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     if (QFileInfo(nativeFileName).exists()) {
         File *file = isManaged(nativeFileName);
@@ -120,7 +120,7 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
 
 File * FileManager::isManaged(const QString &pFileName) const
 {
-    QString nativeFileName = QDir::toNativeSeparators(pFileName);
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     foreach (File *file, mFiles)
         if (file->fileName() == nativeFileName)

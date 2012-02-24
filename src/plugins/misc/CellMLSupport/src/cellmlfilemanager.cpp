@@ -53,11 +53,11 @@ CellmlFileManager * CellmlFileManager::instance()
 
 //==============================================================================
 
-CellmlFile *CellmlFileManager::cellmlFile(const QString &pFileName)
+CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
 {
     // Return the CellmlFile object, if any, associated with the requested file
 
-    return mCellmlFiles.value(QDir::toNativeSeparators(pFileName));
+    return mCellmlFiles.value(Core::nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================
