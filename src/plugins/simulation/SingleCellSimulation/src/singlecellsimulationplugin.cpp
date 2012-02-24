@@ -294,11 +294,11 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
         CellMLSupport::CellmlFileRuntimeOdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
 
+        // Initialise the constants and compute the rates and variables
+
         QTime time;
 
         time.start();
-
-        // Initialise the constants and compute the rates and variables
 
         odeFunctions.initializeConstants(constants, rates, states);
         odeFunctions.computeRates(voi, constants, rates, states, algebraic);
