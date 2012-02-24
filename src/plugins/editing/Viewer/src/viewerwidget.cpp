@@ -1,8 +1,8 @@
 //==============================================================================
-// MathML viewer widget
+// Viewer widget
 //==============================================================================
 
-#include "mmlviewerwidget.h"
+#include "viewerwidget.h"
 
 //==============================================================================
 
@@ -15,7 +15,7 @@ namespace Viewer {
 
 //==============================================================================
 
-MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
+ViewerWidget::ViewerWidget(const QString &pName, QWidget *pParent) :
     QtMmlWidget(pParent),
     CommonWidget(pName, this, pParent)
 {
@@ -23,9 +23,9 @@ MmlViewerWidget::MmlViewerWidget(const QString &pName, QWidget *pParent) :
     // that we can use that as a benchmark for what the 'ideal' dimensions of
     // the MathML widget should be (see resizeEvent below)
 
-    mTestMmlWidget = new QtMmlWidget;
+    mTestViewerWidget = new QtMmlWidget;
 
-    mTestMmlWidget->setBaseFontPointSize(100);
+    mTestViewerWidget->setBaseFontPointSize(100);
 
     // Set the background role in such a way that the background color is always
     // that of the system's base colour
@@ -46,19 +46,19 @@ setContent("<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><msub><mi>i
 
 //==============================================================================
 
-MmlViewerWidget::~MmlViewerWidget()
+ViewerWidget::~ViewerWidget()
 {
-    delete mTestMmlWidget;
+    delete mTestViewerWidget;
 }
 
 //==============================================================================
 
-bool MmlViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
-                                 int *pErrorLine, int *pErrorColumn)
+bool ViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
+                              int *pErrorLine, int *pErrorColumn)
 {
     // Set the MathML equation
 
-    mTestMmlWidget->setContent(pContent);
+    mTestViewerWidget->setContent(pContent);
 
     return QtMmlWidget::setContent(pContent, pErrorMsg,
                                    pErrorLine, pErrorColumn);
@@ -66,7 +66,7 @@ bool MmlViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
 
 //==============================================================================
 
-QSize MmlViewerWidget::sizeHint() const
+QSize ViewerWidget::sizeHint() const
 {
     // Suggest a default size for the file browser widget
     // Note: this is critical if we want a docked widget, with a file browser
@@ -77,7 +77,7 @@ QSize MmlViewerWidget::sizeHint() const
 
 //==============================================================================
 
-void MmlViewerWidget::paintEvent(QPaintEvent *pEvent)
+void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Default handling of the event
 
@@ -90,24 +90,24 @@ void MmlViewerWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void MmlViewerWidget::resizeEvent(QResizeEvent *pEvent)
+void ViewerWidget::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event
 
     QtMmlWidget::resizeEvent(pEvent);
 
     // Retrieve the 'optimal' dimensions of the MathML equation (which was
-    // rendered using our mTestMmlWidget object)
-    // Note: to skip the mTestMmlWidget object (to save a bit of memory) and use
-    //       the current object to compute the 'optimal' dimensions is not good
-    //       enough. For having tried it, this worked fine when resizing the
-    //       object vertically (the equation would resize accordingly), but not
-    //       horizontally (the equation would just not resize), so...
+    // rendered using our mTestViewerWidget object)
+    // Note: to skip the mTestViewerWidget object (to save a bit of memory) and
+    //       use the current object to compute the 'optimal' dimensions is not
+    //       good enough. For having tried it, this worked fine when resizing
+    //       the object vertically (the equation would resize accordingly), but
+    //       not horizontally (the equation would just not resize), so...
 
-    QSize testMmlWidgetSize = mTestMmlWidget->sizeHint();
+    QSize testViewerWidgetSize = mTestViewerWidget->sizeHint();
 
-    setBaseFontPointSize(qRound(93*qMin((double) width()/testMmlWidgetSize.width(),
-                                        (double) height()/testMmlWidgetSize.height())));
+    setBaseFontPointSize(qRound(93*qMin((double) width()/testViewerWidgetSize.width(),
+                                        (double) height()/testViewerWidgetSize.height())));
     // Note: to go for 100% of the 'optimal' size may result in the edges of
     //       the equation being clipped, hence we go for 93% of the 'optimal'
     //       size...

@@ -6,10 +6,10 @@ ADD_PLUGIN(Viewer
     SOURCES
         ../../plugininfo.cpp
 
-        src/mmlviewerwidget.cpp
+        src/viewerwidget.cpp
         src/viewerplugin.cpp
     HEADERS_MOC
-        src/mmlviewerwidget.h
+        src/viewerwidget.h
         src/viewerplugin.h
     INCLUDE_DIRS
         src
