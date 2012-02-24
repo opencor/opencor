@@ -17,6 +17,7 @@ ADD_PLUGIN(Core
         src/coreutils.cpp
         src/docktoolbar.cpp
         src/dockwidget.cpp
+        src/file.cpp
         src/filemanager.cpp
         src/organisationwidget.cpp
         src/treeview.cpp

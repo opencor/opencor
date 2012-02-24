@@ -8,15 +8,14 @@
 //==============================================================================
 
 #include "coreglobal.h"
+#include "file.h"
 
 //==============================================================================
 
-#include <QList>
 #include <QObject>
 
 //==============================================================================
 
-class QString;
 class QTimer;
 
 //==============================================================================
@@ -27,31 +26,6 @@ namespace Core {
 //==============================================================================
 
 static const QString FileSystemMimeType = "text/uri-list";
-
-//==============================================================================
-
-class File
-{
-public:
-    enum Status
-    {
-        Changed,
-        Unchanged,
-        Deleted
-    };
-
-    explicit File(const QString &pFileName);
-
-    QString fileName() const;
-
-    Status check();
-
-private:
-    QString mFileName;
-    QString mSha1;
-
-    QString sha1() const;
-};
 
 //==============================================================================
 
