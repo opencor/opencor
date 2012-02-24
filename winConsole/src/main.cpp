@@ -26,7 +26,7 @@ int main(int pArgc, char *pArgv[])
 {
     // Create the application
 
-    QCoreApplication app(pArgc, pArgv);
+    QCoreApplication *app = new QCoreApplication(pArgc, pArgv);
 
     // Some general initialisations
 
@@ -36,40 +36,43 @@ int main(int pArgc, char *pArgv[])
 
     int res;
 
-    if (consoleApplication(app, res)) {
-        // OpenCOR was run as a proper console application, so...
-
-        return res;
-    } else {
+    if (!consoleApplication(app, &res)) {
         // OpenCOR wasn't run as a proper console application, so start its GUI
         // version instead
 
         static const QString dotExe = ".exe";
-        static const int dotExeSize = dotExe.size();
 
-        if (app.applicationFilePath().right(dotExeSize) == dotExe) {
+        if (app->applicationFilePath().right(dotExe.size()) == dotExe) {
             // This is a safeguard from accidentally running a non-renamed (to
             // '.com') console version of OpenCOR
 
-            error(app, "the console version of "+app.applicationName()+" has the wrong extension ('.exe' instead of '.com').");
+            error(app, "the console version of "+app->applicationName()+" has the wrong extension ('.exe' instead of '.com').");
 
-            return -1;
+            res = -1;
         } else {
-            QString guiAppFilePath = app.applicationDirPath()+QDir::separator()+app.applicationName()+dotExe;
+            QString guiAppFilePath = app->applicationDirPath()+QDir::separator()+app->applicationName()+dotExe;
 
             if (!QFileInfo(guiAppFilePath).exists()) {
                 // We can't find the GUI version of OpenCOR, so...
 
-                error(app, "the GUI version of "+app.applicationName()+" cannot be found.");
+                error(app, "the GUI version of "+app->applicationName()+" cannot be found.");
 
-                return -1;
+                res = -1;
             } else {
-                QProcess().startDetached(guiAppFilePath, app.arguments(), QProcess().workingDirectory());
+                QProcess().startDetached(guiAppFilePath, app->arguments(), QProcess().workingDirectory());
 
-                return 0;
+                res = 0;
             }
         }
     }
+
+    // Release some memory
+
+    delete app;
+
+    // We are done, so...
+
+    return res;
 }
 
 //==============================================================================
