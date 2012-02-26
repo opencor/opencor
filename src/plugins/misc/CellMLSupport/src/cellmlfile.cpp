@@ -101,7 +101,7 @@ time.start();
 
         mModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
 
-qDebug(" - CellML file - Loading time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+qDebug(" - CellML Loading time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
     } catch (iface::cellml_api::CellMLException &) {
         // Something went wrong with the loading of the model, so...
 
