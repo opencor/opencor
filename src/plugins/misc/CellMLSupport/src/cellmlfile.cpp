@@ -355,14 +355,16 @@ CellmlFileRuntime * CellmlFile::runtime()
 
         return mRuntime;
 
-    // Check whether the file is valid
+    // Load (but not reload!) the file, if needed
 
-    if (isValid()) {
-        // The file is valid, so return an updated version of its runtime
+    if (load()) {
+        // The file is loaded, so return an updated version of its runtime
 
-        mRuntimeUpdateNeeded = false;
+        mRuntime->update(mModel);
 
-        return mRuntime->update(mModel);
+        mRuntimeUpdateNeeded = !mRuntime->isValid();
+
+        return mRuntime;
     } else {
         // The file isn't valid, so reset its runtime
 

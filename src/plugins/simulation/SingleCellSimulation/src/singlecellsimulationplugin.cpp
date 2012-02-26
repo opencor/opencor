@@ -137,53 +137,6 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
     qDebug("=======================================");
     qDebug("%s:", qPrintable(pFileName));
 
-    // Check the file's validity
-
-    if (cellmlFile->isValid()) {
-        // The file is valid, but let's see whether warnings were generated
-
-        int warningsCount = cellmlFile->issues().count();
-
-        if (warningsCount)
-            qDebug(" - The CellML file was properly loaded:");
-        else
-            qDebug(" - The CellML file was properly loaded.");
-    } else {
-        qDebug(" - The CellML file was NOT properly loaded:");
-    }
-
-    // Output any warnings/errors that were generated
-
-    foreach (const CellMLSupport::CellmlFileIssue &issue, cellmlFile->issues()) {
-        QString type = QString((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning");
-        QString message = issue.formattedMessage();
-        uint32_t line = issue.line();
-        uint32_t column = issue.column();
-        QString importedFile = issue.importedFile();
-
-        if (line && column) {
-            if (importedFile.isEmpty())
-                qDebug("    [%s at line %s column %s] %s", qPrintable(type),
-                                                           qPrintable(QString::number(issue.line())),
-                                                           qPrintable(QString::number(issue.column())),
-                                                           qPrintable(message));
-            else
-                qDebug("    [%s at line %s column %s from imported file %s] %s", qPrintable(type),
-                                                                                 qPrintable(QString::number(issue.line())),
-                                                                                 qPrintable(QString::number(issue.column())),
-                                                                                 qPrintable(importedFile),
-                                                                                 qPrintable(message));
-        } else {
-            if (importedFile.isEmpty())
-                qDebug("    [%s] %s", qPrintable(type),
-                                      qPrintable(message));
-            else
-                qDebug("    [%s from imported file %s] %s", qPrintable(type),
-                                                            qPrintable(importedFile),
-                                                            qPrintable(message));
-        }
-    }
-
     // Get a runtime for the file
 
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
