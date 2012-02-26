@@ -15,6 +15,7 @@
 
 //==============================================================================
 
+#include <QTime>
 #include <QUrl>
 
 //==============================================================================
@@ -94,7 +95,13 @@ bool CellmlFile::load()
     // Try to load the model
 
     try {
+QTime time;
+
+time.start();
+
         mModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
+
+qDebug(" - CellML file - Loading time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
     } catch (iface::cellml_api::CellMLException &) {
         // Something went wrong with the loading of the model, so...
 
@@ -109,7 +116,13 @@ bool CellmlFile::load()
 
     if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
         try {
+QTime time;
+
+time.start();
+
             mModel->fullyInstantiateImports();
+
+qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
         } catch (...) {
             // Something went wrong with the full instantiation of the imports,
             // so...
@@ -168,8 +181,14 @@ bool CellmlFile::isValid()
         //       time it takes to fully validate a model that has many
         //       warnings/errors)...
 
+QTime time;
+
+time.start();
+
         ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
         ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mModel);
+
+qDebug(" - CellML validation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 
         // Determine the number of errors and warnings
         // Note: CellMLValidityErrorSet::nValidityErrors() returns any type of
@@ -177,6 +196,8 @@ bool CellmlFile::isValid()
         //       determine the number of true errors
 
         uint32_t cellmlErrorsCount = 0;
+
+time.restart();
 
         for (uint32_t i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
             ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
@@ -294,6 +315,8 @@ bool CellmlFile::isValid()
                                            QString::fromStdWString(cellmlValidityIssue->description()),
                                            line, column, importedFile));
         }
+
+qDebug(" - CellML warnings vs. errors time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 
         if (cellmlErrorsCount)
             // There are CellML errors, so...

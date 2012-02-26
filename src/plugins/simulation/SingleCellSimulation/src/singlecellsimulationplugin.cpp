@@ -145,11 +145,11 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
         int warningsCount = cellmlFile->issues().count();
 
         if (warningsCount)
-            qDebug(" - The file was properly loaded:");
+            qDebug(" - The CellML file was properly loaded:");
         else
-            qDebug(" - The file was properly loaded.");
+            qDebug(" - The CellML file was properly loaded.");
     } else {
-        qDebug(" - The file was NOT properly loaded:");
+        qDebug(" - The CellML file was NOT properly loaded:");
     }
 
     // Output any warnings/errors that were generated
@@ -189,10 +189,10 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
 
     if (cellmlFileRuntime->isValid()) {
-        qDebug(" - The file's runtime was properly generated.");
+        qDebug(" - The CellML file's runtime was properly generated.");
         qDebug("    [Information] Model type = %s", (cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE");
     } else {
-        qDebug(" - The file's runtime was NOT properly generated:");
+        qDebug(" - The CellML file's runtime was NOT properly generated:");
 
         foreach (const CellMLSupport::CellmlFileIssue &issue,
                  cellmlFileRuntime->issues())
