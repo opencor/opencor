@@ -2,9 +2,9 @@
 // File organiser window
 //==============================================================================
 
-#include "docktoolbar.h"
 #include "fileorganiserwindow.h"
 #include "fileorganiserwidget.h"
+#include "toolbar.h"
 
 //==============================================================================
 
@@ -33,7 +33,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     // Create a toolbar with different buttons
     // Note: this sadly can't be done using the design mode, so...
 
-    Core::DockToolBar *toolbar = new Core::DockToolBar(this);
+    Core::ToolBar *toolbar = new Core::ToolBar(this);
 
     toolbar->addAction(mUi->actionNew);
     toolbar->addAction(mUi->actionDelete);

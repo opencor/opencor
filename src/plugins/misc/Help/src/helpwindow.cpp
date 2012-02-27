@@ -3,9 +3,9 @@
 //==============================================================================
 
 #include "coreutils.h"
-#include "docktoolbar.h"
 #include "helpwindow.h"
 #include "helpwidget.h"
+#include "toolbar.h"
 
 //==============================================================================
 
@@ -58,7 +58,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     // Create a toolbar with different buttons
     // Note: this sadly can't be done using the design mode, so...
 
-    Core::DockToolBar *toolbar = new Core::DockToolBar(this);
+    Core::ToolBar *toolbar = new Core::ToolBar(this);
 
     toolbar->addAction(mUi->actionHome);
     toolbar->addSeparator();

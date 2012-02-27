@@ -15,21 +15,21 @@ ADD_PLUGIN(Core
         src/commonwidget.cpp
         src/coreplugin.cpp
         src/coreutils.cpp
-        src/docktoolbar.cpp
         src/dockwidget.cpp
         src/file.cpp
         src/filemanager.cpp
         src/organisationwidget.cpp
+        src/toolbar.cpp
         src/treeview.cpp
     HEADERS_MOC
         ../../plugin.h
 
         src/centralwidget.h
         src/coreplugin.h
-        src/docktoolbar.h
         src/dockwidget.h
         src/filemanager.h
         src/organisationwidget.h
+        src/toolbar.h
         src/treeview.h
     UIS
         src/centralwidget.ui

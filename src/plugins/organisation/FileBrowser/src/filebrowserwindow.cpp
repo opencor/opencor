@@ -2,9 +2,9 @@
 // File browser window
 //==============================================================================
 
-#include "docktoolbar.h"
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
+#include "toolbar.h"
 
 //==============================================================================
 
@@ -34,7 +34,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     // Create a toolbar with different buttons
     // Note: this sadly can't be done using the design mode, so...
 
-    Core::DockToolBar *toolbar = new Core::DockToolBar(this);
+    Core::ToolBar *toolbar = new Core::ToolBar(this);
 
     toolbar->addAction(mUi->actionHome);
     toolbar->addSeparator();

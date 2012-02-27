@@ -78,17 +78,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     //       said, it's good to have it set for all three platforms, since it
     //       can then be used in, for example, the about box, so...
 
-//---GRY--- THE BELOW CODE WOULD BE GOOD TO HAVE, BUT THERE IS A KNOWN BUG (SEE
-//          http://bugreports.qt.nokia.com/browse/QTBUG-3116) WHICH MAKES THAT
-//          CODE TO CAUSE PROBLEMS WITH THE LOADING/RESTORING OF THE APPLICATION
-//          GEOMETRY, SO...
-
-//#ifdef Q_WS_MAC
-//    // Make the application look more like a Mac OS X application
-
-//    setUnifiedTitleAndToolBarOnMac(true);
-//#endif
-
     // Some connections to handle our Help toolbar
 
     GuiInterface::connectToolBarToAction(mUi->helpToolbar,
