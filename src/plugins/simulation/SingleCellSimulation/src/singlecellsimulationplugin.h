@@ -14,17 +14,18 @@
 
 //==============================================================================
 
-class QwtPlot;
-class QwtPlotCurve;
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellSimulation {
 
 //==============================================================================
 
 PLUGININFO_FUNC SingleCellSimulationPluginInfo();
+
+//==============================================================================
+
+class SingleCellSimulationView;
+
+//==============================================================================
 
 class SingleCellSimulationPlugin : public QObject, public CoreInterface,
                                    public GuiInterface, public I18nInterface
@@ -38,17 +39,15 @@ public:
     explicit SingleCellSimulationPlugin();
 
     virtual void initialize();
-    virtual void finalize();
 
     virtual QWidget * viewWidget(const QString & pFileName, const int &);
     virtual QString viewName(const int &pViewIndex);
 
+protected:
+    virtual void retranslateUi();
+
 private:
-    QwtPlot *mSimulationView;
-
-    QList<QwtPlotCurve *> mCurves;
-
-    void resetCurves();
+    SingleCellSimulationView *mSingleCellSimulationView;
 };
 
 //==============================================================================

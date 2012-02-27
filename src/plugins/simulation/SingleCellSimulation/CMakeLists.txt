@@ -15,8 +15,12 @@ ADD_PLUGIN(SingleCellSimulation
         ../../plugininfo.cpp
 
         src/singlecellsimulationplugin.cpp
+        src/singlecellsimulationview.cpp
     HEADERS_MOC
         src/singlecellsimulationplugin.h
+        src/singlecellsimulationview.h
+    UIS
+        src/singlecellsimulationview.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
