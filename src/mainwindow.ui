@@ -69,17 +69,6 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <widget class="QMenu" name="menuToolbars">
-     <property name="title">
-      <string>&amp;Toolbars</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../res/ui.qrc">
-       <normaloff>:/oxygen/actions/configure-toolbars.png</normaloff>:/oxygen/actions/configure-toolbars.png</iconset>
-     </property>
-     <addaction name="actionHelpToolbar"/>
-    </widget>
-    <addaction name="menuToolbars"/>
     <addaction name="actionStatusBar"/>
     <addaction name="separator"/>
     <addaction name="actionFullScreen"/>
@@ -88,26 +77,6 @@
    <addaction name="menuView"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
-  </widget>
-  <widget class="QToolBar" name="helpToolbar">
-   <property name="windowTitle">
-    <string>Help Toolbar</string>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>24</width>
-     <height>24</height>
-    </size>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="actionHomePage"/>
-   <addaction name="separator"/>
-   <addaction name="actionAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">

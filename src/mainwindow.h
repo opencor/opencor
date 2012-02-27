@@ -70,12 +70,10 @@ private:
     QTranslator mAppTranslator;
 
     QMap<QString, QMenu *> mMenus;
-    QMap<QString, QToolBar *> mToolbars;
 
     QMenu *mFileNewMenu;
 
     QMenu *mViewOrganisationMenu;
-    QMenu *mViewEditingMenu;
     QAction *mViewSeparator;
 
     void initializeGuiPlugin(const QString &pPluginName,

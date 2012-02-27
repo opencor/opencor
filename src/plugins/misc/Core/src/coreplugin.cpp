@@ -13,7 +13,6 @@
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QSettings>
-#include <QToolBar>
 
 //==============================================================================
 
@@ -49,13 +48,7 @@ void CorePlugin::initialize()
 
     mCentralWidget = new CentralWidget(mMainWindow);
 
-    // Create our File toolbar (and its show/hide action)
-
-    QToolBar *fileToolbar = newToolBar(mMainWindow, FileGroup);
-
-    mFileToolbarAction = newAction(mMainWindow, true);
-
-    // Create our different File actions, and add some to our File toolbar
+    // Create our different File actions
 //---GRY--- ALL THE SAVE-RELATED ACTIONS SHOULD BE INVISIBLE UNLESS THE EDITING
 //          MODE IS ACTIVE
 
@@ -101,19 +94,6 @@ void CorePlugin::initialize()
                                  ":/oxygen/actions/document-print.png",
                                  QKeySequence::Print);
 
-    fileToolbar->addAction(mFileOpenAction);
-    fileToolbar->addSeparator();
-    fileToolbar->addAction(mFileSaveAction);
-    fileToolbar->addAction(mFileSaveAsAction);
-    fileToolbar->addAction(mFileSaveAllAction);
-    fileToolbar->addSeparator();
-    fileToolbar->addAction(mFilePreviousAction);
-    fileToolbar->addAction(mFileNextAction);
-    fileToolbar->addSeparator();
-    fileToolbar->addAction(mFileCloseAction);
-    fileToolbar->addSeparator();
-    fileToolbar->addAction(mFilePrintAction);
-
     // Some connections to handle our various actions
 
     connect(mFileOpenAction, SIGNAL(triggered(bool)),
@@ -153,9 +133,6 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFilePrintAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-
-    mGuiSettings->addToolBar(Qt::TopToolBarArea, fileToolbar,
-                             mFileToolbarAction);
 
     mGuiSettings->addCentralWidget(mCentralWidget);
 
@@ -292,11 +269,6 @@ void CorePlugin::retranslateUi()
 
     retranslateAction(mFilePrintAction, tr("&Print..."),
                       tr("Print the current file"));
-
-    // Retranslate our show/hide actions
-
-    retranslateAction(mFileToolbarAction, tr("&File"),
-                      tr("Show/hide the File toolbar"));
 
     // Retranslate our central widget
 

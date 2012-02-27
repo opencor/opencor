@@ -75,47 +75,6 @@ QAction * GuiMenuActionSettings::action() const
 
 //==============================================================================
 
-GuiToolBarSettings::GuiToolBarSettings(const Qt::ToolBarArea &pDefaultDockingArea,
-                                       QToolBar *pToolbar,
-                                       QAction *pAction) :
-    mDefaultDockingArea(pDefaultDockingArea),
-    mToolbar(pToolbar),
-    mAction(pAction)
-{
-    // Connect the toolbar to its toolbar action
-
-    GuiInterface::connectToolBarToAction(pToolbar, pAction);
-}
-
-//==============================================================================
-
-Qt::ToolBarArea GuiToolBarSettings::defaultDockingArea() const
-{
-    // Return the toolbar's default docking area
-
-    return mDefaultDockingArea;
-}
-
-//==============================================================================
-
-QToolBar * GuiToolBarSettings::toolbar() const
-{
-    // Return the toolbar itself
-
-    return mToolbar;
-}
-
-//==============================================================================
-
-QAction * GuiToolBarSettings::action() const
-{
-    // Return the show/hide action
-
-    return mAction;
-}
-
-//==============================================================================
-
 GuiViewSettings::GuiViewSettings(const Mode &pMode, const int &pIndex) :
     mMode(pMode),
     mIndex(pIndex)
@@ -238,16 +197,6 @@ void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettin
 
 //==============================================================================
 
-void GuiSettings::addToolBar(const Qt::ToolBarArea &pDefaultDockingArea,
-                             QToolBar *pToolbar, QAction *pAction)
-{
-    // Add a toolbar to our list
-
-    mToolbars << new GuiToolBarSettings(pDefaultDockingArea, pToolbar, pAction);
-}
-
-//==============================================================================
-
 void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
 {
     // Set the central widget to be used
@@ -293,15 +242,6 @@ QList<GuiMenuActionSettings *> GuiSettings::menuActions() const
     // Return our menu actions
 
     return mMenuActions;
-}
-
-//==============================================================================
-
-QList<GuiToolBarSettings *> GuiSettings::toolbars() const
-{
-    // Return our toolbars
-
-    return mToolbars;
 }
 
 //==============================================================================

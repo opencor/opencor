@@ -79,14 +79,6 @@
         <translation>Imprimer le fichier actuel</translation>
     </message>
     <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fichier</translation>
-    </message>
-    <message>
-        <source>Show/hide the File toolbar</source>
-        <translation>Montrer/cacher la barre d&apos;outils Fichier</translation>
-    </message>
-    <message>
         <source>Open File</source>
         <translation>Ouvrir Fichier</translation>
     </message>

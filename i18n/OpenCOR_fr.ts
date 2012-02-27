@@ -31,10 +31,6 @@
         <translation>&amp;Voir</translation>
     </message>
     <message>
-        <source>&amp;Toolbars</source>
-        <translation>Barres d&apos;Ou&amp;tils</translation>
-    </message>
-    <message>
         <source>&amp;Exit</source>
         <translation>&amp;Quitter</translation>
     </message>
@@ -111,10 +107,6 @@
         <translation>Montrer/cacher la barre d&apos;état</translation>
     </message>
     <message>
-        <source>Help Toolbar</source>
-        <translation>Barre d&apos;Outils Aide</translation>
-    </message>
-    <message>
         <source>&amp;Preferences...</source>
         <translation>&amp;Préférences...</translation>
     </message>
@@ -144,10 +136,6 @@
     <message>
         <source>Organisation</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Editing</source>
-        <translation>Édition</translation>
     </message>
     <message>
         <source>Plugins</source>

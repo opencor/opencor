@@ -46,9 +46,6 @@ protected:
 private:
     QMenu *mEditMenu;
 
-    QToolBar *mEditToolbar;
-    QAction *mEditToolbarAction;
-
     QAction *mEditUndoAction;
     QAction *mEditRedoAction;
     QAction *mEditCutAction;

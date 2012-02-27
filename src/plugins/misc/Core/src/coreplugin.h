@@ -64,8 +64,6 @@ private:
 
     CentralWidget *mCentralWidget;
 
-    QAction *mFileToolbarAction;
-
     QAction *mFileOpenAction;
     QAction *mFileSaveAction;
     QAction *mFileSaveAsAction;

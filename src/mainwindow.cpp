@@ -50,7 +50,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     mUi(new Ui::MainWindow),
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
-    mViewEditingMenu(0),
     mViewSeparator(0)
 {
     // Create our settings object
@@ -77,11 +76,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     //       cases (see CMakeLists.txt)) is set within the UI file. This being
     //       said, it's good to have it set for all three platforms, since it
     //       can then be used in, for example, the about box, so...
-
-    // Some connections to handle our Help toolbar
-
-    GuiInterface::connectToolBarToAction(mUi->helpToolbar,
-                                         mUi->actionHelpToolbar);
 
     // A connection to handle the status bar
 
@@ -432,42 +426,6 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
             ;
         }
 
-    // Add the toolbars (including to the View|Toolbars menu)
-
-    foreach (GuiToolBarSettings *toolbarSettings, pGuiSettings->toolbars()) {
-        QToolBar *newToolbar = toolbarSettings->toolbar();
-        QString newToolbarName = newToolbar->objectName();
-
-        QToolBar *oldToolbar = mToolbars.value(newToolbarName);
-
-        if (oldToolbar) {
-            // A toolbar with the same name already exists, so add the contents
-            // of the new toolbar to the existing one
-
-            oldToolbar->addSeparator();
-            oldToolbar->addActions(newToolbar->actions());
-
-            // Delete the new toolbar, since we don't need it...
-            // Note: this prevents from the toolbar from being shown in the
-            //       top-left corner of the main window
-
-            delete newToolbar;
-        } else {
-            // No toolbar with the same name already exists, so add the new
-            // toolbar
-
-            addToolBar(toolbarSettings->defaultDockingArea(), newToolbar);
-
-            // Also add a toolbar action to our View|Toolbars menu
-
-            mUi->menuToolbars->addAction(toolbarSettings->action());
-
-            // Keep track of the new toolbar
-
-            mToolbars.insert(newToolbarName, newToolbar);
-        }
-    }
-
     // Set the central widget, but only if we are dealing with the Core plugin
 
     if (!pPluginName.compare(CorePlugin))
@@ -496,14 +454,6 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
                            windowSettings->action());
 
             break;
-        case GuiWindowSettings::Editing:
-            // Update the View menu by adding the action to the View|Editing
-            // menu
-
-            updateViewMenu(GuiWindowSettings::Editing,
-                           windowSettings->action());
-
-            break;
         case GuiWindowSettings::Help:
             if (!pPluginName.compare(HelpPlugin)) {
                 // We only want to add the action if we are coming here from the
@@ -512,13 +462,6 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
                 mUi->menuHelp->insertAction(mUi->actionHomePage,
                                             windowSettings->action());
                 mUi->menuHelp->insertSeparator(mUi->actionHomePage);
-
-                // In the case of a Help window, we also want to add the action
-                // to our Help toolbar
-
-                mUi->helpToolbar->insertAction(mUi->actionHomePage,
-                                               windowSettings->action());
-                mUi->helpToolbar->insertSeparator(mUi->actionHomePage);
             } else {
                 doConnectDockWidgetToAction = false;
             }
@@ -685,9 +628,6 @@ void MainWindow::setLocale(const QString &pLocale)
             GuiInterface::retranslateMenu(mViewOrganisationMenu,
                                           tr("Organisation"));
 
-        if (mViewEditingMenu)
-            GuiInterface::retranslateMenu(mViewEditingMenu, tr("Editing"));
-
         // Update the locale of our various loaded plugins
         // Note: we do this in reverse order of the loaded plugins since some
         //       plugins loaded first (e.g. the Core plugin) may need an updated
@@ -767,18 +707,12 @@ void MainWindow::reorderViewMenu(QMenu *pViewMenu)
 
 void MainWindow::reorderViewMenus()
 {
-    // Reorder the View|Toolbars menu, as well as the View|Organisation and
-    // View|Editing menus, should they exist
+    // Reorder the View|Organisation men, should it exist
     // Note: this is useful after having added a new menu item or after having
     //       changed the locale
 
-    reorderViewMenu(mUi->menuToolbars);
-
     if (mViewOrganisationMenu)
         reorderViewMenu(mViewOrganisationMenu);
-
-    if (mViewEditingMenu)
-        reorderViewMenu(mViewEditingMenu);
 }
 
 //==============================================================================
@@ -786,14 +720,14 @@ void MainWindow::reorderViewMenus()
 void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
                                 QAction *pAction)
 {
-    // Check whether we need to insert a separator before the Full Screen menu
+    // Check whether we need to insert a separator before the status bar menu
     // item
 
     if ((pMenuType != GuiWindowSettings::Help) && !mViewSeparator)
         // None of the menus have already been inserted which means that we need
         // to insert a separator before the Full Screen menu item
 
-        mViewSeparator =  mUi->menuView->insertSeparator(mUi->actionFullScreen);
+        mViewSeparator =  mUi->menuView->insertSeparator(mUi->actionStatusBar);
 
     // Determine the menu that is to be inserted, should this be required, and
     // the action before which it is to be inserted
@@ -804,11 +738,6 @@ void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &
     switch (pMenuType) {
     case GuiWindowSettings::Organisation:
         menu   = &mViewOrganisationMenu;
-        action = mViewEditingMenu?mViewEditingMenu->menuAction():mViewSeparator;
-
-        break;
-    case GuiWindowSettings::Editing:
-        menu   = &mViewEditingMenu;
         action = mViewSeparator;
 
         break;
@@ -834,7 +763,6 @@ void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &
     // created, so we can just add the action to it
 
     (*menu)->addAction(pAction);
-
 }
 
 //==============================================================================

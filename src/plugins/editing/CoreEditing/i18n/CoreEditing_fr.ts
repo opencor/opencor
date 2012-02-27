@@ -95,9 +95,5 @@
         <source>Select all the objects</source>
         <translation>Sélectionner tous les objets</translation>
     </message>
-    <message>
-        <source>Show/hide the Edit toolbar</source>
-        <translation>Montrer/cacher la barre d&apos;outils Éditer</translation>
-    </message>
 </context>
 </TS>

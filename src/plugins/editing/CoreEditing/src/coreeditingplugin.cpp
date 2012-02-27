@@ -7,7 +7,6 @@
 //==============================================================================
 
 #include <QMenu>
-#include <QToolBar>
 
 //==============================================================================
 
@@ -39,15 +38,11 @@ Q_EXPORT_PLUGIN2(CoreEditing, CoreEditingPlugin)
 
 void CoreEditingPlugin::initialize()
 {
-    // Create our Edit menu and toolbar (and its show/hide action)
+    // Create our Edit menu
 
     mEditMenu = newMenu(mMainWindow, EditGroup);
 
-    mEditToolbar = newToolBar(mMainWindow, EditGroup);
-    mEditToolbarAction = newAction(mMainWindow, true);
-
-    // Create our different Edit actions, and add them to our Edit menu and
-    // some to our Edit toolbar
+    // Create our different Edit actions, and add them to our Edit menu
 
     mEditUndoAction = newAction(mMainWindow, false,
                                 ":/oxygen/actions/edit-undo.png",
@@ -97,22 +92,9 @@ void CoreEditingPlugin::initialize()
     mEditMenu->addSeparator();
     mEditMenu->addAction(mEditSelectAllAction);
 
-    mEditToolbar->addAction(mEditUndoAction);
-    mEditToolbar->addAction(mEditRedoAction);
-    mEditToolbar->addSeparator();
-    mEditToolbar->addAction(mEditCutAction);
-    mEditToolbar->addAction(mEditCopyAction);
-    mEditToolbar->addAction(mEditPasteAction);
-    mEditToolbar->addAction(mEditDeleteAction);
-    mEditToolbar->addSeparator();
-    mEditToolbar->addAction(mEditFindAction);
-
     // Set our settings
 
     mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
-
-    mGuiSettings->addToolBar(Qt::TopToolBarArea, mEditToolbar,
-                             mEditToolbarAction);
 
     // Initialise the enabled state of our various actions
 
@@ -154,11 +136,6 @@ void CoreEditingPlugin::retranslateUi()
 
     retranslateAction(mEditSelectAllAction, tr("Select &All"),
                       tr("Select all the objects"));
-
-    // Retranslate our show/hide actions
-
-    retranslateAction(mEditToolbarAction, tr("&Edit"),
-                      tr("Show/hide the Edit toolbar"));
 }
 
 //==============================================================================
