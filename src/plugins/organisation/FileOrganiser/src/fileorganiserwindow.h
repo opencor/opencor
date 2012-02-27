@@ -51,7 +51,7 @@ private:
 
     FileOrganiserWidget *mFileOrganiserWidget;
 
-private slots:
+private Q_SLOTS:
     void on_actionNew_triggered();
     void on_actionDelete_triggered();
 

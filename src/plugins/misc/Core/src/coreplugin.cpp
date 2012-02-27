@@ -204,8 +204,9 @@ void CorePlugin::setup(const Plugins &pLoadedPlugins)
                      guiInterface->guiSettings()->windows())
                 switch (windowSettings->type()) {
                 case GuiWindowSettings::Organisation:
-                    // The plugin's window is of organisation type, so something
-                    // we want our central widget to connect to
+                    // The plugin's window is of organisation type, so we want
+                    // its filesOpened signal to trigger out central widget's
+                    // openFiles slot
 
                     connect((OrganisationWidget *) windowSettings->window(), SIGNAL(filesOpened(const QStringList &)),
                             mCentralWidget, SLOT(openFiles(const QStringList &)));

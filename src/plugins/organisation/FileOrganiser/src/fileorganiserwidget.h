@@ -129,7 +129,7 @@ private:
 Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);
 
-private slots:
+private Q_SLOTS:
     void expandedFolder(const QModelIndex &pFolderIndex);
     void collapsedFolder(const QModelIndex &pFolderIndex);
 

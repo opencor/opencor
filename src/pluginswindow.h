@@ -87,7 +87,7 @@ private:
 
     void selectFirstVisiblePlugin();
 
-private slots:
+private Q_SLOTS:
     void on_selectablePluginsCheckBox_toggled(bool pChecked);
 
     void on_buttonBox_accepted();

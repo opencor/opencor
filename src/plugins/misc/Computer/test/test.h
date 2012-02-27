@@ -30,7 +30,7 @@ private:
     llvm::Function * mFunction;
     double mResult;
 
-private slots:
+private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
 

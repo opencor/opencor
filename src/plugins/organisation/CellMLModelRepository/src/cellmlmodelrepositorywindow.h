@@ -56,7 +56,7 @@ private:
 
     void outputModelList(const QStringList &pModelList);
 
-private slots:
+private Q_SLOTS:
     void on_nameValue_textChanged(const QString &text);
     void on_actionCopy_triggered();
     void on_refreshButton_clicked();
