@@ -827,10 +827,11 @@ void MainWindow::showSelf()
     // Do what one would normally do
 
     activateWindow();
-    raise();   // Just to be on the safe side
-    // Note: raise() never seems to be required on Mac OS X, but to use
-    //       activateWindow() on its own under Linux may or not give the
-    //       expected result, so...
+    raise();
+    // Note: raise() is not always required (e.g. on Mac OS X, it's required
+    //       when starting OpenCOR, but it's not when we come here as a result
+    //       of trying to start another instance of OpenCOR), but better be safe
+    //       than sorry, so...
 #endif
 }
 
