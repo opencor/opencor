@@ -205,15 +205,6 @@ MainWindow::MainWindow(QWidget *pParent) :
     // may (re)start in full screen mode
 
     mUi->actionFullScreen->setChecked(isFullScreen());
-
-    // Bring ourselves to the foreground
-    // Note: indeed, when starting/restarting OpenCOR (as a result of a Reset
-    //       All in the case of a restart), OpenCOR will on Mac OS X be behind
-    //       any other application. Now, because it doesn't harm to bring
-    //       ourselves to the foreground when on Windows or Linux, we may as
-    //       well do it on those platforms too...
-
-    showSelf();
 }
 
 //==============================================================================
@@ -263,22 +254,34 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 
     QMainWindow::showEvent(pEvent);
 
-    // The first time we show OpenCOR, we want to make sure that its menu is
-    // fine (i.e. it respects OpenCOR's settings that were loaded in the
-    // constructor). Various connections (set in the constructor) take care of
-    // this, but there still remains one menu item (which specifies whether the
-    // status bar is to be shown or not) for which no connection can be set. So,
-    // we have to 'manually' set the status of that menu item here (as opposed
-    // to, say, the constructor), since we may need (on Windows at least) all of
-    // OpenCOR to be visible in order to be able to determine whether the status
-    // bar is visible or not
+    // Things which need to be done and can only be done once the main window is
+    // fully created
 
     static bool firstTime = true;
 
     if (firstTime) {
         firstTime = false;
 
+        // The first time we show OpenCOR, we want to make sure that its menu is
+        // fine (i.e. it respects OpenCOR's settings that were loaded in the
+        // constructor). Various connections (set in the constructor) take care
+        // of this, but there is still one menu item (which tells us whether the
+        // status bar is to be shown or not) for which no connection can be set.
+        // So, we have to 'manually' set the status of that menu item here (as
+        // opposed to, say, the constructor), since we may need (on Windows at
+        // least) all of OpenCOR to be visible in order to be able to determine
+        // whether the status bar is visible or not...
+
         mUi->actionStatusBar->setChecked(statusBar()->isVisible());
+
+        // Bring ourselves to the foreground
+        // Note: indeed, when starting/restarting OpenCOR (as a result of a
+        //       Reset All in the case of a restart), OpenCOR will on Mac OS X
+        //       be behind any other application. Now, because it doesn't harm
+        //       to bring ourselves to the foreground when on Windows or Linux,
+        //       we may as well do it on those platforms too...
+
+        showSelf();
     }
 }
 
