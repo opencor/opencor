@@ -74,7 +74,7 @@
   </widget>
   <action name="actionCopy">
    <property name="icon">
-    <iconset resource="../../../application/Core/res/Core.qrc">
+    <iconset resource="../../../misc/Core/res/Core.qrc">
      <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
    </property>
    <property name="text">
@@ -86,7 +86,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../../../application/Core/res/Core.qrc"/>
+  <include location="../../../misc/Core/res/Core.qrc"/>
   <include location="../res/CellMLModelRepository.qrc"/>
  </resources>
  <connections/>
