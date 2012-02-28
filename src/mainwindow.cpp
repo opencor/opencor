@@ -33,6 +33,17 @@
     #include <QShortcut>
 #endif
 #include <QUrl>
+#ifdef Q_WS_X11
+    #include <QX11Info>
+#endif
+
+//==============================================================================
+
+#ifdef Q_WS_X11
+    #include <X11/Xlib.h>
+    // Note: for some reason, this header file must be included after QUrl,
+    //       so...
+#endif
 
 //==============================================================================
 
@@ -776,12 +787,14 @@ void MainWindow::showSelf() const
 void MainWindow::showSelf()
 #endif
 {
-    // Note: to show ourselves, one would normally use activateWindow(), but
-    //       depending on the operating system it may or not bring OpenCOR to
-    //       the foreground, so... instead we do what follows, depending on the
-    //       operating system...
+    // Note: to show ourselves, one would normally use activateWindow() (and
+    //       possibly raise()), but depending on the operating system it may or
+    //       not bring OpenCOR to the foreground, so... instead we do what
+    //       follows, depending on the operating system...
 
 #ifdef Q_WS_WIN
+    // Show ourselves the Windows way
+
     // Retrieve OpenCOR's window Id
 
     WId mainWinId = winId();
@@ -823,7 +836,7 @@ void MainWindow::showSelf()
     //       application is already in the foreground. Fair enough, but it
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
-#else
+#elif defined(Q_WS_MAC)
     // Do what one would normally do
 
     activateWindow();
@@ -832,6 +845,25 @@ void MainWindow::showSelf()
     //       when starting OpenCOR, but it's not when we come here as a result
     //       of trying to start another instance of OpenCOR), but better be safe
     //       than sorry, so...
+#else
+    // Show ourselves the X11 way
+
+    // Send ourselves a message asking us to activate ourselves
+
+    XEvent event;
+    XWindowAttributes windowAttributes;
+
+    memset(&event, 0, sizeof(event));
+
+    event.xclient.type = ClientMessage;
+    event.xclient.display = x11Info().display();
+    event.xclient.window = winId();
+    event.xclient.message_type = XInternAtom(x11Info().display(), "_NET_ACTIVE_WINDOW", False);
+    event.xclient.format = 32;
+
+    XGetWindowAttributes(x11Info().display(), winId(), &windowAttributes);
+    XSendEvent(x11Info().display(), windowAttributes.screen->root, False,
+               SubstructureRedirectMask|SubstructureNotifyMask, &event);
 #endif
 }
 
