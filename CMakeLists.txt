@@ -91,7 +91,6 @@ INCLUDE_DIRECTORIES(
 SET(QT_USE_PHONON TRUE)
 SET(QT_USE_QTHELP TRUE)
 SET(QT_USE_QTNETWORK TRUE)
-SET(QT_USE_QTOPENGL TRUE)
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTSVG TRUE)
 SET(QT_USE_QTWEBKIT TRUE)
@@ -336,14 +335,6 @@ IF(APPLE)
             libQtCLucene
     )
 
-    DEPLOY_MAC_OS_X_LIBRARY(QtOpenGL
-        TYPE
-            Framework
-        FRAMEWORKS
-            QtCore
-            QtGui
-    )
-
     DEPLOY_MAC_OS_X_LIBRARY(QtSvg
         TYPE
             Framework
@@ -464,7 +455,7 @@ IF(WIN32)
 
     # Qt files required by OpenCOR
 
-    FOREACH(QT_LIBRARY phonon QtCLucene QtCore QtGui QtHelp QtNetwork QtOpenGL QtSql QtSvg QtWebKit QtXml)
+    FOREACH(QT_LIBRARY phonon QtCLucene QtCore QtGui QtHelp QtNetwork QtSql QtSvg QtWebKit QtXml)
         INSTALL(FILES ${QT_BINARY_DIR}/${QT_LIBRARY}${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
@@ -540,7 +531,7 @@ ELSE()
     INSTALL(FILES ${QT_LIBRARY_DIR}/libphonon.so.4.4.0 RENAME libphonon.so.4 DESTINATION lib)
     INSTALL(FILES ${QT_LIBRARY_DIR}/libQtWebKit.so.4.9.0 RENAME libQtWebKit.so.4 DESTINATION lib)
 
-    FOREACH(QT_LIBRARY QtCLucene QtCore QtDBus QtGui QtHelp QtNetwork QtOpenGL QtSql QtSvg QtXml)
+    FOREACH(QT_LIBRARY QtCLucene QtCore QtDBus QtGui QtHelp QtNetwork QtSql QtSvg QtXml)
         INSTALL(FILES
                 ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
                 RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}
