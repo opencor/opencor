@@ -15,7 +15,7 @@ if [ $# -le 1 ]; then
         FILES=.
     fi
 
-    otool -L `du -a $FILES | awk '{ print $2 }'` 2> /dev/null | grep $QT_LIBRARY_PATH | sed -e 's/^.*'$QT_LIBRARY_PATH'\///' -e 's/^.*\.framework\/Versions\/4\///' -e 's/ .*$//' | sort -u
+    otool -L `du -a $FILES | awk '{ print $2 }'` 2> /dev/null | grep "	$QT_LIBRARY_PATH" | sed -e 's/^.*'$QT_LIBRARY_PATH'\///' -e 's/^.*\.framework\/Versions\/4\///' -e 's/ .*$//' | sort -u
 else
     echo "Usage: `basename $0` [<FileNameOrFolderName>]"
 fi
