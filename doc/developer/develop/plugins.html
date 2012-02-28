@@ -88,6 +88,7 @@
                 <pre class="prettyprint">$ cd [OpenCOR]
 $ doc/developer/develop/res/qtdependencies build/OpenCOR.app/Contents/PlugIns
 QtCore
+QtDBus
 QtDeclarative
 QtGui
 QtHelp
@@ -103,7 +104,7 @@ phonon</pre>
             </li>
             <li>
                 <strong>Qt libraries deployment:</strong> any missing Qt library can be deployed using our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_MAC_OS_X_QT_LIBRARY</code></a> macro, but first we must determine the library's Qt dependencies. For example, for <code>QtHelp</code>, we could enter the following on the command line
-                <pre class="prettyprint">$ doc/developer/develop/res/qtdependencies /Developer/QtSDK/Desktop/Qt/474/gcc/lib/QtHelp.framework/Versions/4/QtHelp
+                <pre class="prettyprint">$ doc/developer/develop/res/qtdependencies /Developer/QtSDK/Desktop/Qt/4.8.0/gcc/lib/QtHelp.framework/Versions/4/QtHelp
 QtCore
 QtGui
 QtHelp
