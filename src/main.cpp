@@ -136,23 +136,15 @@ int main(int pArgc, char *pArgv[])
 
     // We are done with the execution of the application, so now the question is
     // whether we need to restart or not
-    // Note #1: we do this here rather than 'within' the GUI because once we
-    //          have launched a new instance of OpenCOR, we want this instance
-    //          of OpenCOR to finish as soon as possible which will be the case
-    //          here since all that remains to be done is to return the result
-    //          of the execution of the application...
-    // Note #2: ideally, we would have a do...while loop which is executed while
-    //          res equals OpenCOR::NeedRestart, deleting (if necessary) and
-    //          reinitialising app and win. There is, however, a bug in Qt (see
-    //          http://bugreports.qt.nokia.com/browse/QTBUG-17305) which has
-    //          been fixed but hasn't yet been released, so... we go for the
-    //          second best solution instead...
-    //          ---GRY--- TO BE DONE...
+    // Note: we do this here rather than 'within' the GUI because once we have
+    //       launched a new instance of OpenCOR, we want this instance of
+    //       OpenCOR to finish as soon as possible which will be the case here
+    //       since all that remains to be done is to return the result of the
+    //       execution of the application...
 
     if (res == OpenCOR::NeedRestart)
         // Restart OpenCOR, but without providing any of the argument with which
-        // OpenCOR was originally started, since we indeed want to reset
-        // everything
+        // OpenCOR was originally started, since we want to reset everything
 
         QProcess::startDetached(appFilePath, QStringList(), appDirPath);
 
