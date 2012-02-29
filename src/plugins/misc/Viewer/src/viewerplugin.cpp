@@ -21,7 +21,7 @@ PLUGININFO_FUNC ViewerPluginInfo()
     return PluginInfo(PluginInfo::V001,
                       PluginInfo::Gui,
                       PluginInfo::Miscellaneous,
-                      true,
+                      false,
                       QStringList() << "CoreEditing" << "QtMmlWidget",
                       descriptions);
 }
