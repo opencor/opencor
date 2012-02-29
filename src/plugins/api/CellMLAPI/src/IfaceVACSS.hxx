@@ -24,10 +24,11 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLValidityError"; }
       virtual ~CellMLValidityError() {}
-      virtual wchar_t* description() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring description() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t nSupplements() throw(std::exception&)  = 0;
-      virtual iface::cellml_services::CellMLValidityError* getSupplement(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CellMLValidityError>  getSupplement(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual bool isWarningOnly() throw(std::exception&)  = 0;
     };
     PUBLIC_VACSS_PRE 
@@ -35,8 +36,9 @@ namespace iface
      : public virtual iface::cellml_services::CellMLValidityError
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLRepresentationValidityError"; }
       virtual ~CellMLRepresentationValidityError() {}
-      virtual iface::dom::Node* errorNode() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  errorNode() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t errorNodalOffset() throw(std::exception&)  = 0;
     };
     PUBLIC_VACSS_PRE 
@@ -44,25 +46,28 @@ namespace iface
      : public virtual iface::cellml_services::CellMLValidityError
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLSemanticValidityError"; }
       virtual ~CellMLSemanticValidityError() {}
-      virtual iface::cellml_api::CellMLElement* errorElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLElement>  errorElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_VACSS_PRE 
     class  PUBLIC_VACSS_POST CellMLValidityErrorSet
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLValidityErrorSet"; }
       virtual ~CellMLValidityErrorSet() {}
       virtual uint32_t nValidityErrors() throw(std::exception&)  = 0;
-      virtual iface::cellml_services::CellMLValidityError* getValidityError(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CellMLValidityError>  getValidityError(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_VACSS_PRE 
     class  PUBLIC_VACSS_POST VACSService
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::VACSService"; }
       virtual ~VACSService() {}
-      virtual iface::cellml_services::CellMLValidityErrorSet* validateModel(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CellMLValidityErrorSet>  validateModel(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t getPositionInXML(iface::dom::Node* node, uint32_t nodalOffset, uint32_t* column) throw(std::exception&) = 0;
     };
   };

@@ -24,7 +24,7 @@ namespace iface
 {
   namespace cellml_services
   {
-    typedef double* DoubleSeq;
+    typedef std::vector<double>& DoubleSeq;
     typedef enum _enum_ODEIntegrationStepType
     {
       RUNGE_KUTTA_2_3 = 0,
@@ -46,17 +46,19 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::IntegrationProgressObserver"; }
       virtual ~IntegrationProgressObserver() {}
-      virtual void computedConstants(uint32_t _length_values, double* values) throw(std::exception&) = 0;
-      virtual void results(uint32_t _length_state, double* state) throw(std::exception&) = 0;
+      virtual void computedConstants(const std::vector<double>& values) throw(std::exception&) = 0;
+      virtual void results(const std::vector<double>& state) throw(std::exception&) = 0;
       virtual void done() throw(std::exception&) = 0;
-      virtual void failed(const char* errorMessage) throw(std::exception&) = 0;
+      virtual void failed(const std::string& errorMessage) throw(std::exception&) = 0;
     };
     PUBLIC_CIS_PRE 
     class  PUBLIC_CIS_POST CellMLIntegrationRun
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLIntegrationRun"; }
       virtual ~CellMLIntegrationRun() {}
       virtual void setStepSizeControl(double epsAbs, double epsRel, double scalVar, double scalRate, double maxStep) throw(std::exception&) = 0;
       virtual void setTabulationStepControl(double tabulationStepSize, bool strictTabulation) throw(std::exception&) = 0;
@@ -71,6 +73,7 @@ namespace iface
      : public virtual iface::cellml_services::CellMLIntegrationRun
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::ODESolverRun"; }
       virtual ~ODESolverRun() {}
       virtual iface::cellml_services::ODEIntegrationStepType stepType() throw(std::exception&)  = 0;
       virtual void stepType(iface::cellml_services::ODEIntegrationStepType attr) throw(std::exception&) = 0;
@@ -80,6 +83,7 @@ namespace iface
      : public virtual iface::cellml_services::CellMLIntegrationRun
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::DAESolverRun"; }
       virtual ~DAESolverRun() {}
     };
     PUBLIC_CIS_PRE 
@@ -87,15 +91,17 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLCompiledModel"; }
       virtual ~CellMLCompiledModel() {}
-      virtual iface::cellml_api::Model* model() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::CodeInformation* codeInformation() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::Model>  model() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CodeInformation>  codeInformation() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CIS_PRE 
     class  PUBLIC_CIS_POST ODESolverCompiledModel
      : public virtual iface::cellml_services::CellMLCompiledModel
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::ODESolverCompiledModel"; }
       virtual ~ODESolverCompiledModel() {}
     };
     PUBLIC_CIS_PRE 
@@ -103,6 +109,7 @@ namespace iface
      : public virtual iface::cellml_services::CellMLCompiledModel
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::DAESolverCompiledModel"; }
       virtual ~DAESolverCompiledModel() {}
     };
     PUBLIC_CIS_PRE 
@@ -110,12 +117,13 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLIntegrationService"; }
       virtual ~CellMLIntegrationService() {}
-      virtual iface::cellml_services::ODESolverCompiledModel* compileModelODE(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::DAESolverCompiledModel* compileModelDAE(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::ODESolverRun* createODEIntegrationRun(iface::cellml_services::ODESolverCompiledModel* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::DAESolverRun* createDAEIntegrationRun(iface::cellml_services::DAESolverCompiledModel* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* lastError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::ODESolverCompiledModel>  compileModelODE(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::DAESolverCompiledModel>  compileModelDAE(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::ODESolverRun>  createODEIntegrationRun(iface::cellml_services::ODESolverCompiledModel* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::DAESolverRun>  createDAEIntegrationRun(iface::cellml_services::DAESolverCompiledModel* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring lastError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

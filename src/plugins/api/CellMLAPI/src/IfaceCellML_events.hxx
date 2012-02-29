@@ -25,15 +25,16 @@ namespace iface
      : public virtual iface::events::Event
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_events::MutationEvent"; }
       virtual ~MutationEvent() {}
       static const uint16_t MODIFICATION = 1;
       static const uint16_t ADDITION = 2;
       static const uint16_t REMOVAL = 3;
-      virtual iface::cellml_api::CellMLElement* relatedElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* prevValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* newValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* attrLocalName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* attrNamespaceURI() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLElement>  relatedElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring prevValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring newValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring attrLocalName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring attrNamespaceURI() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint16_t attrChange() throw(std::exception&)  = 0;
     };
   };

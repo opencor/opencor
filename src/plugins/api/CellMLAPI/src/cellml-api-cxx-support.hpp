@@ -10,14 +10,15 @@ HEADER_INLINE int
 CDA_objcmp(iface::XPCOM::IObject* o1, iface::XPCOM::IObject* o2)
   throw()
 {
-  char* s1, *s2;
+  std::string s1, s2;
+  bool vs1 = true, vs2 = true;
   try
   {
     s1 = o1->objid();
   }
   catch (...)
   {
-    s1 = NULL;
+    vs1 = false;
   }
   try
   {
@@ -25,59 +26,28 @@ CDA_objcmp(iface::XPCOM::IObject* o1, iface::XPCOM::IObject* o2)
   }
   catch (...)
   {
-    s2 = NULL;
+    vs2 = false;
   }
 
   int cmp;
-  if (s1 && s2)
+  if (vs1 && vs2)
   {
-    cmp = strcmp(s1, s2);
+    cmp = strcmp(s1.c_str(), s2.c_str());
   }
   // if we have a dead object, we can't compare them so easily, so we just
   // follow a basic rule. This can break ordering relationships, but once
   // they are dead, it is the best we can do.
-  else if (!s1 && !s2)
+  else if (!vs1 && !vs2)
     // Dead objects are automatically identical.
     cmp = 0;
-  else if (!s1)
+  else if (!vs1)
     // First is dead, second is alive, so treat as -1...
     cmp = -1;
   else
     cmp = 1;
 
-  if (s1)
-    free(s1);
-  if (s2)
-    free(s2);
-
   return cmp;
 }
-
-template<class T>
-class already_AddRefd
-{
-public:
-  already_AddRefd(T* aPtr)
-    : mPtr(aPtr)
-  {
-  }
-
-  ~already_AddRefd()
-  {
-  }
-
-  operator T*() const
-  {
-    return mPtr;
-  }
-
-  T* getPointer() const
-  {
-    return mPtr;
-  }
-private:
-  T* mPtr;
-};
 
 template<class T>
 class ObjRef
@@ -203,9 +173,7 @@ operator!=(const ObjRef<T>& lhs, const ObjRef<U>& rhs)
 }
 
 #define RETURN_INTO_WSTRING(lhs, rhs) \
-  wchar_t* tmp_##lhs = rhs; \
-  std::wstring lhs(tmp_##lhs); \
-  free(tmp_##lhs);
+  std::wstring lhs(rhs);
 #define RETURN_INTO_OBJREF(lhs, type, rhs) \
   ObjRef<type> lhs \
   ( \

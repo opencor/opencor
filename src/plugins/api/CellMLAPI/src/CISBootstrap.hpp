@@ -12,5 +12,5 @@
  * This code is the external C++ interface which allows you to fetch the
  * implementation.
  */
-CIS_PUBLIC_PRE iface::cellml_services::CellMLIntegrationService*
+CIS_PUBLIC_PRE already_AddRefd<iface::cellml_services::CellMLIntegrationService>
 CreateIntegrationService(void) CIS_PUBLIC_POST;

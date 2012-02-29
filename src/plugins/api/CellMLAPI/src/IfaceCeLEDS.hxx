@@ -28,29 +28,32 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::LanguageDictionary"; }
       virtual ~LanguageDictionary() {}
-      virtual wchar_t* getValue(const wchar_t* keyName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::NodeList* getMappings() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring getValue(const std::wstring& keyName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::NodeList>  getMappings() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CeLEDS_PRE 
     class  PUBLIC_CeLEDS_POST DictionaryGenerator
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::DictionaryGenerator"; }
       virtual ~DictionaryGenerator() {}
-      virtual iface::cellml_services::LanguageDictionary* getDictionary(const wchar_t* dictionaryNameSpace) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Element* getElementNS(const wchar_t* nameSpace, const wchar_t* elementName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::MaLaESTransform* getMalTransform() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::LanguageDictionary>  getDictionary(const std::wstring& dictionaryNameSpace) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Element>  getElementNS(const std::wstring& nameSpace, const std::wstring& elementName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::MaLaESTransform>  getMalTransform() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CeLEDS_PRE 
     class  PUBLIC_CeLEDS_POST CeLEDSBootstrap
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CeLEDSBootstrap"; }
       virtual ~CeLEDSBootstrap() {}
-      virtual iface::cellml_services::DictionaryGenerator* createDictGenerator(const wchar_t* URL) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::DictionaryGenerator* createDictGeneratorFromText(const wchar_t* XMLText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* loadError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::DictionaryGenerator>  createDictGenerator(const std::wstring& URL) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::DictionaryGenerator>  createDictGeneratorFromText(const std::wstring& XMLText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring loadError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

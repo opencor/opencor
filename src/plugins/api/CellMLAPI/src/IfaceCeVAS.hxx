@@ -24,30 +24,33 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::ConnectedVariableSet"; }
       virtual ~ConnectedVariableSet() {}
-      virtual iface::cellml_api::CellMLVariable* sourceVariable() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLVariable>  sourceVariable() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t length() throw(std::exception&)  = 0;
-      virtual iface::cellml_api::CellMLVariable* getVariable(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLVariable>  getVariable(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CeVAS_PRE 
     class  PUBLIC_CeVAS_POST CeVAS
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CeVAS"; }
       virtual ~CeVAS() {}
-      virtual wchar_t* modelError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_api::CellMLComponentIterator* iterateRelevantComponents() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::ConnectedVariableSet* findVariableSet(iface::cellml_api::CellMLVariable* aVariable) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring modelError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLComponentIterator>  iterateRelevantComponents() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::ConnectedVariableSet>  findVariableSet(iface::cellml_api::CellMLVariable* aVariable) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t length() throw(std::exception&)  = 0;
-      virtual iface::cellml_services::ConnectedVariableSet* getVariableSet(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::ConnectedVariableSet>  getVariableSet(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CeVAS_PRE 
     class  PUBLIC_CeVAS_POST CeVASBootstrap
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CeVASBootstrap"; }
       virtual ~CeVASBootstrap() {}
-      virtual iface::cellml_services::CeVAS* createCeVASForModel(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CeVAS>  createCeVASForModel(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

@@ -83,7 +83,12 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
 
         return GuiInterface::newViewWidget(pFileName);
 
-    // The expected file extension, so return our generic simulation view widget
+    // We are dealing with a CellML file, so update our generic simulation view
+    // widget using the passed CellML file
+
+    mSingleCellSimulationView->updateWith(pFileName);
+
+    // Our generic simulation view widget is now ready, so...
 
     return mSingleCellSimulationView;
 }

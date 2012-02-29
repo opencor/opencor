@@ -13,6 +13,6 @@
  * implementation.
  */
 CELEDS_PUBLIC_PRE
-  iface::cellml_services::CeLEDSBootstrap* 
+  already_AddRefd<iface::cellml_services::CeLEDSBootstrap>
   CreateCeLEDSBootstrap(void)
 CELEDS_PUBLIC_POST;

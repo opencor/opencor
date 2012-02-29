@@ -30,6 +30,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CodeExporter"; }
       virtual ~CodeExporter() {}
       virtual double rangeStart() throw(std::exception&)  = 0;
       virtual void rangeStart(double attr) throw(std::exception&) = 0;
@@ -41,19 +42,20 @@ namespace iface
       virtual void relTol(double attr) throw(std::exception&) = 0;
       virtual double maxStep() throw(std::exception&)  = 0;
       virtual void maxStep(double attr) throw(std::exception&) = 0;
-      virtual wchar_t* generateCode(iface::cellml_api::Model* model) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring generateCode(iface::cellml_api::Model* model) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CeLEDSExporter_PRE 
     class  PUBLIC_CeLEDSExporter_POST CeLEDSExporterBootstrap
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CeLEDSExporterBootstrap"; }
       virtual ~CeLEDSExporterBootstrap() {}
-      virtual iface::cellml_services::DictionaryGenerator* createDictGenerator(const wchar_t* URL) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::DictionaryGenerator* createDictGeneratorFromText(const wchar_t* XMLText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::CodeExporter* createExporter(const wchar_t* URL) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::CodeExporter* createExporterFromText(const wchar_t* XMLText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* loadError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::DictionaryGenerator>  createDictGenerator(const std::wstring& URL) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::DictionaryGenerator>  createDictGeneratorFromText(const std::wstring& XMLText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CodeExporter>  createExporter(const std::wstring& URL) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CodeExporter>  createExporterFromText(const std::wstring& XMLText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring loadError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

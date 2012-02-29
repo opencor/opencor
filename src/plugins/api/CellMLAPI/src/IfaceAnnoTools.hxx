@@ -24,17 +24,19 @@ namespace iface
      : public virtual iface::cellml_api::UserData
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::StringAnnotation"; }
       virtual ~StringAnnotation() {}
-      virtual wchar_t* value() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual void value(const wchar_t* attr) throw(std::exception&) = 0;
+      virtual std::wstring value() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void value(const std::wstring& attr) throw(std::exception&) = 0;
     };
     PUBLIC_AnnoTools_PRE 
     class  PUBLIC_AnnoTools_POST ObjectAnnotation
      : public virtual iface::cellml_api::UserData
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::ObjectAnnotation"; }
       virtual ~ObjectAnnotation() {}
-      virtual iface::XPCOM::IObject* value() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::XPCOM::IObject>  value() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void value(iface::XPCOM::IObject* attr) throw(std::exception&) = 0;
     };
     PUBLIC_AnnoTools_PRE 
@@ -42,20 +44,22 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::AnnotationSet"; }
       virtual ~AnnotationSet() {}
-      virtual wchar_t* prefixURI() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual void setStringAnnotation(iface::cellml_api::CellMLElement* element, const wchar_t* key, const wchar_t* value) throw(std::exception&) = 0;
-      virtual wchar_t* getStringAnnotation(iface::cellml_api::CellMLElement* element, const wchar_t* key) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual void setObjectAnnotation(iface::cellml_api::CellMLElement* element, const wchar_t* key, iface::XPCOM::IObject* value) throw(std::exception&) = 0;
-      virtual iface::XPCOM::IObject* getObjectAnnotation(iface::cellml_api::CellMLElement* element, const wchar_t* key) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring prefixURI() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void setStringAnnotation(iface::cellml_api::CellMLElement* element, const std::wstring& key, const std::wstring& value) throw(std::exception&) = 0;
+      virtual std::wstring getStringAnnotation(iface::cellml_api::CellMLElement* element, const std::wstring& key) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual void setObjectAnnotation(iface::cellml_api::CellMLElement* element, const std::wstring& key, iface::XPCOM::IObject* value) throw(std::exception&) = 0;
+      virtual already_AddRefd<iface::XPCOM::IObject>  getObjectAnnotation(iface::cellml_api::CellMLElement* element, const std::wstring& key) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_AnnoTools_PRE 
     class  PUBLIC_AnnoTools_POST AnnotationToolService
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::AnnotationToolService"; }
       virtual ~AnnotationToolService() {}
-      virtual iface::cellml_services::AnnotationSet* createAnnotationSet() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::AnnotationSet>  createAnnotationSet() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

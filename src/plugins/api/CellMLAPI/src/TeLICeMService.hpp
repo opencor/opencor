@@ -14,6 +14,6 @@
  * implementation.
  */
 TeLICeMS_PUBLIC_PRE
-  iface::cellml_services::TeLICeMService*
+  already_AddRefd<iface::cellml_services::TeLICeMService>
   CreateTeLICeMService(void)
 TeLICeMS_PUBLIC_POST;

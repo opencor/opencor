@@ -7,5 +7,5 @@
 #endif
 #include "IfaceCellML_APISPEC.hxx"
 
-CELLML_PUBLIC_PRE iface::cellml_api::CellMLBootstrap* CreateCellMLBootstrap()
+CELLML_PUBLIC_PRE already_AddRefd<iface::cellml_api::CellMLBootstrap> CreateCellMLBootstrap()
   CELLML_PUBLIC_POST;

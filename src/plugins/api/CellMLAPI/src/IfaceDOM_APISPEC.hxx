@@ -16,7 +16,7 @@ namespace iface
 {
   namespace dom
   {
-    typedef wchar_t* DOMString;
+    typedef std::wstring& DOMString;
     typedef uint64_t DOMTimeStamp;
     class DocumentType;
     class Document;
@@ -49,16 +49,18 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::DOMImplementation"; }
       virtual ~DOMImplementation() {}
-      virtual bool hasFeature(const wchar_t* feature, const wchar_t* version) throw(std::exception&) = 0;
-      virtual iface::dom::DocumentType* createDocumentType(const wchar_t* qualifiedName, const wchar_t* publicId, const wchar_t* systemId) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Document* createDocument(const wchar_t* namespaceURI, const wchar_t* qualifiedName, iface::dom::DocumentType* doctype) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual bool hasFeature(const std::wstring& feature, const std::wstring& version) throw(std::exception&) = 0;
+      virtual already_AddRefd<iface::dom::DocumentType>  createDocumentType(const std::wstring& qualifiedName, const std::wstring& publicId, const std::wstring& systemId) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Document>  createDocument(const std::wstring& namespaceURI, const std::wstring& qualifiedName, iface::dom::DocumentType* doctype) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST Node
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::Node"; }
       virtual ~Node() {}
       static const uint16_t ELEMENT_NODE = 1;
       static const uint16_t ATTRIBUTE_NODE = 2;
@@ -72,30 +74,30 @@ namespace iface
       static const uint16_t DOCUMENT_TYPE_NODE = 10;
       static const uint16_t DOCUMENT_FRAGMENT_NODE = 11;
       static const uint16_t NOTATION_NODE = 12;
-      virtual wchar_t* nodeName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* nodeValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual void nodeValue(const wchar_t* attr) throw(std::exception&) = 0;
+      virtual std::wstring nodeName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring nodeValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void nodeValue(const std::wstring& attr) throw(std::exception&) = 0;
       virtual uint16_t nodeType() throw(std::exception&)  = 0;
-      virtual iface::dom::Node* parentNode() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::NodeList* childNodes() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* firstChild() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* lastChild() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* previousSibling() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* nextSibling() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::NamedNodeMap* attributes() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Document* ownerDocument() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* insertBefore(iface::dom::Node* newChild, iface::dom::Node* refChild) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* replaceChild(iface::dom::Node* newChild, iface::dom::Node* oldChild) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* removeChild(iface::dom::Node* oldChild) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* appendChild(iface::dom::Node* newChild) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  parentNode() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::NodeList>  childNodes() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  firstChild() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  lastChild() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  previousSibling() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  nextSibling() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::NamedNodeMap>  attributes() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Document>  ownerDocument() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  insertBefore(iface::dom::Node* newChild, iface::dom::Node* refChild) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  replaceChild(iface::dom::Node* newChild, iface::dom::Node* oldChild) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  removeChild(iface::dom::Node* oldChild) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  appendChild(iface::dom::Node* newChild) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual bool hasChildNodes() throw(std::exception&) = 0;
-      virtual iface::dom::Node* cloneNode(bool deep) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  cloneNode(bool deep) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void normalize() throw(std::exception&) = 0;
-      virtual bool isSupported(const wchar_t* feature, const wchar_t* version) throw(std::exception&) = 0;
-      virtual wchar_t* namespaceURI() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* prefix() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual void prefix(const wchar_t* attr) throw(std::exception&) = 0;
-      virtual wchar_t* localName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual bool isSupported(const std::wstring& feature, const std::wstring& version) throw(std::exception&) = 0;
+      virtual std::wstring namespaceURI() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring prefix() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void prefix(const std::wstring& attr) throw(std::exception&) = 0;
+      virtual std::wstring localName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual bool hasAttributes() throw(std::exception&) = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
@@ -103,8 +105,9 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::NodeList"; }
       virtual ~NodeList() {}
-      virtual iface::dom::Node* item(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  item(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t length() throw(std::exception&)  = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
@@ -112,79 +115,85 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::NamedNodeMap"; }
       virtual ~NamedNodeMap() {}
-      virtual iface::dom::Node* getNamedItem(const wchar_t* name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* setNamedItem(iface::dom::Node* arg) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* removeNamedItem(const wchar_t* name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* item(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  getNamedItem(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  setNamedItem(iface::dom::Node* arg) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  removeNamedItem(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  item(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t length() throw(std::exception&)  = 0;
-      virtual iface::dom::Node* getNamedItemNS(const wchar_t* namespaceURI, const wchar_t* localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* setNamedItemNS(iface::dom::Node* arg) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* removeNamedItemNS(const wchar_t* namespaceURI, const wchar_t* localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  getNamedItemNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  setNamedItemNS(iface::dom::Node* arg) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  removeNamedItemNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST CharacterData
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::CharacterData"; }
       virtual ~CharacterData() {}
-      virtual wchar_t* data() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual void data(const wchar_t* attr) throw(std::exception&) = 0;
+      virtual std::wstring data() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void data(const std::wstring& attr) throw(std::exception&) = 0;
       virtual uint32_t length() throw(std::exception&)  = 0;
-      virtual wchar_t* substringData(uint32_t offset, uint32_t count) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual void appendData(const wchar_t* arg) throw(std::exception&) = 0;
-      virtual void insertData(uint32_t offset, const wchar_t* arg) throw(std::exception&) = 0;
+      virtual std::wstring substringData(uint32_t offset, uint32_t count) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual void appendData(const std::wstring& arg) throw(std::exception&) = 0;
+      virtual void insertData(uint32_t offset, const std::wstring& arg) throw(std::exception&) = 0;
       virtual void deleteData(uint32_t offset, uint32_t count) throw(std::exception&) = 0;
-      virtual void replaceData(uint32_t offset, uint32_t count, const wchar_t* arg) throw(std::exception&) = 0;
+      virtual void replaceData(uint32_t offset, uint32_t count, const std::wstring& arg) throw(std::exception&) = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST Attr
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::Attr"; }
       virtual ~Attr() {}
-      virtual wchar_t* name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual bool specified() throw(std::exception&)  = 0;
-      virtual wchar_t* value() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual void value(const wchar_t* attr) throw(std::exception&) = 0;
-      virtual iface::dom::Element* ownerElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring value() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void value(const std::wstring& attr) throw(std::exception&) = 0;
+      virtual already_AddRefd<iface::dom::Element>  ownerElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST Element
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::Element"; }
       virtual ~Element() {}
-      virtual wchar_t* tagName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* getAttribute(const wchar_t* name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual void setAttribute(const wchar_t* name, const wchar_t* value) throw(std::exception&) = 0;
-      virtual void removeAttribute(const wchar_t* name) throw(std::exception&) = 0;
-      virtual iface::dom::Attr* getAttributeNode(const wchar_t* name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Attr* setAttributeNode(iface::dom::Attr* newAttr) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Attr* removeAttributeNode(iface::dom::Attr* oldAttr) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::NodeList* getElementsByTagName(const wchar_t* name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* getAttributeNS(const wchar_t* namespaceURI, const wchar_t* localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual void setAttributeNS(const wchar_t* namespaceURI, const wchar_t* qualifiedName, const wchar_t* value) throw(std::exception&) = 0;
-      virtual void removeAttributeNS(const wchar_t* namespaceURI, const wchar_t* localName) throw(std::exception&) = 0;
-      virtual iface::dom::Attr* getAttributeNodeNS(const wchar_t* namespaceURI, const wchar_t* localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Attr* setAttributeNodeNS(iface::dom::Attr* newAttr) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::NodeList* getElementsByTagNameNS(const wchar_t* namespaceURI, const wchar_t* localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual bool hasAttribute(const wchar_t* name) throw(std::exception&) = 0;
-      virtual bool hasAttributeNS(const wchar_t* namespaceURI, const wchar_t* localName) throw(std::exception&) = 0;
+      virtual std::wstring tagName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring getAttribute(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual void setAttribute(const std::wstring& name, const std::wstring& value) throw(std::exception&) = 0;
+      virtual void removeAttribute(const std::wstring& name) throw(std::exception&) = 0;
+      virtual already_AddRefd<iface::dom::Attr>  getAttributeNode(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Attr>  setAttributeNode(iface::dom::Attr* newAttr) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Attr>  removeAttributeNode(iface::dom::Attr* oldAttr) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::NodeList>  getElementsByTagName(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring getAttributeNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual void setAttributeNS(const std::wstring& namespaceURI, const std::wstring& qualifiedName, const std::wstring& value) throw(std::exception&) = 0;
+      virtual void removeAttributeNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) = 0;
+      virtual already_AddRefd<iface::dom::Attr>  getAttributeNodeNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Attr>  setAttributeNodeNS(iface::dom::Attr* newAttr) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::NodeList>  getElementsByTagNameNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual bool hasAttribute(const std::wstring& name) throw(std::exception&) = 0;
+      virtual bool hasAttributeNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST Text
      : public virtual iface::dom::CharacterData
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::Text"; }
       virtual ~Text() {}
-      virtual iface::dom::Text* splitText(uint32_t offset) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Text>  splitText(uint32_t offset) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST Comment
      : public virtual iface::dom::CharacterData
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::Comment"; }
       virtual ~Comment() {}
     };
     PUBLIC_DOMAPISPEC_PRE 
@@ -192,6 +201,7 @@ namespace iface
      : public virtual iface::dom::Text
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::CDATASection"; }
       virtual ~CDATASection() {}
     };
     PUBLIC_DOMAPISPEC_PRE 
@@ -199,38 +209,42 @@ namespace iface
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::DocumentType"; }
       virtual ~DocumentType() {}
-      virtual wchar_t* name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::NamedNodeMap* entities() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::NamedNodeMap* notations() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* publicId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* systemId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* internalSubset() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::NamedNodeMap>  entities() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::NamedNodeMap>  notations() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring publicId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring systemId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring internalSubset() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST Notation
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::Notation"; }
       virtual ~Notation() {}
-      virtual wchar_t* publicId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* systemId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring publicId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring systemId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST Entity
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::Entity"; }
       virtual ~Entity() {}
-      virtual wchar_t* publicId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* systemId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* notationName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring publicId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring systemId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring notationName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST EntityReference
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::EntityReference"; }
       virtual ~EntityReference() {}
     };
     PUBLIC_DOMAPISPEC_PRE 
@@ -238,16 +252,18 @@ namespace iface
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::ProcessingInstruction"; }
       virtual ~ProcessingInstruction() {}
-      virtual wchar_t* target() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* data() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual void data(const wchar_t* attr) throw(std::exception&) = 0;
+      virtual std::wstring target() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring data() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void data(const std::wstring& attr) throw(std::exception&) = 0;
     };
     PUBLIC_DOMAPISPEC_PRE 
     class  PUBLIC_DOMAPISPEC_POST DocumentFragment
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::DocumentFragment"; }
       virtual ~DocumentFragment() {}
     };
     PUBLIC_DOMAPISPEC_PRE 
@@ -255,24 +271,25 @@ namespace iface
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::dom::Document"; }
       virtual ~Document() {}
-      virtual iface::dom::DocumentType* doctype() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::DOMImplementation* implementation() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Element* documentElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Element* createElement(const wchar_t* tagName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::DocumentFragment* createDocumentFragment() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Text* createTextNode(const wchar_t* data) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Comment* createComment(const wchar_t* data) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::CDATASection* createCDATASection(const wchar_t* data) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::ProcessingInstruction* createProcessingInstruction(const wchar_t* target, const wchar_t* data) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Attr* createAttribute(const wchar_t* name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::EntityReference* createEntityReference(const wchar_t* name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::NodeList* getElementsByTagName(const wchar_t* tagname) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* importNode(iface::dom::Node* importedNode, bool deep) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Element* createElementNS(const wchar_t* namespaceURI, const wchar_t* qualifiedName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Attr* createAttributeNS(const wchar_t* namespaceURI, const wchar_t* qualifiedName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::NodeList* getElementsByTagNameNS(const wchar_t* namespaceURI, const wchar_t* localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Element* getElementById(const wchar_t* elementId) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::DocumentType>  doctype() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::DOMImplementation>  implementation() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Element>  documentElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Element>  createElement(const std::wstring& tagName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::DocumentFragment>  createDocumentFragment() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Text>  createTextNode(const std::wstring& data) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Comment>  createComment(const std::wstring& data) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::CDATASection>  createCDATASection(const std::wstring& data) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::ProcessingInstruction>  createProcessingInstruction(const std::wstring& target, const std::wstring& data) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Attr>  createAttribute(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::EntityReference>  createEntityReference(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::NodeList>  getElementsByTagName(const std::wstring& tagname) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  importNode(iface::dom::Node* importedNode, bool deep) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Element>  createElementNS(const std::wstring& namespaceURI, const std::wstring& qualifiedName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Attr>  createAttributeNS(const std::wstring& namespaceURI, const std::wstring& qualifiedName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::NodeList>  getElementsByTagNameNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Element>  getElementById(const std::wstring& elementId) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

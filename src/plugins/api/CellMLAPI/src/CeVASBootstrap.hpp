@@ -13,5 +13,5 @@
  * implementation.
  */
 CEVAS_PUBLIC_PRE
-iface::cellml_services::CeVASBootstrap* CreateCeVASBootstrap(void)
+already_AddRefd<iface::cellml_services::CeVASBootstrap> CreateCeVASBootstrap(void)
 CEVAS_PUBLIC_POST;

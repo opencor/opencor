@@ -35,10 +35,11 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::SRuS::SEDMLProcessor"; }
       virtual ~SEDMLProcessor() {}
-      virtual bool supportsModellingLanguage(const wchar_t* aNSURI) throw(std::exception&) = 0;
-      virtual iface::SRuS::TransformedModel* buildOneModel(iface::SProS::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::SRuS::TransformedModelSet* buildAllModels(iface::SProS::SEDMLElement* aElement) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual bool supportsModellingLanguage(const std::wstring& aNSURI) throw(std::exception&) = 0;
+      virtual already_AddRefd<iface::SRuS::TransformedModel>  buildOneModel(iface::SProS::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::SRuS::TransformedModelSet>  buildAllModels(iface::SProS::SEDMLElement* aElement) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void generateData(iface::SRuS::TransformedModelSet* aSet, iface::SProS::SEDMLElement* aElement, iface::SRuS::GeneratedDataMonitor* aMonitor) throw(std::exception&) = 0;
     };
     PUBLIC_SRuS_PRE 
@@ -46,29 +47,32 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::SRuS::TransformedModel"; }
       virtual ~TransformedModel() {}
-      virtual iface::dom::Document* xmlDocument() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::XPCOM::IObject* modelDocument() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::SProS::Model* sedmlModel() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Document>  xmlDocument() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::XPCOM::IObject>  modelDocument() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::SProS::Model>  sedmlModel() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_SRuS_PRE 
     class  PUBLIC_SRuS_POST TransformedModelSet
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::SRuS::TransformedModelSet"; }
       virtual ~TransformedModelSet() {}
       virtual uint32_t length() throw(std::exception&)  = 0;
-      virtual iface::SRuS::TransformedModel* item(uint32_t idx) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::SRuS::TransformedModel* getItemByID(const wchar_t* matchId) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::SRuS::TransformedModel>  item(uint32_t idx) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::SRuS::TransformedModel>  getItemByID(const std::wstring& matchId) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_SRuS_PRE 
     class  PUBLIC_SRuS_POST GeneratedDataMonitor
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::SRuS::GeneratedDataMonitor"; }
       virtual ~GeneratedDataMonitor() {}
       virtual void progress(iface::SRuS::GeneratedDataSet* aData) throw(std::exception&) = 0;
-      virtual void failure(const char* aErrMsg) throw(std::exception&) = 0;
+      virtual void failure(const std::string& aErrMsg) throw(std::exception&) = 0;
       virtual void done() throw(std::exception&) = 0;
     };
     PUBLIC_SRuS_PRE 
@@ -76,8 +80,9 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::SRuS::GeneratedData"; }
       virtual ~GeneratedData() {}
-      virtual iface::SProS::DataGenerator* sedmlDataGenerator() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::SProS::DataGenerator>  sedmlDataGenerator() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t length() throw(std::exception&)  = 0;
       virtual double dataPoint(uint32_t idx) throw(std::exception&) = 0;
     };
@@ -86,17 +91,19 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::SRuS::GeneratedDataSet"; }
       virtual ~GeneratedDataSet() {}
       virtual uint32_t length() throw(std::exception&)  = 0;
-      virtual iface::SRuS::GeneratedData* item(uint32_t idx) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::SRuS::GeneratedData>  item(uint32_t idx) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_SRuS_PRE 
     class  PUBLIC_SRuS_POST Bootstrap
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::SRuS::Bootstrap"; }
       virtual ~Bootstrap() {}
-      virtual iface::SRuS::SEDMLProcessor* makeDefaultProcessor() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::SRuS::SEDMLProcessor>  makeDefaultProcessor() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

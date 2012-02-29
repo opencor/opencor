@@ -27,11 +27,11 @@ class CellML_DOMImplementationBase
 {
 public:
   // A non-standard function used by the bootstrap code to load documents...
-  virtual iface::dom::Document* loadDocument(const wchar_t* aURL,
+  virtual iface::dom::Document* loadDocument(const std::wstring& aURL,
                                              std::wstring& aErrorMessage)
     throw(std::exception&) = 0;
 
-  virtual iface::dom::Document* loadDocumentFromText(const wchar_t* aText,
+  virtual iface::dom::Document* loadDocumentFromText(const std::wstring& aText,
                                                      std::wstring& aErrorMessage)
     throw(std::exception&) = 0;
 };

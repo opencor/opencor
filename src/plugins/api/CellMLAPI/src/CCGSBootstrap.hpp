@@ -13,6 +13,6 @@
  * implementation.
  */
 CCGS_PUBLIC_PRE
-  iface::cellml_services::CodeGeneratorBootstrap*
+  already_AddRefd<iface::cellml_services::CodeGeneratorBootstrap>
   CreateCodeGeneratorBootstrap(void)
 CCGS_PUBLIC_POST;

@@ -17,7 +17,7 @@ namespace iface
 {
   namespace xpath
   {
-    typedef wchar_t* DOMString;
+    typedef std::wstring& DOMString;
     typedef iface::dom::Node* Node;
     typedef iface::dom::Element* Element;
     class XPathNSResolver;
@@ -36,32 +36,36 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::xpath::XPathEvaluator"; }
       virtual ~XPathEvaluator() {}
-      virtual iface::xpath::XPathExpression* createExpression(const wchar_t* expression, iface::xpath::XPathNSResolver* resolver) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::xpath::XPathNSResolver* createNSResolver(iface::dom::Node* nodeResolver) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::xpath::XPathResult* evaluate(const wchar_t* expression, iface::dom::Node* contextNode, iface::xpath::XPathNSResolver* resolver, uint16_t type, iface::xpath::XPathResult* result) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::xpath::XPathExpression>  createExpression(const std::wstring& expression, iface::xpath::XPathNSResolver* resolver) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::xpath::XPathNSResolver>  createNSResolver(iface::dom::Node* nodeResolver) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::xpath::XPathResult>  evaluate(const std::wstring& expression, iface::dom::Node* contextNode, iface::xpath::XPathNSResolver* resolver, uint16_t type, iface::xpath::XPathResult* result) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_xpath_PRE 
     class  PUBLIC_xpath_POST XPathExpression
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::xpath::XPathExpression"; }
       virtual ~XPathExpression() {}
-      virtual iface::xpath::XPathResult* evaluate(iface::dom::Node* contextNode, uint16_t type, iface::xpath::XPathResult* result) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::xpath::XPathResult>  evaluate(iface::dom::Node* contextNode, uint16_t type, iface::xpath::XPathResult* result) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_xpath_PRE 
     class  PUBLIC_xpath_POST XPathNSResolver
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::xpath::XPathNSResolver"; }
       virtual ~XPathNSResolver() {}
-      virtual wchar_t* lookupNamespaceURI(const wchar_t* prefix) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring lookupNamespaceURI(const std::wstring& prefix) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_xpath_PRE 
     class  PUBLIC_xpath_POST XPathResult
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::xpath::XPathResult"; }
       virtual ~XPathResult() {}
       static const uint16_t ANY_TYPE = 0;
       static const uint16_t NUMBER_TYPE = 1;
@@ -75,22 +79,23 @@ namespace iface
       static const uint16_t FIRST_ORDERED_NODE_TYPE = 9;
       virtual uint16_t resultType() throw(std::exception&)  = 0;
       virtual double numberValue() throw(std::exception&)  = 0;
-      virtual wchar_t* stringValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring stringValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual bool booleanValue() throw(std::exception&)  = 0;
-      virtual iface::dom::Node* singleNodeValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  singleNodeValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual bool invalidIteratorState() throw(std::exception&)  = 0;
       virtual uint32_t snapshotLength() throw(std::exception&)  = 0;
-      virtual iface::dom::Node* iterateNext() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::dom::Node* snapshotItem(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  iterateNext() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  snapshotItem(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_xpath_PRE 
     class  PUBLIC_xpath_POST XPathNamespace
      : public virtual iface::dom::Node
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::xpath::XPathNamespace"; }
       virtual ~XPathNamespace() {}
       static const uint16_t XPATH_NAMESPACE_NODE = 13;
-      virtual iface::dom::Element* ownerElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Element>  ownerElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

@@ -15,17 +15,20 @@ namespace iface
 {
   namespace XPCOM
   {
-    typedef char* utf8string;
-    typedef wchar_t* utf8wstring;
+    typedef std::string& utf8string;
+    typedef std::wstring& utf8wstring;
+    typedef std::vector<std::string>& interface_list;
     PUBLIC_xpcom_PRE 
     class  PUBLIC_xpcom_POST IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::XPCOM::IObject"; }
       virtual ~IObject() {}
       virtual void add_ref() throw(std::exception&) = 0;
       virtual void release_ref() throw(std::exception&) = 0;
-      virtual void* query_interface(const char* id) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual char* objid() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void* query_interface(const std::string& id) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::string objid() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::vector<std::string> supported_interfaces() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

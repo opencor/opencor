@@ -17,7 +17,7 @@ namespace iface
 {
   namespace events
   {
-    typedef wchar_t* DOMString;
+    typedef std::wstring& DOMString;
     typedef uint64_t DOMTimeStamp;
     typedef iface::dom::Node* Node;
     class EventListener;
@@ -34,9 +34,10 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::events::EventTarget"; }
       virtual ~EventTarget() {}
-      virtual void addEventListener(const wchar_t* type, iface::events::EventListener* listener, bool useCapture) throw(std::exception&) = 0;
-      virtual void removeEventListener(const wchar_t* type, iface::events::EventListener* listener, bool useCapture) throw(std::exception&) = 0;
+      virtual void addEventListener(const std::wstring& type, iface::events::EventListener* listener, bool useCapture) throw(std::exception&) = 0;
+      virtual void removeEventListener(const std::wstring& type, iface::events::EventListener* listener, bool useCapture) throw(std::exception&) = 0;
       virtual bool dispatchEvent(iface::events::Event* evt) throw(std::exception&) = 0;
     };
     PUBLIC_DOMevents_PRE 
@@ -44,6 +45,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::events::EventListener"; }
       virtual ~EventListener() {}
       virtual void handleEvent(iface::events::Event* evt) throw(std::exception&) = 0;
     };
@@ -52,44 +54,47 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::events::Event"; }
       virtual ~Event() {}
       static const uint16_t CAPTURING_PHASE = 1;
       static const uint16_t AT_TARGET = 2;
       static const uint16_t BUBBLING_PHASE = 3;
-      virtual wchar_t* type() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::events::EventTarget* target() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::events::EventTarget* currentTarget() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring type() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::events::EventTarget>  target() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::events::EventTarget>  currentTarget() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint16_t eventPhase() throw(std::exception&)  = 0;
       virtual bool bubbles() throw(std::exception&)  = 0;
       virtual bool cancelable() throw(std::exception&)  = 0;
       virtual uint64_t timeStamp() throw(std::exception&)  = 0;
       virtual void stopPropagation() throw(std::exception&) = 0;
       virtual void preventDefault() throw(std::exception&) = 0;
-      virtual void initEvent(const wchar_t* eventTypeArg, bool canBubbleArg, bool cancelableArg) throw(std::exception&) = 0;
+      virtual void initEvent(const std::wstring& eventTypeArg, bool canBubbleArg, bool cancelableArg) throw(std::exception&) = 0;
     };
     PUBLIC_DOMevents_PRE 
     class  PUBLIC_DOMevents_POST DocumentEvent
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::events::DocumentEvent"; }
       virtual ~DocumentEvent() {}
-      virtual iface::events::Event* createEvent(const wchar_t* domEventType) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::events::Event>  createEvent(const std::wstring& domEventType) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_DOMevents_PRE 
     class  PUBLIC_DOMevents_POST MutationEvent
      : public virtual iface::events::Event
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::events::MutationEvent"; }
       virtual ~MutationEvent() {}
       static const uint16_t MODIFICATION = 1;
       static const uint16_t ADDITION = 2;
       static const uint16_t REMOVAL = 3;
-      virtual iface::dom::Node* relatedNode() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* prevValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* newValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* attrName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::dom::Node>  relatedNode() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring prevValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring newValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring attrName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint16_t attrChange() throw(std::exception&)  = 0;
-      virtual void initMutationEvent(const wchar_t* typeArg, bool canBubbleArg, bool cancelableArg, iface::dom::Node* relatedNodeArg, const wchar_t* prevValueArg, const wchar_t* newValueArg, const wchar_t* attrNameArg, uint16_t attrChangeArg) throw(std::exception&) = 0;
+      virtual void initMutationEvent(const std::wstring& typeArg, bool canBubbleArg, bool cancelableArg, iface::dom::Node* relatedNodeArg, const std::wstring& prevValueArg, const std::wstring& newValueArg, const std::wstring& attrNameArg, uint16_t attrChangeArg) throw(std::exception&) = 0;
     };
   };
 };

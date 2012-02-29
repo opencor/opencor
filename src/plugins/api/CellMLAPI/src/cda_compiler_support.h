@@ -4,6 +4,59 @@
 /*---GRY---
 #include "cda_config.h"
 */
+#include <cstdlib>
+#include <string>
+#include <vector>
+#include <iostream>
+
+template<class T>
+class already_AddRefd
+{
+public:
+  already_AddRefd(T* aPtr)
+    : mPtr(aPtr)
+  {
+  }
+
+  template<typename R>
+  already_AddRefd(already_AddRefd<R> aPtr)
+    : mPtr(aPtr)
+  {
+  }
+
+  ~already_AddRefd()
+  {
+  }
+
+  template<typename R>
+  operator R*() const
+  {
+    return mPtr;
+  }
+
+  T* operator-> () const
+  {
+    return mPtr;
+  }
+
+  T* getPointer() const
+  {
+    return mPtr;
+  }
+private:
+  T* mPtr;
+};
+
+static void
+operator<<(std::ostream& data, const std::wstring& str)
+{
+  size_t n = wcstombs(NULL, str.c_str(), 0);
+  char* buf = new char[n + 1];
+  wcstombs(buf, str.c_str(), n + 1);
+  data << buf;
+  delete [] buf;
+}
+
 
 #ifdef _MSC_VER
 #undef WIN32

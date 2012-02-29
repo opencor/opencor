@@ -24,24 +24,27 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::BaseUnit"; }
       virtual ~BaseUnit() {}
-      virtual wchar_t* name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CUSES_PRE 
     class  PUBLIC_CUSES_POST UserBaseUnit
      : public virtual iface::cellml_services::BaseUnit
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::UserBaseUnit"; }
       virtual ~UserBaseUnit() {}
-      virtual iface::cellml_api::Units* cellmlUnits() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::Units>  cellmlUnits() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CUSES_PRE 
     class  PUBLIC_CUSES_POST BaseUnitInstance
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::BaseUnitInstance"; }
       virtual ~BaseUnitInstance() {}
-      virtual iface::cellml_services::BaseUnit* unit() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::BaseUnit>  unit() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual double prefix() throw(std::exception&)  = 0;
       virtual double offset() throw(std::exception&)  = 0;
       virtual double exponent() throw(std::exception&)  = 0;
@@ -51,32 +54,35 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CanonicalUnitRepresentation"; }
       virtual ~CanonicalUnitRepresentation() {}
       virtual uint32_t length() throw(std::exception&)  = 0;
-      virtual iface::cellml_services::BaseUnitInstance* fetchBaseUnit(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::BaseUnitInstance>  fetchBaseUnit(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual bool compatibleWith(iface::cellml_services::CanonicalUnitRepresentation* aCompareWith) throw(std::exception&) = 0;
       virtual double convertUnits(iface::cellml_services::CanonicalUnitRepresentation* aConvertTo, double* offset) throw(std::exception&) = 0;
       virtual double siConversion(double* offset) throw(std::exception&) = 0;
       virtual void addBaseUnit(iface::cellml_services::BaseUnitInstance* baseUnit) throw(std::exception&) = 0;
-      virtual iface::cellml_services::CanonicalUnitRepresentation* mergeWith(double thisExponent, iface::cellml_services::CanonicalUnitRepresentation* other, double otherExponent) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CanonicalUnitRepresentation>  mergeWith(double thisExponent, iface::cellml_services::CanonicalUnitRepresentation* other, double otherExponent) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CUSES_PRE 
     class  PUBLIC_CUSES_POST CUSES
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CUSES"; }
       virtual ~CUSES() {}
-      virtual wchar_t* modelError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::CanonicalUnitRepresentation* getUnitsByName(iface::cellml_api::CellMLElement* aContext, const wchar_t* aName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::CanonicalUnitRepresentation* createEmptyUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring modelError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CanonicalUnitRepresentation>  getUnitsByName(iface::cellml_api::CellMLElement* aContext, const std::wstring& aName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CanonicalUnitRepresentation>  createEmptyUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CUSES_PRE 
     class  PUBLIC_CUSES_POST CUSESBootstrap
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::CUSESBootstrap"; }
       virtual ~CUSESBootstrap() {}
-      virtual iface::cellml_services::CUSES* createCUSESForModel(iface::cellml_api::Model* aModel, bool aStrict) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::CUSES>  createCUSESForModel(iface::cellml_api::Model* aModel, bool aStrict) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

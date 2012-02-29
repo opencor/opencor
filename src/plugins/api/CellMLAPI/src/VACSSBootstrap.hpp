@@ -13,5 +13,5 @@
  * implementation.
  */
 VACSS_PUBLIC_PRE
-iface::cellml_services::VACSService* CreateVACSService(void)
+already_AddRefd<iface::cellml_services::VACSService> CreateVACSService(void)
 VACSS_PUBLIC_POST;

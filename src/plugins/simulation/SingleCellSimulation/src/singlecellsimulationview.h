@@ -37,6 +37,8 @@ public:
 
     virtual void retranslateUi();
 
+    void updateWith(const QString &pFileName);
+
 private:
     Ui::SingleCellSimulationView *mUi;
 

@@ -14,6 +14,6 @@
  * the implementation.
  */
 SRuS_PUBLIC_PRE
-  iface::SRuS::Bootstrap*
+already_AddRefd<iface::SRuS::Bootstrap>
 CreateSRuSBootstrap(void) throw()
 SRuS_PUBLIC_POST;

@@ -145,10 +145,7 @@ void CellmlFileRuntime::resetOdeCodeInformation()
 {
     // Reset the ODE code information
 
-    /*delete mOdeCodeInformation;*/ mOdeCodeInformation = 0;
-    //---GRY--- WE CANNOT delete mOdeCodeInformation AT THIS STAGE. FOR THIS, WE
-    //          WOULD NEED TO USE THE CLEANED UP C++ INTERFACE (SEE THE MAIN
-    //          COMMENT AT THE BEGINNING OF THE cellmlfile.cpp FILE)
+    delete mOdeCodeInformation; mOdeCodeInformation = 0;
 }
 
 //==============================================================================
@@ -157,10 +154,7 @@ void CellmlFileRuntime::resetDaeCodeInformation()
 {
     // Reset the DAE code information
 
-    /*delete mDaeCodeInformation;*/ mDaeCodeInformation = 0;
-    //---GRY--- WE CANNOT delete mDaeCodeInformation AT THIS STAGE. FOR THIS, WE
-    //          WOULD NEED TO USE THE CLEANED UP C++ INTERFACE (SEE THE MAIN
-    //          COMMENT AT THE BEGINNING OF THE cellmlfile.cpp FILE)
+    delete mDaeCodeInformation; mDaeCodeInformation = 0;
 }
 
 //==============================================================================

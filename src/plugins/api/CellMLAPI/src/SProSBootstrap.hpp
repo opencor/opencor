@@ -14,6 +14,6 @@
  * implementation.
  */
 SProS_PUBLIC_PRE
-  iface::SProS::Bootstrap*
+  already_AddRefd<iface::SProS::Bootstrap>
   CreateSProSBootstrap(void) throw()
 SProS_PUBLIC_POST;

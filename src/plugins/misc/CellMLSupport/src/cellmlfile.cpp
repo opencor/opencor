@@ -1,15 +1,6 @@
 //==============================================================================
 // CellML file class
 //==============================================================================
-//---GRY--- NOTE THAT OUR CURRENT USE OF THE CellML API IS *WRONG*. INDEED, WE
-//          ARE ASSUMING THAT THE BINARIES IMPLEMENT A CLEANED UP C++ INTERFACE
-//          (SEE https://tracker.physiomeproject.org/show_bug.cgi?id=3108) WHILE
-//          THIS IS NOT (YET) THE CASE. STILL, WE PREFER TO HAVE MEMORY LEAKS,
-//          ETC. AND BE READY FOR WHEN BINARIES ARE UPDATED RATHER THAN HAVE
-//          UGLY CODE, ETC. THIS BEING SAID, THERE IS STILL THE ISSUE OF
-//          DECLARE_QUERY_INTERFACE_OBJREF WHICH CAN'T BE MIMICKED AT THIS POINT
-//          (SEE https://tracker.physiomeproject.org/show_bug.cgi?id=3165)
-//==============================================================================
 
 #include "cellmlfile.h"
 
@@ -59,10 +50,7 @@ void CellmlFile::reset()
 {
     // Reset all of the file's properties
 
-    /*delete mModel;*/ mModel = 0;
-    //---GRY--- WE CANNOT delete mModel AT THIS STAGE. FOR THIS, WE WOULD NEED
-    //          TO USE THE CLEANED UP C++ INTERFACE (SEE THE MAIN COMMENT AT THE
-    //          BEGINNING OF THIS FILE)
+    delete mModel; mModel = 0;
 
     mIssues.clear();
 

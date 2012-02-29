@@ -13,5 +13,5 @@
  * implementation.
  */
 AT_PUBLIC_PRE
-  iface::cellml_services::AnnotationToolService* CreateAnnotationToolService(void)
+  already_AddRefd<iface::cellml_services::AnnotationToolService> CreateAnnotationToolService(void)
 AT_PUBLIC_POST;

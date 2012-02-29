@@ -13,5 +13,5 @@
  * implementation.
  */
 MALAES_PUBLIC_PRE
-iface::cellml_services::MaLaESBootstrap* CreateMaLaESBootstrap(void)
+already_AddRefd<iface::cellml_services::MaLaESBootstrap> CreateMaLaESBootstrap(void)
 MALAES_PUBLIC_POST;

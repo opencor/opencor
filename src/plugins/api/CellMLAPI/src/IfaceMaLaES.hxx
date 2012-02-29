@@ -27,8 +27,9 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::DegreeVariable"; }
       virtual ~DegreeVariable() {}
-      virtual iface::cellml_api::CellMLVariable* variable() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLVariable>  variable() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t degree() throw(std::exception&)  = 0;
       virtual bool appearedUndelayed() throw(std::exception&)  = 0;
       virtual bool appearedInfinitesimallyDelayed() throw(std::exception&)  = 0;
@@ -38,23 +39,25 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::DegreeVariableIterator"; }
       virtual ~DegreeVariableIterator() {}
-      virtual iface::cellml_services::DegreeVariable* nextDegreeVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::DegreeVariable>  nextDegreeVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_MaLaES_PRE 
     class  PUBLIC_MaLaES_POST MaLaESResult
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::MaLaESResult"; }
       virtual ~MaLaESResult() {}
-      virtual wchar_t* compileErrors() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* expression() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring compileErrors() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring expression() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t supplementariesLength() throw(std::exception&)  = 0;
-      virtual wchar_t* getSupplementary(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_api::CellMLVariableIterator* iterateInvolvedVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::DegreeVariableIterator* iterateInvolvedVariablesByDegree() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_api::CellMLVariableIterator* iterateBoundVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_api::CellMLVariableIterator* iterateLocallyBoundVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring getSupplementary(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLVariableIterator>  iterateInvolvedVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::DegreeVariableIterator>  iterateInvolvedVariablesByDegree() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLVariableIterator>  iterateBoundVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLVariableIterator>  iterateLocallyBoundVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t getDiffDegree(iface::cellml_api::CellMLVariable* aVar) throw(std::exception&) = 0;
       virtual bool involvesExternalCode() throw(std::exception&)  = 0;
     };
@@ -63,9 +66,10 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::MaLaESTransform"; }
       virtual ~MaLaESTransform() {}
-      virtual wchar_t* compileErrors() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::MaLaESResult* transform(iface::cellml_services::CeVAS* aCeVAS, iface::cellml_services::CUSES* aCUSES, iface::cellml_services::AnnotationSet* aAnnos, iface::mathml_dom::MathMLElement* aMathML, iface::cellml_api::CellMLElement* aContext, iface::cellml_api::CellMLVariable* aUnitsOf, iface::cellml_api::CellMLVariable* aBoundUnitsOf, uint32_t aUnitsDiffDegree) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring compileErrors() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::MaLaESResult>  transform(iface::cellml_services::CeVAS* aCeVAS, iface::cellml_services::CUSES* aCUSES, iface::cellml_services::AnnotationSet* aAnnos, iface::mathml_dom::MathMLElement* aMathML, iface::cellml_api::CellMLElement* aContext, iface::cellml_api::CellMLVariable* aUnitsOf, iface::cellml_api::CellMLVariable* aBoundUnitsOf, uint32_t aUnitsDiffDegree) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void stripPassthrough(iface::cellml_api::Model* aModel) throw(std::exception&) = 0;
     };
     PUBLIC_MaLaES_PRE 
@@ -73,8 +77,9 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::MaLaESBootstrap"; }
       virtual ~MaLaESBootstrap() {}
-      virtual iface::cellml_services::MaLaESTransform* compileTransformer(const wchar_t* specification) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::MaLaESTransform>  compileTransformer(const std::wstring& specification) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };

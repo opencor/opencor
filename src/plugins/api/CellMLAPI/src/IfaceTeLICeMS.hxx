@@ -24,35 +24,39 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::TeLICeMResult"; }
       virtual ~TeLICeMResult() {}
-      virtual wchar_t* errorMessage() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring errorMessage() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_TeLICeMS_PRE 
     class  PUBLIC_TeLICeMS_POST TeLICeMModelResult
      : public virtual iface::cellml_services::TeLICeMResult
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::TeLICeMModelResult"; }
       virtual ~TeLICeMModelResult() {}
-      virtual iface::cellml_api::Model* modelResult() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::Model>  modelResult() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_TeLICeMS_PRE 
     class  PUBLIC_TeLICeMS_POST TeLICeMMathResult
      : public virtual iface::cellml_services::TeLICeMResult
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::TeLICeMMathResult"; }
       virtual ~TeLICeMMathResult() {}
-      virtual iface::mathml_dom::MathMLElement* mathResult() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::mathml_dom::MathMLElement>  mathResult() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_TeLICeMS_PRE 
     class  PUBLIC_TeLICeMS_POST TeLICeMService
      : public virtual iface::XPCOM::IObject
     {
     public:
+      static const char* INTERFACE_NAME() { return "iface::cellml_services::TeLICeMService"; }
       virtual ~TeLICeMService() {}
-      virtual iface::cellml_services::TeLICeMModelResult* parseModel(const wchar_t* aModelText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual iface::cellml_services::TeLICeMMathResult* parseMaths(iface::dom::Document* aDoc, const wchar_t* aMathText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* showModel(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual wchar_t* showMaths(iface::mathml_dom::MathMLContentElement* aEl) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::TeLICeMModelResult>  parseModel(const std::wstring& aModelText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::TeLICeMMathResult>  parseMaths(iface::dom::Document* aDoc, const std::wstring& aMathText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring showModel(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual std::wstring showMaths(iface::mathml_dom::MathMLContentElement* aEl) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
   };
 };
