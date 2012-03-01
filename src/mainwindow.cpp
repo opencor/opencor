@@ -302,7 +302,7 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
     // Keep track of our default settings
     // Note: it must be done here, as opposed to the destructor, otherwise some
-    //       settings (e.g. dock windows) won't be properly saved
+    //       settings (e.g. docked windows) won't be properly saved
 
     saveSettings();
 

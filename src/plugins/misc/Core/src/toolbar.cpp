@@ -15,7 +15,7 @@ ToolBar::ToolBar(QWidget *pParent) :
     QToolBar(pParent)
 {
     // Remove the border which is normally drawn for a toolbar (indeed, it
-    // doesn't look great when on a dock window, so...)
+    // doesn't look great when on a docked window, so...)
 
     setStyleSheet("QToolBar { border: 0px; }");
 
