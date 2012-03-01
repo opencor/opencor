@@ -6,6 +6,7 @@
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "singlecellsimulationview.h"
+#include "toolbar.h"
 
 //==============================================================================
 
@@ -14,23 +15,85 @@
 //==============================================================================
 
 #include <QFileInfo>
+#include <QListView>
+#include <QProgressBar>
+#include <QSplitter>
 #include <QTime>
 
 //==============================================================================
 
-#include "qwt_plot.h"
 #include "qwt_plot_grid.h"
 #include "qwt_plot_curve.h"
 
 //==============================================================================
 
-//#include "llvm/Module.h"
-//#include "llvm/ExecutionEngine/ExecutionEngine.h"
+namespace OpenCOR {
+namespace SingleCellSimulation {
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace SingleCellSimulation {
+GraphPanel::GraphPanel(QWidget *pParent) :
+    QwtPlot(pParent)
+{
+    // Customise our simulation view widget
+
+    setCanvasBackground(Qt::white);
+
+    // Remove the canvas' border as it otherwise looks odd, not to say ugly,
+    // with one
+
+    setCanvasLineWidth(0);
+
+    // Add a grid to our simulation view widget
+
+    QwtPlotGrid *grid = new QwtPlotGrid;
+
+    grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
+
+    grid->attach(this);
+}
+
+//==============================================================================
+
+GraphPanel::~GraphPanel()
+{
+    // Delete some internal objects
+
+    resetCurves();
+}
+
+//==============================================================================
+
+void GraphPanel::addCurve(QwtPlotCurve *pCurve, const bool &pRefresh)
+{
+    // Add the curve to our list of curves
+
+    mCurves.append(pCurve);
+
+    // Refresh the graph panel, if needed
+
+    if (pRefresh)
+        replot();
+}
+
+//==============================================================================
+
+void GraphPanel::resetCurves()
+{
+    // Remove any existing curve
+
+    foreach (QwtPlotCurve *curve, mCurves) {
+        curve->detach();
+
+        delete curve;
+    }
+
+    mCurves.clear();
+
+    // Refresh the graph panel
+
+    replot();
+}
 
 //==============================================================================
 
@@ -42,40 +105,53 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
     mUi->setupUi(this);
 
+    // Create a toolbar with different buttons
+
+    Core::ToolBar *toolbar = new Core::ToolBar(this);
+
+    toolbar->addAction(mUi->action);
+
+    mUi->verticalLayout->addWidget(toolbar);
+
+    // Create a separating line
+
+    QFrame *separatingLine = new QFrame(this);
+
+    separatingLine->setFrameShape(QFrame::HLine);
+    separatingLine->setFrameShadow(QFrame::Sunken);
+
+    mUi->verticalLayout->addWidget(separatingLine);
+
+    // Create our vertical splitter
+
+    mVerticalSplitter = new QSplitter(Qt::Vertical, this);
+
     // Create our simulation view widget
 
-    mSimulationView = new QwtPlot(this);
+    mGraphPanel = addGraphPanel();
 
-    // Customise our simulation view widget
+    // Create our simulation output widget
 
-    mSimulationView->setCanvasBackground(Qt::white);
+    mSimulationOutput = new QListView(this);
 
-    // Remove the canvas' border as it otherwise looks odd, not to say ugly,
-    // with one
+    // Populate our splitter and add it to our view
 
-    mSimulationView->setCanvasLineWidth(0);
+    mVerticalSplitter->addWidget(mGraphPanel);
+    mVerticalSplitter->addWidget(mSimulationOutput);
 
-    // Add a grid to our simulation view widget
+    mUi->verticalLayout->addWidget(mVerticalSplitter);
 
-    QwtPlotGrid *grid = new QwtPlotGrid;
+    // Create our simulation progress widget
 
-    grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
+    mProgressBar = new QProgressBar(this);
 
-    grid->attach(mSimulationView);
-
-    // Add the simluation view to the view
-
-    mUi->verticalLayout->addWidget(mSimulationView);
+    mUi->verticalLayout->addWidget(mProgressBar);
 }
 
 //==============================================================================
 
 SingleCellSimulationView::~SingleCellSimulationView()
 {
-    // Delete some internal objects
-
-    resetCurves();
-
     // Delete the UI
 
     delete mUi;
@@ -92,21 +168,11 @@ void SingleCellSimulationView::retranslateUi()
 
 //==============================================================================
 
-void SingleCellSimulationView::resetCurves()
+GraphPanel * SingleCellSimulationView::addGraphPanel()
 {
-    // Remove any existing curve
+    // Add a graph panel to our simulation view
 
-    foreach (QwtPlotCurve *curve, mCurves) {
-        curve->detach();
-
-        delete curve;
-    }
-
-    mCurves.clear();
-
-    // Refresh the view
-
-    mSimulationView->replot();
+    return new GraphPanel(this);
 }
 
 //==============================================================================
@@ -135,7 +201,7 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
 
     // Remove any existing curve
 
-    resetCurves();
+    mGraphPanel->resetCurves();
 
     // Compute the model, if supported
 
@@ -276,16 +342,16 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
 
             curve->setSamples(xData, yData[i]);
 
-            curve->attach(mSimulationView);
+            curve->attach(mGraphPanel);
 
             // Keep track of the curve
 
-            mCurves.append(curve);
+            mGraphPanel->addCurve(curve, false);
         }
 
         // Make sure that the view is up-to-date
 
-        mSimulationView->replot();
+        mGraphPanel->replot();
     }
 }
 

@@ -32,7 +32,6 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     mUi->setupUi(this);
 
     // Create a toolbar with different buttons
-    // Note: this sadly can't be done using the design mode, so...
 
     Core::ToolBar *toolbar = new Core::ToolBar(this);
 

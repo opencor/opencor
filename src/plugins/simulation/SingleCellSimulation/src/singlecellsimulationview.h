@@ -11,7 +11,15 @@
 
 //==============================================================================
 
-class QwtPlot;
+#include "qwt_plot.h"
+
+//==============================================================================
+
+class QProgressBar;
+class QSplitter;
+
+//==============================================================================
+
 class QwtPlotCurve;
 
 //==============================================================================
@@ -24,6 +32,21 @@ namespace Ui {
 
 namespace OpenCOR {
 namespace SingleCellSimulation {
+
+//==============================================================================
+
+class GraphPanel : public QwtPlot
+{
+public:
+    explicit GraphPanel(QWidget *pParent = 0);
+    ~GraphPanel();
+
+    void addCurve(QwtPlotCurve *pCurve, const bool &pRefresh = true);
+    void resetCurves();
+
+private:
+    QList<QwtPlotCurve *> mCurves;
+};
 
 //==============================================================================
 
@@ -42,11 +65,13 @@ public:
 private:
     Ui::SingleCellSimulationView *mUi;
 
-    QwtPlot *mSimulationView;
+    QSplitter *mVerticalSplitter;
+    QProgressBar *mProgressBar;
 
-    QList<QwtPlotCurve *> mCurves;
+    GraphPanel *mGraphPanel;
+    QWidget *mSimulationOutput;
 
-    void resetCurves();
+    GraphPanel * addGraphPanel();
 };
 
 //==============================================================================
