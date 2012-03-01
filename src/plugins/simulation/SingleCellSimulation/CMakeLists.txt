@@ -14,6 +14,7 @@ ADD_PLUGIN(SingleCellSimulation
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
+        src/singlecellsimulationgraphpanel.cpp
         src/singlecellsimulationplugin.cpp
         src/singlecellsimulationview.cpp
     HEADERS_MOC

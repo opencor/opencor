@@ -1,26 +1,17 @@
 //==============================================================================
-// Single cell simulation view
+// Single cell simulation graph panel widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEW_H
-#define SINGLECELLSIMULATIONVIEW_H
-
-//==============================================================================
-
-#include <QWidget>
+#ifndef SINGLECELLSIMULATIONGRAPHPANEL_H
+#define SINGLECELLSIMULATIONGRAPHPANEL_H
 
 //==============================================================================
 
-class QFrame;
-class QProgressBar;
-class QSplitter;
-class QTextEdit;
+#include "qwt_plot.h"
 
 //==============================================================================
 
-namespace Ui {
-    class SingleCellSimulationView;
-}
+class QwtPlotCurve;
 
 //==============================================================================
 
@@ -29,34 +20,17 @@ namespace SingleCellSimulation {
 
 //==============================================================================
 
-class SingleCellSimulationGraphPanel;
-
-//==============================================================================
-
-class SingleCellSimulationView : public QWidget
+class SingleCellSimulationGraphPanel : public QwtPlot
 {
-    Q_OBJECT
-
 public:
-    explicit SingleCellSimulationView(QWidget *pParent = 0);
-    ~SingleCellSimulationView();
+    explicit SingleCellSimulationGraphPanel(QWidget *pParent = 0);
+    ~SingleCellSimulationGraphPanel();
 
-    virtual void retranslateUi();
-
-    void updateWith(const QString &pFileName);
+    QwtPlotCurve * addCurve();
+    void resetCurves();
 
 private:
-    Ui::SingleCellSimulationView *mUi;
-
-    QSplitter *mGraphPanels;
-    SingleCellSimulationGraphPanel *mGraphPanel;
-    QTextEdit *mSimulationOutput;
-
-    QProgressBar *mProgressBar;
-
-    SingleCellSimulationGraphPanel * addGraphPanel();
-
-    QFrame * newSeparatingLine();
+    QList<QwtPlotCurve *> mCurves;
 };
 
 //==============================================================================
