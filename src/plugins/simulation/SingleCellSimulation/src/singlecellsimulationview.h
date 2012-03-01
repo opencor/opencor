@@ -15,9 +15,9 @@
 
 //==============================================================================
 
-class QListView;
 class QProgressBar;
 class QSplitter;
+class QTextEdit;
 
 //==============================================================================
 
@@ -68,7 +68,7 @@ private:
 
     QSplitter *mGraphPanels;
     GraphPanel *mGraphPanel;
-    QListView *mSimulationOutput;
+    QTextEdit *mSimulationOutput;
 
     QProgressBar *mProgressBar;
 

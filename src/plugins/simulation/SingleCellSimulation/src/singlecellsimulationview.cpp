@@ -17,9 +17,9 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QFileInfo>
-#include <QListView>
 #include <QProgressBar>
 #include <QSplitter>
+#include <QTextEdit>
 #include <QTime>
 
 //==============================================================================
@@ -145,7 +145,7 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
     simulationOutputWidget->setLayout(simulationOutputVerticalLayout);
 
-    mSimulationOutput = new QListView(this);
+    mSimulationOutput = new QTextEdit(this);
 
     mSimulationOutput->setFrameStyle(QFrame::NoFrame);
 
@@ -218,24 +218,23 @@ QFrame * SingleCellSimulationView::newSeparatingLine()
 
 void SingleCellSimulationView::updateWith(const QString &pFileName)
 {
-    qDebug("=======================================");
-    qDebug("%s:", qPrintable(pFileName));
+    mSimulationOutput->clear();
+    mSimulationOutput->append(QString("%1:").arg(pFileName));
 
     // Get a runtime for the file
 
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
 
     if (cellmlFileRuntime->isValid()) {
-        qDebug(" - The CellML file's runtime was properly generated.");
-        qDebug("    [Information] Model type = %s", (cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE");
+        mSimulationOutput->append(" - The CellML file's runtime was properly generated.");
+        mSimulationOutput->append(QString("    [Information] Model type = %1").arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
     } else {
-        qDebug(" - The CellML file's runtime was NOT properly generated:");
+        mSimulationOutput->append(" - The CellML file's runtime was NOT properly generated:");
 
         foreach (const CellMLSupport::CellmlFileIssue &issue,
                  cellmlFileRuntime->issues())
-            qDebug("    [%s] %s",
-                   (issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
-                   qPrintable(issue.formattedMessage()));
+            mSimulationOutput->append(QString("    [%1] %2").arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
+                                                                 issue.formattedMessage()));
     }
 
     // Remove any existing curve
@@ -369,7 +368,7 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
         for (int i = 0; i < statesCount; ++i)
             yData[i].append(states[i]);
 
-        qDebug(" - Simulation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+        mSimulationOutput->append(QString(" - Simulation time: %1 s").arg(QString::number(0.001*time.elapsed(), 'g', 3)));
 
         // Add some curves to our plotting area
 
