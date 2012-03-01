@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>320</width>
+    <height>240</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -26,7 +26,7 @@
    <property name="text">
     <string>&amp;Run</string>
    </property>
-   <property name="toolTip">
+   <property name="statusTip">
     <string>Run the simulation</string>
    </property>
    <property name="shortcut">
@@ -41,7 +41,7 @@
    <property name="text">
     <string>&amp;Pause</string>
    </property>
-   <property name="toolTip">
+   <property name="statusTip">
     <string>Pause the simulation</string>
    </property>
    <property name="shortcut">
@@ -56,7 +56,7 @@
    <property name="text">
     <string>&amp;Stop</string>
    </property>
-   <property name="toolTip">
+   <property name="statusTip">
     <string>Stop the simulation</string>
    </property>
    <property name="shortcut">
@@ -74,7 +74,7 @@
    <property name="text">
     <string>&amp;Debug Mode</string>
    </property>
-   <property name="toolTip">
+   <property name="statusTip">
     <string>Enable the debug mode</string>
    </property>
   </action>
@@ -86,7 +86,7 @@
    <property name="text">
     <string>&amp;CSV Export</string>
    </property>
-   <property name="toolTip">
+   <property name="statusTip">
     <string>Export the simulation data to CSV</string>
    </property>
   </action>
