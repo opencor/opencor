@@ -14,6 +14,8 @@
 
 //==============================================================================
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QFileInfo>
 #include <QListView>
 #include <QProgressBar>
@@ -35,9 +37,9 @@ namespace SingleCellSimulation {
 GraphPanel::GraphPanel(QWidget *pParent) :
     QwtPlot(pParent)
 {
-    // Allow the graph panel to be of any size
+    // Allow the graph panel to be of any vertical size
 
-    setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
 
     // Have a white background by default
 
@@ -129,9 +131,6 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     mGraphPanel = addGraphPanel();
 
     mGraphPanels->addWidget(mGraphPanel);
-    mGraphPanels->addWidget(addGraphPanel());   //---GRY--- These two graph
-    mGraphPanels->addWidget(addGraphPanel());   //          panels are just for
-                                                //          testing purposes...
 
     // Create a simulation output widget with a vertical layout on which we put
     // a separating line and our simulation output list view
@@ -153,10 +152,14 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     simulationOutputVerticalLayout->addWidget(newSeparatingLine());
     simulationOutputVerticalLayout->addWidget(mSimulationOutput);
 
-    // Populate our splitter and add it to our view
+    // Populate our splitter, use as much space as possible for the graph panels
+    // (by asking their height to be that of the desktop's) and add it to our
+    // view
 
     mainVerticalSplitter->addWidget(mGraphPanels);
     mainVerticalSplitter->addWidget(simulationOutputWidget);
+
+    mainVerticalSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
 
     mUi->verticalLayout->addWidget(mainVerticalSplitter);
 
