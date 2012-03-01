@@ -112,39 +112,55 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     toolbar->addAction(mUi->action);
 
     mUi->verticalLayout->addWidget(toolbar);
-
-    // Create a separating line
-
-    QFrame *separatingLine = new QFrame(this);
-
-    separatingLine->setFrameShape(QFrame::HLine);
-    separatingLine->setFrameShadow(QFrame::Sunken);
-
-    mUi->verticalLayout->addWidget(separatingLine);
+    mUi->verticalLayout->addWidget(newSeparatingLine());
 
     // Create our vertical splitter
 
-    mVerticalSplitter = new QSplitter(Qt::Vertical, this);
+    QSplitter *mainVerticalSplitter = new QSplitter(Qt::Vertical, this);
 
-    // Create our simulation view widget
+    // Create a splitter for our graph panels and add a graph panel to it
+
+    mGraphPanels = new QSplitter(Qt::Vertical, this);
 
     mGraphPanel = addGraphPanel();
 
-    // Create our simulation output widget
+    mGraphPanels->addWidget(mGraphPanel);
+    mGraphPanels->addWidget(addGraphPanel());   //---GRY--- These two graph
+    mGraphPanels->addWidget(addGraphPanel());   //          panels are just for
+                                                //          testing purposes...
+
+    // Create a simulation output widget with a vertical layout on which we put
+    // a separating line and our simulation output list view
+    // Note: the separating line is because we remove, for aesthetical reasons,
+    //       the border of our simulation output list view...
+
+    QWidget *simulationOutputWidget = new QWidget(this);
+    QVBoxLayout *simulationOutputVerticalLayout= new QVBoxLayout(this);
+
+    simulationOutputVerticalLayout->setContentsMargins(0, 0, 0, 0);
+    simulationOutputVerticalLayout->setSpacing(0);
+
+    simulationOutputWidget->setLayout(simulationOutputVerticalLayout);
 
     mSimulationOutput = new QListView(this);
 
+    mSimulationOutput->setFrameStyle(QFrame::NoFrame);
+
+    simulationOutputVerticalLayout->addWidget(newSeparatingLine());
+    simulationOutputVerticalLayout->addWidget(mSimulationOutput);
+
     // Populate our splitter and add it to our view
 
-    mVerticalSplitter->addWidget(mGraphPanel);
-    mVerticalSplitter->addWidget(mSimulationOutput);
+    mainVerticalSplitter->addWidget(mGraphPanels);
+    mainVerticalSplitter->addWidget(simulationOutputWidget);
 
-    mUi->verticalLayout->addWidget(mVerticalSplitter);
+    mUi->verticalLayout->addWidget(mainVerticalSplitter);
 
     // Create our simulation progress widget
 
     mProgressBar = new QProgressBar(this);
 
+    mUi->verticalLayout->addWidget(newSeparatingLine());
     mUi->verticalLayout->addWidget(mProgressBar);
 }
 
@@ -173,6 +189,20 @@ GraphPanel * SingleCellSimulationView::addGraphPanel()
     // Add a graph panel to our simulation view
 
     return new GraphPanel(this);
+}
+
+//==============================================================================
+
+QFrame * SingleCellSimulationView::newSeparatingLine()
+{
+    // Return a separating line widget
+
+    QFrame *res = new QFrame(this);
+
+    res->setFrameShape(QFrame::HLine);
+    res->setFrameShadow(QFrame::Sunken);
+
+    return res;
 }
 
 //==============================================================================

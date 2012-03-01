@@ -15,6 +15,7 @@
 
 //==============================================================================
 
+class QListView;
 class QProgressBar;
 class QSplitter;
 
@@ -65,13 +66,15 @@ public:
 private:
     Ui::SingleCellSimulationView *mUi;
 
-    QSplitter *mVerticalSplitter;
+    QSplitter *mGraphPanels;
+    GraphPanel *mGraphPanel;
+    QListView *mSimulationOutput;
+
     QProgressBar *mProgressBar;
 
-    GraphPanel *mGraphPanel;
-    QWidget *mSimulationOutput;
-
     GraphPanel * addGraphPanel();
+
+    QFrame * newSeparatingLine();
 };
 
 //==============================================================================
