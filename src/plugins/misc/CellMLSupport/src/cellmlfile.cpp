@@ -82,6 +82,9 @@ bool CellmlFile::load()
 
     // Try to load the model
 
+qDebug("---------------------------------------");
+qDebug("%s:", qPrintable(mFileName));
+
     try {
 QTime time;
 
