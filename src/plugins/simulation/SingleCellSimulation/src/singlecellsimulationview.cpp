@@ -35,7 +35,11 @@ namespace SingleCellSimulation {
 GraphPanel::GraphPanel(QWidget *pParent) :
     QwtPlot(pParent)
 {
-    // Customise our simulation view widget
+    // Allow the graph panel to be of any size
+
+    setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+
+    // Have a white background by default
 
     setCanvasBackground(Qt::white);
 
@@ -44,7 +48,7 @@ GraphPanel::GraphPanel(QWidget *pParent) :
 
     setCanvasLineWidth(0);
 
-    // Add a grid to our simulation view widget
+    // Add a grid to our graph panel
 
     QwtPlotGrid *grid = new QwtPlotGrid;
 
@@ -135,7 +139,7 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     //       the border of our simulation output list view...
 
     QWidget *simulationOutputWidget = new QWidget(this);
-    QVBoxLayout *simulationOutputVerticalLayout= new QVBoxLayout(this);
+    QVBoxLayout *simulationOutputVerticalLayout= new QVBoxLayout(simulationOutputWidget);
 
     simulationOutputVerticalLayout->setContentsMargins(0, 0, 0, 0);
     simulationOutputVerticalLayout->setSpacing(0);
@@ -159,6 +163,8 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     // Create our simulation progress widget
 
     mProgressBar = new QProgressBar(this);
+
+    mProgressBar->setAlignment(Qt::AlignCenter);
 
     mUi->verticalLayout->addWidget(newSeparatingLine());
     mUi->verticalLayout->addWidget(mProgressBar);
