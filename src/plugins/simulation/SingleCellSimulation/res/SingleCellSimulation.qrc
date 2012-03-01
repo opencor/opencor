@@ -1,5 +1,10 @@
 <RCC>
     <qresource prefix="/">
+        <file>oxygen/actions/media-playback-pause.png</file>
+        <file>oxygen/actions/media-playback-start.png</file>
+        <file>oxygen/actions/media-playback-stop.png</file>
+        <file>oxygen/actions/tools-report-bug.png</file>
+        <file>oxygen/mimetypes/text-csv.png</file>
         <file alias="SingleCellSimulation_fr">../../../../../build/SingleCellSimulation_fr.qm</file>
     </qresource>
 </RCC>

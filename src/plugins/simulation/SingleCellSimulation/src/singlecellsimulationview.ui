@@ -18,8 +18,81 @@
     <number>0</number>
    </property>
   </layout>
-  <action name="action"/>
+  <action name="actionRun">
+   <property name="icon">
+    <iconset resource="../res/SingleCellSimulation.qrc">
+     <normaloff>:/oxygen/actions/media-playback-start.png</normaloff>:/oxygen/actions/media-playback-start.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Run</string>
+   </property>
+   <property name="toolTip">
+    <string>Run the simulation</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="icon">
+    <iconset resource="../res/SingleCellSimulation.qrc">
+     <normaloff>:/oxygen/actions/media-playback-pause.png</normaloff>:/oxygen/actions/media-playback-pause.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Pause</string>
+   </property>
+   <property name="toolTip">
+    <string>Pause the simulation</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="../res/SingleCellSimulation.qrc">
+     <normaloff>:/oxygen/actions/media-playback-stop.png</normaloff>:/oxygen/actions/media-playback-stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop the simulation</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F2</string>
+   </property>
+  </action>
+  <action name="actionDebugMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../res/SingleCellSimulation.qrc">
+     <normaloff>:/oxygen/actions/tools-report-bug.png</normaloff>:/oxygen/actions/tools-report-bug.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Debug Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable the debug mode</string>
+   </property>
+  </action>
+  <action name="actionCsvExport">
+   <property name="icon">
+    <iconset resource="../res/SingleCellSimulation.qrc">
+     <normaloff>:/oxygen/mimetypes/text-csv.png</normaloff>:/oxygen/mimetypes/text-csv.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;CSV Export</string>
+   </property>
+   <property name="toolTip">
+    <string>Export the simulation data to CSV</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../res/SingleCellSimulation.qrc"/>
+ </resources>
  <connections/>
 </ui>

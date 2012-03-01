@@ -115,7 +115,12 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
     Core::ToolBar *toolbar = new Core::ToolBar(this);
 
-    toolbar->addAction(mUi->action);
+    toolbar->addAction(mUi->actionRun);
+    toolbar->addAction(mUi->actionStop);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionDebugMode);
+    toolbar->addSeparator();
+    toolbar->addAction(mUi->actionCsvExport);
 
     mUi->verticalLayout->addWidget(toolbar);
     mUi->verticalLayout->addWidget(newSeparatingLine());
