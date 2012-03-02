@@ -78,9 +78,9 @@ void SingleCellSimulationGraphPanels::wheelEvent(QWheelEvent *pEvent)
             i += (pEvent->delta() < 0)?1:-1;
 
             if (i < 0)
-                i = iMax-1;
-            else if (i == iMax)
                 i = 0;
+            else if (i == iMax)
+                i = iMax-1;
 
             qobject_cast<SingleCellSimulationGraphPanel *>(widget(i))->setActive(true);
 
