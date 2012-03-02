@@ -30,6 +30,7 @@ namespace SingleCellSimulation {
 //==============================================================================
 
 class SingleCellSimulationGraphPanel;
+class SingleCellSimulationGraphPanels;
 
 //==============================================================================
 
@@ -48,20 +49,16 @@ public:
 private:
     Ui::SingleCellSimulationView *mUi;
 
-    QSplitter *mGraphPanels;
+    SingleCellSimulationGraphPanels *mGraphPanels;
     QTextEdit *mOutput;
 
     QProgressBar *mProgressBar;
-
-    SingleCellSimulationGraphPanel * addGraphPanel();
 
     QFrame * newSeparatingLine();
 
 private Q_SLOTS:
     void on_actionAdd_triggered();
     void on_actionRemove_triggered();
-
-    void graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel);
 };
 
 //==============================================================================

@@ -16,8 +16,7 @@ namespace SingleCellSimulation {
 
 //==============================================================================
 
-}   // namespace SingleCellSimulation
-}   // namespace OpenCOR
+class SingleCellSimulationGraphPanel;
 
 //==============================================================================
 
@@ -27,7 +26,18 @@ class SingleCellSimulationGraphPanels : public QSplitter
 
 public:
     explicit SingleCellSimulationGraphPanels(QWidget *pParent = 0);
+
+    SingleCellSimulationGraphPanel * addGraphPanel();
+    void removeGraphPanel();
+
+private Q_SLOTS:
+    void graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel);
 };
+
+//==============================================================================
+
+}   // namespace SingleCellSimulation
+}   // namespace OpenCOR
 
 //==============================================================================
 
