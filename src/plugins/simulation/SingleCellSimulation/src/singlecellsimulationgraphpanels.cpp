@@ -13,7 +13,8 @@ namespace SingleCellSimulation {
 //==============================================================================
 
 SingleCellSimulationGraphPanels::SingleCellSimulationGraphPanels(QWidget *pParent) :
-    QSplitter(Qt::Vertical, pParent)
+    QSplitter(Qt::Vertical, pParent),
+    mGraphPanelsCount(0)
 {
     // Add a default graph panel
 
@@ -24,13 +25,33 @@ SingleCellSimulationGraphPanels::SingleCellSimulationGraphPanels(QWidget *pParen
 
 SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel()
 {
+    // Check whether there is already a graph panel and if not, then delete our
+    // dummy widget which ensures that we don't shrink
+
+    if (!mGraphPanelsCount && count()) {
+        // No previous graph panel, so...
+        // Note: the test for count() above is for the very first time we want
+        //       to add a graph panel and therefore where no dummy widget will
+        //       be present...
+
+        QWidget *dummyWidget = qobject_cast<QWidget*>(widget(0));
+
+        dummyWidget->hide();
+
+        delete dummyWidget;
+    }
+
     // Create a new graph panel
 
     SingleCellSimulationGraphPanel *res = new SingleCellSimulationGraphPanel(this);
 
-    // Add it as a widget
+    // Add the graph panel to ourselves
 
     addWidget(res);
+
+    // Keep track of the fact that we have one more graph panel
+
+    ++mGraphPanelsCount;
 
     // Create a connection to keep track of whenever the graph panel gets
     // activated
@@ -51,6 +72,11 @@ SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel(
 
 void SingleCellSimulationGraphPanels::removeGraphPanel()
 {
+    if (!mGraphPanelsCount)
+        // We don't have any graph panel to remove, so...
+
+        return;
+
     // Remove the current graph panel
 
     for (int i = 0, iMax = count(); i < iMax; ++i) {
@@ -64,6 +90,10 @@ void SingleCellSimulationGraphPanels::removeGraphPanel()
 
             delete graphPanel;
 
+            // Keep track of the fact that we have one less graph panel
+
+            --mGraphPanelsCount;
+
             // Activate the next graph panel or the last one available, if any
 
             iMax = count();
@@ -71,7 +101,7 @@ void SingleCellSimulationGraphPanels::removeGraphPanel()
             if (!iMax)
                 // No more graph panel, so...
 
-                return;
+                break;
             else if (i < iMax)
                 // There is a next graph panel, so activate it
 
@@ -84,9 +114,15 @@ void SingleCellSimulationGraphPanels::removeGraphPanel()
 
             // We are all done, so...
 
-            return;
+            break;
         }
     }
+
+    // Check whether we have any graph panel left and if so add a dummy widget
+    // which will ensure that we don't shrink
+
+    if (!mGraphPanelsCount)
+        addWidget(new QWidget(this));
 }
 
 //==============================================================================

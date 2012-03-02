@@ -30,6 +30,9 @@ public:
     SingleCellSimulationGraphPanel * addGraphPanel();
     void removeGraphPanel();
 
+private:
+    int mGraphPanelsCount;
+
 private Q_SLOTS:
     void graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel);
 };
