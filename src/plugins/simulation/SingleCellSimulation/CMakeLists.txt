@@ -15,10 +15,12 @@ ADD_PLUGIN(SingleCellSimulation
         ../../plugininfo.cpp
 
         src/singlecellsimulationgraphpanel.cpp
+        src/singlecellsimulationgraphpanels.cpp
         src/singlecellsimulationplugin.cpp
         src/singlecellsimulationview.cpp
     HEADERS_MOC
         src/singlecellsimulationgraphpanel.h
+        src/singlecellsimulationgraphpanels.h
         src/singlecellsimulationplugin.h
         src/singlecellsimulationview.h
     UIS
