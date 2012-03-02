@@ -49,7 +49,7 @@ SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel(
 
     addWidget(res);
 
-    // Keep track of the fact that we have one more graph panel
+    // Keep track of the fact that we are holding one more graph panel
 
     ++mGraphPanelsCount;
 
@@ -62,6 +62,10 @@ SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel(
     // Activate it
 
     res->setActive(true);
+
+    // Let people know that we have added a graph panel
+
+    emit grapPanelAdded(res);
 
     // Return our newly created graph panel
 
@@ -90,7 +94,7 @@ void SingleCellSimulationGraphPanels::removeGraphPanel()
 
             delete graphPanel;
 
-            // Keep track of the fact that we have one less graph panel
+            // Keep track of the fact that we are holding one less graph panel
 
             --mGraphPanelsCount;
 
@@ -123,6 +127,19 @@ void SingleCellSimulationGraphPanels::removeGraphPanel()
 
     if (!mGraphPanelsCount)
         addWidget(new QWidget(this));
+
+    // Let people know that we have removed a graph panel
+
+    emit grapPanelRemoved();
+}
+
+//==============================================================================
+
+int SingleCellSimulationGraphPanels::graphPanelsCount() const
+{
+    // Return the number of graph panels we currently hold
+
+    return mGraphPanelsCount;
 }
 
 //==============================================================================

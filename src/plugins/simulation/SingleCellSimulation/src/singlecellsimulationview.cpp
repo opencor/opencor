@@ -62,9 +62,15 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
     QSplitter *mainVerticalSplitter = new QSplitter(Qt::Vertical, this);
 
-    // Create a splitter for our graph panels
+    // Create a splitter for our graph panels and make a few connections to keep
+    // track of when a graph panel is added or removed
 
     mGraphPanels = new SingleCellSimulationGraphPanels(this);
+
+    connect(mGraphPanels, SIGNAL(grapPanelAdded(SingleCellSimulationGraphPanel *)),
+            this, SLOT(updateGui()));
+    connect(mGraphPanels, SIGNAL(grapPanelRemoved()),
+            this, SLOT(updateGui()));
 
     // Create a simulation output widget with a vertical layout on which we put
     // a separating line and our simulation output list view
@@ -335,6 +341,16 @@ void SingleCellSimulationView::on_actionRemove_triggered()
     // Remove the current graph panel
 
     mGraphPanels->removeGraphPanel();
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::updateGui()
+{
+    // Enable/disable the remove graph panel action based on whether or not
+    // there are graph panels
+
+    mUi->actionRemove->setEnabled(mGraphPanels->graphPanelsCount());
 }
 
 //==============================================================================

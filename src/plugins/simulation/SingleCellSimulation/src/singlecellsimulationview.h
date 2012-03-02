@@ -59,6 +59,8 @@ private:
 private Q_SLOTS:
     void on_actionAdd_triggered();
     void on_actionRemove_triggered();
+
+    void updateGui();
 };
 
 //==============================================================================
