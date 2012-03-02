@@ -21,6 +21,7 @@ ADD_PLUGIN(Core
         src/organisationwidget.cpp
         src/toolbar.cpp
         src/treeview.cpp
+        src/widget.cpp
     HEADERS_MOC
         ../../plugin.h
 
@@ -31,6 +32,7 @@ ADD_PLUGIN(Core
         src/organisationwidget.h
         src/toolbar.h
         src/treeview.h
+        src/widget.h
     UIS
         src/centralwidget.ui
     INCLUDE_DIRS
