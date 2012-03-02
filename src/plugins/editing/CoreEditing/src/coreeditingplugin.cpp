@@ -142,7 +142,7 @@ void CoreEditingPlugin::retranslateUi()
 
 void CoreEditingPlugin::updateActions()
 {
-    // Make sure that the various actions are properly enabled/disabled
+    // Make sure that our various actions are properly enabled/disabled
 
     mEditUndoAction->setEnabled(false);
     mEditRedoAction->setEnabled(false);

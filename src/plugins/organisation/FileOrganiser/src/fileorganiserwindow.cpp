@@ -75,7 +75,7 @@ FileOrganiserWindow::~FileOrganiserWindow()
 
 void FileOrganiserWindow::updateActions()
 {
-    // Make sure that the various actions are properly enabled/disabled
+    // Make sure that our various actions are properly enabled/disabled
 
     QModelIndexList selectedIndexes = mFileOrganiserWidget->selectionModel()->selectedIndexes();
     int selectedIndexesCount = selectedIndexes.count();

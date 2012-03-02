@@ -279,7 +279,7 @@ void CorePlugin::retranslateUi()
 
 void CorePlugin::updateActions()
 {
-    // Make sure that the various actions are properly enabled/disabled
+    // Make sure that our various actions are properly enabled/disabled
 
     mFileOpenAction->setEnabled(true);
 

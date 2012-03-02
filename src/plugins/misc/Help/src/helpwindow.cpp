@@ -127,7 +127,7 @@ HelpWindow::~HelpWindow()
 
 void HelpWindow::updateActions()
 {
-    // Make sure that the various actions are properly enabled/disabled
+    // Make sure that our various actions are properly enabled/disabled
 
     mUi->actionHome->setEnabled(mHelpWidget->url() != mHelpWidget->homePage());
 

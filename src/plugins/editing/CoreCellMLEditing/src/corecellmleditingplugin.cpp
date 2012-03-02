@@ -69,7 +69,7 @@ void CoreCellMLEditingPlugin::retranslateUi()
 
 void CoreCellMLEditingPlugin::updateActions()
 {
-    // Make sure that the various actions are properly enabled/disabled
+    // Make sure that our various actions are properly enabled/disabled
 
     mFileNewCellml1_0Action->setEnabled(false);
     mFileNewCellml1_1Action->setEnabled(false);
