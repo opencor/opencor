@@ -49,7 +49,7 @@ private:
     Ui::SingleCellSimulationView *mUi;
 
     QSplitter *mGraphPanels;
-    QTextEdit *mSimulationOutput;
+    QTextEdit *mOutput;
 
     QProgressBar *mProgressBar;
 

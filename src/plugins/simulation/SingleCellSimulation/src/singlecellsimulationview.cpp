@@ -81,12 +81,12 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
     simulationOutputWidget->setLayout(simulationOutputVerticalLayout);
 
-    mSimulationOutput = new QTextEdit(this);
+    mOutput = new QTextEdit(this);
 
-    mSimulationOutput->setFrameStyle(QFrame::NoFrame);
+    mOutput->setFrameStyle(QFrame::NoFrame);
 
     simulationOutputVerticalLayout->addWidget(newSeparatingLine());
-    simulationOutputVerticalLayout->addWidget(mSimulationOutput);
+    simulationOutputVerticalLayout->addWidget(mOutput);
 
     // Populate our splitter and use as much space as possible for the graph
     // panels (by asking their height to be that of the desktop's) and add it to
@@ -189,23 +189,23 @@ QFrame * SingleCellSimulationView::newSeparatingLine()
 
 void SingleCellSimulationView::updateWith(const QString &pFileName)
 {
-    mSimulationOutput->clear();
-    mSimulationOutput->append(QString("%1:").arg(pFileName));
+    mOutput->clear();
+    mOutput->append(QString("%1:").arg(pFileName));
 
     // Get a runtime for the file
 
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
 
     if (cellmlFileRuntime->isValid()) {
-        mSimulationOutput->append(" - The CellML file's runtime was properly generated.");
-        mSimulationOutput->append(QString("    [Information] Model type = %1").arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
+        mOutput->append(" - The CellML file's runtime was properly generated.");
+        mOutput->append(QString("    [Information] Model type = %1").arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
     } else {
-        mSimulationOutput->append(" - The CellML file's runtime was NOT properly generated:");
+        mOutput->append(" - The CellML file's runtime was NOT properly generated:");
 
         foreach (const CellMLSupport::CellmlFileIssue &issue,
                  cellmlFileRuntime->issues())
-            mSimulationOutput->append(QString("    [%1] %2").arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
-                                                                 issue.formattedMessage()));
+            mOutput->append(QString("    [%1] %2").arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
+                                                       issue.formattedMessage()));
     }
 
     // Retrieve the first graph panel
@@ -346,7 +346,7 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
         for (int i = 0; i < statesCount; ++i)
             yData[i].append(states[i]);
 
-        mSimulationOutput->append(QString(" - Simulation time: %1 s").arg(QString::number(0.001*time.elapsed(), 'g', 3)));
+        mOutput->append(QString(" - Simulation time: %1 s").arg(QString::number(0.001*time.elapsed(), 'g', 3)));
 
         // Add some curves to our plotting area
 
