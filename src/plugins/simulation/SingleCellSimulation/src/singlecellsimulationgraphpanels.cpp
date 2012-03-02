@@ -75,7 +75,11 @@ void SingleCellSimulationGraphPanels::wheelEvent(QWheelEvent *pEvent)
 
             graphPanel->setActive(false);
 
+#ifdef Q_WS_MAC
+            i -= (pEvent->delta() < 0)?1:-1;
+#else
             i += (pEvent->delta() < 0)?1:-1;
+#endif
 
             if (i < 0)
                 i = 0;
