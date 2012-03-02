@@ -29,7 +29,7 @@ public:
     virtual void initialize();
     virtual void finalize();
 
-    virtual void setup(const Plugins &);
+    virtual void initializationsDone(const Plugins &);
 };
 
 //==============================================================================

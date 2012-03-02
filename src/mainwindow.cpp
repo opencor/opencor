@@ -183,19 +183,18 @@ MainWindow::MainWindow(QWidget *pParent) :
             initializeGuiPlugin(plugin->name(), guiInterface->guiSettings());
     }
 
-    // Setup our various plugins
-    // Note: this is very different from initialising our various plugins.
-    //       Indeed, to initialise a plugin is something that doesn't require to
-    //       know anything about any other plugin while to setup a plugin is for
-    //       anything that requires prior knowledge of what one or several other
-    //       plugins are about, and this is something that cannot be known until
-    //       all the plugins have been initialised...
+    // Let our various plugins know that all of them have been initialised
+    // Note: this is important to do, since the initialisation of a plugin is
+    //       something which is done without knowing anything about other
+    //       plugins. However, there may be things that require knowledge of
+    //       what one or several other plugins are about, and this is something
+    //       that can only be done once all the plugins have been initialised...
 
     foreach (Plugin *plugin, loadedPlugins) {
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
         if (coreInterface)
-            coreInterface->setup(loadedPlugins);
+            coreInterface->initializationsDone(loadedPlugins);
     }
 
     // Retrieve the user settings from the previous session, if any

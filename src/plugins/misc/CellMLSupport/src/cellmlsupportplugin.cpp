@@ -37,7 +37,7 @@ Q_EXPORT_PLUGIN2(CellMLSupport, CellMLSupportPlugin)
 
 //==============================================================================
 
-void CellMLSupportPlugin::setup(const Plugins &)
+void CellMLSupportPlugin::initializationsDone(const Plugins &)
 {
     // Make a call to the instance of the CellML file manager so that it gets
     // set up and can then do its job

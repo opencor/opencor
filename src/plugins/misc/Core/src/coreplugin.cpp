@@ -143,7 +143,7 @@ void CorePlugin::initialize()
 
 //==============================================================================
 
-void CorePlugin::setup(const Plugins &pLoadedPlugins)
+void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
 {
     // Retrieve the file types supported by the plugins
 

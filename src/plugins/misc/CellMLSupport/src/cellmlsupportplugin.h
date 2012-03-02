@@ -39,7 +39,7 @@ class CellMLSupportPlugin : public QObject, public CoreInterface,
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    virtual void setup(const Plugins &);
+    virtual void initializationsDone(const Plugins &);
 
     virtual QList<FileType> fileTypes() const;
     virtual QString fileTypeDescription(const QString &mMimeType) const;

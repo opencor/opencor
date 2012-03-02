@@ -24,7 +24,7 @@ void CoreInterface::finalize()
 
 //==============================================================================
 
-void CoreInterface::setup(const Plugins &)
+void CoreInterface::initializationsDone(const Plugins &)
 {
     // Nothing to do by default...
 }
