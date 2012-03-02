@@ -28,7 +28,7 @@ namespace Core {
 //==============================================================================
 
 CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner) :
-    mIsEnabled(false)
+    mEnabled(false)
 {
     // Initialise a few internal objects
 
@@ -60,16 +60,16 @@ bool CentralWidgetMode::isEnabled() const
 {
     // Return whether the mode is enabled
 
-    return mIsEnabled;
+    return mEnabled;
 }
 
 //==============================================================================
 
-void CentralWidgetMode::setIsEnabled(const bool &pIsEnabled)
+void CentralWidgetMode::setEnabled(const bool &pEnabled)
 {
     // Set whether a mode is enabled
 
-    mIsEnabled = pIsEnabled;
+    mEnabled = pEnabled;
 }
 
 //==============================================================================
@@ -641,7 +641,7 @@ void CentralWidget::addMode(const GuiViewSettings::Mode &pMode)
 
         mModeTabs->addTab(QString());
 
-        mModes.value(pMode)->setIsEnabled(true);
+        mModes.value(pMode)->setEnabled(true);
     }
 }
 

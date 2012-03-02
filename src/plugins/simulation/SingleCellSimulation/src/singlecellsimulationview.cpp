@@ -65,6 +65,11 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     mGraphPanel = addGraphPanel();
 
     mGraphPanels->addWidget(mGraphPanel);
+    mGraphPanels->addWidget(addGraphPanel());   //---GRY--- These two graph
+    mGraphPanels->addWidget(addGraphPanel());   //          panels are just for
+                                                //          test purposes...
+
+    mGraphPanel->setActive(true);
 
     // Create a simulation output widget with a vertical layout on which we put
     // a separating line and our simulation output list view
@@ -127,11 +132,46 @@ void SingleCellSimulationView::retranslateUi()
 
 //==============================================================================
 
-SingleCellSimulationGraphPanel *SingleCellSimulationView::addGraphPanel()
+SingleCellSimulationGraphPanel * SingleCellSimulationView::addGraphPanel()
 {
-    // Add a graph panel to our simulation view
+    // Create a new graph panel
 
-    return new SingleCellSimulationGraphPanel(this);
+    SingleCellSimulationGraphPanel *res = new SingleCellSimulationGraphPanel(this);
+
+    // Add it to our list of graph panels
+
+    mGraphPanels->addWidget(res);
+
+    // Create a connection to keep track of whenever the graph panel gets
+    // activated
+
+    connect(res, SIGNAL(activated(SingleCellSimulationGraphPanel *)),
+            this, SLOT(graphPanelActivated(SingleCellSimulationGraphPanel *)));
+
+    // Activate it
+
+    res->setActive(true);
+
+    // Return our newly created graph panel
+
+    return res;
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel)
+{
+    // A graph panel has been activated, so inactivate all of the others
+
+    for (int i = 0, iMax = mGraphPanels->count(); i < iMax; ++i) {
+        SingleCellSimulationGraphPanel *graphPanel = qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(i));
+
+        if (graphPanel != pGraphPanel)
+            // We are not dealing with the graph panel that just got activated,
+            // so inactivate it
+
+            graphPanel->setActive(false);
+    }
 }
 
 //==============================================================================

@@ -57,6 +57,9 @@ private:
     SingleCellSimulationGraphPanel * addGraphPanel();
 
     QFrame * newSeparatingLine();
+
+private Q_SLOTS:
+    void graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel);
 };
 
 //==============================================================================

@@ -337,6 +337,9 @@ void HelpWidget::zoomOut()
 
 void HelpWidget::setZoomLevel(const int &pZoomLevel)
 {
+    if (pZoomLevel == mZoomLevel)
+        return;
+
     // Set the zoom level of the help page contents to a particular value
 
     mZoomLevel = pZoomLevel;

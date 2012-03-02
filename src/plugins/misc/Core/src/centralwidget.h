@@ -55,7 +55,7 @@ public:
     ~CentralWidgetMode();
 
     bool isEnabled() const;
-    void setIsEnabled(const bool &pIsEnabled);
+    void setEnabled(const bool &pEnabled);
 
     QTabBar * views() const;
 
@@ -65,7 +65,7 @@ public:
     CentralWidgetViewSettings * viewSettings() const;
 
 private:
-    bool mIsEnabled;
+    bool mEnabled;
 
     QTabBar *mViews;
 

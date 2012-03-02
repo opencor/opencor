@@ -6,8 +6,14 @@
 
 //==============================================================================
 
-#include "qwt_plot_grid.h"
+#include <QHBoxLayout>
+#include <QPaintEvent>
+
+//==============================================================================
+
+#include "qwt_plot.h"
 #include "qwt_plot_curve.h"
+#include "qwt_plot_grid.h"
 
 //==============================================================================
 
@@ -17,28 +23,52 @@ namespace SingleCellSimulation {
 //==============================================================================
 
 SingleCellSimulationGraphPanel::SingleCellSimulationGraphPanel(QWidget *pParent) :
-    QwtPlot(pParent)
+    QWidget(pParent),
+    mActive(false),
+    mPlotCurves(QList<QwtPlotCurve *>())
 {
-    // Allow the graph panel to be of any vertical size
+    // Create, customise and set a horizontal layout where we are going to put
+    // our marker and QwtPlot widget
 
-    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
+    QHBoxLayout *horizontalLayout= new QHBoxLayout(this);
 
-    // Have a white background by default
+    horizontalLayout->setContentsMargins(0, 0, 0, 0);
 
-    setCanvasBackground(Qt::white);
+    setLayout(horizontalLayout);
 
-    // Remove the canvas' border as it otherwise looks odd, not to say ugly,
-    // with one
+    // Create, customise and add a marker to our horizontal layout
 
-    setCanvasLineWidth(0);
+    static const int MarkerWidth = 3;
 
-    // Add a grid to our graph panel
+    mMarker = new QFrame(this);
+
+    mMarker->setFrameShape(QFrame::VLine);
+    mMarker->setLineWidth(MarkerWidth);
+    mMarker->setMinimumWidth(MarkerWidth);
+
+    setActive(false);
+
+    horizontalLayout->addWidget(mMarker);
+
+    // Create, customise and add a QwtPlot widget to our horizontal layout
+
+    mPlot = new QwtPlot(this);
+
+    mPlot->setCanvasBackground(Qt::white);
+    mPlot->setCanvasLineWidth(0);
+    mPlot->setFrameStyle(QFrame::NoFrame);
 
     QwtPlotGrid *grid = new QwtPlotGrid;
 
     grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
 
-    grid->attach(this);
+    grid->attach(mPlot);
+
+    horizontalLayout->addWidget(mPlot);
+
+    // Allow the graph panel to be of any vertical size
+
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
 }
 
 //==============================================================================
@@ -48,6 +78,21 @@ SingleCellSimulationGraphPanel::~SingleCellSimulationGraphPanel()
     // Delete some internal objects
 
     resetCurves();
+}
+
+//==============================================================================
+
+void SingleCellSimulationGraphPanel::mousePressEvent(QMouseEvent *pEvent)
+{
+    // Default handling of the event
+
+    QWidget::mousePressEvent(pEvent);
+
+    // Activate/inactivate the graph panel
+    // Note: we do it through setActive() because we want the graph panel to let
+    //       people know that our active state has changed...
+
+    setActive(true);
 }
 
 //==============================================================================
@@ -65,11 +110,11 @@ QwtPlotCurve * SingleCellSimulationGraphPanel::addCurve()
 
     // Attach it to ourselves
 
-    res->attach(this);
+    res->attach(mPlot);
 
     // Add it to our list of curves
 
-    mCurves.append(res);
+    mPlotCurves.append(res);
 
     // Return it to the caller
 
@@ -82,17 +127,64 @@ void SingleCellSimulationGraphPanel::resetCurves()
 {
     // Remove any existing curve
 
-    foreach (QwtPlotCurve *curve, mCurves) {
+    foreach (QwtPlotCurve *curve, mPlotCurves) {
         curve->detach();
 
         delete curve;
     }
 
-    mCurves.clear();
+    mPlotCurves.clear();
 
     // Refresh the graph panel
 
-    replot();
+    mPlot->replot();
+}
+
+//==============================================================================
+
+void SingleCellSimulationGraphPanel::replot()
+{
+    // Refresh the graph panel
+
+    mPlot->replot();
+}
+
+//==============================================================================
+
+bool SingleCellSimulationGraphPanel::isActive() const
+{
+    // Return whether the graph panel as active
+
+    return mActive;
+}
+
+//==============================================================================
+
+void SingleCellSimulationGraphPanel::setActive(const bool &pActive)
+{
+    if (pActive == mActive)
+        return;
+
+    // Set the graph panel's active state
+
+    mActive = pActive;
+
+    // Update the marker's colour
+
+    QPalette markerPalette = mMarker->palette();
+
+    markerPalette.setColor(QPalette::WindowText, pActive?
+                                                    markerPalette.color(QPalette::Highlight):
+                                                    markerPalette.color(QPalette::Window));
+
+    mMarker->setPalette(markerPalette);
+
+    // Let people know if the graph panel has been activated or inactivated
+
+    if (pActive)
+        emit activated(this);
+    else
+        emit inactivated(this);
 }
 
 //==============================================================================

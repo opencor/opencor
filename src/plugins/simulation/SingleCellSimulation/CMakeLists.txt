@@ -18,6 +18,7 @@ ADD_PLUGIN(SingleCellSimulation
         src/singlecellsimulationplugin.cpp
         src/singlecellsimulationview.cpp
     HEADERS_MOC
+        src/singlecellsimulationgraphpanel.h
         src/singlecellsimulationplugin.h
         src/singlecellsimulationview.h
     UIS
