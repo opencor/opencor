@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
+        <file>oxygen/actions/list-add.png</file>
+        <file>oxygen/actions/list-remove.png</file>
         <file>oxygen/actions/media-playback-pause.png</file>
         <file>oxygen/actions/media-playback-start.png</file>
         <file>oxygen/actions/media-playback-stop.png</file>

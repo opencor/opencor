@@ -58,5 +58,21 @@
         <source>Enable the debug mode</source>
         <translation>Activer le mode déboguage</translation>
     </message>
+    <message>
+        <source>&amp;Add</source>
+        <translation>&amp;Ajouter</translation>
+    </message>
+    <message>
+        <source>Add a graph panel</source>
+        <translation>Ajouter un panneau graphique</translation>
+    </message>
+    <message>
+        <source>&amp;Remove</source>
+        <translation>&amp;Supprimer</translation>
+    </message>
+    <message>
+        <source>Remove the active graph panel</source>
+        <translation>Supprimer le panneau graphique actif</translation>
+    </message>
 </context>
 </TS>

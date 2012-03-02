@@ -49,6 +49,9 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     toolbar->addSeparator();
     toolbar->addAction(mUi->actionDebugMode);
     toolbar->addSeparator();
+    toolbar->addAction(mUi->actionAdd);
+    toolbar->addAction(mUi->actionRemove);
+    toolbar->addSeparator();
     toolbar->addAction(mUi->actionCsvExport);
 
     mUi->verticalLayout->addWidget(toolbar);
@@ -58,18 +61,12 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
     QSplitter *mainVerticalSplitter = new QSplitter(Qt::Vertical, this);
 
-    // Create a splitter for our graph panels and add a graph panel to it
+    // Create a splitter for our graph panels and add a default graph panel to
+    // it
 
     mGraphPanels = new QSplitter(Qt::Vertical, this);
 
-    mGraphPanel = addGraphPanel();
-
-    mGraphPanels->addWidget(mGraphPanel);
-    mGraphPanels->addWidget(addGraphPanel());   //---GRY--- These two graph
-    mGraphPanels->addWidget(addGraphPanel());   //          panels are just for
-                                                //          test purposes...
-
-    mGraphPanel->setActive(true);
+    mGraphPanels->addWidget(addGraphPanel());
 
     // Create a simulation output widget with a vertical layout on which we put
     // a separating line and our simulation output list view
@@ -91,9 +88,9 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     simulationOutputVerticalLayout->addWidget(newSeparatingLine());
     simulationOutputVerticalLayout->addWidget(mSimulationOutput);
 
-    // Populate our splitter, use as much space as possible for the graph panels
-    // (by asking their height to be that of the desktop's) and add it to our
-    // view
+    // Populate our splitter and use as much space as possible for the graph
+    // panels (by asking their height to be that of the desktop's) and add it to
+    // our view
 
     mainVerticalSplitter->addWidget(mGraphPanels);
     mainVerticalSplitter->addWidget(simulationOutputWidget);
@@ -211,9 +208,16 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
                                                                  issue.formattedMessage()));
     }
 
+    // Retrieve the first graph panel
+
+    SingleCellSimulationGraphPanel *firstGraphPanel = mGraphPanels->count()?qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(0)):0;
+
+    if (!firstGraphPanel)
+        return;
+
     // Remove any existing curve
 
-    mGraphPanel->resetCurves();
+    firstGraphPanel->resetCurves();
 
     // Compute the model, if supported
 
@@ -347,7 +351,7 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
         // Add some curves to our plotting area
 
         for (int i = 0, iMax = (model == VanDerPol1928)?statesCount:1; i < iMax; ++i) {
-            QwtPlotCurve *curve = mGraphPanel->addCurve();
+            QwtPlotCurve *curve = firstGraphPanel->addCurve();
 
             if (!i%2)
                 curve->setPen(QPen(Qt::darkRed));
@@ -357,7 +361,58 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
 
         // Make sure that the view is up-to-date
 
-        mGraphPanel->replot();
+        firstGraphPanel->replot();
+    }
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::on_actionAdd_triggered()
+{
+    // Add a new graph panel
+
+    addGraphPanel();
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::on_actionRemove_triggered()
+{
+    // Remove the current graph panel
+
+    for (int i = 0, iMax = mGraphPanels->count(); i < iMax; ++i) {
+        SingleCellSimulationGraphPanel *graphPanel = qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(i));
+
+        if (graphPanel->isActive()) {
+            // We are dealing with the currently active graph panel, so remove
+            // it
+
+            graphPanel->hide();
+
+            delete graphPanel;
+
+            // Activate the next graph panel or the last one available, if any
+
+            iMax = mGraphPanels->count();
+
+            if (!iMax)
+                // No more graph panel, so...
+
+                return;
+            else if (i < iMax)
+                // There is a next graph panel, so activate it
+
+                qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(i))->setActive(true);
+            else
+                // We were dealing with the last graph panel, but there is still
+                // at least one left, so activate the new last graph panel
+
+                qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(mGraphPanels->count()-1))->setActive(true);
+
+            // We are all done, so...
+
+            return;
+        }
     }
 }
 

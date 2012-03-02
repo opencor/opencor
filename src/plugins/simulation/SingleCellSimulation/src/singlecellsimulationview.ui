@@ -90,6 +90,30 @@
     <string>Export the simulation data to CSV</string>
    </property>
   </action>
+  <action name="actionAdd">
+   <property name="icon">
+    <iconset resource="../res/SingleCellSimulation.qrc">
+     <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Add</string>
+   </property>
+   <property name="statusTip">
+    <string>Add a graph panel</string>
+   </property>
+  </action>
+  <action name="actionRemove">
+   <property name="icon">
+    <iconset resource="../res/SingleCellSimulation.qrc">
+     <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Remove</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove the active graph panel</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../res/SingleCellSimulation.qrc"/>

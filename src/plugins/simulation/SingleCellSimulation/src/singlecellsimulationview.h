@@ -49,7 +49,6 @@ private:
     Ui::SingleCellSimulationView *mUi;
 
     QSplitter *mGraphPanels;
-    SingleCellSimulationGraphPanel *mGraphPanel;
     QTextEdit *mSimulationOutput;
 
     QProgressBar *mProgressBar;
@@ -59,6 +58,9 @@ private:
     QFrame * newSeparatingLine();
 
 private Q_SLOTS:
+    void on_actionAdd_triggered();
+    void on_actionRemove_triggered();
+
     void graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel);
 };
 
