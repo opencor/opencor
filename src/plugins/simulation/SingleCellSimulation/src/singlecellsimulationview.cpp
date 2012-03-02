@@ -18,6 +18,7 @@
 #include <QDesktopWidget>
 #include <QFileInfo>
 #include <QProgressBar>
+#include <QSettings>
 #include <QSplitter>
 #include <QTextEdit>
 #include <QTime>
@@ -34,7 +35,7 @@ namespace SingleCellSimulation {
 //==============================================================================
 
 SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
-    QWidget(pParent),
+    Widget(pParent),
     mUi(new Ui::SingleCellSimulationView)
 {
     // Set up the UI
@@ -65,12 +66,12 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     // Create a splitter for our graph panels and make a few connections to keep
     // track of when a graph panel is added or removed
 
-    mGraphPanels = new SingleCellSimulationGraphPanels(this);
+    mGraphPanels = new SingleCellSimulationGraphPanels("GraphPanels", this);
 
     connect(mGraphPanels, SIGNAL(grapPanelAdded(SingleCellSimulationGraphPanel *)),
-            this, SLOT(updateGui()));
+            this, SLOT(needUpdateActions()));
     connect(mGraphPanels, SIGNAL(grapPanelRemoved()),
-            this, SLOT(updateGui()));
+            this, SLOT(needUpdateActions()));
 
     // Create a simulation output widget with a vertical layout on which we put
     // a separating line and our simulation output list view
@@ -124,11 +125,46 @@ SingleCellSimulationView::~SingleCellSimulationView()
 
 //==============================================================================
 
+void SingleCellSimulationView::updateActions()
+{
+    // Make sure that our various actions are properly enabled/disabled
+
+    mUi->actionRemove->setEnabled(mGraphPanels->graphPanelsCount());
+}
+
+//==============================================================================
+
 void SingleCellSimulationView::retranslateUi()
 {
     // Retranslate the whole view
 
     mUi->retranslateUi(this);
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::loadSettings(QSettings *pSettings)
+{
+    // Retrieve the settings of our graph panels widget
+
+    pSettings->beginGroup(mGraphPanels->objectName());
+        mGraphPanels->loadSettings(pSettings);
+    pSettings->endGroup();
+
+    // Make sure that all the actions are up-to-date
+
+    updateActions();
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of the settings of our graph panels widget
+
+    pSettings->beginGroup(mGraphPanels->objectName());
+        mGraphPanels->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -168,16 +204,16 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
                                                        issue.formattedMessage()));
     }
 
-    // Retrieve the first graph panel
+    // Retrieve the active graph panel
 
-    SingleCellSimulationGraphPanel *firstGraphPanel = mGraphPanels->count()?qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(0)):0;
+    SingleCellSimulationGraphPanel *activeGraphPanel = mGraphPanels->activeGraphPanel();
 
-    if (!firstGraphPanel)
+    if (!activeGraphPanel)
         return;
 
     // Remove any existing curve
 
-    firstGraphPanel->resetCurves();
+    activeGraphPanel->resetCurves();
 
     // Compute the model, if supported
 
@@ -311,7 +347,7 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
         // Add some curves to our plotting area
 
         for (int i = 0, iMax = (model == VanDerPol1928)?statesCount:1; i < iMax; ++i) {
-            QwtPlotCurve *curve = firstGraphPanel->addCurve();
+            QwtPlotCurve *curve = activeGraphPanel->addCurve();
 
             if (!i%2)
                 curve->setPen(QPen(Qt::darkRed));
@@ -321,7 +357,7 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
 
         // Make sure that the view is up-to-date
 
-        firstGraphPanel->replot();
+        activeGraphPanel->replot();
     }
 }
 
@@ -345,12 +381,11 @@ void SingleCellSimulationView::on_actionRemove_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationView::updateGui()
+void SingleCellSimulationView::needUpdateActions()
 {
-    // Enable/disable the remove graph panel action based on whether or not
-    // there are graph panels
+    // Something requires the actions to be udpated
 
-    mUi->actionRemove->setEnabled(mGraphPanels->graphPanelsCount());
+    updateActions();
 }
 
 //==============================================================================

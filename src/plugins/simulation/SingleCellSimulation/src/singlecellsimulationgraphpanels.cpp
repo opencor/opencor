@@ -7,18 +7,51 @@
 
 //==============================================================================
 
+#include <QSettings>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulation {
 
 //==============================================================================
 
-SingleCellSimulationGraphPanels::SingleCellSimulationGraphPanels(QWidget *pParent) :
+SingleCellSimulationGraphPanels::SingleCellSimulationGraphPanels(const QString &pName,
+                                                                 QWidget *pParent) :
     QSplitter(Qt::Vertical, pParent),
+    CommonWidget(pName, this, pParent),
     mGraphPanelsCount(0)
 {
-    // Add a default graph panel
+}
 
-    addGraphPanel();
+//==============================================================================
+
+static const QString SettingsGraphPanelsCount = "GraphPanelsCount";
+
+//==============================================================================
+
+void SingleCellSimulationGraphPanels::loadSettings(QSettings *pSettings)
+{
+    // Retrieve the number of graph panels (default: 1) and create the
+    // corresponding number of graphs
+
+    int graphPanelsCount = pSettings->value(SettingsGraphPanelsCount, 1).toInt();
+
+    for (int i = 0; i < graphPanelsCount; ++i)
+        addGraphPanel();
+
+    // Select the first graph panel
+
+    qobject_cast<SingleCellSimulationGraphPanel *>(widget(0))->setActive(true);
+}
+
+//==============================================================================
+
+void SingleCellSimulationGraphPanels::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of the number of graph panels
+
+    pSettings->setValue(SettingsGraphPanelsCount, mGraphPanelsCount);
 }
 
 //==============================================================================

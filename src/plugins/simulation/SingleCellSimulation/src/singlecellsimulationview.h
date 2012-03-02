@@ -7,12 +7,17 @@
 
 //==============================================================================
 
+#include "widget.h"
+
+//==============================================================================
+
 #include <QWidget>
 
 //==============================================================================
 
 class QFrame;
 class QProgressBar;
+class QSettings;
 class QSplitter;
 class QTextEdit;
 
@@ -34,7 +39,7 @@ class SingleCellSimulationGraphPanels;
 
 //==============================================================================
 
-class SingleCellSimulationView : public QWidget
+class SingleCellSimulationView : public Core::Widget
 {
     Q_OBJECT
 
@@ -44,7 +49,13 @@ public:
 
     virtual void retranslateUi();
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     void updateWith(const QString &pFileName);
+
+protected:
+    virtual void updateActions();
 
 private:
     Ui::SingleCellSimulationView *mUi;
@@ -60,7 +71,7 @@ private Q_SLOTS:
     void on_actionAdd_triggered();
     void on_actionRemove_triggered();
 
-    void updateGui();
+    void needUpdateActions();
 };
 
 //==============================================================================

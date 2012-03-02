@@ -7,6 +7,10 @@
 
 //==============================================================================
 
+#include "commonwidget.h"
+
+//==============================================================================
+
 #include <QSplitter>
 
 //==============================================================================
@@ -20,12 +24,17 @@ class SingleCellSimulationGraphPanel;
 
 //==============================================================================
 
-class SingleCellSimulationGraphPanels : public QSplitter
+class SingleCellSimulationGraphPanels : public QSplitter,
+                                        public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationGraphPanels(QWidget *pParent = 0);
+    explicit SingleCellSimulationGraphPanels(const QString &pName,
+                                             QWidget *pParent = 0);
+
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
     SingleCellSimulationGraphPanel * addGraphPanel();
     void removeGraphPanel();

@@ -61,6 +61,24 @@ void SingleCellSimulationPlugin::initialize()
 
 //==============================================================================
 
+void SingleCellSimulationPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our single cell simulation view settings
+
+    loadViewSettings(pSettings, mSingleCellSimulationView);
+}
+
+//==============================================================================
+
+void SingleCellSimulationPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Retrieve our single cell simulation view settings
+
+    saveViewSettings(pSettings, mSingleCellSimulationView);
+}
+
+//==============================================================================
+
 void SingleCellSimulationPlugin::retranslateUi()
 {
     // Retranslate our single cell simulation view
