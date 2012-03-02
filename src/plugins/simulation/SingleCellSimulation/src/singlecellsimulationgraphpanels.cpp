@@ -75,11 +75,18 @@ void SingleCellSimulationGraphPanels::wheelEvent(QWheelEvent *pEvent)
 
             graphPanel->setActive(false);
 
+            int shift = 1;
+
 #ifdef Q_WS_MAC
-            i -= (pEvent->delta() < 0)?1:-1;
-#else
-            i += (pEvent->delta() < 0)?1:-1;
+    #ifdef AVAILABLE_MAC_OS_X_VERSION_10_7_AND_LATER
+            // From version 10.7 of Mac OS X, the scrolling works the other way
+            // round, so...
+
+            shift = -1;
+    #endif
 #endif
+
+            i += (pEvent->delta() < 0)?shift:-shift;
 
             if (i < 0)
                 i = 0;
