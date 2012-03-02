@@ -20,8 +20,7 @@ namespace SingleCellSimulation {
 SingleCellSimulationGraphPanels::SingleCellSimulationGraphPanels(const QString &pName,
                                                                  QWidget *pParent) :
     QSplitter(Qt::Vertical, pParent),
-    CommonWidget(pName, this, pParent),
-    mGraphPanelsCount(0)
+    CommonWidget(pName, this, pParent)
 {
 }
 
@@ -36,11 +35,11 @@ void SingleCellSimulationGraphPanels::loadSettings(QSettings *pSettings)
     // Retrieve the number of graph panels and create the corresponding number
     // of graphs
 
-    int graphPanelsCount = pSettings->value(SettingsGraphPanelsCount).toInt();
+    int graphPanelsCount = pSettings->value(SettingsGraphPanelsCount, 1).toInt();
 
     if (!graphPanelsCount)
-        // We left the previous session with no graph panel, so add one as a
-        // default
+        // For some reason, the settings for the number of graph panels to be
+        // created got messed up, so...
 
         graphPanelsCount = 1;
 
@@ -58,7 +57,7 @@ void SingleCellSimulationGraphPanels::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the number of graph panels
 
-    pSettings->setValue(SettingsGraphPanelsCount, mGraphPanelsCount);
+    pSettings->setValue(SettingsGraphPanelsCount, count());
 }
 
 //==============================================================================
@@ -110,22 +109,6 @@ void SingleCellSimulationGraphPanels::wheelEvent(QWheelEvent *pEvent)
 
 SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel()
 {
-    // Check whether there is already a graph panel and if not, then delete our
-    // dummy widget which ensures that we don't shrink
-
-    if (!mGraphPanelsCount && count()) {
-        // No previous graph panel, so...
-        // Note: the test for count() above is for the very first time we want
-        //       to add a graph panel and therefore where no dummy widget will
-        //       be present...
-
-        QWidget *dummyWidget = qobject_cast<QWidget*>(widget(0));
-
-        dummyWidget->hide();
-
-        delete dummyWidget;
-    }
-
     // Create a new graph panel
 
     SingleCellSimulationGraphPanel *res = new SingleCellSimulationGraphPanel(this);
@@ -133,10 +116,6 @@ SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel(
     // Add the graph panel to ourselves
 
     addWidget(res);
-
-    // Keep track of the fact that we are holding one more graph panel
-
-    ++mGraphPanelsCount;
 
     // Create a connection to keep track of whenever the graph panel gets
     // activated
@@ -152,6 +131,10 @@ SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel(
 
     emit grapPanelAdded(res);
 
+    // Let people know whether graph panels can be removed
+
+    emit canRemoveGraphPanels(count() > 1);
+
     // Return our newly created graph panel
 
     return res;
@@ -161,8 +144,8 @@ SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel(
 
 void SingleCellSimulationGraphPanels::removeGraphPanel()
 {
-    if (!mGraphPanelsCount)
-        // We don't have any graph panel to remove, so...
+    if (count() == 1)
+        // There is only one graph panel left, so...
 
         return;
 
@@ -178,10 +161,6 @@ void SingleCellSimulationGraphPanels::removeGraphPanel()
             graphPanel->hide();
 
             delete graphPanel;
-
-            // Keep track of the fact that we are holding one less graph panel
-
-            --mGraphPanelsCount;
 
             // Activate the next graph panel or the last one available, if any
 
@@ -207,24 +186,13 @@ void SingleCellSimulationGraphPanels::removeGraphPanel()
         }
     }
 
-    // Check whether we have any graph panel left and if so add a dummy widget
-    // which will ensure that we don't shrink
-
-    if (!mGraphPanelsCount)
-        addWidget(new QWidget(this));
-
     // Let people know that we have removed a graph panel
 
     emit grapPanelRemoved();
-}
 
-//==============================================================================
+    // Let people know whether graph panels can be removed
 
-int SingleCellSimulationGraphPanels::graphPanelsCount() const
-{
-    // Return the number of graph panels we currently hold
-
-    return mGraphPanelsCount;
+    emit canRemoveGraphPanels(count() > 1);
 }
 
 //==============================================================================

@@ -54,9 +54,6 @@ public:
 
     void updateWith(const QString &pFileName);
 
-protected:
-    virtual void updateActions();
-
 private:
     Ui::SingleCellSimulationView *mUi;
 
@@ -70,8 +67,6 @@ private:
 private Q_SLOTS:
     void on_actionAdd_triggered();
     void on_actionRemove_triggered();
-
-    void needUpdateActions();
 };
 
 //==============================================================================

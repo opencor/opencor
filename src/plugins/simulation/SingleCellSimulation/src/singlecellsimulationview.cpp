@@ -63,15 +63,13 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
     QSplitter *mainVerticalSplitter = new QSplitter(Qt::Vertical, this);
 
-    // Create a splitter for our graph panels and make a few connections to keep
-    // track of when a graph panel is added or removed
+    // Create a splitter for our graph panels and create a connection to keep
+    // track of whether we can remove graph panels
 
     mGraphPanels = new SingleCellSimulationGraphPanels("GraphPanels", this);
 
-    connect(mGraphPanels, SIGNAL(grapPanelAdded(SingleCellSimulationGraphPanel *)),
-            this, SLOT(needUpdateActions()));
-    connect(mGraphPanels, SIGNAL(grapPanelRemoved()),
-            this, SLOT(needUpdateActions()));
+    connect(mGraphPanels, SIGNAL(canRemoveGraphPanels(const bool &)),
+            mUi->actionRemove, SLOT(setEnabled(bool)));
 
     // Create a simulation output widget with a vertical layout on which we put
     // a separating line and our simulation output list view
@@ -125,15 +123,6 @@ SingleCellSimulationView::~SingleCellSimulationView()
 
 //==============================================================================
 
-void SingleCellSimulationView::updateActions()
-{
-    // Make sure that our various actions are properly enabled/disabled
-
-    mUi->actionRemove->setEnabled(mGraphPanels->graphPanelsCount());
-}
-
-//==============================================================================
-
 void SingleCellSimulationView::retranslateUi()
 {
     // Retranslate the whole view
@@ -150,10 +139,6 @@ void SingleCellSimulationView::loadSettings(QSettings *pSettings)
     pSettings->beginGroup(mGraphPanels->objectName());
         mGraphPanels->loadSettings(pSettings);
     pSettings->endGroup();
-
-    // Make sure that all the actions are up-to-date
-
-    updateActions();
 }
 
 //==============================================================================
@@ -377,15 +362,6 @@ void SingleCellSimulationView::on_actionRemove_triggered()
     // Remove the current graph panel
 
     mGraphPanels->removeGraphPanel();
-}
-
-//==============================================================================
-
-void SingleCellSimulationView::needUpdateActions()
-{
-    // Something requires the actions to be udpated
-
-    updateActions();
 }
 
 //==============================================================================

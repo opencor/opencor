@@ -39,19 +39,15 @@ public:
     SingleCellSimulationGraphPanel * addGraphPanel();
     void removeGraphPanel();
 
-    int graphPanelsCount() const;
-
     SingleCellSimulationGraphPanel * activeGraphPanel();
 
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
-private:
-    int mGraphPanelsCount;
-
 Q_SIGNALS:
     void grapPanelAdded(SingleCellSimulationGraphPanel *);
     void grapPanelRemoved();
+    void canRemoveGraphPanels(const bool &);
 
 private Q_SLOTS:
     void graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel);
