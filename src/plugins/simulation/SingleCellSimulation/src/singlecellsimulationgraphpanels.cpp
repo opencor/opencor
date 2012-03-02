@@ -33,10 +33,16 @@ static const QString SettingsGraphPanelsCount = "GraphPanelsCount";
 
 void SingleCellSimulationGraphPanels::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the number of graph panels (default: 1) and create the
-    // corresponding number of graphs
+    // Retrieve the number of graph panels and create the corresponding number
+    // of graphs
 
-    int graphPanelsCount = pSettings->value(SettingsGraphPanelsCount, 1).toInt();
+    int graphPanelsCount = pSettings->value(SettingsGraphPanelsCount).toInt();
+
+    if (!graphPanelsCount)
+        // We left the previous session with no graph panel, so add one as a
+        // default
+
+        graphPanelsCount = 1;
 
     for (int i = 0; i < graphPanelsCount; ++i)
         addGraphPanel();
