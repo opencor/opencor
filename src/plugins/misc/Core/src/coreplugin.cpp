@@ -235,11 +235,12 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CorePlugin::setFocus()
+void CorePlugin::loadingOfSettingsDone(const Plugins &pPlugins)
 {
-    // Set the focus to the central widget
+    // Let our central widget know that all the other plugins have now loaded
+    // their settings
 
-    mCentralWidget->setFocus();
+    mCentralWidget->loadingOfSettingsDone(pPlugins);
 }
 
 //==============================================================================

@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include "coreglobal.h"
+#include "plugin.h"
 
 //==============================================================================
 
@@ -55,6 +56,8 @@ public:
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
+
+    virtual void loadingOfSettingsDone(const Plugins &);
 
 protected:
     QSize defaultSize(const double &pRatio) const;

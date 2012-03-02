@@ -344,14 +344,6 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Editing);
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Simulation);
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Analysis);
-
-    // Update our status now that we are fully ready
-
-    mStatus = Running;
-
-    // Update the GUI
-
-    updateGui();
 }
 
 //==============================================================================
@@ -400,8 +392,16 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CentralWidget::setFocus()
+void CentralWidget::loadingOfSettingsDone(const Plugins &)
 {
+    // Update our status now that all the plugins  are fully ready
+
+    mStatus = Running;
+
+    // Update the GUI
+
+    updateGui();
+
     // Set the focus to the contents' top widget
 
     mContents->currentWidget()->setFocus();

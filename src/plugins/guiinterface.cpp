@@ -5,6 +5,7 @@
 #include "centralwidget.h"
 #include "dockwidget.h"
 #include "guiinterface.h"
+#include "widget.h"
 
 //==============================================================================
 
@@ -308,7 +309,18 @@ void GuiInterface::loadWindowSettings(QSettings *pSettings,
 
 //==============================================================================
 
-void GuiInterface::loadSettings(QSettings *pSettings)
+void GuiInterface::loadViewSettings(QSettings *pSettings, Core::Widget *pView)
+{
+    // Retrieve the view's settings
+
+    pSettings->beginGroup(pView->objectName());
+        pView->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void GuiInterface::loadSettings(QSettings *)
 {
     // Nothing to do by default...
 }
@@ -327,7 +339,26 @@ void GuiInterface::saveWindowSettings(QSettings *pSettings,
 
 //==============================================================================
 
-void GuiInterface::saveSettings(QSettings *pSettings) const
+void GuiInterface::saveViewSettings(QSettings *pSettings,
+                                    Core::Widget *pView) const
+{
+    // Keep track of the view's settings
+
+    pSettings->beginGroup(pView->objectName());
+        pView->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void GuiInterface::saveSettings(QSettings *) const
+{
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
+void GuiInterface::loadingOfSettingsDone(const Plugins &)
 {
     // Nothing to do by default...
 }
@@ -390,13 +421,6 @@ QString GuiInterface::viewName(const int &)
     // Return an empty string by default...
 
     return QString();
-}
-
-//==============================================================================
-
-void GuiInterface::setFocus()
-{
-    // Nothing to do by default...
 }
 
 //==============================================================================

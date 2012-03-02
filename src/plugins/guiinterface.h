@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include <QtPlugin>
+#include "plugin.h"
 
 //==============================================================================
 
@@ -34,6 +34,7 @@ namespace OpenCOR {
 namespace Core {
     class CentralWidget;
     class DockWidget;
+    class Widget;
 }
 
 //==============================================================================
@@ -175,15 +176,15 @@ public:
     explicit GuiInterface();
     ~GuiInterface();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    virtual void loadSettings(QSettings *);
+    virtual void saveSettings(QSettings *) const;
+
+    virtual void loadingOfSettingsDone(const Plugins &);
 
     virtual QWidget * viewWidget(const QString &pFileName,
                                  const int &pViewIndex);
     virtual QWidget * newViewWidget(const QString &);
     virtual QString viewName(const int &);
-
-    virtual void setFocus();
 
     GuiSettings * guiSettings() const;
 
@@ -227,6 +228,9 @@ protected:
                             Core::DockWidget *pWindow);
     void saveWindowSettings(QSettings *pSettings,
                             Core::DockWidget *pWindow) const;
+
+    void loadViewSettings(QSettings *pSettings, Core::Widget *pView);
+    void saveViewSettings(QSettings *pSettings, Core::Widget *pView) const;
 };
 
 //==============================================================================

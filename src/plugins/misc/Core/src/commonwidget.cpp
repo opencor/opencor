@@ -72,6 +72,13 @@ void CommonWidget::saveSettings(QSettings *) const
 
 //==============================================================================
 
+void CommonWidget::loadingOfSettingsDone(const Plugins &)
+{
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
 void CommonWidget::updateActions()
 {
     // Nothing to do by default...

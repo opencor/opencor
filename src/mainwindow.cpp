@@ -201,16 +201,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     loadSettings();
 
-    // Let the Core plugin decide what widget should get the focus
-
-    foreach (Plugin *plugin, loadedPlugins)
-        if (!plugin->name().compare(CorePlugin)) {
-            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
-
-            if (guiInterface)
-                guiInterface->setFocus();
-        }
-
     // Initialise the checking state of the full screen action, since OpenCOR
     // may (re)start in full screen mode
 
@@ -543,7 +533,9 @@ void MainWindow::loadSettings()
 
     // Retrieve the settings of our various plugins
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+    Plugins loadedPlugins = mPluginManager->loadedPlugins();
+
+    foreach (Plugin *plugin, loadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface) {
@@ -553,6 +545,16 @@ void MainWindow::loadSettings()
                 mSettings->endGroup();
             mSettings->endGroup();
         }
+    }
+
+    // Let our various plugins know that all of them have loaded their settings
+    // Note: this is similar to initialize() vs. initializationsDone()...
+
+    foreach (Plugin *plugin, loadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            guiInterface->loadingOfSettingsDone(loadedPlugins);
     }
 }
 
