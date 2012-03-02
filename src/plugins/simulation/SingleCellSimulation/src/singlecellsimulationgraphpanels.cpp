@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include <QSettings>
+#include <QWheelEvent>
 
 //==============================================================================
 
@@ -52,6 +53,40 @@ void SingleCellSimulationGraphPanels::saveSettings(QSettings *pSettings) const
     // Keep track of the number of graph panels
 
     pSettings->setValue(SettingsGraphPanelsCount, mGraphPanelsCount);
+}
+
+//==============================================================================
+
+void SingleCellSimulationGraphPanels::wheelEvent(QWheelEvent *pEvent)
+{
+    // Default handling of the event
+
+    QSplitter::wheelEvent(pEvent);
+
+    // Select the previous/next graph panel, if any
+
+    if (pEvent->delta())
+    for (int i = 0, iMax = count(); i < iMax; ++i) {
+        SingleCellSimulationGraphPanel *graphPanel = qobject_cast<SingleCellSimulationGraphPanel *>(widget(i));
+
+        if (graphPanel->isActive()) {
+            // We are dealing with the currently active graph panel, so
+            // inactivate it and activate either its predecessor or successor
+
+            graphPanel->setActive(false);
+
+            i += (pEvent->delta() < 0)?1:-1;
+
+            if (i < 0)
+                i = iMax-1;
+            else if (i == iMax)
+                i = 0;
+
+            qobject_cast<SingleCellSimulationGraphPanel *>(widget(i))->setActive(true);
+
+            break;
+        }
+    }
 }
 
 //==============================================================================

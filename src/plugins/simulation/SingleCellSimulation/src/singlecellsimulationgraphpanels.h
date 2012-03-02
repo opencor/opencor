@@ -43,6 +43,9 @@ public:
 
     SingleCellSimulationGraphPanel * activeGraphPanel();
 
+protected:
+    virtual void wheelEvent(QWheelEvent *pEvent);
+
 private:
     int mGraphPanelsCount;
 
