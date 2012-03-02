@@ -144,6 +144,28 @@ int SingleCellSimulationGraphPanels::graphPanelsCount() const
 
 //==============================================================================
 
+SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::activeGraphPanel()
+{
+    // Return the active graph panel
+
+    for (int i = 0, iMax = count(); i < iMax; ++i) {
+        SingleCellSimulationGraphPanel *graphPanel = qobject_cast<SingleCellSimulationGraphPanel *>(widget(i));
+
+        if (graphPanel->isActive())
+            // We found the active graph panel, so...
+
+            return graphPanel;
+    }
+
+    // There are no graph panels, so...
+    // Note: indeed, since if there is at least one graph panel, then we have an
+    //       active graph panel...
+
+    return 0;
+}
+
+//==============================================================================
+
 void SingleCellSimulationGraphPanels::graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel)
 {
     // A graph panel has been activated, so inactivate all the others

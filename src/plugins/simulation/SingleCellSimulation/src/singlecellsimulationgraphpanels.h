@@ -32,6 +32,8 @@ public:
 
     int graphPanelsCount() const;
 
+    SingleCellSimulationGraphPanel * activeGraphPanel();
+
 private:
     int mGraphPanelsCount;
 
