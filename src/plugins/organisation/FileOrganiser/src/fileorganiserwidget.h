@@ -72,10 +72,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    bool isFolderItem(const QModelIndex &pItemIndex) const;
-
-    bool newFolder();
-    bool deleteItems();
+    void newFolder();
+    void deleteItems();
 
     QString filePath(const QModelIndex &pFileIndex) const;
 
@@ -101,12 +99,10 @@ private:
     QString newFolderName(QStandardItem *pFolderItem) const;
     void collapseEmptyFolders(QStandardItem *pFolder);
 
-    bool addFileItem(const QString &pFileName, QStandardItem *pDropItem,
-                     const QAbstractItemView::DropIndicatorPosition &pDropPosition);
-    bool addFile(const QString &pFileName, QStandardItem *pDropItem,
+    void addFile(const QString &pFileName, QStandardItem *pDropItem,
                  const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
-    bool moveItem(QStandardItem *pItem, QStandardItem *pDropItem,
+    void moveItem(QStandardItem *pItem, QStandardItem *pDropItem,
                   const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
     void resizeToContents();
@@ -126,12 +122,19 @@ private:
     void updateFileItems(QStandardItem *pItem, const QString &pFileName,
                          const Core::File::Status &pStatus) const;
 
+    bool canCreateNewFolder() const;
+
 Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);
+
+    void newFolderEnabled(const bool &pEnabled);
+    void deleteItemsEnabled(const bool &pEnabled);
 
 private Q_SLOTS:
     void expandedFolder(const QModelIndex &pFolderIndex);
     void collapsedFolder(const QModelIndex &pFolderIndex);
+
+    void emitItemsRelatedSignals();
 
     void fileContentsChanged(const QString &pFileName) const;
     void fileDeleted(const QString &pFileName) const;

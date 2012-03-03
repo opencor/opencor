@@ -58,8 +58,12 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     connect(mFileOrganiserWidget, SIGNAL(filesOpened(const QStringList &)),
             this, SIGNAL(filesOpened(const QStringList &)));
 
-    connect(mFileOrganiserWidget->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-            this, SLOT(needUpdateActions()));
+    // Some connections to update the enabled state of our various actions
+
+    connect(mFileOrganiserWidget, SIGNAL(newFolderEnabled(const bool &)),
+            mUi->actionNew, SLOT(setEnabled(bool)));
+    connect(mFileOrganiserWidget, SIGNAL(deleteItemsEnabled(const bool &)),
+            mUi->actionDelete, SLOT(setEnabled(bool)));
 }
 
 //==============================================================================
@@ -69,25 +73,6 @@ FileOrganiserWindow::~FileOrganiserWindow()
     // Delete the UI
 
     delete mUi;
-}
-
-//==============================================================================
-
-void FileOrganiserWindow::updateActions()
-{
-    // Make sure that our various actions are properly enabled/disabled
-
-    QModelIndexList selectedIndexes = mFileOrganiserWidget->selectionModel()->selectedIndexes();
-    int selectedIndexesCount = selectedIndexes.count();
-    bool actionNewEnabled = selectedIndexesCount <= 1;
-
-    if (selectedIndexesCount == 1)
-        // One item is selected, but is it a folder item?
-
-        actionNewEnabled = mFileOrganiserWidget->isFolderItem(selectedIndexes.at(0));
-
-    mUi->actionNew->setEnabled(actionNewEnabled);
-    mUi->actionDelete->setEnabled(selectedIndexesCount >= 1);
 }
 
 //==============================================================================
@@ -112,10 +97,6 @@ void FileOrganiserWindow::loadSettings(QSettings *pSettings)
     pSettings->beginGroup(mFileOrganiserWidget->objectName());
         mFileOrganiserWidget->loadSettings(pSettings);
     pSettings->endGroup();
-
-    // Make sure that all the actions are up-to-date
-
-    updateActions();
 }
 
 //==============================================================================
@@ -176,15 +157,6 @@ void FileOrganiserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
         // know about it having been double clicked
 
         emit filesOpened(QStringList() << fileName);
-}
-
-//==============================================================================
-
-void FileOrganiserWindow::needUpdateActions()
-{
-    // Something requires the actions to be udpated
-
-    updateActions();
 }
 
 //==============================================================================

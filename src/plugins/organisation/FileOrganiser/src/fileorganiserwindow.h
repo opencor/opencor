@@ -43,9 +43,6 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-protected:
-    virtual void updateActions();
-
 private:
     Ui::FileOrganiserWindow *mUi;
 
@@ -57,8 +54,6 @@ private Q_SLOTS:
 
     void customContextMenu(const QPoint &) const;
     void itemDoubleClicked(const QModelIndex &itemIndex);
-
-    void needUpdateActions();
 };
 
 //==============================================================================
