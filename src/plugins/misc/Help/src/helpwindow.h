@@ -44,16 +44,6 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void gotoHomePage() const;
-
-    int defaultZoomLevel() const;
-
-    void setZoomLevel(const int &pZoomLevel) const;
-    int zoomLevel() const;
-
-protected:
-    virtual void updateActions();
-
 private:
     Ui::HelpWindow *mUi;
 
@@ -74,7 +64,6 @@ private Q_SLOTS:
     void on_actionPrint_triggered();
 
     void customContextMenu(const QPoint &) const;
-    void needUpdateActions();
 };
 
 //==============================================================================

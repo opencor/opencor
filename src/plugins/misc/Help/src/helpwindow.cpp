@@ -91,21 +91,24 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     connect(mHelpWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(customContextMenu(const QPoint &)));
 
-    // Some connections
+    // Some connections to update the enabled stated of our various actions
 
-    connect(mHelpWidget, SIGNAL(urlChanged(const QUrl &)),
-            this, SLOT(needUpdateActions()));
+    connect(mHelpWidget, SIGNAL(notHomePage(const bool &)),
+            mUi->actionHome, SLOT(setEnabled(bool)));
 
-    connect(mHelpWidget, SIGNAL(backAvailable(bool)),
+    connect(mHelpWidget, SIGNAL(backEnabled(const bool &)),
             mUi->actionBack, SLOT(setEnabled(bool)));
-    connect(mHelpWidget, SIGNAL(forwardAvailable(bool)),
+    connect(mHelpWidget, SIGNAL(forwardEnabled(const bool &)),
             mUi->actionForward, SLOT(setEnabled(bool)));
 
-    connect(mHelpWidget->page(), SIGNAL(selectionChanged()),
-            this, SLOT(needUpdateActions()));
+    connect(mHelpWidget, SIGNAL(copyTextEnabled(const bool &)),
+            mUi->actionCopy, SLOT(setEnabled(bool)));
 
-    connect(mHelpWidget, SIGNAL(zoomLevelChanged(int)),
-            this, SLOT(needUpdateActions()));
+    connect(mHelpWidget, SIGNAL(notDefaultZoomLevel(const bool &)),
+            mUi->actionNormalSize, SLOT(setEnabled(bool)));
+
+    connect(mHelpWidget, SIGNAL(zoomOutEnabled(const bool &)),
+            mUi->actionZoomOut, SLOT(setEnabled(bool)));
 }
 
 //==============================================================================
@@ -121,24 +124,6 @@ HelpWindow::~HelpWindow()
 
     QFile(mQchFileName).remove();
     QFile(mQhcFileName).remove();
-}
-
-//==============================================================================
-
-void HelpWindow::updateActions()
-{
-    // Make sure that our various actions are properly enabled/disabled
-
-    mUi->actionHome->setEnabled(mHelpWidget->url() != mHelpWidget->homePage());
-
-    mUi->actionBack->setEnabled(mHelpWidget->isBackAvailable());
-    mUi->actionForward->setEnabled(mHelpWidget->isForwardAvailable());
-
-    mUi->actionCopy->setEnabled(!mHelpWidget->selectedText().isEmpty());
-
-    mUi->actionNormalSize->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->defaultZoomLevel());
-
-    mUi->actionZoomOut->setEnabled(mHelpWidget->zoomLevel() != mHelpWidget->minimumZoomLevel());
 }
 
 //==============================================================================
@@ -178,47 +163,11 @@ void HelpWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void HelpWindow::gotoHomePage() const
-{
-    // Go to the home page
-
-    mHelpWidget->gotoHomePage();
-}
-
-//==============================================================================
-
-int HelpWindow::defaultZoomLevel() const
-{
-    // Return the default zoom level for the help widget
-
-    return mHelpWidget->defaultZoomLevel();
-}
-
-//==============================================================================
-
-void HelpWindow::setZoomLevel(const int &pZoomLevel) const
-{
-    // Set the zoom level for the help widget
-
-    mHelpWidget->setZoomLevel(pZoomLevel);
-}
-
-//==============================================================================
-
-int HelpWindow::zoomLevel() const
-{
-    // Return the current zoom level for the help widget
-
-    return mHelpWidget->zoomLevel();
-}
-
-//==============================================================================
-
 void HelpWindow::on_actionHome_triggered()
 {
     // Go to the home page
 
-    mHelpWidget->gotoHomePage();
+    mHelpWidget->goToHomePage();
 }
 
 //==============================================================================
@@ -314,15 +263,6 @@ void HelpWindow::customContextMenu(const QPoint &) const
     menu.addAction(mUi->actionPrint);
 
     menu.exec(QCursor::pos());
-}
-
-//==============================================================================
-
-void HelpWindow::needUpdateActions()
-{
-    // Something requires the actions to be udpated
-
-    updateActions();
 }
 
 //==============================================================================

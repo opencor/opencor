@@ -99,22 +99,12 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    QUrl homePage() const;
-    void gotoHomePage();
-
-    bool isBackAvailable() const;
-    bool isForwardAvailable() const;
-
-    int minimumZoomLevel() const;
-    int defaultZoomLevel() const;
+    void goToHomePage();
 
     void resetZoom();
 
     void zoomIn();
     void zoomOut();
-
-    void setZoomLevel(const int &pZoomLevel);
-    int zoomLevel() const;
 
 protected:
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
@@ -129,18 +119,26 @@ private:
 
     QUrl mHomePage;
 
-    bool mBackAvailable;
-    bool mForwardAvailable;
-
     int mZoomLevel;
 
-Q_SIGNALS:
-    void backAvailable(const bool &pAvailable);
-    void forwardAvailable(const bool &pAvailable);
+    void setZoomLevel(const int &pZoomLevel);
 
-    void zoomLevelChanged(const int &pZoomLevel);
+Q_SIGNALS:
+    void notHomePage(const bool &pIsNotHomePage);
+
+    void copyTextEnabled(const bool &pEnabled);
+
+    void backEnabled(const bool &pEnabled);
+    void forwardEnabled(const bool &pEnabled);
+
+    void notDefaultZoomLevel(const bool &pEnabled);
+    void zoomOutEnabled(const bool &pEnabled);
 
 private Q_SLOTS:
+    void urlChanged(const QUrl &pUrl);
+
+    void selectionChanged();
+
     void webPageChanged();
 };
 

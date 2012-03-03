@@ -160,14 +160,17 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
 
 //==============================================================================
 
+static const int MinimumZoomLevel = 1;
+static const int DefaultZoomLevel = 9;
+
+//==============================================================================
+
 HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
                        const QUrl &pHomePage, QWidget *pParent) :
     QWebView(pParent),
     CommonWidget(pName, this, pParent),
     mHelpEngine(pHelpEngine),
-    mHomePage(pHomePage),
-    mBackAvailable(false),
-    mForwardAvailable(false)
+    mHomePage(pHomePage)
 {
     // Add a small margin to the widget, so that no visual trace of the border
     // drawn by drawBorderIfDocked is left when scrolling
@@ -199,9 +202,15 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
     // Note: to set mZoomLevel directly is not good enough since one of the
     //       things setZoomLevel does is to set our zoom factor, so...
 
-    setZoomLevel(defaultZoomLevel());
+    setZoomLevel(DefaultZoomLevel);
 
     // Some connections
+
+    connect(this, SIGNAL(urlChanged(const QUrl &)),
+            this, SLOT(urlChanged(const QUrl &)));
+
+    connect(page(), SIGNAL(selectionChanged()),
+            this, SLOT(selectionChanged()));
 
     connect(pageAction(QWebPage::Back), SIGNAL(changed()),
             this, SLOT(webPageChanged()));
@@ -210,7 +219,7 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
 
     // Go to the home page
 
-    gotoHomePage();
+    goToHomePage();
 }
 
 //==============================================================================
@@ -236,8 +245,7 @@ void HelpWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the zoom level
 
-    setZoomLevel(pSettings->value(SettingsZoomLevel,
-                                  defaultZoomLevel()).toInt());
+    setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
 }
 
 //==============================================================================
@@ -246,21 +254,12 @@ void HelpWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the text size multiplier
 
-    pSettings->setValue(SettingsZoomLevel, zoomLevel());
+    pSettings->setValue(SettingsZoomLevel, mZoomLevel);
 }
 
 //==============================================================================
 
-QUrl HelpWidget::homePage() const
-{
-    // Return the URL for the home page
-
-    return mHomePage;
-}
-
-//==============================================================================
-
-void HelpWidget::gotoHomePage()
+void HelpWidget::goToHomePage()
 {
     // Go to the home page
     // Note: we use setUrl() rather than load() since the former will ensure
@@ -272,47 +271,11 @@ void HelpWidget::gotoHomePage()
 
 //==============================================================================
 
-bool HelpWidget::isBackAvailable() const
-{
-    // Return whether we can go to the previous help or not
-
-    return mBackAvailable;
-}
-
-//==============================================================================
-
-bool HelpWidget::isForwardAvailable() const
-{
-    // Return whether we can go to the next help or not
-
-    return mForwardAvailable;
-}
-
-//==============================================================================
-
-int HelpWidget::minimumZoomLevel() const
-{
-    // Return the minimum zoom level
-
-    return 1;
-}
-
-//==============================================================================
-
-int HelpWidget::defaultZoomLevel() const
-{
-    // Return the default zoom level
-
-    return 9;
-}
-
-//==============================================================================
-
 void HelpWidget::resetZoom()
 {
     // Reset the zoom level
 
-    setZoomLevel(defaultZoomLevel());
+    setZoomLevel(DefaultZoomLevel);
 }
 
 //==============================================================================
@@ -321,7 +284,7 @@ void HelpWidget::zoomIn()
 {
     // Zoom in the help page contents
 
-    setZoomLevel(++mZoomLevel);
+    setZoomLevel(mZoomLevel+1);
 }
 
 //==============================================================================
@@ -330,7 +293,7 @@ void HelpWidget::zoomOut()
 {
     // Zoom out the help page contents
 
-    setZoomLevel(qMax(minimumZoomLevel(), --mZoomLevel));
+    setZoomLevel(qMax(MinimumZoomLevel, mZoomLevel-1));
 }
 
 //==============================================================================
@@ -346,16 +309,11 @@ void HelpWidget::setZoomLevel(const int &pZoomLevel)
 
     setZoomFactor(0.1*mZoomLevel);
 
-    emit zoomLevelChanged(mZoomLevel);
-}
+    // Let the user know whether we are not at the default zoom level and
+    // whether we can still zoom out
 
-//==============================================================================
-
-int HelpWidget::zoomLevel() const
-{
-    // Return the current zoom level for the help page contents
-
-    return mZoomLevel;
+    emit notDefaultZoomLevel(pZoomLevel != DefaultZoomLevel);
+    emit zoomOutEnabled(pZoomLevel != MinimumZoomLevel);
 }
 
 //==============================================================================
@@ -445,6 +403,26 @@ void HelpWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
+void HelpWidget::urlChanged(const QUrl &pUrl)
+{
+    // The URL has changed, so let the user know whether it's the home page or
+    // not
+
+    emit notHomePage(pUrl != mHomePage);
+}
+
+//==============================================================================
+
+void HelpWidget::selectionChanged()
+{
+    // The text selection has changed, so let the user know whether some text is
+    // now selected
+
+    emit copyTextEnabled(selectedText().size());
+}
+
+//==============================================================================
+
 void HelpWidget::webPageChanged()
 {
     // A new help page has been selected, resulting in the previous or next
@@ -457,24 +435,15 @@ void HelpWidget::webPageChanged()
 
         if (action == pageAction(QWebPage::Back)) {
             // The current action is to tell us whether the previous help page
-            // is available or not
+            // is available or not, so send a signal to let the user know about
+            // it
 
-            mBackAvailable = action->isEnabled();
-
-            // Send a signal to let the user know of the new status of the
-            // previous help page
-
-            emit backAvailable(mBackAvailable);
+            emit backEnabled(action->isEnabled());
         } else if (action == pageAction(QWebPage::Forward)) {
             // The current action is to tell us whether the next help page is
-            // available or not
+            // available or not, so send a signal to let the user know about it
 
-            mForwardAvailable = action->isEnabled();
-
-            // Send a signal to let the user know of the new status of the next
-            // help page
-
-            emit forwardAvailable(mForwardAvailable);
+            emit forwardEnabled(action->isEnabled());
         }
     }
 }
