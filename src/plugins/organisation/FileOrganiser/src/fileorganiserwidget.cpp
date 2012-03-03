@@ -924,6 +924,20 @@ void FileOrganiserWidget::newFolder()
 
 //==============================================================================
 
+QStandardItem * FileOrganiserWidget::parentItem(QStandardItem *pDropItem,
+                                                const QAbstractItemView::DropIndicatorPosition &pDropPosition)
+{
+    // Return who should be the parent item of pDropItem based on pDropPosition
+
+    return (pDropPosition == QAbstractItemView::OnItem)?
+                pDropItem:
+                pDropItem->parent()?
+                    pDropItem->parent():
+                    mDataModel->invisibleRootItem();
+}
+
+//==============================================================================
+
 void FileOrganiserWidget::addFile(const QString &pFileName,
                                   QStandardItem *pDropItem,
                                   const QAbstractItemView::DropIndicatorPosition &pDropPosition)
@@ -959,11 +973,7 @@ void FileOrganiserWidget::addFile(const QString &pFileName,
 
         // First, determine the item that will own the file
 
-        QStandardItem *newParentItem = (pDropPosition == QAbstractItemView::OnItem)?
-                                           pDropItem:
-                                           pDropItem->parent()?
-                                               pDropItem->parent():
-                                               mDataModel->invisibleRootItem();
+        QStandardItem *newParentItem = parentItem(pDropItem, pDropPosition);
 
         // Second, check whether or not the file is already owned by
         // newParentItem
@@ -1046,11 +1056,7 @@ void FileOrganiserWidget::moveItem(QStandardItem *pItem,
     QStandardItem *crtParentItem = pItem->parent()?
                                        pItem->parent():
                                        mDataModel->invisibleRootItem();
-    QStandardItem *newParentItem = (pDropPosition == QAbstractItemView::OnItem)?
-                                       pDropItem:
-                                       pDropItem->parent()?
-                                           pDropItem->parent():
-                                           mDataModel->invisibleRootItem();
+    QStandardItem *newParentItem = parentItem(pDropItem, pDropPosition);
 
     // Second, check whether or not the (file) item points to a file which is
     // already owned by newParentItem

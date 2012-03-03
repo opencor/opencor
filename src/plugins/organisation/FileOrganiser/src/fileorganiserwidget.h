@@ -99,6 +99,9 @@ private:
     QString newFolderName(QStandardItem *pFolderItem) const;
     void collapseEmptyFolders(QStandardItem *pFolder);
 
+    QStandardItem *parentItem(QStandardItem *pDropItem,
+                              const QAbstractItemView::DropIndicatorPosition &pDropPosition);
+
     void addFile(const QString &pFileName, QStandardItem *pDropItem,
                  const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
