@@ -197,6 +197,14 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
         // The initial path is that of a file, so...
 
         setCurrentIndex(mDataModel->index(mInitPath));
+
+    // Make sure that the current path is expanded
+    // Note: this is important in case the current path is that of the C: drive
+    //       or the root of the file system, in which case this won't result in
+    //       the directoryLoaded signal being emitted
+
+    if (!isExpanded(currentIndex()))
+        setExpanded(currentIndex(), true);
 }
 
 //==============================================================================
