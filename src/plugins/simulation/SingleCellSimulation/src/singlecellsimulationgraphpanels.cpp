@@ -109,6 +109,10 @@ void SingleCellSimulationGraphPanels::wheelEvent(QWheelEvent *pEvent)
 
 SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel()
 {
+    // Keep track of the graph panels' original size
+
+    QList<int> origSizes = sizes();
+
     // Create a new graph panel
 
     SingleCellSimulationGraphPanel *res = new SingleCellSimulationGraphPanel(this);
@@ -117,13 +121,23 @@ SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel(
 
     addWidget(res);
 
+    // Resize the graph panels, thus making sure that their size is what it
+    // should be (see issue #58)
+
+    double scalingFactor = (double) (count()-1)/count();
+
+    for (int i = 0, iMax = origSizes.count(); i < iMax; ++i)
+        origSizes[i] *= scalingFactor;
+
+    setSizes(origSizes << height()/count());
+
     // Create a connection to keep track of whenever the graph panel gets
     // activated
 
     connect(res, SIGNAL(activated(SingleCellSimulationGraphPanel *)),
             this, SLOT(graphPanelActivated(SingleCellSimulationGraphPanel *)));
 
-    // Activate it
+    // Activate the graph panel
 
     res->setActive(true);
 
@@ -164,19 +178,13 @@ void SingleCellSimulationGraphPanels::removeGraphPanel()
 
             // Activate the next graph panel or the last one available, if any
 
-            iMax = count();
-
-            if (!iMax)
-                // No more graph panel, so...
-
-                break;
-            else if (i < iMax)
+            if (i < count())
                 // There is a next graph panel, so activate it
 
                 qobject_cast<SingleCellSimulationGraphPanel *>(widget(i))->setActive(true);
             else
-                // We were dealing with the last graph panel, but there is still
-                // at least one left, so activate the new last graph panel
+                // We were dealing with the last graph panel, so just activate
+                // the new last graph panel
 
                 qobject_cast<SingleCellSimulationGraphPanel *>(widget(count()-1))->setActive(true);
 
