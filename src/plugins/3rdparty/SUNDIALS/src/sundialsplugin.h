@@ -1,9 +1,9 @@
 //==============================================================================
-// IDA plugin
+// SUNDIALS plugin
 //==============================================================================
 
-#ifndef IDAPLUGIN_H
-#define IDAPLUGIN_H
+#ifndef SUNDIALSPLUGIN_H
+#define SUNDIALSPLUGIN_H
 
 //==============================================================================
 
@@ -12,22 +12,22 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace IDA {
+namespace SUNDIALS {
 
 //==============================================================================
 
-PLUGININFO_FUNC IDAPluginInfo();
+PLUGININFO_FUNC SUNDIALSPluginInfo();
 
 //==============================================================================
 
-class IDAPlugin : public QObject
+class SUNDIALSPlugin : public QObject
 {
     Q_OBJECT
 };
 
 //==============================================================================
 
-}   // namespace IDA
+}   // namespace SUNDIALS
 }   // namespace OpenCOR
 
 //==============================================================================

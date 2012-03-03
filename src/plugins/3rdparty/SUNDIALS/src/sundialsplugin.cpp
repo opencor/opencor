@@ -1,22 +1,22 @@
 //==============================================================================
-// CVODE plugin
+// SUNDIALS plugin
 //==============================================================================
 
-#include "cvodeplugin.h"
+#include "sundialsplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CVODE {
+namespace SUNDIALS {
 
 //==============================================================================
 
-PLUGININFO_FUNC CVODEPluginInfo()
+PLUGININFO_FUNC SUNDIALSPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "A plugin to use <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a>");
-    descriptions.insert("fr", "Une extension pour utiliser <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a>");
+    descriptions.insert("en", "A plugin to use <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a>");
+    descriptions.insert("fr", "Une extension pour utiliser <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a>");
 
     return PluginInfo(PluginInfo::V001,
                       PluginInfo::General,
@@ -28,11 +28,11 @@ PLUGININFO_FUNC CVODEPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CVODE, CVODEPlugin)
+Q_EXPORT_PLUGIN2(SUNDIALS, SUNDIALSPlugin)
 
 //==============================================================================
 
-}   // namespace CVODE
+}   // namespace SUNDIALS
 }   // namespace OpenCOR
 
 //==============================================================================
