@@ -53,8 +53,8 @@ private:
     QList<QwtPlotCurve *> mPlotCurves;
 
 Q_SIGNALS:
-    void activated(SingleCellSimulationGraphPanel *);
-    void inactivated(SingleCellSimulationGraphPanel *);
+    void activated(SingleCellSimulationGraphPanel *pGraphPanel);
+    void inactivated(SingleCellSimulationGraphPanel *pGraphPanel);
 };
 
 //==============================================================================

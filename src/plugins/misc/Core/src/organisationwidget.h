@@ -29,7 +29,7 @@ public:
     explicit OrganisationWidget(QWidget *pParent = 0);
 
 Q_SIGNALS:
-    void filesOpened(const QStringList &);
+    void filesOpened(const QStringList &pFiles);
 };
 
 //==============================================================================
