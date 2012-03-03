@@ -446,9 +446,12 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     updateGui();
 
-    // Everything went fine, so let people know that the file has been opened
+    // Everything went fine, so let people know that the file has been opened,
+    // as well as whether we can naviate and/or close files
 
     emit fileOpened(nativeFileName);
+    emit navigateFilesEnabled(mFileTabs->count() > 1);
+    emit closeFilesEnabled(mFileTabs->count());
 
     // Everything went fine, so...
 
@@ -514,9 +517,12 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         updateGui();
 
-        // Finally, we let people know about the file having just been closed
+        // Finally, we let people know about the file having just been closed,
+        // as well as whether we can naviate and/or close the remaining files
 
         emit fileClosed(fileName);
+        emit navigateFilesEnabled(mFileTabs->count() > 1);
+        emit closeFilesEnabled(mFileTabs->count());
 
         // Everything went fine, so...
 

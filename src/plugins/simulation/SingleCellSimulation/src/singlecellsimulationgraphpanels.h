@@ -45,9 +45,9 @@ protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 Q_SIGNALS:
-    void grapPanelAdded(SingleCellSimulationGraphPanel *);
+    void grapPanelAdded(SingleCellSimulationGraphPanel *pGraphPanel);
     void grapPanelRemoved();
-    void canRemoveGraphPanels(const bool &);
+    void removeGraphPanelsEnabled(const bool &pEnabled);
 
 private Q_SLOTS:
     void graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel);

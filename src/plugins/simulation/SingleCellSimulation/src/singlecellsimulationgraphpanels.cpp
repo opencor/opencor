@@ -147,7 +147,7 @@ SingleCellSimulationGraphPanel * SingleCellSimulationGraphPanels::addGraphPanel(
 
     // Let people know whether graph panels can be removed
 
-    emit canRemoveGraphPanels(count() > 1);
+    emit removeGraphPanelsEnabled(count() > 1);
 
     // Return our newly created graph panel
 
@@ -200,7 +200,7 @@ void SingleCellSimulationGraphPanels::removeGraphPanel()
 
     // Let people know whether graph panels can be removed
 
-    emit canRemoveGraphPanels(count() > 1);
+    emit removeGraphPanelsEnabled(count() > 1);
 }
 
 //==============================================================================

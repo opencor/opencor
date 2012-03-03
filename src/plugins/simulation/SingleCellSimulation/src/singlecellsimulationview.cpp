@@ -68,7 +68,7 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
     mGraphPanels = new SingleCellSimulationGraphPanels("GraphPanels", this);
 
-    connect(mGraphPanels, SIGNAL(canRemoveGraphPanels(const bool &)),
+    connect(mGraphPanels, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mUi->actionRemove, SLOT(setEnabled(bool)));
 
     // Create a simulation output widget with a vertical layout on which we put

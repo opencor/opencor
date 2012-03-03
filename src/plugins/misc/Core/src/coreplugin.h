@@ -57,8 +57,6 @@ public:
 protected:
     virtual void retranslateUi();
 
-    virtual void updateActions();
-
 private:
     QList<FileType> mSupportedFileTypes;
 
@@ -78,8 +76,6 @@ private:
 
 private Q_SLOTS:
     void openFile();
-
-    void needUpdateActions();
 };
 
 //==============================================================================

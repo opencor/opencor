@@ -160,6 +160,9 @@ Q_SIGNALS:
     void fileClosed(const QString &pFileName);
     void fileSelected(const QString &pFileName);
 
+    void navigateFilesEnabled(const bool &pEnabled);
+    void closeFilesEnabled(const bool &pEnabled);
+
 public Q_SLOTS:
     void openFiles(const QStringList &pFileNames);
 

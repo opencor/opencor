@@ -94,6 +94,15 @@ void CorePlugin::initialize()
                                  ":/oxygen/actions/document-print.png",
                                  QKeySequence::Print);
 
+//---GRY--- WE DISABLE SOME OF THE ABOVE ACTIONS SINCE THEY ARE NOT YET
+//          IMPLEMENTED...
+
+mFileSaveAction->setEnabled(false);
+mFileSaveAsAction->setEnabled(false);
+mFileSaveAllAction->setEnabled(false);
+
+mFilePrintAction->setEnabled(false);
+
     // Some connections to handle our various actions
 
     connect(mFileOpenAction, SIGNAL(triggered(bool)),
@@ -109,13 +118,17 @@ void CorePlugin::initialize()
     connect(mFileCloseAllAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(closeAllFiles()));
 
-    // Some connections to handle the result of our various actions
+    // Some connections to update the enabled state of our various actions
 
-    connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
-            this, SLOT(needUpdateActions()));
+    connect(mCentralWidget, SIGNAL(navigateFilesEnabled(const bool &)),
+            mFilePreviousAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, SIGNAL(navigateFilesEnabled(const bool &)),
+            mFileNextAction, SLOT(setEnabled(bool)));
 
-    connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
-            this, SLOT(needUpdateActions()));
+    connect(mCentralWidget, SIGNAL(closeFilesEnabled(const bool &)),
+            mFileCloseAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, SIGNAL(closeFilesEnabled(const bool &)),
+            mFileCloseAllAction, SLOT(setEnabled(bool)));
 
     // Set our settings
 
@@ -135,10 +148,6 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
 
     mGuiSettings->addCentralWidget(mCentralWidget);
-
-    // Initialise the enabled state of our various actions
-
-    updateActions();
 }
 
 //==============================================================================
@@ -278,27 +287,6 @@ void CorePlugin::retranslateUi()
 
 //==============================================================================
 
-void CorePlugin::updateActions()
-{
-    // Make sure that our various actions are properly enabled/disabled
-
-    mFileOpenAction->setEnabled(true);
-
-    mFileSaveAction->setEnabled(false);
-    mFileSaveAsAction->setEnabled(false);
-    mFileSaveAllAction->setEnabled(false);
-
-    mFilePreviousAction->setEnabled(mCentralWidget->openedFilesCount() > 1);
-    mFileNextAction->setEnabled(mCentralWidget->openedFilesCount() > 1);
-
-    mFileCloseAction->setEnabled(mCentralWidget->openedFilesCount());
-    mFileCloseAllAction->setEnabled(mCentralWidget->openedFilesCount());
-
-    mFilePrintAction->setEnabled(false);
-}
-
-//==============================================================================
-
 void CorePlugin::openFile()
 {
     // Ask for the file(s) to be opened
@@ -340,15 +328,6 @@ void CorePlugin::openFile()
     // Open the file(s)
 
     mCentralWidget->openFiles(files);
-}
-
-//==============================================================================
-
-void CorePlugin::needUpdateActions()
-{
-    // Something requires the actions to be udpated
-
-    updateActions();
 }
 
 //==============================================================================
