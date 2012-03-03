@@ -43,10 +43,13 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    bool gotoPath(const QString &pPath, const bool &pExpand = false);
+    bool goToPath(const QString &pPath, const bool &pExpand = false);
 
-    QString homeFolder() const;
-    void gotoHomeFolder(const bool &pExpand = false);
+    void goToHomeFolder(const bool &pExpand = false);
+    void goToParentFolder();
+
+    void goToPreviousFileOrFolder();
+    void goToNextFileOrFolder();
 
     QString currentPath() const;
     QString currentPathDir() const;
@@ -73,17 +76,30 @@ private:
     QString mInitPathDir;
     QString mInitPath;
 
+    QStringList mPreviousItems;
+    QStringList mNextItems;
+
     void deselectFolders() const;
 
     QStringList selectedFiles() const;
 
-Q_SIGNALS:
-    void beginLoadingSettings();
-    void endLoadingSettings();
+    void emitItemChangedRelatedSignals();
 
+    void updateItems(const QString &pItemPath, QStringList &pItems) const;
+    void goToOtherItem(QStringList &pItems, QStringList &pOtherItems);
+
+Q_SIGNALS:
     void filesOpened(const QStringList &pFileNames);
 
+    void notHomeFolder(const bool &pNotHomeFolder);
+    void goToParentFolderEnabled(const bool &pEnabled);
+
+    void goToPreviousFileOrFolderEnabled(const bool &pEnabled);
+    void goToNextFileOrFolderEnabled(const bool &pEnabled);
+
 private Q_SLOTS:
+    void itemChanged(const QModelIndex &pCrtItem, const QModelIndex &pPrevItem);
+
     void directoryLoaded(const QString &pPath);
 };
 

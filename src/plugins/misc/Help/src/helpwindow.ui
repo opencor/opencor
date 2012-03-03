@@ -36,9 +36,6 @@
    </property>
   </action>
   <action name="actionBack">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../../Core/res/Core.qrc">
      <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
@@ -51,9 +48,6 @@
    </property>
   </action>
   <action name="actionForward">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../../Core/res/Core.qrc">
      <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
@@ -90,9 +84,6 @@
    </property>
   </action>
   <action name="actionNormalSize">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../res/Help.qrc">
      <normaloff>:/oxygen/actions/zoom-original.png</normaloff>:/oxygen/actions/zoom-original.png</iconset>
@@ -105,9 +96,6 @@
    </property>
   </action>
   <action name="actionCopy">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../../Core/res/Core.qrc">
      <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>

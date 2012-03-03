@@ -101,14 +101,13 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     connect(mHelpWidget, SIGNAL(forwardEnabled(const bool &)),
             mUi->actionForward, SLOT(setEnabled(bool)));
 
-    connect(mHelpWidget, SIGNAL(copyTextEnabled(const bool &)),
-            mUi->actionCopy, SLOT(setEnabled(bool)));
-
     connect(mHelpWidget, SIGNAL(notDefaultZoomLevel(const bool &)),
             mUi->actionNormalSize, SLOT(setEnabled(bool)));
-
     connect(mHelpWidget, SIGNAL(zoomOutEnabled(const bool &)),
             mUi->actionZoomOut, SLOT(setEnabled(bool)));
+
+    connect(mHelpWidget, SIGNAL(copyTextEnabled(const bool &)),
+            mUi->actionCopy, SLOT(setEnabled(bool)));
 }
 
 //==============================================================================

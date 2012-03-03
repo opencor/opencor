@@ -43,19 +43,10 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-protected:
-    virtual void updateActions();
-
 private:
     Ui::FileBrowserWindow *mUi;
 
     FileBrowserWidget *mFileBrowserWidget;
-
-    QStringList mPrevItems;
-    QStringList mNextItems;
-
-    void gotoOtherItem(QStringList &pItems, QStringList &pOtherItems);
-    void updateItems(const QString &pItemPath, QStringList &pItems) const;
 
 private Q_SLOTS:
     void on_actionHome_triggered();
@@ -63,12 +54,8 @@ private Q_SLOTS:
     void on_actionPrevious_triggered();
     void on_actionNext_triggered();
 
-    void beginLoadingSettings() const;
-    void endLoadingSettings() const;
     void customContextMenu(const QPoint &) const;
     void itemDoubleClicked(const QModelIndex &itemIndex);
-
-    void itemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
 };
 
 //==============================================================================

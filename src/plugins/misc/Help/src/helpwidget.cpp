@@ -246,6 +246,18 @@ void HelpWidget::loadSettings(QSettings *pSettings)
     // Retrieve the zoom level
 
     setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
+
+    // Let the user know of a few default things about ourselves
+
+    emit notHomePage(false);
+
+    emit backEnabled(false);
+    emit forwardEnabled(false);
+
+    emit copyTextEnabled(false);
+
+    emit notDefaultZoomLevel(mZoomLevel != DefaultZoomLevel);
+    emit zoomOutEnabled(mZoomLevel != MinimumZoomLevel);
 }
 
 //==============================================================================

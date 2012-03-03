@@ -126,10 +126,10 @@ private:
 Q_SIGNALS:
     void notHomePage(const bool &pNotHomePage);
 
-    void copyTextEnabled(const bool &pEnabled);
-
     void backEnabled(const bool &pEnabled);
     void forwardEnabled(const bool &pEnabled);
+
+    void copyTextEnabled(const bool &pEnabled);
 
     void notDefaultZoomLevel(const bool &pEnabled);
     void zoomOutEnabled(const bool &pEnabled);

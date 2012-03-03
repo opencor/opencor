@@ -51,12 +51,18 @@ Qt::ItemFlags FileBrowserModel::flags(const QModelIndex &pIndex) const
 
 //==============================================================================
 
+static const QString HomeFolder = QDir::homePath();
+
+//==============================================================================
+
 FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     TreeView(pName, this, pParent),
     mNeedDefColWidth(true),
     mInitPathDirs(QStringList()),
     mInitPathDir(QString()),
-    mInitPath(QString())
+    mInitPath(QString()),
+    mPreviousItems(QStringList()),
+    mNextItems(QStringList())
 {
     // Create an instance of the file system model that we want to view
 
@@ -68,7 +74,10 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
     setModel(mDataModel);
     setSortingEnabled(true);
 
-    // Connection to keep track of the directory loading progress of mDataModel
+    // Some connections
+
+    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 
     connect(mDataModel, SIGNAL(directoryLoaded(const QString &)),
             this, SLOT(directoryLoaded(const QString &)));
@@ -78,6 +87,8 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
 
 FileBrowserWidget::~FileBrowserWidget()
 {
+    // Delete some internal objects
+
     delete mDataModel;
 }
 
@@ -92,9 +103,11 @@ static const QString SettingsSortOrder   = "SortOrder";
 
 void FileBrowserWidget::loadSettings(QSettings *pSettings)
 {
-    // Let people know that we are starting loading the settings
+    // We are about to begin loading the settings, so we don't want to keep
+    // track of the change of item
 
-    emit beginLoadingSettings();
+    disconnect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+               this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
 
     // Retrieve the width of each column
 
@@ -304,6 +317,147 @@ void FileBrowserWidget::deselectFolders() const
 
 //==============================================================================
 
+void FileBrowserWidget::emitItemChangedRelatedSignals()
+{
+    // Let the user know whether the path of the new item is not that of our
+    // home folder, as well as whether we could go to the parent item
+
+    emit notHomeFolder(currentPath() != HomeFolder);
+    emit goToParentFolderEnabled(currentPathParent().size());
+
+    // Let the user know whether we can go to the previous/next file/folder
+
+    emit goToPreviousFileOrFolderEnabled(mPreviousItems.count());
+    emit goToNextFileOrFolderEnabled(mNextItems.count());
+}
+
+//==============================================================================
+
+void FileBrowserWidget::updateItems(const QString &pItemPath,
+                                    QStringList &pItems) const
+{
+    // Remove any instance of pItemPath in pItems
+
+    pItems.removeAll(pItemPath);
+
+    // Because of the above, we may have two or more consective identital items
+    // in the list, so we must reduce that to one
+
+    if (pItems.count() > 1) {
+        QStringList newItems;
+        QString prevItem = pItems.at(0);
+
+        newItems << prevItem;
+
+        for (int i = 1, iMax = pItems.count(); i < iMax; ++i) {
+            QString crtItem = pItems.at(i);
+
+            if (crtItem != prevItem) {
+                // The current and previous items are different, so we want to
+                // keep track of it and add it to our new list
+
+                newItems << crtItem;
+
+                prevItem = crtItem;
+            }
+        }
+
+        // Update the old list of items with our new one
+
+        pItems = newItems;
+    }
+}
+
+//==============================================================================
+
+void FileBrowserWidget::goToOtherItem(QStringList &pItems,
+                                      QStringList &pOtherItems)
+{
+    // Go to the previous/next item and move the last item from our list of
+    // items to our list of other items
+
+    // First, we must stop keeping track of the change of item otherwise it's
+    // going to mess things up
+
+    disconnect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+               this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
+
+    // Retrieve our current path and add it to our list of other items
+
+    QString crtPath = currentPath();
+
+    pOtherItems << crtPath;
+
+    // Retrieve the new path and check whether it still exist or not
+
+    QString newItemPath = pItems.last();
+
+    while (   !pItems.isEmpty()
+           && !QFileInfo(newItemPath).exists()) {
+        // The new item doesn't exist anymore, so remove it from our list of
+        // items and other items
+
+        updateItems(newItemPath, pItems);
+        updateItems(newItemPath, pOtherItems);
+
+        // Try with the next new item
+
+        if (!pItems.isEmpty()) {
+            // The list is not empty, so make the last item our next new item
+
+            newItemPath = pItems.last();
+
+            // The next new item cannot, however, be the same as the current
+            // path
+
+            while (!pItems.isEmpty() && (newItemPath == crtPath)) {
+                pItems.removeLast();
+
+                if (!pItems.isEmpty())
+                    newItemPath = pItems.last();
+                else
+                    newItemPath = "";
+            }
+        } else {
+            // The list is empty, so...
+
+            newItemPath = "";
+        }
+    }
+
+    if (!newItemPath.isEmpty()) {
+        // We have a valid new item, so go to its path and remove it from our
+        // list of items
+
+        goToPath(newItemPath);
+
+        pItems.removeLast();
+    }
+
+    // Make sure that the last item in the lists of items and other items isn't
+    // that of the current path (this may happen if some items got deleted by
+    // the user)
+
+    crtPath = currentPath();
+
+    if (!pItems.isEmpty() && (pItems.last() == crtPath))
+        pItems.removeLast();
+
+    if (!pOtherItems.isEmpty() && (pOtherItems.last() == crtPath))
+        pOtherItems.removeLast();
+
+    // Now that we are done, we can once again keep track of the change of item
+
+    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
+
+    // Let the user know about a few item changed related things
+
+    emitItemChangedRelatedSignals();
+}
+
+//==============================================================================
+
 void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
@@ -361,6 +515,25 @@ void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
+void FileBrowserWidget::itemChanged(const QModelIndex &pCrtItem,
+                                    const QModelIndex &pPrevItem)
+{
+    // A new item has been selected, so we need to keep track of the old one in
+    // case we want to go back to it
+
+    mPreviousItems << pathOf(pPrevItem);
+
+    // Reset the list of next items since that list doesn't make sense anymore
+
+    mNextItems.clear();
+
+    // Let the user know about a few item changed related things
+
+    emitItemChangedRelatedSignals();
+}
+
+//==============================================================================
+
 void FileBrowserWidget::directoryLoaded(const QString &pPath)
 {
     static bool needInitializing = true;
@@ -413,11 +586,20 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
         //       platforms too, so...)
 
         // Check whether or not we are done initializing (which is when
-        // mInitPathDirs is empty) and, if so, let people know that
-        // this means we are done loading the settings
+        // mInitPathDirs is empty)
 
         if (mInitPathDirs.isEmpty()) {
-            emit endLoadingSettings();
+            // We are now done loading the settings for the file browser widget,
+            // so we can now keep track of the change of item
+
+            connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+                    this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
+
+            // Let the user know about a few item changed related things
+
+            emitItemChangedRelatedSignals();
+
+            // We are done initalising, so...
 
             needInitializing = false;
         }
@@ -426,7 +608,7 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
 //==============================================================================
 
-bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
+bool FileBrowserWidget::goToPath(const QString &pPath, const bool &pExpand)
 {
     // Set the current index to that of the provided path
 
@@ -450,20 +632,38 @@ bool FileBrowserWidget::gotoPath(const QString &pPath, const bool &pExpand)
 
 //==============================================================================
 
-QString FileBrowserWidget::homeFolder() const
+void FileBrowserWidget::goToHomeFolder(const bool &pExpand)
 {
-    // Return the path to the home folder
+    // Go to the home folder
 
-    return QDir::homePath();
+    goToPath(HomeFolder, pExpand);
 }
 
 //==============================================================================
 
-void FileBrowserWidget::gotoHomeFolder(const bool &pExpand)
+void FileBrowserWidget::goToParentFolder()
 {
-    // Go to the home folder
+    // Go to the parent folder
 
-    gotoPath(QDir::homePath(), pExpand);
+    goToPath(currentPathParent());
+}
+
+//==============================================================================
+
+void FileBrowserWidget::goToPreviousFileOrFolder()
+{
+    // Go to the previous file/folder
+
+    goToOtherItem(mPreviousItems, mNextItems);
+}
+
+//==============================================================================
+
+void FileBrowserWidget::goToNextFileOrFolder()
+{
+    // Go to the next file/folder
+
+    goToOtherItem(mNextItems, mPreviousItems);
 }
 
 //==============================================================================
