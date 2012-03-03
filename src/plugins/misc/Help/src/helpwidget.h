@@ -124,7 +124,7 @@ private:
     void setZoomLevel(const int &pZoomLevel);
 
 Q_SIGNALS:
-    void notHomePage(const bool &pIsNotHomePage);
+    void notHomePage(const bool &pNotHomePage);
 
     void copyTextEnabled(const bool &pEnabled);
 

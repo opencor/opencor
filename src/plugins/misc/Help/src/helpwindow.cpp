@@ -91,7 +91,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     connect(mHelpWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(customContextMenu(const QPoint &)));
 
-    // Some connections to update the enabled stated of our various actions
+    // Some connections to update the enabled state of our various actions
 
     connect(mHelpWidget, SIGNAL(notHomePage(const bool &)),
             mUi->actionHome, SLOT(setEnabled(bool)));

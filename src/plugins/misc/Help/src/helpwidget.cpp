@@ -418,7 +418,7 @@ void HelpWidget::selectionChanged()
     // The text selection has changed, so let the user know whether some text is
     // now selected
 
-    emit copyTextEnabled(selectedText().size());
+    emit copyTextEnabled(!selectedText().isEmpty());
 }
 
 //==============================================================================
