@@ -434,13 +434,6 @@ GuiSettings * GuiInterface::guiSettings() const
 
 //==============================================================================
 
-void GuiInterface::updateActions()
-{
-    // Nothing to do by default...
-}
-
-//==============================================================================
-
 void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
 {
     // Set the main window
