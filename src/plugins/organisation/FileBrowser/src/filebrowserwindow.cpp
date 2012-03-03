@@ -108,16 +108,6 @@ void FileBrowserWindow::loadSettings(QSettings *pSettings)
     pSettings->beginGroup(mFileBrowserWidget->objectName());
         mFileBrowserWidget->loadSettings(pSettings);
     pSettings->endGroup();
-
-    // Make sure that the current path is expanded
-    // Note: this is important in case the current path is that of the C: drive
-    //       or the root of the file system which, during the loadSettings
-    //       above, won't trigger a directoryLoaded signal in the file browser
-    //       widget
-
-    if (!mFileBrowserWidget->isExpanded(mFileBrowserWidget->currentIndex()))
-        mFileBrowserWidget->setExpanded(mFileBrowserWidget->currentIndex(),
-                                        true);
 }
 
 //==============================================================================
