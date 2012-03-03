@@ -43,19 +43,13 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    bool goToPath(const QString &pPath, const bool &pExpand = false);
+    QString currentPath() const;
 
     void goToHomeFolder(const bool &pExpand = false);
     void goToParentFolder();
 
     void goToPreviousFileOrFolder();
     void goToNextFileOrFolder();
-
-    QString currentPath() const;
-    QString currentPathDir() const;
-    QString currentPathParent() const;
-
-    QString pathOf(const QModelIndex &pIndex) const;
 
 protected:
     virtual QSize sizeHint() const;
@@ -78,6 +72,12 @@ private:
 
     QStringList mPreviousItems;
     QStringList mNextItems;
+
+    bool goToPath(const QString &pPath, const bool &pExpand = false);
+
+    QString currentPathParent() const;
+
+    QString pathOf(const QModelIndex &pIndex) const;
 
     void deselectFolders() const;
 

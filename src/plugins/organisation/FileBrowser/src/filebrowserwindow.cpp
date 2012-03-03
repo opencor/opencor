@@ -183,12 +183,12 @@ void FileBrowserWindow::customContextMenu(const QPoint &) const
 
 //==============================================================================
 
-void FileBrowserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
+void FileBrowserWindow::itemDoubleClicked(const QModelIndex &)
 {
     // Check what kind of item has been double clicked and if it is a file, then
     // let people know about it being double clicked
 
-    QString fileName = mFileBrowserWidget->pathOf(itemIndex);
+    QString fileName = mFileBrowserWidget->currentPath();
     QFileInfo fileInfo = fileName;
 
     if (fileInfo.isFile()) {

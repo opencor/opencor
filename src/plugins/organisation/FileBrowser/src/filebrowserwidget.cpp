@@ -323,7 +323,7 @@ void FileBrowserWidget::emitItemChangedRelatedSignals()
     // home folder, as well as whether we could go to the parent item
 
     emit notHomeFolder(currentPath() != HomeFolder);
-    emit goToParentFolderEnabled(currentPathParent().size());
+    emit goToParentFolderEnabled(!currentPathParent().isEmpty());
 
     // Let the user know whether we can go to the previous/next file/folder
 
@@ -673,20 +673,6 @@ QString FileBrowserWidget::currentPath() const
     // Return the current path
 
     return mDataModel->filePath(currentIndex());
-}
-
-//==============================================================================
-
-QString FileBrowserWidget::currentPathDir() const
-{
-    // Return the directory of the current path
-
-    QString crtIndexPath = mDataModel->filePath(currentIndex());
-    QFileInfo crtIndexFileInfo = crtIndexPath;
-
-    return crtIndexFileInfo.isDir()?
-               crtIndexPath:
-               crtIndexFileInfo.dir().canonicalPath();
 }
 
 //==============================================================================
