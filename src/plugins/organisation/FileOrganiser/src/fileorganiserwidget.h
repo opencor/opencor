@@ -102,6 +102,8 @@ private:
     QStandardItem *parentItem(QStandardItem *pDropItem,
                               const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
+    bool ownedBy(const QString &pFileName, QStandardItem *pItem);
+
     void dropItems(QStandardItem *pDropItem,
                    const QAbstractItemView::DropIndicatorPosition &pDropPosition,
                    QStandardItem *pNewParentItem, QList<QStandardItem *> pItems);

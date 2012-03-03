@@ -938,6 +938,28 @@ QStandardItem * FileOrganiserWidget::parentItem(QStandardItem *pDropItem,
 
 //==============================================================================
 
+bool FileOrganiserWidget::ownedBy(const QString &pFileName,
+                                  QStandardItem *pItem)
+{
+    // Check whether pFileName is already owned by pItem
+
+    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
+        // Check whether the current item is a file with pFileName as its name
+
+        QStandardItem *crtItem = pItem->child(i);
+
+        if (   !crtItem->data(Item::Folder).toBool()
+            && (crtItem->data(Item::Path).toString() == pFileName))
+            return true;
+    }
+
+    // We couldn't find a file with pFileName as its name in pItem, so...
+
+    return false;
+}
+
+//==============================================================================
+
 void FileOrganiserWidget::dropItems(QStandardItem *pDropItem,
                                     const QAbstractItemView::DropIndicatorPosition &pDropPosition,
                                     QStandardItem *pNewParentItem,
@@ -1022,25 +1044,11 @@ void FileOrganiserWidget::addFile(const QString &pFileName,
 
         QStandardItem *newParentItem = parentItem(pDropItem, pDropPosition);
 
-        // Second, check whether or not the file is already owned by
-        // newParentItem
+        // Second, if the file is not already owned, then add it to
+        // newParentItem and this to the right place, depending on the value of
+        // pDropPosition
 
-        bool fileAlreadyOwned = false;
-
-        for (int i = 0, iMax = newParentItem->rowCount(); (i < iMax) && !fileAlreadyOwned; ++i) {
-            // Check whether the current item is a file and whether it's the one
-            // we want to add
-
-            QStandardItem *crtItem = newParentItem->child(i);
-
-            fileAlreadyOwned =    !crtItem->data(Item::Folder).toBool()
-                               && (crtItem->data(Item::Path).toString() == fileName);
-        }
-
-        // Third, if the file is not already owned, then add it to newParentItem
-        // and this to the right place, depending on the value of pDropPosition
-
-        if (!fileAlreadyOwned) {
+        if (!ownedBy(fileName, newParentItem)) {
             QStandardItem *newFileItem = new QStandardItem(QIcon(FileIcon),
                                                            QFileInfo(fileName).fileName());
 
@@ -1087,23 +1095,11 @@ void FileOrganiserWidget::moveItem(QStandardItem *pItem,
 
     bool fileAlreadyOwned = false;
 
-    if (!pItem->data(Item::Folder).toBool()) {
-        // The current item is a file item, so retrieve the name of the file it
-        // refers to and check whether or not it's already owned by
-        // newParentItem
+    if (!pItem->data(Item::Folder).toBool())
+        // The current item is a file item, so retrieve its file name and check
+        // whether or not it's already owned by newParentItem
 
-        QString fileName = pItem->data(Item::Path).toString();
-
-        for (int i = 0, iMax = newParentItem->rowCount(); (i < iMax) && !fileAlreadyOwned; ++i) {
-            // Check whether the current item is a file and whether it's the one
-            // we want to add
-
-            QStandardItem *crtItem = newParentItem->child(i);
-
-            fileAlreadyOwned =    !crtItem->data(Item::Folder).toBool()
-                               && (crtItem->data(Item::Path).toString() == fileName);
-        }
-    }
+        fileAlreadyOwned = ownedBy(pItem->data(Item::Path).toString(), newParentItem);
 
     // Third, move pItem to newParentItem and this to the right place, depending
     // on the value of pDropPosition and only if the destination doesn't already
