@@ -247,7 +247,8 @@ void HelpWidget::loadSettings(QSettings *pSettings)
 
     setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
 
-    // Let the user know of a few default things about ourselves
+    // Let the user know of a few default things about ourselves by emitting a
+    // few signals
 
     emit notHomePage(false);
 
@@ -256,8 +257,7 @@ void HelpWidget::loadSettings(QSettings *pSettings)
 
     emit copyTextEnabled(false);
 
-    emit notDefaultZoomLevel(mZoomLevel != DefaultZoomLevel);
-    emit zoomOutEnabled(mZoomLevel != MinimumZoomLevel);
+    emitZoomRelatedSignals();
 }
 
 //==============================================================================
@@ -310,6 +310,17 @@ void HelpWidget::zoomOut()
 
 //==============================================================================
 
+void HelpWidget::emitZoomRelatedSignals()
+{
+    // Let the user know whether we are not at the default zoom level and
+    // whether we can still zoom out
+
+    emit notDefaultZoomLevel(mZoomLevel != DefaultZoomLevel);
+    emit zoomOutEnabled(mZoomLevel != MinimumZoomLevel);
+}
+
+//==============================================================================
+
 void HelpWidget::setZoomLevel(const int &pZoomLevel)
 {
     if (pZoomLevel == mZoomLevel)
@@ -321,11 +332,9 @@ void HelpWidget::setZoomLevel(const int &pZoomLevel)
 
     setZoomFactor(0.1*mZoomLevel);
 
-    // Let the user know whether we are not at the default zoom level and
-    // whether we can still zoom out
+    // Emit a few zoom-related signals
 
-    emit notDefaultZoomLevel(pZoomLevel != DefaultZoomLevel);
-    emit zoomOutEnabled(pZoomLevel != MinimumZoomLevel);
+    emitZoomRelatedSignals();
 }
 
 //==============================================================================

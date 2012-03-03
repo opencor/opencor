@@ -121,6 +121,8 @@ private:
 
     int mZoomLevel;
 
+    void emitZoomRelatedSignals();
+
     void setZoomLevel(const int &pZoomLevel);
 
 Q_SIGNALS:
