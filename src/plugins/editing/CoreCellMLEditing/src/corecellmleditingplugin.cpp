@@ -43,14 +43,15 @@ void CoreCellMLEditingPlugin::initialize()
     mFileNewCellml1_0Action = newAction(mMainWindow);
     mFileNewCellml1_1Action = newAction(mMainWindow);
 
+//---GRY--- WE DISABLE THE ABOVE ACTIONS SINCE THEY ARE NOT YET IMPLEMENTED...
+
+mFileNewCellml1_0Action->setEnabled(false);
+mFileNewCellml1_1Action->setEnabled(false);
+
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0Action);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1Action);
-
-    // Initialise the enabled state of our various actions
-
-    updateActions();
 }
 
 //==============================================================================
@@ -63,16 +64,6 @@ void CoreCellMLEditingPlugin::retranslateUi()
                       tr("Create a new CellML 1.0 file"));
     retranslateAction(mFileNewCellml1_1Action, tr("CellML 1.1 File"),
                       tr("Create a new CellML 1.1 file"));
-}
-
-//==============================================================================
-
-void CoreCellMLEditingPlugin::updateActions()
-{
-    // Make sure that our various actions are properly enabled/disabled
-
-    mFileNewCellml1_0Action->setEnabled(false);
-    mFileNewCellml1_1Action->setEnabled(false);
 }
 
 //==============================================================================
