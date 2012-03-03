@@ -938,6 +938,53 @@ QStandardItem * FileOrganiserWidget::parentItem(QStandardItem *pDropItem,
 
 //==============================================================================
 
+void FileOrganiserWidget::dropItems(QStandardItem *pDropItem,
+                                    const QAbstractItemView::DropIndicatorPosition &pDropPosition,
+                                    QStandardItem *pNewParentItem,
+                                    QList<QStandardItem *> pItems)
+{
+    // Drop pItems based on pDropPosition's value
+
+    switch (pDropPosition) {
+        case QAbstractItemView::AboveItem:
+            // We dropped pItems above pDropItem, so...
+
+            pNewParentItem->insertRow(pDropItem->row(), pItems);
+
+            break;
+        case QAbstractItemView::BelowItem:
+            // We dropped pItems below pDropItem, so...
+
+            pNewParentItem->insertRow(pDropItem->row()+1, pItems);
+
+            break;
+        default:
+            // We directly dropped pItems on pDropItem, so...
+
+            pNewParentItem->appendRow(pItems);
+
+            // Expand pNewParentItem, so the user knows that the item has been
+            // moved to it (assuming that pNewParentItem was collapsed)
+
+            setExpanded(pNewParentItem->index(), true);
+    }
+}
+
+//==============================================================================
+
+void FileOrganiserWidget::dropItem(QStandardItem *pDropItem,
+                                   const QAbstractItemView::DropIndicatorPosition &pDropPosition,
+                                   QStandardItem *pNewParentItem,
+                                   QStandardItem *pItem)
+{
+    // Drop the item as if we wanted to drop a list of items
+
+    dropItems(pDropItem, pDropPosition, pNewParentItem,
+              QList<QStandardItem *>() << pItem);
+}
+
+//==============================================================================
+
 void FileOrganiserWidget::addFile(const QString &pFileName,
                                   QStandardItem *pDropItem,
                                   const QAbstractItemView::DropIndicatorPosition &pDropPosition)
@@ -999,30 +1046,7 @@ void FileOrganiserWidget::addFile(const QString &pFileName,
 
             newFileItem->setData(fileName, Item::Path);
 
-            switch (pDropPosition) {
-                case QAbstractItemView::AboveItem:
-                    // We dropped the file above pDropItem, so...
-
-                    newParentItem->insertRow(pDropItem->row(), newFileItem);
-
-                    break;
-                case QAbstractItemView::BelowItem:
-                    // We dropped the file below pDropItem, so...
-
-                    newParentItem->insertRow(pDropItem->row()+1, newFileItem);
-
-                    break;
-                default:
-                    // We directly dropped the file on pDropItem, so...
-
-                    newParentItem->appendRow(newFileItem);
-
-                    // Expand newParentItem, so the user knows that the file has
-                    // been added to it (assuming that newParentItem was
-                    // collapsed)
-
-                    setExpanded(newParentItem->index(), true);
-            }
+            dropItem(pDropItem, pDropPosition, newParentItem, newFileItem);
 
             // Add the file to our file manager
             // Note: it doesn't matter whether or not the file is already being
@@ -1100,31 +1124,8 @@ void FileOrganiserWidget::moveItem(QStandardItem *pItem,
 
         // Second, move the item (and any of its children)
 
-        switch (pDropPosition) {
-            case QAbstractItemView::AboveItem:
-                // We dropped pItem above pDropItem, so...
-
-                newParentItem->insertRow(pDropItem->row(),
-                                         crtParentItem->takeRow(pItem->row()));
-
-                break;
-            case QAbstractItemView::BelowItem:
-                // We dropped pItem below pDropItem, so...
-
-                newParentItem->insertRow(pDropItem->row()+1,
-                                         crtParentItem->takeRow(pItem->row()));
-
-                break;
-            default:
-                // We directly dropped pItem on pDropItem, so...
-
-                newParentItem->appendRow(crtParentItem->takeRow(pItem->row()));
-
-                // Expand newParentItem, so the user knows that the item has
-                // been moved to it (assuming that newParentItem was collapsed)
-
-                setExpanded(newParentItem->index(), true);
-        }
+        dropItems(pDropItem, pDropPosition, newParentItem,
+                  crtParentItem->takeRow(pItem->row()));
 
         // Third, re-expand folders, if necessary
 

@@ -102,6 +102,13 @@ private:
     QStandardItem *parentItem(QStandardItem *pDropItem,
                               const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
+    void dropItems(QStandardItem *pDropItem,
+                   const QAbstractItemView::DropIndicatorPosition &pDropPosition,
+                   QStandardItem *pNewParentItem, QList<QStandardItem *> pItems);
+    void dropItem(QStandardItem *pDropItem,
+                  const QAbstractItemView::DropIndicatorPosition &pDropPosition,
+                  QStandardItem *pNewParentItem, QStandardItem *pItem);
+
     void addFile(const QString &pFileName, QStandardItem *pDropItem,
                  const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
