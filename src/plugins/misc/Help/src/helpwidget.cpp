@@ -110,7 +110,7 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
 {
     // Retrieve, if possible, the requested help page
 
-    QUrl url = QUrl(pRequest.url());
+    QUrl url = pRequest.url();
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
                           QByteArray(mErrorMsgTemplate.arg(tr("Error"),

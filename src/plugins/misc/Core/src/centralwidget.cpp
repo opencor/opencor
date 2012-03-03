@@ -431,7 +431,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     // new current one
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
-    QFileInfo fileInfo = QFileInfo(nativeFileName);
+    QFileInfo fileInfo = nativeFileName;
 
     mFileTabs->setCurrentIndex(mFileTabs->insertTab(mFileTabs->currentIndex()+1,
                                                     fileInfo.fileName()));
