@@ -1106,11 +1106,11 @@ void FileOrganiserWidget::moveItem(QStandardItem *pItem,
     // have that item (should it be a file item, since folder items are always
     // moved)
 
-    if (!fileAlreadyOwned || (pItem->parent() == newParentItem)) {
+    if (!fileAlreadyOwned || (crtParentItem == newParentItem)) {
         // Either newParentItem doesn't already own an item which points to the
-        // same file as pItem or pItem's parent is the same as newParentItem in
-        // which case it means that we want to move the item within its current
-        // location
+        // same file as pItem or pItem's current parent is the same as
+        // newParentItem in which case it means that we want to move the item
+        // within its current location
 
         // First, check whether the item is a folder and, if so, whether or not
         // it's expanded (and the same with any (in)direct child folder it may
