@@ -373,6 +373,9 @@ void FileBrowserWidget::updateItems(const QString &pItemPath,
 void FileBrowserWidget::goToOtherItem(QStringList &pItems,
                                       QStringList &pOtherItems)
 {
+    if (pItems.isEmpty())
+        return;
+
     // Go to the previous/next item and move the last item from our list of
     // items to our list of other items
 
@@ -548,19 +551,19 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
         qApp->processEvents();
 
-        QModelIndex initPathDirModelIndex = mDataModel->index(mInitPathDir);
+        QModelIndex initPathDirIndex = mDataModel->index(mInitPathDir);
 
-        setExpanded(initPathDirModelIndex, true);
-        scrollTo(initPathDirModelIndex);
-        setCurrentIndex(initPathDirModelIndex);
+        setExpanded(initPathDirIndex, true);
+        scrollTo(initPathDirIndex);
+        setCurrentIndex(initPathDirIndex);
 
         if (!mInitPath.isEmpty()) {
             // The initial path is that of a file and it exists, so select it
 
-            QModelIndex initPathModelIndex = mDataModel->index(mInitPath);
+            QModelIndex initPathIndex = mDataModel->index(mInitPath);
 
-            scrollTo(initPathModelIndex);
-            setCurrentIndex(initPathModelIndex);
+            scrollTo(initPathIndex);
+            setCurrentIndex(initPathIndex);
         }
 
         // Set the default width of the columns, if needed, so that it fits
@@ -608,35 +611,29 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
 //==============================================================================
 
-bool FileBrowserWidget::goToPath(const QString &pPath, const bool &pExpand)
+void FileBrowserWidget::goToPath(const QString &pPath, const bool &pExpand)
 {
     // Set the current index to that of the provided path
 
-    QModelIndex pathModelIndex = mDataModel->index(pPath);
+    QModelIndex pathIndex = mDataModel->index(pPath);
 
-    if (pathModelIndex != QModelIndex()) {
+    if ((pathIndex != QModelIndex()) && (pathIndex != currentIndex())) {
         // The path exists, so we can go to it
 
         if (pExpand)
-            setExpanded(pathModelIndex, true);
+            setExpanded(pathIndex, true);
 
-        setCurrentIndex(pathModelIndex);
-
-        return true;
-    } else {
-        // The path doesn't exist, so...
-
-        return false;
+        setCurrentIndex(pathIndex);
     }
 }
 
 //==============================================================================
 
-void FileBrowserWidget::goToHomeFolder(const bool &pExpand)
+void FileBrowserWidget::goToHomeFolder()
 {
     // Go to the home folder
 
-    goToPath(HomeFolder, pExpand);
+    goToPath(HomeFolder, true);
 }
 
 //==============================================================================

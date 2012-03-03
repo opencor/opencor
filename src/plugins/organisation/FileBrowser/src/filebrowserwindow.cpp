@@ -135,9 +135,9 @@ void FileBrowserWindow::saveSettings(QSettings *pSettings) const
 
 void FileBrowserWindow::on_actionHome_triggered()
 {
-    // Go to the home folder (and ask for it to be expanded)
+    // Go to the home folder
 
-    mFileBrowserWidget->goToHomeFolder(true);
+    mFileBrowserWidget->goToHomeFolder();
 }
 
 //==============================================================================

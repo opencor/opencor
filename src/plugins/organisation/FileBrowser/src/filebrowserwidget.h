@@ -45,7 +45,7 @@ public:
 
     QString currentPath() const;
 
-    void goToHomeFolder(const bool &pExpand = false);
+    void goToHomeFolder();
     void goToParentFolder();
 
     void goToPreviousFileOrFolder();
@@ -73,7 +73,7 @@ private:
     QStringList mPreviousItems;
     QStringList mNextItems;
 
-    bool goToPath(const QString &pPath, const bool &pExpand = false);
+    void goToPath(const QString &pPath, const bool &pExpand = false);
 
     QString currentPathParent() const;
 
