@@ -35,7 +35,7 @@ QByteArray resourceAsByteArray(const QString &pResource)
                                resource.size());
         else
             // The resource is not compressed, so just return it after doing the
-            // right conversions
+            // right conversion
 
             return QByteArray(reinterpret_cast<const char *>(resource.data()),
                               resource.size());

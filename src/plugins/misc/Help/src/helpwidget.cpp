@@ -170,7 +170,9 @@ HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
     QWebView(pParent),
     CommonWidget(pName, this, pParent),
     mHelpEngine(pHelpEngine),
-    mHomePage(pHomePage)
+    mHomePage(pHomePage),
+    mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
+                     // first call to setZoomLevel
 {
     // Add a small margin to the widget, so that no visual trace of the border
     // drawn by drawBorderIfDocked is left when scrolling
