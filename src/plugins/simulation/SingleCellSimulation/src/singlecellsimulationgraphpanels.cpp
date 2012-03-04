@@ -49,6 +49,11 @@ void SingleCellSimulationGraphPanels::loadSettings(QSettings *pSettings)
     // Select the first graph panel
 
     qobject_cast<SingleCellSimulationGraphPanel *>(widget(0))->setActive(true);
+
+    // Let the user know of a few default things about ourselves by emitting a
+    // few signals
+
+    emit removeGraphPanelsEnabled(false);
 }
 
 //==============================================================================

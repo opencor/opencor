@@ -344,6 +344,12 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Editing);
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Simulation);
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Analysis);
+
+    // Let the user know of a few default things about ourselves by emitting a
+    // few signals
+
+    emit navigateFilesEnabled(false);
+    emit closeFilesEnabled(false);
 }
 
 //==============================================================================
@@ -447,7 +453,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     updateGui();
 
     // Everything went fine, so let people know that the file has been opened,
-    // as well as whether we can naviate and/or close files
+    // as well as whether we can navigate and/or close files
 
     emit fileOpened(nativeFileName);
     emit navigateFilesEnabled(mFileTabs->count() > 1);
@@ -518,7 +524,7 @@ bool CentralWidget::closeFile(const int &pIndex)
         updateGui();
 
         // Finally, we let people know about the file having just been closed,
-        // as well as whether we can naviate and/or close the remaining files
+        // as well as whether we can navigate and/or close the remaining files
 
         emit fileClosed(fileName);
         emit navigateFilesEnabled(mFileTabs->count() > 1);

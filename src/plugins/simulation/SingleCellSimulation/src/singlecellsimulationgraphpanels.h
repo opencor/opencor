@@ -47,6 +47,7 @@ protected:
 Q_SIGNALS:
     void grapPanelAdded(SingleCellSimulationGraphPanel *pGraphPanel);
     void grapPanelRemoved();
+
     void removeGraphPanelsEnabled(const bool &pEnabled);
 
 private Q_SLOTS:
