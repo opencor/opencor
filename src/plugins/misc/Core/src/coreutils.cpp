@@ -29,7 +29,6 @@ QByteArray resourceAsByteArray(const QString &pResource)
     if (resource.isValid()) {
         if (resource.isCompressed())
             // The resource is compressed, so uncompress it before returning it
-            // Note: qUncompress returns a QByteArray, so we are fine...
 
             return qUncompress(reinterpret_cast<const uchar *>(resource.data()),
                                resource.size());
