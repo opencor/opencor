@@ -319,6 +319,12 @@ void CentralWidget::loadModeSettings(QSettings *pSettings,
 
 void CentralWidget::loadSettings(QSettings *pSettings)
 {
+    // Let the user know of a few default things about ourselves by emitting a
+    // few signals
+
+    emit navigateFilesEnabled(false);
+    emit closeFilesEnabled(false);
+
     // Retrieve the files that were previously opened
 
     QStringList openedFiles;
@@ -344,12 +350,6 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Editing);
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Simulation);
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Analysis);
-
-    // Let the user know of a few default things about ourselves by emitting a
-    // few signals
-
-    emit navigateFilesEnabled(false);
-    emit closeFilesEnabled(false);
 }
 
 //==============================================================================

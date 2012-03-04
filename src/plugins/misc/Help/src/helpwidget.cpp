@@ -243,10 +243,6 @@ static const QString SettingsZoomLevel = "ZoomLevel";
 
 void HelpWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the zoom level
-
-    setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
-
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
 
@@ -258,6 +254,10 @@ void HelpWidget::loadSettings(QSettings *pSettings)
     emit copyTextEnabled(false);
 
     emitZoomRelatedSignals();
+
+    // Retrieve the zoom level
+
+    setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
 }
 
 //==============================================================================

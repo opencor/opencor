@@ -103,6 +103,11 @@ static const QString SettingsSortOrder   = "SortOrder";
 
 void FileBrowserWidget::loadSettings(QSettings *pSettings)
 {
+    // Let the user know of a few default things about ourselves by emitting a
+    // few signals
+
+    emitItemChangedRelatedSignals();
+
     // We are about to begin loading the settings, so we don't want to keep
     // track of the change of item
 
@@ -205,12 +210,6 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
 
     if (!isExpanded(currentIndex()))
         setExpanded(currentIndex(), true);
-
-    // Let the user know of a few default things about ourselves by emitting a
-    // few signals
-
-    // Note that the above would be normally done here, but because of the
-    // nature of this widget, it's done in the directoryLoaded slot
 }
 
 //==============================================================================
@@ -611,11 +610,6 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
             connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
                     this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
-
-            // Let the user know of a few default things about ourselves by
-            // emitting a few signals
-
-            emitItemChangedRelatedSignals();
 
             // We are done initalising, so...
 

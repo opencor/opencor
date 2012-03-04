@@ -365,6 +365,11 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
 
 void FileOrganiserWidget::loadSettings(QSettings *pSettings)
 {
+    // Let the user know of a few default things about ourselves by emitting a
+    // few signals
+
+    emitItemsRelatedSignals();
+
     // Retrieve the data model
 
     pSettings->beginGroup(SettingsDataModel);
@@ -380,11 +385,6 @@ void FileOrganiserWidget::loadSettings(QSettings *pSettings)
     // Resize the widget, just to be on the safe side
 
     resizeToContents();
-
-    // Let the user know of a few default things about ourselves by emitting a
-    // few signals
-
-    emitItemsRelatedSignals();
 }
 
 //==============================================================================
