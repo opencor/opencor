@@ -223,6 +223,13 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     foreach (CentralWidgetMode *mode, mModes)
         connect(mode->views(), SIGNAL(currentChanged(int)),
                 this, SLOT(updateGui()));
+
+    // Some connections to handle the opening/closing of a file
+
+    connect(this, SIGNAL(fileOpened(const QString &)),
+            this, SLOT(updateGui()));
+    connect(this, SIGNAL(fileClosed(const QString &)),
+            this, SLOT(updateGui()));
 }
 
 //==============================================================================
@@ -456,10 +463,6 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     mFileTabs->setTabToolTip(mFileTabs->currentIndex(), nativeFileName);
 
-    // Update the GUI
-
-    updateGui();
-
     // Everything went fine, so let people know that the file has been opened,
     // as well as whether we can navigate and/or close files
 
@@ -526,10 +529,6 @@ bool CentralWidget::closeFile(const int &pIndex)
         // Unregister the file from our file manager
 
         Core::FileManager::instance()->unmanage(fileName);
-
-        // Update the GUI
-
-        updateGui();
 
         // Finally, we let people know about the file having just been closed,
         // as well as whether we can navigate and/or close the remaining files
