@@ -173,7 +173,7 @@ ENDIF()
 
 SET(PLUGINS
     # Build the plugins which may be required by other plugins
-    # Note: the build order is important...
+    # Note: the build order is very important...
 
     misc/Core
 
@@ -189,6 +189,8 @@ SET(PLUGINS
     editing/CoreCellMLEditing
 
     3rdparty/SUNDIALS
+
+    simulation/CoreSolver
 
     simulation/ForwardEulerSolver
 

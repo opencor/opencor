@@ -1,52 +1,38 @@
 //==============================================================================
-// ForwardEulerSolver plugin
+// CoreSolver plugin
 //==============================================================================
 
-#include "forwardeulersolverplugin.h"
+#include "coresolverplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace ForwardEulerSolver {
+namespace CoreSolver {
 
 //==============================================================================
 
-PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
+PLUGININFO_FUNC CoreSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "An implementation of the Forward Euler method to solve ODEs");
-    descriptions.insert("fr", "Une implémentation de la méthode Forward Euler pour résoudres des EDOs");
+    descriptions.insert("en", "The core solver plugin for OpenCOR");
+    descriptions.insert("fr", "L'extension de solveur de base pour OpenCOR");
 
     return PluginInfo(PluginInfo::V001,
                       PluginInfo::General,
                       PluginInfo::Simulation,
-                      true,
-                      QStringList() << "CoreSolver",
+                      false,
+                      QStringList(),
                       descriptions);
 }
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(ForwardEulerSolver, ForwardEulerSolverPlugin)
+Q_EXPORT_PLUGIN2(CoreSolver, CoreSolverPlugin)
 
 //==============================================================================
 
-QString ForwardEulerSolverPlugin::name() const
-{
-    return tr("Forward Euler");
-}
-
-//==============================================================================
-
-ForwardEulerSolverPlugin::SolverInterfaceType ForwardEulerSolverPlugin::type() const
-{
-    return ForwardEulerSolverPlugin::Ode;
-}
-
-//==============================================================================
-
-}   // namespace ForwardEulerSolver
+}   // namespace CoreSolver
 }   // namespace OpenCOR
 
 //==============================================================================
