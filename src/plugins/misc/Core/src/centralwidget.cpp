@@ -130,9 +130,12 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our modes
 
+    mModes = QMap<GuiViewSettings::Mode, CentralWidgetMode *>();
+
     mModes.insert(GuiViewSettings::Editing, new CentralWidgetMode(this));
     mModes.insert(GuiViewSettings::Simulation, new CentralWidgetMode(this));
     mModes.insert(GuiViewSettings::Analysis, new CentralWidgetMode(this));
+    // Note: these will be deleted in CentralWidget's destructor...
 
     // Create our files tab bar widget
 
@@ -236,7 +239,12 @@ CentralWidget::~CentralWidget()
 
     closeAllFiles();
 
-    // Delete some internal objects
+    // Delete our various modes
+
+    foreach (CentralWidgetMode *mMode, mModes)
+        delete mMode;
+
+    // Delete the UI
 
     delete mUi;
 }
