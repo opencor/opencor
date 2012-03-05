@@ -24,7 +24,14 @@ class SolverInterface : Interface
     friend class MainWindow;
 
 public:
-    virtual QString solverName() const = 0;
+    enum SolverInterfaceType
+    {
+        Ode,
+        Dae
+    };
+
+    virtual QString name() const = 0;
+    virtual SolverInterfaceType type() const = 0;
 };
 
 //==============================================================================

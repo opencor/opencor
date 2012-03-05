@@ -32,9 +32,16 @@ Q_EXPORT_PLUGIN2(ForwardEulerSolver, ForwardEulerSolverPlugin)
 
 //==============================================================================
 
-QString ForwardEulerSolverPlugin::solverName() const
+QString ForwardEulerSolverPlugin::name() const
 {
     return tr("Forward Euler");
+}
+
+//==============================================================================
+
+ForwardEulerSolverPlugin::SolverInterfaceType ForwardEulerSolverPlugin::type() const
+{
+    return ForwardEulerSolverPlugin::Ode;
 }
 
 //==============================================================================
