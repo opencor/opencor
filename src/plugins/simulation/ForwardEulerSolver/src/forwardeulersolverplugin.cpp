@@ -32,6 +32,13 @@ Q_EXPORT_PLUGIN2(ForwardEulerSolver, ForwardEulerSolverPlugin)
 
 //==============================================================================
 
+QString ForwardEulerSolverPlugin::solverName() const
+{
+    return tr("Forward Euler");
+}
+
+//==============================================================================
+
 }   // namespace ForwardEulerSolver
 }   // namespace OpenCOR
 

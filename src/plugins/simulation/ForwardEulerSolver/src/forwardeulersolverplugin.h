@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "i18ninterface.h"
 #include "solverinterface.h"
 
 //==============================================================================
@@ -24,9 +25,13 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo();
 
 //==============================================================================
 
-class ForwardEulerSolverPlugin : public QObject, public SolverInterface
+class ForwardEulerSolverPlugin : public QObject, public SolverInterface,
+                                 public I18nInterface
 {
     Q_OBJECT
+
+public:
+    virtual QString solverName() const;
 };
 
 //==============================================================================

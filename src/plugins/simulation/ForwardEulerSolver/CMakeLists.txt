@@ -4,6 +4,7 @@ PROJECT(ForwardEulerSolverPlugin)
 
 ADD_PLUGIN(ForwardEulerSolver
     SOURCES
+        ../../i18ninterface.cpp
         ../../interface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp
