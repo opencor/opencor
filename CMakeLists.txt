@@ -49,6 +49,7 @@ SET(SOURCES
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
+    src/plugins/solverinterface.cpp
 
     src/plugins/misc/Core/src/commonwidget.cpp
 )
@@ -188,6 +189,8 @@ SET(PLUGINS
     editing/CoreCellMLEditing
 
     3rdparty/SUNDIALS
+
+    simulation/ForwardEulerSolver
 
     simulation/CoreSimulation
 

@@ -4,7 +4,9 @@ PROJECT(ForwardEulerSolverPlugin)
 
 ADD_PLUGIN(ForwardEulerSolver
     SOURCES
+        ../../interface.cpp
         ../../plugininfo.cpp
+        ../../solverinterface.cpp
 
         src/forwardeulersolverplugin.cpp
     HEADERS_MOC

@@ -11,6 +11,7 @@
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
+#include "solverinterface.h"
 #include "utils.h"
 
 //==============================================================================
@@ -234,6 +235,7 @@ MainWindow::~MainWindow()
         FileInterface *fileInterface = qobject_cast<FileInterface *>(plugin->instance());
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
         I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
+        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
 
         if (coreInterface)
             coreInterface->destroy();
@@ -246,6 +248,9 @@ MainWindow::~MainWindow()
 
         if (i18nInterface)
             i18nInterface->destroy();
+
+        if (solverInterface)
+            solverInterface->destroy();
     }
 
     // Delete some internal objects

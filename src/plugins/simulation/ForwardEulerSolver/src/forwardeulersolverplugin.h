@@ -7,6 +7,10 @@
 
 //==============================================================================
 
+#include "solverinterface.h"
+
+//==============================================================================
+
 #include "plugininfo.h"
 
 //==============================================================================
@@ -20,7 +24,7 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo();
 
 //==============================================================================
 
-class ForwardEulerSolverPlugin : public QObject
+class ForwardEulerSolverPlugin : public QObject, public SolverInterface
 {
     Q_OBJECT
 };
