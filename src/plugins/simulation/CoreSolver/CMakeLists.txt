@@ -7,6 +7,7 @@ ADD_PLUGIN(CoreSolver
         ../../plugininfo.cpp
 
         src/coresolverplugin.cpp
+        src/solver.cpp
     HEADERS_MOC
         src/coresolverplugin.h
     INCLUDE_DIRS
