@@ -9,6 +9,7 @@ ADD_PLUGIN(ForwardEulerSolver
         ../../plugininfo.cpp
         ../../solverinterface.cpp
 
+        src/forwardeulersolver.cpp
         src/forwardeulersolverplugin.cpp
     HEADERS_MOC
         src/forwardeulersolverplugin.h
