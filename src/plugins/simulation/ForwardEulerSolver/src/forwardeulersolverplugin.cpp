@@ -22,7 +22,7 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
                       PluginInfo::General,
                       PluginInfo::Simulation,
                       true,
-                      QStringList() << "Core",
+                      QStringList(),
                       descriptions);
 }
 
