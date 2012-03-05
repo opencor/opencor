@@ -386,7 +386,7 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName,
         // create one and keep track of it
 
         viewWidgets = new GuiViewWidgets;
-        // Note: this will be deleted in GuiInterface's destructor...
+        // Note: this will be deleted in GuiInterface's destroy method...
 
         mModeViewWidgets.insert(pViewIndex, viewWidgets);
     }
