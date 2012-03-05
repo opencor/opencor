@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "interface.h"
 #include "plugin.h"
 
 //==============================================================================
@@ -23,8 +24,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class CoreInterface
+class CoreInterface : Interface
 {
+    friend class MainWindow;
+
 public:
     virtual void initialize();
     virtual void finalize();

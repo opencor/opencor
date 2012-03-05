@@ -430,6 +430,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${TEST_SOURCE_FILE}
                     ../../../../test/testutils.cpp
                     ../../coreinterface.cpp
+                    ../../interface.cpp
                     ../../plugin.cpp
                     ../../plugininfo.cpp
                     ${TEST_SOURCES_MOC}

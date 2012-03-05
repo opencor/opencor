@@ -7,6 +7,10 @@
 
 //==============================================================================
 
+#include "interface.h"
+
+//==============================================================================
+
 #include <QtPlugin>
 
 //==============================================================================
@@ -42,8 +46,10 @@ private:
 
 //==============================================================================
 
-class FileInterface
+class FileInterface : Interface
 {
+    friend class MainWindow;
+
 public:
     virtual QList<FileType> fileTypes() const;
     virtual QString fileTypeDescription(const QString &) const;

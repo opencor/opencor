@@ -12,6 +12,7 @@ ADD_PLUGIN(SingleCellSimulation
         ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
+        ../../interface.cpp
         ../../plugininfo.cpp
 
         src/singlecellsimulationgraphpanel.cpp

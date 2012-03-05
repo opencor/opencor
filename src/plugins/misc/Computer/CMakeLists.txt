@@ -9,6 +9,7 @@ RETRIEVE_LLVM_SETTINGS()
 ADD_PLUGIN(Computer
     SOURCES
         ../../i18ninterface.cpp
+        ../../interface.cpp
         ../../plugininfo.cpp
 
         src/computerengine.cpp

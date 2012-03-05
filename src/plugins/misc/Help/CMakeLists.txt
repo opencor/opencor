@@ -13,6 +13,7 @@ ADD_PLUGIN(Help
         ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
+        ../../interface.cpp
         ../../plugininfo.cpp
 
         src/helpplugin.cpp

@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "interface.h"
 #include "plugin.h"
 
 //==============================================================================
@@ -170,11 +171,12 @@ typedef QMap<QString, QWidget *> GuiViewWidgets;
 
 //==============================================================================
 
-class GuiInterface
+class GuiInterface : Interface
 {
+    friend class MainWindow;
+
 public:
     explicit GuiInterface();
-    ~GuiInterface();
 
     virtual void loadSettings(QSettings *);
     virtual void saveSettings(QSettings *) const;
@@ -200,7 +202,7 @@ protected:
 
     GuiSettings *mGuiSettings;
 
-    QMap<int, GuiViewWidgets *> mViewWidgets;
+    QMap<int, GuiViewWidgets *> mModeViewWidgets;
 
     static QMenu * newMenu(QMainWindow *pMainWindow, const QString &pName);
     static QToolBar * newToolBar(QMainWindow *pMainWindow,
@@ -229,6 +231,9 @@ protected:
 
     void loadViewSettings(QSettings *pSettings, Core::Widget *pView);
     void saveViewSettings(QSettings *pSettings, Core::Widget *pView) const;
+
+private:
+    virtual void destroy();
 };
 
 //==============================================================================

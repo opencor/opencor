@@ -1,17 +1,9 @@
 //==============================================================================
-// Internationalisation interface
+// Base interface
 //==============================================================================
 
-#ifndef I18NINTERFACE_H
-#define I18NINTERFACE_H
-
-//==============================================================================
-
-#include "interface.h"
-
-//==============================================================================
-
-#include <QTranslator>
+#ifndef INTERFACE_H
+#define INTERFACE_H
 
 //==============================================================================
 
@@ -19,30 +11,15 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class I18nInterface : Interface
+class Interface
 {
-    friend class MainWindow;
-
-public:
-    void setLocale(const QString &pLocale);
-    void setI18nPluginName(const QString &pI18nPluginName);
-
 protected:
-    virtual void retranslateUi();
-
-private:
-    QString mI18nPluginName;
-
-    QTranslator mTranslator;
+    virtual void destroy();
 };
 
 //==============================================================================
 
 }   // namespace OpenCOR
-
-//==============================================================================
-
-Q_DECLARE_INTERFACE(OpenCOR::I18nInterface, "OpenCOR.I18nInterface")
 
 //==============================================================================
 

@@ -45,6 +45,7 @@ SET(SOURCES
     src/plugins/fileinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
+    src/plugins/interface.cpp
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp

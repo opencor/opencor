@@ -283,16 +283,23 @@ GuiInterface::GuiInterface()
 
 //==============================================================================
 
-GuiInterface::~GuiInterface()
+void GuiInterface::destroy()
 {
     // Delete our GUI settings object
 
     delete mGuiSettings;
 
     // Delete our lists of view widgets
+    // Note: we would normally use viewWidgets rather than viewWidgets->values()
+    //       in the internal foreach statement, but the compiler gets a bit
+    //       confused with regards to the type of viewWidgets, so...
 
-    foreach (GuiViewWidgets *viewWidgets, mViewWidgets)
+    foreach (GuiViewWidgets *viewWidgets, mModeViewWidgets) {
+        foreach (QWidget *viewWidget, viewWidgets->values())
+            delete dynamic_cast<QWidget *>(viewWidget);
+
         delete viewWidgets;
+    }
 }
 
 //==============================================================================
@@ -372,7 +379,7 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName,
 
     // Retrieve the list of view widgets associated with the view index
 
-    GuiViewWidgets *viewWidgets = mViewWidgets.value(pViewIndex);
+    GuiViewWidgets *viewWidgets = mModeViewWidgets.value(pViewIndex);
 
     if (!viewWidgets) {
         // There is no list of view widgets associated with the view index, so
@@ -381,7 +388,7 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName,
         viewWidgets = new GuiViewWidgets;
         // Note: this will be deleted in GuiInterface's destructor...
 
-        mViewWidgets.insert(pViewIndex, viewWidgets);
+        mModeViewWidgets.insert(pViewIndex, viewWidgets);
     }
 
     // Retrieve, from our list of view widgets, the view widget associated with

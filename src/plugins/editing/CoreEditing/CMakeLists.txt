@@ -7,6 +7,7 @@ ADD_PLUGIN(CoreEditing
         ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
+        ../../interface.cpp
         ../../plugininfo.cpp
 
         src/coreeditingplugin.cpp

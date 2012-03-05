@@ -4,6 +4,7 @@
 
 #include "checkforupdateswindow.h"
 #include "common.h"
+#include "fileinterface.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
 #include "plugin.h"
@@ -211,7 +212,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
 MainWindow::~MainWindow()
 {
-    // Finalize our various plugins
+    // Finalise our various plugins
     // Note: we only need to test for our default interface since we want to
     //       call the finalize method and this method is not overriden by any
     //       other interface, so...
@@ -221,6 +222,30 @@ MainWindow::~MainWindow()
 
         if (coreInterface)
             coreInterface->finalize();
+    }
+
+    // Now that all of our plugins have been finalised, we can detroy their
+    // respective interfaces
+    // Note: not all of them may have things to destroy, but we better assume
+    //       they all do in case they were ever to be modified...
+
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+        FileInterface *fileInterface = qobject_cast<FileInterface *>(plugin->instance());
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
+
+        if (coreInterface)
+            coreInterface->destroy();
+
+        if (fileInterface)
+            fileInterface->destroy();
+
+        if (guiInterface)
+            guiInterface->destroy();
+
+        if (i18nInterface)
+            i18nInterface->destroy();
     }
 
     // Delete some internal objects

@@ -7,6 +7,7 @@ ADD_PLUGIN(FileOrganiser
         ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
+        ../../interface.cpp
         ../../plugininfo.cpp
 
         src/fileorganiserplugin.cpp
