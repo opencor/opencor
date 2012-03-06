@@ -11,9 +11,14 @@ namespace ForwardEulerSolver {
 
 //==============================================================================
 
-void ForwardEulerSolver::initializeForwardEulerSolver(const double &pStep)
+void ForwardEulerSolver::initialize(const int &pNbOfStates, double **pConstants,
+                                    double **pRates, double **pStates,
+                                    double **pAlgebraic, const double &pStep)
 {
     // Initialise the Forward Euler solver
+
+    CoreSolver::CoreOdeSolver::initialize(pNbOfStates, pConstants, pRates,
+                                          pStates, pAlgebraic);
 
     mStep = pStep;
 }
