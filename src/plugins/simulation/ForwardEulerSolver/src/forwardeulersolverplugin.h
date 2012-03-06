@@ -35,6 +35,8 @@ class ForwardEulerSolverPlugin : public QObject, public I18nInterface,
 public:
     virtual QString name() const;
     virtual SolverInterfaceType type() const;
+
+    virtual void * newSolver() const;
 };
 
 //==============================================================================

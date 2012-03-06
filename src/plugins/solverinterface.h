@@ -32,6 +32,8 @@ public:
 
     virtual QString name() const = 0;
     virtual SolverInterfaceType type() const = 0;
+
+    virtual void * newSolver() const = 0;
 };
 
 //==============================================================================

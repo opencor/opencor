@@ -2,6 +2,7 @@
 // ForwardEulerSolver plugin
 //==============================================================================
 
+#include "forwardeulersolver.h"
 #include "forwardeulersolverplugin.h"
 
 //==============================================================================
@@ -34,6 +35,8 @@ Q_EXPORT_PLUGIN2(ForwardEulerSolver, ForwardEulerSolverPlugin)
 
 QString ForwardEulerSolverPlugin::name() const
 {
+    // Return the name of the solver
+
     return tr("Forward Euler");
 }
 
@@ -41,7 +44,18 @@ QString ForwardEulerSolverPlugin::name() const
 
 ForwardEulerSolverPlugin::SolverInterfaceType ForwardEulerSolverPlugin::type() const
 {
+    // Return the type of the solver
+
     return ForwardEulerSolverPlugin::Ode;
+}
+
+//==============================================================================
+
+void * ForwardEulerSolverPlugin::newSolver() const
+{
+    // Create and return an instance of the solver
+
+    return new ForwardEulerSolver();
 }
 
 //==============================================================================

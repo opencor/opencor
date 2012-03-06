@@ -18,6 +18,14 @@ namespace ForwardEulerSolver {
 
 class ForwardEulerSolver : public CoreSolver::CoreOdeSolver
 {
+public:
+    void initializeForwardEulerSolver(const double &pStep);
+
+    virtual void solve(double &pVoi, const double &pVoiEnd,
+                       CoreSolver::CoreOdeSolverComputeRatesFunction pComputeRates) const;
+
+private:
+    double mStep;
 };
 
 //==============================================================================
