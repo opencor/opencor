@@ -187,6 +187,34 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
     qDebug("---------------------------------------");
     qDebug("'%s' solver:", qPrintable(solverInterface->name()));
     qDebug(" - Type: %s", (solverInterface->type() == SolverInterface::Ode)?"ODE":"DAE");
+
+    SolverInterface::Properties properties = solverInterface->properties();
+
+    if (properties.count()) {
+        qDebug(" - Properties:");
+
+        SolverInterface::Properties::const_iterator iter = properties.constBegin();
+        SolverInterface::Properties::const_iterator iterEnd = properties.constEnd();
+
+        while (iter != iterEnd) {
+            QString type;
+
+            switch (iter.value()) {
+            case SolverInterface::Double:
+                type = "Double";
+
+                break;
+            default:
+                type = "???";
+            }
+
+            qDebug("    - %s: %s", qPrintable(iter.key()), qPrintable(type));
+
+            ++iter;
+        }
+    } else {
+        qDebug(" - Properties: none");
+    }
 }
 
 
