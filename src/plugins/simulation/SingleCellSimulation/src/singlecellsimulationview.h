@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "solverinterface.h"
 #include "widget.h"
 
 //==============================================================================
@@ -54,8 +55,12 @@ public:
 
     void updateWith(const QString &pFileName);
 
+    void addSolverInterface(SolverInterface *pSolverInterface);
+
 private:
     Ui::SingleCellSimulationView *mUi;
+
+    SolverInterfaces mSolverInterfaces;
 
     SingleCellSimulationGraphPanels *mGraphPanels;
     QTextEdit *mOutput;

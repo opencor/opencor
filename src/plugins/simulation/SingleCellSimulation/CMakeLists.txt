@@ -13,13 +13,17 @@ ADD_PLUGIN(SingleCellSimulation
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../interface.cpp
+        ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../solverinterface.cpp
 
         src/singlecellsimulationgraphpanel.cpp
         src/singlecellsimulationgraphpanels.cpp
         src/singlecellsimulationplugin.cpp
         src/singlecellsimulationview.cpp
     HEADERS_MOC
+        ../../plugin.h
+
         src/singlecellsimulationgraphpanel.h
         src/singlecellsimulationgraphpanels.h
         src/singlecellsimulationplugin.h

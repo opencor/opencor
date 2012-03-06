@@ -36,7 +36,8 @@ namespace SingleCellSimulation {
 
 SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     Widget(pParent),
-    mUi(new Ui::SingleCellSimulationView)
+    mUi(new Ui::SingleCellSimulationView),
+    mSolverInterfaces(SolverInterfaces())
 {
     // Set up the UI
 
@@ -154,6 +155,18 @@ void SingleCellSimulationView::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+void SingleCellSimulationView::addSolverInterface(SolverInterface *pSolverInterface)
+{
+    // Add the solver interface to our list
+
+    if (!mSolverInterfaces.contains(pSolverInterface))
+        // The solver interface is not yet in our list, so...
+
+        mSolverInterfaces.append(pSolverInterface);
+}
+
+//==============================================================================
+
 QFrame * SingleCellSimulationView::newSeparatingLine()
 {
     // Return a separating line widget
@@ -170,6 +183,14 @@ QFrame * SingleCellSimulationView::newSeparatingLine()
 
 void SingleCellSimulationView::updateWith(const QString &pFileName)
 {
+foreach (SolverInterface *solverInterface, mSolverInterfaces) {
+    qDebug("---------------------------------------");
+    qDebug("'%s' solver:", qPrintable(solverInterface->name()));
+    qDebug(" - Type: %s", (solverInterface->type() == SolverInterface::Ode)?"ODE":"DAE");
+}
+
+
+
     mOutput->clear();
     mOutput->append(QString("%1:").arg(pFileName));
 

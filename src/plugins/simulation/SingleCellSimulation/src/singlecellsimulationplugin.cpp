@@ -5,6 +5,7 @@
 #include "cellmlfilemanager.h"
 #include "singlecellsimulationplugin.h"
 #include "singlecellsimulationview.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -57,6 +58,22 @@ void SingleCellSimulationPlugin::initialize()
     // in our central widget
 
     mSingleCellSimulationView->setVisible(false);
+}
+
+//==============================================================================
+
+void SingleCellSimulationPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+{
+    // Retrieve the different solvers that are available to us
+
+    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
+        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(loadedPlugin->instance());
+
+        if (solverInterface)
+            // The plugin implements our solver interface, so...
+
+            mSingleCellSimulationView->addSolverInterface(solverInterface);
+    }
 }
 
 //==============================================================================

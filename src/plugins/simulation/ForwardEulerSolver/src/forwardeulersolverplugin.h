@@ -25,10 +25,12 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo();
 
 //==============================================================================
 
-class ForwardEulerSolverPlugin : public QObject, public SolverInterface,
-                                 public I18nInterface
+class ForwardEulerSolverPlugin : public QObject, public I18nInterface,
+                                 public SolverInterface
 {
     Q_OBJECT
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:
     virtual QString name() const;

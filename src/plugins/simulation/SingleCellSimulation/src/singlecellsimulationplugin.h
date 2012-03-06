@@ -40,6 +40,8 @@ public:
 
     virtual void initialize();
 
+    virtual void initializationsDone(const Plugins &pLoadedPlugins);
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
