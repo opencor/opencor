@@ -336,7 +336,7 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
             voiOutputCount = 1;
         }
 
-        CellMLSupport::CellmlFileRuntimeOdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
+        CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
 
         // Initialise the constants and compute the rates and variables
 

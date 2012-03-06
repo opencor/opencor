@@ -114,7 +114,7 @@ int CellmlFileRuntime::condVarCount() const
 
 //==============================================================================
 
-CellmlFileRuntimeOdeFunctions CellmlFileRuntime::odeFunctions() const
+CellmlFileRuntime::OdeFunctions CellmlFileRuntime::odeFunctions() const
 {
     // Return the ODE functions
 
@@ -123,7 +123,7 @@ CellmlFileRuntimeOdeFunctions CellmlFileRuntime::odeFunctions() const
 
 //==============================================================================
 
-CellmlFileRuntimeDaeFunctions CellmlFileRuntime::daeFunctions() const
+CellmlFileRuntime::DaeFunctions CellmlFileRuntime::daeFunctions() const
 {
     // Return the DAE functions
 
@@ -535,18 +535,18 @@ qDebug(" - CellML binary code time: %s s", qPrintable(QString::number(0.001*time
     } else if (mModelType == Ode) {
         // ODE functions
 
-        mOdeFunctions.initializeConstants = (CellmlFileRuntimeInitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
-        mOdeFunctions.computeRates        = (CellmlFileRuntimeComputeOdeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
-        mOdeFunctions.computeVariables    = (CellmlFileRuntimeComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
+        mOdeFunctions.initializeConstants = (InitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
+        mOdeFunctions.computeRates        = (ComputeOdeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
+        mOdeFunctions.computeVariables    = (ComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
     } else {
         // DAE functions
 
-        mDaeFunctions.initializeConstants       = (CellmlFileRuntimeInitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
-        mDaeFunctions.computeRates              = (CellmlFileRuntimeComputeDaeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
-        mDaeFunctions.computeVariables          = (CellmlFileRuntimeComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
-        mDaeFunctions.computeEssentialVariables = (CellmlFileRuntimeComputeDaeEssentialVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeEssentialVariables"));
-        mDaeFunctions.computeRootInformation    = (CellmlFileRuntimeComputeDaeRootInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRootInformation"));
-        mDaeFunctions.computeStateInformation   = (CellmlFileRuntimeComputeDaeStateInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeStateInformation"));
+        mDaeFunctions.initializeConstants       = (InitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
+        mDaeFunctions.computeRates              = (ComputeDaeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
+        mDaeFunctions.computeVariables          = (ComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
+        mDaeFunctions.computeEssentialVariables = (ComputeDaeEssentialVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeEssentialVariables"));
+        mDaeFunctions.computeRootInformation    = (ComputeDaeRootInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRootInformation"));
+        mDaeFunctions.computeStateInformation   = (ComputeDaeStateInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeStateInformation"));
     }
 
     // We are done, so return ourselves

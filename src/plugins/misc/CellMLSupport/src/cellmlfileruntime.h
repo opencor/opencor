@@ -33,37 +33,6 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-typedef void (*CellmlFileRuntimeInitializeConstantsFunction)(double *, double *, double *);
-typedef void (*CellmlFileRuntimeComputeOdeRatesFunction)(double, double *, double *, double *, double *);
-typedef void (*CellmlFileRuntimeComputeDaeRatesFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
-typedef void (*CellmlFileRuntimeComputeVariablesFunction)(double, double *, double *, double *, double *);
-typedef void (*CellmlFileRuntimeComputeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *, double *, double *);
-typedef void (*CellmlFileRuntimeComputeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *, double *, double *);
-typedef void (*CellmlFileRuntimeComputeDaeStateInformationFunction)(double *);
-
-//==============================================================================
-
-struct CellmlFileRuntimeOdeFunctions
-{
-    CellmlFileRuntimeInitializeConstantsFunction initializeConstants;
-    CellmlFileRuntimeComputeOdeRatesFunction computeRates;
-    CellmlFileRuntimeComputeVariablesFunction computeVariables;
-};
-
-//==============================================================================
-
-struct CellmlFileRuntimeDaeFunctions
-{
-    CellmlFileRuntimeInitializeConstantsFunction initializeConstants;
-    CellmlFileRuntimeComputeDaeRatesFunction computeRates;
-    CellmlFileRuntimeComputeVariablesFunction computeVariables;
-    CellmlFileRuntimeComputeDaeEssentialVariablesFunction computeEssentialVariables;
-    CellmlFileRuntimeComputeDaeRootInformationFunction computeRootInformation;
-    CellmlFileRuntimeComputeDaeStateInformationFunction computeStateInformation;
-};
-
-//==============================================================================
-
 class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
 {
     Q_OBJECT
@@ -74,6 +43,31 @@ public:
         Ode,
         Dae,
         Undefined
+    };
+
+    typedef void (*InitializeConstantsFunction)(double *, double *, double *);
+    typedef void (*ComputeOdeRatesFunction)(double, double *, double *, double *, double *);
+    typedef void (*ComputeDaeRatesFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
+    typedef void (*ComputeVariablesFunction)(double, double *, double *, double *, double *);
+    typedef void (*ComputeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+    typedef void (*ComputeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+    typedef void (*ComputeDaeStateInformationFunction)(double *);
+
+    struct OdeFunctions
+    {
+        InitializeConstantsFunction initializeConstants;
+        ComputeOdeRatesFunction computeRates;
+        ComputeVariablesFunction computeVariables;
+    };
+
+    struct DaeFunctions
+    {
+        InitializeConstantsFunction initializeConstants;
+        ComputeDaeRatesFunction computeRates;
+        ComputeVariablesFunction computeVariables;
+        ComputeDaeEssentialVariablesFunction computeEssentialVariables;
+        ComputeDaeRootInformationFunction computeRootInformation;
+        ComputeDaeStateInformationFunction computeStateInformation;
     };
 
     explicit CellmlFileRuntime();
@@ -88,8 +82,8 @@ public:
     int algebraicCount() const;
     int condVarCount() const;
 
-    CellmlFileRuntimeOdeFunctions odeFunctions() const;
-    CellmlFileRuntimeDaeFunctions daeFunctions() const;
+    OdeFunctions odeFunctions() const;
+    DaeFunctions daeFunctions() const;
 
     CellmlFileIssues issues() const;
 
@@ -103,8 +97,8 @@ private:
 
     Computer::ComputerEngine *mComputerEngine;
 
-    CellmlFileRuntimeOdeFunctions mOdeFunctions;
-    CellmlFileRuntimeDaeFunctions mDaeFunctions;
+    OdeFunctions mOdeFunctions;
+    DaeFunctions mDaeFunctions;
 
     CellmlFileIssues mIssues;
 
