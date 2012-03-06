@@ -1,28 +1,28 @@
 //==============================================================================
-// Forward Euler solver class
+// Core ODE solver class
 //==============================================================================
 
-#ifndef FORWARDEULERSOLVER_H
-#define FORWARDEULERSOLVER_H
+#ifndef COREODESOLVER_H
+#define COREODESOLVER_H
 
 //==============================================================================
 
-#include "coreodesolver.h"
+#include "coresolverglobal.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace ForwardEulerSolver {
+namespace CoreSolver {
 
 //==============================================================================
 
-class ForwardEulerSolver : public CoreSolver::CoreOdeSolver
+class CORESOLVER_EXPORT CoreOdeSolver
 {
 };
 
 //==============================================================================
 
-}   // namespace ForwardEulerSolver
+}   // namespace CoreSolver
 }   // namespace OpenCOR
 
 //==============================================================================
