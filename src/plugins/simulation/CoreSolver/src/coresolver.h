@@ -1,8 +1,18 @@
 //==============================================================================
-// Core ODE solver class
+// Core solver class
 //==============================================================================
 
-#include "coreodesolver.h"
+#ifndef CORESOLVER_H
+#define CORESOLVER_H
+
+//==============================================================================
+
+#include "coresolverglobal.h"
+
+//==============================================================================
+
+#include <QMap>
+#include <QVariant>
 
 //==============================================================================
 
@@ -11,36 +21,29 @@ namespace CoreSolver {
 
 //==============================================================================
 
-CoreOdeSolver::CoreOdeSolver() :
-    CoreSolver(),
-    mNbOfStates(0),
-    mConstants(0),
-    mRates(0),
-    mStates(0),
-    mAlgebraic(0)
-{
-}
+typedef QMap<QString, QVariant> Properties;
 
 //==============================================================================
 
-void CoreOdeSolver::initialize(const int &pNbOfStates, double **pConstants,
-                               double **pRates, double **pStates,
-                               double **pAlgebraic)
+class CORESOLVER_EXPORT CoreSolver
 {
-    // Initialise the ODE solver
+public:
+    explicit CoreSolver();
 
-    mNbOfStates = pNbOfStates;
+    void setProperty(const QString &pName, const QVariant &pValue);
 
-    mConstants = pConstants;
-    mRates     = pRates;
-    mStates    = pStates;
-    mAlgebraic = pAlgebraic;
-}
+protected:
+    Properties mProperties;
+};
 
 //==============================================================================
 
 }   // namespace CoreSolver
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

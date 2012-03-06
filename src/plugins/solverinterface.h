@@ -11,6 +11,7 @@
 
 //==============================================================================
 
+#include <QMap>
 #include <QTranslator>
 
 //==============================================================================
@@ -30,8 +31,15 @@ public:
         Dae
     };
 
+    enum SovlerInterfacePropertyType {
+        Double
+    };
+
+    typedef QMap<QString, SovlerInterfacePropertyType> Properties;
+
     virtual QString name() const = 0;
     virtual SolverInterfaceType type() const = 0;
+    virtual Properties properties() const = 0;
 
     virtual void * newSolver() const = 0;
 };

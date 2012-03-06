@@ -51,6 +51,19 @@ ForwardEulerSolverPlugin::SolverInterfaceType ForwardEulerSolverPlugin::type() c
 
 //==============================================================================
 
+OpenCOR::SolverInterface::Properties ForwardEulerSolverPlugin::properties() const
+{
+    // Return the properties supported by the solver
+
+    Properties res = Properties();
+
+    res.insert(StepProperty, OpenCOR::SolverInterface::Double);
+
+    return res;
+}
+
+//==============================================================================
+
 void * ForwardEulerSolverPlugin::newSolver() const
 {
     // Create and return an instance of the solver

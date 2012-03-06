@@ -1,8 +1,8 @@
 //==============================================================================
-// Core ODE solver class
+// Core solver class
 //==============================================================================
 
-#include "coreodesolver.h"
+#include "coresolver.h"
 
 //==============================================================================
 
@@ -11,30 +11,18 @@ namespace CoreSolver {
 
 //==============================================================================
 
-CoreOdeSolver::CoreOdeSolver() :
-    CoreSolver(),
-    mNbOfStates(0),
-    mConstants(0),
-    mRates(0),
-    mStates(0),
-    mAlgebraic(0)
+CoreSolver::CoreSolver() :
+    mProperties(Properties())
 {
 }
 
 //==============================================================================
 
-void CoreOdeSolver::initialize(const int &pNbOfStates, double **pConstants,
-                               double **pRates, double **pStates,
-                               double **pAlgebraic)
+void CoreSolver::setProperty(const QString &pName, const QVariant &pValue)
 {
-    // Initialise the ODE solver
+    // Add/replace a property's value
 
-    mNbOfStates = pNbOfStates;
-
-    mConstants = pConstants;
-    mRates     = pRates;
-    mStates    = pStates;
-    mAlgebraic = pAlgebraic;
+    mProperties.insert(pName, pValue);
 }
 
 //==============================================================================

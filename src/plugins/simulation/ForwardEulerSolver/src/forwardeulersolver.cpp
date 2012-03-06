@@ -11,22 +11,34 @@ namespace ForwardEulerSolver {
 
 //==============================================================================
 
+ForwardEulerSolver::ForwardEulerSolver() :
+    mStep(0)
+{
+}
+
+//==============================================================================
+
 void ForwardEulerSolver::initialize(const int &pNbOfStates, double **pConstants,
                                     double **pRates, double **pStates,
-                                    double **pAlgebraic, const double &pStep)
+                                    double **pAlgebraic)
 {
-    // Initialise the Forward Euler solver
+    // Initialise the Forward Euler solver by first initialising the ODE solver
+    // itself
 
-    CoreSolver::CoreOdeSolver::initialize(pNbOfStates, pConstants, pRates,
-                                          pStates, pAlgebraic);
+    OpenCOR::CoreSolver::CoreOdeSolver::initialize(pNbOfStates, pConstants,
+                                                   pRates, pStates, pAlgebraic);
 
-    mStep = pStep;
+    // Next, we need to retrieve the step to be used by our solver
+
+    mStep = mProperties.contains(StepProperty)?
+                mProperties.value(StepProperty).toDouble():
+                0;
 }
 
 //==============================================================================
 
 void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd,
-                               CoreSolver::CoreOdeSolverComputeRatesFunction pComputeRates) const
+                               OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) const
 {
     Q_ASSERT(mNbOfStates > 0);
     Q_ASSERT(mConstants);

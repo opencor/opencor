@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "coresolverglobal.h"
+#include "coresolver.h"
 
 //==============================================================================
 
@@ -16,13 +16,11 @@ namespace CoreSolver {
 
 //==============================================================================
 
-typedef void (*CoreOdeSolverComputeRatesFunction)(double, double *, double *, double *, double *);
-
-//==============================================================================
-
-class CORESOLVER_EXPORT CoreOdeSolver
+class CORESOLVER_EXPORT CoreOdeSolver : public CoreSolver
 {
 public:
+    typedef void (*ComputeRatesFunction)(double, double *, double *, double *, double *);
+
     explicit CoreOdeSolver();
 
     virtual void initialize(const int &pNbOfStates, double **pConstants,
@@ -30,7 +28,7 @@ public:
                             double **pAlgebraic);
 
     virtual void solve(double &pVoi, const double &pVoiEnd,
-                       CoreOdeSolverComputeRatesFunction pComputeRates) const = 0;
+                       ComputeRatesFunction pComputeRates) const = 0;
 
 protected:
     int mNbOfStates;
