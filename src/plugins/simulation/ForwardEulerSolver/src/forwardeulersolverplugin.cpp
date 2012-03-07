@@ -37,7 +37,7 @@ QString ForwardEulerSolverPlugin::name() const
 {
     // Return the name of the solver
 
-    return tr("Forward Euler");
+    return "Forward Euler";
 }
 
 //==============================================================================
@@ -64,7 +64,7 @@ OpenCOR::SolverInterface::Properties ForwardEulerSolverPlugin::properties() cons
 
 //==============================================================================
 
-void * ForwardEulerSolverPlugin::newSolver() const
+void * ForwardEulerSolverPlugin::instance() const
 {
     // Create and return an instance of the solver
 

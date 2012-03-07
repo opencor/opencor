@@ -34,6 +34,8 @@ public:
 
 private:
     double mStep;
+
+    virtual bool isValidProperty(const QString &pName) const;
 };
 
 //==============================================================================

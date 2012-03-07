@@ -37,7 +37,7 @@ public:
     virtual SolverInterfaceType type() const;
     virtual Properties properties() const;
 
-    virtual void * newSolver() const;
+    virtual void * instance() const;
 };
 
 //==============================================================================

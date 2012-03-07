@@ -34,6 +34,8 @@ public:
 
 protected:
     Properties mProperties;
+
+    virtual bool isValidProperty(const QString &pName) const = 0;
 };
 
 //==============================================================================

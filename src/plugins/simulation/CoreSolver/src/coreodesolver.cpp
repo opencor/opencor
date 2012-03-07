@@ -13,7 +13,7 @@ namespace CoreSolver {
 
 CoreOdeSolver::CoreOdeSolver() :
     CoreSolver(),
-    mNbOfStates(0),
+    mStatesCount(0),
     mConstants(0),
     mRates(0),
     mStates(0),
@@ -23,13 +23,13 @@ CoreOdeSolver::CoreOdeSolver() :
 
 //==============================================================================
 
-void CoreOdeSolver::initialize(const int &pNbOfStates, double **pConstants,
+void CoreOdeSolver::initialize(const int &pStatesCount, double **pConstants,
                                double **pRates, double **pStates,
                                double **pAlgebraic)
 {
     // Initialise the ODE solver
 
-    mNbOfStates = pNbOfStates;
+    mStatesCount = pStatesCount;
 
     mConstants = pConstants;
     mRates     = pRates;

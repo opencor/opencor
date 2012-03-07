@@ -40,7 +40,7 @@ void ForwardEulerSolver::initialize(const int &pNbOfStates, double **pConstants,
 void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd,
                                OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) const
 {
-    Q_ASSERT(mNbOfStates > 0);
+    Q_ASSERT(mStatesCount > 0);
     Q_ASSERT(mConstants);
     Q_ASSERT(mRates);
     Q_ASSERT(mStates);
@@ -67,7 +67,7 @@ void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd,
 
         // Compute Y_n+1
 
-        for (int i = 0; i < mNbOfStates; ++i)
+        for (int i = 0; i < mStatesCount; ++i)
             *mStates[i] += realStep*(*mRates[i]);
 
         // Advance through time
@@ -77,6 +77,15 @@ void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd,
         else
             pVoi = voiStart+(++nbOfSteps)*mStep;
     }
+}
+
+//==============================================================================
+
+bool ForwardEulerSolver::isValidProperty(const QString &pName) const
+{
+    // Check whether the property name is known to us
+
+    return !pName.compare(StepProperty);
 }
 
 //==============================================================================

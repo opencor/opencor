@@ -23,7 +23,7 @@ public:
 
     explicit CoreOdeSolver();
 
-    virtual void initialize(const int &pNbOfStates, double **pConstants,
+    virtual void initialize(const int &pStatesCount, double **pConstants,
                             double **pRates, double **pStates,
                             double **pAlgebraic);
 
@@ -31,7 +31,7 @@ public:
                        ComputeRatesFunction pComputeRates) const = 0;
 
 protected:
-    int mNbOfStates;
+    int mStatesCount;
 
     double **mConstants;
     double **mRates;
