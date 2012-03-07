@@ -11,6 +11,8 @@ ADD_PLUGIN(CoreSimulation
         src/coresimulationplugin.h
     INCLUDE_DIRS
         src
+    OPENCOR_DEPENDENCIES
+        CoreSolver
     QT_DEPENDENCIES
         QtCore
         QtGui
