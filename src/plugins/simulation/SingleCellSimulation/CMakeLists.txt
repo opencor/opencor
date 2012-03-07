@@ -41,6 +41,7 @@ ADD_PLUGIN(SingleCellSimulation
         CellMLSupport
         Computer
         Core
+        CoreSolver
         LLVM
         Qwt
     QT_DEPENDENCIES
