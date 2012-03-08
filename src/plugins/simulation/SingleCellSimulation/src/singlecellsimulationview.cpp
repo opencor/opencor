@@ -187,21 +187,21 @@ void SingleCellSimulationView::updateWith(const QString &pFileName)
 foreach (SolverInterface *solverInterface, mSolverInterfaces) {
     qDebug("---------------------------------------");
     qDebug("'%s' solver:", qPrintable(solverInterface->name()));
-    qDebug(" - Type: %s", (solverInterface->type() == SolverInterface::Ode)?"ODE":"DAE");
+    qDebug(" - Type: %s", (solverInterface->type() == Solver::Ode)?"ODE":"DAE");
 
-    SolverInterface::Properties properties = solverInterface->properties();
+    Solver::Properties properties = solverInterface->properties();
 
     if (properties.count()) {
         qDebug(" - Properties:");
 
-        SolverInterface::Properties::const_iterator iter = properties.constBegin();
-        SolverInterface::Properties::const_iterator iterEnd = properties.constEnd();
+        Solver::Properties::const_iterator iter = properties.constBegin();
+        Solver::Properties::const_iterator iterEnd = properties.constEnd();
 
         while (iter != iterEnd) {
             QString type;
 
             switch (iter.value()) {
-            case SolverInterface::Double:
+            case Solver::Double:
                 type = "Double";
 
                 break;

@@ -42,22 +42,22 @@ QString ForwardEulerSolverPlugin::name() const
 
 //==============================================================================
 
-ForwardEulerSolverPlugin::SolverInterfaceType ForwardEulerSolverPlugin::type() const
+Solver::Type ForwardEulerSolverPlugin::type() const
 {
     // Return the type of the solver
 
-    return ForwardEulerSolverPlugin::Ode;
+    return Solver::Ode;
 }
 
 //==============================================================================
 
-OpenCOR::SolverInterface::Properties ForwardEulerSolverPlugin::properties() const
+Solver::Properties ForwardEulerSolverPlugin::properties() const
 {
     // Return the properties supported by the solver
 
-    Properties res = Properties();
+    Solver::Properties res = Solver::Properties();
 
-    res.insert(StepProperty, OpenCOR::SolverInterface::Double);
+    res.insert(StepProperty, Solver::Double);
 
     return res;
 }

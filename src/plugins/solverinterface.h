@@ -20,26 +20,36 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Solver {
+
+//==============================================================================
+
+enum Type
+{
+    Ode,
+    Dae
+};
+
+enum PropertyType {
+    Double
+};
+
+typedef QMap<QString, PropertyType> Properties;
+
+//==============================================================================
+
+}   // namespace Solver
+
+//==============================================================================
+
 class SolverInterface : Interface
 {
     friend class MainWindow;
 
 public:
-    enum SolverInterfaceType
-    {
-        Ode,
-        Dae
-    };
-
-    enum SovlerInterfacePropertyType {
-        Double
-    };
-
-    typedef QMap<QString, SovlerInterfacePropertyType> Properties;
-
     virtual QString name() const = 0;
-    virtual SolverInterfaceType type() const = 0;
-    virtual Properties properties() const = 0;
+    virtual Solver::Type type() const = 0;
+    virtual Solver::Properties properties() const = 0;
 
     virtual void * instance() const = 0;
 };
