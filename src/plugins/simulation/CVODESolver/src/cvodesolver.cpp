@@ -16,8 +16,8 @@ namespace CVODESolver {
 //       that CVODE can use whatever step it sees fit...
 
 static const double DefaultMaximumStep = 0;
-static const double DefaultRelativeTolerance = 1e-6;
-static const double DefaultAbsoluteTolerance = 1e-6;
+static const double DefaultRelativeTolerance = 1e-7;
+static const double DefaultAbsoluteTolerance = 1e-7;
 
 //==============================================================================
 
