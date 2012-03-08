@@ -223,6 +223,14 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
     mOutput->clear();
     mOutput->append(QString("%1:").arg(pFileName));
 
+    // Retrieve the active graph panel
+
+    SingleCellSimulationGraphPanel *activeGraphPanel = mGraphPanels->activeGraphPanel();
+
+    // Remove any existing curve
+
+    activeGraphPanel->resetCurves();
+
     // Check whether we 'support' the model
 
     enum Model {
@@ -268,24 +276,40 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
         return;
     }
 
-    // Make sure that the Forward Euler solver is available
+    // Make sure that either the CVODE or the Forward Euler solver is available
 
     CoreSolver::CoreOdeSolver *odeSolver = 0;
+    QString odeSolverName = QString();
 
     foreach (SolverInterface *solverInterface, mSolverInterfaces)
-        if (!solverInterface->name().compare("Forward Euler")) {
-            // The Forward Euler solver could be found, so retrieve an instance
-            // of it
+        if (!solverInterface->name().compare("CVODE")) {
+            // The CVODE solver could be found, so retrieve an instance of it
 
             odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
+            odeSolverName = solverInterface->name();
 
             break;
         }
 
-    if (!odeSolver) {
-        // The Forward Euler solver couldn't be found, so...
+    if (!odeSolver)
+        // The CVODE solver is not available, so try for the Forward Euler
+        // solver
 
-        mOutput->append(" - The Forward Euler solver is needed, but it couldn't be found.");
+        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+            if (!solverInterface->name().compare("Forward Euler")) {
+                // The Forward Euler solver could be found, so retrieve an
+                // instance of it
+
+                odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
+                odeSolverName = solverInterface->name();
+
+                break;
+            }
+
+    if (!odeSolver) {
+        // Neither the CVODE nor the Forward Euler solver could be found, so...
+
+        mOutput->append(" - Either the CVODE or Forward Euler solver is needed, but neither could be found.");
 
         return;
     }
@@ -309,14 +333,6 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
 
         return;
     }
-
-    // Retrieve the active graph panel
-
-    SingleCellSimulationGraphPanel *activeGraphPanel = mGraphPanels->activeGraphPanel();
-
-    // Remove any existing curve
-
-    activeGraphPanel->resetCurves();
 
     // Get some arrays for our model
 
@@ -415,7 +431,8 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
     for (int i = 0; i < statesCount; ++i)
         yData[i].append(states[i]);
 
-    mOutput->append(QString(" - Simulation time: %1 s").arg(QString::number(0.001*time.elapsed(), 'g', 3)));
+    mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(odeSolverName,
+                                                                                  QString::number(0.001*time.elapsed(), 'g', 3)));
 
     // Add some curves to our plotting area
 
