@@ -11,8 +11,20 @@ namespace CVODESolver {
 
 //==============================================================================
 
+// Default CVODE parameter values
+// Note: a maximum step of 0 means that there is no maximum step as such and
+//       that CVODE can use whatever step it sees fit...
+
+static const double DefaultMaximumStep = 0;
+static const double DefaultRelativeTolerance = 1e-6;
+static const double DefaultAbsoluteTolerance = 1e-6;
+
+//==============================================================================
+
 CVODESolver::CVODESolver() :
-    mStep(0)
+    mMaximumStep(DefaultMaximumStep),
+    mRelativeTolerance(DefaultRelativeTolerance),
+    mAbsoluteTolerance(DefaultAbsoluteTolerance)
 {
 }
 
@@ -27,11 +39,18 @@ void CVODESolver::initialize(const int &pNbOfStates, double *pConstants,
     OpenCOR::CoreSolver::CoreOdeSolver::initialize(pNbOfStates, pConstants,
                                                    pRates, pStates, pAlgebraic);
 
-    // Next, we need to retrieve the step to be used by our solver
+    // Next, we need to retrieve some of the CVODE properties
 
-    mStep = mProperties.contains(StepProperty)?
-                mProperties.value(StepProperty).toDouble():
-                0;
+    mMaximumStep = mProperties.contains(MaximumStepProperty)?
+                       mProperties.value(MaximumStepProperty).toDouble():
+                       DefaultMaximumStep;
+
+    mRelativeTolerance = mProperties.contains(RelativeToleranceProperty)?
+                             mProperties.value(RelativeToleranceProperty).toDouble():
+                             DefaultRelativeTolerance;
+    mAbsoluteTolerance = mProperties.contains(AbsoluteToleranceProperty)?
+                             mProperties.value(AbsoluteToleranceProperty).toDouble():
+                             DefaultAbsoluteTolerance;
 }
 
 //==============================================================================
@@ -44,38 +63,8 @@ void CVODESolver::solve(double &pVoi, const double &pVoiEnd,
     Q_ASSERT(mRates);
     Q_ASSERT(mStates);
     Q_ASSERT(mAlgebraic);
-    Q_ASSERT(mStep > 0);
 
-    // Y_n+1 = Y_n + h * f(t_n, Y_n)
-
-    double voiStart = pVoi;
-
-    int nbOfSteps = 0;
-    double realStep = mStep;
-
-    while (pVoi != pVoiEnd)
-    {
-        // Check that the time step is correct
-
-        if (pVoi+realStep > pVoiEnd)
-            realStep = pVoiEnd-pVoi;
-
-        // Compute f(t_n, Y_n)
-
-        pComputeRates(pVoi, mConstants, mRates, mStates, mAlgebraic);
-
-        // Compute Y_n+1
-
-        for (int i = 0; i < mStatesCount; ++i)
-            mStates[i] += realStep*mRates[i];
-
-        // Advance through time
-
-        if (realStep != mStep)
-            pVoi = pVoiEnd;
-        else
-            pVoi = voiStart+(++nbOfSteps)*mStep;
-    }
+    pVoi = pVoiEnd;
 }
 
 //==============================================================================
@@ -84,7 +73,9 @@ bool CVODESolver::isValidProperty(const QString &pName) const
 {
     // Check whether the property name is known to us
 
-    return !pName.compare(StepProperty);
+    return    !pName.compare(MaximumStepProperty)
+            || !pName.compare(RelativeToleranceProperty)
+            || !pName.compare(AbsoluteToleranceProperty);
 }
 
 //==============================================================================

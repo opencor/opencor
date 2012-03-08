@@ -16,7 +16,9 @@ namespace CVODESolver {
 
 //==============================================================================
 
-static const QString StepProperty = "Step";
+static const QString MaximumStepProperty = "Maximum step";
+static const QString RelativeToleranceProperty = "Relative tolerance";
+static const QString AbsoluteToleranceProperty = "Absolute tolerance";
 
 //==============================================================================
 
@@ -33,7 +35,9 @@ public:
                        OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) const;
 
 private:
-    double mStep;
+    double mMaximumStep;
+    double mRelativeTolerance;
+    double mAbsoluteTolerance;
 
     virtual bool isValidProperty(const QString &pName) const;
 };

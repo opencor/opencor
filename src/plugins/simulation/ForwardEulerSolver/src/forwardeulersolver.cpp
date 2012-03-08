@@ -11,8 +11,12 @@ namespace ForwardEulerSolver {
 
 //==============================================================================
 
+static const double InvalidStep = 0;
+
+//==============================================================================
+
 ForwardEulerSolver::ForwardEulerSolver() :
-    mStep(0)
+    mStep(InvalidStep)
 {
 }
 
@@ -32,7 +36,7 @@ void ForwardEulerSolver::initialize(const int &pNbOfStates, double *pConstants,
 
     mStep = mProperties.contains(StepProperty)?
                 mProperties.value(StepProperty).toDouble():
-                0;
+                InvalidStep;
 }
 
 //==============================================================================
