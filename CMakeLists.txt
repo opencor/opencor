@@ -1,6 +1,6 @@
 PROJECT(OpenCOR)
 
-# Minimum version of CMake required
+# Minimum required version of CMake
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 

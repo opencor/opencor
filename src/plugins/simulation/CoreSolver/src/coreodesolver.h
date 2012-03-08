@@ -23,9 +23,9 @@ public:
 
     explicit CoreOdeSolver();
 
-    virtual void initialize(const int &pStatesCount, double **pConstants,
-                            double **pRates, double **pStates,
-                            double **pAlgebraic);
+    virtual void initialize(const int &pStatesCount, double *pConstants,
+                            double *pRates, double *pStates,
+                            double *pAlgebraic);
 
     virtual void solve(double &pVoi, const double &pVoiEnd,
                        ComputeRatesFunction pComputeRates) const = 0;
@@ -33,10 +33,10 @@ public:
 protected:
     int mStatesCount;
 
-    double **mConstants;
-    double **mRates;
-    double **mStates;
-    double **mAlgebraic;
+    double *mConstants;
+    double *mRates;
+    double *mStates;
+    double *mAlgebraic;
 };
 
 //==============================================================================

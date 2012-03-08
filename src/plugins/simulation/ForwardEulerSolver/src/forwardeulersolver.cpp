@@ -18,9 +18,9 @@ ForwardEulerSolver::ForwardEulerSolver() :
 
 //==============================================================================
 
-void ForwardEulerSolver::initialize(const int &pNbOfStates, double **pConstants,
-                                    double **pRates, double **pStates,
-                                    double **pAlgebraic)
+void ForwardEulerSolver::initialize(const int &pNbOfStates, double *pConstants,
+                                    double *pRates, double *pStates,
+                                    double *pAlgebraic)
 {
     // Initialise the Forward Euler solver by first initialising the ODE solver
     // itself
@@ -63,12 +63,12 @@ void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd,
 
         // Compute f(t_n, Y_n)
 
-        pComputeRates(pVoi, *mConstants, *mRates, *mStates, *mAlgebraic);
+        pComputeRates(pVoi, mConstants, mRates, mStates, mAlgebraic);
 
         // Compute Y_n+1
 
         for (int i = 0; i < mStatesCount; ++i)
-            *mStates[i] += realStep*(*mRates[i]);
+            mStates[i] += realStep*mRates[i];
 
         // Advance through time
 

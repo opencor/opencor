@@ -4,6 +4,7 @@
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
+#include "coreodesolver.h"
 #include "singlecellsimulationgraphpanel.h"
 #include "singlecellsimulationgraphpanels.h"
 #include "singlecellsimulationview.h"
@@ -222,34 +223,7 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
     mOutput->clear();
     mOutput->append(QString("%1:").arg(pFileName));
 
-    // Get a runtime for the file
-
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
-
-    if (cellmlFileRuntime->isValid()) {
-        mOutput->append(" - The CellML file's runtime was properly generated.");
-        mOutput->append(QString("    [Information] Model type = %1").arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
-    } else {
-        mOutput->append(" - The CellML file's runtime was NOT properly generated:");
-
-        foreach (const CellMLSupport::CellmlFileIssue &issue,
-                 cellmlFileRuntime->issues())
-            mOutput->append(QString("    [%1] %2").arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
-                                                       issue.formattedMessage()));
-    }
-
-    // Retrieve the active graph panel
-
-    SingleCellSimulationGraphPanel *activeGraphPanel = mGraphPanels->activeGraphPanel();
-
-    if (!activeGraphPanel)
-        return;
-
-    // Remove any existing curve
-
-    activeGraphPanel->resetCurves();
-
-    // Compute the model, if supported
+    // Check whether we 'support' the model
 
     enum Model {
         Unknown,
@@ -265,134 +239,207 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
 
     QString fileBaseName = QFileInfo(pFileName).baseName();
 
-    if (!fileBaseName.compare("van_der_pol_model_1928"))
+    if (!fileBaseName.compare("van_der_pol_model_1928")) {
         model = VanDerPol1928;
-    else if (   !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952")
-             || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_modified")
-             || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_original"))
+    } else if (   !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952")
+               || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_modified")
+               || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_original")) {
         model = Hodgkin1952;
-    else if (!fileBaseName.compare("noble_model_1962"))
+    } else if (!fileBaseName.compare("noble_model_1962")) {
         model = Noble1962;
-    else if (!fileBaseName.compare("noble_noble_SAN_model_1984"))
+    } else if (!fileBaseName.compare("noble_noble_SAN_model_1984")) {
         model = Noble1984;
-    else if (!fileBaseName.compare("noble_model_1991"))
+    } else if (!fileBaseName.compare("noble_model_1991")) {
         model = Noble1991;
-    else if (!fileBaseName.compare("noble_model_1998"))
+    } else if (!fileBaseName.compare("noble_model_1998")) {
         model = Noble1998;
-    else if (   !fileBaseName.compare("zhang_SAN_model_2000_0D_capable")
-             || !fileBaseName.compare("zhang_SAN_model_2000_1D_capable")
-             || !fileBaseName.compare("zhang_SAN_model_2000_all")
-             || !fileBaseName.compare("zhang_SAN_model_2000_published"))
+    } else if (   !fileBaseName.compare("zhang_SAN_model_2000_0D_capable")
+               || !fileBaseName.compare("zhang_SAN_model_2000_1D_capable")
+               || !fileBaseName.compare("zhang_SAN_model_2000_all")
+               || !fileBaseName.compare("zhang_SAN_model_2000_published")) {
         model = Zhang2000;
-    else if (!fileBaseName.compare("mitchell_schaeffer_2003"))
+    } else if (!fileBaseName.compare("mitchell_schaeffer_2003")) {
         model = Mitchell2003;
-    else
-        model = Unknown;
+    } else {
+        // The model is not 'supported', so...
 
-    if (cellmlFileRuntime->isValid() && (model != Unknown)) {
-        typedef QVector<double> Doubles;
+        mOutput->append(" - The model is not 'supported'.");
 
-        int statesCount = cellmlFileRuntime->statesCount();
+        return;
+    }
 
-        Doubles xData;
-        Doubles yData[statesCount];
+    // Make sure that the Forward Euler solver is available
 
-        double voi = 0;   // ms
-        double voiStep;   // ms
-        double voiMax;    // ms
-        double constants[cellmlFileRuntime->constantsCount()];
-        double rates[cellmlFileRuntime->ratesCount()];
-        double states[statesCount];
-        double algebraic[cellmlFileRuntime->algebraicCount()];
-        int voiCount = 0;
-        int voiOutputCount;   // ms
+    CoreSolver::CoreOdeSolver *odeSolver = 0;
 
-        switch (model) {
-        case Hodgkin1952:
-            voiStep        = 0.01;   // ms
-            voiMax         = 50;     // ms
-            voiOutputCount = 10;
+    foreach (SolverInterface *solverInterface, mSolverInterfaces)
+        if (!solverInterface->name().compare("Forward Euler")) {
+            // The Forward Euler solver could be found, so retrieve an instance
+            // of it
+
+            odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
 
             break;
-        case Noble1962:
-        case Mitchell2003:
-            voiStep        = 0.01;   // ms
-            voiMax         = 1000;   // ms
-            voiOutputCount = 100;
-
-            break;
-        case Noble1984:
-        case Noble1991:
-        case Noble1998:
-        case Zhang2000:
-            voiStep        = 0.00001;   // s
-            voiMax         = 1;         // s
-            voiOutputCount = 100;
-
-            break;
-        default:   // van der Pol 1928
-            voiStep        = 0.01;   // s
-            voiMax         = 10;     // s
-            voiOutputCount = 1;
         }
 
-        CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
+    if (!odeSolver) {
+        // The Forward Euler solver couldn't be found, so...
 
-        // Initialise the constants and compute the rates and variables
+        mOutput->append(" - The Forward Euler solver is needed, but it couldn't be found.");
 
-        QTime time;
+        return;
+    }
 
-        time.start();
+    // Get a runtime for the file
 
-        odeFunctions.initializeConstants(constants, rates, states);
-        odeFunctions.computeRates(voi, constants, rates, states, algebraic);
-        odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
 
-        do {
-            // Output the current data, if needed
+    if (cellmlFileRuntime->isValid()) {
+        mOutput->append(" - The CellML file's runtime was properly generated.");
+        mOutput->append(QString("    [Information] Model type = %1").arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
+    } else {
+        mOutput->append(" - The CellML file's runtime was NOT properly generated:");
 
-            if(voiCount % voiOutputCount == 0) {
-                xData.append(voi);
+        foreach (const CellMLSupport::CellmlFileIssue &issue,
+                 cellmlFileRuntime->issues())
+            mOutput->append(QString("    [%1] %2").arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
+                                                       issue.formattedMessage()));
 
-                for (int i = 0; i < statesCount; ++i)
-                    yData[i].append(states[i]);
-            }
+        // The runtime is not valid, so...
 
-            // Compute the rates and variables
+        return;
+    }
 
-            odeFunctions.computeRates(voi, constants, rates, states, algebraic);
-            odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
+    // Retrieve the active graph panel
 
-            // Go to the next voiStep and integrate the states
+    SingleCellSimulationGraphPanel *activeGraphPanel = mGraphPanels->activeGraphPanel();
 
-            voi = ++voiCount*voiStep;
+    // Remove any existing curve
 
-            for (int i = 0; i < statesCount; ++i)
-                states[i] += voiStep*rates[i];
-        } while (voi < voiMax);
+    activeGraphPanel->resetCurves();
+
+    // Get some arrays for our model
+
+    int statesCount = cellmlFileRuntime->statesCount();
+
+    double *constants = new double[cellmlFileRuntime->constantsCount()];
+    double *rates = new double[cellmlFileRuntime->ratesCount()];
+    double *states = new double[statesCount];
+    double *algebraic = new double[cellmlFileRuntime->algebraicCount()];
+
+    // Get some arrays to store the simulation data
+
+    typedef QVector<double> Doubles;
+
+    Doubles xData;
+    Doubles yData[statesCount];
+
+    // Get some initial values for the ODE solver and our simulation in general
+
+    double voi = 0;   // ms
+
+    double voiStart = voi;   // ms
+    double voiStep;          // ms
+    double voiMax;           // ms
+
+    double voiOutput;   // ms
+    int voiOutputCount = 0;
+
+    switch (model) {
+    case Hodgkin1952:
+        voiStep   = 0.01;   // ms
+        voiMax    = 50;     // ms
+        voiOutput = 0.1;    // ms
+
+        break;
+    case Noble1962:
+    case Mitchell2003:
+        voiStep   = 0.01;   // ms
+        voiMax    = 1000;   // ms
+        voiOutput = 1;      // ms
+
+        break;
+    case Noble1984:
+    case Noble1991:
+    case Noble1998:
+    case Zhang2000:
+        voiStep   = 0.00001;   // s
+        voiMax    = 1;         // s
+        voiOutput = 0.001;     // s
+
+        break;
+    default:   // van der Pol 1928
+        voiStep   = 0.01;   // s
+        voiMax    = 10;     // s
+        voiOutput = 0.01;   // s
+    }
+
+    // Initialise our ODE solver
+
+    odeSolver->setProperty("Step", voiStep);
+    odeSolver->initialize(statesCount, constants, rates, states, algebraic);
+
+    // Retrieve the ODE functions from the CellML file runtime
+
+    CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
+
+    // Initialise the constants and compute the rates and variables
+
+    QTime time;
+
+    time.start();
+
+    odeFunctions.initializeConstants(constants, rates, states);
+    odeFunctions.computeRates(voi, constants, rates, states, algebraic);
+    odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
+
+    do {
+        // Output the current simulation data
 
         xData.append(voi);
 
         for (int i = 0; i < statesCount; ++i)
             yData[i].append(states[i]);
 
-        mOutput->append(QString(" - Simulation time: %1 s").arg(QString::number(0.001*time.elapsed(), 'g', 3)));
+        // Solve the model
 
-        // Add some curves to our plotting area
+        odeSolver->solve(voi,
+                         qMin(voiStart+(++voiOutputCount)*voiOutput, voiMax),
+                         odeFunctions.computeRates);
 
-        for (int i = 0, iMax = (model == VanDerPol1928)?statesCount:1; i < iMax; ++i) {
-            QwtPlotCurve *curve = activeGraphPanel->addCurve();
+        odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
+    } while (voi != voiMax);
 
-            if (!i%2)
-                curve->setPen(QPen(Qt::darkRed));
+    xData.append(voi);
 
-            curve->setSamples(xData, yData[i]);
-        }
+    for (int i = 0; i < statesCount; ++i)
+        yData[i].append(states[i]);
 
-        // Make sure that the view is up-to-date
+    mOutput->append(QString(" - Simulation time: %1 s").arg(QString::number(0.001*time.elapsed(), 'g', 3)));
 
-        activeGraphPanel->replot();
+    // Add some curves to our plotting area
+
+    for (int i = 0, iMax = (model == VanDerPol1928)?statesCount:1; i < iMax; ++i) {
+        QwtPlotCurve *curve = activeGraphPanel->addCurve();
+
+        if (!i%2)
+            curve->setPen(QPen(Qt::darkRed));
+
+        curve->setSamples(xData, yData[i]);
     }
+
+    // Make sure that the view is up-to-date
+
+    activeGraphPanel->replot();
+
+    // Free the memory we allocated to solve the model
+
+    delete[] constants;
+    delete[] rates;
+    delete[] states;
+    delete[] algebraic;
+
+    delete odeSolver;
 }
 
 //==============================================================================
