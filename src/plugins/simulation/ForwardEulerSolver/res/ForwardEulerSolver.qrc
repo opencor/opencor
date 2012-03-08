@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="ForwardEulerSolver_fr">../../../../../build/ForwardEulerSolver_fr.qm</file>
-    </qresource>
-</RCC>
