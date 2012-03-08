@@ -355,44 +355,64 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
     double voi = 0;   // ms
 
     double voiStart = voi;   // ms
-    double voiStep;          // ms
-    double voiMax;           // ms
+    double voiEnd;           // ms
+
+    double voiStep;              // ms
+    double voiMaximumStep = 0;   // ms
+
 
     double voiOutput;   // ms
     int voiOutputCount = 0;
 
     switch (model) {
     case Hodgkin1952:
+        voiEnd    = 50;     // ms
         voiStep   = 0.01;   // ms
-        voiMax    = 50;     // ms
         voiOutput = 0.1;    // ms
 
         break;
     case Noble1962:
     case Mitchell2003:
-        voiStep   = 0.01;   // ms
-        voiMax    = 1000;   // ms
-        voiOutput = 1;      // ms
+        voiEnd         = 1000;   // ms
+        voiStep        = 0.01;   // ms
+        voiOutput      = 1;      // ms
+        voiMaximumStep = 1;      // ms
 
         break;
     case Noble1984:
-    case Noble1991:
-    case Noble1998:
     case Zhang2000:
+        voiEnd    = 1;         // s
         voiStep   = 0.00001;   // s
-        voiMax    = 1;         // s
         voiOutput = 0.001;     // s
 
         break;
+    case Noble1991:
+        voiEnd         = 1;         // s
+        voiStep        = 0.00001;   // s
+        voiOutput      = 0.001;     // s
+        voiMaximumStep = 0.002;     // s
+
+        break;
+    case Noble1998:
+        voiEnd         = 1;         // s
+        voiStep        = 0.00001;   // s
+        voiOutput      = 0.001;     // s
+        voiMaximumStep = 0.003;     // s
+
+        break;
     default:   // van der Pol 1928
+        voiEnd    = 10;     // s
         voiStep   = 0.01;   // s
-        voiMax    = 10;     // s
         voiOutput = 0.01;   // s
     }
 
     // Initialise our ODE solver
 
-    odeSolver->setProperty("Step", voiStep);
+    if (!odeSolverName.compare("CVODE"))
+        odeSolver->setProperty("Maximum step", voiMaximumStep);
+    else
+        odeSolver->setProperty("Step", voiStep);
+
     odeSolver->initialize(statesCount, constants, rates, states, algebraic);
 
     // Retrieve the ODE functions from the CellML file runtime
@@ -420,11 +440,11 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
         // Solve the model
 
         odeSolver->solve(voi,
-                         qMin(voiStart+(++voiOutputCount)*voiOutput, voiMax),
+                         qMin(voiStart+(++voiOutputCount)*voiOutput, voiEnd),
                          odeFunctions.computeRates);
 
         odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
-    } while (voi != voiMax);
+    } while (voi != voiEnd);
 
     xData.append(voi);
 
