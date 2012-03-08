@@ -46,17 +46,27 @@
             <li>
                 <a href="http://qt.nokia.com/">Qt</a> SDK 1.2: this combines Qt 4.8.0 (a cross-platform application and UI framework) and Qt Creator 2.4.1 (a cross-platform environment for Qt), among other things:
                 <ul>
-                    <li><a href="http://qt.nokia.com/downloads/sdk-windows-cpp">Windows</a>;</li>
+                    <li>
+                        <a href="http://qt.nokia.com/downloads/sdk-windows-cpp">Windows</a>;
+                        <div>
+                            <strong>Note:</strong> make sure to select the <code>MinGW 4.4</code> package (under the <code>Qt SDK|Miscellaneous</code> category).
+                        </div>
+                    </li>
                     <li>
                         Linux <a href="http://qt.nokia.com/downloads/sdk-linux-x11-32bit-cpp">32-bit</a>/<a href="http://qt.nokia.com/downloads/sdk-linux-x11-64bit-cpp">64-bit</a>; and
                         <div>
                             <strong>Note:</strong> we would recommend sudo installing the SDK, so that it gets installed under under <code>/opt/QtSDK</code> rather than under your home directory.
                         </div>
                     </li>
-                    <li><a href = "http://qt.nokia.com/downloads/sdk-mac-os-cpp">Mac OS X</a>: you might want to install the SDK under <code>/Developer</code> rather than your home folder as suggested by the installer.</li>
+                    <li>
+                        <a href = "http://qt.nokia.com/downloads/sdk-mac-os-cpp">Mac OS X</a>.
+                        <div>
+                            <strong>Note:</strong> you might want to install the SDK under <code>/Developer</code> rather than your home folder as is suggested by the installer.
+                        </div>
+                    </li>
                 </ul>
                 <div>
-                    <strong>Note:</strong> the Qt SDK will, by default, install everything that is needed to build OpenCOR (except, on Windows, for the <code>MinGW 4.4</code> package which needs to be manually selected from the <code>Qt SDK|Miscellaneous</code> category), so it is pretty much up to you which package(s) you want to install (you can always add/remove packages later on, if wanted/needed). Just for reference, <a href="res/pics/QtSDK.png">here</a> are the packages that we selected for our Windows build (it is very similar on Linux and Mac OS X).
+                    <strong>Note:</strong> the Qt SDK will, by default, install everything that is needed to build OpenCOR, so it is really up to you which package(s) you want to install (you can always add/remove packages later on, if wanted/needed). Just for reference, <a href="res/pics/QtSDK.png">here</a> are the packages that we selected for our Windows build (it is very similar on Linux and Mac OS X).
                 </div>
             </li>
             <li><a href="http://nsis.sourceforge.net/">NSIS</a> (Windows only): a program for creating Windows installers.</li>
