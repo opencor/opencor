@@ -27,6 +27,16 @@ static const QString AbsoluteToleranceProperty = "Absolute tolerance";
 
 //==============================================================================
 
+struct CVODESolverUserData
+{
+    double *constants;
+    double *algebraic;
+
+    OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction computeRates;
+};
+
+//==============================================================================
+
 class CVODESolver : public CoreSolver::CoreOdeSolver
 {
 public:
@@ -45,6 +55,7 @@ public:
 private:
     void *mSolver;
     N_Vector mStates;
+    CVODESolverUserData mUserData;
 
     double mMaximumStep;
     int mMaximumNumberOfSteps;

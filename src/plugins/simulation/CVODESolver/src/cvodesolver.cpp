@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include "cvode/cvode.h"
+#include "cvode/cvode_dense.h"
 
 //==============================================================================
 
@@ -30,6 +31,13 @@ static const double DefaultAbsoluteTolerance = 1e-7;
 
 int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 {
+    CVODESolverUserData *userData = reinterpret_cast<CVODESolverUserData *>(pUserData);
+
+    userData->computeRates(pVoi, userData->constants,
+                           N_VectorContent_Serial(pRates->content)->data,
+                           N_VectorContent_Serial(pStates->content)->data,
+                           userData->algebraic);
+
     return 0;
 }
 
@@ -120,7 +128,16 @@ void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         // Set some user data
 
-//        CVodeSetUserData(mSolver, userData);
+        mUserData.constants = pConstants;
+        mUserData.algebraic = pAlgebraic;
+
+        mUserData.computeRates = pComputeRates;
+
+        CVodeSetUserData(mSolver, &mUserData);
+
+        // Set the linear solver
+
+        CVDense(mSolver, pStatesCount);
 
         // Set the maximum step
 
