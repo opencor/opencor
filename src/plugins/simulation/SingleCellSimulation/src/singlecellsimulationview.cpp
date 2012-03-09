@@ -438,6 +438,8 @@ void SingleCellSimulationView::on_actionRun_triggered()
     double voiStart = voi;
     int voiOutputCount = 0;
 
+    double hundredOverVoiEnd = 100/mVoiEnd;
+
     // Retrieve the ODE functions from the CellML file runtime
 
     CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = mCellmlFileRuntime->odeFunctions();
@@ -478,7 +480,15 @@ void SingleCellSimulationView::on_actionRun_triggered()
         odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
 
         odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+
+        // Update the progress bar
+
+        mProgressBar->setValue(voi*hundredOverVoiEnd);
     } while ((voi != mVoiEnd) && mSolverErrorMsg.isEmpty());
+
+    // Reset the progress bar
+
+    mProgressBar->setValue(0);
 
     if (!mSolverErrorMsg.isEmpty()) {
         // The solver reported an error, so...
