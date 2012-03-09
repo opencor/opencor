@@ -38,7 +38,10 @@ namespace SingleCellSimulation {
 SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     Widget(pParent),
     mUi(new Ui::SingleCellSimulationView),
-    mSolverInterfaces(SolverInterfaces())
+    mFileName(QString()),
+    mCellmlFileRuntime(0),
+    mSolverInterfaces(SolverInterfaces()),
+    mSolverErrorMsg(QString())
 {
     // Set up the UI
 
@@ -182,58 +185,107 @@ QFrame * SingleCellSimulationView::newSeparatingLine()
 
 //==============================================================================
 
-void SingleCellSimulationView::updateWith(const QString &pFileName)
+void SingleCellSimulationView::clearGraphPanels()
 {
-foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-    qDebug("---------------------------------------");
-    qDebug("'%s' solver:", qPrintable(solverInterface->name()));
-    qDebug(" - Type: %s", (solverInterface->type() == Solver::Ode)?"ODE":"DAE");
+    // Clear all the graph panels
 
-    Solver::Properties properties = solverInterface->properties();
+    for (int i = 0, iMax = mGraphPanels->count(); i < iMax; ++i)
+        qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(i))->resetCurves();
+}
 
-    if (properties.count()) {
-        qDebug(" - Properties:");
+//==============================================================================
 
-        Solver::Properties::const_iterator iter = properties.constBegin();
-        Solver::Properties::const_iterator iterEnd = properties.constEnd();
+void SingleCellSimulationView::clearActiveGraphPanel()
+{
+    // Clear the current graph panel
 
-        while (iter != iterEnd) {
-            QString type;
+    mGraphPanels->activeGraphPanel()->resetCurves();
+}
 
-            switch (iter.value()) {
-            case Solver::Double:
-                type = "Double";
+//==============================================================================
 
-                break;
-            case Solver::Integer:
-                type = "Integer";
+void SingleCellSimulationView::initialize(const QString &pFileName)
+{
+    // Keep track of the file name
 
-                break;
-            default:
-                type = "???";
-            }
+    mFileName = pFileName;
 
-            qDebug("    - %s: %s", qPrintable(iter.key()), qPrintable(type));
+    // Clear the graph panels and output
 
-            ++iter;
-        }
+    clearGraphPanels();
+
+    mOutput->clear();
+
+    // Get a runtime for the file
+
+    mCellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
+
+    if (mCellmlFileRuntime->isValid()) {
+        mOutput->append(" - The CellML file's runtime was properly generated.");
+        mOutput->append(QString("    [Information] Model type = %1").arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
     } else {
-        qDebug(" - Properties: none");
+        mOutput->append(" - The CellML file's runtime was NOT properly generated:");
+
+        foreach (const CellMLSupport::CellmlFileIssue &issue,
+                 mCellmlFileRuntime->issues())
+            mOutput->append(QString("    [%1] %2").arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
+                                                       issue.formattedMessage()));
     }
 }
 
+//==============================================================================
 
+void OpenCOR::SingleCellSimulation::SingleCellSimulationView::on_actionRun_triggered()
+{
+    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
+        qDebug("---------------------------------------");
+        qDebug("'%s' solver:", qPrintable(solverInterface->name()));
+        qDebug(" - Type: %s", (solverInterface->type() == Solver::Ode)?"ODE":"DAE");
+
+        Solver::Properties properties = solverInterface->properties();
+
+        if (properties.count()) {
+            qDebug(" - Properties:");
+
+            Solver::Properties::const_iterator iter = properties.constBegin();
+            Solver::Properties::const_iterator iterEnd = properties.constEnd();
+
+            while (iter != iterEnd) {
+                QString type;
+
+                switch (iter.value()) {
+                case Solver::Double:
+                    type = "Double";
+
+                    break;
+                case Solver::Integer:
+                    type = "Integer";
+
+                    break;
+                default:
+                    type = "???";
+                }
+
+                qDebug("    - %s: %s", qPrintable(iter.key()), qPrintable(type));
+
+                ++iter;
+            }
+        } else {
+            qDebug(" - Properties: none");
+        }
+    }
+
+
+
+    // Clear the graph panels and output
+
+    clearGraphPanels();
 
     mOutput->clear();
-    mOutput->append(QString("%1:").arg(pFileName));
 
     // Retrieve the active graph panel
 
     SingleCellSimulationGraphPanel *activeGraphPanel = mGraphPanels->activeGraphPanel();
-
-    // Remove any existing curve
-
-    activeGraphPanel->resetCurves();
 
     // Check whether we 'support' the model
 
@@ -249,7 +301,7 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
         Mitchell2003
     } model;
 
-    QString fileBaseName = QFileInfo(pFileName).baseName();
+    QString fileBaseName = QFileInfo(mFileName).baseName();
 
     if (!fileBaseName.compare("van_der_pol_model_1928")) {
         model = VanDerPol1928;
@@ -325,34 +377,14 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
 
     mSolverErrorMsg = QString();
 
-    // Get a runtime for the file
-
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
-
-    if (cellmlFileRuntime->isValid()) {
-        mOutput->append(" - The CellML file's runtime was properly generated.");
-        mOutput->append(QString("    [Information] Model type = %1").arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
-    } else {
-        mOutput->append(" - The CellML file's runtime was NOT properly generated:");
-
-        foreach (const CellMLSupport::CellmlFileIssue &issue,
-                 cellmlFileRuntime->issues())
-            mOutput->append(QString("    [%1] %2").arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
-                                                       issue.formattedMessage()));
-
-        // The runtime is not valid, so...
-
-        return;
-    }
-
     // Get some arrays for our model
 
-    int statesCount = cellmlFileRuntime->statesCount();
+    int statesCount = mCellmlFileRuntime->statesCount();
 
-    double *constants = new double[cellmlFileRuntime->constantsCount()];
-    double *rates = new double[cellmlFileRuntime->ratesCount()];
+    double *constants = new double[mCellmlFileRuntime->constantsCount()];
+    double *rates = new double[mCellmlFileRuntime->ratesCount()];
     double *states = new double[statesCount];
-    double *algebraic = new double[cellmlFileRuntime->algebraicCount()];
+    double *algebraic = new double[mCellmlFileRuntime->algebraicCount()];
 
     // Get some arrays to store the simulation data
 
@@ -419,7 +451,7 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
 
     // Retrieve the ODE functions from the CellML file runtime
 
-    CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
+    CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = mCellmlFileRuntime->odeFunctions();
 
     // Initialise the model's 'constants'
 

@@ -31,6 +31,21 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+
+//==============================================================================
+
+class CellmlFileRuntime;
+
+//==============================================================================
+
+}   // namespace CellMLSuppoer
+
+//==============================================================================
+
 namespace SingleCellSimulation {
 
 //==============================================================================
@@ -53,12 +68,15 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void updateWith(const QString &pFileName);
-
     void addSolverInterface(SolverInterface *pSolverInterface);
+
+    void initialize(const QString &pFileName);
 
 private:
     Ui::SingleCellSimulationView *mUi;
+
+    QString mFileName;
+    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
     SolverInterfaces mSolverInterfaces;
 
@@ -67,11 +85,15 @@ private:
 
     QProgressBar *mProgressBar;
 
-    QFrame * newSeparatingLine();
-
     QString mSolverErrorMsg;
 
+    QFrame * newSeparatingLine();
+
+    void clearGraphPanels();
+    void clearActiveGraphPanel();
+
 private Q_SLOTS:
+    void on_actionRun_triggered();
     void on_actionAdd_triggered();
     void on_actionRemove_triggered();
 
