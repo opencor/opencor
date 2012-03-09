@@ -31,7 +31,8 @@ enum Type
 };
 
 enum PropertyType {
-    Double
+    Double,
+    Integer
 };
 
 typedef QMap<QString, PropertyType> Properties;

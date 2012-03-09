@@ -205,6 +205,10 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
                 type = "Double";
 
                 break;
+            case Solver::Integer:
+                type = "Integer";
+
+                break;
             default:
                 type = "???";
             }
@@ -413,7 +417,7 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
     else
         odeSolver->setProperty("Step", voiStep);
 
-    odeSolver->initialize(statesCount, constants, rates, states, algebraic);
+    odeSolver->initialize(voi, statesCount, constants, rates, states, algebraic);
 
     // Retrieve the ODE functions from the CellML file runtime
 

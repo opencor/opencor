@@ -22,15 +22,16 @@ ForwardEulerSolver::ForwardEulerSolver() :
 
 //==============================================================================
 
-void ForwardEulerSolver::initialize(const int &pNbOfStates, double *pConstants,
+void ForwardEulerSolver::initialize(const double &pVoiStart,
+                                    const int &pStatesCount, double *pConstants,
                                     double *pRates, double *pStates,
                                     double *pAlgebraic)
 {
-    // Initialise the Forward Euler solver by first initialising the ODE solver
-    // itself
+    // Initialise the ODE solver itself
 
-    OpenCOR::CoreSolver::CoreOdeSolver::initialize(pNbOfStates, pConstants,
-                                                   pRates, pStates, pAlgebraic);
+    OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pStatesCount,
+                                                   pConstants, pRates, pStates,
+                                                   pAlgebraic);
 
     // Next, we need to retrieve the step to be used by our solver
 

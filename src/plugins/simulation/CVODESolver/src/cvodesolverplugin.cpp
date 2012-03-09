@@ -23,7 +23,7 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
                       PluginInfo::General,
                       PluginInfo::Simulation,
                       true,
-                      QStringList() << "CoreSolver",
+                      QStringList() << "CoreSolver" << "SUNDIALS",
                       descriptions);
 }
 
@@ -58,6 +58,7 @@ Solver::Properties CVODESolverPlugin::properties() const
     Solver::Properties res = Solver::Properties();
 
     res.insert(MaximumStepProperty, Solver::Double);
+    res.insert(MaximumNumberOfStepsProperty, Solver::Integer);
     res.insert(RelativeToleranceProperty, Solver::Double);
     res.insert(AbsoluteToleranceProperty, Solver::Double);
 
