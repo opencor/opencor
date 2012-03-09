@@ -31,12 +31,19 @@ static const double DefaultAbsoluteTolerance = 1e-7;
 
 int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 {
+    // Compute the model
+
     CVODESolverUserData *userData = reinterpret_cast<CVODESolverUserData *>(pUserData);
 
     userData->computeRates(pVoi, userData->constants,
-                           N_VectorContent_Serial(pRates->content)->data,
-                           N_VectorContent_Serial(pStates->content)->data,
+                           N_VGetArrayPointer_Serial(pRates),
+                           N_VGetArrayPointer_Serial(pStates),
                            userData->algebraic);
+
+    // Keep track of the rates in case the user wants to plot (some of) them
+
+    memcpy(userData->rates, N_VGetArrayPointer_Serial(pRates),
+           userData->statesCount*sizeof(double));
 
     return 0;
 }
@@ -128,7 +135,10 @@ void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         // Set some user data
 
+        mUserData.statesCount = pStatesCount;
+
         mUserData.constants = pConstants;
+        mUserData.rates     = pRates;
         mUserData.algebraic = pAlgebraic;
 
         mUserData.computeRates = pComputeRates;

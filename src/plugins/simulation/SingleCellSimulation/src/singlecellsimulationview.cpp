@@ -421,6 +421,10 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
 
     CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
 
+    // Initialise the model's 'constants'
+
+    odeFunctions.initializeConstants(constants, rates, states);
+
     // Initialise our ODE solver
 
     if (!odeSolverName.compare("CVODE"))
@@ -437,7 +441,6 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
 
     time.start();
 
-    odeFunctions.initializeConstants(constants, rates, states);
     odeFunctions.computeRates(voi, constants, rates, states, algebraic);
     odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
 
@@ -449,7 +452,7 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
         for (int i = 0; i < statesCount; ++i)
             yData[i].append(states[i]);
 
-        // Solve the model
+        // Solve the model and compute its variables
 
         odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*voiOutput, voiEnd));
 
