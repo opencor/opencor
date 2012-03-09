@@ -318,6 +318,13 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
         return;
     }
 
+    // Keep track of any error that might be reported by our solver
+
+    connect(odeSolver, SIGNAL(error(const QString &)),
+            this, SLOT(solverError(const QString &)));
+
+    mSolverErrorMsg = QString();
+
     // Get a runtime for the file
 
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
@@ -410,6 +417,10 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
         voiOutput = 0.01;   // s
     }
 
+    // Retrieve the ODE functions from the CellML file runtime
+
+    CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
+
     // Initialise our ODE solver
 
     if (!odeSolverName.compare("CVODE"))
@@ -417,11 +428,8 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
     else
         odeSolver->setProperty("Step", voiStep);
 
-    odeSolver->initialize(voi, statesCount, constants, rates, states, algebraic);
-
-    // Retrieve the ODE functions from the CellML file runtime
-
-    CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = cellmlFileRuntime->odeFunctions();
+    odeSolver->initialize(voi, statesCount, constants, rates, states, algebraic,
+                          odeFunctions.computeRates);
 
     // Initialise the constants and compute the rates and variables
 
@@ -443,35 +451,39 @@ foreach (SolverInterface *solverInterface, mSolverInterfaces) {
 
         // Solve the model
 
-        odeSolver->solve(voi,
-                         qMin(voiStart+(++voiOutputCount)*voiOutput, voiEnd),
-                         odeFunctions.computeRates);
+        odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*voiOutput, voiEnd));
 
         odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
-    } while (voi != voiEnd);
+    } while ((voi != voiEnd) && mSolverErrorMsg.isEmpty());
 
-    xData.append(voi);
+    if (!mSolverErrorMsg.isEmpty()) {
+        // The solver reported an error, so...
 
-    for (int i = 0; i < statesCount; ++i)
-        yData[i].append(states[i]);
+        mOutput->append(QString(" - Solver error: %1").arg(mSolverErrorMsg));
+    } else {
+        xData.append(voi);
 
-    mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(odeSolverName,
-                                                                                  QString::number(0.001*time.elapsed(), 'g', 3)));
+        for (int i = 0; i < statesCount; ++i)
+            yData[i].append(states[i]);
 
-    // Add some curves to our plotting area
+        mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(odeSolverName,
+                                                                                      QString::number(0.001*time.elapsed(), 'g', 3)));
 
-    for (int i = 0, iMax = (model == VanDerPol1928)?statesCount:1; i < iMax; ++i) {
-        QwtPlotCurve *curve = activeGraphPanel->addCurve();
+        // Add some curves to our plotting area
 
-        if (!i%2)
-            curve->setPen(QPen(Qt::darkRed));
+        for (int i = 0, iMax = (model == VanDerPol1928)?statesCount:1; i < iMax; ++i) {
+            QwtPlotCurve *curve = activeGraphPanel->addCurve();
 
-        curve->setSamples(xData, yData[i]);
+            if (!i%2)
+                curve->setPen(QPen(Qt::darkRed));
+
+            curve->setSamples(xData, yData[i]);
+        }
+
+        // Make sure that the view is up-to-date
+
+        activeGraphPanel->replot();
     }
-
-    // Make sure that the view is up-to-date
-
-    activeGraphPanel->replot();
 
     // Free the memory we allocated to solve the model
 
@@ -499,6 +511,15 @@ void SingleCellSimulationView::on_actionRemove_triggered()
     // Remove the current graph panel
 
     mGraphPanels->removeGraphPanel();
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::solverError(const QString &pErrorMsg)
+{
+    // The solver emitted an error, so...
+
+    mSolverErrorMsg = pErrorMsg;
 }
 
 //==============================================================================

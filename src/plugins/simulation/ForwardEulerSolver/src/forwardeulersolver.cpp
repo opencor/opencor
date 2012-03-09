@@ -16,7 +16,8 @@ static const double InvalidStep = 0;
 //==============================================================================
 
 ForwardEulerSolver::ForwardEulerSolver() :
-    mStep(InvalidStep)
+    mStep(InvalidStep),
+    mComputeRates(0)
 {
 }
 
@@ -25,25 +26,27 @@ ForwardEulerSolver::ForwardEulerSolver() :
 void ForwardEulerSolver::initialize(const double &pVoiStart,
                                     const int &pStatesCount, double *pConstants,
                                     double *pRates, double *pStates,
-                                    double *pAlgebraic)
+                                    double *pAlgebraic,
+                                    ComputeRatesFunction pComputeRates)
 {
     // Initialise the ODE solver itself
 
     OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pStatesCount,
                                                    pConstants, pRates, pStates,
-                                                   pAlgebraic);
+                                                   pAlgebraic, pComputeRates);
 
-    // Next, we need to retrieve the step to be used by our solver
+    // Retrieve the solver's properties
 
     mStep = mProperties.contains(StepProperty)?
                 mProperties.value(StepProperty).toDouble():
                 InvalidStep;
+
+    mComputeRates = pComputeRates;
 }
 
 //==============================================================================
 
-void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd,
-                               OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) const
+void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     Q_ASSERT(mStatesCount > 0);
     Q_ASSERT(mConstants);
@@ -51,6 +54,7 @@ void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd,
     Q_ASSERT(mStates);
     Q_ASSERT(mAlgebraic);
     Q_ASSERT(mStep > 0);
+    Q_ASSERT(mComputeRates);
 
     // Y_n+1 = Y_n + h * f(t_n, Y_n)
 
@@ -68,7 +72,7 @@ void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd,
 
         // Compute f(t_n, Y_n)
 
-        pComputeRates(pVoi, mConstants, mRates, mStates, mAlgebraic);
+        mComputeRates(pVoi, mConstants, mRates, mStates, mAlgebraic);
 
         // Compute Y_n+1
 

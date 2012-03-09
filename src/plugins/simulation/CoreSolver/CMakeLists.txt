@@ -10,6 +10,7 @@ ADD_PLUGIN(CoreSolver
         src/coresolver.cpp
         src/coresolverplugin.cpp
     HEADERS_MOC
+        src/coresolver.h
         src/coresolverplugin.h
     INCLUDE_DIRS
         src

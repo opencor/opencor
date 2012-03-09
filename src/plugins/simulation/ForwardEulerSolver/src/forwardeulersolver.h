@@ -27,13 +27,14 @@ public:
 
     virtual void initialize(const double &pVoiStart, const int &pStatesCount,
                             double *pConstants, double *pRates,
-                            double *pStates, double *pAlgebraic);
+                            double *pStates, double *pAlgebraic,
+                            ComputeRatesFunction pComputeRates);
 
-    virtual void solve(double &pVoi, const double &pVoiEnd,
-                       OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) const;
+    virtual void solve(double &pVoi, const double &pVoiEnd) const;
 
 private:
     double mStep;
+    ComputeRatesFunction mComputeRates;
 
     virtual bool isValidProperty(const QString &pName) const;
 };

@@ -35,6 +35,21 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 
 //==============================================================================
 
+void errorHandler(int pErrorCode, const char */* pModule */,
+                  const char */* pFunction */, char *pErrorMsg, void *pUserData)
+{
+    if (pErrorCode != CV_WARNING) {
+        // CVODE really generated an error, so forward it to the CVODESolver
+        // object
+
+        QString errorMsg = pErrorMsg;
+
+        reinterpret_cast<CVODESolver *>(pUserData)->emitError(errorMsg.left(1).toLower()+errorMsg.right(errorMsg.size()-1));
+    }
+}
+
+//==============================================================================
+
 CVODESolver::CVODESolver() :
     mSolver(0),
     mStates(0),
@@ -59,16 +74,18 @@ CVODESolver::~CVODESolver()
 
 void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
                              double *pConstants, double *pRates,
-                             double *pStates, double *pAlgebraic)
+                             double *pStates, double *pAlgebraic,
+                             ComputeRatesFunction pComputeRates)
 {
     if (!mSolver) {
         // Initialise the ODE solver itself
 
         OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pStatesCount,
                                                        pConstants, pRates,
-                                                       pStates, pAlgebraic);
+                                                       pStates, pAlgebraic,
+                                                       pComputeRates);
 
-        // Next, we need to retrieve some of the CVODE properties
+        // Retrieve some of the CVODE properties
 
         mMaximumStep = mProperties.contains(MaximumStepProperty)?
                            mProperties.value(MaximumStepProperty).toDouble():
@@ -89,6 +106,10 @@ void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         mSolver = CVodeCreate(CV_BDF, CV_NEWTON);
 
+        // Use our own error handler
+
+        CVodeSetErrHandlerFn(mSolver, errorHandler, this);
+
         // Create the states vector
 
         mStates = N_VMake_Serial(pStatesCount, pStates);
@@ -97,12 +118,15 @@ void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         CVodeInit(mSolver, rhsFunction, pVoiStart, mStates);
 
-        // Specify the maximum step to be used by the CVODE solver
+        // Set some user data
+
+//        CVodeSetUserData(mSolver, userData);
+
+        // Set the maximum step
 
         CVodeSetMaxStep(mSolver, mMaximumStep);
 
-        // Specify the maximum number of steps to be used by the CVODE solver
-        // per call to CVode
+        // Set the maximum number of steps
 
         CVodeSetMaxNumSteps(mSolver, mMaximumNumberOfSteps);
 
@@ -118,8 +142,7 @@ void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
 //==============================================================================
 
-void CVODESolver::solve(double &pVoi, const double &pVoiEnd,
-                        OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) const
+void CVODESolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     Q_ASSERT(mStatesCount > 0);
     Q_ASSERT(mConstants);
@@ -127,7 +150,9 @@ void CVODESolver::solve(double &pVoi, const double &pVoiEnd,
     Q_ASSERT(mStates);
     Q_ASSERT(mAlgebraic);
 
-    pVoi = pVoiEnd;
+    // Solve the model
+
+    CVode(mSolver, pVoiEnd, mStates, &pVoi, CV_NORMAL);
 }
 
 //==============================================================================
@@ -140,6 +165,15 @@ bool CVODESolver::isValidProperty(const QString &pName) const
            || !pName.compare(MaximumNumberOfStepsProperty)
            || !pName.compare(RelativeToleranceProperty)
            || !pName.compare(AbsoluteToleranceProperty);
+}
+
+//==============================================================================
+
+void CVODESolver::emitError(const QString &pErrorMsg)
+{
+    // Let people know that an error occured
+
+    emit error(pErrorMsg);
 }
 
 //==============================================================================

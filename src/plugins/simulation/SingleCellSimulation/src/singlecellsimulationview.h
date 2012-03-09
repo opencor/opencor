@@ -69,9 +69,13 @@ private:
 
     QFrame * newSeparatingLine();
 
+    QString mSolverErrorMsg;
+
 private Q_SLOTS:
     void on_actionAdd_triggered();
     void on_actionRemove_triggered();
+
+    void solverError(const QString &pErrorMsg);
 };
 
 //==============================================================================

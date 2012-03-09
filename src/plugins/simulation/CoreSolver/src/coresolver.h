@@ -25,8 +25,10 @@ typedef QMap<QString, QVariant> Properties;
 
 //==============================================================================
 
-class CORESOLVER_EXPORT CoreSolver
+class CORESOLVER_EXPORT CoreSolver : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit CoreSolver();
 
@@ -36,6 +38,9 @@ protected:
     Properties mProperties;
 
     virtual bool isValidProperty(const QString &pName) const = 0;
+
+Q_SIGNALS:
+    void error(const QString &pErrorMsg);
 };
 
 //==============================================================================

@@ -35,10 +35,12 @@ public:
 
     virtual void initialize(const double &pVoiStart, const int &pStatesCount,
                             double *pConstants, double *pRates,
-                            double *pStates, double *pAlgebraic);
+                            double *pStates, double *pAlgebraic,
+                            ComputeRatesFunction pComputeRates);
 
-    virtual void solve(double &pVoi, const double &pVoiEnd,
-                       OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) const;
+    virtual void solve(double &pVoi, const double &pVoiEnd) const;
+
+    void emitError(const QString &pErrorMsg);
 
 private:
     void *mSolver;
