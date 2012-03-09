@@ -65,10 +65,10 @@ public:
 
     virtual void retranslateUi();
 
+    void addSolverInterface(SolverInterface *pSolverInterface);
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
-
-    void addSolverInterface(SolverInterface *pSolverInterface);
 
     void initialize(const QString &pFileName);
 
@@ -77,6 +77,32 @@ private:
 
     QString mFileName;
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
+
+    enum {
+        Unknown,
+        VanDerPol1928,
+        Hodgkin1952,
+        Noble1962,
+        Noble1984,
+        Noble1991,
+        Noble1998,
+        Zhang2000,
+        Mitchell2003
+    } mModel;
+
+    int mStatesCount;
+
+    double *mConstants;
+    double *mRates;
+    double *mStates;
+    double *mAlgebraic;
+
+    double mVoiEnd;
+    double mVoiStep;
+    double mVoiMaximumStep;
+    double mVoiOutput;
+
+    QString mOdeSolverName;
 
     SolverInterfaces mSolverInterfaces;
 
@@ -94,6 +120,7 @@ private:
 
 private Q_SLOTS:
     void on_actionRun_triggered();
+    void on_actionDebugMode_triggered();
     void on_actionAdd_triggered();
     void on_actionRemove_triggered();
 

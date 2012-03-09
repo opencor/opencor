@@ -38,8 +38,10 @@ namespace SingleCellSimulation {
 SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     Widget(pParent),
     mUi(new Ui::SingleCellSimulationView),
-    mFileName(QString()),
-    mCellmlFileRuntime(0),
+    mFileName(QString()), mCellmlFileRuntime(0), mModel(Unknown),
+    mStatesCount(0), mConstants(0), mRates(0), mStates(0), mAlgebraic(0),
+    mVoiEnd(0), mVoiStep(0), mVoiMaximumStep(0), mVoiOutput(0),
+    mOdeSolverName("CVODE"),
     mSolverInterfaces(SolverInterfaces()),
     mSolverErrorMsg(QString())
 {
@@ -121,6 +123,13 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
 SingleCellSimulationView::~SingleCellSimulationView()
 {
+    // Delete the arrays for our model
+
+    delete[] mConstants;
+    delete[] mRates;
+    delete[] mStates;
+    delete[] mAlgebraic;
+
     // Delete the UI
 
     delete mUi;
@@ -139,6 +148,46 @@ void SingleCellSimulationView::retranslateUi()
 
 void SingleCellSimulationView::loadSettings(QSettings *pSettings)
 {
+    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
+        qDebug("---------------------------------------");
+        qDebug("'%s' solver:", qPrintable(solverInterface->name()));
+        qDebug(" - Type: %s", (solverInterface->type() == Solver::Ode)?"ODE":"DAE");
+
+        Solver::Properties properties = solverInterface->properties();
+
+        if (properties.count()) {
+            qDebug(" - Properties:");
+
+            Solver::Properties::const_iterator iter = properties.constBegin();
+            Solver::Properties::const_iterator iterEnd = properties.constEnd();
+
+            while (iter != iterEnd) {
+                QString type;
+
+                switch (iter.value()) {
+                case Solver::Double:
+                    type = "Double";
+
+                    break;
+                case Solver::Integer:
+                    type = "Integer";
+
+                    break;
+                default:
+                    type = "???";
+                }
+
+                qDebug("    - %s: %s", qPrintable(iter.key()), qPrintable(type));
+
+                ++iter;
+            }
+        } else {
+            qDebug(" - Properties: none");
+        }
+    }
+
+
+
     // Retrieve the settings of our graph panels widget
 
     pSettings->beginGroup(mGraphPanels->objectName());
@@ -230,100 +279,37 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
                  mCellmlFileRuntime->issues())
             mOutput->append(QString("    [%1] %2").arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
                                                        issue.formattedMessage()));
+
+        // The runtime is not valid, so...
+
+        return;
     }
-}
-
-//==============================================================================
-
-void OpenCOR::SingleCellSimulation::SingleCellSimulationView::on_actionRun_triggered()
-{
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        qDebug("---------------------------------------");
-        qDebug("'%s' solver:", qPrintable(solverInterface->name()));
-        qDebug(" - Type: %s", (solverInterface->type() == Solver::Ode)?"ODE":"DAE");
-
-        Solver::Properties properties = solverInterface->properties();
-
-        if (properties.count()) {
-            qDebug(" - Properties:");
-
-            Solver::Properties::const_iterator iter = properties.constBegin();
-            Solver::Properties::const_iterator iterEnd = properties.constEnd();
-
-            while (iter != iterEnd) {
-                QString type;
-
-                switch (iter.value()) {
-                case Solver::Double:
-                    type = "Double";
-
-                    break;
-                case Solver::Integer:
-                    type = "Integer";
-
-                    break;
-                default:
-                    type = "???";
-                }
-
-                qDebug("    - %s: %s", qPrintable(iter.key()), qPrintable(type));
-
-                ++iter;
-            }
-        } else {
-            qDebug(" - Properties: none");
-        }
-    }
-
-
-
-    // Clear the graph panels and output
-
-    clearGraphPanels();
-
-    mOutput->clear();
-
-    // Retrieve the active graph panel
-
-    SingleCellSimulationGraphPanel *activeGraphPanel = mGraphPanels->activeGraphPanel();
 
     // Check whether we 'support' the model
-
-    enum Model {
-        Unknown,
-        VanDerPol1928,
-        Hodgkin1952,
-        Noble1962,
-        Noble1984,
-        Noble1991,
-        Noble1998,
-        Zhang2000,
-        Mitchell2003
-    } model;
 
     QString fileBaseName = QFileInfo(mFileName).baseName();
 
     if (!fileBaseName.compare("van_der_pol_model_1928")) {
-        model = VanDerPol1928;
+        mModel = VanDerPol1928;
     } else if (   !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952")
                || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_modified")
                || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_original")) {
-        model = Hodgkin1952;
+        mModel = Hodgkin1952;
     } else if (!fileBaseName.compare("noble_model_1962")) {
-        model = Noble1962;
+        mModel = Noble1962;
     } else if (!fileBaseName.compare("noble_noble_SAN_model_1984")) {
-        model = Noble1984;
+        mModel = Noble1984;
     } else if (!fileBaseName.compare("noble_model_1991")) {
-        model = Noble1991;
+        mModel = Noble1991;
     } else if (!fileBaseName.compare("noble_model_1998")) {
-        model = Noble1998;
+        mModel = Noble1998;
     } else if (   !fileBaseName.compare("zhang_SAN_model_2000_0D_capable")
                || !fileBaseName.compare("zhang_SAN_model_2000_1D_capable")
                || !fileBaseName.compare("zhang_SAN_model_2000_all")
                || !fileBaseName.compare("zhang_SAN_model_2000_published")) {
-        model = Zhang2000;
+        mModel = Zhang2000;
     } else if (!fileBaseName.compare("mitchell_schaeffer_2003")) {
-        model = Mitchell2003;
+        mModel = Mitchell2003;
     } else {
         // The model is not 'supported', so...
 
@@ -332,14 +318,91 @@ void OpenCOR::SingleCellSimulation::SingleCellSimulationView::on_actionRun_trigg
         return;
     }
 
-    // Make sure that either the CVODE or the Forward Euler solver is available
+    // Delete the arrays for our model
+
+    delete[] mConstants;
+    delete[] mRates;
+    delete[] mStates;
+    delete[] mAlgebraic;
+
+    // Initialise our arrays for our model
+
+    mStatesCount = mCellmlFileRuntime->statesCount();
+
+    mConstants = new double[mCellmlFileRuntime->constantsCount()];
+    mRates = new double[mCellmlFileRuntime->ratesCount()];
+    mStates = new double[mStatesCount];
+    mAlgebraic = new double[mCellmlFileRuntime->algebraicCount()];
+
+    // Get some initial values for the ODE solver and our simulation in general
+
+    mVoiMaximumStep = 0;
+
+    switch (mModel) {
+    case Hodgkin1952:
+        mVoiEnd    = 50;     // ms
+        mVoiStep   = 0.01;   // ms
+        mVoiOutput = 0.1;    // ms
+
+        break;
+    case Noble1962:
+    case Mitchell2003:
+        mVoiEnd         = 1000;   // ms
+        mVoiStep        = 0.01;   // ms
+        mVoiOutput      = 1;      // ms
+        mVoiMaximumStep = 1;      // ms
+
+        break;
+    case Noble1984:
+    case Zhang2000:
+        mVoiEnd    = 1;         // s
+        mVoiStep   = 0.00001;   // s
+        mVoiOutput = 0.001;     // s
+
+        break;
+    case Noble1991:
+        mVoiEnd         = 1;         // s
+        mVoiStep        = 0.00001;   // s
+        mVoiOutput      = 0.001;     // s
+        mVoiMaximumStep = 0.002;     // s
+
+        break;
+    case Noble1998:
+        mVoiEnd         = 1;         // s
+        mVoiStep        = 0.00001;   // s
+        mVoiOutput      = 0.001;     // s
+        mVoiMaximumStep = 0.003;     // s
+
+        break;
+    default:   // van der Pol 1928
+        mVoiEnd    = 10;     // s
+        mVoiStep   = 0.01;   // s
+        mVoiOutput = 0.01;   // s
+    }
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::on_actionRun_triggered()
+{
+    // Clear the graph panels and output
+
+    clearGraphPanels();
+
+    mOutput->clear();
+
+    // Retrieve the active graph panel
+
+    SingleCellSimulationGraphPanel *firstGraphPanel = qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(0));
+
+    // Retrieve the requested ODE solver
 
     CoreSolver::CoreOdeSolver *odeSolver = 0;
     QString odeSolverName = QString();
 
     foreach (SolverInterface *solverInterface, mSolverInterfaces)
-        if (!solverInterface->name().compare("CVODE")) {
-            // The CVODE solver could be found, so retrieve an instance of it
+        if (!solverInterface->name().compare(mOdeSolverName)) {
+            // The ODE solver was found, so retrieve an instance of it
 
             odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
             odeSolverName = solverInterface->name();
@@ -347,25 +410,10 @@ void OpenCOR::SingleCellSimulation::SingleCellSimulationView::on_actionRun_trigg
             break;
         }
 
-    if (!odeSolver)
-        // The CVODE solver is not available, so try for the Forward Euler
-        // solver
-
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare("Forward Euler")) {
-                // The Forward Euler solver could be found, so retrieve an
-                // instance of it
-
-                odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
-                odeSolverName = solverInterface->name();
-
-                break;
-            }
-
     if (!odeSolver) {
-        // Neither the CVODE nor the Forward Euler solver could be found, so...
+        // The ODE solver couldn't be found, so...
 
-        mOutput->append(" - Either the CVODE or Forward Euler solver is needed, but neither could be found.");
+        mOutput->append(QString(" - The %1 solver is needed, but it could not be found.").arg(mOdeSolverName));
 
         return;
     }
@@ -377,77 +425,18 @@ void OpenCOR::SingleCellSimulation::SingleCellSimulationView::on_actionRun_trigg
 
     mSolverErrorMsg = QString();
 
-    // Get some arrays for our model
-
-    int statesCount = mCellmlFileRuntime->statesCount();
-
-    double *constants = new double[mCellmlFileRuntime->constantsCount()];
-    double *rates = new double[mCellmlFileRuntime->ratesCount()];
-    double *states = new double[statesCount];
-    double *algebraic = new double[mCellmlFileRuntime->algebraicCount()];
-
     // Get some arrays to store the simulation data
 
     typedef QVector<double> Doubles;
 
     Doubles xData;
-    Doubles yData[statesCount];
+    Doubles yData[mStatesCount];
 
     // Get some initial values for the ODE solver and our simulation in general
 
-    double voi = 0;   // ms
-
-    double voiStart = voi;   // ms
-    double voiEnd;           // ms
-
-    double voiStep;              // ms
-    double voiMaximumStep = 0;   // ms
-
-
-    double voiOutput;   // ms
+    double voi = 0;
+    double voiStart = voi;
     int voiOutputCount = 0;
-
-    switch (model) {
-    case Hodgkin1952:
-        voiEnd    = 50;     // ms
-        voiStep   = 0.01;   // ms
-        voiOutput = 0.1;    // ms
-
-        break;
-    case Noble1962:
-    case Mitchell2003:
-        voiEnd         = 1000;   // ms
-        voiStep        = 0.01;   // ms
-        voiOutput      = 1;      // ms
-        voiMaximumStep = 1;      // ms
-
-        break;
-    case Noble1984:
-    case Zhang2000:
-        voiEnd    = 1;         // s
-        voiStep   = 0.00001;   // s
-        voiOutput = 0.001;     // s
-
-        break;
-    case Noble1991:
-        voiEnd         = 1;         // s
-        voiStep        = 0.00001;   // s
-        voiOutput      = 0.001;     // s
-        voiMaximumStep = 0.002;     // s
-
-        break;
-    case Noble1998:
-        voiEnd         = 1;         // s
-        voiStep        = 0.00001;   // s
-        voiOutput      = 0.001;     // s
-        voiMaximumStep = 0.003;     // s
-
-        break;
-    default:   // van der Pol 1928
-        voiEnd    = 10;     // s
-        voiStep   = 0.01;   // s
-        voiOutput = 0.01;   // s
-    }
 
     // Retrieve the ODE functions from the CellML file runtime
 
@@ -455,16 +444,16 @@ void OpenCOR::SingleCellSimulation::SingleCellSimulationView::on_actionRun_trigg
 
     // Initialise the model's 'constants'
 
-    odeFunctions.initializeConstants(constants, rates, states);
+    odeFunctions.initializeConstants(mConstants, mRates, mStates);
 
     // Initialise our ODE solver
 
     if (!odeSolverName.compare("CVODE"))
-        odeSolver->setProperty("Maximum step", voiMaximumStep);
+        odeSolver->setProperty("Maximum step", mVoiMaximumStep);
     else
-        odeSolver->setProperty("Step", voiStep);
+        odeSolver->setProperty("Step", mVoiStep);
 
-    odeSolver->initialize(voi, statesCount, constants, rates, states, algebraic,
+    odeSolver->initialize(voi, mStatesCount, mConstants, mRates, mStates, mAlgebraic,
                           odeFunctions.computeRates);
 
     // Initialise the constants and compute the rates and variables
@@ -473,23 +462,23 @@ void OpenCOR::SingleCellSimulation::SingleCellSimulationView::on_actionRun_trigg
 
     time.start();
 
-    odeFunctions.computeRates(voi, constants, rates, states, algebraic);
-    odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
+    odeFunctions.computeRates(voi, mConstants, mRates, mStates, mAlgebraic);
+    odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
 
     do {
         // Output the current simulation data
 
         xData.append(voi);
 
-        for (int i = 0; i < statesCount; ++i)
-            yData[i].append(states[i]);
+        for (int i = 0; i < mStatesCount; ++i)
+            yData[i].append(mStates[i]);
 
         // Solve the model and compute its variables
 
-        odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*voiOutput, voiEnd));
+        odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
 
-        odeFunctions.computeVariables(voi, constants, rates, states, algebraic);
-    } while ((voi != voiEnd) && mSolverErrorMsg.isEmpty());
+        odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+    } while ((voi != mVoiEnd) && mSolverErrorMsg.isEmpty());
 
     if (!mSolverErrorMsg.isEmpty()) {
         // The solver reported an error, so...
@@ -498,16 +487,16 @@ void OpenCOR::SingleCellSimulation::SingleCellSimulationView::on_actionRun_trigg
     } else {
         xData.append(voi);
 
-        for (int i = 0; i < statesCount; ++i)
-            yData[i].append(states[i]);
+        for (int i = 0; i < mStatesCount; ++i)
+            yData[i].append(mStates[i]);
 
         mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(odeSolverName,
                                                                                       QString::number(0.001*time.elapsed(), 'g', 3)));
 
         // Add some curves to our plotting area
 
-        for (int i = 0, iMax = (model == VanDerPol1928)?statesCount:1; i < iMax; ++i) {
-            QwtPlotCurve *curve = activeGraphPanel->addCurve();
+        for (int i = 0, iMax = (mModel == VanDerPol1928)?mStatesCount:1; i < iMax; ++i) {
+            QwtPlotCurve *curve = firstGraphPanel->addCurve();
 
             if (!i%2)
                 curve->setPen(QPen(Qt::darkRed));
@@ -517,17 +506,25 @@ void OpenCOR::SingleCellSimulation::SingleCellSimulationView::on_actionRun_trigg
 
         // Make sure that the view is up-to-date
 
-        activeGraphPanel->replot();
+        firstGraphPanel->replot();
     }
 
-    // Free the memory we allocated to solve the model
-
-    delete[] constants;
-    delete[] rates;
-    delete[] states;
-    delete[] algebraic;
+    // Delete the solver
 
     delete odeSolver;
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::on_actionDebugMode_triggered()
+{
+    // Temporary way to determine which ODE solver to use between CVODE and
+    // Forward Euler
+
+    if (mUi->actionDebugMode->isChecked())
+        mOdeSolverName = "Forward Euler";
+    else
+        mOdeSolverName = "CVODE";
 }
 
 //==============================================================================
