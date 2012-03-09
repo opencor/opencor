@@ -29,11 +29,11 @@ static const QString AbsoluteToleranceProperty = "Absolute tolerance";
 
 struct CVODESolverUserData
 {
-    int statesCount;
-
     double *constants;
     double *rates;
     double *algebraic;
+
+    int ratesByteSize;
 
     OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction computeRates;
 };

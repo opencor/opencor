@@ -42,8 +42,9 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 
     // Keep track of the rates in case the user wants to plot (some of) them
 
-    memcpy(userData->rates, N_VGetArrayPointer_Serial(pRates),
-           userData->statesCount*sizeof(double));
+    memcpy(userData->rates, N_VGetArrayPointer_Serial(pRates), userData->ratesByteSize);
+
+    // Everything went fine, so...
 
     return 0;
 }
@@ -135,11 +136,13 @@ void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         // Set some user data
 
-        mUserData.statesCount = pStatesCount;
+        static int sizeOfDouble = sizeof(double);
 
         mUserData.constants = pConstants;
         mUserData.rates     = pRates;
         mUserData.algebraic = pAlgebraic;
+
+        mUserData.ratesByteSize = pStatesCount*sizeOfDouble;
 
         mUserData.computeRates = pComputeRates;
 
