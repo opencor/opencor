@@ -39,7 +39,7 @@ public:
     bool isActive() const;
     void setActive(const bool &pActive);
 
-    void replot();
+    QwtPlot * plot();
 
 protected:
     virtual void mousePressEvent(QMouseEvent *pEvent);

@@ -26,6 +26,7 @@
 
 //==============================================================================
 
+#include "qwt_plot.h"
 #include "qwt_plot_curve.h"
 
 //==============================================================================
@@ -114,6 +115,7 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     mProgressBar = new QProgressBar(this);
 
     mProgressBar->setAlignment(Qt::AlignCenter);
+    mProgressBar->setTextVisible(false);
 
     mUi->verticalLayout->addWidget(newSeparatingLine());
     mUi->verticalLayout->addWidget(mProgressBar);
@@ -379,6 +381,9 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
         mVoiStep   = 0.01;   // s
         mVoiOutput = 0.01;   // s
     }
+
+//    mVoiEnd *= 10;
+//---GRY--- JUST FOR TESTING...
 }
 
 //==============================================================================
@@ -425,13 +430,6 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
     mSolverErrorMsg = QString();
 
-    // Get some arrays to store the simulation data
-
-    typedef QVector<double> Doubles;
-
-    Doubles xData;
-    Doubles yData[mStatesCount];
-
     // Get some initial values for the ODE solver and our simulation in general
 
     double voi = 0;
@@ -439,6 +437,21 @@ void SingleCellSimulationView::on_actionRun_triggered()
     int voiOutputCount = 0;
 
     double hundredOverVoiEnd = 100/mVoiEnd;
+
+    // Set the minimal and maximal value for the X axis
+
+    firstGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, voiStart, mVoiEnd);
+
+    // Get some arrays to store the simulation data
+
+    typedef QVector<double> Doubles;
+
+    Doubles xData;
+    Doubles yData[mStatesCount];
+
+    // Add a curve to our plotting area
+
+    QwtPlotCurve *curve = firstGraphPanel->addCurve();
 
     // Retrieve the ODE functions from the CellML file runtime
 
@@ -475,6 +488,14 @@ void SingleCellSimulationView::on_actionRun_triggered()
         for (int i = 0; i < mStatesCount; ++i)
             yData[i].append(mStates[i]);
 
+        // Make sure that the graph panel is up-to-date
+        //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH FOR
+        //          DEMONSTRATION PURPOSES...
+
+        curve->setSamples(xData, yData[0]);
+
+        firstGraphPanel->plot()->replot();
+
         // Solve the model and compute its variables
 
         odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
@@ -495,28 +516,25 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
         mOutput->append(QString(" - Solver error: %1").arg(mSolverErrorMsg));
     } else {
+        // Output the total simulation time
+
+        mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(odeSolverName,
+                                                                                      QString::number(0.001*time.elapsed(), 'g', 3)));
+
+        // Last bit of simulation data
+
         xData.append(voi);
 
         for (int i = 0; i < mStatesCount; ++i)
             yData[i].append(mStates[i]);
 
-        mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(odeSolverName,
-                                                                                      QString::number(0.001*time.elapsed(), 'g', 3)));
+        // Make sure that the graph panel is up-to-date
+        //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH FOR
+        //          DEMONSTRATION PURPOSES...
 
-        // Add some curves to our plotting area
+        curve->setSamples(xData, yData[0]);
 
-        for (int i = 0, iMax = (mModel == VanDerPol1928)?mStatesCount:1; i < iMax; ++i) {
-            QwtPlotCurve *curve = firstGraphPanel->addCurve();
-
-            if (!i%2)
-                curve->setPen(QPen(Qt::darkRed));
-
-            curve->setSamples(xData, yData[i]);
-        }
-
-        // Make sure that the view is up-to-date
-
-        firstGraphPanel->replot();
+        firstGraphPanel->plot()->replot();
     }
 
     // Delete the solver

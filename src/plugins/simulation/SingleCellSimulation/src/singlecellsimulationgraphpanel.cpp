@@ -142,11 +142,11 @@ void SingleCellSimulationGraphPanel::resetCurves()
 
 //==============================================================================
 
-void SingleCellSimulationGraphPanel::replot()
+QwtPlot * SingleCellSimulationGraphPanel::plot()
 {
-    // Refresh the graph panel
+    // Return the pointer to our plot widget
 
-    mPlot->replot();
+    return mPlot;
 }
 
 //==============================================================================
