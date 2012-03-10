@@ -104,6 +104,8 @@ private:
 
     QString mOdeSolverName;
 
+    bool mSlowPlotting;
+
     SolverInterfaces mSolverInterfaces;
 
     SingleCellSimulationGraphPanels *mGraphPanels;
@@ -125,6 +127,7 @@ private Q_SLOTS:
     void on_actionRemove_triggered();
 
     void solverError(const QString &pErrorMsg);
+    void on_actionCsvExport_triggered();
 };
 
 //==============================================================================

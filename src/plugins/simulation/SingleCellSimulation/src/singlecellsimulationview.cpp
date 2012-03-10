@@ -44,7 +44,8 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     mVoiEnd(0), mVoiStep(0), mVoiMaximumStep(0), mVoiOutput(0),
     mOdeSolverName("CVODE"),
     mSolverInterfaces(SolverInterfaces()),
-    mSolverErrorMsg(QString())
+    mSolverErrorMsg(QString()),
+    mSlowPlotting(true)
 {
     // Set up the UI
 
@@ -492,9 +493,11 @@ void SingleCellSimulationView::on_actionRun_triggered()
         //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH FOR
         //          DEMONSTRATION PURPOSES...
 
-        curve->setSamples(xData, yData[0]);
+        if (mSlowPlotting) {
+            curve->setSamples(xData, yData[0]);
 
-        firstGraphPanel->plot()->replot();
+            firstGraphPanel->plot()->replot();
+        }
 
         // Solve the model and compute its variables
 
@@ -503,8 +506,10 @@ void SingleCellSimulationView::on_actionRun_triggered()
         odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
 
         // Update the progress bar
+        //---GRY--- OUR USE OF QProgressBar IS VERY SLOW AT THE MOMENT...
 
-        mProgressBar->setValue(voi*hundredOverVoiEnd);
+        if (mSlowPlotting)
+            mProgressBar->setValue(voi*hundredOverVoiEnd);
     } while ((voi != mVoiEnd) && mSolverErrorMsg.isEmpty());
 
     // Reset the progress bar
@@ -515,6 +520,16 @@ void SingleCellSimulationView::on_actionRun_triggered()
         // The solver reported an error, so...
 
         mOutput->append(QString(" - Solver error: %1").arg(mSolverErrorMsg));
+
+        // Make sure that the graph panel is up-to-date
+        //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH FOR
+        //          DEMONSTRATION PURPOSES...
+
+        if (!mSlowPlotting) {
+            curve->setSamples(xData, yData[0]);
+
+            firstGraphPanel->plot()->replot();
+        }
     } else {
         // Output the total simulation time
 
@@ -546,8 +561,7 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
 void SingleCellSimulationView::on_actionDebugMode_triggered()
 {
-    // Temporary way to determine which ODE solver to use between CVODE and
-    // Forward Euler
+    //---GRY--- TEMPORARY WAY TO DETERMINE WHICH ODE SOLVER TO USE
 
     if (mUi->actionDebugMode->isChecked())
         mOdeSolverName = "Forward Euler";
@@ -571,6 +585,15 @@ void SingleCellSimulationView::on_actionRemove_triggered()
     // Remove the current graph panel
 
     mGraphPanels->removeGraphPanel();
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::on_actionCsvExport_triggered()
+{
+    //---GRY--- TEMPORARY WAY TO SPECIFY WHETHER TO PLOT SLOWLY
+
+    mSlowPlotting = !mSlowPlotting;
 }
 
 //==============================================================================
