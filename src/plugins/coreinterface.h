@@ -16,11 +16,24 @@
 
 //==============================================================================
 
-#include <QList>
+class QSettings;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+
+//==============================================================================
+
+class DockWidget;
+class Widget;
+
+//==============================================================================
+
+}
 
 //==============================================================================
 
@@ -33,6 +46,19 @@ public:
     virtual void finalize();
 
     virtual void initializationsDone(const Plugins &);
+
+    virtual void loadSettings(QSettings *);
+    virtual void saveSettings(QSettings *) const;
+
+    virtual void loadingOfSettingsDone(const Plugins &);
+
+    void loadWindowSettings(QSettings *pSettings,
+                            Core::DockWidget *pWindow);
+    void saveWindowSettings(QSettings *pSettings,
+                            Core::DockWidget *pWindow) const;
+
+    void loadViewSettings(QSettings *pSettings, Core::Widget *pView);
+    void saveViewSettings(QSettings *pSettings, Core::Widget *pView) const;
 };
 
 //==============================================================================

@@ -41,7 +41,6 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-protected:
     virtual void retranslateUi();
 
 private:

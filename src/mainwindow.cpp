@@ -566,12 +566,12 @@ void MainWindow::loadSettings()
     Plugins loadedPlugins = mPluginManager->loadedPlugins();
 
     foreach (Plugin *plugin, loadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-        if (guiInterface) {
+        if (coreInterface) {
             mSettings->beginGroup(SettingsPlugins);
                 mSettings->beginGroup(plugin->name());
-                    guiInterface->loadSettings(mSettings);
+                    coreInterface->loadSettings(mSettings);
                 mSettings->endGroup();
             mSettings->endGroup();
         }
@@ -581,10 +581,10 @@ void MainWindow::loadSettings()
     // Note: this is similar to initialize() vs. initializationsDone()...
 
     foreach (Plugin *plugin, loadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-        if (guiInterface)
-            guiInterface->loadingOfSettingsDone(loadedPlugins);
+        if (coreInterface)
+            coreInterface->loadingOfSettingsDone(loadedPlugins);
     }
 }
 
@@ -612,12 +612,12 @@ void MainWindow::saveSettings() const
     // Keep track of the settings of our various plugins
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-        if (guiInterface) {
+        if (coreInterface) {
             mSettings->beginGroup(SettingsPlugins);
                 mSettings->beginGroup(plugin->name());
-                    guiInterface->saveSettings(mSettings);
+                    coreInterface->saveSettings(mSettings);
                 mSettings->endGroup();
             mSettings->endGroup();
         }

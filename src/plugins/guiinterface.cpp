@@ -5,7 +5,6 @@
 #include "centralwidget.h"
 #include "dockwidget.h"
 #include "guiinterface.h"
-#include "widget.h"
 
 //==============================================================================
 
@@ -13,7 +12,6 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QMenu>
-#include <QSettings>
 #include <QToolBar>
 
 //==============================================================================
@@ -300,74 +298,6 @@ void GuiInterface::destroy()
 
         delete viewWidgets;
     }
-}
-
-//==============================================================================
-
-void GuiInterface::loadWindowSettings(QSettings *pSettings,
-                                      Core::DockWidget *pWindow)
-{
-    // Retrieve the window's settings
-
-    pSettings->beginGroup(pWindow->objectName());
-        pWindow->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void GuiInterface::loadViewSettings(QSettings *pSettings, Core::Widget *pView)
-{
-    // Retrieve the view's settings
-
-    pSettings->beginGroup(pView->objectName());
-        pView->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void GuiInterface::loadSettings(QSettings *)
-{
-    // Nothing to do by default...
-}
-
-//==============================================================================
-
-void GuiInterface::saveWindowSettings(QSettings *pSettings,
-                                      Core::DockWidget *pWindow) const
-{
-    // Keep track of the window's settings
-
-    pSettings->beginGroup(pWindow->objectName());
-        pWindow->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void GuiInterface::saveViewSettings(QSettings *pSettings,
-                                    Core::Widget *pView) const
-{
-    // Keep track of the view's settings
-
-    pSettings->beginGroup(pView->objectName());
-        pView->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void GuiInterface::saveSettings(QSettings *) const
-{
-    // Nothing to do by default...
-}
-
-//==============================================================================
-
-void GuiInterface::loadingOfSettingsDone(const Plugins &)
-{
-    // Nothing to do by default...
 }
 
 //==============================================================================

@@ -54,7 +54,6 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &pPlugins);
 
-protected:
     virtual void retranslateUi();
 
 private:

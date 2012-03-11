@@ -96,15 +96,6 @@ void SingleCellSimulationPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellSimulationPlugin::retranslateUi()
-{
-    // Retranslate our single cell simulation view
-
-    mSingleCellSimulationView->retranslateUi();
-}
-
-//==============================================================================
-
 QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
                                                  const int &)
 {
@@ -141,6 +132,15 @@ QString SingleCellSimulationPlugin::viewName(const int &pViewIndex)
     default:
         return GuiInterface::viewName(pViewIndex);
     }
+}
+
+//==============================================================================
+
+void SingleCellSimulationPlugin::retranslateUi()
+{
+    // Retranslate our single cell simulation view
+
+    mSingleCellSimulationView->retranslateUi();
 }
 
 //==============================================================================

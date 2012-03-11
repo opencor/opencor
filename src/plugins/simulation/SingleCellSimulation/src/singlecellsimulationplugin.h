@@ -48,7 +48,6 @@ public:
     virtual QWidget * viewWidget(const QString & pFileName, const int &);
     virtual QString viewName(const int &pViewIndex);
 
-protected:
     virtual void retranslateUi();
 
 private:

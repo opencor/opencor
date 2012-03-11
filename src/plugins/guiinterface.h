@@ -22,7 +22,6 @@ class QAction;
 class QDockWidget;
 class QMainWindow;
 class QMenu;
-class QSettings;
 class QTabBar;
 class QToolBar;
 
@@ -33,9 +32,14 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
-    class CentralWidget;
-    class DockWidget;
-    class Widget;
+
+//==============================================================================
+
+class CentralWidget;
+class DockWidget;
+
+//==============================================================================
+
 }
 
 //==============================================================================
@@ -178,30 +182,12 @@ class GuiInterface : Interface
 public:
     explicit GuiInterface();
 
-    virtual void loadSettings(QSettings *);
-    virtual void saveSettings(QSettings *) const;
-
-    virtual void loadingOfSettingsDone(const Plugins &);
-
     virtual QWidget * viewWidget(const QString &pFileName,
                                  const int &pViewIndex);
     virtual QWidget * newViewWidget(const QString &);
     virtual QString viewName(const int &);
 
     GuiSettings * guiSettings() const;
-
-    void setMainWindow(QMainWindow *pMainWindow);
-
-    static void connectDockWidgetToAction(QDockWidget *pDockWidget, QAction *pAction);
-
-    static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
-
-protected:
-    QMainWindow *mMainWindow;
-
-    GuiSettings *mGuiSettings;
-
-    QMap<int, GuiViewWidgets *> mModeViewWidgets;
 
     static QMenu * newMenu(QMainWindow *pMainWindow, const QString &pName);
     static QToolBar * newToolBar(QMainWindow *pMainWindow,
@@ -220,19 +206,23 @@ protected:
                                const QKeySequence &pKeySequence = QKeySequence(),
                                const bool &pVisible = true);
 
+    static void connectDockWidgetToAction(QDockWidget *pDockWidget, QAction *pAction);
+
+    static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
     static void retranslateAction(QAction *pAction, const QString &pText,
                                   const QString &pStatusTip);
 
-    void loadWindowSettings(QSettings *pSettings,
-                            Core::DockWidget *pWindow);
-    void saveWindowSettings(QSettings *pSettings,
-                            Core::DockWidget *pWindow) const;
+protected:
+    QMainWindow *mMainWindow;
 
-    void loadViewSettings(QSettings *pSettings, Core::Widget *pView);
-    void saveViewSettings(QSettings *pSettings, Core::Widget *pView) const;
+    GuiSettings *mGuiSettings;
+
+    QMap<int, GuiViewWidgets *> mModeViewWidgets;
 
 private:
     virtual void destroy();
+
+    void setMainWindow(QMainWindow *pMainWindow);
 };
 
 //==============================================================================
