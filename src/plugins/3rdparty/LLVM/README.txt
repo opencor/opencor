@@ -9,5 +9,5 @@ From there, you need to get LLVM's source code (see http://www.llvm.org/releases
     tar xvzf llvm-3.0.tar.gz
     mkdir build
     cd build
-    ../llvm-3.0.src/configure --disable-docs --enable-shared --enable-targets=host
+    ../llvm-3.0.src/configure --disable-docs --enable-optimized --enable-shared --enable-targets=host
     make
