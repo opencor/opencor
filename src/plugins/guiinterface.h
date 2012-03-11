@@ -192,7 +192,6 @@ public:
 
     void setMainWindow(QMainWindow *pMainWindow);
 
-    static void connectToolBarToAction(QToolBar *pToolbar, QAction *pAction);
     static void connectDockWidgetToAction(QDockWidget *pDockWidget, QAction *pAction);
 
     static void retranslateMenu(QMenu *pMenu, const QString &pTitle);

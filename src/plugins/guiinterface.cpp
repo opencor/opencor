@@ -548,18 +548,6 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
 
 //==============================================================================
 
-void GuiInterface::connectToolBarToAction(QToolBar *pToolbar, QAction *pAction)
-{
-    // Setup the action for the toolbar, so we can show/hide it at will
-
-    QObject::connect(pAction, SIGNAL(triggered(bool)),
-                     pToolbar, SLOT(setVisible(bool)));
-    QObject::connect(pToolbar->toggleViewAction(), SIGNAL(toggled(bool)),
-                     pAction, SLOT(setChecked(bool)));
-}
-
-//==============================================================================
-
 void GuiInterface::connectDockWidgetToAction(QDockWidget *pDockWidget,
                                              QAction *pAction)
 {
