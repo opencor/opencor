@@ -531,7 +531,7 @@ void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void FileBrowserWidget::itemChanged(const QModelIndex &pCrtItem,
+void FileBrowserWidget::itemChanged(const QModelIndex &,
                                     const QModelIndex &pPrevItem)
 {
     // A new item has been selected, so we need to keep track of the old one in

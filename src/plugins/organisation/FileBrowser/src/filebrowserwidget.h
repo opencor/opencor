@@ -98,7 +98,7 @@ Q_SIGNALS:
     void goToNextFileOrFolderEnabled(const bool &pEnabled);
 
 private Q_SLOTS:
-    void itemChanged(const QModelIndex &pCrtItem, const QModelIndex &pPrevItem);
+    void itemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
 
     void directoryLoaded(const QString &pPath);
 };
