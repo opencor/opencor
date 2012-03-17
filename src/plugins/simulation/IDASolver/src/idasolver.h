@@ -31,8 +31,14 @@ struct IDASolverUserData
 {
     double *constants;
     double *algebraic;
+    double *condVar;
 
-    OpenCOR::CoreSolver::CoreDaeSolver::ComputeRatesFunction computeRates;
+    double *oldRates;
+    double *oldStates;
+
+    OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction computeResiduals;
+    OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction computeEssentialVariables;
+    OpenCOR::CoreSolver::CoreDaeSolver::ComputeRootInformationFunction computeRootInformation;
 };
 
 //==============================================================================
@@ -46,7 +52,10 @@ public:
     virtual void initialize(const double &pVoiStart, const int &pStatesCount,
                             const int &pCondVarCount, double *pConstants,
                             double *pRates, double *pStates, double *pAlgebraic,
-                            ComputeRatesFunction pComputeRates);
+                            double *pCondVar,
+                            ComputeResidualsFunction pComputeResiduals,
+                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                            ComputeRootInformationFunction pComputeRootInformation);
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const;
 
@@ -60,8 +69,6 @@ private:
     int mMaximumNumberOfSteps;
     double mRelativeTolerance;
     double mAbsoluteTolerance;
-
-    ComputeRatesFunction mComputeRates;
 
     virtual bool isValidProperty(const QString &pName) const;
 };

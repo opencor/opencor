@@ -42,7 +42,7 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     mUi(new Ui::SingleCellSimulationView),
     mFileName(QString()), mCellmlFileRuntime(0), mModel(Unknown),
     mStatesCount(0), mCondVarCount(0),
-    mConstants(0), mRates(0), mStates(0), mAlgebraic(0),
+    mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
     mVoiEnd(0), mVoiStep(0), mVoiMaximumStep(0), mVoiOutput(0),
     mOdeSolverName("CVODE"),
     mSolverInterfaces(SolverInterfaces()),
@@ -134,6 +134,7 @@ SingleCellSimulationView::~SingleCellSimulationView()
     delete[] mRates;
     delete[] mStates;
     delete[] mAlgebraic;
+    delete[] mCondVar;
 
     // Delete the UI
 
@@ -331,16 +332,18 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
     delete[] mRates;
     delete[] mStates;
     delete[] mAlgebraic;
+    delete[] mCondVar;
 
     // Initialise our arrays for our model
 
-    mStatesCount = mCellmlFileRuntime->statesCount();
+    mStatesCount  = mCellmlFileRuntime->statesCount();
     mCondVarCount = mCellmlFileRuntime->condVarCount();
 
     mConstants = new double[mCellmlFileRuntime->constantsCount()];
-    mRates = new double[mCellmlFileRuntime->ratesCount()];
-    mStates = new double[mStatesCount];
+    mRates     = new double[mCellmlFileRuntime->ratesCount()];
+    mStates    = new double[mStatesCount];
     mAlgebraic = new double[mCellmlFileRuntime->algebraicCount()];
+    mCondVar   = new double[mCellmlFileRuntime->condVarCount()];
 
     // Get some initial values for the ODE solver and our simulation in general
 
@@ -517,8 +520,10 @@ void SingleCellSimulationView::on_actionRun_triggered()
         daeSolver->setProperty("Maximum step", mVoiMaximumStep);
 
         daeSolver->initialize(voi, mStatesCount, mCondVarCount, mConstants,
-                              mRates, mStates, mAlgebraic,
-                              daeFunctions.computeRates);
+                              mRates, mStates, mAlgebraic, mCondVar,
+                              daeFunctions.computeRates,
+                              daeFunctions.computeEssentialVariables,
+                              daeFunctions.computeRootInformation);
     }
 
     // Initialise the constants and compute the rates and variables

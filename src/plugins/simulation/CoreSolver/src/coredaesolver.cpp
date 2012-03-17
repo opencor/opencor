@@ -27,7 +27,10 @@ void CoreDaeSolver::initialize(const double &/* pVoiStart */,
                                const int &pStatesCount, const int &pCondVarCount,
                                double *pConstants, double *pRates,
                                double *pStates, double *pAlgebraic,
-                               ComputeRatesFunction /* pComputeRates */)
+                               double *pCondVar,
+                               ComputeResidualsFunction /* pComputeResiduals */,
+                               ComputeEssentialVariablesFunction /* pComputeEssentialVariables */,
+                               ComputeRootInformationFunction /* pComputeRootInformation */)
 {
     // Initialise the DAE solver
 
@@ -38,6 +41,7 @@ void CoreDaeSolver::initialize(const double &/* pVoiStart */,
     mRates     = pRates;
     mStates    = pStates;
     mAlgebraic = pAlgebraic;
+    mCondVar   = pCondVar;
 }
 
 //==============================================================================

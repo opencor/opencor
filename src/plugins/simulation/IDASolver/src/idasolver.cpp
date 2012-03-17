@@ -34,12 +34,22 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 {
     // Compute the model
 
-//    IDASolverUserData *userData = reinterpret_cast<IDASolverUserData *>(pUserData);
+    IDASolverUserData *userData = reinterpret_cast<IDASolverUserData *>(pUserData);
 
-//    userData->computeRates(pVoi, userData->constants,
-//                           N_VGetArrayPointer_Serial(pRates),
-//                           N_VGetArrayPointer_Serial(pStates),
-//                           userData->algebraic);
+    double *states    = N_VGetArrayPointer(pStates);
+    double *rates     = N_VGetArrayPointer(pRates);
+    double *residuals = N_VGetArrayPointer(pResiduals);
+
+    userData->computeEssentialVariables(pVoi, userData->constants, rates,
+                                        userData->oldRates, states,
+                                        userData->oldStates,
+                                        userData->algebraic,
+                                        userData->condVar);
+
+    userData->computeResiduals(pVoi, userData->constants, rates,
+                               userData->oldRates, states, userData->oldStates,
+                               userData->algebraic, userData->condVar,
+                               residuals);
 
     // Everything went fine, so...
 
@@ -51,6 +61,17 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
                         double *pRoots, void *pUserData)
 {
+    // Do the root finding
+
+    IDASolverUserData *userData = reinterpret_cast<IDASolverUserData *>(pUserData);
+
+    userData->computeRootInformation(pVoi, userData->constants,
+                                     N_VGetArrayPointer(pRates),
+                                     userData->oldRates,
+                                     N_VGetArrayPointer(pStates),
+                                     userData->oldStates, userData->algebraic,
+                                     pRoots);
+
     // Everything went fine, so...
 
     return 0;
@@ -72,6 +93,10 @@ void errorHandler(int pErrorCode, const char */* pModule */,
 
 //==============================================================================
 
+static const int SizeOfDouble = sizeof(double);
+
+//==============================================================================
+
 IDASolver::IDASolver() :
     mSolver(0),
     mStatesVector(0),
@@ -89,6 +114,9 @@ IDASolver::~IDASolver()
 {
     // Delete some internal objects
 
+    delete[] mUserData.oldRates;
+    delete[] mUserData.oldStates;
+
     N_VDestroy_Serial(mStatesVector);
     N_VDestroy_Serial(mRatesVector);
     IDAFree(&mSolver);
@@ -99,7 +127,10 @@ IDASolver::~IDASolver()
 void IDASolver::initialize(const double &pVoiStart, const int &pStatesCount,
                            const int &pCondVarCount, double *pConstants,
                            double *pRates, double *pStates, double *pAlgebraic,
-                           ComputeRatesFunction pComputeRates)
+                           double *pCondVar,
+                           ComputeResidualsFunction pComputeResiduals,
+                           ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                           ComputeRootInformationFunction pComputeRootInformation)
 {
     if (!mSolver) {
         // Initialise the ODE solver itself
@@ -108,7 +139,10 @@ void IDASolver::initialize(const double &pVoiStart, const int &pStatesCount,
                                                        pCondVarCount,
                                                        pConstants, pRates,
                                                        pStates, pAlgebraic,
-                                                       pComputeRates);
+                                                       pCondVar,
+                                                       pComputeResiduals,
+                                                       pComputeEssentialVariables,
+                                                       pComputeRootInformation);
 
         // Retrieve some of the IDA properties
 
@@ -151,8 +185,17 @@ void IDASolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         mUserData.constants = pConstants;
         mUserData.algebraic = pAlgebraic;
+        mUserData.condVar   = pCondVar;
 
-        mUserData.computeRates = pComputeRates;
+        mUserData.oldRates  = new double[pStatesCount];
+        mUserData.oldStates = new double[pStatesCount];
+
+        memcpy(mUserData.oldRates, pRates, pStatesCount*SizeOfDouble);
+        memcpy(mUserData.oldStates, pStates, pStatesCount*SizeOfDouble);
+
+        mUserData.computeResiduals          = pComputeResiduals;
+        mUserData.computeEssentialVariables = pComputeEssentialVariables;
+        mUserData.computeRootInformation    = pComputeRootInformation;
 
         IDASetUserData(mSolver, &mUserData);
 
@@ -171,10 +214,6 @@ void IDASolver::initialize(const double &pVoiStart, const int &pStatesCount,
         // Set the relative and absolute tolerances
 
         IDASStolerances(mSolver, mRelativeTolerance, mAbsoluteTolerance);
-
-        // Keep track of the compute rates function
-
-        mComputeRates = pComputeRates;
     } else {
         // Reinitialise the IDA object
 
@@ -195,22 +234,12 @@ void IDASolver::solve(double &pVoi, const double &pVoiEnd) const
 
     // Solve the model
 
-//---GRY---
-//    IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL);
+    IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL);
 
-    // Compute the rates one more time to get up-to-date values for the rates
-    // Note: another way of doing this would be to copy the contents of the
-    //       calculated rates in residualFunction, but that's bound to be more
-    //       time consuming since a call to IDA is likely to generate at least a
-    //       few calls to residualFunction, so that would be quite a few memory
-    //       transfers while here we 'only' compute the rates one more time,
-    //       so...
+    // Update oldRates and oldStates
 
-//---GRY---
-//    mComputeRates(pVoiEnd, mConstants, mRates,
-//                  N_VGetArrayPointer_Serial(mStatesVector), mAlgebraic);
-
-pVoi = pVoiEnd;
+    memcpy(mUserData.oldRates, mRates, mStatesCount*SizeOfDouble);
+    memcpy(mUserData.oldStates, mStates, mStatesCount*SizeOfDouble);
 }
 
 //==============================================================================

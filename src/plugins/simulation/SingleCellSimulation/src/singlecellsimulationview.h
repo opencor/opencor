@@ -98,6 +98,7 @@ private:
     double *mRates;
     double *mStates;
     double *mAlgebraic;
+    double *mCondVar;
 
     double mVoiEnd;
     double mVoiStep;
