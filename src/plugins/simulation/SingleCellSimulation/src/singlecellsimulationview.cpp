@@ -532,17 +532,14 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
     time.start();
 
-    if (needOdeSolver) {
-        odeFunctions.computeRates(voi, mConstants, mRates, mStates, mAlgebraic);
-        odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
-    } else {
-//---GRY---
-//        daeFunctions.computeRates(voi, mConstants, mRates, mStates, mAlgebraic);
-//        daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
-    }
-
     do {
-        // Output the current simulation data
+        // Output the current simulation data after making sure that all the
+        // variables have been computed
+
+        if (needOdeSolver)
+            odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+        else
+            daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
 
         xData.append(voi);
 
@@ -561,16 +558,10 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
         // Solve the model and compute its variables
 
-        if (needOdeSolver) {
+        if (needOdeSolver)
             odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
-
-            odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
-        } else {
-//---GRY---
+        else
             daeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
-
-//            daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
-        }
 
         // Update the progress bar
         //---GRY--- OUR USE OF QProgressBar IS VERY SLOW AT THE MOMENT...
