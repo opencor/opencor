@@ -87,10 +87,12 @@ private:
         Noble1991,
         Noble1998,
         Zhang2000,
-        Mitchell2003
+        Mitchell2003,
+        Dae
     } mModel;
 
     int mStatesCount;
+    int mCondVarCount;
 
     double *mConstants;
     double *mRates;

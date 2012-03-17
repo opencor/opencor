@@ -194,6 +194,7 @@ SET(PLUGINS
 
     simulation/CVODESolver
     simulation/ForwardEulerSolver
+    simulation/IDASolver
 
     simulation/CoreSimulation
 

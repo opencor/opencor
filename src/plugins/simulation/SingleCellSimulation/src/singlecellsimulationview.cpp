@@ -4,6 +4,7 @@
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
+#include "coredaesolver.h"
 #include "coreodesolver.h"
 #include "singlecellsimulationgraphpanel.h"
 #include "singlecellsimulationgraphpanels.h"
@@ -40,7 +41,8 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     Widget(pParent),
     mUi(new Ui::SingleCellSimulationView),
     mFileName(QString()), mCellmlFileRuntime(0), mModel(Unknown),
-    mStatesCount(0), mConstants(0), mRates(0), mStates(0), mAlgebraic(0),
+    mStatesCount(0), mCondVarCount(0),
+    mConstants(0), mRates(0), mStates(0), mAlgebraic(0),
     mVoiEnd(0), mVoiStep(0), mVoiMaximumStep(0), mVoiOutput(0),
     mOdeSolverName("CVODE"),
     mSolverInterfaces(SolverInterfaces()),
@@ -313,6 +315,8 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
         mModel = Zhang2000;
     } else if (!fileBaseName.compare("mitchell_schaeffer_2003")) {
         mModel = Mitchell2003;
+    } else if (!fileBaseName.compare("dae_model")) {
+        mModel = Dae;
     } else {
         // The model is not 'supported', so...
 
@@ -331,6 +335,7 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
     // Initialise our arrays for our model
 
     mStatesCount = mCellmlFileRuntime->statesCount();
+    mCondVarCount = mCellmlFileRuntime->condVarCount();
 
     mConstants = new double[mCellmlFileRuntime->constantsCount()];
     mRates = new double[mCellmlFileRuntime->ratesCount()];
@@ -377,6 +382,11 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
         mVoiMaximumStep = 0.003;     // s
 
         break;
+    case Dae:
+        mVoiEnd    = 10;     // dimensionless
+        mVoiOutput = 0.1;    // dimensionless
+
+        break;
     default:   // van der Pol 1928
         mVoiEnd    = 10;     // s
         mVoiStep   = 0.01;   // s
@@ -401,33 +411,60 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
     SingleCellSimulationGraphPanel *firstGraphPanel = qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(0));
 
-    // Retrieve the requested ODE solver
+    // Retrieve the requested ODE/DAE solver
+
+    bool needOdeSolver = mModel != Dae;
 
     CoreSolver::CoreOdeSolver *odeSolver = 0;
-    QString odeSolverName = QString();
+    CoreSolver::CoreDaeSolver *daeSolver = 0;
+    QString solverName = QString();
 
-    foreach (SolverInterface *solverInterface, mSolverInterfaces)
-        if (!solverInterface->name().compare(mOdeSolverName)) {
-            // The ODE solver was found, so retrieve an instance of it
+    if (needOdeSolver) {
+        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+            if (!solverInterface->name().compare(mOdeSolverName)) {
+                // The ODE solver was found, so retrieve an instance of it
 
-            odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
-            odeSolverName = solverInterface->name();
+                odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
+                solverName = solverInterface->name();
 
-            break;
+                break;
+            }
+
+        if (!odeSolver) {
+            // The ODE solver couldn't be found, so...
+
+            mOutput->append(QString(" - The %1 solver is needed, but it could not be found.").arg(mOdeSolverName));
+
+            return;
         }
+    } else {
+        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+            if (!solverInterface->name().compare("IDA")) {
+                // The DAE solver was found, so retrieve an instance of it
 
-    if (!odeSolver) {
-        // The ODE solver couldn't be found, so...
+                daeSolver = reinterpret_cast<CoreSolver::CoreDaeSolver *>(solverInterface->instance());
+                solverName = "IDA";
 
-        mOutput->append(QString(" - The %1 solver is needed, but it could not be found.").arg(mOdeSolverName));
+                break;
+            }
 
-        return;
+        if (!daeSolver) {
+            // The DAE solver couldn't be found, so...
+
+            mOutput->append(" - The IDA solver is needed, but it could not be found.");
+
+            return;
+        }
     }
 
     // Keep track of any error that might be reported by our solver
 
-    connect(odeSolver, SIGNAL(error(const QString &)),
-            this, SLOT(solverError(const QString &)));
+    if (needOdeSolver)
+        connect(odeSolver, SIGNAL(error(const QString &)),
+                this, SLOT(solverError(const QString &)));
+    else
+        connect(daeSolver, SIGNAL(error(const QString &)),
+                this, SLOT(solverError(const QString &)));
 
     mSolverErrorMsg = QString();
 
@@ -457,20 +494,32 @@ void SingleCellSimulationView::on_actionRun_triggered()
     // Retrieve the ODE functions from the CellML file runtime
 
     CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = mCellmlFileRuntime->odeFunctions();
+    CellMLSupport::CellmlFileRuntime::DaeFunctions daeFunctions = mCellmlFileRuntime->daeFunctions();
 
     // Initialise the model's 'constants'
 
-    odeFunctions.initializeConstants(mConstants, mRates, mStates);
-
-    // Initialise our ODE solver
-
-    if (!odeSolverName.compare("CVODE"))
-        odeSolver->setProperty("Maximum step", mVoiMaximumStep);
+    if (needOdeSolver)
+        odeFunctions.initializeConstants(mConstants, mRates, mStates);
     else
-        odeSolver->setProperty("Step", mVoiStep);
+        daeFunctions.initializeConstants(mConstants, mRates, mStates);
 
-    odeSolver->initialize(voi, mStatesCount, mConstants, mRates, mStates, mAlgebraic,
-                          odeFunctions.computeRates);
+    // Initialise our ODE/DAE solver
+
+    if (needOdeSolver) {
+        if (!solverName.compare("CVODE"))
+            odeSolver->setProperty("Maximum step", mVoiMaximumStep);
+        else
+            odeSolver->setProperty("Step", mVoiStep);
+
+        odeSolver->initialize(voi, mStatesCount, mConstants, mRates, mStates,
+                              mAlgebraic, odeFunctions.computeRates);
+    } else {
+        daeSolver->setProperty("Maximum step", mVoiMaximumStep);
+
+        daeSolver->initialize(voi, mStatesCount, mCondVarCount, mConstants,
+                              mRates, mStates, mAlgebraic,
+                              daeFunctions.computeRates);
+    }
 
     // Initialise the constants and compute the rates and variables
 
@@ -478,8 +527,14 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
     time.start();
 
-    odeFunctions.computeRates(voi, mConstants, mRates, mStates, mAlgebraic);
-    odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+    if (needOdeSolver) {
+        odeFunctions.computeRates(voi, mConstants, mRates, mStates, mAlgebraic);
+        odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+    } else {
+//---GRY---
+//        daeFunctions.computeRates(voi, mConstants, mRates, mStates, mAlgebraic);
+//        daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+    }
 
     do {
         // Output the current simulation data
@@ -501,9 +556,16 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
         // Solve the model and compute its variables
 
-        odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
+        if (needOdeSolver) {
+            odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
 
-        odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+            odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+        } else {
+//---GRY---
+            daeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
+
+//            daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+        }
 
         // Update the progress bar
         //---GRY--- OUR USE OF QProgressBar IS VERY SLOW AT THE MOMENT...
@@ -533,7 +595,7 @@ void SingleCellSimulationView::on_actionRun_triggered()
     } else {
         // Output the total simulation time
 
-        mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(odeSolverName,
+        mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(solverName,
                                                                                       QString::number(0.001*time.elapsed(), 'g', 3)));
 
         // Last bit of simulation data
@@ -555,6 +617,7 @@ void SingleCellSimulationView::on_actionRun_triggered()
     // Delete the solver
 
     delete odeSolver;
+    delete daeSolver;
 }
 
 //==============================================================================

@@ -6,6 +6,7 @@ ADD_PLUGIN(CoreSolver
     SOURCES
         ../../plugininfo.cpp
 
+        src/coredaesolver.cpp
         src/coreodesolver.cpp
         src/coresolver.cpp
         src/coresolverplugin.cpp
