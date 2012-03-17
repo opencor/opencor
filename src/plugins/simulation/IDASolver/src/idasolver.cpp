@@ -128,8 +128,8 @@ void IDASolver::initialize(const double &pVoiStart, const int &pStatesCount,
                            const int &pCondVarCount, double *pConstants,
                            double *pRates, double *pStates, double *pAlgebraic,
                            double *pCondVar,
-                           ComputeResidualsFunction pComputeResiduals,
                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                           ComputeResidualsFunction pComputeResiduals,
                            ComputeRootInformationFunction pComputeRootInformation)
 {
     if (!mSolver) {
@@ -140,8 +140,8 @@ void IDASolver::initialize(const double &pVoiStart, const int &pStatesCount,
                                                        pConstants, pRates,
                                                        pStates, pAlgebraic,
                                                        pCondVar,
-                                                       pComputeResiduals,
                                                        pComputeEssentialVariables,
+                                                       pComputeResiduals,
                                                        pComputeRootInformation);
 
         // Retrieve some of the IDA properties

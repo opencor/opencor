@@ -28,8 +28,8 @@ void CoreDaeSolver::initialize(const double &/* pVoiStart */,
                                double *pConstants, double *pRates,
                                double *pStates, double *pAlgebraic,
                                double *pCondVar,
-                               ComputeResidualsFunction /* pComputeResiduals */,
                                ComputeEssentialVariablesFunction /* pComputeEssentialVariables */,
+                               ComputeResidualsFunction /* pComputeResiduals */,
                                ComputeRootInformationFunction /* pComputeRootInformation */)
 {
     // Initialise the DAE solver

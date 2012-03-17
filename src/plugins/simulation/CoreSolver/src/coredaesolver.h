@@ -29,8 +29,8 @@ public:
                             const int &pStatesCount, const int &pCondVarCount,
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic, double *pCondVar,
-                            ComputeResidualsFunction /* pComputeResiduals */,
                             ComputeEssentialVariablesFunction /* pComputeEssentialVariables */,
+                            ComputeResidualsFunction /* pComputeResiduals */,
                             ComputeRootInformationFunction /* pComputeRootInformation */);
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const = 0;

@@ -521,8 +521,8 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
         daeSolver->initialize(voi, mStatesCount, mCondVarCount, mConstants,
                               mRates, mStates, mAlgebraic, mCondVar,
-                              daeFunctions.computeResiduals,
                               daeFunctions.computeEssentialVariables,
+                              daeFunctions.computeResiduals,
                               daeFunctions.computeRootInformation);
     }
 
