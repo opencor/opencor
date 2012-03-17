@@ -50,11 +50,9 @@ public:
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const;
 
-    void emitError(const QString &pErrorMsg);
-
 private:
     void *mSolver;
-    N_Vector mStates;
+    N_Vector mStatesVector;
     CVODESolverUserData mUserData;
 
     double mMaximumStep;

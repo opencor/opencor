@@ -64,7 +64,7 @@ void errorHandler(int pErrorCode, const char */* pModule */,
 
 CVODESolver::CVODESolver() :
     mSolver(0),
-    mStates(0),
+    mStatesVector(0),
     mMaximumStep(DefaultMaximumStep),
     mMaximumNumberOfSteps(DefaultMaximumNumberOfSteps),
     mRelativeTolerance(DefaultRelativeTolerance),
@@ -78,7 +78,7 @@ CVODESolver::~CVODESolver()
 {
     // Delete some internal objects
 
-    N_VDestroy_Serial(mStates);
+    N_VDestroy_Serial(mStatesVector);
     CVodeFree(&mSolver);
 }
 
@@ -124,11 +124,11 @@ void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         // Create the states vector
 
-        mStates = N_VMake_Serial(pStatesCount, pStates);
+        mStatesVector = N_VMake_Serial(pStatesCount, pStates);
 
         // Initialise the CVODE solver
 
-        CVodeInit(mSolver, rhsFunction, pVoiStart, mStates);
+        CVodeInit(mSolver, rhsFunction, pVoiStart, mStatesVector);
 
         // Set some user data
 
@@ -161,7 +161,7 @@ void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
     } else {
         // Reinitialise the CVODE object
 
-        CVodeReInit(mSolver, pVoiStart, mStates);
+        CVodeReInit(mSolver, pVoiStart, mStatesVector);
     }
 }
 
@@ -177,7 +177,7 @@ void CVODESolver::solve(double &pVoi, const double &pVoiEnd) const
 
     // Solve the model
 
-    CVode(mSolver, pVoiEnd, mStates, &pVoi, CV_NORMAL);
+    CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
 
     // Compute the rates one more time to get up-to-date values for the rates
     // Note: another way of doing this would be to copy the contents of the
@@ -187,7 +187,8 @@ void CVODESolver::solve(double &pVoi, const double &pVoiEnd) const
     //       transfers while here we 'only' compute the rates one more time,
     //       so...
 
-    mComputeRates(pVoiEnd, mConstants, mRates, N_VGetArrayPointer_Serial(mStates), mAlgebraic);
+    mComputeRates(pVoiEnd, mConstants, mRates,
+                  N_VGetArrayPointer_Serial(mStatesVector), mAlgebraic);
 }
 
 //==============================================================================
@@ -200,15 +201,6 @@ bool CVODESolver::isValidProperty(const QString &pName) const
            || !pName.compare(MaximumNumberOfStepsProperty)
            || !pName.compare(RelativeToleranceProperty)
            || !pName.compare(AbsoluteToleranceProperty);
-}
-
-//==============================================================================
-
-void CVODESolver::emitError(const QString &pErrorMsg)
-{
-    // Let people know that an error occured
-
-    emit error(pErrorMsg);
 }
 
 //==============================================================================

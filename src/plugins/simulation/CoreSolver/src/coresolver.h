@@ -34,6 +34,8 @@ public:
 
     void setProperty(const QString &pName, const QVariant &pValue);
 
+    void emitError(const QString &pErrorMsg);
+
 protected:
     Properties mProperties;
 

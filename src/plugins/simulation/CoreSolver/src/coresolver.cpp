@@ -28,6 +28,15 @@ void CoreSolver::setProperty(const QString &pName, const QVariant &pValue)
 
 //==============================================================================
 
+void CoreSolver::emitError(const QString &pErrorMsg)
+{
+    // Let people know that an error occured
+
+    emit error(pErrorMsg);
+}
+
+//==============================================================================
+
 }   // namespace CoreSolver
 }   // namespace OpenCOR
 
