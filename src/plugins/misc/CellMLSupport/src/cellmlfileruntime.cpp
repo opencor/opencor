@@ -175,7 +175,7 @@ void CellmlFileRuntime::resetDaeFunctions()
     // Reset the DEA functions
 
     mDaeFunctions.initializeConstants       = 0;
-    mDaeFunctions.computeRates              = 0;
+    mDaeFunctions.computeResiduals          = 0;
     mDaeFunctions.computeVariables          = 0;
     mDaeFunctions.computeEssentialVariables = 0;
     mDaeFunctions.computeRootInformation    = 0;
@@ -542,7 +542,7 @@ qDebug(" - CellML binary code time: %s s", qPrintable(QString::number(0.001*time
         // DAE functions
 
         mDaeFunctions.initializeConstants       = (InitializeConstantsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("initializeConstants"));
-        mDaeFunctions.computeRates              = (ComputeDaeRatesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
+        mDaeFunctions.computeResiduals          = (ComputeDaeResidualsFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRates"));
         mDaeFunctions.computeVariables          = (ComputeVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeVariables"));
         mDaeFunctions.computeEssentialVariables = (ComputeDaeEssentialVariablesFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeEssentialVariables"));
         mDaeFunctions.computeRootInformation    = (ComputeDaeRootInformationFunction)(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mComputerEngine->module()->getFunction("computeRootInformation"));

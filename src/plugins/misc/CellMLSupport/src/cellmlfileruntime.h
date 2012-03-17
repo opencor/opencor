@@ -47,7 +47,7 @@ public:
 
     typedef void (*InitializeConstantsFunction)(double *, double *, double *);
     typedef void (*ComputeOdeRatesFunction)(double, double *, double *, double *, double *);
-    typedef void (*ComputeDaeRatesFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
+    typedef void (*ComputeDaeResidualsFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
     typedef void (*ComputeVariablesFunction)(double, double *, double *, double *, double *);
     typedef void (*ComputeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *, double *, double *);
     typedef void (*ComputeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *, double *, double *);
@@ -63,7 +63,7 @@ public:
     struct DaeFunctions
     {
         InitializeConstantsFunction initializeConstants;
-        ComputeDaeRatesFunction computeRates;
+        ComputeDaeResidualsFunction computeResiduals;
         ComputeVariablesFunction computeVariables;
         ComputeDaeEssentialVariablesFunction computeEssentialVariables;
         ComputeDaeRootInformationFunction computeRootInformation;
