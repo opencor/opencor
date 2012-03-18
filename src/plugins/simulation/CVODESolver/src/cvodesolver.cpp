@@ -68,7 +68,8 @@ CVODESolver::CVODESolver() :
     mMaximumStep(DefaultMaximumStep),
     mMaximumNumberOfSteps(DefaultMaximumNumberOfSteps),
     mRelativeTolerance(DefaultRelativeTolerance),
-    mAbsoluteTolerance(DefaultAbsoluteTolerance)
+    mAbsoluteTolerance(DefaultAbsoluteTolerance),
+    mComputeRates(0)
 {
 }
 
@@ -174,6 +175,7 @@ void CVODESolver::solve(double &pVoi, const double &pVoiEnd) const
     Q_ASSERT(mRates);
     Q_ASSERT(mStates);
     Q_ASSERT(mAlgebraic);
+    Q_ASSERT(mComputeRates);
 
     // Solve the model
 

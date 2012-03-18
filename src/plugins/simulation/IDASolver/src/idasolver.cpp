@@ -233,17 +233,11 @@ void IDASolver::initialize(const double &pVoiStart,
 
         IDASetId(mSolver, idVector);
 
-        QString errorMsg = QString();
-
-        if (IDACalcIC(mSolver, IDA_YA_YDP_INIT,
-                      pVoiStart+pPositiveDirection?VoiEpsilon:-VoiEpsilon) != IDA_SUCCESS)
-            errorMsg = "the model's initial conditions could not be computed.";
+        IDACalcIC(mSolver, IDA_YA_YDP_INIT,
+                  pVoiStart+pPositiveDirection?VoiEpsilon:-VoiEpsilon);
 
         N_VDestroy_Serial(idVector);
         delete[] id;
-
-        if (!errorMsg.isEmpty())
-            emitError(errorMsg);
     } else {
         // Reinitialise the IDA object
 
@@ -266,6 +260,7 @@ void IDASolver::solve(double &pVoi, const double &pVoiEnd) const
     Q_ASSERT(mRates);
     Q_ASSERT(mStates);
     Q_ASSERT(mAlgebraic);
+    Q_ASSERT(mCondVar);
 
     // Solve the model
 

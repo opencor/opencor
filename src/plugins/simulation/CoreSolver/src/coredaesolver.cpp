@@ -14,10 +14,12 @@ namespace CoreSolver {
 CoreDaeSolver::CoreDaeSolver() :
     CoreSolver(),
     mStatesCount(0),
+    mCondVarCount(0),
     mConstants(0),
     mRates(0),
     mStates(0),
-    mAlgebraic(0)
+    mAlgebraic(0),
+    mCondVar(0)
 {
 }
 

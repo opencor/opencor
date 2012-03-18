@@ -344,7 +344,7 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
     mRates     = new double[mCellmlFileRuntime->ratesCount()];
     mStates    = new double[mStatesCount];
     mAlgebraic = new double[mCellmlFileRuntime->algebraicCount()];
-    mCondVar   = new double[mCellmlFileRuntime->condVarCount()];
+    mCondVar   = new double[mCondVarCount];
 
     // Get some initial values for the ODE solver and our simulation in general
 
@@ -389,7 +389,7 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
     case Dae:
         mVoiEnd         = 10;     // dimensionless
         mVoiOutput      =  0.1;   // dimensionless
-        mVoiMaximumStep =  0.1;     // dimensionless
+        mVoiMaximumStep =  1;     // dimensionless
 
         break;
     default:   // van der Pol 1928
