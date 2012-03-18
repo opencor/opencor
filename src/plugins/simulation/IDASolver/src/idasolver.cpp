@@ -186,6 +186,8 @@ void IDASolver::initialize(const double &pVoiStart,
                 mStatesVector, mRatesVector);
 
         IDARootInit(mSolver, pCondVarCount, rootFindingFunction);
+        //---GRY--- NEED TO CHECK WITH A MODEL THAT ACTUALLY NEEDS A ROOT
+        //          FINDING...
 
         // Set some user data
 

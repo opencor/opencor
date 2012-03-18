@@ -508,7 +508,11 @@ time.restart();
     // Note: for some DAE models, the CellML API generates code similar to
     //          rootfind_<ID>(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret);\r\n
     //       which we are not (currently at least) supporting, so...
-    //---GRY--- WHAT IS THE EXACT PURPOSE OF THAT CALL?...
+    //---GRY--- THE CALL TO rootfind_<ID> IS TO DO A LevMar CALL, BUT THIS
+    //          SHOULDN'T BE NECESSARY WHEN USING A 'PROPER' DAE SOLVER (E.G.
+    //          IDA). INSTEAD, THE SOLVER SHOULD PROVIDE A WAY TO DO SOMETHING
+    //          SIMILAR TO A LevMar. USING IDA, THE WAY TO DO IT IS PROBABLY BY
+    //          MAKING A CALL TO IDACalcIC()?...
 
     initializeConstantsString.replace(QRegExp("rootfind_[0-9]+\\(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret\\);\\r\\n"), "");
 
