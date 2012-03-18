@@ -316,7 +316,8 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
         mModel = Zhang2000;
     } else if (!fileBaseName.compare("mitchell_schaeffer_2003")) {
         mModel = Mitchell2003;
-    } else if (!fileBaseName.compare("dae_model")) {
+    } else if (   !fileBaseName.compare("dae_model")
+               || !fileBaseName.compare("simple_dae_model")) {
         mModel = Dae;
     } else {
         // The model is not 'supported', so...
