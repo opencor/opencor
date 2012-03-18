@@ -485,15 +485,15 @@ qDebug(" - CellML ODE code information time: %s s", qPrintable(QString::number(0
     // If the model is of DAE type, then we must get the 'right' code
     // information
 
-    iface::cellml_services::CodeInformation *genericOdeCodeInformation;
+    iface::cellml_services::CodeInformation *genericCodeInformation;
 
     if (mModelType == Ode)
-        genericOdeCodeInformation = mOdeCodeInformation;
+        genericCodeInformation = mOdeCodeInformation;
     else
 {
 time.restart();
 
-        genericOdeCodeInformation = getDaeCodeInformation(pModel);
+        genericCodeInformation = getDaeCodeInformation(pModel);
 
 qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 }
@@ -502,7 +502,7 @@ qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0
 
 time.restart();
 
-    QString initializeConstantsString = QString::fromStdWString(genericOdeCodeInformation->initConstsString());
+    QString initializeConstantsString = QString::fromStdWString(genericCodeInformation->initConstsString());
 
     // Get rid of any call to rootfind_<ID>
     // Note: for some DAE models, the CellML API generates code similar to
@@ -516,14 +516,14 @@ time.restart();
     checkFunction("initializeConstants");
 
     if (mModelType == Ode) {
-        mComputerEngine->addFunction(QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
+        mComputerEngine->addFunction(QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mOdeCodeInformation->ratesString())));
         checkFunction("computeRates");
     } else {
-        mComputerEngine->addFunction(QString("void computeResiduals(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->ratesString())));
+        mComputerEngine->addFunction(QString("void computeResiduals(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->ratesString())));
         checkFunction("computeResiduals");
     }
 
-    mComputerEngine->addFunction(QString("void computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->variablesString())));
+    mComputerEngine->addFunction(QString("void computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
     checkFunction("computeVariables");
 
     if (mModelType == Dae) {
