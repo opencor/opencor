@@ -46,23 +46,12 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
     double *residuals = N_VGetArrayPointer(pResiduals);
 
     userData->computeEssentialVariables(pVoi, userData->constants, rates,
-                                        userData->oldRates, states,
-                                        userData->oldStates,
-                                        userData->algebraic,
+                                        states, userData->algebraic,
                                         userData->condVar);
 
-    userData->computeResiduals(pVoi, userData->constants, rates,
-                               userData->oldRates, states, userData->oldStates,
+    userData->computeResiduals(pVoi, userData->constants, rates, states,
                                userData->algebraic, userData->condVar,
                                residuals);
-
-    // Update oldRates and oldStates
-    // Note: sadly, if we want to support events and reset rules, we must update
-    //       oldRates and oldStates every time residualFunction is called. This
-    //       isn't efficient, but do we have any other option?...
-
-    memcpy(userData->oldRates, rates, userData->statesCount*SizeOfDouble);
-    memcpy(userData->oldStates, states, userData->statesCount*SizeOfDouble);
 
     // Everything went fine, so...
 
@@ -80,10 +69,8 @@ int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 
     userData->computeRootInformation(pVoi, userData->constants,
                                      N_VGetArrayPointer(pRates),
-                                     userData->oldRates,
                                      N_VGetArrayPointer(pStates),
-                                     userData->oldStates, userData->algebraic,
-                                     pRoots);
+                                     userData->algebraic, pRoots);
 
     // Everything went fine, so...
 
@@ -122,9 +109,6 @@ IDASolver::IDASolver() :
 IDASolver::~IDASolver()
 {
     // Delete some internal objects
-
-    delete[] mUserData.oldRates;
-    delete[] mUserData.oldStates;
 
     N_VDestroy_Serial(mStatesVector);
     N_VDestroy_Serial(mRatesVector);
@@ -200,14 +184,9 @@ void IDASolver::initialize(const double &pVoiStart,
 
         // Set some user data
 
-        mUserData.statesCount = pStatesCount;
-
         mUserData.constants = pConstants;
         mUserData.algebraic = pAlgebraic;
         mUserData.condVar   = pCondVar;
-
-        mUserData.oldRates  = new double[pStatesCount];
-        mUserData.oldStates = new double[pStatesCount];
 
         mUserData.computeResiduals          = pComputeResiduals;
         mUserData.computeEssentialVariables = pComputeEssentialVariables;
@@ -252,12 +231,6 @@ void IDASolver::initialize(const double &pVoiStart,
 
         memcpy(pStates, N_VGetArrayPointer(((IDAMem) mSolver)->ida_ynew), pStatesCount*SizeOfDouble);
         memcpy(pRates, N_VGetArrayPointer(((IDAMem) mSolver)->ida_ypnew), pStatesCount*SizeOfDouble);
-
-        // Initialise the old states old rates with the initial values of the
-        // states and rates, resp.
-
-        memcpy(mUserData.oldRates, pRates, pStatesCount*SizeOfDouble);
-        memcpy(mUserData.oldStates, pStates, pStatesCount*SizeOfDouble);
     } else {
         // Reinitialise the IDA object
 

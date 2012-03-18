@@ -29,14 +29,9 @@ static const QString AbsoluteToleranceProperty = "Absolute tolerance";
 
 struct IDASolverUserData
 {
-    int statesCount;
-
     double *constants;
     double *algebraic;
     double *condVar;
-
-    double *oldRates;
-    double *oldStates;
 
     OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction computeEssentialVariables;
     OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction computeResiduals;
