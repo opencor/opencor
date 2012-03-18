@@ -29,6 +29,8 @@ static const QString AbsoluteToleranceProperty = "Absolute tolerance";
 
 struct IDASolverUserData
 {
+    int statesCount;
+
     double *constants;
     double *algebraic;
     double *condVar;

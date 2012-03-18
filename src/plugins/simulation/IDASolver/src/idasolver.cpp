@@ -8,11 +8,16 @@
 
 #include "ida/ida.h"
 #include "ida/ida_dense.h"
+#include "ida/ida_impl.h"
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace IDASolver {
+
+//==============================================================================
+
+static const int SizeOfDouble = sizeof(double);
 
 //==============================================================================
 
@@ -50,6 +55,14 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
                                userData->oldRates, states, userData->oldStates,
                                userData->algebraic, userData->condVar,
                                residuals);
+
+    // Update oldRates and oldStates
+    // Note: sadly, if we want to support events and reset rules, we must update
+    //       oldRates and oldStates every time residualFunction is called. This
+    //       isn't efficient, but do we have any other option?...
+
+    memcpy(userData->oldRates, rates, userData->statesCount*SizeOfDouble);
+    memcpy(userData->oldStates, states, userData->statesCount*SizeOfDouble);
 
     // Everything went fine, so...
 
@@ -90,10 +103,6 @@ void errorHandler(int pErrorCode, const char */* pModule */,
         reinterpret_cast<IDASolver *>(pUserData)->emitError(errorMsg.left(1).toLower()+errorMsg.right(errorMsg.size()-1));
     }
 }
-
-//==============================================================================
-
-static const int SizeOfDouble = sizeof(double);
 
 //==============================================================================
 
@@ -191,15 +200,14 @@ void IDASolver::initialize(const double &pVoiStart,
 
         // Set some user data
 
+        mUserData.statesCount = pStatesCount;
+
         mUserData.constants = pConstants;
         mUserData.algebraic = pAlgebraic;
         mUserData.condVar   = pCondVar;
 
         mUserData.oldRates  = new double[pStatesCount];
         mUserData.oldStates = new double[pStatesCount];
-
-        memcpy(mUserData.oldRates, pRates, pStatesCount*SizeOfDouble);
-        memcpy(mUserData.oldStates, pStates, pStatesCount*SizeOfDouble);
 
         mUserData.computeResiduals          = pComputeResiduals;
         mUserData.computeEssentialVariables = pComputeEssentialVariables;
@@ -239,6 +247,17 @@ void IDASolver::initialize(const double &pVoiStart,
 
         N_VDestroy_Serial(idVector);
         delete[] id;
+
+        // Initialise the states and rates with the values determined by IDA
+
+        memcpy(pStates, N_VGetArrayPointer(((IDAMem) mSolver)->ida_ynew), pStatesCount*SizeOfDouble);
+        memcpy(pRates, N_VGetArrayPointer(((IDAMem) mSolver)->ida_ypnew), pStatesCount*SizeOfDouble);
+
+        // Initialise the old states old rates with the initial values of the
+        // states and rates, resp.
+
+        memcpy(mUserData.oldRates, pRates, pStatesCount*SizeOfDouble);
+        memcpy(mUserData.oldStates, pStates, pStatesCount*SizeOfDouble);
     } else {
         // Reinitialise the IDA object
 
@@ -266,11 +285,6 @@ void IDASolver::solve(double &pVoi, const double &pVoiEnd) const
     // Solve the model
 
     IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL);
-
-    // Update oldRates and oldStates
-
-    memcpy(mUserData.oldRates, mRates, mStatesCount*SizeOfDouble);
-    memcpy(mUserData.oldStates, mStates, mStatesCount*SizeOfDouble);
 }
 
 //==============================================================================

@@ -518,7 +518,7 @@ void SingleCellSimulationView::on_actionRun_triggered()
     typedef QVector<double> Doubles;
 
     Doubles xData;
-    Doubles yData[mStatesCount];
+    Doubles yData;
 
     // Add a curve to our plotting area
 
@@ -584,16 +584,14 @@ void SingleCellSimulationView::on_actionRun_triggered()
                 daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
 
             xData.append(voi);
-
-            for (int i = 0; i < mStatesCount; ++i)
-                yData[i].append(mStates[i]);
+            yData.append(mStates[0]);
 
             // Make sure that the graph panel is up-to-date
             //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
             //          FOR DEMONSTRATION PURPOSES...
 
             if (mSlowPlotting) {
-                curve->setSamples(xData, yData[0]);
+                curve->setSamples(xData, yData);
 
                 firstGraphPanel->plot()->replot();
             }
@@ -626,7 +624,7 @@ void SingleCellSimulationView::on_actionRun_triggered()
             //          FOR DEMONSTRATION PURPOSES...
 
             if (!mSlowPlotting) {
-                curve->setSamples(xData, yData[0]);
+                curve->setSamples(xData, yData);
 
                 firstGraphPanel->plot()->replot();
             }
@@ -639,15 +637,13 @@ void SingleCellSimulationView::on_actionRun_triggered()
             // Last bit of simulation data
 
             xData.append(voi);
-
-            for (int i = 0; i < mStatesCount; ++i)
-                yData[i].append(mStates[i]);
+            yData.append(mStates[0]);
 
             // Make sure that the graph panel is up-to-date
             //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
             //          FOR DEMONSTRATION PURPOSES...
 
-            curve->setSamples(xData, yData[0]);
+            curve->setSamples(xData, yData);
 
             firstGraphPanel->plot()->replot();
         }
