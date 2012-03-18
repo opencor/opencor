@@ -337,16 +337,34 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
     delete[] mAlgebraic;
     delete[] mCondVar;
 
-    // Initialise our arrays for our model
+    // Create and initialise our arrays for our model
 
+    int constantsCount = mCellmlFileRuntime->constantsCount();
+    int ratesCount = mCellmlFileRuntime->ratesCount();
     mStatesCount  = mCellmlFileRuntime->statesCount();
+    int algebraicCount = mCellmlFileRuntime->algebraicCount();
     mCondVarCount = mCellmlFileRuntime->condVarCount();
 
-    mConstants = new double[mCellmlFileRuntime->constantsCount()];
-    mRates     = new double[mCellmlFileRuntime->ratesCount()];
+    mConstants = new double[constantsCount];
+    mRates     = new double[ratesCount];
     mStates    = new double[mStatesCount];
-    mAlgebraic = new double[mCellmlFileRuntime->algebraicCount()];
+    mAlgebraic = new double[algebraicCount];
     mCondVar   = new double[mCondVarCount];
+
+    for (int i = 0; i < constantsCount; ++i)
+        mConstants[i] = 0;
+
+    for (int i = 0; i < ratesCount; ++i)
+        mRates[i] = 0;
+
+    for (int i = 0; i < mStatesCount; ++i)
+        mStates[i] = 0;
+
+    for (int i = 0; i < algebraicCount; ++i)
+        mAlgebraic[i] = 0;
+
+    for (int i = 0; i < mCondVarCount; ++i)
+        mCondVar[i] = 0;
 
     // Get some initial values for the ODE solver and our simulation in general
 
@@ -540,7 +558,8 @@ void SingleCellSimulationView::on_actionRun_triggered()
                               daeFunctions.computeStateInformation);
         // Note: the second argument is just to provide the DAE solver with an
         //       indication of the direction in which we want to integrate the
-        //       model, so...
+        //       model, so that it can properly determine the model's initial
+        //       conditions
     }
 
     // Initialise the constants and compute the rates and variables, but only if

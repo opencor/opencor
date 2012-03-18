@@ -234,7 +234,6 @@ void IDASolver::initialize(const double &pVoiStart,
         N_Vector idVector = N_VMake_Serial(pStatesCount, id);
 
         IDASetId(mSolver, idVector);
-
         IDACalcIC(mSolver, IDA_YA_YDP_INIT,
                   pVoiStart+pPositiveDirection?VoiEpsilon:-VoiEpsilon);
 
