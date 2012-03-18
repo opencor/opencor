@@ -317,6 +317,8 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
     } else if (!fileBaseName.compare("mitchell_schaeffer_2003")) {
         mModel = Mitchell2003;
     } else if (   !fileBaseName.compare("dae_model")
+               || !fileBaseName.compare("newton_raphson_parabola_model")
+               || !fileBaseName.compare("saucerman_brunton_michailova_mcculloch_model_2003")
                || !fileBaseName.compare("simple_dae_model")) {
         mModel = Dae;
     } else {

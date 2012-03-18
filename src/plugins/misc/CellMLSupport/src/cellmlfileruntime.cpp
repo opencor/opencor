@@ -28,6 +28,8 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRuntime::CellmlFileRuntime() :
+    mOdeCodeInformation(0),
+    mDaeCodeInformation(0),
     mComputerEngine(0)
 {
     // Initialise the runtime's properties
@@ -500,7 +502,17 @@ qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0
 
 time.restart();
 
-    mComputerEngine->addFunction(QString("void initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(QString::fromStdWString(genericOdeCodeInformation->initConstsString())));
+    QString initializeConstantsString = QString::fromStdWString(genericOdeCodeInformation->initConstsString());
+
+    // Get rid of any call to rootfind_<ID>
+    // Note: for some DAE models, the CellML API generates code similar to
+    //          rootfind_<ID>(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret);\r\n
+    //       which we are not (currently at least) supporting, so...
+    //---GRY--- WHAT IS THE EXACT PURPOSE OF THAT CALL?...
+
+    initializeConstantsString.replace(QRegExp("rootfind_[0-9]+\\(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret\\);\\r\\n"), "");
+
+    mComputerEngine->addFunction(QString("void initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(initializeConstantsString));
     checkFunction("initializeConstants");
 
     if (mModelType == Ode) {
