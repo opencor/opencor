@@ -19,19 +19,22 @@ namespace CoreSolver {
 class CORESOLVER_EXPORT CoreDaeSolver : public CoreSolver
 {
 public:
-    typedef void (*ComputeResidualsFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
     typedef void (*ComputeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+    typedef void (*ComputeResidualsFunction)(double, double *, double *, double *, double *, double *, double *, double *, double *);
     typedef void (*ComputeRootInformationFunction)(double, double *, double *, double *, double *, double *, double *, double *);
+    typedef void (*ComputeStateInformationFunction)(double *);
 
     explicit CoreDaeSolver();
 
     virtual void initialize(const double &/* pVoiStart */,
+                            const bool &/* pPositiveDirection */,
                             const int &pStatesCount, const int &pCondVarCount,
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic, double *pCondVar,
                             ComputeEssentialVariablesFunction /* pComputeEssentialVariables */,
                             ComputeResidualsFunction /* pComputeResiduals */,
-                            ComputeRootInformationFunction /* pComputeRootInformation */);
+                            ComputeRootInformationFunction /* pComputeRootInformation */,
+                            ComputeStateInformationFunction /* pComputeStateInformation */);
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const = 0;
 

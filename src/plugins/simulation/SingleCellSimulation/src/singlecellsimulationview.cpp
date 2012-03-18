@@ -351,17 +351,17 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
 
     switch (mModel) {
     case Hodgkin1952:
-        mVoiEnd    = 50;     // ms
-        mVoiStep   = 0.01;   // ms
-        mVoiOutput = 0.1;    // ms
+        mVoiEnd    = 50;      // ms
+        mVoiStep   =  0.01;   // ms
+        mVoiOutput =  0.1;    // ms
 
         break;
     case Noble1962:
     case Mitchell2003:
-        mVoiEnd         = 1000;   // ms
-        mVoiStep        = 0.01;   // ms
-        mVoiOutput      = 1;      // ms
-        mVoiMaximumStep = 1;      // ms
+        mVoiEnd         = 1000;      // ms
+        mVoiStep        =    0.01;   // ms
+        mVoiOutput      =    1;      // ms
+        mVoiMaximumStep =    1;      // ms
 
         break;
     case Noble1984:
@@ -386,18 +386,29 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
 
         break;
     case Dae:
-        mVoiEnd    = 10;     // dimensionless
-        mVoiOutput = 0.1;    // dimensionless
+        mVoiEnd         = 10;     // dimensionless
+        mVoiOutput      =  0.1;   // dimensionless
+        mVoiMaximumStep =  0.1;     // dimensionless
 
         break;
     default:   // van der Pol 1928
-        mVoiEnd    = 10;     // s
-        mVoiStep   = 0.01;   // s
-        mVoiOutput = 0.01;   // s
+        mVoiEnd    = 10;      // s
+        mVoiStep   =  0.01;   // s
+        mVoiOutput =  0.01;   // s
     }
 
 //    mVoiEnd *= 10;
 //---GRY--- JUST FOR TESTING...
+}
+
+//==============================================================================
+
+void SingleCellSimulationView::outputSolverErrorMsg()
+{
+    // Output the current solver error message, if any
+
+    if (!mSolverErrorMsg.isEmpty())
+        mOutput->append(QString(" - Solver error: %1").arg(mSolverErrorMsg));
 }
 
 //==============================================================================
@@ -407,8 +418,6 @@ void SingleCellSimulationView::on_actionRun_triggered()
     // Clear the graph panels and output
 
     clearGraphPanels();
-
-    mOutput->clear();
 
     // Retrieve the active graph panel
 
@@ -519,95 +528,107 @@ void SingleCellSimulationView::on_actionRun_triggered()
     } else {
         daeSolver->setProperty("Maximum step", mVoiMaximumStep);
 
-        daeSolver->initialize(voi, mStatesCount, mCondVarCount, mConstants,
-                              mRates, mStates, mAlgebraic, mCondVar,
+        daeSolver->initialize(voi, mVoiEnd > 0/* mVoiStart */,
+                              mStatesCount, mCondVarCount, mConstants, mRates,
+                              mStates, mAlgebraic, mCondVar,
                               daeFunctions.computeEssentialVariables,
                               daeFunctions.computeResiduals,
-                              daeFunctions.computeRootInformation);
+                              daeFunctions.computeRootInformation,
+                              daeFunctions.computeStateInformation);
+        // Note: the second argument is just to provide the DAE solver with an
+        //       indication of the direction in which we want to integrate the
+        //       model, so...
     }
 
-    // Initialise the constants and compute the rates and variables
-
-    QTime time;
-
-    time.start();
-
-    do {
-        // Output the current simulation data after making sure that all the
-        // variables have been computed
-
-        if (needOdeSolver)
-            odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
-        else
-            daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
-
-        xData.append(voi);
-
-        for (int i = 0; i < mStatesCount; ++i)
-            yData[i].append(mStates[i]);
-
-        // Make sure that the graph panel is up-to-date
-        //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH FOR
-        //          DEMONSTRATION PURPOSES...
-
-        if (mSlowPlotting) {
-            curve->setSamples(xData, yData[0]);
-
-            firstGraphPanel->plot()->replot();
-        }
-
-        // Solve the model and compute its variables
-
-        if (needOdeSolver)
-            odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
-        else
-            daeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
-
-        // Update the progress bar
-        //---GRY--- OUR USE OF QProgressBar IS VERY SLOW AT THE MOMENT...
-
-        if (mSlowPlotting)
-            mProgressBar->setValue(voi*hundredOverVoiEnd);
-    } while ((voi != mVoiEnd) && mSolverErrorMsg.isEmpty());
-
-    // Reset the progress bar
-
-    mProgressBar->setValue(0);
+    // Initialise the constants and compute the rates and variables, but only if
+    // the initialisation of the solver went fine
 
     if (!mSolverErrorMsg.isEmpty()) {
-        // The solver reported an error, so...
+        // We couldn't initialise the solver, so...
 
-        mOutput->append(QString(" - Solver error: %1").arg(mSolverErrorMsg));
+        outputSolverErrorMsg();
+    } else {
+        QTime time;
 
-        // Make sure that the graph panel is up-to-date
-        //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH FOR
-        //          DEMONSTRATION PURPOSES...
+        time.start();
 
-        if (!mSlowPlotting) {
+        do {
+            // Output the current simulation data after making sure that all the
+            // variables have been computed
+
+            if (needOdeSolver)
+                odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+            else
+                daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+
+            xData.append(voi);
+
+            for (int i = 0; i < mStatesCount; ++i)
+                yData[i].append(mStates[i]);
+
+            // Make sure that the graph panel is up-to-date
+            //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
+            //          FOR DEMONSTRATION PURPOSES...
+
+            if (mSlowPlotting) {
+                curve->setSamples(xData, yData[0]);
+
+                firstGraphPanel->plot()->replot();
+            }
+
+            // Solve the model and compute its variables
+
+            if (needOdeSolver)
+                odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
+            else
+                daeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
+
+            // Update the progress bar
+            //---GRY--- OUR USE OF QProgressBar IS VERY SLOW AT THE MOMENT...
+
+            if (mSlowPlotting)
+                mProgressBar->setValue(voi*hundredOverVoiEnd);
+        } while ((voi != mVoiEnd) && mSolverErrorMsg.isEmpty());
+
+        // Reset the progress bar
+
+        mProgressBar->setValue(0);
+
+        if (!mSolverErrorMsg.isEmpty()) {
+            // The solver reported an error, so...
+
+            outputSolverErrorMsg();
+
+            // Make sure that the graph panel is up-to-date
+            //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
+            //          FOR DEMONSTRATION PURPOSES...
+
+            if (!mSlowPlotting) {
+                curve->setSamples(xData, yData[0]);
+
+                firstGraphPanel->plot()->replot();
+            }
+        } else {
+            // Output the total simulation time
+
+            mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(solverName,
+                                                                                          QString::number(0.001*time.elapsed(), 'g', 3)));
+
+            // Last bit of simulation data
+
+            xData.append(voi);
+
+            for (int i = 0; i < mStatesCount; ++i)
+                yData[i].append(mStates[i]);
+
+            // Make sure that the graph panel is up-to-date
+            //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
+            //          FOR DEMONSTRATION PURPOSES...
+
             curve->setSamples(xData, yData[0]);
 
             firstGraphPanel->plot()->replot();
         }
-    } else {
-        // Output the total simulation time
-
-        mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(solverName,
-                                                                                      QString::number(0.001*time.elapsed(), 'g', 3)));
-
-        // Last bit of simulation data
-
-        xData.append(voi);
-
-        for (int i = 0; i < mStatesCount; ++i)
-            yData[i].append(mStates[i]);
-
-        // Make sure that the graph panel is up-to-date
-        //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH FOR
-        //          DEMONSTRATION PURPOSES...
-
-        curve->setSamples(xData, yData[0]);
-
-        firstGraphPanel->plot()->replot();
     }
 
     // Delete the solver

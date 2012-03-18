@@ -124,25 +124,31 @@ IDASolver::~IDASolver()
 
 //==============================================================================
 
-void IDASolver::initialize(const double &pVoiStart, const int &pStatesCount,
-                           const int &pCondVarCount, double *pConstants,
-                           double *pRates, double *pStates, double *pAlgebraic,
-                           double *pCondVar,
+void IDASolver::initialize(const double &pVoiStart,
+                           const bool &pPositiveDirection,
+                           const int &pStatesCount, const int &pCondVarCount,
+                           double *pConstants, double *pRates, double *pStates,
+                           double *pAlgebraic, double *pCondVar,
                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
                            ComputeResidualsFunction pComputeResiduals,
-                           ComputeRootInformationFunction pComputeRootInformation)
+                           ComputeRootInformationFunction pComputeRootInformation, ComputeStateInformationFunction pComputeStateInformation)
 {
+    static const double VoiEpsilon = 1e-9;
+
     if (!mSolver) {
         // Initialise the ODE solver itself
 
-        OpenCOR::CoreSolver::CoreDaeSolver::initialize(pVoiStart, pStatesCount,
+        OpenCOR::CoreSolver::CoreDaeSolver::initialize(pVoiStart,
+                                                       pPositiveDirection,
+                                                       pStatesCount,
                                                        pCondVarCount,
                                                        pConstants, pRates,
                                                        pStates, pAlgebraic,
                                                        pCondVar,
                                                        pComputeEssentialVariables,
                                                        pComputeResiduals,
-                                                       pComputeRootInformation);
+                                                       pComputeRootInformation,
+                                                       pComputeStateInformation);
 
         // Retrieve some of the IDA properties
 
@@ -214,10 +220,39 @@ void IDASolver::initialize(const double &pVoiStart, const int &pStatesCount,
         // Set the relative and absolute tolerances
 
         IDASStolerances(mSolver, mRelativeTolerance, mAbsoluteTolerance);
+
+        // Compute the model's initial conditions
+        // Note: this requires retrieving the model's state information, setting
+        //       the IDA object's id vector and then calling IDACalcIC...
+
+        double *id = new double[pStatesCount];
+
+        pComputeStateInformation(id);
+
+        N_Vector idVector = N_VMake_Serial(pStatesCount, id);
+
+        IDASetId(mSolver, idVector);
+
+        QString errorMsg = QString();
+
+        if (IDACalcIC(mSolver, IDA_YA_YDP_INIT,
+                      pVoiStart+pPositiveDirection?VoiEpsilon:-VoiEpsilon) != IDA_SUCCESS)
+            errorMsg = "the model's initial conditions could not be computed.";
+
+        N_VDestroy_Serial(idVector);
+        delete[] id;
+
+        if (!errorMsg.isEmpty())
+            emitError(errorMsg);
     } else {
         // Reinitialise the IDA object
 
         IDAReInit(mSolver, pVoiStart, mStatesVector, mRatesVector);
+
+        // Compute the model's new initial conditions
+
+        IDACalcIC(mSolver, IDA_YA_YDP_INIT,
+                  pVoiStart+pPositiveDirection?VoiEpsilon:-VoiEpsilon);
     }
 }
 

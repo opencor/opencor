@@ -123,6 +123,8 @@ private:
     void clearGraphPanels();
     void clearActiveGraphPanel();
 
+    void outputSolverErrorMsg();
+
 private Q_SLOTS:
     void on_actionRun_triggered();
     void on_actionDebugMode_triggered();

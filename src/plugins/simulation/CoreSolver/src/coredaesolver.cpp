@@ -24,13 +24,15 @@ CoreDaeSolver::CoreDaeSolver() :
 //==============================================================================
 
 void CoreDaeSolver::initialize(const double &/* pVoiStart */,
+                               const bool &/* pPositiveDirection */,
                                const int &pStatesCount, const int &pCondVarCount,
                                double *pConstants, double *pRates,
                                double *pStates, double *pAlgebraic,
                                double *pCondVar,
                                ComputeEssentialVariablesFunction /* pComputeEssentialVariables */,
                                ComputeResidualsFunction /* pComputeResiduals */,
-                               ComputeRootInformationFunction /* pComputeRootInformation */)
+                               ComputeRootInformationFunction /* pComputeRootInformation */,
+                               ComputeStateInformationFunction /* pComputeStateInformation */)
 {
     // Initialise the DAE solver
 
