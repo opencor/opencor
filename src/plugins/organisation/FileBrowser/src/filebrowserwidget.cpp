@@ -66,7 +66,7 @@ FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
 {
     // Create an instance of the file system model that we want to view
 
-    mDataModel = new FileBrowserModel;
+    mDataModel = new FileBrowserModel(this);
 
     // Set some properties for the file browser widget itself
 
