@@ -84,6 +84,7 @@ private:
         Hodgkin1952,
         Noble1962,
         Noble1984,
+        LuoRudy1991,
         Noble1991,
         Noble1998,
         Zhang2000,

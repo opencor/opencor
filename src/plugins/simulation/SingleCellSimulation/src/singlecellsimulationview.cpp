@@ -305,6 +305,8 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
         mModel = Noble1962;
     } else if (!fileBaseName.compare("noble_noble_SAN_model_1984")) {
         mModel = Noble1984;
+    } else if (!fileBaseName.compare("luo_rudy_1991")) {
+        mModel = LuoRudy1991;
     } else if (!fileBaseName.compare("noble_model_1991")) {
         mModel = Noble1991;
     } else if (!fileBaseName.compare("noble_model_1998")) {
@@ -378,6 +380,7 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
 
         break;
     case Noble1962:
+    case LuoRudy1991:
     case Mitchell2003:
         mVoiEnd         = 1000;      // ms
         mVoiStep        =    0.01;   // ms
