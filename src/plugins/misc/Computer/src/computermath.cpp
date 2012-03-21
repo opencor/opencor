@@ -6,10 +6,8 @@
 
 //==============================================================================
 
-#include <math.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdarg>
 
 //==============================================================================
 
@@ -97,7 +95,7 @@ double factorial(double pNb)
 
 double arbitraryLog(double pNb, double pBase)
 {
-    return log(pNb)/log(pBase);
+    return std::log(pNb)/std::log(pBase);
 }
 
 //==============================================================================
@@ -124,36 +122,36 @@ double gcdPair(double pNb1, double pNb2)
 {
     #define EVEN(pNb) !(pNb & 1)
 
-    uint32_t intNb1 = fabs(pNb1);
-    uint32_t intNb2 = fabs(pNb2);
+    long int nb1 = std::fabs(pNb1);
+    long int nb2 = std::fabs(pNb2);
 
-    if (!intNb1)
-        return intNb2;
+    if (!nb1)
+        return nb2;
 
-    if (!intNb2)
-        return intNb1;
+    if (!nb2)
+        return nb1;
 
     int shift = 0;
 
-    while (EVEN(intNb1) && EVEN(intNb2)) {
+    while (EVEN(nb1) && EVEN(nb2)) {
         ++shift;
 
-        intNb1 >>= 1;
-        intNb2 >>= 1;
+        nb1 >>= 1;
+        nb2 >>= 1;
     }
 
     do {
-        if (EVEN(intNb1))
-          intNb1 >>= 1;
-        else if (EVEN(intNb2))
-            intNb2 >>= 1;
-        else if (intNb1 >= intNb2)
-            intNb1 = (intNb1-intNb2) >> 1;
+        if (EVEN(nb1))
+          nb1 >>= 1;
+        else if (EVEN(nb2))
+            nb2 >>= 1;
+        else if (nb1 >= nb2)
+            nb1 = (nb1-nb2) >> 1;
         else
-            intNb2 = (intNb2-intNb1) >> 1;
-    } while (intNb1);
+            nb2 = (nb2-nb1) >> 1;
+    } while (nb1);
 
-    return intNb2 << shift;
+    return nb2 << shift;
 }
 
 //==============================================================================

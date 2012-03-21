@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include <math.h>
+#include <cmath>
 
 //==============================================================================
 
@@ -474,7 +474,7 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
             // fmod(N1, N2)
 
-            replaceNodeWithNumber(pNode, fmod(pNode->left()->number(), pNode->right()->number()));
+            replaceNodeWithNumber(pNode, std::fmod(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Plus:
@@ -593,35 +593,35 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         if (pNode->left()->type() == Number)
             // fabs(N)
 
-            replaceNodeWithNumber(pNode, fabs(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::fabs(pNode->left()->number()));
 
         break;
     case Exp:
         if (pNode->left()->type() == Number)
             // exp(N)
 
-            replaceNodeWithNumber(pNode, exp(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::exp(pNode->left()->number()));
 
         break;
     case Log:
         if (pNode->left()->type() == Number)
             // log(N)
 
-            replaceNodeWithNumber(pNode, log(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::log(pNode->left()->number()));
 
         break;
     case Ceil:
         if (pNode->left()->type() == Number)
             // ceil(N)
 
-            replaceNodeWithNumber(pNode, ceil(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::ceil(pNode->left()->number()));
 
         break;
     case Floor:
         if (pNode->left()->type() == Number)
             // floor(N)
 
-            replaceNodeWithNumber(pNode, floor(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::floor(pNode->left()->number()));
 
         break;
     case Factorial:
@@ -635,63 +635,63 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         if (pNode->left()->type() == Number)
             // sin(N)
 
-            replaceNodeWithNumber(pNode, sin(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::sin(pNode->left()->number()));
 
         break;
     case Cos:
         if (pNode->left()->type() == Number)
             // cos(N)
 
-            replaceNodeWithNumber(pNode, cos(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::cos(pNode->left()->number()));
 
         break;
     case Tan:
         if (pNode->left()->type() == Number)
             // tan(N)
 
-            replaceNodeWithNumber(pNode, tan(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::tan(pNode->left()->number()));
 
         break;
     case Sinh:
         if (pNode->left()->type() == Number)
             // sinh(N)
 
-            replaceNodeWithNumber(pNode, sinh(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::sinh(pNode->left()->number()));
 
         break;
     case Cosh:
         if (pNode->left()->type() == Number)
             // cosh(N)
 
-            replaceNodeWithNumber(pNode, cosh(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::cosh(pNode->left()->number()));
 
         break;
     case Tanh:
         if (pNode->left()->type() == Number)
             // tanh(N)
 
-            replaceNodeWithNumber(pNode, tanh(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::tanh(pNode->left()->number()));
 
         break;
     case Asin:
         if (pNode->left()->type() == Number)
             // asin(N)
 
-            replaceNodeWithNumber(pNode, asin(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::asin(pNode->left()->number()));
 
         break;
     case Acos:
         if (pNode->left()->type() == Number)
             // acos(N)
 
-            replaceNodeWithNumber(pNode, acos(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::acos(pNode->left()->number()));
 
         break;
     case Atan:
         if (pNode->left()->type() == Number)
             // atan(N)
 
-            replaceNodeWithNumber(pNode, atan(pNode->left()->number()));
+            replaceNodeWithNumber(pNode, std::atan(pNode->left()->number()));
 
         break;
     case Asinh:
@@ -732,7 +732,7 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
             // pow(N1, N2)
 
-            replaceNodeWithNumber(pNode, pow(pNode->left()->number(), pNode->right()->number()));
+            replaceNodeWithNumber(pNode, std::pow(pNode->left()->number(), pNode->right()->number()));
 
         break;
     case Quot:
