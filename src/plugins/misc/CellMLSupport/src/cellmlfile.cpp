@@ -11,6 +11,25 @@
 
 //==============================================================================
 
+#ifdef Q_WS_X11
+    #include <stdint.h>
+    //---GRY--- THE ABOVE HEADER FILE IS REQUIRED ON LINUX, SO WE CAN USE
+    //          uint32_t (SO WE CAN 'PROPERLY' MAKE USE OF THE CellML API). NOW,
+    //          WE WOULD NORMALLY HAVE
+    //              #include <cstdint>
+    //          BUT THIS IS NOT CURRENTLY SUPPORTED BY THE CURRENT ISO C++
+    //          STANDARD. INDEED, TO INCLUDE IT WILL GENERATE THE FOLLOWING
+    //          ERROR AT COMPILE TIME:
+    //              error: #error This file requires compiler and library
+    //              support for the upcoming ISO C++ standard, C++0x. This
+    //              support is currently experimental, and must be enabled with
+    //              the -std=c++0x or -std=gnu++0x compiler options.
+    //          AND WELL, WE DON'T WANT TO ENABLE EITHER OF THESE OPTIONS SINCE
+    //          SUPPORT IS STILL ONLY EXPERIMENTAL, SO...
+#endif
+
+//==============================================================================
+
 #include "IfaceVACSS.hxx"
 
 #include "CellMLBootstrap.hpp"
@@ -198,8 +217,8 @@ time.restart();
 
             // Determine the issue's location
 
-            int line = 0;
-            int column = 0;
+            uint32_t line = 0;
+            uint32_t column = 0;
             QString importedFile = QString();
 
             if (cellmlRepresentationValidityError) {
