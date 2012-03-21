@@ -12,8 +12,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage,
-                                 const uint32_t &pLine, 
-                                 const uint32_t &pColumn,
+                                 const int &pLine, const int &pColumn,
                                  const QString &pImportedFile) :
     mType(pType),
     mMessage(pMessage),
@@ -53,7 +52,7 @@ QString CellmlFileIssue::formattedMessage() const
 
 //==============================================================================
 
-uint32_t CellmlFileIssue::line() const
+int CellmlFileIssue::line() const
 {
     // Return the issue's line
 
@@ -62,7 +61,7 @@ uint32_t CellmlFileIssue::line() const
 
 //==============================================================================
 
-uint32_t CellmlFileIssue::column() const
+int CellmlFileIssue::column() const
 {
     // Return the issue's column
 

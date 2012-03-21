@@ -35,22 +35,21 @@ public:
     };
 
     explicit CellmlFileIssue(const Type &pType, const QString &pMessage,
-                             const uint32_t &pLine = 0,
-                             const uint32_t &pColumn = 0,
+                             const int &pLine = 0, const int &pColumn = 0,
                              const QString &pImportedFile = QString());
 
     Type type() const;
     QString message() const;
     QString formattedMessage() const;
-    uint32_t line() const;
-    uint32_t column() const;
+    int line() const;
+    int column() const;
     QString importedFile() const;
 
 private:
     Type mType;
     QString mMessage;
-    uint32_t mLine;
-    uint32_t mColumn;
+    int mLine;
+    int mColumn;
     QString mImportedFile;
 };
 

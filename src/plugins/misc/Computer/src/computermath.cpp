@@ -122,8 +122,8 @@ double gcdPair(double pNb1, double pNb2)
 {
     #define EVEN(pNb) !(pNb & 1)
 
-    long int nb1 = std::fabs(pNb1);
-    long int nb2 = std::fabs(pNb2);
+    int nb1 = std::fabs(pNb1);
+    int nb2 = std::fabs(pNb2);
 
     if (!nb1)
         return nb2;

@@ -186,11 +186,11 @@ qDebug(" - CellML validation time: %s s", qPrintable(QString::number(0.001*time.
         //       validation issue, be it an error or a warning, so we need to
         //       determine the number of true errors
 
-        uint32_t cellmlErrorsCount = 0;
+        int cellmlErrorsCount = 0;
 
 time.restart();
 
-        for (uint32_t i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
+        for (int i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
             ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
 
             DECLARE_QUERY_INTERFACE_OBJREF(cellmlRepresentationValidityError, cellmlValidityIssue,
@@ -198,8 +198,8 @@ time.restart();
 
             // Determine the issue's location
 
-            uint32_t line = 0;
-            uint32_t column = 0;
+            int line = 0;
+            int column = 0;
             QString importedFile = QString();
 
             if (cellmlRepresentationValidityError) {
