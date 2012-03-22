@@ -27,6 +27,7 @@ SingleCellSimulationGraphPanels::SingleCellSimulationGraphPanels(const QString &
 //==============================================================================
 
 static const QString SettingsGraphPanelsCount = "GraphPanelsCount";
+static const QString SettingsActiveGraphPanel = "ActiveGraphPanel";
 
 //==============================================================================
 
@@ -51,18 +52,28 @@ void SingleCellSimulationGraphPanels::loadSettings(QSettings *pSettings)
     for (int i = 0; i < graphPanelsCount; ++i)
         addGraphPanel();
 
-    // Select the first graph panel
+    // Select the graph panel that used to be active
 
-    qobject_cast<SingleCellSimulationGraphPanel *>(widget(0))->setActive(true);
+    qobject_cast<SingleCellSimulationGraphPanel *>(widget(pSettings->value(SettingsActiveGraphPanel, 0).toInt()))->setActive(true);
 }
 
 //==============================================================================
 
 void SingleCellSimulationGraphPanels::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the number of graph panels
+    // Keep track of the number of graph panels and of which graph panel was the
+    // active one
 
     pSettings->setValue(SettingsGraphPanelsCount, count());
+
+    for (int i = 0, iMax = count(); i < iMax; ++i)
+        if (qobject_cast<SingleCellSimulationGraphPanel *>(widget(i))->isActive()) {
+            // We found the active graph panel, so...
+
+            pSettings->setValue(SettingsActiveGraphPanel, i);
+
+            break;
+        }
 }
 
 //==============================================================================
