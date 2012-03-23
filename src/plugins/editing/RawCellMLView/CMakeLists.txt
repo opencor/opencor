@@ -16,8 +16,12 @@ ADD_PLUGIN(RawCellMLView
         ../../plugininfo.cpp
 
         src/rawcellmlviewplugin.cpp
+        src/rawcellmlviewwidget.cpp
     HEADERS_MOC
         src/rawcellmlviewplugin.h
+        src/rawcellmlviewwidget.h
+    UIS
+        src/rawcellmlviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
