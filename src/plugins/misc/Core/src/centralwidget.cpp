@@ -854,6 +854,10 @@ void CentralWidget::updateGui()
         mContents->removeWidget(mContents->currentWidget());
         mContents->addWidget(newView);
     }
+
+    // Give the focus to the new view
+
+    mContents->currentWidget()->setFocus();
 }
 
 //==============================================================================

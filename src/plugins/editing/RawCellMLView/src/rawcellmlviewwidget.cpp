@@ -158,10 +158,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
     // Adjust our vertical splitter's sizes
 
     if (needInitialSizes) {
-        // We need to initialise our vertical splitter's sizes and we do so by
-        // using as much space as possible for the editor by asking the viewer
-        // to take only 10% of the desktop's height and the editor to take
-        // whatever space it can
+        // We need to initialise our vertical splitter's sizes, so...
 
         mVerticalSplitter->setSizes(QList<int>() << mViewerInitialHeight
                                                  << mEditorInitialHeight);
