@@ -11,8 +11,12 @@ ADD_PLUGIN(RawView
         ../../plugininfo.cpp
 
         src/rawviewplugin.cpp
+        src/rawviewwidget.cpp
     HEADERS_MOC
         src/rawviewplugin.h
+        src/rawviewwidget.h
+    UIS
+        src/rawviewwidget.ui
     INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
