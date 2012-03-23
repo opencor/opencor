@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell simulation graph panels widget
+// Single cell simulation view graph panels widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONGRAPHPANELS_H
-#define SINGLECELLSIMULATIONGRAPHPANELS_H
+#ifndef SINGLECELLSIMULATIONVIEWGRAPHPANELS_H
+#define SINGLECELLSIMULATIONVIEWGRAPHPANELS_H
 
 //==============================================================================
 
@@ -16,47 +16,47 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellSimulation {
+namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationGraphPanel;
+class SingleCellSimulationViewGraphPanel;
 
 //==============================================================================
 
-class SingleCellSimulationGraphPanels : public QSplitter,
-                                        public Core::CommonWidget
+class SingleCellSimulationViewGraphPanels : public QSplitter,
+                                            public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationGraphPanels(const QString &pName,
-                                             QWidget *pParent = 0);
+    explicit SingleCellSimulationViewGraphPanels(const QString &pName,
+                                                 QWidget *pParent = 0);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    SingleCellSimulationGraphPanel * addGraphPanel();
+    SingleCellSimulationViewGraphPanel * addGraphPanel();
     void removeGraphPanel();
 
-    SingleCellSimulationGraphPanel * activeGraphPanel();
+    SingleCellSimulationViewGraphPanel * activeGraphPanel();
 
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 Q_SIGNALS:
-    void grapPanelAdded(SingleCellSimulationGraphPanel *pGraphPanel);
+    void grapPanelAdded(SingleCellSimulationViewGraphPanel *pGraphPanel);
     void grapPanelRemoved();
 
     void removeGraphPanelsEnabled(const bool &pEnabled);
 
 private Q_SLOTS:
-    void graphPanelActivated(SingleCellSimulationGraphPanel *pGraphPanel);
+    void graphPanelActivated(SingleCellSimulationViewGraphPanel *pGraphPanel);
 };
 
 //==============================================================================
 
-}   // namespace SingleCellSimulation
+}   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 
 //==============================================================================

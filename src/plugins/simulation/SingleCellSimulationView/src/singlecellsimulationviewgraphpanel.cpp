@@ -1,8 +1,8 @@
 //==============================================================================
-// Single cell simulation graph panel widget
+// Single cell simulation view graph panel widget
 //==============================================================================
 
-#include "singlecellsimulationgraphpanel.h"
+#include "singlecellsimulationviewgraphpanel.h"
 
 //==============================================================================
 
@@ -18,11 +18,11 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellSimulation {
+namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationGraphPanel::SingleCellSimulationGraphPanel(QWidget *pParent) :
+SingleCellSimulationViewGraphPanel::SingleCellSimulationViewGraphPanel(QWidget *pParent) :
     QWidget(pParent),
     mActive(false),
     mPlotCurves(QList<QwtPlotCurve *>())
@@ -73,7 +73,7 @@ SingleCellSimulationGraphPanel::SingleCellSimulationGraphPanel(QWidget *pParent)
 
 //==============================================================================
 
-SingleCellSimulationGraphPanel::~SingleCellSimulationGraphPanel()
+SingleCellSimulationViewGraphPanel::~SingleCellSimulationViewGraphPanel()
 {
     // Delete some internal objects
 
@@ -82,7 +82,7 @@ SingleCellSimulationGraphPanel::~SingleCellSimulationGraphPanel()
 
 //==============================================================================
 
-void SingleCellSimulationGraphPanel::mousePressEvent(QMouseEvent *pEvent)
+void SingleCellSimulationViewGraphPanel::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
@@ -97,7 +97,7 @@ void SingleCellSimulationGraphPanel::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-QwtPlotCurve * SingleCellSimulationGraphPanel::addCurve()
+QwtPlotCurve * SingleCellSimulationViewGraphPanel::addCurve()
 {
     // Create a new curve
 
@@ -123,7 +123,7 @@ QwtPlotCurve * SingleCellSimulationGraphPanel::addCurve()
 
 //==============================================================================
 
-void SingleCellSimulationGraphPanel::resetCurves()
+void SingleCellSimulationViewGraphPanel::resetCurves()
 {
     // Remove any existing curve
 
@@ -142,7 +142,7 @@ void SingleCellSimulationGraphPanel::resetCurves()
 
 //==============================================================================
 
-QwtPlot * SingleCellSimulationGraphPanel::plot()
+QwtPlot * SingleCellSimulationViewGraphPanel::plot()
 {
     // Return the pointer to our plot widget
 
@@ -151,7 +151,7 @@ QwtPlot * SingleCellSimulationGraphPanel::plot()
 
 //==============================================================================
 
-bool SingleCellSimulationGraphPanel::isActive() const
+bool SingleCellSimulationViewGraphPanel::isActive() const
 {
     // Return whether the graph panel as active
 
@@ -160,7 +160,7 @@ bool SingleCellSimulationGraphPanel::isActive() const
 
 //==============================================================================
 
-void SingleCellSimulationGraphPanel::setActive(const bool &pActive)
+void SingleCellSimulationViewGraphPanel::setActive(const bool &pActive)
 {
     if (pActive == mActive)
         return;
@@ -189,7 +189,7 @@ void SingleCellSimulationGraphPanel::setActive(const bool &pActive)
 
 //==============================================================================
 
-}   // namespace SingleCellSimulation
+}   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 
 //==============================================================================

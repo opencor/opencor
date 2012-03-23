@@ -2,14 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::SingleCellSimulation::SingleCellSimulationPlugin</name>
+    <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewPlugin</name>
     <message>
         <source>Single Cell</source>
         <translation>Unicellulaire</translation>
     </message>
 </context>
 <context>
-    <name>SingleCellSimulationView</name>
+    <name>SingleCellSimulationViewWidget</name>
     <message>
         <source>&amp;Run</source>
         <translation>&amp;Lancer</translation>

@@ -214,11 +214,11 @@ SET(PLUGINS
     organisation/FileBrowser
     organisation/FileOrganiser
 
-    editing/CellMLAnnotation
+    editing/CellMLAnnotationView
     editing/RawCellMLView
     editing/RawView
 
-    simulation/SingleCellSimulation
+    simulation/SingleCellSimulationView
 )
 
 FOREACH(PLUGIN ${PLUGINS})

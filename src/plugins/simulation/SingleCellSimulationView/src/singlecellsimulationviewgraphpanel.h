@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell simulation graph panel widget
+// Single cell simulation view graph panel widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONGRAPHPANEL_H
-#define SINGLECELLSIMULATIONGRAPHPANEL_H
+#ifndef SINGLECELLSIMULATIONVIEWGRAPHPANEL_H
+#define SINGLECELLSIMULATIONVIEWGRAPHPANEL_H
 
 //==============================================================================
 
@@ -21,17 +21,17 @@ class QwtPlotCurve;
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellSimulation {
+namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationGraphPanel : public QWidget
+class SingleCellSimulationViewGraphPanel : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationGraphPanel(QWidget *pParent = 0);
-    ~SingleCellSimulationGraphPanel();
+    explicit SingleCellSimulationViewGraphPanel(QWidget *pParent = 0);
+    ~SingleCellSimulationViewGraphPanel();
 
     QwtPlotCurve * addCurve();
     void resetCurves();
@@ -53,13 +53,13 @@ private:
     QList<QwtPlotCurve *> mPlotCurves;
 
 Q_SIGNALS:
-    void activated(SingleCellSimulationGraphPanel *pGraphPanel);
-    void inactivated(SingleCellSimulationGraphPanel *pGraphPanel);
+    void activated(SingleCellSimulationViewGraphPanel *pGraphPanel);
+    void inactivated(SingleCellSimulationViewGraphPanel *pGraphPanel);
 };
 
 //==============================================================================
 
-}   // namespace SingleCellSimulation
+}   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 
 //==============================================================================

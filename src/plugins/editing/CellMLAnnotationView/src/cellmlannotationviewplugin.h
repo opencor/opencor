@@ -1,9 +1,9 @@
 //==============================================================================
-// CellMLAnnotation plugin
+// CellMLAnnotationView plugin
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONPLUGIN_H
-#define CELLMLANNOTATIONPLUGIN_H
+#ifndef CELLMLANNOTATIONVIEWPLUGIN_H
+#define CELLMLANNOTATIONVIEWPLUGIN_H
 
 //==============================================================================
 
@@ -14,23 +14,23 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLAnnotation {
+namespace CellMLAnnotationView {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLAnnotationPluginInfo();
+PLUGININFO_FUNC CellMLAnnotationViewPluginInfo();
 
 //==============================================================================
 
-class CellMLAnnotationPlugin : public QObject, public GuiInterface,
-                               public I18nInterface
+class CellMLAnnotationViewPlugin : public QObject, public GuiInterface,
+                                   public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    explicit CellMLAnnotationPlugin();
+    explicit CellMLAnnotationViewPlugin();
 
     virtual QWidget * newViewWidget(const QString &pFileName);
     virtual QString viewName(const int &pViewIndex);
@@ -38,7 +38,7 @@ public:
 
 //==============================================================================
 
-}   // namespace CellMLAnnotation
+}   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 
 //==============================================================================

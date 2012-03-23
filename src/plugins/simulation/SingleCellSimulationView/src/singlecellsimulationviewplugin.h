@@ -1,9 +1,9 @@
 //==============================================================================
-// SingleCellSimulation plugin
+// SingleCellSimulationView plugin
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONPLUGIN_H
-#define SINGLECELLSIMULATIONPLUGIN_H
+#ifndef SINGLECELLSIMULATIONVIEWPLUGIN_H
+#define SINGLECELLSIMULATIONVIEWPLUGIN_H
 
 //==============================================================================
 
@@ -15,20 +15,20 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellSimulation {
+namespace SingleCellSimulationView {
 
 //==============================================================================
 
-PLUGININFO_FUNC SingleCellSimulationPluginInfo();
+PLUGININFO_FUNC SingleCellSimulationViewPluginInfo();
 
 //==============================================================================
 
-class SingleCellSimulationView;
+class SingleCellSimulationViewWidget;
 
 //==============================================================================
 
-class SingleCellSimulationPlugin : public QObject, public CoreInterface,
-                                   public GuiInterface, public I18nInterface
+class SingleCellSimulationViewPlugin : public QObject, public CoreInterface,
+                                       public GuiInterface, public I18nInterface
 {
     Q_OBJECT
     Q_INTERFACES(OpenCOR::CoreInterface)
@@ -36,7 +36,7 @@ class SingleCellSimulationPlugin : public QObject, public CoreInterface,
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    explicit SingleCellSimulationPlugin();
+    explicit SingleCellSimulationViewPlugin();
 
     virtual void initialize();
 
@@ -51,12 +51,12 @@ public:
     virtual void retranslateUi();
 
 private:
-    SingleCellSimulationView *mSingleCellSimulationView;
+    SingleCellSimulationViewWidget *mViewWidget;
 };
 
 //==============================================================================
 
-}   // namespace SingleCellSimulation
+}   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 
 //==============================================================================

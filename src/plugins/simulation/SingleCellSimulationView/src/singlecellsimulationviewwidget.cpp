@@ -1,19 +1,19 @@
 //==============================================================================
-// Single cell simulation view
+// Single cell simulation view widget
 //==============================================================================
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "coredaesolver.h"
 #include "coreodesolver.h"
-#include "singlecellsimulationgraphpanel.h"
-#include "singlecellsimulationgraphpanels.h"
-#include "singlecellsimulationview.h"
+#include "singlecellsimulationviewgraphpanel.h"
+#include "singlecellsimulationviewgraphpanels.h"
+#include "singlecellsimulationviewwidget.h"
 #include "toolbar.h"
 
 //==============================================================================
 
-#include "ui_singlecellsimulationview.h"
+#include "ui_singlecellsimulationviewwidget.h"
 
 //==============================================================================
 
@@ -33,13 +33,13 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellSimulation {
+namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
+SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent) :
     Widget(pParent),
-    mUi(new Ui::SingleCellSimulationView),
+    mUi(new Ui::SingleCellSimulationViewWidget),
     mFileName(QString()), mCellmlFileRuntime(0), mModel(Unknown),
     mStatesCount(0), mCondVarCount(0),
     mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
@@ -77,7 +77,7 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
     // Create a splitter for our graph panels and create a connection to keep
     // track of whether we can remove graph panels
 
-    mGraphPanels = new SingleCellSimulationGraphPanels("GraphPanels", this);
+    mGraphPanels = new SingleCellSimulationViewGraphPanels("GraphPanels", this);
 
     connect(mGraphPanels, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mUi->actionRemove, SLOT(setEnabled(bool)));
@@ -126,7 +126,7 @@ SingleCellSimulationView::SingleCellSimulationView(QWidget *pParent) :
 
 //==============================================================================
 
-SingleCellSimulationView::~SingleCellSimulationView()
+SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
 {
     // Delete the arrays for our model
 
@@ -143,7 +143,7 @@ SingleCellSimulationView::~SingleCellSimulationView()
 
 //==============================================================================
 
-void SingleCellSimulationView::retranslateUi()
+void SingleCellSimulationViewWidget::retranslateUi()
 {
     // Retranslate the whole view
 
@@ -152,7 +152,7 @@ void SingleCellSimulationView::retranslateUi()
 
 //==============================================================================
 
-void SingleCellSimulationView::loadSettings(QSettings *pSettings)
+void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 {
     foreach (SolverInterface *solverInterface, mSolverInterfaces) {
         qDebug("---------------------------------------");
@@ -203,7 +203,7 @@ void SingleCellSimulationView::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SingleCellSimulationView::saveSettings(QSettings *pSettings) const
+void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the settings of our graph panels widget
 
@@ -214,7 +214,7 @@ void SingleCellSimulationView::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellSimulationView::addSolverInterface(SolverInterface *pSolverInterface)
+void SingleCellSimulationViewWidget::addSolverInterface(SolverInterface *pSolverInterface)
 {
     // Add the solver interface to our list
 
@@ -226,7 +226,7 @@ void SingleCellSimulationView::addSolverInterface(SolverInterface *pSolverInterf
 
 //==============================================================================
 
-QFrame * SingleCellSimulationView::newSeparatingLine()
+QFrame * SingleCellSimulationViewWidget::newSeparatingLine()
 {
     // Return a separating line widget
 
@@ -240,17 +240,17 @@ QFrame * SingleCellSimulationView::newSeparatingLine()
 
 //==============================================================================
 
-void SingleCellSimulationView::clearGraphPanels()
+void SingleCellSimulationViewWidget::clearGraphPanels()
 {
     // Clear all the graph panels
 
     for (int i = 0, iMax = mGraphPanels->count(); i < iMax; ++i)
-        qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(i))->resetCurves();
+        qobject_cast<SingleCellSimulationViewGraphPanel *>(mGraphPanels->widget(i))->resetCurves();
 }
 
 //==============================================================================
 
-void SingleCellSimulationView::clearActiveGraphPanel()
+void SingleCellSimulationViewWidget::clearActiveGraphPanel()
 {
     // Clear the current graph panel
 
@@ -259,7 +259,7 @@ void SingleCellSimulationView::clearActiveGraphPanel()
 
 //==============================================================================
 
-void SingleCellSimulationView::initialize(const QString &pFileName)
+void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
     // Keep track of the file name
 
@@ -429,7 +429,7 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellSimulationView::outputSolverErrorMsg()
+void SingleCellSimulationViewWidget::outputSolverErrorMsg()
 {
     // Output the current solver error message, if any
 
@@ -439,7 +439,7 @@ void SingleCellSimulationView::outputSolverErrorMsg()
 
 //==============================================================================
 
-void SingleCellSimulationView::on_actionRun_triggered()
+void SingleCellSimulationViewWidget::on_actionRun_triggered()
 {
     if (mModel == Unknown)
         // The model is not supported, so...
@@ -452,7 +452,7 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
     // Retrieve the active graph panel
 
-    SingleCellSimulationGraphPanel *firstGraphPanel = qobject_cast<SingleCellSimulationGraphPanel *>(mGraphPanels->widget(0));
+    SingleCellSimulationViewGraphPanel *firstGraphPanel = qobject_cast<SingleCellSimulationViewGraphPanel *>(mGraphPanels->widget(0));
 
     // Retrieve the requested ODE/DAE solver
 
@@ -667,7 +667,7 @@ void SingleCellSimulationView::on_actionRun_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationView::on_actionDebugMode_triggered()
+void SingleCellSimulationViewWidget::on_actionDebugMode_triggered()
 {
     //---GRY--- TEMPORARY WAY TO DETERMINE WHICH ODE SOLVER TO USE
 
@@ -679,7 +679,7 @@ void SingleCellSimulationView::on_actionDebugMode_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationView::on_actionAdd_triggered()
+void SingleCellSimulationViewWidget::on_actionAdd_triggered()
 {
     // Add a new graph panel
 
@@ -688,7 +688,7 @@ void SingleCellSimulationView::on_actionAdd_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationView::on_actionRemove_triggered()
+void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 {
     // Remove the current graph panel
 
@@ -697,7 +697,7 @@ void SingleCellSimulationView::on_actionRemove_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationView::on_actionCsvExport_triggered()
+void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 {
     //---GRY--- TEMPORARY WAY TO SPECIFY WHETHER TO PLOT SLOWLY
 
@@ -706,7 +706,7 @@ void SingleCellSimulationView::on_actionCsvExport_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationView::solverError(const QString &pErrorMsg)
+void SingleCellSimulationViewWidget::solverError(const QString &pErrorMsg)
 {
     // The solver emitted an error, so...
 
@@ -715,7 +715,7 @@ void SingleCellSimulationView::solverError(const QString &pErrorMsg)
 
 //==============================================================================
 
-}   // namespace SingleCellSimulation
+}   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 
 //==============================================================================

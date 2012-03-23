@@ -7,6 +7,6 @@
         <file>oxygen/actions/media-playback-stop.png</file>
         <file>oxygen/actions/tools-report-bug.png</file>
         <file>oxygen/mimetypes/text-csv.png</file>
-        <file alias="SingleCellSimulation_fr">../../../../../build/SingleCellSimulation_fr.qm</file>
+        <file alias="SingleCellSimulationView_fr">../../../../../build/SingleCellSimulationView_fr.qm</file>
     </qresource>
 </RCC>

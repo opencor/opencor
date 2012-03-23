@@ -1,8 +1,8 @@
 //==============================================================================
-// CellMLAnnotation plugin
+// CellMLAnnotationView plugin
 //==============================================================================
 
-#include "cellmlannotationplugin.h"
+#include "cellmlannotationviewplugin.h"
 #include "cellmlsupportplugin.h"
 
 //==============================================================================
@@ -12,11 +12,11 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLAnnotation {
+namespace CellMLAnnotationView {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLAnnotationPluginInfo()
+PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 {
     Descriptions descriptions;
 
@@ -33,11 +33,11 @@ PLUGININFO_FUNC CellMLAnnotationPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CellMLAnnotation, CellMLAnnotationPlugin)
+Q_EXPORT_PLUGIN2(CellMLAnnotationView, CellMLAnnotationViewPlugin)
 
 //==============================================================================
 
-CellMLAnnotationPlugin::CellMLAnnotationPlugin()
+CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin()
 {
     // Set our settings
 
@@ -46,7 +46,7 @@ CellMLAnnotationPlugin::CellMLAnnotationPlugin()
 
 //==============================================================================
 
-QWidget * CellMLAnnotationPlugin::newViewWidget(const QString &pFileName)
+QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 {
     // Check that we are dealing with a CellML file
 
@@ -71,7 +71,7 @@ QWidget * CellMLAnnotationPlugin::newViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString CellMLAnnotationPlugin::viewName(const int &pViewIndex)
+QString CellMLAnnotationViewPlugin::viewName(const int &pViewIndex)
 {
     // We have only one view, so return its name otherwise call the GuiInterface
     // implementation of viewName
@@ -86,7 +86,7 @@ QString CellMLAnnotationPlugin::viewName(const int &pViewIndex)
 
 //==============================================================================
 
-}   // namespace CellMLAnnotation
+}   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 
 //==============================================================================

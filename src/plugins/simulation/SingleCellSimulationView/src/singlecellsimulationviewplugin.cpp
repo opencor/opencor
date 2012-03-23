@@ -1,10 +1,10 @@
 //==============================================================================
-// SingleCellSimulation plugin
+// SingleCellSimulationView plugin
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "singlecellsimulationplugin.h"
-#include "singlecellsimulationview.h"
+#include "singlecellsimulationviewplugin.h"
+#include "singlecellsimulationviewwidget.h"
 #include "solverinterface.h"
 
 //==============================================================================
@@ -14,11 +14,11 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellSimulation {
+namespace SingleCellSimulationView {
 
 //==============================================================================
 
-PLUGININFO_FUNC SingleCellSimulationPluginInfo()
+PLUGININFO_FUNC SingleCellSimulationViewPluginInfo()
 {
     Descriptions descriptions;
 
@@ -35,11 +35,11 @@ PLUGININFO_FUNC SingleCellSimulationPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(SingleCellSimulation, SingleCellSimulationPlugin)
+Q_EXPORT_PLUGIN2(SingleCellSimulationView, SingleCellSimulationViewPlugin)
 
 //==============================================================================
 
-SingleCellSimulationPlugin::SingleCellSimulationPlugin()
+SingleCellSimulationViewPlugin::SingleCellSimulationViewPlugin()
 {
     // Set our settings
 
@@ -48,21 +48,21 @@ SingleCellSimulationPlugin::SingleCellSimulationPlugin()
 
 //==============================================================================
 
-void SingleCellSimulationPlugin::initialize()
+void SingleCellSimulationViewPlugin::initialize()
 {
-    // Create our single cell simulation view
+    // Create our single view widget
 
-    mSingleCellSimulationView = new SingleCellSimulationView(mMainWindow);
+    mViewWidget = new SingleCellSimulationViewWidget(mMainWindow);
 
-    // Hide our single cell simulation view since it may not initially be shown
-    // in our central widget
+    // Hide our single view widget since it may not initially be shown in our
+    // central widget
 
-    mSingleCellSimulationView->setVisible(false);
+    mViewWidget->setVisible(false);
 }
 
 //==============================================================================
 
-void SingleCellSimulationPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void SingleCellSimulationViewPlugin::initializationsDone(const Plugins &pLoadedPlugins)
 {
     // Retrieve the different solvers that are available to us
 
@@ -72,32 +72,32 @@ void SingleCellSimulationPlugin::initializationsDone(const Plugins &pLoadedPlugi
         if (solverInterface)
             // The plugin implements our solver interface, so...
 
-            mSingleCellSimulationView->addSolverInterface(solverInterface);
+            mViewWidget->addSolverInterface(solverInterface);
     }
 }
 
 //==============================================================================
 
-void SingleCellSimulationPlugin::loadSettings(QSettings *pSettings)
+void SingleCellSimulationViewPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our single cell simulation view settings
 
-    loadViewSettings(pSettings, mSingleCellSimulationView);
+    loadViewSettings(pSettings, mViewWidget);
 }
 
 //==============================================================================
 
-void SingleCellSimulationPlugin::saveSettings(QSettings *pSettings) const
+void SingleCellSimulationViewPlugin::saveSettings(QSettings *pSettings) const
 {
     // Retrieve our single cell simulation view settings
 
-    saveViewSettings(pSettings, mSingleCellSimulationView);
+    saveViewSettings(pSettings, mViewWidget);
 }
 
 //==============================================================================
 
-QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
-                                                 const int &)
+QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName,
+                                                     const int &)
 {
     // Check that we are dealing with a CellML file and, if so, return our
     // generic simulation view widget
@@ -112,16 +112,16 @@ QWidget * SingleCellSimulationPlugin::viewWidget(const QString &pFileName,
     // We are dealing with a CellML file, so update our generic simulation view
     // widget using the passed CellML file
 
-    mSingleCellSimulationView->initialize(pFileName);
+    mViewWidget->initialize(pFileName);
 
     // Our generic simulation view widget is now ready, so...
 
-    return mSingleCellSimulationView;
+    return mViewWidget;
 }
 
 //==============================================================================
 
-QString SingleCellSimulationPlugin::viewName(const int &pViewIndex)
+QString SingleCellSimulationViewPlugin::viewName(const int &pViewIndex)
 {
     // We have only one view, so return its name otherwise call the GuiInterface
     // implementation of viewName
@@ -136,16 +136,16 @@ QString SingleCellSimulationPlugin::viewName(const int &pViewIndex)
 
 //==============================================================================
 
-void SingleCellSimulationPlugin::retranslateUi()
+void SingleCellSimulationViewPlugin::retranslateUi()
 {
     // Retranslate our single cell simulation view
 
-    mSingleCellSimulationView->retranslateUi();
+    mViewWidget->retranslateUi();
 }
 
 //==============================================================================
 
-}   // namespace SingleCellSimulation
+}   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 
 //==============================================================================

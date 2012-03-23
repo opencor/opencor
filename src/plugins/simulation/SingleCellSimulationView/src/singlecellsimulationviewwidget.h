@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell simulation view
+// Single cell simulation view widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEW_H
-#define SINGLECELLSIMULATIONVIEW_H
+#ifndef SINGLECELLSIMULATIONVIEWWIDGET_H
+#define SINGLECELLSIMULATIONVIEWWIDGET_H
 
 //==============================================================================
 
@@ -25,7 +25,7 @@ class QTextEdit;
 //==============================================================================
 
 namespace Ui {
-    class SingleCellSimulationView;
+    class SingleCellSimulationViewWidget;
 }
 
 //==============================================================================
@@ -46,22 +46,22 @@ class CellmlFileRuntime;
 
 //==============================================================================
 
-namespace SingleCellSimulation {
+namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationGraphPanel;
-class SingleCellSimulationGraphPanels;
+class SingleCellSimulationViewGraphPanel;
+class SingleCellSimulationViewGraphPanels;
 
 //==============================================================================
 
-class SingleCellSimulationView : public Core::Widget
+class SingleCellSimulationViewWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationView(QWidget *pParent = 0);
-    ~SingleCellSimulationView();
+    explicit SingleCellSimulationViewWidget(QWidget *pParent = 0);
+    ~SingleCellSimulationViewWidget();
 
     virtual void retranslateUi();
 
@@ -73,7 +73,7 @@ public:
     void initialize(const QString &pFileName);
 
 private:
-    Ui::SingleCellSimulationView *mUi;
+    Ui::SingleCellSimulationViewWidget *mUi;
 
     QString mFileName;
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
@@ -112,7 +112,7 @@ private:
 
     SolverInterfaces mSolverInterfaces;
 
-    SingleCellSimulationGraphPanels *mGraphPanels;
+    SingleCellSimulationViewGraphPanels *mGraphPanels;
     QTextEdit *mOutput;
 
     QProgressBar *mProgressBar;
@@ -138,7 +138,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace SingleCellSimulation
+}   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 
 //==============================================================================
