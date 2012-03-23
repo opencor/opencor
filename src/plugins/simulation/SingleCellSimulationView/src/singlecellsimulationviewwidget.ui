@@ -20,7 +20,7 @@
   </layout>
   <action name="actionRun">
    <property name="icon">
-    <iconset resource="../res/SingleCellSimulation.qrc">
+    <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/actions/media-playback-start.png</normaloff>:/oxygen/actions/media-playback-start.png</iconset>
    </property>
    <property name="text">
@@ -35,7 +35,7 @@
   </action>
   <action name="actionPause">
    <property name="icon">
-    <iconset resource="../res/SingleCellSimulation.qrc">
+    <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/actions/media-playback-pause.png</normaloff>:/oxygen/actions/media-playback-pause.png</iconset>
    </property>
    <property name="text">
@@ -50,7 +50,7 @@
   </action>
   <action name="actionStop">
    <property name="icon">
-    <iconset resource="../res/SingleCellSimulation.qrc">
+    <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/actions/media-playback-stop.png</normaloff>:/oxygen/actions/media-playback-stop.png</iconset>
    </property>
    <property name="text">
@@ -68,7 +68,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../res/SingleCellSimulation.qrc">
+    <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/actions/tools-report-bug.png</normaloff>:/oxygen/actions/tools-report-bug.png</iconset>
    </property>
    <property name="text">
@@ -80,7 +80,7 @@
   </action>
   <action name="actionCsvExport">
    <property name="icon">
-    <iconset resource="../res/SingleCellSimulation.qrc">
+    <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/mimetypes/text-csv.png</normaloff>:/oxygen/mimetypes/text-csv.png</iconset>
    </property>
    <property name="text">
@@ -92,7 +92,7 @@
   </action>
   <action name="actionAdd">
    <property name="icon">
-    <iconset resource="../res/SingleCellSimulation.qrc">
+    <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
    <property name="text">
@@ -104,7 +104,7 @@
   </action>
   <action name="actionRemove">
    <property name="icon">
-    <iconset resource="../res/SingleCellSimulation.qrc">
+    <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
    </property>
    <property name="text">
@@ -116,7 +116,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/SingleCellSimulation.qrc"/>
+  <include location="../res/SingleCellSimulationView.qrc"/>
  </resources>
  <connections/>
 </ui>
