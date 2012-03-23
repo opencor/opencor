@@ -12,7 +12,9 @@
 
 //==============================================================================
 
+#include <QDesktopWidget>
 #include <QFileInfo>
+#include <QSplitter>
 #include <QTextStream>
 
 //==============================================================================
@@ -34,6 +36,10 @@ RawCellmlViewWidget::RawCellmlViewWidget(const QString &pFileName,
     // Set up the UI
 
     mUi->setupUi(this);
+
+    // Create our vertical splitter
+
+    QSplitter *verticalSplitter = new QSplitter(Qt::Vertical, this);
 
     // Create a viewer
 
@@ -62,10 +68,18 @@ RawCellmlViewWidget::RawCellmlViewWidget(const QString &pFileName,
                                                               new QsciLexerXML(pParent),
                                                               pParent);
 
-    // Add the viewer and editor to the raw CellML view widget
+    // Populate our vertical splitter and use as much space as possible for the
+    // editor (by asking the viewer to take only 10% of the desktop's height and
+    // the editor to take whatever it can), and add it to our raw CellML view
+    // widget
 
-    mUi->verticalLayout->addWidget(viewer);
-    mUi->verticalLayout->addWidget(editor);
+    verticalSplitter->addWidget(viewer);
+    verticalSplitter->addWidget(editor);
+
+    verticalSplitter->setSizes(QList<int>() << 0.1*qApp->desktop()->screenGeometry().height()
+                                            << qApp->desktop()->screenGeometry().height());
+
+    mUi->verticalLayout->addWidget(verticalSplitter);
 }
 
 //==============================================================================

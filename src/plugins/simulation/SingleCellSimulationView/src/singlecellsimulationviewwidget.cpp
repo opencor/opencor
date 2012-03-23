@@ -102,9 +102,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     simulationOutputVerticalLayout->addWidget(newSeparatingLine());
     simulationOutputVerticalLayout->addWidget(mOutput);
 
-    // Populate our splitter and use as much space as possible for the graph
-    // panels (by asking their height to be that of the desktop's) and add it to
-    // our view
+    // Populate our vertical splitter and use as much space as possible for the
+    // graph panels (by asking their height to be that of the desktop's), and
+    // add it to our single cell simulation view widget
 
     verticalSplitter->addWidget(mGraphPanels);
     verticalSplitter->addWidget(simulationOutputWidget);
