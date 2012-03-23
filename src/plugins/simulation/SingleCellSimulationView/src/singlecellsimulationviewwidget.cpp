@@ -72,7 +72,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     // Create our vertical splitter
 
-    QSplitter *mainVerticalSplitter = new QSplitter(Qt::Vertical, this);
+    QSplitter *verticalSplitter = new QSplitter(Qt::Vertical, this);
 
     // Create a splitter for our graph panels and create a connection to keep
     // track of whether we can remove graph panels
@@ -106,12 +106,12 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     // panels (by asking their height to be that of the desktop's) and add it to
     // our view
 
-    mainVerticalSplitter->addWidget(mGraphPanels);
-    mainVerticalSplitter->addWidget(simulationOutputWidget);
+    verticalSplitter->addWidget(mGraphPanels);
+    verticalSplitter->addWidget(simulationOutputWidget);
 
-    mainVerticalSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
+    verticalSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
 
-    mUi->verticalLayout->addWidget(mainVerticalSplitter);
+    mUi->verticalLayout->addWidget(verticalSplitter);
 
     // Create our simulation progress widget
 
