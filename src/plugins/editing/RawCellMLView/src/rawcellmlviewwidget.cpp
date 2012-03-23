@@ -155,6 +155,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
     mEditor->show();
 
+    // Set the raw CellML view widget's focus proxy to the 'new' editor
+
+    setFocusProxy(mEditor);
+
     // Adjust our vertical splitter's sizes
 
     if (needInitialSizes) {
@@ -171,7 +175,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
         for (int i = 1, iMax = mVerticalSplitter->count(); i < iMax; ++i)
             if (dynamic_cast<QScintillaSupport::QScintilla *>(mVerticalSplitter->widget(i)) == mEditor)
-                // This the editor we are after, so...
+                // This is the editor we are after, so...
 
                 newSizes << editorHeight;
             else

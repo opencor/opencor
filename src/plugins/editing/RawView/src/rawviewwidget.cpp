@@ -51,6 +51,10 @@ RawViewWidget::RawViewWidget(const QString &pFileName, QWidget *pParent) :
                                                               fileIsWritable,
                                                               0, pParent);
 
+    // Set the raw view widget's focus proxy to the editor
+
+    setFocusProxy(editor);
+
     // Add the editor to the raw view widget
 
     mUi->verticalLayout->addWidget(editor);
