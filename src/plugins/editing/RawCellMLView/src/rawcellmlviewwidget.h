@@ -26,6 +26,10 @@ class RawCellmlViewWidget : public Core::Widget
 {
     Q_OBJECT
 
+public:
+    explicit RawCellmlViewWidget(const QString &pFileName,
+                                 QWidget *pParent = 0);
+
 private:
     Ui::RawCellmlViewWidget *mUi;
 };

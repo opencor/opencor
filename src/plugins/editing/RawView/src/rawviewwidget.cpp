@@ -11,7 +11,6 @@
 
 //==============================================================================
 
-#include <QFile>
 #include <QFileInfo>
 #include <QTextStream>
 
@@ -48,7 +47,9 @@ RawViewWidget::RawViewWidget(const QString &pFileName, QWidget *pParent) :
         file.close();
     }
 
-    QsciScintilla *editor = new QScintillaSupport::QScintilla(fileContents, fileIsWritable, 0, pParent);
+    QsciScintilla *editor = new QScintillaSupport::QScintilla(fileContents,
+                                                              fileIsWritable,
+                                                              0, pParent);
 
     // Add the editor to the raw view widget
 

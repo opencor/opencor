@@ -3,19 +3,12 @@
 //==============================================================================
 
 #include "cellmlsupportplugin.h"
-#include "qscintilla.h"
 #include "rawcellmlviewplugin.h"
+#include "rawcellmlviewwidget.h"
 
 //==============================================================================
 
-#include <QFileInfo>
 #include <QMainWindow>
-#include <QTextStream>
-#include <QUrl>
-
-//==============================================================================
-
-#include "Qsci/qscilexerxml.h"
 
 //==============================================================================
 
@@ -63,30 +56,9 @@ QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
 
         return GuiInterface::newViewWidget(pFileName);
 
-    // Create, set up and return a raw CellML Scintilla editor
+    // Create and return a raw CellML view widget
 
-    QFile file(pFileName);
-
-    if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
-        // For some reason, the file couldn't be opened, so...
-
-        return GuiInterface::newViewWidget(pFileName);
-
-    // The file was properly opened, so create a Scintilla editor and associate
-    // an XML (i.e. raw CellML) lexer to it
-
-    QsciScintilla *res = new QScintillaSupport::QScintilla(QTextStream(&file).readAll(),
-                                                           !(QFileInfo(pFileName).isWritable()),
-                                                           new QsciLexerXML(mMainWindow),
-                                                           mMainWindow);
-
-    // We are done with the file, so close it
-
-    file.close();
-
-    // Our raw CellML Scintilla editor is now ready, so...
-
-    return res;
+    return new RawCellmlViewWidget(pFileName, mMainWindow);
 }
 
 //==============================================================================
