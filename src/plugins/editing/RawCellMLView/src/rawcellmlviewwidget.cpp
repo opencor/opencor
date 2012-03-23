@@ -32,7 +32,9 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     Widget(pParent),
     mUi(new Ui::RawCellmlViewWidget),
     mEditors(QMap<QString, QScintillaSupport::QScintilla *>()),
-    mEditor(0)
+    mEditor(0),
+    mViewerInitialHeight(0),
+    mEditorInitialHeight(0)
 {
     // Set up the UI
 
@@ -51,6 +53,44 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mVerticalSplitter->addWidget(mViewer);
 
     mUi->verticalLayout->addWidget(mVerticalSplitter);
+}
+
+//==============================================================================
+
+static const QString SettingsViewerHeight = "ViewerHeight";
+static const QString SettingsEditorHeight = "EditorHeight";
+
+//==============================================================================
+
+void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve the viewer's and editor's height
+    // Note #1: the viewer's default height is 19% of the desktop's height while
+    //          that of the editor is as big as it can be...
+    // Note #2: because the editor's default height is much bigger than our raw
+    //          CellML view widget's height, the viewer's default height will
+    //          effectively be less than 19% of the desktop's height, but that
+    //          doesn't matter at all...
+
+    mViewerInitialHeight = pSettings->value(SettingsViewerHeight,
+                                            0.19*qApp->desktop()->screenGeometry().height()).toInt();
+    mEditorInitialHeight = pSettings->value(SettingsEditorHeight,
+                                            qApp->desktop()->screenGeometry().height()).toInt();
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of the viewer's and editor's height
+    // Note: we must also keep track of the editor's height because when loading
+    //       our raw CellML view widget's settings (see above), the widget
+    //       doesn't yet have a 'proper' height, so we couldn't simply assume
+    //       that the editor's initial height is widget's height minus the
+    //       viewer's initial height, so...
+
+    pSettings->setValue(SettingsViewerHeight, mViewer->height());
+    pSettings->setValue(SettingsEditorHeight, mEditor->height());
 }
 
 //==============================================================================
@@ -123,8 +163,8 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         // to take only 10% of the desktop's height and the editor to take
         // whatever space it can
 
-        mVerticalSplitter->setSizes(QList<int>() << 0.1*qApp->desktop()->screenGeometry().height()
-                                                 << qApp->desktop()->screenGeometry().height());
+        mVerticalSplitter->setSizes(QList<int>() << mViewerInitialHeight
+                                                 << mEditorInitialHeight);
     } else {
         // Our vertical splitter's sizes have already been initialised, so set
         // its sizes so that our 'new' editor gets its size set to that of the

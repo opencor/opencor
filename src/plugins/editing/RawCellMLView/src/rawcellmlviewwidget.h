@@ -48,6 +48,9 @@ class RawCellmlViewWidget : public Core::Widget
 public:
     explicit RawCellmlViewWidget(QWidget *pParent = 0);
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     void initialize(const QString &pFileName);
 
 private:
@@ -58,6 +61,9 @@ private:
 
     Viewer::ViewerWidget *mViewer;
     QScintillaSupport::QScintilla *mEditor;
+
+    int mViewerInitialHeight;
+    int mEditorInitialHeight;
 };
 
 //==============================================================================
