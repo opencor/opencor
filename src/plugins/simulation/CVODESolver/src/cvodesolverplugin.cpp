@@ -71,7 +71,7 @@ void * CVODESolverPlugin::instance() const
 {
     // Create and return an instance of the solver
 
-    return new CVODESolver();
+    return new CvodeSolver();
 }
 
 //==============================================================================

@@ -71,7 +71,7 @@ void * IDASolverPlugin::instance() const
 {
     // Create and return an instance of the solver
 
-    return new IDASolver();
+    return new IdaSolver();
 }
 
 //==============================================================================
