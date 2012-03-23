@@ -2,16 +2,12 @@
 // RawView plugin
 //==============================================================================
 
-#include "commonwidget.h"
-#include "qscintilla.h"
 #include "rawviewplugin.h"
+#include "rawviewwidget.h"
 
 //==============================================================================
 
-#include <QFile>
-#include <QFileInfo>
 #include <QMainWindow>
-#include <QTextStream>
 
 //==============================================================================
 
@@ -52,28 +48,9 @@ RawViewPlugin::RawViewPlugin()
 
 QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
 {
-    // Create, set up and return a raw Scintilla editor
+    // Create and return a raw view widget
 
-    QFile file(pFileName);
-
-    if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
-        // For some reason, the file couldn't be opened, so...
-
-        return GuiInterface::newViewWidget(pFileName);
-
-    // The file was properly opened, so create a Scintilla editor
-
-    QsciScintilla *res = new QScintillaSupport::QScintilla(QTextStream(&file).readAll(),
-                                                           !(QFileInfo(pFileName).isWritable()),
-                                                           0, mMainWindow);
-
-    // We are done with the file, so close it
-
-    file.close();
-
-    // Our raw Scintilla editor is now ready, so...
-
-    return res;
+    return new RawViewWidget(pFileName, mMainWindow);
 }
 
 //==============================================================================
