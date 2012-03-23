@@ -243,7 +243,8 @@ time.restart();
 
                     ObjRef<iface::cellml_api::CellMLElement> cellmlElement = cellmlSemanticValidityError->errorElement();
 
-                    DECLARE_QUERY_INTERFACE_OBJREF(cellmlDomElement, cellmlElement, cellml_api::CellMLDOMElement);
+                    DECLARE_QUERY_INTERFACE_OBJREF(cellmlDomElement, cellmlElement,
+                                                   cellml_api::CellMLDOMElement);
 
                     ObjRef<iface::dom::Element> domElement = cellmlDomElement->domElement();
 
@@ -264,8 +265,7 @@ time.restart();
 
                         // Check whether the parent is an imported file
 
-                        DECLARE_QUERY_INTERFACE_OBJREF(importedCellmlFile,
-                                                       cellmlElementParent,
+                        DECLARE_QUERY_INTERFACE_OBJREF(importedCellmlFile, cellmlElementParent,
                                                        cellml_api::Model);
 
                         if (!importedCellmlFile)
@@ -285,9 +285,8 @@ time.restart();
                         // Check whether the imported CellML element is an
                         // import CellML element
 
-                        DECLARE_QUERY_INTERFACE(importCellmlElement,
-                                                importedCellmlElement,
-                                                cellml_api::CellMLImport);
+                        DECLARE_QUERY_INTERFACE_OBJREF(importCellmlElement, importedCellmlElement,
+                                                       cellml_api::CellMLImport);
 
                         if (!importCellmlElement)
                             // This is not an import CellML element, so...
