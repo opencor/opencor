@@ -16,8 +16,12 @@ ADD_PLUGIN(CellMLAnnotationView
         ../../plugininfo.cpp
 
         src/cellmlannotationviewplugin.cpp
+        src/cellmlannotationviewwidget.cpp
     HEADERS_MOC
         src/cellmlannotationviewplugin.h
+        src/cellmlannotationviewwidget.h
+    UIS
+        src/cellmlannotationviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
