@@ -27,7 +27,7 @@ static const QString AbsoluteToleranceProperty = "Absolute tolerance";
 
 //==============================================================================
 
-struct IDASolverUserData
+struct IdaSolverUserData
 {
     double *constants;
     double *algebraic;
@@ -40,11 +40,11 @@ struct IDASolverUserData
 
 //==============================================================================
 
-class IDASolver : public CoreSolver::CoreDaeSolver
+class IdaSolver : public CoreSolver::CoreDaeSolver
 {
 public:
-    explicit IDASolver();
-    ~IDASolver();
+    explicit IdaSolver();
+    ~IdaSolver();
 
     virtual void initialize(const double &pVoiStart,
                             const bool &pPositiveDirection,
@@ -62,7 +62,7 @@ private:
     void *mSolver;
     N_Vector mStatesVector;
     N_Vector mRatesVector;
-    IDASolverUserData mUserData;
+    IdaSolverUserData mUserData;
 
     double mMaximumStep;
     int mMaximumNumberOfSteps;

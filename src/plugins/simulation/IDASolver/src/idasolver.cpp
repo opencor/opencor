@@ -39,7 +39,7 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 {
     // Compute the model
 
-    IDASolverUserData *userData = reinterpret_cast<IDASolverUserData *>(pUserData);
+    IdaSolverUserData *userData = reinterpret_cast<IdaSolverUserData *>(pUserData);
 
     double *states    = N_VGetArrayPointer(pStates);
     double *rates     = N_VGetArrayPointer(pRates);
@@ -65,7 +65,7 @@ int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 {
     // Do the root finding
 
-    IDASolverUserData *userData = reinterpret_cast<IDASolverUserData *>(pUserData);
+    IdaSolverUserData *userData = reinterpret_cast<IdaSolverUserData *>(pUserData);
 
     userData->computeRootInformation(pVoi, userData->constants,
                                      N_VGetArrayPointer(pRates),
@@ -83,17 +83,17 @@ void errorHandler(int pErrorCode, const char */* pModule */,
                   const char */* pFunction */, char *pErrorMsg, void *pUserData)
 {
     if (pErrorCode != IDA_WARNING) {
-        // IDA really generated an error, so forward it to the IDASolver object
+        // IDA really generated an error, so forward it to the IdaSolver object
 
         QString errorMsg = pErrorMsg;
 
-        reinterpret_cast<IDASolver *>(pUserData)->emitError(errorMsg.left(1).toLower()+errorMsg.right(errorMsg.size()-1));
+        reinterpret_cast<IdaSolver *>(pUserData)->emitError(errorMsg.left(1).toLower()+errorMsg.right(errorMsg.size()-1));
     }
 }
 
 //==============================================================================
 
-IDASolver::IDASolver() :
+IdaSolver::IdaSolver() :
     mSolver(0),
     mStatesVector(0),
     mRatesVector(0),
@@ -106,7 +106,7 @@ IDASolver::IDASolver() :
 
 //==============================================================================
 
-IDASolver::~IDASolver()
+IdaSolver::~IdaSolver()
 {
     // Delete some internal objects
 
@@ -117,7 +117,7 @@ IDASolver::~IDASolver()
 
 //==============================================================================
 
-void IDASolver::initialize(const double &pVoiStart,
+void IdaSolver::initialize(const double &pVoiStart,
                            const bool &pPositiveDirection,
                            const int &pStatesCount, const int &pCondVarCount,
                            double *pConstants, double *pRates, double *pStates,
@@ -245,7 +245,7 @@ void IDASolver::initialize(const double &pVoiStart,
 
 //==============================================================================
 
-void IDASolver::solve(double &pVoi, const double &pVoiEnd) const
+void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     Q_ASSERT(mStatesCount > 0);
     Q_ASSERT(mCondVarCount >= 0);
@@ -262,7 +262,7 @@ void IDASolver::solve(double &pVoi, const double &pVoiEnd) const
 
 //==============================================================================
 
-bool IDASolver::isValidProperty(const QString &pName) const
+bool IdaSolver::isValidProperty(const QString &pName) const
 {
     // Check whether the property name is known to us
 

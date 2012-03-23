@@ -33,7 +33,7 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 {
     // Compute the model
 
-    CVODESolverUserData *userData = reinterpret_cast<CVODESolverUserData *>(pUserData);
+    CvodeSolverUserData *userData = reinterpret_cast<CvodeSolverUserData *>(pUserData);
 
     userData->computeRates(pVoi, userData->constants,
                            N_VGetArrayPointer_Serial(pRates),
@@ -51,18 +51,18 @@ void errorHandler(int pErrorCode, const char */* pModule */,
                   const char */* pFunction */, char *pErrorMsg, void *pUserData)
 {
     if (pErrorCode != CV_WARNING) {
-        // CVODE really generated an error, so forward it to the CVODESolver
+        // CVODE really generated an error, so forward it to the CvodeSolver
         // object
 
         QString errorMsg = pErrorMsg;
 
-        reinterpret_cast<CVODESolver *>(pUserData)->emitError(errorMsg.left(1).toLower()+errorMsg.right(errorMsg.size()-1));
+        reinterpret_cast<CvodeSolver *>(pUserData)->emitError(errorMsg.left(1).toLower()+errorMsg.right(errorMsg.size()-1));
     }
 }
 
 //==============================================================================
 
-CVODESolver::CVODESolver() :
+CvodeSolver::CvodeSolver() :
     mSolver(0),
     mStatesVector(0),
     mMaximumStep(DefaultMaximumStep),
@@ -75,7 +75,7 @@ CVODESolver::CVODESolver() :
 
 //==============================================================================
 
-CVODESolver::~CVODESolver()
+CvodeSolver::~CvodeSolver()
 {
     // Delete some internal objects
 
@@ -85,7 +85,7 @@ CVODESolver::~CVODESolver()
 
 //==============================================================================
 
-void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
+void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
                              double *pConstants, double *pRates,
                              double *pStates, double *pAlgebraic,
                              ComputeRatesFunction pComputeRates)
@@ -168,7 +168,7 @@ void CVODESolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
 //==============================================================================
 
-void CVODESolver::solve(double &pVoi, const double &pVoiEnd) const
+void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     Q_ASSERT(mStatesCount > 0);
     Q_ASSERT(mConstants);
@@ -195,7 +195,7 @@ void CVODESolver::solve(double &pVoi, const double &pVoiEnd) const
 
 //==============================================================================
 
-bool CVODESolver::isValidProperty(const QString &pName) const
+bool CvodeSolver::isValidProperty(const QString &pName) const
 {
     // Check whether the property name is known to us
 

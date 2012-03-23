@@ -27,7 +27,7 @@ static const QString AbsoluteToleranceProperty = "Absolute tolerance";
 
 //==============================================================================
 
-struct CVODESolverUserData
+struct CvodeSolverUserData
 {
     double *constants;
     double *algebraic;
@@ -37,11 +37,11 @@ struct CVODESolverUserData
 
 //==============================================================================
 
-class CVODESolver : public CoreSolver::CoreOdeSolver
+class CvodeSolver : public CoreSolver::CoreOdeSolver
 {
 public:
-    explicit CVODESolver();
-    ~CVODESolver();
+    explicit CvodeSolver();
+    ~CvodeSolver();
 
     virtual void initialize(const double &pVoiStart, const int &pStatesCount,
                             double *pConstants, double *pRates,
@@ -53,7 +53,7 @@ public:
 private:
     void *mSolver;
     N_Vector mStatesVector;
-    CVODESolverUserData mUserData;
+    CvodeSolverUserData mUserData;
 
     double mMaximumStep;
     int mMaximumNumberOfSteps;
