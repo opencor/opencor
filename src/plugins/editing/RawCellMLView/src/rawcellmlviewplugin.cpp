@@ -2,7 +2,7 @@
 // RawCellMLView plugin
 //==============================================================================
 
-#include "cellmlsupportplugin.h"
+#include "cellmlfilemanager.h"
 #include "rawcellmlviewplugin.h"
 #include "rawcellmlviewwidget.h"
 
@@ -47,18 +47,58 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 
 //==============================================================================
 
-QWidget * RawCellMLViewPlugin::newViewWidget(const QString &pFileName)
+void RawCellMLViewPlugin::initialize()
 {
-    // Check that we are dealing with a CellML file
+    // Create our generic raw CellML view widget
 
-    if (!CellMLSupport::isCellmlFile(pFileName))
+    mViewWidget = new RawCellmlViewWidget(mMainWindow);
+
+    // Hide our generic raw CellML view widget since it may not initially be
+    // shown in our central widget
+
+    mViewWidget->setVisible(false);
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our generic raw CellML view widget settings
+
+    loadViewSettings(pSettings, mViewWidget);
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Retrieve our generic raw CellML view widget settings
+
+    saveViewSettings(pSettings, mViewWidget);
+}
+
+//==============================================================================
+
+QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName, const int &)
+{
+    // Check that we are dealing with a CellML file and, if so, return our
+    // generic raw CellML view widget
+
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+
+    if (!cellmlFile)
         // We are not dealing with a CellML file, so...
 
         return GuiInterface::newViewWidget(pFileName);
 
-    // Create and return a raw CellML view widget
+    // We are dealing with a CellML file, so update our generic raw CellML view
+    // widget using the passed CellML file
 
-    return new RawCellmlViewWidget(pFileName, mMainWindow);
+    mViewWidget->initialize(pFileName);
+
+    // Our generic raw CellML view widget is now ready, so...
+
+    return mViewWidget;
 }
 
 //==============================================================================

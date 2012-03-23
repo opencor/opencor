@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -22,18 +23,31 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo();
 
 //==============================================================================
 
-class RawCellMLViewPlugin : public QObject, public GuiInterface,
-                            public I18nInterface
+class RawCellmlViewWidget;
+
+//==============================================================================
+
+class RawCellMLViewPlugin : public QObject, public CoreInterface,
+                            public GuiInterface, public I18nInterface
 {
     Q_OBJECT
+    Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
     explicit RawCellMLViewPlugin();
 
-    virtual QWidget * newViewWidget(const QString &pFileName);
+    virtual void initialize();
+
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
+    virtual QWidget * viewWidget(const QString & pFileName, const int &);
     virtual QString viewName(const int &pViewIndex);
+
+private:
+    RawCellmlViewWidget *mViewWidget;
 };
 
 //==============================================================================
