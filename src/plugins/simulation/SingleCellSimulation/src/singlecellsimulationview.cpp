@@ -326,6 +326,8 @@ void SingleCellSimulationView::initialize(const QString &pFileName)
     } else {
         // The model is not 'supported', so...
 
+        mModel = Unknown;
+
         mOutput->append(" - The model is not 'supported'.");
 
         return;
@@ -439,6 +441,11 @@ void SingleCellSimulationView::outputSolverErrorMsg()
 
 void SingleCellSimulationView::on_actionRun_triggered()
 {
+    if (mModel == Unknown)
+        // The model is not supported, so...
+
+        return;
+
     // Clear the graph panels and output
 
     clearGraphPanels();
