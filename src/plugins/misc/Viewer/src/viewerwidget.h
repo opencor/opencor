@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include "commonwidget.h"
+#include "viewerglobal.h"
 
 //==============================================================================
 
@@ -20,12 +21,12 @@ namespace Viewer {
 
 //==============================================================================
 
-class ViewerWidget : public QtMmlWidget, public Core::CommonWidget
+class VIEWER_EXPORT ViewerWidget : public QtMmlWidget, public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit ViewerWidget(const QString &pName, QWidget *pParent = 0);
+    explicit ViewerWidget(QWidget *pParent = 0);
     ~ViewerWidget();
 
     bool setContent(const QString &pContent, QString *pErrorMsg = 0,

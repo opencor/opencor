@@ -15,9 +15,9 @@ namespace Viewer {
 
 //==============================================================================
 
-ViewerWidget::ViewerWidget(const QString &pName, QWidget *pParent) :
+ViewerWidget::ViewerWidget(QWidget *pParent) :
     QtMmlWidget(pParent),
-    CommonWidget(pName, this, pParent)
+    CommonWidget(pParent)
 {
     // Create a test MathML widget and set its base font point size to 100, so
     // that we can use that as a benchmark for what the 'ideal' dimensions of

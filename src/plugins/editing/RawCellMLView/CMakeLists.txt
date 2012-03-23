@@ -34,6 +34,7 @@ ADD_PLUGIN(RawCellMLView
         LLVM
         QScintilla
         QScintillaSupport
+        Viewer
     QT_DEPENDENCIES
         QtCore
         QtGui

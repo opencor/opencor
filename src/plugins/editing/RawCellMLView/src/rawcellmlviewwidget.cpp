@@ -4,6 +4,7 @@
 
 #include "qscintilla.h"
 #include "rawcellmlviewwidget.h"
+#include "viewerwidget.h"
 
 //==============================================================================
 
@@ -34,6 +35,10 @@ RawCellmlViewWidget::RawCellmlViewWidget(const QString &pFileName,
 
     mUi->setupUi(this);
 
+    // Create a viewer
+
+    Viewer::ViewerWidget *viewer = new Viewer::ViewerWidget(pParent);
+
     // Create and set up a Scintilla editor with an XML lexer associated to it
 
     QFile file(pFileName);
@@ -57,8 +62,9 @@ RawCellmlViewWidget::RawCellmlViewWidget(const QString &pFileName,
                                                               new QsciLexerXML(pParent),
                                                               pParent);
 
-    // Add the editor to the raw view widget
+    // Add the viewer and editor to the raw CellML view widget
 
+    mUi->verticalLayout->addWidget(viewer);
     mUi->verticalLayout->addWidget(editor);
 }
 
