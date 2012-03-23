@@ -294,7 +294,7 @@ void GuiInterface::destroy()
 
     foreach (GuiViewWidgets *viewWidgets, mModeViewWidgets) {
         foreach (QWidget *viewWidget, viewWidgets->values())
-            delete dynamic_cast<QWidget *>(viewWidget);
+            delete qobject_cast<QWidget *>(viewWidget);
 
         delete viewWidgets;
     }
