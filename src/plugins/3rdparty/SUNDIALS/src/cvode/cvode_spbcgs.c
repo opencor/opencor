@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 1.8 $
- * $Date: 2008/09/10 22:39:03 $
+ * $Revision: 1.10 $
+ * $Date: 2011/03/23 22:27:43 $
  * ----------------------------------------------------------------- 
  * Programmer(s): Aaron Collier and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -168,6 +168,7 @@ int CVSpbcg(void *cvode_mem, int pretype, int maxl)
   if ((pretype != PREC_NONE) && (pretype != PREC_LEFT) &&
       (pretype != PREC_RIGHT) && (pretype != PREC_BOTH)) {
     CVProcessError(cv_mem, CVSPILS_ILL_INPUT, "CVSPBCG", "CVSpbcg", MSGS_BAD_PRETYPE);
+    free(cvspils_mem); cvspils_mem = NULL;
     return(CVSPILS_ILL_INPUT);
   }
 
@@ -452,6 +453,7 @@ static void CVSpbcgFree(CVodeMem cv_mem)
 
   if (cvspils_mem->s_pfree != NULL) (cvspils_mem->s_pfree)(cv_mem);
 
-  free(cvspils_mem); cvspils_mem = NULL;
+  free(cvspils_mem);
+  cv_mem->cv_lmem = NULL;
 }
 

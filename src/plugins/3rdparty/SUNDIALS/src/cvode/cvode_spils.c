@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 1.5 $
- * $Date: 2008/09/10 22:39:03 $
+ * $Revision: 1.7 $
+ * $Date: 2011/06/23 00:19:54 $
  * ----------------------------------------------------------------- 
  * Programmer(s): Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -510,7 +510,7 @@ int CVSpilsGetNumRhsEvals(void *cvode_mem, long int *nfevalsLS)
  * -----------------------------------------------------------------
  */
 
-int CVSpilsGetLastFlag(void *cvode_mem, int *flag)
+int CVSpilsGetLastFlag(void *cvode_mem, long int *flag)
 {
   CVodeMem cv_mem;
   CVSpilsMem cvspils_mem;
@@ -539,7 +539,7 @@ int CVSpilsGetLastFlag(void *cvode_mem, int *flag)
  * -----------------------------------------------------------------
  */
 
-char *CVSpilsGetReturnFlagName(int flag)
+char *CVSpilsGetReturnFlagName(long int flag)
 {
   char *name;
 
@@ -620,10 +620,11 @@ int CVSpilsAtimes(void *cvode_mem, N_Vector v, N_Vector z)
  * -----------------------------------------------------------------
  * CVSpilsPSolve
  * -----------------------------------------------------------------
- * This routine interfaces between the generic SpgmrSolve routine and
- * the user's psolve routine.  It passes to psolve all required state 
+ * This routine interfaces between the generic Sp***Solve routine
+ * (within the SPGMR, SPBCG, or SPTFQMR solver) and the
+ * user's psolve routine.  It passes to psolve all required state 
  * information from cvode_mem.  Its return value is the same as that
- * returned by psolve. Note that the generic SPGMR solver guarantees
+ * returned by psolve. Note that the generic SP*** solver guarantees
  * that CVSpilsPSolve will not be called in the case in which
  * preconditioning is not done. This is the only case in which the
  * user's psolve routine is allowed to be NULL.

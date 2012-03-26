@@ -1,8 +1,8 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 1.4 $
- * $Date: 2007/12/19 20:34:00 $
- * ----------------------------------------------------------------- 
+ * $Revision: 1.6 $
+ * $Date: 2010/12/15 22:45:17 $
+ * -----------------------------------------------------------------
  * Programmer(s): Aaron Collier and Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2005, The Regents of the University of California.
@@ -15,7 +15,7 @@
  */
 
 /* Define SUNDIALS version number */
-#define SUNDIALS_PACKAGE_VERSION "2.4.0"
+#define SUNDIALS_PACKAGE_VERSION "2.5.0"
 
 /* FCMIX: Define Fortran name-mangling macro for C identifiers.
  * Depending on the inferred scheme, one of the following six
@@ -34,8 +34,8 @@
  */
 
 
-/* Define precision of SUNDIALS data type 'realtype' 
- * Depending on the precision level, one of the following 
+/* Define precision of SUNDIALS data type 'realtype'
+ * Depending on the precision level, one of the following
  * three macros will be defined:
  *     #define SUNDIALS_SINGLE_PRECISION 1
  *     #define SUNDIALS_DOUBLE_PRECISION 1
@@ -43,13 +43,11 @@
  */
 #define SUNDIALS_DOUBLE_PRECISION 1
 
-/* Use generic math functions 
+/* Use generic math functions
  * If it was decided that generic math functions can be used, then
- *     #define SUNDIALS_USE_GENERIC_MATH 1
- * otherwise
- *     #define SUNDIALS_USE_GENERIC_MATH 0
+ *     #define SUNDIALS_USE_GENERIC_MATH
  */
-
+#define SUNDIALS_USE_GENERIC_MATH
 
 /* Blas/Lapack available
  * If working libraries for Blas/lapack support were found, then
