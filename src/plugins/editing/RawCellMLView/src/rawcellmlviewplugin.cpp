@@ -84,9 +84,7 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName, const int &)
     // Check that we are dealing with a CellML file and, if so, return our
     // generic raw CellML view widget
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-
-    if (!cellmlFile)
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         // We are not dealing with a CellML file, so...
 
         return 0;

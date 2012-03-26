@@ -3,7 +3,8 @@
 //==============================================================================
 
 #include "cellmlannotationviewplugin.h"
-#include "cellmlsupportplugin.h"
+#include "cellmlannotationviewwidget.h"
+#include "cellmlfilemanager.h"
 
 //==============================================================================
 
@@ -48,25 +49,18 @@ CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin()
 
 QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 {
-    // Check that we are dealing with a CellML file
+    // Check that we are dealing with a CellML file and, if so, return our
+    // generic raw CellML view widget
 
-    if (!CellMLSupport::isCellmlFile(pFileName))
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         // We are not dealing with a CellML file, so...
 
-        return GuiInterface::newViewWidget(pFileName);
+        return 0;
 
-    // Create, set up and return a CellML annotation widget
+    // We are dealing with a CellML file, so create and return a CellML
+    // annotation view widget
 
-    QWidget *res = new QWidget(mMainWindow);
-
-    res->setStyleSheet("background-color: white;"
-                       "background-image: url(':ricordoLogo');"
-                       "background-position: center;"
-                       "background-repeat: no-repeat;");
-
-    // Our CellML annotation widget is now ready, so...
-
-    return res;
+    return new CellmlAnnotationViewWidget(pFileName, mMainWindow);
 }
 
 //==============================================================================

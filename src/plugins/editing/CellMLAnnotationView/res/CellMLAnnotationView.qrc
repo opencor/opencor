@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
         <file alias="CellMLAnnotationView_fr">../../../../../build/CellMLAnnotationView_fr.qm</file>
-        <file alias="ricordoLogo">RicordoLogo.png</file>
     </qresource>
 </RCC>
