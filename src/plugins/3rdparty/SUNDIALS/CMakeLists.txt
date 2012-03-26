@@ -48,6 +48,7 @@ ADD_PLUGIN(SUNDIALS
         src/sundialsplugin.h
     DEFINITIONS
         BUILD_SUNDIALS_LIBRARY
+        NO_FPRINTF_OUTPUT
     INCLUDE_DIRS
         include
         src
