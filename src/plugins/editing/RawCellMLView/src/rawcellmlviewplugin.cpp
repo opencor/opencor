@@ -89,7 +89,7 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName, const int &)
     if (!cellmlFile)
         // We are not dealing with a CellML file, so...
 
-        return GuiInterface::newViewWidget(pFileName);
+        return 0;
 
     // We are dealing with a CellML file, so update our generic raw CellML view
     // widget using the passed CellML file

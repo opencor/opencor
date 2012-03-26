@@ -107,7 +107,7 @@ QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName,
     if (!cellmlFile)
         // We are not dealing with a CellML file, so...
 
-        return GuiInterface::newViewWidget(pFileName);
+        return 0;
 
     // We are dealing with a CellML file, so update our generic simulation view
     // widget using the passed CellML file
