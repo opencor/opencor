@@ -62,8 +62,11 @@ private:
     Viewer::ViewerWidget *mViewer;
     QScintillaSupport::QScintilla *mEditor;
 
-    int mViewerInitialHeight;
-    int mEditorInitialHeight;
+    int mViewerHeight;
+    int mEditorHeight;
+
+private Q_SLOTS:
+    void verticalSplitterMoved();
 };
 
 //==============================================================================
