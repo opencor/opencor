@@ -217,9 +217,8 @@ QString FileOrganiserModel::filePath(const QModelIndex &pFileIndex) const
 
 //==============================================================================
 
-FileOrganiserWidget::FileOrganiserWidget(const QString &pName,
-                                         QWidget *pParent) :
-    TreeView(pName, this, pParent)
+FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
+    TreeView(pParent)
 {
     // Create an instance of the data model that we want to view
 

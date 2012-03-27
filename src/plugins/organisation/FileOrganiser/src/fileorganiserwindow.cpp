@@ -41,7 +41,9 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     // Create and add the file organiser widget
 
-    mFileOrganiserWidget = new FileOrganiserWidget("FileOrganiserWidget", this);
+    mFileOrganiserWidget = new FileOrganiserWidget(this);
+
+    mFileOrganiserWidget->setObjectName("FileOrganiserWidget");
 
     mUi->verticalLayout->addWidget(mFileOrganiserWidget);
 

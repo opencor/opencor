@@ -46,7 +46,9 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     // Create and add the file browser widget
 
-    mFileBrowserWidget = new FileBrowserWidget("FileBrowserWidget", this);
+    mFileBrowserWidget = new FileBrowserWidget(this);
+
+    mFileBrowserWidget->setObjectName("FileBrowserWidget");
 
     mUi->verticalLayout->addWidget(mFileBrowserWidget);
 

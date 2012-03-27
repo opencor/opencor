@@ -39,8 +39,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     // Create and add the CellML Model Repository widget
 
-    mCellmlModelRepositoryWidget = new CellmlModelRepositoryWidget("CellmlModelRepositoryWidget",
-                                                                   this);
+    mCellmlModelRepositoryWidget = new CellmlModelRepositoryWidget(this);
 
     mUi->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
 

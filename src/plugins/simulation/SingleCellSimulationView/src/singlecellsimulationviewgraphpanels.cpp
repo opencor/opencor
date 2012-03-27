@@ -17,10 +17,9 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewGraphPanels::SingleCellSimulationViewGraphPanels(const QString &pName,
-                                                                         QWidget *pParent) :
+SingleCellSimulationViewGraphPanels::SingleCellSimulationViewGraphPanels(QWidget *pParent) :
     QSplitter(Qt::Vertical, pParent),
-    CommonWidget(pName, this, pParent)
+    CommonWidget(pParent)
 {
 }
 

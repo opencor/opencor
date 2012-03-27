@@ -78,7 +78,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     // Create a splitter for our graph panels and create a connection to keep
     // track of whether we can remove graph panels
 
-    mGraphPanels = new SingleCellSimulationViewGraphPanels("GraphPanels", this);
+    mGraphPanels = new SingleCellSimulationViewGraphPanels(this);
+
+    mGraphPanels->setObjectName("GraphPanels");
 
     connect(mGraphPanels, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mUi->actionRemove, SLOT(setEnabled(bool)));

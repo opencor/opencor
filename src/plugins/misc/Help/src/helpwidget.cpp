@@ -165,10 +165,10 @@ static const int DefaultZoomLevel = 9;
 
 //==============================================================================
 
-HelpWidget::HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
-                       const QUrl &pHomePage, QWidget *pParent) :
+HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
+                       QWidget *pParent) :
     QWebView(pParent),
-    CommonWidget(pName, this, pParent),
+    CommonWidget(pParent),
     mHelpEngine(pHelpEngine),
     mHomePage(pHomePage),
     mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our

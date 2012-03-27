@@ -49,8 +49,6 @@ class CORE_EXPORT CommonWidget
 {
 public:
     explicit CommonWidget(QWidget *pParent = 0);
-    explicit CommonWidget(const QString &pName, QWidget *pWidget,
-                          QWidget *pParent = 0);
 
     virtual void retranslateUi();
 

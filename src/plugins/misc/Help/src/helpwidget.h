@@ -91,8 +91,8 @@ class HelpWidget : public QWebView, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit HelpWidget(const QString &pName, QHelpEngine *pHelpEngine,
-                        const QUrl &pHomePage, QWidget *pParent = 0);
+    explicit HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
+                        QWidget *pParent = 0);
 
     virtual void retranslateUi();
 

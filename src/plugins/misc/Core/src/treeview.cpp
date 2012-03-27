@@ -15,10 +15,9 @@ namespace Core {
 
 //==============================================================================
 
-TreeView::TreeView(const QString &pName, QWidget *pWidget,
-                   QWidget *pParent) :
+TreeView::TreeView(QWidget *pParent) :
     QTreeView(pParent),
-    CommonWidget(pName, pWidget, pParent)
+    CommonWidget(pParent)
 {
     // Set some properties for the tree view itself
 

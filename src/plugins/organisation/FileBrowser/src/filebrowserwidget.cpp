@@ -55,8 +55,8 @@ static const QString HomeFolder = QDir::homePath();
 
 //==============================================================================
 
-FileBrowserWidget::FileBrowserWidget(const QString &pName, QWidget *pParent) :
-    TreeView(pName, this, pParent),
+FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
+    TreeView(pParent),
     mNeedDefColWidth(true),
     mInitPathDirs(QStringList()),
     mInitPathDir(QString()),

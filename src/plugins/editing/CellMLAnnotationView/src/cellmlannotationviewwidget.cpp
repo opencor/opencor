@@ -39,7 +39,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(const QString &pFileName,
     // Create and customise a tree view which will contain all of the units,
     // components, groups and connections from the CellML file
 
-    mTreeView = new Core::TreeView("", this);
+    mTreeView = new Core::TreeView(this);
 
     mTreeView->setFrameShape(QFrame::NoFrame);
     mTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);

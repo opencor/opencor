@@ -28,17 +28,6 @@ CommonWidget::CommonWidget(QWidget *pParent) :
 
 //==============================================================================
 
-CommonWidget::CommonWidget(const QString &pName, QWidget *pWidget,
-                           QWidget *pParent) :
-    mParent(pParent)
-{
-    // Set the name of the widget
-
-    pWidget->setObjectName(pName);
-}
-
-//==============================================================================
-
 QSize CommonWidget::defaultSize(const double &pRatio) const
 {
     // The default size of a widget is one fifth of the available geometry
