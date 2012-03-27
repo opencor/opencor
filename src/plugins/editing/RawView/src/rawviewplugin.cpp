@@ -50,7 +50,7 @@ QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
 {
     // Create and return a raw view widget
 
-    return new RawViewWidget(pFileName, mMainWindow);
+    return new RawViewWidget(mMainWindow, pFileName);
 }
 
 //==============================================================================

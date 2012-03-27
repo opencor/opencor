@@ -94,7 +94,7 @@ int main(int pArgc, char *pArgv[])
 
     // Create the main window
 
-    MainWindow *win = new MainWindow;
+    MainWindow *win = new MainWindow();
 
     // Keep track of the main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)

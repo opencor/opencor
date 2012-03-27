@@ -45,7 +45,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *pParent = 0);
+    explicit MainWindow();
     ~MainWindow();
 
     QString locale() const;

@@ -58,8 +58,8 @@ static const QString HelpPlugin = "Help";
 
 //==============================================================================
 
-MainWindow::MainWindow(QWidget *pParent) :
-    QMainWindow(pParent),
+MainWindow::MainWindow() :
+    QMainWindow(),
     mUi(new Ui::MainWindow),
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
@@ -964,7 +964,7 @@ void MainWindow::on_actionPlugins_triggered()
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins window
 
-        OpenCOR::PluginsWindow pluginsWindow(mPluginManager, this);
+        OpenCOR::PluginsWindow pluginsWindow(this, mPluginManager);
 
         mSettings->beginGroup(pluginsWindow.objectName());
             pluginsWindow.loadSettings(mSettings);

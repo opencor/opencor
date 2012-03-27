@@ -23,7 +23,7 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     // that we can use that as a benchmark for what the 'ideal' dimensions of
     // the MathML widget should be (see resizeEvent below)
 
-    mTestViewerWidget = new QtMmlWidget;
+    mTestViewerWidget = new QtMmlWidget();
 
     mTestViewerWidget->setBaseFontPointSize(100);
 

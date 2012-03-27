@@ -21,7 +21,7 @@ namespace RawView {
 
 //==============================================================================
 
-RawViewWidget::RawViewWidget(const QString &pFileName, QWidget *pParent) :
+RawViewWidget::RawViewWidget(QWidget *pParent, const QString &pFileName) :
     Widget(pParent),
     mUi(new Ui::RawViewWidget)
 {
@@ -47,9 +47,9 @@ RawViewWidget::RawViewWidget(const QString &pFileName, QWidget *pParent) :
         file.close();
     }
 
-    QsciScintilla *editor = new QScintillaSupport::QScintilla(fileContents,
-                                                              fileIsWritable,
-                                                              0, pParent);
+    QsciScintilla *editor = new QScintillaSupport::QScintilla(pParent,
+                                                              fileContents,
+                                                              fileIsWritable);
 
     // Set the raw view widget's focus proxy to the editor
 

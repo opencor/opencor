@@ -32,8 +32,8 @@ class CellmlAnnotationViewWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewWidget(const QString &pFileName,
-                                        QWidget *pParent = 0);
+    explicit CellmlAnnotationViewWidget(QWidget *pParent,
+                                        const QString &pFileName);
 
 private:
     Ui::CellmlAnnotationViewWidget *mUi;

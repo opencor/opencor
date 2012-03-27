@@ -23,8 +23,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(const QString &pFileName,
-                                                       QWidget *pParent) :
+CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
+                                                       const QString &pFileName) :
     Widget(pParent),
     mUi(new Ui::CellmlAnnotationViewWidget)
 {

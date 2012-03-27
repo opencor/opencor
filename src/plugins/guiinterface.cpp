@@ -276,7 +276,7 @@ GuiInterface::GuiInterface()
 {
     // Create our GUI settings object
 
-    mGuiSettings = new GuiSettings;
+    mGuiSettings = new GuiSettings();
 }
 
 //==============================================================================
@@ -315,7 +315,7 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName,
         // There is no list of view widgets associated with the view index, so
         // create one and keep track of it
 
-        viewWidgets = new GuiViewWidgets;
+        viewWidgets = new GuiViewWidgets();
         // Note: this will be deleted in GuiInterface's destroy method...
 
         mModeViewWidgets.insert(pViewIndex, viewWidgets);

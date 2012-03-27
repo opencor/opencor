@@ -170,7 +170,7 @@ QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
 
 QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
 {
-    QMimeData *res = new QMimeData;
+    QMimeData *res = new QMimeData();
     QList<QUrl> urls;
 
     // Retrieve the URL of the different file (not folder) items
@@ -222,7 +222,7 @@ FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
 {
     // Create an instance of the data model that we want to view
 
-    mDataModel = new FileOrganiserModel;
+    mDataModel = new FileOrganiserModel();
 
     // Create our 'local' file manager (as opposed to the 'global' file manager
     // that comes with the FileManager class)

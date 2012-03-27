@@ -26,7 +26,7 @@ class VIEWER_EXPORT ViewerWidget : public QtMmlWidget, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit ViewerWidget(QWidget *pParent = 0);
+    explicit ViewerWidget(QWidget *pParent);
     ~ViewerWidget();
 
     bool setContent(const QString &pContent, QString *pErrorMsg = 0,

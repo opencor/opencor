@@ -35,7 +35,7 @@ class FileOrganiserWindow : public Core::OrganisationWidget
     Q_OBJECT
 
 public:
-    explicit FileOrganiserWindow(QWidget *pParent = 0);
+    explicit FileOrganiserWindow(QWidget *pParent);
     ~FileOrganiserWindow();
 
     virtual void retranslateUi();

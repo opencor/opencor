@@ -37,7 +37,7 @@ void CORE_EXPORT setFocusTo(QWidget *pWindow, QWidget *pWidget,
 
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 
-QFrame CORE_EXPORT * newLineWidget(QWidget* pParent = 0,
+QFrame CORE_EXPORT * newLineWidget(QWidget* pParent,
                                    const bool &pHorizontal = true);
 
 //==============================================================================

@@ -26,7 +26,7 @@ class PreferencesWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit PreferencesWindow(QWidget *pParent = 0);
+    explicit PreferencesWindow(QWidget *pParent);
     ~PreferencesWindow();
 
 private:

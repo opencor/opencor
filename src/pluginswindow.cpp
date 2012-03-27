@@ -24,9 +24,8 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginDelegate::PluginDelegate(QStandardItemModel *pDataModel,
-                               QObject *pParent) :
-    QStyledItemDelegate(pParent),
+PluginDelegate::PluginDelegate(QStandardItemModel *pDataModel) :
+    QStyledItemDelegate(),
     mDataModel(pDataModel)
 {
 }
@@ -71,7 +70,7 @@ void PluginDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
+PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
     QDialog(pParent),
     CommonWidget(pParent),
     mUi(new Ui::PluginsWindow),
@@ -90,7 +89,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
     // are shown as 'disabled' (to reflect the fact that users cannot decide
     // whether they should be loaded)
 
-    mDataModel = new QStandardItemModel;
+    mDataModel = new QStandardItemModel();
     mPluginDelegate = new PluginDelegate(mDataModel);
 
     mUi->treeView->setModel(mDataModel);

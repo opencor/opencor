@@ -37,8 +37,7 @@ class PluginManager;
 class PluginDelegate : public QStyledItemDelegate
 {
 public:
-    explicit PluginDelegate(QStandardItemModel *pDataModel,
-                            QObject *pParent = 0);
+    explicit PluginDelegate(QStandardItemModel *pDataModel);
 
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
@@ -54,8 +53,7 @@ class PluginsWindow : public QDialog, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit PluginsWindow(PluginManager *pPluginManager,
-                           QWidget *pParent = 0);
+    explicit PluginsWindow(QWidget *pParent, PluginManager *pPluginManager);
     ~PluginsWindow();
 
     virtual void loadSettings(QSettings *pSettings);

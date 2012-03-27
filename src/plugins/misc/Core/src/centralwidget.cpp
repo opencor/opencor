@@ -34,10 +34,10 @@ CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner) :
 
     mViews = pOwner->newTabBar(QTabBar::RoundedEast);
 
-    mViewNames = new CentralWidgetViewNames;
+    mViewNames = new CentralWidgetViewNames();
 
-    mViewInterfaces = new CentralWidgetViewInterfaces;
-    mViewSettings   = new CentralWidgetViewSettings;
+    mViewInterfaces = new CentralWidgetViewInterfaces();
+    mViewSettings   = new CentralWidgetViewSettings();
 }
 
 //==============================================================================

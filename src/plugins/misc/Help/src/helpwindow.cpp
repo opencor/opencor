@@ -77,7 +77,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     // Create and add the help widget
 
-    mHelpWidget = new HelpWidget(mHelpEngine, OpencorHelpHomepageUrl, this);
+    mHelpWidget = new HelpWidget(this, mHelpEngine, OpencorHelpHomepageUrl);
 
     mHelpWidget->setObjectName("HelpWidget");
 

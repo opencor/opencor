@@ -26,7 +26,7 @@ class CORE_EXPORT Widget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    explicit Widget(QWidget *pParent = 0);
+    explicit Widget(QWidget *pParent);
 };
 
 //==============================================================================

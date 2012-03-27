@@ -58,7 +58,7 @@ SingleCellSimulationViewGraphPanel::SingleCellSimulationViewGraphPanel(QWidget *
     mPlot->setCanvasLineWidth(0);
     mPlot->setFrameStyle(QFrame::NoFrame);
 
-    QwtPlotGrid *grid = new QwtPlotGrid;
+    QwtPlotGrid *grid = new QwtPlotGrid();
 
     grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
 

@@ -25,7 +25,7 @@ class FileBrowserModel : public QFileSystemModel
     Q_OBJECT
 
 public:
-    explicit FileBrowserModel(QObject *pParent = 0);
+    explicit FileBrowserModel(QObject *pParent);
 
     virtual Qt::ItemFlags flags(const QModelIndex &pIndex) const;
 };
@@ -37,7 +37,7 @@ class FileBrowserWidget : public Core::TreeView
     Q_OBJECT
 
 public:
-    explicit FileBrowserWidget(QWidget *pParent = 0);
+    explicit FileBrowserWidget(QWidget *pParent);
     ~FileBrowserWidget();
 
     virtual void loadSettings(QSettings *pSettings);

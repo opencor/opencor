@@ -21,8 +21,8 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
-                       QsciLexer *pLexer, QWidget *pParent) :
+QScintilla::QScintilla(QWidget *pParent, const QString &pContents,
+                       const bool &pReadOnly, QsciLexer *pLexer) :
     QsciScintilla(pParent)
 {
     // Remove the frame around our Scintilla editor

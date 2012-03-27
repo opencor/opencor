@@ -82,7 +82,7 @@ class CentralWidget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    explicit CentralWidget(QWidget *pParent = 0);
+    explicit CentralWidget(QWidget *pParent);
     ~CentralWidget();
 
     virtual void retranslateUi();

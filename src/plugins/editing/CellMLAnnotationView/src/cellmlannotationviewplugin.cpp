@@ -60,7 +60,7 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
     // We are dealing with a CellML file, so create and return a CellML
     // annotation view widget
 
-    return new CellmlAnnotationViewWidget(pFileName, mMainWindow);
+    return new CellmlAnnotationViewWidget(mMainWindow, pFileName);
 }
 
 //==============================================================================

@@ -26,7 +26,7 @@ class CheckForUpdatesWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit CheckForUpdatesWindow(QWidget *pParent = 0);
+    explicit CheckForUpdatesWindow(QWidget *pParent);
     ~CheckForUpdatesWindow();
 
 private:

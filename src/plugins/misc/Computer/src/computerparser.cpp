@@ -90,7 +90,7 @@ ComputerFunction * ComputerParser::parseFunction(const QString &pFunction)
     // Retrieve the type of function that we are dealing with, i.e. a void or a
     // double function
 
-    ComputerFunction *function = new ComputerFunction;
+    ComputerFunction *function = new ComputerFunction();
 
     if (mScanner->token().symbol() == ComputerScannerToken::Void) {
         // We are dealing with a void function, so set the function as such
