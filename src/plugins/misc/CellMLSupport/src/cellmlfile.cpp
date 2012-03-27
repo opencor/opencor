@@ -137,8 +137,6 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
             // Something went wrong with the full instantiation of the imports,
             // so...
 
-            reset();
-
             mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
                                            tr("the model's imports could not be fully instantiated")));
 
