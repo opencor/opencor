@@ -6,6 +6,7 @@
 #include "cellmlfileruntime.h"
 #include "coredaesolver.h"
 #include "coreodesolver.h"
+#include "coreutils.h"
 #include "singlecellsimulationviewgraphpanel.h"
 #include "singlecellsimulationviewgraphpanels.h"
 #include "singlecellsimulationviewwidget.h"
@@ -68,7 +69,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     toolbar->addAction(mUi->actionCsvExport);
 
     mUi->verticalLayout->addWidget(toolbar);
-    mUi->verticalLayout->addWidget(newSeparatingLine());
+    mUi->verticalLayout->addWidget(Core::newLineWidget(this));
 
     // Create our vertical splitter
 
@@ -99,7 +100,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mOutput->setFrameStyle(QFrame::NoFrame);
 
-    simulationOutputVerticalLayout->addWidget(newSeparatingLine());
+    simulationOutputVerticalLayout->addWidget(Core::newLineWidget(this));
     simulationOutputVerticalLayout->addWidget(mOutput);
 
     // Populate our vertical splitter and use as much space as possible for the
@@ -120,7 +121,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mProgressBar->setAlignment(Qt::AlignCenter);
     mProgressBar->setTextVisible(false);
 
-    mUi->verticalLayout->addWidget(newSeparatingLine());
+    mUi->verticalLayout->addWidget(Core::newLineWidget(this));
     mUi->verticalLayout->addWidget(mProgressBar);
 }
 
@@ -222,20 +223,6 @@ void SingleCellSimulationViewWidget::addSolverInterface(SolverInterface *pSolver
         // The solver interface is not yet in our list, so...
 
         mSolverInterfaces.append(pSolverInterface);
-}
-
-//==============================================================================
-
-QFrame * SingleCellSimulationViewWidget::newSeparatingLine()
-{
-    // Return a separating line widget
-
-    QFrame *res = new QFrame(this);
-
-    res->setFrameShape(QFrame::HLine);
-    res->setFrameShadow(QFrame::Sunken);
-
-    return res;
 }
 
 //==============================================================================

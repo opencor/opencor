@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QFile>
+#include <QFrame>
 #include <QResource>
 #include <QSettings>
 #include <QWidget>
@@ -145,6 +146,20 @@ QString nativeCanonicalFileName(const QString &pFileName)
     // Return a native and canonical version of the file's name
 
     return QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
+}
+
+//==============================================================================
+
+QFrame * newLineWidget(QWidget* pParent, const bool &pHorizontal)
+{
+    // Return a line widget
+
+    QFrame *res = new QFrame(pParent);
+
+    res->setFrameShape(pHorizontal?QFrame::HLine:QFrame::VLine);
+    res->setFrameShadow(QFrame::Sunken);
+
+    return res;
 }
 
 //==============================================================================

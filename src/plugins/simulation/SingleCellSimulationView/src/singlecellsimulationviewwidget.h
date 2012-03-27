@@ -113,8 +113,6 @@ private:
 
     QString mSolverErrorMsg;
 
-    QFrame * newSeparatingLine();
-
     void clearGraphPanels();
     void clearActiveGraphPanel();
 
