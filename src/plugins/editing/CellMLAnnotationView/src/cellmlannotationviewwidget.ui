@@ -10,26 +10,13 @@
     <height>240</height>
    </rect>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
    </property>
    <property name="margin">
     <number>0</number>
    </property>
-   <item>
-    <widget class="QTreeView" name="treeView">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-     <attribute name="headerVisible">
-      <bool>false</bool>
-     </attribute>
-    </widget>
-   </item>
   </layout>
  </widget>
  <resources/>

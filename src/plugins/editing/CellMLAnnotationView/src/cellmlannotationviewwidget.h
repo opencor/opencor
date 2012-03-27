@@ -17,6 +17,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QTreeView;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -32,6 +36,10 @@ public:
 
 private:
     Ui::CellmlAnnotationViewWidget *mUi;
+
+    QTreeView *mTreeView;
+
+    void initTreeView(const QString &pFileName);
 };
 
 //==============================================================================

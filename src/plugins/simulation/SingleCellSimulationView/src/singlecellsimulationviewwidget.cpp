@@ -41,7 +41,7 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent) :
     Widget(pParent),
     mUi(new Ui::SingleCellSimulationViewWidget),
-    mFileName(QString()), mCellmlFileRuntime(0), mModel(Unknown),
+    mCellmlFileRuntime(0), mModel(Unknown),
     mStatesCount(0), mCondVarCount(0),
     mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
     mVoiEnd(0), mVoiStep(0), mVoiMaximumStep(0), mVoiOutput(0),
@@ -248,10 +248,6 @@ void SingleCellSimulationViewWidget::clearActiveGraphPanel()
 
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
-    // Keep track of the file name
-
-    mFileName = pFileName;
-
     // Clear the graph panels and output
 
     clearGraphPanels();
@@ -280,7 +276,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Check whether we 'support' the model
 
-    QString fileBaseName = QFileInfo(mFileName).baseName();
+    QString fileBaseName = QFileInfo(pFileName).baseName();
 
     if (!fileBaseName.compare("van_der_pol_model_1928")) {
         mModel = VanDerPol1928;

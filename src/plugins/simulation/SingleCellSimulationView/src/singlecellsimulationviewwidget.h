@@ -69,7 +69,6 @@ public:
 private:
     Ui::SingleCellSimulationViewWidget *mUi;
 
-    QString mFileName;
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
     enum {
