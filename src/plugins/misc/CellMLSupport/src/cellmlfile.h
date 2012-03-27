@@ -46,6 +46,8 @@ public:
 
     CellmlFileRuntime * runtime();
 
+    iface::cellml_api::Model * model();
+
 private:
     QString mFileName;
 

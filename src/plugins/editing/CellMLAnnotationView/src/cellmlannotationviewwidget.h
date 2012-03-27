@@ -17,6 +17,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QTextEdit;
 class QTreeView;
 
 //==============================================================================
@@ -38,6 +39,7 @@ private:
     Ui::CellmlAnnotationViewWidget *mUi;
 
     QTreeView *mTreeView;
+    QTextEdit *mDebugOutput;
 
     void initTreeView(const QString &pFileName);
 };

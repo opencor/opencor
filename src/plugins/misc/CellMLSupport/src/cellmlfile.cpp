@@ -381,6 +381,15 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 //==============================================================================
 
+iface::cellml_api::Model * CellmlFile::model()
+{
+    // Return the file's model
+
+    return mModel;
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 
