@@ -116,12 +116,33 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mUi->verticalLayout->addWidget(verticalSplitter);
 
-    // Create our simulation progress widget
+    // Create our (thin) simulation progress widget
 
     mProgressBar = new QProgressBar(this);
 
     mProgressBar->setAlignment(Qt::AlignCenter);
+    mProgressBar->setFixedHeight(3);
+    mProgressBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     mProgressBar->setTextVisible(false);
+
+    QPalette progressBarPalette = mProgressBar->palette();
+    QColor progressBarBackground = progressBarPalette.color(QPalette::Window);
+    QColor progressBarChunkBackground = progressBarPalette.color(QPalette::Highlight);
+
+    mProgressBar->setStyleSheet(QString("QProgressBar {"
+                                        "   background: rgb(%1, %2, %3);"
+                                        "   border: 0px;"
+                                        "}"
+                                        ""
+                                        "QProgressBar::chunk {"
+                                        "   background: rgb(%4, %5, %6);"
+                                        "   border: 0px;"
+                                        "}").arg(QString::number(progressBarBackground.red()),
+                                                 QString::number(progressBarBackground.green()),
+                                                 QString::number(progressBarBackground.blue()),
+                                                 QString::number(progressBarChunkBackground.red()),
+                                                 QString::number(progressBarChunkBackground.green()),
+                                                 QString::number(progressBarChunkBackground.blue())));
 
     mUi->verticalLayout->addWidget(Core::newLineWidget(this));
     mUi->verticalLayout->addWidget(mProgressBar);
