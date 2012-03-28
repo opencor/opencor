@@ -69,7 +69,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     toolbar->addAction(mUi->actionCsvExport);
 
     mUi->verticalLayout->addWidget(toolbar);
-    mUi->verticalLayout->addWidget(Core::newLineWidget(this));
+    mUi->verticalLayout->addWidget(Core::newRealLineWidget(this));
 
     // Create our vertical splitter
 
@@ -114,6 +114,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     verticalSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
 
+    mUi->verticalLayout->addSpacing(verticalSplitter->handleWidth());
     mUi->verticalLayout->addWidget(verticalSplitter);
 
     // Create our (thin) simulation progress widget

@@ -145,7 +145,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mContents = new QStackedWidget(this);
 
-    mContents->setFrameStyle(QFrame::StyledPanel);
+    mContents->setFrameShape(QFrame::StyledPanel);
 
     // Create our logo view which simply display OpenCOR's logo
 
