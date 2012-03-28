@@ -66,6 +66,9 @@ public:
 
     void initialize(const QString &pFileName);
 
+protected:
+    virtual void changeEvent(QEvent *pEvent);
+
 private:
     Ui::SingleCellSimulationViewWidget *mUi;
 
@@ -116,6 +119,8 @@ private:
     void clearActiveGraphPanel();
 
     void outputSolverErrorMsg();
+
+    void setProgressBarStyleSheet();
 
 private Q_SLOTS:
     void on_actionRun_triggered();

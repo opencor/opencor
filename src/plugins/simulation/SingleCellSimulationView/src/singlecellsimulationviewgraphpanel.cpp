@@ -6,6 +6,7 @@
 
 //==============================================================================
 
+#include <QApplication>
 #include <QHBoxLayout>
 #include <QPaintEvent>
 
@@ -78,6 +79,21 @@ SingleCellSimulationViewGraphPanel::~SingleCellSimulationViewGraphPanel()
     // Delete some internal objects
 
     resetCurves();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanel::changeEvent(QEvent *pEvent)
+{
+    // Default handling of the event
+
+    QWidget::changeEvent(pEvent);
+
+    // Check whether the palette has changed and if so then update the colour
+    // used to highlight the active graph panel
+
+    if (pEvent->type() == QEvent::PaletteChange)
+        setMarkerColor();
 }
 
 //==============================================================================
@@ -160,6 +176,21 @@ bool SingleCellSimulationViewGraphPanel::isActive() const
 
 //==============================================================================
 
+void SingleCellSimulationViewGraphPanel::setMarkerColor()
+{
+    // Set the marker's colour based on whether the graph panel is active or not
+
+    QPalette markerPalette = qApp->palette();
+
+    markerPalette.setColor(QPalette::WindowText, mActive?
+                                                    markerPalette.color(QPalette::Highlight):
+                                                    markerPalette.color(QPalette::Window));
+
+    mMarker->setPalette(markerPalette);
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewGraphPanel::setActive(const bool &pActive)
 {
     if (pActive == mActive)
@@ -171,13 +202,7 @@ void SingleCellSimulationViewGraphPanel::setActive(const bool &pActive)
 
     // Update the marker's colour
 
-    QPalette markerPalette = mMarker->palette();
-
-    markerPalette.setColor(QPalette::WindowText, pActive?
-                                                    markerPalette.color(QPalette::Highlight):
-                                                    markerPalette.color(QPalette::Window));
-
-    mMarker->setPalette(markerPalette);
+    setMarkerColor();
 
     // Let people know if the graph panel has been activated or inactivated
 

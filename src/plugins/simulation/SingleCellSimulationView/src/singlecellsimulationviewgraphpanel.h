@@ -42,6 +42,7 @@ public:
     QwtPlot * plot();
 
 protected:
+    virtual void changeEvent(QEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
 private:
@@ -51,6 +52,8 @@ private:
     bool mActive;
 
     QList<QwtPlotCurve *> mPlotCurves;
+
+    void setMarkerColor();
 
 Q_SIGNALS:
     void activated(SingleCellSimulationViewGraphPanel *pGraphPanel);

@@ -125,24 +125,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mProgressBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     mProgressBar->setTextVisible(false);
 
-    QPalette progressBarPalette = mProgressBar->palette();
-    QColor progressBarBackground = progressBarPalette.color(QPalette::Window);
-    QColor progressBarChunkBackground = progressBarPalette.color(QPalette::Highlight);
-
-    mProgressBar->setStyleSheet(QString("QProgressBar {"
-                                        "   background: rgb(%1, %2, %3);"
-                                        "   border: 0px;"
-                                        "}"
-                                        ""
-                                        "QProgressBar::chunk {"
-                                        "   background: rgb(%4, %5, %6);"
-                                        "   border: 0px;"
-                                        "}").arg(QString::number(progressBarBackground.red()),
-                                                 QString::number(progressBarBackground.green()),
-                                                 QString::number(progressBarBackground.blue()),
-                                                 QString::number(progressBarChunkBackground.red()),
-                                                 QString::number(progressBarChunkBackground.green()),
-                                                 QString::number(progressBarChunkBackground.blue())));
+    setProgressBarStyleSheet();
 
     mUi->verticalLayout->addWidget(Core::newLineWidget(this));
     mUi->verticalLayout->addWidget(mProgressBar);
@@ -431,6 +414,47 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
 //    mVoiEnd *= 10;
 //---GRY--- JUST FOR TESTING...
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::setProgressBarStyleSheet()
+{
+    // Customise our progress bar to be a very simple (and fast) one
+
+    QPalette progressBarPalette = qApp->palette();
+    QColor progressBarBackground = progressBarPalette.color(QPalette::Window);
+    QColor progressBarChunkBackground = progressBarPalette.color(QPalette::Highlight);
+
+    mProgressBar->setStyleSheet(QString("QProgressBar {"
+                                        "   background: rgb(%1, %2, %3);"
+                                        "   border: 0px;"
+                                        "}"
+                                        ""
+                                        "QProgressBar::chunk {"
+                                        "   background: rgb(%4, %5, %6);"
+                                        "   border: 0px;"
+                                        "}").arg(QString::number(progressBarBackground.red()),
+                                                 QString::number(progressBarBackground.green()),
+                                                 QString::number(progressBarBackground.blue()),
+                                                 QString::number(progressBarChunkBackground.red()),
+                                                 QString::number(progressBarChunkBackground.green()),
+                                                 QString::number(progressBarChunkBackground.blue())));
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::changeEvent(QEvent *pEvent)
+{
+    // Default handling of the event
+
+    Core::Widget::changeEvent(pEvent);
+
+    // Check whether the palette has changed and if so then update the colours
+    // to be used by our progress bar
+
+    if (pEvent->type() == QEvent::PaletteChange)
+        setProgressBarStyleSheet();
 }
 
 //==============================================================================
