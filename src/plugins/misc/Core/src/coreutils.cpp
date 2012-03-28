@@ -150,7 +150,7 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 //==============================================================================
 
-QFrame * newLineWidget(QWidget* pParent, const bool &pHorizontal)
+QFrame * newLineWidget(QWidget *pParent, const bool &pHorizontal)
 {
     // Return a line widget
 
@@ -158,6 +158,27 @@ QFrame * newLineWidget(QWidget* pParent, const bool &pHorizontal)
 
     res->setFrameShape(pHorizontal?QFrame::HLine:QFrame::VLine);
     res->setFrameShadow(QFrame::Sunken);
+
+    return res;
+}
+
+//==============================================================================
+
+QFrame * newRealLineWidget(QWidget *pParent, const bool &pHorizontal)
+{
+    // Return a 'real' line widget, i.e. one which is 1 pixel wide
+
+    QFrame *res = new QFrame(pParent);
+
+    res->setFrameShape(QFrame::StyledPanel);
+
+    if (pHorizontal) {
+        res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        res->setFixedHeight(1);
+    } else {
+        res->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        res->setFixedWidth(1);
+    }
 
     return res;
 }

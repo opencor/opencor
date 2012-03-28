@@ -102,7 +102,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mOutput->setFrameStyle(QFrame::NoFrame);
 
-    simulationOutputVerticalLayout->addWidget(Core::newLineWidget(this));
+    simulationOutputVerticalLayout->addWidget(Core::newRealLineWidget(this));
     simulationOutputVerticalLayout->addWidget(mOutput);
 
     // Populate our vertical splitter and use as much space as possible for the
@@ -127,7 +127,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     setProgressBarStyleSheet();
 
-    mUi->verticalLayout->addWidget(Core::newLineWidget(this));
+    mUi->verticalLayout->addWidget(Core::newRealLineWidget(this));
     mUi->verticalLayout->addWidget(mProgressBar);
 }
 
