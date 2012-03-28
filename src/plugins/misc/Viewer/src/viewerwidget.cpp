@@ -77,19 +77,6 @@ QSize ViewerWidget::sizeHint() const
 
 //==============================================================================
 
-void ViewerWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QtMmlWidget::paintEvent(pEvent);
-
-    // Draw a border in case we are docked
-
-    drawBorderIfDocked();
-}
-
-//==============================================================================
-
 void ViewerWidget::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event

@@ -35,7 +35,6 @@ public:
 protected:
     virtual QSize sizeHint() const;
 
-    virtual void paintEvent(QPaintEvent *pEvent);
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
