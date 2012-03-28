@@ -72,7 +72,7 @@ QSize ViewerWidget::sizeHint() const
     // Note: this is critical if we want a docked widget, with a file browser
     //       widget on it, to have a decent size when docked to the main window
 
-    return defaultSize(0.1);
+    return 2*Core::CommonWidget::sizeHint();
 }
 
 //==============================================================================

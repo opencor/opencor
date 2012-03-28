@@ -28,14 +28,11 @@ CommonWidget::CommonWidget(QWidget *pParent) :
 
 //==============================================================================
 
-QSize CommonWidget::defaultSize(const double &pRatio) const
+QSize CommonWidget::sizeHint() const
 {
-    // The default size of a widget is one fifth of the available geometry
+    // The default size of a widget is 5% of the available geometry
 
-    QRect desktopGeometry = qApp->desktop()->availableGeometry();
-
-    return QSize(pRatio*desktopGeometry.width(),
-                 pRatio*desktopGeometry.height());
+    return 0.05*qApp->desktop()->availableGeometry().size();
 }
 
 //==============================================================================

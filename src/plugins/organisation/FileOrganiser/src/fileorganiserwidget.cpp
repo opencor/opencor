@@ -477,7 +477,7 @@ QSize FileOrganiserWidget::sizeHint() const
     // Note: this is critical if we want a docked widget, with a file organiser
     //       widget on it, to have a decent size when docked to the main window
 
-    return defaultSize(0.15);
+    return 3*Core::CommonWidget::sizeHint();
 }
 
 //==============================================================================

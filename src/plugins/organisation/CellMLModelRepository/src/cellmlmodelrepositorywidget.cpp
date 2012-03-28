@@ -27,7 +27,7 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
     setStyleSheet("QWebView { margin: 1px; }");
     // Note: not sure why, but no matter how many pixels are specified for the
     //       margin, no margin actually exists, but it addresses the issue with
-    //       border drawn by drawBorderIfDocked, so...
+    //       the border drawn by drawBorderIfDocked, so...
 
     // Prevent objects from being dropped on us
     // Note: by default, QWebView allows for objects to be dropped on itself,
@@ -70,7 +70,7 @@ QSize CellmlModelRepositoryWidget::sizeHint() const
     //       Repository widget on it, to have a decent size when docked to the
     //       main window
 
-    return defaultSize(0.15);
+    return 3*Core::CommonWidget::sizeHint();
 }
 
 //==============================================================================

@@ -180,7 +180,7 @@ HelpWidget::HelpWidget(QWidget *pParent, QHelpEngine *pHelpEngine,
     setStyleSheet("QWebView { margin: 1px; }");
     // Note: not sure why, but no matter how many pixels are specified for the
     //       margin, no margin actually exists, but it addresses the issue with
-    //       border drawn by drawBorderIfDocked, so...
+    //       the border drawn by drawBorderIfDocked, so...
 
     // Use our own help page and help network access manager classes
 
@@ -408,7 +408,7 @@ QSize HelpWidget::sizeHint() const
     // Note: this is critical if we want a docked widget, with a help widget
     //       on it, to have a decent size when docked to the main window
 
-    return defaultSize(0.2);
+    return 4*Core::CommonWidget::sizeHint();
 }
 
 //==============================================================================
