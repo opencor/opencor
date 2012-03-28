@@ -58,7 +58,7 @@ public:
     virtual void loadingOfSettingsDone(const Plugins &);
 
 protected:
-    virtual QSize sizeHint() const;
+    QSize defaultSize(const double &pRatio) const;
 
 #ifndef OpenCOR_MAIN
     void drawBorderIfDocked(const bool &pForceDrawing = false,

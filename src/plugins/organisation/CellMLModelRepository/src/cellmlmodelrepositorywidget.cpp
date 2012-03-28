@@ -70,7 +70,7 @@ QSize CellmlModelRepositoryWidget::sizeHint() const
     //       Repository widget on it, to have a decent size when docked to the
     //       main window
 
-    return 3*Core::CommonWidget::sizeHint();
+    return defaultSize(0.15);
 }
 
 //==============================================================================
