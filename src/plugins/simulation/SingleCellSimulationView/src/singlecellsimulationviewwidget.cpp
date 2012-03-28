@@ -108,6 +108,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     // Populate our vertical splitter and use as much space as possible for the
     // graph panels (by asking their height to be that of the desktop's), and
     // add it to our single cell simulation view widget
+    // Note: we add some spacing before our vertical splitter to match the space
+    //       that exists between the graph panels and the simulation output
+    //       widget. So, yes, it's purely about aesthetic...
 
     verticalSplitter->addWidget(mGraphPanels);
     verticalSplitter->addWidget(simulationOutputWidget);
