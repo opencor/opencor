@@ -29,10 +29,61 @@ namespace RawCellMLView {
 
 //==============================================================================
 
+EditorWidget::EditorWidget(QWidget *pParent, const QString &pFileName) :
+    QWidget(pParent)
+{
+    // Create a layout for ourselves
+
+    QVBoxLayout *verticalLayout= new QVBoxLayout(this);
+
+    verticalLayout->setContentsMargins(0, 0, 0, 0);
+    verticalLayout->setSpacing(0);
+
+    setLayout(verticalLayout);
+
+    // Create and set up a Scintilla editor with an XML lexer associated to it
+
+    QFile file(pFileName);
+    QString fileContents = QString();
+    bool fileIsWritable = false;
+
+    if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        // We could open the file, so retrieve its contents and whether it
+        // can be written to
+
+        fileContents = QTextStream(&file).readAll();
+        fileIsWritable = !(QFileInfo(pFileName).isWritable());
+
+        // We are done with the file, so close it
+
+        file.close();
+    }
+
+    mEditor = new QScintillaSupport::QScintilla(pParent, fileContents,
+                                                fileIsWritable,
+                                                new QsciLexerXML(pParent));
+
+    // Populate our vertical layout with a real line and our Scintilla editor
+
+    verticalLayout->addWidget(Core::newRealLineWidget(this));
+    verticalLayout->addWidget(mEditor);
+}
+
+//==============================================================================
+
+QScintillaSupport::QScintilla * EditorWidget::editor()
+{
+    // Return our Scintilla editor
+
+    return mEditor;
+}
+
+//==============================================================================
+
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     Widget(pParent),
     mUi(new Ui::RawCellmlViewWidget),
-    mEditors(QMap<QString, QScintillaSupport::QScintilla *>()),
+    mEditors(QMap<QString, EditorWidget *>()),
     mEditor(0),
     mViewerHeight(0),
     mEditorHeight(0)
@@ -48,7 +99,8 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     connect(mVerticalSplitter, SIGNAL(splitterMoved(int,int)),
             this, SLOT(verticalSplitterMoved()));
 
-    // Create a viewer with a real line at the bottom of it
+    // Create a viewer with a real line at the bottom of it (so that it looks
+    // aesthetically nicer)
 
     QWidget *viewerWidget = new QWidget(this);
     QVBoxLayout *viewerVerticalLayout= new QVBoxLayout(viewerWidget);
@@ -128,8 +180,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
     if (mEditor) {
         // An editor is currently available, so retrieve the size of both our
         // viewer and the current editor
+        // Note: +1 for viewerHeight because of the real line widget...
 
-        viewerHeight = mViewer->height();
+        viewerHeight = mViewer->height()+1;
         editorHeight = mEditor->height();
 
         // Hide the current editor
@@ -142,28 +195,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
     mEditor = mEditors.value(pFileName);
 
     if (!mEditor) {
-        // No editor exists for the file name, so create and set up a Scintilla
-        // editor with an XML lexer associated to it
+        // No editor exists for the file name, so create one
 
-        QFile file(pFileName);
-        QString fileContents = QString();
-        bool fileIsWritable = false;
-
-        if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
-            // We could open the file, so retrieve its contents and whether it
-            // can be written to
-
-            fileContents = QTextStream(&file).readAll();
-            fileIsWritable = !(QFileInfo(pFileName).isWritable());
-
-            // We are done with the file, so close it
-
-            file.close();
-        }
-
-        mEditor = new QScintillaSupport::QScintilla(qobject_cast<QWidget *>(parent()),
-                                                    fileContents, fileIsWritable,
-                                                    new QsciLexerXML(parent()));
+        mEditor = new EditorWidget(qobject_cast<QWidget *>(parent()),
+                                   pFileName);
 
         // Keep track of the editor and add it to our vertical splitter
 
@@ -178,7 +213,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
     // Set the raw CellML view widget's focus proxy to the 'new' editor
 
-    setFocusProxy(mEditor);
+    setFocusProxy(mEditor->editor());
 
     // Adjust our vertical splitter's sizes
 
@@ -195,7 +230,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         QList<int> newSizes = QList<int>() << viewerHeight;
 
         for (int i = 1, iMax = mVerticalSplitter->count(); i < iMax; ++i)
-            if (dynamic_cast<QScintillaSupport::QScintilla *>(mVerticalSplitter->widget(i)) == mEditor)
+            if (dynamic_cast<EditorWidget *>(mVerticalSplitter->widget(i)) == mEditor)
                 // This is the editor we are after, so...
 
                 newSizes << editorHeight;
@@ -214,8 +249,9 @@ void RawCellmlViewWidget::verticalSplitterMoved()
 {
     // The splitter has moved, so keep track of the viewer and editor's new
     // height
+    // Note: +1 for mViewerHeight because of the real line widget...
 
-    mViewerHeight = mViewer->height();
+    mViewerHeight = mViewer->height()+1;
     mEditorHeight = mEditor->height();
 }
 
