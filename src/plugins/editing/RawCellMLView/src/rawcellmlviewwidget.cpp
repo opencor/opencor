@@ -2,6 +2,7 @@
 // Raw CellML view widget
 //==============================================================================
 
+#include "borderedwidget.h"
 #include "coreutils.h"
 #include "qscintilla.h"
 #include "rawcellmlviewwidget.h"
@@ -29,43 +30,10 @@ namespace RawCellMLView {
 
 //==============================================================================
 
-BorderedWidget::BorderedWidget(QWidget *pWidget) :
-    Core::Widget(qobject_cast<QWidget *>(pWidget->parent()))
-{
-    // Create a layout for ourselves
-
-    QVBoxLayout *verticalLayout= new QVBoxLayout(this);
-
-    verticalLayout->setContentsMargins(0, 0, 0, 0);
-    verticalLayout->setSpacing(0);
-
-    setLayout(verticalLayout);
-
-    // Populate our vertical layout with a real line and our bordered widget
-
-    verticalLayout->addWidget(Core::newRealLineWidget(this));
-    verticalLayout->addWidget(pWidget);
-
-    // Keep track of our bordered widget
-
-    mWidget = pWidget;
-}
-
-//==============================================================================
-
-QWidget * BorderedWidget::widget()
-{
-    // Return our bordered widget
-
-    return mWidget;
-}
-
-//==============================================================================
-
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     Widget(pParent),
     mUi(new Ui::RawCellmlViewWidget),
-    mEditors(QMap<QString, BorderedWidget *>()),
+    mEditors(QMap<QString, Core::BorderedWidget *>()),
     mEditor(0),
     mViewerHeight(0),
     mEditorHeight(0)
@@ -196,10 +164,8 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
             file.close();
         }
 
-        QScintillaSupport::QScintilla *editor = new QScintillaSupport::QScintilla(this, fileContents, fileIsWritable,
-                                                                                  new QsciLexerXML(qobject_cast<QWidget *>(parent())));
-
-        mEditor = new BorderedWidget(editor);
+        mEditor = new Core::BorderedWidget(new QScintillaSupport::QScintilla(this, fileContents, fileIsWritable,
+                                                                             new QsciLexerXML(qobject_cast<QWidget *>(parent()))));
 
         // Keep track of the editor and add it to our vertical splitter
 
@@ -231,7 +197,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         QList<int> newSizes = QList<int>() << viewerHeight;
 
         for (int i = 1, iMax = mVerticalSplitter->count(); i < iMax; ++i)
-            if (dynamic_cast<BorderedWidget *>(mVerticalSplitter->widget(i)) == mEditor)
+            if (dynamic_cast<Core::BorderedWidget *>(mVerticalSplitter->widget(i)) == mEditor)
                 // This is the editor we are after, so...
 
                 newSizes << editorHeight;

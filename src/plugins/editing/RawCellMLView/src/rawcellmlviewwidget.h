@@ -25,6 +25,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Core {
+    class BorderedWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace QScintillaSupport {
     class QScintilla;
 }   // namespace QScintillaSupport
@@ -38,21 +44,6 @@ namespace Viewer {
 //==============================================================================
 
 namespace RawCellMLView {
-
-//==============================================================================
-
-class BorderedWidget : public Core::Widget
-{
-    Q_OBJECT
-
-public:
-    explicit BorderedWidget(QWidget *pWidget);
-
-    QWidget * widget();
-
-private:
-    QWidget *mWidget;
-};
 
 //==============================================================================
 
@@ -72,10 +63,10 @@ private:
     Ui::RawCellmlViewWidget *mUi;
 
     QSplitter *mVerticalSplitter;
-    QMap<QString, BorderedWidget *> mEditors;
+    QMap<QString, Core::BorderedWidget *> mEditors;
 
     Viewer::ViewerWidget *mViewer;
-    BorderedWidget *mEditor;
+    Core::BorderedWidget *mEditor;
 
     int mViewerHeight;
     int mEditorHeight;
