@@ -49,25 +49,15 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     connect(mVerticalSplitter, SIGNAL(splitterMoved(int,int)),
             this, SLOT(verticalSplitterMoved()));
 
-    // Create a viewer with a real line at the bottom of it (so that it looks
-    // aesthetically nicer)
+    // Create a bordered viewer (the border is only here for aesthetical
+    // reasons)
 
-    QWidget *viewerWidget = new QWidget(this);
-    QVBoxLayout *viewerVerticalLayout= new QVBoxLayout(viewerWidget);
-
-    viewerVerticalLayout->setContentsMargins(0, 0, 0, 0);
-    viewerVerticalLayout->setSpacing(0);
-
-    viewerWidget->setLayout(viewerVerticalLayout);
-
-    mViewer = new Viewer::ViewerWidget(pParent);
-
-    viewerVerticalLayout->addWidget(mViewer);
-    viewerVerticalLayout->addWidget(Core::newRealLineWidget(this));
+    mViewer = new Core::BorderedWidget(new Viewer::ViewerWidget(pParent),
+                                       Core::BorderedWidget::Bottom);
 
     // Populate our vertical splitter and add it to our raw CellML view widget
 
-    mVerticalSplitter->addWidget(viewerWidget);
+    mVerticalSplitter->addWidget(mViewer);
 
     mUi->verticalLayout->addWidget(mVerticalSplitter);
 }
@@ -130,9 +120,8 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
     if (mEditor) {
         // An editor is currently available, so retrieve the size of both our
         // viewer and the current editor
-        // Note: +1 for viewerHeight because of the real line widget...
 
-        viewerHeight = mViewer->height()+1;
+        viewerHeight = mViewer->height();
         editorHeight = mEditor->height();
 
         // Hide the current editor
@@ -217,9 +206,8 @@ void RawCellmlViewWidget::verticalSplitterMoved()
 {
     // The splitter has moved, so keep track of the viewer and editor's new
     // height
-    // Note: +1 for mViewerHeight because of the real line widget...
 
-    mViewerHeight = mViewer->height()+1;
+    mViewerHeight = mViewer->height();
     mEditorHeight = mEditor->height();
 }
 

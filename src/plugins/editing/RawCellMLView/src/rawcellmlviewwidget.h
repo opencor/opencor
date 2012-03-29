@@ -65,7 +65,7 @@ private:
     QSplitter *mVerticalSplitter;
     QMap<QString, Core::BorderedWidget *> mEditors;
 
-    Viewer::ViewerWidget *mViewer;
+    Core::BorderedWidget *mViewer;
     Core::BorderedWidget *mEditor;
 
     int mViewerHeight;
