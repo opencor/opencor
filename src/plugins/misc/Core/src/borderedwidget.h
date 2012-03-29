@@ -22,7 +22,15 @@ class CORE_EXPORT BorderedWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit BorderedWidget(QWidget *pWidget);
+    enum Location
+    {
+        Top,
+        Left,
+        Bottom,
+        Right
+    };
+
+    explicit BorderedWidget(QWidget *pWidget, const Location &pLocation);
 
     QWidget * widget();
 

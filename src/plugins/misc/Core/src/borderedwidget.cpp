@@ -8,7 +8,7 @@
 //==============================================================================
 
 #include <QFrame>
-#include <QVBoxLayout>
+#include <QBoxLayout>
 
 //==============================================================================
 
@@ -17,22 +17,33 @@ namespace Core {
 
 //==============================================================================
 
-BorderedWidget::BorderedWidget(QWidget *pWidget) :
+BorderedWidget::BorderedWidget(QWidget *pWidget,
+                               const Location &pLocation) :
     Core::Widget(qobject_cast<QWidget *>(pWidget->parent()))
 {
     // Create a layout for ourselves
 
-    QVBoxLayout *verticalLayout= new QVBoxLayout(this);
+    QBoxLayout *layout;
 
-    verticalLayout->setContentsMargins(0, 0, 0, 0);
-    verticalLayout->setSpacing(0);
+    if ((pLocation == Left) || (pLocation == Right))
+        layout = new QHBoxLayout(this);
+    else
+        layout = new QVBoxLayout(this);
 
-    setLayout(verticalLayout);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    setLayout(layout);
 
     // Populate our vertical layout with a real line and our bordered widget
 
-    verticalLayout->addWidget(Core::newRealLineWidget(this));
-    verticalLayout->addWidget(pWidget);
+    if ((pLocation == Left) || (pLocation == Top))
+        layout->addWidget(Core::newRealLineWidget(this));
+
+    layout->addWidget(pWidget);
+
+    if ((pLocation == Right) || (pLocation == Bottom))
+        layout->addWidget(Core::newRealLineWidget(this));
 
     // Keep track of our bordered widget
 

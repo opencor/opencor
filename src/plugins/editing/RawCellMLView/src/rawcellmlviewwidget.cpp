@@ -165,7 +165,8 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         }
 
         mEditor = new Core::BorderedWidget(new QScintillaSupport::QScintilla(this, fileContents, fileIsWritable,
-                                                                             new QsciLexerXML(qobject_cast<QWidget *>(parent()))));
+                                                                             new QsciLexerXML(qobject_cast<QWidget *>(parent()))),
+                                           Core::BorderedWidget::Top);
 
         // Keep track of the editor and add it to our vertical splitter
 
