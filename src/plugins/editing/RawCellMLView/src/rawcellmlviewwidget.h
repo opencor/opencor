@@ -41,17 +41,17 @@ namespace RawCellMLView {
 
 //==============================================================================
 
-class EditorWidget : public QWidget
+class BorderedWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit EditorWidget(QWidget *pParent, const QString &pFileName);
+    explicit BorderedWidget(QWidget *pWidget);
 
-    QScintillaSupport::QScintilla * editor();
+    QWidget * widget();
 
 private:
-    QScintillaSupport::QScintilla *mEditor;
+    QWidget *mWidget;
 };
 
 //==============================================================================
@@ -72,10 +72,10 @@ private:
     Ui::RawCellmlViewWidget *mUi;
 
     QSplitter *mVerticalSplitter;
-    QMap<QString, EditorWidget *> mEditors;
+    QMap<QString, BorderedWidget *> mEditors;
 
     Viewer::ViewerWidget *mViewer;
-    EditorWidget *mEditor;
+    BorderedWidget *mEditor;
 
     int mViewerHeight;
     int mEditorHeight;

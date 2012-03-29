@@ -29,8 +29,8 @@ namespace RawCellMLView {
 
 //==============================================================================
 
-EditorWidget::EditorWidget(QWidget *pParent, const QString &pFileName) :
-    QWidget(pParent)
+BorderedWidget::BorderedWidget(QWidget *pWidget) :
+    Core::Widget(qobject_cast<QWidget *>(pWidget->parent()))
 {
     // Create a layout for ourselves
 
@@ -41,41 +41,23 @@ EditorWidget::EditorWidget(QWidget *pParent, const QString &pFileName) :
 
     setLayout(verticalLayout);
 
-    // Create and set up a Scintilla editor with an XML lexer associated to it
-
-    QFile file(pFileName);
-    QString fileContents = QString();
-    bool fileIsWritable = false;
-
-    if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        // We could open the file, so retrieve its contents and whether it
-        // can be written to
-
-        fileContents = QTextStream(&file).readAll();
-        fileIsWritable = !(QFileInfo(pFileName).isWritable());
-
-        // We are done with the file, so close it
-
-        file.close();
-    }
-
-    mEditor = new QScintillaSupport::QScintilla(pParent, fileContents,
-                                                fileIsWritable,
-                                                new QsciLexerXML(pParent));
-
-    // Populate our vertical layout with a real line and our Scintilla editor
+    // Populate our vertical layout with a real line and our bordered widget
 
     verticalLayout->addWidget(Core::newRealLineWidget(this));
-    verticalLayout->addWidget(mEditor);
+    verticalLayout->addWidget(pWidget);
+
+    // Keep track of our bordered widget
+
+    mWidget = pWidget;
 }
 
 //==============================================================================
 
-QScintillaSupport::QScintilla * EditorWidget::editor()
+QWidget * BorderedWidget::widget()
 {
-    // Return our Scintilla editor
+    // Return our bordered widget
 
-    return mEditor;
+    return mWidget;
 }
 
 //==============================================================================
@@ -83,7 +65,7 @@ QScintillaSupport::QScintilla * EditorWidget::editor()
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     Widget(pParent),
     mUi(new Ui::RawCellmlViewWidget),
-    mEditors(QMap<QString, EditorWidget *>()),
+    mEditors(QMap<QString, BorderedWidget *>()),
     mEditor(0),
     mViewerHeight(0),
     mEditorHeight(0)
@@ -195,10 +177,29 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
     mEditor = mEditors.value(pFileName);
 
     if (!mEditor) {
-        // No editor exists for the file name, so create one
+        // No editor exists for the file name, so create and set up a Scintilla
+        // editor with an XML lexer associated to it
 
-        mEditor = new EditorWidget(qobject_cast<QWidget *>(parent()),
-                                   pFileName);
+        QFile file(pFileName);
+        QString fileContents = QString();
+        bool fileIsWritable = false;
+
+        if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+            // We could open the file, so retrieve its contents and whether it
+            // can be written to
+
+            fileContents = QTextStream(&file).readAll();
+            fileIsWritable = !(QFileInfo(pFileName).isWritable());
+
+            // We are done with the file, so close it
+
+            file.close();
+        }
+
+        QScintillaSupport::QScintilla *editor = new QScintillaSupport::QScintilla(this, fileContents, fileIsWritable,
+                                                                                  new QsciLexerXML(qobject_cast<QWidget *>(parent())));
+
+        mEditor = new BorderedWidget(editor);
 
         // Keep track of the editor and add it to our vertical splitter
 
@@ -213,7 +214,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
     // Set the raw CellML view widget's focus proxy to the 'new' editor
 
-    setFocusProxy(mEditor->editor());
+    setFocusProxy(mEditor->widget());
 
     // Adjust our vertical splitter's sizes
 
@@ -230,7 +231,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         QList<int> newSizes = QList<int>() << viewerHeight;
 
         for (int i = 1, iMax = mVerticalSplitter->count(); i < iMax; ++i)
-            if (dynamic_cast<EditorWidget *>(mVerticalSplitter->widget(i)) == mEditor)
+            if (dynamic_cast<BorderedWidget *>(mVerticalSplitter->widget(i)) == mEditor)
                 // This is the editor we are after, so...
 
                 newSizes << editorHeight;
