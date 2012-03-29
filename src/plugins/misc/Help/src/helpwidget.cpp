@@ -419,11 +419,11 @@ void HelpWidget::changeEvent(QEvent *pEvent)
 
     QWebView::changeEvent(pEvent);
 
-    // Check whether the palette has changed and if so then update the colour to
-    // be used for the border when docked
+    // Check whether the palette has changed and if so then (re)initialise the
+    // colour to be used for the border when docked
 
     if (pEvent->type() == QEvent::PaletteChange)
-        updateBorderColor();
+        initBorderColor();
 }
 
 //==============================================================================

@@ -35,16 +35,14 @@ namespace Core {
 // The default font family and size below were taken from Qt Creator
 
 #ifdef Q_WS_WIN
-static const QString DefaultFontFamily = "Courier";
-static const int DefaultFontSize = 10;
+    static const QString DefaultFontFamily = "Courier";
+    static const int DefaultFontSize = 10;
+#elif defined(Q_WS_MAC)
+    static const QString DefaultFontFamily = "Monaco";
+    static const int DefaultFontSize = 12;
 #else
-#ifdef Q_WS_MAC
-static const QString DefaultFontFamily = "Monaco";
-static const int DefaultFontSize = 12;
-#else
-static const QString DefaultFontFamily = "Monospace";
-static const int DefaultFontSize = 9;
-#endif
+    static const QString DefaultFontFamily = "Monospace";
+    static const int DefaultFontSize = 9;
 #endif
 
 //==============================================================================
@@ -64,19 +62,15 @@ public:
 protected:
     QSize defaultSize(const double &pRatio) const;
 
-#ifndef OpenCOR_MAIN
-    void updateBorderColor();
+    void initBorderColor();
     void drawBorderIfDocked(const bool &pForceDrawing = false,
                             const bool &pTop = true, const bool &pLeft = true,
                             const bool &pBottom = true, const bool &pRight = true);
-#endif
 
 private:
     QWidget *mParent;
 
-#ifndef OpenCOR_MAIN
     QColor mBorderColor;
-#endif
 };
 
 //==============================================================================

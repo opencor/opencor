@@ -52,6 +52,7 @@ SET(SOURCES
     src/plugins/solverinterface.cpp
 
     src/plugins/misc/Core/src/commonwidget.cpp
+    src/plugins/misc/Core/src/dockwidget.cpp
 )
 
 SET(HEADERS_MOC
@@ -62,6 +63,8 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
+
+    src/plugins/misc/Core/src/dockwidget.h
 )
 
 SET(UIS

@@ -23,16 +23,11 @@ namespace Core {
 //==============================================================================
 
 CommonWidget::CommonWidget(QWidget *pParent) :
-#ifndef OpenCOR_MAIN
-    mParent(pParent),
-    mBorderColor(QColor())
-#else
     mParent(pParent)
-#endif
 {
-#ifndef OpenCOR_MAIN
-    updateBorderColor();
-#endif
+    // Initialise the border's colour
+
+    initBorderColor();
 }
 
 //==============================================================================
@@ -77,8 +72,7 @@ void CommonWidget::loadingOfSettingsDone(const Plugins &)
 
 //==============================================================================
 
-#ifndef OpenCOR_MAIN
-void CommonWidget::updateBorderColor()
+void CommonWidget::initBorderColor()
 {
     // We want the border to be of the same colour as the one used by Qt when
     // rendering the border of a frame with QFrame::StyledPanel as a shape. Now,
@@ -94,18 +88,16 @@ void CommonWidget::updateBorderColor()
 
     mBorderColor = QColor(image.pixel(0, 0));
 }
-#endif
 
 //==============================================================================
 
-#ifndef OpenCOR_MAIN
 void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
                                       const bool &pTop, const bool &pLeft,
                                       const bool &pBottom, const bool &pRight)
 {
 #ifdef Q_WS_MAC
-    // There is no need to draw a border on Mac OS X if we are docked, so
-    // unless we want to force the drawing we just return
+    // There is no need to draw a border on Mac OS X if we are docked, so unless
+    // we want to force the drawing we just return
 
     if (!pForceDrawing)
         return;
@@ -164,7 +156,6 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
             painter.drawLine(border.topRight(), border.bottomRight());
     }
 }
-#endif
 
 //==============================================================================
 
