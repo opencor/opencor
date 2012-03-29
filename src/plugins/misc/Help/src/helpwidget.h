@@ -112,6 +112,7 @@ protected:
 
     virtual QSize sizeHint() const;
 
+    virtual void changeEvent(QEvent *pEvent);
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:

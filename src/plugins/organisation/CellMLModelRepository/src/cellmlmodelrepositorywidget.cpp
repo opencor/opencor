@@ -75,6 +75,21 @@ QSize CellmlModelRepositoryWidget::sizeHint() const
 
 //==============================================================================
 
+void CellmlModelRepositoryWidget::changeEvent(QEvent *pEvent)
+{
+    // Default handling of the event
+
+    QWebView::changeEvent(pEvent);
+
+    // Check whether the palette has changed and if so then update the colour to
+    // be used for the border when docked
+
+    if (pEvent->type() == QEvent::PaletteChange)
+        updateBorderColor();
+}
+
+//==============================================================================
+
 void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Default handling of the event

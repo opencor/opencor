@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include <QWidget>
+#include "widget.h"
 
 //==============================================================================
 
@@ -25,7 +25,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewGraphPanel : public QWidget
+class SingleCellSimulationViewGraphPanel : public Core::Widget
 {
     Q_OBJECT
 

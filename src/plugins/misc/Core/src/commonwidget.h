@@ -12,8 +12,12 @@
 
 //==============================================================================
 
-#include <QString>
 #include <QtGlobal>
+
+//==============================================================================
+
+#include <QColor>
+#include <QString>
 
 //==============================================================================
 
@@ -61,6 +65,7 @@ protected:
     QSize defaultSize(const double &pRatio) const;
 
 #ifndef OpenCOR_MAIN
+    void updateBorderColor();
     void drawBorderIfDocked(const bool &pForceDrawing = false,
                             const bool &pTop = true, const bool &pLeft = true,
                             const bool &pBottom = true, const bool &pRight = true);
@@ -68,6 +73,10 @@ protected:
 
 private:
     QWidget *mParent;
+
+#ifndef OpenCOR_MAIN
+    QColor mBorderColor;
+#endif
 };
 
 //==============================================================================

@@ -23,8 +23,16 @@ namespace Core {
 //==============================================================================
 
 CommonWidget::CommonWidget(QWidget *pParent) :
+#ifndef OpenCOR_MAIN
+    mParent(pParent),
+    mBorderColor(QColor())
+#else
     mParent(pParent)
+#endif
 {
+#ifndef OpenCOR_MAIN
+    updateBorderColor();
+#endif
 }
 
 //==============================================================================
@@ -70,6 +78,27 @@ void CommonWidget::loadingOfSettingsDone(const Plugins &)
 //==============================================================================
 
 #ifndef OpenCOR_MAIN
+void CommonWidget::updateBorderColor()
+{
+    // We want the border to be of the same colour as the one used by Qt when
+    // rendering the border of a frame with QFrame::StyledPanel as a shape. Now,
+    // the problem is that this colour isn't defined anywhere, so we create a
+    // frame, render it to an image and manually retrieve the colour of the
+    // frame's border...
+
+    QFrame frame;
+    QImage image = QImage(frame.size(), QImage::Format_ARGB32_Premultiplied);
+
+    frame.setFrameShape(QFrame::StyledPanel);
+    frame.render(&image);
+
+    mBorderColor = QColor(image.pixel(0, 0));
+}
+#endif
+
+//==============================================================================
+
+#ifndef OpenCOR_MAIN
 void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
                                       const bool &pTop, const bool &pLeft,
                                       const bool &pBottom, const bool &pRight)
@@ -102,29 +131,7 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
 
         QPen pen = painter.pen();
 
-        static bool firstTime = true;
-        static QColor borderColor = QColor();
-
-        if (firstTime) {
-            // We want the border to be of the same colour as the one used by Qt
-            // to render the border of a frame which shape is set to
-            // QFrame::StyledPanel. Now, the problem is that this colour isn't
-            // defined anywhere, so we create a dummy frame, render it to an
-            // image and manually retrieve the colour of the frame's border...
-
-            QFrame frame;
-            QImage image = QImage(widget->size(),
-                                  QImage::Format_ARGB32_Premultiplied);
-
-            frame.setFrameShape(QFrame::StyledPanel);
-            frame.render(&image);
-
-            borderColor = QColor(image.pixel(0, 0));
-
-            firstTime = false;
-        }
-
-        pen.setColor(borderColor);
+        pen.setColor(mBorderColor);
 
         painter.setPen(pen);
 
