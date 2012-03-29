@@ -2,6 +2,7 @@
 // Raw CellML view widget
 //==============================================================================
 
+#include "coreutils.h"
 #include "qscintilla.h"
 #include "rawcellmlviewwidget.h"
 #include "viewerwidget.h"
@@ -47,13 +48,24 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     connect(mVerticalSplitter, SIGNAL(splitterMoved(int,int)),
             this, SLOT(verticalSplitterMoved()));
 
-    // Create a viewer
+    // Create a viewer with a real line at the bottom of it
+
+    QWidget *viewerWidget = new QWidget(this);
+    QVBoxLayout *viewerVerticalLayout= new QVBoxLayout(viewerWidget);
+
+    viewerVerticalLayout->setContentsMargins(0, 0, 0, 0);
+    viewerVerticalLayout->setSpacing(0);
+
+    viewerWidget->setLayout(viewerVerticalLayout);
 
     mViewer = new Viewer::ViewerWidget(pParent);
 
+    viewerVerticalLayout->addWidget(mViewer);
+    viewerVerticalLayout->addWidget(Core::newRealLineWidget(this));
+
     // Populate our vertical splitter and add it to our raw CellML view widget
 
-    mVerticalSplitter->addWidget(mViewer);
+    mVerticalSplitter->addWidget(viewerWidget);
 
     mUi->verticalLayout->addWidget(mVerticalSplitter);
 }
