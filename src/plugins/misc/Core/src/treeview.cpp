@@ -32,6 +32,17 @@ TreeView::TreeView(QWidget *pParent) :
 
 //==============================================================================
 
+QSize TreeView::sizeHint() const
+{
+    // Suggest a default size for the tree view
+    // Note: this is critical if we want a docked widget, with a tree view
+    //       widget on it, to have a decent size when docked to the main window
+
+    return defaultSize(0.15);
+}
+
+//==============================================================================
+
 void TreeView::startDrag(Qt::DropActions pSupportedActions)
 {
     // This a reimplementation of QAbstractItemView::startDrag, so that we can

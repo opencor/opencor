@@ -78,8 +78,6 @@ public:
     QString filePath(const QModelIndex &pFileIndex) const;
 
 protected:
-    virtual QSize sizeHint() const;
-
     virtual bool viewportEvent(QEvent *pEvent);
 
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);

@@ -236,17 +236,6 @@ void FileBrowserWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QSize FileBrowserWidget::sizeHint() const
-{
-    // Suggest a default size for the file browser widget
-    // Note: this is critical if we want a docked widget, with a file browser
-    //       widget on it, to have a decent size when docked to the main window
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
 bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 {
     if (pEvent->type() == QEvent::ToolTip) {

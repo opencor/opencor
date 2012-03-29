@@ -38,12 +38,12 @@ BorderedWidget::BorderedWidget(QWidget *pWidget,
     // Populate our vertical layout with a real line and our bordered widget
 
     if ((pLocation == Left) || (pLocation == Top))
-        layout->addWidget(Core::newRealLineWidget(this));
+        layout->addWidget(Core::newRealLineWidget(this, pLocation == Top));
 
     layout->addWidget(pWidget);
 
     if ((pLocation == Right) || (pLocation == Bottom))
-        layout->addWidget(Core::newRealLineWidget(this));
+        layout->addWidget(Core::newRealLineWidget(this, pLocation == Bottom));
 
     // Keep track of our bordered widget
 

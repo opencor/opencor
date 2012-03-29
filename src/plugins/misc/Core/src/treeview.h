@@ -29,6 +29,8 @@ public:
     explicit TreeView(QWidget *pParent);
 
 protected:
+    virtual QSize sizeHint() const;
+
     virtual void startDrag(Qt::DropActions pSupportedActions);
 };
 

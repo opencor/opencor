@@ -2,6 +2,7 @@
 // CellML annotation view widget
 //==============================================================================
 
+#include "borderedwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "coreutils.h"
@@ -50,8 +51,10 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     //---GRY--- THE DUMMY WIDGET WILL EVENTUALLY GET REPLACED BY SOMETHING THAT
     //          WILL ALLOW THE USER TO EDIT METADATA, MAKE USE OF RICORDO, ETC.
 
-    horizontalSplitter->addWidget(mTreeView);
-    horizontalSplitter->addWidget(new QWidget(this));
+    horizontalSplitter->addWidget(new Core::BorderedWidget(mTreeView,
+                                                           Core::BorderedWidget::Right));
+    horizontalSplitter->addWidget(new Core::BorderedWidget(new QWidget(this),
+                                                           Core::BorderedWidget::Left));
 
     mUi->verticalLayout->addWidget(horizontalSplitter);
 

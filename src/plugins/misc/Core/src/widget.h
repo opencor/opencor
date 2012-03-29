@@ -27,6 +27,9 @@ class CORE_EXPORT Widget : public QWidget, public CommonWidget
 
 public:
     explicit Widget(QWidget *pParent);
+
+protected:
+    virtual QSize sizeHint() const;
 };
 
 //==============================================================================

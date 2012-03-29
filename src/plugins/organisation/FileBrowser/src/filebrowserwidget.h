@@ -52,8 +52,6 @@ public:
     void goToNextFileOrFolder();
 
 protected:
-    virtual QSize sizeHint() const;
-
     virtual bool viewportEvent(QEvent *pEvent);
 
     virtual void keyPressEvent(QKeyEvent *pEvent);

@@ -52,7 +52,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     // Create a bordered viewer (the border is only here for aesthetical
     // reasons)
 
-    mViewer = new Core::BorderedWidget(new Viewer::ViewerWidget(pParent),
+    mViewer = new Core::BorderedWidget(new Viewer::ViewerWidget(this),
                                        Core::BorderedWidget::Bottom);
 
     // Populate our vertical splitter and add it to our raw CellML view widget
@@ -154,7 +154,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         }
 
         mEditor = new Core::BorderedWidget(new QScintillaSupport::QScintilla(this, fileContents, fileIsWritable,
-                                                                             new QsciLexerXML(qobject_cast<QWidget *>(parent()))),
+                                                                             new QsciLexerXML(this)),
                                            Core::BorderedWidget::Top);
 
         // Keep track of the editor and add it to our vertical splitter

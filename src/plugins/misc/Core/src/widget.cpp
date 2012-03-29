@@ -19,6 +19,15 @@ Widget::Widget(QWidget *pParent) :
 
 //==============================================================================
 
+QSize Widget::sizeHint() const
+{
+    // Suggest a default size for the widget
+
+    return defaultSize(0.15);
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 
