@@ -15,6 +15,10 @@ namespace Viewer {
 
 //==============================================================================
 
+static const QString FontName = "Times New Roman";
+
+//==============================================================================
+
 ViewerWidget::ViewerWidget(QWidget *pParent) :
     QtMmlWidget(pParent),
     CommonWidget(pParent)
@@ -26,6 +30,7 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mTestViewerWidget = new QtMmlWidget();
 
     mTestViewerWidget->setBaseFontPointSize(100);
+    mTestViewerWidget->setFontName(NormalFont, FontName);
 
     // Set the background role in such a way that the background color is always
     // that of the system's base colour
@@ -38,9 +43,9 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
 
     // Set a font that we know works on Windows, Linux and Mac OS X
 
-    setFontName(NormalFont, "Times New Roman");
+    setFontName(NormalFont, FontName);
 
-//---GRY--- THE BELOW CODE IS JUST FOR TESTING THE COMPONENT...
+//---GRY--- THE BELOW CODE IS JUST FOR TESTING THE WIDGET...
 setContent("<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><msub><mi>i</mi><mi>Na</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>g</mi><mi>Na</mi></msub><mo>·</mo><msup><mi>m</mi><mn>3</mn></msup><mo>·</mo><mi>h</mi><mo>·</mo><msub><mi>Na</mi><mi>o</mi></msub><mo>·</mo><mfrac><msup><mi>F</mi><mn>2</mn></msup><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac><mo>·</mo><mo>(</mo><mrow><msup><mi>e</mi><mrow><mo>(</mo><mi>V</mi><mo>-</mo><msub><mi>E</mi><mn>Na</mn></msub><mo>)</mo><mo>·</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow><mo>)</mo></mrow><mrow><msup><mi>e</mi><mrow><mi>V</mi><mo>·</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow></mfrac><mo>·</mo><mi>V</mi></mrow></math>");
 }
 
