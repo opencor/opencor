@@ -16,6 +16,7 @@
 
 #include <QDesktopWidget>
 #include <QFileInfo>
+#include <QSettings>
 #include <QSplitter>
 #include <QTextStream>
 
@@ -74,8 +75,8 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
     // Retrieve the viewer's and editor's height
     // Note #1: the viewer's default height is 19% of the desktop's height while
     //          that of the editor is as big as it can be...
-    // Note #2: because the editor's default height is much bigger than our raw
-    //          CellML view widget's height, the viewer's default height will
+    // Note #2: because the editor's default height is much bigger than that of
+    //          our raw CellML view widget, the viewer's default height will
     //          effectively be less than 19% of the desktop's height, but that
     //          doesn't matter at all...
 
@@ -91,10 +92,10 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the viewer's and editor's height
     // Note #1: we must also keep track of the editor's height because when
-    //          loading our raw CellML view widget's settings (see above), the
-    //          widget doesn't yet have a 'proper' height, so we couldn't simply
-    //          assume that the editor's initial height is this widget's height
-    //          minus the viewer's initial height, so...
+    //          loading our settings (see above), the widget doesn't yet have a
+    //          'proper' height, so we couldn't simply assume that the editor's
+    //          initial height is this widget's height minus the viewer's
+    //          initial height, so...
     // Note #2: we rely on mViewerHeight and mEditorHeight rather than directly
     //          calling the height() method of the viewer and of the editor,
     //          respectively since it may happen that the user exits OpenCOR
