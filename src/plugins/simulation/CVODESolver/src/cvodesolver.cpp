@@ -47,8 +47,8 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 
 //==============================================================================
 
-void errorHandler(int pErrorCode, const char */* pModule */,
-                  const char */* pFunction */, char *pErrorMsg, void *pUserData)
+void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
+                  char *pErrorMsg, void *pUserData)
 {
     if (pErrorCode != CV_WARNING) {
         // CVODE really generated an error, so forward it to the CvodeSolver

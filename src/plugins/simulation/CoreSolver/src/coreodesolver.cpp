@@ -23,11 +23,10 @@ CoreOdeSolver::CoreOdeSolver() :
 
 //==============================================================================
 
-void CoreOdeSolver::initialize(const double &/* pVoiStart */,
-                               const int &pStatesCount, double *pConstants,
-                               double *pRates, double *pStates,
-                               double *pAlgebraic,
-                               ComputeRatesFunction /* pComputeRates */)
+void CoreOdeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
+                               double *pConstants, double *pRates,
+                               double *pStates, double *pAlgebraic,
+                               ComputeRatesFunction pComputeRates)
 {
     // Initialise the ODE solver
 

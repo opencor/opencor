@@ -26,15 +26,15 @@ public:
 
     explicit CoreDaeSolver();
 
-    virtual void initialize(const double &/* pVoiStart */,
-                            const bool &/* pPositiveDirection */,
+    virtual void initialize(const double &pVoiStart,
+                            const bool &pPositiveDirection,
                             const int &pStatesCount, const int &pCondVarCount,
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic, double *pCondVar,
-                            ComputeEssentialVariablesFunction /* pComputeEssentialVariables */,
-                            ComputeResidualsFunction /* pComputeResiduals */,
-                            ComputeRootInformationFunction /* pComputeRootInformation */,
-                            ComputeStateInformationFunction /* pComputeStateInformation */);
+                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                            ComputeResidualsFunction pComputeResiduals,
+                            ComputeRootInformationFunction pComputeRootInformation,
+                            ComputeStateInformationFunction pComputeStateInformation);
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const = 0;
 
