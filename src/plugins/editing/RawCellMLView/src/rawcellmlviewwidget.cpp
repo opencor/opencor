@@ -187,7 +187,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         QList<int> newSizes = QList<int>() << viewerHeight;
 
         for (int i = 1, iMax = mVerticalSplitter->count(); i < iMax; ++i)
-            if (dynamic_cast<Core::BorderedWidget *>(mVerticalSplitter->widget(i)) == mEditor)
+            if (static_cast<Core::BorderedWidget *>(mVerticalSplitter->widget(i)) == mEditor)
                 // This is the editor we are after, so...
 
                 newSizes << editorHeight;
