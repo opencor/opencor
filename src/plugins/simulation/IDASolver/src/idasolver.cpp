@@ -82,6 +82,9 @@ int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
                   char *pErrorMsg, void *pUserData)
 {
+    Q_UNUSED(pModule);
+    Q_UNUSED(pFunction);
+
     if (pErrorCode != IDA_WARNING) {
         // IDA really generated an error, so forward it to the IdaSolver object
 

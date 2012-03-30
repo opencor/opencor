@@ -36,6 +36,13 @@ void CoreDaeSolver::initialize(const double &pVoiStart,
                                ComputeRootInformationFunction pComputeRootInformation,
                                ComputeStateInformationFunction pComputeStateInformation)
 {
+    Q_UNUSED(pVoiStart);
+    Q_UNUSED(pPositiveDirection);
+    Q_UNUSED(pComputeEssentialVariables);
+    Q_UNUSED(pComputeResiduals);
+    Q_UNUSED(pComputeRootInformation);
+    Q_UNUSED(pComputeStateInformation);
+
     // Initialise the DAE solver
 
     mStatesCount  = pStatesCount;

@@ -28,6 +28,9 @@ void CoreOdeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
                                double *pStates, double *pAlgebraic,
                                ComputeRatesFunction pComputeRates)
 {
+    Q_UNUSED(pVoiStart);
+    Q_UNUSED(pComputeRates);
+
     // Initialise the ODE solver
 
     mStatesCount = pStatesCount;

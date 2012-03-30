@@ -593,7 +593,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     } else {
         daeSolver->setProperty("Maximum step", mVoiMaximumStep);
 
-        daeSolver->initialize(voi, mVoiEnd > 0/* mVoiStart */,
+        daeSolver->initialize(voi, mVoiEnd > 0,
                               mStatesCount, mCondVarCount, mConstants, mRates,
                               mStates, mAlgebraic, mCondVar,
                               daeFunctions.computeEssentialVariables,
