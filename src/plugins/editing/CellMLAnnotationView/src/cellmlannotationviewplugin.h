@@ -7,9 +7,14 @@
 
 //==============================================================================
 
+#include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
+
+//==============================================================================
+
+class QSettings;
 
 //==============================================================================
 
@@ -22,18 +27,32 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo();
 
 //==============================================================================
 
-class CellMLAnnotationViewPlugin : public QObject, public GuiInterface,
-                                   public I18nInterface
+class CellmlAnnotationViewWidget;
+
+//==============================================================================
+
+class CellMLAnnotationViewPlugin : public QObject, public CoreInterface,
+                                   public GuiInterface, public I18nInterface
 {
     Q_OBJECT
+    Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
     explicit CellMLAnnotationViewPlugin();
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     virtual QWidget * newViewWidget(const QString &pFileName);
     virtual QString viewName(const int &pViewIndex);
+
+private:
+    int mTreeViewWidth;
+    int mCellmlAnnotationWidth;
+
+    QList<CellmlAnnotationViewWidget *> mWidgets;
 };
 
 //==============================================================================
