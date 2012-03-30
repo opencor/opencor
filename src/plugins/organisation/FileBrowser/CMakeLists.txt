@@ -10,10 +10,12 @@ ADD_PLUGIN(FileBrowser
         ../../interface.cpp
         ../../plugininfo.cpp
 
+        src/filebrowsermodel.cpp
         src/filebrowserplugin.cpp
         src/filebrowserwidget.cpp
         src/filebrowserwindow.cpp
     HEADERS_MOC
+        src/filebrowsermodel.h
         src/filebrowserplugin.h
         src/filebrowserwidget.h
         src/filebrowserwindow.h

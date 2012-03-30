@@ -30,6 +30,8 @@ static const QString FileOrganiserMimeType = "opencor/file-organiser";
 
 class FileOrganiserModel : public QStandardItemModel
 {
+    Q_OBJECT
+
     friend class FileOrganiserWidget;
 
 public:

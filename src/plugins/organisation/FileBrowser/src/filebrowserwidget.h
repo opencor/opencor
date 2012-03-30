@@ -7,28 +7,13 @@
 
 //==============================================================================
 
+#include "filebrowsermodel.h"
 #include "treeview.h"
-
-//==============================================================================
-
-#include <QFileSystemModel>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace FileBrowser {
-
-//==============================================================================
-
-class FileBrowserModel : public QFileSystemModel
-{
-    Q_OBJECT
-
-public:
-    explicit FileBrowserModel(QObject *pParent);
-
-    virtual Qt::ItemFlags flags(const QModelIndex &pIndex) const;
-};
 
 //==============================================================================
 

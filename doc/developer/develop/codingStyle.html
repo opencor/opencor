@@ -197,8 +197,7 @@ int&amp; b;</pre>
                             </li>
                             <li>
                                 Avoid C-style casts when possible:
-                                <pre class="good prettyprint">char *blockOfMemory = (char *)malloc(data.size());
-char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</pre>
+                                <pre class="good prettyprint">char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</pre>
                                 <pre class="bad prettyprint">char* blockOfMemory = (char* ) malloc(data.size());</pre>
                                 Of course, in this particulare case, using <code>new</code> might be an even better option.
                             </li>
