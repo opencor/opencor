@@ -63,7 +63,12 @@ static bool           g_draw_frames			= false;
 static const double   g_mfrac_spacing			= 0.1;
 static const double   g_mroot_base_margin		= 0.1;
 static const double   g_script_size_multiplier	    	= 0.7071; // sqrt(1/2)
+/*---OPENCOR---
 static const int      g_min_font_point_size		= 8;
+*/
+//---OPENCOR--- BEGIN
+static const int      g_min_font_point_size		= 1;
+//---OPENCOR--- END
 static const QChar    g_radical_char  	    	    	= QChar(0x1A, 0x22);
 static const unsigned g_oper_spec_rows     	        = 9;
 
@@ -6385,6 +6390,9 @@ QString QtMmlDocument::fontName(QtMmlWidget::MmlFont type) const
 void QtMmlDocument::setFontName(QtMmlWidget::MmlFont type, const QString &name)
 {
     m_doc->setFontName(type, name);
+//---OPENCOR--- BEGIN
+    m_doc->layout();
+//---OPENCOR--- END
 }
 
 /*!
@@ -6406,5 +6414,13 @@ int QtMmlDocument::baseFontPointSize() const
 */
 void QtMmlDocument::setBaseFontPointSize(int size)
 {
+//---OPENCOR--- BEGIN
+    if (size < g_min_font_point_size)
+        return;
+
+//---OPENCOR--- END
     m_doc->setBaseFontPointSize(size);
+//---OPENCOR--- BEGIN
+    m_doc->layout();
+//---OPENCOR--- END
 }
