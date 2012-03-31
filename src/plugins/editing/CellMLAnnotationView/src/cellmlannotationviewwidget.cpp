@@ -72,7 +72,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mDebugOutput->setFrameStyle(QFrame::NoFrame);
     mDebugOutput->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    mUi->verticalLayout->addWidget(Core::newRealLineWidget(this));
+    mUi->verticalLayout->addWidget(Core::newLineWidget(this));
     mUi->verticalLayout->addWidget(mDebugOutput);
 
     // Initialise our tree view
