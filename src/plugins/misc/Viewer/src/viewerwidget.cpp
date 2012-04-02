@@ -6,6 +6,7 @@
 
 //==============================================================================
 
+#include <QPainter>
 #include <QPaintEvent>
 
 //==============================================================================
@@ -15,35 +16,16 @@ namespace Viewer {
 
 //==============================================================================
 
-static const QString FontName = "Times New Roman";
-
-//==============================================================================
-
 ViewerWidget::ViewerWidget(QWidget *pParent) :
-    QtMmlWidget(pParent),
-    CommonWidget(pParent)
+    Widget(pParent),
+    mMmlDocument(QtMmlDocument()),
+    mOneOverMmlDocumentWidth(0),
+    mOneOverMmlDocumentHeight(0),
+    mContent(QString())
 {
-    // Create a test MathML widget and set its base font point size to 100, so
-    // that we can use that as a benchmark for what the 'ideal' dimensions of
-    // the MathML widget should be (see resizeEvent below)
+    // Initialise the font of our MathML document
 
-    mTestViewerWidget = new QtMmlWidget();
-
-    mTestViewerWidget->setBaseFontPointSize(100);
-    mTestViewerWidget->setFontName(NormalFont, FontName);
-
-    // Set the background role in such a way that the background color is always
-    // that of the system's base colour
-
-    setBackgroundRole(QPalette::Base);
-
-    // Have the background filled automatically
-
-    setAutoFillBackground(true);
-
-    // Set a font that we know works on Windows, Linux and Mac OS X
-
-    setFontName(NormalFont, FontName);
+    mMmlDocument.setFontName(QtMmlWidget::NormalFont, "Times New Roman");
 
 //---GRY--- THE BELOW CODE IS JUST FOR TESTING THE WIDGET...
 setContent("<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><msub><mi>i</mi><mi>Na</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>g</mi><mi>Na</mi></msub><mo>·</mo><msup><mi>m</mi><mn>3</mn></msup><mo>·</mo><mi>h</mi><mo>·</mo><msub><mi>Na</mi><mi>o</mi></msub><mo>·</mo><mfrac><msup><mi>F</mi><mn>2</mn></msup><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac><mo>·</mo><mo>(</mo><mrow><msup><mi>e</mi><mrow><mo>(</mo><mi>V</mi><mo>-</mo><msub><mi>E</mi><mn>Na</mn></msub><mo>)</mo><mo>·</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow><mo>)</mo></mrow><mrow><msup><mi>e</mi><mrow><mi>V</mi><mo>·</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>·</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow></mfrac><mo>·</mo><mi>V</mi></mrow></math>");
@@ -51,22 +33,35 @@ setContent("<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><msub><mi>i
 
 //==============================================================================
 
-ViewerWidget::~ViewerWidget()
-{
-    delete mTestViewerWidget;
-}
-
-//==============================================================================
-
 bool ViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
                               int *pErrorLine, int *pErrorColumn)
 {
-    // Set the MathML equation
+    // Keep track of the the MathML equation
 
-    mTestViewerWidget->setContent(pContent);
+    mContent = pContent;
 
-    return QtMmlWidget::setContent(pContent, pErrorMsg,
-                                   pErrorLine, pErrorColumn);
+    // Make sure that the base font size is set to 100 pixels and then set the
+    // MathML equation
+    // Note: when setting the equation, QtMmlDocument recomputes the equation's
+    //       layout. Now, because we want the equation to be rendered as
+    //       optimally as possible, we use a big font size, so that when we
+    //       actually need to render the equation (see paintEvent()), we can
+    //       based on the size of the widget use an optimal font size...
+
+    mMmlDocument.setBaseFontPointSize(100);
+
+    bool res = mMmlDocument.setContent(pContent, pErrorMsg, pErrorLine, pErrorColumn);
+
+    // Keep track of the size of the big version of the rendered equation
+
+    QSize mmlDocumentSize = mMmlDocument.size();
+
+    mOneOverMmlDocumentWidth  = 1.0/mmlDocumentSize.width();
+    mOneOverMmlDocumentHeight = 1.0/mmlDocumentSize.height();
+
+    // We are all done, so just return the result of setContent()
+
+    return res;
 }
 
 //==============================================================================
@@ -82,27 +77,28 @@ QSize ViewerWidget::sizeHint() const
 
 //==============================================================================
 
-void ViewerWidget::resizeEvent(QResizeEvent *pEvent)
+void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 {
-    // Default handling of the event
+    QPainter painter(this);
 
-    QtMmlWidget::resizeEvent(pEvent);
-
-    // Retrieve the 'optimal' dimensions of the MathML equation (which was
-    // rendered using our mTestViewerWidget object)
-    // Note: to skip the mTestViewerWidget object (to save a bit of memory) and
-    //       use the current object to compute the 'optimal' dimensions is not
-    //       good enough. For having tried it, this worked fine when resizing
-    //       the object vertically (the equation would resize accordingly), but
-    //       not horizontally (the equation would just not resize), so...
-
-    QSize testViewerWidgetSize = mTestViewerWidget->sizeHint();
-
-    setBaseFontPointSize(qRound(93*qMin((double) width()/testViewerWidgetSize.width(),
-                                        (double) height()/testViewerWidgetSize.height())));
-    // Note: to go for 100% of the 'optimal' size may result in the edges of
+    // Set the base font size value
+    // Note: to go for 100% of the 'optimal' size might result in the edges of
     //       the equation being clipped, hence we go for 93% of the 'optimal'
     //       size...
+
+    mMmlDocument.setBaseFontPointSize(qRound(93*qMin((double) width()*mOneOverMmlDocumentWidth,
+                                                     (double) height()*mOneOverMmlDocumentHeight)));
+
+    // Clear the background
+
+    painter.fillRect(pEvent->rect(), QColor(palette().color(QPalette::Base)));
+
+    // Render the equation
+
+    QSize mmlDocumentSize = mMmlDocument.size();
+
+    mMmlDocument.paint(&painter, QPoint(0.5*(width()-mmlDocumentSize.width()),
+                                        0.5*(height()-mmlDocumentSize.height())));
 }
 
 //==============================================================================

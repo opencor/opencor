@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "commonwidget.h"
+#include "widget.h"
 #include "viewerglobal.h"
 
 //==============================================================================
@@ -21,13 +21,12 @@ namespace Viewer {
 
 //==============================================================================
 
-class VIEWER_EXPORT ViewerWidget : public QtMmlWidget, public Core::CommonWidget
+class VIEWER_EXPORT ViewerWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
     explicit ViewerWidget(QWidget *pParent);
-    ~ViewerWidget();
 
     bool setContent(const QString &pContent, QString *pErrorMsg = 0,
                     int *pErrorLine = 0, int *pErrorColumn = 0);
@@ -35,10 +34,15 @@ public:
 protected:
     virtual QSize sizeHint() const;
 
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
-    QtMmlWidget *mTestViewerWidget;
+    QtMmlDocument mMmlDocument;
+
+    double mOneOverMmlDocumentWidth;
+    double mOneOverMmlDocumentHeight;
+
+    QString mContent;
 };
 
 //==============================================================================

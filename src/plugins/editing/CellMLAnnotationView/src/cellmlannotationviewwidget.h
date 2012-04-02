@@ -17,6 +17,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QSplitter;
 class QTextEdit;
 class QTreeView;
 
@@ -35,13 +36,26 @@ public:
     explicit CellmlAnnotationViewWidget(QWidget *pParent,
                                         const QString &pFileName);
 
+    QList<int> horizontalSplitterSizes() const;
+
 private:
     Ui::CellmlAnnotationViewWidget *mUi;
+
+    QSplitter *mHorizontalSplitter;
 
     QTreeView *mTreeView;
     QTextEdit *mDebugOutput;
 
     void initTreeView(const QString &pFileName);
+
+Q_SIGNALS:
+    void horizontalSplitterMoved(const QList<int> &pSizes);
+
+public Q_SLOTS:
+    void updateHorizontalSplitter(const QList<int> &pSizes);
+
+private Q_SLOTS:
+    void emitHorizontalSplitterMoved();
 };
 
 //==============================================================================
