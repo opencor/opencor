@@ -381,11 +381,11 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 //==============================================================================
 
-iface::cellml_api::Model * CellmlFile::model()
+QString CellmlFile::modelName()
 {
-    // Return the file's model
+    // Return the model's name
 
-    return mModel;
+    return QString::fromStdWString(mModel->name());
 }
 
 //==============================================================================
