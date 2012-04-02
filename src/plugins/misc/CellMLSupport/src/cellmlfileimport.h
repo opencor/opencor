@@ -12,6 +12,7 @@
 //==============================================================================
 
 #include <QList>
+#include <QMap>
 #include <QString>
 
 //==============================================================================
@@ -26,10 +27,19 @@ class CELLMLSUPPORT_EXPORT CellmlFileImport
 public:
     explicit CellmlFileImport(const QString &pUri);
 
+    void addUnits(const QString &pName, const QString &pReferenceName);
+    void addComponent(const QString &pName, const QString &pReferenceName);
+
     QString uri() const;
+
+    QMap<QString, QString> units() const;
+    QMap<QString, QString> components() const;
 
 private:
     QString mUri;
+
+    QMap<QString, QString> mUnits;
+    QMap<QString, QString> mComponents;
 };
 
 //==============================================================================
