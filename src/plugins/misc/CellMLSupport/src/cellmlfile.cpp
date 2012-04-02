@@ -30,6 +30,7 @@
 
 //==============================================================================
 
+#include "IfaceCellML_APISPEC.hxx"
 #include "IfaceVACSS.hxx"
 
 #include "CellMLBootstrap.hpp"
@@ -346,7 +347,7 @@ qDebug(" - CellML warnings vs. errors time: %s s", qPrintable(QString::number(0.
 
 //==============================================================================
 
-CellmlFileIssues CellmlFile::issues()
+CellmlFileIssues CellmlFile::issues() const
 {
     // Return the file's issue(s)
 
@@ -381,11 +382,39 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 //==============================================================================
 
-QString CellmlFile::modelName()
+QString CellmlFile::modelName() const
 {
     // Return the model's name
 
     return QString::fromStdWString(mModel->name());
+}
+
+//==============================================================================
+
+CellmlFileImports CellmlFile::imports() const
+{
+    CellmlFileImports res = CellmlFileImports();
+
+    // Retrieve the list of imports for the model
+
+    iface::cellml_api::CellMLImportSet *cellmlFileImports = mModel->imports();
+
+    // Iterate through the imports and add them to our list
+
+    iface::cellml_api::CellMLImportIterator *cellmlFileImportsIterator = cellmlFileImports->iterateImports();
+    iface::cellml_api::CellMLImport *cellmlImport;
+
+    while (cellmlImport = cellmlFileImportsIterator->nextImport()) {
+        // We have an import, so add it to our list
+
+        CellmlFileImport *cellmlFileImport = new CellmlFileImport(QString::fromStdWString(cellmlImport->xlinkHref()->asText()));
+
+        res.append(cellmlFileImport);
+    }
+
+    // Return our list of imports for the model
+
+    return res;
 }
 
 //==============================================================================
