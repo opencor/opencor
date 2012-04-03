@@ -119,28 +119,32 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Retrieve the model's imports
 
-    mDebugOutput->append(QString("    [Information] Imports:"));
+    if (cellmlFile->imports().isEmpty()) {
+        mDebugOutput->append(QString("    [Information] No imports"));
+    } else {
+        mDebugOutput->append(QString("    [Information] Imports:"));
 
-    foreach (CellMLSupport::CellmlFileImport *cellmlFileImport,
-             cellmlFile->imports()) {
-        mDebugOutput->append(QString("        %1:").arg(cellmlFileImport->uri()));
+        foreach (CellMLSupport::CellmlFileImport *cellmlFileImport,
+                 cellmlFile->imports()) {
+            mDebugOutput->append(QString("        %1:").arg(cellmlFileImport->uri()));
 
-        QMap<QString, QString> units = cellmlFileImport->units();
-        QMap<QString, QString>::const_iterator iter = units.constBegin();
+            QMap<QString, QString> units = cellmlFileImport->units();
+            QMap<QString, QString>::const_iterator iter = units.constBegin();
 
-        while (iter != units.constEnd()) {
-            mDebugOutput->append(QString("            Units: %1 ---> %2").arg(iter.key(), iter.value()));
+            while (iter != units.constEnd()) {
+                mDebugOutput->append(QString("            Units: %1 ---> %2").arg(iter.key(), iter.value()));
 
-            ++iter;
-        }
+                ++iter;
+            }
 
-        QMap<QString, QString> components = cellmlFileImport->components();
-        iter = components.constBegin();
+            QMap<QString, QString> components = cellmlFileImport->components();
+            iter = components.constBegin();
 
-        while (iter != components.constEnd()) {
-            mDebugOutput->append(QString("            Component: %1 ---> %2").arg(iter.key(), iter.value()));
+            while (iter != components.constEnd()) {
+                mDebugOutput->append(QString("            Component: %1 ---> %2").arg(iter.key(), iter.value()));
 
-            ++iter;
+                ++iter;
+            }
         }
     }
 }

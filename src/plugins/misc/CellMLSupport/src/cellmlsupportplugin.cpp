@@ -74,7 +74,7 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &mMimeType) const
 
 bool isCellmlFile(const QString &pFileName)
 {
-    // Return whether the file is a CellML file
+    // Return whether the file is a CellML file based on its file extension
 
     return !QFileInfo(pFileName).suffix().compare(CellMLSupport::CellmlFileExtension);
 }

@@ -26,7 +26,6 @@ extern "C" double factorial(double pNb);
 
 extern "C" double arbitraryLog(double pNb, double pBase);
 extern "C" double quot(double pNb1, double pNb2);
-extern "C" double rem(double pNb1, double pNb2);
 
 extern "C" double gcd(int pCount, ...);
 extern "C" double lcm(int pCount, ...);
