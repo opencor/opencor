@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfileimport.h"
 #include "cellmlfileissue.h"
 #include "cellmlfileruntime.h"
 #include "cellmlsupportglobal.h"
@@ -42,11 +43,13 @@ public:
 
     bool isValid();
 
-    CellmlFileIssues issues();
+    CellmlFileIssues issues() const;
 
     CellmlFileRuntime * runtime();
 
-    iface::cellml_api::Model * model();
+    QString modelName() const;
+
+    CellmlFileImports imports() const;
 
 private:
     QString mFileName;

@@ -30,6 +30,7 @@
 
 //==============================================================================
 
+#include "IfaceCellML_APISPEC.hxx"
 #include "IfaceVACSS.hxx"
 
 #include "CellMLBootstrap.hpp"
@@ -346,7 +347,7 @@ qDebug(" - CellML warnings vs. errors time: %s s", qPrintable(QString::number(0.
 
 //==============================================================================
 
-CellmlFileIssues CellmlFile::issues()
+CellmlFileIssues CellmlFile::issues() const
 {
     // Return the file's issue(s)
 
@@ -381,11 +382,53 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 //==============================================================================
 
-iface::cellml_api::Model * CellmlFile::model()
+QString CellmlFile::modelName() const
 {
-    // Return the file's model
+    // Return the model's name
 
-    return mModel;
+    return QString::fromStdWString(mModel->name());
+}
+
+//==============================================================================
+
+CellmlFileImports CellmlFile::imports() const
+{
+    CellmlFileImports res = CellmlFileImports();
+
+    // Iterate through the imports and add them to our list
+
+    iface::cellml_api::CellMLImportIterator *cellmlFileImportsIterator = mModel->imports()->iterateImports();
+    iface::cellml_api::CellMLImport *cellmlImport;
+
+    while (cellmlImport = cellmlFileImportsIterator->nextImport()) {
+        // We have an import, so add it to our list
+
+        CellmlFileImport *cellmlFileImport = new CellmlFileImport(QString::fromStdWString(cellmlImport->xlinkHref()->asText()));
+
+        res.append(cellmlFileImport);
+
+        // Keep track of any unit imports...
+
+        iface::cellml_api::ImportUnitsIterator *importUnitsIterator = cellmlImport->units()->iterateImportUnits();
+        iface::cellml_api::ImportUnits *importUnits;
+
+        while (importUnits = importUnitsIterator->nextImportUnits())
+            cellmlFileImport->addUnits(QString::fromStdWString(importUnits->name()),
+                                       QString::fromStdWString(importUnits->unitsRef()));
+
+        // ... and of any component imports
+
+        iface::cellml_api::ImportComponentIterator *importComponentIterator = cellmlImport->components()->iterateImportComponents();
+        iface::cellml_api::ImportComponent *importComponent;
+
+        while (importComponent = importComponentIterator->nextImportComponent())
+            cellmlFileImport->addComponent(QString::fromStdWString(importComponent->name()),
+                                           QString::fromStdWString(importComponent->componentRef()));
+    }
+
+    // Return our list of imports for the model
+
+    return res;
 }
 
 //==============================================================================

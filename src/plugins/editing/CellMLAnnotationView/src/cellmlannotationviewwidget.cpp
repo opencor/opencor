@@ -115,7 +115,34 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Output the name of the CellML model
 
-    mDebugOutput->append(QString("    [Information] Model name: %1").arg(QString::fromStdWString(cellmlFile->model()->name())));
+    mDebugOutput->append(QString("    [Information] Model name: %1").arg(cellmlFile->modelName()));
+
+    // Retrieve the model's imports
+
+    mDebugOutput->append(QString("    [Information] Imports:"));
+
+    foreach (CellMLSupport::CellmlFileImport *cellmlFileImport,
+             cellmlFile->imports()) {
+        mDebugOutput->append(QString("        %1:").arg(cellmlFileImport->uri()));
+
+        QMap<QString, QString> units = cellmlFileImport->units();
+        QMap<QString, QString>::const_iterator iter = units.constBegin();
+
+        while (iter != units.constEnd()) {
+            mDebugOutput->append(QString("            Units: %1 ---> %2").arg(iter.key(), iter.value()));
+
+            ++iter;
+        }
+
+        QMap<QString, QString> components = cellmlFileImport->components();
+        iter = components.constBegin();
+
+        while (iter != components.constEnd()) {
+            mDebugOutput->append(QString("            Component: %1 ---> %2").arg(iter.key(), iter.value()));
+
+            ++iter;
+        }
+    }
 }
 
 //==============================================================================
