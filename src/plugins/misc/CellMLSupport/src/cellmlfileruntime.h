@@ -74,6 +74,7 @@ public:
     };
 
     explicit CellmlFileRuntime();
+    ~CellmlFileRuntime();
 
     bool isValid() const;
 
@@ -95,8 +96,8 @@ public:
 private:
     ModelType mModelType;
 
-    ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
-    ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
+    iface::cellml_services::CodeInformation *mOdeCodeInformation;
+    iface::cellml_services::IDACodeInformation *mDaeCodeInformation;
 
     Computer::ComputerEngine *mComputerEngine;
 

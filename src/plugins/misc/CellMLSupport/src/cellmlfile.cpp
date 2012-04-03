@@ -44,7 +44,8 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFile::CellmlFile(const QString &pFileName) :
-    mFileName(pFileName)
+    mFileName(pFileName),
+    mModel(0)
 {
     // Instantiate our runtime object
 
@@ -62,6 +63,9 @@ CellmlFile::~CellmlFile()
     // Delete some internal objects
 
     delete mRuntime;
+
+    if (mModel)
+        mModel->release_ref();
 }
 
 //==============================================================================
@@ -70,7 +74,11 @@ void CellmlFile::reset()
 {
     // Reset all of the file's properties
 
-    delete mModel; mModel = 0;
+    if (mModel) {
+        mModel->release_ref();
+
+        mModel = 0;
+    }
 
     mIssues.clear();
 
@@ -255,7 +263,7 @@ time.restart();
                     while (true) {
                         // Retrieve the CellML element's parent
 
-                        iface::cellml_api::CellMLElement *cellmlElementParent = already_AddRefd<iface::cellml_api::CellMLElement>(cellmlElement->parentElement());
+                        ObjRef<iface::cellml_api::CellMLElement> cellmlElementParent = cellmlElement->parentElement();
 
                         if (!cellmlElementParent)
                             // There is no parent, so...
