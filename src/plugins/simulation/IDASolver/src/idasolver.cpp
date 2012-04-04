@@ -127,7 +127,8 @@ void IdaSolver::initialize(const double &pVoiStart,
                            double *pAlgebraic, double *pCondVar,
                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
                            ComputeResidualsFunction pComputeResiduals,
-                           ComputeRootInformationFunction pComputeRootInformation, ComputeStateInformationFunction pComputeStateInformation)
+                           ComputeRootInformationFunction pComputeRootInformation,
+                           ComputeStateInformationFunction pComputeStateInformation)
 {
     static const double VoiEpsilon = 1e-9;
 
