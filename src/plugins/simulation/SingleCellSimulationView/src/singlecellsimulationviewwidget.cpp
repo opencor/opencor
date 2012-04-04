@@ -44,7 +44,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mCellmlFileRuntime(0), mModel(Unknown),
     mStatesCount(0), mCondVarCount(0),
     mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
-    mVoiEnd(0), mVoiStep(0), mVoiMaximumStep(0), mVoiOutput(0),
+    mVoiEnd(0), mVoiStep(0), mVoiMaximumStep(0), mVoiOutput(0), mStatesIndex(0),
     mOdeSolverName("CVODE"),
     mSolverInterfaces(SolverInterfaces()),
     mSolverErrorMsg(QString()),
@@ -412,6 +412,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mVoiStep        =    0.01;   // dimensionless
         mVoiOutput      =    1;      // dimensionless
         mVoiMaximumStep =    0.5;    // dimensionless
+        mStatesIndex    =    1;
 
         break;
     case Dae:
@@ -598,7 +599,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         else
             odeSolver->setProperty("Step", mVoiStep);
 
-        odeSolver->initialize(voi, mStatesCount, mConstants, mRates, mStates,
+        odeSolver->initialize(mStatesCount, mConstants, mRates, mStates,
                               mAlgebraic, odeFunctions.computeRates);
     } else {
         daeSolver->setProperty("Maximum step", mVoiMaximumStep);
@@ -638,7 +639,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
                 daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
 
             xData.append(voi);
-            yData.append(mStates[0]);
+            yData.append(mStates[mStatesIndex]);
 
             // Make sure that the graph panel is up-to-date
             //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
@@ -691,7 +692,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
             // Last bit of simulation data
 
             xData.append(voi);
-            yData.append(mStates[0]);
+            yData.append(mStates[mStatesIndex]);
 
             // Make sure that the graph panel is up-to-date
             //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH

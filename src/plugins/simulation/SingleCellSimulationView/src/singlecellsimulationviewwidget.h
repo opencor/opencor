@@ -102,6 +102,7 @@ private:
     double mVoiStep;
     double mVoiMaximumStep;
     double mVoiOutput;
+    int mStatesIndex;
 
     QString mOdeSolverName;
 
