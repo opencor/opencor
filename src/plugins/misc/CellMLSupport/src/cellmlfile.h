@@ -54,7 +54,7 @@ public:
 private:
     QString mFileName;
 
-    iface::cellml_api::Model *mModel;
+    ObjRef<iface::cellml_api::Model> mModel;
 
     bool mIsValid;
 

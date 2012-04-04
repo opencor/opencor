@@ -96,8 +96,8 @@ public:
 private:
     ModelType mModelType;
 
-    iface::cellml_services::CodeInformation *mOdeCodeInformation;
-    iface::cellml_services::IDACodeInformation *mDaeCodeInformation;
+    ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
+    ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
 
     Computer::ComputerEngine *mComputerEngine;
 

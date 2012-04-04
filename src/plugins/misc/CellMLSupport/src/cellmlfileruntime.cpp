@@ -42,14 +42,10 @@ CellmlFileRuntime::CellmlFileRuntime() :
 CellmlFileRuntime::~CellmlFileRuntime()
 {
     // Delete some internal objects
+    // Note: both mOdeCodeInformation and mDaeCodeInformation get automatically
+    //       deleted, if needed, so...
 
     delete mComputerEngine;
-
-    if (mOdeCodeInformation)
-        mOdeCodeInformation->release_ref();
-
-    if (mDaeCodeInformation)
-        mDaeCodeInformation->release_ref();
 }
 
 //==============================================================================
@@ -161,12 +157,10 @@ CellmlFileIssues CellmlFileRuntime::issues() const
 void CellmlFileRuntime::resetOdeCodeInformation()
 {
     // Reset the ODE code information
+    // Note: setting it to zero will automatically delete the current instance,
+    //       if any
 
-    if (mOdeCodeInformation) {
-        mOdeCodeInformation->release_ref();
-
-        mOdeCodeInformation = 0;
-    }
+    mOdeCodeInformation = 0;
 }
 
 //==============================================================================
@@ -174,12 +168,10 @@ void CellmlFileRuntime::resetOdeCodeInformation()
 void CellmlFileRuntime::resetDaeCodeInformation()
 {
     // Reset the DAE code information
+    // Note: setting it to zero will automatically delete the current instance,
+    //       if any
 
-    if (mDaeCodeInformation) {
-        mDaeCodeInformation->release_ref();
-
-        mDaeCodeInformation = 0;
-    }
+    mDaeCodeInformation = 0;
 }
 
 //==============================================================================

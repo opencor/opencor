@@ -61,11 +61,9 @@ CellmlFile::CellmlFile(const QString &pFileName) :
 CellmlFile::~CellmlFile()
 {
     // Delete some internal objects
+    // Note: mModel gets automatically deleted, if needed, so...
 
     delete mRuntime;
-
-    if (mModel)
-        mModel->release_ref();
 }
 
 //==============================================================================
@@ -73,12 +71,10 @@ CellmlFile::~CellmlFile()
 void CellmlFile::reset()
 {
     // Reset all of the file's properties
+    // Note: setting mModel to zero will automatically delete the current
+    //       instance, if any
 
-    if (mModel) {
-        mModel->release_ref();
-
-        mModel = 0;
-    }
+    mModel = 0;
 
     mIssues.clear();
 
