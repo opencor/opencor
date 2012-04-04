@@ -27,6 +27,7 @@ SingleCellSimulationViewGraphPanels::SingleCellSimulationViewGraphPanels(QWidget
 
 static const QString SettingsGraphPanelsCount = "GraphPanelsCount";
 static const QString SettingsActiveGraphPanel = "ActiveGraphPanel";
+static const QString SettingsGraphPanelSize   = "GraphPanelSize%1";
 
 //==============================================================================
 
@@ -51,6 +52,15 @@ void SingleCellSimulationViewGraphPanels::loadSettings(QSettings *pSettings)
     for (int i = 0; i < graphPanelsCount; ++i)
         addGraphPanel();
 
+    // Retrieve and set the size of each graph panel
+
+    QList<int> graphPanelSizes = QList<int>();
+
+    for (int i = 0; i < graphPanelsCount; ++i)
+        graphPanelSizes << pSettings->value(SettingsGraphPanelSize.arg(QString::number(i))).toInt();
+
+    setSizes(graphPanelSizes);
+
     // Select the graph panel that used to be active
 
     qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(pSettings->value(SettingsActiveGraphPanel, 0).toInt()))->setActive(true);
@@ -60,8 +70,8 @@ void SingleCellSimulationViewGraphPanels::loadSettings(QSettings *pSettings)
 
 void SingleCellSimulationViewGraphPanels::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the number of graph panels and of which graph panel was the
-    // active one
+    // Keep track of the number of graph panels, of which graph panel was the
+    // active one, and of the size of each graph panel
 
     pSettings->setValue(SettingsGraphPanelsCount, count());
 
@@ -73,6 +83,11 @@ void SingleCellSimulationViewGraphPanels::saveSettings(QSettings *pSettings) con
 
             break;
         }
+
+    QList<int> graphPanelSizes = sizes();
+
+    for (int i = 0, iMax = graphPanelSizes.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsGraphPanelSize.arg(QString::number(i)), graphPanelSizes.at(i));
 }
 
 //==============================================================================

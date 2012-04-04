@@ -73,7 +73,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     // Create our vertical splitter
 
-    QSplitter *verticalSplitter = new QSplitter(Qt::Vertical, this);
+    mVerticalSplitter = new QSplitter(Qt::Vertical, this);
 
     // Create a splitter for our graph panels and create a connection to keep
     // track of whether we can remove graph panels
@@ -112,13 +112,13 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     //       that exists between the graph panels and the simulation output
     //       widget. So, yes, it's purely about aesthetic...
 
-    verticalSplitter->addWidget(mGraphPanels);
-    verticalSplitter->addWidget(simulationOutputWidget);
+    mVerticalSplitter->addWidget(mGraphPanels);
+    mVerticalSplitter->addWidget(simulationOutputWidget);
 
-    verticalSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
+    mVerticalSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
 
-    mUi->verticalLayout->addSpacing(verticalSplitter->handleWidth());
-    mUi->verticalLayout->addWidget(verticalSplitter);
+    mUi->verticalLayout->addSpacing(mVerticalSplitter->handleWidth());
+    mUi->verticalLayout->addWidget(mVerticalSplitter);
 
     // Create our (thin) simulation progress widget
 
@@ -160,6 +160,11 @@ void SingleCellSimulationViewWidget::retranslateUi()
 
     mUi->retranslateUi(this);
 }
+
+//==============================================================================
+
+static const QString SettingsVerticalSplitterSizesCount = "GraphPanelsSizesCount";
+static const QString SettingsVerticalSplitterSize       = "GraphPanelsSize%1";
 
 //==============================================================================
 
@@ -205,6 +210,19 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 
 
 
+    // Retrieve and set the sizes of our vertical splitter
+
+    int sizesCount = pSettings->value(SettingsVerticalSplitterSizesCount, 0).toInt();
+
+    if (sizesCount) {
+        QList<int> sizes = QList<int>();
+
+        for (int i = 0; i < sizesCount; ++i)
+            sizes << pSettings->value(SettingsVerticalSplitterSize.arg(QString::number(i))).toInt();
+
+        mVerticalSplitter->setSizes(sizes);
+    }
+
     // Retrieve the settings of our graph panels widget
 
     pSettings->beginGroup(mGraphPanels->objectName());
@@ -216,6 +234,15 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 
 void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 {
+    // Keep track of our vertical splitter sizes
+
+    QList<int> sizes = mVerticalSplitter->sizes();
+
+    pSettings->setValue(SettingsVerticalSplitterSizesCount, sizes.count());
+
+    for (int i = 0, iMax = sizes.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsVerticalSplitterSize.arg(QString::number(i)), sizes.at(i));
+
     // Keep track of the settings of our graph panels widget
 
     pSettings->beginGroup(mGraphPanels->objectName());

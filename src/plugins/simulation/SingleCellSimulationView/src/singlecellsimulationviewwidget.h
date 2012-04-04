@@ -110,6 +110,8 @@ private:
 
     SolverInterfaces mSolverInterfaces;
 
+    QSplitter *mVerticalSplitter;
+
     SingleCellSimulationViewGraphPanels *mGraphPanels;
     QTextEdit *mOutput;
 
