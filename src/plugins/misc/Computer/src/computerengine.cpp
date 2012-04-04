@@ -1025,8 +1025,7 @@ void ComputerEngine::compileEquationNode(ComputerEngineData &pData,
 
         break;
     case ComputerEquation::Rem:
-        compileMathematicalFunction(pData, "rem", 2, pEquationNode,
-                                    (void *)(intptr_t) rem);
+        compileMathematicalFunction(pData, "fmod", 2, pEquationNode);
 
         break;
 

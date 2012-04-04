@@ -74,6 +74,7 @@ public:
     };
 
     explicit CellmlFileRuntime();
+    ~CellmlFileRuntime();
 
     bool isValid() const;
 

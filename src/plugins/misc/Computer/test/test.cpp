@@ -1196,7 +1196,7 @@ void Test::quotFunctionTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*A, B);
 
-    QCOMPARE(mResult, 7.0);
+    QCOMPARE(mResult, 6.0);
 }
 
 //==============================================================================
@@ -1218,7 +1218,7 @@ void Test::remFunctionTests()
 
     mResult = ((double (*)(double, double))(intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(mFunction))(11*A, B);
 
-    QCOMPARE(mResult, 6.0);
+    QCOMPARE(mResult, 7.6);
 }
 
 //==============================================================================

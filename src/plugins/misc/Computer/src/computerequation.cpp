@@ -744,9 +744,9 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
         break;
     case Rem:
         if ((pNode->left()->type() == Number) && (pNode->right()->type() == Number))
-            // rem(N1, N2)
+            // fmod(N1, N2)
 
-            replaceNodeWithNumber(pNode, rem(pNode->left()->number(), pNode->right()->number()));
+            replaceNodeWithNumber(pNode, fmod(pNode->left()->number(), pNode->right()->number()));
 
         break;
 

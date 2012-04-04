@@ -101,20 +101,9 @@ double arbitraryLog(double pNb, double pBase)
 
 //==============================================================================
 
-static double zero = 0.0;
-
-//==============================================================================
-
 double quot(double pNb1, double pNb2)
 {
-    return pNb2?(int) pNb1/(int) pNb2:pNb1/zero;
-}
-
-//==============================================================================
-
-double rem(double pNb1, double pNb2)
-{
-    return pNb2?(int) pNb1 % (int) pNb2:pNb1/zero;
+    return (pNb1-fmod(pNb1, pNb2))/pNb2;
 }
 
 //==============================================================================

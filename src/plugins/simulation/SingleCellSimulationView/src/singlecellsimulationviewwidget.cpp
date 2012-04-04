@@ -311,6 +311,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mModel = Zhang2000;
     } else if (!fileBaseName.compare("mitchell_schaeffer_2003")) {
         mModel = Mitchell2003;
+    } else if (   !fileBaseName.compare("cortassa_2006_1_0")
+               || !fileBaseName.compare("cortassa_2006_1_1")) {
+        mModel = Cortessa2006;
     } else if (   !fileBaseName.compare("dae_model")
                || !fileBaseName.compare("newton_raphson_parabola_model")
                || !fileBaseName.compare("saucerman_brunton_michailova_mcculloch_model_2003")
@@ -402,6 +405,13 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mVoiStep        = 0.00001;   // s
         mVoiOutput      = 0.001;     // s
         mVoiMaximumStep = 0.003;     // s
+
+        break;
+    case Cortessa2006:
+        mVoiEnd         = 5000;      // dimensionless
+        mVoiStep        =    0.01;   // dimensionless
+        mVoiOutput      =    1;      // dimensionless
+        mVoiMaximumStep =    0.5;    // dimensionless
 
         break;
     case Dae:

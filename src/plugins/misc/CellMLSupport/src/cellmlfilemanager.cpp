@@ -64,22 +64,29 @@ CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
 
 void CellmlFileManager::fileManaged(const QString &pFileName)
 {
-    if (isCellmlFile(pFileName))
+    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
+
+    if (isCellmlFile(nativeFileName))
         // We are dealing with a CellML file, so we can add it to our list of
         // managed CellML files
 
-        mCellmlFiles.insert(pFileName, new CellmlFile(pFileName));
+        mCellmlFiles.insert(pFileName, new CellmlFile(nativeFileName));
 }
 
 //==============================================================================
 
 void CellmlFileManager::fileUnmanaged(const QString &pFileName)
 {
-    if (isCellmlFile(pFileName))
-        // We are dealing with a CellML file, so we can remove it from our list
-        // of managed CellML files
+    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
-        mCellmlFiles.remove(pFileName);
+    if (isCellmlFile(nativeFileName)) {
+        // We are dealing with a CellML file, so we can remove it from our list
+        // of managed CellML files after having deleted it
+
+        delete cellmlFile(nativeFileName);
+
+        mCellmlFiles.remove(nativeFileName);
+    }
 }
 
 //==============================================================================
