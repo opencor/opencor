@@ -16,8 +16,7 @@ static const double InvalidStep = 0;
 //==============================================================================
 
 ForwardEulerSolver::ForwardEulerSolver() :
-    mStep(InvalidStep),
-    mComputeRates(0)
+    mStep(InvalidStep)
 {
 }
 
@@ -40,8 +39,6 @@ void ForwardEulerSolver::initialize(const double &pVoiStart,
     mStep = mProperties.contains(StepProperty)?
                 mProperties.value(StepProperty).toDouble():
                 InvalidStep;
-
-    mComputeRates = pComputeRates;
 }
 
 //==============================================================================

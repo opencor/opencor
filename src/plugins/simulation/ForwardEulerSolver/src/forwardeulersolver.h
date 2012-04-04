@@ -34,7 +34,6 @@ public:
 
 private:
     double mStep;
-    ComputeRatesFunction mComputeRates;
 
     virtual bool isValidProperty(const QString &pName) const;
 };

@@ -71,8 +71,7 @@ CvodeSolver::CvodeSolver() :
     mMaximumStep(DefaultMaximumStep),
     mMaximumNumberOfSteps(DefaultMaximumNumberOfSteps),
     mRelativeTolerance(DefaultRelativeTolerance),
-    mAbsoluteTolerance(DefaultAbsoluteTolerance),
-    mComputeRates(0)
+    mAbsoluteTolerance(DefaultAbsoluteTolerance)
 {
 }
 
@@ -158,10 +157,6 @@ void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
         // Set the relative and absolute tolerances
 
         CVodeSStolerances(mSolver, mRelativeTolerance, mAbsoluteTolerance);
-
-        // Keep track of the compute rates function
-
-        mComputeRates = pComputeRates;
     } else {
         // Reinitialise the CVODE object
 

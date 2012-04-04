@@ -17,7 +17,8 @@ CoreOdeSolver::CoreOdeSolver() :
     mConstants(0),
     mRates(0),
     mStates(0),
-    mAlgebraic(0)
+    mAlgebraic(0),
+    mComputeRates(0)
 {
 }
 
@@ -29,7 +30,6 @@ void CoreOdeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
                                ComputeRatesFunction pComputeRates)
 {
     Q_UNUSED(pVoiStart);
-    Q_UNUSED(pComputeRates);
 
     // Initialise the ODE solver
 
@@ -39,6 +39,8 @@ void CoreOdeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
     mRates     = pRates;
     mStates    = pStates;
     mAlgebraic = pAlgebraic;
+
+    mComputeRates = pComputeRates;
 }
 
 //==============================================================================

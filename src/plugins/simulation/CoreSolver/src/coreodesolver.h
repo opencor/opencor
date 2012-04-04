@@ -37,6 +37,8 @@ protected:
     double *mRates;
     double *mStates;
     double *mAlgebraic;
+
+    ComputeRatesFunction mComputeRates;
 };
 
 //==============================================================================

@@ -60,8 +60,6 @@ private:
     double mRelativeTolerance;
     double mAbsoluteTolerance;
 
-    ComputeRatesFunction mComputeRates;
-
     virtual bool isValidProperty(const QString &pName) const;
 };
 

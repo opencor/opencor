@@ -599,7 +599,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         else
             odeSolver->setProperty("Step", mVoiStep);
 
-        odeSolver->initialize(mStatesCount, mConstants, mRates, mStates,
+        odeSolver->initialize(voi, mStatesCount, mConstants, mRates, mStates,
                               mAlgebraic, odeFunctions.computeRates);
     } else {
         daeSolver->setProperty("Maximum step", mVoiMaximumStep);
