@@ -370,9 +370,15 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
             // our menu bar
 
             switch (menuSettings->type()) {
-            default:   // View
+            case GuiMenuSettings::View:
                 mUi->menuBar->insertAction(mUi->menuView->menuAction(),
                                            newMenu->menuAction());
+
+                break;
+            default:
+                // Nothing to be done...
+
+                ;
             }
 
             // Keep track of the new menu
