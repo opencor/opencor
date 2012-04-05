@@ -6,7 +6,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # Name of the main project and location of the built OpenCOR binary
 # Note: these are required, on Mac OS X, to determine where plugins should be
-#       copied
+#       copied, so...
 
 SET(MAIN_PROJECT_NAME ${PROJECT_NAME})
 SET(MAC_OS_X_PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
@@ -122,14 +122,15 @@ INCLUDE_THIRD_PARTY_LIBRARY(. QtSingleApplication)
 # case of Linux, it's done through res/OpenCOR.qrc
 
 IF(WIN32)
-    SET(IconObjectFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_icon.o)
+#---GRY--- TO BE DONE...
+#    SET(IconObjectFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_icon.o)
 
-    ADD_CUSTOM_COMMAND(OUTPUT ${IconObjectFile}
-                       COMMAND windres -I ${CMAKE_SOURCE_DIR} -i ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc
-                                       -o ${IconObjectFile}
-                      )
+#    ADD_CUSTOM_COMMAND(OUTPUT ${IconObjectFile}
+#                       COMMAND windres -I ${CMAKE_SOURCE_DIR} -i ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc
+#                                       -o ${IconObjectFile}
+#                      )
 
-    SET(SOURCES ${SOURCES} ${IconObjectFile})
+#    SET(SOURCES ${SOURCES} ${IconObjectFile})
 ELSEIF(APPLE)
     SET(IconFile ${PROJECT_NAME}.icns)
 
@@ -178,50 +179,51 @@ SET(PLUGINS
     # Build the plugins which may be required by other plugins
     # Note: the build order is very important...
 
-    misc/Core
+#---GRY--- TO BE DONE...
+#    misc/Core
 
-    3rdparty/LLVM
-    misc/Computer
+#    3rdparty/LLVM
+#    misc/Computer
 
-    api/CellMLAPI
+#    api/CellMLAPI
 
-    misc/CellMLSupport
-    misc/RICORDOSupport
+#    misc/CellMLSupport
+#    misc/RICORDOSupport
 
-    editing/CoreEditing
-    editing/CoreCellMLEditing
+#    editing/CoreEditing
+#    editing/CoreCellMLEditing
 
-    3rdparty/SUNDIALS
+#    3rdparty/SUNDIALS
 
-    simulation/CoreSolver
+#    simulation/CoreSolver
 
-    simulation/CVODESolver
-    simulation/ForwardEulerSolver
-    simulation/IDASolver
+#    simulation/CVODESolver
+#    simulation/ForwardEulerSolver
+#    simulation/IDASolver
 
-    simulation/CoreSimulation
+#    simulation/CoreSimulation
 
-    3rdparty/QJson
-    3rdparty/QScintilla
-    3rdparty/QtMmlWidget
-    3rdparty/Qwt
+#    3rdparty/QJson
+#    3rdparty/QScintilla
+#    3rdparty/QtMmlWidget
+#    3rdparty/Qwt
 
-    misc/QScintillaSupport
+#    misc/QScintillaSupport
 
     # Build the remaining plugins
 
-    misc/Help
-    misc/Viewer
+#    misc/Help
+#    misc/Viewer
 
-    organisation/CellMLModelRepository
-    organisation/FileBrowser
-    organisation/FileOrganiser
+#    organisation/CellMLModelRepository
+#    organisation/FileBrowser
+#    organisation/FileOrganiser
 
-    editing/CellMLAnnotationView
-    editing/RawCellMLView
-    editing/RawView
+#    editing/CellMLAnnotationView
+#    editing/RawCellMLView
+#    editing/RawView
 
-    simulation/SingleCellSimulationView
+#    simulation/SingleCellSimulationView
 )
 
 FOREACH(PLUGIN ${PLUGINS})
@@ -267,8 +269,14 @@ ENDIF()
 
 # Additional compiler and linker settings
 
-SET(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
 ADD_DEFINITIONS(-D${PROJECT_NAME}_MAIN)
+
+IF(MSVC)
+#---GRY--- TO BE CHECKED...
+#    SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /SUBSYSTEM:WINDOWS")
+    # Note: /SUBSYSTEM:WINDOWS makes sure that we end up with a GUI
+    #       application...
+ENDIF()
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME}
     PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
@@ -300,13 +308,13 @@ IF(APPLE)
 
     # Remove any qt.conf file left from a previous build
     # Note: this prevents us from getting a warning when everything is actually
-    #       OK
+    #       OK...
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
                        COMMAND ${CMAKE_COMMAND} -E remove -f ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
 
     # Remove the PlugIns directory left from a previous build
-    # Note: this prevents us from getting error messages
+    # Note: this prevents us from getting error messages...
 
     FOREACH(QT_FOLDER accessible bearer codecs graphicssystems imageformats
                       phonon_backend qmltooling)
@@ -373,7 +381,7 @@ IF(APPLE)
     )
 
     # Clean up the plugins that are deployed by mmacdeployqt
-    # Note: it's not essential, it's merely to have 'clean' plugins
+    # Note: it's not essential, it's merely to have 'clean' plugins...
 
     CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(accessible qtaccessiblewidgets)
 
@@ -401,7 +409,7 @@ IF(APPLE)
     #       here, since it allows us to test things as if Qt wasn't installed
     #       on our development Mac OS X machine (which is useful since we
     #       cannot have a virtual machine with a 'blank' Mac OS X system on it
-    #       unlike with Windows and Linux)
+    #       unlike with Windows and Linux)...
 
     SET(SQLDRIVERS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers)
 
@@ -457,11 +465,10 @@ IF(WIN32)
 
     INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
 
-    # MinGW files required by OpenCOR
+    # Visual C++ 2010 files required by OpenCOR
 
-    FOREACH(MINGW_LIBRARY mingwm10 libgcc_s_dw2-1)
-        INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${MINGW_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
-    ENDFOREACH()
+#---GRY--- TO BE CHECKED...
+#    INCLUDE(InstallRequiredSystemLibraries)
 
     # Qt files required by OpenCOR
 
@@ -555,7 +562,7 @@ ELSE()
     # Note: it seems that, starting with Ubuntu 11.04, some libraries may end
     #       up in /usr/lib/i386-linux-gnu or /usr/lib/x86_64-linux-gnu,
     #       depending on whether the system is 32-bit or 64-bit, so we need to
-    #       check for these folders first
+    #       check for these folders first...
 
     SET(DEFAULT_LIBRARY_FOLDER /usr/lib)
     SET(X86_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/i386-linux-gnu)
@@ -573,7 +580,7 @@ ELSE()
         # Note: stdc++.so.6 is required by QtCLucene and may be needed when
         #       packaging on a particular version of Ubuntu and deploying on
         #       another (e.g. packaging on Ubuntu 11.04 and deploying on Ubuntu
-        #       10.04)
+        #       10.04), so...
 
         IF(EXISTS "${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}")
             SET(CORRECT_LIBRARY ${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})

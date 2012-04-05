@@ -61,14 +61,20 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
 
 # Additional compiler and linker settings
 
-SET(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
-
-SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-subsystem,console")
-# Note: -Wl,-subsystem,console makes sure that we end up with a console
-#       application
+#---GRY--- TO BE CHECKED...
+IF(MSVC)
+#    SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /SUBSYSTEM:CONSOLE")
+    # Note: /SUBSYSTEM:CONSOLE makes sure that we end up with a console
+    #       application...
+ELSE()
+#---GRY--- IS "-Wl,-subsystem,console" REALLY NEEDED?
+    SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-subsystem,console")
+    # Note: -Wl,-subsystem,console makes sure that we end up with a console
+    #       application...
+ENDIF()
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
 
 # Copy the console version of OpenCOR to the main build folder
 
-COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.exe ${PROJECT_NAME}.com)
+COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${PROJECT_NAME}.exe ${PROJECT_NAME}.com)

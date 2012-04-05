@@ -5,7 +5,15 @@ MACRO(INITIALISE_PROJECT)
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
 
-    SET(CMAKE_CXX_FLAGS "-Werror")
+    IF(MSVC)
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+        # Note: CMake sets some default flags, so we take advantage of them and
+        #       only add /WX to convert warnings into errors...
+    ELSE()
+        SET(CMAKE_CXX_FLAGS "-Wall -Werror")
+        # Note: CMake doesn't set any default flags, so...
+    ENDIF()
+
     SET(LINK_FLAGS_PROPERTIES)
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -15,7 +23,9 @@ MACRO(INITIALISE_PROJECT)
 
         # Default compiler settings
 
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+        IF(NOT MSVC)
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+        ENDIF()
     ELSE()
         SET(CMAKE_BUILD_TYPE "Release")
 
@@ -25,25 +35,30 @@ MACRO(INITIALISE_PROJECT)
 
         # Default compiler and linker settings
 
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
+        IF(MSVC)
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
+        ELSE()
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
+        ENDIF()
 
-        IF(NOT APPLE)
+        IF(NOT APPLE AND NOT MSVC)
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
             # Note #1: -Wl,-s strips all the symbols, thus reducing the final
-            #          size of OpenCOR or one its shared libraries
+            #          size of OpenCOR or one its shared libraries...
             # Note #2: the above linking option has become obsolete on Mac OS X,
             #          so...
         ENDIF()
     ENDIF()
 
-    IF(WIN32)
-        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,--enable-auto-import")
+#---GRY--- TO BE CHECKED...
+#    IF(WIN32)
+#        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,--enable-auto-import")
         # Note #1: -Wl,--enable-auto-import allows to resolve vtable entries
         #          in DLLs. This is something that we, ideally, wouldn't need
         #          to set, but it happens that this is required for any plugin
         #          that uses LLVM. Indeed, llvm::CallInst needs resolving,
         #          so...
-    ENDIF()
+#    ENDIF()
 
     # Required packages
 
@@ -69,7 +84,7 @@ MACRO(INITIALISE_PROJECT)
 
     # Default location of third-party libraries
     # Note: this is only required so that we can quickly test third-party
-    #       libraries without first having to package everything
+    #       libraries without first having to package everything...
 
     SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
@@ -88,7 +103,7 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 
     # Set the RPATH information on Linux
-    # Note: this prevent us from having to use the uncool LD_LIBRARY_PATH
+    # Note: this prevent us from having to use the uncool LD_LIBRARY_PATH...
 
     IF(NOT WIN32 AND NOT APPLE)
         SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../plugins/${PROJECT_NAME}")
@@ -310,7 +325,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Create the plugins directory if it doesn't already exist and move the
     # plugin to it
     # Note: this is done so that we can, on Windows and Linux, test the use of
-    #       plugins in OpenCOR without first having to package OpenCOR
+    #       plugins in OpenCOR without first having to package OpenCOR...
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
