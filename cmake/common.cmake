@@ -6,12 +6,10 @@ MACRO(INITIALISE_PROJECT)
     # of OpenCOR
 
     IF(MSVC)
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
-        # Note: CMake sets some default flags, so we take advantage of them and
-        #       only add /WX to convert warnings into errors...
-    ELSE()
-        SET(CMAKE_CXX_FLAGS "-Wall -Werror")
-        # Note: CMake doesn't set any default flags, so...
+        # Remove the default /W3 flag since we want warnings only for OpenCOR
+        # itself and not for any of the third-party libraries that we use...
+
+        STRING(REPLACE "/W3" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     ENDIF()
 
     SET(LINK_FLAGS_PROPERTIES)
@@ -80,6 +78,15 @@ MACRO(INITIALISE_PROJECT)
         SET(64BIT_MODE ON)
     ELSE()
         SET(64BIT_MODE OFF)
+    ENDIF()
+
+    # Default location of third-party libraries
+    # Note: this is only required so that we can quickly test third-party
+    #       libraries without first having to package everything...
+
+    IF(NOT MSVC)
+        SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+        # Note: MSVC doesn't care about this location, so...
     ENDIF()
 
     # Default location of external dependencies
@@ -316,16 +323,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         PROPERTIES OUTPUT_NAME ${PLUGIN_NAME} LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 
-    # Default location of third-party libraries
-    # Note: this is only required so that we can quickly test third-party
-    #       libraries without first having to package everything...
+    # Location of our plugins
 
     IF(WIN32)
         STRING(REPLACE "${${MAIN_PROJECT_NAME}_SOURCE_DIR}" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
         SET(PLUGIN_BUILD_DIR "${CMAKE_BINARY_DIR}${PLUGIN_BUILD_DIR}")
         # Note: MSVC generate things in a different place to GCC, so...
     ELSE()
-        SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR})
+        SET(PLUGIN_BUILD_DIR ${LIBRARY_OUTPUT_PATH})
     ENDIF()
 
     # Create the plugins directory if it doesn't already exist and move the

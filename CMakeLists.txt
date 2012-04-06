@@ -266,6 +266,18 @@ IF(NOT WIN32 AND NOT APPLE)
 ENDIF()
 
 # Additional compiler and linker settings
+# Note: we want the compiler to generate whatever warnings for our code (but
+#       not for third-party codes, hence we set things up here rather than in
+#       INITIALISE_PROJECT())...
+
+IF(MSVC)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /WX")
+    # Note: MSVC has a /Wall flag, but it results in MSVC being very pedantic,
+    #       so instead we use what MSVC recommends for production code which is
+    #       /W3...
+ELSE()
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
+ENDIF()
 
 ADD_DEFINITIONS(-D${PROJECT_NAME}_MAIN)
 
@@ -465,13 +477,13 @@ IF(WIN32)
 
     INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
 
-    # Visual C++ 2010 files required by OpenCOR
+    # MSVC files required by OpenCOR
     # Note: we would normally use
     #           INCLUDE(InstallRequiredSystemLibraries)
-    #       but it doesn't work with Visual C++ 2010 Express since that version
-    #       of Visual C++ 2010 doesn't come with redistributables, and even if
-    #       we were to install the redistributables, it would still not work
-    #       because CMake checks a registry key which is not set, so...
+    #       but it doesn't work with MSVC Express since that version of MSVC
+    #       doesn't come with redistributables, and even if we were to install
+    #       the redistributables, it would still not work because CMake checks
+    #       a registry key which is not set, so...
 
     FOREACH(MSVC_LIBRARY msvcp100 msvcr100)
         DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
