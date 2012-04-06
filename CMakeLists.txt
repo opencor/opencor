@@ -466,9 +466,16 @@ IF(WIN32)
     INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
 
     # Visual C++ 2010 files required by OpenCOR
+    # Note: we would normally use
+    #           INCLUDE(InstallRequiredSystemLibraries)
+    #       but it doesn't work with Visual C++ 2010 Express since that version
+    #       of Visual C++ 2010 doesn't come with redistributables, and even if
+    #       we were to install the redistributables, it would still not work
+    #       because CMake checks a registry key which is not set, so...
 
-#---GRY--- TO BE CHECKED...
-#    INCLUDE(InstallRequiredSystemLibraries)
+    FOREACH(MSVC_LIBRARY msvcr100)
+        DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDFOREACH()
 
     # Qt files required by OpenCOR
 
