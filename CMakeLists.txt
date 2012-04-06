@@ -187,13 +187,13 @@ SET(PLUGINS
 
     3rdparty/SUNDIALS
 
-#    simulation/CoreSolver
+    simulation/CoreSolver
 
-#    simulation/CVODESolver
-#    simulation/ForwardEulerSolver
-#    simulation/IDASolver
+    simulation/CVODESolver
+    simulation/ForwardEulerSolver
+    simulation/IDASolver
 
-#    simulation/CoreSimulation
+    simulation/CoreSimulation
 
     3rdparty/QJson
     3rdparty/QScintilla
@@ -208,12 +208,12 @@ SET(PLUGINS
     misc/Viewer
 
 #    organisation/CellMLModelRepository
-#    organisation/FileBrowser
-#    organisation/FileOrganiser
+    organisation/FileBrowser
+    organisation/FileOrganiser
 
 #    editing/CellMLAnnotationView
 #    editing/RawCellMLView
-#    editing/RawView
+    editing/RawView
 
 #    simulation/SingleCellSimulationView
 )
