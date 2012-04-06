@@ -29,7 +29,8 @@
                     <li>
                         <a href="https://github.com/opencor/opencor/blob/master/make"><code>[OpenCOR]/make</code></a>[<a href="https://github.com/opencor/opencor/blob/master/make.bat"><code>.bat</code></a>]: compiles and links everything that is required to get a release version of OpenCOR; and
                         <div>
-                            <strong>Note:</strong> <code>make[.bat]</code> does, by default, compile OpenCOR sequentially. You can, however, specify the number of jobs (<code>n</code>) to be run simultaneously, making it possible to compile OpenCOR in parallel, if needed:
+                            <strong>Note:</strong> <code>make[.bat]</code> does, by default, compile OpenCOR sequentially. You can, however, specify the number of jobs (<code>n</code>) to be run simultaneously, making it possible to compile OpenCOR in parallel on Windows and on Linux / Mac OS X, respectively:
+                            <pre class="prettyprint">C:\OpenCOR>make /m[:n]</pre>
                             <pre class="prettyprint">$ ./make -j [n]</pre>
                             If no <code>n</code> value is provided, then as many jobs as possible will be run simultaneously.
                         </div>
@@ -50,10 +51,9 @@
                     <li>Start Qt Creator;</li>
                     <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
                     <li>Specify <a href="https://github.com/opencor/opencor/tree/master/build"><code>[OpenCOR]/build</code></a> as the build directory;</li>
-                    <li>Make sure that the right generator is selected (i.e. <code>MinGW Generator (Mingw as GCC for Windows targets)</code> for Windows, <code>Unix Generator (GCC (x86 32bit))</code> for Linux 32-bit, <code>Unix Generator (GCC (x86 64bit))</code> for Linux 64-bit and <code>Unix Generator (GCC (x86 64bit))</code> for Mac OS X), if necessary;</li>
+                    <li>Make sure that the right generator is selected (i.e. <code>NMake Generator (Microsoft Visual C++ Compiler 10.0 (x86))</code> for Windows, <code>Unix Generator (GCC (x86 32bit))</code> for Linux 32-bit, <code>Unix Generator (GCC (x86 64bit))</code> for Linux 64-bit and <code>Unix Generator (GCC (x86 64bit))</code> for Mac OS X), if necessary;</li>
                     <li>Click on the <code>Run CMake</code> button;</li>
-                    <li>Click on the <code>Finish</code> button;</li>
-                    <li>Select <code>OpenCOR</code> as the run target (by selecting the <code>Build</code> | <code>Open Build/Run Target Seclector...</code> menu or by pressing <code>Ctrl+T</code>), if necessary; and</li>
+                    <li>Click on the <code>Finish</code> button; and</li>
                     <li>
                         Build and run OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl+R</code>).
                         <div>
@@ -63,7 +63,7 @@
                             <strong>Note #2:</strong> to build OpenCOR's tests, you need to add <code>-DENABLE_TESTING=True</code> to the CMake command (see Note #1). Then, if you want the tests to be run every time you build OpenCOR, you need to create (and enable) a new build step (see Note #1) with <code>runtests</code> as the <code>Command</code> and <code>%{buildDir}/tests</code> as the <code>Working directory</code>. Now, unlike in Note #1, this new build step must come after the default <code>Make</code> build step.
                         </div>
                         <div>
-                            <strong>Note #3:</strong> by default, Qt Creator will compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button of the default <code>Make</code> build step under the <code>Build Steps</code> header. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> where <code>n</code> is the number of jobs to be run simultaneously (if no <code>n</code> value is provided, then Qt Creator will try to run as many jobs as possible).
+                            <strong>Note #3:</strong> by default, Qt Creator will compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button of the default <code>Make</code> build step under the <code>Build Steps</code> header. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> where <code>n</code> is the number of jobs to be run simultaneously (the <code>n</code> value is compulsory on Windows, but if none is provided on Linux / Mac OS X, then Qt Creator will try to run as many jobs as possible).
                         </div>
                     </li>
                 </ul>

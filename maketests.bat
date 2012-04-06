@@ -31,6 +31,6 @@ ECHO.
 CD build
 
 cmake -G "Visual Studio 10" -DENABLE_TESTING=True ..
-msbuild OpenCOR.sln /p:Configuration=Release %*
+msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
 
 CD ..

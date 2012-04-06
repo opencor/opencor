@@ -31,7 +31,7 @@ ECHO.
 CD build
 
 cmake -G "Visual Studio 10" ..
-msbuild OpenCOR.sln /p:Configuration=Release %*
+msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
 
 ECHO.
 ECHO -------------------------------------
@@ -42,6 +42,6 @@ ECHO.
 CD ..\winConsole\build
 
 cmake -G "Visual Studio 10" ..
-msbuild OpenCOR.sln /p:Configuration=Release %*
+msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
 
 CD ..\..

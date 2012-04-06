@@ -278,11 +278,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME}
 IF(NOT APPLE)
     # Copy the OpenCOR executable to the build/bin folder
 
-    IF(WIN32)
-        COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
-    ELSE()
-        COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
-    ENDIF()
+    COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 ENDIF()
 
 # Some Mac OS X specific information, as well as some pre- and post-processing
