@@ -248,7 +248,7 @@ PluginInfo Plugin::info(const QString &pFileName)
     //       on LD_LIBRARY_PATH to get the result we are after (in fact, it is
     //       probably a better approach!), so...
 
-    typedef PluginInfo (*PluginInfoFunc)();
+    typedef void * (*PluginInfoFunc)();
 
 #ifdef Q_WS_WIN
     QString origPath = QDir::currentPath();
@@ -265,15 +265,32 @@ PluginInfo Plugin::info(const QString &pFileName)
 
     // Check whether the plugin information function was found
 
-    if (pluginInfoFunc)
+    if (pluginInfoFunc) {
         // The plugin information function was found, so we can extract the
         // information we are after
+        // Note: see the definition for PLUGININFO_FUNC in pluginfo.h for an
+        //       explanation of the code below (i.e. retrieving a pointer to a
+        //       PluginInfo object and then deleting it)...
 
-        return pluginInfoFunc();
-    else
+        PluginInfo *pluginInfo = static_cast<PluginInfo *>(pluginInfoFunc());
+        PluginInfo res;
+
+        res.mVersion          = pluginInfo->mVersion;
+        res.mType             = pluginInfo->mType;
+        res.mCategory         = pluginInfo->mCategory;
+        res.mManageable       = pluginInfo->mManageable;
+        res.mDependencies     = pluginInfo->mDependencies;
+        res.mFullDependencies = QStringList();
+        res.mDescriptions     = pluginInfo->mDescriptions;
+
+        delete pluginInfo;
+
+        return res;
+    } else {
         // The plugin information couldn't be found, so...
 
         return PluginInfo();
+    }
 }
 
 //==============================================================================

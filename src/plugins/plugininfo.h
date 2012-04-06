@@ -26,7 +26,17 @@ static const QString FrenchLocale  = "fr";
 
 //==============================================================================
 
-#define PLUGININFO_FUNC extern "C++" Q_DECL_EXPORT PluginInfo
+#define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT void *
+// Note: each have a function called <PLUGIN_NAME>PluginInfo which can be used
+//       to retrieve some information about the plugin itself. This is done by
+//       returning a PluginInfo object. This therefore requires C++ support, so
+//       logically we would use extern "C++", but this would result in the
+//       function name being mangled. So, to avoid this problem, we use extern
+//       "C" which ensures that the function name remains intact. Now, because
+//       it's C and not C++, MSVC will generate a warning if we return a
+//       PluginInfo object, so we return a void pointer which means that we must
+//       free it once we have used it and this is done by our Plugin::info()
+//       which is our way to retrieve some information about a plugin...
 
 //==============================================================================
 

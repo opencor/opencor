@@ -22,12 +22,12 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
     descriptions.insert("en", "The core editing plugin for OpenCOR");
     descriptions.insert("fr", "L'extension d'édition de base pour OpenCOR");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::Gui,
-                      PluginInfo::Editing,
-                      false,
-                      QStringList() << "Core",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::Gui,
+                          PluginInfo::Editing,
+                          false,
+                          QStringList() << "Core",
+                          descriptions);
 }
 
 //==============================================================================

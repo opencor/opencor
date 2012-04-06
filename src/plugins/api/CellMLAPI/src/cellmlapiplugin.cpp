@@ -18,12 +18,12 @@ PLUGININFO_FUNC CellMLAPIPluginInfo()
     descriptions.insert("en", "A plugin to use the <a href=\"http://www.cellml.org/tools/api/\">CellML API</a>");
     descriptions.insert("fr", "Une extension pour utiliser l'<a href=\"http://www.cellml.org/tools/api/\">API CellML</a>");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::General,
-                      PluginInfo::Api,
-                      false,
-                      QStringList(),
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::General,
+                          PluginInfo::Api,
+                          false,
+                          QStringList(),
+                          descriptions);
 }
 
 //==============================================================================

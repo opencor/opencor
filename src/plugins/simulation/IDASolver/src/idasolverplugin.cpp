@@ -19,12 +19,12 @@ PLUGININFO_FUNC IDASolverPluginInfo()
     descriptions.insert("en", "Use of <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> to solve DAEs");
     descriptions.insert("fr", "Utilisation de <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> pour résoudres des EDAs");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::General,
-                      PluginInfo::Simulation,
-                      true,
-                      QStringList() << "CoreSolver" << "SUNDIALS",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::General,
+                          PluginInfo::Simulation,
+                          true,
+                          QStringList() << "CoreSolver" << "SUNDIALS",
+                          descriptions);
 }
 
 //==============================================================================

@@ -23,12 +23,12 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
     descriptions.insert("en", "A plugin to access your local files");
     descriptions.insert("fr", "Une extension pour accéder à vos fichiers locaux");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::Gui,
-                      PluginInfo::Organisation,
-                      true,
-                      QStringList() << "Core",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::Gui,
+                          PluginInfo::Organisation,
+                          true,
+                          QStringList() << "Core",
+                          descriptions);
 }
 
 //==============================================================================

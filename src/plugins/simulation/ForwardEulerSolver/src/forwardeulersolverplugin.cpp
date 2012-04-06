@@ -19,12 +19,12 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
     descriptions.insert("en", "An implementation of the Forward Euler method to solve ODEs");
     descriptions.insert("fr", "Une implémentation de la méthode Forward Euler pour résoudres des EDOs");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::General,
-                      PluginInfo::Simulation,
-                      true,
-                      QStringList() << "CoreSolver",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::General,
+                          PluginInfo::Simulation,
+                          true,
+                          QStringList() << "CoreSolver",
+                          descriptions);
 }
 
 //==============================================================================

@@ -24,12 +24,12 @@ PLUGININFO_FUNC HelpPluginInfo()
     descriptions.insert("en", "A plugin to provide help");
     descriptions.insert("fr", "Une extension pour fournir de l'aide");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::Gui,
-                      PluginInfo::Miscellaneous,
-                      true,
-                      QStringList() << "Core",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::Gui,
+                          PluginInfo::Miscellaneous,
+                          true,
+                          QStringList() << "Core",
+                          descriptions);
 }
 
 //==============================================================================

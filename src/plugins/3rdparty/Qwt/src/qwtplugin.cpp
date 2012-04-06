@@ -18,12 +18,12 @@ PLUGININFO_FUNC QwtPluginInfo()
     descriptions.insert("en", "A plugin to use <a href=\"http://qwt.sourceforge.net/\">Qwt</a>");
     descriptions.insert("fr", "Une extension pour utiliser <a href=\"http://qwt.sourceforge.net/\">Qwt</a>");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::Gui,
-                      PluginInfo::ThirdParty,
-                      false,
-                      QStringList(),
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::Gui,
+                          PluginInfo::ThirdParty,
+                          false,
+                          QStringList(),
+                          descriptions);
 }
 
 //==============================================================================

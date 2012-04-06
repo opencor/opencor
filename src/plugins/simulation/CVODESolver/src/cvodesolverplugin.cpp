@@ -19,12 +19,12 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
     descriptions.insert("en", "Use of <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> to solve ODEs");
     descriptions.insert("fr", "Utilisation de <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> pour résoudres des EDOs");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::General,
-                      PluginInfo::Simulation,
-                      true,
-                      QStringList() << "CoreSolver" << "SUNDIALS",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::General,
+                          PluginInfo::Simulation,
+                          true,
+                          QStringList() << "CoreSolver" << "SUNDIALS",
+                          descriptions);
 }
 
 //==============================================================================
