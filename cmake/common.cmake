@@ -82,12 +82,6 @@ MACRO(INITIALISE_PROJECT)
         SET(64BIT_MODE OFF)
     ENDIF()
 
-    # Default location of third-party libraries
-    # Note: this is only required so that we can quickly test third-party
-    #       libraries without first having to package everything...
-
-    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-
     # Default location of external dependencies
 
     IF(WIN32)
@@ -322,6 +316,18 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         PROPERTIES OUTPUT_NAME ${PLUGIN_NAME} LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 
+    # Default location of third-party libraries
+    # Note: this is only required so that we can quickly test third-party
+    #       libraries without first having to package everything...
+
+    IF(WIN32)
+        STRING(REPLACE "${${MAIN_PROJECT_NAME}_SOURCE_DIR}" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
+        SET(PLUGIN_BUILD_DIR "${CMAKE_BINARY_DIR}${PLUGIN_BUILD_DIR}")
+        # Note: MSVC generate things in a different place to GCC, so...
+    ELSE()
+        SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR})
+    ENDIF()
+
     # Create the plugins directory if it doesn't already exist and move the
     # plugin to it
     # Note: this is done so that we can, on Windows and Linux, test the use of
@@ -341,7 +347,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDIF()
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${LIBRARY_OUTPUT_PATH}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # Add some more definitions
 
@@ -365,7 +371,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         FOREACH(OPENCOR_DEPENDENCY ${OPENCOR_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                               COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                  @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
@@ -418,6 +424,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Package the plugin itself
 
     IF(WIN32)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                                                            ${PLUGIN_BUILD_DIR}/${CMAKE_BUILD_TYPE}/${PLUGIN_FILENAME})
+        # Note: the above ensures that the DLL is where CPack expects it to be.
+        #       Indeed, MSVC generates it elsewhere, so...
+
         INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION plugins/${MAIN_PROJECT_NAME})
     ELSEIF(NOT APPLE)
         INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins/${MAIN_PROJECT_NAME})

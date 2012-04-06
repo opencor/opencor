@@ -172,7 +172,7 @@ SET(PLUGINS
     # Note: the build order is very important...
 
 #---GRY--- TO BE DONE...
-#    misc/Core
+    misc/Core
 
 #    3rdparty/LLVM
 #    misc/Computer

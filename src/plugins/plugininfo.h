@@ -26,7 +26,7 @@ static const QString FrenchLocale  = "fr";
 
 //==============================================================================
 
-#define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT PluginInfo
+#define PLUGININFO_FUNC extern "C++" Q_DECL_EXPORT PluginInfo
 
 //==============================================================================
 
