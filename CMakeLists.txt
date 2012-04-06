@@ -266,18 +266,6 @@ IF(NOT WIN32 AND NOT APPLE)
 ENDIF()
 
 # Additional compiler and linker settings
-# Note: we want the compiler to generate whatever warnings for our code (but
-#       not for third-party codes, hence we set things up here rather than in
-#       INITIALISE_PROJECT())...
-
-IF(MSVC)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /WX")
-    # Note: MSVC has a /Wall flag, but it results in MSVC being very pedantic,
-    #       so instead we use what MSVC recommends for production code which is
-    #       /W3...
-ELSE()
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
-ENDIF()
 
 ADD_DEFINITIONS(-D${PROJECT_NAME}_MAIN)
 

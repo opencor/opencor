@@ -3,6 +3,7 @@ PROJECT(QtMmlWidgetPlugin)
 # Add the plugin
 
 ADD_PLUGIN(QtMmlWidget
+    THIRD_PARTY
     SOURCES
         ../../plugininfo.cpp
 

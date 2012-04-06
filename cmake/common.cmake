@@ -6,10 +6,13 @@ MACRO(INITIALISE_PROJECT)
     # of OpenCOR
 
     IF(MSVC)
-        # Remove the default /W3 flag since we want warnings only for OpenCOR
-        # itself and not for any of the third-party libraries that we use...
-
-        STRING(REPLACE "/W3" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        STRING(REPLACE "/W3" "/W3 /WX" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        # Note: MSVC has a /Wall flag, but it results in MSVC being very
+        #       pedantic, so instead we use what MSVC recommends for production
+        #       code which is /W3 and which is also what CMake uses by
+        #       default...
+    ELSE()
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
     ENDIF()
 
     SET(LINK_FLAGS_PROPERTIES)
@@ -21,7 +24,9 @@ MACRO(INITIALISE_PROJECT)
 
         # Default compiler settings
 
-        IF(NOT MSVC)
+        IF(MSVC)
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+        ELSE()
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
         ENDIF()
     ELSE()
@@ -166,7 +171,24 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(TYPE_OF_PARAMETER 0)
 
     FOREACH(PARAMETER ${ARGN})
-        IF(${PARAMETER} STREQUAL "SOURCES")
+        IF(${PARAMETER} STREQUAL "THIRD_PARTY")
+            # We are dealing with a third-party plugin disable warnings since
+            # it may generate some and this is not something we have or should
+            # have control over
+
+            IF(MSVC)
+                STRING(REPLACE "/W3 /WX" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+            ELSE()
+                STRING(REPLACE "-Wall -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+            ENDIF()
+
+            # Add a definition in case of compilation from within Qt Creator
+            # using MSVC since JOM overrides some of our settings, so...
+
+            IF(MSVC)
+                ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
+            ENDIF()
+        ELSEIF(${PARAMETER} STREQUAL "SOURCES")
             SET(TYPE_OF_PARAMETER 1)
         ELSEIF(${PARAMETER} STREQUAL "HEADERS_MOC")
             SET(TYPE_OF_PARAMETER 2)

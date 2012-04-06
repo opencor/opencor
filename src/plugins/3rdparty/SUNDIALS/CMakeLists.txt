@@ -3,6 +3,7 @@ PROJECT(SUNDIALSPlugin)
 # Add the plugin
 
 ADD_PLUGIN(SUNDIALS
+    THIRD_PARTY
     SOURCES
         ../../plugininfo.cpp
 

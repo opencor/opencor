@@ -3,6 +3,7 @@ PROJECT(QScintillaPlugin)
 # Add the plugin
 
 ADD_PLUGIN(QScintilla
+    THIRD_PARTY
     SOURCES
         ../../plugininfo.cpp
 
