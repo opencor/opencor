@@ -180,12 +180,12 @@ SET(PLUGINS
 #    api/CellMLAPI
 
 #    misc/CellMLSupport
-#    misc/RICORDOSupport
+    misc/RICORDOSupport
 
-#    editing/CoreEditing
+    editing/CoreEditing
 #    editing/CoreCellMLEditing
 
-#    3rdparty/SUNDIALS
+    3rdparty/SUNDIALS
 
 #    simulation/CoreSolver
 
@@ -195,17 +195,17 @@ SET(PLUGINS
 
 #    simulation/CoreSimulation
 
-#    3rdparty/QJson
-#    3rdparty/QScintilla
-#    3rdparty/QtMmlWidget
-#    3rdparty/Qwt
+    3rdparty/QJson
+    3rdparty/QScintilla
+    3rdparty/QtMmlWidget
+    3rdparty/Qwt
 
-#    misc/QScintillaSupport
+    misc/QScintillaSupport
 
     # Build the remaining plugins
 
-#    misc/Help
-#    misc/Viewer
+    misc/Help
+    misc/Viewer
 
 #    organisation/CellMLModelRepository
 #    organisation/FileBrowser
