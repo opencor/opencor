@@ -261,6 +261,12 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTNETWORK_LIBRARY}
 )
 
+IF(WIN32)
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+        ${QT_QTMAIN_LIBRARY}
+    )
+ENDIF()
+
 IF(NOT WIN32 AND NOT APPLE)
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
         ${QT_QTDBUS_LIBRARY}
@@ -287,7 +293,11 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME}
 IF(NOT APPLE)
     # Copy the OpenCOR executable to the build/bin folder
 
-    COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+    IF(WIN32)
+        COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+    ELSE()
+        COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+    ENDIF()
 ENDIF()
 
 # Some Mac OS X specific information, as well as some pre- and post-processing
@@ -473,7 +483,7 @@ IF(WIN32)
     #       we were to install the redistributables, it would still not work
     #       because CMake checks a registry key which is not set, so...
 
-    FOREACH(MSVC_LIBRARY msvcr100)
+    FOREACH(MSVC_LIBRARY msvcp100 msvcr100)
         DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 
