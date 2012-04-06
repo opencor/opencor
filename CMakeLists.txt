@@ -122,15 +122,7 @@ INCLUDE_THIRD_PARTY_LIBRARY(. QtSingleApplication)
 # case of Linux, it's done through res/OpenCOR.qrc
 
 IF(WIN32)
-#---GRY--- TO BE DONE...
-#    SET(IconObjectFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_icon.o)
-
-#    ADD_CUSTOM_COMMAND(OUTPUT ${IconObjectFile}
-#                       COMMAND windres -I ${CMAKE_SOURCE_DIR} -i ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc
-#                                       -o ${IconObjectFile}
-#                      )
-
-#    SET(SOURCES ${SOURCES} ${IconObjectFile})
+    SET(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc)
 ELSEIF(APPLE)
     SET(IconFile ${PROJECT_NAME}.icns)
 
