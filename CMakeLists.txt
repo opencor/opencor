@@ -207,7 +207,7 @@ SET(PLUGINS
     misc/Help
     misc/Viewer
 
-#    organisation/CellMLModelRepository
+    organisation/CellMLModelRepository
     organisation/FileBrowser
     organisation/FileOrganiser
 
