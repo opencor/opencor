@@ -279,6 +279,15 @@ IF(NOT APPLE)
     # Copy the OpenCOR executable to the build/bin folder
 
     COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+
+    IF(WIN32)
+        # Copy the OpenCOR executable to the build/Release folder, so that
+        # CPack can find it since this is where it expects it to be, except
+        # that make.bat asks for the OpenCOR executable to be generated in
+        # build to match what does Qt Creator, so...
+
+        COPY_FILE_TO_BUILD_DIR(Release ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+    ENDIF()
 ENDIF()
 
 # Some Mac OS X specific information, as well as some pre- and post-processing
