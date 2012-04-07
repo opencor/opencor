@@ -904,10 +904,10 @@ bool parsePrimaryExpression(ComputerParser *pParser,
         // Parse the RHS of an equation and this as many times as there are
         // arguments according to argumentsCount
 
-        ComputerEquation * arguments[argumentsCount];
+        ComputerEquations arguments;
 
         for (int i = 0; i < argumentsCount; ++i) {
-            arguments[i] = 0;
+            arguments << 0;
 
             // The current token must be ","
 
@@ -915,7 +915,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                 pParser->setError("','");
 
                 for (int j = 0; j < i; ++j)
-                    delete arguments[j];
+                    delete arguments.at(j);
 
                 return false;
             }
@@ -924,12 +924,14 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
             // Parse the RHS of an equation
 
-            if (!pParser->parseRhsEquation(arguments[i])) {
+            ComputerEquation *computerEquation = arguments.at(i);
+
+            if (!pParser->parseRhsEquation(computerEquation)) {
                 // Something went wrong with the parsing of the RHS of an
                 // equation, so...
 
                 for (int j = 0; j <= i; ++j)
-                    delete arguments[j];
+                    delete arguments.at(j);
 
                 return false;
             }
@@ -941,7 +943,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
             pParser->setError("')'");
 
             for (int i = 0; i < argumentsCount; ++i)
-                delete arguments[i];
+                delete arguments.at(i);
 
             return false;
         }
@@ -950,8 +952,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
         // The parsing of our X-argument function went fine, so...
 
-        pExpression = new ComputerEquation(equationType,
-                                           argumentsCount, arguments);
+        pExpression = new ComputerEquation(equationType, arguments);
     } else if (pParser->scanner()->token().symbol() == ComputerScannerToken::DefInt) {
         // We are dealing with a definite integral function, so...
 

@@ -488,7 +488,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     // automatically added to our module
 
     llvm::SMDiagnostic parseError;
-    llvm::ParseAssemblyString(qPrintable(data.assemblyCode().replace("%%", "\%")),
+    llvm::ParseAssemblyString(qPrintable(data.assemblyCode().replace("%%", "\\%")),
                               mModule, parseError, llvm::getGlobalContext());
     // Note: for LLVM to be able to parse the assembly code properly, we must
     //       replace '%' with '\%', so...
