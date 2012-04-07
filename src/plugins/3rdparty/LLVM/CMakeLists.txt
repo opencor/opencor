@@ -66,13 +66,6 @@ IF(WIN32)
     FOREACH(LLVM_EXTERNAL_DEPENDENCY ${LLVM_EXTERNAL_DEPENDENCIES})
         DEPLOY_WINDOWS_BINARY_FILE(${LLVM_EXTERNAL_DEPENDENCIES_DIR}/${LLVM_EXTERNAL_DEPENDENCY})
     ENDFOREACH()
-
-    # The libstdc++-6.dll and pthreadGC2.dll files
-    # Note: these DLLs come from the official version of MinGW (as opposed to
-    #       the Qt patched version) and are required by LLVM, so...
-
-    DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
-    DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/pthreadGC2.dll)
 ELSEIF(APPLE)
     # Deploy the LLVM libraries together with their respective LLVM
     # dependencies, if any

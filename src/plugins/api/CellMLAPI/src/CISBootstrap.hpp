@@ -1,4 +1,5 @@
 #include "cda_compiler_support.h"
+#include "IfaceCIS.hxx"
 #ifdef IN_CIS_MODULE
 #define CIS_PUBLIC_PRE CDA_EXPORT_PRE
 #define CIS_PUBLIC_POST CDA_EXPORT_POST

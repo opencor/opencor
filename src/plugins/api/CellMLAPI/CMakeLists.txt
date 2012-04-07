@@ -57,12 +57,6 @@ IF(WIN32)
     FOREACH(CELLML_API_EXTERNAL_DEPENDENCY ${CELLML_API_EXTERNAL_DEPENDENCIES})
         DEPLOY_WINDOWS_BINARY_FILE(${CELLML_API_EXTERNAL_DEPENDENCIES_DIR}/${CELLML_API_EXTERNAL_DEPENDENCY})
     ENDFOREACH()
-
-    # The libstdc++-6.dll file
-    # Note: this DLL comes from the official version of MinGW (as opposed to
-    #       the Qt patched version) and is required by the CellML API, so...
-
-    DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
 ELSEIF(APPLE)
     # Deploy the CellML API libraries together with their respective CellML API
     # dependencies, if any
