@@ -65,6 +65,11 @@
                         <div>
                             <strong>Note #3:</strong> by default, Qt Creator will compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button of the default <code>Make</code> build step under the <code>Build Steps</code> header. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> where <code>n</code> is the number of jobs to be run simultaneously (the <code>n</code> value is compulsory on Windows, but if none is provided on Linux / Mac OS X, then Qt Creator will try to run as many jobs as possible).
                         </div>
+                        <div>
+                            <strong>Note #4:</strong> on Windows, <a href="http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express">Visual C++ 2010 Express SP1</a> will generate a warning:
+                            <pre class="prettyprint">qtmaind.lib(qtmain_win.obj):-1: warning: LNK4099: PDB 'vc100.pdb' was not found with 'qtmaind.lib(qtmain_win.obj)' or at '[OpenCOR]\build\vc100.pdb'; linking object as if no debug info</pre>
+                            This warning is completely safe to ignore. Ideally, we would have disabled it, but it cannot be done (see <a href="http://connect.microsoft.com/VisualStudio/feedback/details/176188/can-not-disable-warning-lnk4099">here</a> for more information; the workaround mentioned <a href="http://www.bottledlight.com/docs/lnk4099.html">here</a> does not work though).
+                        </div>
                     </li>
                 </ul>
             </li>
