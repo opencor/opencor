@@ -32,6 +32,12 @@ extern "C" double lcm(int pCount, ...);
 extern "C" double max(int pCount, ...);
 extern "C" double min(int pCount, ...);
 
+#ifdef _MSC_VER
+    extern "C" double asinh(double pNb);
+    extern "C" double acosh(double pNb);
+    extern "C" double atanh(double pNb);
+#endif
+
 extern "C" double piecewise(double pCondition, double pTrue, double pFalse);
 
 //==============================================================================
