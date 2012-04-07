@@ -26,17 +26,15 @@ ADD_PLUGIN(Computer
         src/computerengine.h
         src/computerparser.h
         src/computerplugin.h
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
+    DEFINITIONS
+        ${LLVM_DEFINITIONS}
     OPENCOR_DEPENDENCIES
         LLVM
     QT_DEPENDENCIES
         QtCore
         QtGui
-    EXTERNAL_DEPENDENCIES
-        ${LLVM_EXTERNAL_DEPENDENCIES}
     TESTS
         test
 )

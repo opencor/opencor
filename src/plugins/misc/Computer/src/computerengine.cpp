@@ -9,7 +9,20 @@
 //==============================================================================
 
 #include "llvm/LLVMContext.h"
+
+#ifdef _MSC_VER
+    // To include llvm/Module.h results in some indirect warnings from MSVC, but
+    // it's LLVM's task to address them not ours, so...
+
+    #pragma warning(disable: 4146)
+#endif
+
 #include "llvm/Module.h"
+
+#ifdef _MSC_VER
+    #pragma warning(default: 4146)
+#endif
+
 #include "llvm/Assembly/Parser.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/Support/SourceMgr.h"
