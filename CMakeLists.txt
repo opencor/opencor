@@ -174,8 +174,8 @@ SET(PLUGINS
 #---GRY--- TO BE DONE...
     misc/Core
 
-    3rdparty/LLVM
-    misc/Computer
+#    3rdparty/LLVM
+#    misc/Computer
 
 #    api/CellMLAPI
 

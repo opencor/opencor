@@ -11,6 +11,8 @@ MACRO(INITIALISE_PROJECT)
         #       pedantic, so instead we use what MSVC recommends for production
         #       code which is /W3 and which is also what CMake uses by
         #       default...
+
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /STACK:10000000 /machine:X86")
     ELSE()
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
     ENDIF()
@@ -25,7 +27,8 @@ MACRO(INITIALISE_PROJECT)
         # Default compiler settings
 
         IF(MSVC)
-            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Zi /Ob0 /Od /RTC1")
+            SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /debug /INCREMENTAL")
         ELSE()
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
         ENDIF()
@@ -39,7 +42,8 @@ MACRO(INITIALISE_PROJECT)
         # Default compiler and linker settings
 
         IF(MSVC)
-            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MD /O2 /Ob2 /D NDEBUG")
+            SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /INCREMENTAL:NO")
         ELSE()
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
         ENDIF()

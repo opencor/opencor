@@ -3,3 +3,4 @@
 /winConsole/CMakeLists.txt.user
 /src/plugins/3rdparty/LLVM/include/llvm/Config/config.h
 /src/plugins/3rdparty/LLVM/include/llvm/Config/llvm-config.h
+/src/plugins/3rdparty/LLVM/include/llvm/Support/DataTypes.h
