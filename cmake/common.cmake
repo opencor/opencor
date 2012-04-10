@@ -42,7 +42,7 @@ MACRO(INITIALISE_PROJECT)
         # Default compiler and linker settings
 
         IF(MSVC)
-            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MD /O2 /Ob2 /D NDEBUG")
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MD /O2 /Ob2 /Oy- /DNDEBUG")
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /INCREMENTAL:NO")
         ELSE()
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
