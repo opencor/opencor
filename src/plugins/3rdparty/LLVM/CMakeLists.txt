@@ -162,13 +162,13 @@ ADD_PLUGIN(LLVM
         lib/AsmParser/LLParser.cpp
         lib/AsmParser/Parser.cpp
 
-        lib/BitCode/Reader/BitcodeReader.cpp
-        lib/BitCode/Reader/BitReader.cpp
+        lib/Bitcode/Reader/BitcodeReader.cpp
+        lib/Bitcode/Reader/BitReader.cpp
 
-        lib/BitCode/Writer/BitcodeWriter.cpp
-        lib/BitCode/Writer/BitcodeWriterPass.cpp
-        lib/BitCode/Writer/BitWriter.cpp
-        lib/BitCode/Writer/ValueEnumerator.cpp
+        lib/Bitcode/Writer/BitcodeWriter.cpp
+        lib/Bitcode/Writer/BitcodeWriterPass.cpp
+        lib/Bitcode/Writer/BitWriter.cpp
+        lib/Bitcode/Writer/ValueEnumerator.cpp
 
         lib/CodeGen/AggressiveAntiDepBreaker.cpp
         lib/CodeGen/AllocationOrder.cpp
