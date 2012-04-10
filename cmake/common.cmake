@@ -98,6 +98,15 @@ MACRO(INITIALISE_PROJECT)
         # Note: MSVC doesn't care about this location, so...
     ENDIF()
 
+    # Location of our plugins so that we don't have to deploy OpenCOR on
+    # Windows and Linux before being able to test it
+
+    IF(APPLE)
+        SET(DEST_PLUGINS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME})
+    ELSE()
+        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${MAIN_PROJECT_NAME})
+    ENDIF()
+
     # Default location of external dependencies
 
     IF(WIN32)
@@ -267,6 +276,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     ADD_DEFINITIONS(-D${PLUGIN_NAME}_PLUGIN)
 
+    # Some plugin-specific definitions
+
+    FOREACH(DEFINITION ${DEFINITIONS})
+        ADD_DEFINITIONS(-D${DEFINITION})
+    ENDFOREACH()
+
     # Rules to build the plugin
 
     IF("${HEADERS_MOC}" STREQUAL "")
@@ -366,12 +381,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-    IF(APPLE)
-        SET(DEST_PLUGINS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME})
-    ELSE()
-        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${MAIN_PROJECT_NAME})
-    ENDIF()
-
     IF(NOT EXISTS ${DEST_PLUGINS_DIR})
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PLUGINS_DIR})
@@ -379,12 +388,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-
-    # Add some more definitions
-
-    FOREACH(DEFINITION ${DEFINITIONS})
-        ADD_DEFINITIONS(-D${DEFINITION})
-    ENDFOREACH()
 
     # A few Mac OS X specific things
 
@@ -545,7 +548,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 SET(TEST_NAME_FILEPATH ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
                 ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_NAME_FILEPATH} ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
+                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_NAME_FILEPATH}
+                                                                    ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
 
                 # Make sure that, on Mac OS X, the test refers to our test
                 # version of the external libraries on which it depends
@@ -568,6 +572,61 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ENDIF()
         ENDFOREACH()
     ENDIF()
+ENDMACRO()
+
+MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
+    # Various initialisations
+
+    SET(PLUGIN_NAME ${PLUGIN_NAME})
+
+    SET(INCLUDE_DIRS)
+
+    # Analyse the extra parameters
+
+    SET(TYPE_OF_PARAMETER 0)
+
+    FOREACH(PARAMETER ${ARGN})
+        IF(${PARAMETER} STREQUAL "INCLUDE_DIRS")
+            SET(TYPE_OF_PARAMETER 1)
+        ELSE()
+            # Not one of the headers, so add the parameter to the corresponding
+            # set
+
+            IF(${TYPE_OF_PARAMETER} EQUAL 1)
+                SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${PARAMETER})
+            ENDIF()
+        ENDIF()
+    ENDFOREACH()
+
+    # Various include directories
+
+    SET(PLUGIN_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
+
+    INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
+
+    # Location of our plugins
+
+    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_DIR})
+
+    # Create the plugins directory if it doesn't already exist and move the
+    # plugin to it
+    # Note: this is done so that we can, on Windows and Linux, test the use of
+    #       plugins in OpenCOR without first having to package OpenCOR...
+
+    SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+    IF(NOT EXISTS ${DEST_PLUGINS_DIR})
+        ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_MAKE_DIRECTORY ALL
+                          COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PLUGINS_DIR})
+    ENDIF()
+
+    ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY ALL
+                      COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                       ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+
+    # Package the plugin itself
+
+    INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
 ENDMACRO()
 
 MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
@@ -632,14 +691,16 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
             SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} ${LIBRARY_LIB_FILEPATH})
+                               COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                ${LIBRARY_LIB_FILEPATH})
         ELSE()
             # We must deploy a third-party library
 
             SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME} ${LIBRARY_LIB_FILEPATH})
+                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME}
+                                                                ${LIBRARY_LIB_FILEPATH})
 
             # In the case of a third-party library, we must also copy the
             # library to the build directory, so that we can test any plugin
@@ -648,7 +709,8 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
             SET(LIBRARY_LIB_TEST_FILEPATH ${CMAKE_BINARY_DIR}/${LIBRARY_NAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME} ${LIBRARY_LIB_TEST_FILEPATH})
+                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME}
+                                                                ${LIBRARY_LIB_TEST_FILEPATH})
         ENDIF()
     ELSE()
         # We must deploy a library which is bundled in a Qt framework
@@ -656,7 +718,8 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
         SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME})
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY_NAME} ${LIBRARY_LIB_FILEPATH})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY_NAME}
+                                                            ${LIBRARY_LIB_FILEPATH})
     ENDIF()
 
     # Strip the library from anything that is not essential
@@ -746,13 +809,15 @@ MACRO(COPY_FILE_TO_BUILD_DIR DIRNAME FILENAME)
 
     IF("${ARGN}" STREQUAL "")
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${REAL_DIRNAME})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME}
+                                                            ${REAL_DIRNAME})
     ELSE()
         # An argument was passed so use it to rename the file which is to be
         # copied
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${REAL_DIRNAME}/${ARGN})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME}
+                                                            ${REAL_DIRNAME}/${ARGN})
     ENDIF()
 ENDMACRO()
 

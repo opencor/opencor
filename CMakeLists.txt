@@ -162,7 +162,8 @@ IF(ENABLE_TESTING)
     SET(MAIN_TEST_FILENAME ${RUNTESTS_PROGRAM}${CMAKE_EXECUTABLE_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_PROGRAM} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME} ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
+                                                        ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 ENDIF()
 
 # Build the plugins used by either the GUI and/or console version of OpenCOR
@@ -419,7 +420,8 @@ IF(APPLE)
     ENDIF()
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib ${SQLDRIVERS_DIR})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib
+                                                        ${SQLDRIVERS_DIR})
 
     # Make sure that the SQLite plugin refers to our embedded version
 
