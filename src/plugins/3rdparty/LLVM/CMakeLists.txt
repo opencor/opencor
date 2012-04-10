@@ -26,11 +26,14 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
     )
 
     IF(MSVC)
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4355 /wd4503")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4355 /wd4503 /wd4624 /wd4805")
+        # Note: to build LLVM generates quite a few warnings from MSVC, so
+        #       disable them since we have nothing to do with them...
     ENDIF()
 ENDMACRO()
 
-# Retrieve some header files that were generated on each of our target platforms
+# Retrieve some header/include files that were generated on each of our target
+# platforms
 
 SET(LLVM_CONFIG_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/llvm/Config)
 SET(CONFIG_HEADER_FILES
@@ -55,6 +58,27 @@ FOREACH(CONFIG_HEADER_FILE ${CONFIG_HEADER_FILES})
                    COPYONLY)
 ENDFOREACH()
 
+SET(LLVM_CONFIG_INCLUDES_DIR ${PROJECT_SOURCE_DIR}/lib/Target/X86)
+SET(CONFIG_INCLUDE_FILES
+    X86GenAsmMatcher.inc
+    X86GenAsmWriter.inc
+    X86GenAsmWriter1.inc
+    X86GenCallingConv.inc
+    X86GenDAGISel.inc
+    X86GenDisassemblerTables.inc
+    X86GenEDInfo.inc
+    X86GenFastISel.inc
+    X86GenInstrInfo.inc
+    X86GenRegisterInfo.inc
+    X86GenSubtargetInfo.inc
+)
+
+FOREACH(CONFIG_INCLUDE_FILE ${CONFIG_INCLUDE_FILES})
+    CONFIGURE_FILE(${LLVM_CONFIG_INCLUDES_DIR}/${DISTRIB_DIR}/${CONFIG_INCLUDE_FILE}
+                   ${LLVM_CONFIG_INCLUDES_DIR}/${CONFIG_INCLUDE_FILE}
+                   COPYONLY)
+ENDFOREACH()
+
 # Retrieve some LLVM settings
 
 RETRIEVE_LLVM_SETTINGS()
@@ -65,6 +89,329 @@ ADD_PLUGIN(LLVM
     THIRD_PARTY
     SOURCES
         ../../plugininfo.cpp
+
+        lib/Analysis/AliasAnalysis.cpp
+        lib/Analysis/AliasAnalysisCounter.cpp
+        lib/Analysis/AliasAnalysisEvaluator.cpp
+        lib/Analysis/AliasDebugger.cpp
+        lib/Analysis/AliasSetTracker.cpp
+        lib/Analysis/Analysis.cpp
+        lib/Analysis/BasicAliasAnalysis.cpp
+        lib/Analysis/BlockFrequencyInfo.cpp
+        lib/Analysis/BranchProbabilityInfo.cpp
+        lib/Analysis/CaptureTracking.cpp
+        lib/Analysis/CFGPrinter.cpp
+        lib/Analysis/ConstantFolding.cpp
+        lib/Analysis/DbgInfoPrinter.cpp
+        lib/Analysis/DebugInfo.cpp
+        lib/Analysis/DIBuilder.cpp
+        lib/Analysis/DominanceFrontier.cpp
+        lib/Analysis/DomPrinter.cpp
+        lib/Analysis/InlineCost.cpp
+        lib/Analysis/InstCount.cpp
+        lib/Analysis/InstructionSimplify.cpp
+        lib/Analysis/Interval.cpp
+        lib/Analysis/IntervalPartition.cpp
+        lib/Analysis/IVUsers.cpp
+        lib/Analysis/LazyValueInfo.cpp
+        lib/Analysis/LibCallAliasAnalysis.cpp
+        lib/Analysis/LibCallSemantics.cpp
+        lib/Analysis/Lint.cpp
+        lib/Analysis/Loads.cpp
+        lib/Analysis/LoopDependenceAnalysis.cpp
+        lib/Analysis/LoopInfo.cpp
+        lib/Analysis/LoopPass.cpp
+        lib/Analysis/MemDepPrinter.cpp
+        lib/Analysis/MemoryBuiltins.cpp
+        lib/Analysis/MemoryDependenceAnalysis.cpp
+        lib/Analysis/ModuleDebugInfoPrinter.cpp
+        lib/Analysis/NoAliasAnalysis.cpp
+        lib/Analysis/PathNumbering.cpp
+        lib/Analysis/PathProfileInfo.cpp
+        lib/Analysis/PathProfileVerifier.cpp
+        lib/Analysis/PHITransAddr.cpp
+        lib/Analysis/PostDominators.cpp
+        lib/Analysis/ProfileEstimatorPass.cpp
+        lib/Analysis/ProfileInfo.cpp
+        lib/Analysis/ProfileInfoLoader.cpp
+        lib/Analysis/ProfileInfoLoaderPass.cpp
+        lib/Analysis/ProfileVerifierPass.cpp
+        lib/Analysis/RegionInfo.cpp
+        lib/Analysis/RegionPass.cpp
+        lib/Analysis/RegionPrinter.cpp
+        lib/Analysis/ScalarEvolution.cpp
+        lib/Analysis/ScalarEvolutionAliasAnalysis.cpp
+        lib/Analysis/ScalarEvolutionExpander.cpp
+        lib/Analysis/ScalarEvolutionNormalization.cpp
+        lib/Analysis/SparsePropagation.cpp
+        lib/Analysis/Trace.cpp
+        lib/Analysis/TypeBasedAliasAnalysis.cpp
+        lib/Analysis/ValueTracking.cpp
+
+        lib/Analysis/IPA/CallGraph.cpp
+        lib/Analysis/IPA/CallGraphSCCPass.cpp
+        lib/Analysis/IPA/FindUsedTypes.cpp
+        lib/Analysis/IPA/GlobalsModRef.cpp
+        lib/Analysis/IPA/IPA.cpp
+
+        lib/Archive/Archive.cpp
+        lib/Archive/ArchiveReader.cpp
+        lib/Archive/ArchiveWriter.cpp
+
+        lib/AsmParser/LLLexer.cpp
+        lib/AsmParser/LLParser.cpp
+        lib/AsmParser/Parser.cpp
+
+        lib/BitCode/Reader/BitcodeReader.cpp
+        lib/BitCode/Reader/BitReader.cpp
+
+        lib/BitCode/Writer/BitcodeWriter.cpp
+        lib/BitCode/Writer/BitcodeWriterPass.cpp
+        lib/BitCode/Writer/BitWriter.cpp
+        lib/BitCode/Writer/ValueEnumerator.cpp
+
+        lib/CodeGen/AggressiveAntiDepBreaker.cpp
+        lib/CodeGen/AllocationOrder.cpp
+        lib/CodeGen/Analysis.cpp
+        lib/CodeGen/BranchFolding.cpp
+        lib/CodeGen/CalcSpillWeights.cpp
+        lib/CodeGen/CallingConvLower.cpp
+        lib/CodeGen/CodeGen.cpp
+        lib/CodeGen/CodePlacementOpt.cpp
+        lib/CodeGen/CriticalAntiDepBreaker.cpp
+        lib/CodeGen/DeadMachineInstructionElim.cpp
+        lib/CodeGen/DwarfEHPrepare.cpp
+        lib/CodeGen/EdgeBundles.cpp
+        lib/CodeGen/ELFCodeEmitter.cpp
+        lib/CodeGen/ELFWriter.cpp
+        lib/CodeGen/ExecutionDepsFix.cpp
+        lib/CodeGen/ExpandISelPseudos.cpp
+        lib/CodeGen/ExpandPostRAPseudos.cpp
+        lib/CodeGen/GCMetadata.cpp
+        lib/CodeGen/GCMetadataPrinter.cpp
+        lib/CodeGen/GCStrategy.cpp
+        lib/CodeGen/IfConversion.cpp
+        lib/CodeGen/InlineSpiller.cpp
+        lib/CodeGen/InterferenceCache.cpp
+        lib/CodeGen/IntrinsicLowering.cpp
+        lib/CodeGen/LatencyPriorityQueue.cpp
+        lib/CodeGen/LexicalScopes.cpp
+        lib/CodeGen/LiveDebugVariables.cpp
+        lib/CodeGen/LiveInterval.cpp
+        lib/CodeGen/LiveIntervalAnalysis.cpp
+        lib/CodeGen/LiveIntervalUnion.cpp
+        lib/CodeGen/LiveRangeCalc.cpp
+        lib/CodeGen/LiveRangeEdit.cpp
+        lib/CodeGen/LiveStackAnalysis.cpp
+        lib/CodeGen/LiveVariables.cpp
+        lib/CodeGen/LLVMTargetMachine.cpp
+        lib/CodeGen/LocalStackSlotAllocation.cpp
+        lib/CodeGen/MachineBasicBlock.cpp
+        lib/CodeGen/MachineBlockFrequencyInfo.cpp
+        lib/CodeGen/MachineBranchProbabilityInfo.cpp
+        lib/CodeGen/MachineCSE.cpp
+        lib/CodeGen/MachineDominators.cpp
+        lib/CodeGen/MachineFunction.cpp
+        lib/CodeGen/MachineFunctionAnalysis.cpp
+        lib/CodeGen/MachineFunctionPass.cpp
+        lib/CodeGen/MachineFunctionPrinterPass.cpp
+        lib/CodeGen/MachineInstr.cpp
+        lib/CodeGen/MachineLICM.cpp
+        lib/CodeGen/MachineLoopInfo.cpp
+        lib/CodeGen/MachineLoopRanges.cpp
+        lib/CodeGen/MachineModuleInfo.cpp
+        lib/CodeGen/MachineModuleInfoImpls.cpp
+        lib/CodeGen/MachinePassRegistry.cpp
+        lib/CodeGen/MachineRegisterInfo.cpp
+        lib/CodeGen/MachineSink.cpp
+        lib/CodeGen/MachineSSAUpdater.cpp
+        lib/CodeGen/MachineVerifier.cpp
+        lib/CodeGen/ObjectCodeEmitter.cpp
+        lib/CodeGen/OcamlGC.cpp
+        lib/CodeGen/OptimizePHIs.cpp
+        lib/CodeGen/Passes.cpp
+        lib/CodeGen/PeepholeOptimizer.cpp
+        lib/CodeGen/PHIElimination.cpp
+        lib/CodeGen/PHIEliminationUtils.cpp
+        lib/CodeGen/PostRASchedulerList.cpp
+        lib/CodeGen/ProcessImplicitDefs.cpp
+        lib/CodeGen/PrologEpilogInserter.cpp
+        lib/CodeGen/PseudoSourceValue.cpp
+        lib/CodeGen/RegAllocBasic.cpp
+        lib/CodeGen/RegAllocFast.cpp
+        lib/CodeGen/RegAllocGreedy.cpp
+        lib/CodeGen/RegAllocLinearScan.cpp
+        lib/CodeGen/RegAllocPBQP.cpp
+        lib/CodeGen/RegisterClassInfo.cpp
+        lib/CodeGen/RegisterCoalescer.cpp
+        lib/CodeGen/RegisterScavenging.cpp
+        lib/CodeGen/RenderMachineFunction.cpp
+        lib/CodeGen/ScheduleDAG.cpp
+        lib/CodeGen/ScheduleDAGEmit.cpp
+        lib/CodeGen/ScheduleDAGInstrs.cpp
+        lib/CodeGen/ScheduleDAGPrinter.cpp
+        lib/CodeGen/ScoreboardHazardRecognizer.cpp
+        lib/CodeGen/ShadowStackGC.cpp
+        lib/CodeGen/ShrinkWrapping.cpp
+        lib/CodeGen/SjLjEHPrepare.cpp
+        lib/CodeGen/SlotIndexes.cpp
+        lib/CodeGen/Spiller.cpp
+        lib/CodeGen/SpillPlacement.cpp
+        lib/CodeGen/SplitKit.cpp
+        lib/CodeGen/Splitter.cpp
+        lib/CodeGen/StackProtector.cpp
+        lib/CodeGen/StackSlotColoring.cpp
+        lib/CodeGen/StrongPHIElimination.cpp
+        lib/CodeGen/TailDuplication.cpp
+        lib/CodeGen/TargetInstrInfoImpl.cpp
+        lib/CodeGen/TargetLoweringObjectFileImpl.cpp
+        lib/CodeGen/TwoAddressInstructionPass.cpp
+        lib/CodeGen/UnreachableBlockElim.cpp
+        lib/CodeGen/VirtRegMap.cpp
+        lib/CodeGen/VirtRegRewriter.cpp
+
+        lib/CodeGen/AsmPrinter/ARMException.cpp
+        lib/CodeGen/AsmPrinter/AsmPrinter.cpp
+        lib/CodeGen/AsmPrinter/AsmPrinterDwarf.cpp
+        lib/CodeGen/AsmPrinter/AsmPrinterInlineAsm.cpp
+        lib/CodeGen/AsmPrinter/DIE.cpp
+        lib/CodeGen/AsmPrinter/DwarfCFIException.cpp
+        lib/CodeGen/AsmPrinter/DwarfCompileUnit.cpp
+        lib/CodeGen/AsmPrinter/DwarfDebug.cpp
+        lib/CodeGen/AsmPrinter/DwarfException.cpp
+        lib/CodeGen/AsmPrinter/OcamlGCPrinter.cpp
+        lib/CodeGen/AsmPrinter/Win64Exception.cpp
+
+        lib/CodeGen/SelectionDAG/DAGCombiner.cpp
+        lib/CodeGen/SelectionDAG/FastISel.cpp
+        lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp
+        lib/CodeGen/SelectionDAG/InstrEmitter.cpp
+        lib/CodeGen/SelectionDAG/LegalizeDAG.cpp
+        lib/CodeGen/SelectionDAG/LegalizeFloatTypes.cpp
+        lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
+        lib/CodeGen/SelectionDAG/LegalizeTypes.cpp
+        lib/CodeGen/SelectionDAG/LegalizeTypesGeneric.cpp
+        lib/CodeGen/SelectionDAG/LegalizeVectorOps.cpp
+        lib/CodeGen/SelectionDAG/LegalizeVectorTypes.cpp
+        lib/CodeGen/SelectionDAG/ScheduleDAGFast.cpp
+        lib/CodeGen/SelectionDAG/ScheduleDAGList.cpp
+        lib/CodeGen/SelectionDAG/ScheduleDAGRRList.cpp
+        lib/CodeGen/SelectionDAG/ScheduleDAGSDNodes.cpp
+        lib/CodeGen/SelectionDAG/SelectionDAG.cpp
+        lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+        lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp
+        lib/CodeGen/SelectionDAG/SelectionDAGPrinter.cpp
+        lib/CodeGen/SelectionDAG/TargetLowering.cpp
+        lib/CodeGen/SelectionDAG/TargetSelectionDAGInfo.cpp
+
+        lib/DebugInfo/DIContext.cpp
+        lib/DebugInfo/DWARFAbbreviationDeclaration.cpp
+        lib/DebugInfo/DWARFCompileUnit.cpp
+        lib/DebugInfo/DWARFContext.cpp
+        lib/DebugInfo/DWARFDebugAbbrev.cpp
+        lib/DebugInfo/DWARFDebugAranges.cpp
+        lib/DebugInfo/DWARFDebugArangeSet.cpp
+        lib/DebugInfo/DWARFDebugInfoEntry.cpp
+        lib/DebugInfo/DWARFDebugLine.cpp
+        lib/DebugInfo/DWARFFormValue.cpp
+
+        lib/ExecutionEngine/ExecutionEngine.cpp
+        lib/ExecutionEngine/ExecutionEngineBindings.cpp
+        lib/ExecutionEngine/TargetSelect.cpp
+
+        lib/ExecutionEngine/Interpreter/Execution.cpp
+        lib/ExecutionEngine/Interpreter/ExternalFunctions.cpp
+        lib/ExecutionEngine/Interpreter/Interpreter.cpp
+
+        lib/ExecutionEngine/JIT/Intercept.cpp
+        lib/ExecutionEngine/JIT/JIT.cpp
+        lib/ExecutionEngine/JIT/JITDebugRegisterer.cpp
+        lib/ExecutionEngine/JIT/JITDwarfEmitter.cpp
+        lib/ExecutionEngine/JIT/JITEmitter.cpp
+        lib/ExecutionEngine/JIT/JITMemoryManager.cpp
+        lib/ExecutionEngine/JIT/OProfileJITEventListener.cpp
+
+        lib/ExecutionEngine/MCJIT/Intercept.cpp
+        lib/ExecutionEngine/MCJIT/MCJIT.cpp
+
+        lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
+        lib/ExecutionEngine/RuntimeDyld/RuntimeDyldMachO.cpp
+
+        lib/Linker/LinkArchives.cpp
+        lib/Linker/Linker.cpp
+        lib/Linker/LinkItems.cpp
+        lib/Linker/LinkModules.cpp
+
+        lib/MC/ELFObjectWriter.cpp
+        lib/MC/MachObjectWriter.cpp
+        lib/MC/MCAsmBackend.cpp
+        lib/MC/MCAsmInfo.cpp
+        lib/MC/MCAsmInfoCOFF.cpp
+        lib/MC/MCAsmInfoDarwin.cpp
+        lib/MC/MCAsmStreamer.cpp
+        lib/MC/MCAssembler.cpp
+        lib/MC/MCAtom.cpp
+        lib/MC/MCCodeEmitter.cpp
+        lib/MC/MCCodeGenInfo.cpp
+        lib/MC/MCContext.cpp
+        lib/MC/MCDisassembler.cpp
+        lib/MC/MCDwarf.cpp
+        lib/MC/MCELF.cpp
+        lib/MC/MCELFObjectTargetWriter.cpp
+        lib/MC/MCELFStreamer.cpp
+        lib/MC/MCExpr.cpp
+        lib/MC/MCInst.cpp
+        lib/MC/MCInstPrinter.cpp
+        lib/MC/MCInstrAnalysis.cpp
+        lib/MC/MCLabel.cpp
+        lib/MC/MCLoggingStreamer.cpp
+        lib/MC/MCMachObjectTargetWriter.cpp
+        lib/MC/MCMachOStreamer.cpp
+        lib/MC/MCModule.cpp
+        lib/MC/MCNullStreamer.cpp
+        lib/MC/MCObjectFileInfo.cpp
+        lib/MC/MCObjectStreamer.cpp
+        lib/MC/MCObjectWriter.cpp
+        lib/MC/MCPureStreamer.cpp
+        lib/MC/MCSection.cpp
+        lib/MC/MCSectionCOFF.cpp
+        lib/MC/MCSectionELF.cpp
+        lib/MC/MCSectionMachO.cpp
+        lib/MC/MCStreamer.cpp
+        lib/MC/MCSubtargetInfo.cpp
+        lib/MC/MCSymbol.cpp
+        lib/MC/MCTargetAsmLexer.cpp
+        lib/MC/MCValue.cpp
+        lib/MC/MCWin64EH.cpp
+        lib/MC/SubtargetFeature.cpp
+        lib/MC/WinCOFFObjectWriter.cpp
+        lib/MC/WinCOFFStreamer.cpp
+
+        lib/MC/MCDisassembler/Disassembler.cpp
+        lib/MC/MCDisassembler/EDDisassembler.cpp
+        lib/MC/MCDisassembler/EDInst.cpp
+        lib/MC/MCDisassembler/EDOperand.cpp
+        lib/MC/MCDisassembler/EDToken.cpp
+
+        lib/MC/MCParser/AsmLexer.cpp
+        lib/MC/MCParser/AsmParser.cpp
+        lib/MC/MCParser/COFFAsmParser.cpp
+        lib/MC/MCParser/DarwinAsmParser.cpp
+        lib/MC/MCParser/ELFAsmParser.cpp
+        lib/MC/MCParser/MCAsmLexer.cpp
+        lib/MC/MCParser/MCAsmParser.cpp
+        lib/MC/MCParser/MCAsmParserExtension.cpp
+        lib/MC/MCParser/MCTargetAsmParser.cpp
+
+        lib/Object/Archive.cpp
+        lib/Object/Binary.cpp
+        lib/Object/COFFObjectFile.cpp
+        lib/Object/ELFObjectFile.cpp
+        lib/Object/Error.cpp
+        lib/Object/MachOObject.cpp
+        lib/Object/MachOObjectFile.cpp
+        lib/Object/Object.cpp
+        lib/Object/ObjectFile.cpp
 
         lib/Support/Allocator.cpp
         lib/Support/APFloat.cpp
@@ -165,6 +512,162 @@ ADD_PLUGIN(LLVM
         lib/Support/Windows/ThreadLocal.inc
         lib/Support/Windows/TimeValue.inc
 
+        lib/Target/Mangler.cpp
+        lib/Target/Target.cpp
+        lib/Target/TargetData.cpp
+        lib/Target/TargetELFWriterInfo.cpp
+        lib/Target/TargetFrameLowering.cpp
+        lib/Target/TargetInstrInfo.cpp
+        lib/Target/TargetIntrinsicInfo.cpp
+        lib/Target/TargetLibraryInfo.cpp
+        lib/Target/TargetLoweringObjectFile.cpp
+        lib/Target/TargetMachine.cpp
+        lib/Target/TargetRegisterInfo.cpp
+        lib/Target/TargetSubtargetInfo.cpp
+
+        lib/Target/X86/X86AsmPrinter.cpp
+        lib/Target/X86/X86CodeEmitter.cpp
+        lib/Target/X86/X86COFFMachineModuleInfo.cpp
+        lib/Target/X86/X86ELFWriterInfo.cpp
+        lib/Target/X86/X86FastISel.cpp
+        lib/Target/X86/X86FloatingPoint.cpp
+        lib/Target/X86/X86FrameLowering.cpp
+        lib/Target/X86/X86InstrInfo.cpp
+        lib/Target/X86/X86ISelDAGToDAG.cpp
+        lib/Target/X86/X86ISelLowering.cpp
+        lib/Target/X86/X86JITInfo.cpp
+        lib/Target/X86/X86MCInstLower.cpp
+        lib/Target/X86/X86RegisterInfo.cpp
+        lib/Target/X86/X86SelectionDAGInfo.cpp
+        lib/Target/X86/X86Subtarget.cpp
+        lib/Target/X86/X86TargetMachine.cpp
+        lib/Target/X86/X86TargetObjectFile.cpp
+        lib/Target/X86/X86VZeroUpper.cpp
+
+        lib/Target/X86/AsmParser/X86AsmLexer.cpp
+        lib/Target/X86/AsmParser/X86AsmParser.cpp
+
+        lib/Target/X86/Disassembler/X86Disassembler.cpp
+        lib/Target/X86/Disassembler/X86DisassemblerDecoder.c
+
+        lib/Target/X86/InstPrinter/X86ATTInstPrinter.cpp
+        lib/Target/X86/InstPrinter/X86InstComments.cpp
+        lib/Target/X86/InstPrinter/X86IntelInstPrinter.cpp
+
+        lib/Target/X86/MCTargetDesc/X86AsmBackend.cpp
+        lib/Target/X86/MCTargetDesc/X86MachObjectWriter.cpp
+        lib/Target/X86/MCTargetDesc/X86MCAsmInfo.cpp
+        lib/Target/X86/MCTargetDesc/X86MCCodeEmitter.cpp
+        lib/Target/X86/MCTargetDesc/X86MCTargetDesc.cpp
+
+        lib/Target/X86/TargetInfo/X86TargetInfo.cpp
+
+        lib/Target/X86/Utils/X86ShuffleDecode.cpp
+
+        lib/Transforms/Hello/Hello.cpp
+
+        lib/Transforms/InstCombine/InstCombineAddSub.cpp
+        lib/Transforms/InstCombine/InstCombineAndOrXor.cpp
+        lib/Transforms/InstCombine/InstCombineCalls.cpp
+        lib/Transforms/InstCombine/InstCombineCasts.cpp
+        lib/Transforms/InstCombine/InstCombineCompares.cpp
+        lib/Transforms/InstCombine/InstCombineLoadStoreAlloca.cpp
+        lib/Transforms/InstCombine/InstCombineMulDivRem.cpp
+        lib/Transforms/InstCombine/InstCombinePHI.cpp
+        lib/Transforms/InstCombine/InstCombineSelect.cpp
+        lib/Transforms/InstCombine/InstCombineShifts.cpp
+        lib/Transforms/InstCombine/InstCombineSimplifyDemanded.cpp
+        lib/Transforms/InstCombine/InstCombineVectorOps.cpp
+        lib/Transforms/InstCombine/InstructionCombining.cpp
+
+        lib/Transforms/Instrumentation/EdgeProfiling.cpp
+        lib/Transforms/Instrumentation/GCOVProfiling.cpp
+        lib/Transforms/Instrumentation/Instrumentation.cpp
+        lib/Transforms/Instrumentation/OptimalEdgeProfiling.cpp
+        lib/Transforms/Instrumentation/PathProfiling.cpp
+        lib/Transforms/Instrumentation/ProfilingUtils.cpp
+
+        lib/Transforms/IPO/ArgumentPromotion.cpp
+        lib/Transforms/IPO/ConstantMerge.cpp
+        lib/Transforms/IPO/DeadArgumentElimination.cpp
+        lib/Transforms/IPO/ExtractGV.cpp
+        lib/Transforms/IPO/FunctionAttrs.cpp
+        lib/Transforms/IPO/GlobalDCE.cpp
+        lib/Transforms/IPO/GlobalOpt.cpp
+        lib/Transforms/IPO/InlineAlways.cpp
+        lib/Transforms/IPO/Inliner.cpp
+        lib/Transforms/IPO/InlineSimple.cpp
+        lib/Transforms/IPO/Internalize.cpp
+        lib/Transforms/IPO/IPConstantPropagation.cpp
+        lib/Transforms/IPO/IPO.cpp
+        lib/Transforms/IPO/LoopExtractor.cpp
+        lib/Transforms/IPO/MergeFunctions.cpp
+        lib/Transforms/IPO/PartialInlining.cpp
+        lib/Transforms/IPO/PassManagerBuilder.cpp
+        lib/Transforms/IPO/PruneEH.cpp
+        lib/Transforms/IPO/StripDeadPrototypes.cpp
+        lib/Transforms/IPO/StripSymbols.cpp
+
+        lib/Transforms/Scalar/ADCE.cpp
+        lib/Transforms/Scalar/BasicBlockPlacement.cpp
+        lib/Transforms/Scalar/CodeGenPrepare.cpp
+        lib/Transforms/Scalar/ConstantProp.cpp
+        lib/Transforms/Scalar/CorrelatedValuePropagation.cpp
+        lib/Transforms/Scalar/DCE.cpp
+        lib/Transforms/Scalar/DeadStoreElimination.cpp
+        lib/Transforms/Scalar/EarlyCSE.cpp
+        lib/Transforms/Scalar/GVN.cpp
+        lib/Transforms/Scalar/IndVarSimplify.cpp
+        lib/Transforms/Scalar/JumpThreading.cpp
+        lib/Transforms/Scalar/LICM.cpp
+        lib/Transforms/Scalar/LoopDeletion.cpp
+        lib/Transforms/Scalar/LoopIdiomRecognize.cpp
+        lib/Transforms/Scalar/LoopInstSimplify.cpp
+        lib/Transforms/Scalar/LoopRotation.cpp
+        lib/Transforms/Scalar/LoopStrengthReduce.cpp
+        lib/Transforms/Scalar/LoopUnrollPass.cpp
+        lib/Transforms/Scalar/LoopUnswitch.cpp
+        lib/Transforms/Scalar/LowerAtomic.cpp
+        lib/Transforms/Scalar/MemCpyOptimizer.cpp
+        lib/Transforms/Scalar/ObjCARC.cpp
+        lib/Transforms/Scalar/Reassociate.cpp
+        lib/Transforms/Scalar/Reg2Mem.cpp
+        lib/Transforms/Scalar/Scalar.cpp
+        lib/Transforms/Scalar/ScalarReplAggregates.cpp
+        lib/Transforms/Scalar/SCCP.cpp
+        lib/Transforms/Scalar/SimplifyCFGPass.cpp
+        lib/Transforms/Scalar/SimplifyLibCalls.cpp
+        lib/Transforms/Scalar/Sink.cpp
+        lib/Transforms/Scalar/TailRecursionElimination.cpp
+
+        lib/Transforms/Utils/AddrModeMatcher.cpp
+        lib/Transforms/Utils/BasicBlockUtils.cpp
+        lib/Transforms/Utils/BasicInliner.cpp
+        lib/Transforms/Utils/BreakCriticalEdges.cpp
+        lib/Transforms/Utils/BuildLibCalls.cpp
+        lib/Transforms/Utils/CloneFunction.cpp
+        lib/Transforms/Utils/CloneModule.cpp
+        lib/Transforms/Utils/CodeExtractor.cpp
+        lib/Transforms/Utils/DemoteRegToStack.cpp
+        lib/Transforms/Utils/InlineFunction.cpp
+        lib/Transforms/Utils/InstructionNamer.cpp
+        lib/Transforms/Utils/LCSSA.cpp
+        lib/Transforms/Utils/Local.cpp
+        lib/Transforms/Utils/LoopSimplify.cpp
+        lib/Transforms/Utils/LoopUnroll.cpp
+        lib/Transforms/Utils/LowerExpectIntrinsic.cpp
+        lib/Transforms/Utils/LowerInvoke.cpp
+        lib/Transforms/Utils/LowerSwitch.cpp
+        lib/Transforms/Utils/Mem2Reg.cpp
+        lib/Transforms/Utils/PromoteMemoryToRegister.cpp
+        lib/Transforms/Utils/SimplifyCFG.cpp
+        lib/Transforms/Utils/SimplifyIndVar.cpp
+        lib/Transforms/Utils/SimplifyInstructions.cpp
+        lib/Transforms/Utils/SSAUpdater.cpp
+        lib/Transforms/Utils/UnifyFunctionExitNodes.cpp
+        lib/Transforms/Utils/Utils.cpp
+        lib/Transforms/Utils/ValueMapper.cpp
+
         lib/VMCore/AsmWriter.cpp
         lib/VMCore/Attributes.cpp
         lib/VMCore/AutoUpgrade.cpp
@@ -206,6 +709,7 @@ ADD_PLUGIN(LLVM
         src/llvmplugin.h
     INCLUDE_DIRS
         include
+        lib/Target/X86
         src
     DEFINITIONS
         ${LLVM_DEFINITIONS}
