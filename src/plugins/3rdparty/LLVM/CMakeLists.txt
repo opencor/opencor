@@ -1,9 +1,18 @@
 PROJECT(LLVMPlugin)
 
-# Add the plugin as a binary
+# Add the plugin
 
-ADD_PLUGIN_BINARY(LLVM
+ADD_PLUGIN(LLVM
+    THIRD_PARTY
+    SOURCES
+        ../../plugininfo.cpp
+
+        src/llvmplugin.cpp
+    HEADERS_MOC
+        src/llvmplugin.h
     INCLUDE_DIRS
         include
         src
+    QT_DEPENDENCIES
+        QtCore
 )

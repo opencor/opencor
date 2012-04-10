@@ -1,0 +1,9 @@
+PROJECT(LLVMPlugin)
+
+# Add the plugin as a binary
+
+ADD_PLUGIN_BINARY(LLVM
+    INCLUDE_DIRS
+        include
+        src
+)
