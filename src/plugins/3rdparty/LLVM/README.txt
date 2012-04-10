@@ -3,7 +3,7 @@ We want and need to build OpenCOR using MSVC on Windows, as well as have a share
 To address this shortcoming, we maunally qualify the classes that are currently needed by OpenCOR (grep for ---OPENCOR--- to find out which ones those are). Should OpenCOR ever need direct access to another class, then that class will obviously have to be qualified and LLVM rebuilt.
 
 To build LLVM is time consuming and therefore not something we want to do everytime we build OpenCOR. We therefore have two CMakeLists.txt files:
- - CMakeLists.txt: this is our 'proper' CMakeLists.txt file and the one which is to be used by default and once a binary version of the LLVM plugin exists (such a binary is located in either the windows, linux or macosx folder under [LLVM]/lib).
+ - CMakeLists.txt: this is our 'proper' CMakeLists.txt file and the one which is to be used by default and once a binary version of the LLVM plugin exists (such a binary is located in either the windows, linux or macosx folder under [LLVM]/bin).
  - CMakeLists.txt.build: this CMakeLists.txt file should be used whenever LLVM needs to be rebuilt. Once this is done, use of the 'proper' CMakeLists.txt should be resumed.
 
 Note: LLVM's config files were generated using CMake:
