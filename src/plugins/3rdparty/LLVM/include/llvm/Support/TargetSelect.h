@@ -17,6 +17,9 @@
 #define LLVM_SUPPORT_TARGETSELECT_H
 
 #include "llvm/Config/llvm-config.h"
+//---OPENCOR---
+#include "llvmglobal.h"
+//---OPENCOR---
 
 extern "C" {
   // Declare all of the target-initialization functions that are available.
@@ -113,7 +116,12 @@ namespace llvm {
   /// for JIT applications to ensure that the target gets linked in correctly.
   ///
   /// It is legal for a client to make multiple calls to this function.
+//---OPENCOR--- BEGIN
+  inline bool LLVM_EXPORT InitializeNativeTarget() {
+//---OPENCOR--- END
+/*---OPENCOR---
   inline bool InitializeNativeTarget() {
+*/
   // If we have a native target, initialize it to ensure it is linked in.
 #ifdef LLVM_NATIVE_TARGET
     LLVM_NATIVE_TARGETINFO();
