@@ -2,31 +2,8 @@ PROJECT(LLVMPlugin)
 
 INCLUDE(common.cmake)
 
-# Retrieve some header/include files that were generated on each of our target
+# Retrieve some include files that were generated on each of our target
 # platforms
-
-SET(LLVM_CONFIG_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/llvm/Config)
-SET(CONFIG_HEADER_FILES
-    config.h
-    llvm-config.h
-)
-
-FOREACH(CONFIG_HEADER_FILE ${CONFIG_HEADER_FILES})
-    CONFIGURE_FILE(${LLVM_CONFIG_HEADERS_DIR}/${DISTRIB_DIR}/${CONFIG_HEADER_FILE}
-                   ${LLVM_CONFIG_HEADERS_DIR}/${CONFIG_HEADER_FILE}
-                   COPYONLY)
-ENDFOREACH()
-
-SET(LLVM_CONFIG_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/llvm/Support)
-SET(CONFIG_HEADER_FILES
-    DataTypes.h
-)
-
-FOREACH(CONFIG_HEADER_FILE ${CONFIG_HEADER_FILES})
-    CONFIGURE_FILE(${LLVM_CONFIG_HEADERS_DIR}/${DISTRIB_DIR}/${CONFIG_HEADER_FILE}
-                   ${LLVM_CONFIG_HEADERS_DIR}/${CONFIG_HEADER_FILE}
-                   COPYONLY)
-ENDFOREACH()
 
 SET(LLVM_CONFIG_INCLUDES_DIR ${PROJECT_SOURCE_DIR}/lib/Target/X86)
 SET(CONFIG_INCLUDE_FILES

@@ -29,3 +29,29 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
         #       disable them since we have nothing to do with them...
     ENDIF()
 ENDMACRO()
+
+# Retrieve some header files that were generated on each of our target
+# platforms
+
+SET(LLVM_CONFIG_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/llvm/Config)
+SET(CONFIG_HEADER_FILES
+    config.h
+    llvm-config.h
+)
+
+FOREACH(CONFIG_HEADER_FILE ${CONFIG_HEADER_FILES})
+    CONFIGURE_FILE(${LLVM_CONFIG_HEADERS_DIR}/${DISTRIB_DIR}/${CONFIG_HEADER_FILE}
+                   ${LLVM_CONFIG_HEADERS_DIR}/${CONFIG_HEADER_FILE}
+                   COPYONLY)
+ENDFOREACH()
+
+SET(LLVM_CONFIG_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/llvm/Support)
+SET(CONFIG_HEADER_FILES
+    DataTypes.h
+)
+
+FOREACH(CONFIG_HEADER_FILE ${CONFIG_HEADER_FILES})
+    CONFIGURE_FILE(${LLVM_CONFIG_HEADERS_DIR}/${DISTRIB_DIR}/${CONFIG_HEADER_FILE}
+                   ${LLVM_CONFIG_HEADERS_DIR}/${CONFIG_HEADER_FILE}
+                   COPYONLY)
+ENDFOREACH()
