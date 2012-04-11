@@ -178,13 +178,13 @@ SET(PLUGINS
     3rdparty/LLVM
     misc/Computer
 
-#    api/CellMLAPI
+    api/CellMLAPI
 
-#    misc/CellMLSupport
+    misc/CellMLSupport
     misc/RICORDOSupport
 
     editing/CoreEditing
-#    editing/CoreCellMLEditing
+    editing/CoreCellMLEditing
 
     3rdparty/SUNDIALS
 
@@ -212,11 +212,11 @@ SET(PLUGINS
     organisation/FileBrowser
     organisation/FileOrganiser
 
-#    editing/CellMLAnnotationView
-#    editing/RawCellMLView
+    editing/CellMLAnnotationView
+    editing/RawCellMLView
     editing/RawView
 
-#    simulation/SingleCellSimulationView
+    simulation/SingleCellSimulationView
 )
 
 FOREACH(PLUGIN ${PLUGINS})
@@ -270,8 +270,8 @@ ENDIF()
 
 ADD_DEFINITIONS(-D${PROJECT_NAME}_MAIN)
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME}
-    PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
 )
 
 # Some post-processing specific to Windows and Linux
@@ -305,7 +305,9 @@ IF(APPLE)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macosx/Info.plist.in ${InfoPlistFile})
 
-    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile})
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile}
+    )
 
     # Remove any qt.conf file left from a previous build
     # Note: this prevents us from getting a warning when everything is actually
