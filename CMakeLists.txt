@@ -172,7 +172,6 @@ SET(PLUGINS
     # Build the plugins which may be required by other plugins
     # Note: the build order is very important...
 
-#---GRY--- TO BE DONE...
     misc/Core
 
     3rdparty/LLVM
