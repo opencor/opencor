@@ -104,12 +104,12 @@ private:
 
 /// getGlobalContext - Returns a global context.  This is for LLVM clients that
 /// only care about operating on a single thread.
-//---OPENCOR--- BEGIN
-extern LLVMContext LLVM_EXPORT &getGlobalContext();
-//---OPENCOR--- END
 /*---OPENCOR---
 extern LLVMContext &getGlobalContext();
 */
+//---OPENCOR--- BEGIN
+extern LLVMContext LLVM_EXPORT &getGlobalContext();
+//---OPENCOR--- END
 
 }
 

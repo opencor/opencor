@@ -116,12 +116,12 @@ namespace llvm {
   /// for JIT applications to ensure that the target gets linked in correctly.
   ///
   /// It is legal for a client to make multiple calls to this function.
-//---OPENCOR--- BEGIN
-  inline bool LLVM_EXPORT InitializeNativeTarget() {
-//---OPENCOR--- END
 /*---OPENCOR---
   inline bool InitializeNativeTarget() {
 */
+//---OPENCOR--- BEGIN
+  inline bool LLVM_EXPORT InitializeNativeTarget() {
+//---OPENCOR--- END
   // If we have a native target, initialize it to ensure it is linked in.
 #ifdef LLVM_NATIVE_TARGET
     LLVM_NATIVE_TARGETINFO();

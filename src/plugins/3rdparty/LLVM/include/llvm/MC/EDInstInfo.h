@@ -21,14 +21,14 @@ struct EDInstInfo {
   uint8_t       numOperands;
   uint8_t       operandTypes[EDIS_MAX_OPERANDS];
   uint8_t       operandFlags[EDIS_MAX_OPERANDS];
+/*---OPENCOR---
+  const signed char operandOrders[EDIS_MAX_SYNTAXES][EDIS_MAX_OPERANDS];
+*/
 //---OPENCOR--- BEGIN
 // Note: this addresses the issue reported at:
 //       https://connectppe.microsoft.com/VisualStudio/feedback/details/641144/llvmx86disassembler-fails-to-compile-properly-in-optimize-mode
   signed char operandOrders[EDIS_MAX_SYNTAXES][EDIS_MAX_OPERANDS];
 //---OPENCOR--- END
-/*---OPENCOR---
-  const signed char operandOrders[EDIS_MAX_SYNTAXES][EDIS_MAX_OPERANDS];
-*/
 };
   
 } // namespace llvm

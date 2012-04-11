@@ -118,9 +118,9 @@ bool QtLocalPeer::isClient()
 /*---OPENCOR---
     if (!lockFile.lock(QtLP_Private::QtLockedFile::WriteLock, false))
 */
-//---GRY--- BEGIN
+//---OPENCOR--- BEGIN
     if (!lockFile.lock(QtLockedFile::WriteLock, false))
-//---GRY--- END
+//---OPENCOR--- END
         return true;
 
     bool res = server->listen(socketName);

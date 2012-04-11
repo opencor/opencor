@@ -1,7 +1,7 @@
 #ifndef compiler_support_h
 #define compiler_support_h
 
-/*---GRY---
+/*---OPENCOR---
 #include "cda_config.h"
 */
 #include <cstdlib>

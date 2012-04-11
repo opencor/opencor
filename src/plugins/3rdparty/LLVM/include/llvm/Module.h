@@ -113,12 +113,12 @@ private:
 /// constant references to global variables in the module.  When a global
 /// variable is destroyed, it should have no entries in the GlobalValueRefMap.
 /// @brief The main container class for the LLVM Intermediate Representation.
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Module {
-//---OPENCOR--- END
 /*---OPENCOR---
 class Module {
 */
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Module {
+//---OPENCOR--- END
 /// @name Types And Enumerations
 /// @{
 public:
