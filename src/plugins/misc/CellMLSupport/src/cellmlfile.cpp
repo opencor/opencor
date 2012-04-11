@@ -404,7 +404,7 @@ CellmlFileImports CellmlFile::imports() const
     iface::cellml_api::CellMLImportIterator *cellmlFileImportsIterator = mModel->imports()->iterateImports();
     iface::cellml_api::CellMLImport *cellmlImport;
 
-    while (cellmlImport = cellmlFileImportsIterator->nextImport()) {
+    while ((cellmlImport = cellmlFileImportsIterator->nextImport())) {
         // We have an import, so add it to our list
 
         CellmlFileImport *cellmlFileImport = new CellmlFileImport(QString::fromStdWString(cellmlImport->xlinkHref()->asText()));
@@ -416,7 +416,7 @@ CellmlFileImports CellmlFile::imports() const
         iface::cellml_api::ImportUnitsIterator *importUnitsIterator = cellmlImport->units()->iterateImportUnits();
         iface::cellml_api::ImportUnits *importUnits;
 
-        while (importUnits = importUnitsIterator->nextImportUnits())
+        while ((importUnits = importUnitsIterator->nextImportUnits()))
             cellmlFileImport->addUnits(QString::fromStdWString(importUnits->name()),
                                        QString::fromStdWString(importUnits->unitsRef()));
 
@@ -425,7 +425,7 @@ CellmlFileImports CellmlFile::imports() const
         iface::cellml_api::ImportComponentIterator *importComponentIterator = cellmlImport->components()->iterateImportComponents();
         iface::cellml_api::ImportComponent *importComponent;
 
-        while (importComponent = importComponentIterator->nextImportComponent())
+        while ((importComponent = importComponentIterator->nextImportComponent()))
             cellmlFileImport->addComponent(QString::fromStdWString(importComponent->name()),
                                            QString::fromStdWString(importComponent->componentRef()));
     }
