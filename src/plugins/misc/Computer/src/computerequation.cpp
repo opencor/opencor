@@ -779,6 +779,10 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             replaceNodeWithNumber(pNode, min(pNode->left(), pNode->right()));
 
         break;
+    default:
+        // A type which we can't/don't simplify, so... nothing to do...
+
+        ;
     }
 }
 
