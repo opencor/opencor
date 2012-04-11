@@ -26,6 +26,9 @@
 #include "llvm/Support/ValueHandle.h"
 #include "llvm/Support/Mutex.h"
 #include "llvm/Target/TargetMachine.h"
+//---OPENCOR---
+#include "llvmglobal.h"
+//---OPENCOR---
 
 namespace llvm {
 
@@ -92,7 +95,12 @@ public:
 /// \brief Abstract interface for implementation execution of LLVM modules,
 /// designed to support both interpreter and just-in-time (JIT) compiler
 /// implementations.
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT ExecutionEngine {
+//---OPENCOR--- END
+/*---OPENCOR---
 class ExecutionEngine {
+*/
   /// The state object holding the global address mapping, which must be
   /// accessed synchronously.
   //

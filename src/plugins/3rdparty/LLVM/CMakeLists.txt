@@ -26,7 +26,7 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
     )
 
     IF(MSVC)
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4355 /wd4503 /wd4624 /wd4805")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4146 /wd4244 /wd4355 /wd4503 /wd4624 /wd4805")
         # Note: to build LLVM generates quite a few warnings from MSVC, so
         #       disable them since we have nothing to do with them...
     ENDIF()

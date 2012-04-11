@@ -57,16 +57,6 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-#---GRY--- TO BE CHECKED...
-#    IF(WIN32)
-#        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,--enable-auto-import")
-        # Note #1: -Wl,--enable-auto-import allows to resolve vtable entries
-        #          in DLLs. This is something that we, ideally, wouldn't need
-        #          to set, but it happens that this is required for any plugin
-        #          that uses LLVM. Indeed, llvm::CallInst needs resolving,
-        #          so...
-#    ENDIF()
-
     # Required packages
 
     IF(APPLE)
@@ -537,8 +527,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ENDFOREACH()
                 ENDIF()
 
-                # Copy the test to our tests directory which we create if
-                # needed
+                # Copy the test to our tests directory which we create if needed
 
                 IF(NOT EXISTS ${DEST_TESTS_DIR})
                     ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
