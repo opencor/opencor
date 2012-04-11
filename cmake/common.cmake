@@ -331,16 +331,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
-    # External dependencies
-
-    IF(NOT ${EXTERNAL_DEPENDENCIES_DIR} STREQUAL "")
-        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
-            TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
-            )
-        ENDFOREACH()
-    ENDIF()
-
     # Linker settings
     # Note: by default "lib" will be prepended to the name of the target file.
     #       However, this is not common practice on Windows, so...
@@ -354,6 +344,24 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         OUTPUT_NAME ${PLUGIN_NAME}
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
+
+    # External dependencies
+
+    IF(MSVC)
+        SET(EXTERNAL_DEPENDENCY_PREFIX ${CMAKE_IMPORT_LIBRARY_PREFIX})
+        SET(EXTERNAL_DEPENDENCY_SUFFIX ${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    ELSE()
+        SET(EXTERNAL_DEPENDENCY_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
+        SET(EXTERNAL_DEPENDENCY_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDIF()
+
+    IF(NOT ${EXTERNAL_DEPENDENCIES_DIR} STREQUAL "")
+        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+            TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY_PREFIX}${EXTERNAL_DEPENDENCY}${EXTERNAL_DEPENDENCY_SUFFIX}
+            )
+        ENDFOREACH()
+    ENDIF()
 
     # Location of our plugins
 
@@ -422,26 +430,28 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
             # First, for the deployed version of the plugin
 
+            SET(EXTERNAL_DEPENDENCY_FILENAME ${EXTERNAL_DEPENDENCY_PREFIX}${EXTERNAL_DEPENDENCY}${EXTERNAL_DEPENDENCY_SUFFIX})
+
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
 
             # Second, for the 'test' version of the plugin
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
-                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
-                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -523,7 +533,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(NOT ${EXTERNAL_DEPENDENCIES_DIR} STREQUAL "")
                     FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
                         TARGET_LINK_LIBRARIES(${TEST_NAME}
-                            ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
+                            ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY_PREFIX}${EXTERNAL_DEPENDENCY}${EXTERNAL_DEPENDENCY_SUFFIX}
                         )
                     ENDFOREACH()
                 ENDIF()
@@ -546,14 +556,17 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 IF(APPLE)
                     FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+                        SET(EXTERNAL_DEPENDENCY_FILENAME ${EXTERNAL_DEPENDENCY_PREFIX}${EXTERNAL_DEPENDENCY}${EXTERNAL_DEPENDENCY_SUFFIX})
+
+
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                           COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                              ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
 
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                              ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
                     ENDFOREACH()
                 ENDIF()
