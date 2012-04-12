@@ -500,6 +500,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 QT4_WRAP_CPP(TEST_SOURCES_MOC
                     ../../plugin.h
 
+                    ${HEADERS_MOC}
                     ${TEST_HEADER_MOC_FILE}
                 )
 
