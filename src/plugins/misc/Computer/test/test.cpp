@@ -30,7 +30,7 @@ static const double BigC = 5.0*7.0*17.0;
 
 void Test::initTestCase()
 {
-    // Load the CellMLModelSupport plugin
+    // Load the Computer plugin
 
     OpenCOR::loadPlugin("Computer");
 
