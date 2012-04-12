@@ -42,8 +42,10 @@ ADD_PLUGIN(SingleCellSimulationView
         Computer
         Core
         CoreSolver
-        LLVM
+        ${LLVM_PLUGIN}
         Qwt
+    OPENCOR_BINARY_DEPENDENCIES
+        ${LLVM_BINARY_PLUGIN}
     QT_DEPENDENCIES
         QtCore
         QtGui

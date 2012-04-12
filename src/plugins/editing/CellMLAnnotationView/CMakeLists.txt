@@ -31,8 +31,10 @@ ADD_PLUGIN(CellMLAnnotationView
         CellMLSupport
         Computer
         Core
-        LLVM
+        ${LLVM_PLUGIN}
         RICORDOSupport
+    OPENCOR_BINARY_DEPENDENCIES
+        ${LLVM_BINARY_PLUGIN}
     QT_DEPENDENCIES
         QtCore
         QtGui

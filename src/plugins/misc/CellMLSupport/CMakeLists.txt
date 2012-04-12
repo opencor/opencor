@@ -34,7 +34,9 @@ ADD_PLUGIN(CellMLSupport
         CellMLAPI
         Computer
         Core
-        LLVM
+        ${LLVM_PLUGIN}
+    OPENCOR_BINARY_DEPENDENCIES
+        ${LLVM_BINARY_PLUGIN}
     QT_DEPENDENCIES
         QtCore
         QtGui

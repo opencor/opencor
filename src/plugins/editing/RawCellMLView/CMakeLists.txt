@@ -31,11 +31,13 @@ ADD_PLUGIN(RawCellMLView
         CellMLSupport
         Computer
         Core
-        LLVM
+        ${LLVM_PLUGIN}
         QScintilla
         QScintillaSupport
         QtMmlWidget
         Viewer
+    OPENCOR_BINARY_DEPENDENCIES
+        ${LLVM_BINARY_PLUGIN}
     QT_DEPENDENCIES
         QtCore
         QtGui
