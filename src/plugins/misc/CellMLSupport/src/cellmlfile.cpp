@@ -20,7 +20,7 @@
     //       but this is not supported by the current ISO C++ standard. Indeed,
     //       to include it will generate the following error at compile time:
     //           error: #error This file requires compiler and library support
-    //           for the upcoming ISO C++ standard, C++0x. This support is 
+    //           for the upcoming ISO C++ standard, C++0x. This support is
     //           currently experimental, and must be enabled with the -std=c++0x
     //           or -std=gnu++0x compiler options.
     //       and well, we don't want to enable either of these options since
