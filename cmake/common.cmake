@@ -57,6 +57,12 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    # Ask MSVC to treat wchat_t as a built-in type
+
+    IF(MSVC)
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t-")
+    ENDIF()
+
     # Required packages
 
     IF(APPLE)
