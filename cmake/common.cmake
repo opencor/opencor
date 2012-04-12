@@ -496,17 +496,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 # The test exists, so build it
 
                 QT4_WRAP_CPP(TEST_SOURCES_MOC
-                    ${TEST_HEADER_MOC_FILE}
                     ../../plugin.h
+
+                    ${TEST_HEADER_MOC_FILE}
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
-                    ${TEST_SOURCE_FILE}
                     ../../../../test/testutils.cpp
                     ../../coreinterface.cpp
                     ../../interface.cpp
                     ../../plugin.cpp
                     ../../plugininfo.cpp
+
+                    ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}
                 )
 
