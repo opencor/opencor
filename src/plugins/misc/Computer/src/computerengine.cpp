@@ -10,7 +10,7 @@
 
 #include "llvm/LLVMContext.h"
 
-#ifdef _MSC_VER
+#ifdef Q_WS_WIN
     // To include llvm/Module.h results in some indirect warnings from MSVC, but
     // it's LLVM's task to address them not ours, so...
 
@@ -19,7 +19,7 @@
 
 #include "llvm/Module.h"
 
-#ifdef _MSC_VER
+#ifdef Q_WS_WIN
     #pragma warning(default: 4146)
 #endif
 

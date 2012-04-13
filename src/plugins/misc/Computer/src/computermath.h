@@ -32,7 +32,7 @@ extern "C" double COMPUTER_EXPORT lcm(int pCount, ...);
 extern "C" double COMPUTER_EXPORT max(int pCount, ...);
 extern "C" double COMPUTER_EXPORT min(int pCount, ...);
 
-#ifdef _MSC_VER
+#ifdef Q_WS_WIN
     extern "C" double COMPUTER_EXPORT asinh(double pNb);
     extern "C" double COMPUTER_EXPORT acosh(double pNb);
     extern "C" double COMPUTER_EXPORT atanh(double pNb);
