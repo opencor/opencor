@@ -373,7 +373,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
 
             parameters += "* nocapture";
 
-        parameters += " %%"+parameter.name();
+        parameters += " %"+parameter.name();
     }
 
     data.appendAssemblyCode("("+parameters+") nounwind uwtable");
@@ -501,10 +501,8 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
     // automatically added to our module
 
     llvm::SMDiagnostic parseError;
-    llvm::ParseAssemblyString(qPrintable(data.assemblyCode().replace("%%", "\\%")),
+    llvm::ParseAssemblyString(qPrintable(data.assemblyCode()),
                               mModule, parseError, llvm::getGlobalContext());
-    // Note: for LLVM to be able to parse the assembly code properly, we must
-    //       replace '%' with '\%', so...
 
     if (parseError.getMessage().size())
         mError = ComputerError(tr("the LLVM assembly code for the '%1' function could not be parsed").arg(pFunction->name()));
@@ -582,7 +580,7 @@ int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEngineData &pData
             // No assembly code index for the direct pointer to the indirect
             // parameter exists, so create one
 
-            pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = getelementptr inbounds double* %%"+pIndirectParameter->parameterName()+", i64 "+QString::number(pIndirectParameter->parameterIndex())+"\n");
+            pData.appendAssemblyCode(Indent+"%"+QString::number(pData.nextAssemblyCodeIndex())+" = getelementptr inbounds double* %"+pIndirectParameter->parameterName()+", i64 "+QString::number(pIndirectParameter->parameterIndex())+"\n");
 
             // Keep track of the assembly code index
 
@@ -613,7 +611,7 @@ int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEngineData &pData
             // No assembly code index for the loading of the indirect  parameter
             // exists, so create one
 
-            pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = load double* %%");
+            pData.appendAssemblyCode(Indent+"%"+QString::number(pData.nextAssemblyCodeIndex())+" = load double* %");
 
             if (pointerAssemblyCodeIndex)
                 pData.appendAssemblyCode(QString::number(pointerAssemblyCodeIndex));
@@ -652,11 +650,11 @@ QString ComputerEngine::compileOperand(ComputerEngineData &pData,
     case ComputerEquation::DirectParameter:
         // A direct parameter, so...
 
-        return "%%"+pOperand->parameterName();
+        return "%"+pOperand->parameterName();
     case ComputerEquation::IndirectParameter:
         // An indirect parameter, so...
 
-        return "%%"+QString::number(indirectParameterAssemblyCodeIndex(pData, pOperand, true));
+        return "%"+QString::number(indirectParameterAssemblyCodeIndex(pData, pOperand, true));
 
         break;
     case ComputerEquation::Number: {
@@ -682,7 +680,7 @@ QString ComputerEngine::compileOperand(ComputerEngineData &pData,
     default:
         // Part of a computed equation, so...
 
-        return "%%"+QString::number(pData.equationAssemblyCodeIndexes().value(pOperand));
+        return "%"+QString::number(pData.equationAssemblyCodeIndexes().value(pOperand));
     }
 }
 
@@ -702,7 +700,7 @@ void ComputerEngine::compileAssignmentEquation(ComputerEngineData &pData,
 
     // Store the RHS of the equation to the LHS of the equation
 
-    pData.appendAssemblyCode(Indent+"store double "+rhsEquation+", double* %%");
+    pData.appendAssemblyCode(Indent+"store double "+rhsEquation+", double* %");
 
     if (assemblyCodeIndex)
         // We have an assembly code index for the indirect parameter, so...
@@ -735,7 +733,7 @@ void ComputerEngine::compileMathematicalOperator(ComputerEngineData &pData,
 
     // Apply the mathematical operator
 
-    pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = "+pOperator+" double "+operandOne+", "+operandTwo+"\n");
+    pData.appendAssemblyCode(Indent+"%"+QString::number(pData.nextAssemblyCodeIndex())+" = "+pOperator+" double "+operandOne+", "+operandTwo+"\n");
 }
 
 //==============================================================================
@@ -792,7 +790,7 @@ void ComputerEngine::compileMathematicalFunction(ComputerEngineData &pData,
 
     // Apply the mathematical function
 
-    pData.appendAssemblyCode(Indent+"%%"+QString::number(pData.nextAssemblyCodeIndex())+" = tail call double ");
+    pData.appendAssemblyCode(Indent+"%"+QString::number(pData.nextAssemblyCodeIndex())+" = tail call double ");
 
     if (pArgumentsCount == -1)
         pData.appendAssemblyCode("(i32, ...)* ");

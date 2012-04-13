@@ -212,7 +212,7 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
 
     delete mComputerEngine;
 
-    mComputerEngine = new Computer::ComputerEngine;
+    mComputerEngine = new Computer::ComputerEngine();
 
     resetOdeFunctions();
     resetDaeFunctions();
