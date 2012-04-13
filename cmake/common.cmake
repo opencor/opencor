@@ -5,7 +5,7 @@ MACRO(INITIALISE_PROJECT)
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
 
-    IF(MSVC)
+    IF(WIN32)
         STRING(REPLACE "/W3" "/W3 /WX" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
         # Note: MSVC has a /Wall flag, but it results in MSVC being very
         #       pedantic, so instead we use what MSVC recommends for production
@@ -26,7 +26,7 @@ MACRO(INITIALISE_PROJECT)
 
         # Default compiler settings
 
-        IF(MSVC)
+        IF(WIN32)
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Zi /Ob0 /Od /RTC1")
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /DEBUG /INCREMENTAL")
         ELSE()
@@ -41,14 +41,14 @@ MACRO(INITIALISE_PROJECT)
 
         # Default compiler and linker settings
 
-        IF(MSVC)
+        IF(WIN32)
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNDEBUG /MD /O2 /Ob2 /Oy-")
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /INCREMENTAL:NO")
         ELSE()
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
         ENDIF()
 
-        IF(NOT APPLE AND NOT MSVC)
+        IF(NOT WIN32 AND NOT APPLE)
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
             # Note #1: -Wl,-s strips all the symbols, thus reducing the final
             #          size of OpenCOR or one its shared libraries...
@@ -59,7 +59,7 @@ MACRO(INITIALISE_PROJECT)
 
     # Ask MSVC to treat wchat_t as a built-in type
 
-    IF(MSVC)
+    IF(WIN32)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t-")
     ENDIF()
 
@@ -89,7 +89,7 @@ MACRO(INITIALISE_PROJECT)
     # Note: this is only required so that we can quickly test third-party
     #       libraries without first having to package everything...
 
-    IF(NOT MSVC)
+    IF(NOT WIN32)
         SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
         # Note: MSVC doesn't care about this location, so...
     ENDIF()
@@ -182,11 +182,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     FOREACH(PARAMETER ${ARGN})
         IF(${PARAMETER} STREQUAL "THIRD_PARTY")
-            # We are dealing with a third-party plugin disable warnings since
-            # it may generate some and this is not something we have or should
-            # have control over
+            # We are dealing with a third-party plugin, so disable warnings
+            # since it may generate some and this is not something we have or
+            # should have control over
 
-            IF(MSVC)
+            IF(WIN32)
                 STRING(REPLACE "/W3 /WX" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
             ELSE()
                 STRING(REPLACE "-Wall -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -195,7 +195,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # Add a definition in case of compilation from within Qt Creator
             # using MSVC since JOM overrides some of our settings, so...
 
-            IF(MSVC)
+            IF(WIN32)
                 ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
             ENDIF()
         ELSEIF(${PARAMETER} STREQUAL "SOURCES")
@@ -322,7 +322,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # OpenCOR binary dependencies
 
-    IF(MSVC)
+    IF(WIN32)
         FOREACH(OPENCOR_BINARY_DEPENDENCY ${OPENCOR_BINARY_DEPENDENCIES})
             TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                 ${OPENCOR_BINARY_DEPENDENCY}
@@ -361,7 +361,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # External dependencies
 
-    IF(MSVC)
+    IF(WIN32)
         SET(EXTERNAL_DEPENDENCY_PREFIX ${CMAKE_IMPORT_LIBRARY_PREFIX})
         SET(EXTERNAL_DEPENDENCY_SUFFIX ${CMAKE_IMPORT_LIBRARY_SUFFIX})
     ELSE()

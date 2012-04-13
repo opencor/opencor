@@ -20,7 +20,7 @@ MACRO(RETRIEVE_CELLML_API_SETTINGS)
         xpath
     )
 
-    IF(MSVC)
+    IF(WIN32)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4091 /wd4290")
         # Note #1: on Windows, and when using MSVC, CMAKE_CXX_FLAGS contains
         #          /EHsc by default and this is a good thing since it is
