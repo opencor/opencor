@@ -12,7 +12,7 @@ MACRO(INITIALISE_PROJECT)
         #       code which is /W3 and which is also what CMake uses by
         #       default...
 
-        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /STACK:10000000 /machine:X86")
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /STACK:10000000 /MACHINE:X86")
     ELSE()
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
     ENDIF()
