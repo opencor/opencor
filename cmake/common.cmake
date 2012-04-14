@@ -322,13 +322,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # OpenCOR binary dependencies
 
-    IF(WIN32)
-        FOREACH(OPENCOR_BINARY_DEPENDENCY ${OPENCOR_BINARY_DEPENDENCIES})
-            TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                ${OPENCOR_BINARY_DEPENDENCY}
-            )
-        ENDFOREACH()
-    ENDIF()
+    FOREACH(OPENCOR_BINARY_DEPENDENCY ${OPENCOR_BINARY_DEPENDENCIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${OPENCOR_BINARY_DEPENDENCY}
+        )
+    ENDFOREACH()
 
     # Qt dependencies
 
@@ -661,11 +659,9 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # requires the plugin will expect it to be, but this is not where MSVC
     # generates the plugin, so...
 
-    IF(WIN32)
     ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY ALL
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
-    ENDIF()
 
     # Package the plugin itself
 

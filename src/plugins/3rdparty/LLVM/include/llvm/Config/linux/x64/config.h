@@ -471,7 +471,7 @@
 #define HAVE_U_INT64_T 1
 
 /* Define to 1 if you have the <valgrind/valgrind.h> header file. */
-#define HAVE_VALGRIND_VALGRIND_H 1
+/* #undef HAVE_VALGRIND_VALGRIND_H */
 
 /* Define to 1 if you have the <windows.h> header file. */
 /* #undef HAVE_WINDOWS_H */
