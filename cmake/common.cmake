@@ -400,7 +400,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDIF()
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                                                        ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+
+    # On Windows, make a copy of the plugin to our main build directory, since
+    # this is where it will be on Linux and Mac OS X and where any test which
+    # requires the plugin will expect it to be, but this is not where MSVC
+    # generates the plugin, so...
+
+    IF(WIN32)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                                                            ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
+    ENDIF()
 
     # A few Mac OS X specific things
 
@@ -636,13 +648,24 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     IF(NOT EXISTS ${DEST_PLUGINS_DIR})
-        ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_MAKE_DIRECTORY ALL
+        ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_CREATE_PLUGINS_DIRECTORY ALL
                           COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PLUGINS_DIR})
     ENDIF()
 
-    ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY ALL
+    ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY_PLUGIN_TO_PLUGINS_DIRECTORY ALL
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+
+    # On Windows, make a copy of the plugin to our main build directory, since
+    # this is where it will be on Linux and Mac OS X and where any test which
+    # requires the plugin will expect it to be, but this is not where MSVC
+    # generates the plugin, so...
+
+    IF(WIN32)
+    ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY ALL
+                      COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                       ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
+    ENDIF()
 
     # Package the plugin itself
 
