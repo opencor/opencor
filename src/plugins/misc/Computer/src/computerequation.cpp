@@ -45,25 +45,25 @@ ComputerEquation::ComputerEquation(const Type &pType,
     mParameterName(QString()),
     mParameterIndex(-1),
     mNumber(0),
-    mLeft(pArguments.at(0)),
+    mLeft(pArguments.first()),
     mRight(0)
 {
     // Initialise the left and right nodes based on pArguments
 
-    ComputerEquation *crtRight = mRight;
+    ComputerEquation **crtRight = &mRight;
 
     for (int i = 1, iMax = pArguments.size()-1; i <= iMax; ++i)
         if (i != iMax) {
             // We are not dealing with the last argument, so need to create a
             // new node
 
-            crtRight = new ComputerEquation(OtherArguments, pArguments.at(i));
+            *crtRight = new ComputerEquation(OtherArguments, pArguments.at(i));
 
-            crtRight = crtRight->right();
+            crtRight = &(*crtRight)->mRight;
         } else {
             // We are dealing with the last argument, so...
 
-            crtRight = pArguments.at(i);
+            *crtRight = pArguments.at(i);
         }
 }
 

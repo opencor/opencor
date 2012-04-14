@@ -935,6 +935,8 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
                 return false;
             }
+
+            arguments.replace(i, computerEquation);
         }
 
         // The current token must be ")"
