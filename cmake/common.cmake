@@ -641,7 +641,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # Create the plugins directory if it doesn't already exist and move the
     # plugin to it
     # Note: this is done so that we can, on Windows and Linux, test the use of
-    #       plugins in OpenCOR without first having to package OpenCOR...
+    #       plugins in OpenCOR without first having to package and deploy it...
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
@@ -654,10 +654,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # On Windows, make a copy of the plugin to our main build directory, since
-    # this is where it will be on Linux and Mac OS X and where any test which
-    # requires the plugin will expect it to be, but this is not where MSVC
-    # generates the plugin, so...
+    # Make a copy of the plugin to our main build directory
 
     ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY ALL
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
