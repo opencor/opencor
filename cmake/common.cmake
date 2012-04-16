@@ -433,12 +433,17 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
-        # Make sure that the plugin refers to our embedded version of the other
-        # binary plugins on which it depends
+        # Make sure that our embedded plugin and the one in the plugin build
+        # directory refer to the correct version version of the other binary
+        # plugins on which they depend
 
         FOREACH(OPENCOR_BINARY_DEPENDENCY ${OPENCOR_BINARY_DEPENDENCIES})
             STRING(REPLACE "${PLUGIN_BUILD_DIR}/" "" OPENCOR_BINARY_DEPENDENCY "${OPENCOR_BINARY_DEPENDENCY}")
 
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${OPENCOR_BINARY_DEPENDENCY}
+                                                                 ${PLUGIN_BUILD_DIR}/${OPENCOR_BINARY_DEPENDENCY}
+                                                                 ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${OPENCOR_BINARY_DEPENDENCY}
                                                                  @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${OPENCOR_BINARY_DEPENDENCY}
@@ -622,6 +627,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
     SET(INCLUDE_DIRS)
+    SET(QT_DEPENDENCIES)
 
     # Analyse the extra parameters
 
@@ -630,12 +636,16 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     FOREACH(PARAMETER ${ARGN})
         IF(${PARAMETER} STREQUAL "INCLUDE_DIRS")
             SET(TYPE_OF_PARAMETER 1)
+        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
+            SET(TYPE_OF_PARAMETER 2)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
 
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
                 SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
+                SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
             ENDIF()
         ENDIF()
     ENDFOREACH()
@@ -671,6 +681,22 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY ALL
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
+
+    # A few Mac OS X specific things
+
+    IF(APPLE)
+        # Make sure that the plugin refers to the system version of the Qt
+        # libraries on which it depends
+        # Note: indeed, the copy of the binary plugin that we have refers to
+        #       the embedded version of the Qt libraries, so...
+
+        FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
+            ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_UPDATE_MAC_OS_X_QT_REFERENCE ALL
+                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                 ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                 ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ENDFOREACH()
+    ENDIF()
 
     # Package the plugin itself
 
