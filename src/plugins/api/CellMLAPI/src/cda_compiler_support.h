@@ -1,7 +1,7 @@
 #ifndef compiler_support_h
 #define compiler_support_h
 
-/*---GRY---
+/*---OPENCOR---
 #include "cda_config.h"
 */
 #include <cstdlib>
@@ -46,17 +46,6 @@ public:
 private:
   T* mPtr;
 };
-
-static void
-operator<<(std::ostream& data, const std::wstring& str)
-{
-  size_t n = wcstombs(NULL, str.c_str(), 0);
-  char* buf = new char[n + 1];
-  wcstombs(buf, str.c_str(), n + 1);
-  data << buf;
-  delete [] buf;
-}
-
 
 #ifdef _MSC_VER
 #undef WIN32

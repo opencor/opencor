@@ -5,7 +5,18 @@ MACRO(INITIALISE_PROJECT)
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
 
-    SET(CMAKE_CXX_FLAGS "-Werror")
+    IF(WIN32)
+        STRING(REPLACE "/W3" "/W3 /WX" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        # Note: MSVC has a /Wall flag, but it results in MSVC being very
+        #       pedantic, so instead we use what MSVC recommends for production
+        #       code which is /W3 and which is also what CMake uses by
+        #       default...
+
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /STACK:10000000 /MACHINE:X86")
+    ELSE()
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
+    ENDIF()
+
     SET(LINK_FLAGS_PROPERTIES)
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -15,7 +26,12 @@ MACRO(INITIALISE_PROJECT)
 
         # Default compiler settings
 
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+        IF(WIN32)
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Zi /Ob0 /Od /RTC1")
+            SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /DEBUG /INCREMENTAL")
+        ELSE()
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+        ENDIF()
     ELSE()
         SET(CMAKE_BUILD_TYPE "Release")
 
@@ -25,24 +41,26 @@ MACRO(INITIALISE_PROJECT)
 
         # Default compiler and linker settings
 
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
+        IF(WIN32)
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNDEBUG /MD /O2 /Ob2 /Oy-")
+            SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /INCREMENTAL:NO")
+        ELSE()
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
+        ENDIF()
 
-        IF(NOT APPLE)
+        IF(NOT WIN32 AND NOT APPLE)
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
             # Note #1: -Wl,-s strips all the symbols, thus reducing the final
-            #          size of OpenCOR or one its shared libraries
+            #          size of OpenCOR or one its shared libraries...
             # Note #2: the above linking option has become obsolete on Mac OS X,
             #          so...
         ENDIF()
     ENDIF()
 
+    # Ask MSVC to treat wchat_t as a built-in type
+
     IF(WIN32)
-        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,--enable-auto-import")
-        # Note #1: -Wl,--enable-auto-import allows to resolve vtable entries
-        #          in DLLs. This is something that we, ideally, wouldn't need
-        #          to set, but it happens that this is required for any plugin
-        #          that uses LLVM. Indeed, llvm::CallInst needs resolving,
-        #          so...
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t-")
     ENDIF()
 
     # Required packages
@@ -69,9 +87,21 @@ MACRO(INITIALISE_PROJECT)
 
     # Default location of third-party libraries
     # Note: this is only required so that we can quickly test third-party
-    #       libraries without first having to package everything
+    #       libraries without first having to package everything...
 
-    SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+    IF(NOT WIN32)
+        SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+        # Note: MSVC doesn't care about this location, so...
+    ENDIF()
+
+    # Location of our plugins so that we don't have to deploy OpenCOR on
+    # Windows and Linux before being able to test it
+
+    IF(APPLE)
+        SET(DEST_PLUGINS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME})
+    ELSE()
+        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${MAIN_PROJECT_NAME})
+    ENDIF()
 
     # Default location of external dependencies
 
@@ -88,7 +118,7 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 
     # Set the RPATH information on Linux
-    # Note: this prevent us from having to use the uncool LD_LIBRARY_PATH
+    # Note: this prevent us from having to use the uncool LD_LIBRARY_PATH...
 
     IF(NOT WIN32 AND NOT APPLE)
         SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../plugins/${PROJECT_NAME}")
@@ -140,6 +170,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(INCLUDE_DIRS)
     SET(DEFINITIONS)
     SET(OPENCOR_DEPENDENCIES)
+    SET(OPENCOR_BINARY_DEPENDENCIES)
     SET(QT_DEPENDENCIES)
     SET(EXTERNAL_DEPENDENCIES_DIR)
     SET(EXTERNAL_DEPENDENCIES)
@@ -150,7 +181,24 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(TYPE_OF_PARAMETER 0)
 
     FOREACH(PARAMETER ${ARGN})
-        IF(${PARAMETER} STREQUAL "SOURCES")
+        IF(${PARAMETER} STREQUAL "THIRD_PARTY")
+            # We are dealing with a third-party plugin, so disable warnings
+            # since it may generate some and this is not something we have or
+            # should have control over
+
+            IF(WIN32)
+                STRING(REPLACE "/W3 /WX" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+            ELSE()
+                STRING(REPLACE "-Wall -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+            ENDIF()
+
+            # Add a definition in case of compilation from within Qt Creator
+            # using MSVC since JOM overrides some of our settings, so...
+
+            IF(WIN32)
+                ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
+            ENDIF()
+        ELSEIF(${PARAMETER} STREQUAL "SOURCES")
             SET(TYPE_OF_PARAMETER 1)
         ELSEIF(${PARAMETER} STREQUAL "HEADERS_MOC")
             SET(TYPE_OF_PARAMETER 2)
@@ -162,14 +210,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 5)
         ELSEIF(${PARAMETER} STREQUAL "OPENCOR_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 6)
-        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_BINARY_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 7)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES_DIR")
+        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 8)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES_DIR")
             SET(TYPE_OF_PARAMETER 9)
-        ELSEIF(${PARAMETER} STREQUAL "TESTS")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 10)
+        ELSEIF(${PARAMETER} STREQUAL "TESTS")
+            SET(TYPE_OF_PARAMETER 11)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -187,12 +237,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 6)
                 SET(OPENCOR_DEPENDENCIES ${OPENCOR_DEPENDENCIES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
-                SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
+                SET(OPENCOR_BINARY_DEPENDENCIES ${OPENCOR_BINARY_DEPENDENCIES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
-                SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
+                SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
-                SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
+                SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
+                SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
                 SET(TESTS ${TESTS} ${PARAMETER})
             ENDIF()
         ENDIF()
@@ -224,6 +276,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Definition to make sure that the plugin can be used by other plugins
 
     ADD_DEFINITIONS(-D${PLUGIN_NAME}_PLUGIN)
+
+    # Some plugin-specific definitions
+
+    FOREACH(DEFINITION ${DEFINITIONS})
+        ADD_DEFINITIONS(-D${DEFINITION})
+    ENDFOREACH()
 
     # Rules to build the plugin
 
@@ -262,6 +320,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
+    # OpenCOR binary dependencies
+
+    FOREACH(OPENCOR_BINARY_DEPENDENCY ${OPENCOR_BINARY_DEPENDENCIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${OPENCOR_BINARY_DEPENDENCY}
+        )
+    ENDFOREACH()
+
     # Qt dependencies
 
     FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
@@ -284,41 +350,47 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
+    # Linker settings
+
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+        OUTPUT_NAME ${PLUGIN_NAME}
+        LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+    )
+
     # External dependencies
+
+    IF(WIN32)
+        SET(EXTERNAL_DEPENDENCY_PREFIX ${CMAKE_IMPORT_LIBRARY_PREFIX})
+        SET(EXTERNAL_DEPENDENCY_SUFFIX ${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    ELSE()
+        SET(EXTERNAL_DEPENDENCY_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
+        SET(EXTERNAL_DEPENDENCY_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDIF()
 
     IF(NOT ${EXTERNAL_DEPENDENCIES_DIR} STREQUAL "")
         FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
             TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
+                ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY_PREFIX}${EXTERNAL_DEPENDENCY}${EXTERNAL_DEPENDENCY_SUFFIX}
             )
         ENDFOREACH()
     ENDIF()
 
-    # Linker settings
-    # Note: by default "lib" will be prepended to the name of the target file.
-    #       However, this is not common practice on Windows, so...
+    # Location of our plugins
 
     IF(WIN32)
-        SET(CMAKE_IMPORT_LIBRARY_PREFIX)
-        SET(CMAKE_SHARED_LIBRARY_PREFIX)
+        STRING(REPLACE "${${MAIN_PROJECT_NAME}_SOURCE_DIR}" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
+        SET(PLUGIN_BUILD_DIR "${CMAKE_BINARY_DIR}${PLUGIN_BUILD_DIR}")
+        # Note: MSVC generate things in a different place to GCC, so...
+    ELSE()
+        SET(PLUGIN_BUILD_DIR ${LIBRARY_OUTPUT_PATH})
     ENDIF()
-
-    SET_TARGET_PROPERTIES(${PROJECT_NAME}
-        PROPERTIES OUTPUT_NAME ${PLUGIN_NAME} LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
-    )
 
     # Create the plugins directory if it doesn't already exist and move the
     # plugin to it
     # Note: this is done so that we can, on Windows and Linux, test the use of
-    #       plugins in OpenCOR without first having to package OpenCOR
+    #       plugins in OpenCOR without first having to package OpenCOR...
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-    IF(APPLE)
-        SET(DEST_PLUGINS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME})
-    ELSE()
-        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${MAIN_PROJECT_NAME})
-    ENDIF()
 
     IF(NOT EXISTS ${DEST_PLUGINS_DIR})
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
@@ -326,13 +398,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDIF()
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${LIBRARY_OUTPUT_PATH}/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                                                        ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # Add some more definitions
+    # On Windows, make a copy of the plugin to our main build directory, since
+    # this is where it will be on Linux and Mac OS X and where any test which
+    # requires the plugin will expect it to be, but this is not where MSVC
+    # generates the plugin, so...
 
-    FOREACH(DEFINITION ${DEFINITIONS})
-        ADD_DEFINITIONS(-D${DEFINITION})
-    ENDFOREACH()
+    IF(WIN32)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                                                            ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
+    ENDIF()
 
     # A few Mac OS X specific things
 
@@ -350,8 +428,25 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         FOREACH(OPENCOR_DEPENDENCY ${OPENCOR_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                               COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                  @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+        ENDFOREACH()
+
+        # Make sure that our embedded plugin and the one in the plugin build
+        # directory refer to the correct version version of the other binary
+        # plugins on which they depend
+
+        FOREACH(OPENCOR_BINARY_DEPENDENCY ${OPENCOR_BINARY_DEPENDENCIES})
+            STRING(REPLACE "${PLUGIN_BUILD_DIR}/" "" OPENCOR_BINARY_DEPENDENCY "${OPENCOR_BINARY_DEPENDENCY}")
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${OPENCOR_BINARY_DEPENDENCY}
+                                                                 ${PLUGIN_BUILD_DIR}/${OPENCOR_BINARY_DEPENDENCY}
+                                                                 ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${OPENCOR_BINARY_DEPENDENCY}
+                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${OPENCOR_BINARY_DEPENDENCY}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
@@ -376,26 +471,28 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
             # First, for the deployed version of the plugin
 
+            SET(EXTERNAL_DEPENDENCY_FILENAME ${EXTERNAL_DEPENDENCY_PREFIX}${EXTERNAL_DEPENDENCY}${EXTERNAL_DEPENDENCY_SUFFIX})
+
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
 
             # Second, for the 'test' version of the plugin
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
-                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
-                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -403,6 +500,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Package the plugin itself
 
     IF(WIN32)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                                                            ${PLUGIN_BUILD_DIR}/${CMAKE_BUILD_TYPE}/${PLUGIN_FILENAME})
+        # Note: the above ensures that the DLL is where CPack expects it to be.
+        #       Indeed, MSVC generates it elsewhere, so...
+
         INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION plugins/${MAIN_PROJECT_NAME})
     ELSEIF(NOT APPLE)
         INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins/${MAIN_PROJECT_NAME})
@@ -422,17 +525,20 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 # The test exists, so build it
 
                 QT4_WRAP_CPP(TEST_SOURCES_MOC
-                    ${TEST_HEADER_MOC_FILE}
                     ../../plugin.h
+
+                    ${HEADERS_MOC}
+                    ${TEST_HEADER_MOC_FILE}
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
-                    ${TEST_SOURCE_FILE}
                     ../../../../test/testutils.cpp
                     ../../coreinterface.cpp
                     ../../interface.cpp
                     ../../plugin.cpp
                     ../../plugininfo.cpp
+
+                    ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}
                 )
 
@@ -471,13 +577,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(NOT ${EXTERNAL_DEPENDENCIES_DIR} STREQUAL "")
                     FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
                         TARGET_LINK_LIBRARIES(${TEST_NAME}
-                            ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
+                            ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY_PREFIX}${EXTERNAL_DEPENDENCY}${EXTERNAL_DEPENDENCY_SUFFIX}
                         )
                     ENDFOREACH()
                 ENDIF()
 
-                # Copy the test to our tests directory which we create if
-                # needed
+                # Copy the test to our tests directory which we create if needed
 
                 IF(NOT EXISTS ${DEST_TESTS_DIR})
                     ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
@@ -487,21 +592,25 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 SET(TEST_NAME_FILEPATH ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
                 ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_NAME_FILEPATH} ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
+                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_NAME_FILEPATH}
+                                                                    ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
 
                 # Make sure that, on Mac OS X, the test refers to our test
                 # version of the external libraries on which it depends
 
                 IF(APPLE)
                     FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+                        SET(EXTERNAL_DEPENDENCY_FILENAME ${EXTERNAL_DEPENDENCY_PREFIX}${EXTERNAL_DEPENDENCY}${EXTERNAL_DEPENDENCY_SUFFIX})
+
+
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                           COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                              ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
 
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                              ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
                     ENDFOREACH()
                 ENDIF()
@@ -510,6 +619,88 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ENDIF()
         ENDFOREACH()
     ENDIF()
+ENDMACRO()
+
+MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
+    # Various initialisations
+
+    SET(PLUGIN_NAME ${PLUGIN_NAME})
+
+    SET(INCLUDE_DIRS)
+    SET(QT_DEPENDENCIES)
+
+    # Analyse the extra parameters
+
+    SET(TYPE_OF_PARAMETER 0)
+
+    FOREACH(PARAMETER ${ARGN})
+        IF(${PARAMETER} STREQUAL "INCLUDE_DIRS")
+            SET(TYPE_OF_PARAMETER 1)
+        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
+            SET(TYPE_OF_PARAMETER 2)
+        ELSE()
+            # Not one of the headers, so add the parameter to the corresponding
+            # set
+
+            IF(${TYPE_OF_PARAMETER} EQUAL 1)
+                SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
+                SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
+            ENDIF()
+        ENDIF()
+    ENDFOREACH()
+
+    # Various include directories
+
+    SET(PLUGIN_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
+
+    INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
+
+    # Location of our plugins
+
+    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_DIR})
+
+    # Create the plugins directory if it doesn't already exist and move the
+    # plugin to it
+    # Note: this is done so that we can, on Windows and Linux, test the use of
+    #       plugins in OpenCOR without first having to package and deploy it...
+
+    SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+    IF(NOT EXISTS ${DEST_PLUGINS_DIR})
+        ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_CREATE_PLUGINS_DIRECTORY ALL
+                          COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PLUGINS_DIR})
+    ENDIF()
+
+    ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY_PLUGIN_TO_PLUGINS_DIRECTORY ALL
+                      COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                       ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+
+    # Make a copy of the plugin to our main build directory
+
+    ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY ALL
+                      COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                       ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
+
+    # A few Mac OS X specific things
+
+    IF(APPLE)
+        # Make sure that the plugin refers to the system version of the Qt
+        # libraries on which it depends
+        # Note: indeed, the copy of the binary plugin that we have refers to
+        #       the embedded version of the Qt libraries, so...
+
+        FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
+            ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_UPDATE_MAC_OS_X_QT_REFERENCE ALL
+                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                 ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                 ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ENDFOREACH()
+    ENDIF()
+
+    # Package the plugin itself
+
+    INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
 ENDMACRO()
 
 MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
@@ -574,14 +765,16 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
             SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} ${LIBRARY_LIB_FILEPATH})
+                               COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                ${LIBRARY_LIB_FILEPATH})
         ELSE()
             # We must deploy a third-party library
 
             SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME} ${LIBRARY_LIB_FILEPATH})
+                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME}
+                                                                ${LIBRARY_LIB_FILEPATH})
 
             # In the case of a third-party library, we must also copy the
             # library to the build directory, so that we can test any plugin
@@ -590,7 +783,8 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
             SET(LIBRARY_LIB_TEST_FILEPATH ${CMAKE_BINARY_DIR}/${LIBRARY_NAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME} ${LIBRARY_LIB_TEST_FILEPATH})
+                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME}
+                                                                ${LIBRARY_LIB_TEST_FILEPATH})
         ENDIF()
     ELSE()
         # We must deploy a library which is bundled in a Qt framework
@@ -598,7 +792,8 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
         SET(LIBRARY_LIB_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME})
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY_NAME} ${LIBRARY_LIB_FILEPATH})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY_NAME}
+                                                            ${LIBRARY_LIB_FILEPATH})
     ENDIF()
 
     # Strip the library from anything that is not essential
@@ -688,13 +883,15 @@ MACRO(COPY_FILE_TO_BUILD_DIR DIRNAME FILENAME)
 
     IF("${ARGN}" STREQUAL "")
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${REAL_DIRNAME})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME}
+                                                            ${REAL_DIRNAME})
     ELSE()
         # An argument was passed so use it to rename the file which is to be
         # copied
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME} ${REAL_DIRNAME}/${ARGN})
+                           COMMAND ${CMAKE_COMMAND} -E copy ${FILENAME}
+                                                            ${REAL_DIRNAME}/${ARGN})
     ENDIF()
 ENDMACRO()
 

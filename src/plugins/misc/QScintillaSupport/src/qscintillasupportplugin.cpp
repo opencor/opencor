@@ -18,12 +18,12 @@ PLUGININFO_FUNC QScintillaSupportPluginInfo()
     descriptions.insert("en", "A plugin to support <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>");
     descriptions.insert("fr", "Une extension pour supporter <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::Gui,
-                      PluginInfo::Miscellaneous,
-                      false,
-                      QStringList() << "Core" << "QScintilla",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::Gui,
+                          PluginInfo::Miscellaneous,
+                          false,
+                          QStringList() << "Core" << "QScintilla",
+                          descriptions);
 }
 
 //==============================================================================

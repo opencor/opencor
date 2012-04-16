@@ -59,15 +59,11 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
 )
 
-# Additional compiler and linker settings
+# Additional linker settings
 
-SET(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
-
-SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-subsystem,console")
-# Note: -Wl,-subsystem,console makes sure that we end up with a console
-#       application
-
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}")
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+)
 
 # Copy the console version of OpenCOR to the main build folder
 

@@ -108,9 +108,8 @@ MainWindow::MainWindow() :
 
     mUi->actionFullScreen->setShortcut(Qt::Key_F11);
 #ifdef Q_WS_WIN
-    //---GRY--- QKeySequence::Quit CORRESPONDS TO NOTHING ON WINDOWS, YET ONE
-    //          MIGHT EXPECT IT TO CORRESPOND TO Alt+F4 AND MAYBE EVEN TO
-    //          Ctrl+Q, SO...
+    // Note: QKeySequence::Quit corresponds to nothing on Windows, yet one might
+    //       expect it to correspond to Alt+F4 and maybe even to Ctrl+Q, so...
 
     mUi->actionExit->setShortcuts(QList<QKeySequence>()
                                     << QKeySequence(Qt::ALT|Qt::Key_F4)

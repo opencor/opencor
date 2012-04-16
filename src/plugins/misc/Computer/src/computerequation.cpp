@@ -40,31 +40,30 @@ ComputerEquation::ComputerEquation(const Type &pType,
 //==============================================================================
 
 ComputerEquation::ComputerEquation(const Type &pType,
-                                   const int &pArgumentsCount,
-                                   ComputerEquation **pArguments) :
+                                   const ComputerEquations &pArguments) :
     mType(pType),
     mParameterName(QString()),
     mParameterIndex(-1),
     mNumber(0),
-    mLeft(pArguments[0]),
+    mLeft(pArguments.first()),
     mRight(0)
 {
     // Initialise the left and right nodes based on pArguments
 
     ComputerEquation **crtRight = &mRight;
 
-    for (int i = 1, iMax = pArgumentsCount-1; i <= iMax; ++i)
+    for (int i = 1, iMax = pArguments.size()-1; i <= iMax; ++i)
         if (i != iMax) {
             // We are not dealing with the last argument, so need to create a
             // new node
 
-            *crtRight = new ComputerEquation(OtherArguments, pArguments[i]);
+            *crtRight = new ComputerEquation(OtherArguments, pArguments.at(i));
 
             crtRight = &(*crtRight)->mRight;
         } else {
             // We are dealing with the last argument, so...
 
-            *crtRight = pArguments[i];
+            *crtRight = pArguments.at(i);
         }
 }
 
@@ -780,6 +779,10 @@ void ComputerEquation::simplifyNode(ComputerEquation *pNode)
             replaceNodeWithNumber(pNode, min(pNode->left(), pNode->right()));
 
         break;
+    default:
+        // A type which we can't/don't simplify, so... nothing to do...
+
+        ;
     }
 }
 

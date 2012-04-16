@@ -19,5 +19,6 @@ ADD_PLUGIN(Viewer
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
         QtXml
 )

@@ -4,26 +4,35 @@ MACRO(RETRIEVE_CELLML_API_SETTINGS)
     # Retrieve CellML API settings
 
     SET(CELLML_API_EXTERNAL_DEPENDENCIES
-        ${CMAKE_SHARED_LIBRARY_PREFIX}annotools${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}ccgs${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}celeds${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}celedsexporter${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}cellml${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}cevas${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}cis${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}cuses${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}malaes${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}spros${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}srus${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}telicems${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}vacss${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_SHARED_LIBRARY_PREFIX}xpath${CMAKE_SHARED_LIBRARY_SUFFIX}
+        annotools
+        ccgs
+        celeds
+        celedsexporter
+        cellml
+        cevas
+        cis
+        cuses
+        malaes
+        spros
+        srus
+        telicems
+        vacss
+        xpath
     )
+
+    IF(WIN32)
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4091 /wd4290")
+        # Note #1: on Windows, and when using MSVC, CMAKE_CXX_FLAGS contains
+        #          /EHsc by default and this is a good thing since it is
+        #          required for using the CellML API with MSVC...
+        # Note #2: to use the CellML API without disabling the above warnings
+        #          will generate quite a few warnings from MSVC, so...
+    ENDIF()
 ENDMACRO()
 
 # CellML API libraries
 
-SET(CELLML_API_EXTERNAL_DEPENDENCIES_DIR ${PROJECT_SOURCE_DIR}/lib/${DISTRIB_DIR})
+SET(CELLML_API_EXTERNAL_DEPENDENCIES_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_DIR})
 
 RETRIEVE_CELLML_API_SETTINGS()
 
@@ -55,14 +64,8 @@ IF(WIN32)
     # The CellML API libraries
 
     FOREACH(CELLML_API_EXTERNAL_DEPENDENCY ${CELLML_API_EXTERNAL_DEPENDENCIES})
-        DEPLOY_WINDOWS_BINARY_FILE(${CELLML_API_EXTERNAL_DEPENDENCIES_DIR}/${CELLML_API_EXTERNAL_DEPENDENCY})
+        DEPLOY_WINDOWS_BINARY_FILE(${CELLML_API_EXTERNAL_DEPENDENCIES_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${CELLML_API_EXTERNAL_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
-
-    # The libstdc++-6.dll file
-    # Note: this DLL comes from the official version of MinGW (as opposed to
-    #       the Qt patched version) and is required by the CellML API, so...
-
-    DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/libstdc++-6.dll)
 ELSEIF(APPLE)
     # Deploy the CellML API libraries together with their respective CellML API
     # dependencies, if any
@@ -220,6 +223,6 @@ ELSE()
     # The CellML API binaries
 
     FOREACH(CELLML_API_EXTERNAL_DEPENDENCY ${CELLML_API_EXTERNAL_DEPENDENCIES})
-        INSTALL(FILES ${CELLML_API_EXTERNAL_DEPENDENCIES_DIR}/${CELLML_API_EXTERNAL_DEPENDENCY} DESTINATION lib)
+        INSTALL(FILES ${CELLML_API_EXTERNAL_DEPENDENCIES_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${CELLML_API_EXTERNAL_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION lib)
     ENDFOREACH()
 ENDIF()

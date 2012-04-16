@@ -23,12 +23,12 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
     descriptions.insert("en", "A plugin to access the <a href=\"http://models.cellml.org/\">CellML Model Repository</a>");
     descriptions.insert("fr", "Une extension pour accéder au <a href=\"http://models.cellml.org/\">Répertoire de Modèles CellML</a>");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::Gui,
-                      PluginInfo::Organisation,
-                      true,
-                      QStringList() << "Core" << "QJson",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::Gui,
+                          PluginInfo::Organisation,
+                          true,
+                          QStringList() << "Core" << "QJson",
+                          descriptions);
 }
 
 //==============================================================================

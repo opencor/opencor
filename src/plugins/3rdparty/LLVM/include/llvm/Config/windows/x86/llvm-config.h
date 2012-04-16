@@ -1,4 +1,3 @@
-/* include/llvm/Config/llvm-config.h.  Generated from llvm-config.h.in by configure.  */
 /*===-- llvm/config/llvm-config.h - llvm configure variable -------*- C -*-===*/
 /*                                                                            */
 /*                     The LLVM Compiler Infrastructure                       */
@@ -18,43 +17,43 @@
 #ifndef CONFIG_H
 
 /* Installation directory for binary executables */
-#define LLVM_BINDIR "/usr/local/bin"
+/* #undef LLVM_BINDIR */
 
 /* Time at which LLVM was configured */
-#define LLVM_CONFIGTIME "Fri Dec 16 10:54:31 GMTST 2011"
+/* #undef LLVM_CONFIGTIME */
 
 /* Installation directory for data files */
-#define LLVM_DATADIR "/usr/local/share/llvm"
+/* #undef LLVM_DATADIR */
 
 /* Installation directory for documentation */
-#define LLVM_DOCSDIR "/usr/local/share/doc/llvm"
+/* #undef LLVM_DOCSDIR */
 
 /* Installation directory for config files */
-#define LLVM_ETCDIR "/usr/local/etc/llvm"
+/* #undef LLVM_ETCDIR */
 
 /* Has gcc/MSVC atomic intrinsics */
-#define LLVM_HAS_ATOMICS 0
+#define LLVM_HAS_ATOMICS 1
 
 /* Host triple we were built on */
-#define LLVM_HOSTTRIPLE "i686-pc-mingw32"
+#define LLVM_HOSTTRIPLE "i686-pc-win32"
 
 /* Installation directory for include files */
-#define LLVM_INCLUDEDIR "/usr/local/include"
+/* #undef LLVM_INCLUDEDIR */
 
 /* Installation directory for .info files */
-#define LLVM_INFODIR "/usr/local/info"
+/* #undef LLVM_INFODIR */
 
 /* Installation directory for libraries */
-#define LLVM_LIBDIR "/usr/local/lib"
+/* #undef LLVM_LIBDIR */
 
 /* Installation directory for man pages */
-#define LLVM_MANDIR "/usr/local/man"
+/* #undef LLVM_MANDIR */
 
 /* LLVM architecture name for the native architecture, if available */
 #define LLVM_NATIVE_ARCH X86
 
 /* LLVM name for the native AsmParser init function, if available */
-#define LLVM_NATIVE_ASMPARSER LLVMInitializeX86AsmParser
+/* #undef LLVM_NATIVE_ASMPARSER */
 
 /* LLVM name for the native AsmPrinter init function, if available */
 #define LLVM_NATIVE_ASMPRINTER LLVMInitializeX86AsmPrinter
@@ -102,6 +101,6 @@
 /* #undef LLVM_PATH_XDOT_PY */
 
 /* Installation prefix directory */
-#define LLVM_PREFIX "/usr/local"
+#define LLVM_PREFIX "C:/Program Files (x86)/LLVM"
 
 #endif

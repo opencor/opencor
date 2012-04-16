@@ -6,7 +6,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # Name of the main project and location of the built OpenCOR binary
 # Note: these are required, on Mac OS X, to determine where plugins should be
-#       copied
+#       copied, so...
 
 SET(MAIN_PROJECT_NAME ${PROJECT_NAME})
 SET(MAC_OS_X_PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
@@ -122,14 +122,7 @@ INCLUDE_THIRD_PARTY_LIBRARY(. QtSingleApplication)
 # case of Linux, it's done through res/OpenCOR.qrc
 
 IF(WIN32)
-    SET(IconObjectFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_icon.o)
-
-    ADD_CUSTOM_COMMAND(OUTPUT ${IconObjectFile}
-                       COMMAND windres -I ${CMAKE_SOURCE_DIR} -i ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc
-                                       -o ${IconObjectFile}
-                      )
-
-    SET(SOURCES ${SOURCES} ${IconObjectFile})
+    SET(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc)
 ELSEIF(APPLE)
     SET(IconFile ${PROJECT_NAME}.icns)
 
@@ -152,7 +145,9 @@ IF(ENABLE_TESTING)
 
     SET(RUNTESTS_PROGRAM runtests)
 
-    ADD_EXECUTABLE(${RUNTESTS_PROGRAM} test/main.cpp)
+    ADD_EXECUTABLE(${RUNTESTS_PROGRAM}
+        test/main.cpp
+    )
 
     TARGET_LINK_LIBRARIES(${RUNTESTS_PROGRAM}
         ${QT_QTCORE_LIBRARY}
@@ -169,7 +164,8 @@ IF(ENABLE_TESTING)
     SET(MAIN_TEST_FILENAME ${RUNTESTS_PROGRAM}${CMAKE_EXECUTABLE_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_PROGRAM} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME} ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
+                                                        ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 ENDIF()
 
 # Build the plugins used by either the GUI and/or console version of OpenCOR
@@ -259,6 +255,12 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     ${QT_QTNETWORK_LIBRARY}
 )
 
+IF(WIN32)
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+        ${QT_QTMAIN_LIBRARY}
+    )
+ENDIF()
+
 IF(NOT WIN32 AND NOT APPLE)
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
         ${QT_QTDBUS_LIBRARY}
@@ -267,11 +269,10 @@ ENDIF()
 
 # Additional compiler and linker settings
 
-SET(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
 ADD_DEFINITIONS(-D${PROJECT_NAME}_MAIN)
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME}
-    PROPERTIES LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
 )
 
 # Some post-processing specific to Windows and Linux
@@ -280,6 +281,15 @@ IF(NOT APPLE)
     # Copy the OpenCOR executable to the build/bin folder
 
     COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+
+    IF(WIN32)
+        # Copy the OpenCOR executable to the build/Release folder, so that
+        # CPack can find it since this is where it expects it to be, except
+        # that make.bat asks for the OpenCOR executable to be generated in
+        # build to match what does Qt Creator, so...
+
+        COPY_FILE_TO_BUILD_DIR(Release ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+    ENDIF()
 ENDIF()
 
 # Some Mac OS X specific information, as well as some pre- and post-processing
@@ -296,17 +306,19 @@ IF(APPLE)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macosx/Info.plist.in ${InfoPlistFile})
 
-    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile})
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile}
+    )
 
     # Remove any qt.conf file left from a previous build
     # Note: this prevents us from getting a warning when everything is actually
-    #       OK
+    #       OK...
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
                        COMMAND ${CMAKE_COMMAND} -E remove -f ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
 
     # Remove the PlugIns directory left from a previous build
-    # Note: this prevents us from getting error messages
+    # Note: this prevents us from getting error messages...
 
     FOREACH(QT_FOLDER accessible bearer codecs graphicssystems imageformats
                       phonon_backend qmltooling)
@@ -373,7 +385,7 @@ IF(APPLE)
     )
 
     # Clean up the plugins that are deployed by mmacdeployqt
-    # Note: it's not essential, it's merely to have 'clean' plugins
+    # Note: it's not essential, it's merely to have 'clean' plugins...
 
     CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(accessible qtaccessiblewidgets)
 
@@ -401,7 +413,7 @@ IF(APPLE)
     #       here, since it allows us to test things as if Qt wasn't installed
     #       on our development Mac OS X machine (which is useful since we
     #       cannot have a virtual machine with a 'blank' Mac OS X system on it
-    #       unlike with Windows and Linux)
+    #       unlike with Windows and Linux)...
 
     SET(SQLDRIVERS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers)
 
@@ -411,7 +423,8 @@ IF(APPLE)
     ENDIF()
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib ${SQLDRIVERS_DIR})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib
+                                                        ${SQLDRIVERS_DIR})
 
     # Make sure that the SQLite plugin refers to our embedded version
 
@@ -457,10 +470,16 @@ IF(WIN32)
 
     INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
 
-    # MinGW files required by OpenCOR
+    # MSVC files required by OpenCOR
+    # Note: we would normally use
+    #           INCLUDE(InstallRequiredSystemLibraries)
+    #       but it doesn't work with MSVC Express since that version of MSVC
+    #       doesn't come with redistributables, and even if we were to install
+    #       the redistributables, it would still not work because CMake checks
+    #       a registry key which is not set, so...
 
-    FOREACH(MINGW_LIBRARY mingwm10 libgcc_s_dw2-1)
-        INSTALL(FILES ${QT_BINARY_DIR}/../../mingw/bin/${MINGW_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
+    FOREACH(MSVC_LIBRARY msvcp100 msvcr100)
+        DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 
     # Qt files required by OpenCOR
@@ -555,7 +574,7 @@ ELSE()
     # Note: it seems that, starting with Ubuntu 11.04, some libraries may end
     #       up in /usr/lib/i386-linux-gnu or /usr/lib/x86_64-linux-gnu,
     #       depending on whether the system is 32-bit or 64-bit, so we need to
-    #       check for these folders first
+    #       check for these folders first...
 
     SET(DEFAULT_LIBRARY_FOLDER /usr/lib)
     SET(X86_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/i386-linux-gnu)
@@ -573,7 +592,7 @@ ELSE()
         # Note: stdc++.so.6 is required by QtCLucene and may be needed when
         #       packaging on a particular version of Ubuntu and deploying on
         #       another (e.g. packaging on Ubuntu 11.04 and deploying on Ubuntu
-        #       10.04)
+        #       10.04), so...
 
         IF(EXISTS "${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}")
             SET(CORRECT_LIBRARY ${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})

@@ -32,7 +32,7 @@
 }
 
 /* Put a border around prettyprinted code snippets. */
-/*---GRY--- DISABLED FOR OpenCOR
+/*---OPENCOR---
 pre.prettyprint { padding: 2px; border: 1px solid #888 }
 */
 

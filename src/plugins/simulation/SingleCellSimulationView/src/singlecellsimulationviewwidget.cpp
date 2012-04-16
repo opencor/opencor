@@ -46,9 +46,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
     mVoiEnd(0), mVoiStep(0), mVoiMaximumStep(0), mVoiOutput(0), mStatesIndex(0),
     mOdeSolverName("CVODE"),
+    mSlowPlotting(true),
     mSolverInterfaces(SolverInterfaces()),
-    mSolverErrorMsg(QString()),
-    mSlowPlotting(true)
+    mSolverErrorMsg(QString())
 {
     // Set up the UI
 

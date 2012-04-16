@@ -87,10 +87,10 @@ public:
     QwtInterval operator|( double ) const;
     QwtInterval &operator|=( double );
 
-/*---GRY---
+/*---OPENCOR---
     bool isValid() const;
 */
-//---GRY--- BEGIN
+//---OPENCOR--- BEGIN
     // Note: to add 'inline' to the definition avoids a warning that reads:
     //       qwt_interval.h:277: warning: 'bool QwtInterval::isValid() const'
     //       redeclared without dllimport attribute after being referenced with
@@ -98,7 +98,7 @@ public:
     //       http://comments.gmane.org/gmane.comp.graphics.qwt.general/3248
 
     inline bool isValid() const;
-//---GRY--- END
+//---OPENCOR--- END
     bool isNull() const;
     void invalidate();
 

@@ -314,7 +314,7 @@ void FileBrowserWidget::updateItems(const QString &pItemPath,
 
     if (pItems.count() > 1) {
         QStringList newItems;
-        QString prevItem = pItems.at(0);
+        QString prevItem = pItems.first();
 
         newItems << prevItem;
 

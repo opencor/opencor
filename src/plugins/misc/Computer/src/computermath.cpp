@@ -239,6 +239,33 @@ double min(int pCount, ...)
 
 //==============================================================================
 
+#ifdef Q_WS_WIN
+double asinh(double pNb)
+{
+    return log(pNb+sqrt(pNb*pNb+1));
+}
+#endif
+
+//==============================================================================
+
+#ifdef Q_WS_WIN
+double acosh(double pNb)
+{
+    return log(pNb+sqrt(pNb*pNb-1));
+}
+#endif
+
+//==============================================================================
+
+#ifdef Q_WS_WIN
+double atanh(double pNb)
+{
+    return 0.5*(log(1+pNb)-log(1-pNb));
+}
+#endif
+
+//==============================================================================
+
 double piecewise(double pCondition, double pTrue, double pFalse)
 {
     return pCondition?pTrue:pFalse;

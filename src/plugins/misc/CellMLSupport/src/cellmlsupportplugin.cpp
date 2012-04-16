@@ -23,12 +23,12 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
     descriptions.insert("en", "A plugin to support <a href=\"http://www.cellml.org/\">CellML</a>");
     descriptions.insert("fr", "Une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::General,
-                      PluginInfo::Miscellaneous,
-                      false,
-                      QStringList() << "Core" << "CellMLAPI" << "Computer",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::General,
+                          PluginInfo::Miscellaneous,
+                          false,
+                          QStringList() << "Core" << "CellMLAPI" << "Computer",
+                          descriptions);
 }
 
 //==============================================================================

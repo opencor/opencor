@@ -14,8 +14,8 @@ namespace Computer {
 ComputerFunction::ComputerFunction() :
     mType(Void),
     mName(QString()),
-    mEquations(ComputerEquations()),
-    mParameters(ComputerParameters())
+    mParameters(ComputerParameters()),
+    mEquations(ComputerEquations())
 {
 }
 

@@ -3,6 +3,7 @@ PROJECT(SUNDIALSPlugin)
 # Add the plugin
 
 ADD_PLUGIN(SUNDIALS
+    THIRD_PARTY
     SOURCES
         ../../plugininfo.cpp
 
@@ -46,12 +47,12 @@ ADD_PLUGIN(SUNDIALS
         src/sundials/sundials_sptfqmr.c
     HEADERS_MOC
         src/sundialsplugin.h
-    DEFINITIONS
-        BUILD_SUNDIALS_LIBRARY
-        NO_FPRINTF_OUTPUT
     INCLUDE_DIRS
         include
         src
+    DEFINITIONS
+        BUILD_SUNDIALS_LIBRARY
+        NO_FPRINTF_OUTPUT
     QT_DEPENDENCIES
         QtCore
 )

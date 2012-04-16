@@ -18,12 +18,12 @@ PLUGININFO_FUNC QJsonPluginInfo()
     descriptions.insert("en", "A plugin to use <a href=\"http://qjson.sourceforge.net/\">QJson</a>");
     descriptions.insert("fr", "Une extension pour utiliser <a href=\"http://qjson.sourceforge.net/\">QJson</a>");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::General,
-                      PluginInfo::ThirdParty,
-                      false,
-                      QStringList(),
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::General,
+                          PluginInfo::ThirdParty,
+                          false,
+                          QStringList(),
+                          descriptions);
 }
 
 //==============================================================================

@@ -17,6 +17,14 @@ namespace Computer {
 
 //==============================================================================
 
+class ComputerEquation;
+
+//==============================================================================
+
+typedef QList<ComputerEquation *> ComputerEquations;
+
+//==============================================================================
+
 class ComputerEquation
 {
 public:
@@ -69,8 +77,7 @@ public:
                               ComputerEquation *pLeft,
                               ComputerEquation *pRight = 0);
     explicit ComputerEquation(const Type &pType,
-                              const int &pArgumentsCount,
-                              ComputerEquation **pArguments);
+                              const ComputerEquations &pArguments);
     explicit ComputerEquation(const Type &pType,
                               ComputerEquation *pLeftLeft,
                               ComputerEquation *pLeftRight,
@@ -120,10 +127,6 @@ private:
     void replaceNodeWithChildNode(ComputerEquation *pNode,
                                   ComputerEquation *pChildNode);
 };
-
-//==============================================================================
-
-typedef QList<ComputerEquation *> ComputerEquations;
 
 //==============================================================================
 

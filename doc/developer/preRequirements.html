@@ -38,19 +38,16 @@
             <li>
                 C++ toolchain: a set of C++ tools. The toolchain is different depending on the platform you are using:
                 <ul>
-                    <li>Windows: MinGW 4.4.0 is required, but it comes with the Qt SDK (see below), so no need to do anything here;</li>
+                    <li>Windows: <a href="http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express">Visual C++ 2010 Express SP1</a> and the <a href="http://msdn.microsoft.com/en-us/windows/hardware/gg463009/">Debugging Tools for Windows</a>;</li>
                     <li>Linux: the <a href="http://packages.ubuntu.com/natty/g++">g++</a> package on Ubuntu; and</li>
                     <li>Mac OS X: <a href="http://developer.apple.com/xcode/">Xcode 4.3.2</a>.</li>
                 </ul>
             </li>
             <li>
-                <a href="http://qt.nokia.com/">Qt</a> SDK 1.2: this combines Qt 4.8.0 (a cross-platform application and UI framework) and Qt Creator 2.4.1 (a cross-platform environment for Qt), among other things:
+                <a href="http://qt.nokia.com/">Qt</a> SDK 1.2.1: this combines Qt 4.8.1 (a cross-platform application and UI framework) and Qt Creator 2.4.1 (a cross-platform environment for Qt), among other things:
                 <ul>
                     <li>
                         <a href="http://qt.nokia.com/downloads/sdk-windows-cpp">Windows</a>;
-                        <div>
-                            <strong>Note:</strong> make sure to select the <code>MinGW 4.4</code> package (under the <code>Qt SDK|Miscellaneous</code> category).
-                        </div>
                     </li>
                     <li>
                         Linux <a href="http://qt.nokia.com/downloads/sdk-linux-x11-32bit-cpp">32-bit</a>/<a href="http://qt.nokia.com/downloads/sdk-linux-x11-64bit-cpp">64-bit</a>; and
@@ -81,7 +78,7 @@
         </p>
 
         <ul>
-            <li>Windows: <code>C:\Program Files (x86)\CMake 2.8\bin</code> (or <code>C:\Program Files\CMake 2.8\bin</code> if you are running a 32-bit version of Windows), <code>C:\QtSDK\mingw\bin</code> and <code>C:\QtSDK\Desktop\Qt\4.8.0\mingw\bin</code>;</li>
+            <li>Windows: <code>C:\Program Files (x86)\CMake 2.8\bin</code> (or <code>C:\Program Files\CMake 2.8\bin</code> if you are running a 32-bit version of Windows) and <code>C:\QtSDK\Desktop\Qt\4.8.0\msvc2010\bin</code>;</li>
             <li>Linux: <code>/opt/QtSDK/Desktop/Qt/4.8.0/gcc/bin</code> (in <code>/etc/environment</code> on Ubuntu); and</li>
             <li>Mac OS X: <code>/Developer/QtSDK/Desktop/Qt/4.8.0/gcc/bin</code> (in <code>/etc/profile</code>).</li>
         </ul>

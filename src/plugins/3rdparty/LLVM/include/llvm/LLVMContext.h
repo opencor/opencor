@@ -14,6 +14,9 @@
 
 #ifndef LLVM_LLVMCONTEXT_H
 #define LLVM_LLVMCONTEXT_H
+//---OPENCOR---
+#include "llvmglobal.h"
+//---OPENCOR---
 
 namespace llvm {
 
@@ -101,7 +104,12 @@ private:
 
 /// getGlobalContext - Returns a global context.  This is for LLVM clients that
 /// only care about operating on a single thread.
+/*---OPENCOR---
 extern LLVMContext &getGlobalContext();
+*/
+//---OPENCOR--- BEGIN
+extern LLVMContext LLVM_EXPORT &getGlobalContext();
+//---OPENCOR--- END
 
 }
 

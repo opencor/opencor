@@ -31,15 +31,18 @@ ADD_PLUGIN(RawCellMLView
         CellMLSupport
         Computer
         Core
-        LLVM
+        ${LLVM_PLUGIN}
         QScintilla
         QScintillaSupport
         QtMmlWidget
         Viewer
+    OPENCOR_BINARY_DEPENDENCIES
+        ${LLVM_BINARY_PLUGIN}
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
+        QtXml
     EXTERNAL_DEPENDENCIES
         ${CELLML_API_EXTERNAL_DEPENDENCIES}
-        ${LLVM_EXTERNAL_DEPENDENCIES}
 )

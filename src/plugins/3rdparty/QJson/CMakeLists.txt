@@ -3,6 +3,7 @@ PROJECT(QJsonPlugin)
 # Add the plugin
 
 ADD_PLUGIN(QJson
+    THIRD_PARTY
     SOURCES
         ../../plugininfo.cpp
 

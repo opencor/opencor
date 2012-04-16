@@ -18,4 +18,5 @@ ADD_PLUGIN(QScintillaSupport
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
 )

@@ -18,12 +18,12 @@ PLUGININFO_FUNC ComputerPluginInfo()
     descriptions.insert("en", "A plugin to support code compilation");
     descriptions.insert("fr", "Une extension pour supporter la compilation de code");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::General,
-                      PluginInfo::Miscellaneous,
-                      false,
-                      QStringList() << "LLVM",
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::General,
+                          PluginInfo::Miscellaneous,
+                          false,
+                          QStringList() << "LLVM",
+                          descriptions);
 }
 
 //==============================================================================

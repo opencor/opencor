@@ -18,12 +18,12 @@ PLUGININFO_FUNC SUNDIALSPluginInfo()
     descriptions.insert("en", "A plugin to use CVODE and IDA from the <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a> library");
     descriptions.insert("fr", "Une extension pour utiliser CVODE et IDA de la librairie <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a>");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::General,
-                      PluginInfo::ThirdParty,
-                      false,
-                      QStringList(),
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::General,
+                          PluginInfo::ThirdParty,
+                          false,
+                          QStringList(),
+                          descriptions);
 }
 
 //==============================================================================

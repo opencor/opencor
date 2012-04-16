@@ -3,6 +3,7 @@ PROJECT(QwtPlugin)
 # Add the plugin
 
 ADD_PLUGIN(Qwt
+    THIRD_PARTY
     SOURCES
         ../../plugininfo.cpp
 

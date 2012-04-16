@@ -18,12 +18,12 @@ PLUGININFO_FUNC CoreSolverPluginInfo()
     descriptions.insert("en", "The core solver plugin for OpenCOR");
     descriptions.insert("fr", "L'extension de solveur de base pour OpenCOR");
 
-    return PluginInfo(PluginInfo::V001,
-                      PluginInfo::General,
-                      PluginInfo::Simulation,
-                      false,
-                      QStringList(),
-                      descriptions);
+    return new PluginInfo(PluginInfo::V001,
+                          PluginInfo::General,
+                          PluginInfo::Simulation,
+                          false,
+                          QStringList(),
+                          descriptions);
 }
 
 //==============================================================================
