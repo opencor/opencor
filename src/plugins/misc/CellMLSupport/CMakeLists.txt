@@ -40,6 +40,7 @@ ADD_PLUGIN(CellMLSupport
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
     EXTERNAL_DEPENDENCIES
         ${CELLML_API_EXTERNAL_DEPENDENCIES}
 )

@@ -41,6 +41,8 @@ ADD_PLUGIN(RawCellMLView
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
+        QtXml
     EXTERNAL_DEPENDENCIES
         ${CELLML_API_EXTERNAL_DEPENDENCIES}
 )

@@ -49,6 +49,7 @@ ADD_PLUGIN(SingleCellSimulationView
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
         QtSvg
         QtXml
     EXTERNAL_DEPENDENCIES

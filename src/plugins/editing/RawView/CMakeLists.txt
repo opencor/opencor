@@ -26,4 +26,5 @@ ADD_PLUGIN(RawView
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
 )

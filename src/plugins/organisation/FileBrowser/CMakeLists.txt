@@ -28,4 +28,5 @@ ADD_PLUGIN(FileBrowser
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
 )
