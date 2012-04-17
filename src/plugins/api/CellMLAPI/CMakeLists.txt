@@ -46,6 +46,7 @@ ADD_PLUGIN(CellMLAPI
     HEADERS_MOC
         src/cellmlapiplugin.h
     INCLUDE_DIRS
+        include
         src
     QT_DEPENDENCIES
         QtCore
