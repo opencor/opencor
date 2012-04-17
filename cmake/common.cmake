@@ -117,6 +117,16 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    IF(WIN32)
+        IF(DEBUG_MODE)
+            SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR}/debug)
+        ELSE()
+            SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR}/debug)
+        ENDIF()
+    ELSE()
+        SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR})
+    ENDIF()
+
     # Set the RPATH information on Linux
     # Note: this prevent us from having to use the uncool LD_LIBRARY_PATH...
 
@@ -658,7 +668,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     # Location of our plugins
 
-    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_DIR})
+    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR})
 
     # Create the plugins directory if it doesn't already exist and move the
     # plugin to it
