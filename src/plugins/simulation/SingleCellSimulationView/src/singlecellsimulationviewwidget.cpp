@@ -238,6 +238,15 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 
     QList<int> sizes = mVerticalSplitter->sizes();
 
+    if (!sizes.count() || !sizes.first())
+        // Either we have no vertical splitter sizes (how could this ever be the
+        // case?!) or our first vertical splitter size has a value of zero
+        // (which would mean that we previously left OpenCOR without going into
+        // Simulation mode and the vertical splitter sizes are not meaningful),
+        // so...
+
+        return;
+
     pSettings->setValue(SettingsVerticalSplitterSizesCount, sizes.count());
 
     for (int i = 0, iMax = sizes.count(); i < iMax; ++i)
