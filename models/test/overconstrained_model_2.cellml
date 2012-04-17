@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="overconstrained_model_2" cmeta:id="overconstrained_model_2" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+   <component name="main">
+      <units name="per_second">
+         <unit units="second" exponent="-1"/>
+      </units>
+      <variable name="time" units="second"/>
+      <variable name="x" units="dimensionless"/>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+         <apply>
+            <eq/>
+            <apply>
+               <diff/>
+               <bvar>
+                  <ci>time</ci>
+               </bvar>
+               <ci>x</ci>
+            </apply>
+            <cn cellml:units="per_second">1</cn>
+         </apply>
+         <apply>
+            <eq/>
+            <ci>x</ci>
+            <cn cellml:units="dimensionless">1</cn>
+         </apply>
+      </math>
+   </component>
+</model>
