@@ -444,11 +444,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         break;
     case Cortessa2006:
-        mVoiEnd         = 5000;      // dimensionless
-        mVoiStep        =    0.01;   // dimensionless
-        mVoiOutput      =    1;      // dimensionless
-        mVoiMaximumStep =    0.5;    // dimensionless
-        mStatesIndex    =    1;
+        mVoiEnd         = 300;      // dimensionless
+        mVoiStep        =   0.01;   // dimensionless
+        mVoiOutput      =   1;      // dimensionless
+        mVoiMaximumStep =   0.5;    // dimensionless
+        mStatesIndex    =   1;
 
         break;
     case Dae:

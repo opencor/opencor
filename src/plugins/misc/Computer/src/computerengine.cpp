@@ -297,15 +297,15 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
         }
 
         // No function with the same name already exists, so we can try to
-        // compile the function
+        // compile it
 
         llvm::Function *res = compileFunction(function);
 
         delete function;
 
         return res;
-        // Note: it's fine if the compilation failed, since compileFunction()
-        //       will then return 0...
+        // Note: it's OK if the compilation failed, since compileFunction() will
+        //       then return 0...
     } else {
         // The function wasn't properly parsed, so...
 
@@ -560,7 +560,9 @@ int ComputerEngine::indirectParameterAssemblyCodeIndex(ComputerEngineData &pData
     // Key used to retrieve existing assembly code indexes for the independent
     // parameter
 
-    QString key = pIndirectParameter->parameterName()+"|"+pIndirectParameter->parameterIndex();
+    QString key =  pIndirectParameter->parameterName()
+                  +"|"
+                  +QString::number(pIndirectParameter->parameterIndex());
 
     // Get the assembly code index for the direct pointer to the indirect
     // parameter
