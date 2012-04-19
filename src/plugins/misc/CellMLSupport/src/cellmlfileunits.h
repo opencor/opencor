@@ -1,15 +1,13 @@
 //==============================================================================
-// CellML file import
+// CellML file units
 //==============================================================================
 
-#ifndef CELLMLFILEIMPORT_H
-#define CELLMLFILEIMPORT_H
+#ifndef CELLMLFILEUNITS_H
+#define CELLMLFILEUNITS_H
 
 //==============================================================================
 
-#include "cellmlfileelement.h"
-#include "cellmlfileimportunits.h"
-#include "cellmlfileimportcomponent.h"
+#include "cellmlfilenamedelement.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -23,32 +21,11 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileImport : public CellmlFileElement
+class CELLMLSUPPORT_EXPORT CellmlFileUnits : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileImport(const QString &pCmetaId, const QString &pUri);
-    ~CellmlFileImport();
-
-    void addUnits(const QString &pCmetaId, const QString &pName,
-                  const QString &pReferenceName);
-    void addComponent(const QString &pCmetaId, const QString &pName,
-                      const QString &pReferenceName);
-
-    QString uri() const;
-
-    CellmlFileImportUnitsList unitsList() const;
-    CellmlFileImportComponentList componentList() const;
-
-private:
-    QString mUri;
-
-    CellmlFileImportUnitsList mUnitsList;
-    CellmlFileImportComponentList mComponentList;
+    explicit CellmlFileUnits(const QString &pCmetaId, const QString &pName);
 };
-
-//==============================================================================
-
-typedef QList<CellmlFileImport *> CellmlFileImports;
 
 //==============================================================================
 

@@ -1,19 +1,18 @@
 //==============================================================================
-// CellML file import
+// CellML file import component
 //==============================================================================
 
-#ifndef CELLMLFILEIMPORT_H
-#define CELLMLFILEIMPORT_H
+#ifndef CELLMLFILEIMPORTCOMPONENT_H
+#define CELLMLFILEIMPORTCOMPONENT_H
 
 //==============================================================================
 
-#include "cellmlfileelement.h"
-#include "cellmlfileimportunits.h"
-#include "cellmlfileimportcomponent.h"
+#include "cellmlfilecomponent.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
 
+#include <QList>
 #include <QString>
 
 //==============================================================================
@@ -23,32 +22,22 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileImport : public CellmlFileElement
+class CELLMLSUPPORT_EXPORT CellmlFileImportComponent : public CellmlFileComponent
 {
 public:
-    explicit CellmlFileImport(const QString &pCmetaId, const QString &pUri);
-    ~CellmlFileImport();
+    explicit CellmlFileImportComponent(const QString &pCmetaId,
+                                       const QString &pName,
+                                       const QString &pReferenceName);
 
-    void addUnits(const QString &pCmetaId, const QString &pName,
-                  const QString &pReferenceName);
-    void addComponent(const QString &pCmetaId, const QString &pName,
-                      const QString &pReferenceName);
-
-    QString uri() const;
-
-    CellmlFileImportUnitsList unitsList() const;
-    CellmlFileImportComponentList componentList() const;
+    QString referenceName() const;
 
 private:
-    QString mUri;
-
-    CellmlFileImportUnitsList mUnitsList;
-    CellmlFileImportComponentList mComponentList;
+    QString mReferenceName;
 };
 
 //==============================================================================
 
-typedef QList<CellmlFileImport *> CellmlFileImports;
+typedef QList<CellmlFileImportComponent *> CellmlFileImportComponentList;
 
 //==============================================================================
 

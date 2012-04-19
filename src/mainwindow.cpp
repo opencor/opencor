@@ -722,7 +722,7 @@ void MainWindow::reorderViewMenu(QMenu *pViewMenu)
 
     // Retrieve the title of the menu items and keep track of their actions
 
-    foreach(QAction *menuItemAction, pViewMenu->actions()) {
+    foreach (QAction *menuItemAction, pViewMenu->actions()) {
         // Remove any '&' present in the menu item title, as well as replace
         // accentuated characters by non-accentuated ones, making the sorting
         // sensible
@@ -749,7 +749,7 @@ void MainWindow::reorderViewMenu(QMenu *pViewMenu)
     //       of the menu, so since we do it in the right order, we end up with
     //       the menu items being properly ordered...
 
-    foreach(const QString menuItemTitle, menuItemTitles)
+    foreach (const QString menuItemTitle, menuItemTitles)
         pViewMenu->addAction(menuItemActions.value(menuItemTitle));
 }
 

@@ -65,6 +65,9 @@ CellmlFile::~CellmlFile()
     // Note: mCellmlApiModel gets automatically deleted, if needed, so...
 
     delete mModel;
+
+    clearImports();
+
     delete mRuntime;
 }
 
@@ -438,7 +441,8 @@ void CellmlFile::retrieveImports()
         iface::cellml_api::ImportUnits *importUnits;
 
         while ((importUnits = importUnitsIterator->nextImportUnits()))
-            cellmlFileImport->addUnits(QString::fromStdWString(importUnits->name()),
+            cellmlFileImport->addUnits(QString::fromStdWString(importUnits->cmetaId()),
+                                       QString::fromStdWString(importUnits->name()),
                                        QString::fromStdWString(importUnits->unitsRef()));
 
         // ... and of any component imports
@@ -447,7 +451,8 @@ void CellmlFile::retrieveImports()
         iface::cellml_api::ImportComponent *importComponent;
 
         while ((importComponent = importComponentIterator->nextImportComponent()))
-            cellmlFileImport->addComponent(QString::fromStdWString(importComponent->name()),
+            cellmlFileImport->addComponent(QString::fromStdWString(importComponent->cmetaId()),
+                                           QString::fromStdWString(importComponent->name()),
                                            QString::fromStdWString(importComponent->componentRef()));
     }
 }
@@ -458,7 +463,7 @@ void CellmlFile::clearImports()
 {
     // Delete all the imports and clear our list of  imports
 
-    foreach (CellMLSupport::CellmlFileImport *import, mImports)
+    foreach (CellmlFileImport *import, mImports)
         delete import;
 
     mImports.clear();

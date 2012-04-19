@@ -215,7 +215,7 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
             // Retrieve the list of models itself
 
-            foreach(const QVariant &modelVariant, res["values"].toList()) {
+            foreach (const QVariant &modelVariant, res["values"].toList()) {
                 QVariantList modelDetailsVariant = modelVariant.toList();
 
                 mModelNames << modelDetailsVariant.at(0).toString();

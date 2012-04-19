@@ -1,15 +1,13 @@
 //==============================================================================
-// CellML file import
+// CellML file import units
 //==============================================================================
 
-#ifndef CELLMLFILEIMPORT_H
-#define CELLMLFILEIMPORT_H
+#ifndef CELLMLFILEIMPORTUNITS_H
+#define CELLMLFILEIMPORTUNITS_H
 
 //==============================================================================
 
-#include "cellmlfileelement.h"
-#include "cellmlfileimportunits.h"
-#include "cellmlfileimportcomponent.h"
+#include "cellmlfileunits.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -23,32 +21,22 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileImport : public CellmlFileElement
+class CELLMLSUPPORT_EXPORT CellmlFileImportUnits : public CellmlFileUnits
 {
 public:
-    explicit CellmlFileImport(const QString &pCmetaId, const QString &pUri);
-    ~CellmlFileImport();
+    explicit CellmlFileImportUnits(const QString &pCmetaId,
+                                   const QString &pName,
+                                   const QString &pReferenceName);
 
-    void addUnits(const QString &pCmetaId, const QString &pName,
-                  const QString &pReferenceName);
-    void addComponent(const QString &pCmetaId, const QString &pName,
-                      const QString &pReferenceName);
-
-    QString uri() const;
-
-    CellmlFileImportUnitsList unitsList() const;
-    CellmlFileImportComponentList componentList() const;
+    QString referenceName() const;
 
 private:
-    QString mUri;
-
-    CellmlFileImportUnitsList mUnitsList;
-    CellmlFileImportComponentList mComponentList;
+    QString mReferenceName;
 };
 
 //==============================================================================
 
-typedef QList<CellmlFileImport *> CellmlFileImports;
+typedef QList<CellmlFileImportUnits *> CellmlFileImportUnitsList;
 
 //==============================================================================
 

@@ -130,23 +130,13 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
             mDebugOutput->append(QString("        %1 [%2]:").arg(cellmlFileImport->uri(),
                                                                  cellmlFileImport->cmetaId()));
 
-            QMap<QString, QString> units = cellmlFileImport->units();
-            QMap<QString, QString>::const_iterator iter = units.constBegin();
+            foreach (CellMLSupport::CellmlFileImportUnits *units,
+                     cellmlFileImport->unitsList())
+                mDebugOutput->append(QString("            Units: %1 ---> %2 [%3]").arg(units->name(), units->referenceName(), units->cmetaId()));
 
-            while (iter != units.constEnd()) {
-                mDebugOutput->append(QString("            Units: %1 ---> %2").arg(iter.key(), iter.value()));
-
-                ++iter;
-            }
-
-            QMap<QString, QString> components = cellmlFileImport->components();
-            iter = components.constBegin();
-
-            while (iter != components.constEnd()) {
-                mDebugOutput->append(QString("            Component: %1 ---> %2").arg(iter.key(), iter.value()));
-
-                ++iter;
-            }
+            foreach (CellMLSupport::CellmlFileImportComponent *component,
+                     cellmlFileImport->componentList())
+                mDebugOutput->append(QString("            Component: %1 ---> %2 [%3]").arg(component->name(), component->referenceName(), component->cmetaId()));
         }
     }
 }
