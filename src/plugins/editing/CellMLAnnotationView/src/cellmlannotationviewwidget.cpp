@@ -115,7 +115,8 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Output the name of the CellML model
 
-    mDebugOutput->append(QString("    [Information] Model name: %1").arg(cellmlFile->modelName()));
+    mDebugOutput->append(QString("    [Information] Model name: %1 [%2]").arg(cellmlFile->model()->name(),
+                                                                              cellmlFile->model()->cmetaId()));
 
     // Retrieve the model's imports
 

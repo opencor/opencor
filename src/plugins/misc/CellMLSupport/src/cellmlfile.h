@@ -9,6 +9,7 @@
 
 #include "cellmlfileimport.h"
 #include "cellmlfileissue.h"
+#include "cellmlfilemodel.h"
 #include "cellmlfileruntime.h"
 #include "cellmlsupportglobal.h"
 
@@ -47,14 +48,15 @@ public:
 
     CellmlFileRuntime * runtime();
 
-    QString modelName() const;
+    CellmlFileModel * model() const;
 
     CellmlFileImports imports() const;
 
 private:
     QString mFileName;
 
-    ObjRef<iface::cellml_api::Model> mModel;
+    ObjRef<iface::cellml_api::Model> mCellmlApiModel;
+    CellmlFileModel *mModel;
 
     bool mIsValid;
 

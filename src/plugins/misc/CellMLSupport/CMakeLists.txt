@@ -16,9 +16,12 @@ ADD_PLUGIN(CellMLSupport
         ../../plugininfo.cpp
 
         src/cellmlfile.cpp
+        src/cellmlfileelement.cpp
         src/cellmlfileimport.cpp
         src/cellmlfileissue.cpp
         src/cellmlfilemanager.cpp
+        src/cellmlfilemodel.cpp
+        src/cellmlfilenamedelement.cpp
         src/cellmlfileruntime.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC

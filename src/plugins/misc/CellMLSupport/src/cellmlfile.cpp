@@ -44,6 +44,7 @@ namespace CellMLSupport {
 
 CellmlFile::CellmlFile(const QString &pFileName) :
     mFileName(pFileName),
+    mCellmlApiModel(0),
     mModel(0)
 {
     // Instantiate our runtime object
@@ -60,8 +61,9 @@ CellmlFile::CellmlFile(const QString &pFileName) :
 CellmlFile::~CellmlFile()
 {
     // Delete some internal objects
-    // Note: mModel gets automatically deleted, if needed, so...
+    // Note: mCellmlApiModel gets automatically deleted, if needed, so...
 
+    delete mModel;
     delete mRuntime;
 }
 
@@ -70,10 +72,12 @@ CellmlFile::~CellmlFile()
 void CellmlFile::reset()
 {
     // Reset all of the file's properties
-    // Note: setting mModel to zero will automatically delete the current
-    //       instance, if any
+    // Note: setting mCellmlApiModel to zero will automatically delete the
+    //       current instance, if any
 
-    mModel = 0;
+    mCellmlApiModel = 0;
+
+    delete mModel;
 
     mIssues.clear();
 
@@ -113,7 +117,7 @@ QTime time;
 
 time.start();
 
-        mModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
+        mCellmlApiModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
 
 qDebug(" - CellML Loading time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
     } catch (iface::cellml_api::CellMLException &) {
@@ -128,13 +132,13 @@ qDebug(" - CellML Loading time: %s s", qPrintable(QString::number(0.001*time.ela
     // In the case of a non CellML 1.0 model, we want all imports to be fully
     // instantiated
 
-    if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
+    if (QString::fromStdWString(mCellmlApiModel->cellmlVersion()).compare(Cellml_1_0))
         try {
 QTime time;
 
 time.start();
 
-            mModel->fullyInstantiateImports();
+            mCellmlApiModel->fullyInstantiateImports();
 
 qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
         } catch (...) {
@@ -146,6 +150,11 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
 
             return false;
         }
+
+    // Extract various things from mCellmlApiModel
+
+    mModel = new CellmlFileModel(QString::fromStdWString(mCellmlApiModel->cmetaId()),
+                                 QString::fromStdWString(mCellmlApiModel->name()));
 
     // All done, so...
 
@@ -198,7 +207,7 @@ QTime time;
 time.start();
 
         ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
-        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mModel);
+        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mCellmlApiModel);
 
 qDebug(" - CellML validation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 
@@ -371,7 +380,7 @@ CellmlFileRuntime * CellmlFile::runtime()
     if (load()) {
         // The file is loaded, so return an updated version of its runtime
 
-        mRuntime->update(mModel);
+        mRuntime->update(mCellmlApiModel);
 
         mRuntimeUpdateNeeded = !mRuntime->isValid();
 
@@ -385,11 +394,11 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 //==============================================================================
 
-QString CellmlFile::modelName() const
+CellmlFileModel * CellmlFile::model() const
 {
-    // Return the model's name
+    // Return the CellML file's model
 
-    return QString::fromStdWString(mModel->name());
+    return mModel;
 }
 
 //==============================================================================
@@ -400,7 +409,7 @@ CellmlFileImports CellmlFile::imports() const
 
     // Iterate through the imports and add them to our list
 
-    iface::cellml_api::CellMLImportIterator *cellmlFileImportsIterator = mModel->imports()->iterateImports();
+    iface::cellml_api::CellMLImportIterator *cellmlFileImportsIterator = mCellmlApiModel->imports()->iterateImports();
     iface::cellml_api::CellMLImport *cellmlImport;
 
     while ((cellmlImport = cellmlFileImportsIterator->nextImport())) {
