@@ -127,7 +127,8 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
         foreach (CellMLSupport::CellmlFileImport *cellmlFileImport,
                  cellmlFile->imports()) {
-            mDebugOutput->append(QString("        %1:").arg(cellmlFileImport->uri()));
+            mDebugOutput->append(QString("        %1 [%2]:").arg(cellmlFileImport->uri(),
+                                                                 cellmlFileImport->cmetaId()));
 
             QMap<QString, QString> units = cellmlFileImport->units();
             QMap<QString, QString>::const_iterator iter = units.constBegin();

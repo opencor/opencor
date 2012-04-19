@@ -56,7 +56,9 @@ private:
     QString mFileName;
 
     ObjRef<iface::cellml_api::Model> mCellmlApiModel;
+
     CellmlFileModel *mModel;
+    CellmlFileImports mImports;
 
     bool mIsValid;
 
@@ -69,6 +71,9 @@ private:
     bool mRuntimeUpdateNeeded;
 
     void reset();
+
+    void retrieveImports();
+    void clearImports();
 };
 
 //==============================================================================

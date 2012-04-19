@@ -45,7 +45,8 @@ namespace CellMLSupport {
 CellmlFile::CellmlFile(const QString &pFileName) :
     mFileName(pFileName),
     mCellmlApiModel(0),
-    mModel(0)
+    mModel(0),
+    mImports(CellmlFileImports())
 {
     // Instantiate our runtime object
 
@@ -78,6 +79,8 @@ void CellmlFile::reset()
     mCellmlApiModel = 0;
 
     delete mModel;
+
+    clearImports();
 
     mIssues.clear();
 
@@ -151,10 +154,12 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
             return false;
         }
 
-    // Extract various things from mCellmlApiModel
+    // Extract/retrieve various things from mCellmlApiModel
 
     mModel = new CellmlFileModel(QString::fromStdWString(mCellmlApiModel->cmetaId()),
                                  QString::fromStdWString(mCellmlApiModel->name()));
+
+    retrieveImports();
 
     // All done, so...
 
@@ -405,8 +410,15 @@ CellmlFileModel * CellmlFile::model() const
 
 CellmlFileImports CellmlFile::imports() const
 {
-    CellmlFileImports res = CellmlFileImports();
+    // Return the CellML file's imports
 
+    return mImports;
+}
+
+//==============================================================================
+
+void CellmlFile::retrieveImports()
+{
     // Iterate through the imports and add them to our list
 
     iface::cellml_api::CellMLImportIterator *cellmlFileImportsIterator = mCellmlApiModel->imports()->iterateImports();
@@ -415,9 +427,10 @@ CellmlFileImports CellmlFile::imports() const
     while ((cellmlImport = cellmlFileImportsIterator->nextImport())) {
         // We have an import, so add it to our list
 
-        CellmlFileImport *cellmlFileImport = new CellmlFileImport(QString::fromStdWString(cellmlImport->xlinkHref()->asText()));
+        CellmlFileImport *cellmlFileImport = new CellmlFileImport(QString::fromStdWString(cellmlImport->cmetaId()),
+                                                                  QString::fromStdWString(cellmlImport->xlinkHref()->asText()));
 
-        res.append(cellmlFileImport);
+        mImports.append(cellmlFileImport);
 
         // Keep track of any unit imports...
 
@@ -437,10 +450,18 @@ CellmlFileImports CellmlFile::imports() const
             cellmlFileImport->addComponent(QString::fromStdWString(importComponent->name()),
                                            QString::fromStdWString(importComponent->componentRef()));
     }
+}
 
-    // Return our list of imports for the model
+//==============================================================================
 
-    return res;
+void CellmlFile::clearImports()
+{
+    // Delete all the imports and clear our list of  imports
+
+    foreach (CellMLSupport::CellmlFileImport *import, mImports)
+        delete import;
+
+    mImports.clear();
 }
 
 //==============================================================================

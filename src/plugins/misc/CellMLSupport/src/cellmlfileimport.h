@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfileelement.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -22,10 +23,10 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileImport
+class CELLMLSUPPORT_EXPORT CellmlFileImport : public CellmlFileElement
 {
 public:
-    explicit CellmlFileImport(const QString &pUri);
+    explicit CellmlFileImport(const QString &pCmetaId, const QString &pUri);
 
     void addUnits(const QString &pName, const QString &pReferenceName);
     void addComponent(const QString &pName, const QString &pReferenceName);

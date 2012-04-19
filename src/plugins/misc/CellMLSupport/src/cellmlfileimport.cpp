@@ -11,7 +11,8 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileImport::CellmlFileImport(const QString &pUri) :
+CellmlFileImport::CellmlFileImport(const QString &pCmetaId, const QString &pUri) :
+    CellmlFileElement(pCmetaId),
     mUri(pUri)
 {
 }
