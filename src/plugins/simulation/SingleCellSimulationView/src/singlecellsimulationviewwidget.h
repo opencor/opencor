@@ -85,7 +85,7 @@ private:
         Noble1998,
         Zhang2000,
         Mitchell2003,
-        Cortessa2006,
+        Cortassa2006,
         Dae
     } mModel;
 
