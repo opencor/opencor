@@ -1,9 +1,9 @@
 //==============================================================================
-// CellML file units
+// CellML file unit
 //==============================================================================
 
-#ifndef CELLMLFILEUNITS_H
-#define CELLMLFILEUNITS_H
+#ifndef CELLMLFILEUNIT_H
+#define CELLMLFILEUNIT_H
 
 //==============================================================================
 
@@ -21,10 +21,10 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileUnits : public CellmlFileNamedElement
+class CELLMLSUPPORT_EXPORT CellmlFileUnit : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileUnits(const QString &pCmetaId, const QString &pName);
+    explicit CellmlFileUnit(const QString &pCmetaId, const QString &pName);
 };
 
 //==============================================================================

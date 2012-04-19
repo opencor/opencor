@@ -8,7 +8,7 @@
 //==============================================================================
 
 #include "cellmlfileelement.h"
-#include "cellmlfileimportunits.h"
+#include "cellmlfileimportunit.h"
 #include "cellmlfileimportcomponent.h"
 #include "cellmlsupportglobal.h"
 
@@ -36,14 +36,14 @@ public:
 
     QString uri() const;
 
-    CellmlFileImportUnitsList unitsList() const;
-    CellmlFileImportComponentList componentList() const;
+    CellmlFileImportUnits units() const;
+    CellmlFileImportComponents components() const;
 
 private:
     QString mUri;
 
-    CellmlFileImportUnitsList mUnitsList;
-    CellmlFileImportComponentList mComponentList;
+    CellmlFileImportUnits mUnits;
+    CellmlFileImportComponents mComponents;
 };
 
 //==============================================================================

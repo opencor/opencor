@@ -1,13 +1,13 @@
 //==============================================================================
-// CellML file import units
+// CellML file import unit
 //==============================================================================
 
-#ifndef CELLMLFILEIMPORTUNITS_H
-#define CELLMLFILEIMPORTUNITS_H
+#ifndef CELLMLFILEIMPORTUNIT_H
+#define CELLMLFILEIMPORTUNIT_H
 
 //==============================================================================
 
-#include "cellmlfileunits.h"
+#include "cellmlfileunit.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -21,12 +21,12 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileImportUnits : public CellmlFileUnits
+class CELLMLSUPPORT_EXPORT CellmlFileImportUnit : public CellmlFileUnit
 {
 public:
-    explicit CellmlFileImportUnits(const QString &pCmetaId,
-                                   const QString &pName,
-                                   const QString &pReferenceName);
+    explicit CellmlFileImportUnit(const QString &pCmetaId,
+                                  const QString &pName,
+                                  const QString &pReferenceName);
 
     QString referenceName() const;
 
@@ -36,7 +36,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlFileImportUnits *> CellmlFileImportUnitsList;
+typedef QList<CellmlFileImportUnit *> CellmlFileImportUnits;
 
 //==============================================================================
 

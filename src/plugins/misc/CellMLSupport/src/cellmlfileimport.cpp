@@ -14,8 +14,8 @@ namespace CellMLSupport {
 CellmlFileImport::CellmlFileImport(const QString &pCmetaId, const QString &pUri) :
     CellmlFileElement(pCmetaId),
     mUri(pUri),
-    mUnitsList(CellmlFileImportUnitsList()),
-    mComponentList(CellmlFileImportComponentList())
+    mUnits(CellmlFileImportUnits()),
+    mComponents(CellmlFileImportComponents())
 {
 }
 
@@ -25,10 +25,10 @@ CellmlFileImport::~CellmlFileImport()
 {
     // Delete some internal objects
 
-    foreach (CellmlFileImportUnits *units, mUnitsList)
-        delete units;
+    foreach (CellmlFileImportUnit *unit, mUnits)
+        delete unit;
 
-    foreach (CellmlFileImportComponent *component, mComponentList)
+    foreach (CellmlFileImportComponent *component, mComponents)
         delete component;
 }
 
@@ -39,8 +39,7 @@ void CellmlFileImport::addUnits(const QString &pCmetaId, const QString &pName,
 {
     // Add the units import to our list
 
-    mUnitsList.append(new CellmlFileImportUnits(pCmetaId, pName,
-                                                pReferenceName));
+    mUnits.append(new CellmlFileImportUnit(pCmetaId, pName, pReferenceName));
 }
 
 //==============================================================================
@@ -51,8 +50,8 @@ void CellmlFileImport::addComponent(const QString &pCmetaId,
 {
     // Add the component import to our list
 
-    mComponentList.append(new CellmlFileImportComponent(pCmetaId, pName,
-                                                        pReferenceName));
+    mComponents.append(new CellmlFileImportComponent(pCmetaId, pName,
+                                                     pReferenceName));
 }
 
 //==============================================================================
@@ -66,20 +65,20 @@ QString CellmlFileImport::uri() const
 
 //==============================================================================
 
-CellmlFileImportUnitsList CellmlFileImport::unitsList() const
+CellmlFileImportUnits CellmlFileImport::units() const
 {
-    // Return's the import's list of units
+    // Return's the import's units
 
-    return mUnitsList;
+    return mUnits;
 }
 
 //==============================================================================
 
-CellmlFileImportComponentList CellmlFileImport::componentList() const
+CellmlFileImportComponents CellmlFileImport::components() const
 {
-    // Return's the import's list of components
+    // Return's the import's components
 
-    return mComponentList;
+    return mComponents;
 }
 
 //==============================================================================

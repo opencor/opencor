@@ -1,8 +1,8 @@
 //==============================================================================
-// CellML file import units
+// CellML file unit
 //==============================================================================
 
-#include "cellmlfileimportunits.h"
+#include "cellmlfileunit.h"
 
 //==============================================================================
 
@@ -11,21 +11,10 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileImportUnits::CellmlFileImportUnits(const QString &pCmetaId,
-                                             const QString &pName,
-                                             const QString &pReferenceName) :
-    CellmlFileUnits(pCmetaId, pName),
-    mReferenceName(pReferenceName)
+CellmlFileUnit::CellmlFileUnit(const QString &pCmetaId, 
+                               const QString &pName) :
+    CellmlFileNamedElement(pCmetaId, pName)
 {
-}
-
-//==============================================================================
-
-QString CellmlFileImportUnits::referenceName() const
-{
-    // Return the import units' reference name
-
-    return mReferenceName;
 }
 
 //==============================================================================

@@ -37,7 +37,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlFileImportComponent *> CellmlFileImportComponentList;
+typedef QList<CellmlFileImportComponent *> CellmlFileImportComponents;
 
 //==============================================================================
 
