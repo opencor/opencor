@@ -29,7 +29,6 @@
 
 //==============================================================================
 
-#include "IfaceCellML_APISPEC.hxx"
 #include "IfaceVACSS.hxx"
 
 #include "CellMLBootstrap.hpp"
@@ -162,11 +161,27 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
 
     // Extract/retrieve various things from mCellmlApiModel
 
-    mModel = new CellmlFileModel(QString::fromStdWString(mCellmlApiModel->cmetaId()),
-                                 QString::fromStdWString(mCellmlApiModel->name()));
+    mModel = new CellmlFileModel(mCellmlApiModel);
 
-    retrieveImports();
-    retrieveUnits();
+    // Iterate through the imports and add them to our list
+
+    iface::cellml_api::CellMLImportIterator *cellmlFileImportsIterator = mCellmlApiModel->imports()->iterateImports();
+    iface::cellml_api::CellMLImport *cellmlImport;
+
+    while ((cellmlImport = cellmlFileImportsIterator->nextImport()))
+        // We have an import, so add it to our list
+
+        mImports.append(new CellmlFileImport(cellmlImport));
+
+    // Iterate through the units and add them to our list
+
+    iface::cellml_api::UnitsIterator *unitsIterator = mCellmlApiModel->localUnits()->iterateUnits();
+    iface::cellml_api::Units *units;
+
+    while ((units = unitsIterator->nextUnits()))
+        // We have a unit, so add it to our list
+
+        mUnits.append(new CellmlFileUnit(units));
 
     // All done, so...
 
@@ -433,45 +448,6 @@ CellmlFileUnits CellmlFile::units() const
 
 //==============================================================================
 
-void CellmlFile::retrieveImports()
-{
-    // Iterate through the imports and add them to our list
-
-    iface::cellml_api::CellMLImportIterator *cellmlFileImportsIterator = mCellmlApiModel->imports()->iterateImports();
-    iface::cellml_api::CellMLImport *cellmlImport;
-
-    while ((cellmlImport = cellmlFileImportsIterator->nextImport())) {
-        // We have an import, so add it to our list
-
-        CellmlFileImport *cellmlFileImport = new CellmlFileImport(QString::fromStdWString(cellmlImport->cmetaId()),
-                                                                  QString::fromStdWString(cellmlImport->xlinkHref()->asText()));
-
-        mImports.append(cellmlFileImport);
-
-        // Keep track of any unit imports...
-
-        iface::cellml_api::ImportUnitsIterator *importUnitsIterator = cellmlImport->units()->iterateImportUnits();
-        iface::cellml_api::ImportUnits *importUnits;
-
-        while ((importUnits = importUnitsIterator->nextImportUnits()))
-            cellmlFileImport->addUnits(QString::fromStdWString(importUnits->cmetaId()),
-                                       QString::fromStdWString(importUnits->name()),
-                                       QString::fromStdWString(importUnits->unitsRef()));
-
-        // ... and of any component imports
-
-        iface::cellml_api::ImportComponentIterator *importComponentIterator = cellmlImport->components()->iterateImportComponents();
-        iface::cellml_api::ImportComponent *importComponent;
-
-        while ((importComponent = importComponentIterator->nextImportComponent()))
-            cellmlFileImport->addComponent(QString::fromStdWString(importComponent->cmetaId()),
-                                           QString::fromStdWString(importComponent->name()),
-                                           QString::fromStdWString(importComponent->componentRef()));
-    }
-}
-
-//==============================================================================
-
 void CellmlFile::clearImports()
 {
     // Delete all the imports and clear our list
@@ -480,26 +456,6 @@ void CellmlFile::clearImports()
         delete import;
 
     mImports.clear();
-}
-
-//==============================================================================
-
-void CellmlFile::retrieveUnits()
-{
-    // Iterate through the units and add them to our list
-
-    iface::cellml_api::UnitsIterator *unitsIterator = mCellmlApiModel->localUnits()->iterateUnits();
-    iface::cellml_api::Units *units;
-
-    while ((units = unitsIterator->nextUnits())) {
-        // We have a unit, so add it to our list
-
-        CellmlFileUnit *cellmlFileUnit = new CellmlFileUnit(QString::fromStdWString(units->cmetaId()),
-                                                            QString::fromStdWString(units->name()),
-                                                            units->isBaseUnits());
-
-        mUnits.append(cellmlFileUnit);
-    }
 }
 
 //==============================================================================

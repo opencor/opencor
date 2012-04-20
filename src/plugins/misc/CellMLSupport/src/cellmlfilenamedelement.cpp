@@ -11,10 +11,33 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileNamedElement::CellmlFileNamedElement(const QString &pCmetaId,
-                                               const QString &pName) :
-    CellmlFileElement(pCmetaId),
-    mName(pName)
+CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::Model *pModel) :
+    CellmlFileElement(pModel),
+    mName(QString::fromStdWString(pModel->name()))
+{
+}
+
+//==============================================================================
+
+CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::ImportUnits *pImportUnits) :
+    CellmlFileElement(pImportUnits),
+    mName(QString::fromStdWString(pImportUnits->name()))
+{
+}
+
+//==============================================================================
+
+CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::ImportComponent *pImportComponent) :
+    CellmlFileElement(pImportComponent),
+    mName(QString::fromStdWString(pImportComponent->name()))
+{
+}
+
+//==============================================================================
+
+CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::Units *pUnits) :
+    CellmlFileElement(pUnits),
+    mName(QString::fromStdWString(pUnits->name()))
 {
 }
 

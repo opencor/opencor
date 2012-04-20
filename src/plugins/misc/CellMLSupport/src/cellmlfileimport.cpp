@@ -11,12 +11,27 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileImport::CellmlFileImport(const QString &pCmetaId, const QString &pUri) :
-    CellmlFileElement(pCmetaId),
-    mUri(pUri),
+CellmlFileImport::CellmlFileImport(iface::cellml_api::CellMLImport *pCellmlImport) :
+    CellmlFileElement(pCellmlImport),
+    mUri(QString::fromStdWString(pCellmlImport->xlinkHref()->asText())),
     mUnits(CellmlFileImportUnits()),
     mComponents(CellmlFileImportComponents())
 {
+    // Keep track of any unit imports...
+
+    iface::cellml_api::ImportUnitsIterator *importUnitsIterator = pCellmlImport->units()->iterateImportUnits();
+    iface::cellml_api::ImportUnits *importUnits;
+
+    while ((importUnits = importUnitsIterator->nextImportUnits()))
+        mUnits.append(new CellmlFileImportUnit(importUnits));
+
+    // ... and of any component imports
+
+    iface::cellml_api::ImportComponentIterator *importComponentIterator = pCellmlImport->components()->iterateImportComponents();
+    iface::cellml_api::ImportComponent *importComponent;
+
+    while ((importComponent = importComponentIterator->nextImportComponent()))
+        mComponents.append(new CellmlFileImportComponent(importComponent));
 }
 
 //==============================================================================
@@ -30,28 +45,6 @@ CellmlFileImport::~CellmlFileImport()
 
     foreach (CellmlFileImportComponent *component, mComponents)
         delete component;
-}
-
-//==============================================================================
-
-void CellmlFileImport::addUnits(const QString &pCmetaId, const QString &pName,
-                                const QString &pReferenceName)
-{
-    // Add the units import to our list
-
-    mUnits.append(new CellmlFileImportUnit(pCmetaId, pName, pReferenceName));
-}
-
-//==============================================================================
-
-void CellmlFileImport::addComponent(const QString &pCmetaId,
-                                    const QString &pName,
-                                    const QString &pReferenceName)
-{
-    // Add the component import to our list
-
-    mComponents.append(new CellmlFileImportComponent(pCmetaId, pName,
-                                                     pReferenceName));
 }
 
 //==============================================================================

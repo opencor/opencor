@@ -12,10 +12,6 @@
 
 //==============================================================================
 
-#include <QString>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -24,8 +20,8 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileUnit : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileUnit(const QString &pCmetaId, const QString &pName,
-                            const bool &pBaseUnit = false);
+    explicit CellmlFileUnit(iface::cellml_api::ImportUnits *pImportUnits);
+    explicit CellmlFileUnit(iface::cellml_api::Units *pUnits);
 
     bool isBaseUnit() const;
 

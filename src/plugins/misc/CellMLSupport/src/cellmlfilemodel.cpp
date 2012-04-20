@@ -11,9 +11,8 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileModel::CellmlFileModel(const QString &pCmetaId, 
-                                 const QString &pName) :
-    CellmlFileNamedElement(pCmetaId, pName)
+CellmlFileModel::CellmlFileModel(iface::cellml_api::Model *pModel) :
+    CellmlFileNamedElement(pModel)
 {
 }
 

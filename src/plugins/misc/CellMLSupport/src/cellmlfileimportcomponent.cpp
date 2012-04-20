@@ -11,11 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileImportComponent::CellmlFileImportComponent(const QString &pCmetaId,
-                                                     const QString &pName,
-                                                     const QString &pReferenceName) :
-    CellmlFileComponent(pCmetaId, pName),
-    mReferenceName(pReferenceName)
+CellmlFileImportComponent::CellmlFileImportComponent(iface::cellml_api::ImportComponent *pImportComponent) :
+    CellmlFileComponent(pImportComponent),
+    mReferenceName(QString::fromStdWString(pImportComponent->componentRef()))
 {
 }
 

@@ -16,13 +16,6 @@
 //==============================================================================
 
 #include <QObject>
-#include <QStringList>
-
-//==============================================================================
-
-#include "cellml-api-cxx-support.hpp"
-
-#include "IfaceCellML_APISPEC.hxx"
 
 //==============================================================================
 
@@ -74,10 +67,7 @@ private:
 
     void reset();
 
-    void retrieveImports();
     void clearImports();
-
-    void retrieveUnits();
     void clearUnits();
 };
 

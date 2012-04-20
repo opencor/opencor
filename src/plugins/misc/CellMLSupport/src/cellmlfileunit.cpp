@@ -11,10 +11,17 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileUnit::CellmlFileUnit(const QString &pCmetaId, const QString &pName,
-                               const bool &pBaseUnit) :
-    CellmlFileNamedElement(pCmetaId, pName),
-    mBaseUnit(pBaseUnit)
+CellmlFileUnit::CellmlFileUnit(iface::cellml_api::ImportUnits *pImportUnits) :
+    CellmlFileNamedElement(pImportUnits),
+    mBaseUnit(false)
+{
+}
+
+//==============================================================================
+
+CellmlFileUnit::CellmlFileUnit(iface::cellml_api::Units *pUnits) :
+    CellmlFileNamedElement(pUnits),
+    mBaseUnit(pUnits->isBaseUnits())
 {
 }
 

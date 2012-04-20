@@ -13,7 +13,6 @@
 //==============================================================================
 
 #include <QList>
-#include <QString>
 
 //==============================================================================
 
@@ -25,9 +24,7 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileImportComponent : public CellmlFileComponent
 {
 public:
-    explicit CellmlFileImportComponent(const QString &pCmetaId,
-                                       const QString &pName,
-                                       const QString &pReferenceName);
+    explicit CellmlFileImportComponent(iface::cellml_api::ImportComponent *pImportComponent);
 
     QString referenceName() const;
 

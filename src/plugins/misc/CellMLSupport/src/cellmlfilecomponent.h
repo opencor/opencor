@@ -12,10 +12,6 @@
 
 //==============================================================================
 
-#include <QString>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -24,7 +20,7 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileComponent : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileComponent(const QString &pCmetaId, const QString &pName);
+    explicit CellmlFileComponent(iface::cellml_api::ImportComponent *pImportComponent);
 };
 
 //==============================================================================
