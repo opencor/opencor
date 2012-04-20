@@ -51,6 +51,7 @@ public:
     CellmlFileModel * model() const;
 
     CellmlFileImports imports() const;
+    CellmlFileUnits units() const;
 
 private:
     QString mFileName;
@@ -59,6 +60,7 @@ private:
 
     CellmlFileModel *mModel;
     CellmlFileImports mImports;
+    CellmlFileUnits mUnits;
 
     bool mIsValid;
 
@@ -74,6 +76,9 @@ private:
 
     void retrieveImports();
     void clearImports();
+
+    void retrieveUnits();
+    void clearUnits();
 };
 
 //==============================================================================

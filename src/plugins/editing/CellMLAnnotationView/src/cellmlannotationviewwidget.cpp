@@ -127,17 +127,30 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
         foreach (CellMLSupport::CellmlFileImport *cellmlFileImport,
                  cellmlFile->imports()) {
-            mDebugOutput->append(QString("        %1 [%2]:").arg(cellmlFileImport->uri(),
+            mDebugOutput->append(QString("        From %1 [%2]:").arg(cellmlFileImport->uri(),
                                                                  cellmlFileImport->cmetaId()));
 
             foreach (CellMLSupport::CellmlFileImportUnit *unit,
                      cellmlFileImport->units())
-                mDebugOutput->append(QString("            Units: %1 ---> %2 [%3]").arg(unit->name(), unit->referenceName(), unit->cmetaId()));
+                mDebugOutput->append(QString("            Unit: %1 ---> %2 [%3]").arg(unit->name(), unit->referenceName(), unit->cmetaId()));
 
             foreach (CellMLSupport::CellmlFileImportComponent *component,
                      cellmlFileImport->components())
                 mDebugOutput->append(QString("            Component: %1 ---> %2 [%3]").arg(component->name(), component->referenceName(), component->cmetaId()));
         }
+    }
+
+    // Retrieve the model's unit definitions
+
+    if (cellmlFile->units().isEmpty()) {
+        mDebugOutput->append(QString("    [Information] No units"));
+    } else {
+        mDebugOutput->append(QString("    [Information] Units:"));
+
+        foreach (CellMLSupport::CellmlFileUnit *cellmlFileUnit,
+                 cellmlFile->units())
+            mDebugOutput->append(QString("        %1 [%2]").arg(cellmlFileUnit->name(),
+                                                                cellmlFileUnit->cmetaId()));
     }
 }
 

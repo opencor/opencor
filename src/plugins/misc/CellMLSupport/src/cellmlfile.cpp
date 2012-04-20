@@ -46,7 +46,8 @@ CellmlFile::CellmlFile(const QString &pFileName) :
     mFileName(pFileName),
     mCellmlApiModel(0),
     mModel(0),
-    mImports(CellmlFileImports())
+    mImports(CellmlFileImports()),
+    mUnits(CellmlFileUnits())
 {
     // Instantiate our runtime object
 
@@ -67,6 +68,7 @@ CellmlFile::~CellmlFile()
     delete mModel;
 
     clearImports();
+    clearUnits();
 
     delete mRuntime;
 }
@@ -84,6 +86,7 @@ void CellmlFile::reset()
     delete mModel;
 
     clearImports();
+    clearUnits();
 
     mIssues.clear();
 
@@ -163,6 +166,7 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
                                  QString::fromStdWString(mCellmlApiModel->name()));
 
     retrieveImports();
+    retrieveUnits();
 
     // All done, so...
 
@@ -420,6 +424,15 @@ CellmlFileImports CellmlFile::imports() const
 
 //==============================================================================
 
+CellmlFileUnits CellmlFile::units() const
+{
+    // Return the CellML file's units
+
+    return mUnits;
+}
+
+//==============================================================================
+
 void CellmlFile::retrieveImports()
 {
     // Iterate through the imports and add them to our list
@@ -461,12 +474,40 @@ void CellmlFile::retrieveImports()
 
 void CellmlFile::clearImports()
 {
-    // Delete all the imports and clear our list of  imports
+    // Delete all the imports and clear our list
 
     foreach (CellmlFileImport *import, mImports)
         delete import;
 
     mImports.clear();
+}
+
+//==============================================================================
+
+void CellmlFile::retrieveUnits()
+{
+    // Iterate through the units and add them to our list
+
+    iface::cellml_api::UnitsIterator *unitsIterator = mCellmlApiModel->localUnits()->iterateUnits();
+    iface::cellml_api::Units *units;
+
+    while ((units = unitsIterator->nextUnits()))
+        // We have a unit, so add it to our list
+
+        mUnits.append(new CellmlFileUnit(QString::fromStdWString(units->cmetaId()),
+                                         QString::fromStdWString(units->name())));
+}
+
+//==============================================================================
+
+void CellmlFile::clearUnits()
+{
+    // Delete all the units and clear our list
+
+    foreach (CellmlFileUnit *unit, mUnits)
+        delete unit;
+
+    mUnits.clear();
 }
 
 //==============================================================================

@@ -29,6 +29,10 @@ public:
 
 //==============================================================================
 
+typedef QList<CellmlFileUnit *> CellmlFileUnits;
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 
