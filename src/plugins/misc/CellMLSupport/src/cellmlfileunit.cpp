@@ -11,10 +11,20 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileUnit::CellmlFileUnit(const QString &pCmetaId, 
-                               const QString &pName) :
-    CellmlFileNamedElement(pCmetaId, pName)
+CellmlFileUnit::CellmlFileUnit(const QString &pCmetaId, const QString &pName,
+                               const bool &pBaseUnit) :
+    CellmlFileNamedElement(pCmetaId, pName),
+    mBaseUnit(pBaseUnit)
 {
+}
+
+//==============================================================================
+
+bool CellmlFileUnit::isBaseUnit() const
+{
+    // Return whether the unit is a base unit
+
+    return mBaseUnit;
 }
 
 //==============================================================================

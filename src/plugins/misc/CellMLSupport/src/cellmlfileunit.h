@@ -24,7 +24,13 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileUnit : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileUnit(const QString &pCmetaId, const QString &pName);
+    explicit CellmlFileUnit(const QString &pCmetaId, const QString &pName,
+                            const bool &pBaseUnit = false);
+
+    bool isBaseUnit() const;
+
+private:
+    bool mBaseUnit;
 };
 
 //==============================================================================

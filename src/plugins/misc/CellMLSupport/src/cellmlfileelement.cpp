@@ -20,7 +20,7 @@ CellmlFileElement::CellmlFileElement(const QString &pCmetaId) :
 
 QString CellmlFileElement::cmetaId() const
 {
-    // Return's the element's cmeta:id
+    // Return the element's cmeta:id
 
     return mCmetaId;
 }

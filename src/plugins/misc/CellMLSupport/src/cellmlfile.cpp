@@ -491,11 +491,15 @@ void CellmlFile::retrieveUnits()
     iface::cellml_api::UnitsIterator *unitsIterator = mCellmlApiModel->localUnits()->iterateUnits();
     iface::cellml_api::Units *units;
 
-    while ((units = unitsIterator->nextUnits()))
+    while ((units = unitsIterator->nextUnits())) {
         // We have a unit, so add it to our list
 
-        mUnits.append(new CellmlFileUnit(QString::fromStdWString(units->cmetaId()),
-                                         QString::fromStdWString(units->name())));
+        CellmlFileUnit *cellmlFileUnit = new CellmlFileUnit(QString::fromStdWString(units->cmetaId()),
+                                                            QString::fromStdWString(units->name()),
+                                                            units->isBaseUnits());
+
+        mUnits.append(cellmlFileUnit);
+    }
 }
 
 //==============================================================================

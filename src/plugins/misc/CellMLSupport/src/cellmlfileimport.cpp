@@ -58,7 +58,7 @@ void CellmlFileImport::addComponent(const QString &pCmetaId,
 
 QString CellmlFileImport::uri() const
 {
-    // Return's the import's URI
+    // Return the import's URI
 
     return mUri;
 }
@@ -67,7 +67,7 @@ QString CellmlFileImport::uri() const
 
 CellmlFileImportUnits CellmlFileImport::units() const
 {
-    // Return's the import's units
+    // Return the import's units
 
     return mUnits;
 }
@@ -76,7 +76,7 @@ CellmlFileImportUnits CellmlFileImport::units() const
 
 CellmlFileImportComponents CellmlFileImport::components() const
 {
-    // Return's the import's components
+    // Return the import's components
 
     return mComponents;
 }

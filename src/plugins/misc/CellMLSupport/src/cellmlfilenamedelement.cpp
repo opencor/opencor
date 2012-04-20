@@ -22,7 +22,7 @@ CellmlFileNamedElement::CellmlFileNamedElement(const QString &pCmetaId,
 
 QString CellmlFileNamedElement::name() const
 {
-    // Return's the named element's name
+    // Return the named element's name
 
     return mName;
 }

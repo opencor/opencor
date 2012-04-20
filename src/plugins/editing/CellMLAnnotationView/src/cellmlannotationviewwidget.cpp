@@ -148,9 +148,11 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
         mDebugOutput->append(QString("    [Information] Units:"));
 
         foreach (CellMLSupport::CellmlFileUnit *cellmlFileUnit,
-                 cellmlFile->units())
+                 cellmlFile->units()) {
             mDebugOutput->append(QString("        %1 [%2]").arg(cellmlFileUnit->name(),
                                                                 cellmlFileUnit->cmetaId()));
+            mDebugOutput->append(QString("            Base unit: %1").arg(cellmlFileUnit->isBaseUnit()?"yes":"no"));
+        }
     }
 }
 
