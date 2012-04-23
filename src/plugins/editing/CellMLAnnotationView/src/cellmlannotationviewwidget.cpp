@@ -164,6 +164,20 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
             }
         }
     }
+
+    // Retrieve the model's groups
+
+    if (cellmlFile->groups().isEmpty()) {
+        mDebugOutput->append(QString("    [Information] No groups"));
+    } else {
+        mDebugOutput->append(QString("    [Information] Groups:"));
+
+        foreach (CellMLSupport::CellmlFileGroup *cellmlFileGroup,
+                 cellmlFile->groups()) {
+            mDebugOutput->append(QString("        %1 [%2]").arg("Type",
+                                                                cellmlFileGroup->cmetaId()));
+        }
+    }
 }
 
 //==============================================================================

@@ -1,23 +1,18 @@
 //==============================================================================
-// CellML file element
+// CellML file relationship ref(erence)
 //==============================================================================
 
-#ifndef CELLMLFILEELEMENT_H
-#define CELLMLFILEELEMENT_H
+#ifndef CELLMLFILERELATIONSHIPREF_H
+#define CELLMLFILERELATIONSHIPREF_H
 
 //==============================================================================
 
+#include "cellmlfileelement.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
 
-#include <QString>
-
-//==============================================================================
-
-#include "cellml-api-cxx-support.hpp"
-
-#include "IfaceCellML_APISPEC.hxx"
+#include <QList>
 
 //==============================================================================
 
@@ -26,23 +21,15 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileElement
+class CELLMLSUPPORT_EXPORT CellmlFileRelationshipRef : public CellmlFileElement
 {
 public:
-    explicit CellmlFileElement(iface::cellml_api::Model *pModel);
-    explicit CellmlFileElement(iface::cellml_api::CellMLImport *pCellmlImport);
-    explicit CellmlFileElement(iface::cellml_api::ImportUnits *pImportUnits);
-    explicit CellmlFileElement(iface::cellml_api::ImportComponent *pImportComponent);
-    explicit CellmlFileElement(iface::cellml_api::Units *pUnits);
-    explicit CellmlFileElement(iface::cellml_api::Unit *pUnit);
-    explicit CellmlFileElement(iface::cellml_api::Group *pGroup);
-    explicit CellmlFileElement(iface::cellml_api::RelationshipRef *pRelationshipRef);
-
-    QString cmetaId() const;
-
-private:
-    QString mCmetaId;
+    explicit CellmlFileRelationshipRef(iface::cellml_api::RelationshipRef *pRelationshipRef);
 };
+
+//==============================================================================
+
+typedef QList<CellmlFileRelationshipRef *> CellmlFileRelationshipRefs;
 
 //==============================================================================
 

@@ -53,6 +53,20 @@ CellmlFileElement::CellmlFileElement(iface::cellml_api::Unit *pUnit) :
 
 //==============================================================================
 
+CellmlFileElement::CellmlFileElement(iface::cellml_api::Group *pGroup) :
+    mCmetaId(QString::fromStdWString(pGroup->cmetaId()))
+{
+}
+
+//==============================================================================
+
+CellmlFileElement::CellmlFileElement(iface::cellml_api::RelationshipRef *pRelationshipRef) :
+    mCmetaId(QString::fromStdWString(pRelationshipRef->cmetaId()))
+{
+}
+
+//==============================================================================
+
 QString CellmlFileElement::cmetaId() const
 {
     // Return the element's cmeta:id

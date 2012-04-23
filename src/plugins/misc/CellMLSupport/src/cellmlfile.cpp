@@ -183,6 +183,20 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
 
         mUnits.append(new CellmlFileUnit(units));
 
+    // Iterate through the components and add them to our list
+
+//---GRY--- TO BE DONE...
+
+    // Iterate through the groups and add them to our list
+
+    iface::cellml_api::GroupIterator *groupIterator = mCellmlApiModel->groups()->iterateGroups();
+    iface::cellml_api::Group *group;
+
+    while ((group = groupIterator->nextGroup()))
+        // We have a group, so add it to our list
+
+        mGroups.append(new CellmlFileGroup(group));
+
     // All done, so...
 
     mLoadingNeeded = false;
@@ -444,6 +458,15 @@ CellmlFileUnits CellmlFile::units() const
     // Return the CellML file's units
 
     return mUnits;
+}
+
+//==============================================================================
+
+CellmlFileGroups CellmlFile::groups() const
+{
+    // Return the CellML file's groups
+
+    return mGroups;
 }
 
 //==============================================================================

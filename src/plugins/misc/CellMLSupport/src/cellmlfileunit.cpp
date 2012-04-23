@@ -34,7 +34,6 @@ CellmlFileUnit::CellmlFileUnit(iface::cellml_api::Units *pUnits) :
         // We have a unit, so add it to our list
 
         mUnitElements.append(new CellmlFileUnitElement(unit));
-
 }
 
 //==============================================================================
