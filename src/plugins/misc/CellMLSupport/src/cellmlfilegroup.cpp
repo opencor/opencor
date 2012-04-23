@@ -38,6 +38,15 @@ CellmlFileGroup::~CellmlFileGroup()
 
 //==============================================================================
 
+CellmlFileRelationshipRefs CellmlFileGroup::relationshipRefs() const
+{
+    // Return the group's relationship ref(erence)s
+
+    return mRelationshipRefs;
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 

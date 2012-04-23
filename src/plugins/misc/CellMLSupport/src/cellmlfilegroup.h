@@ -24,6 +24,8 @@ public:
     explicit CellmlFileGroup(iface::cellml_api::Group *pGroup);
     ~CellmlFileGroup();
 
+    CellmlFileRelationshipRefs relationshipRefs() const;
+
 private:
     CellmlFileRelationshipRefs mRelationshipRefs;
 };

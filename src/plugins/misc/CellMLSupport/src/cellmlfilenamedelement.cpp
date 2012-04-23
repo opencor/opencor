@@ -51,6 +51,14 @@ CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::Unit *pUnit) :
 
 //==============================================================================
 
+CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::RelationshipRef *pRelationshipRef) :
+    CellmlFileElement(pRelationshipRef),
+    mName(QString::fromStdWString(pRelationshipRef->name()))
+{
+}
+
+//==============================================================================
+
 QString CellmlFileNamedElement::name() const
 {
     // Return the named element's name
