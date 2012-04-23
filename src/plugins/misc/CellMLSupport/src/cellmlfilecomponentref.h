@@ -1,16 +1,18 @@
 //==============================================================================
-// CellML file group
+// CellML file component ref(erence)
 //==============================================================================
 
-#ifndef CELLMLFILEGROUP_H
-#define CELLMLFILEGROUP_H
+#ifndef CELLMLFILECOMPONENTREF_H
+#define CELLMLFILECOMPONENTREF_H
 
 //==============================================================================
 
-#include "cellmlfilecomponentref.h"
-#include "cellmlfileelement.h"
-#include "cellmlfilerelationshipref.h"
+#include "cellmlfilenamedelement.h"
 #include "cellmlsupportglobal.h"
+
+//==============================================================================
+
+#include <QList>
 
 //==============================================================================
 
@@ -19,23 +21,25 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileGroup : public CellmlFileElement
-{
-public:
-    explicit CellmlFileGroup(iface::cellml_api::Group *pGroup);
-    ~CellmlFileGroup();
-
-    CellmlFileRelationshipRefs relationshipRefs() const;
-    CellmlFileComponentRefs componentRefs() const;
-
-private:
-    CellmlFileRelationshipRefs mRelationshipRefs;
-    CellmlFileComponentRefs mComponentRefs;
-};
+class CELLMLSUPPORT_EXPORT CellmlFileComponentRef;
 
 //==============================================================================
 
-typedef QList<CellmlFileGroup *> CellmlFileGroups;
+typedef QList<CellmlFileComponentRef *> CellmlFileComponentRefs;
+
+//==============================================================================
+
+class CELLMLSUPPORT_EXPORT CellmlFileComponentRef : public CellmlFileNamedElement
+{
+public:
+    explicit CellmlFileComponentRef(iface::cellml_api::ComponentRef *pComponentRef);
+    ~CellmlFileComponentRef();
+
+    CellmlFileComponentRefs componentRefs() const;
+
+private:
+    CellmlFileComponentRefs mComponentRefs;
+};
 
 //==============================================================================
 

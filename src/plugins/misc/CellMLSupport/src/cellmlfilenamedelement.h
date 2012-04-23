@@ -26,6 +26,7 @@ public:
     explicit CellmlFileNamedElement(iface::cellml_api::Units *pUnits);
     explicit CellmlFileNamedElement(iface::cellml_api::Unit *pUnit);
     explicit CellmlFileNamedElement(iface::cellml_api::RelationshipRef *pRelationshipRef);
+    explicit CellmlFileNamedElement(iface::cellml_api::ComponentRef *pComponentRef);
 
     QString name() const;
 

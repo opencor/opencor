@@ -125,17 +125,17 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
     } else {
         mDebugOutput->append(QString("    Imports:"));
 
-        foreach (CellMLSupport::CellmlFileImport *cellmlFileImport,
+        foreach (CellMLSupport::CellmlFileImport *import,
                  cellmlFile->imports()) {
-            mDebugOutput->append(QString("        From %1 [%2]:").arg(cellmlFileImport->uri(),
-                                                                 cellmlFileImport->cmetaId()));
+            mDebugOutput->append(QString("        From %1 [%2]:").arg(import->uri(),
+                                                                      import->cmetaId()));
 
             foreach (CellMLSupport::CellmlFileImportUnit *unit,
-                     cellmlFileImport->units())
+                     import->units())
                 mDebugOutput->append(QString("            Unit: %1 ---> %2 [%3]").arg(unit->name(), unit->referenceName(), unit->cmetaId()));
 
             foreach (CellMLSupport::CellmlFileImportComponent *component,
-                     cellmlFileImport->components())
+                     import->components())
                 mDebugOutput->append(QString("            Component: %1 ---> %2 [%3]").arg(component->name(), component->referenceName(), component->cmetaId()));
         }
     }
@@ -147,25 +147,24 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
     } else {
         mDebugOutput->append(QString("    Units:"));
 
-        foreach (CellMLSupport::CellmlFileUnit *cellmlFileUnit,
-                 cellmlFile->units()) {
-            mDebugOutput->append(QString("        %1 [%2]").arg(cellmlFileUnit->name(),
-                                                                cellmlFileUnit->cmetaId()));
-            mDebugOutput->append(QString("            Base unit: %1").arg(cellmlFileUnit->isBaseUnit()?"yes":"no"));
+        foreach (CellMLSupport::CellmlFileUnit *unit, cellmlFile->units()) {
+            mDebugOutput->append(QString("        %1 [%2]").arg(unit->name(),
+                                                                unit->cmetaId()));
+            mDebugOutput->append(QString("            Base unit: %1").arg(unit->isBaseUnit()?"yes":"no"));
 
-            if (cellmlFileUnit->unitElements().isEmpty()) {
+            if (unit->unitElements().isEmpty()) {
                 mDebugOutput->append(QString("            No unit elements"));
             } else {
                 mDebugOutput->append(QString("            Unit elements:"));
 
-                foreach (CellMLSupport::CellmlFileUnitElement *cellmlFileUnitElement,
-                         cellmlFileUnit->unitElements()) {
-                    mDebugOutput->append(QString("            %1 [%2]").arg(cellmlFileUnitElement->name(),
-                                                                            cellmlFileUnitElement->cmetaId()));
-                    mDebugOutput->append(QString("                Prefix: %1").arg(cellmlFileUnitElement->prefix()));
-                    mDebugOutput->append(QString("                Multiplier: %1").arg(cellmlFileUnitElement->multiplier()));
-                    mDebugOutput->append(QString("                Offset: %1").arg(cellmlFileUnitElement->offset()));
-                    mDebugOutput->append(QString("                Exponent: %1").arg(cellmlFileUnitElement->exponent()));
+                foreach (CellMLSupport::CellmlFileUnitElement *unitElement,
+                         unit->unitElements()) {
+                    mDebugOutput->append(QString("            %1 [%2]").arg(unitElement->name(),
+                                                                            unitElement->cmetaId()));
+                    mDebugOutput->append(QString("                Prefix: %1").arg(unitElement->prefix()));
+                    mDebugOutput->append(QString("                Multiplier: %1").arg(unitElement->multiplier()));
+                    mDebugOutput->append(QString("                Offset: %1").arg(unitElement->offset()));
+                    mDebugOutput->append(QString("                Exponent: %1").arg(unitElement->exponent()));
                 }
             }
         }
@@ -178,25 +177,48 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
     } else {
         mDebugOutput->append(QString("    Groups:"));
 
-        foreach (CellMLSupport::CellmlFileGroup *cellmlFileGroup,
-                 cellmlFile->groups()) {
-            mDebugOutput->append(QString("        Group [%1]").arg(cellmlFileGroup->cmetaId()));
+        foreach (CellMLSupport::CellmlFileGroup *group, cellmlFile->groups()) {
+            mDebugOutput->append(QString("        Group [%1]").arg(group->cmetaId()));
 
-            if (cellmlFileGroup->relationshipRefs().isEmpty()) {
+            if (group->relationshipRefs().isEmpty()) {
                 mDebugOutput->append(QString("            No relationship ref(erence)s"));
             } else {
                 mDebugOutput->append(QString("            Relationship ref(erence)s:"));
 
-                foreach (CellMLSupport::CellmlFileRelationshipRef *cellmlFileRelationshipRef,
-                         cellmlFileGroup->relationshipRefs()) {
-                    mDebugOutput->append(QString("                %1 [%2]").arg(cellmlFileRelationshipRef->name(),
-                                                                                cellmlFileRelationshipRef->cmetaId()));
-                    mDebugOutput->append(QString("                    Relationship: %1").arg(cellmlFileRelationshipRef->relationship()));
-                    mDebugOutput->append(QString("                    Relationship namespace: %1").arg(cellmlFileRelationshipRef->relationshipNamespace()));
+                foreach (CellMLSupport::CellmlFileRelationshipRef *relationshipRef,
+                         group->relationshipRefs()) {
+                    mDebugOutput->append(QString("                %1 [%2]").arg(relationshipRef->name(),
+                                                                                relationshipRef->cmetaId()));
+                    mDebugOutput->append(QString("                    Relationship: %1").arg(relationshipRef->relationship()));
+                    mDebugOutput->append(QString("                    Relationship namespace: %1").arg(relationshipRef->relationshipNamespace()));
                 }
+            }
+
+            if (group->componentRefs().isEmpty()) {
+                mDebugOutput->append(QString("            No component ref(erence)s"));
+            } else {
+                mDebugOutput->append(QString("            Component ref(erence)s:"));
+
+                foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
+                         group->componentRefs())
+                    initComponentRefTreeView("                ", componentRef);
             }
         }
     }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::initComponentRefTreeView(const QString &pLeadingSpace,
+                                                          CellMLSupport::CellmlFileComponentRef *pComponentRef)
+{
+    mDebugOutput->append(QString("%1%2 [%3]").arg(pLeadingSpace,
+                                                  pComponentRef->name(),
+                                                  pComponentRef->cmetaId()));
+
+    foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
+             pComponentRef->componentRefs())
+        initComponentRefTreeView(pLeadingSpace+"    ", componentRef);
 }
 
 //==============================================================================
