@@ -1,14 +1,18 @@
 //==============================================================================
-// CellML file named element
+// CellML file unit element
 //==============================================================================
 
-#ifndef CELLMLFILENAMEDELEMENT_H
-#define CELLMLFILENAMEDELEMENT_H
+#ifndef CELLMLFILEUNITELEMENT_H
+#define CELLMLFILEUNITELEMENT_H
 
 //==============================================================================
 
-#include "cellmlfileelement.h"
+#include "cellmlfilenamedelement.h"
 #include "cellmlsupportglobal.h"
+
+//==============================================================================
+
+#include <QList>
 
 //==============================================================================
 
@@ -17,20 +21,26 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileNamedElement : public CellmlFileElement
+class CELLMLSUPPORT_EXPORT CellmlFileUnitElement : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileNamedElement(iface::cellml_api::Model *pModel);
-    explicit CellmlFileNamedElement(iface::cellml_api::ImportUnits *pImportUnits);
-    explicit CellmlFileNamedElement(iface::cellml_api::ImportComponent *pImportComponent);
-    explicit CellmlFileNamedElement(iface::cellml_api::Units *pUnits);
-    explicit CellmlFileNamedElement(iface::cellml_api::Unit *pUnit);
+    explicit CellmlFileUnitElement(iface::cellml_api::Unit *pUnit);
 
-    QString name() const;
+    int prefix() const;
+    double multiplier() const;
+    double offset() const;
+    double exponent() const;
 
 private:
-    QString mName;
+    int mPrefix;
+    double mMultiplier;
+    double mOffset;
+    double mExponent;
 };
+
+//==============================================================================
+
+typedef QList<CellmlFileUnitElement *> CellmlFileUnitElements;
 
 //==============================================================================
 

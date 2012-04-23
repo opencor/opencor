@@ -1,23 +1,8 @@
 //==============================================================================
-// CellML file element
+// CellML file unit element
 //==============================================================================
 
-#ifndef CELLMLFILEELEMENT_H
-#define CELLMLFILEELEMENT_H
-
-//==============================================================================
-
-#include "cellmlsupportglobal.h"
-
-//==============================================================================
-
-#include <QString>
-
-//==============================================================================
-
-#include "cellml-api-cxx-support.hpp"
-
-#include "IfaceCellML_APISPEC.hxx"
+#include "cellmlfileunitelement.h"
 
 //==============================================================================
 
@@ -26,30 +11,55 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileElement
+CellmlFileUnitElement::CellmlFileUnitElement(iface::cellml_api::Unit *pUnit) :
+    CellmlFileNamedElement(pUnit),
+    mPrefix(pUnit->prefix()),
+    mMultiplier(pUnit->multiplier()),
+    mOffset(pUnit->offset()),
+    mExponent(pUnit->exponent())
 {
-public:
-    explicit CellmlFileElement(iface::cellml_api::Model *pModel);
-    explicit CellmlFileElement(iface::cellml_api::CellMLImport *pCellmlImport);
-    explicit CellmlFileElement(iface::cellml_api::ImportUnits *pImportUnits);
-    explicit CellmlFileElement(iface::cellml_api::ImportComponent *pImportComponent);
-    explicit CellmlFileElement(iface::cellml_api::Units *pUnits);
-    explicit CellmlFileElement(iface::cellml_api::Unit *pUnit);
+}
 
-    QString cmetaId() const;
+//==============================================================================
 
-private:
-    QString mCmetaId;
-};
+int CellmlFileUnitElement::prefix() const
+{
+    // Return the unit element's prefix
+
+    return mPrefix;
+}
+
+//==============================================================================
+
+double CellmlFileUnitElement::multiplier() const
+{
+    // Return the unit element's multiplier
+
+    return mMultiplier;
+}
+
+//==============================================================================
+
+double CellmlFileUnitElement::offset() const
+{
+    // Return the unit element's offset
+
+    return mOffset;
+}
+
+//==============================================================================
+
+double CellmlFileUnitElement::exponent() const
+{
+    // Return the unit element's exponent
+
+    return mExponent;
+}
 
 //==============================================================================
 
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -46,6 +46,13 @@ CellmlFileElement::CellmlFileElement(iface::cellml_api::Units *pUnits) :
 
 //==============================================================================
 
+CellmlFileElement::CellmlFileElement(iface::cellml_api::Unit *pUnit) :
+    mCmetaId(QString::fromStdWString(pUnit->cmetaId()))
+{
+}
+
+//==============================================================================
+
 QString CellmlFileElement::cmetaId() const
 {
     // Return the element's cmeta:id

@@ -43,6 +43,14 @@ CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::Units *pUnits)
 
 //==============================================================================
 
+CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::Unit *pUnit) :
+    CellmlFileElement(pUnit),
+    mName(QString::fromStdWString(pUnit->units()))
+{
+}
+
+//==============================================================================
+
 QString CellmlFileNamedElement::name() const
 {
     // Return the named element's name

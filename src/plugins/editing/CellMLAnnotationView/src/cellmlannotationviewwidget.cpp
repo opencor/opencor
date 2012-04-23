@@ -152,6 +152,16 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
             mDebugOutput->append(QString("        %1 [%2]").arg(cellmlFileUnit->name(),
                                                                 cellmlFileUnit->cmetaId()));
             mDebugOutput->append(QString("            Base unit: %1").arg(cellmlFileUnit->isBaseUnit()?"yes":"no"));
+
+            foreach (CellMLSupport::CellmlFileUnitElement *cellmlFileUnitElement,
+                     cellmlFileUnit->unitElements()) {
+                mDebugOutput->append(QString("            %1 [%2]").arg(cellmlFileUnitElement->name(),
+                                                                        cellmlFileUnitElement->cmetaId()));
+                mDebugOutput->append(QString("                Prefix: %1").arg(cellmlFileUnitElement->prefix()));
+                mDebugOutput->append(QString("                Multiplier: %1").arg(cellmlFileUnitElement->multiplier()));
+                mDebugOutput->append(QString("                Offset: %1").arg(cellmlFileUnitElement->offset()));
+                mDebugOutput->append(QString("                Exponent: %1").arg(cellmlFileUnitElement->exponent()));
+            }
         }
     }
 }
