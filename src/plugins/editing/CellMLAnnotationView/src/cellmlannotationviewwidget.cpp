@@ -177,8 +177,23 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
                 foreach (CellMLSupport::CellmlFileVariable *variable,
                          component->variables()) {
-                    mDebugOutput->append(QString("                %1 [%2]:").arg(variable->name(),
-                                                                                 variable->cmetaId()));
+                    QString variablePublicInterface = (variable->publicInterface() == CellMLSupport::CellmlFileVariable::In)?
+                                                          "in":
+                                                          (variable->publicInterface() == CellMLSupport::CellmlFileVariable::Out)?
+                                                              "out":
+                                                              "none";
+                    QString variablePrivateInterface = (variable->privateInterface() == CellMLSupport::CellmlFileVariable::In)?
+                                                          "in":
+                                                          (variable->privateInterface() == CellMLSupport::CellmlFileVariable::Out)?
+                                                              "out":
+                                                              "none";
+
+                    mDebugOutput->append(QString("                %1 | Unit: %2 | Initial value: %3 | Public interface: %4 | Private interface: %5 [%6]").arg(variable->name(),
+                                                                                                                                                              variable->unit(),
+                                                                                                                                                              variable->initialValue(),
+                                                                                                                                                              variablePublicInterface,
+                                                                                                                                                              variablePrivateInterface,
+                                                                                                                                                              variable->cmetaId()));
                 }
             }
         }
