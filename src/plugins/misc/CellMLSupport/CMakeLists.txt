@@ -34,6 +34,7 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfileruntime.cpp
         src/cellmlfileunit.cpp
         src/cellmlfileunitelement.cpp
+        src/cellmlfilevariable.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
         src/cellmlfile.h

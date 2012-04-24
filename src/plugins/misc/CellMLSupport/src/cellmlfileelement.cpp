@@ -60,6 +60,13 @@ CellmlFileElement::CellmlFileElement(iface::cellml_api::CellMLComponent *pCompon
 
 //==============================================================================
 
+CellmlFileElement::CellmlFileElement(iface::cellml_api::CellMLVariable *pVariable) :
+    mCmetaId(QString::fromStdWString(pVariable->cmetaId()))
+{
+}
+
+//==============================================================================
+
 CellmlFileElement::CellmlFileElement(iface::cellml_api::Group *pGroup) :
     mCmetaId(QString::fromStdWString(pGroup->cmetaId()))
 {

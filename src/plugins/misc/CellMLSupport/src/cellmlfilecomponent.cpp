@@ -13,7 +13,8 @@ namespace CellMLSupport {
 
 CellmlFileComponent::CellmlFileComponent(iface::cellml_api::ImportComponent *pImportComponent) :
     CellmlFileNamedElement(pImportComponent),
-    mUnits(CellmlFileUnits())
+    mUnits(CellmlFileUnits()),
+    mVariables(CellmlFileVariables())
 {
 }
 
@@ -21,7 +22,8 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::ImportComponent *pIm
 
 CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pComponent) :
     CellmlFileNamedElement(pComponent),
-    mUnits(CellmlFileUnits())
+    mUnits(CellmlFileUnits()),
+    mVariables(CellmlFileVariables())
 {
     // Iterate through the units and add them to our list
 
@@ -32,6 +34,16 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
         // We have a unit, so add it to our list
 
         mUnits.append(new CellmlFileUnit(units));
+
+    // Iterate through the variables and add them to our list
+
+    iface::cellml_api::CellMLVariableIterator *variableIterator = pComponent->variables()->iterateVariables();
+    iface::cellml_api::CellMLVariable *variable;
+
+    while ((variable = variableIterator->nextVariable()))
+        // We have a variable, so add it to our list
+
+        mVariables.append(new CellmlFileVariable(variable));
 }
 
 //==============================================================================
@@ -41,6 +53,7 @@ CellmlFileComponent::~CellmlFileComponent()
     // Delete some internal objects
 
     clearUnits();
+    clearVariables();
 }
 
 //==============================================================================
@@ -54,6 +67,15 @@ CellmlFileUnits CellmlFileComponent::units() const
 
 //==============================================================================
 
+CellmlFileVariables CellmlFileComponent::variables() const
+{
+    // Return the component's variables
+
+    return mVariables;
+}
+
+//==============================================================================
+
 void CellmlFileComponent::clearUnits()
 {
     // Delete all the units and clear our list
@@ -62,6 +84,18 @@ void CellmlFileComponent::clearUnits()
         delete unit;
 
     mUnits.clear();
+}
+
+//==============================================================================
+
+void CellmlFileComponent::clearVariables()
+{
+    // Delete all the variables and clear our list
+
+    foreach (CellmlFileVariable *variable, mVariables)
+        delete variable;
+
+    mVariables.clear();
 }
 
 //==============================================================================

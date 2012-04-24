@@ -130,13 +130,25 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
             mDebugOutput->append(QString("        From %1 [%2]:").arg(import->uri(),
                                                                       import->cmetaId()));
 
-            foreach (CellMLSupport::CellmlFileImportUnit *unit,
-                     import->units())
-                mDebugOutput->append(QString("            Unit: %1 ---> %2 [%3]").arg(unit->name(), unit->referenceName(), unit->cmetaId()));
+            if (import->units().isEmpty()) {
+                mDebugOutput->append(QString("            No units"));
+            } else {
+                mDebugOutput->append(QString("            Units:"));
 
-            foreach (CellMLSupport::CellmlFileImportComponent *component,
-                     import->components())
-                mDebugOutput->append(QString("            Component: %1 ---> %2 [%3]").arg(component->name(), component->referenceName(), component->cmetaId()));
+                foreach (CellMLSupport::CellmlFileImportUnit *unit,
+                         import->units())
+                    mDebugOutput->append(QString("                Unit: %1 ---> %2 [%3]").arg(unit->name(), unit->referenceName(), unit->cmetaId()));
+            }
+
+            if (import->components().isEmpty()) {
+                mDebugOutput->append(QString("            No components"));
+            } else {
+                mDebugOutput->append(QString("            Components:"));
+
+                foreach (CellMLSupport::CellmlFileImportComponent *component,
+                         import->components())
+                    mDebugOutput->append(QString("                Component: %1 ---> %2 [%3]").arg(component->name(), component->referenceName(), component->cmetaId()));
+            }
         }
     }
 
@@ -157,6 +169,18 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
                                                                 component->cmetaId()));
 
             initUnitsTreeView("            ", component->units());
+
+            if (component->variables().isEmpty()) {
+                mDebugOutput->append(QString("            No variables"));
+            } else {
+                mDebugOutput->append(QString("            Variables:"));
+
+                foreach (CellMLSupport::CellmlFileVariable *variable,
+                         component->variables()) {
+                    mDebugOutput->append(QString("                %1 [%2]:").arg(variable->name(),
+                                                                                 variable->cmetaId()));
+                }
+            }
         }
     }
 

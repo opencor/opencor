@@ -1,20 +1,14 @@
 //==============================================================================
-// CellML file component
+// CellML file variable
 //==============================================================================
 
-#ifndef CELLMLFILECOMPONENT_H
-#define CELLMLFILECOMPONENT_H
+#ifndef CELLMLFILEVARIABLE_H
+#define CELLMLFILEVARIABLE_H
 
 //==============================================================================
 
 #include "cellmlfilenamedelement.h"
-#include "cellmlfileunit.h"
-#include "cellmlfilevariable.h"
 #include "cellmlsupportglobal.h"
-
-//==============================================================================
-
-#include <QList>
 
 //==============================================================================
 
@@ -23,27 +17,15 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileComponent : public CellmlFileNamedElement
+class CELLMLSUPPORT_EXPORT CellmlFileVariable : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileComponent(iface::cellml_api::ImportComponent *pImportComponent);
-    explicit CellmlFileComponent(iface::cellml_api::CellMLComponent *pComponent);
-    ~CellmlFileComponent();
-
-    CellmlFileUnits units() const;
-    CellmlFileVariables variables() const;
-
-private:
-    CellmlFileUnits mUnits;
-    CellmlFileVariables mVariables;
-
-    void clearUnits();
-    void clearVariables();
+    explicit CellmlFileVariable(iface::cellml_api::CellMLVariable *pVariable);
 };
 
 //==============================================================================
 
-typedef QList<CellmlFileComponent *> CellmlFileComponents;
+typedef QList<CellmlFileVariable *> CellmlFileVariables;
 
 //==============================================================================
 
