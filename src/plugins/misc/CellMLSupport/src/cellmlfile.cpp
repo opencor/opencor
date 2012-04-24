@@ -62,12 +62,8 @@ CellmlFile::CellmlFile(const QString &pFileName) :
 CellmlFile::~CellmlFile()
 {
     // Delete some internal objects
-    // Note: mCellmlApiModel gets automatically deleted, if needed, so...
 
-    delete mModel;
-
-    clearImports();
-    clearUnits();
+    reset();
 
     delete mRuntime;
 }
@@ -86,6 +82,8 @@ void CellmlFile::reset()
 
     clearImports();
     clearUnits();
+    clearGroups();
+    clearConnections();
 
     mIssues.clear();
 
@@ -196,6 +194,16 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
         // We have a group, so add it to our list
 
         mGroups.append(new CellmlFileGroup(group));
+
+    // Iterate through the connections and add them to our list
+
+    iface::cellml_api::ConnectionIterator *connectionIterator = mCellmlApiModel->connections()->iterateConnections();
+    iface::cellml_api::Connection *connection;
+
+    while ((connection = connectionIterator->nextConnection()))
+        // We have a connection, so add it to our list
+
+        mConnections.append(new CellmlFileConnection(connection));
 
     // All done, so...
 
@@ -471,6 +479,15 @@ CellmlFileGroups CellmlFile::groups() const
 
 //==============================================================================
 
+CellmlFileConnections CellmlFile::connections() const
+{
+    // Return the CellML file's connections
+
+    return mConnections;
+}
+
+//==============================================================================
+
 void CellmlFile::clearImports()
 {
     // Delete all the imports and clear our list
@@ -491,6 +508,30 @@ void CellmlFile::clearUnits()
         delete unit;
 
     mUnits.clear();
+}
+
+//==============================================================================
+
+void CellmlFile::clearGroups()
+{
+    // Delete all the groups and clear our list
+
+    foreach (CellmlFileGroup *group, mGroups)
+        delete group;
+
+    mGroups.clear();
+}
+
+//==============================================================================
+
+void CellmlFile::clearConnections()
+{
+    // Delete all the connections and clear our list
+
+    foreach (CellmlFileConnection *connection, mConnections)
+        delete connection;
+
+    mConnections.clear();
 }
 
 //==============================================================================

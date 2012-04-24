@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfileconnection.h"
 #include "cellmlfilegroup.h"
 #include "cellmlfileimport.h"
 #include "cellmlfileissue.h"
@@ -47,6 +48,7 @@ public:
     CellmlFileImports imports() const;
     CellmlFileUnits units() const;
     CellmlFileGroups groups() const;
+    CellmlFileConnections connections() const;
 
 private:
     QString mFileName;
@@ -57,6 +59,7 @@ private:
     CellmlFileImports mImports;
     CellmlFileUnits mUnits;
     CellmlFileGroups mGroups;
+    CellmlFileConnections mConnections;
 
     bool mIsValid;
 
@@ -72,6 +75,8 @@ private:
 
     void clearImports();
     void clearUnits();
+    void clearGroups();
+    void clearConnections();
 };
 
 //==============================================================================

@@ -38,6 +38,9 @@ public:
     explicit CellmlFileElement(iface::cellml_api::Group *pGroup);
     explicit CellmlFileElement(iface::cellml_api::RelationshipRef *pRelationshipRef);
     explicit CellmlFileElement(iface::cellml_api::ComponentRef *pComponentRef);
+    explicit CellmlFileElement(iface::cellml_api::Connection *pConnection);
+    explicit CellmlFileElement(iface::cellml_api::MapComponents *pMapComponents);
+    explicit CellmlFileElement(iface::cellml_api::MapVariables *pMapVariables);
 
     QString cmetaId() const;
 

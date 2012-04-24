@@ -18,6 +18,7 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfile.cpp
         src/cellmlfilecomponent.cpp
         src/cellmlfilecomponentref.cpp
+        src/cellmlfileconnection.cpp
         src/cellmlfileelement.cpp
         src/cellmlfilegroup.cpp
         src/cellmlfileimport.cpp
@@ -25,6 +26,8 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfileimportunit.cpp
         src/cellmlfileissue.cpp
         src/cellmlfilemanager.cpp
+        src/cellmlfilemapcomponents.cpp
+        src/cellmlfilemapvariables.cpp
         src/cellmlfilemodel.cpp
         src/cellmlfilenamedelement.cpp
         src/cellmlfilerelationshipref.cpp

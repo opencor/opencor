@@ -74,6 +74,27 @@ CellmlFileElement::CellmlFileElement(iface::cellml_api::ComponentRef *pComponent
 
 //==============================================================================
 
+CellmlFileElement::CellmlFileElement(iface::cellml_api::Connection *pConnection) :
+    mCmetaId(QString::fromStdWString(pConnection->cmetaId()))
+{
+}
+
+//==============================================================================
+
+CellmlFileElement::CellmlFileElement(iface::cellml_api::MapComponents *pMapComponents) :
+    mCmetaId(QString::fromStdWString(pMapComponents->cmetaId()))
+{
+}
+
+//==============================================================================
+
+CellmlFileElement::CellmlFileElement(iface::cellml_api::MapVariables *pMapVariables) :
+    mCmetaId(QString::fromStdWString(pMapVariables->cmetaId()))
+{
+}
+
+//==============================================================================
+
 QString CellmlFileElement::cmetaId() const
 {
     // Return the element's cmeta:id
