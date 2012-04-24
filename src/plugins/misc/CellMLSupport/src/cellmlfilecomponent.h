@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include "cellmlfilenamedelement.h"
+#include "cellmlfileunit.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -26,6 +27,14 @@ class CELLMLSUPPORT_EXPORT CellmlFileComponent : public CellmlFileNamedElement
 public:
     explicit CellmlFileComponent(iface::cellml_api::ImportComponent *pImportComponent);
     explicit CellmlFileComponent(iface::cellml_api::CellMLComponent *pComponent);
+    ~CellmlFileComponent();
+
+    CellmlFileUnits units() const;
+
+private:
+    CellmlFileUnits mUnits;
+
+    void clearUnits();
 };
 
 //==============================================================================

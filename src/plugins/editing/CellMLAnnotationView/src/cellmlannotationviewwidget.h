@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include "cellmlfilecomponentref.h"
+#include "cellmlfileunit.h"
 #include "widget.h"
 
 //==============================================================================
@@ -48,7 +49,10 @@ private:
     QTextEdit *mDebugOutput;
 
     void initTreeView(const QString &pFileName);
-    void initComponentRefTreeView(const QString &pLeadingSpace, CellMLSupport::CellmlFileComponentRef *pComponentRef);
+    void initUnitsTreeView(const QString &pLeadingSpace,
+                           const CellMLSupport::CellmlFileUnits pUnits);
+    void initComponentRefTreeView(const QString &pLeadingSpace,
+                                  CellMLSupport::CellmlFileComponentRef *pComponentRef);
 
 Q_SIGNALS:
     void horizontalSplitterMoved(const QList<int> &pSizes);

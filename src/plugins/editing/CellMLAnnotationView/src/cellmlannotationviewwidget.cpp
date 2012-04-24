@@ -142,33 +142,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Retrieve the model's unit definitions
 
-    if (cellmlFile->units().isEmpty()) {
-        mDebugOutput->append(QString("    No units"));
-    } else {
-        mDebugOutput->append(QString("    Units:"));
-
-        foreach (CellMLSupport::CellmlFileUnit *unit, cellmlFile->units()) {
-            mDebugOutput->append(QString("        %1 [%2]").arg(unit->name(),
-                                                                unit->cmetaId()));
-            mDebugOutput->append(QString("            Base unit: %1").arg(unit->isBaseUnit()?"yes":"no"));
-
-            if (unit->unitElements().isEmpty()) {
-                mDebugOutput->append(QString("            No unit elements"));
-            } else {
-                mDebugOutput->append(QString("            Unit elements:"));
-
-                foreach (CellMLSupport::CellmlFileUnitElement *unitElement,
-                         unit->unitElements()) {
-                    mDebugOutput->append(QString("                %1 | Prefix: %2 | Multiplier: %3 | Offset: %4 | Exponent: %5 [%6]").arg(unitElement->name(),
-                                                                                                                                          QString::number(unitElement->prefix()),
-                                                                                                                                          QString::number(unitElement->multiplier()),
-                                                                                                                                          QString::number(unitElement->offset()),
-                                                                                                                                          QString::number(unitElement->exponent()),
-                                                                                                                                          unitElement->cmetaId()));
-                }
-            }
-        }
-    }
+    initUnitsTreeView("    ", cellmlFile->units());
 
     // Retrieve the model's components
 
@@ -177,9 +151,13 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
     } else {
         mDebugOutput->append(QString("    Components:"));
 
-        foreach (CellMLSupport::CellmlFileComponent *component, cellmlFile->components())
+        foreach (CellMLSupport::CellmlFileComponent *component,
+                 cellmlFile->components()) {
             mDebugOutput->append(QString("        %1 [%2]").arg(component->name(),
                                                                 component->cmetaId()));
+
+            initUnitsTreeView("            ", component->units());
+        }
     }
 
     // Retrieve the model's groups
@@ -241,6 +219,43 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
                     mDebugOutput->append(QString("                %1 ---> %2 [%3]").arg(mapVariablesItem->firstVariableName(),
                                                                                         mapVariablesItem->secondVariableName(),
                                                                                         mapVariablesItem->cmetaId()));
+            }
+        }
+    }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::initUnitsTreeView(const QString &pLeadingSpace,
+                                                   const CellMLSupport::CellmlFileUnits pUnits)
+{
+    if (pUnits.isEmpty()) {
+        mDebugOutput->append(QString("%1No units").arg(pLeadingSpace));
+    } else {
+        mDebugOutput->append(QString("%1Units:").arg(pLeadingSpace));
+
+        foreach (CellMLSupport::CellmlFileUnit *unit, pUnits) {
+            mDebugOutput->append(QString("%1    %2 [%3]").arg(pLeadingSpace,
+                                                              unit->name(),
+                                                              unit->cmetaId()));
+            mDebugOutput->append(QString("%1        Base unit: %2").arg(pLeadingSpace,
+                                                                        unit->isBaseUnit()?"yes":"no"));
+
+            if (unit->unitElements().isEmpty()) {
+                mDebugOutput->append(QString("%1        No unit elements").arg(pLeadingSpace));
+            } else {
+                mDebugOutput->append(QString("%1        Unit elements:").arg(pLeadingSpace));
+
+                foreach (CellMLSupport::CellmlFileUnitElement *unitElement,
+                         unit->unitElements()) {
+                    mDebugOutput->append(QString("%1            %2 | Prefix: %3 | Multiplier: %4 | Offset: %5 | Exponent: %6 [%7]").arg(pLeadingSpace,
+                                                                                                                                        unitElement->name(),
+                                                                                                                                        QString::number(unitElement->prefix()),
+                                                                                                                                        QString::number(unitElement->multiplier()),
+                                                                                                                                        QString::number(unitElement->offset()),
+                                                                                                                                        QString::number(unitElement->exponent()),
+                                                                                                                                        unitElement->cmetaId()));
+                }
             }
         }
     }
