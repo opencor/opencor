@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfilecomponent.h"
 #include "cellmlfileconnection.h"
 #include "cellmlfilegroup.h"
 #include "cellmlfileimport.h"
@@ -47,6 +48,7 @@ public:
 
     CellmlFileImports imports() const;
     CellmlFileUnits units() const;
+    CellmlFileComponents components() const;
     CellmlFileGroups groups() const;
     CellmlFileConnections connections() const;
 
@@ -58,6 +60,7 @@ private:
     CellmlFileModel *mModel;
     CellmlFileImports mImports;
     CellmlFileUnits mUnits;
+    CellmlFileComponents mComponents;
     CellmlFileGroups mGroups;
     CellmlFileConnections mConnections;
 
@@ -75,6 +78,7 @@ private:
 
     void clearImports();
     void clearUnits();
+    void clearComponents();
     void clearGroups();
     void clearConnections();
 };

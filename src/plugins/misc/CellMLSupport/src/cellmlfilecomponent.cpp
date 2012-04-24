@@ -18,6 +18,13 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::ImportComponent *pIm
 
 //==============================================================================
 
+CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pComponent) :
+    CellmlFileNamedElement(pComponent)
+{
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 

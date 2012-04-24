@@ -35,6 +35,7 @@ public:
     explicit CellmlFileElement(iface::cellml_api::ImportComponent *pImportComponent);
     explicit CellmlFileElement(iface::cellml_api::Units *pUnits);
     explicit CellmlFileElement(iface::cellml_api::Unit *pUnit);
+    explicit CellmlFileElement(iface::cellml_api::CellMLComponent *pComponent);
     explicit CellmlFileElement(iface::cellml_api::Group *pGroup);
     explicit CellmlFileElement(iface::cellml_api::RelationshipRef *pRelationshipRef);
     explicit CellmlFileElement(iface::cellml_api::ComponentRef *pComponentRef);

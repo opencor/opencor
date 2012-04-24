@@ -53,6 +53,13 @@ CellmlFileElement::CellmlFileElement(iface::cellml_api::Unit *pUnit) :
 
 //==============================================================================
 
+CellmlFileElement::CellmlFileElement(iface::cellml_api::CellMLComponent *pComponent) :
+    mCmetaId(QString::fromStdWString(pComponent->cmetaId()))
+{
+}
+
+//==============================================================================
+
 CellmlFileElement::CellmlFileElement(iface::cellml_api::Group *pGroup) :
     mCmetaId(QString::fromStdWString(pGroup->cmetaId()))
 {

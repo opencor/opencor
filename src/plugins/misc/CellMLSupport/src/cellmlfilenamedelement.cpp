@@ -51,6 +51,14 @@ CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::Unit *pUnit) :
 
 //==============================================================================
 
+CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::CellMLComponent *pComponent) :
+    CellmlFileElement(pComponent),
+    mName(QString::fromStdWString(pComponent->name()))
+{
+}
+
+//==============================================================================
+
 CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::RelationshipRef *pRelationshipRef) :
     CellmlFileElement(pRelationshipRef),
     mName(QString::fromStdWString(pRelationshipRef->name()))

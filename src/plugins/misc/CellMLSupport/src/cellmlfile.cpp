@@ -82,6 +82,7 @@ void CellmlFile::reset()
 
     clearImports();
     clearUnits();
+    clearComponents();
     clearGroups();
     clearConnections();
 
@@ -183,7 +184,13 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
 
     // Iterate through the components and add them to our list
 
-//---GRY--- TO BE DONE...
+    iface::cellml_api::CellMLComponentIterator *componentIterator = mCellmlApiModel->localComponents()->iterateComponents();
+    iface::cellml_api::CellMLComponent *component;
+
+    while ((component = componentIterator->nextComponent()))
+        // We have a component, so add it to our list
+
+        mComponents.append(new CellmlFileComponent(component));
 
     // Iterate through the groups and add them to our list
 
@@ -470,6 +477,15 @@ CellmlFileUnits CellmlFile::units() const
 
 //==============================================================================
 
+CellmlFileComponents CellmlFile::components() const
+{
+    // Return the CellML file's components
+
+    return mComponents;
+}
+
+//==============================================================================
+
 CellmlFileGroups CellmlFile::groups() const
 {
     // Return the CellML file's groups
@@ -508,6 +524,18 @@ void CellmlFile::clearUnits()
         delete unit;
 
     mUnits.clear();
+}
+
+//==============================================================================
+
+void CellmlFile::clearComponents()
+{
+    // Delete all the components and clear our list
+
+    foreach (CellmlFileComponent *component, mComponents)
+        delete component;
+
+    mComponents.clear();
 }
 
 //==============================================================================
