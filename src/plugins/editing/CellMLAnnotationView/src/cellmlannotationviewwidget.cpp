@@ -196,6 +196,18 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
                                                                                                                                                               variable->cmetaId()));
                 }
             }
+
+            if (component->mathmlElements().isEmpty()) {
+                mDebugOutput->append(QString("            No MathML elements"));
+            } else {
+                mDebugOutput->append(QString("            MathML elements:"));
+
+                int counter = 0;
+
+                foreach (CellMLSupport::CellmlFileMathmlElement *mathmlElement,
+                         component->mathmlElements())
+                    mDebugOutput->append(QString("                MathML element #%1").arg(QString::number(++counter)));
+            }
         }
     }
 

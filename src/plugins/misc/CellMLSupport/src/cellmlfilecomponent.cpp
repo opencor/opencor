@@ -44,6 +44,16 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
         // We have a variable, so add it to our list
 
         mVariables.append(new CellmlFileVariable(variable));
+
+    // Iterate through the MathML elements and add them to our list
+
+    iface::cellml_api::MathMLElementIterator *mathmlElementIterator = pComponent->math()->iterate();
+    iface::mathml_dom::MathMLElement *mathmlElement;
+
+    while ((mathmlElement = mathmlElementIterator->next()))
+        // We have a MathML element, so add it to our list
+
+        mMathmlElements.append(new CellmlFileMathmlElement(mathmlElement));
 }
 
 //==============================================================================
@@ -52,8 +62,14 @@ CellmlFileComponent::~CellmlFileComponent()
 {
     // Delete some internal objects
 
-    clearUnits();
-    clearVariables();
+    foreach (CellmlFileUnit *unit, mUnits)
+        delete unit;
+
+    foreach (CellmlFileVariable *variable, mVariables)
+        delete variable;
+
+    foreach (CellmlFileMathmlElement *mathmlElement, mMathmlElements)
+        delete mathmlElement;
 }
 
 //==============================================================================
@@ -76,26 +92,11 @@ CellmlFileVariables CellmlFileComponent::variables() const
 
 //==============================================================================
 
-void CellmlFileComponent::clearUnits()
+CellmlFileMathmlElements CellmlFileComponent::mathmlElements() const
 {
-    // Delete all the units and clear our list
+    // Return the component's MathML elements
 
-    foreach (CellmlFileUnit *unit, mUnits)
-        delete unit;
-
-    mUnits.clear();
-}
-
-//==============================================================================
-
-void CellmlFileComponent::clearVariables()
-{
-    // Delete all the variables and clear our list
-
-    foreach (CellmlFileVariable *variable, mVariables)
-        delete variable;
-
-    mVariables.clear();
+    return mMathmlElements;
 }
 
 //==============================================================================

@@ -1,16 +1,12 @@
 //==============================================================================
-// CellML file component
+// CellML file MathML element
 //==============================================================================
 
-#ifndef CELLMLFILECOMPONENT_H
-#define CELLMLFILECOMPONENT_H
+#ifndef CELLMLFILEMATHMLELEMENT_H
+#define CELLMLFILEMATHMLELEMENT_H
 
 //==============================================================================
 
-#include "cellmlfilenamedelement.h"
-#include "cellmlfileunit.h"
-#include "cellmlfilemathmlelement.h"
-#include "cellmlfilevariable.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -19,31 +15,24 @@
 
 //==============================================================================
 
+#include "IfaceMathML_content_APISPEC.hxx"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileComponent : public CellmlFileNamedElement
+class CELLMLSUPPORT_EXPORT CellmlFileMathmlElement
 {
 public:
-    explicit CellmlFileComponent(iface::cellml_api::ImportComponent *pImportComponent);
-    explicit CellmlFileComponent(iface::cellml_api::CellMLComponent *pComponent);
-    ~CellmlFileComponent();
-
-    CellmlFileUnits units() const;
-    CellmlFileVariables variables() const;
-    CellmlFileMathmlElements mathmlElements() const;
-
-private:
-    CellmlFileUnits mUnits;
-    CellmlFileVariables mVariables;
-    CellmlFileMathmlElements mMathmlElements;
+    explicit CellmlFileMathmlElement(iface::mathml_dom::MathMLElement *pMathmlElement);
 };
 
 //==============================================================================
 
-typedef QList<CellmlFileComponent *> CellmlFileComponents;
+typedef QList<CellmlFileMathmlElement *> CellmlFileMathmlElements;
 
 //==============================================================================
 
