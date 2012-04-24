@@ -115,7 +115,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Output the name of the CellML model
 
-    mDebugOutput->append(QString("    Model name: %1 [%2]").arg(cellmlFile->model()->name(),
+    mDebugOutput->append(QString("    Model: %1 [%2]").arg(cellmlFile->model()->name(),
                                                                 cellmlFile->model()->cmetaId()));
 
     // Retrieve the model's imports
@@ -159,12 +159,12 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
                 foreach (CellMLSupport::CellmlFileUnitElement *unitElement,
                          unit->unitElements()) {
-                    mDebugOutput->append(QString("            %1 [%2]").arg(unitElement->name(),
-                                                                            unitElement->cmetaId()));
-                    mDebugOutput->append(QString("                Prefix: %1").arg(unitElement->prefix()));
-                    mDebugOutput->append(QString("                Multiplier: %1").arg(unitElement->multiplier()));
-                    mDebugOutput->append(QString("                Offset: %1").arg(unitElement->offset()));
-                    mDebugOutput->append(QString("                Exponent: %1").arg(unitElement->exponent()));
+                    mDebugOutput->append(QString("                %1 | Prefix: %2 | Multiplier: %3 | Offset: %4 | Exponent: %5 [%6]").arg(unitElement->name(),
+                                                                                                                                          QString::number(unitElement->prefix()),
+                                                                                                                                          QString::number(unitElement->multiplier()),
+                                                                                                                                          QString::number(unitElement->offset()),
+                                                                                                                                          QString::number(unitElement->exponent()),
+                                                                                                                                          unitElement->cmetaId()));
                 }
             }
         }
@@ -203,6 +203,21 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
                          group->componentRefs())
                     initComponentRefTreeView("                ", componentRef);
             }
+        }
+    }
+
+    // Retrieve the model's connections
+
+    if (cellmlFile->connections().isEmpty()) {
+        mDebugOutput->append(QString("    No connections"));
+    } else {
+        mDebugOutput->append(QString("    Connections:"));
+
+        foreach (CellMLSupport::CellmlFileConnection *connection, cellmlFile->connections()) {
+            mDebugOutput->append(QString("        Connection [%1]").arg(connection->cmetaId()));
+            mDebugOutput->append(QString("            Components: %1 ---> %2 [%3]").arg(connection->componentMapping()->firstComponentName(),
+                                                                                        connection->componentMapping()->secondComponentName(),
+                                                                                        connection->componentMapping()->cmetaId()));
         }
     }
 }
