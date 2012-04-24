@@ -170,6 +170,18 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
         }
     }
 
+    // Retrieve the model's components
+
+    if (cellmlFile->components().isEmpty()) {
+        mDebugOutput->append(QString("    No components"));
+    } else {
+        mDebugOutput->append(QString("    Components:"));
+
+        foreach (CellMLSupport::CellmlFileComponent *component, cellmlFile->components())
+            mDebugOutput->append(QString("        %1 [%2]").arg(component->name(),
+                                                                component->cmetaId()));
+    }
+
     // Retrieve the model's groups
 
     if (cellmlFile->groups().isEmpty()) {
