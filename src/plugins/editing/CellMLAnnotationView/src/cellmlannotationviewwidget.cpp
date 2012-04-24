@@ -218,6 +218,18 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
             mDebugOutput->append(QString("            Components: %1 ---> %2 [%3]").arg(connection->componentMapping()->firstComponentName(),
                                                                                         connection->componentMapping()->secondComponentName(),
                                                                                         connection->componentMapping()->cmetaId()));
+
+            if (connection->variableMappings().isEmpty()) {
+                mDebugOutput->append(QString("            No variables"));
+            } else {
+                mDebugOutput->append(QString("            Variables:"));
+
+                foreach (CellMLSupport::CellmlFileMapVariablesItem *mapVariablesItem,
+                         connection->variableMappings())
+                    mDebugOutput->append(QString("                %1 ---> %2 [%3]").arg(mapVariablesItem->firstVariableName(),
+                                                                                        mapVariablesItem->secondVariableName(),
+                                                                                        mapVariablesItem->cmetaId()));
+            }
         }
     }
 }
