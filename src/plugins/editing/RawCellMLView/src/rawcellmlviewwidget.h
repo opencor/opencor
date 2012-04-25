@@ -53,6 +53,7 @@ class RawCellmlViewWidget : public Core::Widget
 
 public:
     explicit RawCellmlViewWidget(QWidget *pParent);
+    ~RawCellmlViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;

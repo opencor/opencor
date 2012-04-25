@@ -65,6 +65,15 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
+RawCellmlViewWidget::~RawCellmlViewWidget()
+{
+    // Delete the UI
+
+    delete mUi;
+}
+
+//==============================================================================
+
 static const QString SettingsViewerHeight = "ViewerHeight";
 static const QString SettingsEditorHeight = "EditorHeight";
 

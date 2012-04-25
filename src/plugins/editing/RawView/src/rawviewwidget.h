@@ -28,6 +28,7 @@ class RawViewWidget : public Core::Widget
 
 public:
     explicit RawViewWidget(QWidget *pParent, const QString &pFileName);
+    ~RawViewWidget();
 
 private:
     Ui::RawViewWidget *mUi;

@@ -62,6 +62,15 @@ RawViewWidget::RawViewWidget(QWidget *pParent, const QString &pFileName) :
 
 //==============================================================================
 
+RawViewWidget::~RawViewWidget()
+{
+    // Delete the UI
+
+    delete mUi;
+}
+
+//==============================================================================
+
 }   // namespace RawView
 }   // namespace OpenCOR
 

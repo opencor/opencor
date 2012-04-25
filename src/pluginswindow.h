@@ -15,7 +15,11 @@
 
 #include <QDialog>
 #include <QStyledItemDelegate>
-#include <QStandardItemModel>
+
+//==============================================================================
+
+class QStandardItem;
+class QStandardItemModel;
 
 //==============================================================================
 

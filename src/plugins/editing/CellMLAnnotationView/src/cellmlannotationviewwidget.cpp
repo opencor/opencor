@@ -15,6 +15,7 @@
 //==============================================================================
 
 #include <QSplitter>
+#include <QStandardItemModel>
 #include <QTextEdit>
 
 //==============================================================================
@@ -40,8 +41,10 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // Create and customise a tree view which will contain all of the units,
     // components, groups and connections from the CellML file
 
-    mTreeView = new Core::TreeView(this);
+    mTreeView  = new Core::TreeView(this);
+    mDataModel = new QStandardItemModel(mTreeView);
 
+    mTreeView->setModel(mDataModel);
     mTreeView->setFrameShape(QFrame::NoFrame);
     mTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeView->header()->setVisible(false);
@@ -78,6 +81,15 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // Initialise our tree view
 
     initTreeView(pFileName);
+}
+
+//==============================================================================
+
+CellmlAnnotationViewWidget::~CellmlAnnotationViewWidget()
+{
+    // Delete some internal objects
+
+    delete mUi;
 }
 
 //==============================================================================

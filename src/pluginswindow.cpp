@@ -16,6 +16,7 @@
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QStandardItemModel>
 #include <QUrl>
 
 //==============================================================================
@@ -89,7 +90,7 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
     // are shown as 'disabled' (to reflect the fact that users cannot decide
     // whether they should be loaded)
 
-    mDataModel = new QStandardItemModel();
+    mDataModel = new QStandardItemModel(mUi->treeView);
     mPluginDelegate = new PluginDelegate(mDataModel);
 
     mUi->treeView->setModel(mDataModel);
@@ -208,10 +209,8 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
 
 PluginsWindow::~PluginsWindow()
 {
-    // Delete some internal objects
+    // Delete the UI
 
-    delete mDataModel;
-    delete mPluginDelegate;
     delete mUi;
 }
 
