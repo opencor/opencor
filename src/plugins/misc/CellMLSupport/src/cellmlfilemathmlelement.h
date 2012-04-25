@@ -12,6 +12,7 @@
 //==============================================================================
 
 #include <QList>
+#include <QString>
 
 //==============================================================================
 
@@ -28,6 +29,19 @@ class CELLMLSUPPORT_EXPORT CellmlFileMathmlElement
 {
 public:
     explicit CellmlFileMathmlElement(iface::mathml_dom::MathMLElement *pMathmlElement);
+
+    QString className() const;
+    QString mathElementStyle() const;
+    QString id() const;
+    QString xref() const;
+    QString href() const;
+
+private:
+    QString mClassName;
+    QString mMathElementStyle;
+    QString mId;
+    QString mXref;
+    QString mHref;
 };
 
 //==============================================================================

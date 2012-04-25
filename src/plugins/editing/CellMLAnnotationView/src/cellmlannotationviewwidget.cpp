@@ -206,7 +206,12 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
                 foreach (CellMLSupport::CellmlFileMathmlElement *mathmlElement,
                          component->mathmlElements())
-                    mDebugOutput->append(QString("                MathML element #%1").arg(QString::number(++counter)));
+                    mDebugOutput->append(QString("                MathML element #%1 | Class name: %2 | Math element style: %3 | Id: %4 | Xref: %5 | Href: %6").arg(QString::number(++counter),
+                                                                                                                                                                    mathmlElement->className(),
+                                                                                                                                                                    mathmlElement->mathElementStyle(),
+                                                                                                                                                                    mathmlElement->id(),
+                                                                                                                                                                    mathmlElement->xref(),
+                                                                                                                                                                    mathmlElement->href()));
             }
         }
     }
