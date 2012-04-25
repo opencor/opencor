@@ -69,7 +69,6 @@ private:
     PluginManager *mPluginManager;
 
     QStandardItemModel *mDataModel;
-
     PluginDelegate *mPluginDelegate;
 
     QList<QStandardItem *> mManageablePlugins;

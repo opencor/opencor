@@ -58,7 +58,7 @@ void PluginDelegate::paint(QPainter *pPainter,
         // This is not a plugin item, but a category item, so prevent it from
         // being hoverable. Otherwise, show the category item enabled since it's
         // actually disabled (so we can't select it), yet we want to see as if
-        // it was enabled. Finally, make the category item's text bold
+        // it was enabled. Finally, make the category item's text bold...
 
         option.state &= ~QStyle::State_MouseOver;
         option.state |=  QStyle::State_Enabled;
@@ -95,11 +95,6 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
 
     mUi->treeView->setModel(mDataModel);
     mUi->treeView->setItemDelegate(mPluginDelegate);
-
-    // Prevent the categories from being collapsable
-
-    mUi->treeView->setRootIsDecorated(false);
-    mUi->treeView->setExpandsOnDoubleClick(false);
 
     // Populate the data model with our different categories of plugins
     // Note: we create all of them in one go (rather than when required), so

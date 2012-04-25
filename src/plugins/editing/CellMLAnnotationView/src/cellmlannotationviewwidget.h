@@ -13,6 +13,11 @@
 
 //==============================================================================
 
+#include <QStandardItem>
+#include <QStyledItemDelegate>
+
+//==============================================================================
+
 namespace Ui {
     class CellmlAnnotationViewWidget;
 }
@@ -28,6 +33,40 @@ class QTreeView;
 
 namespace OpenCOR {
 namespace CellMLAnnotationView {
+
+//==============================================================================
+
+class CellmlElementDelegate : public QStyledItemDelegate
+{
+public:
+    explicit CellmlElementDelegate(QStandardItemModel *pDataModel);
+
+    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+                       const QModelIndex &pIndex) const;
+
+private:
+    QStandardItemModel *mDataModel;
+};
+
+//==============================================================================
+
+class CellmlElementItem : public QStandardItem
+{
+public:
+    enum Type
+    {
+        Error = QStandardItem::UserType,
+        Category = QStandardItem::UserType+1,
+        Item = QStandardItem::UserType+2
+    };
+
+    explicit CellmlElementItem(const Type &pType, const QString &pText);
+
+    virtual int type() const;
+
+private:
+    Type mType;
+};
 
 //==============================================================================
 
@@ -49,6 +88,7 @@ private:
 
     QTreeView *mTreeView;
     QStandardItemModel *mDataModel;
+    CellmlElementDelegate *mCellmlElementDelegate;
 
     QTextEdit *mDebugOutput;
 

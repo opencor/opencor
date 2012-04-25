@@ -25,6 +25,62 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
+CellmlElementDelegate::CellmlElementDelegate(QStandardItemModel *pDataModel) :
+    QStyledItemDelegate(),
+    mDataModel(pDataModel)
+{
+}
+
+//==============================================================================
+
+void CellmlElementDelegate::paint(QPainter *pPainter,
+                                  const QStyleOptionViewItem &pOption,
+                                  const QModelIndex &pIndex) const
+{
+    // Paint the item as normal, except for the items which are not checkable
+    // (i.e. plugins which the user cannot decide whether to load) in which case
+    // we paint them as if they were disabled
+
+    CellmlElementItem *cellmlElementItem = static_cast<CellmlElementItem *>(mDataModel->itemFromIndex(pIndex));
+
+    QStyleOptionViewItemV4 option(pOption);
+
+    initStyleOption(&option, pIndex);
+
+    if (cellmlElementItem->type() == CellmlElementItem::Category) {
+        // This is a category item, so prevent it from being hoverable.
+        // Otherwise, show the category item enabled since it's actually
+        // disabled (so we can't select it), yet we want to see as if it was
+        // enabled. Finally, make the category item's text bold...
+
+        option.state &= ~QStyle::State_MouseOver;
+        option.state |=  QStyle::State_Enabled;
+
+        option.font.setBold(true);
+    }
+
+    QStyledItemDelegate::paint(pPainter, option, pIndex);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(const Type &pType, const QString &pText) :
+    QStandardItem(pText),
+    mType(pType)
+{
+}
+
+//==============================================================================
+
+int CellmlElementItem::type() const
+{
+    // Return the CellML element item's type
+
+    return mType;
+}
+
+//==============================================================================
+
 CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
                                                        const QString &pFileName) :
     Widget(pParent),
@@ -41,13 +97,17 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // Create and customise a tree view which will contain all of the units,
     // components, groups and connections from the CellML file
 
-    mTreeView  = new Core::TreeView(this);
+    mTreeView = new Core::TreeView(this);
     mDataModel = new QStandardItemModel(mTreeView);
+    mCellmlElementDelegate = new CellmlElementDelegate(mDataModel);
 
     mTreeView->setModel(mDataModel);
-    mTreeView->setFrameShape(QFrame::NoFrame);
+    mTreeView->setItemDelegate(mCellmlElementDelegate);
+
     mTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mTreeView->header()->setVisible(false);
+    mTreeView->setFrameShape(QFrame::NoFrame);
+    mTreeView->setHeaderHidden(true);
+    mTreeView->setRootIsDecorated(false);
 
     // Populate our horizontal splitter with the aforementioned tree view, as
     // well as with a dummy (for now) widget
@@ -120,15 +180,19 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
         // Something went wrong while trying to load the CellML file, so report
         // it and leave
 
-        mDebugOutput->append(QString("    [Error] %1").arg(cellmlFile->issues().first().formattedMessage()));
+        mDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(CellmlElementItem::Error,
+                                                                         QString("[Error] %1").arg(cellmlFile->issues().first().formattedMessage())));
 
         return;
     }
 
     // Output the name of the CellML model
 
+    mDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(CellmlElementItem::Category,
+                                                                     "Model"));
+
     mDebugOutput->append(QString("    Model: %1 [%2]").arg(cellmlFile->model()->name(),
-                                                                cellmlFile->model()->cmetaId()));
+                                                           cellmlFile->model()->cmetaId()));
 
     // Retrieve the model's imports
 
