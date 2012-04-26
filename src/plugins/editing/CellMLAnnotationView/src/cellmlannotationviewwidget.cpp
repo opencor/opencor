@@ -48,9 +48,10 @@ void CellmlElementDelegate::paint(QPainter *pPainter,
     initStyleOption(&option, pIndex);
 
     if (   (cellmlElementItem->type() == CellmlElementItem::Error)
-        || (cellmlElementItem->type() == CellmlElementItem::Warning)) {
-        // This is an error/warning item, so prevent it from being hoverable.
-        // Otherwise, show the category item enabled since it's actually
+        || (cellmlElementItem->type() == CellmlElementItem::Warning)
+        || (cellmlElementItem->type() == CellmlElementItem::Category)) {
+        // This is an error/warning/category item, so prevent it from being
+        // hoverable. Otherwise, show the item enabled since it's actually
         // disabled (so we can't select it), yet we want to see as if it was
         // enabled...
 
@@ -67,7 +68,7 @@ CellmlElementItem::CellmlElementItem(const Type &pType, const QString &pText) :
     QStandardItem(pText),
     mType(pType)
 {
-    initialize(pType, pText);
+    initialize(pType, pType, pText);
 }
 
 //==============================================================================
@@ -77,26 +78,33 @@ CellmlElementItem::CellmlElementItem(const Type &pType, const Type &pSubType,
     QStandardItem(pText),
     mType(pType)
 {
-    initialize(pSubType, pText);
+    initialize(pType, pSubType, pText);
 }
 
 //==============================================================================
 
-void CellmlElementItem::initialize(const Type &pIconType, const QString &pText)
+void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
+                                   const QString &pText)
 {
     // Disable the item in case it's an error/warning item and also use its text
     // as a tooltip (in case it's too long and therefore doesn't fit within the
     // allocated space we have)
     // Note: it will get 're-enabled' by our item delegate
 
-    if ((pIconType == Error) || (pIconType == Warning)) {
+    if ((pType == Error) || (pType == Warning)) {
         setEnabled(false);
         setToolTip(pText);
     }
 
+    // Disable the item in case it's a category item
+    // Note: it will get 're-enabled' by our item delegate
+
+    if (pType == Category)
+        setEnabled(false);
+
     // Determine the icon to be used for the item
 
-    switch (pIconType) {
+    switch (pSubType) {
     case Error:
         setIcon(QIcon(":CellMLSupport_errorNode"));
 
@@ -259,8 +267,8 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     mDataModel->invisibleRootItem()->appendRow(modelItem);
 
-    mDebugOutput->append(QString("    Model: %1 [%2]").arg(cellmlFile->model()->name(),
-                                                           cellmlFile->model()->cmetaId()));
+//    mDebugOutput->append(QString("    Model: %1 [%2]").arg(cellmlFile->model()->name(),
+//                                                           cellmlFile->model()->cmetaId()));
 
     // Retrieve the model's imports
 
@@ -273,27 +281,41 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
         foreach (CellMLSupport::CellmlFileImport *import,
                  cellmlFile->imports()) {
-            mDebugOutput->append(QString("        From %1 [%2]:").arg(import->uri(),
-                                                                      import->cmetaId()));
+            CellmlElementItem *importItem = new CellmlElementItem(CellmlElementItem::Import,
+                                                                  import->uri());
 
-            if (import->units().isEmpty()) {
-                mDebugOutput->append(QString("            No units"));
-            } else {
-                mDebugOutput->append(QString("            Units:"));
+            importsItem->appendRow(importItem);
+
+            if (import->units().count()) {
+                CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                     CellmlElementItem::Unit,
+                                                                     "Units");
+
+                importItem->appendRow(unitsItem);
+
+//                mDebugOutput->append(QString("            Units:"));
 
                 foreach (CellMLSupport::CellmlFileImportUnit *unit,
                          import->units())
-                    mDebugOutput->append(QString("                Unit: %1 ---> %2 [%3]").arg(unit->name(), unit->referenceName(), unit->cmetaId()));
+                    unitsItem->appendRow(new CellmlElementItem(CellmlElementItem::Unit,
+                                                               unit->name()));
+//                    mDebugOutput->append(QString("                Unit: %1 ---> %2 [%3]").arg(unit->name(), unit->referenceName(), unit->cmetaId()));
             }
 
-            if (import->components().isEmpty()) {
-                mDebugOutput->append(QString("            No components"));
-            } else {
-                mDebugOutput->append(QString("            Components:"));
+            if (import->components().count()) {
+                CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                          CellmlElementItem::Component,
+                                                                          "Components");
+
+                importItem->appendRow(componentsItem);
+
+//                mDebugOutput->append(QString("            Components:"));
 
                 foreach (CellMLSupport::CellmlFileImportComponent *component,
                          import->components())
-                    mDebugOutput->append(QString("                Component: %1 ---> %2 [%3]").arg(component->name(), component->referenceName(), component->cmetaId()));
+                    componentsItem->appendRow(new CellmlElementItem(CellmlElementItem::Component,
+                                                                    component->name()));
+//                    mDebugOutput->append(QString("                Component: %1 ---> %2 [%3]").arg(component->name(), component->referenceName(), component->cmetaId()));
             }
         }
     }

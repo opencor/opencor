@@ -68,14 +68,16 @@ public:
     };
 
     explicit CellmlElementItem(const Type &pType, const QString &pText);
-    explicit CellmlElementItem(const Type &pType, const Type &pSubType, const QString &pText);
+    explicit CellmlElementItem(const Type &pType, const Type &pSubType,
+                               const QString &pText);
 
     virtual int type() const;
 
 private:
     Type mType;
 
-    void initialize(const Type &pIconType, const QString &pText);
+    void initialize(const Type &pType, const Type &pSubType,
+                    const QString &pText);
 };
 
 //==============================================================================
