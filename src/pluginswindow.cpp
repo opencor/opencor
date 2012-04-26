@@ -344,30 +344,13 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
 //==============================================================================
 
 void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
-                                     const QModelIndex &) const
+                                     const QModelIndex &pOldIndex) const
 {
-    // Check whether we are really dealing with a plugin item or whether we are
-    // dealing with a group item
-
-    QStandardItem *pluginItem = mDataModel->itemFromIndex(pNewIndex);
-
-    if (pluginItem->parent()) {
-        // This is a plugin item, so make sure that the details widget is
-        // visible
-
-        mUi->detailsWidget->setVisible(true);
-    } else {
-        // This is not a plugin item, but a category item, so hide it and
-        // leave...
-
-        mUi->detailsWidget->setVisible(false);
-
-        return;
-    }
+    Q_UNUSED(pOldIndex);
 
     // Update the information view with the plugin's information
 
-    Plugin *plugin = mPluginManager->plugin(pluginItem->text());
+    Plugin *plugin = mPluginManager->plugin(mDataModel->itemFromIndex(pNewIndex)->text());
     PluginInfo pluginInfo = plugin->info();
 
     // The plugin's name

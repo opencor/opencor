@@ -94,7 +94,8 @@ private Q_SLOTS:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 
-    void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &) const;
+    void updatePluginInfo(const QModelIndex &pNewIndex,
+                          const QModelIndex &pOldIndex) const;
     void updatePluginsLoadingState(QStandardItem *pChangedPluginItem = 0,
                                    const bool &pInitializing = false);
 

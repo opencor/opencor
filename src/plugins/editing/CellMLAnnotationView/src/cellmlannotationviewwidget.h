@@ -27,11 +27,19 @@ namespace Ui {
 class QSplitter;
 class QStandardItemModel;
 class QTextEdit;
-class QTreeView;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TreeView;
+}
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -98,7 +106,7 @@ private:
 
     QSplitter *mHorizontalSplitter;
 
-    QTreeView *mTreeView;
+    Core::TreeView *mTreeView;
     QStandardItemModel *mDataModel;
     CellmlElementDelegate *mCellmlElementDelegate;
 
