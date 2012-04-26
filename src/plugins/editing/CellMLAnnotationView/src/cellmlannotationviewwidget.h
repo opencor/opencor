@@ -63,16 +63,17 @@ class CellmlElementItem : public QStandardItem
 public:
     enum Type
     {
-        Error      = QStandardItem::UserType,
-        Warning    = QStandardItem::UserType+1,
-        Category   = QStandardItem::UserType+2,
-        Model      = QStandardItem::UserType+3,
-        Import     = QStandardItem::UserType+4,
-        Unit       = QStandardItem::UserType+5,
-        Component  = QStandardItem::UserType+6,
-        Variable   = QStandardItem::UserType+7,
-        Group      = QStandardItem::UserType+8,
-        Connection = QStandardItem::UserType+9
+        Error       = QStandardItem::UserType,
+        Warning     = QStandardItem::UserType+1,
+        Category    = QStandardItem::UserType+2,
+        Model       = QStandardItem::UserType+3,
+        Import      = QStandardItem::UserType+4,
+        Unit        = QStandardItem::UserType+5,
+        UnitElement = QStandardItem::UserType+6,
+        Component   = QStandardItem::UserType+7,
+        Variable    = QStandardItem::UserType+8,
+        Group       = QStandardItem::UserType+9,
+        Connection  = QStandardItem::UserType+10
     };
 
     explicit CellmlElementItem(const Type &pType, const QString &pText);

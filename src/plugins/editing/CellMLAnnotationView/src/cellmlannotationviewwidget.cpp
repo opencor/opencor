@@ -57,6 +57,11 @@ void CellmlElementDelegate::paint(QPainter *pPainter,
 
         option.state &= ~QStyle::State_MouseOver;
         option.state |=  QStyle::State_Enabled;
+
+        // In the case of a category, we make the font bold
+
+        if (cellmlElementItem->type() == CellmlElementItem::Category)
+            option.font.setBold(true);
     }
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
@@ -123,6 +128,10 @@ void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
         break;
     case Unit:
         setIcon(QIcon(":CellMLSupport_unitNode"));
+
+        break;
+    case UnitElement:
+        setIcon(QIcon(":CellMLSupport_unitElementNode"));
 
         break;
     case Component:
@@ -346,7 +355,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 //            mDebugOutput->append(QString("        %1 [%2]").arg(component->name(),
 //                                                                component->cmetaId()));
 
-            initUnitsTreeView(componentsItem, component->units());
+            initUnitsTreeView(componentItem, component->units());
 
             if (component->variables().count()) {
                 CellmlElementItem *variablesItem = new CellmlElementItem(CellmlElementItem::Category,
@@ -469,27 +478,34 @@ void CellmlAnnotationViewWidget::initUnitsTreeView(QStandardItem *pItem,
                                                    const CellMLSupport::CellmlFileUnits pUnits)
 {
     if (pUnits.count()) {
-        pItem->appendRow(new CellmlElementItem(CellmlElementItem::Category,
-                                               CellmlElementItem::Unit,
-                                               "Units"));
+        CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                   CellmlElementItem::Unit,
+                                                                   "Units");
+
+        pItem->appendRow(unitsItem);
 
         foreach (CellMLSupport::CellmlFileUnit *unit, pUnits) {
-            mDebugOutput->append(QString("%1 [%2]").arg(unit->name(),
-                                                        unit->cmetaId()));
-            mDebugOutput->append(QString("Base unit: %1").arg(unit->isBaseUnit()?"yes":"no"));
+            CellmlElementItem *unitItem = new CellmlElementItem(CellmlElementItem::Unit,
+                                                                unit->name());
+
+            unitsItem->appendRow(unitItem);
+//            mDebugOutput->append(QString("%1 [%2]").arg(unit->name(),
+//                                                        unit->cmetaId()));
+//            mDebugOutput->append(QString("Base unit: %1").arg(unit->isBaseUnit()?"yes":"no"));
 
             if (unit->unitElements().count()) {
-                mDebugOutput->append("Unit elements:");
+//                mDebugOutput->append("Unit elements:");
 
                 foreach (CellMLSupport::CellmlFileUnitElement *unitElement,
-                         unit->unitElements()) {
-                    mDebugOutput->append(QString("%1 | Prefix: %2 | Multiplier: %3 | Offset: %4 | Exponent: %5 [%6]").arg(unitElement->name(),
-                                                                                                                          QString::number(unitElement->prefix()),
-                                                                                                                          QString::number(unitElement->multiplier()),
-                                                                                                                          QString::number(unitElement->offset()),
-                                                                                                                          QString::number(unitElement->exponent()),
-                                                                                                                          unitElement->cmetaId()));
-                }
+                         unit->unitElements())
+                    unitItem->appendRow(new CellmlElementItem(CellmlElementItem::UnitElement,
+                                                              unitElement->name()));
+//                    mDebugOutput->append(QString("%1 | Prefix: %2 | Multiplier: %3 | Offset: %4 | Exponent: %5 [%6]").arg(unitElement->name(),
+//                                                                                                                          QString::number(unitElement->prefix()),
+//                                                                                                                          QString::number(unitElement->multiplier()),
+//                                                                                                                          QString::number(unitElement->offset()),
+//                                                                                                                          QString::number(unitElement->exponent()),
+//                                                                                                                          unitElement->cmetaId()));
             }
         }
     }
