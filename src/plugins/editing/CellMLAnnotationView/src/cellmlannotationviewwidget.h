@@ -55,17 +55,27 @@ class CellmlElementItem : public QStandardItem
 public:
     enum Type
     {
-        Error = QStandardItem::UserType,
-        Category = QStandardItem::UserType+1,
-        Item = QStandardItem::UserType+2
+        Error      = QStandardItem::UserType,
+        Warning    = QStandardItem::UserType+1,
+        Category   = QStandardItem::UserType+2,
+        Model      = QStandardItem::UserType+3,
+        Import     = QStandardItem::UserType+4,
+        Unit       = QStandardItem::UserType+5,
+        Component  = QStandardItem::UserType+6,
+        Group      = QStandardItem::UserType+7,
+        Connection = QStandardItem::UserType+8,
+        Item       = QStandardItem::UserType+9
     };
 
     explicit CellmlElementItem(const Type &pType, const QString &pText);
+    explicit CellmlElementItem(const Type &pType, const Type &pSubType, const QString &pText);
 
     virtual int type() const;
 
 private:
     Type mType;
+
+    void initialize(const Type &pIconType, const QString &pText);
 };
 
 //==============================================================================
@@ -93,7 +103,7 @@ private:
     QTextEdit *mDebugOutput;
 
     void initTreeView(const QString &pFileName);
-    void initUnitsTreeView(const QString &pLeadingSpace,
+    void initUnitsTreeView(QStandardItem *pItem,
                            const CellMLSupport::CellmlFileUnits pUnits);
     void initComponentRefTreeView(const QString &pLeadingSpace,
                                   CellMLSupport::CellmlFileComponentRef *pComponentRef);

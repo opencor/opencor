@@ -97,7 +97,9 @@ private Q_SLOTS:
     void updatePluginInfo(const QModelIndex &pNewIndex, const QModelIndex &) const;
     void updatePluginsLoadingState(QStandardItem *pChangedPluginItem = 0,
                                    const bool &pInitializing = false);
+
     void openLink(const QString &pLink) const;
+
     void apply();
 };
 

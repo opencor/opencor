@@ -93,7 +93,7 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
 {
     // Retrieve the error message template
 
-    QFile helpWidgetErrorFile(":helpWidgetError");
+    QFile helpWidgetErrorFile(":Help_helpWidgetError");
 
     helpWidgetErrorFile.open(QIODevice::ReadOnly);
 

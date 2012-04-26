@@ -48,8 +48,8 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     mQchFileName = applicationBaseFileName+".qch";
     mQhcFileName = applicationBaseFileName+".qhc";
 
-    Core::saveResourceAs(":qchFile", mQchFileName);
-    Core::saveResourceAs(":qhcFile", mQhcFileName);
+    Core::saveResourceAs(":Help_qchFile", mQchFileName);
+    Core::saveResourceAs(":Help_qhcFile", mQhcFileName);
 
     // Set up the help engine
 

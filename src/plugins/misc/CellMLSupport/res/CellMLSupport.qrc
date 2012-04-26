@@ -1,5 +1,13 @@
 <RCC>
     <qresource prefix="/">
+        <file alias="CellMLSupport_errorNode">oxygen/emblems/emblem-important.png</file>
+        <file alias="CellMLSupport_warningNode">oxygen/status/task-attention.png</file>
+        <file alias="CellMLSupport_modelNode">modelNode.png</file>
+        <file alias="CellMLSupport_importNode">importNode.png</file>
+        <file alias="CellMLSupport_unitNode">unitNode.png</file>
+        <file alias="CellMLSupport_componentNode">componentNode.png</file>
+        <file alias="CellMLSupport_groupNode">groupNode.png</file>
+        <file alias="CellMLSupport_connectionNode">connectionNode.png</file>
         <file alias="CellMLSupport_fr">../../../../../build/CellMLSupport_fr.qm</file>
     </qresource>
 </RCC>

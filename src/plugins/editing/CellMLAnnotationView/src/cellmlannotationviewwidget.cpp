@@ -47,16 +47,15 @@ void CellmlElementDelegate::paint(QPainter *pPainter,
 
     initStyleOption(&option, pIndex);
 
-    if (cellmlElementItem->type() == CellmlElementItem::Category) {
-        // This is a category item, so prevent it from being hoverable.
+    if (   (cellmlElementItem->type() == CellmlElementItem::Error)
+        || (cellmlElementItem->type() == CellmlElementItem::Warning)) {
+        // This is an error/warning item, so prevent it from being hoverable.
         // Otherwise, show the category item enabled since it's actually
         // disabled (so we can't select it), yet we want to see as if it was
-        // enabled. Finally, make the category item's text bold...
+        // enabled...
 
         option.state &= ~QStyle::State_MouseOver;
         option.state |=  QStyle::State_Enabled;
-
-        option.font.setBold(true);
     }
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
@@ -68,6 +67,73 @@ CellmlElementItem::CellmlElementItem(const Type &pType, const QString &pText) :
     QStandardItem(pText),
     mType(pType)
 {
+    initialize(pType, pText);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(const Type &pType, const Type &pSubType,
+                                     const QString &pText) :
+    QStandardItem(pText),
+    mType(pType)
+{
+    initialize(pSubType, pText);
+}
+
+//==============================================================================
+
+void CellmlElementItem::initialize(const Type &pIconType, const QString &pText)
+{
+    // Disable the item in case it's an error/warning item and also use its text
+    // as a tooltip (in case it's too long and therefore doesn't fit within the
+    // allocated space we have)
+    // Note: it will get 're-enabled' by our item delegate
+
+    if ((pIconType == Error) || (pIconType == Warning)) {
+        setEnabled(false);
+        setToolTip(pText);
+    }
+
+    // Determine the icon to be used for the item
+
+    switch (pIconType) {
+    case Error:
+        setIcon(QIcon(":CellMLSupport_errorNode"));
+
+        break;
+    case Warning:
+        setIcon(QIcon(":CellMLSupport_warningNode"));
+
+        break;
+    case Model:
+        setIcon(QIcon(":CellMLSupport_modelNode"));
+
+        break;
+    case Import:
+        setIcon(QIcon(":CellMLSupport_importNode"));
+
+        break;
+    case Unit:
+        setIcon(QIcon(":CellMLSupport_unitNode"));
+
+        break;
+    case Component:
+        setIcon(QIcon(":CellMLSupport_componentNode"));
+
+        break;
+    case Group:
+        setIcon(QIcon(":CellMLSupport_groupNode"));
+
+        break;
+    case Connection:
+        setIcon(QIcon(":CellMLSupport_connectionNode"));
+
+        break;
+    default:
+        // Anything that doesn't require an icon
+
+        break;
+    }
 }
 
 //==============================================================================
@@ -180,26 +246,30 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
         // Something went wrong while trying to load the CellML file, so report
         // it and leave
 
-        mDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(CellmlElementItem::Error,
-                                                                         QString("[Error] %1").arg(cellmlFile->issues().first().formattedMessage())));
+        mDataModel->invisibleRootItem()->appendRow(new CellmlElementItem((cellmlFile->issues().first().type() == CellMLSupport::CellmlFileIssue::Error)?CellmlElementItem::Error:CellmlElementItem::Warning,
+                                                                         cellmlFile->issues().first().formattedMessage()));
 
         return;
     }
 
     // Output the name of the CellML model
 
-    mDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(CellmlElementItem::Category,
-                                                                     "Model"));
+    CellmlElementItem *modelItem = new CellmlElementItem(CellmlElementItem::Model,
+                                                         cellmlFile->model()->name());
+
+    mDataModel->invisibleRootItem()->appendRow(modelItem);
 
     mDebugOutput->append(QString("    Model: %1 [%2]").arg(cellmlFile->model()->name(),
                                                            cellmlFile->model()->cmetaId()));
 
     // Retrieve the model's imports
 
-    if (cellmlFile->imports().isEmpty()) {
-        mDebugOutput->append(QString("    No imports"));
-    } else {
-        mDebugOutput->append(QString("    Imports:"));
+    if (cellmlFile->imports().count()) {
+        CellmlElementItem *importsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                 CellmlElementItem::Import,
+                                                                 "Imports");
+
+        modelItem->appendRow(importsItem);
 
         foreach (CellMLSupport::CellmlFileImport *import,
                  cellmlFile->imports()) {
@@ -230,21 +300,23 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Retrieve the model's unit definitions
 
-    initUnitsTreeView("    ", cellmlFile->units());
+    initUnitsTreeView(modelItem, cellmlFile->units());
 
     // Retrieve the model's components
 
-    if (cellmlFile->components().isEmpty()) {
-        mDebugOutput->append(QString("    No components"));
-    } else {
-        mDebugOutput->append(QString("    Components:"));
+    if (cellmlFile->components().count()) {
+        CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                  CellmlElementItem::Component,
+                                                                  "Components");
+
+        modelItem->appendRow(componentsItem);
 
         foreach (CellMLSupport::CellmlFileComponent *component,
                  cellmlFile->components()) {
             mDebugOutput->append(QString("        %1 [%2]").arg(component->name(),
                                                                 component->cmetaId()));
 
-            initUnitsTreeView("            ", component->units());
+            initUnitsTreeView(componentsItem, component->units());
 
             if (component->variables().isEmpty()) {
                 mDebugOutput->append(QString("            No variables"));
@@ -294,10 +366,12 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Retrieve the model's groups
 
-    if (cellmlFile->groups().isEmpty()) {
-        mDebugOutput->append(QString("    No groups"));
-    } else {
-        mDebugOutput->append(QString("    Groups:"));
+    if (cellmlFile->groups().count()) {
+        CellmlElementItem *groupsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                              CellmlElementItem::Group,
+                                                              "Groups");
+
+        modelItem->appendRow(groupsItem);
 
         foreach (CellMLSupport::CellmlFileGroup *group, cellmlFile->groups()) {
             mDebugOutput->append(QString("        Group [%1]").arg(group->cmetaId()));
@@ -330,10 +404,12 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Retrieve the model's connections
 
-    if (cellmlFile->connections().isEmpty()) {
-        mDebugOutput->append(QString("    No connections"));
-    } else {
-        mDebugOutput->append(QString("    Connections:"));
+    if (cellmlFile->connections().count()) {
+        CellmlElementItem *connectionsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                   CellmlElementItem::Connection,
+                                                                   "Connections");
+
+        modelItem->appendRow(connectionsItem);
 
         foreach (CellMLSupport::CellmlFileConnection *connection, cellmlFile->connections()) {
             mDebugOutput->append(QString("        Connection [%1]").arg(connection->cmetaId()));
@@ -354,39 +430,40 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
             }
         }
     }
+
+    // Expand everything so we can see the full contents of the CellML file
+
+    mTreeView->expandAll();
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::initUnitsTreeView(const QString &pLeadingSpace,
+void CellmlAnnotationViewWidget::initUnitsTreeView(QStandardItem *pItem,
                                                    const CellMLSupport::CellmlFileUnits pUnits)
 {
-    if (pUnits.isEmpty()) {
-        mDebugOutput->append(QString("%1No units").arg(pLeadingSpace));
-    } else {
-        mDebugOutput->append(QString("%1Units:").arg(pLeadingSpace));
+    if (pUnits.count()) {
+        pItem->appendRow(new CellmlElementItem(CellmlElementItem::Category,
+                                               CellmlElementItem::Unit,
+                                               "Units"));
 
         foreach (CellMLSupport::CellmlFileUnit *unit, pUnits) {
-            mDebugOutput->append(QString("%1    %2 [%3]").arg(pLeadingSpace,
-                                                              unit->name(),
-                                                              unit->cmetaId()));
-            mDebugOutput->append(QString("%1        Base unit: %2").arg(pLeadingSpace,
-                                                                        unit->isBaseUnit()?"yes":"no"));
+            mDebugOutput->append(QString("%1 [%2]").arg(unit->name(),
+                                                        unit->cmetaId()));
+            mDebugOutput->append(QString("Base unit: %1").arg(unit->isBaseUnit()?"yes":"no"));
 
             if (unit->unitElements().isEmpty()) {
-                mDebugOutput->append(QString("%1        No unit elements").arg(pLeadingSpace));
+                mDebugOutput->append("No unit elements");
             } else {
-                mDebugOutput->append(QString("%1        Unit elements:").arg(pLeadingSpace));
+                mDebugOutput->append("Unit elements:");
 
                 foreach (CellMLSupport::CellmlFileUnitElement *unitElement,
                          unit->unitElements()) {
-                    mDebugOutput->append(QString("%1            %2 | Prefix: %3 | Multiplier: %4 | Offset: %5 | Exponent: %6 [%7]").arg(pLeadingSpace,
-                                                                                                                                        unitElement->name(),
-                                                                                                                                        QString::number(unitElement->prefix()),
-                                                                                                                                        QString::number(unitElement->multiplier()),
-                                                                                                                                        QString::number(unitElement->offset()),
-                                                                                                                                        QString::number(unitElement->exponent()),
-                                                                                                                                        unitElement->cmetaId()));
+                    mDebugOutput->append(QString("%1 | Prefix: %2 | Multiplier: %3 | Offset: %4 | Exponent: %5 [%6]").arg(unitElement->name(),
+                                                                                                                          QString::number(unitElement->prefix()),
+                                                                                                                          QString::number(unitElement->multiplier()),
+                                                                                                                          QString::number(unitElement->offset()),
+                                                                                                                          QString::number(unitElement->exponent()),
+                                                                                                                          unitElement->cmetaId()));
                 }
             }
         }
