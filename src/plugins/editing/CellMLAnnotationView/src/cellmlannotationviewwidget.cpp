@@ -542,9 +542,9 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
         }
     }
 
-    // Expand everything so we can see the full contents of the CellML file
+    // Expand enough so we can see the meaningful parts of the CellML file
 
-    mTreeView->expandAll();
+    mTreeView->expandToDepth(1);
 }
 
 //==============================================================================
