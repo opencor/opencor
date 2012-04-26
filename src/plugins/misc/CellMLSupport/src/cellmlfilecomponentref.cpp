@@ -12,7 +12,8 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileComponentRef::CellmlFileComponentRef(iface::cellml_api::ComponentRef *pComponentRef) :
-    CellmlFileNamedElement(pComponentRef),
+    CellmlFileElement(pComponentRef),
+    mComponent(QString::fromStdWString(pComponentRef->componentName())),
     mComponentRefs(CellmlFileComponentRefs())
 {
     // Iterate through the component ref(erence)s and add them to our list
@@ -34,6 +35,15 @@ CellmlFileComponentRef::~CellmlFileComponentRef()
 
     foreach (CellmlFileComponentRef *componentRef, mComponentRefs)
         delete componentRef;
+}
+
+//==============================================================================
+
+QString CellmlFileComponentRef::component() const
+{
+    // Return the component ref(erence)'s component
+
+    return mComponent;
 }
 
 //==============================================================================

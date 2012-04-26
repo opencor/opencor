@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlfilenamedelement.h"
+#include "cellmlfileelement.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -29,15 +29,17 @@ typedef QList<CellmlFileComponentRef *> CellmlFileComponentRefs;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileComponentRef : public CellmlFileNamedElement
+class CELLMLSUPPORT_EXPORT CellmlFileComponentRef : public CellmlFileElement
 {
 public:
     explicit CellmlFileComponentRef(iface::cellml_api::ComponentRef *pComponentRef);
     ~CellmlFileComponentRef();
 
+    QString component() const;
     CellmlFileComponentRefs componentRefs() const;
 
 private:
+    QString mComponent;
     CellmlFileComponentRefs mComponentRefs;
 };
 

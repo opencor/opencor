@@ -63,17 +63,20 @@ class CellmlElementItem : public QStandardItem
 public:
     enum Type
     {
-        Error       = QStandardItem::UserType,
-        Warning     = QStandardItem::UserType+1,
-        Category    = QStandardItem::UserType+2,
-        Model       = QStandardItem::UserType+3,
-        Import      = QStandardItem::UserType+4,
-        Unit        = QStandardItem::UserType+5,
-        UnitElement = QStandardItem::UserType+6,
-        Component   = QStandardItem::UserType+7,
-        Variable    = QStandardItem::UserType+8,
-        Group       = QStandardItem::UserType+9,
-        Connection  = QStandardItem::UserType+10
+        Error           = QStandardItem::UserType,
+        Warning         = QStandardItem::UserType+1,
+        Category        = QStandardItem::UserType+2,
+        Model           = QStandardItem::UserType+3,
+        Import          = QStandardItem::UserType+4,
+        Unit            = QStandardItem::UserType+5,
+        UnitElement     = QStandardItem::UserType+6,
+        Component       = QStandardItem::UserType+7,
+        Variable        = QStandardItem::UserType+8,
+        MathmlElement   = QStandardItem::UserType+9,
+        Group           = QStandardItem::UserType+10,
+        RelationshipRef = QStandardItem::UserType+11,
+        ComponentRef    = QStandardItem::UserType+12,
+        Connection      = QStandardItem::UserType+13
     };
 
     explicit CellmlElementItem(const Type &pType, const QString &pText);
@@ -113,10 +116,12 @@ private:
 
     QTextEdit *mDebugOutput;
 
+    QChar mRightArrow;
+
     void initTreeView(const QString &pFileName);
-    void initUnitsTreeView(QStandardItem *pItem,
+    void initUnitsTreeView(CellmlElementItem *pCellmlElementItem,
                            const CellMLSupport::CellmlFileUnits pUnits);
-    void initComponentRefTreeView(const QString &pLeadingSpace,
+    void initComponentRefTreeView(CellmlElementItem *pCellmlElementItem,
                                   CellMLSupport::CellmlFileComponentRef *pComponentRef);
 
 Q_SIGNALS:

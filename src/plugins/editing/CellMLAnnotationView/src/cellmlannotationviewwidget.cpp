@@ -14,6 +14,7 @@
 
 //==============================================================================
 
+#include <QRawFont>
 #include <QSplitter>
 #include <QStandardItemModel>
 #include <QTextEdit>
@@ -142,8 +143,20 @@ void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
         setIcon(QIcon(":CellMLSupport_variableNode"));
 
         break;
+    case MathmlElement:
+        setIcon(QIcon(":CellMLSupport_mathmlElementNode"));
+
+        break;
     case Group:
         setIcon(QIcon(":CellMLSupport_groupNode"));
+
+        break;
+    case RelationshipRef:
+        setIcon(QIcon(":CellMLSupport_relationshipRefNode"));
+
+        break;
+    case ComponentRef:
+        setIcon(QIcon(":CellMLSupport_componentRefNode"));
 
         break;
     case Connection:
@@ -227,6 +240,13 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mUi->verticalLayout->addWidget(Core::newLineWidget(this));
     mUi->verticalLayout->addWidget(mDebugOutput);
 
+    // Check what should be used to represent a right arrow character
+
+    mRightArrow = QChar(0x2192);
+
+    if (!QRawFont::fromFont(mTreeView->font()).supportsCharacter(mRightArrow))
+        mRightArrow = QChar('>');
+
     // Initialise our tree view
 
     initTreeView(pFileName);
@@ -275,133 +295,144 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
         return;
     }
 
-    // Output the name of the CellML model
+    // Retrieve the model's root
 
     CellmlElementItem *modelItem = new CellmlElementItem(CellmlElementItem::Model,
                                                          cellmlFile->model()->name());
 
     mDataModel->invisibleRootItem()->appendRow(modelItem);
-//    mDebugOutput->append(QString("    Model: %1 [%2]").arg(cellmlFile->model()->name(),
-//                                                           cellmlFile->model()->cmetaId()));
 
     // Retrieve the model's imports
 
     if (cellmlFile->imports().count()) {
+        // Imports category
+
         CellmlElementItem *importsItem = new CellmlElementItem(CellmlElementItem::Category,
                                                                  CellmlElementItem::Import,
                                                                  "Imports");
 
         modelItem->appendRow(importsItem);
 
+        // Retrieve the model's imports themselves
+
         foreach (CellMLSupport::CellmlFileImport *import,
                  cellmlFile->imports()) {
+            // A model import
+
             CellmlElementItem *importItem = new CellmlElementItem(CellmlElementItem::Import,
                                                                   import->uri());
 
             importsItem->appendRow(importItem);
 
+            // Retrieve the model's import's units
+
             if (import->units().count()) {
+                // Units category
+
                 CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Category,
                                                                      CellmlElementItem::Unit,
                                                                      "Units");
 
                 importItem->appendRow(unitsItem);
-//                mDebugOutput->append(QString("            Units:"));
+
+                // Retrieve the model's import's units themselves
 
                 foreach (CellMLSupport::CellmlFileImportUnit *unit,
                          import->units())
+                    // A model's import's unit
+
                     unitsItem->appendRow(new CellmlElementItem(CellmlElementItem::Unit,
                                                                unit->name()));
-//                    mDebugOutput->append(QString("                Unit: %1 ---> %2 [%3]").arg(unit->name(), unit->referenceName(), unit->cmetaId()));
             }
 
+            // Retrieve the model's import's components
+
             if (import->components().count()) {
+                // Components category
+
                 CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Category,
                                                                           CellmlElementItem::Component,
                                                                           "Components");
 
                 importItem->appendRow(componentsItem);
 
-//                mDebugOutput->append(QString("            Components:"));
+                // Retrieve the model's import's components themselves
 
                 foreach (CellMLSupport::CellmlFileImportComponent *component,
                          import->components())
+                    // A model's import's component
+
                     componentsItem->appendRow(new CellmlElementItem(CellmlElementItem::Component,
                                                                     component->name()));
-//                    mDebugOutput->append(QString("                Component: %1 ---> %2 [%3]").arg(component->name(), component->referenceName(), component->cmetaId()));
             }
         }
     }
 
-    // Retrieve the model's unit definitions
+    // Retrieve the model's units
 
     initUnitsTreeView(modelItem, cellmlFile->units());
 
     // Retrieve the model's components
 
     if (cellmlFile->components().count()) {
+        // Components category
+
         CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Category,
                                                                   CellmlElementItem::Component,
                                                                   "Components");
 
         modelItem->appendRow(componentsItem);
 
+        // Retrieve the model's components themselves
+
         foreach (CellMLSupport::CellmlFileComponent *component,
                  cellmlFile->components()) {
+            // A model's component
+
             CellmlElementItem *componentItem = new CellmlElementItem(CellmlElementItem::Component,
                                                                      component->name());
 
             componentsItem->appendRow(componentItem);
-//            mDebugOutput->append(QString("        %1 [%2]").arg(component->name(),
-//                                                                component->cmetaId()));
+
+            // Retrieve the model's component's units
 
             initUnitsTreeView(componentItem, component->units());
 
+            // Retrieve the model's component's variables
+
             if (component->variables().count()) {
+                // Variables category
+
                 CellmlElementItem *variablesItem = new CellmlElementItem(CellmlElementItem::Category,
                                                                          CellmlElementItem::Variable,
                                                                          "Variables");
 
                 componentItem->appendRow(variablesItem);
-//                mDebugOutput->append(QString("            Variables:"));
+
+                // Retrieve the model's component's variables themselves
 
                 foreach (CellMLSupport::CellmlFileVariable *variable,
-                         component->variables()) {
-//                    QString variablePublicInterface = (variable->publicInterface() == CellMLSupport::CellmlFileVariable::In)?
-//                                                          "in":
-//                                                          (variable->publicInterface() == CellMLSupport::CellmlFileVariable::Out)?
-//                                                              "out":
-//                                                              "none";
-//                    QString variablePrivateInterface = (variable->privateInterface() == CellMLSupport::CellmlFileVariable::In)?
-//                                                          "in":
-//                                                          (variable->privateInterface() == CellMLSupport::CellmlFileVariable::Out)?
-//                                                              "out":
-//                                                              "none";
-
+                         component->variables())
                     variablesItem->appendRow(new CellmlElementItem(CellmlElementItem::Variable,
                                                                    variable->name()));
-//                    mDebugOutput->append(QString("                %1 | Unit: %2 | Initial value: %3 | Public interface: %4 | Private interface: %5 [%6]").arg(variable->name(),
-//                                                                                                                                                              variable->unit(),
-//                                                                                                                                                              variable->initialValue(),
-//                                                                                                                                                              variablePublicInterface,
-//                                                                                                                                                              variablePrivateInterface,
-//                                                                                                                                                              variable->cmetaId()));
-                }
             }
 
+            // Retrieve the model's component's MathML elements
+
             if (component->mathmlElements().count()) {
-                mDebugOutput->append(QString("            MathML elements:"));
+                // MathML elements category
 
-                int counter = 0;
+                CellmlElementItem *mathmlElementsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                              CellmlElementItem::MathmlElement,
+                                                                              "MathML Elements");
 
-                foreach (CellMLSupport::CellmlFileMathmlElement *mathmlElement,
-                         component->mathmlElements())
-                    mDebugOutput->append(QString("                MathML element #%1 | Class name: %2 | Math element style: %3 | Id: %4 | Xref: %5 | Href: %6").arg(QString::number(++counter),
-                                                                                                                                                                    mathmlElement->className(),
-                                                                                                                                                                    mathmlElement->mathElementStyle(),
-                                                                                                                                                                    mathmlElement->id(),
-                                                                                                                                                                    mathmlElement->xref(),
-                                                                                                                                                                    mathmlElement->href()));
+                componentItem->appendRow(mathmlElementsItem);
+
+                // Retrieve the model's component's MathML elements themselves
+
+                for (int i = 1, iMax = component->mathmlElements().count(); i <= iMax; ++i)
+                    mathmlElementsItem->appendRow(new CellmlElementItem(CellmlElementItem::MathmlElement,
+                                                                        QString("MathML element #%1").arg(QString::number(i))));
             }
         }
     }
@@ -409,33 +440,63 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
     // Retrieve the model's groups
 
     if (cellmlFile->groups().count()) {
+        // Groups category
+
         CellmlElementItem *groupsItem = new CellmlElementItem(CellmlElementItem::Category,
                                                               CellmlElementItem::Group,
                                                               "Groups");
 
         modelItem->appendRow(groupsItem);
 
+        // Retrieve the model's groups themselves
+
+        int counter = 0;
+
         foreach (CellMLSupport::CellmlFileGroup *group, cellmlFile->groups()) {
-            mDebugOutput->append(QString("        Group [%1]").arg(group->cmetaId()));
+            // A model's group
+
+            CellmlElementItem *groupItem = new CellmlElementItem(CellmlElementItem::Group,
+                                                                 QString("Group #%1").arg(QString::number(++counter)));
+
+            groupsItem->appendRow(groupItem);
+
+            // Retrieve the model's group's relationship ref(erence)s
 
             if (group->relationshipRefs().count()) {
-                mDebugOutput->append(QString("            Relationship ref(erence)s:"));
+                // Relationship ref(erence)s category
+
+                CellmlElementItem *relationshipRefsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                                CellmlElementItem::RelationshipRef,
+                                                                                "Relationship References");
+
+                groupItem->appendRow(relationshipRefsItem);
+
+                // Retrieve the model's group's relationship ref(erence)s
+                // themselves
 
                 foreach (CellMLSupport::CellmlFileRelationshipRef *relationshipRef,
-                         group->relationshipRefs()) {
-                    mDebugOutput->append(QString("                %1 [%2]").arg(relationshipRef->name(),
-                                                                                relationshipRef->cmetaId()));
-                    mDebugOutput->append(QString("                    Relationship: %1").arg(relationshipRef->relationship()));
-                    mDebugOutput->append(QString("                    Relationship namespace: %1").arg(relationshipRef->relationshipNamespace()));
-                }
+                         group->relationshipRefs())
+                    relationshipRefsItem->appendRow(new CellmlElementItem(CellmlElementItem::RelationshipRef,
+                                                                          relationshipRef->relationship()));
             }
 
+            // Retrieve the model's group's component ref(erence)s
+
             if (group->componentRefs().count()) {
-                mDebugOutput->append(QString("            Component ref(erence)s:"));
+                // Component ref(erence)s category
+
+                CellmlElementItem *componentRefsItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                             CellmlElementItem::ComponentRef,
+                                                                             "Component References");
+
+                groupItem->appendRow(componentRefsItem);
+
+                // Retrieve the model's group's relationship ref(erence)s
+                // themselves
 
                 foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
                          group->componentRefs())
-                    initComponentRefTreeView("                ", componentRef);
+                    initComponentRefTreeView(componentRefsItem, componentRef);
             }
         }
     }
@@ -443,27 +504,41 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
     // Retrieve the model's connections
 
     if (cellmlFile->connections().count()) {
+        // Connections category
+
         CellmlElementItem *connectionsItem = new CellmlElementItem(CellmlElementItem::Category,
                                                                    CellmlElementItem::Connection,
                                                                    "Connections");
 
         modelItem->appendRow(connectionsItem);
 
+        // Retrieve the model's connections themselves
+
+        int counter = 0;
+
         foreach (CellMLSupport::CellmlFileConnection *connection, cellmlFile->connections()) {
-            mDebugOutput->append(QString("        Connection [%1]").arg(connection->cmetaId()));
-            mDebugOutput->append(QString("            Components: %1 ---> %2 [%3]").arg(connection->componentMapping()->firstComponentName(),
-                                                                                        connection->componentMapping()->secondComponentName(),
-                                                                                        connection->componentMapping()->cmetaId()));
+            // A model's connection
 
-            if (connection->variableMappings().count()) {
-                mDebugOutput->append(QString("            Variables:"));
+            CellmlElementItem *connectionItem = new CellmlElementItem(CellmlElementItem::Connection,
+                                                                      QString("Connection #%1").arg(QString::number(++counter)));
 
-                foreach (CellMLSupport::CellmlFileMapVariablesItem *mapVariablesItem,
-                         connection->variableMappings())
-                    mDebugOutput->append(QString("                %1 ---> %2 [%3]").arg(mapVariablesItem->firstVariableName(),
-                                                                                        mapVariablesItem->secondVariableName(),
-                                                                                        mapVariablesItem->cmetaId()));
-            }
+            connectionsItem->appendRow(connectionItem);
+
+            // Component mapping
+
+            connectionItem->appendRow(new CellmlElementItem(CellmlElementItem::Component,
+                                                            QString("%1 %2 %3").arg(connection->componentMapping()->firstComponentName(),
+                                                                                    mRightArrow,
+                                                                                    connection->componentMapping()->secondComponentName())));
+
+            // Variable mappings
+
+            foreach (CellMLSupport::CellmlFileMapVariablesItem *mapVariablesItem,
+                     connection->variableMappings())
+                connectionItem->appendRow(new CellmlElementItem(CellmlElementItem::Variable,
+                                                                QString("%1 %2 %3").arg(mapVariablesItem->firstVariableName(),
+                                                                                        mRightArrow,
+                                                                                        mapVariablesItem->secondVariableName())));
         }
     }
 
@@ -474,55 +549,55 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::initUnitsTreeView(QStandardItem *pItem,
+void CellmlAnnotationViewWidget::initUnitsTreeView(CellmlElementItem *pCellmlElementItem,
                                                    const CellMLSupport::CellmlFileUnits pUnits)
 {
+    // Retrieve the units
+
     if (pUnits.count()) {
+        // Units category
+
         CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Category,
                                                                    CellmlElementItem::Unit,
                                                                    "Units");
 
-        pItem->appendRow(unitsItem);
+        pCellmlElementItem->appendRow(unitsItem);
+
+        // Retrieve the units themselves
 
         foreach (CellMLSupport::CellmlFileUnit *unit, pUnits) {
             CellmlElementItem *unitItem = new CellmlElementItem(CellmlElementItem::Unit,
                                                                 unit->name());
 
             unitsItem->appendRow(unitItem);
-//            mDebugOutput->append(QString("%1 [%2]").arg(unit->name(),
-//                                                        unit->cmetaId()));
-//            mDebugOutput->append(QString("Base unit: %1").arg(unit->isBaseUnit()?"yes":"no"));
 
-            if (unit->unitElements().count()) {
-//                mDebugOutput->append("Unit elements:");
+            // Retrieve the unit's unit elements
 
+            if (unit->unitElements().count())
                 foreach (CellMLSupport::CellmlFileUnitElement *unitElement,
                          unit->unitElements())
                     unitItem->appendRow(new CellmlElementItem(CellmlElementItem::UnitElement,
                                                               unitElement->name()));
-//                    mDebugOutput->append(QString("%1 | Prefix: %2 | Multiplier: %3 | Offset: %4 | Exponent: %5 [%6]").arg(unitElement->name(),
-//                                                                                                                          QString::number(unitElement->prefix()),
-//                                                                                                                          QString::number(unitElement->multiplier()),
-//                                                                                                                          QString::number(unitElement->offset()),
-//                                                                                                                          QString::number(unitElement->exponent()),
-//                                                                                                                          unitElement->cmetaId()));
-            }
+
         }
     }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::initComponentRefTreeView(const QString &pLeadingSpace,
+void CellmlAnnotationViewWidget::initComponentRefTreeView(CellmlElementItem *pCellmlElementItem,
                                                           CellMLSupport::CellmlFileComponentRef *pComponentRef)
 {
-    mDebugOutput->append(QString("%1%2 [%3]").arg(pLeadingSpace,
-                                                  pComponentRef->name(),
-                                                  pComponentRef->cmetaId()));
+    CellmlElementItem *componentRefItem = new CellmlElementItem(CellmlElementItem::ComponentRef,
+                                                                pComponentRef->component());
+
+    pCellmlElementItem->appendRow(componentRefItem);
+
+    // Retrieve the component ref(erence)'s children
 
     foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
              pComponentRef->componentRefs())
-        initComponentRefTreeView(pLeadingSpace+"    ", componentRef);
+        initComponentRefTreeView(componentRefItem, componentRef);
 }
 
 //==============================================================================

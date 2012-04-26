@@ -12,7 +12,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRelationshipRef::CellmlFileRelationshipRef(iface::cellml_api::RelationshipRef *pRelationshipRef) :
-    CellmlFileNamedElement(pRelationshipRef),
+    CellmlFileElement(pRelationshipRef),
     mRelationship(QString::fromStdWString(pRelationshipRef->relationship())),
     mRelationshipNamespace(QString::fromStdWString(pRelationshipRef->relationshipNamespace()))
 {

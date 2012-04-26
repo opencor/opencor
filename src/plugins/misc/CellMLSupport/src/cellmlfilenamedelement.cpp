@@ -67,22 +67,6 @@ CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::CellMLVariable
 
 //==============================================================================
 
-CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::RelationshipRef *pRelationshipRef) :
-    CellmlFileElement(pRelationshipRef),
-    mName(QString::fromStdWString(pRelationshipRef->name()))
-{
-}
-
-//==============================================================================
-
-CellmlFileNamedElement::CellmlFileNamedElement(iface::cellml_api::ComponentRef *pComponentRef) :
-    CellmlFileElement(pComponentRef),
-    mName(QString::fromStdWString(pComponentRef->componentName()))
-{
-}
-
-//==============================================================================
-
 QString CellmlFileNamedElement::name() const
 {
     // Return the named element's name

@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlfilenamedelement.h"
+#include "cellmlfileelement.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -21,7 +21,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRelationshipRef : public CellmlFileNamedElement
+class CELLMLSUPPORT_EXPORT CellmlFileRelationshipRef : public CellmlFileElement
 {
 public:
     explicit CellmlFileRelationshipRef(iface::cellml_api::RelationshipRef *pRelationshipRef);
