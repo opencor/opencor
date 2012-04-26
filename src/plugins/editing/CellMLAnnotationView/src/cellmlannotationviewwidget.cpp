@@ -129,6 +129,10 @@ void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
         setIcon(QIcon(":CellMLSupport_componentNode"));
 
         break;
+    case Variable:
+        setIcon(QIcon(":CellMLSupport_variableNode"));
+
+        break;
     case Group:
         setIcon(QIcon(":CellMLSupport_groupNode"));
 
@@ -182,6 +186,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mTreeView->setFrameShape(QFrame::NoFrame);
     mTreeView->setHeaderHidden(true);
     mTreeView->setRootIsDecorated(false);
+
+    mTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     // Populate our horizontal splitter with the aforementioned tree view, as
     // well as with a dummy (for now) widget
@@ -266,7 +272,6 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
                                                          cellmlFile->model()->name());
 
     mDataModel->invisibleRootItem()->appendRow(modelItem);
-
 //    mDebugOutput->append(QString("    Model: %1 [%2]").arg(cellmlFile->model()->name(),
 //                                                           cellmlFile->model()->cmetaId()));
 
@@ -292,7 +297,6 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
                                                                      "Units");
 
                 importItem->appendRow(unitsItem);
-
 //                mDebugOutput->append(QString("            Units:"));
 
                 foreach (CellMLSupport::CellmlFileImportUnit *unit,
@@ -335,41 +339,48 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
         foreach (CellMLSupport::CellmlFileComponent *component,
                  cellmlFile->components()) {
-            mDebugOutput->append(QString("        %1 [%2]").arg(component->name(),
-                                                                component->cmetaId()));
+            CellmlElementItem *componentItem = new CellmlElementItem(CellmlElementItem::Component,
+                                                                     component->name());
+
+            componentsItem->appendRow(componentItem);
+//            mDebugOutput->append(QString("        %1 [%2]").arg(component->name(),
+//                                                                component->cmetaId()));
 
             initUnitsTreeView(componentsItem, component->units());
 
-            if (component->variables().isEmpty()) {
-                mDebugOutput->append(QString("            No variables"));
-            } else {
-                mDebugOutput->append(QString("            Variables:"));
+            if (component->variables().count()) {
+                CellmlElementItem *variablesItem = new CellmlElementItem(CellmlElementItem::Category,
+                                                                         CellmlElementItem::Variable,
+                                                                         "Variables");
+
+                componentItem->appendRow(variablesItem);
+//                mDebugOutput->append(QString("            Variables:"));
 
                 foreach (CellMLSupport::CellmlFileVariable *variable,
                          component->variables()) {
-                    QString variablePublicInterface = (variable->publicInterface() == CellMLSupport::CellmlFileVariable::In)?
-                                                          "in":
-                                                          (variable->publicInterface() == CellMLSupport::CellmlFileVariable::Out)?
-                                                              "out":
-                                                              "none";
-                    QString variablePrivateInterface = (variable->privateInterface() == CellMLSupport::CellmlFileVariable::In)?
-                                                          "in":
-                                                          (variable->privateInterface() == CellMLSupport::CellmlFileVariable::Out)?
-                                                              "out":
-                                                              "none";
+//                    QString variablePublicInterface = (variable->publicInterface() == CellMLSupport::CellmlFileVariable::In)?
+//                                                          "in":
+//                                                          (variable->publicInterface() == CellMLSupport::CellmlFileVariable::Out)?
+//                                                              "out":
+//                                                              "none";
+//                    QString variablePrivateInterface = (variable->privateInterface() == CellMLSupport::CellmlFileVariable::In)?
+//                                                          "in":
+//                                                          (variable->privateInterface() == CellMLSupport::CellmlFileVariable::Out)?
+//                                                              "out":
+//                                                              "none";
 
-                    mDebugOutput->append(QString("                %1 | Unit: %2 | Initial value: %3 | Public interface: %4 | Private interface: %5 [%6]").arg(variable->name(),
-                                                                                                                                                              variable->unit(),
-                                                                                                                                                              variable->initialValue(),
-                                                                                                                                                              variablePublicInterface,
-                                                                                                                                                              variablePrivateInterface,
-                                                                                                                                                              variable->cmetaId()));
+                    variablesItem->appendRow(new CellmlElementItem(CellmlElementItem::Variable,
+                                                                   variable->name()));
+//                    mDebugOutput->append(QString("                %1 | Unit: %2 | Initial value: %3 | Public interface: %4 | Private interface: %5 [%6]").arg(variable->name(),
+//                                                                                                                                                              variable->unit(),
+//                                                                                                                                                              variable->initialValue(),
+//                                                                                                                                                              variablePublicInterface,
+//                                                                                                                                                              variablePrivateInterface,
+//                                                                                                                                                              variable->cmetaId()));
                 }
             }
 
-            if (component->mathmlElements().isEmpty()) {
-                mDebugOutput->append(QString("            No MathML elements"));
-            } else {
+            if (component->mathmlElements().count()) {
                 mDebugOutput->append(QString("            MathML elements:"));
 
                 int counter = 0;
@@ -398,9 +409,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
         foreach (CellMLSupport::CellmlFileGroup *group, cellmlFile->groups()) {
             mDebugOutput->append(QString("        Group [%1]").arg(group->cmetaId()));
 
-            if (group->relationshipRefs().isEmpty()) {
-                mDebugOutput->append(QString("            No relationship ref(erence)s"));
-            } else {
+            if (group->relationshipRefs().count()) {
                 mDebugOutput->append(QString("            Relationship ref(erence)s:"));
 
                 foreach (CellMLSupport::CellmlFileRelationshipRef *relationshipRef,
@@ -412,9 +421,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
                 }
             }
 
-            if (group->componentRefs().isEmpty()) {
-                mDebugOutput->append(QString("            No component ref(erence)s"));
-            } else {
+            if (group->componentRefs().count()) {
                 mDebugOutput->append(QString("            Component ref(erence)s:"));
 
                 foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
@@ -439,9 +446,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
                                                                                         connection->componentMapping()->secondComponentName(),
                                                                                         connection->componentMapping()->cmetaId()));
 
-            if (connection->variableMappings().isEmpty()) {
-                mDebugOutput->append(QString("            No variables"));
-            } else {
+            if (connection->variableMappings().count()) {
                 mDebugOutput->append(QString("            Variables:"));
 
                 foreach (CellMLSupport::CellmlFileMapVariablesItem *mapVariablesItem,
@@ -473,9 +478,7 @@ void CellmlAnnotationViewWidget::initUnitsTreeView(QStandardItem *pItem,
                                                         unit->cmetaId()));
             mDebugOutput->append(QString("Base unit: %1").arg(unit->isBaseUnit()?"yes":"no"));
 
-            if (unit->unitElements().isEmpty()) {
-                mDebugOutput->append("No unit elements");
-            } else {
+            if (unit->unitElements().count()) {
                 mDebugOutput->append("Unit elements:");
 
                 foreach (CellMLSupport::CellmlFileUnitElement *unitElement,

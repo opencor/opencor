@@ -70,9 +70,9 @@ public:
         Import     = QStandardItem::UserType+4,
         Unit       = QStandardItem::UserType+5,
         Component  = QStandardItem::UserType+6,
-        Group      = QStandardItem::UserType+7,
-        Connection = QStandardItem::UserType+8,
-        Item       = QStandardItem::UserType+9
+        Variable   = QStandardItem::UserType+7,
+        Group      = QStandardItem::UserType+8,
+        Connection = QStandardItem::UserType+9
     };
 
     explicit CellmlElementItem(const Type &pType, const QString &pText);

@@ -6,6 +6,7 @@
         <file alias="CellMLSupport_importNode">importNode.png</file>
         <file alias="CellMLSupport_unitNode">unitNode.png</file>
         <file alias="CellMLSupport_componentNode">componentNode.png</file>
+        <file alias="CellMLSupport_variableNode">variableNode.png</file>
         <file alias="CellMLSupport_groupNode">groupNode.png</file>
         <file alias="CellMLSupport_connectionNode">connectionNode.png</file>
         <file alias="CellMLSupport_fr">../../../../../build/CellMLSupport_fr.qm</file>
