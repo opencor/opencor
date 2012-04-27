@@ -8,7 +8,7 @@
 //==============================================================================
 
 #include <QFrame>
-#include <QBoxLayout>
+#include <QGridLayout>
 
 //==============================================================================
 
@@ -18,32 +18,45 @@ namespace Core {
 //==============================================================================
 
 BorderedWidget::BorderedWidget(QWidget *pWidget,
-                               const Location &pLocation) :
+                               const bool &pTop, const bool &pLeft,
+                               const bool &pBottom, const bool &pRight) :
     Core::Widget(qobject_cast<QWidget *>(pWidget->parent()))
 {
-    // Create a layout for ourselves
+    // We want our widget to be bordered by a single line which colour matches
+    // that of the application's theme. Because of that colour requirement, we
+    // can't use a QFrame, so instead we rely on the use of a grid layout and
+    // Core::newLineWidget()...
 
-    QBoxLayout *layout;
+    // Create a horizontal layout for ourselves
 
-    if ((pLocation == Left) || (pLocation == Right))
-        layout = new QHBoxLayout(this);
-    else
-        layout = new QVBoxLayout(this);
+    QGridLayout *gridLayout = new QGridLayout(this);
 
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
+    gridLayout->setContentsMargins(0, 0, 0, 0);
+    gridLayout->setSpacing(0);
 
-    setLayout(layout);
+    setLayout(gridLayout);
 
-    // Populate our vertical layout with a real line and our bordered widget
+    // Add some real line widgets to the top, left, bottom and/or right of
+    // ourselves, if required
 
-    if ((pLocation == Left) || (pLocation == Top))
-        layout->addWidget(Core::newLineWidget(this, pLocation == Top));
+    int fromColumn = pLeft?0:1;
+    int columnSpan = pLeft+1+pRight;
 
-    layout->addWidget(pWidget);
+    if (pTop)
+        gridLayout->addWidget(Core::newLineWidget(this, true),
+                              0, fromColumn, 1, columnSpan);
 
-    if ((pLocation == Right) || (pLocation == Bottom))
-        layout->addWidget(Core::newLineWidget(this, pLocation == Bottom));
+    if (pLeft)
+        gridLayout->addWidget(Core::newLineWidget(this, false), 1, 0);
+
+    gridLayout->addWidget(pWidget, 1, 1);
+
+    if (pBottom)
+        gridLayout->addWidget(Core::newLineWidget(this, true),
+                              2, fromColumn, 1, columnSpan);
+
+    if (pRight)
+        gridLayout->addWidget(Core::newLineWidget(this, false), 1, 2);
 
     // Keep track of our bordered widget
 

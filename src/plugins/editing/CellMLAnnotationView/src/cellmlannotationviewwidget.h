@@ -109,20 +109,25 @@ private:
     Ui::CellmlAnnotationViewWidget *mUi;
 
     QSplitter *mHorizontalSplitter;
+    QSplitter *mVerticalSplitter;
 
     Core::TreeView *mCellmlTreeView;
     QStandardItemModel *mCellmlDataModel;
     CellmlItemDelegate *mCellmlItemDelegate;
 
+    Core::TreeView *mMetadataTreeView;
+
     QTextEdit *mDebugOutput;
 
     QChar mRightArrow;
 
-    void initTreeView(const QString &pFileName);
-    void initUnitsTreeView(CellmlElementItem *pCellmlElementItem,
-                           const CellMLSupport::CellmlFileUnits pUnits);
-    void initComponentRefTreeView(CellmlElementItem *pCellmlElementItem,
-                                  CellMLSupport::CellmlFileComponentRef *pComponentRef);
+    void initTreeView(Core::TreeView *pTreeView);
+
+    void populateCellmlTreeView(const QString &pFileName);
+    void populateUnitsTreeView(CellmlElementItem *pCellmlElementItem,
+                               const CellMLSupport::CellmlFileUnits pUnits);
+    void populateComponentRefTreeView(CellmlElementItem *pCellmlElementItem,
+                                      CellMLSupport::CellmlFileComponentRef *pComponentRef);
 
 Q_SIGNALS:
     void horizontalSplitterMoved(const QList<int> &pSizes);

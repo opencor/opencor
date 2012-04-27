@@ -190,35 +190,43 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     mUi->setupUi(this);
 
-    // Create our horizontal splitter
+    // Create some splitters
 
     mHorizontalSplitter = new QSplitter(Qt::Horizontal, this);
+    mVerticalSplitter   = new QSplitter(Qt::Vertical, mHorizontalSplitter);
 
-    // Create and customise a tree view which will contain all of the units,
-    // components, groups and connections from the CellML file
+    // Create and customise our CellML tree view which will contain all of the
+    // imports, units, components, groups and connections from the CellML file
 
-    mCellmlTreeView = new Core::TreeView(this);
+    mCellmlTreeView = new Core::TreeView(mVerticalSplitter);
     mCellmlDataModel = new QStandardItemModel(mCellmlTreeView);
     mCellmlItemDelegate = new CellmlItemDelegate(mCellmlDataModel);
 
     mCellmlTreeView->setModel(mCellmlDataModel);
     mCellmlTreeView->setItemDelegate(mCellmlItemDelegate);
 
-    mCellmlTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mCellmlTreeView->setFrameShape(QFrame::NoFrame);
-    mCellmlTreeView->setHeaderHidden(true);
-    mCellmlTreeView->setRootIsDecorated(false);
-    mCellmlTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    initTreeView(mCellmlTreeView);
 
-    // Populate our horizontal splitter with the aforementioned tree view, as
-    // well as with a dummy (for now) widget
+    // Create and customise our metadata tree view which will contain all of the
+    // metadata from the CellML file
+
+    mMetadataTreeView = new Core::TreeView(mVerticalSplitter);
+
+    initTreeView(mMetadataTreeView);
+
+    // Populate our splitters with the aforementioned tree views, as well as
+    // with a dummy (for now) widget
     //---GRY--- THE DUMMY WIDGET WILL EVENTUALLY GET REPLACED BY SOMETHING THAT
     //          WILL ALLOW THE USER TO EDIT METADATA, MAKE USE OF RICORDO, ETC.
 
-    mHorizontalSplitter->addWidget(new Core::BorderedWidget(mCellmlTreeView,
-                                                            Core::BorderedWidget::Right));
+    mVerticalSplitter->addWidget(new Core::BorderedWidget(mCellmlTreeView,
+                                                          false, false, true, true));
+    mVerticalSplitter->addWidget(new Core::BorderedWidget(mMetadataTreeView,
+                                                          true, false, false, true));
+
+    mHorizontalSplitter->addWidget(mVerticalSplitter);
     mHorizontalSplitter->addWidget(new Core::BorderedWidget(new QWidget(this),
-                                                            Core::BorderedWidget::Left));
+                                                            false, true, false, false));
 
     mUi->verticalLayout->addWidget(mHorizontalSplitter);
 
@@ -253,9 +261,9 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mCellmlTreeView, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeToContents()));
 
-    // Initialise our tree view
+    // Populate our CellML tree view
 
-    initTreeView(pFileName);
+    populateCellmlTreeView(pFileName);
 }
 
 //==============================================================================
@@ -278,7 +286,18 @@ QList<int> CellmlAnnotationViewWidget::horizontalSplitterSizes() const
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
+void CellmlAnnotationViewWidget::initTreeView(Core::TreeView *pTreeView)
+{
+    pTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    pTreeView->setFrameShape(QFrame::NoFrame);
+    pTreeView->setHeaderHidden(true);
+    pTreeView->setRootIsDecorated(false);
+    pTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::populateCellmlTreeView(const QString &pFileName)
 {
     // Initialise our tree view with the units, components, groups and
     // connections from the CellML file
@@ -376,7 +395,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Retrieve the model's units
 
-    initUnitsTreeView(modelItem, cellmlFile->units());
+    populateUnitsTreeView(modelItem, cellmlFile->units());
 
     // Retrieve the model's components
 
@@ -402,7 +421,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
             // Retrieve the model's component's units
 
-            initUnitsTreeView(componentItem, component->units());
+            populateUnitsTreeView(componentItem, component->units());
 
             // Retrieve the model's component's variables
 
@@ -502,7 +521,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
                 foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
                          group->componentRefs())
-                    initComponentRefTreeView(componentRefsItem, componentRef);
+                    populateComponentRefTreeView(componentRefsItem, componentRef);
             }
         }
     }
@@ -559,8 +578,8 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::initUnitsTreeView(CellmlElementItem *pCellmlElementItem,
-                                                   const CellMLSupport::CellmlFileUnits pUnits)
+void CellmlAnnotationViewWidget::populateUnitsTreeView(CellmlElementItem *pCellmlElementItem,
+                                                       const CellMLSupport::CellmlFileUnits pUnits)
 {
     // Retrieve the units
 
@@ -595,8 +614,8 @@ void CellmlAnnotationViewWidget::initUnitsTreeView(CellmlElementItem *pCellmlEle
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::initComponentRefTreeView(CellmlElementItem *pCellmlElementItem,
-                                                          CellMLSupport::CellmlFileComponentRef *pComponentRef)
+void CellmlAnnotationViewWidget::populateComponentRefTreeView(CellmlElementItem *pCellmlElementItem,
+                                                              CellMLSupport::CellmlFileComponentRef *pComponentRef)
 {
     CellmlElementItem *componentRefItem = new CellmlElementItem(CellmlElementItem::ComponentRef,
                                                                 pComponentRef->component());
@@ -607,7 +626,7 @@ void CellmlAnnotationViewWidget::initComponentRefTreeView(CellmlElementItem *pCe
 
     foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
              pComponentRef->componentRefs())
-        initComponentRefTreeView(componentRefItem, componentRef);
+        populateComponentRefTreeView(componentRefItem, componentRef);
 }
 
 //==============================================================================
