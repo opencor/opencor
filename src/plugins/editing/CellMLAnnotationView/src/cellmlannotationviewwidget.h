@@ -104,6 +104,7 @@ public:
     ~CellmlAnnotationViewWidget();
 
     QList<int> horizontalSplitterSizes() const;
+    QList<int> verticalSplitterSizes() const;
 
 private:
     Ui::CellmlAnnotationViewWidget *mUi;
@@ -117,28 +118,30 @@ private:
 
     Core::TreeView *mMetadataTreeView;
 
-    QTextEdit *mDebugOutput;
-
     QChar mRightArrow;
 
     void initTreeView(Core::TreeView *pTreeView);
 
-    void populateCellmlTreeView(const QString &pFileName);
-    void populateUnitsTreeView(CellmlElementItem *pCellmlElementItem,
-                               const CellMLSupport::CellmlFileUnits pUnits);
-    void populateComponentRefTreeView(CellmlElementItem *pCellmlElementItem,
-                                      CellMLSupport::CellmlFileComponentRef *pComponentRef);
+    void populateCellmlDataModel(const QString &pFileName);
+    void populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
+                                const CellMLSupport::CellmlFileUnits pUnits);
+    void populateComponentRefDataModel(CellmlElementItem *pCellmlElementItem,
+                                       CellMLSupport::CellmlFileComponentRef *pComponentRef);
 
 Q_SIGNALS:
-    void horizontalSplitterMoved(const QList<int> &pSizes);
+    void horizontalSplitterMoved(const QList<int> &pHorizontalSizes);
+    void verticalSplitterMoved(const QList<int> &pVerticalSizes);
 
 public Q_SLOTS:
-    void updateHorizontalSplitter(const QList<int> &pSizes);
+    void updateHorizontalSplitter(const QList<int> &pHorizontalSizes);
+    void updateVerticalSplitter(const QList<int> &pVerticalSizes);
 
 private Q_SLOTS:
     void emitHorizontalSplitterMoved();
+    void emitVerticalSplitterMoved();
 
-    void resizeToContents();
+    void resizeCellmlTreeViewToContents();
+    void resizeMetadataTreeViewToContents();
 };
 
 //==============================================================================

@@ -42,7 +42,8 @@ Q_EXPORT_PLUGIN2(CellMLAnnotationView, CellMLAnnotationViewPlugin)
 //==============================================================================
 
 CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin() :
-    mSizes(QList<int>())
+    mHorizontalSizes(QList<int>()),
+    mVerticalSizes(QList<int>())
 {
     // Set our settings
 
@@ -51,40 +52,55 @@ CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin() :
 
 //==============================================================================
 
-static const QString SettingsCellmlAnnotationWidget     = "CellmlAnnotationWidget";
-static const QString SettingsCellmlAnnotationWidgetSizesCount = "CellmlAnnotationWidgetSizesCount";
-static const QString SettingsCellmlAnnotationWidgetSizes      = "CellmlAnnotationWidgetSizes%1";
+static const QString SettingsCellmlAnnotationWidget                     = "CellmlAnnotationWidget";
+static const QString SettingsCellmlAnnotationWidgetHorizontalSizesCount = "HorizontalSizesCount";
+static const QString SettingsCellmlAnnotationWidgetHorizontalSizes      = "HorizontalSizes%1";
+static const QString SettingsCellmlAnnotationWidgetVerticalSizesCount   = "VerticalSizesCount";
+static const QString SettingsCellmlAnnotationWidgetVerticalSizes        = "VerticalSizes%1";
 
 //==============================================================================
 
 void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the settings of the tree view and CellML annotation's width
-    // Note #1: we would normally do this in CellmlAnnotationViewWidget, but
-    //          we have one instance of it per CellML file and we want to share
-    //          some information between the different instances, so we do it
-    //          here...
-    // Note #1: the tree view's default width is 30% of the desktop's width
-    //          while of the CellML annotation is as big as it can be...
-    // Note #2: because the CellML annotation's default width is much bigger
-    //          than that of our tree view, the tree view's default width will
-    //          effectively be less than 30% of the desktop's width, but that
-    //          doesn't matter at all...
+    // Retrieve the size of the different items that make up our splitters
+    // Note: we would normally do this in CellmlAnnotationViewWidget, but we
+    //       have one instance of it per CellML file and we want to share some
+    //       information between the different instances, so we have to do it
+    //       here instead...
 
     pSettings->beginGroup(SettingsCellmlAnnotationWidget);
-        int sizesCount = pSettings->value(SettingsCellmlAnnotationWidgetSizesCount, 0).toInt();
+        // Horizontal sizes
 
-        if (!sizesCount) {
-            // There are no previous sizes, so initialise things (see notes
-            // above)
+        int horizontalSizesCount = pSettings->value(SettingsCellmlAnnotationWidgetHorizontalSizesCount, 0).toInt();
 
-            mSizes << 0.3*qApp->desktop()->screenGeometry().width()
-                   << qApp->desktop()->screenGeometry().width();
+        if (!horizontalSizesCount) {
+            // There are no previous horizontal sizes, so get some default ones
+
+            mHorizontalSizes << 0.25*qApp->desktop()->screenGeometry().width()
+                             << 0.75*qApp->desktop()->screenGeometry().width();
         } else {
-            // There are previous sizes, so use them to initialise mSizes
+            // There are previous horizontal sizes, so use them to initialise
+            // mHorizontalSizes
 
-            for (int i = 0; i < sizesCount; ++i)
-                mSizes << pSettings->value(SettingsCellmlAnnotationWidgetSizes.arg(QString::number(i))).toInt();
+            for (int i = 0; i < horizontalSizesCount; ++i)
+                mHorizontalSizes << pSettings->value(SettingsCellmlAnnotationWidgetHorizontalSizes.arg(QString::number(i))).toInt();
+        }
+
+        // Vertical sizes
+
+        int verticalSizesCount = pSettings->value(SettingsCellmlAnnotationWidgetVerticalSizesCount, 0).toInt();
+
+        if (verticalSizesCount) {
+            // There are no previous vertical sizes, so get some default ones
+
+            mVerticalSizes << 0.65*qApp->desktop()->screenGeometry().height()
+                           << 0.35*qApp->desktop()->screenGeometry().height();
+        } else {
+            // There are previous vertical sizes, so use them to initialise
+            // mVerticalSizes
+
+            for (int i = 0; i < verticalSizesCount; ++i)
+                mVerticalSizes << pSettings->value(SettingsCellmlAnnotationWidgetVerticalSizes.arg(QString::number(i))).toInt();
         }
     pSettings->endGroup();
 }
@@ -101,10 +117,19 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
     //       view's initial width, so...
 
     pSettings->beginGroup(SettingsCellmlAnnotationWidget);
-        pSettings->setValue(SettingsCellmlAnnotationWidgetSizesCount, mSizes.count());
+        // Horizontal sizes
 
-        for (int i = 0, iMax = mSizes.count(); i < iMax; ++i)
-            pSettings->setValue(SettingsCellmlAnnotationWidgetSizes.arg(QString::number(i)), mSizes.at(i));
+        pSettings->setValue(SettingsCellmlAnnotationWidgetHorizontalSizesCount, mHorizontalSizes.count());
+
+        for (int i = 0, iMax = mHorizontalSizes.count(); i < iMax; ++i)
+            pSettings->setValue(SettingsCellmlAnnotationWidgetHorizontalSizes.arg(QString::number(i)), mHorizontalSizes.at(i));
+
+        // Vertical sizes
+
+        pSettings->setValue(SettingsCellmlAnnotationWidgetVerticalSizesCount, mVerticalSizes.count());
+
+        for (int i = 0, iMax = mVerticalSizes.count(); i < iMax; ++i)
+            pSettings->setValue(SettingsCellmlAnnotationWidgetVerticalSizes.arg(QString::number(i)), mVerticalSizes.at(i));
     pSettings->endGroup();
 }
 
@@ -112,8 +137,7 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
 
 QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 {
-    // Check that we are dealing with a CellML file and, if so, return our
-    // generic raw CellML view widget
+    // Check that we are dealing with a CellML file
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         // We are not dealing with a CellML file, so...
@@ -127,12 +151,15 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 
     // Initialise our new CellML annotation view widget's sizes
 
-    widget->updateHorizontalSplitter(mSizes);
+    widget->updateHorizontalSplitter(mHorizontalSizes);
+    widget->updateVerticalSplitter(mVerticalSizes);
 
-    // Keep track of the splitter move in our new CellML annotation view widgets
+    // Keep track of the splitter move in our new CellML annotation view widget
 
     connect(widget, SIGNAL(horizontalSplitterMoved(const QList<int> &)),
             this, SLOT(horizontalSplitterMoved(const QList<int> &)));
+    connect(widget, SIGNAL(verticalSplitterMoved(const QList<int> &)),
+            this, SLOT(verticalSplitterMoved(const QList<int> &)));
 
     // Some other connections to handle splitter moves between our CellML
     // annotation view widgets
@@ -143,12 +170,16 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 
         connect(widget, SIGNAL(horizontalSplitterMoved(const QList<int> &)),
                 mWidgets.at(i), SLOT(updateHorizontalSplitter(const QList<int> &)));
+        connect(widget, SIGNAL(verticalSplitterMoved(const QList<int> &)),
+                mWidgets.at(i), SLOT(updateVerticalSplitter(const QList<int> &)));
 
-        // Make sur that the other CellML annotation view widgets is aware of
-        // any splitter move occuring in our new CellML annotation view widget
+        // Make sur that the other CellML annotation view widget is aware of any
+        // splitter move occuring in our new CellML annotation view widget
 
         connect(mWidgets.at(i), SIGNAL(horizontalSplitterMoved(const QList<int> &)),
                 widget, SLOT(updateHorizontalSplitter(const QList<int> &)));
+        connect(mWidgets.at(i), SIGNAL(verticalSplitterMoved(const QList<int> &)),
+                widget, SLOT(updateVerticalSplitter(const QList<int> &)));
     }
 
     // Keep track of our new CellML annotation view widget
@@ -177,12 +208,22 @@ QString CellMLAnnotationViewPlugin::viewName(const int &pViewIndex)
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::horizontalSplitterMoved(const QList<int> &pSizes)
+void CellMLAnnotationViewPlugin::horizontalSplitterMoved(const QList<int> &pHorizontalSizes)
 {
     // The horizontal splitter of one of our CellML annotation view widgets has
-    // been moved, so update
+    // been moved, so update things
 
-    mSizes = pSizes;
+    mHorizontalSizes = pHorizontalSizes;
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::verticalSplitterMoved(const QList<int> &pVerticalSizes)
+{
+    // The vertical splitter of one of our CellML annotation view widgets has
+    // been moved, so update things
+
+    mVerticalSizes = pVerticalSizes;
 }
 
 //==============================================================================

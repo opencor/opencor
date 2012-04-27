@@ -49,12 +49,14 @@ public:
     virtual QString viewName(const int &pViewIndex);
 
 private:
-    QList<int> mSizes;
+    QList<int> mHorizontalSizes;
+    QList<int> mVerticalSizes;
 
     QList<CellmlAnnotationViewWidget *> mWidgets;
 
 private Q_SLOTS:
-    void horizontalSplitterMoved(const QList<int> &pSizes);
+    void horizontalSplitterMoved(const QList<int> &pHorizontalSizes);
+    void verticalSplitterMoved(const QList<int> &pVerticalSizes);
 };
 
 //==============================================================================
