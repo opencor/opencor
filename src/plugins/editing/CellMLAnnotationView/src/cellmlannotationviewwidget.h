@@ -132,6 +132,8 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void emitHorizontalSplitterMoved();
+
+    void resizeToContents();
 };
 
 //==============================================================================

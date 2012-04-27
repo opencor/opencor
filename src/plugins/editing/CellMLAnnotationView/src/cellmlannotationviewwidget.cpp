@@ -208,7 +208,6 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mTreeView->setFrameShape(QFrame::NoFrame);
     mTreeView->setHeaderHidden(true);
     mTreeView->setRootIsDecorated(false);
-
     mTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     // Populate our horizontal splitter with the aforementioned tree view, as
@@ -246,6 +245,13 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     if (!QRawFont::fromFont(mTreeView->font()).supportsCharacter(mRightArrow))
         mRightArrow = QChar('>');
+
+    // Some connections
+
+    connect(mTreeView, SIGNAL(expanded(const QModelIndex &)),
+            this, SLOT(resizeToContents()));
+    connect(mTreeView, SIGNAL(collapsed(const QModelIndex &)),
+            this, SLOT(resizeToContents()));
 
     // Initialise our tree view
 
@@ -545,6 +551,10 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
     // Expand enough so we can see the meaningful parts of the CellML file
 
     mTreeView->expandToDepth(1);
+
+    // Resize the widget, just to be on the safe side
+
+    resizeToContents();
 }
 
 //==============================================================================
@@ -617,6 +627,16 @@ void CellmlAnnotationViewWidget::emitHorizontalSplitterMoved()
     // Let whoever know that our horizontal splitter has been moved
 
     emit horizontalSplitterMoved(mHorizontalSplitter->sizes());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::resizeToContents()
+{
+    // Resize the tree view so that the contents of the first (and only) column
+    // is visible
+
+    mTreeView->resizeColumnToContents(0);
 }
 
 //==============================================================================
