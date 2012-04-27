@@ -478,13 +478,13 @@ void SingleCellSimulationViewWidget::setProgressBarStyleSheet()
     QColor progressBarChunkBackground = progressBarPalette.color(QPalette::Highlight);
 
     mProgressBar->setStyleSheet(QString("QProgressBar {"
-                                        "   background: rgb(%1, %2, %3);"
-                                        "   border: 0px;"
+                                        "    background: rgb(%1, %2, %3);"
+                                        "    border: 0px;"
                                         "}"
                                         ""
                                         "QProgressBar::chunk {"
-                                        "   background: rgb(%4, %5, %6);"
-                                        "   border: 0px;"
+                                        "    background: rgb(%4, %5, %6);"
+                                        "    border: 0px;"
                                         "}").arg(QString::number(progressBarBackground.red()),
                                                  QString::number(progressBarBackground.green()),
                                                  QString::number(progressBarBackground.blue()),

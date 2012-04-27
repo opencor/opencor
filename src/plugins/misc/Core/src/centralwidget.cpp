@@ -151,10 +151,12 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mLogoView = new QWidget(this);
 
-    mLogoView->setStyleSheet("background-color: white;"
-                             "background-image: url(':logo');"
-                             "background-position: center;"
-                             "background-repeat: no-repeat;");
+    mLogoView->setStyleSheet("QWidget {"
+                             "    background-color: white;"
+                             "    background-image: url(':logo');"
+                             "    background-position: center;"
+                             "    background-repeat: no-repeat;"
+                             "}");
 
     mContents->addWidget(mLogoView);
 
