@@ -90,11 +90,11 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
 
         int verticalSizesCount = pSettings->value(SettingsCellmlAnnotationWidgetVerticalSizesCount, 0).toInt();
 
-        if (verticalSizesCount) {
+        if (!verticalSizesCount) {
             // There are no previous vertical sizes, so get some default ones
 
-            mVerticalSizes << 0.65*qApp->desktop()->screenGeometry().height()
-                           << 0.35*qApp->desktop()->screenGeometry().height();
+            mVerticalSizes << 0.75*qApp->desktop()->screenGeometry().height()
+                           << 0.25*qApp->desktop()->screenGeometry().height();
         } else {
             // There are previous vertical sizes, so use them to initialise
             // mVerticalSizes
