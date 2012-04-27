@@ -47,7 +47,8 @@ namespace CellMLAnnotationView {
 class CellmlItemDelegate : public QStyledItemDelegate
 {
 public:
-    explicit CellmlItemDelegate(QStandardItemModel *pDataModel);
+    explicit CellmlItemDelegate(QWidget *pParent,
+                                QStandardItemModel *pDataModel);
 
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;

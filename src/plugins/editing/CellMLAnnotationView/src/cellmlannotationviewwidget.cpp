@@ -26,8 +26,9 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlItemDelegate::CellmlItemDelegate(QStandardItemModel *pDataModel) :
-    QStyledItemDelegate(),
+CellmlItemDelegate::CellmlItemDelegate(QWidget *pParent,
+                                       QStandardItemModel *pDataModel) :
+    QStyledItemDelegate(pParent),
     mCellmlDataModel(pDataModel)
 {
 }
@@ -200,7 +201,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     mCellmlTreeView = new Core::TreeView(mVerticalSplitter);
     mCellmlDataModel = new QStandardItemModel(mCellmlTreeView);
-    mCellmlItemDelegate = new CellmlItemDelegate(mCellmlDataModel);
+    mCellmlItemDelegate = new CellmlItemDelegate(mCellmlTreeView,
+                                                 mCellmlDataModel);
 
     mCellmlTreeView->setModel(mCellmlDataModel);
     mCellmlTreeView->setItemDelegate(mCellmlItemDelegate);
