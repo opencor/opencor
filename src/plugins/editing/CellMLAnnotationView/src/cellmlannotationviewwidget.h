@@ -44,16 +44,16 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlElementDelegate : public QStyledItemDelegate
+class CellmlItemDelegate : public QStyledItemDelegate
 {
 public:
-    explicit CellmlElementDelegate(QStandardItemModel *pDataModel);
+    explicit CellmlItemDelegate(QStandardItemModel *pDataModel);
 
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
 
 private:
-    QStandardItemModel *mDataModel;
+    QStandardItemModel *mCellmlDataModel;
 };
 
 //==============================================================================
@@ -110,9 +110,9 @@ private:
 
     QSplitter *mHorizontalSplitter;
 
-    Core::TreeView *mTreeView;
-    QStandardItemModel *mDataModel;
-    CellmlElementDelegate *mCellmlElementDelegate;
+    Core::TreeView *mCellmlTreeView;
+    QStandardItemModel *mCellmlDataModel;
+    CellmlItemDelegate *mCellmlItemDelegate;
 
     QTextEdit *mDebugOutput;
 

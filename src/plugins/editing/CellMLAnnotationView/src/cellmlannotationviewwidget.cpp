@@ -26,23 +26,23 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlElementDelegate::CellmlElementDelegate(QStandardItemModel *pDataModel) :
+CellmlItemDelegate::CellmlItemDelegate(QStandardItemModel *pDataModel) :
     QStyledItemDelegate(),
-    mDataModel(pDataModel)
+    mCellmlDataModel(pDataModel)
 {
 }
 
 //==============================================================================
 
-void CellmlElementDelegate::paint(QPainter *pPainter,
-                                  const QStyleOptionViewItem &pOption,
-                                  const QModelIndex &pIndex) const
+void CellmlItemDelegate::paint(QPainter *pPainter,
+                               const QStyleOptionViewItem &pOption,
+                               const QModelIndex &pIndex) const
 {
     // Paint the item as normal, except for the items which are not checkable
     // (i.e. plugins which the user cannot decide whether to load) in which case
     // we paint them as if they were disabled
 
-    CellmlElementItem *cellmlElementItem = static_cast<CellmlElementItem *>(mDataModel->itemFromIndex(pIndex));
+    CellmlElementItem *cellmlElementItem = static_cast<CellmlElementItem *>(mCellmlDataModel->itemFromIndex(pIndex));
 
     QStyleOptionViewItemV4 option(pOption);
 
@@ -197,25 +197,25 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // Create and customise a tree view which will contain all of the units,
     // components, groups and connections from the CellML file
 
-    mTreeView = new Core::TreeView(this);
-    mDataModel = new QStandardItemModel(mTreeView);
-    mCellmlElementDelegate = new CellmlElementDelegate(mDataModel);
+    mCellmlTreeView = new Core::TreeView(this);
+    mCellmlDataModel = new QStandardItemModel(mCellmlTreeView);
+    mCellmlItemDelegate = new CellmlItemDelegate(mCellmlDataModel);
 
-    mTreeView->setModel(mDataModel);
-    mTreeView->setItemDelegate(mCellmlElementDelegate);
+    mCellmlTreeView->setModel(mCellmlDataModel);
+    mCellmlTreeView->setItemDelegate(mCellmlItemDelegate);
 
-    mTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mTreeView->setFrameShape(QFrame::NoFrame);
-    mTreeView->setHeaderHidden(true);
-    mTreeView->setRootIsDecorated(false);
-    mTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    mCellmlTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    mCellmlTreeView->setFrameShape(QFrame::NoFrame);
+    mCellmlTreeView->setHeaderHidden(true);
+    mCellmlTreeView->setRootIsDecorated(false);
+    mCellmlTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     // Populate our horizontal splitter with the aforementioned tree view, as
     // well as with a dummy (for now) widget
     //---GRY--- THE DUMMY WIDGET WILL EVENTUALLY GET REPLACED BY SOMETHING THAT
     //          WILL ALLOW THE USER TO EDIT METADATA, MAKE USE OF RICORDO, ETC.
 
-    mHorizontalSplitter->addWidget(new Core::BorderedWidget(mTreeView,
+    mHorizontalSplitter->addWidget(new Core::BorderedWidget(mCellmlTreeView,
                                                             Core::BorderedWidget::Right));
     mHorizontalSplitter->addWidget(new Core::BorderedWidget(new QWidget(this),
                                                             Core::BorderedWidget::Left));
@@ -243,14 +243,14 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     mRightArrow = QChar(0x2192);
 
-    if (!QRawFont::fromFont(mTreeView->font()).supportsCharacter(mRightArrow))
+    if (!QRawFont::fromFont(mCellmlTreeView->font()).supportsCharacter(mRightArrow))
         mRightArrow = QChar('>');
 
     // Some connections
 
-    connect(mTreeView, SIGNAL(expanded(const QModelIndex &)),
+    connect(mCellmlTreeView, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(resizeToContents()));
-    connect(mTreeView, SIGNAL(collapsed(const QModelIndex &)),
+    connect(mCellmlTreeView, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeToContents()));
 
     // Initialise our tree view
@@ -295,8 +295,8 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
         // Something went wrong while trying to load the CellML file, so report
         // it and leave
 
-        mDataModel->invisibleRootItem()->appendRow(new CellmlElementItem((cellmlFile->issues().first().type() == CellMLSupport::CellmlFileIssue::Error)?CellmlElementItem::Error:CellmlElementItem::Warning,
-                                                                         cellmlFile->issues().first().formattedMessage()));
+        mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem((cellmlFile->issues().first().type() == CellMLSupport::CellmlFileIssue::Error)?CellmlElementItem::Error:CellmlElementItem::Warning,
+                                                                               cellmlFile->issues().first().formattedMessage()));
 
         return;
     }
@@ -306,7 +306,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
     CellmlElementItem *modelItem = new CellmlElementItem(CellmlElementItem::Model,
                                                          cellmlFile->model()->name());
 
-    mDataModel->invisibleRootItem()->appendRow(modelItem);
+    mCellmlDataModel->invisibleRootItem()->appendRow(modelItem);
 
     // Retrieve the model's imports
 
@@ -550,7 +550,7 @@ void CellmlAnnotationViewWidget::initTreeView(const QString &pFileName)
 
     // Expand enough so we can see the meaningful parts of the CellML file
 
-    mTreeView->expandToDepth(1);
+    mCellmlTreeView->expandToDepth(1);
 
     // Resize the widget, just to be on the safe side
 
@@ -636,7 +636,7 @@ void CellmlAnnotationViewWidget::resizeToContents()
     // Resize the tree view so that the contents of the first (and only) column
     // is visible
 
-    mTreeView->resizeColumnToContents(0);
+    mCellmlTreeView->resizeColumnToContents(0);
 }
 
 //==============================================================================
