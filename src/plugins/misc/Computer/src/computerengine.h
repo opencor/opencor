@@ -23,7 +23,7 @@ namespace llvm {
     class ExecutionEngine;
     class Function;
     class Module;
-}
+}   // namespace llvm
 
 //==============================================================================
 
