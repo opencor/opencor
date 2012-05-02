@@ -118,6 +118,7 @@ private:
     CellmlItemDelegate *mCellmlItemDelegate;
 
     Core::TreeView *mMetadataTreeView;
+    QStandardItemModel *mMetadataDataModel;
 
     QChar mRightArrow;
 
@@ -128,6 +129,8 @@ private:
                                 const CellMLSupport::CellmlFileUnits pUnits);
     void populateComponentRefDataModel(CellmlElementItem *pCellmlElementItem,
                                        CellMLSupport::CellmlFileComponentRef *pComponentRef);
+
+    void populateMetadataDataModel(const QString &pFileName);
 
 Q_SIGNALS:
     void horizontalSplitterMoved(const QList<int> &pHorizontalSizes);

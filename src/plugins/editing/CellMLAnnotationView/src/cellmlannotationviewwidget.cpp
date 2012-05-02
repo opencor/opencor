@@ -213,6 +213,9 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // metadata from the CellML file
 
     mMetadataTreeView = new Core::TreeView(mVerticalSplitter);
+    mMetadataDataModel = new QStandardItemModel(mMetadataTreeView);
+
+    mMetadataTreeView->setModel(mMetadataDataModel);
 
     initTreeView(mMetadataTreeView);
 
@@ -258,9 +261,10 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mMetadataTreeView, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeMetadataTreeViewToContents()));
 
-    // Populate our CellML tree view
+    // Populate our tree views
 
     populateCellmlDataModel(pFileName);
+    populateMetadataDataModel(pFileName);
 
     // Expand our CellML tree view enough so that we can see the meaningful
     // parts of the CellML file
@@ -315,9 +319,6 @@ void CellmlAnnotationViewWidget::initTreeView(Core::TreeView *pTreeView)
 
 void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileName)
 {
-    // Initialise our tree view with the units, components, groups and
-    // connections from the CellML file
-
     // Retrieve our CellML file object and load the CellML file
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
@@ -634,6 +635,13 @@ void CellmlAnnotationViewWidget::populateComponentRefDataModel(CellmlElementItem
     foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
              pComponentRef->componentRefs())
         populateComponentRefDataModel(componentRefItem, componentRef);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::populateMetadataDataModel(const QString &pFileName)
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
