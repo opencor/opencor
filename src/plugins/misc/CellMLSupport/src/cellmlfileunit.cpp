@@ -27,13 +27,21 @@ CellmlFileUnit::CellmlFileUnit(iface::cellml_api::Units *pUnits) :
 {
     // Iterate through the unit elements and add them to our list
 
-    iface::cellml_api::UnitIterator *unitIterator = pUnits->unitCollection()->iterateUnits();
-    iface::cellml_api::Unit *unit;
+    ObjRef<iface::cellml_api::UnitSet> units = pUnits->unitCollection();
+    ObjRef<iface::cellml_api::UnitIterator> unitIterator = units->iterateUnits();
 
-    while ((unit = unitIterator->nextUnit()))
-        // We have a unit, so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::Unit> unit = unitIterator->nextUnit();
 
-        mUnitElements.append(new CellmlFileUnitElement(unit));
+        if (unit)
+            // We have a unit, so add it to our list
+
+            mUnitElements.append(new CellmlFileUnitElement(unit));
+        else
+            // No more units, so...
+
+            break;
+    }
 }
 
 //==============================================================================

@@ -21,13 +21,21 @@ CellmlFileConnection::CellmlFileConnection(iface::cellml_api::Connection *pConne
 
     // Iterate through the variables to map and add them to our list
 
-    iface::cellml_api::MapVariablesIterator *mapVariablesIterator = pConnection->variableMappings()->iterateMapVariables();
-    iface::cellml_api::MapVariables *mapVariables;
+    ObjRef<iface::cellml_api::MapVariablesSet> variableMappings = pConnection->variableMappings();
+    ObjRef<iface::cellml_api::MapVariablesIterator> mapVariablesIterator = variableMappings->iterateMapVariables();
 
-    while ((mapVariables = mapVariablesIterator->nextMapVariables()))
-        // We have variables to map, so add them to our list
+    while (true) {
+        ObjRef<iface::cellml_api::MapVariables> mapVariables = mapVariablesIterator->nextMapVariables();
 
-        mVariableMappings.append(new CellmlFileMapVariablesItem(mapVariables));
+        if (mapVariables)
+            // We have variables to map, so add them to our list
+
+            mVariableMappings.append(new CellmlFileMapVariablesItem(mapVariables));
+        else
+            // No more variables to map, so...
+
+            break;
+    }
 }
 
 //==============================================================================

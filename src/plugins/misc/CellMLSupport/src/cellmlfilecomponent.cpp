@@ -27,33 +27,57 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
 {
     // Iterate through the units and add them to our list
 
-    iface::cellml_api::UnitsIterator *unitsIterator = pComponent->units()->iterateUnits();
-    iface::cellml_api::Units *units;
+    ObjRef<iface::cellml_api::UnitsSet> units = pComponent->units();
+    ObjRef<iface::cellml_api::UnitsIterator> unitIterator = units->iterateUnits();
 
-    while ((units = unitsIterator->nextUnits()))
-        // We have a unit, so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::Units> unit = unitIterator->nextUnits();
 
-        mUnits.append(new CellmlFileUnit(units));
+        if (unit)
+            // We have a unit, so add it to our list
+
+            mUnits.append(new CellmlFileUnit(unit));
+        else
+            // No more units, so...
+
+            break;
+    }
 
     // Iterate through the variables and add them to our list
 
-    iface::cellml_api::CellMLVariableIterator *variableIterator = pComponent->variables()->iterateVariables();
-    iface::cellml_api::CellMLVariable *variable;
+    ObjRef<iface::cellml_api::CellMLVariableSet> variables = pComponent->variables();
+    ObjRef<iface::cellml_api::CellMLVariableIterator> variableIterator = variables->iterateVariables();
 
-    while ((variable = variableIterator->nextVariable()))
-        // We have a variable, so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::CellMLVariable> variable = variableIterator->nextVariable();
 
-        mVariables.append(new CellmlFileVariable(variable));
+        if (variable)
+            // We have a variable, so add it to our list
+
+            mVariables.append(new CellmlFileVariable(variable));
+        else
+            // No more variables, so...
+
+            break;
+    }
 
     // Iterate through the MathML elements and add them to our list
 
-    iface::cellml_api::MathMLElementIterator *mathmlElementIterator = pComponent->math()->iterate();
-    iface::mathml_dom::MathMLElement *mathmlElement;
+    ObjRef<iface::cellml_api::MathList> mathmlElements = pComponent->math();
+    ObjRef<iface::cellml_api::MathMLElementIterator> mathmlElementIterator = mathmlElements->iterate();
 
-    while ((mathmlElement = mathmlElementIterator->next()))
-        // We have a MathML element, so add it to our list
+    while (true) {
+        ObjRef<iface::mathml_dom::MathMLElement> mathmlElement = mathmlElementIterator->next();
 
-        mMathmlElements.append(new CellmlFileMathmlElement(mathmlElement));
+        if (mathmlElement)
+            // We have a MathML element, so add it to our list
+
+            mMathmlElements.append(new CellmlFileMathmlElement(mathmlElement));
+        else
+            // No more MathML elements, so...
+
+            break;
+    }
 }
 
 //==============================================================================

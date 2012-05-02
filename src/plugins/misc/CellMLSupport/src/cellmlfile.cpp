@@ -164,53 +164,93 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
 
     // Iterate through the imports and add them to our list
 
-    iface::cellml_api::CellMLImportIterator *cellmlFileImportsIterator = mCellmlApiModel->imports()->iterateImports();
-    iface::cellml_api::CellMLImport *cellmlImport;
+    ObjRef<iface::cellml_api::CellMLImportSet> imports = mCellmlApiModel->imports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importIterator = imports->iterateImports();
 
-    while ((cellmlImport = cellmlFileImportsIterator->nextImport()))
-        // We have an import, so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::CellMLImport> import = importIterator->nextImport();
 
-        mImports.append(new CellmlFileImport(cellmlImport));
+        if (import)
+            // We have an import, so add it to our list
+
+            mImports.append(new CellmlFileImport(import));
+        else
+            // No more imports, so...
+
+            break;
+    }
 
     // Iterate through the units and add them to our list
 
-    iface::cellml_api::UnitsIterator *unitsIterator = mCellmlApiModel->localUnits()->iterateUnits();
-    iface::cellml_api::Units *units;
+    ObjRef<iface::cellml_api::UnitsSet> units = mCellmlApiModel->localUnits();
+    ObjRef<iface::cellml_api::UnitsIterator> unitIterator = units->iterateUnits();
 
-    while ((units = unitsIterator->nextUnits()))
-        // We have a unit, so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::Units> unit = unitIterator->nextUnits();
 
-        mUnits.append(new CellmlFileUnit(units));
+        if (unit)
+            // We have a unit, so add it to our list
+
+            mUnits.append(new CellmlFileUnit(unit));
+        else
+            // No more units, so...
+
+            break;
+    }
 
     // Iterate through the components and add them to our list
 
-    iface::cellml_api::CellMLComponentIterator *componentIterator = mCellmlApiModel->localComponents()->iterateComponents();
-    iface::cellml_api::CellMLComponent *component;
+    ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlApiModel->localComponents();
+    ObjRef<iface::cellml_api::CellMLComponentIterator> componentIterator = components->iterateComponents();
 
-    while ((component = componentIterator->nextComponent()))
-        // We have a component, so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::CellMLComponent> component = componentIterator->nextComponent();
 
-        mComponents.append(new CellmlFileComponent(component));
+        if (component)
+            // We have a component, so add it to our list
+
+            mComponents.append(new CellmlFileComponent(component));
+        else
+            // No more components, so...
+
+            break;
+    }
 
     // Iterate through the groups and add them to our list
 
-    iface::cellml_api::GroupIterator *groupIterator = mCellmlApiModel->groups()->iterateGroups();
-    iface::cellml_api::Group *group;
+    ObjRef<iface::cellml_api::GroupSet> groups = mCellmlApiModel->groups();
+    ObjRef<iface::cellml_api::GroupIterator> groupIterator = groups->iterateGroups();
 
-    while ((group = groupIterator->nextGroup()))
-        // We have a group, so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::Group> group = groupIterator->nextGroup();
 
-        mGroups.append(new CellmlFileGroup(group));
+        if (group)
+            // We have a group, so add it to our list
+
+            mGroups.append(new CellmlFileGroup(group));
+        else
+            // No more groups, so...
+
+            break;
+    }
 
     // Iterate through the connections and add them to our list
 
-    iface::cellml_api::ConnectionIterator *connectionIterator = mCellmlApiModel->connections()->iterateConnections();
-    iface::cellml_api::Connection *connection;
+    ObjRef<iface::cellml_api::ConnectionSet> connections = mCellmlApiModel->connections();
+    ObjRef<iface::cellml_api::ConnectionIterator> connectionIterator = connections->iterateConnections();
 
-    while ((connection = connectionIterator->nextConnection()))
-        // We have a connection, so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::Connection> connection = connectionIterator->nextConnection();
 
-        mConnections.append(new CellmlFileConnection(connection));
+        if (connection)
+            // We have a connection, so add it to our list
+
+            mConnections.append(new CellmlFileConnection(connection));
+        else
+            // No more connections, so...
+
+            break;
+    }
 
     // All done, so...
 

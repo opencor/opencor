@@ -19,19 +19,39 @@ CellmlFileImport::CellmlFileImport(iface::cellml_api::CellMLImport *pCellmlImpor
 {
     // Keep track of any unit imports...
 
-    iface::cellml_api::ImportUnitsIterator *importUnitsIterator = pCellmlImport->units()->iterateImportUnits();
-    iface::cellml_api::ImportUnits *importUnits;
+    ObjRef<iface::cellml_api::ImportUnitsSet> importUnits = pCellmlImport->units();
+    ObjRef<iface::cellml_api::ImportUnitsIterator> importUnitIterator = importUnits->iterateImportUnits();
 
-    while ((importUnits = importUnitsIterator->nextImportUnits()))
-        mUnits.append(new CellmlFileImportUnit(importUnits));
+    while (true) {
+        ObjRef<iface::cellml_api::ImportUnits> importUnit = importUnitIterator->nextImportUnits();
+
+        if (importUnit)
+            // We have a unit import, so add it to our list
+
+            mUnits.append(new CellmlFileImportUnit(importUnit));
+        else
+            // No more unit imports, so...
+
+            break;
+    }
 
     // ... and of any component imports
 
-    iface::cellml_api::ImportComponentIterator *importComponentIterator = pCellmlImport->components()->iterateImportComponents();
-    iface::cellml_api::ImportComponent *importComponent;
+    ObjRef<iface::cellml_api::ImportComponentSet> importComponents = pCellmlImport->components();
+    ObjRef<iface::cellml_api::ImportComponentIterator> importComponentIterator = importComponents->iterateImportComponents();
 
-    while ((importComponent = importComponentIterator->nextImportComponent()))
-        mComponents.append(new CellmlFileImportComponent(importComponent));
+    while (true) {
+        ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentIterator->nextImportComponent();
+
+        if (importComponent)
+            // We have a component import, so add it to our list
+
+            mComponents.append(new CellmlFileImportComponent(importComponent));
+        else
+            // No more component imports, so...
+
+            break;
+    }
 }
 
 //==============================================================================

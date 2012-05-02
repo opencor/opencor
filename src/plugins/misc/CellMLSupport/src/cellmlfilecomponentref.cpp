@@ -18,13 +18,21 @@ CellmlFileComponentRef::CellmlFileComponentRef(iface::cellml_api::ComponentRef *
 {
     // Iterate through the component ref(erence)s and add them to our list
 
-    iface::cellml_api::ComponentRefIterator *componentRefIterator = pComponentRef->componentRefs()->iterateComponentRefs();
-    iface::cellml_api::ComponentRef *componentRef;
+    ObjRef<iface::cellml_api::ComponentRefSet> componentRefs = pComponentRef->componentRefs();
+    ObjRef<iface::cellml_api::ComponentRefIterator> componentRefIterator = componentRefs->iterateComponentRefs();
 
-    while ((componentRef = componentRefIterator->nextComponentRef()))
-        // We have a component ref(erence), so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::ComponentRef> componentRef = componentRefIterator->nextComponentRef();
 
-        mComponentRefs.append(new CellmlFileComponentRef(componentRef));
+        if (componentRef)
+            // We have a component ref(erence), so add it to our list
+
+            mComponentRefs.append(new CellmlFileComponentRef(componentRef));
+        else
+            // No more component ref(erence)s, so...
+
+            break;
+    }
 }
 
 //==============================================================================

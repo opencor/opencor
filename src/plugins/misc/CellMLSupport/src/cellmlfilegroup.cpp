@@ -17,23 +17,39 @@ CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
 {
     // Iterate through the relationship ref(erence)s and add them to our list
 
-    iface::cellml_api::RelationshipRefIterator *relationshipRefIterator = pGroup->relationshipRefs()->iterateRelationshipRefs();
-    iface::cellml_api::RelationshipRef *relationshipRef;
+    ObjRef<iface::cellml_api::RelationshipRefSet> relationshipRefs = pGroup->relationshipRefs();
+    ObjRef<iface::cellml_api::RelationshipRefIterator> relationshipRefIterator = relationshipRefs->iterateRelationshipRefs();
 
-    while ((relationshipRef = relationshipRefIterator->nextRelationshipRef()))
-        // We have a relationship ref(erence), so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::RelationshipRef> relationshipRef = relationshipRefIterator->nextRelationshipRef();
 
-        mRelationshipRefs.append(new CellmlFileRelationshipRef(relationshipRef));
+        if (relationshipRef)
+            // We have a relationship ref(erence), so add it to our list
+
+            mRelationshipRefs.append(new CellmlFileRelationshipRef(relationshipRef));
+        else
+            // No more relationship ref(erence)s, so...
+
+            break;
+    }
 
     // Iterate through the component ref(erence)s and add them to our list
 
-    iface::cellml_api::ComponentRefIterator *componentRefIterator = pGroup->componentRefs()->iterateComponentRefs();
-    iface::cellml_api::ComponentRef *componentRef;
+    ObjRef<iface::cellml_api::ComponentRefSet> componentRefs = pGroup->componentRefs();
+    ObjRef<iface::cellml_api::ComponentRefIterator> componentRefIterator = componentRefs->iterateComponentRefs();
 
-    while ((componentRef = componentRefIterator->nextComponentRef()))
-        // We have a component ref(erence), so add it to our list
+    while (true) {
+        ObjRef<iface::cellml_api::ComponentRef> componentRef = componentRefIterator->nextComponentRef();
 
-        mComponentRefs.append(new CellmlFileComponentRef(componentRef));
+        if (componentRef)
+            // We have a component ref(erence), so add it to our list
+
+            mComponentRefs.append(new CellmlFileComponentRef(componentRef));
+        else
+            // No more component ref(erence)s, so...
+
+            break;
+    }
 }
 
 //==============================================================================
