@@ -12,6 +12,7 @@
 //==============================================================================
 
 #include <QMap>
+#include <QString>
 
 //==============================================================================
 
@@ -27,7 +28,36 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileRdfTriple
 {
 public:
-    explicit CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple);
+    enum Type
+    {
+        Uri,
+        ObjId,
+        PlainLiteral,
+        TypedLiteral
+    };
+
+    explicit CellmlFileRdfTriple(iface::rdf_api::Triple *pTriple);
+
+    Type subjectType() const;
+    QString subject() const;
+
+    Type predicateType() const;
+    QString predicate() const;
+
+    Type objectType() const;
+    QString object() const;
+    QString objectExtra() const;
+
+private:
+    Type mSubjectType;
+    QString mSubject;
+
+    Type mPredicateType;
+    QString mPredicate;
+
+    Type mObjectType;
+    QString mObject;
+    QString mObjectExtra;
 };
 
 //==============================================================================
