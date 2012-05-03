@@ -29,6 +29,7 @@
 
 //==============================================================================
 
+#include "IfaceRDF_APISPEC.hxx"
 #include "IfaceVACSS.hxx"
 
 #include "CellMLBootstrap.hpp"
@@ -94,6 +95,42 @@ void CellmlFile::reset()
 }
 
 //==============================================================================
+void
+debug_PrintNode(iface::rdf_api::Node* aNode)
+{
+  DECLARE_QUERY_INTERFACE_OBJREF(ur, aNode, rdf_api::URIReference);
+  if (ur != NULL)
+  {
+    RETURN_INTO_WSTRING(s, ur->URI());
+    printf("<URI: %S> ", s.c_str());
+    return;
+  }
+
+  DECLARE_QUERY_INTERFACE_OBJREF(bn, aNode, rdf_api::BlankNode);
+  if (bn != NULL)
+  {
+    printf("<BlankNode %08 PRIxPTR >", reinterpret_cast<uintptr_t>(static_cast<iface::rdf_api::BlankNode*>(bn)));
+    return;
+  }
+
+  DECLARE_QUERY_INTERFACE_OBJREF(pl, aNode, rdf_api::PlainLiteral);
+  if (pl != NULL)
+  {
+    RETURN_INTO_WSTRING(lf, pl->lexicalForm());
+    RETURN_INTO_WSTRING(l, pl->language());
+    printf("<PlainLiteral: %S language %S> ", lf.c_str(), l.c_str());
+    return;
+  }
+
+  DECLARE_QUERY_INTERFACE_OBJREF(tl, aNode, rdf_api::TypedLiteral);
+  if (tl != NULL)
+  {
+    RETURN_INTO_WSTRING(lf, tl->lexicalForm());
+    RETURN_INTO_WSTRING(l, tl->datatypeURI());
+    printf("<TypedLiteral: %S type %S> ", lf.c_str(), l.c_str());
+    return;
+  }
+}
 
 bool CellmlFile::load()
 {
@@ -250,6 +287,67 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
             // No more connections, so...
 
             break;
+    }
+
+    // Retrieve all the metadata associated with the model
+
+    ObjRef<iface::cellml_api::RDFRepresentation> rdfRepresentation = mCellmlApiModel->getRDFRepresentation(L"http://www.cellml.org/RDF/API");
+
+    if (rdfRepresentation) {
+        ObjRef<iface::rdf_api::RDFAPIRepresentation> rdfApiRepresentation;
+        QUERY_INTERFACE(rdfApiRepresentation, rdfRepresentation,
+                        rdf_api::RDFAPIRepresentation);
+
+        if (rdfApiRepresentation) {
+            ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
+            QString uriBase = QString::fromStdWString(xmlBase->asText());
+
+printf(">>> uriBase = %s\n", qPrintable(uriBase));
+
+            ObjRef<iface::rdf_api::DataSource> dataSource = rdfApiRepresentation->source();
+            ObjRef<iface::rdf_api::TripleSet> triples = dataSource->getAllTriples();
+            ObjRef<iface::rdf_api::TripleEnumerator> tripleEnumerator = triples->enumerateTriples();
+
+//int counter = 0;
+
+            while (true) {
+                ObjRef<iface::rdf_api::Triple> triple = tripleEnumerator->getNextTriple();
+
+                if (triple) {
+                    // We have a triple, so add it to our list
+
+//                    mConnections.append(new CellmlFileConnection(connection));
+
+//                    ObjRef<iface::rdf_api::Node> object = triple->object();
+
+//                    ObjRef<iface::rdf_api::PlainLiteral> plainLiteral;
+//                    QUERY_INTERFACE(plainLiteral, object, rdf_api::PlainLiteral);
+
+//                    if (plainLiteral)
+//                        qDebug("Triple #%d: %s", ++counter, qPrintable(QString::fromStdWString(plainLiteral->lexicalForm())));
+//                    else
+//                        qDebug("Triple #%d: ???", ++counter);
+
+                    printf("-----------------------------------------------\n");
+                    printf("Subject: ");
+                    RETURN_INTO_OBJREF(s, iface::rdf_api::Resource, triple->subject());
+                    debug_PrintNode(s);
+                    printf("\n");
+                    printf("Predicate: ");
+                    RETURN_INTO_OBJREF(p, iface::rdf_api::Resource, triple->predicate());
+                    debug_PrintNode(p);
+                    printf("\n");
+                    printf("Object: ");
+                    RETURN_INTO_OBJREF(o, iface::rdf_api::Node, triple->object());
+                    debug_PrintNode(o);
+                    printf("\n");
+                } else {
+                    // No more triples, so...
+
+                    break;
+                }
+            }
+        }
     }
 
     // All done, so...
