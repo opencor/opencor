@@ -29,7 +29,6 @@
 
 //==============================================================================
 
-#include "IfaceRDF_APISPEC.hxx"
 #include "IfaceVACSS.hxx"
 
 #include "CellMLBootstrap.hpp"
@@ -47,7 +46,11 @@ CellmlFile::CellmlFile(const QString &pFileName) :
     mCellmlApiModel(0),
     mModel(0),
     mImports(CellmlFileImports()),
-    mUnits(CellmlFileUnits())
+    mUnits(CellmlFileUnits()),
+    mComponents(CellmlFileComponents()),
+    mGroups(CellmlFileGroups()),
+    mConnections(CellmlFileConnections()),
+    mMetadata(CellmlFileRdfTriples())
 {
     // Instantiate our runtime object
 
@@ -86,6 +89,7 @@ void CellmlFile::reset()
     clearComponents();
     clearGroups();
     clearConnections();
+    clearMetadata();
 
     mIssues.clear();
 
@@ -276,56 +280,53 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
                 if (triple) {
                     // We have a triple, so retrieve its subject so we can
                     // determine to which group of triples it should be added
+                    // Note: the triple is part of an rdf:Description element
+                    //       which is itself part of a rdf:RDF element. The
+                    //       rdf:Description element has an rdf:about attribute
+                    //       which may or not have a value assigned to it. If no
+                    //       value was assigned, then the triple is valid at the
+                    //       whole CellML model level. On the other hand, if a
+                    //       value was assigned (and of the format #<id>), then
+                    //       it will be associated to any CellML element which
+                    //       cmeta:id value is <id>. A couple of examples:
+                    //
+                    // <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+                    //   <rdf:Description rdf:about="">
+                    //     <dc:creator rdf:parseType="Resource">
+                    //       <vCard:EMAIL rdf:parseType="Resource">
+                    //         <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet"/>
+                    //         <rdf:value>someone@somewhere.com</rdf:value>
+                    //       </vCard:EMAIL>
+                    //     </dc:creator>
+                    //   </rdf:Description>
+                    // </rdf:RDF>
+                    //
+                    // <variable units="micromolar" public_interface="out" cmeta:id="C_C" name="C" initial_value="0.01">
+                    //   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+                    //     <rdf:Description rdf:about="#C_C">
+                    //       <bqbiol:isVersionOf>
+                    //         <rdf:Bag>
+                    //           <rdf:li rdf:resource="urn:miriam:uniprot:Q4KLA0"/>
+                    //           <rdf:li rdf:resource="urn:miriam:interpro:IPR006670"/>
+                    //           <rdf:li rdf:resource="urn:miriam:obo.sbo:sbo%3A0000252"/>
+                    //         </rdf:Bag>
+                    //       </bqbiol:isVersionOf>
+                    //     </rdf:Description>
+                    //   </rdf:RDF>
+                    // </variable>
 
                     ObjRef<iface::rdf_api::Resource> subject = triple->subject();
                     ObjRef<iface::rdf_api::URIReference> uriReference;
                     QUERY_INTERFACE(uriReference, subject,
                                     rdf_api::URIReference);
 
-                    if (uriReference) {
-                        // The triple is part of an rdf:Description element
-                        // which is itself part of a rdf:RDF element. The
-                        // rdf:Description element has an rdf:about attribute
-                        // which may or not have a value assigned to it. If no
-                        // value was assigned, then the triple is valid at the
-                        // whole CellML model level. On the other hand, if a
-                        // value was assigned (and of the format #<id>), then it
-                        // will be associated to any CellML element which
-                        // cmeta:id value is <id>. A couple of examples:
-                        //
-                        // <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
-                        //   <rdf:Description rdf:about="">
-                        //     <dc:creator rdf:parseType="Resource">
-                        //       <vCard:EMAIL rdf:parseType="Resource">
-                        //         <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet"/>
-                        //         <rdf:value>someone@somewhere.com</rdf:value>
-                        //       </vCard:EMAIL>
-                        //     </dc:creator>
-                        //   </rdf:Description>
-                        // </rdf:RDF>
-                        //
-                        // <variable units="micromolar" public_interface="out" cmeta:id="C_C" name="C" initial_value="0.01">
-                        //   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-                        //     <rdf:Description rdf:about="#C_C">
-                        //       <bqbiol:isVersionOf>
-                        //         <rdf:Bag>
-                        //           <rdf:li rdf:resource="urn:miriam:uniprot:Q4KLA0"/>
-                        //           <rdf:li rdf:resource="urn:miriam:interpro:IPR006670"/>
-                        //           <rdf:li rdf:resource="urn:miriam:obo.sbo:sbo%3A0000252"/>
-                        //         </rdf:Bag>
-                        //       </bqbiol:isVersionOf>
-                        //     </rdf:Description>
-                        //   </rdf:RDF>
-                        // </variable>
+                    if (uriReference)
+                        // We could retrieve triple's subject's URI reference,
+                        // so we can now add the triple to the correct group of
+                        // triples
 
-                        QString uri = QString::fromStdWString(uriReference->URI());
-                        QString rdfAboutWithoutHash = QString(uri).remove(uriBaseWithHash);
-
-qDebug("---------------------------------------");
-qDebug("uriBaseWithHash = %s", qPrintable(uriBaseWithHash));
-qDebug("uri = %s", qPrintable(uri));
-qDebug("rdfAboutWithoutHash = %s", qPrintable(rdfAboutWithoutHash));
-                    }
+                        mMetadata.insert(QString::fromStdWString(uriReference->URI()).remove(uriBaseWithHash),
+                                         new CellmlFileRdfTriple(triple));
                 } else {
                     // No more triples, so...
 
@@ -627,6 +628,15 @@ CellmlFileConnections CellmlFile::connections() const
 
 //==============================================================================
 
+CellmlFileRdfTriples CellmlFile::metadata() const
+{
+    // Return the CellML file's metadata
+
+    return mMetadata;
+}
+
+//==============================================================================
+
 void CellmlFile::clearImports()
 {
     // Delete all the imports and clear our list
@@ -683,6 +693,18 @@ void CellmlFile::clearConnections()
         delete connection;
 
     mConnections.clear();
+}
+
+//==============================================================================
+
+void CellmlFile::clearMetadata()
+{
+    // Delete all the metadata and clear our list
+
+    foreach (CellmlFileRdfTriple *triple, mMetadata)
+        delete triple;
+
+    mMetadata.clear();
 }
 
 //==============================================================================

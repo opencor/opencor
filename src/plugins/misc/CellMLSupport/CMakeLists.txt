@@ -31,6 +31,7 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfilemathmlelement.cpp
         src/cellmlfilemodel.cpp
         src/cellmlfilenamedelement.cpp
+        src/cellmlfilerdftriple.cpp
         src/cellmlfilerelationshipref.cpp
         src/cellmlfileruntime.cpp
         src/cellmlfileunit.cpp

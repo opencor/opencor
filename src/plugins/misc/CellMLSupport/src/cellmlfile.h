@@ -13,6 +13,7 @@
 #include "cellmlfileimport.h"
 #include "cellmlfileissue.h"
 #include "cellmlfilemodel.h"
+#include "cellmlfilerdftriple.h"
 #include "cellmlfileruntime.h"
 #include "cellmlsupportglobal.h"
 
@@ -51,6 +52,7 @@ public:
     CellmlFileComponents components() const;
     CellmlFileGroups groups() const;
     CellmlFileConnections connections() const;
+    CellmlFileRdfTriples metadata() const;
 
 private:
     QString mFileName;
@@ -63,6 +65,7 @@ private:
     CellmlFileComponents mComponents;
     CellmlFileGroups mGroups;
     CellmlFileConnections mConnections;
+    CellmlFileRdfTriples mMetadata;
 
     bool mIsValid;
 
@@ -81,6 +84,7 @@ private:
     void clearComponents();
     void clearGroups();
     void clearConnections();
+    void clearMetadata();
 };
 
 //==============================================================================
