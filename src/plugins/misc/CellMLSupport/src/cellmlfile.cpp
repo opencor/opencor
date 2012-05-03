@@ -95,42 +95,6 @@ void CellmlFile::reset()
 }
 
 //==============================================================================
-void
-debug_PrintNode(iface::rdf_api::Node* aNode)
-{
-  DECLARE_QUERY_INTERFACE_OBJREF(ur, aNode, rdf_api::URIReference);
-  if (ur != NULL)
-  {
-    RETURN_INTO_WSTRING(s, ur->URI());
-    printf("<URI: %S> ", s.c_str());
-    return;
-  }
-
-  DECLARE_QUERY_INTERFACE_OBJREF(bn, aNode, rdf_api::BlankNode);
-  if (bn != NULL)
-  {
-    printf("<BlankNode %08 PRIxPTR >", reinterpret_cast<uintptr_t>(static_cast<iface::rdf_api::BlankNode*>(bn)));
-    return;
-  }
-
-  DECLARE_QUERY_INTERFACE_OBJREF(pl, aNode, rdf_api::PlainLiteral);
-  if (pl != NULL)
-  {
-    RETURN_INTO_WSTRING(lf, pl->lexicalForm());
-    RETURN_INTO_WSTRING(l, pl->language());
-    printf("<PlainLiteral: %S language %S> ", lf.c_str(), l.c_str());
-    return;
-  }
-
-  DECLARE_QUERY_INTERFACE_OBJREF(tl, aNode, rdf_api::TypedLiteral);
-  if (tl != NULL)
-  {
-    RETURN_INTO_WSTRING(lf, tl->lexicalForm());
-    RETURN_INTO_WSTRING(l, tl->datatypeURI());
-    printf("<TypedLiteral: %S type %S> ", lf.c_str(), l.c_str());
-    return;
-  }
-}
 
 bool CellmlFile::load()
 {
@@ -300,47 +264,68 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
 
         if (rdfApiRepresentation) {
             ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
-            QString uriBase = QString::fromStdWString(xmlBase->asText());
-
-printf(">>> uriBase = %s\n", qPrintable(uriBase));
+            QString uriBaseWithHash = QString::fromStdWString(xmlBase->asText())+"#";
 
             ObjRef<iface::rdf_api::DataSource> dataSource = rdfApiRepresentation->source();
             ObjRef<iface::rdf_api::TripleSet> triples = dataSource->getAllTriples();
             ObjRef<iface::rdf_api::TripleEnumerator> tripleEnumerator = triples->enumerateTriples();
 
-//int counter = 0;
-
             while (true) {
                 ObjRef<iface::rdf_api::Triple> triple = tripleEnumerator->getNextTriple();
 
                 if (triple) {
-                    // We have a triple, so add it to our list
+                    // We have a triple, so retrieve its subject so we can
+                    // determine to which group of triples it should be added
 
-//                    mConnections.append(new CellmlFileConnection(connection));
+                    ObjRef<iface::rdf_api::Resource> subject = triple->subject();
+                    ObjRef<iface::rdf_api::URIReference> uriReference;
+                    QUERY_INTERFACE(uriReference, subject,
+                                    rdf_api::URIReference);
 
-//                    ObjRef<iface::rdf_api::Node> object = triple->object();
+                    if (uriReference) {
+                        // The triple is part of an rdf:Description element
+                        // which is itself part of a rdf:RDF element. The
+                        // rdf:Description element has an rdf:about attribute
+                        // which may or not have a value assigned to it. If no
+                        // value was assigned, then the triple is valid at the
+                        // whole CellML model level. On the other hand, if a
+                        // value was assigned (and of the format #<id>), then it
+                        // will be associated to any CellML element which
+                        // cmeta:id value is <id>. A couple of examples:
+                        //
+                        // <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+                        //   <rdf:Description rdf:about="">
+                        //     <dc:creator rdf:parseType="Resource">
+                        //       <vCard:EMAIL rdf:parseType="Resource">
+                        //         <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet"/>
+                        //         <rdf:value>someone@somewhere.com</rdf:value>
+                        //       </vCard:EMAIL>
+                        //     </dc:creator>
+                        //   </rdf:Description>
+                        // </rdf:RDF>
+                        //
+                        // <variable units="micromolar" public_interface="out" cmeta:id="C_C" name="C" initial_value="0.01">
+                        //   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+                        //     <rdf:Description rdf:about="#C_C">
+                        //       <bqbiol:isVersionOf>
+                        //         <rdf:Bag>
+                        //           <rdf:li rdf:resource="urn:miriam:uniprot:Q4KLA0"/>
+                        //           <rdf:li rdf:resource="urn:miriam:interpro:IPR006670"/>
+                        //           <rdf:li rdf:resource="urn:miriam:obo.sbo:sbo%3A0000252"/>
+                        //         </rdf:Bag>
+                        //       </bqbiol:isVersionOf>
+                        //     </rdf:Description>
+                        //   </rdf:RDF>
+                        // </variable>
 
-//                    ObjRef<iface::rdf_api::PlainLiteral> plainLiteral;
-//                    QUERY_INTERFACE(plainLiteral, object, rdf_api::PlainLiteral);
+                        QString uri = QString::fromStdWString(uriReference->URI());
+                        QString rdfAboutWithoutHash = QString(uri).remove(uriBaseWithHash);
 
-//                    if (plainLiteral)
-//                        qDebug("Triple #%d: %s", ++counter, qPrintable(QString::fromStdWString(plainLiteral->lexicalForm())));
-//                    else
-//                        qDebug("Triple #%d: ???", ++counter);
-
-                    printf("-----------------------------------------------\n");
-                    printf("Subject: ");
-                    RETURN_INTO_OBJREF(s, iface::rdf_api::Resource, triple->subject());
-                    debug_PrintNode(s);
-                    printf("\n");
-                    printf("Predicate: ");
-                    RETURN_INTO_OBJREF(p, iface::rdf_api::Resource, triple->predicate());
-                    debug_PrintNode(p);
-                    printf("\n");
-                    printf("Object: ");
-                    RETURN_INTO_OBJREF(o, iface::rdf_api::Node, triple->object());
-                    debug_PrintNode(o);
-                    printf("\n");
+qDebug("---------------------------------------");
+qDebug("uriBaseWithHash = %s", qPrintable(uriBaseWithHash));
+qDebug("uri = %s", qPrintable(uri));
+qDebug("rdfAboutWithoutHash = %s", qPrintable(rdfAboutWithoutHash));
+                    }
                 } else {
                     // No more triples, so...
 
