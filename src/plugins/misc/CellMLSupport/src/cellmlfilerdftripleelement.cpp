@@ -25,8 +25,8 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
     QUERY_INTERFACE(uriReference, pNode, rdf_api::URIReference);
 
     if (uriReference) {
-        // The rdf_api::URIReference is supported, so initialise the triple
-        // element with it
+        // The rdf_api::URIReference interface is supported, so initialise the
+        // triple element using that interface
 
         mType = UriReference;
 
@@ -36,8 +36,8 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
         QUERY_INTERFACE(plainLiteral, pNode, rdf_api::PlainLiteral);
 
         if (plainLiteral) {
-            // The rdf_api::PlainLiteral is supported, so initialise the triple
-            // element with it
+            // The rdf_api::PlainLiteral interface is supported, so initialise
+            // the triple element using that interface
 
             mType = PlainLiteral;
 
@@ -48,16 +48,16 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
             QUERY_INTERFACE(typedLiteral, pNode, rdf_api::TypedLiteral);
 
             if (typedLiteral) {
-                // The rdf_api::TypedLiteral is supported, so initialise the
-                // triple element with it
+                // The rdf_api::TypedLiteral interface is supported, so
+                // initialise the triple element using that interface
 
                 mType = TypedLiteral;
 
                 mLexicalForm = QString::fromStdWString(typedLiteral->lexicalForm());
                 mDataTypeUri = QString::fromStdWString(typedLiteral->datatypeURI());
             } else {
-                // The node doesn't support any interface, so just return its
-                // object id
+                // The node doesn't support any interface, so initialise it
+                // using only its object id
 
                 mType = Object;
 
