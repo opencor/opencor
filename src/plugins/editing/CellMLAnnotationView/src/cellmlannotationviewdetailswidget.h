@@ -32,11 +32,46 @@ class CellmlAnnotationViewDetailsWidget : public Core::Widget
     Q_OBJECT
 
 public:
+    enum Type
+    {
+        Empty,
+        Model,
+        Import,
+        Unit,
+        UnitElement,
+        Component,
+        Variable,
+        MathmlElement,
+        Group,
+        RelationshipRef,
+        ComponentRef,
+        Connection,
+        Metadata
+    };
+
     explicit CellmlAnnotationViewDetailsWidget(QWidget *pParent);
     ~CellmlAnnotationViewDetailsWidget();
 
+    void setEmpty();
+    void setModel();
+    void setImport();
+    void setUnit();
+    void setUnitElement();
+    void setComponent();
+    void setVariable();
+    void setMathmlElement();
+    void setGroup();
+    void setRelationshipRef();
+    void setComponentRef();
+    void setConnection();
+    void setMetadata();
+
 private:
     Ui::CellmlAnnotationViewDetailsWidget *mUi;
+
+    Type mType;
+
+    void setType(const Type &pType);
 };
 
 //==============================================================================

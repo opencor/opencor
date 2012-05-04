@@ -723,15 +723,66 @@ void CellmlAnnotationViewWidget::resizeCellmlTreeViewToContents()
 void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
                                                   const QModelIndex &pOldIndex)
 {
-    Q_UNUSED(pNewIndex);
     Q_UNUSED(pOldIndex);
 
-    QPalette palette(mDetails->palette());
+    CellmlElementItem *cellmlElementItem = static_cast<CellmlElementItem *>(mCellmlDataModel->itemFromIndex(pNewIndex));
 
-    palette.setColor(QPalette::Background, QColor(qrand()%256, qrand()%256, qrand()%256));
+    switch (cellmlElementItem->type()) {
+    case CellmlElementItem::Model:
+        mDetails->setModel();
 
-    mDetails->setAutoFillBackground(true);
-    mDetails->setPalette(palette);
+        break;
+    case CellmlElementItem::Import:
+        mDetails->setImport();
+
+        break;
+    case CellmlElementItem::Unit:
+        mDetails->setUnit();
+
+        break;
+    case CellmlElementItem::UnitElement:
+        mDetails->setUnitElement();
+
+        break;
+    case CellmlElementItem::Component:
+        mDetails->setComponent();
+
+        break;
+    case CellmlElementItem::Variable:
+        mDetails->setVariable();
+
+        break;
+    case CellmlElementItem::MathmlElement:
+        mDetails->setMathmlElement();
+
+        break;
+    case CellmlElementItem::Group:
+        mDetails->setGroup();
+
+        break;
+    case CellmlElementItem::RelationshipRef:
+        mDetails->setRelationshipRef();
+
+        break;
+    case CellmlElementItem::ComponentRef:
+        mDetails->setComponentRef();
+
+        break;
+    case CellmlElementItem::Connection:
+        mDetails->setConnection();
+
+        break;
+    case CellmlElementItem::Metadata:
+        mDetails->setMetadata();
+
+        break;
+    default:
+        // Either an error, warning or category, so nothing to show...
+
+        mDetails->setEmpty();
+
+        break;
+    }
 }
 
 //==============================================================================
@@ -742,12 +793,7 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
     Q_UNUSED(pNewIndex);
     Q_UNUSED(pOldIndex);
 
-    QPalette palette(mDetails->palette());
-
-    palette.setColor(QPalette::Background, QColor(qrand()%256, qrand()%256, qrand()%256));
-
-    mDetails->setAutoFillBackground(true);
-    mDetails->setPalette(palette);
+    mDetails->setMetadata();
 }
 
 //==============================================================================
