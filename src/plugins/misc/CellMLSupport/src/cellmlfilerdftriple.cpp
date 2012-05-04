@@ -23,6 +23,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pTriple)
     ObjRef<iface::rdf_api::URIReference> subjectUriReference;
     QUERY_INTERFACE(subjectUriReference, subject, rdf_api::URIReference);
 
+qDebug("---------------------------------------");
+qDebug("Subject - Supported interfaces:");
+std::vector<std::string> supportedInterfaces = subject->supported_interfaces();
+for (int i = 0, iMax = supportedInterfaces.size(); i < iMax; ++i)
+    qDebug(" - %s", supportedInterfaces[i].c_str());
+
     if (subjectUriReference) {
         mSubjectType = Uri;
         mSubject     = QString::fromStdWString(subjectUriReference->URI());
@@ -37,6 +43,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pTriple)
     ObjRef<iface::rdf_api::URIReference> predicateUriReference;
     QUERY_INTERFACE(predicateUriReference, predicate, rdf_api::URIReference);
 
+qDebug("---------------------------------------");
+qDebug("Predicate - Supported interfaces:");
+supportedInterfaces = predicate->supported_interfaces();
+for (int i = 0, iMax = supportedInterfaces.size(); i < iMax; ++i)
+    qDebug(" - %s", supportedInterfaces[i].c_str());
+
     if (predicateUriReference) {
         mPredicateType = Uri;
         mPredicate     = QString::fromStdWString(predicateUriReference->URI());
@@ -50,6 +62,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pTriple)
     ObjRef<iface::rdf_api::Node> object = pTriple->object();
     ObjRef<iface::rdf_api::URIReference> objectUriReference;
     QUERY_INTERFACE(objectUriReference, object, rdf_api::URIReference);
+
+qDebug("---------------------------------------");
+qDebug("Object - Supported interfaces:");
+supportedInterfaces = object->supported_interfaces();
+for (int i = 0, iMax = supportedInterfaces.size(); i < iMax; ++i)
+    qDebug(" - %s", supportedInterfaces[i].c_str());
 
     if (objectUriReference) {
         mObjectType  = Uri;
