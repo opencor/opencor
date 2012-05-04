@@ -323,7 +323,7 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
 {
                         mMetadata.insert(rdfTriple->subject()->uriReference().remove(uriBaseWithHash),
                                          rdfTriple);
-qDebug(">>> ADDED... to %s...", rdfTriple->subject()->uriReference().remove(uriBaseWithHash));
+qDebug(">>> Added to '%s'...", qPrintable(rdfTriple->subject()->uriReference().remove(uriBaseWithHash)));
 }
                     else
                         // Not a triple we recognise, so...
