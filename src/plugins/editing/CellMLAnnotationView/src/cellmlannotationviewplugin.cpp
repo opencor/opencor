@@ -208,6 +208,16 @@ QString CellMLAnnotationViewPlugin::viewName(const int &pViewIndex)
 
 //==============================================================================
 
+void CellMLAnnotationViewPlugin::retranslateUi()
+{
+    // Retranslate all of our CellML annotation view widgets
+
+    foreach (CellmlAnnotationViewWidget *widget, mWidgets)
+        widget->retranslateUi();
+}
+
+//==============================================================================
+
 void CellMLAnnotationViewPlugin::horizontalSplitterMoved(const QList<int> &pHorizontalSizes)
 {
     // The horizontal splitter of one of our CellML annotation view widgets has

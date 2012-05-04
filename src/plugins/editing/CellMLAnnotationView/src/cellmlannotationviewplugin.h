@@ -48,6 +48,8 @@ public:
     virtual QWidget * newViewWidget(const QString &pFileName);
     virtual QString viewName(const int &pViewIndex);
 
+    virtual void retranslateUi();
+
 private:
     QList<int> mHorizontalSizes;
     QList<int> mVerticalSizes;

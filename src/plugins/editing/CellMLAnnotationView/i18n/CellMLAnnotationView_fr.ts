@@ -8,4 +8,55 @@
         <translation>Annotation CellML</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewWidget</name>
+    <message>
+        <source>Imports</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Units</source>
+        <translation>Unités</translation>
+    </message>
+    <message>
+        <source>Components</source>
+        <translation>Composants</translation>
+    </message>
+    <message>
+        <source>Variables</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>MathML Elements</source>
+        <translation>Eléments MathML</translation>
+    </message>
+    <message>
+        <source>MathML element #%1</source>
+        <translation>Elément MathML #%1</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Groupes</translation>
+    </message>
+    <message>
+        <source>Group #%1</source>
+        <translation>Groupe #%1</translation>
+    </message>
+    <message>
+        <source>Relationship References</source>
+        <translation>Références de Relation</translation>
+    </message>
+    <message>
+        <source>Component References</source>
+        <translation>Références de Composant</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Connexions</translation>
+    </message>
+    <message>
+        <source>Connection #%1</source>
+        <translation>Connexion #%1</translation>
+    </message>
+</context>
 </TS>

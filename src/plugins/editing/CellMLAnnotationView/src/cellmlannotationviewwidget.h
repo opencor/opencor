@@ -64,21 +64,22 @@ class CellmlElementItem : public QStandardItem
 public:
     enum Type
     {
-        Error           = QStandardItem::UserType,
-        Warning         = QStandardItem::UserType+1,
-        Category        = QStandardItem::UserType+2,
-        Model           = QStandardItem::UserType+3,
-        Import          = QStandardItem::UserType+4,
-        Unit            = QStandardItem::UserType+5,
-        UnitElement     = QStandardItem::UserType+6,
-        Component       = QStandardItem::UserType+7,
-        Variable        = QStandardItem::UserType+8,
-        MathmlElement   = QStandardItem::UserType+9,
-        Group           = QStandardItem::UserType+10,
-        RelationshipRef = QStandardItem::UserType+11,
-        ComponentRef    = QStandardItem::UserType+12,
-        Connection      = QStandardItem::UserType+13,
-        Metadata        = QStandardItem::UserType+14
+        None            = QStandardItem::UserType,
+        Error           = QStandardItem::UserType+1,
+        Warning         = QStandardItem::UserType+2,
+        Category        = QStandardItem::UserType+3,
+        Model           = QStandardItem::UserType+4,
+        Import          = QStandardItem::UserType+5,
+        Unit            = QStandardItem::UserType+6,
+        UnitElement     = QStandardItem::UserType+7,
+        Component       = QStandardItem::UserType+8,
+        Variable        = QStandardItem::UserType+9,
+        MathmlElement   = QStandardItem::UserType+10,
+        Group           = QStandardItem::UserType+11,
+        RelationshipRef = QStandardItem::UserType+12,
+        ComponentRef    = QStandardItem::UserType+13,
+        Connection      = QStandardItem::UserType+14,
+        Metadata        = QStandardItem::UserType+15
     };
 
     explicit CellmlElementItem(const Type &pType, const QString &pText);
@@ -86,9 +87,11 @@ public:
                                const QString &pText);
 
     virtual int type() const;
+    int subType() const;
 
 private:
     Type mType;
+    Type mSubType;
 
     void initialize(const Type &pType, const Type &pSubType,
                     const QString &pText);
@@ -109,6 +112,8 @@ public:
                                         const QString &pFileName);
     ~CellmlAnnotationViewWidget();
 
+    virtual void retranslateUi();
+
     QList<int> horizontalSplitterSizes() const;
     QList<int> verticalSplitterSizes() const;
 
@@ -128,6 +133,8 @@ private:
     CellmlAnnotationViewDetailsWidget *mDetails;
 
     QChar mRightArrow;
+
+    void retranslateCellmlDataItem(CellmlElementItem *pCellmlElementItem);
 
     void initTreeView(Core::TreeView *pTreeView);
 
