@@ -106,12 +106,12 @@ void CellmlAnnotationViewDetailsWidget::setType(const Type &pType)
         break;
     };
 
-    QPalette palette(palette());
+    QPalette pal(palette());
 
-    palette.setColor(QPalette::Background, color);
+    pal.setColor(QPalette::Background, color);
 
     setAutoFillBackground(true);
-    setPalette(palette);
+    setPalette(pal);
 }
 
 //==============================================================================
