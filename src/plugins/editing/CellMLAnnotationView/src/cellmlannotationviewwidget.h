@@ -77,7 +77,8 @@ public:
         Group           = QStandardItem::UserType+10,
         RelationshipRef = QStandardItem::UserType+11,
         ComponentRef    = QStandardItem::UserType+12,
-        Connection      = QStandardItem::UserType+13
+        Connection      = QStandardItem::UserType+13,
+        Metadata        = QStandardItem::UserType+14
     };
 
     explicit CellmlElementItem(const Type &pType, const QString &pText);
@@ -145,7 +146,6 @@ private Q_SLOTS:
     void emitVerticalSplitterMoved();
 
     void resizeCellmlTreeViewToContents();
-    void resizeMetadataTreeViewToContents();
 };
 
 //==============================================================================

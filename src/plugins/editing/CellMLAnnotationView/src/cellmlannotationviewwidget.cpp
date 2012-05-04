@@ -164,6 +164,10 @@ void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
         setIcon(QIcon(":CellMLSupport_connectionNode"));
 
         break;
+    case Metadata:
+        setIcon(QIcon(":CellMLSupport_metadataNode"));
+
+        break;
     default:
         // Anything that doesn't require an icon
 
@@ -256,11 +260,6 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mCellmlTreeView, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeCellmlTreeViewToContents()));
 
-    connect(mMetadataTreeView, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeMetadataTreeViewToContents()));
-    connect(mMetadataTreeView, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeMetadataTreeViewToContents()));
-
     // Populate our tree views
 
     populateCellmlDataModel(pFileName);
@@ -274,7 +273,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // Resize our tree views, just to be on the safe side
 
     resizeCellmlTreeViewToContents();
-    resizeMetadataTreeViewToContents();
+    mMetadataTreeView->resizeColumnToContents(0);
 }
 
 //==============================================================================
@@ -641,7 +640,27 @@ void CellmlAnnotationViewWidget::populateComponentRefDataModel(CellmlElementItem
 
 void CellmlAnnotationViewWidget::populateMetadataDataModel(const QString &pFileName)
 {
-//---GRY--- TO BE DONE...
+    // Retrieve our CellML file object and load the CellML file
+    // Note: the CellML file will already be loaded because of our previous call
+    //       to populateCellmlDataModel() and that's fine. In fact, should there
+    //       have been issues, then they will have been listed in the CellML
+    //       tree view, so we don't need to do anything here in case there are
+    //       issues, just return...
+
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+
+    cellmlFile->load();
+
+    if (cellmlFile->issues().count())
+        // There are issues, so...
+
+        return;
+
+    // Retrieve the name of the different groups of triples
+
+    foreach (const QString &groupName, cellmlFile->metadata().uniqueKeys())
+        mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(CellmlElementItem::Metadata,
+                                                                                 groupName));
 }
 
 //==============================================================================
@@ -689,15 +708,6 @@ void CellmlAnnotationViewWidget::resizeCellmlTreeViewToContents()
     // Resize our CellML tree view so that its contents is visible
 
     mCellmlTreeView->resizeColumnToContents(0);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewWidget::resizeMetadataTreeViewToContents()
-{
-    // Resize our metadata tree view so that its contents is visible
-
-    mMetadataTreeView->resizeColumnToContents(0);
 }
 
 //==============================================================================

@@ -6,6 +6,7 @@
 
 //==============================================================================
 
+#include <QRegExp>
 #include <QTime>
 #include <QUrl>
 
@@ -268,7 +269,7 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
 
         if (rdfApiRepresentation) {
             ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
-            QString uriBaseWithHash = QString::fromStdWString(xmlBase->asText())+"#";
+            QString uriBase = QString::fromStdWString(xmlBase->asText());
 
             ObjRef<iface::rdf_api::DataSource> dataSource = rdfApiRepresentation->source();
             ObjRef<iface::rdf_api::TripleSet> triples = dataSource->getAllTriples();
@@ -320,11 +321,14 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
                     if (rdfTriple->subject()->type() == CellmlFileRdfTripleElement::UriReference)
                         // We have a triple of which we can make sense, so add
                         // it to the correct group of triples
-{
-                        mMetadata.insert(rdfTriple->subject()->uriReference().remove(uriBaseWithHash),
-                                         rdfTriple);
-qDebug(">>> Added to '%s'...", qPrintable(rdfTriple->subject()->uriReference().remove(uriBaseWithHash)));
-}
+                        // Note: we want the name of the group to be the same as
+                        //       the cmeta:id of a CellML element. This means
+                        //       that we must remove the URI base (and optional
+                        //       hash character) which makes the beginning of
+                        //       the triple's subject's URI reference...
+
+                        mMetadata.insertMulti(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?")),
+                                              rdfTriple);
                     else
                         // Not a triple we recognise, so...
 

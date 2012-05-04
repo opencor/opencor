@@ -13,6 +13,7 @@
         <file alias="CellMLSupport_relationshipRefNode">relationshipRefNode.png</file>
         <file alias="CellMLSupport_componentRefNode">componentRefNode.png</file>
         <file alias="CellMLSupport_connectionNode">connectionNode.png</file>
+        <file alias="CellMLSupport_metadataNode">metadataNode.png</file>
         <file alias="CellMLSupport_fr">../../../../../build/CellMLSupport_fr.qm</file>
     </qresource>
 </RCC>

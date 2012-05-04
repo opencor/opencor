@@ -22,11 +22,6 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pTriple)
     mSubject   = new CellmlFileRdfTripleElement(subject);
     mPredicate = new CellmlFileRdfTripleElement(predicate);
     mObject    = new CellmlFileRdfTripleElement(object);
-
-qDebug("---------------------------------------");
-qDebug("Subject: %s", qPrintable(mSubject->asString()));
-qDebug("Predicate: %s", qPrintable(mPredicate->asString()));
-qDebug("Object: %s", qPrintable(mObject->asString()));
 }
 
 //==============================================================================
