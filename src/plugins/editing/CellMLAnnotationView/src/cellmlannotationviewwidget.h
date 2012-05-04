@@ -96,6 +96,10 @@ private:
 
 //==============================================================================
 
+class CellmlAnnotationViewDetailsWidget;
+
+//==============================================================================
+
 class CellmlAnnotationViewWidget : public Core::Widget
 {
     Q_OBJECT
@@ -121,7 +125,7 @@ private:
     Core::TreeView *mMetadataTreeView;
     QStandardItemModel *mMetadataDataModel;
 
-    QWidget *mDummyWidget;
+    CellmlAnnotationViewDetailsWidget *mDetails;
 
     QChar mRightArrow;
 

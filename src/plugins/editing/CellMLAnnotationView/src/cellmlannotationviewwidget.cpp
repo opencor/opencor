@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "coreutils.h"
@@ -224,19 +225,17 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     initTreeView(mMetadataTreeView);
 
     // Populate our splitters with the aforementioned tree views, as well as
-    // with a dummy (for now) widget
-    //---GRY--- THE DUMMY WIDGET WILL EVENTUALLY GET REPLACED BY SOMETHING THAT
-    //          WILL ALLOW THE USER TO EDIT METADATA, MAKE USE OF RICORDO, ETC.
+    // with a details widget
 
     mVerticalSplitter->addWidget(new Core::BorderedWidget(mCellmlTreeView,
                                                           false, false, true, true));
     mVerticalSplitter->addWidget(new Core::BorderedWidget(mMetadataTreeView,
                                                           true, false, false, true));
 
-    mDummyWidget = new QWidget(this);
+    mDetails = new CellmlAnnotationViewDetailsWidget(this);
 
     mHorizontalSplitter->addWidget(mVerticalSplitter);
-    mHorizontalSplitter->addWidget(new Core::BorderedWidget(mDummyWidget,
+    mHorizontalSplitter->addWidget(new Core::BorderedWidget(mDetails,
                                                             false, true, false, false));
 
     mUi->verticalLayout->addWidget(mHorizontalSplitter);
@@ -289,7 +288,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
 CellmlAnnotationViewWidget::~CellmlAnnotationViewWidget()
 {
-    // Delete some internal objects
+    // Delete the UI
 
     delete mUi;
 }
@@ -727,12 +726,12 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
     Q_UNUSED(pNewIndex);
     Q_UNUSED(pOldIndex);
 
-    QPalette palette(mDummyWidget->palette());
+    QPalette palette(mDetails->palette());
 
     palette.setColor(QPalette::Background, QColor(qrand()%256, qrand()%256, qrand()%256));
 
-    mDummyWidget->setAutoFillBackground(true);
-    mDummyWidget->setPalette(palette);
+    mDetails->setAutoFillBackground(true);
+    mDetails->setPalette(palette);
 }
 
 //==============================================================================
@@ -743,12 +742,12 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
     Q_UNUSED(pNewIndex);
     Q_UNUSED(pOldIndex);
 
-    QPalette palette(mDummyWidget->palette());
+    QPalette palette(mDetails->palette());
 
     palette.setColor(QPalette::Background, QColor(qrand()%256, qrand()%256, qrand()%256));
 
-    mDummyWidget->setAutoFillBackground(true);
-    mDummyWidget->setPalette(palette);
+    mDetails->setAutoFillBackground(true);
+    mDetails->setPalette(palette);
 }
 
 //==============================================================================
