@@ -1,19 +1,23 @@
 //==============================================================================
-// CellML file RDF triple
+// CellML file RDF triple element
 //==============================================================================
 
-#ifndef CELLMLFILERDFTRIPLE_H
-#define CELLMLFILERDFTRIPLE_H
+#ifndef CELLMLFILERDFTRIPLEELEMENT_H
+#define CELLMLFILERDFTRIPLEELEMENT_H
 
 //==============================================================================
 
-#include "cellmlfilerdftripleelement.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
 
-#include <QMap>
 #include <QString>
+
+//==============================================================================
+
+#include "cellml-api-cxx-support.hpp"
+
+#include "IfaceRDF_APISPEC.hxx"
 
 //==============================================================================
 
@@ -22,25 +26,42 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRdfTriple
+class CELLMLSUPPORT_EXPORT CellmlFileRdfTripleElement
 {
 public:
-    explicit CellmlFileRdfTriple(iface::rdf_api::Triple *pTriple);
-    ~CellmlFileRdfTriple();
+    enum Type
+    {
+        Object,
+        UriReference,
+        PlainLiteral,
+        TypedLiteral
+    };
 
-    CellmlFileRdfTripleElement * subject() const;
-    CellmlFileRdfTripleElement * predicate() const;
-    CellmlFileRdfTripleElement * object() const;
+    explicit CellmlFileRdfTripleElement(iface::rdf_api::Node *pNode);
+
+    Type type() const;
+
+    QString objectId() const;
+
+    QString uriReference() const;
+
+    QString lexicalForm() const;
+    QString language() const;
+    QString dataTypeUri() const;
+
+    QString asString() const;
 
 private:
-    CellmlFileRdfTripleElement *mSubject;
-    CellmlFileRdfTripleElement *mPredicate;
-    CellmlFileRdfTripleElement *mObject;
+    Type mType;
+
+    QString mObjectId;
+
+    QString mUriReference;
+
+    QString mLexicalForm;
+    QString mLanguage;
+    QString mDataTypeUri;
 };
-
-//==============================================================================
-
-typedef QMap<QString, CellmlFileRdfTriple *> CellmlFileRdfTriples;
 
 //==============================================================================
 

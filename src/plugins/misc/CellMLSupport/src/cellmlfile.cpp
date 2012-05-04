@@ -315,18 +315,20 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
                     //   </rdf:RDF>
                     // </variable>
 
-                    ObjRef<iface::rdf_api::Resource> subject = triple->subject();
-                    ObjRef<iface::rdf_api::URIReference> uriReference;
-                    QUERY_INTERFACE(uriReference, subject,
-                                    rdf_api::URIReference);
+                    CellmlFileRdfTriple *rdfTriple = new CellmlFileRdfTriple(triple);
 
-                    if (uriReference)
-                        // We could retrieve triple's subject's URI reference,
-                        // so we can now add the triple to the correct group of
-                        // triples
+                    if (rdfTriple->subject()->type() == CellmlFileRdfTripleElement::UriReference)
+                        // We have a triple of which we can make sense, so add
+                        // it to the correct group of triples
+{
+                        mMetadata.insert(rdfTriple->subject()->uriReference().remove(uriBaseWithHash),
+                                         rdfTriple);
+qDebug(">>> ADDED... to %s...", rdfTriple->subject()->uriReference().remove(uriBaseWithHash));
+}
+                    else
+                        // Not a triple we recognise, so...
 
-                        mMetadata.insert(QString::fromStdWString(uriReference->URI()).remove(uriBaseWithHash),
-                                         new CellmlFileRdfTriple(triple));
+                        delete rdfTriple;
                 } else {
                     // No more triples, so...
 
