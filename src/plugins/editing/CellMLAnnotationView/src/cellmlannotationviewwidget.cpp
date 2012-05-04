@@ -233,8 +233,10 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mVerticalSplitter->addWidget(new Core::BorderedWidget(mMetadataTreeView,
                                                           true, false, false, true));
 
+    mDummyWidget = new QWidget(this);
+
     mHorizontalSplitter->addWidget(mVerticalSplitter);
-    mHorizontalSplitter->addWidget(new Core::BorderedWidget(new QWidget(this),
+    mHorizontalSplitter->addWidget(new Core::BorderedWidget(mDummyWidget,
                                                             false, true, false, false));
 
     mUi->verticalLayout->addWidget(mHorizontalSplitter);
@@ -253,12 +255,19 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     if (!QRawFont::fromFont(mCellmlTreeView->font()).supportsCharacter(mRightArrow))
         mRightArrow = QChar('>');
 
-    // Some connections
+    // Some connections to handle the expansion/collapse of a CellML tree node
 
     connect(mCellmlTreeView, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(resizeCellmlTreeViewToContents()));
     connect(mCellmlTreeView, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeCellmlTreeViewToContents()));
+
+    // Some connections to handle the change of CellML/metadata node
+
+    connect(mCellmlTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(updateCellmlNode(const QModelIndex &, const QModelIndex &)));
+    connect(mMetadataTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(updateMetadataNode(const QModelIndex &, const QModelIndex &)));
 
     // Populate our tree views
 
@@ -708,6 +717,38 @@ void CellmlAnnotationViewWidget::resizeCellmlTreeViewToContents()
     // Resize our CellML tree view so that its contents is visible
 
     mCellmlTreeView->resizeColumnToContents(0);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
+                                                  const QModelIndex &pOldIndex)
+{
+    Q_UNUSED(pNewIndex);
+    Q_UNUSED(pOldIndex);
+
+    QPalette palette(mDummyWidget->palette());
+
+    palette.setColor(QPalette::Background, QColor(qrand()%256, qrand()%256, qrand()%256));
+
+    mDummyWidget->setAutoFillBackground(true);
+    mDummyWidget->setPalette(palette);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex,
+                                                    const QModelIndex &pOldIndex)
+{
+    Q_UNUSED(pNewIndex);
+    Q_UNUSED(pOldIndex);
+
+    QPalette palette(mDummyWidget->palette());
+
+    palette.setColor(QPalette::Background, QColor(qrand()%256, qrand()%256, qrand()%256));
+
+    mDummyWidget->setAutoFillBackground(true);
+    mDummyWidget->setPalette(palette);
 }
 
 //==============================================================================

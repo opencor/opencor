@@ -121,6 +121,8 @@ private:
     Core::TreeView *mMetadataTreeView;
     QStandardItemModel *mMetadataDataModel;
 
+    QWidget *mDummyWidget;
+
     QChar mRightArrow;
 
     void initTreeView(Core::TreeView *pTreeView);
@@ -146,6 +148,11 @@ private Q_SLOTS:
     void emitVerticalSplitterMoved();
 
     void resizeCellmlTreeViewToContents();
+
+    void updateCellmlNode(const QModelIndex &pNewIndex,
+                          const QModelIndex &pOldIndex);
+    void updateMetadataNode(const QModelIndex &pNewIndex,
+                            const QModelIndex &pOldIndex);
 };
 
 //==============================================================================
