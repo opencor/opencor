@@ -118,11 +118,13 @@ void CellmlAnnotationViewDetailsWidget::setEmpty()
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::setModel()
+void CellmlAnnotationViewDetailsWidget::setModel(CellMLSupport::CellmlFileModel *pModel)
 {
     // Get the widget ready for some model
 
     setType(Model);
+
+    mUi->nameValue->setText(pModel->name());
 }
 
 //==============================================================================

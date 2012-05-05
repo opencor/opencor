@@ -7,8 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlfilecomponentref.h"
-#include "cellmlfileunit.h"
+#include "cellmlfile.h"
 #include "widget.h"
 
 //==============================================================================
@@ -36,7 +35,7 @@ namespace OpenCOR {
 
 namespace Core {
     class TreeView;
-}
+}   // namespace Core
 
 //==============================================================================
 
@@ -82,6 +81,7 @@ public:
         Metadata        = QStandardItem::UserType+15
     };
 
+    explicit CellmlElementItem(CellMLSupport::CellmlFileModel *pModel);
     explicit CellmlElementItem(const Type &pType, const QString &pText);
     explicit CellmlElementItem(const Type &pType, const Type &pSubType,
                                const QString &pText);
@@ -89,12 +89,17 @@ public:
     virtual int type() const;
     int subType() const;
 
+    CellMLSupport::CellmlFileModel * model() const;
+
 private:
     Type mType;
     Type mSubType;
 
+    CellMLSupport::CellmlFileModel *mModel;
+
     void initialize(const Type &pType, const Type &pSubType,
-                    const QString &pText);
+                    const QString &pText,
+                    CellMLSupport::CellmlFileModel *pModel);
 };
 
 //==============================================================================

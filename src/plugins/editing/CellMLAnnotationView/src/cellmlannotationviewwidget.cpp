@@ -72,12 +72,22 @@ void CellmlItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
+CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileModel *pModel) :
+    QStandardItem(pModel->name()),
+    mType(Model),
+    mSubType(None)
+{
+    initialize(mType, mType, text(), pModel);
+}
+
+//==============================================================================
+
 CellmlElementItem::CellmlElementItem(const Type &pType, const QString &pText) :
     QStandardItem(pText),
     mType(pType),
     mSubType(None)
 {
-    initialize(pType, pType, pText);
+    initialize(pType, pType, pText, 0);
 }
 
 //==============================================================================
@@ -88,13 +98,23 @@ CellmlElementItem::CellmlElementItem(const Type &pType, const Type &pSubType,
     mType(pType),
     mSubType(pSubType)
 {
-    initialize(pType, pSubType, pText);
+    initialize(pType, pSubType, pText, 0);
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileModel * CellmlElementItem::model() const
+{
+    // Return the CellML element item's model
+
+    return mModel;
 }
 
 //==============================================================================
 
 void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
-                                   const QString &pText)
+                                   const QString &pText,
+                                   CellMLSupport::CellmlFileModel *pModel)
 {
     // Disable the item in case it's an error/warning item and also use its text
     // as a tooltip (in case it's too long and therefore doesn't fit within the
@@ -176,6 +196,10 @@ void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
 
         break;
     }
+
+    // CellML element
+
+    mModel = pModel;
 }
 
 //==============================================================================
@@ -447,8 +471,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
 
     // Retrieve the model's root
 
-    CellmlElementItem *modelItem = new CellmlElementItem(CellmlElementItem::Model,
-                                                         cellmlFile->model()->name());
+    CellmlElementItem *modelItem = new CellmlElementItem(cellmlFile->model());
 
     mCellmlDataModel->invisibleRootItem()->appendRow(modelItem);
 
@@ -832,7 +855,7 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
 
     switch (cellmlElementItem->type()) {
     case CellmlElementItem::Model:
-        mDetails->setModel();
+        mDetails->setModel(cellmlElementItem->model());
 
         break;
     case CellmlElementItem::Import:

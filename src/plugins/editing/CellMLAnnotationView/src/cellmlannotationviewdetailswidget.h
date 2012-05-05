@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "widget.h"
 
 //==============================================================================
@@ -55,7 +56,7 @@ public:
     virtual void retranslateUi();
 
     void setEmpty();
-    void setModel();
+    void setModel(CellMLSupport::CellmlFileModel *pModel);
     void setImport();
     void setUnit();
     void setUnitElement();
