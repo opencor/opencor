@@ -71,49 +71,15 @@ void CellmlItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-CellmlElementItem::CellmlElementItem(const Type &pType,
-                                     CellMLSupport::CellmlFileElement *pElement) :
-    QStandardItem(),
-    mCategory(false),
-    mType(pType),
-    mElement(pElement)
-{
-    // Set the text
-
-    switch (pType) {
-    case Import:
-        setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
-
-        break;
-    case RelationshipRef:
-        setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
-
-        break;
-    case ComponentRef:
-        setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
-
-        break;
-    default:
-        // Another type of element which has a name
-
-        setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
-
-        break;
-    }
-
-    // Set the icon for the item
-
-    setIcon(mType);
-}
-
-//==============================================================================
-
 CellmlElementItem::CellmlElementItem(const bool &pError, const QString &pText) :
     QStandardItem(pText),
     mCategory(false),
     mType(pError?Error:Warning),
-    mElement(0)
+    mElement(0),
+    mMathmlElement(0)
 {
+    // Constructor for either an error or a warning
+
     // Disable the item and use its text as a tooltip (in case it's too long and
     // therefore doesn't fit within the allocated space we have)
     // Note: the item will get 're-enabled' by our item delegate...
@@ -128,21 +94,123 @@ CellmlElementItem::CellmlElementItem(const bool &pError, const QString &pText) :
 
 //==============================================================================
 
-CellmlElementItem::CellmlElementItem(const bool &pCategory,
-                                     const Type &pType, const QString &pText) :
+CellmlElementItem::CellmlElementItem(const Type &pType,
+                                     const QString &pText) :
     QStandardItem(pText),
-    mCategory(pCategory),
+    mCategory(true),
     mType(pType),
-    mElement(0)
+    mElement(0),
+    mMathmlElement(0)
 {
-    // Disable the item in case it is a category
+    // Constructor for a category
+
+    // Disable the item
     // Note: the item will get 're-enabled' by our item delegate...
 
-    setEnabled(!pCategory);
+    setEnabled(false);
 
     // Set the icon for the item
 
     setIcon(pType);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(const Type &pType,
+                                     CellMLSupport::CellmlFileElement *pElement,
+                                     const QString &pText) :
+    QStandardItem(pText),
+    mCategory(false),
+    mType(pType),
+    mElement(pElement),
+    mMathmlElement(0)
+{
+    // Check what should be used to represent a right arrow character
+
+    QChar rightArrow = QChar(0x2192);
+
+    if (!QRawFont::fromFont(font()).supportsCharacter(rightArrow))
+        rightArrow = QChar('>');
+
+    // Set the text for some types
+
+    switch (pType) {
+    case Import:
+        setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
+
+        break;
+    case RelationshipRef:
+        setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
+
+        break;
+    case ComponentRef:
+        setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
+
+        break;
+    case ComponentMapping: {
+        CellMLSupport::CellmlFileMapComponents *mapComponents = static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement);
+
+        setText(QString("%1 %2 %3").arg(mapComponents->firstComponentName(),
+                                        rightArrow,
+                                        mapComponents->secondComponentName()));
+
+        break;
+    }
+    case VariableMapping: {
+        CellMLSupport::CellmlFileMapVariablesItem *mapVariables = static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement);
+
+        setText(QString("%1 %2 %3").arg(mapVariables->firstVariableName(),
+                                        rightArrow,
+                                        mapVariables->secondVariableName()));
+
+        break;
+    }
+    default:
+        // Another type of element, so either pText was used or it has a name
+        // which we can use
+
+        if (pText.isEmpty())
+            setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
+
+        break;
+    }
+
+    // Set the icon for the item
+
+    setIcon(pType);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileMathmlElement *pMathmlElement,
+                                     const QString &pText) :
+    QStandardItem(pText),
+    mCategory(false),
+    mType(MathmlElement),
+    mElement(0),
+    mMathmlElement(pMathmlElement)
+{
+    // Constructor for some MathML element
+
+    // Set the icon for the item
+
+    setIcon(mType);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(const QString &pText) :
+    QStandardItem(pText),
+    mCategory(false),
+    mType(Metadata),
+    mElement(0),
+    mMathmlElement(0)
+{
+    // Constructor for some metadata
+
+    // Set the icon for the item
+
+    setIcon(mType);
 }
 
 //==============================================================================
@@ -177,10 +245,12 @@ void CellmlElementItem::setIcon(const Type &pType)
 
         break;
     case Component:
+    case ComponentMapping:
         QStandardItem::setIcon(QIcon(":CellMLSupport_componentNode"));
 
         break;
     case Variable:
+    case VariableMapping:
         QStandardItem::setIcon(QIcon(":CellMLSupport_variableNode"));
 
         break;
@@ -217,15 +287,6 @@ void CellmlElementItem::setIcon(const Type &pType)
 
 //==============================================================================
 
-CellMLSupport::CellmlFileElement * CellmlElementItem::element() const
-{
-    // Return the CellML element item's element
-
-    return mElement;
-}
-
-//==============================================================================
-
 bool CellmlElementItem::isCategory() const
 {
     // Return wether the CellML element item is a category or not
@@ -240,6 +301,24 @@ int CellmlElementItem::type() const
     // Return the CellML element item's type
 
     return mType;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileElement * CellmlElementItem::element() const
+{
+    // Return the CellML element item's element
+
+    return mElement;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileMathmlElement * CellmlElementItem::mathmlElement() const
+{
+    // Return the CellML element item's MathML element
+
+    return mMathmlElement;
 }
 
 //==============================================================================
@@ -303,13 +382,6 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
             this, SLOT(emitHorizontalSplitterMoved()));
     connect(mVerticalSplitter, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitVerticalSplitterMoved()));
-
-    // Check what should be used to represent a right arrow character
-
-    mRightArrow = QChar(0x2192);
-
-    if (!QRawFont::fromFont(mCellmlTreeView->font()).supportsCharacter(mRightArrow))
-        mRightArrow = QChar('>');
 
     // Some connections to handle the expansion/collapse of a CellML tree node
 
@@ -496,7 +568,6 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
 
         return;
     }
-mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "For testing..."));
 
     // Retrieve the model's root
 
@@ -510,8 +581,7 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
     if (cellmlFile->imports().count()) {
         // Imports category
 
-        CellmlElementItem *importsItem = new CellmlElementItem(true,
-                                                               CellmlElementItem::Import,
+        CellmlElementItem *importsItem = new CellmlElementItem(CellmlElementItem::Import,
                                                                tr("Imports"));
 
         modelItem->appendRow(importsItem);
@@ -532,8 +602,7 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
             if (import->units().count()) {
                 // Units category
 
-                CellmlElementItem *unitsItem = new CellmlElementItem(true,
-                                                                     CellmlElementItem::Unit,
+                CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Unit,
                                                                      tr("Units"));
 
                 importItem->appendRow(unitsItem);
@@ -553,8 +622,7 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
             if (import->components().count()) {
                 // Components category
 
-                CellmlElementItem *componentsItem = new CellmlElementItem(true,
-                                                                          CellmlElementItem::Component,
+                CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Component,
                                                                           tr("Components"));
 
                 importItem->appendRow(componentsItem);
@@ -580,8 +648,7 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
     if (cellmlFile->components().count()) {
         // Components category
 
-        CellmlElementItem *componentsItem = new CellmlElementItem(true,
-                                                                  CellmlElementItem::Component,
+        CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Component,
                                                                   tr("Components"));
 
         modelItem->appendRow(componentsItem);
@@ -606,8 +673,7 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
             if (component->variables().count()) {
                 // Variables category
 
-                CellmlElementItem *variablesItem = new CellmlElementItem(true,
-                                                                         CellmlElementItem::Variable,
+                CellmlElementItem *variablesItem = new CellmlElementItem(CellmlElementItem::Variable,
                                                                          tr("Variables"));
 
                 componentItem->appendRow(variablesItem);
@@ -625,18 +691,16 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
             if (component->mathmlElements().count()) {
                 // MathML elements category
 
-                CellmlElementItem *mathmlElementsItem = new CellmlElementItem(true,
-                                                                              CellmlElementItem::MathmlElement,
+                CellmlElementItem *mathmlElementsItem = new CellmlElementItem(CellmlElementItem::MathmlElement,
                                                                               tr("MathML Elements"));
 
                 componentItem->appendRow(mathmlElementsItem);
 
                 // Retrieve the model's component's MathML elements themselves
 
-                for (int i = 1, iMax = component->mathmlElements().count(); i <= iMax; ++i)
-                    mathmlElementsItem->appendRow(new CellmlElementItem(false,
-                                                                        CellmlElementItem::MathmlElement,
-                                                                        tr("MathML element #%1").arg(QString::number(i))));
+                for (int i = 0, iMax = component->mathmlElements().count(); i < iMax; ++i)
+                    mathmlElementsItem->appendRow(new CellmlElementItem(component->mathmlElements().at(i),
+                                                                        tr("MathML element #%1").arg(QString::number(i+1))));
             }
         }
     }
@@ -646,8 +710,7 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
     if (cellmlFile->groups().count()) {
         // Groups category
 
-        CellmlElementItem *groupsItem = new CellmlElementItem(true,
-                                                              CellmlElementItem::Group,
+        CellmlElementItem *groupsItem = new CellmlElementItem(CellmlElementItem::Group,
                                                               tr("Groups"));
 
         modelItem->appendRow(groupsItem);
@@ -659,8 +722,8 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
         foreach (CellMLSupport::CellmlFileGroup *group, cellmlFile->groups()) {
             // A model's group
 
-            CellmlElementItem *groupItem = new CellmlElementItem(false,
-                                                                 CellmlElementItem::Group,
+            CellmlElementItem *groupItem = new CellmlElementItem(CellmlElementItem::Group,
+                                                                 group,
                                                                  tr("Group #%1").arg(QString::number(++counter)));
 
             groupsItem->appendRow(groupItem);
@@ -670,8 +733,7 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
             if (group->relationshipRefs().count()) {
                 // Relationship ref(erence)s category
 
-                CellmlElementItem *relationshipRefsItem = new CellmlElementItem(true,
-                                                                                CellmlElementItem::RelationshipRef,
+                CellmlElementItem *relationshipRefsItem = new CellmlElementItem(CellmlElementItem::RelationshipRef,
                                                                                 tr("Relationship References"));
 
                 groupItem->appendRow(relationshipRefsItem);
@@ -690,8 +752,7 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
             if (group->componentRefs().count()) {
                 // Component ref(erence)s category
 
-                CellmlElementItem *componentRefsItem = new CellmlElementItem(true,
-                                                                             CellmlElementItem::ComponentRef,
+                CellmlElementItem *componentRefsItem = new CellmlElementItem(CellmlElementItem::ComponentRef,
                                                                              tr("Component References"));
 
                 groupItem->appendRow(componentRefsItem);
@@ -712,8 +773,7 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
     if (cellmlFile->connections().count()) {
         // Connections category
 
-        CellmlElementItem *connectionsItem = new CellmlElementItem(true,
-                                                                   CellmlElementItem::Connection,
+        CellmlElementItem *connectionsItem = new CellmlElementItem(CellmlElementItem::Connection,
                                                                    tr("Connections"));
 
         modelItem->appendRow(connectionsItem);
@@ -725,29 +785,23 @@ mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "Fo
         foreach (CellMLSupport::CellmlFileConnection *connection, cellmlFile->connections()) {
             // A model's connection
 
-            CellmlElementItem *connectionItem = new CellmlElementItem(false,
-                                                                      CellmlElementItem::Connection,
+            CellmlElementItem *connectionItem = new CellmlElementItem(CellmlElementItem::Connection,
+                                                                      connection,
                                                                       tr("Connection #%1").arg(QString::number(++counter)));
 
             connectionsItem->appendRow(connectionItem);
 
             // Component mapping
 
-            connectionItem->appendRow(new CellmlElementItem(false,
-                                                            CellmlElementItem::Component,
-                                                            QString("%1 %2 %3").arg(connection->componentMapping()->firstComponentName(),
-                                                                                    mRightArrow,
-                                                                                    connection->componentMapping()->secondComponentName())));
+            connectionItem->appendRow(new CellmlElementItem(CellmlElementItem::ComponentMapping,
+                                                            connection->componentMapping()));
 
             // Variable mappings
 
             foreach (CellMLSupport::CellmlFileMapVariablesItem *mapVariablesItem,
                      connection->variableMappings())
-                connectionItem->appendRow(new CellmlElementItem(false,
-                                                                CellmlElementItem::Variable,
-                                                                QString("%1 %2 %3").arg(mapVariablesItem->firstVariableName(),
-                                                                                        mRightArrow,
-                                                                                        mapVariablesItem->secondVariableName())));
+                connectionItem->appendRow(new CellmlElementItem(CellmlElementItem::VariableMapping,
+                                                                mapVariablesItem));
         }
     }
 }
@@ -762,8 +816,7 @@ void CellmlAnnotationViewWidget::populateUnitsDataModel(CellmlElementItem *pCell
     if (pUnits.count()) {
         // Units category
 
-        CellmlElementItem *unitsItem = new CellmlElementItem(true,
-                                                             CellmlElementItem::Unit,
+        CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Unit,
                                                              tr("Units"));
 
         pCellmlElementItem->appendRow(unitsItem);
@@ -828,8 +881,7 @@ void CellmlAnnotationViewWidget::populateMetadataDataModel(const QString &pFileN
     // Retrieve the name of the different groups of triples
 
     foreach (const QString &groupName, cellmlFile->metadata().uniqueKeys())
-        mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(false,
-                                                                                 CellmlElementItem::Metadata,
+        mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(CellmlElementItem::Metadata,
                                                                                  groupName));
 }
 
@@ -922,7 +974,7 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
         break;
     case CellmlElementItem::MathmlElement:
         mDetails->update(CellmlAnnotationViewDetailsWidget::MathmlElement,
-                         cellmlElementItem->element());
+                         cellmlElementItem->mathmlElement());
 
         break;
     case CellmlElementItem::Group:
@@ -942,6 +994,16 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
         break;
     case CellmlElementItem::Connection:
         mDetails->update(CellmlAnnotationViewDetailsWidget::Connection,
+                         cellmlElementItem->element());
+
+        break;
+    case CellmlElementItem::ComponentMapping:
+        mDetails->update(CellmlAnnotationViewDetailsWidget::ComponentMapping,
+                         cellmlElementItem->element());
+
+        break;
+    case CellmlElementItem::VariableMapping:
+        mDetails->update(CellmlAnnotationViewDetailsWidget::VariableMapping,
                          cellmlElementItem->element());
 
         break;

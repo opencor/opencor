@@ -8,8 +8,8 @@
         <translation>Nom :</translation>
     </message>
     <message>
-        <source>Id:</source>
-        <translation>Id :</translation>
+        <source>cmeta:id:</source>
+        <translation>cmeta:id :</translation>
     </message>
 </context>
 <context>

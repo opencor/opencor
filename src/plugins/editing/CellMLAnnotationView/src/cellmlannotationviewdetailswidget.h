@@ -47,6 +47,8 @@ public:
         RelationshipRef,
         ComponentRef,
         Connection,
+        ComponentMapping,
+        VariableMapping,
         Metadata
     };
 
@@ -57,12 +59,20 @@ public:
 
     void update(const Type &pType,
                 CellMLSupport::CellmlFileElement *pElement = 0);
+    void update(const Type &pType,
+                CellMLSupport::CellmlFileMathmlElement *pMathmlElement);
 
 private:
     Ui::CellmlAnnotationViewDetailsWidget *mUi;
 
     Type mType;
+
     CellMLSupport::CellmlFileElement *mElement;
+    CellMLSupport::CellmlFileMathmlElement *mMathmlElement;
+
+    void updateUi(const Type &pType,
+                  CellMLSupport::CellmlFileElement *pElement,
+                  CellMLSupport::CellmlFileMathmlElement *pMathmlElement);
 };
 
 //==============================================================================

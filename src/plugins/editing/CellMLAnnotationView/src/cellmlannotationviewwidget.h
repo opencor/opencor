@@ -63,37 +63,46 @@ class CellmlElementItem : public QStandardItem
 public:
     enum Type
     {
-        None            = QStandardItem::UserType,
-        Error           = QStandardItem::UserType+1,
-        Warning         = QStandardItem::UserType+2,
-        Model           = QStandardItem::UserType+3,
-        Import          = QStandardItem::UserType+4,
-        Unit            = QStandardItem::UserType+5,
-        UnitElement     = QStandardItem::UserType+6,
-        Component       = QStandardItem::UserType+7,
-        Variable        = QStandardItem::UserType+8,
-        MathmlElement   = QStandardItem::UserType+9,
-        Group           = QStandardItem::UserType+10,
-        RelationshipRef = QStandardItem::UserType+11,
-        ComponentRef    = QStandardItem::UserType+12,
-        Connection      = QStandardItem::UserType+13,
-        Metadata        = QStandardItem::UserType+14
+        None             = QStandardItem::UserType,
+        Error            = QStandardItem::UserType+1,
+        Warning          = QStandardItem::UserType+2,
+        Model            = QStandardItem::UserType+3,
+        Import           = QStandardItem::UserType+4,
+        Unit             = QStandardItem::UserType+5,
+        UnitElement      = QStandardItem::UserType+6,
+        Component        = QStandardItem::UserType+7,
+        Variable         = QStandardItem::UserType+8,
+        MathmlElement    = QStandardItem::UserType+9,
+        Group            = QStandardItem::UserType+10,
+        RelationshipRef  = QStandardItem::UserType+11,
+        ComponentRef     = QStandardItem::UserType+12,
+        Connection       = QStandardItem::UserType+13,
+        ComponentMapping = QStandardItem::UserType+14,
+        VariableMapping  = QStandardItem::UserType+15,
+        Metadata         = QStandardItem::UserType+16
     };
 
-    explicit CellmlElementItem(const Type &pType, CellMLSupport::CellmlFileElement *pElement);
     explicit CellmlElementItem(const bool &pError, const QString &pText);
-    explicit CellmlElementItem(const bool &pCategory, const Type &pType, const QString &pText);
+    explicit CellmlElementItem(const Type &pType, const QString &pText);
+    explicit CellmlElementItem(const Type &pType,
+                               CellMLSupport::CellmlFileElement *pElement,
+                               const QString &pText = QString());
+    explicit CellmlElementItem(CellMLSupport::CellmlFileMathmlElement *pMathmlElement,
+                               const QString &pText);
+    explicit CellmlElementItem(const QString &pText);
 
     bool isCategory() const;
     virtual int type() const;
 
     CellMLSupport::CellmlFileElement * element() const;
+    CellMLSupport::CellmlFileMathmlElement * mathmlElement() const;
 
 private:
     bool mCategory;
     Type mType;
 
     CellMLSupport::CellmlFileElement *mElement;
+    CellMLSupport::CellmlFileMathmlElement *mMathmlElement;
 
     void setIcon(const Type &pType);
 };
@@ -132,8 +141,6 @@ private:
     QStandardItemModel *mMetadataDataModel;
 
     CellmlAnnotationViewDetailsWidget *mDetails;
-
-    QChar mRightArrow;
 
     void retranslateCellmlDataItem(CellmlElementItem *pCellmlElementItem);
 

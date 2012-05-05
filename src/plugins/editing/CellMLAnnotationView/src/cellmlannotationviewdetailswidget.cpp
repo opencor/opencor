@@ -45,7 +45,7 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
     // Update the UI (since some labels get reinitialised as a result of the
     // retranslation)
 
-    update(mType, mElement);
+    updateUi(mType, mElement, mMathmlElement);
 }
 
 //==============================================================================
@@ -56,14 +56,37 @@ void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
     Q_ASSERT(   (((pType == Empty) || (pType == Metadata)) && !pElement)
              || ((pType != Empty) && (pType != Metadata) && pElement));
 
-    // Keep track of the new type and element
+    // Update the UI
+
+    updateUi(pType, pElement, 0);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
+                                               CellMLSupport::CellmlFileMathmlElement *pMathmlElement)
+{
+    // Update the UI
+
+    updateUi(pType, 0, pMathmlElement);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewDetailsWidget::updateUi(const Type &pType,
+                                                 CellMLSupport::CellmlFileElement *pElement,
+                                                 CellMLSupport::CellmlFileMathmlElement *pMathmlElement)
+{
+    // Keep track of the new type and elements
 
     mType = pType;
+
     mElement = pElement;
+    mMathmlElement = pMathmlElement;
 
     // Determine which widget should be shown/hidden
 
-    bool showId = false;
+    bool showCmetaId = false;
     bool showName = false;
     bool showUri = false;
     bool showRelationshipRef = false;
@@ -71,59 +94,65 @@ void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
 
     switch (pType) {
     case Model:
-        showId = true;
+        showCmetaId = true;
         showName = true;
 
         break;
     case Import:
-        showId = true;
+        showCmetaId = true;
         showUri = true;
 
         break;
     case Unit:
-        showId = true;
+        showCmetaId = true;
         showName = true;
 
         break;
     case UnitElement:
-        showId = true;
+        showCmetaId = true;
         showName = true;
 
         break;
     case Component:
-        showId = true;
+        showCmetaId = true;
         showName = true;
 
         break;
     case Variable:
-        showId = true;
+        showCmetaId = true;
         showName = true;
 
         break;
     case MathmlElement:
-        showId = true;
-
         break;
     case Group:
-        showId = true;
+        showCmetaId = true;
 
         break;
     case RelationshipRef:
-        showId = true;
+        showCmetaId = true;
         showRelationshipRef = true;
 
         break;
     case ComponentRef:
-        showId = true;
+        showCmetaId = true;
         showComponentRef = true;
 
         break;
     case Connection:
-        showId = true;
+        showCmetaId = true;
+
+        break;
+    case ComponentMapping:
+        showCmetaId = true;
+
+        break;
+    case VariableMapping:
+        showCmetaId = true;
 
         break;
     case Metadata:
-        showId = true;
+        showCmetaId = true;
 
         break;
     default:
@@ -134,8 +163,8 @@ void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
 
     // Show/hide the relevant widgets
 
-    mUi->idLabel->setVisible(showId);
-    mUi->idValue->setVisible(showId);
+    mUi->cmetaIdLabel->setVisible(showCmetaId);
+    mUi->cmetaIdValue->setVisible(showCmetaId);
 
     bool showNameField =    showName || showUri
                          || showRelationshipRef || showComponentRef;
@@ -145,8 +174,8 @@ void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
 
     // Update the value of the widgets which are shown
 
-    if (showId)
-        mUi->idValue->setText(pElement->cmetaId());
+    if (showCmetaId)
+        mUi->cmetaIdValue->setText(pElement->cmetaId());
 
     if (showName) {
         mUi->nameLabel->setText(tr("Name:"));
