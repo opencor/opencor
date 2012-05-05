@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>CellmlAnnotationViewDetailsWidget</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nom :</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>
     <message>
         <source>CellML Annotation</source>

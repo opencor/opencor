@@ -311,6 +311,10 @@ void CellmlAnnotationViewWidget::retranslateUi()
     // Retranslate some of the nodes in the CellML tree view
 
     retranslateCellmlDataItem(static_cast<CellmlElementItem *>(mCellmlDataModel->invisibleRootItem()));
+
+    // Retranslate the details widget
+
+    mDetails->retranslateUi();
 }
 
 //==============================================================================

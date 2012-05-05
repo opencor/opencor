@@ -52,6 +52,8 @@ public:
     explicit CellmlAnnotationViewDetailsWidget(QWidget *pParent);
     ~CellmlAnnotationViewDetailsWidget();
 
+    virtual void retranslateUi();
+
     void setEmpty();
     void setModel();
     void setImport();

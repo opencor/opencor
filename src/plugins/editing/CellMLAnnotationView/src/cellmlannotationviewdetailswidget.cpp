@@ -36,6 +36,15 @@ CellmlAnnotationViewDetailsWidget::~CellmlAnnotationViewDetailsWidget()
 
 //==============================================================================
 
+void CellmlAnnotationViewDetailsWidget::retranslateUi()
+{
+    // Retranslate our UI
+
+    mUi->retranslateUi(this);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewDetailsWidget::setType(const Type &pType)
 {
     if (pType == mType)
@@ -43,75 +52,59 @@ void CellmlAnnotationViewDetailsWidget::setType(const Type &pType)
 
     // Show/hide whatever widget is required / not required for the new type
 
-//---GRY--- TO BE DONE...
-
     mType = pType;
 
-    QColor color;
+    bool showName = false;
 
     switch (pType) {
     case Model:
-        color = Qt::red;
+        showName = true;
 
         break;
     case Import:
-        color = Qt::green;
-
         break;
     case Unit:
-        color = Qt::blue;
+        showName = true;
 
         break;
     case UnitElement:
-        color = Qt::cyan;
+        showName = true;
 
         break;
     case Component:
-        color = Qt::magenta;
+        showName = true;
 
         break;
     case Variable:
-        color = Qt::yellow;
+        showName = true;
 
         break;
     case MathmlElement:
-        color = Qt::darkRed;
 
         break;
     case Group:
-        color = Qt::darkGreen;
 
         break;
     case RelationshipRef:
-        color = Qt::darkBlue;
 
         break;
     case ComponentRef:
-        color = Qt::darkCyan;
 
         break;
     case Connection:
-        color = Qt::darkMagenta;
 
         break;
     case Metadata:
-        color = Qt::darkYellow;
 
         break;
     default:
         // Empty
 
-        color = Qt::white;
-
         break;
     };
 
-    QPalette pal(palette());
-
-    pal.setColor(QPalette::Background, color);
-
-    setAutoFillBackground(true);
-    setPalette(pal);
+    mUi->nameLabel->setVisible(showName);
+    mUi->nameValue->setVisible(showName);
 }
 
 //==============================================================================
