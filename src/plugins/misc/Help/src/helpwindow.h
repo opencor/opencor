@@ -45,7 +45,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
 private:
-    Ui::HelpWindow *mUi;
+    Ui::HelpWindow *mGui;
 
     HelpWidget *mHelpWidget;
 

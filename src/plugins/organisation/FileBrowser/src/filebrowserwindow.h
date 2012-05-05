@@ -44,7 +44,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
 private:
-    Ui::FileBrowserWindow *mUi;
+    Ui::FileBrowserWindow *mGui;
 
     FileBrowserWidget *mFileBrowserWidget;
 

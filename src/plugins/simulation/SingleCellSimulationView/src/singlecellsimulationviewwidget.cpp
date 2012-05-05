@@ -40,7 +40,7 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent) :
     Widget(pParent),
-    mUi(new Ui::SingleCellSimulationViewWidget),
+    mGui(new Ui::SingleCellSimulationViewWidget),
     mCellmlFileRuntime(0), mModel(Unknown),
     mStatesCount(0), mCondVarCount(0),
     mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
@@ -50,26 +50,26 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mSolverInterfaces(SolverInterfaces()),
     mSolverErrorMsg(QString())
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Create a toolbar with different buttons
 
     Core::ToolBar *toolbar = new Core::ToolBar(this);
 
-    toolbar->addAction(mUi->actionRun);
-    toolbar->addAction(mUi->actionStop);
+    toolbar->addAction(mGui->actionRun);
+    toolbar->addAction(mGui->actionStop);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionDebugMode);
+    toolbar->addAction(mGui->actionDebugMode);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionAdd);
-    toolbar->addAction(mUi->actionRemove);
+    toolbar->addAction(mGui->actionAdd);
+    toolbar->addAction(mGui->actionRemove);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionCsvExport);
+    toolbar->addAction(mGui->actionCsvExport);
 
-    mUi->verticalLayout->addWidget(toolbar);
-    mUi->verticalLayout->addWidget(Core::newLineWidget(this));
+    mGui->verticalLayout->addWidget(toolbar);
+    mGui->verticalLayout->addWidget(Core::newLineWidget(this));
 
     // Create our vertical splitter
 
@@ -83,7 +83,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mGraphPanels->setObjectName("GraphPanels");
 
     connect(mGraphPanels, SIGNAL(removeGraphPanelsEnabled(const bool &)),
-            mUi->actionRemove, SLOT(setEnabled(bool)));
+            mGui->actionRemove, SLOT(setEnabled(bool)));
 
     // Create a simulation output widget with a vertical layout on which we put
     // a separating line and our simulation output list view
@@ -117,8 +117,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mVerticalSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
 
-    mUi->verticalLayout->addSpacing(mVerticalSplitter->handleWidth());
-    mUi->verticalLayout->addWidget(mVerticalSplitter);
+    mGui->verticalLayout->addSpacing(mVerticalSplitter->handleWidth());
+    mGui->verticalLayout->addWidget(mVerticalSplitter);
 
     // Create our (thin) simulation progress widget
 
@@ -131,8 +131,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     setProgressBarStyleSheet();
 
-    mUi->verticalLayout->addWidget(Core::newLineWidget(this));
-    mUi->verticalLayout->addWidget(mProgressBar);
+    mGui->verticalLayout->addWidget(Core::newLineWidget(this));
+    mGui->verticalLayout->addWidget(mProgressBar);
 }
 
 //==============================================================================
@@ -147,9 +147,9 @@ SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
     delete[] mAlgebraic;
     delete[] mCondVar;
 
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================
@@ -158,7 +158,7 @@ void SingleCellSimulationViewWidget::retranslateUi()
 {
     // Retranslate the whole view
 
-    mUi->retranslateUi(this);
+    mGui->retranslateUi(this);
 }
 
 //==============================================================================
@@ -752,7 +752,7 @@ void SingleCellSimulationViewWidget::on_actionDebugMode_triggered()
 {
     //---GRY--- TEMPORARY WAY TO DETERMINE WHICH ODE SOLVER TO USE
 
-    if (mUi->actionDebugMode->isChecked())
+    if (mGui->actionDebugMode->isChecked())
         mOdeSolverName = "Forward Euler";
     else
         mOdeSolverName = "CVODE";

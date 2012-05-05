@@ -33,15 +33,15 @@ namespace RawCellMLView {
 
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     Widget(pParent),
-    mUi(new Ui::RawCellmlViewWidget),
+    mGui(new Ui::RawCellmlViewWidget),
     mEditors(QMap<QString, Core::BorderedWidget *>()),
     mEditor(0),
     mViewerHeight(0),
     mEditorHeight(0)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Create our vertical splitter
 
@@ -60,16 +60,16 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
 
     mVerticalSplitter->addWidget(mViewer);
 
-    mUi->verticalLayout->addWidget(mVerticalSplitter);
+    mGui->verticalLayout->addWidget(mVerticalSplitter);
 }
 
 //==============================================================================
 
 RawCellmlViewWidget::~RawCellmlViewWidget()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================

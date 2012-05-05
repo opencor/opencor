@@ -119,7 +119,7 @@ private:
         Stopping
     };
 
-    Ui::CentralWidget *mUi;
+    Ui::CentralWidget *mGui;
 
     Status mStatus;
 

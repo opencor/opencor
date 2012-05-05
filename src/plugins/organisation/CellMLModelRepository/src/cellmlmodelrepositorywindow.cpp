@@ -31,17 +31,17 @@ namespace CellMLModelRepository {
 
 CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
-    mUi(new Ui::CellmlModelRepositoryWindow)
+    mGui(new Ui::CellmlModelRepositoryWindow)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Create and add the CellML Model Repository widget
 
     mCellmlModelRepositoryWidget = new CellmlModelRepositoryWidget(this);
 
-    mUi->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
+    mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
 
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
@@ -72,9 +72,9 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
 CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================
@@ -83,7 +83,7 @@ void CellmlModelRepositoryWindow::retranslateUi()
 {
     // Retranslate the whole window
 
-    mUi->retranslateUi(this);
+    mGui->retranslateUi(this);
 
     // Retranslate our list of models
 
@@ -230,16 +230,16 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
     // Initialise the output using whatever search criteria is present
 
-    on_nameValue_textChanged(mUi->nameValue->text());
+    on_nameValue_textChanged(mGui->nameValue->text());
 
     // Re-enable the GUI side
 
     setEnabled(true);
 
-    // Give, within the current window, the focus to mUi->nameValue, but only if
-    // the current window already has the focus
+    // Give, within the current window, the focus to mGui->nameValue, but only
+    // if the current window already has the focus
 
-    Core::setFocusTo(this, mUi->nameValue, false);
+    Core::setFocusTo(this, mGui->nameValue, false);
 }
 
 //==============================================================================
@@ -250,7 +250,7 @@ void CellmlModelRepositoryWindow::customContextMenu(const QPoint &) const
 
     QMenu menu;
 
-    menu.addAction(mUi->actionCopy);
+    menu.addAction(mGui->actionCopy);
 
     menu.exec(QCursor::pos());
 }

@@ -63,16 +63,16 @@ public:
                 CellMLSupport::CellmlFileMathmlElement *pMathmlElement);
 
 private:
-    Ui::CellmlAnnotationViewDetailsWidget *mUi;
+    Ui::CellmlAnnotationViewDetailsWidget *mGui;
 
     Type mType;
 
     CellMLSupport::CellmlFileElement *mElement;
     CellMLSupport::CellmlFileMathmlElement *mMathmlElement;
 
-    void updateUi(const Type &pType,
-                  CellMLSupport::CellmlFileElement *pElement,
-                  CellMLSupport::CellmlFileMathmlElement *pMathmlElement);
+    void updateGui(const Type &pType,
+                   CellMLSupport::CellmlFileElement *pElement,
+                   CellMLSupport::CellmlFileMathmlElement *pMathmlElement);
 };
 
 //==============================================================================

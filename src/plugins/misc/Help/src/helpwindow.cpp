@@ -34,11 +34,11 @@ static const QString OpencorHelpHomepageUrl = "qthelp://opencor/doc/user/index.h
 
 HelpWindow::HelpWindow(QWidget *pParent) :
     DockWidget(pParent),
-    mUi(new Ui::HelpWindow)
+    mGui(new Ui::HelpWindow)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Extract the help files
 
@@ -59,21 +59,21 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     Core::ToolBar *toolbar = new Core::ToolBar(this);
 
-    toolbar->addAction(mUi->actionHome);
+    toolbar->addAction(mGui->actionHome);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionBack);
-    toolbar->addAction(mUi->actionForward);
+    toolbar->addAction(mGui->actionBack);
+    toolbar->addAction(mGui->actionForward);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionCopy);
+    toolbar->addAction(mGui->actionCopy);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionNormalSize);
+    toolbar->addAction(mGui->actionNormalSize);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionZoomIn);
-    toolbar->addAction(mUi->actionZoomOut);
+    toolbar->addAction(mGui->actionZoomIn);
+    toolbar->addAction(mGui->actionZoomOut);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionPrint);
+    toolbar->addAction(mGui->actionPrint);
 
-    mUi->verticalLayout->addWidget(toolbar);
+    mGui->verticalLayout->addWidget(toolbar);
 
     // Create and add the help widget
 
@@ -81,7 +81,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     mHelpWidget->setObjectName("HelpWidget");
 
-    mUi->verticalLayout->addWidget(mHelpWidget);
+    mGui->verticalLayout->addWidget(mHelpWidget);
 
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
@@ -95,20 +95,20 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     // Some connections to update the enabled state of our various actions
 
     connect(mHelpWidget, SIGNAL(notHomePage(const bool &)),
-            mUi->actionHome, SLOT(setEnabled(bool)));
+            mGui->actionHome, SLOT(setEnabled(bool)));
 
     connect(mHelpWidget, SIGNAL(backEnabled(const bool &)),
-            mUi->actionBack, SLOT(setEnabled(bool)));
+            mGui->actionBack, SLOT(setEnabled(bool)));
     connect(mHelpWidget, SIGNAL(forwardEnabled(const bool &)),
-            mUi->actionForward, SLOT(setEnabled(bool)));
+            mGui->actionForward, SLOT(setEnabled(bool)));
 
     connect(mHelpWidget, SIGNAL(notDefaultZoomLevel(const bool &)),
-            mUi->actionNormalSize, SLOT(setEnabled(bool)));
+            mGui->actionNormalSize, SLOT(setEnabled(bool)));
     connect(mHelpWidget, SIGNAL(zoomOutEnabled(const bool &)),
-            mUi->actionZoomOut, SLOT(setEnabled(bool)));
+            mGui->actionZoomOut, SLOT(setEnabled(bool)));
 
     connect(mHelpWidget, SIGNAL(copyTextEnabled(const bool &)),
-            mUi->actionCopy, SLOT(setEnabled(bool)));
+            mGui->actionCopy, SLOT(setEnabled(bool)));
 }
 
 //==============================================================================
@@ -118,12 +118,15 @@ HelpWindow::~HelpWindow()
     // Delete some internal objects
 
     delete mHelpEngine;
-    delete mUi;
 
     // Delete the help files
 
     QFile(mQchFileName).remove();
     QFile(mQhcFileName).remove();
+
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================
@@ -132,7 +135,7 @@ void HelpWindow::retranslateUi()
 {
     // Retranslate the whole window
 
-    mUi->retranslateUi(this);
+    mGui->retranslateUi(this);
 
     // Retranslate the help widget
 
@@ -248,19 +251,19 @@ void HelpWindow::customContextMenu(const QPoint &) const
 
     QMenu menu;
 
-    menu.addAction(mUi->actionHome);
+    menu.addAction(mGui->actionHome);
     menu.addSeparator();
-    menu.addAction(mUi->actionBack);
-    menu.addAction(mUi->actionForward);
+    menu.addAction(mGui->actionBack);
+    menu.addAction(mGui->actionForward);
     menu.addSeparator();
-    menu.addAction(mUi->actionCopy);
+    menu.addAction(mGui->actionCopy);
     menu.addSeparator();
-    menu.addAction(mUi->actionNormalSize);
+    menu.addAction(mGui->actionNormalSize);
     menu.addSeparator();
-    menu.addAction(mUi->actionZoomIn);
-    menu.addAction(mUi->actionZoomOut);
+    menu.addAction(mGui->actionZoomIn);
+    menu.addAction(mGui->actionZoomOut);
     menu.addSeparator();
-    menu.addAction(mUi->actionPrint);
+    menu.addAction(mGui->actionPrint);
 
     menu.exec(QCursor::pos());
 }

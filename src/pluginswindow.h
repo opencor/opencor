@@ -64,7 +64,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
 private:
-    Ui::PluginsWindow *mUi;
+    Ui::PluginsWindow *mGui;
 
     PluginManager *mPluginManager;
 

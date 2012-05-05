@@ -16,20 +16,20 @@ namespace OpenCOR {
 
 PreferencesWindow::PreferencesWindow(QWidget *pParent) :
     QDialog(pParent),
-    mUi(new Ui::PreferencesWindow)
+    mGui(new Ui::PreferencesWindow)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 }
 
 //==============================================================================
 
 PreferencesWindow::~PreferencesWindow()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================

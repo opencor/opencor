@@ -16,20 +16,20 @@ namespace OpenCOR {
 
 CheckForUpdatesWindow::CheckForUpdatesWindow(QWidget *pParent) :
     QDialog(pParent),
-    mUi(new Ui::CheckForUpdatesWindow)
+    mGui(new Ui::CheckForUpdatesWindow)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 }
 
 //==============================================================================
 
 CheckForUpdatesWindow::~CheckForUpdatesWindow()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================

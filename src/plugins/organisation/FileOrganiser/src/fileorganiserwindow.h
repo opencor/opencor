@@ -44,7 +44,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
 private:
-    Ui::FileOrganiserWindow *mUi;
+    Ui::FileOrganiserWindow *mGui;
 
     FileOrganiserWidget *mFileOrganiserWidget;
 

@@ -23,11 +23,11 @@ namespace RawView {
 
 RawViewWidget::RawViewWidget(QWidget *pParent, const QString &pFileName) :
     Widget(pParent),
-    mUi(new Ui::RawViewWidget)
+    mGui(new Ui::RawViewWidget)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Create and set up a raw Scintilla editor
 
@@ -57,16 +57,16 @@ RawViewWidget::RawViewWidget(QWidget *pParent, const QString &pFileName) :
 
     // Add the editor to the raw view widget
 
-    mUi->verticalLayout->addWidget(editor);
+    mGui->verticalLayout->addWidget(editor);
 }
 
 //==============================================================================
 
 RawViewWidget::~RawViewWidget()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================

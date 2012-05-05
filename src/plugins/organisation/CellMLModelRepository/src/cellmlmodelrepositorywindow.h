@@ -42,7 +42,7 @@ public:
     virtual void retranslateUi();
 
 private:
-    Ui::CellmlModelRepositoryWindow *mUi;
+    Ui::CellmlModelRepositoryWindow *mGui;
 
     QStringList mModelNames;
     QStringList mModelUrls;

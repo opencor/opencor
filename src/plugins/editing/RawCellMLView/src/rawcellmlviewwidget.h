@@ -61,7 +61,7 @@ public:
     void initialize(const QString &pFileName);
 
 private:
-    Ui::RawCellmlViewWidget *mUi;
+    Ui::RawCellmlViewWidget *mGui;
 
     QSplitter *mVerticalSplitter;
     QMap<QString, Core::BorderedWidget *> mEditors;

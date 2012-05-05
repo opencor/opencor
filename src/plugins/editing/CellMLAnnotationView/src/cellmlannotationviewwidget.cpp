@@ -326,11 +326,11 @@ CellMLSupport::CellmlFileMathmlElement * CellmlElementItem::mathmlElement() cons
 CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
                                                        const QString &pFileName) :
     Widget(pParent),
-    mUi(new Ui::CellmlAnnotationViewWidget)
+    mGui(new Ui::CellmlAnnotationViewWidget)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Create some splitters
 
@@ -374,7 +374,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mHorizontalSplitter->addWidget(new Core::BorderedWidget(mDetails,
                                                             false, true, false, false));
 
-    mUi->verticalLayout->addWidget(mHorizontalSplitter);
+    mGui->verticalLayout->addWidget(mHorizontalSplitter);
 
     // Keep track of our splitters being moved
 
@@ -422,9 +422,9 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
 CellmlAnnotationViewWidget::~CellmlAnnotationViewWidget()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================

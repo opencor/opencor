@@ -113,12 +113,12 @@ CentralWidgetViewSettings * CentralWidgetMode::viewSettings() const
 CentralWidget::CentralWidget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
-    mUi(new Ui::CentralWidget),
+    mGui(new Ui::CentralWidget),
     mStatus(Starting)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Allow for things to be dropped on us
 
@@ -200,11 +200,11 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Add the widgets to our horizontal layout
 
-    mUi->horizontalLayout->addWidget(mModeTabs);
-    mUi->horizontalLayout->addWidget(centralWidget);
+    mGui->horizontalLayout->addWidget(mModeTabs);
+    mGui->horizontalLayout->addWidget(centralWidget);
 
     foreach (CentralWidgetMode *mode, mModes)
-        mUi->horizontalLayout->addWidget(mode->views());
+        mGui->horizontalLayout->addWidget(mode->views());
 
     // Some connections to handle our files tab bar
 
@@ -253,9 +253,9 @@ CentralWidget::~CentralWidget()
     foreach (CentralWidgetMode *mMode, mModes)
         delete mMode;
 
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================

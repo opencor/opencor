@@ -60,7 +60,7 @@ static const QString HelpPlugin = "Help";
 
 MainWindow::MainWindow() :
     QMainWindow(),
-    mUi(new Ui::MainWindow),
+    mGui(new Ui::MainWindow),
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
     mViewSeparator(0)
@@ -81,41 +81,41 @@ MainWindow::MainWindow() :
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
     // Note: the application icon (which needs to be set for Linux, but neither
     //       for Windows nor Mac OS X, since it's set through CMake in those
-    //       cases (see CMakeLists.txt)) is set within the UI file. This being
+    //       cases (see CMakeLists.txt)) is set within the GUI file. This being
     //       said, it's good to have it set for all three platforms, since it
     //       can then be used in, for example, the about box, so...
 
     // A connection to handle the status bar
 
-    connect(mUi->actionStatusBar, SIGNAL(triggered(bool)),
+    connect(mGui->actionStatusBar, SIGNAL(triggered(bool)),
             statusBar(), SLOT(setVisible(bool)));
 
     // Some connections to handle our various menu items
 
-    connect(mUi->actionExit, SIGNAL(triggered(bool)),
+    connect(mGui->actionExit, SIGNAL(triggered(bool)),
             this, SLOT(close()));
-    connect(mUi->actionResetAll, SIGNAL(triggered(bool)),
+    connect(mGui->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
     // Set the shortcuts of some actions
     // Note: we do it here, so that we can use standard shortcuts (whenever
     //       possible)...
 
-    mUi->actionFullScreen->setShortcut(Qt::Key_F11);
+    mGui->actionFullScreen->setShortcut(Qt::Key_F11);
 #ifdef Q_WS_WIN
     // Note: QKeySequence::Quit corresponds to nothing on Windows, yet one might
     //       expect it to correspond to Alt+F4 and maybe even to Ctrl+Q, so...
 
-    mUi->actionExit->setShortcuts(QList<QKeySequence>()
-                                    << QKeySequence(Qt::ALT|Qt::Key_F4)
-                                    << QKeySequence(Qt::CTRL|Qt::Key_Q));
+    mGui->actionExit->setShortcuts(QList<QKeySequence>()
+                                       << QKeySequence(Qt::ALT|Qt::Key_F4)
+                                       << QKeySequence(Qt::CTRL|Qt::Key_Q));
 #else
-    mUi->actionExit->setShortcut(QKeySequence::Quit);
+    mGui->actionExit->setShortcut(QKeySequence::Quit);
 #endif
 
 #ifdef Q_WS_MAC
@@ -205,7 +205,7 @@ MainWindow::MainWindow() :
     // Initialise the checking state of the full screen action, since OpenCOR
     // may (re)start in full screen mode
 
-    mUi->actionFullScreen->setChecked(isFullScreen());
+    mGui->actionFullScreen->setChecked(isFullScreen());
 }
 
 //==============================================================================
@@ -256,7 +256,10 @@ MainWindow::~MainWindow()
 
     delete mPluginManager;
     delete mSettings;
-    delete mUi;
+
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================
@@ -271,7 +274,7 @@ void MainWindow::changeEvent(QEvent *pEvent)
     // the user wants to use the system's locale
 
     if (   (pEvent->type() == QEvent::LocaleChange)
-        && (mUi->actionSystem->isChecked()))
+        && (mGui->actionSystem->isChecked()))
         setLocale(SystemLocale);
 }
 
@@ -301,7 +304,7 @@ void MainWindow::showEvent(QShowEvent *pEvent)
         // least) all of OpenCOR to be visible in order to be able to determine
         // whether the status bar is visible or not...
 
-        mUi->actionStatusBar->setChecked(statusBar()->isVisible());
+        mGui->actionStatusBar->setChecked(statusBar()->isVisible());
 
         // Bring ourselves to the foreground
         // Note: indeed, when starting/restarting OpenCOR (as a result of a
@@ -370,8 +373,8 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
             switch (menuSettings->type()) {
             case GuiMenuSettings::View:
-                mUi->menuBar->insertAction(mUi->menuView->menuAction(),
-                                           newMenu->menuAction());
+                mGui->menuBar->insertAction(mGui->menuView->menuAction(),
+                                            newMenu->menuAction());
 
                 break;
             default:
@@ -402,10 +405,10 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         switch (menuActionSettings->type()) {
         case GuiMenuActionSettings::File:
             if(menuActionSettings->action())
-                mUi->menuFile->insertAction(mUi->menuFile->actions().first(),
-                                            menuActionSettings->action());
+                mGui->menuFile->insertAction(mGui->menuFile->actions().first(),
+                                             menuActionSettings->action());
             else
-                mUi->menuFile->insertSeparator(mUi->menuFile->actions().first());
+                mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
 
             break;
         default:
@@ -440,9 +443,9 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
                 // Add the New menu to our File menu and add a separator after
                 // it
 
-                mUi->menuFile->insertMenu(mUi->menuFile->actions().first(),
-                                          mFileNewMenu);
-                mUi->menuFile->insertSeparator(mUi->menuFile->actions().at(1));
+                mGui->menuFile->insertMenu(mGui->menuFile->actions().first(),
+                                           mFileNewMenu);
+                mGui->menuFile->insertSeparator(mGui->menuFile->actions().at(1));
 
                 pluginForFileNewMenu = pPluginName;
             } else if (pluginForFileNewMenu.compare(pPluginName)) {
@@ -497,9 +500,9 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
                 // We only want to add the action if we are coming here from the
                 // Help plugin
 
-                mUi->menuHelp->insertAction(mUi->actionHomePage,
-                                            windowSettings->action());
-                mUi->menuHelp->insertSeparator(mUi->actionHomePage);
+                mGui->menuHelp->insertAction(mGui->actionHomePage,
+                                             windowSettings->action());
+                mGui->menuHelp->insertSeparator(mGui->actionHomePage);
             } else {
                 doConnectDockWidgetToAction = false;
             }
@@ -562,8 +565,8 @@ void MainWindow::loadSettings()
 
         // Retrieve whether the status bar is to be shown
 
-        mUi->statusBar->setVisible(mSettings->value(SettingsStatusBarVisibility,
-                                                    true).toBool());
+        mGui->statusBar->setVisible(mSettings->value(SettingsStatusBarVisibility,
+                                                     true).toBool());
     }
 
     // Retrieve the settings of our various plugins
@@ -612,7 +615,7 @@ void MainWindow::saveSettings() const
     // Keep track of whether the status bar is to be shown
 
     mSettings->setValue(SettingsStatusBarVisibility,
-                        mUi->statusBar->isVisible());
+                        mGui->statusBar->isVisible());
 
     // Keep track of the settings of our various plugins
 
@@ -666,7 +669,7 @@ void MainWindow::setLocale(const QString &pLocale)
 
         // Retranslate OpenCOR
 
-        mUi->retranslateUi(this);
+        mGui->retranslateUi(this);
 
         // Retranslate some widgets that are not originally part of our user
         // interface
@@ -705,10 +708,10 @@ void MainWindow::setLocale(const QString &pLocale)
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status, so...
 
-    mUi->actionSystem->setChecked(mLocale == SystemLocale);
+    mGui->actionSystem->setChecked(mLocale == SystemLocale);
 
-    mUi->actionEnglish->setChecked(mLocale == EnglishLocale);
-    mUi->actionFrench->setChecked(mLocale == FrenchLocale);
+    mGui->actionEnglish->setChecked(mLocale == EnglishLocale);
+    mGui->actionFrench->setChecked(mLocale == FrenchLocale);
 }
 
 //==============================================================================
@@ -777,7 +780,7 @@ void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &
         // None of the menus have already been inserted which means that we need
         // to insert a separator before the Full Screen menu item
 
-        mViewSeparator =  mUi->menuView->insertSeparator(mUi->actionStatusBar);
+        mViewSeparator =  mGui->menuView->insertSeparator(mGui->actionStatusBar);
 
     // Determine the menu that is to be inserted, should this be required, and
     // the action before which it is to be inserted
@@ -806,7 +809,7 @@ void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &
 
         // Add the menu to our View menu
 
-        mUi->menuView->insertMenu(action, *menu);
+        mGui->menuView->insertMenu(action, *menu);
     }
 
     // At this stage, the menu to which we want to add an action has been
@@ -927,7 +930,7 @@ void MainWindow::on_actionFullScreen_triggered()
 {
     // Switch to / back from full screen mode
 
-    if (mUi->actionFullScreen->isChecked())
+    if (mGui->actionFullScreen->isChecked())
         showFullScreen();
     else
         showNormal();

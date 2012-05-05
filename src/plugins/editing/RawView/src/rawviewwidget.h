@@ -31,7 +31,7 @@ public:
     ~RawViewWidget();
 
 private:
-    Ui::RawViewWidget *mUi;
+    Ui::RawViewWidget *mGui;
 };
 
 //==============================================================================

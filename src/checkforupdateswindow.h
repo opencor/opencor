@@ -30,7 +30,7 @@ public:
     ~CheckForUpdatesWindow();
 
 private:
-    Ui::CheckForUpdatesWindow *mUi;
+    Ui::CheckForUpdatesWindow *mGui;
 };
 
 //==============================================================================

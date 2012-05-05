@@ -128,7 +128,7 @@ public:
     QList<int> verticalSplitterSizes() const;
 
 private:
-    Ui::CellmlAnnotationViewWidget *mUi;
+    Ui::CellmlAnnotationViewWidget *mGui;
 
     QSplitter *mHorizontalSplitter;
     QSplitter *mVerticalSplitter;

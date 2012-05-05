@@ -30,7 +30,7 @@ public:
     ~PreferencesWindow();
 
 private:
-    Ui::PreferencesWindow *mUi;
+    Ui::PreferencesWindow *mGui;
 };
 
 //==============================================================================

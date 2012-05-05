@@ -74,27 +74,27 @@ void PluginDelegate::paint(QPainter *pPainter,
 PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
     QDialog(pParent),
     CommonWidget(pParent),
-    mUi(new Ui::PluginsWindow),
+    mGui(new Ui::PluginsWindow),
     mPluginManager(pPluginManager),
     mMainWindow(qobject_cast<MainWindow *>(pParent))
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Update the note label
 
-    mUi->noteLabel->setText(mUi->noteLabel->text().arg(qApp->applicationName()));
+    mGui->noteLabel->setText(mGui->noteLabel->text().arg(qApp->applicationName()));
 
     // Set up the tree view with a delegate, so that we can select plugins that
     // are shown as 'disabled' (to reflect the fact that users cannot decide
     // whether they should be loaded)
 
-    mDataModel = new QStandardItemModel(mUi->treeView);
+    mDataModel = new QStandardItemModel(mGui->treeView);
     mPluginDelegate = new PluginDelegate(mDataModel);
 
-    mUi->treeView->setModel(mDataModel);
-    mUi->treeView->setItemDelegate(mPluginDelegate);
+    mGui->treeView->setModel(mDataModel);
+    mGui->treeView->setItemDelegate(mPluginDelegate);
 
     // Populate the data model with our different categories of plugins
     // Note: we create all of them in one go (rather than when required), so
@@ -153,9 +153,9 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
 
     foreach (QStandardItem *categoryItem, mPluginCategories)
         if (!categoryItem->hasChildren())
-            mUi->treeView->setRowHidden(categoryItem->row(),
-                                        mDataModel->invisibleRootItem()->index(),
-                                        true);
+            mGui->treeView->setRowHidden(categoryItem->row(),
+                                         mDataModel->invisibleRootItem()->index(),
+                                         true);
 
     // Make sure that the loading state of all the plugins is right, including
     // that of the plugins which the user cannot manage
@@ -170,33 +170,33 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
     //       it (the extra 15% seems to be enough even to even account for a big
     //       number of plugins which would then require a vertical scroll bar)
 
-    mUi->treeView->expandAll();
-    mUi->treeView->resizeColumnToContents(0);
+    mGui->treeView->expandAll();
+    mGui->treeView->resizeColumnToContents(0);
 
-    mUi->treeView->setMinimumWidth(1.15*mUi->treeView->columnWidth(0));
-    mUi->treeView->setMaximumWidth(mUi->treeView->minimumWidth());
+    mGui->treeView->setMinimumWidth(1.15*mGui->treeView->columnWidth(0));
+    mGui->treeView->setMaximumWidth(mGui->treeView->minimumWidth());
 
     // Make, through the note label, sure that the window has a minimum width
 
-    mUi->noteLabel->setMinimumWidth(2.5*mUi->treeView->minimumWidth());
+    mGui->noteLabel->setMinimumWidth(2.5*mGui->treeView->minimumWidth());
 
     // Make sure that the window has a reasonable starting size
 
-    mUi->verticalLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    mGui->verticalLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
     // Connection to handle a plugin's information
 
-    connect(mUi->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+    connect(mGui->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updatePluginInfo(const QModelIndex &, const QModelIndex &)));
 
     // Connection to handle the activation of a link in the description
 
-    connect(mUi->descriptionValue, SIGNAL(linkActivated(const QString &)),
+    connect(mGui->descriptionValue, SIGNAL(linkActivated(const QString &)),
             this, SLOT(openLink(const QString &)));
 
     // Connection to handle the window's buttons
 
-    connect(mUi->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
+    connect(mGui->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
             this, SLOT(apply()));
 }
 
@@ -204,9 +204,9 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
 
 PluginsWindow::~PluginsWindow()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================
@@ -218,17 +218,17 @@ void PluginsWindow::selectFirstVisiblePlugin()
     //       hence nothing needs to be done indeed...
 
     foreach (QStandardItem *categoryItem, mPluginCategories)
-        if (!mUi->treeView->isRowHidden(categoryItem->row(),
-                                        mDataModel->invisibleRootItem()->index()))
+        if (!mGui->treeView->isRowHidden(categoryItem->row(),
+                                         mDataModel->invisibleRootItem()->index()))
             // We have found the first visible category, so now find its first
             // visible plugin
 
             for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
-                if (!mUi->treeView->isRowHidden(categoryItem->child(i)->row(),
-                                                categoryItem->index())) {
+                if (!mGui->treeView->isRowHidden(categoryItem->child(i)->row(),
+                                                 categoryItem->index())) {
                     // We have found our first visible plugin, so...
 
-                    mUi->treeView->setCurrentIndex(categoryItem->child(i)->index());
+                    mGui->treeView->setCurrentIndex(categoryItem->child(i)->index());
 
                     // We are done, so...
 
@@ -246,12 +246,12 @@ void PluginsWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve whether to show selectable plugins
 
-    mUi->selectablePluginsCheckBox->setChecked(pSettings->value(SettingsShowOnlySelectablePlugins,
-                                                                true).toBool());
+    mGui->selectablePluginsCheckBox->setChecked(pSettings->value(SettingsShowOnlySelectablePlugins,
+                                                                 true).toBool());
 
     // Show/hide our unmanageable plugins
 
-    on_selectablePluginsCheckBox_toggled(mUi->selectablePluginsCheckBox->isChecked());
+    on_selectablePluginsCheckBox_toggled(mGui->selectablePluginsCheckBox->isChecked());
 }
 
 //==============================================================================
@@ -261,7 +261,7 @@ void PluginsWindow::saveSettings(QSettings *pSettings) const
     // Keep track of whether to show selectable plugins
 
     pSettings->setValue(SettingsShowOnlySelectablePlugins,
-                        mUi->selectablePluginsCheckBox->isChecked());
+                        mGui->selectablePluginsCheckBox->isChecked());
 }
 
 //==============================================================================
@@ -340,25 +340,25 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     // The plugin's name
 
-    mUi->nameValue->setText(plugin->name());
+    mGui->nameValue->setText(plugin->name());
 
     // The plugin's type
 
     switch (pluginInfo.type()) {
     case PluginInfo::General:
-        mUi->typeValue->setText(tr("General"));
+        mGui->typeValue->setText(tr("General"));
 
         break;
     case PluginInfo::Console:
-        mUi->typeValue->setText(tr("Console"));
+        mGui->typeValue->setText(tr("Console"));
 
         break;
     case PluginInfo::Gui:
-        mUi->typeValue->setText(tr("GUI"));
+        mGui->typeValue->setText(tr("GUI"));
 
         break;
     default:
-        mUi->typeValue->setText(tr("Undefined"));
+        mGui->typeValue->setText(tr("Undefined"));
 
         break;
     }
@@ -371,21 +371,21 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
         dependencies << tr("None");
 
     if (dependencies.count() > 1)
-        mUi->dependenciesValue->setText("- "+dependencies.join("\n- "));
+        mGui->dependenciesValue->setText("- "+dependencies.join("\n- "));
     else
-        mUi->dependenciesValue->setText(dependencies.first());
+        mGui->dependenciesValue->setText(dependencies.first());
 
     // The plugin's description
 
     QString description = pluginInfo.description(mMainWindow->locale());
 
-    mUi->descriptionValue->setText(description.isEmpty()?
-                                       tr("None"):
-                                       description);
+    mGui->descriptionValue->setText(description.isEmpty()?
+                                        tr("None"):
+                                        description);
 
     // The plugin's status
 
-    mUi->statusValue->setText(statusDescription(plugin));
+    mGui->statusValue->setText(statusDescription(plugin));
 }
 
 //==============================================================================
@@ -402,7 +402,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
     // Prevent the list view from being updated, since we may end up changing
     // quite a bit of its visual contents
 
-    mUi->treeView->setUpdatesEnabled(false);
+    mGui->treeView->setUpdatesEnabled(false);
 
     // Check whether we came here as a result of checking a plugin and, if so,
     // then make sure that all of that plugin's dependencies (i.e. both direct
@@ -472,7 +472,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
 
     // Re-enable the updating of the list view
 
-    mUi->treeView->setUpdatesEnabled(true);
+    mGui->treeView->setUpdatesEnabled(true);
 
     // Check whether the OK and apply buttons should be enabled
 
@@ -497,8 +497,8 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
             break;
         }
 
-    mUi->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(buttonsEnabled);
-    mUi->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(buttonsEnabled);
+    mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(buttonsEnabled);
+    mGui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(buttonsEnabled);
 
     // Re-enable the connection that handles a change in a plugin's loading
     // state
@@ -584,8 +584,8 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
     // Show/hide our unmanageable plugins
 
     foreach (QStandardItem *pluginItem, mUnmanageablePlugins)
-        mUi->treeView->setRowHidden(pluginItem->row(),
-                                    pluginItem->parent()->index(), pChecked);
+        mGui->treeView->setRowHidden(pluginItem->row(),
+                                     pluginItem->parent()->index(), pChecked);
 
     // Show/hide our categories, based on whether they contain visible plugins
 
@@ -599,8 +599,8 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
             bool hideCategory = true;
 
             for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
-                if (!mUi->treeView->isRowHidden(categoryItem->child(i)->row(),
-                                                categoryItem->index())) {
+                if (!mGui->treeView->isRowHidden(categoryItem->child(i)->row(),
+                                                 categoryItem->index())) {
                     // There is at least one plugin which is visible, so...
 
                     hideCategory = false;
@@ -608,9 +608,9 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
                     break;
                 }
 
-            mUi->treeView->setRowHidden(categoryItem->row(),
-                                        mDataModel->invisibleRootItem()->index(),
-                                        hideCategory);
+            mGui->treeView->setRowHidden(categoryItem->row(),
+                                         mDataModel->invisibleRootItem()->index(),
+                                         hideCategory);
         }
 
     // Select the first plugin item

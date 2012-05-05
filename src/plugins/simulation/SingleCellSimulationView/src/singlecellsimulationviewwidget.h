@@ -70,7 +70,7 @@ protected:
     virtual void changeEvent(QEvent *pEvent);
 
 private:
-    Ui::SingleCellSimulationViewWidget *mUi;
+    Ui::SingleCellSimulationViewWidget *mGui;
 
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 

@@ -58,7 +58,7 @@ protected:
     virtual void closeEvent(QCloseEvent *pEvent);
 
 private:
-    Ui::MainWindow *mUi;
+    Ui::MainWindow *mGui;
 
     QSettings *mSettings;
 

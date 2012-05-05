@@ -17,35 +17,35 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent) :
     Widget(pParent),
-    mUi(new Ui::CellmlAnnotationViewDetailsWidget),
+    mGui(new Ui::CellmlAnnotationViewDetailsWidget),
     mType(Empty)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 }
 
 //==============================================================================
 
 CellmlAnnotationViewDetailsWidget::~CellmlAnnotationViewDetailsWidget()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewDetailsWidget::retranslateUi()
 {
-    // Retranslate our UI
+    // Retranslate our GUI
 
-    mUi->retranslateUi(this);
+    mGui->retranslateUi(this);
 
-    // Update the UI (since some labels get reinitialised as a result of the
+    // Update the GUI (since some labels get reinitialised as a result of the
     // retranslation)
 
-    updateUi(mType, mElement, mMathmlElement);
+    updateGui(mType, mElement, mMathmlElement);
 }
 
 //==============================================================================
@@ -56,9 +56,9 @@ void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
     Q_ASSERT(   (((pType == Empty) || (pType == Metadata)) && !pElement)
              || ((pType != Empty) && (pType != Metadata) && pElement));
 
-    // Update the UI
+    // Update the GUI
 
-    updateUi(pType, pElement, 0);
+    updateGui(pType, pElement, 0);
 }
 
 //==============================================================================
@@ -66,16 +66,16 @@ void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
 void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
                                                CellMLSupport::CellmlFileMathmlElement *pMathmlElement)
 {
-    // Update the UI
+    // Update the GUI
 
-    updateUi(pType, 0, pMathmlElement);
+    updateGui(pType, 0, pMathmlElement);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::updateUi(const Type &pType,
-                                                 CellMLSupport::CellmlFileElement *pElement,
-                                                 CellMLSupport::CellmlFileMathmlElement *pMathmlElement)
+void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
+                                                  CellMLSupport::CellmlFileElement *pElement,
+                                                  CellMLSupport::CellmlFileMathmlElement *pMathmlElement)
 {
     // Keep track of the new type and elements
 
@@ -163,32 +163,32 @@ void CellmlAnnotationViewDetailsWidget::updateUi(const Type &pType,
 
     // Show/hide the relevant widgets
 
-    mUi->cmetaIdLabel->setVisible(showCmetaId);
-    mUi->cmetaIdValue->setVisible(showCmetaId);
+    mGui->cmetaIdLabel->setVisible(showCmetaId);
+    mGui->cmetaIdValue->setVisible(showCmetaId);
 
     bool showNameField =    showName || showUri
                          || showRelationshipRef || showComponentRef;
 
-    mUi->nameLabel->setVisible(showNameField);
-    mUi->nameValue->setVisible(showNameField);
+    mGui->nameLabel->setVisible(showNameField);
+    mGui->nameValue->setVisible(showNameField);
 
     // Update the value of the widgets which are shown
 
     if (showCmetaId)
-        mUi->cmetaIdValue->setText(pElement->cmetaId());
+        mGui->cmetaIdValue->setText(pElement->cmetaId());
 
     if (showName) {
-        mUi->nameLabel->setText(tr("Name:"));
-        mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
+        mGui->nameLabel->setText(tr("Name:"));
+        mGui->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
     } else if (showUri) {
-        mUi->nameLabel->setText(tr("URI:"));
-        mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
+        mGui->nameLabel->setText(tr("URI:"));
+        mGui->nameValue->setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
     } else if (showRelationshipRef) {
-        mUi->nameLabel->setText(tr("Relationship reference:"));
-        mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
+        mGui->nameLabel->setText(tr("Relationship reference:"));
+        mGui->nameValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
     } else if (showComponentRef) {
-        mUi->nameLabel->setText(tr("Component reference:"));
-        mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
+        mGui->nameLabel->setText(tr("Component reference:"));
+        mGui->nameValue->setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
     }
 }
 

@@ -24,20 +24,20 @@ namespace FileOrganiser {
 
 FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
-    mUi(new Ui::FileOrganiserWindow)
+    mGui(new Ui::FileOrganiserWindow)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Create a toolbar with different buttons
 
     Core::ToolBar *toolbar = new Core::ToolBar(this);
 
-    toolbar->addAction(mUi->actionNew);
-    toolbar->addAction(mUi->actionDelete);
+    toolbar->addAction(mGui->actionNew);
+    toolbar->addAction(mGui->actionDelete);
 
-    mUi->verticalLayout->addWidget(toolbar);
+    mGui->verticalLayout->addWidget(toolbar);
 
     // Create and add the file organiser widget
 
@@ -45,7 +45,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     mFileOrganiserWidget->setObjectName("FileOrganiserWidget");
 
-    mUi->verticalLayout->addWidget(mFileOrganiserWidget);
+    mGui->verticalLayout->addWidget(mFileOrganiserWidget);
 
     // We want our own context menu for the file organiser widget
 
@@ -63,18 +63,18 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     // Some connections to update the enabled state of our various actions
 
     connect(mFileOrganiserWidget, SIGNAL(newFolderEnabled(const bool &)),
-            mUi->actionNew, SLOT(setEnabled(bool)));
+            mGui->actionNew, SLOT(setEnabled(bool)));
     connect(mFileOrganiserWidget, SIGNAL(deleteItemsEnabled(const bool &)),
-            mUi->actionDelete, SLOT(setEnabled(bool)));
+            mGui->actionDelete, SLOT(setEnabled(bool)));
 }
 
 //==============================================================================
 
 FileOrganiserWindow::~FileOrganiserWindow()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================
@@ -83,7 +83,7 @@ void FileOrganiserWindow::retranslateUi()
 {
     // Retranslate the whole window
 
-    mUi->retranslateUi(this);
+    mGui->retranslateUi(this);
 
     // Retranslate the file organiser widget
 
@@ -139,8 +139,8 @@ void FileOrganiserWindow::customContextMenu(const QPoint &) const
 
     QMenu menu;
 
-    menu.addAction(mUi->actionNew);
-    menu.addAction(mUi->actionDelete);
+    menu.addAction(mGui->actionNew);
+    menu.addAction(mGui->actionDelete);
 
     menu.exec(QCursor::pos());
 }

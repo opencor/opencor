@@ -25,24 +25,24 @@ namespace FileBrowser {
 
 FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
-    mUi(new Ui::FileBrowserWindow)
+    mGui(new Ui::FileBrowserWindow)
 {
-    // Set up the UI
+    // Set up the GUI
 
-    mUi->setupUi(this);
+    mGui->setupUi(this);
 
     // Create a toolbar with different buttons
 
     Core::ToolBar *toolbar = new Core::ToolBar(this);
 
-    toolbar->addAction(mUi->actionHome);
+    toolbar->addAction(mGui->actionHome);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionParent);
+    toolbar->addAction(mGui->actionParent);
     toolbar->addSeparator();
-    toolbar->addAction(mUi->actionPrevious);
-    toolbar->addAction(mUi->actionNext);
+    toolbar->addAction(mGui->actionPrevious);
+    toolbar->addAction(mGui->actionNext);
 
-    mUi->verticalLayout->addWidget(toolbar);
+    mGui->verticalLayout->addWidget(toolbar);
 
     // Create and add the file browser widget
 
@@ -50,7 +50,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mFileBrowserWidget->setObjectName("FileBrowserWidget");
 
-    mUi->verticalLayout->addWidget(mFileBrowserWidget);
+    mGui->verticalLayout->addWidget(mFileBrowserWidget);
 
     // We want our own context menu for the file organiser widget
 
@@ -68,24 +68,24 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     // Some connections to update the enabled state of our various actions
 
     connect(mFileBrowserWidget, SIGNAL(notHomeFolder(const bool &)),
-            mUi->actionHome, SLOT(setEnabled(bool)));
+            mGui->actionHome, SLOT(setEnabled(bool)));
 
     connect(mFileBrowserWidget, SIGNAL(goToParentFolderEnabled(const bool &)),
-            mUi->actionParent, SLOT(setEnabled(bool)));
+            mGui->actionParent, SLOT(setEnabled(bool)));
 
     connect(mFileBrowserWidget, SIGNAL(goToPreviousFileOrFolderEnabled(const bool &)),
-            mUi->actionPrevious, SLOT(setEnabled(bool)));
+            mGui->actionPrevious, SLOT(setEnabled(bool)));
     connect(mFileBrowserWidget, SIGNAL(goToNextFileOrFolderEnabled(const bool &)),
-            mUi->actionNext, SLOT(setEnabled(bool)));
+            mGui->actionNext, SLOT(setEnabled(bool)));
 }
 
 //==============================================================================
 
 FileBrowserWindow::~FileBrowserWindow()
 {
-    // Delete the UI
+    // Delete the GUI
 
-    delete mUi;
+    delete mGui;
 }
 
 //==============================================================================
@@ -94,7 +94,7 @@ void FileBrowserWindow::retranslateUi()
 {
     // Retranslate the whole window
 
-    mUi->retranslateUi(this);
+    mGui->retranslateUi(this);
 
     // Retranslate the file browser widget
 
@@ -168,7 +168,7 @@ void FileBrowserWindow::customContextMenu(const QPoint &) const
 
     QMenu menu;
 
-    menu.addAction(mUi->actionHome);
+    menu.addAction(mGui->actionHome);
 
     menu.exec(QCursor::pos());
 }
