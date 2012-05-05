@@ -213,23 +213,13 @@ PluginsWindow::~PluginsWindow()
 
 void PluginsWindow::selectFirstVisiblePlugin()
 {
-    // First, unselect the currently selected plugin
-    // Note: this is required if we toggle between showing only selectable
-    //       plugins or showing all plugins, so...
-
-    mUi->treeView->selectionModel()->setCurrentIndex(mUi->treeView->selectionModel()->currentIndex(),
-                                                     QItemSelectionModel::ToggleCurrent);
-
-    // Now, we can select the first plugin by looking at the first visible
-    // category
+    // Select the first plugin by looking at the first visible category
     // Note: if no category is visible, then it means that no plugin is visible,
     //       hence nothing needs to be done indeed...
 
-    bool firstPluginSelected = false;
-
     foreach (QStandardItem *categoryItem, mPluginCategories)
         if (!mUi->treeView->isRowHidden(categoryItem->row(),
-                                        mDataModel->invisibleRootItem()->index())) {
+                                        mDataModel->invisibleRootItem()->index()))
             // We have found the first visible category, so now find its first
             // visible plugin
 
@@ -238,17 +228,12 @@ void PluginsWindow::selectFirstVisiblePlugin()
                                                 categoryItem->index())) {
                     // We have found our first visible plugin, so...
 
-                    mUi->treeView->selectionModel()->setCurrentIndex(categoryItem->child(i)->index(),
-                                                                     QItemSelectionModel::ToggleCurrent);
+                    mUi->treeView->setCurrentIndex(categoryItem->child(i)->index());
 
-                    firstPluginSelected = true;
+                    // We are done, so...
 
-                    break;
+                    return;
                 }
-
-            if (firstPluginSelected)
-                break;
-        }
 }
 
 //==============================================================================
