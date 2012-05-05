@@ -82,6 +82,10 @@ public:
     };
 
     explicit CellmlElementItem(CellMLSupport::CellmlFileModel *pModel);
+    explicit CellmlElementItem(CellMLSupport::CellmlFileImport *pImport);
+    explicit CellmlElementItem(CellMLSupport::CellmlFileUnit *pUnit);
+    explicit CellmlElementItem(CellMLSupport::CellmlFileUnitElement *pUnitElement);
+    explicit CellmlElementItem(CellMLSupport::CellmlFileComponent *pComponent);
     explicit CellmlElementItem(const Type &pType, const QString &pText);
     explicit CellmlElementItem(const Type &pType, const Type &pSubType,
                                const QString &pText);
@@ -89,17 +93,17 @@ public:
     virtual int type() const;
     int subType() const;
 
-    CellMLSupport::CellmlFileModel * model() const;
+    CellMLSupport::CellmlFileElement * element() const;
 
 private:
     Type mType;
     Type mSubType;
 
-    CellMLSupport::CellmlFileModel *mModel;
+    CellMLSupport::CellmlFileElement *mElement;
 
     void initialize(const Type &pType, const Type &pSubType,
                     const QString &pText,
-                    CellMLSupport::CellmlFileModel *pModel);
+                    CellMLSupport::CellmlFileElement *pElement = 0);
 };
 
 //==============================================================================

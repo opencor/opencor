@@ -54,47 +54,61 @@ void CellmlAnnotationViewDetailsWidget::setType(const Type &pType)
 
     mType = pType;
 
+    bool showId = false;
     bool showName = false;
 
     switch (pType) {
     case Model:
+        showId = true;
         showName = true;
 
         break;
     case Import:
+        showId = true;
+
         break;
     case Unit:
+        showId = true;
         showName = true;
 
         break;
     case UnitElement:
+        showId = true;
         showName = true;
 
         break;
     case Component:
+        showId = true;
         showName = true;
 
         break;
     case Variable:
+        showId = true;
         showName = true;
 
         break;
     case MathmlElement:
+        showId = true;
 
         break;
     case Group:
+        showId = true;
 
         break;
     case RelationshipRef:
+        showId = true;
 
         break;
     case ComponentRef:
+        showId = true;
 
         break;
     case Connection:
+        showId = true;
 
         break;
     case Metadata:
+        showId = true;
 
         break;
     default:
@@ -102,6 +116,9 @@ void CellmlAnnotationViewDetailsWidget::setType(const Type &pType)
 
         break;
     };
+
+    mUi->idLabel->setVisible(showId);
+    mUi->idValue->setVisible(showId);
 
     mUi->nameLabel->setVisible(showName);
     mUi->nameValue->setVisible(showName);
@@ -118,49 +135,61 @@ void CellmlAnnotationViewDetailsWidget::setEmpty()
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::setModel(CellMLSupport::CellmlFileModel *pModel)
+void CellmlAnnotationViewDetailsWidget::setModel(CellMLSupport::CellmlFileElement *pElement)
 {
     // Get the widget ready for some model
 
     setType(Model);
 
-    mUi->nameValue->setText(pModel->name());
+    mUi->idValue->setText(pElement->cmetaId());
+    mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::setImport()
+void CellmlAnnotationViewDetailsWidget::setImport(CellMLSupport::CellmlFileElement *pElement)
 {
     // Get the widget ready for some import
 
     setType(Import);
+
+    mUi->idValue->setText(pElement->cmetaId());
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::setUnit()
+void CellmlAnnotationViewDetailsWidget::setUnit(CellMLSupport::CellmlFileElement *pElement)
 {
     // Get the widget ready for some unit
 
     setType(Unit);
+
+    mUi->idValue->setText(pElement->cmetaId());
+    mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::setUnitElement()
+void CellmlAnnotationViewDetailsWidget::setUnitElement(CellMLSupport::CellmlFileElement *pElement)
 {
     // Get the widget ready for some unit element
 
     setType(UnitElement);
+
+    mUi->idValue->setText(pElement->cmetaId());
+    mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::setComponent()
+void CellmlAnnotationViewDetailsWidget::setComponent(CellMLSupport::CellmlFileElement *pElement)
 {
     // Get the widget ready for some component
 
     setType(Component);
+
+    mUi->idValue->setText(pElement->cmetaId());
+    mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
 }
 
 //==============================================================================

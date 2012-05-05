@@ -82,12 +82,52 @@ CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileModel *pModel) :
 
 //==============================================================================
 
+CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileImport *pImport) :
+    QStandardItem(pImport->uri()),
+    mType(Import),
+    mSubType(None)
+{
+    initialize(mType, mType, text(), pImport);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileUnit *pUnit) :
+    QStandardItem(pUnit->name()),
+    mType(Unit),
+    mSubType(None)
+{
+    initialize(mType, mType, text(), pUnit);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileUnitElement *pUnitElement) :
+    QStandardItem(pUnitElement->name()),
+    mType(UnitElement),
+    mSubType(None)
+{
+    initialize(mType, mType, text(), pUnitElement);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileComponent *pComponent) :
+    QStandardItem(pComponent->name()),
+    mType(Component),
+    mSubType(None)
+{
+    initialize(mType, mType, text(), pComponent);
+}
+
+//==============================================================================
+
 CellmlElementItem::CellmlElementItem(const Type &pType, const QString &pText) :
     QStandardItem(pText),
     mType(pType),
     mSubType(None)
 {
-    initialize(pType, pType, pText, 0);
+    initialize(pType, pType, pText);
 }
 
 //==============================================================================
@@ -98,39 +138,34 @@ CellmlElementItem::CellmlElementItem(const Type &pType, const Type &pSubType,
     mType(pType),
     mSubType(pSubType)
 {
-    initialize(pType, pSubType, pText, 0);
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFileModel * CellmlElementItem::model() const
-{
-    // Return the CellML element item's model
-
-    return mModel;
+    initialize(pType, pSubType, pText);
 }
 
 //==============================================================================
 
 void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
                                    const QString &pText,
-                                   CellMLSupport::CellmlFileModel *pModel)
+                                   CellMLSupport::CellmlFileElement *pElement)
 {
-    // Disable the item in case it's an error/warning item and also use its text
-    // as a tooltip (in case it's too long and therefore doesn't fit within the
-    // allocated space we have)
-    // Note: it will get 're-enabled' by our item delegate
+    // Some settings for the Error, Warning and Category types. In the case of
+    // an Error or Warning type, we use their text as a tooltip (in case it's
+    // too long and therefore doesn't fit within the allocated space we have).
+    // Otherwise, in all the types we handle, the item is disabled though it
+    // will get 're-enabled' by our item delegate...
 
-    if ((pType == Error) || (pType == Warning)) {
-        setEnabled(false);
+    switch (pType) {
+    case Error:
+    case Warning:
         setToolTip(pText);
-    }
-
-    // Disable the item in case it's a category item
-    // Note: it will get 're-enabled' by our item delegate
-
-    if (pType == Category)
+    case Category:
         setEnabled(false);
+
+        break;
+    default:
+        // Type which we don't handle
+
+        break;
+    }
 
     // Determine the icon to be used for the item
 
@@ -192,14 +227,23 @@ void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
 
         break;
     default:
-        // Anything that doesn't require an icon
+        // Sub-type which doesn't require an icon
 
         break;
     }
 
     // CellML element
 
-    mModel = pModel;
+    mElement = pElement;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileElement * CellmlElementItem::element() const
+{
+    // Return the CellML element item's element
+
+    return mElement;
 }
 
 //==============================================================================
@@ -492,8 +536,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                  cellmlFile->imports()) {
             // A model import
 
-            CellmlElementItem *importItem = new CellmlElementItem(CellmlElementItem::Import,
-                                                                  import->uri());
+            CellmlElementItem *importItem = new CellmlElementItem(import);
 
             importsItem->appendRow(importItem);
 
@@ -514,8 +557,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                          import->units())
                     // A model's import's unit
 
-                    unitsItem->appendRow(new CellmlElementItem(CellmlElementItem::Unit,
-                                                               unit->name()));
+                    unitsItem->appendRow(new CellmlElementItem(unit));
             }
 
             // Retrieve the model's import's components
@@ -562,8 +604,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                  cellmlFile->components()) {
             // A model's component
 
-            CellmlElementItem *componentItem = new CellmlElementItem(CellmlElementItem::Component,
-                                                                     component->name());
+            CellmlElementItem *componentItem = new CellmlElementItem(component);
 
             componentsItem->appendRow(componentItem);
 
@@ -736,8 +777,7 @@ void CellmlAnnotationViewWidget::populateUnitsDataModel(CellmlElementItem *pCell
         // Retrieve the units themselves
 
         foreach (CellMLSupport::CellmlFileUnit *unit, pUnits) {
-            CellmlElementItem *unitItem = new CellmlElementItem(CellmlElementItem::Unit,
-                                                                unit->name());
+            CellmlElementItem *unitItem = new CellmlElementItem(unit);
 
             unitsItem->appendRow(unitItem);
 
@@ -746,8 +786,7 @@ void CellmlAnnotationViewWidget::populateUnitsDataModel(CellmlElementItem *pCell
             if (unit->unitElements().count())
                 foreach (CellMLSupport::CellmlFileUnitElement *unitElement,
                          unit->unitElements())
-                    unitItem->appendRow(new CellmlElementItem(CellmlElementItem::UnitElement,
-                                                              unitElement->name()));
+                    unitItem->appendRow(new CellmlElementItem(unitElement));
 
         }
     }
@@ -855,23 +894,23 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
 
     switch (cellmlElementItem->type()) {
     case CellmlElementItem::Model:
-        mDetails->setModel(cellmlElementItem->model());
+        mDetails->setModel(cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Import:
-        mDetails->setImport();
+        mDetails->setImport(cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Unit:
-        mDetails->setUnit();
+        mDetails->setUnit(cellmlElementItem->element());
 
         break;
     case CellmlElementItem::UnitElement:
-        mDetails->setUnitElement();
+        mDetails->setUnitElement(cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Component:
-        mDetails->setComponent();
+        mDetails->setComponent(cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Variable:

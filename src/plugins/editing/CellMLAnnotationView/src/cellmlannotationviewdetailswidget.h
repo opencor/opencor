@@ -56,11 +56,11 @@ public:
     virtual void retranslateUi();
 
     void setEmpty();
-    void setModel(CellMLSupport::CellmlFileModel *pModel);
-    void setImport();
-    void setUnit();
-    void setUnitElement();
-    void setComponent();
+    void setModel(CellMLSupport::CellmlFileElement *pElement);
+    void setImport(CellMLSupport::CellmlFileElement *pElement);
+    void setUnit(CellMLSupport::CellmlFileElement *pElement);
+    void setUnitElement(CellMLSupport::CellmlFileElement *pElement);
+    void setComponent(CellMLSupport::CellmlFileElement *pElement);
     void setVariable();
     void setMathmlElement();
     void setGroup();
