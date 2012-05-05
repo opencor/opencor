@@ -55,26 +55,14 @@ public:
 
     virtual void retranslateUi();
 
-    void setEmpty();
-    void setModel(CellMLSupport::CellmlFileElement *pElement);
-    void setImport(CellMLSupport::CellmlFileElement *pElement);
-    void setUnit(CellMLSupport::CellmlFileElement *pElement);
-    void setUnitElement(CellMLSupport::CellmlFileElement *pElement);
-    void setComponent(CellMLSupport::CellmlFileElement *pElement);
-    void setVariable();
-    void setMathmlElement();
-    void setGroup();
-    void setRelationshipRef();
-    void setComponentRef();
-    void setConnection();
-    void setMetadata();
+    void update(const Type &pType,
+                CellMLSupport::CellmlFileElement *pElement = 0);
 
 private:
     Ui::CellmlAnnotationViewDetailsWidget *mUi;
 
     Type mType;
-
-    void setType(const Type &pType);
+    CellMLSupport::CellmlFileElement *mElement;
 };
 
 //==============================================================================

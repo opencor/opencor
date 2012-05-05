@@ -41,21 +41,33 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
     // Retranslate our UI
 
     mUi->retranslateUi(this);
+
+    // Update the UI (since some labels get reinitialised as a result of the
+    // retranslation)
+
+    update(mType, mElement);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::setType(const Type &pType)
+void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
+                                               CellMLSupport::CellmlFileElement *pElement)
 {
-    if (pType == mType)
-        return;
+    Q_ASSERT(   (((pType == Empty) || (pType == Metadata)) && !pElement)
+             || ((pType != Empty) && (pType != Metadata) && pElement));
 
-    // Show/hide whatever widget is required / not required for the new type
+    // Keep track of the new type and element
 
     mType = pType;
+    mElement = pElement;
+
+    // Determine which widget should be shown/hidden
 
     bool showId = false;
     bool showName = false;
+    bool showUri = false;
+    bool showRelationshipRef = false;
+    bool showComponentRef = false;
 
     switch (pType) {
     case Model:
@@ -65,6 +77,7 @@ void CellmlAnnotationViewDetailsWidget::setType(const Type &pType)
         break;
     case Import:
         showId = true;
+        showUri = true;
 
         break;
     case Unit:
@@ -97,10 +110,12 @@ void CellmlAnnotationViewDetailsWidget::setType(const Type &pType)
         break;
     case RelationshipRef:
         showId = true;
+        showRelationshipRef = true;
 
         break;
     case ComponentRef:
         showId = true;
+        showComponentRef = true;
 
         break;
     case Connection:
@@ -117,142 +132,35 @@ void CellmlAnnotationViewDetailsWidget::setType(const Type &pType)
         break;
     };
 
+    // Show/hide the relevant widgets
+
     mUi->idLabel->setVisible(showId);
     mUi->idValue->setVisible(showId);
 
-    mUi->nameLabel->setVisible(showName);
-    mUi->nameValue->setVisible(showName);
-}
+    bool showNameField =    showName || showUri
+                         || showRelationshipRef || showComponentRef;
 
-//==============================================================================
+    mUi->nameLabel->setVisible(showNameField);
+    mUi->nameValue->setVisible(showNameField);
 
-void CellmlAnnotationViewDetailsWidget::setEmpty()
-{
-    // Empty the widget
+    // Update the value of the widgets which are shown
 
-    setType(Empty);
-}
+    if (showId)
+        mUi->idValue->setText(pElement->cmetaId());
 
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setModel(CellMLSupport::CellmlFileElement *pElement)
-{
-    // Get the widget ready for some model
-
-    setType(Model);
-
-    mUi->idValue->setText(pElement->cmetaId());
-    mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setImport(CellMLSupport::CellmlFileElement *pElement)
-{
-    // Get the widget ready for some import
-
-    setType(Import);
-
-    mUi->idValue->setText(pElement->cmetaId());
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setUnit(CellMLSupport::CellmlFileElement *pElement)
-{
-    // Get the widget ready for some unit
-
-    setType(Unit);
-
-    mUi->idValue->setText(pElement->cmetaId());
-    mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setUnitElement(CellMLSupport::CellmlFileElement *pElement)
-{
-    // Get the widget ready for some unit element
-
-    setType(UnitElement);
-
-    mUi->idValue->setText(pElement->cmetaId());
-    mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setComponent(CellMLSupport::CellmlFileElement *pElement)
-{
-    // Get the widget ready for some component
-
-    setType(Component);
-
-    mUi->idValue->setText(pElement->cmetaId());
-    mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setVariable()
-{
-    // Get the widget ready for some variable
-
-    setType(Variable);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setMathmlElement()
-{
-    // Get the widget ready for some MathML element
-
-    setType(MathmlElement);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setGroup()
-{
-    // Get the widget ready for some group
-
-    setType(Group);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setRelationshipRef()
-{
-    // Get the widget ready for some relationship ref(erence)
-
-    setType(RelationshipRef);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setComponentRef()
-{
-    // Get the widget ready for some component ref(erence)
-
-    setType(ComponentRef);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setConnection()
-{
-    // Get the widget ready for some connection
-
-    setType(Connection);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::setMetadata()
-{
-    // Get the widget ready for some metadata
-
-    setType(Metadata);
+    if (showName) {
+        mUi->nameLabel->setText(tr("Name:"));
+        mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
+    } else if (showUri) {
+        mUi->nameLabel->setText(tr("URI:"));
+        mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
+    } else if (showRelationshipRef) {
+        mUi->nameLabel->setText(tr("Relationship reference:"));
+        mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
+    } else if (showComponentRef) {
+        mUi->nameLabel->setText(tr("Component reference:"));
+        mUi->nameValue->setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
+    }
 }
 
 //==============================================================================

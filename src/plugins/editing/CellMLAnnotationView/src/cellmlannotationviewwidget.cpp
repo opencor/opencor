@@ -52,7 +52,7 @@ void CellmlItemDelegate::paint(QPainter *pPainter,
 
     if (   (cellmlElementItem->type() == CellmlElementItem::Error)
         || (cellmlElementItem->type() == CellmlElementItem::Warning)
-        || (cellmlElementItem->type() == CellmlElementItem::Category)) {
+        || cellmlElementItem->isCategory()) {
         // This is an error/warning/category item, so prevent it from being
         // hoverable. Otherwise, show the item enabled since it's actually
         // disabled (so we can't select it), yet we want to see as if it was
@@ -63,8 +63,7 @@ void CellmlItemDelegate::paint(QPainter *pPainter,
 
         // In the case of a category, we make the font bold
 
-        if (cellmlElementItem->type() == CellmlElementItem::Category)
-            option.font.setBold(true);
+        option.font.setBold(cellmlElementItem->isCategory());
     }
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
@@ -72,169 +71,148 @@ void CellmlItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileModel *pModel) :
-    QStandardItem(pModel->name()),
-    mType(Model),
-    mSubType(None)
-{
-    initialize(mType, mType, text(), pModel);
-}
-
-//==============================================================================
-
-CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileImport *pImport) :
-    QStandardItem(pImport->uri()),
-    mType(Import),
-    mSubType(None)
-{
-    initialize(mType, mType, text(), pImport);
-}
-
-//==============================================================================
-
-CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileUnit *pUnit) :
-    QStandardItem(pUnit->name()),
-    mType(Unit),
-    mSubType(None)
-{
-    initialize(mType, mType, text(), pUnit);
-}
-
-//==============================================================================
-
-CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileUnitElement *pUnitElement) :
-    QStandardItem(pUnitElement->name()),
-    mType(UnitElement),
-    mSubType(None)
-{
-    initialize(mType, mType, text(), pUnitElement);
-}
-
-//==============================================================================
-
-CellmlElementItem::CellmlElementItem(CellMLSupport::CellmlFileComponent *pComponent) :
-    QStandardItem(pComponent->name()),
-    mType(Component),
-    mSubType(None)
-{
-    initialize(mType, mType, text(), pComponent);
-}
-
-//==============================================================================
-
-CellmlElementItem::CellmlElementItem(const Type &pType, const QString &pText) :
-    QStandardItem(pText),
+CellmlElementItem::CellmlElementItem(const Type &pType,
+                                     CellMLSupport::CellmlFileElement *pElement) :
+    QStandardItem(),
+    mCategory(false),
     mType(pType),
-    mSubType(None)
+    mElement(pElement)
 {
-    initialize(pType, pType, pText);
-}
-
-//==============================================================================
-
-CellmlElementItem::CellmlElementItem(const Type &pType, const Type &pSubType,
-                                     const QString &pText) :
-    QStandardItem(pText),
-    mType(pType),
-    mSubType(pSubType)
-{
-    initialize(pType, pSubType, pText);
-}
-
-//==============================================================================
-
-void CellmlElementItem::initialize(const Type &pType, const Type &pSubType,
-                                   const QString &pText,
-                                   CellMLSupport::CellmlFileElement *pElement)
-{
-    // Some settings for the Error, Warning and Category types. In the case of
-    // an Error or Warning type, we use their text as a tooltip (in case it's
-    // too long and therefore doesn't fit within the allocated space we have).
-    // Otherwise, in all the types we handle, the item is disabled though it
-    // will get 're-enabled' by our item delegate...
+    // Set the text
 
     switch (pType) {
-    case Error:
-    case Warning:
-        setToolTip(pText);
-    case Category:
-        setEnabled(false);
-
-        break;
-    default:
-        // Type which we don't handle
-
-        break;
-    }
-
-    // Determine the icon to be used for the item
-
-    switch (pSubType) {
-    case Error:
-        setIcon(QIcon(":CellMLSupport_errorNode"));
-
-        break;
-    case Warning:
-        setIcon(QIcon(":CellMLSupport_warningNode"));
-
-        break;
-    case Model:
-        setIcon(QIcon(":CellMLSupport_modelNode"));
-
-        break;
     case Import:
-        setIcon(QIcon(":CellMLSupport_importNode"));
-
-        break;
-    case Unit:
-        setIcon(QIcon(":CellMLSupport_unitNode"));
-
-        break;
-    case UnitElement:
-        setIcon(QIcon(":CellMLSupport_unitElementNode"));
-
-        break;
-    case Component:
-        setIcon(QIcon(":CellMLSupport_componentNode"));
-
-        break;
-    case Variable:
-        setIcon(QIcon(":CellMLSupport_variableNode"));
-
-        break;
-    case MathmlElement:
-        setIcon(QIcon(":CellMLSupport_mathmlElementNode"));
-
-        break;
-    case Group:
-        setIcon(QIcon(":CellMLSupport_groupNode"));
+        setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
 
         break;
     case RelationshipRef:
-        setIcon(QIcon(":CellMLSupport_relationshipRefNode"));
+        setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
 
         break;
     case ComponentRef:
-        setIcon(QIcon(":CellMLSupport_componentRefNode"));
-
-        break;
-    case Connection:
-        setIcon(QIcon(":CellMLSupport_connectionNode"));
-
-        break;
-    case Metadata:
-        setIcon(QIcon(":CellMLSupport_metadataNode"));
+        setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
 
         break;
     default:
-        // Sub-type which doesn't require an icon
+        // Another type of element which has a name
+
+        setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
 
         break;
     }
 
-    // CellML element
+    // Set the icon for the item
 
-    mElement = pElement;
+    setIcon(mType);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(const bool &pError, const QString &pText) :
+    QStandardItem(pText),
+    mCategory(false),
+    mType(pError?Error:Warning),
+    mElement(0)
+{
+    // Disable the item and use its text as a tooltip (in case it's too long and
+    // therefore doesn't fit within the allocated space we have)
+    // Note: the item will get 're-enabled' by our item delegate...
+
+    setEnabled(false);
+    setToolTip(pText);
+
+    // Set the icon for the item
+
+    setIcon(mType);
+}
+
+//==============================================================================
+
+CellmlElementItem::CellmlElementItem(const bool &pCategory,
+                                     const Type &pType, const QString &pText) :
+    QStandardItem(pText),
+    mCategory(pCategory),
+    mType(pType),
+    mElement(0)
+{
+    // Disable the item in case it is a category
+    // Note: the item will get 're-enabled' by our item delegate...
+
+    setEnabled(!pCategory);
+
+    // Set the icon for the item
+
+    setIcon(pType);
+}
+
+//==============================================================================
+
+void CellmlElementItem::setIcon(const Type &pType)
+{
+    // Determine the icon to be used for the item
+
+    switch (pType) {
+    case Error:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_errorNode"));
+
+        break;
+    case Warning:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_warningNode"));
+
+        break;
+    case Model:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_modelNode"));
+
+        break;
+    case Import:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_importNode"));
+
+        break;
+    case Unit:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_unitNode"));
+
+        break;
+    case UnitElement:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_unitElementNode"));
+
+        break;
+    case Component:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_componentNode"));
+
+        break;
+    case Variable:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_variableNode"));
+
+        break;
+    case MathmlElement:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_mathmlElementNode"));
+
+        break;
+    case Group:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_groupNode"));
+
+        break;
+    case RelationshipRef:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_relationshipRefNode"));
+
+        break;
+    case ComponentRef:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_componentRefNode"));
+
+        break;
+    case Connection:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_connectionNode"));
+
+        break;
+    case Metadata:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_metadataNode"));
+
+        break;
+    default:
+        // Type which doesn't require an icon
+
+        break;
+    }
 }
 
 //==============================================================================
@@ -248,20 +226,20 @@ CellMLSupport::CellmlFileElement * CellmlElementItem::element() const
 
 //==============================================================================
 
+bool CellmlElementItem::isCategory() const
+{
+    // Return wether the CellML element item is a category or not
+
+    return mCategory;
+}
+
+//==============================================================================
+
 int CellmlElementItem::type() const
 {
     // Return the CellML element item's type
 
     return mType;
-}
-
-//==============================================================================
-
-int CellmlElementItem::subType() const
-{
-    // Return the CellML element item's sub-type
-
-    return mSubType;
 }
 
 //==============================================================================
@@ -361,6 +339,11 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     resizeCellmlTreeViewToContents();
     mMetadataTreeView->resizeColumnToContents(0);
+
+    // Select the first CellML node, if any
+
+    if (mCellmlDataModel->invisibleRootItem()->rowCount())
+        mCellmlTreeView->setCurrentIndex(mCellmlDataModel->invisibleRootItem()->child(0)->index());
 }
 
 //==============================================================================
@@ -394,14 +377,12 @@ void CellmlAnnotationViewWidget::retranslateCellmlDataItem(CellmlElementItem *pC
     for (int i = 0, iMax = pCellmlElementItem->rowCount(); i < iMax; ++i)
         retranslateCellmlDataItem(static_cast<CellmlElementItem *>(pCellmlElementItem->child(i)));
 
-    // Check whether the current node needs retranslating
+    // Check whether we are dealing with a category or not
 
-    switch (pCellmlElementItem->type()) {
-    case CellmlElementItem::Category:
-        // We are dealing with a category, so we need to check its sub-type to
-        // know how to retranslate it
+    if (pCellmlElementItem->isCategory())
+        // We are dealing with a category, so retranslate its type
 
-        switch (pCellmlElementItem->subType()) {
+        switch (pCellmlElementItem->type()) {
         case CellmlElementItem::Import:
             pCellmlElementItem->setText(tr("Imports"));
 
@@ -439,29 +420,32 @@ void CellmlAnnotationViewWidget::retranslateCellmlDataItem(CellmlElementItem *pC
 
             break;
         default:
+            // Not a type we can retranslate, so do nothing...
+
+            break;
+        }
+    else
+        // We are not dealing with a category, so check the type and see whether
+        // node needs retranslating
+
+        switch (pCellmlElementItem->type()) {
+        case CellmlElementItem::MathmlElement:
+            pCellmlElementItem->setText(tr("MathML element #%1").arg(pCellmlElementItem->text().remove(QRegExp("^[^#]+#"))));
+
+            break;
+        case CellmlElementItem::Group:
+            pCellmlElementItem->setText(tr("Group #%1").arg(pCellmlElementItem->text().remove(QRegExp("^[^#]+#"))));
+
+            break;
+        case CellmlElementItem::Connection:
+            pCellmlElementItem->setText(tr("Connection #%1").arg(pCellmlElementItem->text().remove(QRegExp("^[^#]+#"))));
+
+            break;
+        default:
             // Not a sub-type we can retranslate, so do nothing...
 
             break;
         }
-
-        break;
-    case CellmlElementItem::MathmlElement:
-        pCellmlElementItem->setText(tr("MathML element #%1").arg(pCellmlElementItem->text().remove(QRegExp("^[^#]+#"))));
-
-        break;
-    case CellmlElementItem::Group:
-        pCellmlElementItem->setText(tr("Group #%1").arg(pCellmlElementItem->text().remove(QRegExp("^[^#]+#"))));
-
-        break;
-    case CellmlElementItem::Connection:
-        pCellmlElementItem->setText(tr("Connection #%1").arg(pCellmlElementItem->text().remove(QRegExp("^[^#]+#"))));
-
-        break;
-    default:
-        // Not a sub-type we can retranslate, so do nothing...
-
-        break;
-    }
 }
 
 //==============================================================================
@@ -507,15 +491,17 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
         // Something went wrong while trying to load the CellML file, so report
         // it and leave
 
-        mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem((cellmlFile->issues().first().type() == CellMLSupport::CellmlFileIssue::Error)?CellmlElementItem::Error:CellmlElementItem::Warning,
+        mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(cellmlFile->issues().first().type() == CellMLSupport::CellmlFileIssue::Error,
                                                                                cellmlFile->issues().first().formattedMessage()));
 
         return;
     }
+mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(true, "For testing..."));
 
     // Retrieve the model's root
 
-    CellmlElementItem *modelItem = new CellmlElementItem(cellmlFile->model());
+    CellmlElementItem *modelItem = new CellmlElementItem(CellmlElementItem::Model,
+                                                         cellmlFile->model());
 
     mCellmlDataModel->invisibleRootItem()->appendRow(modelItem);
 
@@ -524,7 +510,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
     if (cellmlFile->imports().count()) {
         // Imports category
 
-        CellmlElementItem *importsItem = new CellmlElementItem(CellmlElementItem::Category,
+        CellmlElementItem *importsItem = new CellmlElementItem(true,
                                                                CellmlElementItem::Import,
                                                                tr("Imports"));
 
@@ -536,7 +522,8 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                  cellmlFile->imports()) {
             // A model import
 
-            CellmlElementItem *importItem = new CellmlElementItem(import);
+            CellmlElementItem *importItem = new CellmlElementItem(CellmlElementItem::Import,
+                                                                  import);
 
             importsItem->appendRow(importItem);
 
@@ -545,7 +532,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
             if (import->units().count()) {
                 // Units category
 
-                CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Category,
+                CellmlElementItem *unitsItem = new CellmlElementItem(true,
                                                                      CellmlElementItem::Unit,
                                                                      tr("Units"));
 
@@ -557,7 +544,8 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                          import->units())
                     // A model's import's unit
 
-                    unitsItem->appendRow(new CellmlElementItem(unit));
+                    unitsItem->appendRow(new CellmlElementItem(CellmlElementItem::Unit,
+                                                               unit));
             }
 
             // Retrieve the model's import's components
@@ -565,7 +553,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
             if (import->components().count()) {
                 // Components category
 
-                CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Category,
+                CellmlElementItem *componentsItem = new CellmlElementItem(true,
                                                                           CellmlElementItem::Component,
                                                                           tr("Components"));
 
@@ -578,7 +566,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                     // A model's import's component
 
                     componentsItem->appendRow(new CellmlElementItem(CellmlElementItem::Component,
-                                                                    component->name()));
+                                                                    component));
             }
         }
     }
@@ -592,7 +580,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
     if (cellmlFile->components().count()) {
         // Components category
 
-        CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Category,
+        CellmlElementItem *componentsItem = new CellmlElementItem(true,
                                                                   CellmlElementItem::Component,
                                                                   tr("Components"));
 
@@ -604,7 +592,8 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                  cellmlFile->components()) {
             // A model's component
 
-            CellmlElementItem *componentItem = new CellmlElementItem(component);
+            CellmlElementItem *componentItem = new CellmlElementItem(CellmlElementItem::Component,
+                                                                     component);
 
             componentsItem->appendRow(componentItem);
 
@@ -617,7 +606,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
             if (component->variables().count()) {
                 // Variables category
 
-                CellmlElementItem *variablesItem = new CellmlElementItem(CellmlElementItem::Category,
+                CellmlElementItem *variablesItem = new CellmlElementItem(true,
                                                                          CellmlElementItem::Variable,
                                                                          tr("Variables"));
 
@@ -628,7 +617,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                 foreach (CellMLSupport::CellmlFileVariable *variable,
                          component->variables())
                     variablesItem->appendRow(new CellmlElementItem(CellmlElementItem::Variable,
-                                                                   variable->name()));
+                                                                   variable));
             }
 
             // Retrieve the model's component's MathML elements
@@ -636,7 +625,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
             if (component->mathmlElements().count()) {
                 // MathML elements category
 
-                CellmlElementItem *mathmlElementsItem = new CellmlElementItem(CellmlElementItem::Category,
+                CellmlElementItem *mathmlElementsItem = new CellmlElementItem(true,
                                                                               CellmlElementItem::MathmlElement,
                                                                               tr("MathML Elements"));
 
@@ -645,7 +634,8 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                 // Retrieve the model's component's MathML elements themselves
 
                 for (int i = 1, iMax = component->mathmlElements().count(); i <= iMax; ++i)
-                    mathmlElementsItem->appendRow(new CellmlElementItem(CellmlElementItem::MathmlElement,
+                    mathmlElementsItem->appendRow(new CellmlElementItem(false,
+                                                                        CellmlElementItem::MathmlElement,
                                                                         tr("MathML element #%1").arg(QString::number(i))));
             }
         }
@@ -656,7 +646,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
     if (cellmlFile->groups().count()) {
         // Groups category
 
-        CellmlElementItem *groupsItem = new CellmlElementItem(CellmlElementItem::Category,
+        CellmlElementItem *groupsItem = new CellmlElementItem(true,
                                                               CellmlElementItem::Group,
                                                               tr("Groups"));
 
@@ -669,7 +659,8 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
         foreach (CellMLSupport::CellmlFileGroup *group, cellmlFile->groups()) {
             // A model's group
 
-            CellmlElementItem *groupItem = new CellmlElementItem(CellmlElementItem::Group,
+            CellmlElementItem *groupItem = new CellmlElementItem(false,
+                                                                 CellmlElementItem::Group,
                                                                  tr("Group #%1").arg(QString::number(++counter)));
 
             groupsItem->appendRow(groupItem);
@@ -679,7 +670,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
             if (group->relationshipRefs().count()) {
                 // Relationship ref(erence)s category
 
-                CellmlElementItem *relationshipRefsItem = new CellmlElementItem(CellmlElementItem::Category,
+                CellmlElementItem *relationshipRefsItem = new CellmlElementItem(true,
                                                                                 CellmlElementItem::RelationshipRef,
                                                                                 tr("Relationship References"));
 
@@ -691,7 +682,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                 foreach (CellMLSupport::CellmlFileRelationshipRef *relationshipRef,
                          group->relationshipRefs())
                     relationshipRefsItem->appendRow(new CellmlElementItem(CellmlElementItem::RelationshipRef,
-                                                                          relationshipRef->relationship()));
+                                                                          relationshipRef));
             }
 
             // Retrieve the model's group's component ref(erence)s
@@ -699,7 +690,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
             if (group->componentRefs().count()) {
                 // Component ref(erence)s category
 
-                CellmlElementItem *componentRefsItem = new CellmlElementItem(CellmlElementItem::Category,
+                CellmlElementItem *componentRefsItem = new CellmlElementItem(true,
                                                                              CellmlElementItem::ComponentRef,
                                                                              tr("Component References"));
 
@@ -721,7 +712,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
     if (cellmlFile->connections().count()) {
         // Connections category
 
-        CellmlElementItem *connectionsItem = new CellmlElementItem(CellmlElementItem::Category,
+        CellmlElementItem *connectionsItem = new CellmlElementItem(true,
                                                                    CellmlElementItem::Connection,
                                                                    tr("Connections"));
 
@@ -734,14 +725,16 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
         foreach (CellMLSupport::CellmlFileConnection *connection, cellmlFile->connections()) {
             // A model's connection
 
-            CellmlElementItem *connectionItem = new CellmlElementItem(CellmlElementItem::Connection,
+            CellmlElementItem *connectionItem = new CellmlElementItem(false,
+                                                                      CellmlElementItem::Connection,
                                                                       tr("Connection #%1").arg(QString::number(++counter)));
 
             connectionsItem->appendRow(connectionItem);
 
             // Component mapping
 
-            connectionItem->appendRow(new CellmlElementItem(CellmlElementItem::Component,
+            connectionItem->appendRow(new CellmlElementItem(false,
+                                                            CellmlElementItem::Component,
                                                             QString("%1 %2 %3").arg(connection->componentMapping()->firstComponentName(),
                                                                                     mRightArrow,
                                                                                     connection->componentMapping()->secondComponentName())));
@@ -750,7 +743,8 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
 
             foreach (CellMLSupport::CellmlFileMapVariablesItem *mapVariablesItem,
                      connection->variableMappings())
-                connectionItem->appendRow(new CellmlElementItem(CellmlElementItem::Variable,
+                connectionItem->appendRow(new CellmlElementItem(false,
+                                                                CellmlElementItem::Variable,
                                                                 QString("%1 %2 %3").arg(mapVariablesItem->firstVariableName(),
                                                                                         mRightArrow,
                                                                                         mapVariablesItem->secondVariableName())));
@@ -768,16 +762,17 @@ void CellmlAnnotationViewWidget::populateUnitsDataModel(CellmlElementItem *pCell
     if (pUnits.count()) {
         // Units category
 
-        CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Category,
-                                                                   CellmlElementItem::Unit,
-                                                                   tr("Units"));
+        CellmlElementItem *unitsItem = new CellmlElementItem(true,
+                                                             CellmlElementItem::Unit,
+                                                             tr("Units"));
 
         pCellmlElementItem->appendRow(unitsItem);
 
         // Retrieve the units themselves
 
         foreach (CellMLSupport::CellmlFileUnit *unit, pUnits) {
-            CellmlElementItem *unitItem = new CellmlElementItem(unit);
+            CellmlElementItem *unitItem = new CellmlElementItem(CellmlElementItem::Unit,
+                                                                unit);
 
             unitsItem->appendRow(unitItem);
 
@@ -786,7 +781,8 @@ void CellmlAnnotationViewWidget::populateUnitsDataModel(CellmlElementItem *pCell
             if (unit->unitElements().count())
                 foreach (CellMLSupport::CellmlFileUnitElement *unitElement,
                          unit->unitElements())
-                    unitItem->appendRow(new CellmlElementItem(unitElement));
+                    unitItem->appendRow(new CellmlElementItem(CellmlElementItem::UnitElement,
+                                                              unitElement));
 
         }
     }
@@ -798,7 +794,7 @@ void CellmlAnnotationViewWidget::populateComponentRefDataModel(CellmlElementItem
                                                                CellMLSupport::CellmlFileComponentRef *pComponentRef)
 {
     CellmlElementItem *componentRefItem = new CellmlElementItem(CellmlElementItem::ComponentRef,
-                                                                pComponentRef->component());
+                                                                pComponentRef);
 
     pCellmlElementItem->appendRow(componentRefItem);
 
@@ -832,7 +828,8 @@ void CellmlAnnotationViewWidget::populateMetadataDataModel(const QString &pFileN
     // Retrieve the name of the different groups of triples
 
     foreach (const QString &groupName, cellmlFile->metadata().uniqueKeys())
-        mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(CellmlElementItem::Metadata,
+        mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(false,
+                                                                                 CellmlElementItem::Metadata,
                                                                                  groupName));
 }
 
@@ -894,57 +891,69 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
 
     switch (cellmlElementItem->type()) {
     case CellmlElementItem::Model:
-        mDetails->setModel(cellmlElementItem->element());
+        mDetails->update(CellmlAnnotationViewDetailsWidget::Model,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Import:
-        mDetails->setImport(cellmlElementItem->element());
+        mDetails->update(CellmlAnnotationViewDetailsWidget::Import,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Unit:
-        mDetails->setUnit(cellmlElementItem->element());
+        mDetails->update(CellmlAnnotationViewDetailsWidget::Unit,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::UnitElement:
-        mDetails->setUnitElement(cellmlElementItem->element());
+        mDetails->update(CellmlAnnotationViewDetailsWidget::UnitElement,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Component:
-        mDetails->setComponent(cellmlElementItem->element());
+        mDetails->update(CellmlAnnotationViewDetailsWidget::Component,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Variable:
-        mDetails->setVariable();
+        mDetails->update(CellmlAnnotationViewDetailsWidget::Variable,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::MathmlElement:
-        mDetails->setMathmlElement();
+        mDetails->update(CellmlAnnotationViewDetailsWidget::MathmlElement,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Group:
-        mDetails->setGroup();
+        mDetails->update(CellmlAnnotationViewDetailsWidget::Group,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::RelationshipRef:
-        mDetails->setRelationshipRef();
+        mDetails->update(CellmlAnnotationViewDetailsWidget::RelationshipRef,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::ComponentRef:
-        mDetails->setComponentRef();
+        mDetails->update(CellmlAnnotationViewDetailsWidget::ComponentRef,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Connection:
-        mDetails->setConnection();
+        mDetails->update(CellmlAnnotationViewDetailsWidget::Connection,
+                         cellmlElementItem->element());
 
         break;
     case CellmlElementItem::Metadata:
-        mDetails->setMetadata();
+        mDetails->update(CellmlAnnotationViewDetailsWidget::Metadata,
+                         cellmlElementItem->element());
 
         break;
     default:
         // Either an error, warning or category, so nothing to show...
 
-        mDetails->setEmpty();
+        mDetails->update(CellmlAnnotationViewDetailsWidget::Empty);
 
         break;
     }
@@ -958,7 +967,7 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
     Q_UNUSED(pNewIndex);
     Q_UNUSED(pOldIndex);
 
-    mDetails->setMetadata();
+    mDetails->update(CellmlAnnotationViewDetailsWidget::Metadata);
 }
 
 //==============================================================================

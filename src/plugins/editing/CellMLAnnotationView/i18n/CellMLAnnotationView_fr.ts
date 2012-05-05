@@ -20,6 +20,25 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewDetailsWidget</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nom :</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI :</translation>
+    </message>
+    <message>
+        <source>Relationship reference:</source>
+        <translation>Référence de relation :</translation>
+    </message>
+    <message>
+        <source>Component reference:</source>
+        <translation>Référence de composant :</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewWidget</name>
     <message>
         <source>Imports</source>
