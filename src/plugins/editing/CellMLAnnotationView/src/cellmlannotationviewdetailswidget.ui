@@ -10,60 +10,37 @@
     <height>240</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="margin">
-    <number>0</number>
-   </property>
-   <item>
-    <widget class="QWidget" name="detailsWidget" native="true">
-     <layout class="QFormLayout" name="detailsFormLayout">
+     <layout class="QFormLayout" name="formLayout">
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
       </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="cmetaIdLabel">
+       <widget class="QLabel" name="field01Label">
         <property name="font">
          <font>
           <weight>75</weight>
           <bold>true</bold>
          </font>
-        </property>
-        <property name="text">
-         <string>cmeta:id:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="cmetaIdValue">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
+       <widget class="QLineEdit" name="field01Value"/>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="nameLabel">
+       <widget class="QLabel" name="field02Label">
         <property name="font">
          <font>
           <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
-        <property name="text">
-         <string>Name:</string>
-        </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="nameValue">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
+       <widget class="QLabel" name="field02Value"/>
       </item>
      </layout>
-    </widget>
-   </item>
-  </layout>
  </widget>
  <resources/>
  <connections/>

@@ -2,17 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CellmlAnnotationViewDetailsWidget</name>
-    <message>
-        <source>Name:</source>
-        <translation>Nom :</translation>
-    </message>
-    <message>
-        <source>cmeta:id:</source>
-        <translation>cmeta:id :</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>
     <message>
         <source>CellML Annotation</source>
@@ -36,6 +25,10 @@
     <message>
         <source>Component reference:</source>
         <translation>Référence de composant :</translation>
+    </message>
+    <message>
+        <source>cmeta:id:</source>
+        <translation>cmeta:id :</translation>
     </message>
 </context>
 <context>
