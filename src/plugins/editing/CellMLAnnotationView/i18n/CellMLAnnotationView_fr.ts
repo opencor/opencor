@@ -30,6 +30,10 @@
         <source>Component reference:</source>
         <translation>Référence de composant :</translation>
     </message>
+    <message>
+        <source>Reference name:</source>
+        <translation>Nom de référence :</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewWidget</name>

@@ -42,6 +42,8 @@ public:
         Empty,
         Model,
         Import,
+        ImportUnit,
+        ImportComponent,
         Unit,
         UnitElement,
         Component,
@@ -83,6 +85,9 @@ private:
     QLabel *mUriLabel;
     QLabel *mUriValue;
 
+    QLabel *mReferenceNameLabel;
+    QLabel *mReferenceNameValue;
+
     QLabel *mRelationshipRefLabel;
     QLabel *mRelationshipRefValue;
 
@@ -91,7 +96,8 @@ private:
 
     void updateGui(const Type &pType,
                    CellMLSupport::CellmlFileElement *pElement,
-                   CellMLSupport::CellmlFileMathmlElement *pMathmlElement);
+                   CellMLSupport::CellmlFileMathmlElement *pMathmlElement,
+                   const bool &pNeedRetranslating = false);
 };
 
 //==============================================================================

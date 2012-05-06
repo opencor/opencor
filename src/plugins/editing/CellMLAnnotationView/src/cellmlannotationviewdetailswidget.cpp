@@ -50,7 +50,7 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
     // Update the GUI (since some labels get reinitialised as a result of the
     // retranslation)
 
-    updateGui(mType, mElement, mMathmlElement);
+    updateGui(mType, mElement, mMathmlElement, true);
 }
 
 //==============================================================================
@@ -80,11 +80,12 @@ void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
 
 void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
                                                   CellMLSupport::CellmlFileElement *pElement,
-                                                  CellMLSupport::CellmlFileMathmlElement *pMathmlElement)
+                                                  CellMLSupport::CellmlFileMathmlElement *pMathmlElement,
+                                                  const bool &pNeedRetranslating)
 {
     // Keep track of the new type and elements
 
-    bool needUpdatingGui = mType != pType;
+    bool needUpdatingGui = (mType != pType) || pNeedRetranslating;
 
     mType = pType;
 
@@ -96,6 +97,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     bool showCmetaId = false;
     bool showName = false;
     bool showUri = false;
+    bool showReferenceName = false;
     bool showRelationshipRef = false;
     bool showComponentRef = false;
 
@@ -108,6 +110,18 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     case Import:
         showCmetaId = true;
         showUri = true;
+
+        break;
+    case ImportUnit:
+        showCmetaId = true;
+        showName = true;
+        showReferenceName = true;
+
+        break;
+    case ImportComponent:
+        showCmetaId = true;
+        showName = true;
+        showReferenceName = true;
 
         break;
     case Unit:
@@ -225,6 +239,16 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
             mUriValue = 0;
         }
 
+        if (showReferenceName) {
+            mReferenceNameLabel = new QLabel(tr("Reference name:"), this);
+            mReferenceNameValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mReferenceNameLabel, mReferenceNameValue);
+        } else {
+            mReferenceNameLabel = 0;
+            mReferenceNameValue = 0;
+        }
+
         if (showRelationshipRef) {
             mRelationshipRefLabel = new QLabel(tr("Relationship reference:"), this);
             mRelationshipRefValue = new QLabel(this);
@@ -256,6 +280,13 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
     if (showUri)
         mUriValue->setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
+
+    if (showReferenceName) {
+        if (pType == ImportUnit)
+            mReferenceNameValue->setText(static_cast<CellMLSupport::CellmlFileImportUnit *>(pElement)->referenceName());
+        else
+            mReferenceNameValue->setText(static_cast<CellMLSupport::CellmlFileImportComponent *>(pElement)->referenceName());
+    }
 
     if (showRelationshipRef)
         mRelationshipRefValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());

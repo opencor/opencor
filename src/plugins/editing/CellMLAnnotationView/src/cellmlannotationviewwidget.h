@@ -68,18 +68,20 @@ public:
         Warning          = QStandardItem::UserType+2,
         Model            = QStandardItem::UserType+3,
         Import           = QStandardItem::UserType+4,
-        Unit             = QStandardItem::UserType+5,
-        UnitElement      = QStandardItem::UserType+6,
-        Component        = QStandardItem::UserType+7,
-        Variable         = QStandardItem::UserType+8,
-        MathmlElement    = QStandardItem::UserType+9,
-        Group            = QStandardItem::UserType+10,
-        RelationshipRef  = QStandardItem::UserType+11,
-        ComponentRef     = QStandardItem::UserType+12,
-        Connection       = QStandardItem::UserType+13,
-        ComponentMapping = QStandardItem::UserType+14,
-        VariableMapping  = QStandardItem::UserType+15,
-        Metadata         = QStandardItem::UserType+16
+        ImportUnit       = QStandardItem::UserType+5,
+        ImportComponent  = QStandardItem::UserType+6,
+        Unit             = QStandardItem::UserType+7,
+        UnitElement      = QStandardItem::UserType+8,
+        Component        = QStandardItem::UserType+9,
+        Variable         = QStandardItem::UserType+10,
+        MathmlElement    = QStandardItem::UserType+11,
+        Group            = QStandardItem::UserType+12,
+        RelationshipRef  = QStandardItem::UserType+13,
+        ComponentRef     = QStandardItem::UserType+14,
+        Connection       = QStandardItem::UserType+15,
+        ComponentMapping = QStandardItem::UserType+16,
+        VariableMapping  = QStandardItem::UserType+17,
+        Metadata         = QStandardItem::UserType+18
     };
 
     explicit CellmlElementItem(const bool &pError, const QString &pText);

@@ -236,6 +236,7 @@ void CellmlElementItem::setIcon(const Type &pType)
         QStandardItem::setIcon(QIcon(":CellMLSupport_importNode"));
 
         break;
+    case ImportUnit:
     case Unit:
         QStandardItem::setIcon(QIcon(":CellMLSupport_unitNode"));
 
@@ -244,6 +245,7 @@ void CellmlElementItem::setIcon(const Type &pType)
         QStandardItem::setIcon(QIcon(":CellMLSupport_unitElementNode"));
 
         break;
+    case ImportComponent:
     case Component:
     case ComponentMapping:
         QStandardItem::setIcon(QIcon(":CellMLSupport_componentNode"));
@@ -602,7 +604,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
             if (import->units().count()) {
                 // Units category
 
-                CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Unit,
+                CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::ImportUnit,
                                                                      tr("Units"));
 
                 importItem->appendRow(unitsItem);
@@ -613,7 +615,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                          import->units())
                     // A model's import's unit
 
-                    unitsItem->appendRow(new CellmlElementItem(CellmlElementItem::Unit,
+                    unitsItem->appendRow(new CellmlElementItem(CellmlElementItem::ImportUnit,
                                                                unit));
             }
 
@@ -622,7 +624,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
             if (import->components().count()) {
                 // Components category
 
-                CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Component,
+                CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::ImportComponent,
                                                                           tr("Components"));
 
                 importItem->appendRow(componentsItem);
@@ -633,7 +635,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
                          import->components())
                     // A model's import's component
 
-                    componentsItem->appendRow(new CellmlElementItem(CellmlElementItem::Component,
+                    componentsItem->appendRow(new CellmlElementItem(CellmlElementItem::ImportComponent,
                                                                     component));
             }
         }
@@ -949,6 +951,16 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
         break;
     case CellmlElementItem::Import:
         mDetails->update(CellmlAnnotationViewDetailsWidget::Import,
+                         cellmlElementItem->element());
+
+        break;
+    case CellmlElementItem::ImportUnit:
+        mDetails->update(CellmlAnnotationViewDetailsWidget::ImportUnit,
+                         cellmlElementItem->element());
+
+        break;
+    case CellmlElementItem::ImportComponent:
+        mDetails->update(CellmlAnnotationViewDetailsWidget::ImportComponent,
                          cellmlElementItem->element());
 
         break;
