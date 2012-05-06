@@ -172,6 +172,16 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
     if (needUpdatingGui) {
         // Remove everything from our form layout
+        // Note: ideally, we wouldn't have to remove everything and add whatever
+        //       widgets we need. Instead, and ideally, we would have all the
+        //       rows of widgets that we will ever need and would just show/hide
+        //       whichever rows we need / don't need. Now, we can show/hide
+        //       indvidual widgets, but not rows and this is where the problem
+        //       lies since if we hide all the widgets that make up a row, then
+        //       we will still have the layout will still show the space which
+        //       exists (and which we want) between two rows, so it will look
+        //       odd, hence everytime we are dealing with a new type of element,
+        //       we remove everything and add whatever we need...
 
         for (int i = 0, iMax = mGui->formLayout->count(); i < iMax; ++i) {
             QLayoutItem *item = mGui->formLayout->takeAt(0);
