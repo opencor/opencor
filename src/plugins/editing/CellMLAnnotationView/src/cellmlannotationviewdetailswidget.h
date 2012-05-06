@@ -100,6 +100,21 @@ private:
     QLabel *mPrivateInterfaceLabel;
     QLabel *mPrivateInterfaceValue;
 
+    QLabel *mClassNameLabel;
+    QLabel *mClassNameValue;
+
+    QLabel *mMathElementStyleLabel;
+    QLabel *mMathElementStyleValue;
+
+    QLabel *mIdLabel;
+    QLabel *mIdValue;
+
+    QLabel *mXrefLabel;
+    QLabel *mXrefValue;
+
+    QLabel *mHrefLabel;
+    QLabel *mHrefValue;
+
     QLabel *mRelationshipRefLabel;
     QLabel *mRelationshipRefValue;
 
