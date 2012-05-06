@@ -22,12 +22,12 @@ class CELLMLSUPPORT_EXPORT CellmlFileMapComponents : public CellmlFileElement
 public:
     explicit CellmlFileMapComponents(iface::cellml_api::MapComponents *pMapComponents);
 
-    QString firstComponentName() const;
-    QString secondComponentName() const;
+    QString firstComponent() const;
+    QString secondComponent() const;
 
 private:
-    QString mFirstComponentName;
-    QString mSecondComponentName;
+    QString mFirstComponent;
+    QString mSecondComponent;
 };
 
 //==============================================================================

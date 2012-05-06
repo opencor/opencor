@@ -7,9 +7,9 @@
 
 //==============================================================================
 
-#include "cellmlfilecomponentref.h"
+#include "cellmlfilecomponentreference.h"
 #include "cellmlfileelement.h"
-#include "cellmlfilerelationshipref.h"
+#include "cellmlfilerelationshipreference.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -25,12 +25,12 @@ public:
     explicit CellmlFileGroup(iface::cellml_api::Group *pGroup);
     ~CellmlFileGroup();
 
-    CellmlFileRelationshipRefs relationshipRefs() const;
-    CellmlFileComponentRefs componentRefs() const;
+    CellmlFileRelationshipReferences relationshipReferences() const;
+    CellmlFileComponentReferences componentReferences() const;
 
 private:
-    CellmlFileRelationshipRefs mRelationshipRefs;
-    CellmlFileComponentRefs mComponentRefs;
+    CellmlFileRelationshipReferences mRelationshipReferences;
+    CellmlFileComponentReferences mComponentReferences;
 };
 
 //==============================================================================

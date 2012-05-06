@@ -19,14 +19,6 @@
         <translation>Nom :</translation>
     </message>
     <message>
-        <source>URI:</source>
-        <translation>URI :</translation>
-    </message>
-    <message>
-        <source>Reference name:</source>
-        <translation>Nom de référence :</translation>
-    </message>
-    <message>
         <source>Unit:</source>
         <translation>Unité :</translation>
     </message>
@@ -53,6 +45,34 @@
     <message>
         <source>Component:</source>
         <translation>Composant :</translation>
+    </message>
+    <message>
+        <source>Unit reference:</source>
+        <translation>Référence unité :</translation>
+    </message>
+    <message>
+        <source>Component reference:</source>
+        <translation>Référence composant :</translation>
+    </message>
+    <message>
+        <source>xlink:href:</source>
+        <translation>xlink:href :</translation>
+    </message>
+    <message>
+        <source>First component:</source>
+        <translation>Premier composant :</translation>
+    </message>
+    <message>
+        <source>Second component:</source>
+        <translation>Deuxième composant :</translation>
+    </message>
+    <message>
+        <source>First variable:</source>
+        <translation>Première variable :</translation>
+    </message>
+    <message>
+        <source>Second variable:</source>
+        <translation>Deuxièmre variable :</translation>
     </message>
 </context>
 <context>

@@ -122,43 +122,38 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
     mType(pType),
     mElement(pElement)
 {
-    // Check what should be used to represent a right arrow character
-
-    QChar rightArrow = QChar(0x2192);
-
-    if (!QRawFont::fromFont(font()).supportsCharacter(rightArrow))
-        rightArrow = QChar('>');
+    static const QChar rightArrow = QChar(0x2192);
 
     // Set the text for some types
 
     switch (pType) {
     case Import:
-        setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
+        setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->xlinkHref());
 
         break;
-    case RelationshipRef:
-        setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
+    case RelationshipReference:
+        setText(static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationship());
 
         break;
-    case ComponentRef:
-        setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
+    case ComponentReference:
+        setText(static_cast<CellMLSupport::CellmlFileComponentReference *>(pElement)->component());
 
         break;
     case ComponentMapping: {
         CellMLSupport::CellmlFileMapComponents *mapComponents = static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement);
 
-        setText(QString("%1 %2 %3").arg(mapComponents->firstComponentName(),
+        setText(QString("%1 %2 %3").arg(mapComponents->firstComponent(),
                                         rightArrow,
-                                        mapComponents->secondComponentName()));
+                                        mapComponents->secondComponent()));
 
         break;
     }
     case VariableMapping: {
         CellMLSupport::CellmlFileMapVariablesItem *mapVariables = static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement);
 
-        setText(QString("%1 %2 %3").arg(mapVariables->firstVariableName(),
+        setText(QString("%1 %2 %3").arg(mapVariables->firstVariable(),
                                         rightArrow,
-                                        mapVariables->secondVariableName()));
+                                        mapVariables->secondVariable()));
 
         break;
     }
@@ -237,12 +232,12 @@ void CellmlElementItem::setIcon(const Type &pType)
         QStandardItem::setIcon(QIcon(":CellMLSupport_groupNode"));
 
         break;
-    case RelationshipRef:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_relationshipRefNode"));
+    case RelationshipReference:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_relationshipReferenceNode"));
 
         break;
-    case ComponentRef:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_componentRefNode"));
+    case ComponentReference:
+        QStandardItem::setIcon(QIcon(":CellMLSupport_componentReferenceNode"));
 
         break;
     case Connection:
@@ -441,11 +436,11 @@ void CellmlAnnotationViewWidget::retranslateCellmlDataItem(CellmlElementItem *pC
             pCellmlElementItem->setText(tr("Groups"));
 
             break;
-        case CellmlElementItem::RelationshipRef:
+        case CellmlElementItem::RelationshipReference:
             pCellmlElementItem->setText(tr("Relationship References"));
 
             break;
-        case CellmlElementItem::ComponentRef:
+        case CellmlElementItem::ComponentReference:
             pCellmlElementItem->setText(tr("Component References"));
 
             break;
@@ -669,42 +664,42 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
 
             groupsItem->appendRow(groupItem);
 
-            // Retrieve the model's group's relationship ref(erence)s
+            // Retrieve the model's group's relationship references
 
-            if (group->relationshipRefs().count()) {
-                // Relationship ref(erence)s category
+            if (group->relationshipReferences().count()) {
+                // Relationship references category
 
-                CellmlElementItem *relationshipRefsItem = new CellmlElementItem(CellmlElementItem::RelationshipRef,
-                                                                                tr("Relationship References"));
+                CellmlElementItem *relationshipReferencesItem = new CellmlElementItem(CellmlElementItem::RelationshipReference,
+                                                                                      tr("Relationship References"));
 
-                groupItem->appendRow(relationshipRefsItem);
+                groupItem->appendRow(relationshipReferencesItem);
 
-                // Retrieve the model's group's relationship ref(erence)s
+                // Retrieve the model's group's relationship references
                 // themselves
 
-                foreach (CellMLSupport::CellmlFileRelationshipRef *relationshipRef,
-                         group->relationshipRefs())
-                    relationshipRefsItem->appendRow(new CellmlElementItem(CellmlElementItem::RelationshipRef,
-                                                                          relationshipRef));
+                foreach (CellMLSupport::CellmlFileRelationshipReference *relationshipReference,
+                         group->relationshipReferences())
+                    relationshipReferencesItem->appendRow(new CellmlElementItem(CellmlElementItem::RelationshipReference,
+                                                                                relationshipReference));
             }
 
-            // Retrieve the model's group's component ref(erence)s
+            // Retrieve the model's group's component references
 
-            if (group->componentRefs().count()) {
-                // Component ref(erence)s category
+            if (group->componentReferences().count()) {
+                // Component references category
 
-                CellmlElementItem *componentRefsItem = new CellmlElementItem(CellmlElementItem::ComponentRef,
-                                                                             tr("Component References"));
+                CellmlElementItem *componentReferencesItem = new CellmlElementItem(CellmlElementItem::ComponentReference,
+                                                                                   tr("Component References"));
 
-                groupItem->appendRow(componentRefsItem);
+                groupItem->appendRow(componentReferencesItem);
 
-                // Retrieve the model's group's relationship ref(erence)s
+                // Retrieve the model's group's relationship references
                 // themselves
 
-                foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
-                         group->componentRefs())
-                    populateComponentRefDataModel(componentRefsItem,
-                                                  componentRef);
+                foreach (CellMLSupport::CellmlFileComponentReference *componentReference,
+                         group->componentReferences())
+                    populateComponentReferenceDataModel(componentReferencesItem,
+                                                        componentReference);
             }
         }
     }
@@ -784,19 +779,19 @@ void CellmlAnnotationViewWidget::populateUnitsDataModel(CellmlElementItem *pCell
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::populateComponentRefDataModel(CellmlElementItem *pCellmlElementItem,
-                                                               CellMLSupport::CellmlFileComponentRef *pComponentRef)
+void CellmlAnnotationViewWidget::populateComponentReferenceDataModel(CellmlElementItem *pCellmlElementItem,
+                                                                     CellMLSupport::CellmlFileComponentReference *pComponentReference)
 {
-    CellmlElementItem *componentRefItem = new CellmlElementItem(CellmlElementItem::ComponentRef,
-                                                                pComponentRef);
+    CellmlElementItem *componentReferenceItem = new CellmlElementItem(CellmlElementItem::ComponentReference,
+                                                                      pComponentReference);
 
-    pCellmlElementItem->appendRow(componentRefItem);
+    pCellmlElementItem->appendRow(componentReferenceItem);
 
-    // Retrieve the component ref(erence)'s children
+    // Retrieve the component reference's children
 
-    foreach (CellMLSupport::CellmlFileComponentRef *componentRef,
-             pComponentRef->componentRefs())
-        populateComponentRefDataModel(componentRefItem, componentRef);
+    foreach (CellMLSupport::CellmlFileComponentReference *componentReference,
+             pComponentReference->componentReferences())
+        populateComponentReferenceDataModel(componentReferenceItem, componentReference);
 }
 
 //==============================================================================
@@ -927,13 +922,13 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
                             cellmlElementItem->element());
 
         break;
-    case CellmlElementItem::RelationshipRef:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::RelationshipRef,
+    case CellmlElementItem::RelationshipReference:
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::RelationshipReference,
                             cellmlElementItem->element());
 
         break;
-    case CellmlElementItem::ComponentRef:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::ComponentRef,
+    case CellmlElementItem::ComponentReference:
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::ComponentReference,
                             cellmlElementItem->element());
 
         break;

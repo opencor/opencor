@@ -63,24 +63,24 @@ class CellmlElementItem : public QStandardItem
 public:
     enum Type
     {
-        None             = QStandardItem::UserType,
-        Error            = QStandardItem::UserType+1,
-        Warning          = QStandardItem::UserType+2,
-        Model            = QStandardItem::UserType+3,
-        Import           = QStandardItem::UserType+4,
-        ImportUnit       = QStandardItem::UserType+5,
-        ImportComponent  = QStandardItem::UserType+6,
-        Unit             = QStandardItem::UserType+7,
-        UnitElement      = QStandardItem::UserType+8,
-        Component        = QStandardItem::UserType+9,
-        Variable         = QStandardItem::UserType+10,
-        Group            = QStandardItem::UserType+11,
-        RelationshipRef  = QStandardItem::UserType+12,
-        ComponentRef     = QStandardItem::UserType+13,
-        Connection       = QStandardItem::UserType+14,
-        ComponentMapping = QStandardItem::UserType+15,
-        VariableMapping  = QStandardItem::UserType+16,
-        Metadata         = QStandardItem::UserType+17
+        None                  = QStandardItem::UserType,
+        Error                 = QStandardItem::UserType+1,
+        Warning               = QStandardItem::UserType+2,
+        Model                 = QStandardItem::UserType+3,
+        Import                = QStandardItem::UserType+4,
+        ImportUnit            = QStandardItem::UserType+5,
+        ImportComponent       = QStandardItem::UserType+6,
+        Unit                  = QStandardItem::UserType+7,
+        UnitElement           = QStandardItem::UserType+8,
+        Component             = QStandardItem::UserType+9,
+        Variable              = QStandardItem::UserType+10,
+        Group                 = QStandardItem::UserType+11,
+        RelationshipReference = QStandardItem::UserType+12,
+        ComponentReference    = QStandardItem::UserType+13,
+        Connection            = QStandardItem::UserType+14,
+        ComponentMapping      = QStandardItem::UserType+15,
+        VariableMapping       = QStandardItem::UserType+16,
+        Metadata              = QStandardItem::UserType+17
     };
 
     explicit CellmlElementItem(const bool &pError, const QString &pText);
@@ -146,8 +146,8 @@ private:
     void populateCellmlDataModel(const QString &pFileName);
     void populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
                                 const CellMLSupport::CellmlFileUnits pUnits);
-    void populateComponentRefDataModel(CellmlElementItem *pCellmlElementItem,
-                                       CellMLSupport::CellmlFileComponentRef *pComponentRef);
+    void populateComponentReferenceDataModel(CellmlElementItem *pCellmlElementItem,
+                                             CellMLSupport::CellmlFileComponentReference *pComponentReference);
 
     void populateMetadataDataModel(const QString &pFileName);
 

@@ -26,10 +26,10 @@ class CELLMLSUPPORT_EXPORT CellmlFileImportComponent : public CellmlFileComponen
 public:
     explicit CellmlFileImportComponent(iface::cellml_api::ImportComponent *pImportComponent);
 
-    QString referenceName() const;
+    QString componentReference() const;
 
 private:
-    QString mReferenceName;
+    QString mComponentReference;
 };
 
 //==============================================================================

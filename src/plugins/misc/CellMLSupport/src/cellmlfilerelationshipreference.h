@@ -1,9 +1,9 @@
 //==============================================================================
-// CellML file component ref(erence)
+// CellML file relationship reference
 //==============================================================================
 
-#ifndef CELLMLFILECOMPONENTREF_H
-#define CELLMLFILECOMPONENTREF_H
+#ifndef CELLMLFILERELATIONSHIPREFERENCE_H
+#define CELLMLFILERELATIONSHIPREFERENCE_H
 
 //==============================================================================
 
@@ -21,27 +21,22 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileComponentRef;
-
-//==============================================================================
-
-typedef QList<CellmlFileComponentRef *> CellmlFileComponentRefs;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileComponentRef : public CellmlFileElement
+class CELLMLSUPPORT_EXPORT CellmlFileRelationshipReference : public CellmlFileElement
 {
 public:
-    explicit CellmlFileComponentRef(iface::cellml_api::ComponentRef *pComponentRef);
-    ~CellmlFileComponentRef();
+    explicit CellmlFileRelationshipReference(iface::cellml_api::RelationshipRef *pRelationshipReference);
 
-    QString component() const;
-    CellmlFileComponentRefs componentRefs() const;
+    QString relationship() const;
+    QString relationshipNamespace() const;
 
 private:
-    QString mComponent;
-    CellmlFileComponentRefs mComponentRefs;
+    QString mRelationship;
+    QString mRelationshipNamespace;
 };
+
+//==============================================================================
+
+typedef QList<CellmlFileRelationshipReference *> CellmlFileRelationshipReferences;
 
 //==============================================================================
 

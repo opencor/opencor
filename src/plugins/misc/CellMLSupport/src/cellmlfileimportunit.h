@@ -26,10 +26,10 @@ class CELLMLSUPPORT_EXPORT CellmlFileImportUnit : public CellmlFileUnit
 public:
     explicit CellmlFileImportUnit(iface::cellml_api::ImportUnits *pImportUnits);
 
-    QString referenceName() const;
+    QString unitReference() const;
 
 private:
-    QString mReferenceName;
+    QString mUnitReference;
 };
 
 //==============================================================================

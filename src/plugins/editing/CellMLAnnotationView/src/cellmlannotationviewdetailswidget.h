@@ -49,8 +49,8 @@ public:
         Component,
         Variable,
         Group,
-        RelationshipRef,
-        ComponentRef,
+        RelationshipReference,
+        ComponentReference,
         Connection,
         ComponentMapping,
         VariableMapping,
@@ -78,11 +78,14 @@ private:
     QLabel *mNameLabel;
     QLabel *mNameValue;
 
-    QLabel *mUriLabel;
-    QLabel *mUriValue;
+    QLabel *mXlinkHrefLabel;
+    QLabel *mXlinkHrefValue;
 
-    QLabel *mReferenceNameLabel;
-    QLabel *mReferenceNameValue;
+    QLabel *mUnitReferenceLabel;
+    QLabel *mUnitReferenceValue;
+
+    QLabel *mComponentReferenceLabel;
+    QLabel *mComponentReferenceValue;
 
     QLabel *mUnitLabel;
     QLabel *mUnitValue;
@@ -104,6 +107,18 @@ private:
 
     QLabel *mComponentLabel;
     QLabel *mComponentValue;
+
+    QLabel *mFirstComponentLabel;
+    QLabel *mFirstComponentValue;
+
+    QLabel *mSecondComponentLabel;
+    QLabel *mSecondComponentValue;
+
+    QLabel *mFirstVariableLabel;
+    QLabel *mFirstVariableValue;
+
+    QLabel *mSecondVariableLabel;
+    QLabel *mSecondVariableValue;
 };
 
 //==============================================================================

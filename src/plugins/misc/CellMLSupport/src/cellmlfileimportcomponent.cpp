@@ -13,17 +13,17 @@ namespace CellMLSupport {
 
 CellmlFileImportComponent::CellmlFileImportComponent(iface::cellml_api::ImportComponent *pImportComponent) :
     CellmlFileComponent(pImportComponent),
-    mReferenceName(QString::fromStdWString(pImportComponent->componentRef()))
+    mComponentReference(QString::fromStdWString(pImportComponent->componentRef()))
 {
 }
 
 //==============================================================================
 
-QString CellmlFileImportComponent::referenceName() const
+QString CellmlFileImportComponent::componentReference() const
 {
-    // Return the import component's reference name
+    // Return the import component's component reference
 
-    return mReferenceName;
+    return mComponentReference;
 }
 
 //==============================================================================

@@ -13,17 +13,17 @@ namespace CellMLSupport {
 
 CellmlFileImportUnit::CellmlFileImportUnit(iface::cellml_api::ImportUnits *pImportUnits) :
     CellmlFileUnit(pImportUnits),
-    mReferenceName(QString::fromStdWString(pImportUnits->unitsRef()))
+    mUnitReference(QString::fromStdWString(pImportUnits->unitsRef()))
 {
 }
 
 //==============================================================================
 
-QString CellmlFileImportUnit::referenceName() const
+QString CellmlFileImportUnit::unitReference() const
 {
     // Return the import unit's reference name
 
-    return mReferenceName;
+    return mUnitReference;
 }
 
 //==============================================================================

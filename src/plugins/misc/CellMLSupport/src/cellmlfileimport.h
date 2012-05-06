@@ -25,13 +25,13 @@ public:
     explicit CellmlFileImport(iface::cellml_api::CellMLImport *pCellmlImport);
     ~CellmlFileImport();
 
-    QString uri() const;
+    QString xlinkHref() const;
 
     CellmlFileImportUnits units() const;
     CellmlFileImportComponents components() const;
 
 private:
-    QString mUri;
+    QString mXlinkHref;
 
     CellmlFileImportUnits mUnits;
     CellmlFileImportComponents mComponents;

@@ -1,8 +1,8 @@
 //==============================================================================
-// CellML file relationship ref(erence)
+// CellML file relationship reference
 //==============================================================================
 
-#include "cellmlfilerelationshipref.h"
+#include "cellmlfilerelationshipreference.h"
 
 //==============================================================================
 
@@ -11,27 +11,27 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileRelationshipRef::CellmlFileRelationshipRef(iface::cellml_api::RelationshipRef *pRelationshipRef) :
-    CellmlFileElement(pRelationshipRef),
-    mRelationship(QString::fromStdWString(pRelationshipRef->relationship())),
-    mRelationshipNamespace(QString::fromStdWString(pRelationshipRef->relationshipNamespace()))
+CellmlFileRelationshipReference::CellmlFileRelationshipReference(iface::cellml_api::RelationshipRef *pRelationshipReference) :
+    CellmlFileElement(pRelationshipReference),
+    mRelationship(QString::fromStdWString(pRelationshipReference->relationship())),
+    mRelationshipNamespace(QString::fromStdWString(pRelationshipReference->relationshipNamespace()))
 {
 }
 
 //==============================================================================
 
-QString CellmlFileRelationshipRef::relationship() const
+QString CellmlFileRelationshipReference::relationship() const
 {
-    // Return the relationship ref(erence)'s relationship
+    // Return the relationship reference's relationship
 
     return mRelationship;
 }
 
 //==============================================================================
 
-QString CellmlFileRelationshipRef::relationshipNamespace() const
+QString CellmlFileRelationshipReference::relationshipNamespace() const
 {
-    // Return the relationship ref(erence)'s relationship namespace
+    // Return the relationship reference's relationship namespace
 
     return mRelationshipNamespace;
 }

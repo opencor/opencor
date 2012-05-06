@@ -13,27 +13,27 @@ namespace CellMLSupport {
 
 CellmlFileMapComponents::CellmlFileMapComponents(iface::cellml_api::MapComponents *pMapComponents) :
     CellmlFileElement(pMapComponents),
-    mFirstComponentName(QString::fromStdWString(pMapComponents->firstComponentName())),
-    mSecondComponentName(QString::fromStdWString(pMapComponents->secondComponentName()))
+    mFirstComponent(QString::fromStdWString(pMapComponents->firstComponentName())),
+    mSecondComponent(QString::fromStdWString(pMapComponents->secondComponentName()))
 {
 }
 
 //==============================================================================
 
-QString CellmlFileMapComponents::firstComponentName() const
+QString CellmlFileMapComponents::firstComponent() const
 {
-    // Return the map components' first component's name
+    // Return the map components' first component
 
-    return mFirstComponentName;
+    return mFirstComponent;
 }
 
 //==============================================================================
 
-QString CellmlFileMapComponents::secondComponentName() const
+QString CellmlFileMapComponents::secondComponent() const
 {
-    // Return the map components' second component's name
+    // Return the map components' second component
 
-    return mSecondComponentName;
+    return mSecondComponent;
 }
 
 //==============================================================================

@@ -1,8 +1,8 @@
 //==============================================================================
-// CellML file group
+// CellML file component reference
 //==============================================================================
 
-#include "cellmlfilegroup.h"
+#include "cellmlfilecomponentreference.h"
 
 //==============================================================================
 
@@ -11,31 +11,14 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
-    CellmlFileElement(pGroup),
-    mRelationshipReferences(CellmlFileRelationshipReferences())
+CellmlFileComponentReference::CellmlFileComponentReference(iface::cellml_api::ComponentRef *pComponentReference) :
+    CellmlFileElement(pComponentReference),
+    mComponent(QString::fromStdWString(pComponentReference->componentName())),
+    mComponentReferences(CellmlFileComponentReferences())
 {
-    // Iterate through the relationship references and add them to our list
-
-    ObjRef<iface::cellml_api::RelationshipRefSet> relationshipReferences = pGroup->relationshipRefs();
-    ObjRef<iface::cellml_api::RelationshipRefIterator> relationshipReferenceIterator = relationshipReferences->iterateRelationshipRefs();
-
-    while (true) {
-        ObjRef<iface::cellml_api::RelationshipRef> relationshipReference = relationshipReferenceIterator->nextRelationshipRef();
-
-        if (relationshipReference)
-            // We have a relationship reference, so add it to our list
-
-            mRelationshipReferences.append(new CellmlFileRelationshipReference(relationshipReference));
-        else
-            // No more relationship references, so...
-
-            break;
-    }
-
     // Iterate through the component references and add them to our list
 
-    ObjRef<iface::cellml_api::ComponentRefSet> componentReferences = pGroup->componentRefs();
+    ObjRef<iface::cellml_api::ComponentRefSet> componentReferences = pComponentReference->componentRefs();
     ObjRef<iface::cellml_api::ComponentRefIterator> componentReferenceIterator = componentReferences->iterateComponentRefs();
 
     while (true) {
@@ -54,29 +37,29 @@ CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
 
 //==============================================================================
 
-CellmlFileGroup::~CellmlFileGroup()
+CellmlFileComponentReference::~CellmlFileComponentReference()
 {
     // Delete some internal objects
 
-    foreach (CellmlFileRelationshipReference *relationshipReference,
-             mRelationshipReferences)
-        delete relationshipReference;
+    foreach (CellmlFileComponentReference *componentReference,
+             mComponentReferences)
+        delete componentReference;
 }
 
 //==============================================================================
 
-CellmlFileRelationshipReferences CellmlFileGroup::relationshipReferences() const
+QString CellmlFileComponentReference::component() const
 {
-    // Return the group's relationship references
+    // Return the component reference's component
 
-    return mRelationshipReferences;
+    return mComponent;
 }
 
 //==============================================================================
 
-CellmlFileComponentReferences CellmlFileGroup::componentReferences() const
+CellmlFileComponentReferences CellmlFileComponentReference::componentReferences() const
 {
-    // Return the group's component references
+    // Return the component reference's list of component references
 
     return mComponentReferences;
 }

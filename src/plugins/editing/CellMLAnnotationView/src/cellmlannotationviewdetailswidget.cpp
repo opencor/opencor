@@ -73,8 +73,9 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
     bool showCmetaId = false;
     bool showName = false;
-    bool showUri = false;
-    bool showReferenceName = false;
+    bool showXlinkHref = false;
+    bool showUnitReference = false;
+    bool showComponentReference = false;
     bool showUnit = false;
     bool showInitialValue = false;
     bool showPublicInterface = false;
@@ -82,6 +83,10 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     bool showRelationship = false;
     bool showRelationshipNamespace = false;
     bool showComponent = false;
+    bool showFirstComponent = false;
+    bool showSecondComponent = false;
+    bool showFirstVariable = false;
+    bool showSecondVariable = false;
 
     switch (pType) {
     case Model:
@@ -91,19 +96,19 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         break;
     case Import:
         showCmetaId = true;
-        showUri = true;
+        showXlinkHref = true;
 
         break;
     case ImportUnit:
         showCmetaId = true;
         showName = true;
-        showReferenceName = true;
+        showUnitReference = true;
 
         break;
     case ImportComponent:
         showCmetaId = true;
         showName = true;
-        showReferenceName = true;
+        showComponentReference = true;
 
         break;
     case Unit:
@@ -134,13 +139,13 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         showCmetaId = true;
 
         break;
-    case RelationshipRef:
+    case RelationshipReference:
         showCmetaId = true;
         showRelationship = true;
         showRelationshipNamespace = true;
 
         break;
-    case ComponentRef:
+    case ComponentReference:
         showCmetaId = true;
         showComponent = true;
 
@@ -151,10 +156,14 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         break;
     case ComponentMapping:
         showCmetaId = true;
+        showFirstComponent = true;
+        showSecondComponent = true;
 
         break;
     case VariableMapping:
         showCmetaId = true;
+        showFirstVariable = true;
+        showSecondVariable = true;
 
         break;
     case Metadata:
@@ -212,24 +221,34 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
             mNameValue = 0;
         }
 
-        if (showUri) {
-            mUriLabel = new QLabel(tr("URI:"), this);
-            mUriValue = new QLabel(this);
+        if (showXlinkHref) {
+            mXlinkHrefLabel = new QLabel(tr("xlink:href:"), this);
+            mXlinkHrefValue = new QLabel(this);
 
-            mGui->formLayout->addRow(mUriLabel, mUriValue);
+            mGui->formLayout->addRow(mXlinkHrefLabel, mXlinkHrefValue);
         } else {
-            mUriLabel = 0;
-            mUriValue = 0;
+            mXlinkHrefLabel = 0;
+            mXlinkHrefValue = 0;
         }
 
-        if (showReferenceName) {
-            mReferenceNameLabel = new QLabel(tr("Reference name:"), this);
-            mReferenceNameValue = new QLabel(this);
+        if (showUnitReference) {
+            mUnitReferenceLabel = new QLabel(tr("Unit reference:"), this);
+            mUnitReferenceValue = new QLabel(this);
 
-            mGui->formLayout->addRow(mReferenceNameLabel, mReferenceNameValue);
+            mGui->formLayout->addRow(mUnitReferenceLabel, mUnitReferenceValue);
         } else {
-            mReferenceNameLabel = 0;
-            mReferenceNameValue = 0;
+            mUnitReferenceLabel = 0;
+            mUnitReferenceValue = 0;
+        }
+
+        if (showComponentReference) {
+            mComponentReferenceLabel = new QLabel(tr("Component reference:"), this);
+            mComponentReferenceValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mComponentReferenceLabel, mComponentReferenceValue);
+        } else {
+            mComponentReferenceLabel = 0;
+            mComponentReferenceValue = 0;
         }
 
         if (showUnit) {
@@ -301,6 +320,46 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
             mComponentLabel = 0;
             mComponentValue = 0;
         }
+
+        if (showFirstComponent) {
+            mFirstComponentLabel = new QLabel(tr("First component:"), this);
+            mFirstComponentValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mFirstComponentLabel, mFirstComponentValue);
+        } else {
+            mFirstComponentLabel = 0;
+            mFirstComponentValue = 0;
+        }
+
+        if (showSecondComponent) {
+            mSecondComponentLabel = new QLabel(tr("Second component:"), this);
+            mSecondComponentValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mSecondComponentLabel, mSecondComponentValue);
+        } else {
+            mSecondComponentLabel = 0;
+            mSecondComponentValue = 0;
+        }
+
+        if (showFirstVariable) {
+            mFirstVariableLabel = new QLabel(tr("First variable:"), this);
+            mFirstVariableValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mFirstVariableLabel, mFirstVariableValue);
+        } else {
+            mFirstVariableLabel = 0;
+            mFirstVariableValue = 0;
+        }
+
+        if (showSecondVariable) {
+            mSecondVariableLabel = new QLabel(tr("Second variable:"), this);
+            mSecondVariableValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mSecondVariableLabel, mSecondVariableValue);
+        } else {
+            mSecondVariableLabel = 0;
+            mSecondVariableValue = 0;
+        }
     }
 
     // Update the value of the widgets which are shown
@@ -311,15 +370,14 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     if (showName)
         mNameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
 
-    if (showUri)
-        mUriValue->setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
+    if (showXlinkHref)
+        mXlinkHrefValue->setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->xlinkHref());
 
-    if (showReferenceName) {
-        if (pType == ImportUnit)
-            mReferenceNameValue->setText(static_cast<CellMLSupport::CellmlFileImportUnit *>(pElement)->referenceName());
-        else
-            mReferenceNameValue->setText(static_cast<CellMLSupport::CellmlFileImportComponent *>(pElement)->referenceName());
-    }
+    if (showUnitReference)
+        mUnitReferenceValue->setText(static_cast<CellMLSupport::CellmlFileImportUnit *>(pElement)->unitReference());
+
+    if (showComponentReference)
+        mComponentReferenceValue->setText(static_cast<CellMLSupport::CellmlFileImportComponent *>(pElement)->componentReference());
 
     if (showUnit)
         mUnitValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->unit());
@@ -337,16 +395,28 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         mPrivateInterfaceValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->privateInterfaceAsString());
 
     if (showRelationship)
-        mRelationshipValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
+        mRelationshipValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationship());
 
     if (showRelationshipNamespace) {
-        QString relationshipNamespace = static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationshipNamespace();
+        QString relationshipNamespace = static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationshipNamespace();
 
         mRelationshipNamespaceValue->setText(relationshipNamespace.isEmpty()?"/":relationshipNamespace);
     }
 
     if (showComponent)
-        mComponentValue->setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
+        mComponentValue->setText(static_cast<CellMLSupport::CellmlFileComponentReference *>(pElement)->component());
+
+    if (showFirstComponent)
+        mFirstComponentValue->setText(static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->firstComponent());
+
+    if (showSecondComponent)
+        mSecondComponentValue->setText(static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->secondComponent());
+
+    if (showFirstVariable)
+        mFirstVariableValue->setText(static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->firstVariable());
+
+    if (showSecondVariable)
+        mSecondVariableValue->setText(static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->secondVariable());
 }
 
 //==============================================================================

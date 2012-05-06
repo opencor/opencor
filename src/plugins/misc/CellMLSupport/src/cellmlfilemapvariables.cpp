@@ -13,27 +13,27 @@ namespace CellMLSupport {
 
 CellmlFileMapVariablesItem::CellmlFileMapVariablesItem(iface::cellml_api::MapVariables *pMapVariables) :
     CellmlFileElement(pMapVariables),
-    mFirstVariableName(QString::fromStdWString(pMapVariables->firstVariableName())),
-    mSecondVariableName(QString::fromStdWString(pMapVariables->secondVariableName()))
+    mFirstVariable(QString::fromStdWString(pMapVariables->firstVariableName())),
+    mSecondVariable(QString::fromStdWString(pMapVariables->secondVariableName()))
 {
 }
 
 //==============================================================================
 
-QString CellmlFileMapVariablesItem::firstVariableName() const
+QString CellmlFileMapVariablesItem::firstVariable() const
 {
-    // Return the map variables' first variable's name
+    // Return the map variables' first variable
 
-    return mFirstVariableName;
+    return mFirstVariable;
 }
 
 //==============================================================================
 
-QString CellmlFileMapVariablesItem::secondVariableName() const
+QString CellmlFileMapVariablesItem::secondVariable() const
 {
-    // Return the map variables' second variable's name
+    // Return the map variables' second variable
 
-    return mSecondVariableName;
+    return mSecondVariable;
 }
 
 //==============================================================================

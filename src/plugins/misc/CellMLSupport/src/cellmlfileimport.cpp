@@ -13,7 +13,7 @@ namespace CellMLSupport {
 
 CellmlFileImport::CellmlFileImport(iface::cellml_api::CellMLImport *pCellmlImport) :
     CellmlFileElement(pCellmlImport),
-    mUri(QString::fromStdWString(pCellmlImport->xlinkHref()->asText())),
+    mXlinkHref(QString::fromStdWString(pCellmlImport->xlinkHref()->asText())),
     mUnits(CellmlFileImportUnits()),
     mComponents(CellmlFileImportComponents())
 {
@@ -69,11 +69,11 @@ CellmlFileImport::~CellmlFileImport()
 
 //==============================================================================
 
-QString CellmlFileImport::uri() const
+QString CellmlFileImport::xlinkHref() const
 {
-    // Return the import's URI
+    // Return the import's xlink:href
 
-    return mUri;
+    return mXlinkHref;
 }
 
 //==============================================================================
