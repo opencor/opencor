@@ -72,7 +72,7 @@
     </message>
     <message>
         <source>Second variable:</source>
-        <translation>Deuxièmre variable :</translation>
+        <translation>Deuxième variable :</translation>
     </message>
 </context>
 <context>
