@@ -657,8 +657,6 @@ QString ComputerEngine::compileOperand(ComputerEngineData &pData,
         // An indirect parameter, so...
 
         return "%"+QString::number(indirectParameterAssemblyCodeIndex(pData, pOperand, true));
-
-        break;
     case ComputerEquation::Number: {
         // A number, so...
 

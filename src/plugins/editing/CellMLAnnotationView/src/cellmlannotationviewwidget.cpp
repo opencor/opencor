@@ -171,8 +171,6 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
 
         if (pText.isEmpty())
             setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
-
-        break;
     }
 
     // Set the icon for the item
@@ -281,9 +279,9 @@ void CellmlElementItem::setIcon(const Type &pType)
 
         break;
     default:
-        // Type which doesn't require an icon
+        // Type which doesn't require an icon, so...
 
-        break;
+        ;
     }
 }
 
@@ -496,7 +494,7 @@ void CellmlAnnotationViewWidget::retranslateCellmlDataItem(CellmlElementItem *pC
         default:
             // Not a type we can retranslate, so do nothing...
 
-            break;
+            ;
         }
     else
         // We are not dealing with a category, so check the type and see whether
@@ -518,7 +516,7 @@ void CellmlAnnotationViewWidget::retranslateCellmlDataItem(CellmlElementItem *pC
         default:
             // Not a sub-type we can retranslate, so do nothing...
 
-            break;
+            ;
         }
 }
 
@@ -1027,8 +1025,6 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
         // Either an error, warning or category, so nothing to show...
 
         mDetails->update(CellmlAnnotationViewDetailsWidget::Empty);
-
-        break;
     }
 }
 

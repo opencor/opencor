@@ -359,8 +359,6 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
         break;
     default:
         mGui->typeValue->setText(tr("Undefined"));
-
-        break;
     }
 
     // The plugin's dependencies

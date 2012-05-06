@@ -88,6 +88,18 @@ private:
     QLabel *mReferenceNameLabel;
     QLabel *mReferenceNameValue;
 
+    QLabel *mUnitLabel;
+    QLabel *mUnitValue;
+
+    QLabel *mInitialValueLabel;
+    QLabel *mInitialValueValue;
+
+    QLabel *mPublicInterfaceLabel;
+    QLabel *mPublicInterfaceValue;
+
+    QLabel *mPrivateInterfaceLabel;
+    QLabel *mPrivateInterfaceValue;
+
     QLabel *mRelationshipRefLabel;
     QLabel *mRelationshipRefValue;
 

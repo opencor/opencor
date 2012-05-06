@@ -34,6 +34,22 @@
         <source>Reference name:</source>
         <translation>Nom de référence :</translation>
     </message>
+    <message>
+        <source>Unit:</source>
+        <translation>Unité :</translation>
+    </message>
+    <message>
+        <source>Initial value:</source>
+        <translation>Valeur initiale :</translation>
+    </message>
+    <message>
+        <source>Public interface:</source>
+        <translation>Interface publique :</translation>
+    </message>
+    <message>
+        <source>Private interface:</source>
+        <translation>Interface privée :</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewWidget</name>

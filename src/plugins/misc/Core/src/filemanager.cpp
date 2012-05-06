@@ -166,7 +166,7 @@ void FileManager::checkFiles()
             default:
                 // The file is unchanged, so do nothing...
 
-                break;
+                ;
         }
 }
 

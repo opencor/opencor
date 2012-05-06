@@ -98,6 +98,10 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     bool showName = false;
     bool showUri = false;
     bool showReferenceName = false;
+    bool showUnit = false;
+    bool showInitialValue = false;
+    bool showPublicInterface = false;
+    bool showPrivateInterface = false;
     bool showRelationshipRef = false;
     bool showComponentRef = false;
 
@@ -142,6 +146,10 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     case Variable:
         showCmetaId = true;
         showName = true;
+        showUnit = true;
+        showInitialValue = true;
+        showPublicInterface = true;
+        showPrivateInterface = true;
 
         break;
     case MathmlElement:
@@ -175,9 +183,9 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     case Metadata:
         break;
     default:
-        // Empty
+        // Empty, so...
 
-        break;
+        ;
     };
 
     // Show/hide the relevant widgets, but only if required
@@ -247,6 +255,46 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
             mReferenceNameValue = 0;
         }
 
+        if (showUnit) {
+            mUnitLabel = new QLabel(tr("Unit:"), this);
+            mUnitValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mUnitLabel, mUnitValue);
+        } else {
+            mUnitLabel = 0;
+            mUnitValue = 0;
+        }
+
+        if (showInitialValue) {
+            mInitialValueLabel = new QLabel(tr("Initial value:"), this);
+            mInitialValueValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mInitialValueLabel, mInitialValueValue);
+        } else {
+            mInitialValueLabel = 0;
+            mInitialValueValue = 0;
+        }
+
+        if (showPublicInterface) {
+            mPublicInterfaceLabel = new QLabel(tr("Public interface:"), this);
+            mPublicInterfaceValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mPublicInterfaceLabel, mPublicInterfaceValue);
+        } else {
+            mPublicInterfaceLabel = 0;
+            mPublicInterfaceValue = 0;
+        }
+
+        if (showPrivateInterface) {
+            mPrivateInterfaceLabel = new QLabel(tr("Private interface:"), this);
+            mPrivateInterfaceValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mPrivateInterfaceLabel, mPrivateInterfaceValue);
+        } else {
+            mPrivateInterfaceLabel = 0;
+            mPrivateInterfaceValue = 0;
+        }
+
         if (showRelationshipRef) {
             mRelationshipRefLabel = new QLabel(tr("Relationship reference:"), this);
             mRelationshipRefValue = new QLabel(this);
@@ -285,6 +333,21 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         else
             mReferenceNameValue->setText(static_cast<CellMLSupport::CellmlFileImportComponent *>(pElement)->referenceName());
     }
+
+    if (showUnit)
+        mUnitValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->unit());
+
+    if (showInitialValue) {
+        QString initialValue = static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->initialValue();
+
+        mInitialValueValue->setText(initialValue.isEmpty()?"/":initialValue);
+    }
+
+    if (showPublicInterface)
+        mPublicInterfaceValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->publicInterfaceAsString());
+
+    if (showPrivateInterface)
+        mPrivateInterfaceValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->privateInterfaceAsString());
 
     if (showRelationshipRef)
         mRelationshipRefValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());

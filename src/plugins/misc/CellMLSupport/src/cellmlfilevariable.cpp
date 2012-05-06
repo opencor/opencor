@@ -32,8 +32,12 @@ void CellmlFileVariable::retrieveInterfaceType(CellmlFileVariableInterface &pInt
     switch (pVariableInterface) {
     case iface::cellml_api::INTERFACE_IN:
         pInterface = In;
+
+        break;
     case iface::cellml_api::INTERFACE_OUT:
         pInterface = Out;
+
+        break;
     default:
         pInterface = None;
     }
@@ -73,6 +77,42 @@ CellmlFileVariable::CellmlFileVariableInterface CellmlFileVariable::privateInter
     // Return the variable's private interface
 
     return mPrivateInterface;
+}
+
+//==============================================================================
+
+QString CellmlFileVariable::interfaceAsString(const CellmlFileVariableInterface &pInterface) const
+{
+    // Return a variable's interface as a string
+
+    switch (pInterface) {
+    case In:
+        return "in";
+    case Out:
+        return "out";
+    default:
+        // None
+
+        return "none";
+    }
+}
+
+//==============================================================================
+
+QString CellmlFileVariable::publicInterfaceAsString() const
+{
+    // Return the variable's public interface as a string
+
+    return interfaceAsString(mPublicInterface);
+}
+
+//==============================================================================
+
+QString CellmlFileVariable::privateInterfaceAsString() const
+{
+    // Return the variable's private interface as a string
+
+    return interfaceAsString(mPrivateInterface);
 }
 
 //==============================================================================
