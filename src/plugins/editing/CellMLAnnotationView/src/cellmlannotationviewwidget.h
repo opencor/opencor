@@ -74,14 +74,13 @@ public:
         UnitElement      = QStandardItem::UserType+8,
         Component        = QStandardItem::UserType+9,
         Variable         = QStandardItem::UserType+10,
-        MathmlElement    = QStandardItem::UserType+11,
-        Group            = QStandardItem::UserType+12,
-        RelationshipRef  = QStandardItem::UserType+13,
-        ComponentRef     = QStandardItem::UserType+14,
-        Connection       = QStandardItem::UserType+15,
-        ComponentMapping = QStandardItem::UserType+16,
-        VariableMapping  = QStandardItem::UserType+17,
-        Metadata         = QStandardItem::UserType+18
+        Group            = QStandardItem::UserType+11,
+        RelationshipRef  = QStandardItem::UserType+12,
+        ComponentRef     = QStandardItem::UserType+13,
+        Connection       = QStandardItem::UserType+14,
+        ComponentMapping = QStandardItem::UserType+15,
+        VariableMapping  = QStandardItem::UserType+16,
+        Metadata         = QStandardItem::UserType+17
     };
 
     explicit CellmlElementItem(const bool &pError, const QString &pText);
@@ -89,22 +88,18 @@ public:
     explicit CellmlElementItem(const Type &pType,
                                CellMLSupport::CellmlFileElement *pElement,
                                const QString &pText = QString());
-    explicit CellmlElementItem(CellMLSupport::CellmlFileMathmlElement *pMathmlElement,
-                               const QString &pText);
     explicit CellmlElementItem(const QString &pText);
 
     bool isCategory() const;
     virtual int type() const;
 
     CellMLSupport::CellmlFileElement * element() const;
-    CellMLSupport::CellmlFileMathmlElement * mathmlElement() const;
 
 private:
     bool mCategory;
     Type mType;
 
     CellMLSupport::CellmlFileElement *mElement;
-    CellMLSupport::CellmlFileMathmlElement *mMathmlElement;
 
     void setIcon(const Type &pType);
 };

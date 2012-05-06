@@ -48,7 +48,6 @@ public:
         UnitElement,
         Component,
         Variable,
-        MathmlElement,
         Group,
         RelationshipRef,
         ComponentRef,
@@ -63,18 +62,15 @@ public:
 
     virtual void retranslateUi();
 
-    void update(const Type &pType,
-                CellMLSupport::CellmlFileElement *pElement = 0);
-    void update(const Type &pType,
-                CellMLSupport::CellmlFileMathmlElement *pMathmlElement);
+    void updateGui(const Type &pType,
+                   CellMLSupport::CellmlFileElement *pElement = 0,
+                   const bool &pNeedRetranslating = false);
 
 private:
     Ui::CellmlAnnotationViewDetailsWidget *mGui;
 
     Type mType;
-
     CellMLSupport::CellmlFileElement *mElement;
-    CellMLSupport::CellmlFileMathmlElement *mMathmlElement;
 
     QLabel *mCmetaIdLabel;
     QLineEdit *mCmetaIdValue;
@@ -100,31 +96,11 @@ private:
     QLabel *mPrivateInterfaceLabel;
     QLabel *mPrivateInterfaceValue;
 
-    QLabel *mClassNameLabel;
-    QLabel *mClassNameValue;
-
-    QLabel *mMathElementStyleLabel;
-    QLabel *mMathElementStyleValue;
-
-    QLabel *mIdLabel;
-    QLabel *mIdValue;
-
-    QLabel *mXrefLabel;
-    QLabel *mXrefValue;
-
-    QLabel *mHrefLabel;
-    QLabel *mHrefValue;
-
     QLabel *mRelationshipRefLabel;
     QLabel *mRelationshipRefValue;
 
     QLabel *mComponentRefLabel;
     QLabel *mComponentRefValue;
-
-    void updateGui(const Type &pType,
-                   CellMLSupport::CellmlFileElement *pElement,
-                   CellMLSupport::CellmlFileMathmlElement *pMathmlElement,
-                   const bool &pNeedRetranslating = false);
 };
 
 //==============================================================================

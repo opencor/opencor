@@ -50,26 +50,6 @@
         <source>Private interface:</source>
         <translation>Interface privée :</translation>
     </message>
-    <message>
-        <source>Class name:</source>
-        <translation>Nom de classe :</translation>
-    </message>
-    <message>
-        <source>Math element style:</source>
-        <translation>Style d&apos;élément mathématique :</translation>
-    </message>
-    <message>
-        <source>Id:</source>
-        <translation>Id :</translation>
-    </message>
-    <message>
-        <source>xref:</source>
-        <translation>xref :</translation>
-    </message>
-    <message>
-        <source>href:</source>
-        <translation>href :</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewWidget</name>
@@ -88,14 +68,6 @@
     <message>
         <source>Variables</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>MathML Elements</source>
-        <translation>Eléments MathML</translation>
-    </message>
-    <message>
-        <source>MathML element #%1</source>
-        <translation>Elément MathML #%1</translation>
     </message>
     <message>
         <source>Groups</source>

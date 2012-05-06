@@ -50,47 +50,24 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
     // Update the GUI (since some labels get reinitialised as a result of the
     // retranslation)
 
-    updateGui(mType, mElement, mMathmlElement, true);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
-                                               CellMLSupport::CellmlFileElement *pElement)
-{
-    Q_ASSERT(   (((pType == Empty) || (pType == Metadata)) && !pElement)
-             || ((pType != Empty) && (pType != Metadata) && pElement));
-
-    // Update the GUI
-
-    updateGui(pType, pElement, 0);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewDetailsWidget::update(const Type &pType,
-                                               CellMLSupport::CellmlFileMathmlElement *pMathmlElement)
-{
-    // Update the GUI
-
-    updateGui(pType, 0, pMathmlElement);
+    updateGui(mType, mElement, true);
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
                                                   CellMLSupport::CellmlFileElement *pElement,
-                                                  CellMLSupport::CellmlFileMathmlElement *pMathmlElement,
                                                   const bool &pNeedRetranslating)
 {
-    // Keep track of the new type and elements
+    Q_ASSERT(   (((pType == Empty) || (pType == Metadata)) && !pElement)
+             || ((pType != Empty) && (pType != Metadata) && pElement));
+
+    // Keep track of the new type and element
 
     bool needUpdatingGui = (mType != pType) || pNeedRetranslating;
 
     mType = pType;
-
     mElement = pElement;
-    mMathmlElement = pMathmlElement;
 
     // Determine which widget should be shown/hidden
 
@@ -102,11 +79,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     bool showInitialValue = false;
     bool showPublicInterface = false;
     bool showPrivateInterface = false;
-    bool showClassName = false;
-    bool showMathElementStyle = false;
-    bool showId = false;
-    bool showXref = false;
-    bool showHref = false;
     bool showRelationshipRef = false;
     bool showComponentRef = false;
 
@@ -155,14 +127,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         showInitialValue = true;
         showPublicInterface = true;
         showPrivateInterface = true;
-
-        break;
-    case MathmlElement:
-        showClassName = true;
-        showMathElementStyle = true;
-        showId = true;
-        showXref = true;
-        showHref = true;
 
         break;
     case Group:
@@ -306,56 +270,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
             mPrivateInterfaceValue = 0;
         }
 
-        if (showClassName) {
-            mClassNameLabel = new QLabel(tr("Class name:"), this);
-            mClassNameValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mClassNameLabel, mClassNameValue);
-        } else {
-            mClassNameLabel = 0;
-            mClassNameValue = 0;
-        }
-
-        if (showMathElementStyle) {
-            mMathElementStyleLabel = new QLabel(tr("Math element style:"), this);
-            mMathElementStyleValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mMathElementStyleLabel, mMathElementStyleValue);
-        } else {
-            mMathElementStyleLabel = 0;
-            mMathElementStyleValue = 0;
-        }
-
-        if (showId) {
-            mIdLabel = new QLabel(tr("Id:"), this);
-            mIdValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mIdLabel, mIdValue);
-        } else {
-            mIdLabel = 0;
-            mIdValue = 0;
-        }
-
-        if (showXref) {
-            mXrefLabel = new QLabel(tr("xref:"), this);
-            mXrefValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mXrefLabel, mXrefValue);
-        } else {
-            mXrefLabel = 0;
-            mXrefValue = 0;
-        }
-
-        if (showHref) {
-            mHrefLabel = new QLabel(tr("href:"), this);
-            mHrefValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mHrefLabel, mHrefValue);
-        } else {
-            mHrefLabel = 0;
-            mHrefValue = 0;
-        }
-
         if (showRelationshipRef) {
             mRelationshipRefLabel = new QLabel(tr("Relationship reference:"), this);
             mRelationshipRefValue = new QLabel(this);
@@ -409,36 +323,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
     if (showPrivateInterface)
         mPrivateInterfaceValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->privateInterfaceAsString());
-
-    if (showClassName) {
-        QString className = pMathmlElement->className();
-
-        mClassNameValue->setText(className.isEmpty()?"/":className);
-    }
-
-    if (showMathElementStyle) {
-        QString mathElementStyle = pMathmlElement->mathElementStyle();
-
-        mMathElementStyleValue->setText(mathElementStyle.isEmpty()?"/":mathElementStyle);
-    }
-
-    if (showId) {
-        QString id = pMathmlElement->id();
-
-        mIdValue->setText(id.isEmpty()?"/":id);
-    }
-
-    if (showXref) {
-        QString xref = pMathmlElement->xref();
-
-        mXrefValue->setText(xref.isEmpty()?"/":xref);
-    }
-
-    if (showHref) {
-        QString href = pMathmlElement->href();
-
-        mHrefValue->setText(href.isEmpty()?"/":href);
-    }
 
     if (showRelationshipRef)
         mRelationshipRefValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
