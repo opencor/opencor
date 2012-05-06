@@ -883,8 +883,7 @@ void CellmlAnnotationViewWidget::populateMetadataDataModel(const QString &pFileN
     // Retrieve the name of the different groups of triples
 
     foreach (const QString &groupName, cellmlFile->metadata().uniqueKeys())
-        mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(CellmlElementItem::Metadata,
-                                                                                 groupName));
+        mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(groupName));
 }
 
 //==============================================================================

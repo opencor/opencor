@@ -173,8 +173,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
         break;
     case Metadata:
-        showCmetaId = true;
-
         break;
     default:
         // Empty

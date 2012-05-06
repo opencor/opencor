@@ -76,8 +76,8 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
         if (!horizontalSizesCount) {
             // There are no previous horizontal sizes, so get some default ones
 
-            mHorizontalSizes << 0.25*qApp->desktop()->screenGeometry().width()
-                             << 0.75*qApp->desktop()->screenGeometry().width();
+            mHorizontalSizes << 0.35*qApp->desktop()->screenGeometry().width()
+                             << 0.65*qApp->desktop()->screenGeometry().width();
         } else {
             // There are previous horizontal sizes, so use them to initialise
             // mHorizontalSizes
