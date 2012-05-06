@@ -79,8 +79,9 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     bool showInitialValue = false;
     bool showPublicInterface = false;
     bool showPrivateInterface = false;
-    bool showRelationshipRef = false;
-    bool showComponentRef = false;
+    bool showRelationship = false;
+    bool showRelationshipNamespace = false;
+    bool showComponent = false;
 
     switch (pType) {
     case Model:
@@ -135,12 +136,13 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         break;
     case RelationshipRef:
         showCmetaId = true;
-        showRelationshipRef = true;
+        showRelationship = true;
+        showRelationshipNamespace = true;
 
         break;
     case ComponentRef:
         showCmetaId = true;
-        showComponentRef = true;
+        showComponent = true;
 
         break;
     case Connection:
@@ -270,24 +272,34 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
             mPrivateInterfaceValue = 0;
         }
 
-        if (showRelationshipRef) {
-            mRelationshipRefLabel = new QLabel(tr("Relationship reference:"), this);
-            mRelationshipRefValue = new QLabel(this);
+        if (showRelationship) {
+            mRelationshipLabel = new QLabel(tr("Relationship:"), this);
+            mRelationshipValue = new QLabel(this);
 
-            mGui->formLayout->addRow(mRelationshipRefLabel, mRelationshipRefValue);
+            mGui->formLayout->addRow(mRelationshipLabel, mRelationshipValue);
         } else {
-            mRelationshipRefLabel = 0;
-            mRelationshipRefValue = 0;
+            mRelationshipLabel = 0;
+            mRelationshipValue = 0;
         }
 
-        if (showComponentRef) {
-            mComponentRefLabel = new QLabel(tr("Component reference:"), this);
-            mComponentRefValue = new QLabel(this);
+        if (showRelationshipNamespace) {
+            mRelationshipNamespaceLabel = new QLabel(tr("Relationship namespace:"), this);
+            mRelationshipNamespaceValue = new QLabel(this);
 
-            mGui->formLayout->addRow(mComponentRefLabel, mComponentRefValue);
+            mGui->formLayout->addRow(mRelationshipNamespaceLabel, mRelationshipNamespaceValue);
         } else {
-            mComponentRefLabel = 0;
-            mComponentRefValue = 0;
+            mRelationshipNamespaceLabel = 0;
+            mRelationshipNamespaceValue = 0;
+        }
+
+        if (showComponent) {
+            mComponentLabel = new QLabel(tr("Component:"), this);
+            mComponentValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mComponentLabel, mComponentValue);
+        } else {
+            mComponentLabel = 0;
+            mComponentValue = 0;
         }
     }
 
@@ -324,11 +336,17 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     if (showPrivateInterface)
         mPrivateInterfaceValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->privateInterfaceAsString());
 
-    if (showRelationshipRef)
-        mRelationshipRefValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
+    if (showRelationship)
+        mRelationshipValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
 
-    if (showComponentRef)
-        mComponentRefValue->setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
+    if (showRelationshipNamespace) {
+        QString relationshipNamespace = static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationshipNamespace();
+
+        mRelationshipNamespaceValue->setText(relationshipNamespace.isEmpty()?"/":relationshipNamespace);
+    }
+
+    if (showComponent)
+        mComponentValue->setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
 }
 
 //==============================================================================

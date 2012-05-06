@@ -23,14 +23,6 @@
         <translation>URI :</translation>
     </message>
     <message>
-        <source>Relationship reference:</source>
-        <translation>Référence de relation :</translation>
-    </message>
-    <message>
-        <source>Component reference:</source>
-        <translation>Référence de composant :</translation>
-    </message>
-    <message>
         <source>Reference name:</source>
         <translation>Nom de référence :</translation>
     </message>
@@ -49,6 +41,18 @@
     <message>
         <source>Private interface:</source>
         <translation>Interface privée :</translation>
+    </message>
+    <message>
+        <source>Relationship:</source>
+        <translation>Relation :</translation>
+    </message>
+    <message>
+        <source>Relationship namespace:</source>
+        <translation>Espace de noms pour la relation :</translation>
+    </message>
+    <message>
+        <source>Component:</source>
+        <translation>Composant :</translation>
     </message>
 </context>
 <context>

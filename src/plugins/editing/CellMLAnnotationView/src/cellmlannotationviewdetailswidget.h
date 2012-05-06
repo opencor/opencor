@@ -96,11 +96,14 @@ private:
     QLabel *mPrivateInterfaceLabel;
     QLabel *mPrivateInterfaceValue;
 
-    QLabel *mRelationshipRefLabel;
-    QLabel *mRelationshipRefValue;
+    QLabel *mRelationshipLabel;
+    QLabel *mRelationshipValue;
 
-    QLabel *mComponentRefLabel;
-    QLabel *mComponentRefValue;
+    QLabel *mRelationshipNamespaceLabel;
+    QLabel *mRelationshipNamespaceValue;
+
+    QLabel *mComponentLabel;
+    QLabel *mComponentValue;
 };
 
 //==============================================================================
