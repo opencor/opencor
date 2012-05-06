@@ -10,6 +10,11 @@
 
 //==============================================================================
 
+#include <QLabel>
+#include <QLineEdit>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -166,36 +171,87 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     // Show/hide the relevant widgets, but only if required
 
     if (needUpdatingGui) {
-        mGui->field01Label->setVisible(showCmetaId);
-        mGui->field01Value->setVisible(showCmetaId);
+        // Remove everything from our form layout
 
-        bool showField02Field =    showName || showUri
-                                || showRelationshipRef || showComponentRef;
+        for (int i = 0, iMax = mGui->formLayout->count(); i < iMax; ++i) {
+            QLayoutItem *item = mGui->formLayout->takeAt(0);
 
-        mGui->field02Label->setVisible(showField02Field);
-        mGui->field02Value->setVisible(showField02Field);
+            delete item->widget();
+            delete item;
+        }
+
+        // Add whatever we need
+        // Note: as long as all of the widgets' parent is ourselves, then they
+        //       will get automatically deleted, so no need to delete them in
+        //       CellmlAnnotationViewDetailsWidget's destructor...
+
+        if (showCmetaId) {
+            mCmetaIdLabel = new QLabel(tr("cmeta:id:"), this);
+            mCmetaIdValue = new QLineEdit(this);
+
+            mGui->formLayout->addRow(mCmetaIdLabel, mCmetaIdValue);
+        } else {
+            mCmetaIdLabel = 0;
+            mCmetaIdValue = 0;
+        }
+
+        if (showName) {
+            mNameLabel = new QLabel(tr("Name:"), this);
+            mNameValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mNameLabel, mNameValue);
+        } else {
+            mNameLabel = 0;
+            mNameValue = 0;
+        }
+
+        if (showUri) {
+            mUriLabel = new QLabel(tr("URI:"), this);
+            mUriValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mUriLabel, mUriValue);
+        } else {
+            mUriLabel = 0;
+            mUriValue = 0;
+        }
+
+        if (showRelationshipRef) {
+            mRelationshipRefLabel = new QLabel(tr("Relationship reference:"), this);
+            mRelationshipRefValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mRelationshipRefLabel, mRelationshipRefValue);
+        } else {
+            mRelationshipRefLabel = 0;
+            mRelationshipRefValue = 0;
+        }
+
+        if (showComponentRef) {
+            mComponentRefLabel = new QLabel(tr("Component reference:"), this);
+            mComponentRefValue = new QLabel(this);
+
+            mGui->formLayout->addRow(mComponentRefLabel, mComponentRefValue);
+        } else {
+            mComponentRefLabel = 0;
+            mComponentRefValue = 0;
+        }
     }
 
     // Update the value of the widgets which are shown
 
-    if (showCmetaId) {
-        mGui->field01Label->setText(tr("cmeta:id:"));
-        mGui->field01Value->setText(pElement->cmetaId());
-    }
+    if (showCmetaId)
+        mCmetaIdValue->setText(pElement->cmetaId());
 
-    if (showName) {
-        mGui->field02Label->setText(tr("Name:"));
-        mGui->field02Value->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
-    } else if (showUri) {
-        mGui->field02Label->setText(tr("URI:"));
-        mGui->field02Value->setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
-    } else if (showRelationshipRef) {
-        mGui->field02Label->setText(tr("Relationship reference:"));
-        mGui->field02Value->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
-    } else if (showComponentRef) {
-        mGui->field02Label->setText(tr("Component reference:"));
-        mGui->field02Value->setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
-    }
+    if (showName)
+        mNameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
+
+    if (showUri)
+        mUriValue->setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->uri());
+
+    if (showRelationshipRef)
+        mRelationshipRefValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipRef *>(pElement)->relationship());
+
+    if (showComponentRef)
+        mComponentRefValue->setText(static_cast<CellMLSupport::CellmlFileComponentRef *>(pElement)->component());
 }
 
 //==============================================================================

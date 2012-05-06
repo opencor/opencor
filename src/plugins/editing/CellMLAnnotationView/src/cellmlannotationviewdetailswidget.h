@@ -23,6 +23,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QLabel;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -69,6 +73,21 @@ private:
 
     CellMLSupport::CellmlFileElement *mElement;
     CellMLSupport::CellmlFileMathmlElement *mMathmlElement;
+
+    QLabel *mCmetaIdLabel;
+    QLineEdit *mCmetaIdValue;
+
+    QLabel *mNameLabel;
+    QLabel *mNameValue;
+
+    QLabel *mUriLabel;
+    QLabel *mUriValue;
+
+    QLabel *mRelationshipRefLabel;
+    QLabel *mRelationshipRefValue;
+
+    QLabel *mComponentRefLabel;
+    QLabel *mComponentRefValue;
 
     void updateGui(const Type &pType,
                    CellMLSupport::CellmlFileElement *pElement,

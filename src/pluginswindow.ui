@@ -37,9 +37,6 @@
        <item>
         <widget class="QWidget" name="detailsWidget" native="true">
          <layout class="QFormLayout" name="detailsFormLayout">
-          <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-          </property>
           <property name="margin">
            <number>0</number>
           </property>

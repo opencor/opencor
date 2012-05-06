@@ -10,37 +10,7 @@
     <height>240</height>
    </rect>
   </property>
-     <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="field01Label">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="field01Value"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="field02Label">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="field02Value"/>
-      </item>
-     </layout>
+  <layout class="QFormLayout" name="formLayout"/>
  </widget>
  <resources/>
  <connections/>
