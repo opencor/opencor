@@ -31,7 +31,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileRdfTripleElement
 public:
     enum Type
     {
-        Object,
+        None,
         UriReference,
         PlainLiteral,
         TypedLiteral
@@ -41,7 +41,7 @@ public:
 
     Type type() const;
 
-    QString objectId() const;
+    QString id() const;
 
     QString uriReference() const;
 
@@ -54,7 +54,7 @@ public:
 private:
     Type mType;
 
-    QString mObjectId;
+    QString mId;
 
     QString mUriReference;
 

@@ -60,32 +60,32 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
                 mLexicalForm = QString::fromStdWString(typedLiteral->lexicalForm()).trimmed();
                 mDataTypeUri = QString::fromStdWString(typedLiteral->datatypeURI()).trimmed();
             } else {
-                // The node doesn't support any interface, so initialise it
-                // using only its object id
-                // Note: this object id returned by the CellML API will look
-                //       something like
+                // The node doesn't support any interface, so initialise the
+                // triple element using its id
+                // Note: the id returned by the CellML API will look something
+                //       like
                 //
                 //          7EQ?;?Y?A?w???A
                 //
-                //       which is not really user-friendly, so we generate our
-                //       own object id...
+                //       This is clearly not user-friendly, so we generate and
+                //       use our own id instead...
 
-                static QMap<QString, QString> objIds;
-                static int objIdCounter = 0;
+                static QMap<QString, QString> ids;
+                static int idCounter = 0;
 
-                QString objectId = QString::fromStdString(pNode->objid()).trimmed();
+                QString id = QString::fromStdString(pNode->objid()).trimmed();
 
-                mType = Object;
+                mType = None;
 
-                mObjectId = objIds.value(objectId);
+                mId = ids.value(id);
 
-                if (mObjectId == QString()) {
-                    // There is no objId value for the current object id, so
-                    // generate one and keep track of it
+                if (mId == QString()) {
+                    // There is no genId value for the current id, so generate
+                    // one and keep track of it
 
-                    mObjectId.sprintf("objid:%05d", ++objIdCounter);
+                    mId.sprintf("id:%05d", ++idCounter);
 
-                    objIds.insert(objectId, mObjectId);
+                    ids.insert(id, mId);
                 }
             }
         }
@@ -103,11 +103,11 @@ CellmlFileRdfTripleElement::Type CellmlFileRdfTripleElement::type() const
 
 //==============================================================================
 
-QString CellmlFileRdfTripleElement::objectId() const
+QString CellmlFileRdfTripleElement::id() const
 {
-    // Return the RDF triple element's object id
+    // Return the RDF triple element's id
 
-    return mObjectId;
+    return mId;
 }
 
 //==============================================================================
@@ -160,9 +160,9 @@ QString CellmlFileRdfTripleElement::asString() const
     case TypedLiteral:
         return mLexicalForm+" ["+mDataTypeUri+"]";
     default:
-        // None of the above, so an object
+        // None of the above, so...
 
-        return mObjectId;
+        return mId;
     }
 }
 
