@@ -20,7 +20,7 @@ CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
     ObjRef<iface::cellml_api::RelationshipRefSet> relationshipReferences = pGroup->relationshipRefs();
     ObjRef<iface::cellml_api::RelationshipRefIterator> relationshipReferenceIterator = relationshipReferences->iterateRelationshipRefs();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::RelationshipRef> relationshipReference = relationshipReferenceIterator->nextRelationshipRef();
 
         if (relationshipReference)
@@ -38,7 +38,7 @@ CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
     ObjRef<iface::cellml_api::ComponentRefSet> componentReferences = pGroup->componentRefs();
     ObjRef<iface::cellml_api::ComponentRefIterator> componentReferenceIterator = componentReferences->iterateComponentRefs();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::ComponentRef> componentReference = componentReferenceIterator->nextComponentRef();
 
         if (componentReference)

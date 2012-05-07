@@ -173,7 +173,7 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
     ObjRef<iface::cellml_api::CellMLImportSet> imports = mCellmlApiModel->imports();
     ObjRef<iface::cellml_api::CellMLImportIterator> importIterator = imports->iterateImports();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::CellMLImport> import = importIterator->nextImport();
 
         if (import)
@@ -191,7 +191,7 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
     ObjRef<iface::cellml_api::UnitsSet> units = mCellmlApiModel->localUnits();
     ObjRef<iface::cellml_api::UnitsIterator> unitIterator = units->iterateUnits();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::Units> unit = unitIterator->nextUnits();
 
         if (unit)
@@ -209,7 +209,7 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
     ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlApiModel->localComponents();
     ObjRef<iface::cellml_api::CellMLComponentIterator> componentIterator = components->iterateComponents();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::CellMLComponent> component = componentIterator->nextComponent();
 
         if (component)
@@ -227,7 +227,7 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
     ObjRef<iface::cellml_api::GroupSet> groups = mCellmlApiModel->groups();
     ObjRef<iface::cellml_api::GroupIterator> groupIterator = groups->iterateGroups();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::Group> group = groupIterator->nextGroup();
 
         if (group)
@@ -245,7 +245,7 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
     ObjRef<iface::cellml_api::ConnectionSet> connections = mCellmlApiModel->connections();
     ObjRef<iface::cellml_api::ConnectionIterator> connectionIterator = connections->iterateConnections();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::Connection> connection = connectionIterator->nextConnection();
 
         if (connection)
@@ -275,7 +275,7 @@ qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.0
             ObjRef<iface::rdf_api::TripleSet> triples = dataSource->getAllTriples();
             ObjRef<iface::rdf_api::TripleEnumerator> tripleEnumerator = triples->enumerateTriples();
 
-            while (true) {
+            forever {
                 ObjRef<iface::rdf_api::Triple> triple = tripleEnumerator->getNextTriple();
 
                 if (triple) {
@@ -450,7 +450,7 @@ time.restart();
 
                     // Also determine its imported file, if any
 
-                    while (true) {
+                    forever {
                         // Retrieve the CellML element's parent
 
                         ObjRef<iface::cellml_api::CellMLElement> cellmlElementParent = cellmlElement->parentElement();

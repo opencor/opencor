@@ -24,7 +24,7 @@ CellmlFileConnection::CellmlFileConnection(iface::cellml_api::Connection *pConne
     ObjRef<iface::cellml_api::MapVariablesSet> variableMappings = pConnection->variableMappings();
     ObjRef<iface::cellml_api::MapVariablesIterator> mapVariablesIterator = variableMappings->iterateMapVariables();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::MapVariables> mapVariables = mapVariablesIterator->nextMapVariables();
 
         if (mapVariables)

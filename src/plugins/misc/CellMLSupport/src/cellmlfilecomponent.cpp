@@ -30,7 +30,7 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
     ObjRef<iface::cellml_api::UnitsSet> units = pComponent->units();
     ObjRef<iface::cellml_api::UnitsIterator> unitIterator = units->iterateUnits();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::Units> unit = unitIterator->nextUnits();
 
         if (unit)
@@ -48,7 +48,7 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
     ObjRef<iface::cellml_api::CellMLVariableSet> variables = pComponent->variables();
     ObjRef<iface::cellml_api::CellMLVariableIterator> variableIterator = variables->iterateVariables();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::CellMLVariable> variable = variableIterator->nextVariable();
 
         if (variable)
@@ -66,7 +66,7 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
     ObjRef<iface::cellml_api::MathList> mathmlElements = pComponent->math();
     ObjRef<iface::cellml_api::MathMLElementIterator> mathmlElementIterator = mathmlElements->iterate();
 
-    while (true) {
+    forever {
         ObjRef<iface::mathml_dom::MathMLElement> mathmlElement = mathmlElementIterator->next();
 
         if (mathmlElement)

@@ -21,7 +21,7 @@ CellmlFileComponentReference::CellmlFileComponentReference(iface::cellml_api::Co
     ObjRef<iface::cellml_api::ComponentRefSet> componentReferences = pComponentReference->componentRefs();
     ObjRef<iface::cellml_api::ComponentRefIterator> componentReferenceIterator = componentReferences->iterateComponentRefs();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::ComponentRef> componentReference = componentReferenceIterator->nextComponentRef();
 
         if (componentReference)

@@ -30,7 +30,7 @@ CellmlFileUnit::CellmlFileUnit(iface::cellml_api::Units *pUnits) :
     ObjRef<iface::cellml_api::UnitSet> units = pUnits->unitCollection();
     ObjRef<iface::cellml_api::UnitIterator> unitIterator = units->iterateUnits();
 
-    while (true) {
+    forever {
         ObjRef<iface::cellml_api::Unit> unit = unitIterator->nextUnit();
 
         if (unit)
