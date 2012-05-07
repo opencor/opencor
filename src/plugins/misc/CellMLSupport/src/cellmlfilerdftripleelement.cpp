@@ -30,7 +30,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
 
         mType = UriReference;
 
-        mUriReference = QString::fromStdWString(uriReference->URI());
+        mUriReference = QString::fromStdWString(uriReference->URI()).trimmed();
     } else {
         ObjRef<iface::rdf_api::PlainLiteral> plainLiteral;
         QUERY_INTERFACE(plainLiteral, pNode, rdf_api::PlainLiteral);
@@ -41,8 +41,8 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
 
             mType = PlainLiteral;
 
-            mLexicalForm = QString::fromStdWString(plainLiteral->lexicalForm());
-            mLanguage    = QString::fromStdWString(plainLiteral->language());
+            mLexicalForm = QString::fromStdWString(plainLiteral->lexicalForm()).trimmed();
+            mLanguage    = QString::fromStdWString(plainLiteral->language()).trimmed();
         } else {
             ObjRef<iface::rdf_api::TypedLiteral> typedLiteral;
             QUERY_INTERFACE(typedLiteral, pNode, rdf_api::TypedLiteral);
@@ -53,15 +53,15 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
 
                 mType = TypedLiteral;
 
-                mLexicalForm = QString::fromStdWString(typedLiteral->lexicalForm());
-                mDataTypeUri = QString::fromStdWString(typedLiteral->datatypeURI());
+                mLexicalForm = QString::fromStdWString(typedLiteral->lexicalForm()).trimmed();
+                mDataTypeUri = QString::fromStdWString(typedLiteral->datatypeURI()).trimmed();
             } else {
                 // The node doesn't support any interface, so initialise it
                 // using only its object id
 
                 mType = Object;
 
-                mObjectId = QString::fromStdString(pNode->objid());
+                mObjectId = QString::fromStdString(pNode->objid()).trimmed();
             }
         }
     }
