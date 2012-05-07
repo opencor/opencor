@@ -151,6 +151,11 @@ private:
 
     void populateMetadataDataModel(const QString &pFileName);
 
+    void indexExpandAll(const QModelIndex &pIndex) const;
+    void indexCollapseAll(const QModelIndex &pIndex) const;
+
+    bool indexIsAllExpanded(const QModelIndex &pIndex) const;
+
 Q_SIGNALS:
     void horizontalSplitterMoved(const QList<int> &pHorizontalSizes);
     void verticalSplitterMoved(const QList<int> &pVerticalSizes);
@@ -169,6 +174,11 @@ private Q_SLOTS:
                           const QModelIndex &pOldIndex);
     void updateMetadataNode(const QModelIndex &pNewIndex,
                             const QModelIndex &pOldIndex);
+
+    void cellmlTreeViewContextMenu(const QPoint &pPosition) const;
+
+    void on_actionExpandAll_triggered();
+    void on_actionCollapseAll_triggered();
 };
 
 //==============================================================================

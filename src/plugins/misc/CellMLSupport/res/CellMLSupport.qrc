@@ -10,8 +10,8 @@
         <file alias="CellMLSupport_variableNode">variableNode.png</file>
         <file alias="CellMLSupport_mathmlElementNode">mathmlElementNode.png</file>
         <file alias="CellMLSupport_groupNode">groupNode.png</file>
-        <file alias="CellMLSupport_relationshipRefNode">relationshipRefNode.png</file>
-        <file alias="CellMLSupport_componentRefNode">componentRefNode.png</file>
+        <file alias="CellMLSupport_relationshipReferenceNode">relationshipReferenceNode.png</file>
+        <file alias="CellMLSupport_componentReferenceNode">componentReferenceNode.png</file>
         <file alias="CellMLSupport_connectionNode">connectionNode.png</file>
         <file alias="CellMLSupport_metadataNode">metadataNode.png</file>
         <file alias="CellMLSupport_fr">../../../../../build/CellMLSupport_fr.qm</file>

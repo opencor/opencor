@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>CellmlAnnotationViewWidget</name>
+    <message>
+        <source>&amp;Expand All</source>
+        <translation>Tout &amp;Etendre</translation>
+    </message>
+    <message>
+        <source>Expand all the children nodes</source>
+        <translation>Etendre tous les noeuds enfants</translation>
+    </message>
+    <message>
+        <source>&amp;Collapse All</source>
+        <translation>Tout &amp;Réduire</translation>
+    </message>
+    <message>
+        <source>Collapse all the children nodes</source>
+        <translation>Réduire tous les noeuds enfants</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>
     <message>
         <source>CellML Annotation</source>

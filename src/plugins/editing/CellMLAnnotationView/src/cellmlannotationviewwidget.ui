@@ -18,7 +18,33 @@
     <number>0</number>
    </property>
   </layout>
+  <action name="actionExpandAll">
+   <property name="icon">
+    <iconset resource="../res/CellMLAnnotationView.qrc">
+     <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Expand All</string>
+   </property>
+   <property name="statusTip">
+    <string>Expand all the children nodes</string>
+   </property>
+  </action>
+  <action name="actionCollapseAll">
+   <property name="icon">
+    <iconset resource="../res/CellMLAnnotationView.qrc">
+     <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Collapse All</string>
+   </property>
+   <property name="statusTip">
+    <string>Collapse all the children nodes</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../res/CellMLAnnotationView.qrc"/>
+ </resources>
  <connections/>
 </ui>

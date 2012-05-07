@@ -15,6 +15,7 @@
 
 //==============================================================================
 
+#include <QMenu>
 #include <QRawFont>
 #include <QSplitter>
 #include <QStandardItemModel>
@@ -301,8 +302,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // Create and customise our CellML tree view which will contain all of the
     // imports, units, components, groups and connections from the CellML file
 
-    mCellmlTreeView = new Core::TreeView(mVerticalSplitter);
-    mCellmlDataModel = new QStandardItemModel(mCellmlTreeView);
+    mCellmlTreeView     = new Core::TreeView(mVerticalSplitter);
+    mCellmlDataModel    = new QStandardItemModel(mCellmlTreeView);
     mCellmlItemDelegate = new CellmlItemDelegate(mCellmlTreeView,
                                                  mCellmlDataModel);
 
@@ -314,7 +315,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // Create and customise our metadata tree view which will contain all of the
     // metadata from the CellML file
 
-    mMetadataTreeView = new Core::TreeView(mVerticalSplitter);
+    mMetadataTreeView  = new Core::TreeView(mVerticalSplitter);
     mMetadataDataModel = new QStandardItemModel(mMetadataTreeView);
 
     mMetadataTreeView->setModel(mMetadataDataModel);
@@ -336,6 +337,13 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
                                                             false, true, false, false));
 
     mGui->verticalLayout->addWidget(mHorizontalSplitter);
+
+    // We want a context menu for our CellML tree view
+
+    mCellmlTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(mCellmlTreeView, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(cellmlTreeViewContextMenu(const QPoint &)));
 
     // Keep track of our splitters being moved
 
@@ -500,6 +508,9 @@ void CellmlAnnotationViewWidget::initTreeView(Core::TreeView *pTreeView)
     pTreeView->setHeaderHidden(true);
     pTreeView->setRootIsDecorated(false);
     pTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    // Note: the selection mode we are opting for means that there is always a
+    //       node which is selected, so that's something we must keep in mind
+    //       when showing the context menu...
 }
 
 //==============================================================================
@@ -968,6 +979,124 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
     Q_UNUSED(pOldIndex);
 
     mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Metadata);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::cellmlTreeViewContextMenu(const QPoint &pPosition) const
+{
+    Q_UNUSED(pPosition);
+
+    // Determine whether to show context menu or not by checking whether the
+    // current item is the same as the one over which we are
+
+    CellmlElementItem *posItem = static_cast<CellmlElementItem *>(mCellmlDataModel->itemFromIndex(mCellmlTreeView->indexAt(mCellmlTreeView->mapFromGlobal(QCursor::pos()-mCellmlTreeView->pos()))));
+    CellmlElementItem *crtItem = static_cast<CellmlElementItem *>(mCellmlDataModel->itemFromIndex(mCellmlTreeView->currentIndex()));
+
+    bool showContextMenu = (posItem == crtItem) && crtItem->hasChildren();
+
+    // Create a custom context menu which items match the contents of our
+    // toolbar
+
+    if (showContextMenu) {
+        // Update the enabled status of our actions
+
+        mGui->actionExpandAll->setEnabled(!indexIsAllExpanded(mCellmlTreeView->currentIndex()));
+        mGui->actionCollapseAll->setEnabled(mCellmlTreeView->isExpanded(mCellmlTreeView->currentIndex()));
+
+        // Create and show the context menu
+
+        QMenu menu;
+
+        menu.addAction(mGui->actionExpandAll);
+        menu.addAction(mGui->actionCollapseAll);
+
+        menu.exec(QCursor::pos());
+    }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::on_actionExpandAll_triggered()
+{
+    // Expand all the nodes below the current one
+    // Note: we disable and then re-enable updates before expanding all the
+    //       index since it may end up in quite a few updates...
+
+    mCellmlTreeView->setUpdatesEnabled(false);
+        indexExpandAll(mCellmlTreeView->currentIndex());
+    mCellmlTreeView->setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::on_actionCollapseAll_triggered()
+{
+    // Collapse all the nodes below the current one
+    // Note: we disable and then re-enable updates before collapsing all the
+    //       index since it may end up in quite a few updates...
+
+    mCellmlTreeView->setUpdatesEnabled(false);
+        indexCollapseAll(mCellmlTreeView->currentIndex());
+    mCellmlTreeView->setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::indexExpandAll(const QModelIndex &pIndex) const
+{
+    // Recursively expand all the nodes below the current one
+    // Note: the test with against pIndex.child(0, 0) is to ensure that we are
+    //       not trying to expand an index which item has no children. Indeed,
+    //       a call to expand() is quite expensive, so the fewer of those we
+    //       make the better...
+
+    if (pIndex.child(0, 0) != QModelIndex()) {
+        mCellmlTreeView->expand(pIndex);
+
+        QStandardItem *item = mCellmlDataModel->itemFromIndex(pIndex);
+
+        for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
+            indexExpandAll(item->child(i)->index());
+    }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::indexCollapseAll(const QModelIndex &pIndex) const
+{
+    // Recursively collapse all the nodes below the current one
+    // Note: see the note in indexExpandAll() above...
+
+    if (pIndex.child(0, 0) != QModelIndex()) {
+        QStandardItem *item = mCellmlDataModel->itemFromIndex(pIndex);
+
+        for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
+            indexCollapseAll(item->child(i)->index());
+
+        mCellmlTreeView->collapse(pIndex);
+    }
+}
+
+//==============================================================================
+
+bool CellmlAnnotationViewWidget::indexIsAllExpanded(const QModelIndex &pIndex) const
+{
+    // Recursively check that the current node and all of its children are
+    // expanded
+    // Note: see the note in indexExpandAll() above...
+
+    if (pIndex.child(0, 0) != QModelIndex()) {
+        QStandardItem *item = mCellmlDataModel->itemFromIndex(pIndex);
+
+        for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
+            if (!indexIsAllExpanded(item->child(i)->index()))
+                return false;
+
+        return mCellmlTreeView->isExpanded(pIndex);
+    } else {
+        return true;
+    }
 }
 
 //==============================================================================

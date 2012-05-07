@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
+        <file>oxygen/actions/list-add.png</file>
+        <file>oxygen/actions/list-remove.png</file>
         <file alias="CellMLAnnotationView_fr">../../../../../build/CellMLAnnotationView_fr.qm</file>
     </qresource>
 </RCC>
