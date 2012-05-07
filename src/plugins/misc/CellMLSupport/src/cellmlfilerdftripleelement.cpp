@@ -6,6 +6,10 @@
 
 //==============================================================================
 
+#include <QMap>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -58,10 +62,31 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
             } else {
                 // The node doesn't support any interface, so initialise it
                 // using only its object id
+                // Note: this object id returned by the CellML API will look
+                //       something like
+                //
+                //          7EQ?;?Y?A?w???A
+                //
+                //       which is not really user-friendly, so we generate our
+                //       own object id...
+
+                static QMap<QString, QString> objIds;
+                static int objIdCounter = 0;
+
+                QString objectId = QString::fromStdString(pNode->objid()).trimmed();
 
                 mType = Object;
 
-                mObjectId = QString::fromStdString(pNode->objid()).trimmed();
+                mObjectId = objIds.value(objectId);
+
+                if (mObjectId == QString()) {
+                    // There is no objId value for the current object id, so
+                    // generate one and keep track of it
+
+                    mObjectId.sprintf("objid:%05d", ++objIdCounter);
+
+                    objIds.insert(objectId, mObjectId);
+                }
             }
         }
     }
