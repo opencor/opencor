@@ -244,8 +244,10 @@ void HelpWindow::on_actionPrint_triggered()
 
 //==============================================================================
 
-void HelpWindow::customContextMenu(const QPoint &) const
+void HelpWindow::customContextMenu(const QPoint &pPosition) const
 {
+    Q_UNUSED(pPosition);
+
     // Create a custom context menu which items match the contents of our
     // toolbar
 

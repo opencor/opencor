@@ -52,15 +52,6 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
 
 //==============================================================================
 
-FileBrowserWidget::~FileBrowserWidget()
-{
-    // Delete some internal objects
-
-    delete mDataModel;
-}
-
-//==============================================================================
-
 static const QString SettingsColumnWidth = "ColumnWidth";
 static const QString SettingsInitialPath = "InitialPath";
 static const QString SettingsSortColumn  = "SortColumn";

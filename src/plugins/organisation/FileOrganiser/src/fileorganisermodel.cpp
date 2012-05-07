@@ -17,6 +17,13 @@ namespace FileOrganiser {
 
 //==============================================================================
 
+FileOrganiserModel::FileOrganiserModel(QObject *pParent) :
+    QStandardItemModel(pParent)
+{
+}
+
+//==============================================================================
+
 QStringList FileOrganiserModel::mimeTypes() const
 {
     // Return the MIME types supported by our model

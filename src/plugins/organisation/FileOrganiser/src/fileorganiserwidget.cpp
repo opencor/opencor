@@ -31,7 +31,7 @@ FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
 {
     // Create an instance of the data model that we want to view
 
-    mDataModel = new FileOrganiserModel();
+    mDataModel = new FileOrganiserModel(this);
 
     // Create our 'local' file manager (as opposed to the 'global' file manager
     // that comes with the FileManager class)
@@ -72,7 +72,6 @@ FileOrganiserWidget::~FileOrganiserWidget()
     // Delete some internal objects
 
     delete mFileManager;
-    delete mDataModel;
 }
 
 //==============================================================================
