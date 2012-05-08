@@ -36,10 +36,6 @@ void usage(QCoreApplication *pApp)
     std::cout << " -h, --help      Display this help information" << std::endl;
     std::cout << " -v, --version   Display OpenCOR version information"
               << std::endl;
-    std::cout << std::endl;
-    std::cout << "Mandatory or optional arguments to long options are "
-              << "also mandatory or optional" << std::endl;
-    std::cout << "for any corresponding short options." << std::endl;
 }
 
 //==============================================================================
