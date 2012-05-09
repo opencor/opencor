@@ -798,8 +798,10 @@ void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
     if (modeActive) {
         int modeViewsCrtIndex = mode->views()->currentIndex();
 
-        pGuiInterface  = mode->viewInterfaces()->value(modeViewsCrtIndex);
-        pModeViewIndex = mode->viewSettings()->value(modeViewsCrtIndex)->index();
+        if (modeViewsCrtIndex != -1) {
+            pGuiInterface  = mode->viewInterfaces()->value(modeViewsCrtIndex);
+            pModeViewIndex = mode->viewSettings()->value(modeViewsCrtIndex)->index();
+        }
     }
 }
 

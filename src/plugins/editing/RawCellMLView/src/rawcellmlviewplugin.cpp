@@ -28,7 +28,7 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
                           PluginInfo::Gui,
                           PluginInfo::Editing,
                           true,
-                          QStringList() << "CoreCellMLEditing" << "QScintillaSupport",
+                          QStringList() << "CoreCellMLEditing" << "QScintillaSupport" << "Viewer",
                           descriptions);
 }
 
