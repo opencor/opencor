@@ -160,9 +160,9 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mContents->addWidget(mLogoView);
 
-    // Create our no view widget which contains a label that will display a
-    // customised warning message to the user to let him know that there is no
-    // view for the current file using the current view
+    // Create our no view widget which contains a label which will display a
+    // customised warning message to let the user know that there view doesn't
+    // support the type of the current file
 
     mNoView = new QWidget(this);
 

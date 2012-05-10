@@ -245,8 +245,7 @@ PluginInfo Plugin::info(const QString &pFileName)
     //       Windows, we do this (by keeping track of the current directory
     //       and) by going to the directory where our plugins are located.
     //       However, this approach doesn't work on Linux, so instead we rely
-    //       on LD_LIBRARY_PATH to get the result we are after (in fact, it is
-    //       probably a better approach!), so...
+    //       on RPATH to get the result we are after...
 
     typedef void * (*PluginInfoFunc)();
 
