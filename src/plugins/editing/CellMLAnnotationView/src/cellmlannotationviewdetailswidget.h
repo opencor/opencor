@@ -57,27 +57,28 @@ public:
         Metadata
     };
 
-    struct Row
+    struct Item
     {
         Type type;
         CellMLSupport::CellmlFileElement *element;
     };
+
+    typedef QList<Item> Items;
 
     explicit CellmlAnnotationViewDetailsWidget(QWidget *pParent);
     ~CellmlAnnotationViewDetailsWidget();
 
     virtual void retranslateUi();
 
-    static Row row(const Type &pType = Empty,
-                   CellMLSupport::CellmlFileElement *pElement = 0);
+    static Item item(const Type &pType = Empty,
+                     CellMLSupport::CellmlFileElement *pElement = 0);
 
-    void updateGui(const Row &pRow, const bool &pNeedRetranslating = false);
+    void updateGui(const Items &pItems);
 
 private:
     Ui::CellmlAnnotationViewDetailsWidget *mGui;
 
-    Type mType;
-    CellMLSupport::CellmlFileElement *mElement;
+    Items mItems;
 
     void addRowToFormLayout(const QString &pLabel, const QString &pValue);
 };
