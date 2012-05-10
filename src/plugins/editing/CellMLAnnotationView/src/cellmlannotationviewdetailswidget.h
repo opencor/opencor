@@ -57,14 +57,21 @@ public:
         Metadata
     };
 
+    struct Row
+    {
+        Type type;
+        CellMLSupport::CellmlFileElement *element;
+    };
+
     explicit CellmlAnnotationViewDetailsWidget(QWidget *pParent);
     ~CellmlAnnotationViewDetailsWidget();
 
     virtual void retranslateUi();
 
-    void updateGui(const Type &pType,
-                   CellMLSupport::CellmlFileElement *pElement = 0,
-                   const bool &pNeedRetranslating = false);
+    static Row row(const Type &pType = Empty,
+                   CellMLSupport::CellmlFileElement *pElement = 0);
+
+    void updateGui(const Row &pRow, const bool &pNeedRetranslating = false);
 
 private:
     Ui::CellmlAnnotationViewDetailsWidget *mGui;

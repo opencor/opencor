@@ -889,84 +889,84 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
 
     switch (cellmlElementItem->type()) {
     case CellmlElementItem::Model:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Model,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::Model,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::Import:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Import,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::Import,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::ImportUnit:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::ImportUnit,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::ImportUnit,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::ImportComponent:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::ImportComponent,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::ImportComponent,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::Unit:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Unit,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::Unit,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::UnitElement:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::UnitElement,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::UnitElement,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::Component:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Component,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::Component,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::Variable:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Variable,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::Variable,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::Group:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Group,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::Group,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::RelationshipReference:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::RelationshipReference,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::RelationshipReference,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::ComponentReference:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::ComponentReference,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::ComponentReference,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::Connection:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Connection,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::Connection,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::ComponentMapping:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::ComponentMapping,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::ComponentMapping,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::VariableMapping:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::VariableMapping,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::VariableMapping,
+                                                                   cellmlElementItem->element()));
 
         break;
     case CellmlElementItem::Metadata:
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Metadata,
-                            cellmlElementItem->element());
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::Metadata,
+                                                                   cellmlElementItem->element()));
 
         break;
     default:
         // Either an error, warning or category, so nothing to show...
 
-        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Empty);
+        mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Row());
     }
 }
 
@@ -978,7 +978,7 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
     Q_UNUSED(pNewIndex);
     Q_UNUSED(pOldIndex);
 
-    mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Metadata);
+    mDetails->updateGui(CellmlAnnotationViewDetailsWidget::row(CellmlAnnotationViewDetailsWidget::Metadata));
 }
 
 //==============================================================================

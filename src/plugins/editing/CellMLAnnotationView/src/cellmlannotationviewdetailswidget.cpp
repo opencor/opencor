@@ -50,26 +50,41 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
     // Update the GUI (since some labels get reinitialised as a result of the
     // retranslation)
 
-    updateGui(mType, mElement, true);
+    updateGui(CellmlAnnotationViewDetailsWidget::row(mType, mElement),
+              true);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
-                                                  CellMLSupport::CellmlFileElement *pElement,
+CellmlAnnotationViewDetailsWidget::Row CellmlAnnotationViewDetailsWidget::row(const Type &pType,
+                                                                              CellMLSupport::CellmlFileElement *pElement)
+{
+    // Return a formatted Row 'object'
+
+    Row res;
+
+    res.type    = pType;
+    res.element = pElement;
+
+    return res;
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewDetailsWidget::updateGui(const Row &pRow,
                                                   const bool &pNeedRetranslating)
 {
-    Q_ASSERT(   (((pType == Empty) || (pType == Metadata)) && !pElement)
-             || ((pType != Empty) && (pType != Metadata) && pElement));
+    Q_ASSERT(   (((pRow.type == Empty) || (pRow.type == Metadata)) && !pRow.element)
+             || ((pRow.type != Empty) && (pRow.type != Metadata) && pRow.element));
 
     // Keep track of the new type and element
 
-    mType = pType;
-    mElement = pElement;
+    mType = pRow.type;
+    mElement = pRow.element;
 
     // Determine which widget should be shown/hidden
 
-    bool showCmetaId = (pType != Metadata) && (pType != Empty);
+    bool showCmetaId = (pRow.type != Metadata) && (pRow.type != Empty);
     bool showName = false;
     bool showXlinkHref = false;
     bool showUnitReference = false;
@@ -86,7 +101,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     bool showFirstVariable = false;
     bool showSecondVariable = false;
 
-    switch (pType) {
+    switch (pRow.type) {
     case Model:
         showName = true;
 
@@ -178,34 +193,34 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
     // Add whatever we need
     // Note: as long as all of the widgets' parent is ourselves, then they
     //       will get automatically deleted, so no need to delete them in
-    //       CellmlAnnotationViewDetailsWidget's destructor...
+    //       ~CellmlAnnotationViewDetailsWidget()...
 
     if (showCmetaId)
         mGui->formLayout->addRow(new QLabel(tr("cmeta:id:"), this),
-                                 new QLineEdit(pElement->cmetaId(), this));
+                                 new QLineEdit(pRow.element->cmetaId(), this));
 
     if (showName)
         addRowToFormLayout(tr("Name:"),
-                           static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
+                           static_cast<CellMLSupport::CellmlFileNamedElement *>(pRow.element)->name());
 
     if (showXlinkHref)
         addRowToFormLayout(tr("xlink:href:"),
-                           static_cast<CellMLSupport::CellmlFileImport *>(pElement)->xlinkHref());
+                           static_cast<CellMLSupport::CellmlFileImport *>(pRow.element)->xlinkHref());
 
     if (showUnitReference)
         addRowToFormLayout(tr("Unit reference:"),
-                           static_cast<CellMLSupport::CellmlFileImportUnit *>(pElement)->unitReference());
+                           static_cast<CellMLSupport::CellmlFileImportUnit *>(pRow.element)->unitReference());
 
     if (showComponentReference)
         addRowToFormLayout(tr("Component reference:"),
-                           static_cast<CellMLSupport::CellmlFileImportComponent *>(pElement)->componentReference());
+                           static_cast<CellMLSupport::CellmlFileImportComponent *>(pRow.element)->componentReference());
 
     if (showUnit)
         addRowToFormLayout(tr("Unit:"),
-                           static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->unit());
+                           static_cast<CellMLSupport::CellmlFileVariable *>(pRow.element)->unit());
 
     if (showInitialValue) {
-        QString initialValue = static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->initialValue();
+        QString initialValue = static_cast<CellMLSupport::CellmlFileVariable *>(pRow.element)->initialValue();
 
         addRowToFormLayout(tr("Initial value:"),
                            initialValue.isEmpty()?"/":initialValue);
@@ -213,18 +228,18 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
     if (showPublicInterface)
         addRowToFormLayout(tr("Public interface:"),
-                           static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->publicInterfaceAsString());
+                           static_cast<CellMLSupport::CellmlFileVariable *>(pRow.element)->publicInterfaceAsString());
 
     if (showPrivateInterface)
         addRowToFormLayout(tr("Private interface:"),
-                           static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->privateInterfaceAsString());
+                           static_cast<CellMLSupport::CellmlFileVariable *>(pRow.element)->privateInterfaceAsString());
 
     if (showRelationship)
         addRowToFormLayout(tr("Relationship:"),
-                           static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationship());
+                           static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pRow.element)->relationship());
 
     if (showRelationshipNamespace) {
-        QString relationshipNamespace = static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationshipNamespace();
+        QString relationshipNamespace = static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pRow.element)->relationshipNamespace();
 
         addRowToFormLayout(tr("Relationship namespace:"),
                            relationshipNamespace.isEmpty()?"/":relationshipNamespace);
@@ -232,23 +247,23 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
     if (showComponent)
         addRowToFormLayout(tr("Component:"),
-                           static_cast<CellMLSupport::CellmlFileComponentReference *>(pElement)->component());
+                           static_cast<CellMLSupport::CellmlFileComponentReference *>(pRow.element)->component());
 
     if (showFirstComponent)
         addRowToFormLayout(tr("First component:"),
-                           static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->firstComponent());
+                           static_cast<CellMLSupport::CellmlFileMapComponents *>(pRow.element)->firstComponent());
 
     if (showSecondComponent)
         addRowToFormLayout(tr("Second component:"),
-                           static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->secondComponent());
+                           static_cast<CellMLSupport::CellmlFileMapComponents *>(pRow.element)->secondComponent());
 
     if (showFirstVariable)
         addRowToFormLayout(tr("First variable:"),
-                           static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->firstVariable());
+                           static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pRow.element)->firstVariable());
 
     if (showSecondVariable)
         addRowToFormLayout(tr("Second variable:"),
-                           static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->secondVariable());
+                           static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pRow.element)->secondVariable());
 
     // Re-show ourselves
 
