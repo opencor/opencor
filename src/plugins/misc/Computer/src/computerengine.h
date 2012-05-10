@@ -41,7 +41,7 @@ typedef QMap<ComputerEquation *, int> ComputerEngineEquationAssemblyCodeIndexes;
 
 //==============================================================================
 
-struct ComputerEngineData
+class ComputerEngineData
 {
 public:
     explicit ComputerEngineData();
