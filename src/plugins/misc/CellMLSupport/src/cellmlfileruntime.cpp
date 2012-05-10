@@ -475,13 +475,17 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
     // Note: this can be done by checking whether some equations were flagged
     //       as needing a Newton-Raphson evaluation...
 
-QTime time;
+#ifdef QT_DEBUG
+    QTime time;
 
-time.start();
+    time.start();
+#endif
 
     getOdeCodeInformation(pModel);
 
-qDebug(" - CellML ODE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+#ifdef QT_DEBUG
+    qDebug(" - CellML ODE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+#endif
 
     if (!mOdeCodeInformation) {
         // No ODE code information could be retrieved, so...
@@ -505,17 +509,23 @@ qDebug(" - CellML ODE code information time: %s s", qPrintable(QString::number(0
     if (mModelType == Ode)
         genericCodeInformation = mOdeCodeInformation;
     else
-{
-time.restart();
+#ifdef QT_DEBUG
+    {
+        time.restart();
+#endif
 
         genericCodeInformation = getDaeCodeInformation(pModel);
 
-qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-}
+#ifdef QT_DEBUG
+        qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+    }
+#endif
 
     // Get some binary code
 
-time.restart();
+#ifdef QT_DEBUG
+    time.restart();
+#endif
 
     QString initializeConstantsString = QString::fromStdWString(genericCodeInformation->initConstsString());
 
@@ -556,7 +566,9 @@ time.restart();
         checkFunction("computeStateInformation");
     }
 
-qDebug(" - CellML binary code time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+#ifdef QT_DEBUG
+    qDebug(" - CellML binary code time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+#endif
 
     // Keep track of the ODE/DAE functions, but only if no issues were reported
 

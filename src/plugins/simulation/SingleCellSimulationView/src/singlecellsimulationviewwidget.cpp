@@ -170,6 +170,7 @@ static const QString SettingsVerticalSplitterSize       = "GraphPanelsSize%1";
 
 void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 {
+#ifdef QT_DEBUG
     foreach (SolverInterface *solverInterface, mSolverInterfaces) {
         qDebug("---------------------------------------");
         qDebug("'%s' solver:", qPrintable(solverInterface->name()));
@@ -207,8 +208,7 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
             qDebug(" - Properties: none");
         }
     }
-
-
+#endif
 
     // Retrieve and set the sizes of our vertical splitter
 
