@@ -71,54 +71,6 @@ private:
 
     Type mType;
     CellMLSupport::CellmlFileElement *mElement;
-
-    QLabel *mCmetaIdLabel;
-    QLineEdit *mCmetaIdValue;
-
-    QLabel *mNameLabel;
-    QLabel *mNameValue;
-
-    QLabel *mXlinkHrefLabel;
-    QLabel *mXlinkHrefValue;
-
-    QLabel *mUnitReferenceLabel;
-    QLabel *mUnitReferenceValue;
-
-    QLabel *mComponentReferenceLabel;
-    QLabel *mComponentReferenceValue;
-
-    QLabel *mUnitLabel;
-    QLabel *mUnitValue;
-
-    QLabel *mInitialValueLabel;
-    QLabel *mInitialValueValue;
-
-    QLabel *mPublicInterfaceLabel;
-    QLabel *mPublicInterfaceValue;
-
-    QLabel *mPrivateInterfaceLabel;
-    QLabel *mPrivateInterfaceValue;
-
-    QLabel *mRelationshipLabel;
-    QLabel *mRelationshipValue;
-
-    QLabel *mRelationshipNamespaceLabel;
-    QLabel *mRelationshipNamespaceValue;
-
-    QLabel *mComponentLabel;
-    QLabel *mComponentValue;
-
-    QLabel *mFirstComponentLabel;
-    QLabel *mFirstComponentValue;
-
-    QLabel *mSecondComponentLabel;
-    QLabel *mSecondComponentValue;
-
-    QLabel *mFirstVariableLabel;
-    QLabel *mFirstVariableValue;
-
-    QLabel *mSecondVariableLabel;
-    QLabel *mSecondVariableValue;
 };
 
 //==============================================================================

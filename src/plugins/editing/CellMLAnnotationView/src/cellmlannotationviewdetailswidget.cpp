@@ -64,14 +64,12 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
     // Keep track of the new type and element
 
-    bool needUpdatingGui = (mType != pType) || pNeedRetranslating;
-
     mType = pType;
     mElement = pElement;
 
     // Determine which widget should be shown/hidden
 
-    bool showCmetaId = false;
+    bool showCmetaId = (pType != Metadata) && (pType != Empty);
     bool showName = false;
     bool showXlinkHref = false;
     bool showUnitReference = false;
@@ -90,44 +88,36 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
     switch (pType) {
     case Model:
-        showCmetaId = true;
         showName = true;
 
         break;
     case Import:
-        showCmetaId = true;
         showXlinkHref = true;
 
         break;
     case ImportUnit:
-        showCmetaId = true;
         showName = true;
         showUnitReference = true;
 
         break;
     case ImportComponent:
-        showCmetaId = true;
         showName = true;
         showComponentReference = true;
 
         break;
     case Unit:
-        showCmetaId = true;
         showName = true;
 
         break;
     case UnitElement:
-        showCmetaId = true;
         showName = true;
 
         break;
     case Component:
-        showCmetaId = true;
         showName = true;
 
         break;
     case Variable:
-        showCmetaId = true;
         showName = true;
         showUnit = true;
         showInitialValue = true;
@@ -136,32 +126,24 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
         break;
     case Group:
-        showCmetaId = true;
-
         break;
     case RelationshipReference:
-        showCmetaId = true;
         showRelationship = true;
         showRelationshipNamespace = true;
 
         break;
     case ComponentReference:
-        showCmetaId = true;
         showComponent = true;
 
         break;
     case Connection:
-        showCmetaId = true;
-
         break;
     case ComponentMapping:
-        showCmetaId = true;
         showFirstComponent = true;
         showSecondComponent = true;
 
         break;
     case VariableMapping:
-        showCmetaId = true;
         showFirstVariable = true;
         showSecondVariable = true;
 
@@ -174,249 +156,149 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         ;
     };
 
-    // Show/hide the relevant widgets, but only if required
+    // Remove everything from our form layout
 
-    if (needUpdatingGui) {
-        // Remove everything from our form layout
-        // Note: ideally, we wouldn't have to remove everything and add whatever
-        //       widgets we need. Instead, and ideally, we would have all the
-        //       rows of widgets that we will ever need and would just show/hide
-        //       whichever rows we need / don't need. Now, we can show/hide
-        //       indvidual widgets, but not rows and this is where the problem
-        //       lies since if we hide all the widgets that make up a row, then
-        //       we will still have the layout will still show the space which
-        //       exists (and which we want) between two rows, so it will look
-        //       odd, hence everytime we are dealing with a new type of element,
-        //       we remove everything and add whatever we need...
+    for (int i = 0, iMax = mGui->formLayout->count(); i < iMax; ++i) {
+        QLayoutItem *item = mGui->formLayout->takeAt(0);
 
-        for (int i = 0, iMax = mGui->formLayout->count(); i < iMax; ++i) {
-            QLayoutItem *item = mGui->formLayout->takeAt(0);
-
-            delete item->widget();
-            delete item;
-        }
-
-        // Add whatever we need
-        // Note: as long as all of the widgets' parent is ourselves, then they
-        //       will get automatically deleted, so no need to delete them in
-        //       CellmlAnnotationViewDetailsWidget's destructor...
-
-        if (showCmetaId) {
-            mCmetaIdLabel = new QLabel(tr("cmeta:id:"), this);
-            mCmetaIdValue = new QLineEdit(this);
-
-            mGui->formLayout->addRow(mCmetaIdLabel, mCmetaIdValue);
-        } else {
-            mCmetaIdLabel = 0;
-            mCmetaIdValue = 0;
-        }
-
-        if (showName) {
-            mNameLabel = new QLabel(tr("Name:"), this);
-            mNameValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mNameLabel, mNameValue);
-        } else {
-            mNameLabel = 0;
-            mNameValue = 0;
-        }
-
-        if (showXlinkHref) {
-            mXlinkHrefLabel = new QLabel(tr("xlink:href:"), this);
-            mXlinkHrefValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mXlinkHrefLabel, mXlinkHrefValue);
-        } else {
-            mXlinkHrefLabel = 0;
-            mXlinkHrefValue = 0;
-        }
-
-        if (showUnitReference) {
-            mUnitReferenceLabel = new QLabel(tr("Unit reference:"), this);
-            mUnitReferenceValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mUnitReferenceLabel, mUnitReferenceValue);
-        } else {
-            mUnitReferenceLabel = 0;
-            mUnitReferenceValue = 0;
-        }
-
-        if (showComponentReference) {
-            mComponentReferenceLabel = new QLabel(tr("Component reference:"), this);
-            mComponentReferenceValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mComponentReferenceLabel, mComponentReferenceValue);
-        } else {
-            mComponentReferenceLabel = 0;
-            mComponentReferenceValue = 0;
-        }
-
-        if (showUnit) {
-            mUnitLabel = new QLabel(tr("Unit:"), this);
-            mUnitValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mUnitLabel, mUnitValue);
-        } else {
-            mUnitLabel = 0;
-            mUnitValue = 0;
-        }
-
-        if (showInitialValue) {
-            mInitialValueLabel = new QLabel(tr("Initial value:"), this);
-            mInitialValueValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mInitialValueLabel, mInitialValueValue);
-        } else {
-            mInitialValueLabel = 0;
-            mInitialValueValue = 0;
-        }
-
-        if (showPublicInterface) {
-            mPublicInterfaceLabel = new QLabel(tr("Public interface:"), this);
-            mPublicInterfaceValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mPublicInterfaceLabel, mPublicInterfaceValue);
-        } else {
-            mPublicInterfaceLabel = 0;
-            mPublicInterfaceValue = 0;
-        }
-
-        if (showPrivateInterface) {
-            mPrivateInterfaceLabel = new QLabel(tr("Private interface:"), this);
-            mPrivateInterfaceValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mPrivateInterfaceLabel, mPrivateInterfaceValue);
-        } else {
-            mPrivateInterfaceLabel = 0;
-            mPrivateInterfaceValue = 0;
-        }
-
-        if (showRelationship) {
-            mRelationshipLabel = new QLabel(tr("Relationship:"), this);
-            mRelationshipValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mRelationshipLabel, mRelationshipValue);
-        } else {
-            mRelationshipLabel = 0;
-            mRelationshipValue = 0;
-        }
-
-        if (showRelationshipNamespace) {
-            mRelationshipNamespaceLabel = new QLabel(tr("Relationship namespace:"), this);
-            mRelationshipNamespaceValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mRelationshipNamespaceLabel, mRelationshipNamespaceValue);
-        } else {
-            mRelationshipNamespaceLabel = 0;
-            mRelationshipNamespaceValue = 0;
-        }
-
-        if (showComponent) {
-            mComponentLabel = new QLabel(tr("Component:"), this);
-            mComponentValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mComponentLabel, mComponentValue);
-        } else {
-            mComponentLabel = 0;
-            mComponentValue = 0;
-        }
-
-        if (showFirstComponent) {
-            mFirstComponentLabel = new QLabel(tr("First component:"), this);
-            mFirstComponentValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mFirstComponentLabel, mFirstComponentValue);
-        } else {
-            mFirstComponentLabel = 0;
-            mFirstComponentValue = 0;
-        }
-
-        if (showSecondComponent) {
-            mSecondComponentLabel = new QLabel(tr("Second component:"), this);
-            mSecondComponentValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mSecondComponentLabel, mSecondComponentValue);
-        } else {
-            mSecondComponentLabel = 0;
-            mSecondComponentValue = 0;
-        }
-
-        if (showFirstVariable) {
-            mFirstVariableLabel = new QLabel(tr("First variable:"), this);
-            mFirstVariableValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mFirstVariableLabel, mFirstVariableValue);
-        } else {
-            mFirstVariableLabel = 0;
-            mFirstVariableValue = 0;
-        }
-
-        if (showSecondVariable) {
-            mSecondVariableLabel = new QLabel(tr("Second variable:"), this);
-            mSecondVariableValue = new QLabel(this);
-
-            mGui->formLayout->addRow(mSecondVariableLabel, mSecondVariableValue);
-        } else {
-            mSecondVariableLabel = 0;
-            mSecondVariableValue = 0;
-        }
+        delete item->widget();
+        delete item;
     }
 
-    // Update the value of the widgets which are shown
+    // Add whatever we need
+    // Note: as long as all of the widgets' parent is ourselves, then they
+    //       will get automatically deleted, so no need to delete them in
+    //       CellmlAnnotationViewDetailsWidget's destructor...
 
-    if (showCmetaId)
-        mCmetaIdValue->setText(pElement->cmetaId());
+    if (showCmetaId) {
+        QLabel *cmetaIdLabel = new QLabel(tr("cmeta:id:"), this);
+        QLineEdit *cmetaIdValue = new QLineEdit(pElement->cmetaId(), this);
 
-    if (showName)
-        mNameValue->setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
+        mGui->formLayout->addRow(cmetaIdLabel, cmetaIdValue);
+    }
 
-    if (showXlinkHref)
-        mXlinkHrefValue->setText(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->xlinkHref());
+    if (showName) {
+        QLabel *nameLabel = new QLabel(tr("Name:"), this);
+        QLabel *nameValue = new QLabel(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name(),
+                                       this);
 
-    if (showUnitReference)
-        mUnitReferenceValue->setText(static_cast<CellMLSupport::CellmlFileImportUnit *>(pElement)->unitReference());
+        mGui->formLayout->addRow(nameLabel, nameValue);
+    }
 
-    if (showComponentReference)
-        mComponentReferenceValue->setText(static_cast<CellMLSupport::CellmlFileImportComponent *>(pElement)->componentReference());
+    if (showXlinkHref) {
+        QLabel *xlinkHrefLabel = new QLabel(tr("xlink:href:"), this);
+        QLabel *xlinkHrefValue = new QLabel(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->xlinkHref(),
+                                            this);
 
-    if (showUnit)
-        mUnitValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->unit());
+        mGui->formLayout->addRow(xlinkHrefLabel, xlinkHrefValue);
+    }
+
+    if (showUnitReference) {
+        QLabel *unitReferenceLabel = new QLabel(tr("Unit reference:"), this);
+        QLabel *unitReferenceValue = new QLabel(static_cast<CellMLSupport::CellmlFileImportUnit *>(pElement)->unitReference(),
+                                                this);
+
+        mGui->formLayout->addRow(unitReferenceLabel, unitReferenceValue);
+    }
+
+    if (showComponentReference) {
+        QLabel *componentReferenceLabel = new QLabel(tr("Component reference:"), this);
+        QLabel *componentReferenceValue = new QLabel(static_cast<CellMLSupport::CellmlFileImportComponent *>(pElement)->componentReference(),
+                                                     this);
+
+        mGui->formLayout->addRow(componentReferenceLabel, componentReferenceValue);
+    }
+
+    if (showUnit) {
+        QLabel *unitLabel = new QLabel(tr("Unit:"), this);
+        QLabel *unitValue = new QLabel(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->unit(),
+                                       this);
+
+        mGui->formLayout->addRow(unitLabel, unitValue);
+    }
 
     if (showInitialValue) {
         QString initialValue = static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->initialValue();
 
-        mInitialValueValue->setText(initialValue.isEmpty()?"/":initialValue);
+        QLabel *initialValueLabel = new QLabel(tr("Initial value:"), this);
+        QLabel *initialValueValue = new QLabel(initialValue.isEmpty()?"/":initialValue, this);
+
+        mGui->formLayout->addRow(initialValueLabel, initialValueValue);
     }
 
-    if (showPublicInterface)
-        mPublicInterfaceValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->publicInterfaceAsString());
+    if (showPublicInterface) {
+        QLabel *publicInterfaceLabel = new QLabel(tr("Public interface:"), this);
+        QLabel *publicInterfaceValue = new QLabel(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->publicInterfaceAsString(),
+                                                  this);
 
-    if (showPrivateInterface)
-        mPrivateInterfaceValue->setText(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->privateInterfaceAsString());
+        mGui->formLayout->addRow(publicInterfaceLabel, publicInterfaceValue);
+    }
 
-    if (showRelationship)
-        mRelationshipValue->setText(static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationship());
+    if (showPrivateInterface) {
+        QLabel *privateInterfaceLabel = new QLabel(tr("Private interface:"), this);
+        QLabel *privateInterfaceValue = new QLabel(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->privateInterfaceAsString(),
+                                                   this);
+
+        mGui->formLayout->addRow(privateInterfaceLabel, privateInterfaceValue);
+    }
+
+    if (showRelationship) {
+        QLabel *relationshipLabel = new QLabel(tr("Relationship:"), this);
+        QLabel *relationshipValue = new QLabel(static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationship(),
+                                               this);
+
+        mGui->formLayout->addRow(relationshipLabel, relationshipValue);
+    }
 
     if (showRelationshipNamespace) {
         QString relationshipNamespace = static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationshipNamespace();
 
-        mRelationshipNamespaceValue->setText(relationshipNamespace.isEmpty()?"/":relationshipNamespace);
+        QLabel *relationshipNamespaceLabel = new QLabel(tr("Relationship namespace:"), this);
+        QLabel *relationshipNamespaceValue = new QLabel(relationshipNamespace.isEmpty()?"/":relationshipNamespace,
+                                                        this);
+
+        mGui->formLayout->addRow(relationshipNamespaceLabel, relationshipNamespaceValue);
     }
 
-    if (showComponent)
-        mComponentValue->setText(static_cast<CellMLSupport::CellmlFileComponentReference *>(pElement)->component());
+    if (showComponent) {
+        QLabel *componentLabel = new QLabel(tr("Component:"), this);
+        QLabel *componentValue = new QLabel(static_cast<CellMLSupport::CellmlFileComponentReference *>(pElement)->component(),
+                                            this);
 
-    if (showFirstComponent)
-        mFirstComponentValue->setText(static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->firstComponent());
+        mGui->formLayout->addRow(componentLabel, componentValue);
+    }
 
-    if (showSecondComponent)
-        mSecondComponentValue->setText(static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->secondComponent());
+    if (showFirstComponent) {
+        QLabel *firstComponentLabel = new QLabel(tr("First component:"), this);
+        QLabel *firstComponentValue = new QLabel(static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->firstComponent(),
+                                                 this);
 
-    if (showFirstVariable)
-        mFirstVariableValue->setText(static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->firstVariable());
+        mGui->formLayout->addRow(firstComponentLabel, firstComponentValue);
+    }
 
-    if (showSecondVariable)
-        mSecondVariableValue->setText(static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->secondVariable());
+    if (showSecondComponent) {
+        QLabel *secondComponentLabel = new QLabel(tr("Second component:"), this);
+        QLabel *secondComponentValue = new QLabel(static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->secondComponent(),
+                                                  this);
+
+        mGui->formLayout->addRow(secondComponentLabel, secondComponentValue);
+    }
+
+    if (showFirstVariable) {
+        QLabel *firstVariableLabel = new QLabel(tr("First variable:"), this);
+        QLabel *firstVariableValue = new QLabel(static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->firstVariable(),
+                                                this);
+
+        mGui->formLayout->addRow(firstVariableLabel, firstVariableValue);
+    }
+
+    if (showSecondVariable) {
+        QLabel *secondVariableLabel = new QLabel(tr("Second variable:"), this);
+        QLabel *secondVariableValue = new QLabel(static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->secondVariable(),
+                                                 this);
+
+        mGui->formLayout->addRow(secondVariableLabel, secondVariableValue);
+    }
 }
 
 //==============================================================================
