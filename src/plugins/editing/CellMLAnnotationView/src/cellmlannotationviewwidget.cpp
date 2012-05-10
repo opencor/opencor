@@ -1033,8 +1033,7 @@ void CellmlAnnotationViewWidget::on_actionExpandAll_triggered()
 void CellmlAnnotationViewWidget::on_actionCollapseAll_triggered()
 {
     // Collapse all the nodes below the current one
-    // Note: we disable and then re-enable updates before collapsing all the
-    //       index since it may end up in quite a few updates...
+    // Note: see the note in on_actionExpandAll_triggered() above...
 
     mCellmlTreeView->setUpdatesEnabled(false);
         indexCollapseAll(mCellmlTreeView->currentIndex());
