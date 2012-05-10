@@ -71,6 +71,8 @@ private:
 
     Type mType;
     CellMLSupport::CellmlFileElement *mElement;
+
+    void addRowToFormLayout(const QString &pLabel, const QString &pValue);
 };
 
 //==============================================================================

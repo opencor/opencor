@@ -158,8 +158,11 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
 
     // Hide ourselves (since we may potentially update ourselves quite a bit and
     // we want to avoid any flickering)
-    // Note: one would normally use setUpdatesEnabled(), but it still results in
-    //       bad flickering on Mac OS X, so...
+    // Note #1: one would normally use setUpdatesEnabled(), but it still results
+    //          in bad flickering on Mac OS X, so...
+    // Note #2: it's surprising that setVisible() doesn't cause any flickering
+    //          on any of the platforms we are targetting, but let's not
+    //          complain...
 
     setVisible(false);
 
@@ -182,88 +185,85 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
                                  new QLineEdit(pElement->cmetaId(), this));
 
     if (showName)
-        mGui->formLayout->addRow(new QLabel(tr("Name:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name(),
-                                            this));
+        addRowToFormLayout(tr("Name:"),
+                           static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
 
     if (showXlinkHref)
-        mGui->formLayout->addRow(new QLabel(tr("xlink:href:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileImport *>(pElement)->xlinkHref(),
-                                            this));
+        addRowToFormLayout(tr("xlink:href:"),
+                           static_cast<CellMLSupport::CellmlFileImport *>(pElement)->xlinkHref());
 
     if (showUnitReference)
-        mGui->formLayout->addRow(new QLabel(tr("Unit reference:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileImportUnit *>(pElement)->unitReference(),
-                                            this));
+        addRowToFormLayout(tr("Unit reference:"),
+                           static_cast<CellMLSupport::CellmlFileImportUnit *>(pElement)->unitReference());
 
     if (showComponentReference)
-        mGui->formLayout->addRow(new QLabel(tr("Component reference:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileImportComponent *>(pElement)->componentReference(),
-                                            this));
+        addRowToFormLayout(tr("Component reference:"),
+                           static_cast<CellMLSupport::CellmlFileImportComponent *>(pElement)->componentReference());
 
     if (showUnit)
-        mGui->formLayout->addRow(new QLabel(tr("Unit:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->unit(),
-                                            this));
+        addRowToFormLayout(tr("Unit:"),
+                           static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->unit());
 
     if (showInitialValue) {
         QString initialValue = static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->initialValue();
 
-        mGui->formLayout->addRow(new QLabel(tr("Initial value:"), this),
-                                 new QLabel(initialValue.isEmpty()?"/":initialValue, this));
+        addRowToFormLayout(tr("Initial value:"),
+                           initialValue.isEmpty()?"/":initialValue);
     }
 
     if (showPublicInterface)
-        mGui->formLayout->addRow(new QLabel(tr("Public interface:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->publicInterfaceAsString(),
-                                            this));
+        addRowToFormLayout(tr("Public interface:"),
+                           static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->publicInterfaceAsString());
 
     if (showPrivateInterface)
-        mGui->formLayout->addRow(new QLabel(tr("Private interface:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->privateInterfaceAsString(),
-                                            this));
+        addRowToFormLayout(tr("Private interface:"),
+                           static_cast<CellMLSupport::CellmlFileVariable *>(pElement)->privateInterfaceAsString());
 
     if (showRelationship)
-        mGui->formLayout->addRow(new QLabel(tr("Relationship:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationship(),
-                                            this));
+        addRowToFormLayout(tr("Relationship:"),
+                           static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationship());
 
     if (showRelationshipNamespace) {
         QString relationshipNamespace = static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationshipNamespace();
 
-        mGui->formLayout->addRow(new QLabel(tr("Relationship namespace:"), this),
-                                 new QLabel(relationshipNamespace.isEmpty()?"/":relationshipNamespace,
-                                            this));
+        addRowToFormLayout(tr("Relationship namespace:"),
+                           relationshipNamespace.isEmpty()?"/":relationshipNamespace);
     }
 
     if (showComponent)
-        mGui->formLayout->addRow(new QLabel(tr("Component:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileComponentReference *>(pElement)->component(),
-                                            this));
+        addRowToFormLayout(tr("Component:"),
+                           static_cast<CellMLSupport::CellmlFileComponentReference *>(pElement)->component());
 
     if (showFirstComponent)
-        mGui->formLayout->addRow(new QLabel(tr("First component:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->firstComponent(),
-                                            this));
+        addRowToFormLayout(tr("First component:"),
+                           static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->firstComponent());
 
     if (showSecondComponent)
-        mGui->formLayout->addRow(new QLabel(tr("Second component:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->secondComponent(),
-                                            this));
+        addRowToFormLayout(tr("Second component:"),
+                           static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement)->secondComponent());
 
     if (showFirstVariable)
-        mGui->formLayout->addRow(new QLabel(tr("First variable:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->firstVariable(),
-                                            this));
+        addRowToFormLayout(tr("First variable:"),
+                           static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->firstVariable());
 
     if (showSecondVariable)
-        mGui->formLayout->addRow(new QLabel(tr("Second variable:"), this),
-                                 new QLabel(static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->secondVariable(),
-                                            this));
+        addRowToFormLayout(tr("Second variable:"),
+                           static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->secondVariable());
 
     // Re-show ourselves
 
     setVisible(true);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewDetailsWidget::addRowToFormLayout(const QString &pLabel,
+                                                           const QString &pValue)
+{
+    // Add a row to our form layout
+
+    mGui->formLayout->addRow(new QLabel(pLabel, this),
+                             new QLabel(pValue, this));
 }
 
 //==============================================================================
