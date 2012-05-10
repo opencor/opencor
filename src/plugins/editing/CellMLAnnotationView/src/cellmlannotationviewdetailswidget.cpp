@@ -156,6 +156,13 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         ;
     };
 
+    // Hide ourselves (since we may potentially update ourselves quite a bit and
+    // we want to avoid any flickering)
+    // Note: one would normally use setUpdatesEnabled(), but it still results in
+    //       bad flickering on Mac OS X, so...
+
+    setVisible(false);
+
     // Remove everything from our form layout
 
     for (int i = 0, iMax = mGui->formLayout->count(); i < iMax; ++i) {
@@ -253,6 +260,10 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Type &pType,
         mGui->formLayout->addRow(new QLabel(tr("Second variable:"), this),
                                  new QLabel(static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement)->secondVariable(),
                                             this));
+
+    // Re-show ourselves
+
+    setVisible(true);
 }
 
 //==============================================================================
