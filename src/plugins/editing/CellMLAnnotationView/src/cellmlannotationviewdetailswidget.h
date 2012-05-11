@@ -61,6 +61,7 @@ public:
     {
         Type type;
         CellMLSupport::CellmlFileElement *element;
+        QString name;
     };
 
     typedef QList<Item> Items;
@@ -71,7 +72,8 @@ public:
     virtual void retranslateUi();
 
     static Item item(const Type &pType = Empty,
-                     CellMLSupport::CellmlFileElement *pElement = 0);
+                     CellMLSupport::CellmlFileElement *pElement = 0,
+                     const QString &pName = QString());
 
     void updateGui(const Items &pItems);
 

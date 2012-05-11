@@ -57,7 +57,8 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
 //==============================================================================
 
 CellmlAnnotationViewDetailsWidget::Item CellmlAnnotationViewDetailsWidget::item(const Type &pType,
-                                                                                CellMLSupport::CellmlFileElement *pElement)
+                                                                                CellMLSupport::CellmlFileElement *pElement,
+                                                                                const QString &pName)
 {
     // Return a formatted Item 'object'
 
@@ -65,6 +66,7 @@ CellmlAnnotationViewDetailsWidget::Item CellmlAnnotationViewDetailsWidget::item(
 
     res.type    = pType;
     res.element = pElement;
+    res.name    = pName;
 
     return res;
 }
@@ -125,6 +127,11 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
 
         switch (item.type) {
         case Model:
+        case Unit:
+        case UnitElement:
+        case Component:
+        case Group:
+        case Connection:
             showName = true;
 
             break;
@@ -142,18 +149,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
             showComponentReference = true;
 
             break;
-        case Unit:
-            showName = true;
-
-            break;
-        case UnitElement:
-            showName = true;
-
-            break;
-        case Component:
-            showName = true;
-
-            break;
         case Variable:
             showName = true;
             showUnit = true;
@@ -161,8 +156,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
             showPublicInterface = true;
             showPrivateInterface = true;
 
-            break;
-        case Group:
             break;
         case RelationshipReference:
             showRelationship = true;
@@ -172,8 +165,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
         case ComponentReference:
             showComponent = true;
 
-            break;
-        case Connection:
             break;
         case ComponentMapping:
             showFirstComponent = true;
@@ -214,9 +205,17 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
                                    cmetaId.isEmpty()?"/":cmetaId);
         }
 
-        if (showName)
-            addRowToFormLayout(tr("Name:"),
-                               static_cast<CellMLSupport::CellmlFileNamedElement *>(item.element)->name());
+        if (showName) {
+            // Retrieve the name of the CellML element
+            // Note: in the case of a group or a connection, there won't be a
+            //       name, so we use the item's name, hoping one was provided...
+
+            QString name = ((item.type == Group) || (item.type == Connection))?
+                               item.name:
+                               static_cast<CellMLSupport::CellmlFileNamedElement *>(item.element)->name();
+
+            addRowToFormLayout(tr("Name:"), name);
+        }
 
         if (showXlinkHref)
             addRowToFormLayout(tr("xlink:href:"),

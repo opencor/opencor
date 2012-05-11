@@ -939,7 +939,8 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
                 break;
             case CellmlElementItem::Group:
                 items << CellmlAnnotationViewDetailsWidget::item(CellmlAnnotationViewDetailsWidget::Group,
-                                                                 crtCellmlElementItem->element());
+                                                                 crtCellmlElementItem->element(),
+                                                                 crtCellmlElementItem->text());
 
                 break;
             case CellmlElementItem::RelationshipReference:
@@ -954,7 +955,8 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
                 break;
             case CellmlElementItem::Connection:
                 items << CellmlAnnotationViewDetailsWidget::item(CellmlAnnotationViewDetailsWidget::Connection,
-                                                                 crtCellmlElementItem->element());
+                                                                 crtCellmlElementItem->element(),
+                                                                 crtCellmlElementItem->text());
 
                 break;
             case CellmlElementItem::ComponentMapping:
