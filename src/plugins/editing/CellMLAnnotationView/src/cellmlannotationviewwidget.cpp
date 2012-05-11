@@ -985,6 +985,14 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
         crtIndex = crtIndex.parent();
     } while (crtIndex != QModelIndex());
 
+    // Reverse the list, so that we start from the item's parents and finish
+    // with the item itself
+
+    int itemsCount = items.count();
+
+    for (int i = 0, iMax = itemsCount >> 1; i < iMax; ++i)
+        items.swap(i, itemsCount-(i+1));
+
     // Update the details GUI
 
     mDetails->updateGui(items);

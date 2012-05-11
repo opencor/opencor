@@ -100,7 +100,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
 
     // Go through the different items which properties we want to add to the GUI
 
-    for (int i = 0, iMax = pItems.count(); i < iMax; ++i) {
+    for (int i = 0, iLast = pItems.count()-1; i <= iLast; ++i) {
         Item item = pItems.at(i);
 
         Q_ASSERT(   (((item.type == Empty) || (item.type == Metadata)) && !item.element)
@@ -189,20 +189,43 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
         //       will get automatically deleted, so no need to delete them in
         //       ~CellmlAnnotationViewDetailsWidget()...
 
-        if (i)
-            mGui->formLayout->addRow(Core::newLineWidget(this));
+        // Add a bold centered label as a header to let the user know what type
+        // of item we are talking about
+
+        QLabel *header = new QLabel(typeAsString(item.type), this);
+
+        QFont headerFont = header->font();
+
+        headerFont.setBold(true);
+
+        header->setAlignment(Qt::AlignCenter);
+        header->setFont(headerFont);
+
+        mGui->formLayout->addRow(header);
+
+        // Show the item's properties
 
         if (showCmetaId) {
             // We only want to allow the editing of the very first item
 
             QString cmetaId = item.element->cmetaId();
 
-            if (!i)
+            if (i == iLast) {
+                // This is our 'main' current item, so we want to allow the user
+                // to edit its cmeta:id
+
+                mCmetaIdValue = new QLineEdit(cmetaId, this);
+
+                mCmetaIdValue->setFocus();
+
                 mGui->formLayout->addRow(new QLabel(tr("cmeta:id:"), this),
-                                         new QLineEdit(cmetaId, this));
-            else
+                                         mCmetaIdValue);
+            } else {
+                // Not our 'main' current item, so just display its cmeta:id
+
                 addRowToFormLayout(tr("cmeta:id:"),
                                    cmetaId.isEmpty()?"/":cmetaId);
+            }
         }
 
         if (showName) {
@@ -211,7 +234,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
             //       name, so we use the item's name, hoping one was provided...
 
             QString name = ((item.type == Group) || (item.type == Connection))?
-                               item.name:
+                               item.name.isEmpty()?"/":item.name:
                                static_cast<CellMLSupport::CellmlFileNamedElement *>(item.element)->name();
 
             addRowToFormLayout(tr("Name:"), name);
@@ -294,6 +317,48 @@ void CellmlAnnotationViewDetailsWidget::addRowToFormLayout(const QString &pLabel
 
     mGui->formLayout->addRow(new QLabel(pLabel, this),
                              new QLabel(pValue, this));
+}
+
+//==============================================================================
+
+QString CellmlAnnotationViewDetailsWidget::typeAsString(const Type &pType) const
+{
+    switch (pType) {
+    case Model:
+        return tr("Model");
+    case Import:
+        return tr("Import");
+    case ImportUnit:
+        return tr("Imported unit");
+    case ImportComponent:
+        return tr("Imported component");
+    case Unit:
+        return tr("Unit");
+    case UnitElement:
+        return tr("Unit element");
+    case Component:
+        return tr("Component");
+    case Variable:
+        return tr("Variable");
+    case Group:
+        return tr("Group");
+    case RelationshipReference:
+        return tr("Relationshop reference");
+    case ComponentReference:
+        return tr("Component reference");
+    case Connection:
+        return tr("Connection");
+    case ComponentMapping:
+        return tr("Component mapping");
+    case VariableMapping:
+        return tr("Variable mapping");
+    case Metadata:
+        return tr("Metadata");
+    default:
+        // Empty
+
+        return QString();
+    }
 }
 
 //==============================================================================

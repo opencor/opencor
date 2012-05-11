@@ -71,7 +71,7 @@
     </message>
     <message>
         <source>Component reference:</source>
-        <translation>Référence composant :</translation>
+        <translation>Référence de composant :</translation>
     </message>
     <message>
         <source>xlink:href:</source>
@@ -92,6 +92,66 @@
     <message>
         <source>Second variable:</source>
         <translation>Deuxième variable :</translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation>Modèle</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>Import</translation>
+    </message>
+    <message>
+        <source>Unit</source>
+        <translation>Unité</translation>
+    </message>
+    <message>
+        <source>Unit element</source>
+        <translation>Elément unité</translation>
+    </message>
+    <message>
+        <source>Component</source>
+        <translation>Composant</translation>
+    </message>
+    <message>
+        <source>Variable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation>Groupe</translation>
+    </message>
+    <message>
+        <source>Relationshop reference</source>
+        <translation>Référence de relation</translation>
+    </message>
+    <message>
+        <source>Component reference</source>
+        <translation>Référence de composant</translation>
+    </message>
+    <message>
+        <source>Connection</source>
+        <translation>Connexion</translation>
+    </message>
+    <message>
+        <source>Component mapping</source>
+        <translation>Association de composant</translation>
+    </message>
+    <message>
+        <source>Variable mapping</source>
+        <translation>Association de variable</translation>
+    </message>
+    <message>
+        <source>Metadata</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Imported unit</source>
+        <translation>Unité importée</translation>
+    </message>
+    <message>
+        <source>Imported component</source>
+        <translation>Composant importé</translation>
     </message>
 </context>
 <context>

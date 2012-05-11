@@ -82,7 +82,11 @@ private:
 
     Items mItems;
 
+    QLineEdit *mCmetaIdValue;
+
     void addRowToFormLayout(const QString &pLabel, const QString &pValue);
+
+    QString typeAsString(const Type &pType) const;
 };
 
 //==============================================================================
