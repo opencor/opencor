@@ -63,6 +63,13 @@ MACRO(INITIALISE_PROJECT)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t-")
     ENDIF()
 
+    # Ask MSVC to ignore the LNK4099 warning since it has nothing to do with
+    # OpenCOR itself
+
+    IF(WIN32)
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /IGNORE:4099")
+    ENDIF()
+
     # Required packages
 
     IF(APPLE)
