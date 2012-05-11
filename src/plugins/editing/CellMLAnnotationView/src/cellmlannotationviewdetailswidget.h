@@ -77,6 +77,8 @@ public:
 
     void updateGui(const Items &pItems);
 
+    QWidget * focusProxyWidget();
+
 private:
     Ui::CellmlAnnotationViewDetailsWidget *mGui;
 

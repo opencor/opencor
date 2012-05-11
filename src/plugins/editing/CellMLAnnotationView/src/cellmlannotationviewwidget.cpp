@@ -15,6 +15,7 @@
 
 //==============================================================================
 
+#include <QLineEdit>
 #include <QMenu>
 #include <QRawFont>
 #include <QSplitter>
@@ -996,6 +997,11 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
     // Update the details GUI
 
     mDetails->updateGui(items);
+
+    // Set the view widget's focus proxy to the the cmeta:id field in the
+    // details GUI
+
+    setFocusProxy(mDetails->focusProxyWidget());
 }
 
 //==============================================================================

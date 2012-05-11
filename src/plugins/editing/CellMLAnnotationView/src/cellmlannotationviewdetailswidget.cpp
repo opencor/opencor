@@ -24,7 +24,8 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent) :
     Widget(pParent),
     mGui(new Ui::CellmlAnnotationViewDetailsWidget),
-    mItems(Items())
+    mItems(Items()),
+    mCmetaIdValue(0)
 {
     // Set up the GUI
 
@@ -97,6 +98,8 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
         delete item->widget();
         delete item;
     }
+
+    mCmetaIdValue = 0;
 
     // Go through the different items which properties we want to add to the GUI
 
@@ -359,6 +362,16 @@ QString CellmlAnnotationViewDetailsWidget::typeAsString(const Type &pType) const
 
         return QString();
     }
+}
+
+//==============================================================================
+
+QWidget * CellmlAnnotationViewDetailsWidget::focusProxyWidget()
+{
+    // If anything, we want our cmeta:id value widget to be a focus proxy
+    // widget, so...
+
+    return mCmetaIdValue;
 }
 
 //==============================================================================
