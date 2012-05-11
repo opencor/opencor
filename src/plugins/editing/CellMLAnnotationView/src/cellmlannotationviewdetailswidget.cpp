@@ -204,11 +204,14 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
         if (showCmetaId) {
             // We only want to allow the editing of the very first item
 
+            QString cmetaId = item.element->cmetaId();
+
             if (!i)
                 mGui->formLayout->addRow(new QLabel(tr("cmeta:id:"), this),
-                                         new QLineEdit(item.element->cmetaId(), this));
+                                         new QLineEdit(cmetaId, this));
             else
-                addRowToFormLayout(tr("cmeta:id:"), item.element->cmetaId());
+                addRowToFormLayout(tr("cmeta:id:"),
+                                   cmetaId.isEmpty()?"/":cmetaId);
         }
 
         if (showName)
