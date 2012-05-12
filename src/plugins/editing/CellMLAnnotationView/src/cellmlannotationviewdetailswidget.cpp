@@ -3,7 +3,6 @@
 //==============================================================================
 
 #include "cellmlannotationviewdetailswidget.h"
-#include "coreutils.h"
 
 //==============================================================================
 
@@ -11,8 +10,10 @@
 
 //==============================================================================
 
+#include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QScrollBar>
 
 //==============================================================================
 
@@ -22,14 +23,26 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent) :
-    Widget(pParent),
+    QScrollArea(pParent),
+    Core::CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewDetailsWidget),
     mItems(Items()),
+    mFormLayout(0),
     mCmetaIdValue(0)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // Add a widget to our scoll area and a form layout to our scroll area's
+    // widget
+
+    mWidget = new QWidget(this);
+    mFormLayout = new QFormLayout(this);
+
+    mWidget->setLayout(mFormLayout);
+
+    setWidget(mWidget);
 }
 
 //==============================================================================
@@ -92,8 +105,8 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
 
     // Remove everything from our form layout
 
-    for (int i = 0, iMax = mGui->formLayout->count(); i < iMax; ++i) {
-        QLayoutItem *item = mGui->formLayout->takeAt(0);
+    for (int i = 0, iMax = mFormLayout->count(); i < iMax; ++i) {
+        QLayoutItem *item = mFormLayout->takeAt(0);
 
         delete item->widget();
         delete item;
@@ -188,14 +201,14 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
         };
 
         // Add whatever we need
-        // Note: as long as all of the widgets' parent is ourselves, then they
-        //       will get automatically deleted, so no need to delete them in
-        //       ~CellmlAnnotationViewDetailsWidget()...
+        // Note: as long as all of the widgets' parent is our scroll area's
+        //       widget, then they will get automatically deleted, so no need to
+        //       delete them in ~CellmlAnnotationViewDetailsWidget()...
 
         // Add a bold centered label as a header to let the user know what type
         // of item we are talking about
 
-        QLabel *header = new QLabel(typeAsString(item.type), this);
+        QLabel *header = new QLabel(typeAsString(item.type), mWidget);
 
         QFont headerFont = header->font();
 
@@ -204,7 +217,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
         header->setAlignment(Qt::AlignCenter);
         header->setFont(headerFont);
 
-        mGui->formLayout->addRow(header);
+        mFormLayout->addRow(header);
 
         // Show the item's properties
 
@@ -217,12 +230,10 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
                 // This is our 'main' current item, so we want to allow the user
                 // to edit its cmeta:id
 
-                mCmetaIdValue = new QLineEdit(cmetaId, this);
+                mCmetaIdValue = new QLineEdit(cmetaId, mWidget);
 
-                mCmetaIdValue->setFocus();
-
-                mGui->formLayout->addRow(new QLabel(tr("cmeta:id:"), this),
-                                         mCmetaIdValue);
+                mFormLayout->addRow(new QLabel(tr("cmeta:id:"), mWidget),
+                                    mCmetaIdValue);
             } else {
                 // Not our 'main' current item, so just display its cmeta:id
 
@@ -309,6 +320,25 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
     // Re-show ourselves
 
     setVisible(true);
+
+    // Scroll to the bottom of ourselves, just in case things don't fit within
+    // the viewport
+    // Note: for this, we need to be up-to-date, hence we make a call to
+    //       qApp->processEvents() and this can only be done when we are once
+    //       again visible...
+
+    qApp->processEvents();
+
+    verticalScrollBar()->setValue(verticalScrollBar()->maximum());
+
+    // Give the focus to the cmeta:id value field
+    // Note: indeed, to have the cmeta:id value field as a focus proxy widget
+    //       for CellmlAnnotationViewWidget isn't good enough to have it get the
+    //       focus after selecting a 'new' CellML element in
+    //       CellmlAnnotationViewWidget (while it's when we switch from one
+    //       CellML file to another), so...
+
+    mCmetaIdValue->setFocus();
 }
 
 //==============================================================================
@@ -318,8 +348,8 @@ void CellmlAnnotationViewDetailsWidget::addRowToFormLayout(const QString &pLabel
 {
     // Add a row to our form layout
 
-    mGui->formLayout->addRow(new QLabel(pLabel, this),
-                             new QLabel(pValue, this));
+    mFormLayout->addRow(new QLabel(pLabel, mWidget),
+                        new QLabel(pValue, mWidget));
 }
 
 //==============================================================================
@@ -368,8 +398,7 @@ QString CellmlAnnotationViewDetailsWidget::typeAsString(const Type &pType) const
 
 QWidget * CellmlAnnotationViewDetailsWidget::focusProxyWidget()
 {
-    // If anything, we want our cmeta:id value widget to be a focus proxy
-    // widget, so...
+    // If anything, we want our cmeta:id value widget to be a focus proxy widget
 
     return mCmetaIdValue;
 }

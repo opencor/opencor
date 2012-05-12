@@ -998,8 +998,8 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
 
     mDetails->updateGui(items);
 
-    // Set the view widget's focus proxy to the the cmeta:id field in the
-    // details GUI
+    // Set the view widget's focus proxy to the widget which the details GUI
+    // thinks should be the focus proxy widget
 
     setFocusProxy(mDetails->focusProxyWidget());
 }

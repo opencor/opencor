@@ -12,6 +12,7 @@
 
 //==============================================================================
 
+#include <QScrollArea>
 #include <QStandardItem>
 #include <QStyledItemDelegate>
 
@@ -23,6 +24,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QFormLayout;
 class QLabel;
 
 //==============================================================================
@@ -32,7 +34,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewDetailsWidget : public Core::Widget
+class CellmlAnnotationViewDetailsWidget : public QScrollArea,
+                                          public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -84,6 +87,8 @@ private:
 
     Items mItems;
 
+    QWidget *mWidget;
+    QFormLayout *mFormLayout;
     QLineEdit *mCmetaIdValue;
 
     void addRowToFormLayout(const QString &pLabel, const QString &pValue);
