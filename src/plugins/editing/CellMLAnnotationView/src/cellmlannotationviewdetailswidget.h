@@ -58,14 +58,14 @@ public:
         VariableMapping
     };
 
-    struct Item
+    struct CellmlItem
     {
         Type type;
         CellMLSupport::CellmlFileElement *element;
         QString name;
     };
 
-    typedef QList<Item> Items;
+    typedef QList<CellmlItem> CellmlItems;
 
     explicit CellmlAnnotationViewDetailsWidget(QWidget *pParent,
                                                CellMLSupport::CellmlFile *pCellmlFile);
@@ -73,11 +73,11 @@ public:
 
     virtual void retranslateUi();
 
-    static Item item(const Type &pType,
-                     CellMLSupport::CellmlFileElement *pElement,
-                     const QString &pName = QString());
+    static CellmlItem cellmlItem(const Type &pType,
+                                 CellMLSupport::CellmlFileElement *pElement,
+                                 const QString &pName = QString());
 
-    void updateGui(const Items &pItems);
+    void updateGui(const CellmlItems &pCellmlItems);
     void updateGui(const QString &pMetadataGroupName);
 
     QWidget * focusProxyWidget();
@@ -87,7 +87,7 @@ private:
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    Items mItems;
+    CellmlItems mCellmlItems;
     QString mMetadataGroupName;
 
     QWidget *mWidget;
@@ -96,7 +96,8 @@ private:
 
     void addRowToFormLayout(const QString &pLabel, const QString &pValue);
 
-    void updateGui(const Items &pItems, const QString &pMetadataGroupName);
+    void updateGui(const CellmlItems &pCellmlItems,
+                   const QString &pMetadataGroupName);
 
     QString typeAsString(const Type &pType) const;
 };
