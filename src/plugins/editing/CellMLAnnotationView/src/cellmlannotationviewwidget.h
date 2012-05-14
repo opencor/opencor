@@ -79,8 +79,7 @@ public:
         ComponentReference    = QStandardItem::UserType+13,
         Connection            = QStandardItem::UserType+14,
         ComponentMapping      = QStandardItem::UserType+15,
-        VariableMapping       = QStandardItem::UserType+16,
-        Metadata              = QStandardItem::UserType+17
+        VariableMapping       = QStandardItem::UserType+16
     };
 
     explicit CellmlElementItem(const bool &pError, const QString &pText);
@@ -88,7 +87,6 @@ public:
     explicit CellmlElementItem(const Type &pType,
                                CellMLSupport::CellmlFileElement *pElement,
                                const QString &pText = QString());
-    explicit CellmlElementItem(const QString &pText);
 
     bool isCategory() const;
     virtual int type() const;

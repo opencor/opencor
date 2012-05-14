@@ -142,10 +142,6 @@
         <translation>Association de variable</translation>
     </message>
     <message>
-        <source>Metadata</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Imported unit</source>
         <translation>Unité importée</translation>
     </message>

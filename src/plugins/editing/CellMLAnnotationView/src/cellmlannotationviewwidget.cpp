@@ -174,21 +174,6 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
 
 //==============================================================================
 
-CellmlElementItem::CellmlElementItem(const QString &pText) :
-    QStandardItem(pText),
-    mCategory(false),
-    mType(Metadata),
-    mElement(0)
-{
-    // Constructor for some metadata
-
-    // Set the icon for the item
-
-    setIcon(mType);
-}
-
-//==============================================================================
-
 void CellmlElementItem::setIcon(const Type &pType)
 {
     // Determine the icon to be used for the item
@@ -244,10 +229,6 @@ void CellmlElementItem::setIcon(const Type &pType)
         break;
     case Connection:
         QStandardItem::setIcon(QIcon(":CellMLSupport_connectionNode"));
-
-        break;
-    case Metadata:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_metadataNode"));
 
         break;
     default:
@@ -879,7 +860,11 @@ void CellmlAnnotationViewWidget::populateMetadataDataModel(const QString &pFileN
                 // The group hasn't already been added, so add it and keep track
                 // of it
 
-                mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(groupName));
+                QStandardItem *metadataItem = new QStandardItem(groupName);
+
+                metadataItem->setIcon(QIcon(":CellMLSupport_metadataNode"));
+
+                mMetadataDataModel->invisibleRootItem()->appendRow(metadataItem);
 
                 groupNames.append(groupName);
             }
@@ -1065,7 +1050,7 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
 {
     Q_UNUSED(pOldIndex);
 
-    mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Items() << CellmlAnnotationViewDetailsWidget::item(static_cast<CellmlElementItem *>(mMetadataDataModel->itemFromIndex(pNewIndex))->text()));
+    mDetails->updateGui(mMetadataDataModel->itemFromIndex(pNewIndex)->text());
 }
 
 //==============================================================================

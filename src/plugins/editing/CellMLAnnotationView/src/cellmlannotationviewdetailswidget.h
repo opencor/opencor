@@ -42,7 +42,6 @@ class CellmlAnnotationViewDetailsWidget : public QScrollArea,
 public:
     enum Type
     {
-        Empty,
         Model,
         Import,
         ImportUnit,
@@ -56,8 +55,7 @@ public:
         ComponentReference,
         Connection,
         ComponentMapping,
-        VariableMapping,
-        Metadata
+        VariableMapping
     };
 
     struct Item
@@ -74,12 +72,12 @@ public:
 
     virtual void retranslateUi();
 
-    static Item item(const Type &pType = Empty,
-                     CellMLSupport::CellmlFileElement *pElement = 0,
+    static Item item(const Type &pType,
+                     CellMLSupport::CellmlFileElement *pElement,
                      const QString &pName = QString());
-    static Item item(const QString &pName);
 
     void updateGui(const Items &pItems);
+    void updateGui(const QString &pMetadataGroupName);
 
     QWidget * focusProxyWidget();
 
@@ -87,12 +85,15 @@ private:
     Ui::CellmlAnnotationViewDetailsWidget *mGui;
 
     Items mItems;
+    QString mMetadataGroupName;
 
     QWidget *mWidget;
     QFormLayout *mFormLayout;
     QLineEdit *mCmetaIdValue;
 
     void addRowToFormLayout(const QString &pLabel, const QString &pValue);
+
+    void updateGui(const Items &pItems, const QString &pMetadataGroupName);
 
     QString typeAsString(const Type &pType) const;
 };
