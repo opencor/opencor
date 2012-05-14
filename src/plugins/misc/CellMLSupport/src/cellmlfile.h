@@ -54,6 +54,8 @@ public:
     CellmlFileConnections connections() const;
     CellmlFileRdfTriples metadata() const;
 
+    QString uriBase() const;
+
 private:
     QString mFileName;
 

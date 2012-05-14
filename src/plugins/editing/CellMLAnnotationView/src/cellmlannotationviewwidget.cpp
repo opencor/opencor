@@ -828,8 +828,66 @@ void CellmlAnnotationViewWidget::populateMetadataDataModel(const QString &pFileN
 
     // Retrieve the name of the different groups of triples
 
-    foreach (const QString &groupName, cellmlFile->metadata().uniqueKeys())
-        mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(groupName));
+    QString uriBase = cellmlFile->uriBase();
+    QList<QString> groupNames = QList<QString>();
+
+    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
+             cellmlFile->metadata())
+        // Retrieve the RDF triple's subject so we can determine to which group
+        // of RDF triples it should be added
+        // Note: the RDF triple is part of an rdf:Description element which is
+        //       itself part of an rdf:RDF element. The rdf:Description element
+        //       has an rdf:about attribute which may or not have a value
+        //       assigned to it. If no value was assigned, then the RDF triple
+        //       is valid at the whole CellML model level. On the other hand, if
+        //       a value was assigned (and of the format #<id>), then it will be
+        //       associated to any CellML element which cmeta:id value is <id>.
+        //       A couple of examples:
+        //
+        // <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+        //   <rdf:Description rdf:about="">
+        //     <dc:creator rdf:parseType="Resource">
+        //       <vCard:EMAIL rdf:parseType="Resource">
+        //         <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet"/>
+        //         <rdf:value>someone@somewhere.com</rdf:value>
+        //       </vCard:EMAIL>
+        //     </dc:creator>
+        //   </rdf:Description>
+        // </rdf:RDF>
+        //
+        // <variable units="micromolar" public_interface="out" cmeta:id="C_C" name="C" initial_value="0.01">
+        //   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+        //     <rdf:Description rdf:about="#C_C">
+        //       <bqbiol:isVersionOf rdf:resource="urn:miriam:uniprot:Q4KLA0"/>
+        //       <bqbiol:isVersionOf rdf:resource="urn:miriam:interpro:IPR006670"/>
+        //       <bqbiol:isVersionOf rdf:resource="urn:miriam:obo.sbo:sbo%3A0000252"/>
+        //     </rdf:Description>
+        //   </rdf:RDF>
+        // </variable>
+
+        if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference) {
+            // We have an RDF triple of which we can make sense, so add it to
+            // the correct group of RDF triples
+            // Note: we want the name of the group to be the same as that of the
+            //       cmeta:id of a CellML element. This means that we must
+            //       remove the URI base (and hash character) which makes the
+            //       beginning of the RDF triple's subject's URI reference...
+
+            QString groupName = rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"));
+
+            if (!groupNames.contains(groupName)) {
+                // The group hasn't already been added, so add it and keep track
+                // of it
+
+                mMetadataDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(groupName));
+
+                groupNames.append(groupName);
+            }
+        }
+
+    // Sort the group names
+
+    mMetadataDataModel->sort(0);
 }
 
 //==============================================================================

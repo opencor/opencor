@@ -278,9 +278,6 @@ bool CellmlFile::load()
                         rdf_api::RDFAPIRepresentation);
 
         if (rdfApiRepresentation) {
-            ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
-            QString uriBase = QString::fromStdWString(xmlBase->asText());
-
             ObjRef<iface::rdf_api::DataSource> dataSource = rdfApiRepresentation->source();
             ObjRef<iface::rdf_api::TripleSet> triples = dataSource->getAllTriples();
             ObjRef<iface::rdf_api::TripleEnumerator> tripleEnumerator = triples->enumerateTriples();
@@ -289,60 +286,9 @@ bool CellmlFile::load()
                 ObjRef<iface::rdf_api::Triple> triple = tripleEnumerator->getNextTriple();
 
                 if (triple) {
-                    // We have a triple, so retrieve its subject so we can
-                    // determine to which group of triples it should be added
-                    // Note: the triple is part of an rdf:Description element
-                    //       which is itself part of a rdf:RDF element. The
-                    //       rdf:Description element has an rdf:about attribute
-                    //       which may or not have a value assigned to it. If no
-                    //       value was assigned, then the triple is valid at the
-                    //       whole CellML model level. On the other hand, if a
-                    //       value was assigned (and of the format #<id>), then
-                    //       it will be associated to any CellML element which
-                    //       cmeta:id value is <id>. A couple of examples:
-                    //
-                    // <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
-                    //   <rdf:Description rdf:about="">
-                    //     <dc:creator rdf:parseType="Resource">
-                    //       <vCard:EMAIL rdf:parseType="Resource">
-                    //         <rdf:type rdf:resource="http://imc.org/vCard/3.0#internet"/>
-                    //         <rdf:value>someone@somewhere.com</rdf:value>
-                    //       </vCard:EMAIL>
-                    //     </dc:creator>
-                    //   </rdf:Description>
-                    // </rdf:RDF>
-                    //
-                    // <variable units="micromolar" public_interface="out" cmeta:id="C_C" name="C" initial_value="0.01">
-                    //   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-                    //     <rdf:Description rdf:about="#C_C">
-                    //       <bqbiol:isVersionOf>
-                    //         <rdf:Bag>
-                    //           <rdf:li rdf:resource="urn:miriam:uniprot:Q4KLA0"/>
-                    //           <rdf:li rdf:resource="urn:miriam:interpro:IPR006670"/>
-                    //           <rdf:li rdf:resource="urn:miriam:obo.sbo:sbo%3A0000252"/>
-                    //         </rdf:Bag>
-                    //       </bqbiol:isVersionOf>
-                    //     </rdf:Description>
-                    //   </rdf:RDF>
-                    // </variable>
+                    // We have a triple, so add it to our list
 
-                    CellmlFileRdfTriple *rdfTriple = new CellmlFileRdfTriple(triple);
-
-                    if (rdfTriple->subject()->type() == CellmlFileRdfTripleElement::UriReference)
-                        // We have a triple of which we can make sense, so add
-                        // it to the correct group of triples
-                        // Note: we want the name of the group to be the same as
-                        //       the cmeta:id of a CellML element. This means
-                        //       that we must remove the URI base (and optional
-                        //       hash character) which makes the beginning of
-                        //       the triple's subject's URI reference...
-
-                        mMetadata.insertMulti(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?")),
-                                              rdfTriple);
-                    else
-                        // Not a triple we recognise, so...
-
-                        delete rdfTriple;
+                    mMetadata.append(new CellmlFileRdfTriple(triple));
                 } else {
                     // No more triples, so...
 
@@ -657,6 +603,17 @@ CellmlFileRdfTriples CellmlFile::metadata() const
     // Return the CellML file's metadata
 
     return mMetadata;
+}
+
+//==============================================================================
+
+QString CellmlFile::uriBase() const
+{
+    // Return the CellML file's URI base
+
+    ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
+
+    return QString::fromStdWString(xmlBase->asText());
 }
 
 //==============================================================================
