@@ -1044,9 +1044,33 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
 {
     Q_UNUSED(pOldIndex);
 
+    // Determine the RDF triples that we need to show in the details GUI
+
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples();
+
+    QString metadataGroupName = mMetadataDataModel->itemFromIndex(pNewIndex)->text();
+    QString uriBase = mCellmlFile->uriBase();
+
+    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
+             mCellmlFile->metadata())
+        // Retrieve the RDF triple's subject so we can determine whether it's
+        // from the group of RDF triples in which we are interested
+
+        if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference) {
+            // We have an RDF triple of which we can make sense, so retrieve its
+            // group name
+
+            QString groupName = rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"));
+
+            if (!groupName.compare(metadataGroupName))
+                // It's the correct group name, so add it to our list
+
+                rdfTriples.append(rdfTriple);
+        }
+
     // Update the details GUI
 
-    mDetails->updateGui(mMetadataDataModel->itemFromIndex(pNewIndex)->text());
+    mDetails->updateGui(rdfTriples);
 }
 
 //==============================================================================

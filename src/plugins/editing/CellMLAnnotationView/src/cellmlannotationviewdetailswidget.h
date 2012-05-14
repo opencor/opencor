@@ -78,7 +78,7 @@ public:
                                  const QString &pName = QString());
 
     void updateGui(const CellmlItems &pCellmlItems);
-    void updateGui(const QString &pMetadataGroupName);
+    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 
     QWidget * focusProxyWidget();
 
@@ -88,7 +88,7 @@ private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
     CellmlItems mCellmlItems;
-    QString mMetadataGroupName;
+    CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
     QWidget *mWidget;
     QFormLayout *mFormLayout;
@@ -97,7 +97,7 @@ private:
     void addRowToFormLayout(const QString &pLabel, const QString &pValue);
 
     void updateGui(const CellmlItems &pCellmlItems,
-                   const QString &pMetadataGroupName);
+                   const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 
     QString typeAsString(const Type &pType) const;
 };

@@ -29,7 +29,7 @@ CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pP
     mGui(new Ui::CellmlAnnotationViewDetailsWidget),
     mCellmlFile(pCellmlFile),
     mCellmlItems(CellmlItems()),
-    mMetadataGroupName(QString()),
+    mRdfTriples(CellMLSupport::CellmlFileRdfTriples()),
     mFormLayout(0),
     mCmetaIdValue(0)
 {
@@ -68,7 +68,7 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
     // Update the GUI (since some labels get reinitialised as a result of the
     // retranslation)
 
-    updateGui(mCellmlItems, mMetadataGroupName);
+    updateGui(mCellmlItems, mRdfTriples);
 }
 
 //==============================================================================
@@ -91,7 +91,7 @@ CellmlAnnotationViewDetailsWidget::CellmlItem CellmlAnnotationViewDetailsWidget:
 //==============================================================================
 
 void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItems,
-                                                  const QString &pMetadataGroupName)
+                                                  const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
     // Hide ourselves (since we may potentially update ourselves quite a bit and
     // we want to avoid any flickering)
@@ -106,7 +106,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
     // Keep track of the CellML items and metadata group name
 
     mCellmlItems = pCellmlItems;
-    mMetadataGroupName = pMetadataGroupName;
+    mRdfTriples  = pRdfTriples;
 
     // Remove everything from our form layout
 
@@ -317,28 +317,12 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
     } else {
         // We are dealing with some metadata, so...
 
-        QString uriBase = mCellmlFile->uriBase();
-
-        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-                 mCellmlFile->metadata())
-            // Retrieve the RDF triple's subject so we can determine whether
-            // it's from the group of RDF triples in which we are interested
-
-            if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference) {
-                // We have an RDF triple of which we can make sense, so retrieve
-                // its group name
-
-                QString groupName = rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"));
-
-                if (!groupName.compare(pMetadataGroupName)) {
-                    // It's the correct group name, so...
-
+        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
 qDebug("---------------------------------------");
 qDebug("rdfTriple->subject() = %s", qPrintable(rdfTriple->subject()->asString()));
 qDebug("rdfTriple->predicate() = %s", qPrintable(rdfTriple->predicate()->asString()));
 qDebug("rdfTriple->object() = %s", qPrintable(rdfTriple->object()->asString()));
-                }
-            }
+        }
     }
 
     // Re-show ourselves
@@ -372,16 +356,16 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
 {
     // Call our generic updateGui()
 
-    updateGui(pCellmlItems, QString());
+    updateGui(pCellmlItems, CellMLSupport::CellmlFileRdfTriples());
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::updateGui(const QString &pMetadataGroupName)
+void CellmlAnnotationViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
     // Call our generic updateGui()
 
-    updateGui(CellmlItems(), pMetadataGroupName);
+    updateGui(CellmlItems(), pRdfTriples);
 }
 
 //==============================================================================
