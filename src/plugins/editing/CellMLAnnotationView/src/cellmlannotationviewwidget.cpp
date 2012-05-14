@@ -1028,13 +1028,9 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
                                                                  crtCellmlElementItem->element());
 
                 break;
-            case CellmlElementItem::Metadata:
-                items << CellmlAnnotationViewDetailsWidget::item(CellmlAnnotationViewDetailsWidget::Metadata,
-                                                                 crtCellmlElementItem->element());
-
-                break;
             default:
-                // Either an error, warning or category, so nothing to show...
+                // Either an error, warning, category or metadata, so nothing to
+                // show/do...
 
                 ;
             }
@@ -1067,10 +1063,9 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
 void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex,
                                                     const QModelIndex &pOldIndex)
 {
-    Q_UNUSED(pNewIndex);
     Q_UNUSED(pOldIndex);
 
-    mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Items() << CellmlAnnotationViewDetailsWidget::item(CellmlAnnotationViewDetailsWidget::Metadata));
+    mDetails->updateGui(CellmlAnnotationViewDetailsWidget::Items() << CellmlAnnotationViewDetailsWidget::item(static_cast<CellmlElementItem *>(mMetadataDataModel->itemFromIndex(pNewIndex))->text()));
 }
 
 //==============================================================================

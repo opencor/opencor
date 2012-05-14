@@ -77,6 +77,7 @@ public:
     static Item item(const Type &pType = Empty,
                      CellMLSupport::CellmlFileElement *pElement = 0,
                      const QString &pName = QString());
+    static Item item(const QString &pName);
 
     void updateGui(const Items &pItems);
 

@@ -87,6 +87,21 @@ CellmlAnnotationViewDetailsWidget::Item CellmlAnnotationViewDetailsWidget::item(
 
 //==============================================================================
 
+CellmlAnnotationViewDetailsWidget::Item CellmlAnnotationViewDetailsWidget::item(const QString &pName)
+{
+    // Return a formatted metadata Item 'object'
+
+    Item res;
+
+    res.type    = Metadata;
+    res.element = 0;
+    res.name    = pName;
+
+    return res;
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
 {
     // Hide ourselves (since we may potentially update ourselves quite a bit and
