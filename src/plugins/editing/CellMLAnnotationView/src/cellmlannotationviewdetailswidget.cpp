@@ -22,12 +22,10 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent,
-                                                                     CellMLSupport::CellmlFile *pCellmlFile) :
+CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent) :
     QScrollArea(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewDetailsWidget),
-    mCellmlFile(pCellmlFile),
     mCellmlItems(CellmlItems()),
     mRdfTriples(CellMLSupport::CellmlFileRdfTriples()),
     mFormLayout(0),

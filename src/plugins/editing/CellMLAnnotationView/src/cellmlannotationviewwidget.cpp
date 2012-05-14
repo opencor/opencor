@@ -318,7 +318,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mVerticalSplitter->addWidget(new Core::BorderedWidget(mMetadataTreeView,
                                                           true, false, false, true));
 
-    mDetails = new CellmlAnnotationViewDetailsWidget(this, mCellmlFile);
+    mDetails = new CellmlAnnotationViewDetailsWidget(this);
 
     mHorizontalSplitter->addWidget(mVerticalSplitter);
     mHorizontalSplitter->addWidget(new Core::BorderedWidget(mDetails,
