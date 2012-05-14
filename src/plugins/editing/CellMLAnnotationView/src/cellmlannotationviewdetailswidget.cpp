@@ -338,7 +338,8 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems)
     //       CellmlAnnotationViewWidget (while it's when we switch from one
     //       CellML file to another), so...
 
-    mCmetaIdValue->setFocus();
+    if (mCmetaIdValue)
+        mCmetaIdValue->setFocus();
 }
 
 //==============================================================================
