@@ -276,6 +276,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     mGui->setupUi(this);
 
+    // Retrieve and load the corresponding CellML file
+
+    mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+
+    mCellmlFile->load();
+
     // Create some splitters
 
     mHorizontalSplitter = new QSplitter(Qt::Horizontal, this);
@@ -312,7 +318,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mVerticalSplitter->addWidget(new Core::BorderedWidget(mMetadataTreeView,
                                                           true, false, false, true));
 
-    mDetails = new CellmlAnnotationViewDetailsWidget(this);
+    mDetails = new CellmlAnnotationViewDetailsWidget(this, mCellmlFile);
 
     mHorizontalSplitter->addWidget(mVerticalSplitter);
     mHorizontalSplitter->addWidget(new Core::BorderedWidget(mDetails,
@@ -350,8 +356,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Populate our tree views
 
-    populateCellmlDataModel(pFileName);
-    populateMetadataDataModel(pFileName);
+    populateCellmlDataModel();
+    populateMetadataDataModel();
 
     // Expand our CellML tree view enough so that we can see the meaningful
     // parts of the CellML file
@@ -497,20 +503,16 @@ void CellmlAnnotationViewWidget::initTreeView(Core::TreeView *pTreeView)
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileName)
+void CellmlAnnotationViewWidget::populateCellmlDataModel()
 {
-    // Retrieve our CellML file object and load the CellML file
+    // Make sure that the CellML file was properly loaded
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-
-    cellmlFile->load();
-
-    if (cellmlFile->issues().count()) {
+    if (mCellmlFile->issues().count()) {
         // Something went wrong while trying to load the CellML file, so report
         // it and leave
 
-        mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(cellmlFile->issues().first().type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                               cellmlFile->issues().first().formattedMessage()));
+        mCellmlDataModel->invisibleRootItem()->appendRow(new CellmlElementItem(mCellmlFile->issues().first().type() == CellMLSupport::CellmlFileIssue::Error,
+                                                                               mCellmlFile->issues().first().formattedMessage()));
 
         return;
     }
@@ -518,13 +520,13 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
     // Retrieve the model's root
 
     CellmlElementItem *modelItem = new CellmlElementItem(CellmlElementItem::Model,
-                                                         cellmlFile->model());
+                                                         mCellmlFile->model());
 
     mCellmlDataModel->invisibleRootItem()->appendRow(modelItem);
 
     // Retrieve the model's imports
 
-    if (cellmlFile->imports().count()) {
+    if (mCellmlFile->imports().count()) {
         // Imports category
 
         CellmlElementItem *importsItem = new CellmlElementItem(CellmlElementItem::Import,
@@ -535,7 +537,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
         // Retrieve the model's imports themselves
 
         foreach (CellMLSupport::CellmlFileImport *import,
-                 cellmlFile->imports()) {
+                 mCellmlFile->imports()) {
             // A model import
 
             CellmlElementItem *importItem = new CellmlElementItem(CellmlElementItem::Import,
@@ -587,11 +589,11 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
 
     // Retrieve the model's units
 
-    populateUnitsDataModel(modelItem, cellmlFile->units());
+    populateUnitsDataModel(modelItem, mCellmlFile->units());
 
     // Retrieve the model's components
 
-    if (cellmlFile->components().count()) {
+    if (mCellmlFile->components().count()) {
         // Components category
 
         CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Component,
@@ -602,7 +604,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
         // Retrieve the model's components themselves
 
         foreach (CellMLSupport::CellmlFileComponent *component,
-                 cellmlFile->components()) {
+                 mCellmlFile->components()) {
             // A model's component
 
             CellmlElementItem *componentItem = new CellmlElementItem(CellmlElementItem::Component,
@@ -636,7 +638,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
 
     // Retrieve the model's groups
 
-    if (cellmlFile->groups().count()) {
+    if (mCellmlFile->groups().count()) {
         // Groups category
 
         CellmlElementItem *groupsItem = new CellmlElementItem(CellmlElementItem::Group,
@@ -648,7 +650,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
 
         int counter = 0;
 
-        foreach (CellMLSupport::CellmlFileGroup *group, cellmlFile->groups()) {
+        foreach (CellMLSupport::CellmlFileGroup *group, mCellmlFile->groups()) {
             // A model's group
 
             CellmlElementItem *groupItem = new CellmlElementItem(CellmlElementItem::Group,
@@ -699,7 +701,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
 
     // Retrieve the model's connections
 
-    if (cellmlFile->connections().count()) {
+    if (mCellmlFile->connections().count()) {
         // Connections category
 
         CellmlElementItem *connectionsItem = new CellmlElementItem(CellmlElementItem::Connection,
@@ -711,7 +713,7 @@ void CellmlAnnotationViewWidget::populateCellmlDataModel(const QString &pFileNam
 
         int counter = 0;
 
-        foreach (CellMLSupport::CellmlFileConnection *connection, cellmlFile->connections()) {
+        foreach (CellMLSupport::CellmlFileConnection *connection, mCellmlFile->connections()) {
             // A model's connection
 
             CellmlElementItem *connectionItem = new CellmlElementItem(CellmlElementItem::Connection,
@@ -789,31 +791,22 @@ void CellmlAnnotationViewWidget::populateComponentReferenceDataModel(CellmlEleme
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::populateMetadataDataModel(const QString &pFileName)
+void CellmlAnnotationViewWidget::populateMetadataDataModel()
 {
-    // Retrieve our CellML file object and load the CellML file
-    // Note: the CellML file will already be loaded because of our previous call
-    //       to populateCellmlDataModel() and that's fine. In fact, should there
-    //       have been issues, then they will have been listed in the CellML
-    //       tree view, so we don't need to do anything here in case there are
-    //       issues, just return...
+    // Make sure that the CellML file was properly loaded
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-
-    cellmlFile->load();
-
-    if (cellmlFile->issues().count())
+    if (mCellmlFile->issues().count())
         // There are issues, so...
 
         return;
 
     // Retrieve the name of the different groups of triples
 
-    QString uriBase = cellmlFile->uriBase();
+    QString uriBase = mCellmlFile->uriBase();
     QList<QString> groupNames = QList<QString>();
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             cellmlFile->metadata())
+             mCellmlFile->metadata())
         // Retrieve the RDF triple's subject so we can determine to which group
         // of RDF triples it should be added
         // Note: the RDF triple is part of an rdf:Description element which is
@@ -1049,6 +1042,8 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
                                                     const QModelIndex &pOldIndex)
 {
     Q_UNUSED(pOldIndex);
+
+    // Update the details GUI
 
     mDetails->updateGui(mMetadataDataModel->itemFromIndex(pNewIndex)->text());
 }

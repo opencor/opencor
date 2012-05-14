@@ -67,7 +67,8 @@ public:
 
     typedef QList<Item> Items;
 
-    explicit CellmlAnnotationViewDetailsWidget(QWidget *pParent);
+    explicit CellmlAnnotationViewDetailsWidget(QWidget *pParent,
+                                               CellMLSupport::CellmlFile *pCellmlFile);
     ~CellmlAnnotationViewDetailsWidget();
 
     virtual void retranslateUi();
@@ -83,6 +84,8 @@ public:
 
 private:
     Ui::CellmlAnnotationViewDetailsWidget *mGui;
+
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     Items mItems;
     QString mMetadataGroupName;

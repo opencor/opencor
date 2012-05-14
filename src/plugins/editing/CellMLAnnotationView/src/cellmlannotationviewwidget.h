@@ -137,17 +137,19 @@ private:
 
     CellmlAnnotationViewDetailsWidget *mDetails;
 
+    CellMLSupport::CellmlFile *mCellmlFile;
+
     void retranslateCellmlDataItem(CellmlElementItem *pCellmlElementItem);
 
     void initTreeView(Core::TreeView *pTreeView);
 
-    void populateCellmlDataModel(const QString &pFileName);
+    void populateCellmlDataModel();
     void populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
                                 const CellMLSupport::CellmlFileUnits pUnits);
     void populateComponentReferenceDataModel(CellmlElementItem *pCellmlElementItem,
                                              CellMLSupport::CellmlFileComponentReference *pComponentReference);
 
-    void populateMetadataDataModel(const QString &pFileName);
+    void populateMetadataDataModel();
 
     void indexExpandAll(const QModelIndex &pIndex) const;
     void indexCollapseAll(const QModelIndex &pIndex) const;

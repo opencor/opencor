@@ -22,11 +22,14 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent) :
+CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent,
+                                                                     CellMLSupport::CellmlFile *pCellmlFile) :
     QScrollArea(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewDetailsWidget),
+    mCellmlFile(pCellmlFile),
     mItems(Items()),
+    mMetadataGroupName(QString()),
     mFormLayout(0),
     mCmetaIdValue(0)
 {
@@ -115,17 +118,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems,
     }
 
     mCmetaIdValue = 0;
-
-    // Check that we have something to deal with
-
-    if (pItems.isEmpty() && pMetadataGroupName.isEmpty()) {
-        // For some reasons, we have nothing to deal with, so re-show ourselves
-        // and leave
-
-        setVisible(true);
-
-        return;
-    }
 
     // Check whether we are dealing with some metadata or not
 
@@ -325,7 +317,28 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const Items &pItems,
     } else {
         // We are dealing with some metadata, so...
 
-//---GRY--- TO BE DONE...
+        QString uriBase = mCellmlFile->uriBase();
+
+        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
+                 mCellmlFile->metadata())
+            // Retrieve the RDF triple's subject so we can determine whether
+            // it's from the group of RDF triples in which we are interested
+
+            if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference) {
+                // We have an RDF triple of which we can make sense, so retrieve
+                // its group name
+
+                QString groupName = rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"));
+
+                if (!groupName.compare(pMetadataGroupName)) {
+                    // It's the correct group name, so...
+
+qDebug("---------------------------------------");
+qDebug("rdfTriple->subject() = %s", qPrintable(rdfTriple->subject()->asString()));
+qDebug("rdfTriple->predicate() = %s", qPrintable(rdfTriple->predicate()->asString()));
+qDebug("rdfTriple->object() = %s", qPrintable(rdfTriple->object()->asString()));
+                }
+            }
     }
 
     // Re-show ourselves
