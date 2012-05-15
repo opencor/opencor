@@ -1057,17 +1057,15 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
         // Retrieve the RDF triple's subject so we can determine whether it's
         // from the group of RDF triples in which we are interested
 
-        if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference) {
+        if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)
             // We have an RDF triple of which we can make sense, so retrieve its
             // group name
 
-            QString groupName = rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"));
-
-            if (!groupName.compare(metadataGroupName))
+            if (!metadataGroupName.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
                 // It's the correct group name, so add it to our list
 
-                rdfTriples.append(rdfTriple);
-        }
+                rdfTriples.insertMulti(rdfTriple->subject()->asString(),
+                                       rdfTriple);
 
     // Update the details GUI
 

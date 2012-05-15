@@ -288,7 +288,10 @@ bool CellmlFile::load()
                 if (triple) {
                     // We have a triple, so add it to our list
 
-                    mMetadata.append(new CellmlFileRdfTriple(triple));
+                    CellmlFileRdfTriple *rdfTriple = new CellmlFileRdfTriple(triple);
+
+                    mMetadata.insertMulti(rdfTriple->subject()->asString(),
+                                          rdfTriple);
                 } else {
                     // No more triples, so...
 
