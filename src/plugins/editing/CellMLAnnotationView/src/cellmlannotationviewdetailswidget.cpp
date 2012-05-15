@@ -23,10 +23,12 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent) :
+CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent,
+                                                                     CellMLSupport::CellmlFile *pCellmlFile) :
     QScrollArea(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewDetailsWidget),
+    mCellmlFile(pCellmlFile),
     mCellmlItems(CellmlItems()),
     mRdfTriples(CellMLSupport::CellmlFileRdfTriples()),
     mCellmlWidget(0),
@@ -362,14 +364,26 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
                 delete item;
 
         // Add the 'new' triples to our tree view
+        // Note: for the triple's subject, we try to remove the CellML file's
+        //       URI base, thus only leaving the equivalent of a CellML element
+        //       cmeta:id which will speak more to the user than a possible long
+        //       URI reference...
 
+        QString uriBase = mCellmlFile->uriBase();
         int rdfTripleCounter = 0;
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)
             mMetadataDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
-                                                                                        << new QStandardItem(rdfTriple->subject()->asString())
+                                                                                        << new QStandardItem(rdfTriple->subject()->asString().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?")))
                                                                                         << new QStandardItem(rdfTriple->predicate()->asString())
                                                                                         << new QStandardItem(rdfTriple->object()->asString()));
+
+        // Make sure that all the columns have their contents fit
+
+        mMetadataTreeView->resizeColumnToContents(0);
+        mMetadataTreeView->resizeColumnToContents(1);
+        mMetadataTreeView->resizeColumnToContents(2);
+        mMetadataTreeView->resizeColumnToContents(3);
     }
 
     // Re-show ourselves
