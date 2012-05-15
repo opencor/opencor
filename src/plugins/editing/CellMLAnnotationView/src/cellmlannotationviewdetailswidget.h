@@ -25,7 +25,7 @@ namespace Ui {
 //==============================================================================
 
 class QFormLayout;
-class QLabel;
+class QVBoxLayout;
 
 //==============================================================================
 
@@ -87,9 +87,12 @@ private:
     CellmlItems mCellmlItems;
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
-    QWidget *mWidget;
-    QFormLayout *mFormLayout;
-    QLineEdit *mCmetaIdValue;
+    QWidget *mCellmlWidget;
+    QFormLayout *mCellmlFormLayout;
+    QLineEdit *mCellmlCmetaIdValue;
+
+    QWidget *mMetadataWidget;
+    QVBoxLayout *mMetadataFormLayout;
 
     void addRowToFormLayout(const QString &pLabel, const QString &pValue);
 

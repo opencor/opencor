@@ -28,22 +28,15 @@ CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pP
     mGui(new Ui::CellmlAnnotationViewDetailsWidget),
     mCellmlItems(CellmlItems()),
     mRdfTriples(CellMLSupport::CellmlFileRdfTriples()),
-    mFormLayout(0),
-    mCmetaIdValue(0)
+    mCellmlWidget(0),
+    mCellmlFormLayout(0),
+    mCellmlCmetaIdValue(0),
+    mMetadataWidget(0),
+    mMetadataFormLayout(0)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
-
-    // Add a widget to our scoll area and a form layout to our scroll area's
-    // widget
-
-    mWidget = new QWidget(this);
-    mFormLayout = new QFormLayout(this);
-
-    mWidget->setLayout(mFormLayout);
-
-    setWidget(mWidget);
 }
 
 //==============================================================================
@@ -106,22 +99,34 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
     mCellmlItems = pCellmlItems;
     mRdfTriples  = pRdfTriples;
 
-    // Remove everything from our form layout
-
-    for (int i = 0, iMax = mFormLayout->count(); i < iMax; ++i) {
-        QLayoutItem *item = mFormLayout->takeAt(0);
-
-        delete item->widget();
-        delete item;
-    }
-
-    mCmetaIdValue = 0;
-
     // Check whether we are dealing with some metadata or not
 
     if (pCellmlItems.count()) {
-        // We are not dealing with some metadata, so go through the different
-        // items which properties we want to add to the GUI
+        // We are not dealing with some metadata, so enable the CellML side of
+        // the GUI
+
+        if (!widget() || (widget() != mCellmlWidget)) {
+            mCellmlWidget = new QWidget(this);
+            mCellmlFormLayout = new QFormLayout(mCellmlWidget);
+
+            mCellmlWidget->setLayout(mCellmlFormLayout);
+        }
+
+        setWidget(mCellmlWidget);
+
+        // Remove everything from our form layout
+
+        for (int i = 0, iMax = mCellmlFormLayout->count(); i < iMax; ++i) {
+            QLayoutItem *item = mCellmlFormLayout->takeAt(0);
+
+            delete item->widget();
+            delete item;
+        }
+
+        mCellmlCmetaIdValue = 0;
+
+        // Go through the different items which properties we want to add to the
+        // GUI
 
         for (int i = 0, iLast = pCellmlItems.count()-1; i <= iLast; ++i) {
             CellmlItem cellmlItem = pCellmlItems.at(i);
@@ -205,7 +210,8 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
             // Add a bold centered label as a header to let the user know what type
             // of item we are talking about
 
-            QLabel *header = new QLabel(typeAsString(cellmlItem.type), mWidget);
+            QLabel *header = new QLabel(typeAsString(cellmlItem.type),
+                                        mCellmlWidget);
 
             QFont headerFont = header->font();
 
@@ -214,7 +220,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
             header->setAlignment(Qt::AlignCenter);
             header->setFont(headerFont);
 
-            mFormLayout->addRow(header);
+            mCellmlFormLayout->addRow(header);
 
             // Show the item's cmeta:id, keeping in mind that we only want to
             // allow the editing of the cmeta:id of the very first item
@@ -225,10 +231,10 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
                 // This is our 'main' current item, so we want to allow the user
                 // to edit its cmeta:id
 
-                mCmetaIdValue = new QLineEdit(cmetaId, mWidget);
+                mCellmlCmetaIdValue = new QLineEdit(cmetaId, mCellmlWidget);
 
-                mFormLayout->addRow(new QLabel(tr("cmeta:id:"), mWidget),
-                                    mCmetaIdValue);
+                mCellmlFormLayout->addRow(new QLabel(tr("cmeta:id:"), mCellmlWidget),
+                                          mCellmlCmetaIdValue);
             } else {
                 // Not our 'main' current item, so just display its cmeta:id
 
@@ -313,7 +319,17 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
                                    static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(cellmlItem.element)->secondVariable());
         }
     } else {
-        // We are dealing with some metadata, so...
+        // We are dealing with some metadata, so enable the metadata ML side of
+        // the GUI
+
+        if (!widget() || (widget() != mMetadataWidget)) {
+            mMetadataWidget = new QWidget(this);
+            mMetadataFormLayout = new QVBoxLayout(mMetadataWidget);
+
+            mMetadataWidget->setLayout(mMetadataFormLayout);
+        }
+
+        setWidget(mMetadataWidget);
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
 qDebug("---------------------------------------");
@@ -344,8 +360,8 @@ qDebug("rdfTriple->object() = %s", qPrintable(rdfTriple->object()->asString()));
     //       CellmlAnnotationViewWidget (while it's when we switch from one
     //       CellML file to another), so...
 
-    if (mCmetaIdValue)
-        mCmetaIdValue->setFocus();
+    if ((widget() == mCellmlWidget) && mCellmlCmetaIdValue)
+        mCellmlCmetaIdValue->setFocus();
 }
 
 //==============================================================================
@@ -373,8 +389,8 @@ void CellmlAnnotationViewDetailsWidget::addRowToFormLayout(const QString &pLabel
 {
     // Add a row to our form layout
 
-    mFormLayout->addRow(new QLabel(pLabel, mWidget),
-                        new QLabel(pValue, mWidget));
+    mCellmlFormLayout->addRow(new QLabel(pLabel, mCellmlWidget),
+                              new QLabel(pValue, mCellmlWidget));
 }
 
 //==============================================================================
@@ -421,7 +437,7 @@ QWidget * CellmlAnnotationViewDetailsWidget::focusProxyWidget()
 {
     // If anything, we want our cmeta:id value widget to be a focus proxy widget
 
-    return mCmetaIdValue;
+    return (widget() == mCellmlWidget)?mCellmlCmetaIdValue:0;
 }
 
 //==============================================================================
