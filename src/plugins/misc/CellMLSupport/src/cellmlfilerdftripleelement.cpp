@@ -75,7 +75,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
 
                 QString id = QString::fromStdString(pNode->objid()).trimmed();
 
-                mType = None;
+                mType = Id;
 
                 mId = ids.value(id);
 
@@ -160,7 +160,7 @@ QString CellmlFileRdfTripleElement::asString() const
     case TypedLiteral:
         return mLexicalForm+" ["+mDataTypeUri+"]";
     default:
-        // None of the above, so...
+        // Id
 
         return mId;
     }

@@ -1040,6 +1040,23 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
 
 //==============================================================================
 
+void CellmlAnnotationViewWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
+                                              CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+{
+    // Add pRdfTriple to pRdfTriples
+
+    pRdfTriples.insertMulti(pRdfTriple->subject()->asString(), pRdfTriple);
+
+    // Recursively add all the RDF triples which subject matches that of
+    // pRdfTriple's object
+
+    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
+             mCellmlFile->metadata().values(pRdfTriple->object()->asString()))
+        addRdfTriple(pRdfTriples, rdfTriple);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex,
                                                     const QModelIndex &pOldIndex)
 {
@@ -1064,8 +1081,7 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
             if (!metadataGroupName.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
                 // It's the correct group name, so add it to our list
 
-                rdfTriples.insertMulti(rdfTriple->subject()->asString(),
-                                       rdfTriple);
+                addRdfTriple(rdfTriples, rdfTriple);
 
     // Update the details GUI
 

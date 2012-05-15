@@ -31,7 +31,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileRdfTripleElement
 public:
     enum Type
     {
-        None,
+        Id,
         UriReference,
         PlainLiteral,
         TypedLiteral
