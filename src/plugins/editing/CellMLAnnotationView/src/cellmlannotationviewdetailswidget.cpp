@@ -345,7 +345,8 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
             mMetadataTreeView->setRootIsDecorated(false);
             mMetadataTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
 
-            mMetadataDataModel->setHorizontalHeaderLabels(QStringList() << tr("Subject")
+            mMetadataDataModel->setHorizontalHeaderLabels(QStringList() << tr("#")
+                                                                        << tr("Subject")
                                                                         << tr("Predicate")
                                                                         << tr("Object"));
 
@@ -362,8 +363,11 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
 
         // Add the 'new' triples to our tree view
 
+        int rdfTripleCounter = 0;
+
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)
-            mMetadataDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(rdfTriple->subject()->asString())
+            mMetadataDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
+                                                                                        << new QStandardItem(rdfTriple->subject()->asString())
                                                                                         << new QStandardItem(rdfTriple->predicate()->asString())
                                                                                         << new QStandardItem(rdfTriple->object()->asString()));
     }

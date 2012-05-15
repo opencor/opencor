@@ -161,6 +161,10 @@
         <source>Object</source>
         <translation>Objet</translation>
     </message>
+    <message>
+        <source>#</source>
+        <translation>N°</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewWidget</name>
