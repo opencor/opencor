@@ -23,7 +23,6 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent) :
 CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent,
                                                                      CellMLSupport::CellmlFile *pCellmlFile) :
     QScrollArea(pParent),
