@@ -6,7 +6,6 @@
 #include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
-#include "coreutils.h"
 #include "treeview.h"
 
 //==============================================================================
@@ -295,10 +294,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mCellmlItemDelegate = new CellmlItemDelegate(mCellmlTreeView,
                                                  mCellmlDataModel);
 
-    mCellmlTreeView->setModel(mCellmlDataModel);
-    mCellmlTreeView->setItemDelegate(mCellmlItemDelegate);
-
-    initTreeView(mCellmlTreeView);
+    initTreeView(mCellmlTreeView, mCellmlDataModel, mCellmlItemDelegate);
 
     // Create and customise our metadata tree view which will contain all of the
     // metadata from the CellML file
@@ -306,9 +302,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mMetadataTreeView  = new Core::TreeView(mVerticalSplitter);
     mMetadataDataModel = new QStandardItemModel(mMetadataTreeView);
 
-    mMetadataTreeView->setModel(mMetadataDataModel);
-
-    initTreeView(mMetadataTreeView);
+    initTreeView(mMetadataTreeView, mMetadataDataModel);
 
     // Populate our splitters with the aforementioned tree views, as well as
     // with a details widget
@@ -489,8 +483,15 @@ QList<int> CellmlAnnotationViewWidget::verticalSplitterSizes() const
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::initTreeView(Core::TreeView *pTreeView)
+void CellmlAnnotationViewWidget::initTreeView(Core::TreeView *pTreeView,
+                                              QStandardItemModel *pDataModel,
+                                              CellmlItemDelegate *pItemDelegate)
 {
+    pTreeView->setModel(pDataModel);
+
+    if (pItemDelegate)
+        pTreeView->setItemDelegate(pItemDelegate);
+
     pTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     pTreeView->setFrameShape(QFrame::NoFrame);
     pTreeView->setHeaderHidden(true);

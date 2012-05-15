@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlannotationviewdetailswidget.h"
+#include "treeview.h"
 
 //==============================================================================
 
@@ -32,7 +33,9 @@ CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pP
     mCellmlFormLayout(0),
     mCellmlCmetaIdValue(0),
     mMetadataWidget(0),
-    mMetadataFormLayout(0)
+    mMetadataFormLayout(0),
+    mMetadataTreeView(0),
+    mMetadataDataModel(0)
 {
     // Set up the GUI
 
@@ -110,9 +113,9 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
             mCellmlFormLayout = new QFormLayout(mCellmlWidget);
 
             mCellmlWidget->setLayout(mCellmlFormLayout);
-        }
 
-        setWidget(mCellmlWidget);
+            setWidget(mCellmlWidget);
+        }
 
         // Remove everything from our form layout
 
@@ -238,8 +241,8 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
             } else {
                 // Not our 'main' current item, so just display its cmeta:id
 
-                addRowToFormLayout(tr("cmeta:id:"),
-                                   cmetaId.isEmpty()?"/":cmetaId);
+                addRowToCellmlFormLayout(tr("cmeta:id:"),
+                                         cmetaId.isEmpty()?"/":cmetaId);
             }
 
             // Show the item's remaining properties
@@ -253,70 +256,70 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
                                    cellmlItem.name.isEmpty()?"/":cellmlItem.name:
                                    static_cast<CellMLSupport::CellmlFileNamedElement *>(cellmlItem.element)->name();
 
-                addRowToFormLayout(tr("Name:"), name);
+                addRowToCellmlFormLayout(tr("Name:"), name);
             }
 
             if (showXlinkHref)
-                addRowToFormLayout(tr("xlink:href:"),
-                                   static_cast<CellMLSupport::CellmlFileImport *>(cellmlItem.element)->xlinkHref());
+                addRowToCellmlFormLayout(tr("xlink:href:"),
+                                         static_cast<CellMLSupport::CellmlFileImport *>(cellmlItem.element)->xlinkHref());
 
             if (showUnitReference)
-                addRowToFormLayout(tr("Unit reference:"),
-                                   static_cast<CellMLSupport::CellmlFileImportUnit *>(cellmlItem.element)->unitReference());
+                addRowToCellmlFormLayout(tr("Unit reference:"),
+                                         static_cast<CellMLSupport::CellmlFileImportUnit *>(cellmlItem.element)->unitReference());
 
             if (showComponentReference)
-                addRowToFormLayout(tr("Component reference:"),
-                                   static_cast<CellMLSupport::CellmlFileImportComponent *>(cellmlItem.element)->componentReference());
+                addRowToCellmlFormLayout(tr("Component reference:"),
+                                         static_cast<CellMLSupport::CellmlFileImportComponent *>(cellmlItem.element)->componentReference());
 
             if (showUnit)
-                addRowToFormLayout(tr("Unit:"),
-                                   static_cast<CellMLSupport::CellmlFileVariable *>(cellmlItem.element)->unit());
+                addRowToCellmlFormLayout(tr("Unit:"),
+                                         static_cast<CellMLSupport::CellmlFileVariable *>(cellmlItem.element)->unit());
 
             if (showInitialValue) {
                 QString initialValue = static_cast<CellMLSupport::CellmlFileVariable *>(cellmlItem.element)->initialValue();
 
-                addRowToFormLayout(tr("Initial value:"),
-                                   initialValue.isEmpty()?"/":initialValue);
+                addRowToCellmlFormLayout(tr("Initial value:"),
+                                         initialValue.isEmpty()?"/":initialValue);
             }
 
             if (showPublicInterface)
-                addRowToFormLayout(tr("Public interface:"),
-                                   static_cast<CellMLSupport::CellmlFileVariable *>(cellmlItem.element)->publicInterfaceAsString());
+                addRowToCellmlFormLayout(tr("Public interface:"),
+                                         static_cast<CellMLSupport::CellmlFileVariable *>(cellmlItem.element)->publicInterfaceAsString());
 
             if (showPrivateInterface)
-                addRowToFormLayout(tr("Private interface:"),
-                                   static_cast<CellMLSupport::CellmlFileVariable *>(cellmlItem.element)->privateInterfaceAsString());
+                addRowToCellmlFormLayout(tr("Private interface:"),
+                                         static_cast<CellMLSupport::CellmlFileVariable *>(cellmlItem.element)->privateInterfaceAsString());
 
             if (showRelationship)
-                addRowToFormLayout(tr("Relationship:"),
-                                   static_cast<CellMLSupport::CellmlFileRelationshipReference *>(cellmlItem.element)->relationship());
+                addRowToCellmlFormLayout(tr("Relationship:"),
+                                         static_cast<CellMLSupport::CellmlFileRelationshipReference *>(cellmlItem.element)->relationship());
 
             if (showRelationshipNamespace) {
                 QString relationshipNamespace = static_cast<CellMLSupport::CellmlFileRelationshipReference *>(cellmlItem.element)->relationshipNamespace();
 
-                addRowToFormLayout(tr("Relationship namespace:"),
-                                   relationshipNamespace.isEmpty()?"/":relationshipNamespace);
+                addRowToCellmlFormLayout(tr("Relationship namespace:"),
+                                         relationshipNamespace.isEmpty()?"/":relationshipNamespace);
             }
 
             if (showComponent)
-                addRowToFormLayout(tr("Component:"),
-                                   static_cast<CellMLSupport::CellmlFileComponentReference *>(cellmlItem.element)->component());
+                addRowToCellmlFormLayout(tr("Component:"),
+                                         static_cast<CellMLSupport::CellmlFileComponentReference *>(cellmlItem.element)->component());
 
             if (showFirstComponent)
-                addRowToFormLayout(tr("First component:"),
-                                   static_cast<CellMLSupport::CellmlFileMapComponents *>(cellmlItem.element)->firstComponent());
+                addRowToCellmlFormLayout(tr("First component:"),
+                                         static_cast<CellMLSupport::CellmlFileMapComponents *>(cellmlItem.element)->firstComponent());
 
             if (showSecondComponent)
-                addRowToFormLayout(tr("Second component:"),
-                                   static_cast<CellMLSupport::CellmlFileMapComponents *>(cellmlItem.element)->secondComponent());
+                addRowToCellmlFormLayout(tr("Second component:"),
+                                         static_cast<CellMLSupport::CellmlFileMapComponents *>(cellmlItem.element)->secondComponent());
 
             if (showFirstVariable)
-                addRowToFormLayout(tr("First variable:"),
-                                   static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(cellmlItem.element)->firstVariable());
+                addRowToCellmlFormLayout(tr("First variable:"),
+                                         static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(cellmlItem.element)->firstVariable());
 
             if (showSecondVariable)
-                addRowToFormLayout(tr("Second variable:"),
-                                   static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(cellmlItem.element)->secondVariable());
+                addRowToCellmlFormLayout(tr("Second variable:"),
+                                         static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(cellmlItem.element)->secondVariable());
         }
     } else {
         // We are dealing with some metadata, so enable the metadata ML side of
@@ -326,10 +329,24 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
             mMetadataWidget = new QWidget(this);
             mMetadataFormLayout = new QVBoxLayout(mMetadataWidget);
 
-            mMetadataWidget->setLayout(mMetadataFormLayout);
-        }
+            mMetadataFormLayout->setMargin(0);
 
-        setWidget(mMetadataWidget);
+            mMetadataWidget->setLayout(mMetadataFormLayout);
+
+            mMetadataTreeView  = new Core::TreeView(mMetadataWidget);
+            mMetadataDataModel = new QStandardItemModel(mMetadataTreeView);
+
+            mMetadataTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+            mMetadataTreeView->setFrameShape(QFrame::NoFrame);
+            mMetadataTreeView->setHeaderHidden(true);
+            mMetadataTreeView->setModel(mMetadataDataModel);
+            mMetadataTreeView->setRootIsDecorated(false);
+            mMetadataTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+
+            mMetadataFormLayout->addWidget(mMetadataTreeView);
+
+            setWidget(mMetadataWidget);
+        }
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
 qDebug("---------------------------------------");
@@ -384,8 +401,8 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellMLSupport::CellmlFil
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::addRowToFormLayout(const QString &pLabel,
-                                                           const QString &pValue)
+void CellmlAnnotationViewDetailsWidget::addRowToCellmlFormLayout(const QString &pLabel,
+                                                                 const QString &pValue)
 {
     // Add a row to our form layout
 

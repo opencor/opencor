@@ -30,6 +30,15 @@ class QVBoxLayout;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TreeView;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -93,8 +102,10 @@ private:
 
     QWidget *mMetadataWidget;
     QVBoxLayout *mMetadataFormLayout;
+    Core::TreeView *mMetadataTreeView;
+    QStandardItemModel *mMetadataDataModel;
 
-    void addRowToFormLayout(const QString &pLabel, const QString &pValue);
+    void addRowToCellmlFormLayout(const QString &pLabel, const QString &pValue);
 
     void updateGui(const CellmlItems &pCellmlItems,
                    const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);

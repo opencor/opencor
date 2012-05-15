@@ -141,7 +141,8 @@ private:
 
     void retranslateCellmlDataItem(CellmlElementItem *pCellmlElementItem);
 
-    void initTreeView(Core::TreeView *pTreeView);
+    void initTreeView(Core::TreeView *pTreeView, QStandardItemModel *pDataModel,
+                      CellmlItemDelegate *pItemDelegate = 0);
 
     void populateCellmlDataModel();
     void populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
