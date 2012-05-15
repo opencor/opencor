@@ -334,6 +334,11 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mVerticalSplitter, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitVerticalSplitterMoved()));
 
+    // Set an event filter for our tree views
+
+    mCellmlTreeView->installEventFilter(this);
+    mMetadataTreeView->installEventFilter(this);
+
     // Some connections to handle the expansion/collapse of a CellML tree node
 
     connect(mCellmlTreeView, SIGNAL(expanded(const QModelIndex &)),
@@ -461,6 +466,30 @@ void CellmlAnnotationViewWidget::retranslateCellmlDataItem(CellmlElementItem *pC
 
             ;
         }
+}
+
+//==============================================================================
+
+bool CellmlAnnotationViewWidget::eventFilter(QObject *pObject, QEvent *pEvent)
+{
+    switch (pEvent->type()) {
+    case QEvent::FocusIn:
+        // Check whether we are dealing with one of our tree views and, if so,
+        // update their details
+
+        if (pObject == mCellmlTreeView)
+            updateCellmlNode(mCellmlTreeView->currentIndex(), QModelIndex());
+        else if (pObject == mMetadataTreeView)
+            updateMetadataNode(mMetadataTreeView->currentIndex(), QModelIndex());
+        else
+            return QWidget::eventFilter(pObject, pEvent);
+
+        return true;
+    default:
+        // Another type of event which we don't handle, so...
+
+        return QWidget::eventFilter(pObject, pEvent);
+    }
 }
 
 //==============================================================================
@@ -923,6 +952,11 @@ void CellmlAnnotationViewWidget::updateCellmlNode(const QModelIndex &pNewIndex,
 {
     Q_UNUSED(pOldIndex);
 
+    // Make sure that we have a valid pNewIndex
+
+    if (pNewIndex == QModelIndex())
+        return;
+
     // Retrieve all the CellML items which properties we want to add to the
     // details GUI
 
@@ -1061,6 +1095,11 @@ void CellmlAnnotationViewWidget::updateMetadataNode(const QModelIndex &pNewIndex
                                                     const QModelIndex &pOldIndex)
 {
     Q_UNUSED(pOldIndex);
+
+    // Make sure that we have a valid pNewIndex
+
+    if (pNewIndex == QModelIndex())
+        return;
 
     // Determine the RDF triples that we need to show in the details GUI
 

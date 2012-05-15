@@ -122,6 +122,9 @@ public:
     QList<int> horizontalSplitterSizes() const;
     QList<int> verticalSplitterSizes() const;
 
+protected:
+    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
+
 private:
     Ui::CellmlAnnotationViewWidget *mGui;
 
