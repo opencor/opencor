@@ -338,22 +338,31 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
 
             mMetadataTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
             mMetadataTreeView->setFrameShape(QFrame::NoFrame);
-            mMetadataTreeView->setHeaderHidden(true);
             mMetadataTreeView->setModel(mMetadataDataModel);
             mMetadataTreeView->setRootIsDecorated(false);
             mMetadataTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+
+            mMetadataDataModel->setHorizontalHeaderLabels(QStringList() << tr("Subject")
+                                                                        << tr("Predicate")
+                                                                        << tr("Object"));
 
             mMetadataFormLayout->addWidget(mMetadataTreeView);
 
             setWidget(mMetadataWidget);
         }
 
-        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
-qDebug("---------------------------------------");
-qDebug("rdfTriple->subject() = %s", qPrintable(rdfTriple->subject()->asString()));
-qDebug("rdfTriple->predicate() = %s", qPrintable(rdfTriple->predicate()->asString()));
-qDebug("rdfTriple->object() = %s", qPrintable(rdfTriple->object()->asString()));
-        }
+        // Remove all previous triples from our tree view
+
+        while (mMetadataDataModel->rowCount())
+            foreach (QStandardItem *item, mMetadataDataModel->takeRow(0))
+                delete item;
+
+        // Add the 'new' triples to our tree view
+
+        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)
+            mMetadataDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(rdfTriple->subject()->asString())
+                                                                                        << new QStandardItem(rdfTriple->predicate()->asString())
+                                                                                        << new QStandardItem(rdfTriple->object()->asString()));
     }
 
     // Re-show ourselves

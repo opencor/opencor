@@ -149,6 +149,18 @@
         <source>Imported component</source>
         <translation>Composant importé</translation>
     </message>
+    <message>
+        <source>Subject</source>
+        <translation>Sujet</translation>
+    </message>
+    <message>
+        <source>Predicate</source>
+        <translation>Attribut</translation>
+    </message>
+    <message>
+        <source>Object</source>
+        <translation>Objet</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewWidget</name>
