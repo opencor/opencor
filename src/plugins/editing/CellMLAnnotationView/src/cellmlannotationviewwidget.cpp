@@ -28,8 +28,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlItemDelegate::CellmlItemDelegate(QWidget *pParent,
-                                       QStandardItemModel *pDataModel) :
+CellmlElementItemDelegate::CellmlElementItemDelegate(QWidget *pParent,
+                                                     QStandardItemModel *pDataModel) :
     QStyledItemDelegate(pParent),
     mCellmlDataModel(pDataModel)
 {
@@ -37,9 +37,9 @@ CellmlItemDelegate::CellmlItemDelegate(QWidget *pParent,
 
 //==============================================================================
 
-void CellmlItemDelegate::paint(QPainter *pPainter,
-                               const QStyleOptionViewItem &pOption,
-                               const QModelIndex &pIndex) const
+void CellmlElementItemDelegate::paint(QPainter *pPainter,
+                                      const QStyleOptionViewItem &pOption,
+                                      const QModelIndex &pIndex) const
 {
     // Paint the item as normal, except for the items which are not checkable
     // (i.e. plugins which the user cannot decide whether to load) in which case
@@ -289,12 +289,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // Create and customise our CellML tree view which will contain all of the
     // imports, units, components, groups and connections from the CellML file
 
-    mCellmlTreeView     = new Core::TreeView(mVerticalSplitter);
-    mCellmlDataModel    = new QStandardItemModel(mCellmlTreeView);
-    mCellmlItemDelegate = new CellmlItemDelegate(mCellmlTreeView,
-                                                 mCellmlDataModel);
+    mCellmlTreeView            = new Core::TreeView(mVerticalSplitter);
+    mCellmlDataModel           = new QStandardItemModel(mCellmlTreeView);
+    mCellmlElementItemDelegate = new CellmlElementItemDelegate(mCellmlTreeView,
+                                                               mCellmlDataModel);
 
-    initTreeView(mCellmlTreeView, mCellmlDataModel, mCellmlItemDelegate);
+    initTreeView(mCellmlTreeView, mCellmlDataModel, mCellmlElementItemDelegate);
 
     // Create and customise our metadata tree view which will contain all of the
     // metadata from the CellML file
@@ -514,7 +514,7 @@ QList<int> CellmlAnnotationViewWidget::verticalSplitterSizes() const
 
 void CellmlAnnotationViewWidget::initTreeView(Core::TreeView *pTreeView,
                                               QStandardItemModel *pDataModel,
-                                              CellmlItemDelegate *pItemDelegate)
+                                              CellmlElementItemDelegate *pItemDelegate)
 {
     pTreeView->setModel(pDataModel);
 

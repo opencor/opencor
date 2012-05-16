@@ -43,11 +43,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlItemDelegate : public QStyledItemDelegate
+class CellmlElementItemDelegate : public QStyledItemDelegate
 {
 public:
-    explicit CellmlItemDelegate(QWidget *pParent,
-                                QStandardItemModel *pDataModel);
+    explicit CellmlElementItemDelegate(QWidget *pParent,
+                                       QStandardItemModel *pDataModel);
 
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
@@ -133,7 +133,7 @@ private:
 
     Core::TreeView *mCellmlTreeView;
     QStandardItemModel *mCellmlDataModel;
-    CellmlItemDelegate *mCellmlItemDelegate;
+    CellmlElementItemDelegate *mCellmlElementItemDelegate;
 
     Core::TreeView *mMetadataTreeView;
     QStandardItemModel *mMetadataDataModel;
@@ -145,7 +145,7 @@ private:
     void retranslateCellmlDataItem(CellmlElementItem *pCellmlElementItem);
 
     void initTreeView(Core::TreeView *pTreeView, QStandardItemModel *pDataModel,
-                      CellmlItemDelegate *pItemDelegate = 0);
+                      CellmlElementItemDelegate *pItemDelegate = 0);
 
     void populateCellmlDataModel();
     void populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
