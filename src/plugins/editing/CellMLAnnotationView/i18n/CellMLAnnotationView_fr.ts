@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CellmlAnnotationViewWidget</name>
+    <name>CellmlAnnotationViewListsWidget</name>
     <message>
         <source>&amp;Expand All</source>
         <translation>Tout &amp;Etendre</translation>
@@ -167,7 +167,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewWidget</name>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewListsWidget</name>
     <message>
         <source>Imports</source>
         <translation></translation>
@@ -189,10 +189,6 @@
         <translation>Groupes</translation>
     </message>
     <message>
-        <source>Group #%1</source>
-        <translation>Groupe #%1</translation>
-    </message>
-    <message>
         <source>Relationship References</source>
         <translation>Références de Relation</translation>
     </message>
@@ -205,8 +201,12 @@
         <translation>Connexions</translation>
     </message>
     <message>
+        <source>Group #%1</source>
+        <translation>Groupe N° %1</translation>
+    </message>
+    <message>
         <source>Connection #%1</source>
-        <translation>Connexion #%1</translation>
+        <translation>Connexion N° %1</translation>
     </message>
 </context>
 </TS>

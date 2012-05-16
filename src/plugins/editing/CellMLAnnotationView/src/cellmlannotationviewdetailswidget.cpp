@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlannotationviewdetailswidget.h"
+#include "cellmlannotationviewwidget.h"
 #include "treeview.h"
 
 //==============================================================================
@@ -23,12 +24,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(QWidget *pParent,
-                                                                     CellMLSupport::CellmlFile *pCellmlFile) :
+CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
     Core::CommonWidget(pParent),
+    mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewDetailsWidget),
-    mCellmlFile(pCellmlFile),
     mCellmlItems(CellmlItems()),
     mRdfTriples(CellMLSupport::CellmlFileRdfTriples()),
     mCellmlWidget(0),
@@ -369,7 +369,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
         //       cmeta:id which will speak more to the user than a possible long
         //       URI reference...
 
-        QString uriBase = mCellmlFile->uriBase();
+        QString uriBase = mParent->cellmlFile()->uriBase();
         int rdfTripleCounter = 0;
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)

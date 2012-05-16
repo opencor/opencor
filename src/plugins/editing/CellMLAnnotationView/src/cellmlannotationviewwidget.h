@@ -12,10 +12,6 @@
 
 //==============================================================================
 
-#include <QModelIndex>
-
-//==============================================================================
-
 namespace Ui {
     class CellmlAnnotationViewWidget;
 }
@@ -23,28 +19,16 @@ namespace Ui {
 //==============================================================================
 
 class QSplitter;
-class QStandardItemModel;
-class QTextEdit;
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class TreeView;
-}   // namespace Core
-
-//==============================================================================
-
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
+class CellmlAnnotationViewListsWidget;
 class CellmlAnnotationViewDetailsWidget;
-class CellmlElementItem;
-class CellmlElementItemDelegate;
 
 //==============================================================================
 
@@ -60,72 +44,30 @@ public:
     virtual void retranslateUi();
 
     QList<int> horizontalSplitterSizes() const;
-    QList<int> verticalSplitterSizes() const;
 
-protected:
-    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
+    CellMLSupport::CellmlFile * cellmlFile() const;
+
+    CellmlAnnotationViewListsWidget * listsWidget() const;
+    CellmlAnnotationViewDetailsWidget * detailsWidget() const;
 
 private:
     Ui::CellmlAnnotationViewWidget *mGui;
 
-    QSplitter *mHorizontalSplitter;
-    QSplitter *mVerticalSplitter;
-
-    Core::TreeView *mCellmlTreeView;
-    QStandardItemModel *mCellmlDataModel;
-    CellmlElementItemDelegate *mCellmlElementItemDelegate;
-
-    Core::TreeView *mMetadataTreeView;
-    QStandardItemModel *mMetadataDataModel;
-
-    CellmlAnnotationViewDetailsWidget *mDetails;
-
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    void retranslateCellmlDataItem(CellmlElementItem *pCellmlElementItem);
+    QSplitter *mHorizontalSplitter;
 
-    void initTreeView(Core::TreeView *pTreeView, QStandardItemModel *pDataModel,
-                      CellmlElementItemDelegate *pItemDelegate = 0);
-
-    void populateCellmlDataModel();
-    void populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
-                                const CellMLSupport::CellmlFileUnits pUnits);
-    void populateComponentReferenceDataModel(CellmlElementItem *pCellmlElementItem,
-                                             CellMLSupport::CellmlFileComponentReference *pComponentReference);
-
-    void populateMetadataDataModel();
-
-    void indexExpandAll(const QModelIndex &pIndex) const;
-    void indexCollapseAll(const QModelIndex &pIndex) const;
-
-    bool indexIsAllExpanded(const QModelIndex &pIndex) const;
-
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
-                      CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    CellmlAnnotationViewListsWidget *mListsWidget;
+    CellmlAnnotationViewDetailsWidget *mDetailsWidget;
 
 Q_SIGNALS:
     void horizontalSplitterMoved(const QList<int> &pHorizontalSizes);
-    void verticalSplitterMoved(const QList<int> &pVerticalSizes);
 
 public Q_SLOTS:
     void updateHorizontalSplitter(const QList<int> &pHorizontalSizes);
-    void updateVerticalSplitter(const QList<int> &pVerticalSizes);
 
 private Q_SLOTS:
     void emitHorizontalSplitterMoved();
-    void emitVerticalSplitterMoved();
-
-    void resizeCellmlTreeViewToContents();
-
-    void updateCellmlNode(const QModelIndex &pNewIndex,
-                          const QModelIndex &pOldIndex);
-    void updateMetadataNode(const QModelIndex &pNewIndex,
-                            const QModelIndex &pOldIndex);
-
-    void cellmlTreeViewContextMenu(const QPoint &pPosition) const;
-
-    void on_actionExpandAll_triggered();
-    void on_actionCollapseAll_triggered();
 };
 
 //==============================================================================

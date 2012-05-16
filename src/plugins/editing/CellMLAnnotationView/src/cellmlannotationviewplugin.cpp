@@ -2,6 +2,7 @@
 // CellMLAnnotationView plugin
 //==============================================================================
 
+#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
@@ -152,13 +153,13 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
     // Initialise our new CellML annotation view widget's sizes
 
     widget->updateHorizontalSplitter(mHorizontalSizes);
-    widget->updateVerticalSplitter(mVerticalSizes);
+    widget->listsWidget()->updateVerticalSplitter(mVerticalSizes);
 
     // Keep track of the splitter move in our new CellML annotation view widget
 
     connect(widget, SIGNAL(horizontalSplitterMoved(const QList<int> &)),
             this, SLOT(horizontalSplitterMoved(const QList<int> &)));
-    connect(widget, SIGNAL(verticalSplitterMoved(const QList<int> &)),
+    connect(widget->listsWidget(), SIGNAL(verticalSplitterMoved(const QList<int> &)),
             this, SLOT(verticalSplitterMoved(const QList<int> &)));
 
     // Some other connections to handle splitter moves between our CellML
@@ -170,16 +171,16 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 
         connect(widget, SIGNAL(horizontalSplitterMoved(const QList<int> &)),
                 mWidgets.at(i), SLOT(updateHorizontalSplitter(const QList<int> &)));
-        connect(widget, SIGNAL(verticalSplitterMoved(const QList<int> &)),
-                mWidgets.at(i), SLOT(updateVerticalSplitter(const QList<int> &)));
+        connect(widget->listsWidget(), SIGNAL(verticalSplitterMoved(const QList<int> &)),
+                mWidgets.at(i)->listsWidget(), SLOT(updateVerticalSplitter(const QList<int> &)));
 
         // Make sur that the other CellML annotation view widget is aware of any
         // splitter move occuring in our new CellML annotation view widget
 
         connect(mWidgets.at(i), SIGNAL(horizontalSplitterMoved(const QList<int> &)),
                 widget, SLOT(updateHorizontalSplitter(const QList<int> &)));
-        connect(mWidgets.at(i), SIGNAL(verticalSplitterMoved(const QList<int> &)),
-                widget, SLOT(updateVerticalSplitter(const QList<int> &)));
+        connect(mWidgets.at(i)->listsWidget(), SIGNAL(verticalSplitterMoved(const QList<int> &)),
+                widget->listsWidget(), SLOT(updateVerticalSplitter(const QList<int> &)));
     }
 
     // Keep track of our new CellML annotation view widget

@@ -43,6 +43,10 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
+class CellmlAnnotationViewWidget;
+
+//==============================================================================
+
 class CellmlAnnotationViewDetailsWidget : public QScrollArea,
                                           public Core::CommonWidget
 {
@@ -76,8 +80,7 @@ public:
 
     typedef QList<CellmlItem> CellmlItems;
 
-    explicit CellmlAnnotationViewDetailsWidget(QWidget *pParent,
-                                               CellMLSupport::CellmlFile *pCellmlFile);
+    explicit CellmlAnnotationViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewDetailsWidget();
 
     virtual void retranslateUi();
@@ -92,9 +95,9 @@ public:
     QWidget * focusProxyWidget();
 
 private:
-    Ui::CellmlAnnotationViewDetailsWidget *mGui;
+    CellmlAnnotationViewWidget *mParent;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
+    Ui::CellmlAnnotationViewDetailsWidget *mGui;
 
     CellmlItems mCellmlItems;
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
