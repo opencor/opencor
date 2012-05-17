@@ -65,7 +65,7 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
     // retranslation)
 
     delete takeWidget();   // This will force the GUI to be recreated from
-                            // scratch and everything to be retranslated
+                           // scratch and everything to be retranslated
 
     updateGui(mCellmlItems, mRdfTriples);
 }
