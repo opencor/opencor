@@ -57,7 +57,7 @@ public:
 
     virtual void retranslateUi();
 
-    QList<int> verticalSplitterSizes() const;
+    QList<int> splitterSizes() const;
 
     void selectFirstCellmlNode();
 
@@ -69,7 +69,7 @@ private:
 
     Ui::CellmlAnnotationViewListsWidget *mGui;
 
-    QSplitter *mVerticalSplitter;
+    QSplitter *mSplitter;
 
     Core::TreeView *mCellmlTreeView;
     QStandardItemModel *mCellmlDataModel;
@@ -100,13 +100,13 @@ private:
                       CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 Q_SIGNALS:
-    void verticalSplitterMoved(const QList<int> &pVerticalSizes);
+    void splitterMoved(const QList<int> &pSizes);
 
 public Q_SLOTS:
-    void updateVerticalSplitter(const QList<int> &pVerticalSizes);
+    void updateSplitter(const QList<int> &pSizes);
 
 private Q_SLOTS:
-    void emitVerticalSplitterMoved();
+    void emitSplitterMoved();
 
     void resizeCellmlTreeViewToContents();
 

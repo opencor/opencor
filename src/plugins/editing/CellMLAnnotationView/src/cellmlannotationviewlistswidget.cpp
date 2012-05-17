@@ -37,14 +37,14 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
 
     mGui->setupUi(this);
 
-    // Create our vertical splitter
+    // Create our splitter
 
-    mVerticalSplitter   = new QSplitter(Qt::Vertical, this);
+    mSplitter = new QSplitter(Qt::Vertical, this);
 
     // Create and customise our CellML tree view which will contain all of the
     // imports, units, components, groups and connections from a CellML file
 
-    mCellmlTreeView            = new Core::TreeView(mVerticalSplitter);
+    mCellmlTreeView            = new Core::TreeView(mSplitter);
     mCellmlDataModel           = new QStandardItemModel(mCellmlTreeView);
     mCellmlElementItemDelegate = new CellmlElementItemDelegate(mCellmlTreeView,
                                                                mCellmlDataModel);
@@ -54,21 +54,21 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
     // Create and customise our metadata tree view which will contain all of the
     // metadata from a CellML file
 
-    mMetadataTreeView  = new Core::TreeView(mVerticalSplitter);
+    mMetadataTreeView  = new Core::TreeView(mSplitter);
     mMetadataDataModel = new QStandardItemModel(mMetadataTreeView);
 
     initTreeView(mMetadataTreeView, mMetadataDataModel);
 
-    // Populate our vertical splitter
+    // Populate our splitter
 
-    mVerticalSplitter->addWidget(new Core::BorderedWidget(mCellmlTreeView,
-                                                          false, false, true, true));
-    mVerticalSplitter->addWidget(new Core::BorderedWidget(mMetadataTreeView,
-                                                          true, false, false, true));
+    mSplitter->addWidget(new Core::BorderedWidget(mCellmlTreeView,
+                                                  false, false, true, true));
+    mSplitter->addWidget(new Core::BorderedWidget(mMetadataTreeView,
+                                                  true, false, false, true));
 
-    // Add our vertical splitter to our vertical layout
+    // Add our splitter to our layout
 
-    mGui->verticalLayout->addWidget(mVerticalSplitter);
+    mGui->verticalLayout->addWidget(mSplitter);
 
     // We want a context menu for our CellML tree view
 
@@ -77,10 +77,10 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
     connect(mCellmlTreeView, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(cellmlTreeViewContextMenu(const QPoint &)));
 
-    // Keep track of our vertical splitter being moved
+    // Keep track of our splitter being moved
 
-    connect(mVerticalSplitter, SIGNAL(splitterMoved(int,int)),
-            this, SLOT(emitVerticalSplitterMoved()));
+    connect(mSplitter, SIGNAL(splitterMoved(int,int)),
+            this, SLOT(emitSplitterMoved()));
 
     // Set an event filter for our tree views
 
@@ -234,11 +234,11 @@ bool CellmlAnnotationViewListsWidget::eventFilter(QObject *pObject,
 
 //==============================================================================
 
-QList<int> CellmlAnnotationViewListsWidget::verticalSplitterSizes() const
+QList<int> CellmlAnnotationViewListsWidget::splitterSizes() const
 {
-    // Return our vertical splitter's sizes
+    // Return our splitter's sizes
 
-    return mVerticalSplitter->sizes();
+    return mSplitter->sizes();
 }
 
 //==============================================================================
@@ -641,21 +641,21 @@ void CellmlAnnotationViewListsWidget::populateMetadataDataModel()
 
 //==============================================================================
 
-void CellmlAnnotationViewListsWidget::updateVerticalSplitter(const QList<int> &pVerticalSizes)
+void CellmlAnnotationViewListsWidget::updateSplitter(const QList<int> &pSizes)
 {
-    // Update our vertical splitter after the vertical splitter of another
-    // CellmlAnnotationViewListsWidget object has been moved
+    // The splitter of another CellmlAnnotationViewListsWidget object has been
+    // moved, so update ours
 
-    mVerticalSplitter->setSizes(pVerticalSizes);
+    mSplitter->setSizes(pSizes);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewListsWidget::emitVerticalSplitterMoved()
+void CellmlAnnotationViewListsWidget::emitSplitterMoved()
 {
-    // Let whoever know that our vertical splitter has been moved
+    // Let whoever know that our splitter has been moved
 
-    emit verticalSplitterMoved(mVerticalSplitter->sizes());
+    emit splitterMoved(mSplitter->sizes());
 }
 
 //==============================================================================
