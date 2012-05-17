@@ -72,6 +72,10 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     connect(mHorizontalSplitter, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitHorizontalSplitterMoved()));
+
+    // Select the first CellML node from our CellML list
+
+    mListsWidget->selectFirstCellmlNode();
 }
 
 //==============================================================================

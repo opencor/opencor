@@ -115,11 +115,6 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
 
     resizeCellmlTreeViewToContents();
     mMetadataTreeView->resizeColumnToContents(0);
-
-    // Select the first CellML node, if any
-
-    if (mCellmlDataModel->invisibleRootItem()->rowCount())
-        mCellmlTreeView->setCurrentIndex(mCellmlDataModel->invisibleRootItem()->child(0)->index());
 }
 
 //==============================================================================
@@ -244,6 +239,16 @@ QList<int> CellmlAnnotationViewListsWidget::verticalSplitterSizes() const
     // Return our vertical splitter's sizes
 
     return mVerticalSplitter->sizes();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewListsWidget::selectFirstCellmlNode()
+{
+    // Select the first CellML node, if any
+
+    if (mCellmlDataModel->invisibleRootItem()->rowCount())
+        mCellmlTreeView->setCurrentIndex(mCellmlDataModel->invisibleRootItem()->child(0)->index());
 }
 
 //==============================================================================
@@ -788,10 +793,10 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
 
     mParent->detailsWidget()->updateGui(cellmlItems);
 
-    // Set the view widget's focus proxy to the widget which the details GUI
-    // thinks should be the focus proxy widget
+    // Set our parent's focus proxy to the widget which the details GUI thinks
+    // should be the focus proxy widget
 
-    setFocusProxy(mParent->detailsWidget()->focusProxyWidget());
+    mParent->setFocusProxy(mParent->detailsWidget()->focusProxyWidget());
 }
 
 //==============================================================================

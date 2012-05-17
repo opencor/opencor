@@ -59,6 +59,8 @@ public:
 
     QList<int> verticalSplitterSizes() const;
 
+    void selectFirstCellmlNode();
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
 
