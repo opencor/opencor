@@ -66,7 +66,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Add our splitter to our layout
 
-    mGui->horizontalLayout->addWidget(mSplitter);
+    mGui->layout->addWidget(mSplitter);
 
     // Keep track of our splitter being moved
 

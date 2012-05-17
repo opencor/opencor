@@ -10,7 +10,7 @@
     <height>240</height>
    </rect>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QHBoxLayout" name="layout">
    <property name="spacing">
     <number>0</number>
    </property>

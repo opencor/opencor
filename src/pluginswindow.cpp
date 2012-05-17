@@ -90,11 +90,11 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
     // are shown as 'disabled' (to reflect the fact that users cannot decide
     // whether they should be loaded)
 
-    mDataModel = new QStandardItemModel(mGui->treeView);
+    mDataModel = new QStandardItemModel(mGui->pluginsTreeView);
     mPluginDelegate = new PluginDelegate(mDataModel);
 
-    mGui->treeView->setModel(mDataModel);
-    mGui->treeView->setItemDelegate(mPluginDelegate);
+    mGui->pluginsTreeView->setModel(mDataModel);
+    mGui->pluginsTreeView->setItemDelegate(mPluginDelegate);
 
     // Populate the data model with our different categories of plugins
     // Note: we create all of them in one go (rather than when required), so
@@ -153,9 +153,9 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
 
     foreach (QStandardItem *categoryItem, mPluginCategories)
         if (!categoryItem->hasChildren())
-            mGui->treeView->setRowHidden(categoryItem->row(),
-                                         mDataModel->invisibleRootItem()->index(),
-                                         true);
+            mGui->pluginsTreeView->setRowHidden(categoryItem->row(),
+                                                mDataModel->invisibleRootItem()->index(),
+                                                true);
 
     // Make sure that the loading state of all the plugins is right, including
     // that of the plugins which the user cannot manage
@@ -170,23 +170,23 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
     //       it (the extra 15% seems to be enough even to even account for a big
     //       number of plugins which would then require a vertical scroll bar)
 
-    mGui->treeView->expandAll();
-    mGui->treeView->resizeColumnToContents(0);
+    mGui->pluginsTreeView->expandAll();
+    mGui->pluginsTreeView->resizeColumnToContents(0);
 
-    mGui->treeView->setMinimumWidth(1.15*mGui->treeView->columnWidth(0));
-    mGui->treeView->setMaximumWidth(mGui->treeView->minimumWidth());
+    mGui->pluginsTreeView->setMinimumWidth(1.15*mGui->pluginsTreeView->columnWidth(0));
+    mGui->pluginsTreeView->setMaximumWidth(mGui->pluginsTreeView->minimumWidth());
 
     // Make, through the note label, sure that the window has a minimum width
 
-    mGui->noteLabel->setMinimumWidth(2.5*mGui->treeView->minimumWidth());
+    mGui->noteLabel->setMinimumWidth(2.5*mGui->pluginsTreeView->minimumWidth());
 
     // Make sure that the window has a reasonable starting size
 
-    mGui->verticalLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    mGui->layout->setSizeConstraint(QLayout::SetMinimumSize);
 
     // Connection to handle a plugin's information
 
-    connect(mGui->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+    connect(mGui->pluginsTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updatePluginInfo(const QModelIndex &, const QModelIndex &)));
 
     // Connection to handle the activation of a link in the description
@@ -218,17 +218,17 @@ void PluginsWindow::selectFirstVisiblePlugin()
     //       hence nothing needs to be done indeed...
 
     foreach (QStandardItem *categoryItem, mPluginCategories)
-        if (!mGui->treeView->isRowHidden(categoryItem->row(),
-                                         mDataModel->invisibleRootItem()->index()))
+        if (!mGui->pluginsTreeView->isRowHidden(categoryItem->row(),
+                                                mDataModel->invisibleRootItem()->index()))
             // We have found the first visible category, so now find its first
             // visible plugin
 
             for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
-                if (!mGui->treeView->isRowHidden(categoryItem->child(i)->row(),
-                                                 categoryItem->index())) {
+                if (!mGui->pluginsTreeView->isRowHidden(categoryItem->child(i)->row(),
+                                                        categoryItem->index())) {
                     // We have found our first visible plugin, so...
 
-                    mGui->treeView->setCurrentIndex(categoryItem->child(i)->index());
+                    mGui->pluginsTreeView->setCurrentIndex(categoryItem->child(i)->index());
 
                     // We are done, so...
 
@@ -400,7 +400,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
     // Prevent the list view from being updated, since we may end up changing
     // quite a bit of its visual contents
 
-    mGui->treeView->setUpdatesEnabled(false);
+    mGui->pluginsTreeView->setUpdatesEnabled(false);
 
     // Check whether we came here as a result of checking a plugin and, if so,
     // then make sure that all of that plugin's dependencies (i.e. both direct
@@ -470,7 +470,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
 
     // Re-enable the updating of the list view
 
-    mGui->treeView->setUpdatesEnabled(true);
+    mGui->pluginsTreeView->setUpdatesEnabled(true);
 
     // Check whether the OK and apply buttons should be enabled
 
@@ -582,8 +582,8 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
     // Show/hide our unmanageable plugins
 
     foreach (QStandardItem *pluginItem, mUnmanageablePlugins)
-        mGui->treeView->setRowHidden(pluginItem->row(),
-                                     pluginItem->parent()->index(), pChecked);
+        mGui->pluginsTreeView->setRowHidden(pluginItem->row(),
+                                            pluginItem->parent()->index(), pChecked);
 
     // Show/hide our categories, based on whether they contain visible plugins
 
@@ -597,8 +597,8 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
             bool hideCategory = true;
 
             for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
-                if (!mGui->treeView->isRowHidden(categoryItem->child(i)->row(),
-                                                 categoryItem->index())) {
+                if (!mGui->pluginsTreeView->isRowHidden(categoryItem->child(i)->row(),
+                                                        categoryItem->index())) {
                     // There is at least one plugin which is visible, so...
 
                     hideCategory = false;
@@ -606,9 +606,9 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
                     break;
                 }
 
-            mGui->treeView->setRowHidden(categoryItem->row(),
-                                         mDataModel->invisibleRootItem()->index(),
-                                         hideCategory);
+            mGui->pluginsTreeView->setRowHidden(categoryItem->row(),
+                                                mDataModel->invisibleRootItem()->index(),
+                                                hideCategory);
         }
 
     // Select the first plugin item

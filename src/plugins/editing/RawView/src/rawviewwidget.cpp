@@ -57,7 +57,7 @@ RawViewWidget::RawViewWidget(QWidget *pParent, const QString &pFileName) :
 
     // Add the editor to the raw view widget
 
-    mGui->verticalLayout->addWidget(editor);
+    mGui->layout->addWidget(editor);
 }
 
 //==============================================================================

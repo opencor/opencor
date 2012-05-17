@@ -68,8 +68,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     toolbar->addSeparator();
     toolbar->addAction(mGui->actionCsvExport);
 
-    mGui->verticalLayout->addWidget(toolbar);
-    mGui->verticalLayout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addWidget(toolbar);
+    mGui->layout->addWidget(Core::newLineWidget(this));
 
     // Create our vertical splitter
 
@@ -117,8 +117,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mVerticalSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
 
-    mGui->verticalLayout->addSpacing(mVerticalSplitter->handleWidth());
-    mGui->verticalLayout->addWidget(mVerticalSplitter);
+    mGui->layout->addSpacing(mVerticalSplitter->handleWidth());
+    mGui->layout->addWidget(mVerticalSplitter);
 
     // Create our (thin) simulation progress widget
 
@@ -131,8 +131,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     setProgressBarStyleSheet();
 
-    mGui->verticalLayout->addWidget(Core::newLineWidget(this));
-    mGui->verticalLayout->addWidget(mProgressBar);
+    mGui->layout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addWidget(mProgressBar);
 }
 
 //==============================================================================

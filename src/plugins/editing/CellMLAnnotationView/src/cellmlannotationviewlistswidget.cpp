@@ -68,7 +68,7 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
 
     // Add our splitter to our layout
 
-    mGui->verticalLayout->addWidget(mSplitter);
+    mGui->layout->addWidget(mSplitter);
 
     // We want a context menu for our CellML tree view
 

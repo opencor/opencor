@@ -73,7 +73,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     toolbar->addSeparator();
     toolbar->addAction(mGui->actionPrint);
 
-    mGui->verticalLayout->addWidget(toolbar);
+    mGui->layout->addWidget(toolbar);
 
     // Create and add the help widget
 
@@ -81,7 +81,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     mHelpWidget->setObjectName("HelpWidget");
 
-    mGui->verticalLayout->addWidget(mHelpWidget);
+    mGui->layout->addWidget(mHelpWidget);
 
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions

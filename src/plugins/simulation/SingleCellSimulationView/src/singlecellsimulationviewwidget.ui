@@ -10,7 +10,7 @@
     <height>240</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="layout">
    <property name="spacing">
     <number>0</number>
    </property>

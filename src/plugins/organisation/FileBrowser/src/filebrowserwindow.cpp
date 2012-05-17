@@ -42,7 +42,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     toolbar->addAction(mGui->actionPrevious);
     toolbar->addAction(mGui->actionNext);
 
-    mGui->verticalLayout->addWidget(toolbar);
+    mGui->layout->addWidget(toolbar);
 
     // Create and add the file browser widget
 
@@ -50,7 +50,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mFileBrowserWidget->setObjectName("FileBrowserWidget");
 
-    mGui->verticalLayout->addWidget(mFileBrowserWidget);
+    mGui->layout->addWidget(mFileBrowserWidget);
 
     // We want our own context menu for the file organiser widget
 

@@ -60,7 +60,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
 
     mVerticalSplitter->addWidget(mViewer);
 
-    mGui->verticalLayout->addWidget(mVerticalSplitter);
+    mGui->layout->addWidget(mVerticalSplitter);
 }
 
 //==============================================================================

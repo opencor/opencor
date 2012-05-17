@@ -14,7 +14,7 @@
    <string>CellML Model Repository</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="layout">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -22,7 +22,7 @@
      <number>0</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="subLayout">
       <property name="spacing">
        <number>8</number>
       </property>

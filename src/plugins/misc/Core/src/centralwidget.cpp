@@ -200,11 +200,11 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Add the widgets to our horizontal layout
 
-    mGui->horizontalLayout->addWidget(mModeTabs);
-    mGui->horizontalLayout->addWidget(centralWidget);
+    mGui->layout->addWidget(mModeTabs);
+    mGui->layout->addWidget(centralWidget);
 
     foreach (CentralWidgetMode *mode, mModes)
-        mGui->horizontalLayout->addWidget(mode->views());
+        mGui->layout->addWidget(mode->views());
 
     // Some connections to handle our files tab bar
 

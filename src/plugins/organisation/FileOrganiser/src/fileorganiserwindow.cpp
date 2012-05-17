@@ -37,7 +37,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
     toolbar->addAction(mGui->actionNew);
     toolbar->addAction(mGui->actionDelete);
 
-    mGui->verticalLayout->addWidget(toolbar);
+    mGui->layout->addWidget(toolbar);
 
     // Create and add the file organiser widget
 
@@ -45,7 +45,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     mFileOrganiserWidget->setObjectName("FileOrganiserWidget");
 
-    mGui->verticalLayout->addWidget(mFileOrganiserWidget);
+    mGui->layout->addWidget(mFileOrganiserWidget);
 
     // We want our own context menu for the file organiser widget
 

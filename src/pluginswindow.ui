@@ -13,11 +13,11 @@
   <property name="windowTitle">
    <string>Plugins</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="layout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="pluginsLayout">
      <item>
-      <widget class="QTreeView" name="treeView">
+      <widget class="QTreeView" name="pluginsTreeView">
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
@@ -33,7 +33,7 @@
       </widget>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="rightVerticalLayout">
+      <layout class="QVBoxLayout" name="detailsLayout">
        <item>
         <widget class="QWidget" name="detailsWidget" native="true">
          <layout class="QFormLayout" name="detailsFormLayout">

@@ -14,7 +14,7 @@
    <string>OpenCOR Help</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="layout">
     <property name="spacing">
      <number>0</number>
     </property>

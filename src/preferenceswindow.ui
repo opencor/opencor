@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="layout">
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
