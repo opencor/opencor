@@ -28,78 +28,18 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewDetailsWidget</name>
-    <message>
-        <source>cmeta:id:</source>
-        <translation>cmeta:id :</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>Nom :</translation>
-    </message>
-    <message>
-        <source>Unit:</source>
-        <translation>Unité :</translation>
-    </message>
-    <message>
-        <source>Initial value:</source>
-        <translation>Valeur initiale :</translation>
-    </message>
-    <message>
-        <source>Public interface:</source>
-        <translation>Interface publique :</translation>
-    </message>
-    <message>
-        <source>Private interface:</source>
-        <translation>Interface privée :</translation>
-    </message>
-    <message>
-        <source>Relationship:</source>
-        <translation>Relation :</translation>
-    </message>
-    <message>
-        <source>Relationship namespace:</source>
-        <translation>Espace de noms pour la relation :</translation>
-    </message>
-    <message>
-        <source>Component:</source>
-        <translation>Composant :</translation>
-    </message>
-    <message>
-        <source>Unit reference:</source>
-        <translation>Référence unité :</translation>
-    </message>
-    <message>
-        <source>Component reference:</source>
-        <translation>Référence de composant :</translation>
-    </message>
-    <message>
-        <source>xlink:href:</source>
-        <translation>xlink:href :</translation>
-    </message>
-    <message>
-        <source>First component:</source>
-        <translation>Premier composant :</translation>
-    </message>
-    <message>
-        <source>Second component:</source>
-        <translation>Deuxième composant :</translation>
-    </message>
-    <message>
-        <source>First variable:</source>
-        <translation>Première variable :</translation>
-    </message>
-    <message>
-        <source>Second variable:</source>
-        <translation>Deuxième variable :</translation>
-    </message>
-    <message>
-        <source>Model</source>
-        <translation>Modèle</translation>
-    </message>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlDetailsWidget</name>
     <message>
         <source>Import</source>
         <translation>Import</translation>
+    </message>
+    <message>
+        <source>Imported unit</source>
+        <translation>Unité importée</translation>
+    </message>
+    <message>
+        <source>Imported component</source>
+        <translation>Composant importé</translation>
     </message>
     <message>
         <source>Unit</source>
@@ -142,28 +82,12 @@
         <translation>Association de variable</translation>
     </message>
     <message>
-        <source>Imported unit</source>
-        <translation>Unité importée</translation>
+        <source>Model</source>
+        <translation>Modèle</translation>
     </message>
     <message>
-        <source>Imported component</source>
-        <translation>Composant importé</translation>
-    </message>
-    <message>
-        <source>Subject</source>
-        <translation>Sujet</translation>
-    </message>
-    <message>
-        <source>Predicate</source>
-        <translation>Attribut</translation>
-    </message>
-    <message>
-        <source>Object</source>
-        <translation>Objet</translation>
-    </message>
-    <message>
-        <source>#</source>
-        <translation>N°</translation>
+        <source>cmeta:id:</source>
+        <translation>cmeta:id :</translation>
     </message>
     <message>
         <source>Group #%1</source>
@@ -172,6 +96,66 @@
     <message>
         <source>Connection #%1</source>
         <translation>Connexion n° %1</translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation>Nom :</translation>
+    </message>
+    <message>
+        <source>xlink:href:</source>
+        <translation>xlink:href :</translation>
+    </message>
+    <message>
+        <source>Unit reference:</source>
+        <translation>Référence unité :</translation>
+    </message>
+    <message>
+        <source>Component reference:</source>
+        <translation>Référence de composant :</translation>
+    </message>
+    <message>
+        <source>Unit:</source>
+        <translation>Unité :</translation>
+    </message>
+    <message>
+        <source>Initial value:</source>
+        <translation>Valeur initiale :</translation>
+    </message>
+    <message>
+        <source>Public interface:</source>
+        <translation>Interface publique :</translation>
+    </message>
+    <message>
+        <source>Private interface:</source>
+        <translation>Interface privée :</translation>
+    </message>
+    <message>
+        <source>Relationship:</source>
+        <translation>Relation :</translation>
+    </message>
+    <message>
+        <source>Relationship namespace:</source>
+        <translation>Espace de noms pour la relation :</translation>
+    </message>
+    <message>
+        <source>Component:</source>
+        <translation>Composant :</translation>
+    </message>
+    <message>
+        <source>First component:</source>
+        <translation>Premier composant :</translation>
+    </message>
+    <message>
+        <source>Second component:</source>
+        <translation>Deuxième composant :</translation>
+    </message>
+    <message>
+        <source>First variable:</source>
+        <translation>Première variable :</translation>
+    </message>
+    <message>
+        <source>Second variable:</source>
+        <translation>Deuxième variable :</translation>
     </message>
 </context>
 <context>
@@ -215,6 +199,25 @@
     <message>
         <source>Connection #%1</source>
         <translation>Connexion n° %1</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>
+    <message>
+        <source>#</source>
+        <translation>N°</translation>
+    </message>
+    <message>
+        <source>Subject</source>
+        <translation>Sujet</translation>
+    </message>
+    <message>
+        <source>Predicate</source>
+        <translation>Attribut</translation>
+    </message>
+    <message>
+        <source>Object</source>
+        <translation>Objet</translation>
     </message>
 </context>
 <context>

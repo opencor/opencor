@@ -1,66 +1,75 @@
 //==============================================================================
-// CellML annotation view details widget
+// CellML annotation view metadata details widget
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWDETAILSWIDGET_H
-#define CELLMLANNOTATIONVIEWDETAILSWIDGET_H
+#ifndef CELLMLANNOTATIONVIEWMETADATADETAILSWIDGET_H
+#define CELLMLANNOTATIONVIEWMETADATADETAILSWIDGET_H
 
 //==============================================================================
 
-#include "cellmlannotationviewcellmldetailswidget.h"
+#include "cellmlfile.h"
 #include "widget.h"
 
 //==============================================================================
 
-#include <QStackedWidget>
+#include <QScrollArea>
+#include <QStandardItem>
+#include <QStyledItemDelegate>
 
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewDetailsWidget;
+    class CellmlAnnotationViewMetadataDetailsWidget;
 }
 
 //==============================================================================
 
+class QVBoxLayout;
+
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TreeView;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewCellmlDetailsWidget;
-class CellmlAnnotationViewMetadataDetailsWidget;
-class CellmlAnnotationViewWidget;
+class CellmlAnnotationViewDetailsWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewDetailsWidget : public QStackedWidget,
-                                          public Core::CommonWidget
+class CellmlAnnotationViewMetadataDetailsWidget : public QScrollArea,
+                                                  public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewDetailsWidget();
+    explicit CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewDetailsWidget *pParent);
+    ~CellmlAnnotationViewMetadataDetailsWidget();
 
     virtual void retranslateUi();
 
-    virtual QWidget * focusProxyWidget() const;
-
-    CellmlAnnotationViewWidget * parent() const;
-
-    void updateGui(const CellmlAnnotationViewCellmlDetailsWidget::Items &pItems);
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 
 private:
-    CellmlAnnotationViewWidget *mParent;
+    CellmlAnnotationViewDetailsWidget *mParent;
 
-    Ui::CellmlAnnotationViewDetailsWidget *mGui;
+    Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
 
-    CellmlAnnotationViewCellmlDetailsWidget *mCellmlDetails;
-    CellmlAnnotationViewMetadataDetailsWidget *mMetadataDetails;
+    CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
-    void updateGui(const CellmlAnnotationViewCellmlDetailsWidget::Items &pItems,
-                   const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
+    QWidget *mWidget;
+    QVBoxLayout *mLayout;
+    Core::TreeView *mTreeView;
+    QStandardItemModel *mDataModel;
 };
 
 //==============================================================================

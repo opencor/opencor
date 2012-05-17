@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CellmlAnnotationViewDetailsWidget</class>
- <widget class="QStackedWidget" name="CellmlAnnotationViewDetailsWidget">
+ <class>CellmlAnnotationViewMetadataDetailsWidget</class>
+ <widget class="QScrollArea" name="CellmlAnnotationViewMetadataDetailsWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,6 +12,9 @@
   </property>
   <property name="frameShape">
    <enum>QFrame::NoFrame</enum>
+  </property>
+  <property name="widgetResizable">
+   <bool>true</bool>
   </property>
  </widget>
  <resources/>

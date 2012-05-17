@@ -18,17 +18,23 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewcellmlelementitem.cpp
         src/cellmlannotationviewcellmlelementitemdelegate.cpp
         src/cellmlannotationviewplugin.cpp
+        src/cellmlannotationviewcellmldetailswidget.cpp
         src/cellmlannotationviewdetailswidget.cpp
         src/cellmlannotationviewlistswidget.cpp
+        src/cellmlannotationviewmetadatadetailswidget.cpp
         src/cellmlannotationviewwidget.cpp
     HEADERS_MOC
         src/cellmlannotationviewplugin.h
+        src/cellmlannotationviewcellmldetailswidget.h
         src/cellmlannotationviewdetailswidget.h
         src/cellmlannotationviewlistswidget.h
+        src/cellmlannotationviewmetadatadetailswidget.h
         src/cellmlannotationviewwidget.h
     UIS
+        src/cellmlannotationviewcellmldetailswidget.ui
         src/cellmlannotationviewdetailswidget.ui
         src/cellmlannotationviewlistswidget.ui
+        src/cellmlannotationviewmetadatadetailswidget.ui
         src/cellmlannotationviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}

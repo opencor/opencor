@@ -72,6 +72,15 @@ void CommonWidget::loadingOfSettingsDone(const Plugins &)
 
 //==============================================================================
 
+QWidget * CommonWidget::focusProxyWidget() const
+{
+    // By default, there is no widget which is to be used as a focus proxy
+
+    return 0;
+}
+
+//==============================================================================
+
 void CommonWidget::initBorderColor()
 {
     // We want the border to be of the same colour as the one used by Qt when
