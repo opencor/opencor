@@ -51,13 +51,13 @@ public:
     virtual void retranslateUi();
 
 private:
-    QList<int> mHorizontalSizes;
+    QList<int> mSizes;
     QList<int> mVerticalSizes;
 
     QList<CellmlAnnotationViewWidget *> mWidgets;
 
 private Q_SLOTS:
-    void horizontalSplitterMoved(const QList<int> &pHorizontalSizes);
+    void splitterMoved(const QList<int> &pSizes);
     void verticalSplitterMoved(const QList<int> &pVerticalSizes);
 };
 

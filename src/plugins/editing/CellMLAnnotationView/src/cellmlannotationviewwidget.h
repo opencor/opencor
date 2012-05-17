@@ -43,7 +43,7 @@ public:
 
     virtual void retranslateUi();
 
-    QList<int> horizontalSplitterSizes() const;
+    QList<int> splitterSizes() const;
 
     CellMLSupport::CellmlFile * cellmlFile() const;
 
@@ -55,19 +55,19 @@ private:
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    QSplitter *mHorizontalSplitter;
+    QSplitter *mSplitter;
 
     CellmlAnnotationViewListsWidget *mListsWidget;
     CellmlAnnotationViewDetailsWidget *mDetailsWidget;
 
 Q_SIGNALS:
-    void horizontalSplitterMoved(const QList<int> &pHorizontalSizes);
+    void splitterMoved(const QList<int> &pSizes);
 
 public Q_SLOTS:
-    void updateHorizontalSplitter(const QList<int> &pHorizontalSizes);
+    void updateSplitter(const QList<int> &pSizes);
 
 private Q_SLOTS:
-    void emitHorizontalSplitterMoved();
+    void emitSplitterMoved();
 };
 
 //==============================================================================
