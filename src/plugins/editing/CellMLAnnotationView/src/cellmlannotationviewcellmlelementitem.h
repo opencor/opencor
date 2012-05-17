@@ -48,16 +48,18 @@ public:
     explicit CellmlElementItem(const Type &pType, const QString &pText);
     explicit CellmlElementItem(const Type &pType,
                                CellMLSupport::CellmlFileElement *pElement,
-                               const QString &pText = QString());
+                               const int pNumber = -1);
 
     bool isCategory() const;
     virtual int type() const;
+    int number() const;
 
     CellMLSupport::CellmlFileElement * element() const;
 
 private:
     bool mCategory;
     Type mType;
+    int mNumber;
 
     CellMLSupport::CellmlFileElement *mElement;
 

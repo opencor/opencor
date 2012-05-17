@@ -75,7 +75,7 @@ public:
     {
         Type type;
         CellMLSupport::CellmlFileElement *element;
-        QString name;
+        int number;
     };
 
     typedef QList<CellmlItem> CellmlItems;
@@ -87,7 +87,7 @@ public:
 
     static CellmlItem cellmlItem(const Type &pType,
                                  CellMLSupport::CellmlFileElement *pElement,
-                                 const QString &pName = QString());
+                                 const int &pNumber = -1);
 
     void updateGui(const CellmlItems &pCellmlItems);
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);

@@ -57,11 +57,12 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
 
 CellmlElementItem::CellmlElementItem(const Type &pType,
                                      CellMLSupport::CellmlFileElement *pElement,
-                                     const QString &pText) :
-    QStandardItem(pText),
+                                     const int pNumber) :
+    QStandardItem(),
     mCategory(false),
     mType(pType),
-    mElement(pElement)
+    mElement(pElement),
+    mNumber(pNumber)
 {
     static const QChar rightArrow = QChar(0x2192);
 
@@ -76,8 +77,16 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
         setText(static_cast<CellMLSupport::CellmlFileRelationshipReference *>(pElement)->relationship());
 
         break;
+    case Group:
+        setText(QObject::tr("Group #%1").arg(QString::number(pNumber)));
+
+        break;
     case ComponentReference:
         setText(static_cast<CellMLSupport::CellmlFileComponentReference *>(pElement)->component());
+
+        break;
+    case Connection:
+        setText(QObject::tr("Connection #%1").arg(QString::number(pNumber)));
 
         break;
     case ComponentMapping: {
@@ -99,11 +108,9 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
         break;
     }
     default:
-        // Another type of element, so either pText was used or it has a name
-        // which we can use
+        // Another type of element which has a name
 
-        if (pText.isEmpty())
-            setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
+        setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
     }
 
     // Set the icon for the item
@@ -193,6 +200,15 @@ int CellmlElementItem::type() const
     // Return the CellML element item's type
 
     return mType;
+}
+
+//==============================================================================
+
+int CellmlElementItem::number() const
+{
+    // Return the CellML element item's number
+
+    return mNumber;
 }
 
 //==============================================================================

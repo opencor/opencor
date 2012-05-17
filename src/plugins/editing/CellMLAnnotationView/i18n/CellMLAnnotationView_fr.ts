@@ -165,6 +165,14 @@
         <source>#</source>
         <translation>N°</translation>
     </message>
+    <message>
+        <source>Group #%1</source>
+        <translation>Groupe n° %1</translation>
+    </message>
+    <message>
+        <source>Connection #%1</source>
+        <translation>Connexion n° %1</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewListsWidget</name>
@@ -202,11 +210,22 @@
     </message>
     <message>
         <source>Group #%1</source>
-        <translation>Groupe N° %1</translation>
+        <translation>Groupe n° %1</translation>
     </message>
     <message>
         <source>Connection #%1</source>
-        <translation>Connexion N° %1</translation>
+        <translation>Connexion n° %1</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Group #%1</source>
+        <translation>Groupe n° %1</translation>
+    </message>
+    <message>
+        <source>Connection #%1</source>
+        <translation>Connexion n° %1</translation>
     </message>
 </context>
 </TS>

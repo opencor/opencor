@@ -74,7 +74,7 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
 
 CellmlAnnotationViewDetailsWidget::CellmlItem CellmlAnnotationViewDetailsWidget::cellmlItem(const Type &pType,
                                                                                             CellMLSupport::CellmlFileElement *pElement,
-                                                                                            const QString &pName)
+                                                                                            const int &pNumber)
 {
     // Return a formatted CellmlItem 'object'
 
@@ -82,7 +82,7 @@ CellmlAnnotationViewDetailsWidget::CellmlItem CellmlAnnotationViewDetailsWidget:
 
     res.type    = pType;
     res.element = pElement;
-    res.name    = pName;
+    res.number  = pNumber;
 
     return res;
 }
@@ -258,7 +258,11 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlItems &pCellmlItem
                 //       name, so we use the item's name, hoping one was provided...
 
                 QString name = ((cellmlItem.type == Group) || (cellmlItem.type == Connection))?
-                                   cellmlItem.name.isEmpty()?"/":cellmlItem.name:
+                                   (cellmlItem.number == -1)?
+                                       "/":
+                                       (cellmlItem.type == Group)?
+                                           tr("Group #%1").arg(cellmlItem.number):
+                                           tr("Connection #%1").arg(cellmlItem.number):
                                    static_cast<CellMLSupport::CellmlFileNamedElement *>(cellmlItem.element)->name();
 
                 addRowToCellmlFormLayout(tr("Name:"), name);

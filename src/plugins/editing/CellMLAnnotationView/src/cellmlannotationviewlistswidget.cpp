@@ -198,11 +198,11 @@ void CellmlAnnotationViewListsWidget::retranslateCellmlDataItem(CellmlElementIte
 
         switch (pCellmlElementItem->type()) {
         case CellmlElementItem::Group:
-            pCellmlElementItem->setText(tr("Group #%1").arg(pCellmlElementItem->text().remove(QRegExp("^[^#]+#"))));
+            pCellmlElementItem->setText(tr("Group #%1").arg(pCellmlElementItem->number()));
 
             break;
         case CellmlElementItem::Connection:
-            pCellmlElementItem->setText(tr("Connection #%1").arg(pCellmlElementItem->text().remove(QRegExp("^[^#]+#"))));
+            pCellmlElementItem->setText(tr("Connection #%1").arg(pCellmlElementItem->number()));
 
             break;
         default:
@@ -421,7 +421,7 @@ void CellmlAnnotationViewListsWidget::populateCellmlDataModel()
 
             CellmlElementItem *groupItem = new CellmlElementItem(CellmlElementItem::Group,
                                                                  group,
-                                                                 tr("Group #%1").arg(QString::number(++counter)));
+                                                                 ++counter);
 
             groupsItem->appendRow(groupItem);
 
@@ -484,7 +484,7 @@ void CellmlAnnotationViewListsWidget::populateCellmlDataModel()
 
             CellmlElementItem *connectionItem = new CellmlElementItem(CellmlElementItem::Connection,
                                                                       connection,
-                                                                      tr("Connection #%1").arg(QString::number(++counter)));
+                                                                      ++counter);
 
             connectionsItem->appendRow(connectionItem);
 
@@ -735,7 +735,7 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
             case CellmlElementItem::Group:
                 cellmlItems << CellmlAnnotationViewDetailsWidget::cellmlItem(CellmlAnnotationViewDetailsWidget::Group,
                                                                              crtCellmlElementItem->element(),
-                                                                             crtCellmlElementItem->text());
+                                                                             crtCellmlElementItem->number());
 
                 break;
             case CellmlElementItem::RelationshipReference:
@@ -751,7 +751,7 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
             case CellmlElementItem::Connection:
                 cellmlItems << CellmlAnnotationViewDetailsWidget::cellmlItem(CellmlAnnotationViewDetailsWidget::Connection,
                                                                              crtCellmlElementItem->element(),
-                                                                             crtCellmlElementItem->text());
+                                                                             crtCellmlElementItem->number());
 
                 break;
             case CellmlElementItem::ComponentMapping:
