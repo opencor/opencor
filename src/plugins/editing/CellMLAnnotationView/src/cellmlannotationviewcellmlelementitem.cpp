@@ -16,6 +16,7 @@ CellmlElementItem::CellmlElementItem(const bool &pError, const QString &pText) :
     QStandardItem(pText),
     mCategory(false),
     mType(pError?Error:Warning),
+    mNumber(-1),
     mElement(0)
 {
     // Constructor for either an error or a warning
@@ -39,6 +40,7 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
     QStandardItem(pText),
     mCategory(true),
     mType(pType),
+    mNumber(-1),
     mElement(0)
 {
     // Constructor for a category
@@ -61,8 +63,8 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
     QStandardItem(),
     mCategory(false),
     mType(pType),
-    mElement(pElement),
-    mNumber(pNumber)
+    mNumber(pNumber),
+    mElement(pElement)
 {
     static const QChar rightArrow = QChar(0x2192);
 
