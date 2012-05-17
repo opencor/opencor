@@ -62,9 +62,9 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
     // Populate our vertical splitter
 
     mVerticalSplitter->addWidget(new Core::BorderedWidget(mCellmlTreeView,
-                                                          false, false, true, false));
+                                                          false, false, true, true));
     mVerticalSplitter->addWidget(new Core::BorderedWidget(mMetadataTreeView,
-                                                          true, false, false, false));
+                                                          true, false, false, true));
 
     // Add our vertical splitter to our vertical layout
 

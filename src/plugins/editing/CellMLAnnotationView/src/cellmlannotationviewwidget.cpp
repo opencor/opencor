@@ -60,8 +60,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Populate our horizontal splitter
 
-    mHorizontalSplitter->addWidget(new Core::BorderedWidget(mListsWidget,
-                                                            false, false, false, true));
+    mHorizontalSplitter->addWidget(mListsWidget);
     mHorizontalSplitter->addWidget(new Core::BorderedWidget(mDetailsWidget,
                                                             false, true, false, false));
 
