@@ -28,134 +28,134 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlDetailsWidget</name>
-    <message>
-        <source>Import</source>
-        <translation>Import</translation>
-    </message>
-    <message>
-        <source>Imported unit</source>
-        <translation>Unité importée</translation>
-    </message>
-    <message>
-        <source>Imported component</source>
-        <translation>Composant importé</translation>
-    </message>
-    <message>
-        <source>Unit</source>
-        <translation>Unité</translation>
-    </message>
-    <message>
-        <source>Unit element</source>
-        <translation>Elément unité</translation>
-    </message>
-    <message>
-        <source>Component</source>
-        <translation>Composant</translation>
-    </message>
-    <message>
-        <source>Variable</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Group</source>
-        <translation>Groupe</translation>
-    </message>
-    <message>
-        <source>Relationshop reference</source>
-        <translation>Référence de relation</translation>
-    </message>
-    <message>
-        <source>Component reference</source>
-        <translation>Référence de composant</translation>
-    </message>
-    <message>
-        <source>Connection</source>
-        <translation>Connexion</translation>
-    </message>
-    <message>
-        <source>Component mapping</source>
-        <translation>Association de composant</translation>
-    </message>
-    <message>
-        <source>Variable mapping</source>
-        <translation>Association de variable</translation>
-    </message>
-    <message>
-        <source>Model</source>
-        <translation>Modèle</translation>
-    </message>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlElementDetailsWidget</name>
     <message>
         <source>cmeta:id:</source>
-        <translation>cmeta:id :</translation>
+        <translation type="unfinished">cmeta:id :</translation>
     </message>
     <message>
         <source>Group #%1</source>
-        <translation>Groupe n° %1</translation>
+        <translation type="unfinished">Groupe n° %1</translation>
     </message>
     <message>
         <source>Connection #%1</source>
-        <translation>Connexion n° %1</translation>
+        <translation type="unfinished">Connexion n° %1</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation>Nom :</translation>
+        <translation type="unfinished">Nom :</translation>
     </message>
     <message>
         <source>xlink:href:</source>
-        <translation>xlink:href :</translation>
+        <translation type="unfinished">xlink:href :</translation>
     </message>
     <message>
         <source>Unit reference:</source>
-        <translation>Référence unité :</translation>
+        <translation type="unfinished">Référence unité :</translation>
     </message>
     <message>
         <source>Component reference:</source>
-        <translation>Référence de composant :</translation>
+        <translation type="unfinished">Référence de composant :</translation>
     </message>
     <message>
         <source>Unit:</source>
-        <translation>Unité :</translation>
+        <translation type="unfinished">Unité :</translation>
     </message>
     <message>
         <source>Initial value:</source>
-        <translation>Valeur initiale :</translation>
+        <translation type="unfinished">Valeur initiale :</translation>
     </message>
     <message>
         <source>Public interface:</source>
-        <translation>Interface publique :</translation>
+        <translation type="unfinished">Interface publique :</translation>
     </message>
     <message>
         <source>Private interface:</source>
-        <translation>Interface privée :</translation>
+        <translation type="unfinished">Interface privée :</translation>
     </message>
     <message>
         <source>Relationship:</source>
-        <translation>Relation :</translation>
+        <translation type="unfinished">Relation :</translation>
     </message>
     <message>
         <source>Relationship namespace:</source>
-        <translation>Espace de noms pour la relation :</translation>
+        <translation type="unfinished">Espace de noms pour la relation :</translation>
     </message>
     <message>
         <source>Component:</source>
-        <translation>Composant :</translation>
+        <translation type="unfinished">Composant :</translation>
     </message>
     <message>
         <source>First component:</source>
-        <translation>Premier composant :</translation>
+        <translation type="unfinished">Premier composant :</translation>
     </message>
     <message>
         <source>Second component:</source>
-        <translation>Deuxième composant :</translation>
+        <translation type="unfinished">Deuxième composant :</translation>
     </message>
     <message>
         <source>First variable:</source>
-        <translation>Première variable :</translation>
+        <translation type="unfinished">Première variable :</translation>
     </message>
     <message>
         <source>Second variable:</source>
-        <translation>Deuxième variable :</translation>
+        <translation type="unfinished">Deuxième variable :</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation type="unfinished">Import</translation>
+    </message>
+    <message>
+        <source>Imported unit</source>
+        <translation type="unfinished">Unité importée</translation>
+    </message>
+    <message>
+        <source>Imported component</source>
+        <translation type="unfinished">Composant importé</translation>
+    </message>
+    <message>
+        <source>Unit</source>
+        <translation type="unfinished">Unité</translation>
+    </message>
+    <message>
+        <source>Unit element</source>
+        <translation type="unfinished">Elément unité</translation>
+    </message>
+    <message>
+        <source>Component</source>
+        <translation type="unfinished">Composant</translation>
+    </message>
+    <message>
+        <source>Variable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished">Groupe</translation>
+    </message>
+    <message>
+        <source>Relationshop reference</source>
+        <translation type="unfinished">Référence de relation</translation>
+    </message>
+    <message>
+        <source>Component reference</source>
+        <translation type="unfinished">Référence de composant</translation>
+    </message>
+    <message>
+        <source>Connection</source>
+        <translation type="unfinished">Connexion</translation>
+    </message>
+    <message>
+        <source>Component mapping</source>
+        <translation type="unfinished">Association de composant</translation>
+    </message>
+    <message>
+        <source>Variable mapping</source>
+        <translation type="unfinished">Association de variable</translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation type="unfinished">Modèle</translation>
     </message>
 </context>
 <context>

@@ -7,12 +7,8 @@
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "widget.h"
-
-//==============================================================================
-
-#include <QScrollArea>
+#include "cellmlannotationviewcellmlelementdetailswidget.h"
+#include "commonwidget.h"
 
 //==============================================================================
 
@@ -22,8 +18,7 @@ namespace Ui {
 
 //==============================================================================
 
-class QFormLayout;
-class QLineEdit;
+#include <QSplitter>
 
 //==============================================================================
 
@@ -36,39 +31,12 @@ class CellmlAnnotationViewDetailsWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewCellmlDetailsWidget : public QScrollArea,
+class CellmlAnnotationViewCellmlDetailsWidget : public QSplitter,
                                                 public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    enum Type
-    {
-        Model,
-        Import,
-        ImportUnit,
-        ImportComponent,
-        Unit,
-        UnitElement,
-        Component,
-        Variable,
-        Group,
-        RelationshipReference,
-        ComponentReference,
-        Connection,
-        ComponentMapping,
-        VariableMapping
-    };
-
-    struct Item
-    {
-        Type type;
-        CellMLSupport::CellmlFileElement *element;
-        int number;
-    };
-
-    typedef QList<Item> Items;
-
     explicit CellmlAnnotationViewCellmlDetailsWidget(CellmlAnnotationViewDetailsWidget *pParent);
     ~CellmlAnnotationViewCellmlDetailsWidget();
 
@@ -76,26 +44,15 @@ public:
 
     virtual QWidget * focusProxyWidget() const;
 
-    static Item item(const Type &pType,
-                     CellMLSupport::CellmlFileElement *pElement,
-                     const int &pNumber = -1);
-
-    void updateGui(const Items &pItems);
+    void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
+    void finalizeGui();
 
 private:
     CellmlAnnotationViewDetailsWidget *mParent;
 
     Ui::CellmlAnnotationViewCellmlDetailsWidget *mGui;
 
-    Items mItems;
-
-    QWidget *mWidget;
-    QFormLayout *mLayout;
-    QLineEdit *mCmetaIdValue;
-
-    void addRowToCellmlFormLayout(const QString &pLabel, const QString &pValue);
-
-    QString typeAsString(const Type &pType) const;
+    CellmlAnnotationViewCellmlElementDetailsWidget *mCellmlElementDetails;
 };
 
 //==============================================================================

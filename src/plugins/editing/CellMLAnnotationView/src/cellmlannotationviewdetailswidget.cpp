@@ -2,6 +2,7 @@
 // CellML annotation view details widget
 //==============================================================================
 
+#include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewwidget.h"
@@ -9,10 +10,6 @@
 //==============================================================================
 
 #include "ui_cellmlannotationviewdetailswidget.h"
-
-//==============================================================================
-
-#include <QScrollBar>
 
 //==============================================================================
 
@@ -38,7 +35,7 @@ CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(CellmlAnnot
 
     // Make our CellML details GUI the default widget
 
-    this->addWidget(mCellmlDetails);
+    addWidget(mCellmlDetails);
 }
 
 //==============================================================================
@@ -88,7 +85,7 @@ CellmlAnnotationViewWidget * CellmlAnnotationViewDetailsWidget::parent() const
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCellmlDetailsWidget::Items &pItems,
+void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems,
                                                   const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
     // Hide ourselves (since we may potentially update ourselves quite a bit and
@@ -103,36 +100,28 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCell
 
     // Ask the CellML or metadata details GUI to update itself
 
-    QScrollArea *scrollArea;
-
-    if (currentWidget() == mCellmlDetails) {
-        scrollArea = mCellmlDetails;
-
+    if (currentWidget() == mCellmlDetails)
         mCellmlDetails->updateGui(pItems);
-    } else {
-        scrollArea = mMetadataDetails;
-
+    else
         mMetadataDetails->updateGui(pRdfTriples);
-    }
 
     // Re-show ourselves
 
     setVisible(true);
 
-    // Scroll down to the bottom of ourselves, just in case things don't fit
-    // within the viewport
-    // Note: for this, we need to be up-to-date, hence we make a call to
-    //       qApp->processEvents() and this can only be done when we are once
-    //       again visible...
+    // Finalise the update
+    // Note: this is for things that can only be done when everything is visible
+    //       again...
 
-    qApp->processEvents();
-
-    scrollArea->verticalScrollBar()->setValue(scrollArea->verticalScrollBar()->maximum());
+    if (currentWidget() == mCellmlDetails)
+        mCellmlDetails->finalizeGui();
+    else
+        mMetadataDetails->finalizeGui();
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCellmlDetailsWidget::Items &pItems)
+void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems)
 {
     // Make our CellML details GUI the default default widget
 
@@ -155,7 +144,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellMLSupport::CellmlFil
 
     // Call our generic updateGui() method
 
-    updateGui(CellmlAnnotationViewCellmlDetailsWidget::Items(), pRdfTriples);
+    updateGui(CellmlAnnotationViewCellmlElementDetailsWidget::Items(), pRdfTriples);
 }
 
 //==============================================================================

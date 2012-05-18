@@ -687,7 +687,7 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
     // Retrieve all the CellML items which properties we want to add to the
     // details GUI
 
-    CellmlAnnotationViewCellmlDetailsWidget::Items items = CellmlAnnotationViewCellmlDetailsWidget::Items();
+    CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
     QModelIndex crtIndex = pNewIndex;
 
     do {
@@ -698,75 +698,75 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
         if (!crtCellmlElementItem->isCategory())
             switch (crtCellmlElementItem->type()) {
             case CellmlElementItem::Model:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::Model,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Model,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::Import:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::Import,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Import,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::ImportUnit:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::ImportUnit,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ImportUnit,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::ImportComponent:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::ImportComponent,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ImportComponent,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::Unit:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::Unit,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Unit,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::UnitElement:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::UnitElement,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::UnitElement,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::Component:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::Component,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Component,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::Variable:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::Variable,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Variable,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::Group:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::Group,
-                                                                       crtCellmlElementItem->element(),
-                                                                       crtCellmlElementItem->number());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Group,
+                                                                              crtCellmlElementItem->element(),
+                                                                              crtCellmlElementItem->number());
 
                 break;
             case CellmlElementItem::RelationshipReference:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::RelationshipReference,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::RelationshipReference,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::ComponentReference:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::ComponentReference,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ComponentReference,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::Connection:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::Connection,
-                                                                       crtCellmlElementItem->element(),
-                                                                       crtCellmlElementItem->number());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Connection,
+                                                                              crtCellmlElementItem->element(),
+                                                                              crtCellmlElementItem->number());
 
                 break;
             case CellmlElementItem::ComponentMapping:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::ComponentMapping,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ComponentMapping,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             case CellmlElementItem::VariableMapping:
-                items << CellmlAnnotationViewCellmlDetailsWidget::item(CellmlAnnotationViewCellmlDetailsWidget::VariableMapping,
-                                                                       crtCellmlElementItem->element());
+                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::VariableMapping,
+                                                                              crtCellmlElementItem->element());
 
                 break;
             default:

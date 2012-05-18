@@ -7,8 +7,8 @@
 
 //==============================================================================
 
-#include "cellmlannotationviewcellmldetailswidget.h"
-#include "widget.h"
+#include "cellmlannotationviewcellmlelementdetailswidget.h"
+#include "commonwidget.h"
 
 //==============================================================================
 
@@ -48,7 +48,7 @@ public:
 
     CellmlAnnotationViewWidget * parent() const;
 
-    void updateGui(const CellmlAnnotationViewCellmlDetailsWidget::Items &pItems);
+    void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 
 private:
@@ -59,7 +59,7 @@ private:
     CellmlAnnotationViewCellmlDetailsWidget *mCellmlDetails;
     CellmlAnnotationViewMetadataDetailsWidget *mMetadataDetails;
 
-    void updateGui(const CellmlAnnotationViewCellmlDetailsWidget::Items &pItems,
+    void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems,
                    const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 };
 

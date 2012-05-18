@@ -81,6 +81,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     updateGui(mRdfTriples);
+    finalizeGui();
 }
 
 //==============================================================================
@@ -118,6 +119,13 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
     mTreeView->resizeColumnToContents(1);
     mTreeView->resizeColumnToContents(2);
     mTreeView->resizeColumnToContents(3);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataDetailsWidget::finalizeGui()
+{
+    // Nothing to do at this stage...
 }
 
 //==============================================================================
