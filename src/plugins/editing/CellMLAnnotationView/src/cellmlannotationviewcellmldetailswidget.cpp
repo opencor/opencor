@@ -39,6 +39,11 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
                                        false, true, true, false));
     addWidget(new Core::BorderedWidget(mMetadataViewDetails,
                                        true, true, false, false));
+
+    // Keep track of our splitter being moved
+
+    connect(this, SIGNAL(splitterMoved(int,int)),
+            this, SLOT(emitSplitterMoved()));
 }
 
 //==============================================================================
@@ -88,6 +93,25 @@ void CellmlAnnotationViewCellmlDetailsWidget::finalizeGui()
 
     mCellmlElementDetails->finalizeGui();
     mMetadataViewDetails->finalizeGui();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlDetailsWidget::updateSplitter(const QList<int> &pSizes)
+{
+    // The splitter of another CellmlAnnotationViewCellmlDetailsWidget object
+    // has been moved, so update ours
+
+    setSizes(pSizes);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlDetailsWidget::emitSplitterMoved()
+{
+    // Let whoever know that our splitter has been moved
+
+    emit splitterMoved(sizes());
 }
 
 //==============================================================================

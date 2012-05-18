@@ -146,6 +146,15 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellMLSupport::CellmlFil
 
 //==============================================================================
 
+CellmlAnnotationViewCellmlDetailsWidget * CellmlAnnotationViewDetailsWidget::cellmlDetails() const
+{
+    // Return our CellML details widget
+
+    return mCellmlDetails;
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 
