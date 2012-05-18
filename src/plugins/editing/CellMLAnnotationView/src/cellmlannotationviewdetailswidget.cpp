@@ -30,12 +30,18 @@ CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(CellmlAnnot
 
     // Create our CellML and metadata details GUIs
 
-    mCellmlDetails   = new CellmlAnnotationViewCellmlDetailsWidget(this);
-    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(this);
+    mCellmlDetails   = new CellmlAnnotationViewCellmlDetailsWidget(pParent);
+    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pParent);
 
     // Make our CellML details GUI the default widget
 
     addWidget(mCellmlDetails);
+
+    // Hide our metadata details GUI
+    // Note: indeed, without this we will otherwise see and well... it's not
+    //       what we want, so...
+
+    mMetadataDetails->setVisible(false);
 }
 
 //==============================================================================
@@ -72,15 +78,6 @@ QWidget * CellmlAnnotationViewDetailsWidget::focusProxyWidget() const
         return mCellmlDetails->focusProxyWidget();
     else
         return mMetadataDetails->focusProxyWidget();
-}
-
-//==============================================================================
-
-CellmlAnnotationViewWidget * CellmlAnnotationViewDetailsWidget::parent() const
-{
-    // Return our parent
-
-    return mParent;
 }
 
 //==============================================================================

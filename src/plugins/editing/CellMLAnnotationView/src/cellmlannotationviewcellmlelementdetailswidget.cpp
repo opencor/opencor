@@ -2,8 +2,8 @@
 // CellML annotation view CellML element details widget
 //==============================================================================
 
-#include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
+#include "cellmlannotationviewwidget.h"
 
 //==============================================================================
 
@@ -23,7 +23,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElementDetailsWidget(CellmlAnnotationViewCellmlDetailsWidget *pParent) :
+CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElementDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
     Core::CommonWidget(pParent),
     mParent(pParent),

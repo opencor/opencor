@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlannotationviewmetadataviewdetailswidget.h"
+#include "cellmlfile.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -27,7 +27,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewDetailsWidget;
+class CellmlAnnotationViewMetadataViewDetailsWidget;
+class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
@@ -37,18 +38,16 @@ class CellmlAnnotationViewMetadataDetailsWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewDetailsWidget *pParent);
+    explicit CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataDetailsWidget();
 
     virtual void retranslateUi();
-
-    CellmlAnnotationViewDetailsWidget * parent() const;
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
     void finalizeGui();
 
 private:
-    CellmlAnnotationViewDetailsWidget *mParent;
+    CellmlAnnotationViewWidget *mParent;
 
     Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
 

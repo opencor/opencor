@@ -2,7 +2,6 @@
 // CellML annotation view widget
 //==============================================================================
 
-#include "borderedwidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
@@ -61,8 +60,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // Populate our splitter
 
     mSplitter->addWidget(mListsWidget);
-    mSplitter->addWidget(new Core::BorderedWidget(mDetailsWidget,
-                                                  false, true, false, false));
+    mSplitter->addWidget(mDetailsWidget);
 
     // Add our splitter to our layout
 

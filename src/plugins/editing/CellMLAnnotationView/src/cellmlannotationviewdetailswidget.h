@@ -46,8 +46,6 @@ public:
 
     virtual QWidget * focusProxyWidget() const;
 
-    CellmlAnnotationViewWidget * parent() const;
-
     void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 

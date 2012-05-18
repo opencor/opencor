@@ -2,8 +2,10 @@
 // CellML annotation view metadata details widget
 //==============================================================================
 
-#include "cellmlannotationviewdetailswidget.h"
+#include "borderedwidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
+#include "cellmlannotationviewmetadataviewdetailswidget.h"
+#include "cellmlannotationviewwidget.h"
 
 //==============================================================================
 
@@ -16,7 +18,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewDetailsWidget *pParent) :
+CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent),
     mParent(pParent),
@@ -26,11 +28,14 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     mGui->setupUi(this);
 
-    // Create and add our Metadata view details widget
+    // Create our details widget
 
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(this);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
 
-    addWidget(mMetadataViewDetails);
+    // Add our details widget to our splitter
+
+    addWidget(new Core::BorderedWidget(mMetadataViewDetails,
+                                       false, true, false, false));
 }
 
 //==============================================================================
@@ -51,15 +56,6 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     mMetadataViewDetails->retranslateUi();
-}
-
-//==============================================================================
-
-CellmlAnnotationViewDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::parent() const
-{
-    // Return our parent
-
-    return mParent;
 }
 
 //==============================================================================

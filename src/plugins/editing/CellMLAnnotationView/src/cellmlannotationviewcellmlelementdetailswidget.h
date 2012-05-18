@@ -32,7 +32,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewCellmlDetailsWidget;
+class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
@@ -69,7 +69,7 @@ public:
 
     typedef QList<Item> Items;
 
-    explicit CellmlAnnotationViewCellmlElementDetailsWidget(CellmlAnnotationViewCellmlDetailsWidget *pParent);
+    explicit CellmlAnnotationViewCellmlElementDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewCellmlElementDetailsWidget();
 
     virtual void retranslateUi();
@@ -84,7 +84,7 @@ public:
     void finalizeGui();
 
 private:
-    CellmlAnnotationViewCellmlDetailsWidget *mParent;
+    CellmlAnnotationViewWidget *mParent;
 
     Ui::CellmlAnnotationViewCellmlElementDetailsWidget *mGui;
 

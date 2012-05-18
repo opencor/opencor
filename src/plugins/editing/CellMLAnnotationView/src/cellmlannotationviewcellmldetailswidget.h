@@ -27,7 +27,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewDetailsWidget;
+class CellmlAnnotationViewMetadataViewDetailsWidget;
+class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
@@ -37,7 +38,7 @@ class CellmlAnnotationViewCellmlDetailsWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewCellmlDetailsWidget(CellmlAnnotationViewDetailsWidget *pParent);
+    explicit CellmlAnnotationViewCellmlDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewCellmlDetailsWidget();
 
     virtual void retranslateUi();
@@ -48,11 +49,12 @@ public:
     void finalizeGui();
 
 private:
-    CellmlAnnotationViewDetailsWidget *mParent;
+    CellmlAnnotationViewWidget *mParent;
 
     Ui::CellmlAnnotationViewCellmlDetailsWidget *mGui;
 
     CellmlAnnotationViewCellmlElementDetailsWidget *mCellmlElementDetails;
+    CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
 };
 
 //==============================================================================

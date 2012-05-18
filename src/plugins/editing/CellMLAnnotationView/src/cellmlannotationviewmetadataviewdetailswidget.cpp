@@ -2,8 +2,6 @@
 // CellML annotation view metadata view details widget
 //==============================================================================
 
-#include "cellmlannotationviewdetailswidget.h"
-#include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "treeview.h"
@@ -19,7 +17,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewMetadataDetailsWidget *pParent) :
+CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent),
     mParent(pParent),
@@ -92,7 +90,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
     //       cmeta:id which will speak more to the user than a possibly long URI
     //       reference...
 
-    QString uriBase = mParent->parent()->parent()->cellmlFile()->uriBase();
+    QString uriBase = mParent->cellmlFile()->uriBase();
     int rdfTripleCounter = 0;
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)

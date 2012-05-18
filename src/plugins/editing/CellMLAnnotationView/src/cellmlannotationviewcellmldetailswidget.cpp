@@ -2,8 +2,10 @@
 // CellML annotation view CellML details widget
 //==============================================================================
 
+#include "borderedwidget.h"
 #include "cellmlannotationviewcellmldetailswidget.h"
-#include "cellmlannotationviewdetailswidget.h"
+#include "cellmlannotationviewwidget.h"
+#include "cellmlannotationviewmetadataviewdetailswidget.h"
 
 //==============================================================================
 
@@ -16,7 +18,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget(CellmlAnnotationViewDetailsWidget *pParent) :
+CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent),
     mParent(pParent),
@@ -26,11 +28,17 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     mGui->setupUi(this);
 
-    // Create and add our CellML element details widget
+    // Create our details widgets
 
-    mCellmlElementDetails = new CellmlAnnotationViewCellmlElementDetailsWidget(this);
+    mCellmlElementDetails = new CellmlAnnotationViewCellmlElementDetailsWidget(pParent);
+    mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
 
-    addWidget(mCellmlElementDetails);
+    // Add our details widgets to our splitter
+
+    addWidget(new Core::BorderedWidget(mCellmlElementDetails,
+                                       false, true, true, false));
+    addWidget(new Core::BorderedWidget(mMetadataViewDetails,
+                                       true, true, false, false));
 }
 
 //==============================================================================
@@ -51,6 +59,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     mCellmlElementDetails->retranslateUi();
+    mMetadataViewDetails->retranslateUi();
 }
 
 //==============================================================================
@@ -75,9 +84,10 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
 void CellmlAnnotationViewCellmlDetailsWidget::finalizeGui()
 {
-    // Finalise our CellML element details GUI
+    // Finalise our CellML element and metadata view details GUI
 
     mCellmlElementDetails->finalizeGui();
+    mMetadataViewDetails->finalizeGui();
 }
 
 //==============================================================================
