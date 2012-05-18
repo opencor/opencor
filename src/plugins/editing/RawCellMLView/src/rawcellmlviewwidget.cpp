@@ -34,10 +34,12 @@ namespace RawCellMLView {
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     Widget(pParent),
     mGui(new Ui::RawCellmlViewWidget),
-    mEditors(QMap<QString, Core::BorderedWidget *>()),
+    mEditors(QMap<QString, QScintillaSupport::QScintilla *>()),
+    mBorderedEditors(QMap<QString, Core::BorderedWidget *>()),
     mEditor(0),
-    mViewerHeight(0),
-    mEditorHeight(0)
+    mBorderedEditor(0),
+    mBorderedViewerHeight(0),
+    mBorderedEditorHeight(0)
 {
     // Set up the GUI
 
@@ -50,15 +52,15 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     connect(mVerticalSplitter, SIGNAL(splitterMoved(int,int)),
             this, SLOT(verticalSplitterMoved()));
 
-    // Create a bordered viewer (the border is only here for aesthetical
-    // reasons)
+    // Create our viewer
 
-    mViewer = new Core::BorderedWidget(new Viewer::ViewerWidget(this),
-                                       false, false, true, false);
+    mViewer = new Viewer::ViewerWidget(this);
+    mBorderedViewer = new Core::BorderedWidget(mViewer,
+                                               false, false, true, false);
 
     // Populate our vertical splitter and add it to our raw CellML view widget
 
-    mVerticalSplitter->addWidget(mViewer);
+    mVerticalSplitter->addWidget(mBorderedViewer);
 
     mGui->layout->addWidget(mVerticalSplitter);
 }
@@ -89,10 +91,10 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
     //          effectively be less than 19% of the desktop's height, but that
     //          doesn't matter at all...
 
-    mViewerHeight = pSettings->value(SettingsViewerHeight,
-                                     0.19*qApp->desktop()->screenGeometry().height()).toInt();
-    mEditorHeight = pSettings->value(SettingsEditorHeight,
-                                     qApp->desktop()->screenGeometry().height()).toInt();
+    mBorderedViewerHeight = pSettings->value(SettingsViewerHeight,
+                                             0.19*qApp->desktop()->screenGeometry().height()).toInt();
+    mBorderedEditorHeight = pSettings->value(SettingsEditorHeight,
+                                             qApp->desktop()->screenGeometry().height()).toInt();
 }
 
 //==============================================================================
@@ -105,15 +107,16 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
     //          'proper' height, so we couldn't simply assume that the editor's
     //          initial height is this widget's height minus the viewer's
     //          initial height, so...
-    // Note #2: we rely on mViewerHeight and mEditorHeight rather than directly
-    //          calling the height() method of the viewer and of the editor,
-    //          respectively since it may happen that the user exits OpenCOR
-    //          without ever having switched to the raw CellML view, in which
-    //          case we couldn't retrieve the viewer and editor's height which
-    //          in turn would result in OpenCOR crashing, so...
+    // Note #2: we rely on mBorderedViewerHeight and mBorderedEditorHeight
+    //          rather than directly calling the height() method of the viewer
+    //          and of the editor, respectively since it may happen that the
+    //          user exits OpenCOR without ever having switched to the raw
+    //          CellML view, in which case we couldn't retrieve the viewer and
+    //          editor's height which in turn would result in OpenCOR crashing,
+    //          so...
 
-    pSettings->setValue(SettingsViewerHeight, mViewerHeight);
-    pSettings->setValue(SettingsEditorHeight, mEditorHeight);
+    pSettings->setValue(SettingsViewerHeight, mBorderedViewerHeight);
+    pSettings->setValue(SettingsEditorHeight, mBorderedEditorHeight);
 }
 
 //==============================================================================
@@ -122,28 +125,29 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the size of our viewer and current editor, and hide the editor
 
-    bool needInitialSizes = !mEditor;
+    bool needInitialSizes = !mBorderedEditor;
 
     int viewerHeight = 0;
     int editorHeight = 0;
 
-    if (mEditor) {
+    if (mBorderedEditor) {
         // An editor is currently available, so retrieve the size of both our
         // viewer and the current editor
 
-        viewerHeight = mViewer->height();
-        editorHeight = mEditor->height();
+        viewerHeight = mBorderedViewer->height();
+        editorHeight = mBorderedEditor->height();
 
         // Hide the current editor
 
-        mEditor->hide();
+        mBorderedEditor->hide();
     }
 
     // Retrieve the editor associated with the file name, if any
 
     mEditor = mEditors.value(pFileName);
+    mBorderedEditor = mBorderedEditors.value(pFileName);
 
-    if (!mEditor) {
+    if (!mBorderedEditor) {
         // No editor exists for the file name, so create and set up a Scintilla
         // editor with an XML lexer associated to it
 
@@ -163,32 +167,34 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
             file.close();
         }
 
-        mEditor = new Core::BorderedWidget(new QScintillaSupport::QScintilla(this, fileContents, fileIsWritable,
-                                                                             new QsciLexerXML(this)),
-                                           true, false, false, false);
+        mEditor = new QScintillaSupport::QScintilla(this, fileContents, fileIsWritable,
+                                                    new QsciLexerXML(this));
+        mBorderedEditor = new Core::BorderedWidget(mEditor,
+                                                   true, false, false, false);
 
         // Keep track of the editor and add it to our vertical splitter
 
         mEditors.insert(pFileName, mEditor);
+        mBorderedEditors.insert(pFileName, mBorderedEditor);
 
-        mVerticalSplitter->addWidget(mEditor);
+        mVerticalSplitter->addWidget(mBorderedEditor);
     }
 
     // Make sure that the 'new' editor is visible
 
-    mEditor->show();
+    mBorderedEditor->show();
 
     // Set the raw CellML view widget's focus proxy to the 'new' editor
 
-    setFocusProxy(mEditor->widget());
+    setFocusProxy(mBorderedEditor);
 
     // Adjust our vertical splitter's sizes
 
     if (needInitialSizes) {
         // We need to initialise our vertical splitter's sizes, so...
 
-        mVerticalSplitter->setSizes(QList<int>() << mViewerHeight
-                                                 << mEditorHeight);
+        mVerticalSplitter->setSizes(QList<int>() << mBorderedViewerHeight
+                                                 << mBorderedEditorHeight);
     } else {
         // Our vertical splitter's sizes have already been initialised, so set
         // its sizes so that our 'new' editor gets its size set to that of the
@@ -197,7 +203,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         QList<int> newSizes = QList<int>() << viewerHeight;
 
         for (int i = 1, iMax = mVerticalSplitter->count(); i < iMax; ++i)
-            if (static_cast<Core::BorderedWidget *>(mVerticalSplitter->widget(i)) == mEditor)
+            if (static_cast<Core::BorderedWidget *>(mVerticalSplitter->widget(i)) == mBorderedEditor)
                 // This is the editor we are after, so...
 
                 newSizes << editorHeight;
@@ -217,8 +223,8 @@ void RawCellmlViewWidget::verticalSplitterMoved()
     // The splitter has moved, so keep track of the viewer and editor's new
     // height
 
-    mViewerHeight = mViewer->height();
-    mEditorHeight = mEditor->height();
+    mBorderedViewerHeight = mBorderedViewer->height();
+    mBorderedEditorHeight = mBorderedEditor->height();
 }
 
 //==============================================================================

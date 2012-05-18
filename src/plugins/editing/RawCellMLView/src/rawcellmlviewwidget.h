@@ -64,13 +64,18 @@ private:
     Ui::RawCellmlViewWidget *mGui;
 
     QSplitter *mVerticalSplitter;
-    QMap<QString, Core::BorderedWidget *> mEditors;
 
-    Core::BorderedWidget *mViewer;
-    Core::BorderedWidget *mEditor;
+    QMap<QString, QScintillaSupport::QScintilla *> mEditors;
+    QMap<QString, Core::BorderedWidget *> mBorderedEditors;
 
-    int mViewerHeight;
-    int mEditorHeight;
+    Viewer::ViewerWidget *mViewer;
+    Core::BorderedWidget *mBorderedViewer;
+
+    QScintillaSupport::QScintilla *mEditor;
+    Core::BorderedWidget *mBorderedEditor;
+
+    int mBorderedViewerHeight;
+    int mBorderedEditorHeight;
 
 private Q_SLOTS:
     void verticalSplitterMoved();
