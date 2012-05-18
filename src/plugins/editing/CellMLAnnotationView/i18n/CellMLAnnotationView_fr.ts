@@ -202,7 +202,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataViewDetailsWidget</name>
     <message>
         <source>#</source>
         <translation>N°</translation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CellmlAnnotationViewMetadataDetailsWidget</class>
- <widget class="QSplitter" name="CellmlAnnotationViewMetadataDetailsWidget">
+ <class>CellmlAnnotationViewMetadataViewDetailsWidget</class>
+ <widget class="QSplitter" name="CellmlAnnotationViewMetadataViewDetailsWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

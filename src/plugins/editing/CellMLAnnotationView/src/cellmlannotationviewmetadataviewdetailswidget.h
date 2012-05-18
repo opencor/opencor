@@ -1,58 +1,74 @@
 //==============================================================================
-// CellML annotation view metadata details widget
+// CellML annotation view metadata view details widget
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWMETADATADETAILSWIDGET_H
-#define CELLMLANNOTATIONVIEWMETADATADETAILSWIDGET_H
+#ifndef CELLMLANNOTATIONVIEWMETADATAVIEWDETAILSWIDGET_H
+#define CELLMLANNOTATIONVIEWMETADATAVIEWDETAILSWIDGET_H
 
 //==============================================================================
 
-#include "cellmlannotationviewmetadataviewdetailswidget.h"
+#include "cellmlfile.h"
 #include "commonwidget.h"
 
 //==============================================================================
 
+#include <QSplitter>
+#include <QStandardItem>
+#include <QStyledItemDelegate>
+
+//==============================================================================
+
 namespace Ui {
-    class CellmlAnnotationViewMetadataDetailsWidget;
+    class CellmlAnnotationViewMetadataViewDetailsWidget;
 }
 
 //==============================================================================
 
-#include <QSplitter>
+class QVBoxLayout;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TreeView;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewDetailsWidget;
+class CellmlAnnotationViewMetadataDetailsWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataDetailsWidget : public QSplitter,
-                                                  public Core::CommonWidget
+class CellmlAnnotationViewMetadataViewDetailsWidget : public QSplitter,
+                                                      public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewDetailsWidget *pParent);
-    ~CellmlAnnotationViewMetadataDetailsWidget();
+    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewMetadataDetailsWidget *pParent);
+    ~CellmlAnnotationViewMetadataViewDetailsWidget();
 
     virtual void retranslateUi();
-
-    CellmlAnnotationViewDetailsWidget * parent() const;
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
     void finalizeGui();
 
 private:
-    CellmlAnnotationViewDetailsWidget *mParent;
+    CellmlAnnotationViewMetadataDetailsWidget *mParent;
 
-    Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
+    Ui::CellmlAnnotationViewMetadataViewDetailsWidget *mGui;
 
-    CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
+    CellMLSupport::CellmlFileRdfTriples mRdfTriples;
+
+    Core::TreeView *mTreeView;
+    QStandardItemModel *mDataModel;
 };
 
 //==============================================================================

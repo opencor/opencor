@@ -78,7 +78,7 @@ QWidget * CellmlAnnotationViewDetailsWidget::focusProxyWidget() const
 
 CellmlAnnotationViewWidget * CellmlAnnotationViewDetailsWidget::parent() const
 {
-    // Return the details GUI's parent
+    // Return our parent
 
     return mParent;
 }
