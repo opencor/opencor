@@ -285,18 +285,14 @@ bool CellmlFile::load()
             forever {
                 ObjRef<iface::rdf_api::Triple> triple = tripleEnumerator->getNextTriple();
 
-                if (triple) {
+                if (triple)
                     // We have a triple, so add it to our list
 
-                    CellmlFileRdfTriple *rdfTriple = new CellmlFileRdfTriple(triple);
-
-                    mMetadata.insertMulti(rdfTriple->subject()->asString(),
-                                          rdfTriple);
-                } else {
+                    mMetadata.append(new CellmlFileRdfTriple(triple));
+                else
                     // No more triples, so...
 
                     break;
-                }
             }
         }
     }

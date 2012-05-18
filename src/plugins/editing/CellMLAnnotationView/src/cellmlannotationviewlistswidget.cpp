@@ -806,14 +806,15 @@ void CellmlAnnotationViewListsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfT
 {
     // Add pRdfTriple to pRdfTriples
 
-    pRdfTriples.insertMulti(pRdfTriple->subject()->asString(), pRdfTriple);
+    pRdfTriples.append(pRdfTriple);
 
-    // Recursively add all the RDF triples which subject matches that of
-    // pRdfTriple's object
+    // Recursively add all the RDF triples which subject matches pRdfTriple's
+    // object
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             mParent->cellmlFile()->metadata().values(pRdfTriple->object()->asString()))
-        addRdfTriple(pRdfTriples, rdfTriple);
+             mParent->cellmlFile()->metadata())
+        if (!rdfTriple->subject()->asString().compare(pRdfTriple->object()->asString()))
+            addRdfTriple(pRdfTriples, rdfTriple);
 }
 
 //==============================================================================
