@@ -73,7 +73,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     // Create our vertical splitter
 
-    mVerticalSplitter = new QSplitter(Qt::Vertical, this);
+    mSplitter = new QSplitter(Qt::Vertical, this);
 
     // Create a splitter for our graph panels and create a connection to keep
     // track of whether we can remove graph panels
@@ -112,13 +112,13 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     //       that exists between the graph panels and the simulation output
     //       widget. So, yes, it's purely about aesthetic...
 
-    mVerticalSplitter->addWidget(mGraphPanels);
-    mVerticalSplitter->addWidget(simulationOutputWidget);
+    mSplitter->addWidget(mGraphPanels);
+    mSplitter->addWidget(simulationOutputWidget);
 
-    mVerticalSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
+    mSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
 
-    mGui->layout->addSpacing(mVerticalSplitter->handleWidth());
-    mGui->layout->addWidget(mVerticalSplitter);
+    mGui->layout->addSpacing(mSplitter->handleWidth());
+    mGui->layout->addWidget(mSplitter);
 
     // Create our (thin) simulation progress widget
 
@@ -220,7 +220,7 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
         for (int i = 0; i < sizesCount; ++i)
             sizes << pSettings->value(SettingsVerticalSplitterSize.arg(QString::number(i))).toInt();
 
-        mVerticalSplitter->setSizes(sizes);
+        mSplitter->setSizes(sizes);
     }
 
     // Retrieve the settings of our graph panels widget
@@ -236,7 +236,7 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our vertical splitter sizes
 
-    QList<int> sizes = mVerticalSplitter->sizes();
+    QList<int> sizes = mSplitter->sizes();
 
     if (!sizes.count() || !sizes.first())
         // Either we have no vertical splitter sizes (how could this ever be the
