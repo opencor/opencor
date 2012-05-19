@@ -97,10 +97,10 @@ void CellmlAnnotationViewCellmlDetailsWidget::finalizeGui()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::updateSplitter(const QList<int> &pSizes)
+void CellmlAnnotationViewCellmlDetailsWidget::updateSizes(const QList<int> &pSizes)
 {
     // The splitter of another CellmlAnnotationViewCellmlDetailsWidget object
-    // has been moved, so update ours
+    // has been moved, so update our sizes
 
     setSizes(pSizes);
 }

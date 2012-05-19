@@ -234,15 +234,6 @@ bool CellmlAnnotationViewListsWidget::eventFilter(QObject *pObject,
 
 //==============================================================================
 
-QList<int> CellmlAnnotationViewListsWidget::splitterSizes() const
-{
-    // Return our splitter's sizes
-
-    return mSplitter->sizes();
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewListsWidget::selectFirstCellmlNode()
 {
     // Select the first CellML node, if any
@@ -641,10 +632,10 @@ void CellmlAnnotationViewListsWidget::populateMetadataDataModel()
 
 //==============================================================================
 
-void CellmlAnnotationViewListsWidget::updateSplitter(const QList<int> &pSizes)
+void CellmlAnnotationViewListsWidget::updateSizes(const QList<int> &pSizes)
 {
     // The splitter of another CellmlAnnotationViewListsWidget object has been
-    // moved, so update ours
+    // moved, so update our sizes
 
     mSplitter->setSizes(pSizes);
 }

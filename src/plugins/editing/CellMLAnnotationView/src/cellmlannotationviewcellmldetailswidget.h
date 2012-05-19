@@ -60,7 +60,7 @@ Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
 public Q_SLOTS:
-    void updateSplitter(const QList<int> &pSizes);
+    void updateSizes(const QList<int> &pSizes);
 
 private Q_SLOTS:
     void emitSplitterMoved();

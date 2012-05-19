@@ -124,19 +124,10 @@ CellmlAnnotationViewDetailsWidget * CellmlAnnotationViewWidget::detailsWidget() 
 
 //==============================================================================
 
-QList<int> CellmlAnnotationViewWidget::splitterSizes() const
-{
-    // Return our splitter's sizes
-
-    return mSplitter->sizes();
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewWidget::updateSplitter(const QList<int> &pSizes)
+void CellmlAnnotationViewWidget::updateSizes(const QList<int> &pSizes)
 {
     // The splitter of another CellmlAnnotationViewWidget object has been moved,
-    // so update ours
+    // so update our sizes
 
     mSplitter->setSizes(pSizes);
 }
