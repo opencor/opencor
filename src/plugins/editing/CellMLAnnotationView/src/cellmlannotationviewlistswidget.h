@@ -8,11 +8,12 @@
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "widget.h"
+#include "commonwidget.h"
 
 //==============================================================================
 
 #include <QModelIndex>
+#include <QSplitter>
 
 //==============================================================================
 
@@ -22,7 +23,6 @@ namespace Ui {
 
 //==============================================================================
 
-class QSplitter;
 class QStandardItemModel;
 
 //==============================================================================
@@ -47,7 +47,8 @@ class CellmlElementItemDelegate;
 
 //==============================================================================
 
-class CellmlAnnotationViewListsWidget : public Core::Widget
+class CellmlAnnotationViewListsWidget : public QSplitter,
+                                        public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -66,8 +67,6 @@ private:
     CellmlAnnotationViewWidget *mParent;
 
     Ui::CellmlAnnotationViewListsWidget *mGui;
-
-    QSplitter *mSplitter;
 
     Core::TreeView *mCellmlTreeView;
     QStandardItemModel *mCellmlDataModel;

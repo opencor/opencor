@@ -18,7 +18,6 @@
 //==============================================================================
 
 #include <QMenu>
-#include <QSplitter>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -29,7 +28,8 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotationViewWidget *pParent) :
-    Widget(pParent),
+    QSplitter(pParent),
+    CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewListsWidget)
 {
@@ -37,14 +37,10 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
 
     mGui->setupUi(this);
 
-    // Create our splitter
-
-    mSplitter = new QSplitter(Qt::Vertical, this);
-
     // Create and customise our CellML tree view which will contain all of the
     // imports, units, components, groups and connections from a CellML file
 
-    mCellmlTreeView            = new Core::TreeView(mSplitter);
+    mCellmlTreeView            = new Core::TreeView(pParent);
     mCellmlDataModel           = new QStandardItemModel(mCellmlTreeView);
     mCellmlElementItemDelegate = new CellmlElementItemDelegate(mCellmlTreeView,
                                                                mCellmlDataModel);
@@ -54,21 +50,17 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
     // Create and customise our metadata tree view which will contain all of the
     // metadata from a CellML file
 
-    mMetadataTreeView  = new Core::TreeView(mSplitter);
+    mMetadataTreeView  = new Core::TreeView(pParent);
     mMetadataDataModel = new QStandardItemModel(mMetadataTreeView);
 
     initTreeView(mMetadataTreeView, mMetadataDataModel);
 
-    // Populate our splitter
+    // Populate ourselves
 
-    mSplitter->addWidget(new Core::BorderedWidget(mCellmlTreeView,
-                                                  false, false, true, true));
-    mSplitter->addWidget(new Core::BorderedWidget(mMetadataTreeView,
-                                                  true, false, false, true));
-
-    // Add our splitter to our layout
-
-    mGui->layout->addWidget(mSplitter);
+    addWidget(new Core::BorderedWidget(mCellmlTreeView,
+                                       false, false, true, true));
+    addWidget(new Core::BorderedWidget(mMetadataTreeView,
+                                       true, false, false, true));
 
     // We want a context menu for our CellML tree view
 
@@ -79,7 +71,7 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
 
     // Keep track of our splitter being moved
 
-    connect(mSplitter, SIGNAL(splitterMoved(int,int)),
+    connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
 
     // Set an event filter for our tree views
@@ -637,7 +629,7 @@ void CellmlAnnotationViewListsWidget::updateSizes(const QList<int> &pSizes)
     // The splitter of another CellmlAnnotationViewListsWidget object has been
     // moved, so update our sizes
 
-    mSplitter->setSizes(pSizes);
+    setSizes(pSizes);
 }
 
 //==============================================================================
@@ -646,7 +638,7 @@ void CellmlAnnotationViewListsWidget::emitSplitterMoved()
 {
     // Let whoever know that our splitter has been moved
 
-    emit splitterMoved(mSplitter->sizes());
+    emit splitterMoved(sizes());
 }
 
 //==============================================================================
