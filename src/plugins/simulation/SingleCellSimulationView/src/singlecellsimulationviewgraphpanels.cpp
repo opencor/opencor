@@ -12,15 +12,32 @@
 
 //==============================================================================
 
+#include "ui_singlecellsimulationviewgraphpanels.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
 //==============================================================================
 
 SingleCellSimulationViewGraphPanels::SingleCellSimulationViewGraphPanels(QWidget *pParent) :
-    QSplitter(Qt::Vertical, pParent),
-    CommonWidget(pParent)
+    QSplitter(pParent),
+    CommonWidget(pParent),
+    mGui(new Ui::SingleCellSimulationViewGraphPanels)
 {
+    // Set up the GUI
+
+    mGui->setupUi(this);
+}
+
+//==============================================================================
+
+SingleCellSimulationViewGraphPanels::~SingleCellSimulationViewGraphPanels()
+{
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================

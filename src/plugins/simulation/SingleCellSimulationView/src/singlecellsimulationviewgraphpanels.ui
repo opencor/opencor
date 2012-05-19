@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SingleCellSimulationViewGraphPanels</class>
+ <widget class="QSplitter" name="SingleCellSimulationViewGraphPanels">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <property name="orientation">
+   <enum>Qt::Vertical</enum>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

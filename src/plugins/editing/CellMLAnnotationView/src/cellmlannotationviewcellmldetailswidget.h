@@ -12,13 +12,13 @@
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewCellmlDetailsWidget;
-}
+#include <QSplitter>
 
 //==============================================================================
 
-#include <QSplitter>
+namespace Ui {
+    class CellmlAnnotationViewCellmlDetailsWidget;
+}
 
 //==============================================================================
 
