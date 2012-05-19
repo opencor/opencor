@@ -29,6 +29,7 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewplugin.h
         src/singlecellsimulationviewwidget.h
     UIS
+        src/singlecellsimulationviewgraphpanel.ui
         src/singlecellsimulationviewgraphpanels.ui
         src/singlecellsimulationviewwidget.ui
     DEFINITIONS

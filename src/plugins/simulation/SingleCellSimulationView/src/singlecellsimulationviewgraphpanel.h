@@ -20,6 +20,12 @@ class QwtPlotCurve;
 
 //==============================================================================
 
+namespace Ui {
+    class SingleCellSimulationViewGraphPanel;
+}
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -46,6 +52,8 @@ protected:
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
 private:
+    Ui::SingleCellSimulationViewGraphPanel *mGui;
+
     QFrame *mMarker;
     QwtPlot *mPlot;
 

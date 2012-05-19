@@ -18,6 +18,10 @@
 
 //==============================================================================
 
+#include "ui_singlecellsimulationviewgraphpanel.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -25,17 +29,13 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewGraphPanel::SingleCellSimulationViewGraphPanel(QWidget *pParent) :
     Core::Widget(pParent),
+    mGui(new Ui::SingleCellSimulationViewGraphPanel),
     mActive(false),
     mPlotCurves(QList<QwtPlotCurve *>())
 {
-    // Create, customise and set a horizontal layout where we are going to put
-    // our marker and QwtPlot widget
+    // Set up the GUI
 
-    QHBoxLayout *horizontalLayout= new QHBoxLayout(this);
-
-    horizontalLayout->setContentsMargins(0, 0, 0, 0);
-
-    setLayout(horizontalLayout);
+    mGui->setupUi(this);
 
     // Create, customise and add a marker to our horizontal layout
 
@@ -49,7 +49,7 @@ SingleCellSimulationViewGraphPanel::SingleCellSimulationViewGraphPanel(QWidget *
 
     setActive(false);
 
-    horizontalLayout->addWidget(mMarker);
+    mGui->layout->addWidget(mMarker);
 
     // Create, customise and add a QwtPlot widget to our horizontal layout
 
@@ -65,7 +65,7 @@ SingleCellSimulationViewGraphPanel::SingleCellSimulationViewGraphPanel(QWidget *
 
     grid->attach(mPlot);
 
-    horizontalLayout->addWidget(mPlot);
+    mGui->layout->addWidget(mPlot);
 
     // Allow the graph panel to be of any vertical size
 
@@ -79,6 +79,10 @@ SingleCellSimulationViewGraphPanel::~SingleCellSimulationViewGraphPanel()
     // Delete some internal objects
 
     resetCurves();
+
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================
