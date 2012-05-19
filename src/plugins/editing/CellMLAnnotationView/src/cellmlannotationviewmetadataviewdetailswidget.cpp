@@ -19,7 +19,7 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QSplitter(pParent),
-    Core::CommonWidget(pParent),
+    CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataViewDetailsWidget),
     mRdfTriples(CellMLSupport::CellmlFileRdfTriples())

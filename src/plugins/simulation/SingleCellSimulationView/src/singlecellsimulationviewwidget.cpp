@@ -498,7 +498,7 @@ void SingleCellSimulationViewWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
 
-    Core::Widget::changeEvent(pEvent);
+    Widget::changeEvent(pEvent);
 
     // Check whether the palette has changed and if so then update the colours
     // to be used by our progress bar

@@ -28,7 +28,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidget(QWidget *pParent) :
-    Core::Widget(pParent),
+    Widget(pParent),
     mGui(new Ui::SingleCellSimulationViewGraphPanelWidget),
     mActive(false),
     mPlotCurves(QList<QwtPlotCurve *>())
@@ -91,7 +91,7 @@ void SingleCellSimulationViewGraphPanelWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
 
-    Core::Widget::changeEvent(pEvent);
+    Widget::changeEvent(pEvent);
 
     // Check whether the palette has changed and if so then update the colour
     // used to highlight the active graph panel

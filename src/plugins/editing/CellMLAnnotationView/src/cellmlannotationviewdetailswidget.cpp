@@ -20,7 +20,7 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QStackedWidget(pParent),
-    Core::CommonWidget(pParent),
+    CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewDetailsWidget)
 {

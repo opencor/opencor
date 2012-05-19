@@ -25,7 +25,7 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElementDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
-    Core::CommonWidget(pParent),
+    CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewCellmlElementDetailsWidget),
     mItems(Items()),
