@@ -13,10 +13,6 @@
 
 //==============================================================================
 
-#include <QSplitter>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -24,7 +20,8 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
                                                        const QString &pFileName) :
-    Widget(pParent),
+    QSplitter(pParent),
+    CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewWidget),
     mListsWidget(0),
     mDetailsWidget(0)
@@ -44,31 +41,22 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     //  1) A couple of lists (for CellML elements and metadata, resp.); and
     //  2) Some details (for a CellML element or metadata).
     //
-    // These two main parts are widgets of an horizontal splitter and moving the
-    // splitter will result in the horizontal splitter of other CellML files'
-    // view to be moved too
-
-    // Create our splitter
-
-    mSplitter = new QSplitter(Qt::Horizontal, this);
+    // These two main parts are widgets of ourselves and moving the splitter
+    // will result in the splitter of other CellML files' view to be moved too
 
     // Create our two main parts
 
     mListsWidget   = new CellmlAnnotationViewListsWidget(this);
     mDetailsWidget = new CellmlAnnotationViewDetailsWidget(this);
 
-    // Populate our splitter
+    // Populate ourselves
 
-    mSplitter->addWidget(mListsWidget);
-    mSplitter->addWidget(mDetailsWidget);
-
-    // Add our splitter to our layout
-
-    mGui->layout->addWidget(mSplitter);
+    addWidget(mListsWidget);
+    addWidget(mDetailsWidget);
 
     // Keep track of our splitter being moved
 
-    connect(mSplitter, SIGNAL(splitterMoved(int,int)),
+    connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
 
     // Select the first CellML node from our CellML list
@@ -129,7 +117,7 @@ void CellmlAnnotationViewWidget::updateSizes(const QList<int> &pSizes)
     // The splitter of another CellmlAnnotationViewWidget object has been moved,
     // so update our sizes
 
-    mSplitter->setSizes(pSizes);
+    setSizes(pSizes);
 }
 
 //==============================================================================
@@ -138,7 +126,7 @@ void CellmlAnnotationViewWidget::emitSplitterMoved()
 {
     // Let whoever know that our splitter has been moved
 
-    emit splitterMoved(mSplitter->sizes());
+    emit splitterMoved(sizes());
 }
 
 //==============================================================================

@@ -8,17 +8,17 @@
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "widget.h"
+#include "commonwidget.h"
+
+//==============================================================================
+
+#include <QSplitter>
 
 //==============================================================================
 
 namespace Ui {
     class CellmlAnnotationViewWidget;
 }
-
-//==============================================================================
-
-class QSplitter;
 
 //==============================================================================
 
@@ -32,7 +32,7 @@ class CellmlAnnotationViewDetailsWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget : public Core::Widget
+class CellmlAnnotationViewWidget : public QSplitter, public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -52,8 +52,6 @@ private:
     Ui::CellmlAnnotationViewWidget *mGui;
 
     CellMLSupport::CellmlFile *mCellmlFile;
-
-    QSplitter *mSplitter;
 
     CellmlAnnotationViewListsWidget *mListsWidget;
     CellmlAnnotationViewDetailsWidget *mDetailsWidget;

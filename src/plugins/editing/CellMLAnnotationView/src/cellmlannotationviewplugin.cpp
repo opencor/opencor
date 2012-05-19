@@ -182,9 +182,9 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 
     // Initialise our new CellML annotation view widget's sizes
 
-    widget->updateSizes(mSizes);
-    widget->listsWidget()->updateSizes(mListsWidgetSizes);
-    widget->detailsWidget()->cellmlDetails()->updateSizes(mCellmlDetailsWidgetSizes);
+    widget->setSizes(mSizes);
+    widget->listsWidget()->setSizes(mListsWidgetSizes);
+    widget->detailsWidget()->cellmlDetails()->setSizes(mCellmlDetailsWidgetSizes);
 
     // Keep track of the splitter move in our new CellML annotation view widget
 
