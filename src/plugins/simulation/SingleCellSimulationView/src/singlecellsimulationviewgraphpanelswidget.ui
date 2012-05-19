@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SingleCellSimulationViewGraphPanels</class>
- <widget class="QSplitter" name="SingleCellSimulationViewGraphPanels">
+ <class>SingleCellSimulationViewGraphPanelsWidget</class>
+ <widget class="QSplitter" name="SingleCellSimulationViewGraphPanelsWidgets">
   <property name="geometry">
    <rect>
     <x>0</x>

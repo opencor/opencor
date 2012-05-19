@@ -2,8 +2,8 @@
 // Single cell simulation view graph panels widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEWGRAPHPANELS_H
-#define SINGLECELLSIMULATIONVIEWGRAPHPANELS_H
+#ifndef SINGLECELLSIMULATIONVIEWGRAPHPANELSWIDGET_H
+#define SINGLECELLSIMULATIONVIEWGRAPHPANELSWIDGET_H
 
 //==============================================================================
 
@@ -16,7 +16,7 @@
 //==============================================================================
 
 namespace Ui {
-    class SingleCellSimulationViewGraphPanels;
+    class SingleCellSimulationViewGraphPanelsWidget;
 }
 
 //==============================================================================
@@ -26,41 +26,41 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewGraphPanel;
+class SingleCellSimulationViewGraphPanelWidget;
 
 //==============================================================================
 
-class SingleCellSimulationViewGraphPanels : public QSplitter,
-                                            public Core::CommonWidget
+class SingleCellSimulationViewGraphPanelsWidget : public QSplitter,
+                                                  public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewGraphPanels(QWidget *pParent);
-    ~SingleCellSimulationViewGraphPanels();
+    explicit SingleCellSimulationViewGraphPanelsWidget(QWidget *pParent);
+    ~SingleCellSimulationViewGraphPanelsWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    SingleCellSimulationViewGraphPanel * addGraphPanel();
+    SingleCellSimulationViewGraphPanelWidget * addGraphPanel();
     void removeGraphPanel();
 
-    SingleCellSimulationViewGraphPanel * activeGraphPanel();
+    SingleCellSimulationViewGraphPanelWidget * activeGraphPanel();
 
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
-    Ui::SingleCellSimulationViewGraphPanels *mGui;
+    Ui::SingleCellSimulationViewGraphPanelsWidget *mGui;
 
 Q_SIGNALS:
-    void grapPanelAdded(SingleCellSimulationViewGraphPanel *pGraphPanel);
+    void grapPanelAdded(SingleCellSimulationViewGraphPanelWidget *pGraphPanel);
     void grapPanelRemoved();
 
     void removeGraphPanelsEnabled(const bool &pEnabled);
 
 private Q_SLOTS:
-    void graphPanelActivated(SingleCellSimulationViewGraphPanel *pGraphPanel);
+    void graphPanelActivated(SingleCellSimulationViewGraphPanelWidget *pGraphPanel);
 };
 
 //==============================================================================

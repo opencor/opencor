@@ -17,20 +17,20 @@ ADD_PLUGIN(SingleCellSimulationView
         ../../plugininfo.cpp
         ../../solverinterface.cpp
 
-        src/singlecellsimulationviewgraphpanel.cpp
-        src/singlecellsimulationviewgraphpanels.cpp
+        src/singlecellsimulationviewgraphpanelwidget.cpp
+        src/singlecellsimulationviewgraphpanelswidget.cpp
         src/singlecellsimulationviewplugin.cpp
         src/singlecellsimulationviewwidget.cpp
     HEADERS_MOC
         ../../plugin.h
 
-        src/singlecellsimulationviewgraphpanel.h
-        src/singlecellsimulationviewgraphpanels.h
+        src/singlecellsimulationviewgraphpanelwidget.h
+        src/singlecellsimulationviewgraphpanelswidget.h
         src/singlecellsimulationviewplugin.h
         src/singlecellsimulationviewwidget.h
     UIS
-        src/singlecellsimulationviewgraphpanel.ui
-        src/singlecellsimulationviewgraphpanels.ui
+        src/singlecellsimulationviewgraphpanelwidget.ui
+        src/singlecellsimulationviewgraphpanelswidget.ui
         src/singlecellsimulationviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}

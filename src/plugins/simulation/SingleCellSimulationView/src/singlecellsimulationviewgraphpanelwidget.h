@@ -2,8 +2,8 @@
 // Single cell simulation view graph panel widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEWGRAPHPANEL_H
-#define SINGLECELLSIMULATIONVIEWGRAPHPANEL_H
+#ifndef SINGLECELLSIMULATIONVIEWGRAPHPANELWIDGET_H
+#define SINGLECELLSIMULATIONVIEWGRAPHPANELWIDGET_H
 
 //==============================================================================
 
@@ -21,7 +21,7 @@ class QwtPlotCurve;
 //==============================================================================
 
 namespace Ui {
-    class SingleCellSimulationViewGraphPanel;
+    class SingleCellSimulationViewGraphPanelWidget;
 }
 
 //==============================================================================
@@ -31,13 +31,13 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewGraphPanel : public Core::Widget
+class SingleCellSimulationViewGraphPanelWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewGraphPanel(QWidget *pParent);
-    ~SingleCellSimulationViewGraphPanel();
+    explicit SingleCellSimulationViewGraphPanelWidget(QWidget *pParent);
+    ~SingleCellSimulationViewGraphPanelWidget();
 
     QwtPlotCurve * addCurve();
     void resetCurves();
@@ -52,7 +52,7 @@ protected:
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
 private:
-    Ui::SingleCellSimulationViewGraphPanel *mGui;
+    Ui::SingleCellSimulationViewGraphPanelWidget *mGui;
 
     QFrame *mMarker;
     QwtPlot *mPlot;
@@ -64,8 +64,8 @@ private:
     void setMarkerColor();
 
 Q_SIGNALS:
-    void activated(SingleCellSimulationViewGraphPanel *pGraphPanel);
-    void inactivated(SingleCellSimulationViewGraphPanel *pGraphPanel);
+    void activated(SingleCellSimulationViewGraphPanelWidget *pGraphPanel);
+    void inactivated(SingleCellSimulationViewGraphPanelWidget *pGraphPanel);
 };
 
 //==============================================================================

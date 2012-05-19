@@ -2,7 +2,7 @@
 // Single cell simulation view graph panel widget
 //==============================================================================
 
-#include "singlecellsimulationviewgraphpanel.h"
+#include "singlecellsimulationviewgraphpanelwidget.h"
 
 //==============================================================================
 
@@ -18,7 +18,7 @@
 
 //==============================================================================
 
-#include "ui_singlecellsimulationviewgraphpanel.h"
+#include "ui_singlecellsimulationviewgraphpanelwidget.h"
 
 //==============================================================================
 
@@ -27,9 +27,9 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewGraphPanel::SingleCellSimulationViewGraphPanel(QWidget *pParent) :
+SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidget(QWidget *pParent) :
     Core::Widget(pParent),
-    mGui(new Ui::SingleCellSimulationViewGraphPanel),
+    mGui(new Ui::SingleCellSimulationViewGraphPanelWidget),
     mActive(false),
     mPlotCurves(QList<QwtPlotCurve *>())
 {
@@ -74,7 +74,7 @@ SingleCellSimulationViewGraphPanel::SingleCellSimulationViewGraphPanel(QWidget *
 
 //==============================================================================
 
-SingleCellSimulationViewGraphPanel::~SingleCellSimulationViewGraphPanel()
+SingleCellSimulationViewGraphPanelWidget::~SingleCellSimulationViewGraphPanelWidget()
 {
     // Delete some internal objects
 
@@ -87,7 +87,7 @@ SingleCellSimulationViewGraphPanel::~SingleCellSimulationViewGraphPanel()
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanel::changeEvent(QEvent *pEvent)
+void SingleCellSimulationViewGraphPanelWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
 
@@ -102,7 +102,7 @@ void SingleCellSimulationViewGraphPanel::changeEvent(QEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanel::mousePressEvent(QMouseEvent *pEvent)
+void SingleCellSimulationViewGraphPanelWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
@@ -117,7 +117,7 @@ void SingleCellSimulationViewGraphPanel::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-QwtPlotCurve * SingleCellSimulationViewGraphPanel::addCurve()
+QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addCurve()
 {
     // Create a new curve
 
@@ -143,7 +143,7 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanel::addCurve()
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanel::resetCurves()
+void SingleCellSimulationViewGraphPanelWidget::resetCurves()
 {
     // Remove any existing curve
 
@@ -162,7 +162,7 @@ void SingleCellSimulationViewGraphPanel::resetCurves()
 
 //==============================================================================
 
-QwtPlot * SingleCellSimulationViewGraphPanel::plot()
+QwtPlot * SingleCellSimulationViewGraphPanelWidget::plot()
 {
     // Return the pointer to our plot widget
 
@@ -171,7 +171,7 @@ QwtPlot * SingleCellSimulationViewGraphPanel::plot()
 
 //==============================================================================
 
-bool SingleCellSimulationViewGraphPanel::isActive() const
+bool SingleCellSimulationViewGraphPanelWidget::isActive() const
 {
     // Return whether the graph panel as active
 
@@ -180,7 +180,7 @@ bool SingleCellSimulationViewGraphPanel::isActive() const
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanel::setMarkerColor()
+void SingleCellSimulationViewGraphPanelWidget::setMarkerColor()
 {
     // Set the marker's colour based on whether the graph panel is active or not
 
@@ -195,7 +195,7 @@ void SingleCellSimulationViewGraphPanel::setMarkerColor()
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanel::setActive(const bool &pActive)
+void SingleCellSimulationViewGraphPanelWidget::setActive(const bool &pActive)
 {
     if (pActive == mActive)
         return;

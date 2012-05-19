@@ -2,8 +2,8 @@
 // Single cell simulation view graph panels widget
 //==============================================================================
 
-#include "singlecellsimulationviewgraphpanel.h"
-#include "singlecellsimulationviewgraphpanels.h"
+#include "singlecellsimulationviewgraphpanelwidget.h"
+#include "singlecellsimulationviewgraphpanelswidget.h"
 
 //==============================================================================
 
@@ -12,7 +12,7 @@
 
 //==============================================================================
 
-#include "ui_singlecellsimulationviewgraphpanels.h"
+#include "ui_singlecellsimulationviewgraphpanelswidget.h"
 
 //==============================================================================
 
@@ -21,10 +21,10 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewGraphPanels::SingleCellSimulationViewGraphPanels(QWidget *pParent) :
+SingleCellSimulationViewGraphPanelsWidget::SingleCellSimulationViewGraphPanelsWidget(QWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
-    mGui(new Ui::SingleCellSimulationViewGraphPanels)
+    mGui(new Ui::SingleCellSimulationViewGraphPanelsWidget)
 {
     // Set up the GUI
 
@@ -33,7 +33,7 @@ SingleCellSimulationViewGraphPanels::SingleCellSimulationViewGraphPanels(QWidget
 
 //==============================================================================
 
-SingleCellSimulationViewGraphPanels::~SingleCellSimulationViewGraphPanels()
+SingleCellSimulationViewGraphPanelsWidget::~SingleCellSimulationViewGraphPanelsWidget()
 {
     // Delete the GUI
 
@@ -48,7 +48,7 @@ static const QString SettingsGraphPanelSize   = "GraphPanelSize%1";
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanels::loadSettings(QSettings *pSettings)
+void SingleCellSimulationViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
 {
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -80,12 +80,12 @@ void SingleCellSimulationViewGraphPanels::loadSettings(QSettings *pSettings)
 
     // Select the graph panel that used to be active
 
-    qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(pSettings->value(SettingsActiveGraphPanel, 0).toInt()))->setActive(true);
+    qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(pSettings->value(SettingsActiveGraphPanel, 0).toInt()))->setActive(true);
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanels::saveSettings(QSettings *pSettings) const
+void SingleCellSimulationViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the number of graph panels, of which graph panel was the
     // active one, and of the size of each graph panel
@@ -93,7 +93,7 @@ void SingleCellSimulationViewGraphPanels::saveSettings(QSettings *pSettings) con
     pSettings->setValue(SettingsGraphPanelsCount, count());
 
     for (int i = 0, iMax = count(); i < iMax; ++i)
-        if (qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(i))->isActive()) {
+        if (qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->isActive()) {
             // We found the active graph panel, so...
 
             pSettings->setValue(SettingsActiveGraphPanel, i);
@@ -109,7 +109,7 @@ void SingleCellSimulationViewGraphPanels::saveSettings(QSettings *pSettings) con
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanels::wheelEvent(QWheelEvent *pEvent)
+void SingleCellSimulationViewGraphPanelsWidget::wheelEvent(QWheelEvent *pEvent)
 {
     // Default handling of the event
 
@@ -119,7 +119,7 @@ void SingleCellSimulationViewGraphPanels::wheelEvent(QWheelEvent *pEvent)
 
     if (pEvent->delta())
     for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellSimulationViewGraphPanel *graphPanel = qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(i));
+        SingleCellSimulationViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i));
 
         if (graphPanel->isActive()) {
             // We are dealing with the currently active graph panel, so
@@ -145,7 +145,7 @@ void SingleCellSimulationViewGraphPanels::wheelEvent(QWheelEvent *pEvent)
             else if (i == iMax)
                 i = iMax-1;
 
-            qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(i))->setActive(true);
+            qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->setActive(true);
 
             break;
         }
@@ -154,7 +154,7 @@ void SingleCellSimulationViewGraphPanels::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
-SingleCellSimulationViewGraphPanel * SingleCellSimulationViewGraphPanels::addGraphPanel()
+SingleCellSimulationViewGraphPanelWidget * SingleCellSimulationViewGraphPanelsWidget::addGraphPanel()
 {
     // Keep track of the graph panels' original size
 
@@ -162,7 +162,7 @@ SingleCellSimulationViewGraphPanel * SingleCellSimulationViewGraphPanels::addGra
 
     // Create a new graph panel
 
-    SingleCellSimulationViewGraphPanel *res = new SingleCellSimulationViewGraphPanel(this);
+    SingleCellSimulationViewGraphPanelWidget *res = new SingleCellSimulationViewGraphPanelWidget(this);
 
     // Add the graph panel to ourselves
 
@@ -181,8 +181,8 @@ SingleCellSimulationViewGraphPanel * SingleCellSimulationViewGraphPanels::addGra
     // Create a connection to keep track of whenever the graph panel gets
     // activated
 
-    connect(res, SIGNAL(activated(SingleCellSimulationViewGraphPanel *)),
-            this, SLOT(graphPanelActivated(SingleCellSimulationViewGraphPanel *)));
+    connect(res, SIGNAL(activated(SingleCellSimulationViewGraphPanelWidget *)),
+            this, SLOT(graphPanelActivated(SingleCellSimulationViewGraphPanelWidget *)));
 
     // Activate the graph panel
 
@@ -203,7 +203,7 @@ SingleCellSimulationViewGraphPanel * SingleCellSimulationViewGraphPanels::addGra
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanels::removeGraphPanel()
+void SingleCellSimulationViewGraphPanelsWidget::removeGraphPanel()
 {
     if (count() == 1)
         // There is only one graph panel left, so...
@@ -213,7 +213,7 @@ void SingleCellSimulationViewGraphPanels::removeGraphPanel()
     // Remove the current graph panel
 
     for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellSimulationViewGraphPanel *graphPanel = qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(i));
+        SingleCellSimulationViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i));
 
         if (graphPanel->isActive()) {
             // We are dealing with the currently active graph panel, so remove
@@ -228,12 +228,12 @@ void SingleCellSimulationViewGraphPanels::removeGraphPanel()
             if (i < count())
                 // There is a next graph panel, so activate it
 
-                qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(i))->setActive(true);
+                qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->setActive(true);
             else
                 // We were dealing with the last graph panel, so just activate
                 // the new last graph panel
 
-                qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(count()-1))->setActive(true);
+                qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(count()-1))->setActive(true);
 
             // We are all done, so...
 
@@ -252,12 +252,12 @@ void SingleCellSimulationViewGraphPanels::removeGraphPanel()
 
 //==============================================================================
 
-SingleCellSimulationViewGraphPanel * SingleCellSimulationViewGraphPanels::activeGraphPanel()
+SingleCellSimulationViewGraphPanelWidget * SingleCellSimulationViewGraphPanelsWidget::activeGraphPanel()
 {
     // Return the active graph panel
 
     for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellSimulationViewGraphPanel *graphPanel = qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(i));
+        SingleCellSimulationViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i));
 
         if (graphPanel->isActive())
             // We found the active graph panel, so...
@@ -274,12 +274,12 @@ SingleCellSimulationViewGraphPanel * SingleCellSimulationViewGraphPanels::active
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanels::graphPanelActivated(SingleCellSimulationViewGraphPanel *pGraphPanel)
+void SingleCellSimulationViewGraphPanelsWidget::graphPanelActivated(SingleCellSimulationViewGraphPanelWidget *pGraphPanel)
 {
     // A graph panel has been activated, so inactivate all the others
 
     for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellSimulationViewGraphPanel *graphPanel = qobject_cast<SingleCellSimulationViewGraphPanel *>(widget(i));
+        SingleCellSimulationViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i));
 
         if (graphPanel != pGraphPanel)
             // We are not dealing with the graph panel that just got activated,

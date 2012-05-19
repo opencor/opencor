@@ -44,8 +44,8 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewGraphPanel;
-class SingleCellSimulationViewGraphPanels;
+class SingleCellSimulationViewGraphPanelWidget;
+class SingleCellSimulationViewGraphPanelsWidget;
 
 //==============================================================================
 
@@ -112,7 +112,7 @@ private:
 
     QSplitter *mSplitter;
 
-    SingleCellSimulationViewGraphPanels *mGraphPanels;
+    SingleCellSimulationViewGraphPanelsWidget *mGraphPanels;
     QTextEdit *mOutput;
 
     QProgressBar *mProgressBar;

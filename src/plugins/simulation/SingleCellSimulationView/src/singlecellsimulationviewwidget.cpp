@@ -7,8 +7,8 @@
 #include "coredaesolver.h"
 #include "coreodesolver.h"
 #include "coreutils.h"
-#include "singlecellsimulationviewgraphpanel.h"
-#include "singlecellsimulationviewgraphpanels.h"
+#include "singlecellsimulationviewgraphpanelwidget.h"
+#include "singlecellsimulationviewgraphpanelswidget.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbar.h"
 
@@ -78,7 +78,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     // Create a splitter for our graph panels and create a connection to keep
     // track of whether we can remove graph panels
 
-    mGraphPanels = new SingleCellSimulationViewGraphPanels(this);
+    mGraphPanels = new SingleCellSimulationViewGraphPanelsWidget(this);
 
     mGraphPanels->setObjectName("GraphPanels");
 
@@ -278,7 +278,7 @@ void SingleCellSimulationViewWidget::clearGraphPanels()
     // Clear all the graph panels
 
     for (int i = 0, iMax = mGraphPanels->count(); i < iMax; ++i)
-        qobject_cast<SingleCellSimulationViewGraphPanel *>(mGraphPanels->widget(i))->resetCurves();
+        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(mGraphPanels->widget(i))->resetCurves();
 }
 
 //==============================================================================
@@ -533,7 +533,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     // Retrieve the active graph panel
 
-    SingleCellSimulationViewGraphPanel *firstGraphPanel = qobject_cast<SingleCellSimulationViewGraphPanel *>(mGraphPanels->widget(0));
+    SingleCellSimulationViewGraphPanelWidget *firstGraphPanel = qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(mGraphPanels->widget(0));
 
     // Retrieve the requested ODE/DAE solver
 
