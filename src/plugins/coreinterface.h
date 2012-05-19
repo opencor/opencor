@@ -25,14 +25,8 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
-
-//==============================================================================
-
-class DockWidget;
-class Widget;
-
-//==============================================================================
-
+    class CommonWidget;
+    class DockWidget;
 }
 
 //==============================================================================
@@ -57,8 +51,8 @@ public:
     void saveWindowSettings(QSettings *pSettings,
                             Core::DockWidget *pWindow) const;
 
-    void loadViewSettings(QSettings *pSettings, Core::Widget *pView);
-    void saveViewSettings(QSettings *pSettings, Core::Widget *pView) const;
+    void loadViewSettings(QSettings *pSettings, QObject *pView);
+    void saveViewSettings(QSettings *pSettings, QObject *pView) const;
 };
 
 //==============================================================================

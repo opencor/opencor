@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>RawCellmlViewWidget</class>
- <widget class="QWidget" name="RawCellmlViewWidget">
+ <widget class="QSplitter" name="RawCellmlViewWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -10,14 +10,9 @@
     <height>240</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="layout">
-   <property name="margin">
-    <number>0</number>
-   </property>
-   <property name="spacing">
-    <number>0</number>
-   </property>
-  </layout>
+  <property name="orientation">
+   <enum>Qt::Vertical</enum>
+  </property>
  </widget>
  <resources/>
  <connections/>

@@ -82,24 +82,23 @@ void CoreInterface::saveWindowSettings(QSettings *pSettings,
 
 //==============================================================================
 
-void CoreInterface::loadViewSettings(QSettings *pSettings, Core::Widget *pView)
+void CoreInterface::loadViewSettings(QSettings *pSettings, QObject *pView)
 {
     // Retrieve the view's settings
 
-    pSettings->beginGroup(pView->objectName());
-        pView->loadSettings(pSettings);
+    pSettings->beginGroup(qobject_cast<QWidget *>(pView)->objectName());
+        dynamic_cast<Core::CommonWidget *>(pView)->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
 //==============================================================================
 
-void CoreInterface::saveViewSettings(QSettings *pSettings,
-                                     Core::Widget *pView) const
+void CoreInterface::saveViewSettings(QSettings *pSettings, QObject *pView) const
 {
     // Keep track of the view's settings
 
-    pSettings->beginGroup(pView->objectName());
-        pView->saveSettings(pSettings);
+    pSettings->beginGroup(qobject_cast<QWidget *>(pView)->objectName());
+        dynamic_cast<Core::CommonWidget *>(pView)->saveSettings(pSettings);
     pSettings->endGroup();
 }
 

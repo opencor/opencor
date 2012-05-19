@@ -7,17 +7,17 @@
 
 //==============================================================================
 
-#include "widget.h"
+#include "commonwidget.h"
+
+//==============================================================================
+
+#include <QSplitter>
 
 //==============================================================================
 
 namespace Ui {
     class RawCellmlViewWidget;
 }
-
-//==============================================================================
-
-class QSplitter;
 
 //==============================================================================
 
@@ -47,7 +47,7 @@ namespace RawCellMLView {
 
 //==============================================================================
 
-class RawCellmlViewWidget : public Core::Widget
+class RawCellmlViewWidget : public QSplitter, public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -63,8 +63,6 @@ public:
 private:
     Ui::RawCellmlViewWidget *mGui;
 
-    QSplitter *mVerticalSplitter;
-
     QMap<QString, QScintillaSupport::QScintilla *> mEditors;
     QMap<QString, Core::BorderedWidget *> mBorderedEditors;
 
@@ -78,7 +76,7 @@ private:
     int mBorderedEditorHeight;
 
 private Q_SLOTS:
-    void verticalSplitterMoved();
+    void splitterMoved();
 };
 
 //==============================================================================
