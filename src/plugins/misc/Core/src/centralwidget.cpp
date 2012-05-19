@@ -198,7 +198,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     centralWidgetVBoxLayout->addWidget(mFileTabs);
     centralWidgetVBoxLayout->addWidget(mContents);
 
-    // Add the widgets to our horizontal layout
+    // Add the widgets to our layout
 
     mGui->layout->addWidget(mModeTabs);
     mGui->layout->addWidget(centralWidget);

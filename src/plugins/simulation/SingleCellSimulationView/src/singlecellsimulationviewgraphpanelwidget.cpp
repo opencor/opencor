@@ -37,7 +37,7 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
 
     mGui->setupUi(this);
 
-    // Create, customise and add a marker to our horizontal layout
+    // Create, customise and add a marker to our layout
 
     static const int MarkerWidth = 3;
 
@@ -51,7 +51,7 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
 
     mGui->layout->addWidget(mMarker);
 
-    // Create, customise and add a QwtPlot widget to our horizontal layout
+    // Create, customise and add a QwtPlot widget to our layout
 
     mPlot = new QwtPlot(this);
 

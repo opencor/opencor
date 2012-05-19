@@ -27,7 +27,7 @@ BorderedWidget::BorderedWidget(QWidget *pWidget,
     // can't use a QFrame, so instead we rely on the use of a grid layout and
     // Core::newLineWidget()...
 
-    // Create a horizontal layout for ourselves
+    // Create a grid layout for ourselves
 
     QGridLayout *gridLayout = new QGridLayout(this);
 

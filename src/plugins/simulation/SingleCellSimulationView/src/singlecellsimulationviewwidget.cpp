@@ -71,7 +71,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mGui->layout->addWidget(toolbar);
     mGui->layout->addWidget(Core::newLineWidget(this));
 
-    // Create our vertical splitter
+    // Create our splitter
 
     mSplitter = new QSplitter(Qt::Vertical, this);
 
@@ -85,32 +85,32 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     connect(mGraphPanels, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
-    // Create a simulation output widget with a vertical layout on which we put
-    // a separating line and our simulation output list view
+    // Create a simulation output widget with a layout on which we put a
+    // separating line and our simulation output list view
     // Note: the separating line is because we remove, for aesthetical reasons,
     //       the border of our simulation output list view...
 
     QWidget *simulationOutputWidget = new QWidget(this);
-    QVBoxLayout *simulationOutputVerticalLayout= new QVBoxLayout(simulationOutputWidget);
+    QVBoxLayout *simulationOutputLayout= new QVBoxLayout(simulationOutputWidget);
 
-    simulationOutputVerticalLayout->setContentsMargins(0, 0, 0, 0);
-    simulationOutputVerticalLayout->setSpacing(0);
+    simulationOutputLayout->setContentsMargins(0, 0, 0, 0);
+    simulationOutputLayout->setSpacing(0);
 
-    simulationOutputWidget->setLayout(simulationOutputVerticalLayout);
+    simulationOutputWidget->setLayout(simulationOutputLayout);
 
     mOutput = new QTextEdit(this);
 
     mOutput->setFrameStyle(QFrame::NoFrame);
 
-    simulationOutputVerticalLayout->addWidget(Core::newLineWidget(this));
-    simulationOutputVerticalLayout->addWidget(mOutput);
+    simulationOutputLayout->addWidget(Core::newLineWidget(this));
+    simulationOutputLayout->addWidget(mOutput);
 
-    // Populate our vertical splitter and use as much space as possible for the
-    // graph panels (by asking their height to be that of the desktop's), and
-    // add it to our single cell simulation view widget
-    // Note: we add some spacing before our vertical splitter to match the space
-    //       that exists between the graph panels and the simulation output
-    //       widget. So, yes, it's purely about aesthetic...
+    // Populate our splitter and use as much space as possible for the graph
+    // panels (by asking their height to be that of the desktop's), and add it
+    // to our single cell simulation view widget
+    // Note: we add some spacing before our splitter to match the space that
+    //       exists between the graph panels and the simulation output widget.
+    //       So, yes, it's purely about aesthetic...
 
     mSplitter->addWidget(mGraphPanels);
     mSplitter->addWidget(simulationOutputWidget);
@@ -163,8 +163,8 @@ void SingleCellSimulationViewWidget::retranslateUi()
 
 //==============================================================================
 
-static const QString SettingsVerticalSplitterSizesCount = "GraphPanelsSizesCount";
-static const QString SettingsVerticalSplitterSize       = "GraphPanelsSize%1";
+static const QString SettingsGraphPanelsSizesCount = "GraphPanelsSizesCount";
+static const QString SettingsGraphPanelsSize       = "GraphPanelsSize%1";
 
 //==============================================================================
 
@@ -210,15 +210,15 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
     }
 #endif
 
-    // Retrieve and set the sizes of our vertical splitter
+    // Retrieve and set the sizes of our splitter
 
-    int sizesCount = pSettings->value(SettingsVerticalSplitterSizesCount, 0).toInt();
+    int sizesCount = pSettings->value(SettingsGraphPanelsSizesCount, 0).toInt();
 
     if (sizesCount) {
         QList<int> sizes = QList<int>();
 
         for (int i = 0; i < sizesCount; ++i)
-            sizes << pSettings->value(SettingsVerticalSplitterSize.arg(QString::number(i))).toInt();
+            sizes << pSettings->value(SettingsGraphPanelsSize.arg(QString::number(i))).toInt();
 
         mSplitter->setSizes(sizes);
     }
@@ -234,23 +234,22 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 
 void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our vertical splitter sizes
+    // Keep track of our splitter sizes
 
     QList<int> sizes = mSplitter->sizes();
 
     if (!sizes.count() || !sizes.first())
-        // Either we have no vertical splitter sizes (how could this ever be the
-        // case?!) or our first vertical splitter size has a value of zero
-        // (which would mean that we previously left OpenCOR without going into
-        // Simulation mode and the vertical splitter sizes are not meaningful),
-        // so...
+        // Either we have no splitter sizes (how could this ever be the case?!)
+        // or our first vertical splitter size has a value of zero (which would
+        // mean that we previously left OpenCOR without going into Simulation
+        // mode and the vertical splitter sizes are not meaningful), so...
 
         return;
 
-    pSettings->setValue(SettingsVerticalSplitterSizesCount, sizes.count());
+    pSettings->setValue(SettingsGraphPanelsSizesCount, sizes.count());
 
     for (int i = 0, iMax = sizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsVerticalSplitterSize.arg(QString::number(i)), sizes.at(i));
+        pSettings->setValue(SettingsGraphPanelsSize.arg(QString::number(i)), sizes.at(i));
 
     // Keep track of the settings of our graph panels widget
 
