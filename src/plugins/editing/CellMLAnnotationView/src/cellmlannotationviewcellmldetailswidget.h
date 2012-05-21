@@ -63,6 +63,8 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void emitSplitterMoved();
+
+    void newCmetaIdValue(const QString &pCmetaIdValue);
 };
 
 //==============================================================================

@@ -384,6 +384,15 @@ QString CellmlAnnotationViewCellmlElementDetailsWidget::typeAsString(const Type 
 
 //==============================================================================
 
+QLineEdit * CellmlAnnotationViewCellmlElementDetailsWidget::cmetaIdValue() const
+{
+    // Return our cmeta:id value widget
+
+    return mCmetaIdValue;
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

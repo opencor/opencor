@@ -13,6 +13,10 @@
 
 //==============================================================================
 
+#include <QLineEdit>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -80,9 +84,29 @@ QWidget * CellmlAnnotationViewCellmlDetailsWidget::focusProxyWidget() const
 
 void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems)
 {
+    // Stop tracking any change in the cmeta:id value of our CellML element
+
+    if (mCellmlElementDetails->cmetaIdValue()) {
+        disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(textChanged(const QString &)),
+                   this, SLOT(newCmetaIdValue(const QString &)));
+        disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(textEdited(const QString &)),
+                   this, SLOT(newCmetaIdValue(const QString &)));
+    }
+
     // Update our CellML element details GUI
 
     mCellmlElementDetails->updateGui(pItems);
+
+    // Track any change in the cmeta:id value of our CellML element
+
+    connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(textChanged(const QString &)),
+            this, SLOT(newCmetaIdValue(const QString &)));
+    connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(textEdited(const QString &)),
+            this, SLOT(newCmetaIdValue(const QString &)));
+
+    // Update the our metadata details GUI
+
+    newCmetaIdValue(mCellmlElementDetails->cmetaIdValue()->text());
 }
 
 //==============================================================================
@@ -102,6 +126,16 @@ void CellmlAnnotationViewCellmlDetailsWidget::emitSplitterMoved()
     // Let whoever know that our splitter has been moved
 
     emit splitterMoved(sizes());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCmetaIdValue)
+{
+    // The cmeta:id value of our CellML element has changed, so update its
+    // metadata details
+
+    mMetadataViewDetails->updateGui(mParent->rdfTriples(pCmetaIdValue));
 }
 
 //==============================================================================

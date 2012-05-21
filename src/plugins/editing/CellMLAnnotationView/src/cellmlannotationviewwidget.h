@@ -48,6 +48,8 @@ public:
     CellmlAnnotationViewListsWidget * listsWidget() const;
     CellmlAnnotationViewDetailsWidget * detailsWidget() const;
 
+    CellMLSupport::CellmlFileRdfTriples rdfTriples(const QString &pCmetaId) const;
+
 private:
     Ui::CellmlAnnotationViewWidget *mGui;
 
@@ -55,6 +57,9 @@ private:
 
     CellmlAnnotationViewListsWidget *mListsWidget;
     CellmlAnnotationViewDetailsWidget *mDetailsWidget;
+
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
+                      CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const;
 
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);

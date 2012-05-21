@@ -667,7 +667,16 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
     if (pNewIndex == QModelIndex())
         return;
 
-    // Retrieve all the CellML items which properties we want to add to the
+    // Disable CellML node updates
+    // Note: indeed, to update a CellML node takes a bit of time, so if the user
+    //       was to move press the mouse button and move the mouse around, then
+    //       loads of updates would be queued and it would look a bit odd from a
+    //       GUI perspective, so...
+
+    disconnect(mCellmlTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+               this, SLOT(updateCellmlNode(const QModelIndex &, const QModelIndex &)));
+
+    // Retrieve all the CellML items which properties we want to be added to the
     // details GUI
 
     CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
@@ -780,24 +789,17 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
     // should be the focus proxy widget
 
     mParent->setFocusProxy(mParent->detailsWidget()->focusProxyWidget());
-}
 
-//==============================================================================
+    // Re-enable CellML node updates
 
-void CellmlAnnotationViewListsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
-                                                   CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
-{
-    // Add pRdfTriple to pRdfTriples
+    connect(mCellmlTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(updateCellmlNode(const QModelIndex &, const QModelIndex &)));
 
-    pRdfTriples.append(pRdfTriple);
+    // Check that the current index is the one that got us here in the first
+    // place and update ourselves, if not
 
-    // Recursively add all the RDF triples which subject matches pRdfTriple's
-    // object
-
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             mParent->cellmlFile()->metadata())
-        if (!rdfTriple->subject()->asString().compare(pRdfTriple->object()->asString()))
-            addRdfTriple(pRdfTriples, rdfTriple);
+    if (pNewIndex != mCellmlTreeView->currentIndex())
+        updateCellmlNode(mCellmlTreeView->currentIndex(), pNewIndex);
 }
 
 //==============================================================================
@@ -817,30 +819,27 @@ void CellmlAnnotationViewListsWidget::updateMetadataNode(const QModelIndex &pNew
     if (pNewIndex == QModelIndex())
         return;
 
-    // Determine the RDF triples that we need to show in the details GUI
+    // Disable metadata node updates
+    // Note: at this stage, this is more about prevention than anything (see the
+    //       similar note in updateCellmlNode())...
 
-    CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples();
-
-    QString metadataGroupName = mMetadataDataModel->itemFromIndex(pNewIndex)->text();
-    QString uriBase = mParent->cellmlFile()->uriBase();
-
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             mParent->cellmlFile()->metadata())
-        // Retrieve the RDF triple's subject so we can determine whether it's
-        // from the group of RDF triples in which we are interested
-
-        if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)
-            // We have an RDF triple of which we can make sense, so retrieve its
-            // group name
-
-            if (!metadataGroupName.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
-                // It's the correct group name, so add it to our list
-
-                addRdfTriple(rdfTriples, rdfTriple);
+    disconnect(mMetadataTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+               this, SLOT(updateMetadataNode(const QModelIndex &, const QModelIndex &)));
 
     // Update the details GUI
 
-    mParent->detailsWidget()->updateGui(rdfTriples);
+    mParent->detailsWidget()->updateGui(mParent->rdfTriples(mMetadataDataModel->itemFromIndex(pNewIndex)->text()));
+
+    // Re-enable metadata node updates
+
+    connect(mMetadataTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(updateMetadataNode(const QModelIndex &, const QModelIndex &)));
+
+    // Check that the current index is the one that got us here in the first
+    // place and update ourselves, if not
+
+    if (pNewIndex != mMetadataTreeView->currentIndex())
+        updateMetadataNode(mMetadataTreeView->currentIndex(), pNewIndex);
 }
 
 //==============================================================================

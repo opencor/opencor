@@ -93,9 +93,6 @@ private:
 
     bool indexIsAllExpanded(const QModelIndex &pIndex) const;
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
-                      CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
-
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 

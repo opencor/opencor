@@ -82,6 +82,8 @@ public:
 
     void updateGui(const Items &pItems);
 
+    QLineEdit * cmetaIdValue() const;
+
 private:
     CellmlAnnotationViewWidget *mParent;
 
