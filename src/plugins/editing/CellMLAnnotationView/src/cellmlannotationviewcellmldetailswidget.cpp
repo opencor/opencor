@@ -87,16 +87,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::finalizeGui()
-{
-    // Finalise our CellML element and metadata view details GUI
-
-    mCellmlElementDetails->finalizeGui();
-    mMetadataViewDetails->finalizeGui();
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewCellmlDetailsWidget::updateSizes(const QList<int> &pSizes)
 {
     // The splitter of another CellmlAnnotationViewCellmlDetailsWidget object

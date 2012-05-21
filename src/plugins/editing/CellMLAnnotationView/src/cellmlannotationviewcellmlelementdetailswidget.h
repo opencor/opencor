@@ -81,7 +81,6 @@ public:
                      const int &pNumber = -1);
 
     void updateGui(const Items &pItems);
-    void finalizeGui();
 
 private:
     CellmlAnnotationViewWidget *mParent;

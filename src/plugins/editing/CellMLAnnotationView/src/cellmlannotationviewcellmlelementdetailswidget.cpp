@@ -63,7 +63,6 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     updateGui(mItems);
-    finalizeGui();
 }
 
 //==============================================================================
@@ -96,6 +95,10 @@ CellmlAnnotationViewCellmlElementDetailsWidget::Item CellmlAnnotationViewCellmlE
 
 void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pItems)
 {
+    // Hide ourselves (to avoid any flickering during the updaate)
+
+    setVisible(false);
+
     // Keep track of the items
 
     mItems = pItems;
@@ -306,12 +309,11 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             addRowToCellmlFormLayout(tr("Second variable:"),
                                      static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(item.element)->secondVariable());
     }
-}
 
-//==============================================================================
+    // Re-show ourselves
 
-void CellmlAnnotationViewCellmlElementDetailsWidget::finalizeGui()
-{
+    setVisible(true);
+
     // Scroll down to the bottom of ourselves, just in case things don't fit
     // within the viewport
     // Note: for this, we need to be up-to-date, hence we make a call to

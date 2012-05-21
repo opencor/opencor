@@ -84,15 +84,14 @@ QWidget * CellmlAnnotationViewDetailsWidget::focusProxyWidget() const
 void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems,
                                                   const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    // Hide ourselves (since we may potentially update ourselves quite a bit and
-    // we want to avoid any flickering)
+    // The widget which updateGui() method we call must first hide itself before
+    // being updated (and then re-show itself once it has been updated), this to
+    // avoid any flickering)
     // Note #1: one would normally use setUpdatesEnabled(), but it still results
     //          in bad flickering on Mac OS X, so...
     // Note #2: it's surprising that setVisible() doesn't cause any flickering
     //          on any of the platforms we are targetting, but let's not
     //          complain...
-
-    setVisible(false);
 
     // Ask the CellML or metadata details GUI to update itself
 
@@ -100,19 +99,6 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCell
         mCellmlDetails->updateGui(pItems);
     else
         mMetadataDetails->updateGui(pRdfTriples);
-
-    // Re-show ourselves
-
-    setVisible(true);
-
-    // Finalise the update
-    // Note: this is for things that can only be done when everything is visible
-    //       again...
-
-    if (currentWidget() == mCellmlDetails)
-        mCellmlDetails->finalizeGui();
-    else
-        mMetadataDetails->finalizeGui();
 }
 
 //==============================================================================

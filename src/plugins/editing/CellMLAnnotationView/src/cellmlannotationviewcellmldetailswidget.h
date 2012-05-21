@@ -46,7 +46,6 @@ public:
     virtual QWidget * focusProxyWidget() const;
 
     void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
-    void finalizeGui();
 
 private:
     CellmlAnnotationViewWidget *mParent;

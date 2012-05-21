@@ -69,15 +69,6 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::finalizeGui()
-{
-    // Finalise our Metadata view details GUI
-
-    mMetadataViewDetails->finalizeGui();
-}
-
-//==============================================================================
-
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

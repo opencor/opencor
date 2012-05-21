@@ -44,7 +44,6 @@ public:
     virtual void retranslateUi();
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
-    void finalizeGui();
 
 private:
     CellmlAnnotationViewWidget *mParent;

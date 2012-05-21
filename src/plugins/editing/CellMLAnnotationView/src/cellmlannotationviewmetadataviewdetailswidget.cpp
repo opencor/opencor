@@ -58,13 +58,16 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     updateGui(mRdfTriples);
-    finalizeGui();
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
+    // Hide ourselves (to avoid any flickering during the updaate)
+
+    setVisible(false);
+
     // Keep track of the RDF triples
 
     mRdfTriples = pRdfTriples;
@@ -105,13 +108,10 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
     mTreeView->resizeColumnToContents(1);
     mTreeView->resizeColumnToContents(2);
     mTreeView->resizeColumnToContents(3);
-}
 
-//==============================================================================
+    // Re-show ourselves
 
-void CellmlAnnotationViewMetadataViewDetailsWidget::finalizeGui()
-{
-    // Nothing to do at this stage...
+    setVisible(true);
 }
 
 //==============================================================================
