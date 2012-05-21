@@ -23,6 +23,7 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewdetailswidget.cpp
         src/cellmlannotationviewlistswidget.cpp
         src/cellmlannotationviewmetadatadetailswidget.cpp
+        src/cellmlannotationviewmetadatarawviewdetailswidget.cpp
         src/cellmlannotationviewmetadataviewdetailswidget.cpp
         src/cellmlannotationviewwidget.cpp
     HEADERS_MOC
@@ -32,6 +33,7 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewdetailswidget.h
         src/cellmlannotationviewlistswidget.h
         src/cellmlannotationviewmetadatadetailswidget.h
+        src/cellmlannotationviewmetadatarawviewdetailswidget.h
         src/cellmlannotationviewmetadataviewdetailswidget.h
         src/cellmlannotationviewwidget.h
     UIS
@@ -40,6 +42,7 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewdetailswidget.ui
         src/cellmlannotationviewlistswidget.ui
         src/cellmlannotationviewmetadatadetailswidget.ui
+        src/cellmlannotationviewmetadatarawviewdetailswidget.ui
         src/cellmlannotationviewmetadataviewdetailswidget.ui
         src/cellmlannotationviewwidget.ui
     DEFINITIONS

@@ -1,23 +1,24 @@
 //==============================================================================
-// CellML annotation view metadata view details widget
+// CellML annotation view metadata raw view details widget
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWMETADATAVIEWDETAILSWIDGET_H
-#define CELLMLANNOTATIONVIEWMETADATAVIEWDETAILSWIDGET_H
+#ifndef CELLMLANNOTATIONVIEWMETADATARAWVIEWDETAILSWIDGET_H
+#define CELLMLANNOTATIONVIEWMETADATARAWVIEWDETAILSWIDGET_H
 
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "commonwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
-#include <QStackedWidget>
+#include <QStandardItem>
+#include <QStyledItemDelegate>
 
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewMetadataViewDetailsWidget;
+    class CellmlAnnotationViewMetadataRawViewDetailsWidget;
 }
 
 //==============================================================================
@@ -30,23 +31,27 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Core {
+    class TreeView;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataRawViewDetailsWidget;
 class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataViewDetailsWidget : public QStackedWidget,
-                                                      public Core::CommonWidget
+class CellmlAnnotationViewMetadataRawViewDetailsWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewMetadataViewDetailsWidget();
+    explicit CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    ~CellmlAnnotationViewMetadataRawViewDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -55,11 +60,10 @@ public:
 private:
     CellmlAnnotationViewWidget *mParent;
 
-    Ui::CellmlAnnotationViewMetadataViewDetailsWidget *mGui;
+    Ui::CellmlAnnotationViewMetadataRawViewDetailsWidget *mGui;
 
-    CellMLSupport::CellmlFileRdfTriples mRdfTriples;
-
-    CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
+    Core::TreeView *mTreeView;
+    QStandardItemModel *mDataModel;
 };
 
 //==============================================================================

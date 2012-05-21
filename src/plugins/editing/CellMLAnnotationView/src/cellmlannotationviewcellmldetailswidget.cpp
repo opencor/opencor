@@ -104,7 +104,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
     connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
             this, SLOT(newCmetaIdValue(const QString &)));
 
-    // Update the our metadata details GUI
+    // Update our metadata details GUI
 
     newCmetaIdValue(mCellmlElementDetails->cmetaIdValue()->currentText());
 }

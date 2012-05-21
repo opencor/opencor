@@ -2,9 +2,9 @@
 // CellML annotation view metadata view details widget
 //==============================================================================
 
+#include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
-#include "treeview.h"
 
 //==============================================================================
 
@@ -18,7 +18,7 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
-    QSplitter(pParent),
+    QStackedWidget(pParent),
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataViewDetailsWidget),
@@ -28,16 +28,13 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
     mGui->setupUi(this);
 
-    mTreeView  = new Core::TreeView(this);
-    mDataModel = new QStandardItemModel(mTreeView);
+    // Create our different metadata views
 
-    mTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mTreeView->setFrameShape(QFrame::NoFrame);
-    mTreeView->setModel(mDataModel);
-    mTreeView->setRootIsDecorated(false);
-    mTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    mRawView = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
 
-    addWidget(mTreeView);
+    // Make our raw the default widget
+
+    addWidget(mRawView);
 }
 
 //==============================================================================
@@ -57,6 +54,8 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
+    mRawView->retranslateUi();
+
     updateGui(mRdfTriples);
 }
 
@@ -64,54 +63,13 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    // Hide ourselves (to avoid any flickering during the updaate)
-
-    setVisible(false);
-
     // Keep track of the RDF triples
 
     mRdfTriples = pRdfTriples;
 
-    // Update the header labels
-    // Note: we do it here (rather than in the constructor) in case the user
-    //       decides to change languages...
+    // Update our raw view
 
-    mDataModel->setHorizontalHeaderLabels(QStringList() << tr("#")
-                                                        << tr("Subject")
-                                                        << tr("Predicate")
-                                                        << tr("Object"));
-
-    // Remove all previous RDF triples from our tree view
-
-    while (mDataModel->rowCount())
-        foreach (QStandardItem *item, mDataModel->takeRow(0))
-            delete item;
-
-    // Add the 'new' RDF triples to our tree view
-    // Note: for the RDF triple's subject, we try to remove the CellML file's
-    //       URI base, thus only leaving the equivalent of a CellML element
-    //       cmeta:id which will speak more to the user than a possibly long URI
-    //       reference...
-
-    QString uriBase = mParent->cellmlFile()->uriBase();
-    int rdfTripleCounter = 0;
-
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)
-        mDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
-                                                                            << new QStandardItem(rdfTriple->subject()->asString().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?")))
-                                                                            << new QStandardItem(rdfTriple->predicate()->asString())
-                                                                            << new QStandardItem(rdfTriple->object()->asString()));
-
-    // Make sure that all the columns have their contents fit
-
-    mTreeView->resizeColumnToContents(0);
-    mTreeView->resizeColumnToContents(1);
-    mTreeView->resizeColumnToContents(2);
-    mTreeView->resizeColumnToContents(3);
-
-    // Re-show ourselves
-
-    setVisible(true);
+    mRawView->updateGui(pRdfTriples);
 }
 
 //==============================================================================
