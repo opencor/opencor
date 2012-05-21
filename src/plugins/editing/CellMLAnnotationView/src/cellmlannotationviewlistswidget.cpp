@@ -554,10 +554,10 @@ void CellmlAnnotationViewListsWidget::populateMetadataDataModel()
 
         return;
 
-    // Retrieve the name of the different groups of triples
+    // Retrieve the id of the different groups of triples
 
     QString uriBase = mParent->cellmlFile()->uriBase();
-    QList<QString> groupNames = QList<QString>();
+    QStringList ids = QStringList();
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
              mParent->cellmlFile()->metadata())
@@ -596,28 +596,28 @@ void CellmlAnnotationViewListsWidget::populateMetadataDataModel()
         if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference) {
             // We have an RDF triple of which we can make sense, so add it to
             // the correct group of RDF triples
-            // Note: we want the name of the group to be the same as that of the
+            // Note: we want the id of the group to be the same as that of the
             //       cmeta:id of a CellML element. This means that we must
             //       remove the URI base (and hash character) which makes the
             //       beginning of the RDF triple's subject's URI reference...
 
-            QString groupName = rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"));
+            QString id = rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"));
 
-            if (!groupNames.contains(groupName)) {
-                // The group hasn't already been added, so add it and keep track
-                // of it
+            if (!ids.contains(id)) {
+                // The id hasn't already been added, so add it and keep track of
+                // it
 
-                QStandardItem *metadataItem = new QStandardItem(groupName);
+                QStandardItem *metadataItem = new QStandardItem(id);
 
                 metadataItem->setIcon(QIcon(":CellMLSupport_metadataNode"));
 
                 mMetadataDataModel->invisibleRootItem()->appendRow(metadataItem);
 
-                groupNames.append(groupName);
+                ids.append(id);
             }
         }
 
-    // Sort the group names
+    // Sort the ids
 
     mMetadataDataModel->sort(0);
 }
@@ -957,6 +957,20 @@ bool CellmlAnnotationViewListsWidget::indexIsAllExpanded(const QModelIndex &pInd
     } else {
         return true;
     }
+}
+
+//==============================================================================
+
+QStringList CellmlAnnotationViewListsWidget::metadataIds() const
+{
+    // Return the full list of metadata ids
+
+    QStringList res = QStringList();
+
+    for (int i = 0, iMax = mMetadataDataModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+        res << mMetadataDataModel->invisibleRootItem()->child(i)->text();
+
+    return res;
 }
 
 //==============================================================================

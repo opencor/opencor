@@ -23,7 +23,7 @@ namespace Ui {
 //==============================================================================
 
 class QFormLayout;
-class QLineEdit;
+class QComboBox;
 
 //==============================================================================
 
@@ -82,7 +82,7 @@ public:
 
     void updateGui(const Items &pItems);
 
-    QLineEdit * cmetaIdValue() const;
+    QComboBox * cmetaIdValue() const;
 
 private:
     CellmlAnnotationViewWidget *mParent;
@@ -93,7 +93,7 @@ private:
 
     QWidget *mWidget;
     QFormLayout *mLayout;
-    QLineEdit *mCmetaIdValue;
+    QComboBox *mCmetaIdValue;
 
     void addRowToCellmlFormLayout(const QString &pLabel, const QString &pValue);
 

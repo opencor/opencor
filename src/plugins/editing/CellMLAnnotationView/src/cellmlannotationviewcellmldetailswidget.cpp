@@ -13,7 +13,7 @@
 
 //==============================================================================
 
-#include <QLineEdit>
+#include <QComboBox>
 
 //==============================================================================
 
@@ -87,9 +87,9 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
     // Stop tracking any change in the cmeta:id value of our CellML element
 
     if (mCellmlElementDetails->cmetaIdValue()) {
-        disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(textChanged(const QString &)),
+        disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(currentIndexChanged(const QString &)),
                    this, SLOT(newCmetaIdValue(const QString &)));
-        disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(textEdited(const QString &)),
+        disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
                    this, SLOT(newCmetaIdValue(const QString &)));
     }
 
@@ -99,14 +99,14 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
     // Track any change in the cmeta:id value of our CellML element
 
-    connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(textChanged(const QString &)),
+    connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(currentIndexChanged(const QString &)),
             this, SLOT(newCmetaIdValue(const QString &)));
-    connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(textEdited(const QString &)),
+    connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
             this, SLOT(newCmetaIdValue(const QString &)));
 
     // Update the our metadata details GUI
 
-    newCmetaIdValue(mCellmlElementDetails->cmetaIdValue()->text());
+    newCmetaIdValue(mCellmlElementDetails->cmetaIdValue()->currentText());
 }
 
 //==============================================================================

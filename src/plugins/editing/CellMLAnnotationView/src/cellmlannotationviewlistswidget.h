@@ -60,6 +60,8 @@ public:
 
     void selectFirstCellmlNode();
 
+    QStringList metadataIds() const;
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
 

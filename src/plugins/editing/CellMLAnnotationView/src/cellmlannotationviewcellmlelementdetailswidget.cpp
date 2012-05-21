@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
+#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewwidget.h"
 
 //==============================================================================
@@ -13,7 +14,8 @@
 
 #include <QFormLayout>
 #include <QLabel>
-#include <QLineEdit>
+#include <QComboBox>
+#include <QStandardItemModel>
 #include <QScrollBar>
 
 //==============================================================================
@@ -218,7 +220,12 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             // This is our 'main' current item, so we want to allow the user to
             // edit its cmeta:id
 
-            mCmetaIdValue = new QLineEdit(cmetaId, mWidget);
+            mCmetaIdValue = new QComboBox(mWidget);
+
+            mCmetaIdValue->addItems(mParent->listsWidget()->metadataIds());
+
+            mCmetaIdValue->setEditable(true);
+            mCmetaIdValue->setEditText(cmetaId);
 
             mLayout->addRow(new QLabel(tr("cmeta:id:"), mWidget),
                             mCmetaIdValue);
@@ -384,7 +391,7 @@ QString CellmlAnnotationViewCellmlElementDetailsWidget::typeAsString(const Type 
 
 //==============================================================================
 
-QLineEdit * CellmlAnnotationViewCellmlElementDetailsWidget::cmetaIdValue() const
+QComboBox * CellmlAnnotationViewCellmlElementDetailsWidget::cmetaIdValue() const
 {
     // Return our cmeta:id value widget
 
