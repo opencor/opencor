@@ -24,6 +24,10 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileRdfTriple
 {
 public:
+    enum Type {
+        Unknown
+    };
+
     explicit CellmlFileRdfTriple(iface::rdf_api::Triple *pTriple);
     ~CellmlFileRdfTriple();
 
@@ -40,6 +44,11 @@ private:
 //==============================================================================
 
 typedef QList<CellmlFileRdfTriple *> CellmlFileRdfTriples;
+
+//==============================================================================
+
+CellmlFileRdfTriple::Type CELLMLSUPPORT_EXPORT rdfTripleType(CellmlFileRdfTriple *pRdfTriple);
+CellmlFileRdfTriple::Type CELLMLSUPPORT_EXPORT rdfTriplesType(const CellmlFileRdfTriples &pRdfTriples);
 
 //==============================================================================
 
