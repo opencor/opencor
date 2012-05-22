@@ -59,6 +59,10 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
 
+    // Make our lists widget our focus proxy
+
+    setFocusProxy(mListsWidget);
+
     // Select the first CellML node from our CellML list
 
     mListsWidget->selectFirstCellmlNode();

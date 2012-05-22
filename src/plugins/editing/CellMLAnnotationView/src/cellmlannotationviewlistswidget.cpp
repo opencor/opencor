@@ -99,6 +99,10 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
     populateCellmlDataModel();
     populateMetadataDataModel();
 
+    // Make our CellML tree view our focus proxy
+
+    setFocusProxy(mCellmlTreeView);
+
     // Expand our CellML tree view enough so that we can see the meaningful
     // parts of the CellML file
 
@@ -779,14 +783,6 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
     // Update the details GUI
 
     mParent->detailsWidget()->updateGui(items);
-
-    // Set our parent's focus proxy to the widget which the details GUI thinks
-    // should be the focus proxy widget
-    // Note: this won't give the focus to the details GUI's widget, but it's
-    //       probably what we want (in case the user wants to browse through
-    //       several CellML elements), so...
-
-    mParent->setFocusProxy(mParent->detailsWidget()->focusProxyWidget());
 
     // Check that the current index is the one that got us here in the first
     // place and update ourselves, if not
