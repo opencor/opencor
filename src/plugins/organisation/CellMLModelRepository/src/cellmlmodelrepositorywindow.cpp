@@ -37,6 +37,10 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    // Make the name value our focus proxy
+
+    setFocusProxy(mGui->nameValue);
+
     // Create and add the CellML Model Repository widget
 
     mCellmlModelRepositoryWidget = new CellmlModelRepositoryWidget(this);
@@ -239,7 +243,7 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
     // Give, within the current window, the focus to mGui->nameValue, but only
     // if the current window already has the focus
 
-    Core::setFocusTo(this, mGui->nameValue, false);
+    Core::setFocusTo(mGui->nameValue, false);
 }
 
 //==============================================================================

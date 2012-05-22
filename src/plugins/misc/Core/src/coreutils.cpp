@@ -115,26 +115,24 @@ void * instance(const QString &pClassName, void *pDefaultGlobalInstance)
 
 //==============================================================================
 
-void setFocusTo(QWidget *pWindow, QWidget *pWidget, const bool &pForceFocus)
+void setFocusTo(QWidget *pWidget)
 {
     // Give the focus to pWidget, but then revert the focus back to whoever had
-    // it before, if needed and required
+    // it before, if needed
 
-    QWidget *focusedWidget = pForceFocus?
-                                 0:
-                                 pWindow?
-                                     pWindow->parent()?
-                                         ((QWidget *) pWindow->parent())->focusWidget():
-                                         0:
-                                     0;
-    // Note: we assume that the parent of pWindow is OpenCOR's main window which
-    //       means that we can retrieve OpenCOR's currently focused widget...
+    if (!pWidget)
+        return;
+
+    QWidget *focusedWidget = qApp->activeWindow()?
+                                 qApp->activeWindow()->focusWidget():
+                                 0;
 
     pWidget->setFocus();
 
-    if (focusedWidget && (pWindow != focusedWidget->parentWidget()))
-        // There was a 'previously' focused widget and its parent window is not
-        // pWindow, so revert the focus back to that 'previously' focused widget
+    if (   focusedWidget
+        && (pWidget->parentWidget() != focusedWidget->parentWidget()))
+        // The current and previously focused widgets don't share the same
+        // parent, so revert the focus back to the previously focused widget
 
         focusedWidget->setFocus();
 }

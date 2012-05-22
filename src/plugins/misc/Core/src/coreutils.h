@@ -32,8 +32,7 @@ void CORE_EXPORT saveResourceAs(const QString &pResource,
 void CORE_EXPORT * instance(const QString &pClassName,
                             void *pDefaultGlobalInstance);
 
-void CORE_EXPORT setFocusTo(QWidget *pWindow, QWidget *pWidget,
-                            const bool &pForceFocus = true);
+void CORE_EXPORT setFocusTo(QWidget *pWidget);
 
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 
