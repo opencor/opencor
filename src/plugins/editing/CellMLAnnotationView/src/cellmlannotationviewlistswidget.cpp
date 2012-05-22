@@ -31,7 +31,8 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
     QSplitter(pParent),
     CommonWidget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewListsWidget)
+    mGui(new Ui::CellmlAnnotationViewListsWidget),
+    mOldIndex(QModelIndex())
 {
     // Set up the GUI
 
@@ -657,24 +658,18 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
 {
     Q_UNUSED(pOldIndex);
 
-    // Make sure that the details GUI is valid
+    // Make sure that we are not already updating a CellML node, that we are not
+    // trying to update the same CellML node, that the details GUI is valid and
+    // that we have a valid pNewIndex
 
-    if (!mParent->detailsWidget())
+    static bool alreadyUpdatingCellmlNode = false;
+
+    if (   alreadyUpdatingCellmlNode || (pNewIndex == mOldIndex)
+        || !mParent->detailsWidget() || (pNewIndex == QModelIndex()))
         return;
 
-    // Make sure that we have a valid pNewIndex
-
-    if (pNewIndex == QModelIndex())
-        return;
-
-    // Disable CellML node updates
-    // Note: indeed, to update a CellML node takes a bit of time, so if the user
-    //       was to move press the mouse button and move the mouse around, then
-    //       loads of updates would be queued and it would look a bit odd from a
-    //       GUI perspective, so...
-
-    disconnect(mCellmlTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-               this, SLOT(updateCellmlNode(const QModelIndex &, const QModelIndex &)));
+    alreadyUpdatingCellmlNode = true;
+    mOldIndex = pNewIndex;
 
     // Retrieve all the CellML items which properties we want to be added to the
     // details GUI
@@ -787,19 +782,21 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
 
     // Set our parent's focus proxy to the widget which the details GUI thinks
     // should be the focus proxy widget
+    // Note: this won't give the focus to the details GUI's widget, but it's
+    //       probably what we want (in case the user wants to browse through
+    //       several CellML elements), so...
 
     mParent->setFocusProxy(mParent->detailsWidget()->focusProxyWidget());
-
-    // Re-enable CellML node updates
-
-    connect(mCellmlTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateCellmlNode(const QModelIndex &, const QModelIndex &)));
 
     // Check that the current index is the one that got us here in the first
     // place and update ourselves, if not
 
     if (pNewIndex != mCellmlTreeView->currentIndex())
         updateCellmlNode(mCellmlTreeView->currentIndex(), pNewIndex);
+
+    // We are done, so...
+
+    alreadyUpdatingCellmlNode = false;
 }
 
 //==============================================================================
@@ -809,37 +806,32 @@ void CellmlAnnotationViewListsWidget::updateMetadataNode(const QModelIndex &pNew
 {
     Q_UNUSED(pOldIndex);
 
-    // Make sure that the details GUI is valid
+    // Make sure that we are not already updating a metadata node, that we are
+    // not trying to update the same metadata node, that the details GUI is
+    // valid and that we have a valid pNewIndex
 
-    if (!mParent->detailsWidget())
+    static bool alreadyUpdatingMetadataNode = false;
+
+    if (   alreadyUpdatingMetadataNode || (pNewIndex == mOldIndex)
+        || !mParent->detailsWidget() || (pNewIndex == QModelIndex()))
         return;
 
-    // Make sure that we have a valid pNewIndex
-
-    if (pNewIndex == QModelIndex())
-        return;
-
-    // Disable metadata node updates
-    // Note: at this stage, this is more about prevention than anything (see the
-    //       similar note in updateCellmlNode())...
-
-    disconnect(mMetadataTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-               this, SLOT(updateMetadataNode(const QModelIndex &, const QModelIndex &)));
+    alreadyUpdatingMetadataNode = true;
+    mOldIndex = pNewIndex;
 
     // Update the details GUI
 
     mParent->detailsWidget()->updateGui(mParent->rdfTriples(mMetadataDataModel->itemFromIndex(pNewIndex)->text()));
-
-    // Re-enable metadata node updates
-
-    connect(mMetadataTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateMetadataNode(const QModelIndex &, const QModelIndex &)));
 
     // Check that the current index is the one that got us here in the first
     // place and update ourselves, if not
 
     if (pNewIndex != mMetadataTreeView->currentIndex())
         updateMetadataNode(mMetadataTreeView->currentIndex(), pNewIndex);
+
+    // We are done, so...
+
+    alreadyUpdatingMetadataNode = false;
 }
 
 //==============================================================================

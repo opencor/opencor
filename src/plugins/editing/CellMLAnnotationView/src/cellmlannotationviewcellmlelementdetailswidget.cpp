@@ -330,15 +330,6 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
     qApp->processEvents();
 
     verticalScrollBar()->setValue(verticalScrollBar()->maximum());
-
-    // Give the focus to the cmeta:id value field
-    // Note: indeed, to have the cmeta:id value field as a focus proxy widget
-    //       for CellmlAnnotationViewWidget isn't good enough to have it get the
-    //       focus after selecting a 'new' CellML element in
-    //       CellmlAnnotationViewWidget (while it's when we switch from one
-    //       CellML file to another), so...
-
-    mCmetaIdValue->setFocus();
 }
 
 //==============================================================================

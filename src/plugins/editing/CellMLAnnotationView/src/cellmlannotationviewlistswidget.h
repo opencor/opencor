@@ -77,6 +77,8 @@ private:
     Core::TreeView *mMetadataTreeView;
     QStandardItemModel *mMetadataDataModel;
 
+    QModelIndex mOldIndex;
+
     void retranslateCellmlDataItem(CellmlElementItem *pCellmlElementItem);
 
     void initTreeView(Core::TreeView *pTreeView, QStandardItemModel *pDataModel,
