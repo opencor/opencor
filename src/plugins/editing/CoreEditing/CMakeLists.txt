@@ -15,6 +15,8 @@ ADD_PLUGIN(CoreEditing
         src/coreeditingplugin.h
     INCLUDE_DIRS
         src
+    OPENCOR_DEPENDENCIES
+        Core
     QT_DEPENDENCIES
         QtCore
         QtGui
