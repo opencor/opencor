@@ -73,15 +73,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-QWidget * CellmlAnnotationViewCellmlDetailsWidget::focusProxyWidget() const
-{
-    // We want our cmeta:id widget to be a focus proxy widget
-
-    return mCellmlElementDetails->focusProxyWidget();
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems)
 {
     // Stop tracking any change in the cmeta:id value of our CellML element

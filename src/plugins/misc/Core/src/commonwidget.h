@@ -59,8 +59,6 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &);
 
-    virtual QWidget * focusProxyWidget() const;
-
 protected:
     QSize defaultSize(const double &pRatio) const;
 

@@ -44,8 +44,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual QWidget * focusProxyWidget() const;
-
     void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 

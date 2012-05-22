@@ -43,8 +43,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual QWidget * focusProxyWidget() const;
-
     void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
 
 private:

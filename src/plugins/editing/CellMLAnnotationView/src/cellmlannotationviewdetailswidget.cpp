@@ -69,19 +69,6 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-QWidget * CellmlAnnotationViewDetailsWidget::focusProxyWidget() const
-{
-    // Ask either our CellML our metadata details GUI to tell which widget, if
-    // any, should be the focus proxy widget
-
-    if (currentWidget() == mCellmlDetails)
-        return mCellmlDetails->focusProxyWidget();
-    else
-        return mMetadataDetails->focusProxyWidget();
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems,
                                                   const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {

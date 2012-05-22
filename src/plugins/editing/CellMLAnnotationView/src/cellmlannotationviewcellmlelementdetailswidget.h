@@ -74,8 +74,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual QWidget * focusProxyWidget() const;
-
     static Item item(const Type &pType,
                      CellMLSupport::CellmlFileElement *pElement,
                      const int &pNumber = -1);

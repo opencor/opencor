@@ -69,15 +69,6 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-QWidget * CellmlAnnotationViewCellmlElementDetailsWidget::focusProxyWidget() const
-{
-    // We want our cmeta:id widget to be a focus proxy widget
-
-    return mCmetaIdValue;
-}
-
-//==============================================================================
-
 CellmlAnnotationViewCellmlElementDetailsWidget::Item CellmlAnnotationViewCellmlElementDetailsWidget::item(const Type &pType,
                                                                                                           CellMLSupport::CellmlFileElement *pElement,
                                                                                                           const int &pNumber)
