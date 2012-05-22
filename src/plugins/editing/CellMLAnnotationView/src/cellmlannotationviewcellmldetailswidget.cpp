@@ -135,7 +135,13 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCm
     // The cmeta:id value of our CellML element has changed, so update its
     // metadata details
 
-    mMetadataViewDetails->updateGui(mParent->rdfTriples(pCmetaIdValue));
+    if (pCmetaIdValue.isEmpty())
+        // The CellML element doesn't have a cmeta:id value, so we don't want
+        // any metadata to be shown for it (not even the model-wide metadata)
+
+        mMetadataViewDetails->updateGui();
+    else
+        mMetadataViewDetails->updateGui(mParent->rdfTriples(pCmetaIdValue));
 }
 
 //==============================================================================

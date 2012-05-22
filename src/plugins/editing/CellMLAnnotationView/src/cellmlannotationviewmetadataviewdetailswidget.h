@@ -50,7 +50,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
+    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples = CellMLSupport::CellmlFileRdfTriples());
 
 private:
     CellmlAnnotationViewWidget *mParent;
@@ -59,6 +59,7 @@ private:
 
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
+    QWidget *mEmptyView;
     CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
 };
 

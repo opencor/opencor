@@ -30,11 +30,18 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
     // Create our different metadata views
 
-    mRawView = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
+    mEmptyView = new QWidget(pParent);
+    mRawView   = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
 
-    // Make our raw the default widget
+    // Make our empty view the default widget
+    // Note: for the GUI to be properly initialised, we must add and immediately
+    //       remove the views which we don't yet need. Not to do that may mess
+    //       things up in our parent, so...
+
+    addWidget(mEmptyView);
 
     addWidget(mRawView);
+    removeWidget(mRawView);
 }
 
 //==============================================================================
@@ -67,9 +74,20 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
 
     mRdfTriples = pRdfTriples;
 
-    // Update our raw view
+    // Decide on which view to use
 
-    mRawView->updateGui(pRdfTriples);
+    removeWidget(mEmptyView);
+    removeWidget(mRawView);
+
+    if (pRdfTriples.isEmpty())
+        addWidget(mEmptyView);
+    else
+        addWidget(mRawView);
+
+    // Update our non-empty view, if needed
+
+    if (currentWidget() == mRawView)
+        mRawView->updateGui(pRdfTriples);
 }
 
 //==============================================================================

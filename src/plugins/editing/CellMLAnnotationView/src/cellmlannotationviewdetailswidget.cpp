@@ -35,10 +35,11 @@ CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(CellmlAnnot
 
     // Make our CellML details GUI the default widget
     // Note: for the GUI to be properly initialised, we must add and immediately
-    //       remove mMetadataDetails. Without doing that, we may mess things up
-    //       in the parent, so...
+    //       remove mMetadataDetails. Not to do that may mess things up in our
+    //       parent, so...
 
     addWidget(mCellmlDetails);
+
     addWidget(mMetadataDetails);
     removeWidget(mMetadataDetails);
 }
