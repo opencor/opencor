@@ -82,8 +82,8 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
         if (!sizesCount) {
             // There are no previous sizes, so get some default ones
 
-            mSizes << 0.35*qApp->desktop()->screenGeometry().width()
-                   << 0.65*qApp->desktop()->screenGeometry().width();
+            mSizes << 0.25*qApp->desktop()->screenGeometry().width()
+                   << 0.75*qApp->desktop()->screenGeometry().width();
         } else {
             // There are previous sizes, so use them to initialise mSizes
 
