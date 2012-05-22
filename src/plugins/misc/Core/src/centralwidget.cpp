@@ -424,10 +424,6 @@ void CentralWidget::loadingOfSettingsDone(const Plugins &)
     // Update the GUI
 
     updateGui();
-
-    // Set the focus to the contents' top widget
-
-    mContents->currentWidget()->setFocus();
 }
 
 //==============================================================================
