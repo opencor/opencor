@@ -20,7 +20,7 @@ namespace Core {
 BorderedWidget::BorderedWidget(QWidget *pWidget,
                                const bool &pTop, const bool &pLeft,
                                const bool &pBottom, const bool &pRight) :
-    Widget(qobject_cast<QWidget *>(pWidget->parent()))
+    Widget(pWidget->parentWidget())
 {
     // We want our widget to be bordered by a single line which colour matches
     // that of the application's theme. Because of that colour requirement, we
