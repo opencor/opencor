@@ -86,7 +86,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
                 break;
             }
 
-    if ((mType == ModelQualifier) || (mType == BiologyQualifier))
+    if ((mType == ModelQualifier) || (mType == BiologyQualifier)) {
         // We seem to be dealing with either a model or a biology qualifier, so
         // check that its object is a valid MIRIAM URN
 
@@ -107,6 +107,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
             mModelQualifierType   = ModelUnknown;
             mBiologyQualifierType = BiologyUnknown;
         }
+    }
 }
 
 //==============================================================================
