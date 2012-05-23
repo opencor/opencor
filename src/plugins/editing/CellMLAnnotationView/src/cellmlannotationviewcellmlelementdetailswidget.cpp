@@ -227,6 +227,8 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->cellmlTreeView()),
                         mCmetaIdValue);
+            setTabOrder(mCmetaIdValue,
+                        qobject_cast<QWidget *>(mParent->listsWidget()->metadataTreeView()));
         } else {
             // Not our 'main' current item, so just display its cmeta:id
 
