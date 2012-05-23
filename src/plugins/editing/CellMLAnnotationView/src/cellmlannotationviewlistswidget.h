@@ -60,6 +60,9 @@ public:
 
     void selectFirstCellmlNode();
 
+    Core::TreeView *cellmlTreeView() const;
+    Core::TreeView *metadataTreeView() const;
+
     QStringList metadataIds() const;
 
 protected:

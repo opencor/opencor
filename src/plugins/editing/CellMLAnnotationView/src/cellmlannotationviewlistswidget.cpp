@@ -975,6 +975,24 @@ bool CellmlAnnotationViewListsWidget::indexIsAllExpanded(const QModelIndex &pInd
 
 //==============================================================================
 
+Core::TreeView * CellmlAnnotationViewListsWidget::cellmlTreeView() const
+{
+    // Return our CellML tree view
+
+    return mCellmlTreeView;
+}
+
+//==============================================================================
+
+Core::TreeView * CellmlAnnotationViewListsWidget::metadataTreeView() const
+{
+    // Return our metadata tree view
+
+    return mMetadataTreeView;
+}
+
+//==============================================================================
+
 QStringList CellmlAnnotationViewListsWidget::metadataIds() const
 {
     // Return the full list of metadata ids

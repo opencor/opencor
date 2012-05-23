@@ -5,6 +5,7 @@
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewwidget.h"
+#include "treeview.h"
 
 //==============================================================================
 
@@ -220,6 +221,12 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             mLayout->addRow(new QLabel(tr("cmeta:id:"), mWidget),
                             mCmetaIdValue);
+
+            // Make our cmeta:id value the widget to tab to after our CellML
+            // tree view
+
+            setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->cellmlTreeView()),
+                        mCmetaIdValue);
         } else {
             // Not our 'main' current item, so just display its cmeta:id
 
