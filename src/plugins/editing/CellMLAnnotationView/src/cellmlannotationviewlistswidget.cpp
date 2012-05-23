@@ -32,7 +32,8 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewListsWidget),
-    mOldIndex(QModelIndex())
+    mCellmlIndexes(QList<QModelIndex>()),
+    mMetadataIndexes(QList<QModelIndex>())
 {
     // Set up the GUI
 
@@ -186,7 +187,7 @@ void CellmlAnnotationViewListsWidget::retranslateCellmlDataItem(CellmlElementIte
         }
     else
         // We are not dealing with a category, so check the type and see whether
-        // node needs retranslating
+        // a node needs retranslating
 
         switch (pCellmlElementItem->type()) {
         case CellmlElementItem::Group:
@@ -662,133 +663,145 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
 {
     Q_UNUSED(pOldIndex);
 
-    // Make sure that we are not already updating a CellML node, that we are not
-    // trying to update the same CellML node, that the details GUI is valid and
-    // that we have a valid pNewIndex
+    // Make sure that the details GUI is valid and that we have a valid
+    // pNewIndex
+
+    if (!mParent->detailsWidget() || (pNewIndex == QModelIndex()))
+        return;
+
+    // Keep track of the fact that there is a CellML node to update
+
+    mCellmlIndexes << pNewIndex;
+
+    // Make sure that we are not already updating a CellML node
 
     static bool alreadyUpdatingCellmlNode = false;
 
-    if (   alreadyUpdatingCellmlNode || (pNewIndex == mOldIndex)
-        || !mParent->detailsWidget() || (pNewIndex == QModelIndex()))
+    if (alreadyUpdatingCellmlNode)
         return;
 
     alreadyUpdatingCellmlNode = true;
-    mOldIndex = pNewIndex;
 
-    // Retrieve all the CellML items which properties we want to be added to the
-    // details GUI
+    // Loop while there are CellML nodes to update
+    // Note: this is done because a CellML node may take time to update, so we
+    //       may end up in a situation where several CellML nodes need
+    //       updating...
 
-    CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
-    QModelIndex crtIndex = pNewIndex;
+    while (mCellmlIndexes.count()) {
+        // Retrieve the first CellML node to update
 
-    do {
-        CellmlElementItem *crtCellmlElementItem = static_cast<CellmlElementItem *>(mCellmlDataModel->itemFromIndex(crtIndex));
+        QModelIndex crtIndex = mCellmlIndexes.first();
 
-        // Add the item based on its type, but only if it's not a category
+        mCellmlIndexes.removeFirst();
 
-        if (!crtCellmlElementItem->isCategory())
-            switch (crtCellmlElementItem->type()) {
-            case CellmlElementItem::Model:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Model,
-                                                                              crtCellmlElementItem->element());
+        // Retrieve all the CellML items which properties we want to be added to the
+        // details GUI
 
-                break;
-            case CellmlElementItem::Import:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Import,
-                                                                              crtCellmlElementItem->element());
+        CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
 
-                break;
-            case CellmlElementItem::ImportUnit:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ImportUnit,
-                                                                              crtCellmlElementItem->element());
+        do {
+            CellmlElementItem *crtCellmlElementItem = static_cast<CellmlElementItem *>(mCellmlDataModel->itemFromIndex(crtIndex));
 
-                break;
-            case CellmlElementItem::ImportComponent:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ImportComponent,
-                                                                              crtCellmlElementItem->element());
+            // Add the item based on its type, but only if it's not a category
 
-                break;
-            case CellmlElementItem::Unit:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Unit,
-                                                                              crtCellmlElementItem->element());
+            if (!crtCellmlElementItem->isCategory())
+                switch (crtCellmlElementItem->type()) {
+                case CellmlElementItem::Model:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Model,
+                                                                                  crtCellmlElementItem->element());
 
-                break;
-            case CellmlElementItem::UnitElement:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::UnitElement,
-                                                                              crtCellmlElementItem->element());
+                    break;
+                case CellmlElementItem::Import:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Import,
+                                                                                  crtCellmlElementItem->element());
 
-                break;
-            case CellmlElementItem::Component:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Component,
-                                                                              crtCellmlElementItem->element());
+                    break;
+                case CellmlElementItem::ImportUnit:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ImportUnit,
+                                                                                  crtCellmlElementItem->element());
 
-                break;
-            case CellmlElementItem::Variable:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Variable,
-                                                                              crtCellmlElementItem->element());
+                    break;
+                case CellmlElementItem::ImportComponent:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ImportComponent,
+                                                                                  crtCellmlElementItem->element());
 
-                break;
-            case CellmlElementItem::Group:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Group,
-                                                                              crtCellmlElementItem->element(),
-                                                                              crtCellmlElementItem->number());
+                    break;
+                case CellmlElementItem::Unit:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Unit,
+                                                                                  crtCellmlElementItem->element());
 
-                break;
-            case CellmlElementItem::RelationshipReference:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::RelationshipReference,
-                                                                              crtCellmlElementItem->element());
+                    break;
+                case CellmlElementItem::UnitElement:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::UnitElement,
+                                                                                  crtCellmlElementItem->element());
 
-                break;
-            case CellmlElementItem::ComponentReference:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ComponentReference,
-                                                                              crtCellmlElementItem->element());
+                    break;
+                case CellmlElementItem::Component:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Component,
+                                                                                  crtCellmlElementItem->element());
 
-                break;
-            case CellmlElementItem::Connection:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Connection,
-                                                                              crtCellmlElementItem->element(),
-                                                                              crtCellmlElementItem->number());
+                    break;
+                case CellmlElementItem::Variable:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Variable,
+                                                                                  crtCellmlElementItem->element());
 
-                break;
-            case CellmlElementItem::ComponentMapping:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ComponentMapping,
-                                                                              crtCellmlElementItem->element());
+                    break;
+                case CellmlElementItem::Group:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Group,
+                                                                                  crtCellmlElementItem->element(),
+                                                                                  crtCellmlElementItem->number());
 
-                break;
-            case CellmlElementItem::VariableMapping:
-                items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::VariableMapping,
-                                                                              crtCellmlElementItem->element());
+                    break;
+                case CellmlElementItem::RelationshipReference:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::RelationshipReference,
+                                                                                  crtCellmlElementItem->element());
 
-                break;
-            default:
-                // Either an error, warning, category or metadata, so nothing to
-                // show/do...
+                    break;
+                case CellmlElementItem::ComponentReference:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ComponentReference,
+                                                                                  crtCellmlElementItem->element());
 
-                ;
-            }
+                    break;
+                case CellmlElementItem::Connection:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::Connection,
+                                                                                  crtCellmlElementItem->element(),
+                                                                                  crtCellmlElementItem->number());
 
-        // Go to the next index
+                    break;
+                case CellmlElementItem::ComponentMapping:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::ComponentMapping,
+                                                                                  crtCellmlElementItem->element());
 
-        crtIndex = crtIndex.parent();
-    } while (crtIndex != QModelIndex());
+                    break;
+                case CellmlElementItem::VariableMapping:
+                    items << CellmlAnnotationViewCellmlElementDetailsWidget::item(CellmlAnnotationViewCellmlElementDetailsWidget::VariableMapping,
+                                                                                  crtCellmlElementItem->element());
 
-    // Reverse the list, so that we start from the CellML item's parents and
-    // finish with the CellML item itself
+                    break;
+                default:
+                    // Either an error, warning, category or metadata, so nothing to
+                    // show/do...
 
-    int itemsCount = items.count();
+                    ;
+                }
 
-    for (int i = 0, iMax = itemsCount >> 1; i < iMax; ++i)
-        items.swap(i, itemsCount-(i+1));
+            // Go to the next index
 
-    // Update the details GUI
+            crtIndex = crtIndex.parent();
+        } while (crtIndex != QModelIndex());
 
-    mParent->detailsWidget()->updateGui(items);
+        // Reverse the list, so that we start from the CellML item's parents and
+        // finish with the CellML item itself
 
-    // Check that the current index is the one that got us here in the first
-    // place and update ourselves, if not
+        int itemsCount = items.count();
 
-    if (pNewIndex != mCellmlTreeView->currentIndex())
-        updateCellmlNode(mCellmlTreeView->currentIndex(), pNewIndex);
+        for (int i = 0, iMax = itemsCount >> 1; i < iMax; ++i)
+            items.swap(i, itemsCount-(i+1));
+
+        // Update the details GUI
+
+        mParent->detailsWidget()->updateGui(items);
+    }
 
     // We are done, so...
 
@@ -802,28 +815,41 @@ void CellmlAnnotationViewListsWidget::updateMetadataNode(const QModelIndex &pNew
 {
     Q_UNUSED(pOldIndex);
 
-    // Make sure that we are not already updating a metadata node, that we are
-    // not trying to update the same metadata node, that the details GUI is
-    // valid and that we have a valid pNewIndex
+    // Make sure that the details GUI is valid and that we have a valid
+    // pNewIndex
+
+    if (!mParent->detailsWidget() || (pNewIndex == QModelIndex()))
+        return;
+
+    // Keep track of the fact that there is a metadata node to update
+
+    mMetadataIndexes << pNewIndex;
+
+    // Make sure that we are not already updating a metadata node
 
     static bool alreadyUpdatingMetadataNode = false;
 
-    if (   alreadyUpdatingMetadataNode || (pNewIndex == mOldIndex)
-        || !mParent->detailsWidget() || (pNewIndex == QModelIndex()))
+    if (alreadyUpdatingMetadataNode)
         return;
 
     alreadyUpdatingMetadataNode = true;
-    mOldIndex = pNewIndex;
 
-    // Update the details GUI
+    // Loop while there are metadata nodes to update
+    // Note: this is done because a metadata node may take time to update, so we
+    //       may end up in a situation where several metadata nodes need
+    //       updating...
 
-    mParent->detailsWidget()->updateGui(mParent->rdfTriples(mMetadataDataModel->itemFromIndex(pNewIndex)->text()));
+    while (mMetadataIndexes.count()) {
+        // Retrieve the first metadata node to update
 
-    // Check that the current index is the one that got us here in the first
-    // place and update ourselves, if not
+        QModelIndex crtIndex = mMetadataIndexes.first();
 
-    if (pNewIndex != mMetadataTreeView->currentIndex())
-        updateMetadataNode(mMetadataTreeView->currentIndex(), pNewIndex);
+        mMetadataIndexes.removeFirst();
+
+        // Update the details GUI
+
+        mParent->detailsWidget()->updateGui(mParent->rdfTriples(mMetadataDataModel->itemFromIndex(crtIndex)->text()));
+    }
 
     // We are done, so...
 
