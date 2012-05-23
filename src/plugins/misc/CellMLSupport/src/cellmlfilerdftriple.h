@@ -13,6 +13,9 @@
 //==============================================================================
 
 #include <QList>
+#include <QSet>
+#include <QUrl>
+#include <QVector>
 
 //==============================================================================
 
@@ -25,30 +28,72 @@ class CELLMLSUPPORT_EXPORT CellmlFileRdfTriple
 {
 public:
     enum Type {
-        Unknown
+        Unknown,
+        ModelQualifier,
+        BiologyQualifier
     };
 
-    explicit CellmlFileRdfTriple(iface::rdf_api::Triple *pTriple);
+    enum ModelQualifierType {
+        ModelUnknown,
+        ModelIs,
+        ModelIsDerivedFrom,
+        ModelIsDescribedBy
+    };
+
+    enum BiologyQualifierType {
+        BiologyUnknown,
+        BiologyEncodes,
+        BiologyHasPart,
+        BiologyHasProperty,
+        BiologyHasVersion,
+        BiologyIs,
+        BiologyIsDescribedBy,
+        BiologyIsEncodedBy,
+        BiologyIsHomologTo,
+        BiologyIsPartOf,
+        BiologyIsPropertyOf,
+        BiologyIsVersionOf,
+        BiologyOccursIn,
+        BiologyHasTaxon
+    };
+
+    explicit CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple);
     ~CellmlFileRdfTriple();
 
     CellmlFileRdfTripleElement * subject() const;
     CellmlFileRdfTripleElement * predicate() const;
     CellmlFileRdfTripleElement * object() const;
 
+    Type type() const;
+
+    ModelQualifierType modelQualifierType() const;
+    QString modelQualifierTypeAsString() const;
+
+    BiologyQualifierType biologyQualifierType() const;
+    QString biologyQualifierTypeAsString() const;
+
+    QUrl qualifierUrl() const;
+
 private:
     CellmlFileRdfTripleElement *mSubject;
     CellmlFileRdfTripleElement *mPredicate;
     CellmlFileRdfTripleElement *mObject;
+
+    Type mType;
+
+    ModelQualifierType mModelQualifierType;
+    BiologyQualifierType mBiologyQualifierType;
+
+    QUrl mQualifierUrl;
 };
 
 //==============================================================================
 
-typedef QList<CellmlFileRdfTriple *> CellmlFileRdfTriples;
-
-//==============================================================================
-
-CellmlFileRdfTriple::Type CELLMLSUPPORT_EXPORT rdfTripleType(CellmlFileRdfTriple *pRdfTriple);
-CellmlFileRdfTriple::Type CELLMLSUPPORT_EXPORT rdfTriplesType(const CellmlFileRdfTriples &pRdfTriples);
+class CELLMLSUPPORT_EXPORT CellmlFileRdfTriples: public QList<CellmlFileRdfTriple *>
+{
+public:
+    CellmlFileRdfTriple::Type type() const;
+};
 
 //==============================================================================
 

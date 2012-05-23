@@ -86,6 +86,37 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
 
     // Update our non-empty view, if needed
 
+switch (pRdfTriples.type()) {
+case CellMLSupport::CellmlFileRdfTriple::ModelQualifier: {
+    qDebug(">>> Model qualifier");
+
+    int counter = 0;
+
+    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
+        qDebug(">>> RDF triple #%d", ++counter);
+        qDebug(">>>    Model qualifier: %s", qPrintable(rdfTriple->modelQualifierTypeAsString()));
+        qDebug(">>>    Qualifier URL: %s", qPrintable(rdfTriple->qualifierUrl().toString()));
+    }
+
+    break;
+}
+case CellMLSupport::CellmlFileRdfTriple::BiologyQualifier: {
+    qDebug(">>> Biology qualifier");
+
+    int counter = 0;
+
+    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
+        qDebug(">>> RDF triple #%d", ++counter);
+        qDebug(">>>    Biology qualifier: %s", qPrintable(rdfTriple->biologyQualifierTypeAsString()));
+        qDebug(">>>    Qualifier URL: %s", qPrintable(rdfTriple->qualifierUrl().toString()));
+    }
+
+    break;
+}
+default:
+    qDebug(">>> Unknown");
+}
+
     if (currentWidget() == mRawView)
         mRawView->updateGui(pRdfTriples);
 }

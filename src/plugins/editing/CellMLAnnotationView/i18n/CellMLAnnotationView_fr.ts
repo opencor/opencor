@@ -31,131 +31,131 @@
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlElementDetailsWidget</name>
     <message>
         <source>cmeta:id:</source>
-        <translation type="unfinished">cmeta:id :</translation>
+        <translation>cmeta:id :</translation>
     </message>
     <message>
         <source>Group #%1</source>
-        <translation type="unfinished">Groupe n° %1</translation>
+        <translation>Groupe n° %1</translation>
     </message>
     <message>
         <source>Connection #%1</source>
-        <translation type="unfinished">Connexion n° %1</translation>
+        <translation>Connexion n° %1</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished">Nom :</translation>
+        <translation>Nom :</translation>
     </message>
     <message>
         <source>xlink:href:</source>
-        <translation type="unfinished">xlink:href :</translation>
+        <translation>xlink:href :</translation>
     </message>
     <message>
         <source>Unit reference:</source>
-        <translation type="unfinished">Référence unité :</translation>
+        <translation>Référence unité :</translation>
     </message>
     <message>
         <source>Component reference:</source>
-        <translation type="unfinished">Référence de composant :</translation>
+        <translation>Référence de composant :</translation>
     </message>
     <message>
         <source>Unit:</source>
-        <translation type="unfinished">Unité :</translation>
+        <translation>Unité :</translation>
     </message>
     <message>
         <source>Initial value:</source>
-        <translation type="unfinished">Valeur initiale :</translation>
+        <translation>Valeur initiale :</translation>
     </message>
     <message>
         <source>Public interface:</source>
-        <translation type="unfinished">Interface publique :</translation>
+        <translation>Interface publique :</translation>
     </message>
     <message>
         <source>Private interface:</source>
-        <translation type="unfinished">Interface privée :</translation>
+        <translation>Interface privée :</translation>
     </message>
     <message>
         <source>Relationship:</source>
-        <translation type="unfinished">Relation :</translation>
+        <translation>Relation :</translation>
     </message>
     <message>
         <source>Relationship namespace:</source>
-        <translation type="unfinished">Espace de noms pour la relation :</translation>
+        <translation>Espace de noms pour la relation :</translation>
     </message>
     <message>
         <source>Component:</source>
-        <translation type="unfinished">Composant :</translation>
+        <translation>Composant :</translation>
     </message>
     <message>
         <source>First component:</source>
-        <translation type="unfinished">Premier composant :</translation>
+        <translation>Premier composant :</translation>
     </message>
     <message>
         <source>Second component:</source>
-        <translation type="unfinished">Deuxième composant :</translation>
+        <translation>Deuxième composant :</translation>
     </message>
     <message>
         <source>First variable:</source>
-        <translation type="unfinished">Première variable :</translation>
+        <translation>Première variable :</translation>
     </message>
     <message>
         <source>Second variable:</source>
-        <translation type="unfinished">Deuxième variable :</translation>
+        <translation>Deuxième variable :</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation type="unfinished">Import</translation>
+        <translation>Import</translation>
     </message>
     <message>
         <source>Imported unit</source>
-        <translation type="unfinished">Unité importée</translation>
+        <translation>Unité importée</translation>
     </message>
     <message>
         <source>Imported component</source>
-        <translation type="unfinished">Composant importé</translation>
+        <translation>Composant importé</translation>
     </message>
     <message>
         <source>Unit</source>
-        <translation type="unfinished">Unité</translation>
+        <translation>Unité</translation>
     </message>
     <message>
         <source>Unit element</source>
-        <translation type="unfinished">Elément unité</translation>
+        <translation>Elément unité</translation>
     </message>
     <message>
         <source>Component</source>
-        <translation type="unfinished">Composant</translation>
+        <translation>Composant</translation>
     </message>
     <message>
         <source>Variable</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Group</source>
-        <translation type="unfinished">Groupe</translation>
+        <translation>Groupe</translation>
     </message>
     <message>
         <source>Relationshop reference</source>
-        <translation type="unfinished">Référence de relation</translation>
+        <translation>Référence de relation</translation>
     </message>
     <message>
         <source>Component reference</source>
-        <translation type="unfinished">Référence de composant</translation>
+        <translation>Référence de composant</translation>
     </message>
     <message>
         <source>Connection</source>
-        <translation type="unfinished">Connexion</translation>
+        <translation>Connexion</translation>
     </message>
     <message>
         <source>Component mapping</source>
-        <translation type="unfinished">Association de composant</translation>
+        <translation>Association de composant</translation>
     </message>
     <message>
         <source>Variable mapping</source>
-        <translation type="unfinished">Association de variable</translation>
+        <translation>Association de variable</translation>
     </message>
     <message>
         <source>Model</source>
-        <translation type="unfinished">Modèle</translation>
+        <translation>Modèle</translation>
     </message>
 </context>
 <context>

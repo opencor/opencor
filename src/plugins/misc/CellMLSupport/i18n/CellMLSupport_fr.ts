@@ -58,4 +58,63 @@
         <translation>Le code pour le modèle n&apos;a pas pu être généré</translation>
     </message>
 </context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>is</source>
+        <translation>est</translation>
+    </message>
+    <message>
+        <source>is derived from</source>
+        <translation>est dérivé de</translation>
+    </message>
+    <message>
+        <source>is described by</source>
+        <translation>est décrit par</translation>
+    </message>
+    <message>
+        <source>encodes</source>
+        <translation>encode</translation>
+    </message>
+    <message>
+        <source>has part</source>
+        <translation>a la partie</translation>
+    </message>
+    <message>
+        <source>has property</source>
+        <translation>a la propriété</translation>
+    </message>
+    <message>
+        <source>has version</source>
+        <translation>a la version</translation>
+    </message>
+    <message>
+        <source>is encoded by</source>
+        <translation>est encodé par</translation>
+    </message>
+    <message>
+        <source>is homolog to</source>
+        <translation>est homologue à</translation>
+    </message>
+    <message>
+        <source>is part of</source>
+        <translation>fait partie de</translation>
+    </message>
+    <message>
+        <source>is property of</source>
+        <translation>est une propriété de</translation>
+    </message>
+    <message>
+        <source>is version of</source>
+        <translation>est une version de</translation>
+    </message>
+    <message>
+        <source>occurs in</source>
+        <translation>a lieu dans</translation>
+    </message>
+    <message>
+        <source>has taxon</source>
+        <translation>a la catégorie d&apos;assortiment</translation>
+    </message>
+</context>
 </TS>
