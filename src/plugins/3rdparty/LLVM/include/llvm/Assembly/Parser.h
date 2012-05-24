@@ -15,9 +15,9 @@
 #define LLVM_ASSEMBLY_PARSER_H
 
 #include <string>
-//---OPENCOR---
+//---OPENCOR--- BEGIN
 #include "llvmglobal.h"
-//---OPENCOR---
+//---OPENCOR--- END
 
 namespace llvm {
 

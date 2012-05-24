@@ -22,9 +22,9 @@
 #include "llvm/ADT/OwningPtr.h"
 #include "llvm/Support/DataTypes.h"
 #include <vector>
-//---OPENCOR---
+//---OPENCOR--- BEGIN
 #include "llvmglobal.h"
-//---OPENCOR---
+//---OPENCOR--- END
 
 namespace llvm {
 

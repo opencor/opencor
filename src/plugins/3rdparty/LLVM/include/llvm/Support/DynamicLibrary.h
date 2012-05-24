@@ -15,9 +15,9 @@
 #define LLVM_SYSTEM_DYNAMIC_LIBRARY_H
 
 #include <string>
-//---OPENCOR---
+//---OPENCOR--- BEGIN
 #include "llvmglobal.h"
-//---OPENCOR---
+//---OPENCOR--- END
 
 namespace llvm {
 namespace sys {

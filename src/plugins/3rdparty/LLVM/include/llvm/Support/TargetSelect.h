@@ -17,9 +17,9 @@
 #define LLVM_SUPPORT_TARGETSELECT_H
 
 #include "llvm/Config/llvm-config.h"
-//---OPENCOR---
+//---OPENCOR--- BEGIN
 #include "llvmglobal.h"
-//---OPENCOR---
+//---OPENCOR--- END
 
 extern "C" {
   // Declare all of the target-initialization functions that are available.

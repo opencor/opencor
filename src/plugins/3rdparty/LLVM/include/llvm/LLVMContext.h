@@ -14,9 +14,9 @@
 
 #ifndef LLVM_LLVMCONTEXT_H
 #define LLVM_LLVMCONTEXT_H
-//---OPENCOR---
+//---OPENCOR--- BEGIN
 #include "llvmglobal.h"
-//---OPENCOR---
+//---OPENCOR--- END
 
 namespace llvm {
 

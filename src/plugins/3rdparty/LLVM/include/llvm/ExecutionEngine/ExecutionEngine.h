@@ -26,9 +26,9 @@
 #include "llvm/Support/ValueHandle.h"
 #include "llvm/Support/Mutex.h"
 #include "llvm/Target/TargetMachine.h"
-//---OPENCOR---
+//---OPENCOR--- BEGIN
 #include "llvmglobal.h"
-//---OPENCOR---
+//---OPENCOR--- END
 
 namespace llvm {
 
