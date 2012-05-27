@@ -140,7 +140,7 @@ static bool CC_X86_32_C(unsigned ValNo, MVT ValVT,
   if (!State.isVarArg()) {
     if (ArgFlags.isInReg()) {
       if (LocVT == MVT::i32) {
-        static const unsigned RegList1[] = {
+        static const uint16_t RegList1[] = {
           X86::EAX, X86::EDX, X86::ECX
         };
         if (unsigned Reg = State.AllocateReg(RegList1, 3)) {
@@ -171,8 +171,8 @@ static bool CC_X86_32_Common(unsigned ValNo, MVT ValVT,
     if (ArgFlags.isInReg()) {
       if (LocVT == MVT::f32 ||
           LocVT == MVT::f64) {
-        if (State.getTarget().getSubtarget<X86Subtarget>().hasXMMInt()) {
-          static const unsigned RegList1[] = {
+        if (State.getTarget().getSubtarget<X86Subtarget>().hasSSE2()) {
+          static const uint16_t RegList1[] = {
             X86::XMM0, X86::XMM1, X86::XMM2
           };
           if (unsigned Reg = State.AllocateReg(RegList1, 3)) {
@@ -186,7 +186,7 @@ static bool CC_X86_32_Common(unsigned ValNo, MVT ValVT,
 
   if (!State.isVarArg()) {
     if (LocVT == MVT::x86mmx) {
-      static const unsigned RegList2[] = {
+      static const uint16_t RegList2[] = {
         X86::MM0, X86::MM1, X86::MM2
       };
       if (unsigned Reg = State.AllocateReg(RegList2, 3)) {
@@ -223,7 +223,7 @@ static bool CC_X86_32_Common(unsigned ValNo, MVT ValVT,
         LocVT == MVT::v2i64 ||
         LocVT == MVT::v4f32 ||
         LocVT == MVT::v2f64) {
-      static const unsigned RegList6[] = {
+      static const uint16_t RegList6[] = {
         X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
       };
       if (unsigned Reg = State.AllocateReg(RegList6, 4)) {
@@ -241,7 +241,7 @@ static bool CC_X86_32_Common(unsigned ValNo, MVT ValVT,
         LocVT == MVT::v8f32 ||
         LocVT == MVT::v4f64) {
       if (State.getTarget().getSubtarget<X86Subtarget>().hasAVX()) {
-        static const unsigned RegList7[] = {
+        static const uint16_t RegList7[] = {
           X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3
         };
         if (unsigned Reg = State.AllocateReg(RegList7, 4)) {
@@ -312,7 +312,7 @@ static bool CC_X86_32_FastCC(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i32) {
-    static const unsigned RegList1[] = {
+    static const uint16_t RegList1[] = {
       X86::ECX, X86::EDX
     };
     if (unsigned Reg = State.AllocateReg(RegList1, 2)) {
@@ -324,8 +324,8 @@ static bool CC_X86_32_FastCC(unsigned ValNo, MVT ValVT,
   if (!State.isVarArg()) {
     if (LocVT == MVT::f32 ||
         LocVT == MVT::f64) {
-      if (State.getTarget().getSubtarget<X86Subtarget>().hasXMMInt()) {
-        static const unsigned RegList2[] = {
+      if (State.getTarget().getSubtarget<X86Subtarget>().hasSSE2()) {
+        static const uint16_t RegList2[] = {
           X86::XMM0, X86::XMM1, X86::XMM2
         };
         if (unsigned Reg = State.AllocateReg(RegList2, 3)) {
@@ -372,7 +372,7 @@ static bool CC_X86_32_FastCall(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i32) {
-    static const unsigned RegList1[] = {
+    static const uint16_t RegList1[] = {
       X86::ECX, X86::EDX
     };
     if (unsigned Reg = State.AllocateReg(RegList1, 2)) {
@@ -404,7 +404,7 @@ static bool CC_X86_32_GHC(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i32) {
-    static const unsigned RegList1[] = {
+    static const uint16_t RegList1[] = {
       X86::EBX, X86::EBP, X86::EDI, X86::ESI
     };
     if (unsigned Reg = State.AllocateReg(RegList1, 4)) {
@@ -432,7 +432,7 @@ static bool CC_X86_32_ThisCall(unsigned ValNo, MVT ValVT,
         LocInfo = CCValAssign::AExt;
   }
 
-  if (ArgFlags.isNest()) {
+  if (ArgFlags.isSRet()) {
     if (unsigned Reg = State.AllocateReg(X86::EAX)) {
       State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
       return false;
@@ -502,7 +502,7 @@ static bool CC_X86_64_C(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i32) {
-    static const unsigned RegList1[] = {
+    static const uint16_t RegList1[] = {
       X86::EDI, X86::ESI, X86::EDX, X86::ECX, X86::R8D, X86::R9D
     };
     if (unsigned Reg = State.AllocateReg(RegList1, 6)) {
@@ -512,7 +512,7 @@ static bool CC_X86_64_C(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i64) {
-    static const unsigned RegList2[] = {
+    static const uint16_t RegList2[] = {
       X86::RDI, X86::RSI, X86::RDX, X86::RCX, X86::R8, X86::R9
     };
     if (unsigned Reg = State.AllocateReg(RegList2, 6)) {
@@ -523,7 +523,7 @@ static bool CC_X86_64_C(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::x86mmx) {
     if (State.getTarget().getSubtarget<X86Subtarget>().isTargetDarwin()) {
-      if (State.getTarget().getSubtarget<X86Subtarget>().hasXMMInt()) {
+      if (State.getTarget().getSubtarget<X86Subtarget>().hasSSE2()) {
         LocVT = MVT::v2i64;
         if (ArgFlags.isSExt())
                 LocInfo = CCValAssign::SExt;
@@ -543,8 +543,8 @@ static bool CC_X86_64_C(unsigned ValNo, MVT ValVT,
       LocVT == MVT::v2i64 ||
       LocVT == MVT::v4f32 ||
       LocVT == MVT::v2f64) {
-    if (State.getTarget().getSubtarget<X86Subtarget>().hasXMM()) {
-      static const unsigned RegList3[] = {
+    if (State.getTarget().getSubtarget<X86Subtarget>().hasSSE1()) {
+      static const uint16_t RegList3[] = {
         X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7
       };
       if (unsigned Reg = State.AllocateReg(RegList3, 8)) {
@@ -554,19 +554,21 @@ static bool CC_X86_64_C(unsigned ValNo, MVT ValVT,
     }
   }
 
-  if (LocVT == MVT::v32i8 ||
-      LocVT == MVT::v16i16 ||
-      LocVT == MVT::v8i32 ||
-      LocVT == MVT::v4i64 ||
-      LocVT == MVT::v8f32 ||
-      LocVT == MVT::v4f64) {
-    if (State.getTarget().getSubtarget<X86Subtarget>().hasAVX()) {
-      static const unsigned RegList4[] = {
-        X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3, X86::YMM4, X86::YMM5, X86::YMM6, X86::YMM7
-      };
-      if (unsigned Reg = State.AllocateReg(RegList4, 8)) {
-        State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
-        return false;
+  if (!State.isVarArg()) {
+    if (LocVT == MVT::v32i8 ||
+        LocVT == MVT::v16i16 ||
+        LocVT == MVT::v8i32 ||
+        LocVT == MVT::v4i64 ||
+        LocVT == MVT::v8f32 ||
+        LocVT == MVT::v4f64) {
+      if (State.getTarget().getSubtarget<X86Subtarget>().hasAVX()) {
+        static const uint16_t RegList4[] = {
+          X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3, X86::YMM4, X86::YMM5, X86::YMM6, X86::YMM7
+        };
+        if (unsigned Reg = State.AllocateReg(RegList4, 8)) {
+          State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+          return false;
+        }
       }
     }
   }
@@ -631,7 +633,7 @@ static bool CC_X86_64_GHC(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i64) {
-    static const unsigned RegList1[] = {
+    static const uint16_t RegList1[] = {
       X86::R13, X86::RBP, X86::R12, X86::RBX, X86::R14, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R15
     };
     if (unsigned Reg = State.AllocateReg(RegList1, 10)) {
@@ -648,8 +650,8 @@ static bool CC_X86_64_GHC(unsigned ValNo, MVT ValVT,
       LocVT == MVT::v2i64 ||
       LocVT == MVT::v4f32 ||
       LocVT == MVT::v2f64) {
-    if (State.getTarget().getSubtarget<X86Subtarget>().hasXMM()) {
-      static const unsigned RegList2[] = {
+    if (State.getTarget().getSubtarget<X86Subtarget>().hasSSE1()) {
+      static const uint16_t RegList2[] = {
         X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6
       };
       if (unsigned Reg = State.AllocateReg(RegList2, 6)) {
@@ -695,16 +697,26 @@ static bool CC_X86_Win64_C(unsigned ValNo, MVT ValVT,
     LocInfo = CCValAssign::Indirect;
   }
 
+  if (LocVT == MVT::v32i8 ||
+      LocVT == MVT::v16i16 ||
+      LocVT == MVT::v8i32 ||
+      LocVT == MVT::v4i64 ||
+      LocVT == MVT::v8f32 ||
+      LocVT == MVT::v4f64) {
+    LocVT = MVT::i64;
+    LocInfo = CCValAssign::Indirect;
+  }
+
   if (LocVT == MVT::x86mmx) {
     LocVT = MVT::i64;
     LocInfo = CCValAssign::BCvt;
   }
 
   if (LocVT == MVT::i32) {
-    static const unsigned RegList1[] = {
+    static const uint16_t RegList1[] = {
       X86::ECX, X86::EDX, X86::R8D, X86::R9D
     };
-    static const unsigned RegList2[] = {
+    static const uint16_t RegList2[] = {
       X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
     };
     if (unsigned Reg = State.AllocateReg(RegList1, RegList2, 4)) {
@@ -716,10 +728,10 @@ static bool CC_X86_Win64_C(unsigned ValNo, MVT ValVT,
   if (State.getCallingConv() == CallingConv::X86_ThisCall) {
     if (ArgFlags.isSRet()) {
       if (LocVT == MVT::i64) {
-        static const unsigned RegList3[] = {
+        static const uint16_t RegList3[] = {
           X86::RDX, X86::R8, X86::R9
         };
-        static const unsigned RegList4[] = {
+        static const uint16_t RegList4[] = {
           X86::XMM1, X86::XMM2, X86::XMM3
         };
         if (unsigned Reg = State.AllocateReg(RegList3, RegList4, 3)) {
@@ -731,10 +743,10 @@ static bool CC_X86_Win64_C(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i64) {
-    static const unsigned RegList5[] = {
+    static const uint16_t RegList5[] = {
       X86::RCX, X86::RDX, X86::R8, X86::R9
     };
-    static const unsigned RegList6[] = {
+    static const uint16_t RegList6[] = {
       X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
     };
     if (unsigned Reg = State.AllocateReg(RegList5, RegList6, 4)) {
@@ -751,10 +763,10 @@ static bool CC_X86_Win64_C(unsigned ValNo, MVT ValVT,
       LocVT == MVT::v2i64 ||
       LocVT == MVT::v4f32 ||
       LocVT == MVT::v2f64) {
-    static const unsigned RegList7[] = {
+    static const uint16_t RegList7[] = {
       X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
     };
-    static const unsigned RegList8[] = {
+    static const uint16_t RegList8[] = {
       X86::RCX, X86::RDX, X86::R8, X86::R9
     };
     if (unsigned Reg = State.AllocateReg(RegList7, RegList8, 4)) {
@@ -805,7 +817,7 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
                             ISD::ArgFlagsTy ArgFlags, CCState &State) {
 
   if (LocVT == MVT::i8) {
-    static const unsigned RegList1[] = {
+    static const uint16_t RegList1[] = {
       X86::AL, X86::DL
     };
     if (unsigned Reg = State.AllocateReg(RegList1, 2)) {
@@ -815,7 +827,7 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i16) {
-    static const unsigned RegList2[] = {
+    static const uint16_t RegList2[] = {
       X86::AX, X86::DX
     };
     if (unsigned Reg = State.AllocateReg(RegList2, 2)) {
@@ -825,7 +837,7 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i32) {
-    static const unsigned RegList3[] = {
+    static const uint16_t RegList3[] = {
       X86::EAX, X86::EDX
     };
     if (unsigned Reg = State.AllocateReg(RegList3, 2)) {
@@ -835,7 +847,7 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i64) {
-    static const unsigned RegList4[] = {
+    static const uint16_t RegList4[] = {
       X86::RAX, X86::RDX
     };
     if (unsigned Reg = State.AllocateReg(RegList4, 2)) {
@@ -850,7 +862,7 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
       LocVT == MVT::v2i64 ||
       LocVT == MVT::v4f32 ||
       LocVT == MVT::v2f64) {
-    static const unsigned RegList5[] = {
+    static const uint16_t RegList5[] = {
       X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
     };
     if (unsigned Reg = State.AllocateReg(RegList5, 4)) {
@@ -865,7 +877,7 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
       LocVT == MVT::v4i64 ||
       LocVT == MVT::v8f32 ||
       LocVT == MVT::v4f64) {
-    static const unsigned RegList6[] = {
+    static const uint16_t RegList6[] = {
       X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3
     };
     if (unsigned Reg = State.AllocateReg(RegList6, 4)) {
@@ -882,7 +894,7 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::f80) {
-    static const unsigned RegList7[] = {
+    static const uint16_t RegList7[] = {
       X86::ST0, X86::ST1
     };
     if (unsigned Reg = State.AllocateReg(RegList7, 2)) {
@@ -916,10 +928,10 @@ static bool RetCC_X86_32_C(unsigned ValNo, MVT ValVT,
                            ISD::ArgFlagsTy ArgFlags, CCState &State) {
 
   if (ArgFlags.isInReg()) {
-    if (State.getTarget().getSubtarget<X86Subtarget>().hasXMMInt()) {
+    if (State.getTarget().getSubtarget<X86Subtarget>().hasSSE2()) {
       if (LocVT == MVT::f32 ||
           LocVT == MVT::f64) {
-        static const unsigned RegList1[] = {
+        static const uint16_t RegList1[] = {
           X86::XMM0, X86::XMM1, X86::XMM2
         };
         if (unsigned Reg = State.AllocateReg(RegList1, 3)) {
@@ -932,7 +944,7 @@ static bool RetCC_X86_32_C(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::f32 ||
       LocVT == MVT::f64) {
-    static const unsigned RegList2[] = {
+    static const uint16_t RegList2[] = {
       X86::ST0, X86::ST1
     };
     if (unsigned Reg = State.AllocateReg(RegList2, 2)) {
@@ -953,8 +965,8 @@ static bool RetCC_X86_32_Fast(unsigned ValNo, MVT ValVT,
                               ISD::ArgFlagsTy ArgFlags, CCState &State) {
 
   if (LocVT == MVT::f32) {
-    if (State.getTarget().getSubtarget<X86Subtarget>().hasXMMInt()) {
-      static const unsigned RegList1[] = {
+    if (State.getTarget().getSubtarget<X86Subtarget>().hasSSE2()) {
+      static const uint16_t RegList1[] = {
         X86::XMM0, X86::XMM1, X86::XMM2
       };
       if (unsigned Reg = State.AllocateReg(RegList1, 3)) {
@@ -965,8 +977,8 @@ static bool RetCC_X86_32_Fast(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::f64) {
-    if (State.getTarget().getSubtarget<X86Subtarget>().hasXMMInt()) {
-      static const unsigned RegList2[] = {
+    if (State.getTarget().getSubtarget<X86Subtarget>().hasSSE2()) {
+      static const uint16_t RegList2[] = {
         X86::XMM0, X86::XMM1, X86::XMM2
       };
       if (unsigned Reg = State.AllocateReg(RegList2, 3)) {
@@ -977,7 +989,7 @@ static bool RetCC_X86_32_Fast(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i8) {
-    static const unsigned RegList3[] = {
+    static const uint16_t RegList3[] = {
       X86::AL, X86::DL, X86::CL
     };
     if (unsigned Reg = State.AllocateReg(RegList3, 3)) {
@@ -987,7 +999,7 @@ static bool RetCC_X86_32_Fast(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i16) {
-    static const unsigned RegList4[] = {
+    static const uint16_t RegList4[] = {
       X86::AX, X86::DX, X86::CX
     };
     if (unsigned Reg = State.AllocateReg(RegList4, 3)) {
@@ -997,7 +1009,7 @@ static bool RetCC_X86_32_Fast(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::i32) {
-    static const unsigned RegList5[] = {
+    static const uint16_t RegList5[] = {
       X86::EAX, X86::EDX, X86::ECX
     };
     if (unsigned Reg = State.AllocateReg(RegList5, 3)) {
@@ -1034,7 +1046,7 @@ static bool RetCC_X86_64_C(unsigned ValNo, MVT ValVT,
                            ISD::ArgFlagsTy ArgFlags, CCState &State) {
 
   if (LocVT == MVT::f32) {
-    static const unsigned RegList1[] = {
+    static const uint16_t RegList1[] = {
       X86::XMM0, X86::XMM1
     };
     if (unsigned Reg = State.AllocateReg(RegList1, 2)) {
@@ -1044,7 +1056,7 @@ static bool RetCC_X86_64_C(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::f64) {
-    static const unsigned RegList2[] = {
+    static const uint16_t RegList2[] = {
       X86::XMM0, X86::XMM1
     };
     if (unsigned Reg = State.AllocateReg(RegList2, 2)) {
@@ -1054,7 +1066,7 @@ static bool RetCC_X86_64_C(unsigned ValNo, MVT ValVT,
   }
 
   if (LocVT == MVT::x86mmx) {
-    static const unsigned RegList3[] = {
+    static const uint16_t RegList3[] = {
       X86::XMM0, X86::XMM1
     };
     if (unsigned Reg = State.AllocateReg(RegList3, 2)) {

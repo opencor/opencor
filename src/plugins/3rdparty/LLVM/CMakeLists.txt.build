@@ -54,6 +54,7 @@ ADD_PLUGIN(LLVM
         lib/Analysis/BranchProbabilityInfo.cpp
         lib/Analysis/CaptureTracking.cpp
         lib/Analysis/CFGPrinter.cpp
+        lib/Analysis/CodeMetrics.cpp
         lib/Analysis/ConstantFolding.cpp
         lib/Analysis/DbgInfoPrinter.cpp
         lib/Analysis/DebugInfo.cpp
@@ -133,10 +134,9 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/CodePlacementOpt.cpp
         lib/CodeGen/CriticalAntiDepBreaker.cpp
         lib/CodeGen/DeadMachineInstructionElim.cpp
+        lib/CodeGen/DFAPacketizer.cpp
         lib/CodeGen/DwarfEHPrepare.cpp
         lib/CodeGen/EdgeBundles.cpp
-        lib/CodeGen/ELFCodeEmitter.cpp
-        lib/CodeGen/ELFWriter.cpp
         lib/CodeGen/ExecutionDepsFix.cpp
         lib/CodeGen/ExpandISelPseudos.cpp
         lib/CodeGen/ExpandPostRAPseudos.cpp
@@ -147,6 +147,7 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/InlineSpiller.cpp
         lib/CodeGen/InterferenceCache.cpp
         lib/CodeGen/IntrinsicLowering.cpp
+        lib/CodeGen/JITCodeEmitter.cpp
         lib/CodeGen/LatencyPriorityQueue.cpp
         lib/CodeGen/LexicalScopes.cpp
         lib/CodeGen/LiveDebugVariables.cpp
@@ -161,7 +162,10 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/LocalStackSlotAllocation.cpp
         lib/CodeGen/MachineBasicBlock.cpp
         lib/CodeGen/MachineBlockFrequencyInfo.cpp
+        lib/CodeGen/MachineBlockPlacement.cpp
         lib/CodeGen/MachineBranchProbabilityInfo.cpp
+        lib/CodeGen/MachineCodeEmitter.cpp
+        lib/CodeGen/MachineCopyPropagation.cpp
         lib/CodeGen/MachineCSE.cpp
         lib/CodeGen/MachineDominators.cpp
         lib/CodeGen/MachineFunction.cpp
@@ -169,6 +173,7 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/MachineFunctionPass.cpp
         lib/CodeGen/MachineFunctionPrinterPass.cpp
         lib/CodeGen/MachineInstr.cpp
+        lib/CodeGen/MachineInstrBundle.cpp
         lib/CodeGen/MachineLICM.cpp
         lib/CodeGen/MachineLoopInfo.cpp
         lib/CodeGen/MachineLoopRanges.cpp
@@ -176,10 +181,10 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/MachineModuleInfoImpls.cpp
         lib/CodeGen/MachinePassRegistry.cpp
         lib/CodeGen/MachineRegisterInfo.cpp
+        lib/CodeGen/MachineScheduler.cpp
         lib/CodeGen/MachineSink.cpp
         lib/CodeGen/MachineSSAUpdater.cpp
         lib/CodeGen/MachineVerifier.cpp
-        lib/CodeGen/ObjectCodeEmitter.cpp
         lib/CodeGen/OcamlGC.cpp
         lib/CodeGen/OptimizePHIs.cpp
         lib/CodeGen/Passes.cpp
@@ -190,17 +195,16 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/ProcessImplicitDefs.cpp
         lib/CodeGen/PrologEpilogInserter.cpp
         lib/CodeGen/PseudoSourceValue.cpp
+        lib/CodeGen/RegAllocBase.cpp
         lib/CodeGen/RegAllocBasic.cpp
         lib/CodeGen/RegAllocFast.cpp
         lib/CodeGen/RegAllocGreedy.cpp
-        lib/CodeGen/RegAllocLinearScan.cpp
         lib/CodeGen/RegAllocPBQP.cpp
         lib/CodeGen/RegisterClassInfo.cpp
         lib/CodeGen/RegisterCoalescer.cpp
         lib/CodeGen/RegisterScavenging.cpp
         lib/CodeGen/RenderMachineFunction.cpp
         lib/CodeGen/ScheduleDAG.cpp
-        lib/CodeGen/ScheduleDAGEmit.cpp
         lib/CodeGen/ScheduleDAGInstrs.cpp
         lib/CodeGen/ScheduleDAGPrinter.cpp
         lib/CodeGen/ScoreboardHazardRecognizer.cpp
@@ -211,23 +215,24 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/Spiller.cpp
         lib/CodeGen/SpillPlacement.cpp
         lib/CodeGen/SplitKit.cpp
-        lib/CodeGen/Splitter.cpp
         lib/CodeGen/StackProtector.cpp
         lib/CodeGen/StackSlotColoring.cpp
         lib/CodeGen/StrongPHIElimination.cpp
         lib/CodeGen/TailDuplication.cpp
+        lib/CodeGen/TargetFrameLoweringImpl.cpp
         lib/CodeGen/TargetInstrInfoImpl.cpp
         lib/CodeGen/TargetLoweringObjectFileImpl.cpp
+        lib/CodeGen/TargetOptionsImpl.cpp
         lib/CodeGen/TwoAddressInstructionPass.cpp
         lib/CodeGen/UnreachableBlockElim.cpp
         lib/CodeGen/VirtRegMap.cpp
-        lib/CodeGen/VirtRegRewriter.cpp
 
         lib/CodeGen/AsmPrinter/ARMException.cpp
         lib/CodeGen/AsmPrinter/AsmPrinter.cpp
         lib/CodeGen/AsmPrinter/AsmPrinterDwarf.cpp
         lib/CodeGen/AsmPrinter/AsmPrinterInlineAsm.cpp
         lib/CodeGen/AsmPrinter/DIE.cpp
+        lib/CodeGen/AsmPrinter/DwarfAccelTable.cpp
         lib/CodeGen/AsmPrinter/DwarfCFIException.cpp
         lib/CodeGen/AsmPrinter/DwarfCompileUnit.cpp
         lib/CodeGen/AsmPrinter/DwarfDebug.cpp
@@ -246,12 +251,14 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/SelectionDAG/LegalizeTypesGeneric.cpp
         lib/CodeGen/SelectionDAG/LegalizeVectorOps.cpp
         lib/CodeGen/SelectionDAG/LegalizeVectorTypes.cpp
+        lib/CodeGen/SelectionDAG/ResourcePriorityQueue.cpp
         lib/CodeGen/SelectionDAG/ScheduleDAGFast.cpp
-        lib/CodeGen/SelectionDAG/ScheduleDAGList.cpp
         lib/CodeGen/SelectionDAG/ScheduleDAGRRList.cpp
         lib/CodeGen/SelectionDAG/ScheduleDAGSDNodes.cpp
+        lib/CodeGen/SelectionDAG/ScheduleDAGVLIW.cpp
         lib/CodeGen/SelectionDAG/SelectionDAG.cpp
         lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+        lib/CodeGen/SelectionDAG/SelectionDAGDumper.cpp
         lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp
         lib/CodeGen/SelectionDAG/SelectionDAGPrinter.cpp
         lib/CodeGen/SelectionDAG/TargetLowering.cpp
@@ -272,22 +279,30 @@ ADD_PLUGIN(LLVM
         lib/ExecutionEngine/ExecutionEngineBindings.cpp
         lib/ExecutionEngine/TargetSelect.cpp
 
+#        lib/ExecutionEngine/IntelJITEvents/IntelJITEventListener.cpp
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM...
+
         lib/ExecutionEngine/Interpreter/Execution.cpp
         lib/ExecutionEngine/Interpreter/ExternalFunctions.cpp
         lib/ExecutionEngine/Interpreter/Interpreter.cpp
 
-        lib/ExecutionEngine/JIT/Intercept.cpp
         lib/ExecutionEngine/JIT/JIT.cpp
-        lib/ExecutionEngine/JIT/JITDebugRegisterer.cpp
         lib/ExecutionEngine/JIT/JITDwarfEmitter.cpp
         lib/ExecutionEngine/JIT/JITEmitter.cpp
         lib/ExecutionEngine/JIT/JITMemoryManager.cpp
-        lib/ExecutionEngine/JIT/OProfileJITEventListener.cpp
 
-        lib/ExecutionEngine/MCJIT/Intercept.cpp
         lib/ExecutionEngine/MCJIT/MCJIT.cpp
+        lib/ExecutionEngine/MCJIT/MCJITMemoryManager.cpp
 
+#        lib/ExecutionEngine/OProfileJIT/OProfileJITEventListener.cpp
+#        lib/ExecutionEngine/OProfileJIT/OProfileWrapper.cpp
+# Note: we don't need the above, but we leave it so we know about it next time
+#       we update LLVM...
+
+        lib/ExecutionEngine/RuntimeDyld/GDBRegistrar.cpp
         lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
+        lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
         lib/ExecutionEngine/RuntimeDyld/RuntimeDyldMachO.cpp
 
         lib/Linker/LinkArchives.cpp
@@ -317,7 +332,6 @@ ADD_PLUGIN(LLVM
         lib/MC/MCInstPrinter.cpp
         lib/MC/MCInstrAnalysis.cpp
         lib/MC/MCLabel.cpp
-        lib/MC/MCLoggingStreamer.cpp
         lib/MC/MCMachObjectTargetWriter.cpp
         lib/MC/MCMachOStreamer.cpp
         lib/MC/MCModule.cpp
@@ -343,6 +357,7 @@ ADD_PLUGIN(LLVM
         lib/MC/MCDisassembler/Disassembler.cpp
         lib/MC/MCDisassembler/EDDisassembler.cpp
         lib/MC/MCDisassembler/EDInst.cpp
+        lib/MC/MCDisassembler/EDMain.cpp
         lib/MC/MCDisassembler/EDOperand.cpp
         lib/MC/MCDisassembler/EDToken.cpp
 
@@ -379,6 +394,7 @@ ADD_PLUGIN(LLVM
         lib/Support/CrashRecoveryContext.cpp
         lib/Support/DAGDeltaAlgorithm.cpp
         lib/Support/DataExtractor.cpp
+        lib/Support/DataStream.cpp
         lib/Support/Debug.cpp
         lib/Support/DeltaAlgorithm.cpp
         lib/Support/Disassembler.cpp
@@ -390,12 +406,16 @@ ADD_PLUGIN(LLVM
         lib/Support/FoldingSet.cpp
         lib/Support/FormattedStream.cpp
         lib/Support/GraphWriter.cpp
+        lib/Support/Hashing.cpp
         lib/Support/Host.cpp
         lib/Support/IncludeFile.cpp
         lib/Support/IntEqClasses.cpp
         lib/Support/IntervalMap.cpp
+        lib/Support/IntrusiveRefCntPtr.cpp
         lib/Support/IsInf.cpp
         lib/Support/IsNAN.cpp
+        lib/Support/Locale.cpp
+        lib/Support/LockFileManager.cpp
         lib/Support/ManagedStatic.cpp
         lib/Support/Memory.cpp
         lib/Support/MemoryBuffer.cpp
@@ -422,6 +442,7 @@ ADD_PLUGIN(LLVM
         lib/Support/SmallVector.cpp
         lib/Support/SourceMgr.cpp
         lib/Support/Statistic.cpp
+        lib/Support/StreamableMemoryObject.cpp
         lib/Support/StringExtras.cpp
         lib/Support/StringMap.cpp
         lib/Support/StringPool.cpp
@@ -437,44 +458,27 @@ ADD_PLUGIN(LLVM
         lib/Support/Triple.cpp
         lib/Support/Twine.cpp
         lib/Support/Valgrind.cpp
+        lib/Support/YAMLParser.cpp
 
-        lib/Support/Unix/Host.inc
-        lib/Support/Unix/Memory.inc
-        lib/Support/Unix/Mutex.inc
-        lib/Support/Unix/Path.inc
-        lib/Support/Unix/PathV2.inc
-        lib/Support/Unix/Process.inc
-        lib/Support/Unix/Program.inc
-        lib/Support/Unix/RWMutex.inc
-        lib/Support/Unix/Signals.inc
-        lib/Support/Unix/system_error.inc
-        lib/Support/Unix/ThreadLocal.inc
-        lib/Support/Unix/TimeValue.inc
-
-        lib/Support/Windows/DynamicLibrary.inc
-        lib/Support/Windows/Host.inc
-        lib/Support/Windows/Memory.inc
-        lib/Support/Windows/Mutex.inc
-        lib/Support/Windows/Path.inc
-        lib/Support/Windows/PathV2.inc
-        lib/Support/Windows/Process.inc
-        lib/Support/Windows/Program.inc
-        lib/Support/Windows/RWMutex.inc
-        lib/Support/Windows/Signals.inc
-        lib/Support/Windows/system_error.inc
-        lib/Support/Windows/ThreadLocal.inc
-        lib/Support/Windows/TimeValue.inc
+        lib/TableGen/Error.cpp
+        lib/TableGen/Main.cpp
+        lib/TableGen/Record.cpp
+        lib/TableGen/TableGenAction.cpp
+        lib/TableGen/TableGenBackend.cpp
+        lib/TableGen/TGLexer.cpp
+        lib/TableGen/TGParser.cpp
 
         lib/Target/Mangler.cpp
         lib/Target/Target.cpp
         lib/Target/TargetData.cpp
         lib/Target/TargetELFWriterInfo.cpp
-        lib/Target/TargetFrameLowering.cpp
         lib/Target/TargetInstrInfo.cpp
         lib/Target/TargetIntrinsicInfo.cpp
+        lib/Target/TargetJITInfo.cpp
         lib/Target/TargetLibraryInfo.cpp
         lib/Target/TargetLoweringObjectFile.cpp
         lib/Target/TargetMachine.cpp
+        lib/Target/TargetMachineC.cpp
         lib/Target/TargetRegisterInfo.cpp
         lib/Target/TargetSubtargetInfo.cpp
 
@@ -489,6 +493,7 @@ ADD_PLUGIN(LLVM
         lib/Target/X86/X86ISelDAGToDAG.cpp
         lib/Target/X86/X86ISelLowering.cpp
         lib/Target/X86/X86JITInfo.cpp
+        lib/Target/X86/X86MachineFunctionInfo.cpp
         lib/Target/X86/X86MCInstLower.cpp
         lib/Target/X86/X86RegisterInfo.cpp
         lib/Target/X86/X86SelectionDAGInfo.cpp
@@ -508,10 +513,12 @@ ADD_PLUGIN(LLVM
         lib/Target/X86/InstPrinter/X86IntelInstPrinter.cpp
 
         lib/Target/X86/MCTargetDesc/X86AsmBackend.cpp
+        lib/Target/X86/MCTargetDesc/X86ELFObjectWriter.cpp
         lib/Target/X86/MCTargetDesc/X86MachObjectWriter.cpp
         lib/Target/X86/MCTargetDesc/X86MCAsmInfo.cpp
         lib/Target/X86/MCTargetDesc/X86MCCodeEmitter.cpp
         lib/Target/X86/MCTargetDesc/X86MCTargetDesc.cpp
+        lib/Target/X86/MCTargetDesc/X86WinCOFFObjectWriter.cpp
 
         lib/Target/X86/TargetInfo/X86TargetInfo.cpp
 
@@ -533,12 +540,15 @@ ADD_PLUGIN(LLVM
         lib/Transforms/InstCombine/InstCombineVectorOps.cpp
         lib/Transforms/InstCombine/InstructionCombining.cpp
 
+        lib/Transforms/Instrumentation/AddressSanitizer.cpp
         lib/Transforms/Instrumentation/EdgeProfiling.cpp
+        lib/Transforms/Instrumentation/FunctionBlackList.cpp
         lib/Transforms/Instrumentation/GCOVProfiling.cpp
         lib/Transforms/Instrumentation/Instrumentation.cpp
         lib/Transforms/Instrumentation/OptimalEdgeProfiling.cpp
         lib/Transforms/Instrumentation/PathProfiling.cpp
         lib/Transforms/Instrumentation/ProfilingUtils.cpp
+        lib/Transforms/Instrumentation/ThreadSanitizer.cpp
 
         lib/Transforms/IPO/ArgumentPromotion.cpp
         lib/Transforms/IPO/ConstantMerge.cpp
@@ -569,6 +579,7 @@ ADD_PLUGIN(LLVM
         lib/Transforms/Scalar/DCE.cpp
         lib/Transforms/Scalar/DeadStoreElimination.cpp
         lib/Transforms/Scalar/EarlyCSE.cpp
+        lib/Transforms/Scalar/GlobalMerge.cpp
         lib/Transforms/Scalar/GVN.cpp
         lib/Transforms/Scalar/IndVarSimplify.cpp
         lib/Transforms/Scalar/JumpThreading.cpp
@@ -595,11 +606,11 @@ ADD_PLUGIN(LLVM
 
         lib/Transforms/Utils/AddrModeMatcher.cpp
         lib/Transforms/Utils/BasicBlockUtils.cpp
-        lib/Transforms/Utils/BasicInliner.cpp
         lib/Transforms/Utils/BreakCriticalEdges.cpp
         lib/Transforms/Utils/BuildLibCalls.cpp
         lib/Transforms/Utils/CloneFunction.cpp
         lib/Transforms/Utils/CloneModule.cpp
+        lib/Transforms/Utils/CmpInstAnalysis.cpp
         lib/Transforms/Utils/CodeExtractor.cpp
         lib/Transforms/Utils/DemoteRegToStack.cpp
         lib/Transforms/Utils/InlineFunction.cpp
@@ -608,10 +619,12 @@ ADD_PLUGIN(LLVM
         lib/Transforms/Utils/Local.cpp
         lib/Transforms/Utils/LoopSimplify.cpp
         lib/Transforms/Utils/LoopUnroll.cpp
+        lib/Transforms/Utils/LoopUnrollRuntime.cpp
         lib/Transforms/Utils/LowerExpectIntrinsic.cpp
         lib/Transforms/Utils/LowerInvoke.cpp
         lib/Transforms/Utils/LowerSwitch.cpp
         lib/Transforms/Utils/Mem2Reg.cpp
+        lib/Transforms/Utils/ModuleUtils.cpp
         lib/Transforms/Utils/PromoteMemoryToRegister.cpp
         lib/Transforms/Utils/SimplifyCFG.cpp
         lib/Transforms/Utils/SimplifyIndVar.cpp
@@ -621,6 +634,9 @@ ADD_PLUGIN(LLVM
         lib/Transforms/Utils/Utils.cpp
         lib/Transforms/Utils/ValueMapper.cpp
 
+        lib/Transforms/Vectorize/BBVectorize.cpp
+        lib/Transforms/Vectorize/Vectorize.cpp
+
         lib/VMCore/AsmWriter.cpp
         lib/VMCore/Attributes.cpp
         lib/VMCore/AutoUpgrade.cpp
@@ -628,7 +644,6 @@ ADD_PLUGIN(LLVM
         lib/VMCore/ConstantFold.cpp
         lib/VMCore/Constants.cpp
         lib/VMCore/Core.cpp
-        lib/VMCore/DebugInfoProbe.cpp
         lib/VMCore/DebugLoc.cpp
         lib/VMCore/Dominators.cpp
         lib/VMCore/Function.cpp

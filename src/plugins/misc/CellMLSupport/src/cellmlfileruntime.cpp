@@ -531,7 +531,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
 
     // Get rid of any call to rootfind_<ID>
     // Note: for some DAE models, the CellML API generates code similar to
-    //          rootfind_<ID>(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret);\r\n
+    //       rootfind_<ID>(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret);\r\n
     //       which we are not (currently at least) supporting, so...
     //---GRY--- THE CALL TO rootfind_<ID> IS TO DO A LevMar CALL, BUT THIS
     //          SHOULDN'T BE NECESSARY WHEN USING A 'PROPER' DAE SOLVER (E.G.

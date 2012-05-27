@@ -25,17 +25,20 @@
 /* Installation directory for data files */
 /* #undef LLVM_DATADIR */
 
+/* Target triple LLVM will generate code for by default */
+#define LLVM_DEFAULT_TARGET_TRIPLE "i686-pc-win32"
+
 /* Installation directory for documentation */
 /* #undef LLVM_DOCSDIR */
+
+/* Define if threads enabled */
+#define LLVM_ENABLE_THREADS 1
 
 /* Installation directory for config files */
 /* #undef LLVM_ETCDIR */
 
 /* Has gcc/MSVC atomic intrinsics */
 #define LLVM_HAS_ATOMICS 1
-
-/* Host triple we were built on */
-#define LLVM_HOSTTRIPLE "i686-pc-win32"
 
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
@@ -53,10 +56,13 @@
 #define LLVM_NATIVE_ARCH X86
 
 /* LLVM name for the native AsmParser init function, if available */
-/* #undef LLVM_NATIVE_ASMPARSER */
+#define LLVM_NATIVE_ASMPARSER LLVMInitializeX86AsmParser
 
 /* LLVM name for the native AsmPrinter init function, if available */
 #define LLVM_NATIVE_ASMPRINTER LLVMInitializeX86AsmPrinter
+
+/* LLVM name for the native Disassembler init function, if available */
+#define LLVM_NATIVE_DISASSEMBLER LLVMInitializeX86Disassembler
 
 /* LLVM name for the native Target init function, if available */
 #define LLVM_NATIVE_TARGET LLVMInitializeX86Target
@@ -102,5 +108,11 @@
 
 /* Installation prefix directory */
 #define LLVM_PREFIX "C:/Program Files (x86)/LLVM"
+
+/* Major version of the LLVM API */
+#define LLVM_VERSION_MAJOR 3
+
+/* Minor version of the LLVM API */
+#define LLVM_VERSION_MINOR 1
 
 #endif

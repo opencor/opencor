@@ -20,6 +20,9 @@
 //---OPENCOR--- END
 
 namespace llvm {
+
+class StringRef;
+
 namespace sys {
 
   /// This class provides a portable interface to dynamic libraries which also

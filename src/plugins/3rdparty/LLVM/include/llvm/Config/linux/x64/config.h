@@ -11,18 +11,6 @@
 /* Relative directory for resource files */
 #define CLANG_RESOURCE_DIR ""
 
-/* 32 bit multilib directory. */
-#define CXX_INCLUDE_32BIT_DIR ""
-
-/* 64 bit multilib directory. */
-#define CXX_INCLUDE_64BIT_DIR ""
-
-/* Arch the libstdc++ headers. */
-#define CXX_INCLUDE_ARCH ""
-
-/* Directory with the libstdc++ headers. */
-#define CXX_INCLUDE_ROOT ""
-
 /* Directories clang will search for headers */
 #define C_INCLUDE_DIRS ""
 
@@ -31,9 +19,6 @@
 
 /* Define if position independent code is enabled */
 #define ENABLE_PIC
-
-/* Define if threads enabled */
-#define ENABLE_THREADS 1
 
 /* Define if timestamp information (e.g., __DATE___) is allowed */
 #define ENABLE_TIMESTAMPS 1
@@ -292,10 +277,13 @@
 #define HAVE_OPENDIR 1
 
 /* Define to 1 if you have the `posix_spawn' function. */
-/* #undef HAVE_POSIX_SPAWN */
+#define HAVE_POSIX_SPAWN 1
 
 /* Define to 1 if you have the `powf' function. */
 /* #undef HAVE_POWF */
+
+/* Define to 1 if you have the `pread' function. */
+#define HAVE_PREAD 1
 
 /* Define if libtool can extract symbol lists from object files. */
 #undef HAVE_PRELOADED_SYMBOLS
@@ -471,7 +459,7 @@
 #define HAVE_U_INT64_T 1
 
 /* Define to 1 if you have the <valgrind/valgrind.h> header file. */
-/* #undef HAVE_VALGRIND_VALGRIND_H */
+#define HAVE_VALGRIND_VALGRIND_H 1
 
 /* Define to 1 if you have the <windows.h> header file. */
 /* #undef HAVE_WINDOWS_H */
@@ -545,17 +533,20 @@
 /* Installation directory for data files */
 /* #undef LLVM_DATADIR */
 
+/* Target triple LLVM will generate code for by default */
+#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-unknown-linux-gnu"
+
 /* Installation directory for documentation */
 /* #undef LLVM_DOCSDIR */
+
+/* Define if threads enabled */
+#define LLVM_ENABLE_THREADS 1
 
 /* Installation directory for config files */
 /* #undef LLVM_ETCDIR */
 
 /* Has gcc/MSVC atomic intrinsics */
 #define LLVM_HAS_ATOMICS 1
-
-/* Host triple we were built on */
-#define LLVM_HOSTTRIPLE "x86_64-unknown-linux-gnu"
 
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
@@ -573,10 +564,13 @@
 #define LLVM_NATIVE_ARCH X86
 
 /* LLVM name for the native AsmParser init function, if available */
-/* #undef LLVM_NATIVE_ASMPARSER */
+#define LLVM_NATIVE_ASMPARSER LLVMInitializeX86AsmParser
 
 /* LLVM name for the native AsmPrinter init function, if available */
 #define LLVM_NATIVE_ASMPRINTER LLVMInitializeX86AsmPrinter
+
+/* LLVM name for the native Disassembler init function, if available */
+#define LLVM_NATIVE_DISASSEMBLER LLVMInitializeX86Disassembler
 
 /* LLVM name for the native Target init function, if available */
 #define LLVM_NATIVE_TARGET LLVMInitializeX86Target
@@ -623,6 +617,12 @@
 /* Installation prefix directory */
 #define LLVM_PREFIX "/usr/local"
 
+/* Major version of the LLVM API */
+#define LLVM_VERSION_MAJOR 3
+
+/* Minor version of the LLVM API */
+#define LLVM_VERSION_MINOR 1
+
 /* Define if the OS needs help to load dependent libraries for dlopen(). */
 /* #undef LTDL_DLOPEN_DEPLIBS */
 
@@ -648,19 +648,19 @@
 #undef NEED_USCORE
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "llvmbugs@cs.uiuc.edu"
+#define PACKAGE_BUGREPORT "http://llvm.org/bugs/"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "llvm"
+#define PACKAGE_NAME "LLVM"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "llvm 3.0"
+#define PACKAGE_STRING "LLVM 3.1svn"
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.0"
+#define PACKAGE_VERSION "3.1svn"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
@@ -668,14 +668,14 @@
 /* Define to 1 if the `S_IS*' macros in <sys/stat.h> do not work properly. */
 #undef STAT_MACROS_BROKEN
 
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #undef TIME_WITH_SYS_TIME
 
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */
 #undef TM_IN_SYS_TIME
-
-/* Define if we have the oprofile JIT-support library */
-#undef USE_OPROFILE
 
 /* Define if use udis86 library */
 #undef USE_UDIS86
@@ -712,5 +712,11 @@
 
 /* Added by Kevin -- Maximum path length */
 #define MAXPATHLEN 2024
+
+/* Support for Intel JIT Events API is enabled */
+/* #undef LLVM_USE_INTEL_JITEVENTS */
+
+/* Support for OProfile JIT API is enabled */
+/* #undef LLVM_USE_OPROFILE */
 
 #endif

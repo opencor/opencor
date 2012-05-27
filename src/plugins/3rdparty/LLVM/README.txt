@@ -6,10 +6,11 @@ To build LLVM is time consuming and therefore not something we want to do every 
  - CMakeLists.txt[.use]: this is our default CMakeLists.txt file and the one which is to be used once a binary version of the LLVM plugin exists (such a binary is located in either the windows, linux or macosx folder under [LLVM]/bin).
  - CMakeLists.txt.build: this CMakeLists.txt file should be used (after having been renamed to CMakeLists.txt) whenever LLVM needs to be rebuilt. Once this is done, use of CMakeLists.txt[.use] should be resumed.
 
-Note: LLVM's config files were generated using CMake:
-          cd <LLVM-SOURCE_CODE>
-          mkdir build
-          cd build
-          cmake ..
-          make
-      From there, the files were manually copied over. They can be found in the windows, linux and macosx folders of [LLVM]/include/llvm/Config, [LLVM]/include/llvm/Support and [LLVM]/lib/Target/X86.
+Note #1: LLVM's config files were generated using CMake (on Windows, we also need Python 2.7.x; http://www.python.org/download/):
+             cd <LLVM-SOURCE_CODE>
+             mkdir build
+             cd build
+             cmake ..
+             make
+         From there, the files were manually copied over. They can be found in the windows, linux and macosx folders of [LLVM]/include/llvm/Config, [LLVM]/include/llvm/Support and [LLVM]/lib/Target/X86.
+Note #2: OpencOR 'only' works on Windows, Linux and Mac OS X, so we only need to target X86 at this stage.
