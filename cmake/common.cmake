@@ -41,7 +41,7 @@ MACRO(INITIALISE_PROJECT)
         # Default compiler and linker settings
 
         IF(WIN32)
-            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNDEBUG /MD /O2 /Ob2 /Oy-")
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNDEBUG /MD /O2 /Ob2")
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /INCREMENTAL:NO")
         ELSE()
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
@@ -56,7 +56,7 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Ask MSVC to treat wchat_t as a built-in type
+    # Ask MSVC not to treat wchat_t as a built-in type
 
     IF(WIN32)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t-")
