@@ -16,6 +16,10 @@
 
 //==============================================================================
 
+class QWebView;
+
+//==============================================================================
+
 namespace Ui {
     class CellmlAnnotationViewCellmlDetailsWidget;
 }
@@ -52,6 +56,7 @@ private:
 
     CellmlAnnotationViewCellmlElementDetailsWidget *mCellmlElementDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
+    QWebView *mWebView;
 
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);

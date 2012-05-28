@@ -118,7 +118,8 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
             // ones
 
             mCellmlDetailsWidgetSizes << 0.25*qApp->desktop()->screenGeometry().height()
-                                      << 0.75*qApp->desktop()->screenGeometry().height();
+                                      << 0.25*qApp->desktop()->screenGeometry().height()
+                                      << 0.50*qApp->desktop()->screenGeometry().height();
         } else {
             // There are previous lists widget sizes, so use them to initialise
             // mCellmlDetailsWidgetSizes

@@ -14,6 +14,7 @@
 //==============================================================================
 
 #include <QComboBox>
+#include <QWebView>
 
 //==============================================================================
 
@@ -36,12 +37,15 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     mCellmlElementDetails = new CellmlAnnotationViewCellmlElementDetailsWidget(pParent);
     mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
+    mWebView              = new QWebView(pParent);
 
     // Add our details widgets to our splitter
 
     addWidget(new Core::BorderedWidget(mCellmlElementDetails,
                                        false, true, true, false));
     addWidget(new Core::BorderedWidget(mMetadataViewDetails,
+                                       true, true, true, false));
+    addWidget(new Core::BorderedWidget(mWebView,
                                        true, true, false, false));
 
     // Keep track of our splitter being moved

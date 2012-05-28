@@ -65,6 +65,7 @@ ADD_PLUGIN(CellMLAnnotationView
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
     EXTERNAL_DEPENDENCIES
         ${CELLML_API_EXTERNAL_DEPENDENCIES}
 )
