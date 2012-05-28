@@ -1,23 +1,24 @@
 //==============================================================================
-// CellML annotation view metadata view details widget
+// CellML annotation view metadata BioModels.Net view details widget
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWMETADATAVIEWDETAILSWIDGET_H
-#define CELLMLANNOTATIONVIEWMETADATAVIEWDETAILSWIDGET_H
+#ifndef CELLMLANNOTATIONVIEWMETADATABIOMODELSDOTNETVIEWDETAILSWIDGET_H
+#define CELLMLANNOTATIONVIEWMETADATABIOMODELSDOTNETVIEWDETAILSWIDGET_H
 
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "commonwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
-#include <QStackedWidget>
+#include <QStandardItem>
+#include <QStyledItemDelegate>
 
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewMetadataViewDetailsWidget;
+    class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget;
 }
 
 //==============================================================================
@@ -30,39 +31,39 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Core {
+    class TreeView;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget;
-class CellmlAnnotationViewMetadataRawViewDetailsWidget;
 class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataViewDetailsWidget : public QStackedWidget,
-                                                      public Core::CommonWidget
+class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewMetadataViewDetailsWidget();
+    explicit CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    ~CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget();
 
     virtual void retranslateUi();
 
-    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples = CellMLSupport::CellmlFileRdfTriples());
+    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 
 private:
     CellmlAnnotationViewWidget *mParent;
 
-    Ui::CellmlAnnotationViewMetadataViewDetailsWidget *mGui;
+    Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *mGui;
 
-    CellMLSupport::CellmlFileRdfTriples mRdfTriples;
-
-    QWidget *mEmptyView;
-    CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
-    CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *mBioModelsDotNetView;
+    Core::TreeView *mTreeView;
+    QStandardItemModel *mDataModel;
 };
 
 //==============================================================================

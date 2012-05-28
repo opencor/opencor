@@ -2,6 +2,7 @@
 // CellML annotation view metadata view details widget
 //==============================================================================
 
+#include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
@@ -30,8 +31,9 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
     // Create our different metadata views
 
-    mEmptyView = new QWidget(pParent);
-    mRawView   = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
+    mEmptyView           = new QWidget(pParent);
+    mRawView             = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
+    mBioModelsDotNetView = new CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(pParent);
 
     // Make our empty view the default widget
     // Note: for the GUI to be properly initialised, we must add and immediately
@@ -42,6 +44,9 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
     addWidget(mRawView);
     removeWidget(mRawView);
+
+    addWidget(mBioModelsDotNetView);
+    removeWidget(mBioModelsDotNetView);
 }
 
 //==============================================================================
@@ -62,6 +67,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     mRawView->retranslateUi();
+    mBioModelsDotNetView->retranslateUi();
 
     updateGui(mRdfTriples);
 }
@@ -78,35 +84,28 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
 
     removeWidget(mEmptyView);
     removeWidget(mRawView);
+    removeWidget(mBioModelsDotNetView);
 
     if (pRdfTriples.isEmpty())
         addWidget(mEmptyView);
     else
-        addWidget(mRawView);
+        switch (pRdfTriples.type()) {
+        case CellMLSupport::CellmlFileRdfTriple::BioModelNetQualifier:
+            addWidget(mBioModelsDotNetView);
+
+            break;
+        default:
+            // Unknown type, so...
+
+            addWidget(mRawView);
+        }
 
     // Update our non-empty view, if needed
 
-switch (pRdfTriples.type()) {
-case CellMLSupport::CellmlFileRdfTriple::BioModelNetQualifier: {
-    qDebug(">>> BioModel.Net qualifier");
-
-    int counter = 0;
-
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
-        qDebug(">>> RDF triple #%d", ++counter);
-        qDebug(">>>    Model qualifier: %s", qPrintable(rdfTriple->modelQualifierTypeAsString()));
-        qDebug(">>>    Bio(logy) qualifier: %s", qPrintable(rdfTriple->bioQualifierTypeAsString()));
-        qDebug(">>>    MIRIAM URN: %s", qPrintable(rdfTriple->miriamUrn().toString()));
-    }
-
-    break;
-}
-default:
-    qDebug(">>> Unknown");
-}
-
     if (currentWidget() == mRawView)
         mRawView->updateGui(pRdfTriples);
+    else if (currentWidget() == mBioModelsDotNetView)
+        mBioModelsDotNetView->updateGui(pRdfTriples);
 }
 
 //==============================================================================

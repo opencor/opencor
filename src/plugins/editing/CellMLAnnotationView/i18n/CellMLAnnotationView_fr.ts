@@ -202,6 +202,25 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget</name>
+    <message>
+        <source>#</source>
+        <translation type="unfinished">N°</translation>
+    </message>
+    <message>
+        <source>Subject</source>
+        <translation type="unfinished">Sujet</translation>
+    </message>
+    <message>
+        <source>Predicate</source>
+        <translation type="unfinished">Attribut</translation>
+    </message>
+    <message>
+        <source>Object</source>
+        <translation type="unfinished">Objet</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataRawViewDetailsWidget</name>
     <message>
         <source>#</source>
