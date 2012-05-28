@@ -19,7 +19,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
     mType(Unknown),
     mModelQualifierType(ModelUnknown),
     mBiologyQualifierType(BiologyUnknown),
-    mQualifierUrl(QUrl())
+    mMiriamUrn(QString())
 {
     // Retrieve the RDF triple's subject, predicate and object information
 
@@ -67,7 +67,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
         if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifiers[i]))) {
             // It looks like we might be dealing with a model qualifier
 
-            mType = ModelQualifier;
+            mType = BioModelNetQualifier;
 
             mModelQualifierType = (ModelQualifierType) (i+1);
 
@@ -79,28 +79,35 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
             if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(biologyQualifiers[i]))){
                 // It looks like we might be dealing with a model qualifier
 
-                mType = BiologyQualifier;
+                mType = BioModelNetQualifier;
 
                 mBiologyQualifierType = (BiologyQualifierType) (i+1);
 
                 break;
             }
 
-    if ((mType == ModelQualifier) || (mType == BiologyQualifier)) {
+    if (mType == BioModelNetQualifier) {
         // We seem to be dealing with either a model or a biology qualifier, so
-        // check that its object is a valid MIRIAM URN
+        // check whether its object is either a valid MIRIAM URN or a valid
+        // identifiers.org URI
 
-        if (QRegExp("^urn:miriam:[a-zA-Z0-9\\._%]+:[a-zA-Z0-9\\._%]+").exactMatch(mObject->asString())) {
-            // The object is a valid MIRIAM URN, so retrieve its corresponding
-            // URL
+        QString objectAsString = mObject->asString();
 
-//---GRY--- TEMPORARY QUALIFIER URL... WE NEED TO RETRIEVE THE PROPER QUALIFIER
-//          URL USING http://www.ebi.ac.uk/miriamws/main/rest/resolve/XXX
+        if (QRegExp("^urn:miriam:[a-zA-Z0-9\\._%]+:[a-zA-Z0-9\\._%]+").exactMatch(objectAsString)) {
+            // The object is a valid MIRIAM URN, so...
 
-            mQualifierUrl = QUrl("http://www.opencor.ws/");
+            mMiriamUrn = objectAsString;
+        } else if (QRegExp("^http://identifiers.org/[a-zA-Z0-9\\._:]+/[a-zA-Z0-9\\._:]+").exactMatch(objectAsString)) {
+            // The object is a valid identifiers.org URI, so retrieve its
+            // corresponding MIRIAM URN
+
+            QStringList uriParts = objectAsString.remove("http://identifiers.org/").replace(":", "%3A").split("/");
+
+            mMiriamUrn = "urn:miriam:"+uriParts[0]+":"+uriParts[1];
         } else {
-            // The object is not a valid MIRIAM URN which means that the RDF
-            // triple is not a valid model/biology qualifier
+            // The object is neither a valid MIRIAM URN nor a valid
+            // identifiers.org URI which means that the RDF triple is not a
+            // valid model/biology qualifier, so...
 
             mType = Unknown;
 
@@ -237,11 +244,11 @@ QString CellmlFileRdfTriple::biologyQualifierTypeAsString() const
 
 //==============================================================================
 
-QUrl CellmlFileRdfTriple::qualifierUrl() const
+QUrl CellmlFileRdfTriple::miriamUrn() const
 {
-    // Return the RDF triple's qualifier URL
+    // Return the RDF triple's MIRIAM URN
 
-    return mQualifierUrl;
+    return mMiriamUrn;
 }
 
 //==============================================================================

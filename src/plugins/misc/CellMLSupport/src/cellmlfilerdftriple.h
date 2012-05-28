@@ -29,8 +29,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileRdfTriple
 public:
     enum Type {
         Unknown,
-        ModelQualifier,
-        BiologyQualifier
+        BioModelNetQualifier
     };
 
     enum ModelQualifierType {
@@ -72,7 +71,7 @@ public:
     BiologyQualifierType biologyQualifierType() const;
     QString biologyQualifierTypeAsString() const;
 
-    QUrl qualifierUrl() const;
+    QUrl miriamUrn() const;
 
 private:
     CellmlFileRdfTripleElement *mSubject;
@@ -84,7 +83,7 @@ private:
     ModelQualifierType mModelQualifierType;
     BiologyQualifierType mBiologyQualifierType;
 
-    QUrl mQualifierUrl;
+    QString mMiriamUrn;
 };
 
 //==============================================================================
