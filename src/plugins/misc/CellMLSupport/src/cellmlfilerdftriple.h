@@ -39,21 +39,21 @@ public:
         ModelIsDescribedBy
     };
 
-    enum BiologyQualifierType {
-        BiologyUnknown,
-        BiologyEncodes,
-        BiologyHasPart,
-        BiologyHasProperty,
-        BiologyHasVersion,
-        BiologyIs,
-        BiologyIsDescribedBy,
-        BiologyIsEncodedBy,
-        BiologyIsHomologTo,
-        BiologyIsPartOf,
-        BiologyIsPropertyOf,
-        BiologyIsVersionOf,
-        BiologyOccursIn,
-        BiologyHasTaxon
+    enum BioQualifierType {
+        BioUnknown,
+        BioEncodes,
+        BioHasPart,
+        BioHasProperty,
+        BioHasVersion,
+        BioIs,
+        BioIsDescribedBy,
+        BioIsEncodedBy,
+        BioIsHomologTo,
+        BioIsPartOf,
+        BioIsPropertyOf,
+        BioIsVersionOf,
+        BioOccursIn,
+        BioHasTaxon
     };
 
     explicit CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple);
@@ -68,8 +68,8 @@ public:
     ModelQualifierType modelQualifierType() const;
     QString modelQualifierTypeAsString() const;
 
-    BiologyQualifierType biologyQualifierType() const;
-    QString biologyQualifierTypeAsString() const;
+    BioQualifierType bioQualifierType() const;
+    QString bioQualifierTypeAsString() const;
 
     QUrl miriamUrn() const;
 
@@ -81,7 +81,7 @@ private:
     Type mType;
 
     ModelQualifierType mModelQualifierType;
-    BiologyQualifierType mBiologyQualifierType;
+    BioQualifierType mBioQualifierType;
 
     QString mMiriamUrn;
 };

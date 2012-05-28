@@ -95,7 +95,7 @@ case CellMLSupport::CellmlFileRdfTriple::BioModelNetQualifier: {
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
         qDebug(">>> RDF triple #%d", ++counter);
         qDebug(">>>    Model qualifier: %s", qPrintable(rdfTriple->modelQualifierTypeAsString()));
-        qDebug(">>>    Biology qualifier: %s", qPrintable(rdfTriple->biologyQualifierTypeAsString()));
+        qDebug(">>>    Bio(logy) qualifier: %s", qPrintable(rdfTriple->bioQualifierTypeAsString()));
         qDebug(">>>    MIRIAM URN: %s", qPrintable(rdfTriple->miriamUrn().toString()));
     }
 

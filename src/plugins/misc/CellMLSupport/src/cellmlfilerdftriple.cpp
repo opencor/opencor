@@ -18,7 +18,7 @@ namespace CellMLSupport {
 CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
     mType(Unknown),
     mModelQualifierType(ModelUnknown),
-    mBiologyQualifierType(BiologyUnknown),
+    mBioQualifierType(BioUnknown),
     mMiriamUrn(QString())
 {
     // Retrieve the RDF triple's subject, predicate and object information
@@ -33,7 +33,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
 
     // Determine the type of the RDF triple
 
-    // Note: at this stage, we only recognise model and biology qualifiers as
+    // Note: at this stage, we only recognise model and bio(logy) qualifiers as
     //       described at http://biomodels.net/qualifiers/. This means that the
     //       predicate of the RDF triple must have one of the following two
     //       forms:
@@ -42,8 +42,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
     //          http://biomodels.net/biology-qualifiers/<yyy>
     //
     //       where <xxx> and <yyy> are one of the values in modelQualifiers and
-    //       biologyQualifiers below. The object of the RDF triple must also
-    //       have the following form:
+    //       bioQualifiers below. The object of the RDF triple must also have
+    //       the following form:
     //
     //          urn:miriam:<collection>:<identifier>
     //
@@ -53,15 +53,13 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
 
     QStringList modelQualifiers = QStringList() << "is" << "isDerivedFrom"
                                                 << "isDescribedBy";
-    QStringList biologyQualifiers = QStringList() << "encodes" << "hasPart"
-                                                  << "hasProperty"
-                                                  << "hasVersion" << "is"
-                                                  << "isDescribedBy"
-                                                  << "isEncodedBy"
-                                                  << "isHomologTo" << "isPartOf"
-                                                  << "isPropertyOf"
-                                                  << "isVersionOf" << "occursIn"
-                                                  << "hasTaxon";
+    QStringList bioQualifiers = QStringList() << "encodes" << "hasPart"
+                                              << "hasProperty" << "hasVersion"
+                                              << "is" << "isDescribedBy"
+                                              << "isEncodedBy" << "isHomologTo"
+                                              << "isPartOf" << "isPropertyOf"
+                                              << "isVersionOf" << "occursIn"
+                                              << "hasTaxon";
 
     for (int i = 0, iMax = modelQualifiers.count(); i < iMax; ++i)
         if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifiers[i]))) {
@@ -75,20 +73,20 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
         }
 
     if (mType == Unknown)
-        for (int i = 0, iMax = biologyQualifiers.count(); i < iMax; ++i)
-            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(biologyQualifiers[i]))){
+        for (int i = 0, iMax = bioQualifiers.count(); i < iMax; ++i)
+            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifiers[i]))){
                 // It looks like we might be dealing with a model qualifier
 
                 mType = BioModelNetQualifier;
 
-                mBiologyQualifierType = (BiologyQualifierType) (i+1);
+                mBioQualifierType = (BioQualifierType) (i+1);
 
                 break;
             }
 
     if (mType == BioModelNetQualifier) {
-        // We seem to be dealing with either a model or a biology qualifier, so
-        // check whether its object is either a valid MIRIAM URN or a valid
+        // We seem to be dealing with either a model or a bio(logy) qualifier,
+        // so check whether its object is either a valid MIRIAM URN or a valid
         // identifiers.org URI
 
         QString objectAsString = mObject->asString();
@@ -107,12 +105,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
         } else {
             // The object is neither a valid MIRIAM URN nor a valid
             // identifiers.org URI which means that the RDF triple is not a
-            // valid model/biology qualifier, so...
+            // valid model/bio(logy) qualifier, so...
 
             mType = Unknown;
 
-            mModelQualifierType   = ModelUnknown;
-            mBiologyQualifierType = BiologyUnknown;
+            mModelQualifierType = ModelUnknown;
+            mBioQualifierType   = BioUnknown;
         }
     }
 }
@@ -195,48 +193,48 @@ QString CellmlFileRdfTriple::modelQualifierTypeAsString() const
 
 //==============================================================================
 
-CellmlFileRdfTriple::BiologyQualifierType CellmlFileRdfTriple::biologyQualifierType() const
+CellmlFileRdfTriple::BioQualifierType CellmlFileRdfTriple::bioQualifierType() const
 {
-    // Return the RDF triple's biology qualifier type
+    // Return the RDF triple's bio(logy) qualifier type
 
-    return mBiologyQualifierType;
+    return mBioQualifierType;
 }
 
 //==============================================================================
 
-QString CellmlFileRdfTriple::biologyQualifierTypeAsString() const
+QString CellmlFileRdfTriple::bioQualifierTypeAsString() const
 {
-    // Return the RDF triple's biology qualifier type as a string
+    // Return the RDF triple's bio(logy) qualifier type as a string
 
-    switch (mBiologyQualifierType) {
-    case BiologyEncodes:
+    switch (mBioQualifierType) {
+    case BioEncodes:
         return QObject::tr("encodes");
-    case BiologyHasPart:
+    case BioHasPart:
         return QObject::tr("has part");
-    case BiologyHasProperty:
+    case BioHasProperty:
         return QObject::tr("has property");
-    case BiologyHasVersion:
+    case BioHasVersion:
         return QObject::tr("has version");
-    case BiologyIs:
+    case BioIs:
         return QObject::tr("is");
-    case BiologyIsDescribedBy:
+    case BioIsDescribedBy:
         return QObject::tr("is described by");
-    case BiologyIsEncodedBy:
+    case BioIsEncodedBy:
         return QObject::tr("is encoded by");
-    case BiologyIsHomologTo:
+    case BioIsHomologTo:
         return QObject::tr("is homolog to");
-    case BiologyIsPartOf:
+    case BioIsPartOf:
         return QObject::tr("is part of");
-    case BiologyIsPropertyOf:
+    case BioIsPropertyOf:
         return QObject::tr("is property of");
-    case BiologyIsVersionOf:
+    case BioIsVersionOf:
         return QObject::tr("is version of");
-    case BiologyOccursIn:
+    case BioOccursIn:
         return QObject::tr("occurs in");
-    case BiologyHasTaxon:
+    case BioHasTaxon:
         return QObject::tr("has taxon");
     default:
-        // BiologyUnknown
+        // BioUnknown
 
         return "???";
     }
