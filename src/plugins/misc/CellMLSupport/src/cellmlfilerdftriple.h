@@ -71,7 +71,10 @@ public:
     BioQualifierType bioQualifierType() const;
     QString bioQualifierTypeAsString() const;
 
-    QUrl miriamUrn() const;
+    QString miriamUrn() const;
+
+    QString resource() const;
+    QString id() const;
 
 private:
     CellmlFileRdfTripleElement *mSubject;

@@ -204,20 +204,16 @@
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget</name>
     <message>
-        <source>#</source>
-        <translation type="unfinished">N°</translation>
+        <source>Qualifier</source>
+        <translation>Qualificatif</translation>
     </message>
     <message>
-        <source>Subject</source>
-        <translation type="unfinished">Sujet</translation>
+        <source>Resource</source>
+        <translation>Ressource</translation>
     </message>
     <message>
-        <source>Predicate</source>
-        <translation type="unfinished">Attribut</translation>
-    </message>
-    <message>
-        <source>Object</source>
-        <translation type="unfinished">Objet</translation>
+        <source>Id</source>
+        <translation></translation>
     </message>
 </context>
 <context>

@@ -68,10 +68,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     // Note: we do it here (rather than in the constructor) in case the user
     //       decides to change languages...
 
-    mDataModel->setHorizontalHeaderLabels(QStringList() << tr("#")
-                                                        << tr("Subject")
-                                                        << tr("Predicate")
-                                                        << tr("Object"));
+    mDataModel->setHorizontalHeaderLabels(QStringList() << tr("Qualifier")
+                                                        << tr("Resource")
+                                                        << tr("Id"));
 
     // Remove all previous RDF triples from our tree view
 
@@ -85,21 +84,18 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     //       cmeta:id which will speak more to the user than a possibly long URI
     //       reference...
 
-    QString uriBase = mParent->cellmlFile()->uriBase();
-    int rdfTripleCounter = 0;
-
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)
-        mDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
-                                                                            << new QStandardItem(rdfTriple->subject()->asString().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?")))
-                                                                            << new QStandardItem(rdfTriple->predicate()->asString())
-                                                                            << new QStandardItem(rdfTriple->object()->asString()));
+        mDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem((rdfTriple->modelQualifierType() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                                                                                                     rdfTriple->modelQualifierTypeAsString():
+                                                                                                     rdfTriple->bioQualifierTypeAsString())
+                                                                            << new QStandardItem(rdfTriple->resource())
+                                                                            << new QStandardItem(rdfTriple->id()));
 
     // Make sure that all the columns have their contents fit
 
     mTreeView->resizeColumnToContents(0);
     mTreeView->resizeColumnToContents(1);
     mTreeView->resizeColumnToContents(2);
-    mTreeView->resizeColumnToContents(3);
 
     // Re-show ourselves
 

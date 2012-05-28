@@ -179,15 +179,15 @@ QString CellmlFileRdfTriple::modelQualifierTypeAsString() const
 
     switch (mModelQualifierType) {
     case ModelIs:
-        return QObject::tr("is");
+        return "model:is";
     case ModelIsDerivedFrom:
-        return QObject::tr("is derived from");
+        return "model:isDerivedFrom";
     case ModelIsDescribedBy:
-        return QObject::tr("is described by");
+        return "model:isDescribedBy";
     default:
         // ModelUnknown
 
-        return "???";
+        return "model:unknown";
     }
 }
 
@@ -208,45 +208,69 @@ QString CellmlFileRdfTriple::bioQualifierTypeAsString() const
 
     switch (mBioQualifierType) {
     case BioEncodes:
-        return QObject::tr("encodes");
+        return "bio:encodes";
     case BioHasPart:
-        return QObject::tr("has part");
+        return "bio:hasPart";
     case BioHasProperty:
-        return QObject::tr("has property");
+        return "bio:hasProperty";
     case BioHasVersion:
-        return QObject::tr("has version");
+        return "bio:hasVersion";
     case BioIs:
-        return QObject::tr("is");
+        return "bio:is";
     case BioIsDescribedBy:
-        return QObject::tr("is described by");
+        return "bio:isDescribedBy";
     case BioIsEncodedBy:
-        return QObject::tr("is encoded by");
+        return "bio:isEncodedBy";
     case BioIsHomologTo:
-        return QObject::tr("is homolog to");
+        return "bio:isHomologTo";
     case BioIsPartOf:
-        return QObject::tr("is part of");
+        return "bio:isPartOf";
     case BioIsPropertyOf:
-        return QObject::tr("is property of");
+        return "bio:isPropertyOf";
     case BioIsVersionOf:
-        return QObject::tr("is version of");
+        return "bio:isVersionOf";
     case BioOccursIn:
-        return QObject::tr("occurs in");
+        return "bio:occursIn";
     case BioHasTaxon:
-        return QObject::tr("has taxon");
+        return "bio:hasTaxon";
     default:
         // BioUnknown
 
-        return "???";
+        return "bio:unknown";
     }
 }
 
 //==============================================================================
 
-QUrl CellmlFileRdfTriple::miriamUrn() const
+QString CellmlFileRdfTriple::miriamUrn() const
 {
     // Return the RDF triple's MIRIAM URN
 
     return mMiriamUrn;
+}
+
+//==============================================================================
+
+QString CellmlFileRdfTriple::resource() const
+{
+    // Return the RDF triple's resource from its MIRIAM URN
+
+    if (!mMiriamUrn.isEmpty())
+        return QString(mMiriamUrn.split(":").at(2)).replace("%3A", ":");
+    else
+        return QString();
+}
+
+//==============================================================================
+
+QString CellmlFileRdfTriple::id() const
+{
+    // Return the RDF triple's id from its MIRIAM URN
+
+    if (!mMiriamUrn.isEmpty())
+        return QString(mMiriamUrn.split(":").at(3)).replace("%3A", ":");
+    else
+        return QString();
 }
 
 //==============================================================================
