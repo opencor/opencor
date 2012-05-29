@@ -38,6 +38,15 @@ static const QString SettingsPlugins = "Plugins";
 
 //==============================================================================
 
+class Plugin;
+class PluginManager;
+
+//==============================================================================
+
+typedef QList<Plugin *> Plugins;
+
+//==============================================================================
+
 class Plugin : public QObject
 {
     Q_OBJECT
@@ -64,7 +73,7 @@ public:
                     const PluginInfo::Version &pExpectedVersion,
                     const QString &pPluginsDir
 #ifndef Q_WS_WIN
-                    , const QMap<QString, Plugin *> &pMappedPlugins
+                    , PluginManager *pPluginManager
 #endif
                    );
 
@@ -93,10 +102,6 @@ private:
     Status mStatus;
     QString mStatusErrors;
 };
-
-//==============================================================================
-
-typedef QList<Plugin *> Plugins;
 
 //==============================================================================
 

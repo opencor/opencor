@@ -11,6 +11,7 @@ ADD_PLUGIN(Core
         ../../interface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../pluginmanager.cpp
 
         src/borderedwidget.cpp
         src/centralwidget.cpp
@@ -26,6 +27,7 @@ ADD_PLUGIN(Core
         src/widget.cpp
     HEADERS_MOC
         ../../plugin.h
+        ../../pluginmanager.h
 
         src/borderedwidget.h
         src/centralwidget.h

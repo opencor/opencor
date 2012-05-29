@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "plugin.h"
+#include "pluginmanager.h"
 
 //==============================================================================
 
@@ -24,7 +25,7 @@ Plugin::Plugin(const QString &pFileName,
                const PluginInfo::Version &pExpectedVersion,
                const QString &pPluginsDir
 #ifndef Q_WS_WIN
-               , const QMap<QString, Plugin *> &pMappedPlugins
+               , PluginManager *pPluginManager
 #endif
               ) :
     mName(name(pFileName)),
@@ -69,7 +70,7 @@ Plugin::Plugin(const QString &pFileName,
             mStatusErrors = "";
 
             foreach (const QString &dependency, mInfo.dependencies()) {
-                Plugin *pluginDependency = pMappedPlugins.value(dependency);
+                Plugin *pluginDependency = pPluginManager->plugin(dependency);
 
                 if (   !pluginDependency
                     || (   pluginDependency

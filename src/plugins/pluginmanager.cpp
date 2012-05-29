@@ -21,7 +21,8 @@ PluginManager::PluginManager(QSettings *pSettings,
                              const PluginInfo::Type &pGuiOrConsoleType) :
     mSettings(pSettings),
     mVersion(PluginInfo::V001),
-    mGuiOrConsoleType(pGuiOrConsoleType)
+    mGuiOrConsoleType(pGuiOrConsoleType),
+    mPlugins(Plugins())
 {
     mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
                   +QDir::separator()+QString("..")
@@ -98,14 +99,13 @@ PluginManager::PluginManager(QSettings *pSettings,
     // Deal with all the plugins we found
 
     foreach (const QString &fileName, orderedFileNames)
-        mPlugins.insert(Plugin::name(fileName),
-                        new Plugin(fileName, mGuiOrConsoleType,
-                                   plugins.contains(Plugin::name(fileName)),
-                                   version(), pluginsDir()
+        mPlugins << new Plugin(fileName, mGuiOrConsoleType,
+                               plugins.contains(Plugin::name(fileName)),
+                               version(), pluginsDir()
 #ifndef Q_WS_WIN
-                                   , mappedPlugins()
+                               , this
 #endif
-                                  ));
+                              );
 }
 
 //==============================================================================
@@ -114,36 +114,32 @@ PluginManager::~PluginManager()
 {
     // Delete all of the plugins
 
-    while (!mPlugins.isEmpty()) {
-        delete mPlugins.begin().value();
-
-        mPlugins.erase(mPlugins.begin());
-    }
+    foreach (Plugin *plugin, mPlugins)
+        delete plugin;
 }
 
 //==============================================================================
 
-Plugins PluginManager::plugins(const bool &pOnlyLoadedPlugins) const
+Plugins PluginManager::plugins() const
 {
-    // Return a list of all the plugins
+    // Return a list of all our plugins, whether loaded or not
 
-    Plugins res;
-
-    foreach (Plugin *plugin, mPlugins)
-        if (   !pOnlyLoadedPlugins
-            || (pOnlyLoadedPlugins && (plugin->status() == Plugin::Loaded)))
-            res << plugin;
-
-    return res;
+    return mPlugins;
 }
 
 //==============================================================================
 
 Plugins PluginManager::loadedPlugins() const
 {
-    // Return a list of all the loaded plugins
+    // Return a list of only our loaded plugins
 
-    return plugins(true);
+    Plugins res = Plugins();
+
+    foreach (Plugin *plugin, mPlugins)
+        if (plugin->status() == Plugin::Loaded)
+            res << plugin;
+
+    return res;
 }
 
 //==============================================================================
@@ -157,20 +153,19 @@ QString PluginManager::pluginsDir() const
 
 //==============================================================================
 
-QMap<QString, Plugin *> PluginManager::mappedPlugins() const
-{
-    // Return the mapped plugins
-
-    return mPlugins;
-}
-
-//==============================================================================
-
 Plugin * PluginManager::plugin(const QString &pName) const
 {
-    // Return the plugin which name is that we have been passed
+    // Return the plugin which name is the one we have been passed
 
-    return mPlugins.value(pName);
+    foreach (Plugin *plugin, mPlugins)
+        if (!pName.compare(plugin->name()))
+            // This is the plugin we are after, so...
+
+            return plugin;
+
+    // The plugin we are after wasn't found, so...
+
+    return 0;
 }
 
 //==============================================================================

@@ -15,6 +15,7 @@ ADD_PLUGIN(SingleCellSimulationView
         ../../interface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../pluginmanager.cpp
         ../../solverinterface.cpp
 
         src/singlecellsimulationviewgraphpanelwidget.cpp
@@ -23,6 +24,7 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewwidget.cpp
     HEADERS_MOC
         ../../plugin.h
+        ../../pluginmanager.h
 
         src/singlecellsimulationviewgraphpanelwidget.h
         src/singlecellsimulationviewgraphpanelswidget.h

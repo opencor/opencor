@@ -542,6 +542,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 QT4_WRAP_CPP(TEST_SOURCES_MOC
                     ../../plugin.h
+                    ../../pluginmanager.h
 
                     ${HEADERS_MOC}
                     ${TEST_HEADER_MOC_FILE}
@@ -553,6 +554,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ../../interface.cpp
                     ../../plugin.cpp
                     ../../plugininfo.cpp
+                    ../../pluginmanager.cpp
 
                     ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}

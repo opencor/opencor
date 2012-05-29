@@ -12,7 +12,6 @@
 
 //==============================================================================
 
-#include <QMap>
 #include <QObject>
 #include <QSettings>
 
@@ -35,11 +34,10 @@ public:
                            const PluginInfo::Type &pGuiOrConsoleType);
     ~PluginManager();
 
-    Plugins plugins(const bool &pOnlyLoadedPlugins = false) const;
+    Plugins plugins() const;
     Plugins loadedPlugins() const;
 
     QString pluginsDir() const;
-    QMap<QString, Plugin *> mappedPlugins() const;
     Plugin * plugin(const QString &pName) const;
 
     QSettings * settings() const;
@@ -53,7 +51,7 @@ private:
     PluginInfo::Type mGuiOrConsoleType;
 
     QString mPluginsDir;
-    QMap<QString, Plugin *> mPlugins;
+    Plugins mPlugins;
 };
 
 //==============================================================================
