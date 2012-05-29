@@ -111,8 +111,7 @@ CentralWidgetViewSettings * CentralWidgetMode::viewSettings() const
 //==============================================================================
 
 CentralWidget::CentralWidget(QWidget *pParent) :
-    QWidget(pParent),
-    CommonWidget(pParent),
+    Widget(pParent),
     mGui(new Ui::CentralWidget),
     mStatus(Starting)
 {

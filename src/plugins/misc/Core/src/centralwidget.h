@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "commonwidget.h"
+#include "widget.h"
 #include "guiinterface.h"
 
 //==============================================================================
@@ -77,7 +77,7 @@ private:
 
 //==============================================================================
 
-class CentralWidget : public QWidget, public CommonWidget
+class CentralWidget : public Widget
 {
     Q_OBJECT
 
