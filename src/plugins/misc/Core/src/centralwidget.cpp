@@ -348,14 +348,14 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     openedFiles = pSettings->value(SettingsOpenedFiles).toStringList();
 
     for (int i = 0, iMax = openedFiles.count(); i < iMax; ++i)
-        openFile(openedFiles.at(i));
+        openFile(openedFiles[i]);
 
     // Retrieve the current file
 
     if (openedFiles.count())
         // There is at least one file, so we can try to activate one of them
 
-        activateFile(openedFiles.at(pSettings->value(SettingsCurrentFile).toInt()));
+        activateFile(openedFiles[pSettings->value(SettingsCurrentFile).toInt()]);
 
     // Retrieve the currently active mode and views
     // Note: if no current mode or view can be retrieved, then we use whatever
@@ -479,7 +479,7 @@ void CentralWidget::openFiles(const QStringList &pFileNames)
     // Open the various files
 
     for (int i = 0, iMax = pFileNames.count(); i < iMax; ++i)
-        openFile(pFileNames.at(i));
+        openFile(pFileNames[i]);
 }
 
 //==============================================================================
@@ -740,7 +740,7 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
     for (int i = 0, iMax = urlList.count(); i < iMax; ++i)
     {
-        QString fileName = urlList.at(i).toLocalFile();
+        QString fileName = urlList[i].toLocalFile();
         QFileInfo fileInfo = fileName;
 
         if (fileInfo.isFile()) {

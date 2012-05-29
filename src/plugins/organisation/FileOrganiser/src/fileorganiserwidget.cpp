@@ -92,10 +92,10 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
     itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
 
     if (itemInfo != QStringList()) {
-        QString textOrPath  = itemInfo.at(0);
-        int parentItemIndex = itemInfo.at(1).toInt();
-        int childItemsCount = itemInfo.at(2).toInt();
-        bool expanded       = itemInfo.at(3).toInt();
+        QString textOrPath  = itemInfo[0];
+        int parentItemIndex = itemInfo[1].toInt();
+        int childItemsCount = itemInfo[2].toInt();
+        bool expanded       = itemInfo[3].toInt();
 
         // Create the item, in case we are not dealing with the root folder item
 
@@ -353,7 +353,7 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
     if (dropItem)
         for (int i = 0; (i < indexes.count()) && !draggingOnSelfOrChild; ++i)
-            draggingOnSelfOrChild = itemIsOrIsChildOf(dropItem, mDataModel->itemFromIndex(indexes.at(i)));
+            draggingOnSelfOrChild = itemIsOrIsChildOf(dropItem, mDataModel->itemFromIndex(indexes[i]));
 
     if (   (pEvent->mimeData()->urls().count() || indexes.count())
         && (   (dropItem && dropItem->data(Item::Folder).toBool())
@@ -420,7 +420,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         QList<QStandardItem *> items;
 
         for (int i = 0, iMax = indexes.count(); i < iMax; ++i)
-            items << mDataModel->itemFromIndex(indexes.at(i));
+            items << mDataModel->itemFromIndex(indexes[i]);
 
         // Move the contents of the list to its final destination
 
@@ -428,13 +428,13 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
             // Move the items in the order they were dropped
 
             for (int i = 0, iMax = items.count(); i < iMax; ++i)
-                moveItem(items.at(i), dropItem, dropPosition);
+                moveItem(items[i], dropItem, dropPosition);
         else
             // Move the items in a reverse order to that they were dropped since
             // we want them moved below the current item
 
             for (int i = items.count()-1; i >= 0; --i)
-                moveItem(items.at(i), dropItem, dropPosition);
+                moveItem(items[i], dropItem, dropPosition);
     } else {
         // The user wants to drop files, so add them to the widget and this at
         // the right place
@@ -445,13 +445,13 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
             // Add the files in the order they were dropped
 
             for (int i = 0, iMax = urls.count(); i < iMax; ++i)
-                addFile(urls.at(i).toLocalFile(), dropItem, dropPosition);
+                addFile(urls[i].toLocalFile(), dropItem, dropPosition);
         else
             // Add the files in a reverse order to that they were dropped since
             // we want them added below the current item
 
             for (int i = urls.count()-1; i >= 0; --i)
-                addFile(urls.at(i).toLocalFile(), dropItem, dropPosition);
+                addFile(urls[i].toLocalFile(), dropItem, dropPosition);
     }
 
     // Accept the proposed action for the event
@@ -514,7 +514,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
         // Check whether one of the current index's parents is already in the
         // list. If so, then skip the current index
 
-        QModelIndex crtIndex = pIndexes.at(i);
+        QModelIndex crtIndex = pIndexes[i];
 
         if (!parentIndexExists(crtIndex, pIndexes)) {
             // None of the index's parents is in the list, so we can safely add
@@ -530,7 +530,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
 
             if (crtItem && crtItem->data(Item::Folder).toBool())
                 for (int j = res.count()-1; j >= 0; --j)
-                    if (parentIndexExists(res.at(j), res))
+                    if (parentIndexExists(res[j], res))
                         res.removeAt(j);
         }
     }
@@ -541,7 +541,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
     // the model
 
     for (int i = res.count()-1; i >= 0; --i) {
-        QStandardItem *crtItem = mDataModel->itemFromIndex(res.at(i));
+        QStandardItem *crtItem = mDataModel->itemFromIndex(res[i]);
 
         if (crtItem && !crtItem->data(Item::Folder).toBool())
             // The index corresponds to a valid file item, so check whether in
@@ -550,7 +550,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
             // model
 
             for (int j = 0; j < i; ++j) {
-                QStandardItem *testItem = mDataModel->itemFromIndex(res.at(j));
+                QStandardItem *testItem = mDataModel->itemFromIndex(res[j]);
 
                 if (   testItem
                     && !testItem->data(Item::Folder).toBool()
@@ -1036,7 +1036,7 @@ QStringList FileOrganiserWidget::selectedFiles() const
     QModelIndexList crtSelectedIndexes = selectedIndexes();
 
     for (int i = 0, iMax = crtSelectedIndexes.count(); i < iMax; ++i) {
-        QString fileName = filePath(crtSelectedIndexes.at(i));
+        QString fileName = filePath(crtSelectedIndexes[i]);
 
         if (fileName.isEmpty())
             // The current item is not a file, so return an empty list

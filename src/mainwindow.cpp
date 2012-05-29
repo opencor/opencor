@@ -445,7 +445,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
                 mGui->menuFile->insertMenu(mGui->menuFile->actions().first(),
                                            mFileNewMenu);
-                mGui->menuFile->insertSeparator(mGui->menuFile->actions().at(1));
+                mGui->menuFile->insertSeparator(mGui->menuFile->actions()[1]);
 
                 pluginForFileNewMenu = pPluginName;
             } else if (pluginForFileNewMenu.compare(pPluginName)) {
@@ -693,7 +693,7 @@ void MainWindow::setLocale(const QString &pLocale)
         Plugins loadedPlugins = mPluginManager->loadedPlugins();
 
         for (int i = loadedPlugins.count()-1; i >= 0; --i) {
-            I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(loadedPlugins.at(i)->instance());
+            I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(loadedPlugins[i]->instance());
 
             if (i18nInterface)
                 i18nInterface->setLocale(realLocale);

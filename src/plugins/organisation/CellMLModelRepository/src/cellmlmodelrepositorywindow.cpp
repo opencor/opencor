@@ -116,7 +116,7 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
         contents += leadingSpaces+"<ul>\n";
 
         foreach (const QString &model, mModelList)
-            contents += leadingSpaces+"<li><a href=\""+mModelUrls.at(mModelNames.indexOf(model))+"\">"+model+"</a></li>\n";
+            contents += leadingSpaces+"<li><a href=\""+mModelUrls[mModelNames.indexOf(model)]+"\">"+model+"</a></li>\n";
 
         contents += leadingSpaces+"</ul>";
     } else if (mModelNames.empty()) {
@@ -125,7 +125,7 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
             // so...
 
             QString errorMsg = mErrorMsg.left(1).toLower()+mErrorMsg.right(mErrorMsg.size()-1);
-            QString dots = (errorMsg.at(errorMsg.size()-1) == '.')?"..":"...";
+            QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
 
             contents = leadingSpaces+"Error: "+errorMsg+dots;
         } else {
@@ -221,8 +221,8 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
             foreach (const QVariant &modelVariant, res["values"].toList()) {
                 QVariantList modelDetailsVariant = modelVariant.toList();
 
-                mModelNames << modelDetailsVariant.at(0).toString();
-                mModelUrls << modelDetailsVariant.at(1).toString();
+                mModelNames << modelDetailsVariant[0].toString();
+                mModelUrls << modelDetailsVariant[1].toString();
             }
         }
     } else {

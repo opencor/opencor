@@ -804,7 +804,7 @@ void ComputerEngine::compileMathematicalFunction(ComputerEngineData &pData,
         if (i)
             pData.appendAssemblyCode(", ");
 
-        pData.appendAssemblyCode("double "+arguments.at(i));
+        pData.appendAssemblyCode("double "+arguments[i]);
     }
 
     pData.appendAssemblyCode(") nounwind\n");

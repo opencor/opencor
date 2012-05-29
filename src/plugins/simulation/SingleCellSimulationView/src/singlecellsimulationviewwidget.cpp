@@ -249,7 +249,7 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
     pSettings->setValue(SettingsGraphPanelsSizesCount, sizes.count());
 
     for (int i = 0, iMax = sizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsGraphPanelsSize.arg(QString::number(i)), sizes.at(i));
+        pSettings->setValue(SettingsGraphPanelsSize.arg(QString::number(i)), sizes[i]);
 
     // Keep track of the settings of our graph panels widget
 

@@ -322,7 +322,7 @@ void CorePlugin::openFile()
         //          in a non-native looking file dialog box (on Windows 7 at
         //          least), so it's not an option unfortunately...
 
-        mActiveDir = QFileInfo(files.at(files.count()-1)).path();
+        mActiveDir = QFileInfo(files[files.count()-1]).path();
 
     // Open the file(s)
 

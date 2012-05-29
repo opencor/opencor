@@ -222,7 +222,7 @@ QStringList FileBrowserWidget::selectedFiles() const
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
-        QString fileName = pathOf(selectedIndexes.at(i));
+        QString fileName = pathOf(selectedIndexes[i]);
         QFileInfo fileInfo = fileName;
 
         if (fileInfo.isFile()) {
@@ -262,14 +262,14 @@ void FileBrowserWidget::deselectFolders() const
         QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
         for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
-            QFileInfo fileInfo = pathOf(selectedIndexes.at(i));
+            QFileInfo fileInfo = pathOf(selectedIndexes[i]);
 
             if (fileInfo.isDir() || !fileInfo.exists())
                 // Either we are dealing with a directory or an entry that
                 // doesn't actually exist (e.g. on Windows, it could be a drive
                 // for a removable device with the device not being present)
 
-                selectionModel()->select(selectedIndexes.at(i),
+                selectionModel()->select(selectedIndexes[i],
                                          QItemSelectionModel::Deselect);
         }
     }
@@ -310,7 +310,7 @@ void FileBrowserWidget::updateItems(const QString &pItemPath,
         newItems << prevItem;
 
         for (int i = 1, iMax = pItems.count(); i < iMax; ++i) {
-            QString crtItem = pItems.at(i);
+            QString crtItem = pItems[i];
 
             if (crtItem != prevItem) {
                 // The current and previous items are different, so we want to

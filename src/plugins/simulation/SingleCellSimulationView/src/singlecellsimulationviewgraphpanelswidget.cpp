@@ -104,7 +104,7 @@ void SingleCellSimulationViewGraphPanelsWidget::saveSettings(QSettings *pSetting
     QList<int> graphPanelSizes = sizes();
 
     for (int i = 0, iMax = graphPanelSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsGraphPanelSize.arg(QString::number(i)), graphPanelSizes.at(i));
+        pSettings->setValue(SettingsGraphPanelSize.arg(QString::number(i)), graphPanelSizes[i]);
 }
 
 //==============================================================================

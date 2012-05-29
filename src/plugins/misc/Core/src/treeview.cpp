@@ -60,8 +60,8 @@ void TreeView::startDrag(Qt::DropActions pSupportedActions)
     QModelIndexList selectedDraggableIndexes = selectedIndexes();
 
     for (int i = selectedDraggableIndexes.count()-1; i >= 0; --i)
-        if (   !(model()->flags(selectedDraggableIndexes.at(i)) & Qt::ItemIsDragEnabled)
-            || selectedDraggableIndexes.at(i).column())
+        if (   !(model()->flags(selectedDraggableIndexes[i]) & Qt::ItemIsDragEnabled)
+            || selectedDraggableIndexes[i].column())
             // The current selected item is not draggable or is not in the first
             // column
             // Note: regarding the test on the column number, it is because we

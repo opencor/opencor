@@ -57,13 +57,13 @@ ComputerEquation::ComputerEquation(const Type &pType,
             // We are not dealing with the last argument, so need to create a
             // new node
 
-            *crtRight = new ComputerEquation(OtherArguments, pArguments.at(i));
+            *crtRight = new ComputerEquation(OtherArguments, pArguments[i]);
 
             crtRight = &(*crtRight)->mRight;
         } else {
             // We are dealing with the last argument, so...
 
-            *crtRight = pArguments.at(i);
+            *crtRight = pArguments[i];
         }
 }
 

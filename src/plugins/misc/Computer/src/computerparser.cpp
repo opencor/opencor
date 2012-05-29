@@ -915,7 +915,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
                 pParser->setError("','");
 
                 for (int j = 0; j < i; ++j)
-                    delete arguments.at(j);
+                    delete arguments[j];
 
                 return false;
             }
@@ -924,14 +924,14 @@ bool parsePrimaryExpression(ComputerParser *pParser,
 
             // Parse the RHS of an equation
 
-            ComputerEquation *computerEquation = arguments.at(i);
+            ComputerEquation *computerEquation = arguments[i];
 
             if (!pParser->parseRhsEquation(computerEquation)) {
                 // Something went wrong with the parsing of the RHS of an
                 // equation, so...
 
                 for (int j = 0; j <= i; ++j)
-                    delete arguments.at(j);
+                    delete arguments[j];
 
                 return false;
             }
@@ -945,7 +945,7 @@ bool parsePrimaryExpression(ComputerParser *pParser,
             pParser->setError("')'");
 
             for (int i = 0; i < argumentsCount; ++i)
-                delete arguments.at(i);
+                delete arguments[i];
 
             return false;
         }

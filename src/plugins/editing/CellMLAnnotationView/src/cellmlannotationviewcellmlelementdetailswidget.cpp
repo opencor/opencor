@@ -113,7 +113,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
     // Go through the different items which properties we want to add to the GUI
 
     for (int i = 0, iLast = pItems.count()-1; i <= iLast; ++i) {
-        Item item = pItems.at(i);
+        Item item = pItems[i];
 
         // Determine which widget should be shown/hidden
 

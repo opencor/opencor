@@ -256,7 +256,7 @@ QString CellmlFileRdfTriple::resource() const
     // Return the RDF triple's resource from its MIRIAM URN
 
     if (!mMiriamUrn.isEmpty())
-        return QString(mMiriamUrn.split(":").at(2)).replace("%3A", ":");
+        return QString(mMiriamUrn.split(":")[2]).replace("%3A", ":");
     else
         return QString();
 }
@@ -268,7 +268,7 @@ QString CellmlFileRdfTriple::id() const
     // Return the RDF triple's id from its MIRIAM URN
 
     if (!mMiriamUrn.isEmpty())
-        return QString(mMiriamUrn.split(":").at(3)).replace("%3A", ":");
+        return QString(mMiriamUrn.split(":")[3]).replace("%3A", ":");
     else
         return QString();
 }

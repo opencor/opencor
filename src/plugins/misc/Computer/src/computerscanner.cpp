@@ -442,7 +442,7 @@ void ComputerScanner::getNextChar()
     } else {
         // Not at the end of the input, so retrieve the current character
 
-        mChar = mInput.at(mPosition);
+        mChar = mInput[mPosition];
 
         // Check whether the current character is a line feed
 
