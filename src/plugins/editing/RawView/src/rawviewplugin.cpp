@@ -41,7 +41,7 @@ RawViewPlugin::RawViewPlugin()
 {
     // Set our settings
 
-    mGuiSettings->addView(GuiViewSettings::Editing, 0);
+    mGuiSettings->setView(GuiViewSettings::Editing);
 }
 
 //==============================================================================
@@ -55,17 +55,11 @@ QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString RawViewPlugin::viewName(const int &pViewIndex)
+QString RawViewPlugin::viewName()
 {
-    // We have only one view, so return its name otherwise call the GuiInterface
-    // implementation of viewName
+    // Return our raw view's name
 
-    switch (pViewIndex) {
-    case 0:
-        return tr("Raw");
-    default:
-        return GuiInterface::viewName(pViewIndex);
-    }
+    return tr("Raw");
 }
 
 //==============================================================================

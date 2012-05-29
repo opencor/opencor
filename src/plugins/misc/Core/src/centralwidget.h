@@ -149,7 +149,7 @@ private:
                      const GuiViewSettings::Mode &pMode);
 
     void updateModeGui(const GuiViewSettings::Mode &pMode,
-                       GuiInterface * &pGuiInterface, int &pModeViewIndex);
+                       GuiInterface * &pGuiInterface);
 
     QString modeViewName(const GuiViewSettings::Mode &pMode);
 

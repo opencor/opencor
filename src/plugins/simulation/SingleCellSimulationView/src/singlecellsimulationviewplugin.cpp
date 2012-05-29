@@ -43,7 +43,7 @@ SingleCellSimulationViewPlugin::SingleCellSimulationViewPlugin()
 {
     // Set our settings
 
-    mGuiSettings->addView(GuiViewSettings::Simulation, 0);
+    mGuiSettings->setView(GuiViewSettings::Simulation);
 }
 
 //==============================================================================
@@ -96,8 +96,7 @@ void SingleCellSimulationViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName,
-                                                     const int &)
+QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName)
 {
     // Check that we are dealing with a CellML file and, if so, return our
     // generic simulation view widget
@@ -119,17 +118,11 @@ QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName,
 
 //==============================================================================
 
-QString SingleCellSimulationViewPlugin::viewName(const int &pViewIndex)
+QString SingleCellSimulationViewPlugin::viewName()
 {
-    // We have only one view, so return its name otherwise call the GuiInterface
-    // implementation of viewName
+    // Return our single cell view's name
 
-    switch (pViewIndex) {
-    case 0:
-        return tr("Single Cell");
-    default:
-        return GuiInterface::viewName(pViewIndex);
-    }
+    return tr("Single Cell");
 }
 
 //==============================================================================

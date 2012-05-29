@@ -51,7 +51,7 @@ CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin() :
 {
     // Set our settings
 
-    mGuiSettings->addView(GuiViewSettings::Editing, 0);
+    mGuiSettings->setView(GuiViewSettings::Editing);
 }
 
 //==============================================================================
@@ -232,17 +232,11 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString CellMLAnnotationViewPlugin::viewName(const int &pViewIndex)
+QString CellMLAnnotationViewPlugin::viewName()
 {
-    // We have only one view, so return its name otherwise call the GuiInterface
-    // implementation of viewName
+    // Return our CellML annotation view's name
 
-    switch (pViewIndex) {
-    case 0:
-        return tr("CellML Annotation");
-    default:
-        return GuiInterface::viewName(pViewIndex);
-    }
+    return tr("CellML Annotation");
 }
 
 //==============================================================================

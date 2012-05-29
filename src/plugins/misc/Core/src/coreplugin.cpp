@@ -147,7 +147,7 @@ mFilePrintAction->setEnabled(false);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFilePrintAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
 
-    mGuiSettings->addCentralWidget(mCentralWidget);
+    mGuiSettings->setCentralWidget(mCentralWidget);
 }
 
 //==============================================================================
@@ -171,13 +171,12 @@ void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
     foreach (Plugin *loadedPlugin, pLoadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(loadedPlugin->instance());
 
-        if (guiInterface)
-            // The plugin implements our GUI interface, so go through each view
-            // supported by the plugin and enable whatever mode is required
+        if (guiInterface && guiInterface->guiSettings()->view())
+            // The plugin implements our GUI interface and it has a view, so add
+            // it to our central widget
 
-            foreach (GuiViewSettings *viewSettings,
-                     guiInterface->guiSettings()->views())
-                mCentralWidget->addView(loadedPlugin, viewSettings);
+            mCentralWidget->addView(loadedPlugin,
+                                    guiInterface->guiSettings()->view());
     }
 
     // Some connections to handle certain plugin's windows

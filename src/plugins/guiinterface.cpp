@@ -74,9 +74,8 @@ QAction * GuiMenuActionSettings::action() const
 
 //==============================================================================
 
-GuiViewSettings::GuiViewSettings(const Mode &pMode, const int &pIndex) :
-    mMode(pMode),
-    mIndex(pIndex)
+GuiViewSettings::GuiViewSettings(const Mode &pMode) :
+    mMode(pMode)
 {
 }
 
@@ -87,15 +86,6 @@ GuiViewSettings::Mode GuiViewSettings::mode() const
     // Return the view's mode
 
     return mMode;
-}
-
-//==============================================================================
-
-int GuiViewSettings::index() const
-{
-    // Return the view's index
-
-    return mIndex;
 }
 
 //==============================================================================
@@ -150,7 +140,11 @@ QAction * GuiWindowSettings::action() const
 //==============================================================================
 
 GuiSettings::GuiSettings() :
-    mCentralWidget(0)
+    mMenus(QList<GuiMenuSettings *>()),
+    mMenuActions(QList<GuiMenuActionSettings *>()),
+    mCentralWidget(0),
+    mView(0),
+    mWindows(QList<GuiWindowSettings *>())
 {
 }
 
@@ -166,8 +160,7 @@ GuiSettings::~GuiSettings()
     foreach (GuiMenuActionSettings *menuActionSettings, mMenuActions)
         delete menuActionSettings;
 
-    foreach (GuiViewSettings *viewSettings, mViews)
-        delete viewSettings;
+    delete mView;
 
     foreach (GuiWindowSettings *windowSettings, mWindows)
         delete windowSettings;
@@ -196,20 +189,11 @@ void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettin
 
 //==============================================================================
 
-void GuiSettings::addCentralWidget(Core::CentralWidget *pCentralWidget)
+void GuiSettings::setCentralWidget(Core::CentralWidget *pCentralWidget)
 {
     // Set the central widget to be used
 
     mCentralWidget = pCentralWidget;
-}
-
-//==============================================================================
-
-void GuiSettings::addView(const GuiViewSettings::Mode &pMode, const int &pIndex)
-{
-    // Add a new view to our list
-
-    mViews << new GuiViewSettings(pMode, pIndex);
 }
 
 //==============================================================================
@@ -223,6 +207,20 @@ void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
 
     mWindows << new GuiWindowSettings(pDefaultDockingArea, pWindow, pType,
                                       pAction);
+}
+
+//==============================================================================
+
+void GuiSettings::setView(const GuiViewSettings::Mode &pMode)
+{
+    // Add and set the view
+
+    if (mView)
+        // There is already a view, so delete it
+
+        delete mView;
+
+    mView = new GuiViewSettings(pMode);
 }
 
 //==============================================================================
@@ -254,15 +252,6 @@ Core::CentralWidget * GuiSettings::centralWidget() const
 
 //==============================================================================
 
-QList<GuiViewSettings *> GuiSettings::views() const
-{
-    // Return our views
-
-    return mViews;
-}
-
-//==============================================================================
-
 QList<GuiWindowSettings *> GuiSettings::windows() const
 {
     // Return our windows
@@ -272,7 +261,18 @@ QList<GuiWindowSettings *> GuiSettings::windows() const
 
 //==============================================================================
 
-GuiInterface::GuiInterface()
+GuiViewSettings * GuiSettings::view() const
+{
+    // Return our view
+
+    return mView;
+}
+
+//==============================================================================
+
+GuiInterface::GuiInterface() :
+    mMainWindow(0),
+    mModeViewWidgets(GuiViewWidgets())
 {
     // Create our GUI settings object
 
@@ -287,44 +287,22 @@ void GuiInterface::destroy()
 
     delete mGuiSettings;
 
-    // Delete our lists of view widgets
-    // Note: we would normally use viewWidgets rather than viewWidgets->values()
-    //       in the internal foreach statement, but the compiler gets a bit
-    //       confused with regards to the type of viewWidgets, so...
+    // Delete our view widgets
 
-    foreach (GuiViewWidgets *viewWidgets, mModeViewWidgets) {
-        foreach (QWidget *viewWidget, viewWidgets->values())
-            delete qobject_cast<QWidget *>(viewWidget);
-
-        delete viewWidgets;
-    }
+    foreach (QWidget *viewWidget, mModeViewWidgets)
+        delete viewWidget;
 }
 
 //==============================================================================
 
-QWidget * GuiInterface::viewWidget(const QString &pFileName,
-                                   const int &pViewIndex)
+QWidget * GuiInterface::viewWidget(const QString &pFileName)
 {
     // Return the view widget associated with the given file name
-
-    // Retrieve the list of view widgets associated with the view index
-
-    GuiViewWidgets *viewWidgets = mModeViewWidgets.value(pViewIndex);
-
-    if (!viewWidgets) {
-        // There is no list of view widgets associated with the view index, so
-        // create one and keep track of it
-
-        viewWidgets = new GuiViewWidgets();
-        // Note: this will be deleted in GuiInterface's destroy method...
-
-        mModeViewWidgets.insert(pViewIndex, viewWidgets);
-    }
 
     // Retrieve, from our list of view widgets, the view widget associated with
     // the file name
 
-    QWidget *res = viewWidgets->value(pFileName);
+    QWidget *res = mModeViewWidgets.value(pFileName);
 
     // Check whether we got an empty view widget or not, and if so then create a
     // view widget for the file and keep track of it
@@ -332,10 +310,10 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName,
     if (!res) {
         res = newViewWidget(pFileName);
 
-        if (res)
-            // Only keep track of the view widget if it is a real one
+        // Only keep track of the view widget if it is a real one
 
-            viewWidgets->insert(pFileName, res);
+        if (res)
+            mModeViewWidgets.insert(pFileName, res);
     }
 
     // Return the view widget
@@ -354,7 +332,7 @@ QWidget * GuiInterface::newViewWidget(const QString &)
 
 //==============================================================================
 
-QString GuiInterface::viewName(const int &)
+QString GuiInterface::viewName()
 {
     // Return an empty string by default...
 

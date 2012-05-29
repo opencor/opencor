@@ -45,8 +45,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual QWidget * viewWidget(const QString & pFileName, const int &);
-    virtual QString viewName(const int &pViewIndex);
+    virtual QWidget * viewWidget(const QString & pFileName);
+    virtual QString viewName();
 
     virtual void retranslateUi();
 

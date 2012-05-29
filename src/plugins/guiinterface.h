@@ -97,14 +97,12 @@ public:
         Analysis
     };
 
-    explicit GuiViewSettings(const Mode &pMode, const int &pIndex);
+    explicit GuiViewSettings(const Mode &pMode);
 
     Mode mode() const;
-    int index() const;
 
 private:
     Mode mMode;
-    int mIndex;
 };
 
 //==============================================================================
@@ -148,24 +146,24 @@ public:
                  QMenu *pMenu);
     void addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
                        QAction *pAction = 0);
-    void addCentralWidget(Core::CentralWidget *pCentralWidget);
-    void addView(const GuiViewSettings::Mode &pMode, const int &pIndex);
+    void setCentralWidget(Core::CentralWidget *pCentralWidget);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
                    Core::DockWidget *pWindow,
                    const GuiWindowSettings::GuiWindowSettingsType &pType,
                    QAction *pAction);
+    void setView(const GuiViewSettings::Mode &pMode);
 
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;
     Core::CentralWidget *centralWidget() const;
-    QList<GuiViewSettings *> views() const;
     QList<GuiWindowSettings *> windows() const;
+    GuiViewSettings * view() const;
 
 private:
     QList<GuiMenuSettings *> mMenus;
     QList<GuiMenuActionSettings *> mMenuActions;
     Core::CentralWidget *mCentralWidget;
-    QList<GuiViewSettings *> mViews;
+    GuiViewSettings * mView;
     QList<GuiWindowSettings *> mWindows;
 };
 
@@ -182,10 +180,9 @@ class GuiInterface : Interface
 public:
     explicit GuiInterface();
 
-    virtual QWidget * viewWidget(const QString &pFileName,
-                                 const int &pViewIndex);
+    virtual QWidget * viewWidget(const QString &pFileName);
     virtual QWidget * newViewWidget(const QString &);
-    virtual QString viewName(const int &);
+    virtual QString viewName();
 
     GuiSettings * guiSettings() const;
 
@@ -217,7 +214,7 @@ protected:
 
     GuiSettings *mGuiSettings;
 
-    QMap<int, GuiViewWidgets *> mModeViewWidgets;
+    GuiViewWidgets mModeViewWidgets;
 
 private:
     virtual void destroy();

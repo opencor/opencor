@@ -42,7 +42,7 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 {
     // Set our settings
 
-    mGuiSettings->addView(GuiViewSettings::Editing, 0);
+    mGuiSettings->setView(GuiViewSettings::Editing);
 }
 
 //==============================================================================
@@ -79,7 +79,7 @@ void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName, const int &)
+QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 {
     // Check that we are dealing with a CellML file and, if so, return our
     // generic raw CellML view widget
@@ -101,17 +101,11 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName, const int &)
 
 //==============================================================================
 
-QString RawCellMLViewPlugin::viewName(const int &pViewIndex)
+QString RawCellMLViewPlugin::viewName()
 {
-    // We have only one view, so return its name otherwise call the GuiInterface
-    // implementation of viewName
+    // Return our raw CellML view's name
 
-    switch (pViewIndex) {
-    case 0:
-        return tr("Raw CellML");
-    default:
-        return GuiInterface::viewName(pViewIndex);
-    }
+    return tr("Raw CellML");
 }
 
 //==============================================================================

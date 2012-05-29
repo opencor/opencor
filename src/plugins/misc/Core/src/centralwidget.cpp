@@ -276,7 +276,7 @@ void CentralWidget::retranslateUi()
         QTabBar *modeViews = mode->views();
 
         for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
-            modeViews->setTabText(i, mode->viewInterfaces()->value(i)->viewName(mode->viewSettings()->value(i)->index()));
+            modeViews->setTabText(i, mode->viewInterfaces()->value(i)->viewName());
     }
 
     // Retranslate our no view widget message
@@ -777,8 +777,7 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 //==============================================================================
 
 void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
-                                  GuiInterface * &pGuiInterface,
-                                  int &pModeViewIndex)
+                                  GuiInterface * &pGuiInterface)
 {
     // Show/hide the mode's corresponding views tab, as needed
 
@@ -793,10 +792,8 @@ void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
     if (modeActive) {
         int modeViewsCrtIndex = mode->views()->currentIndex();
 
-        if (modeViewsCrtIndex != -1) {
+        if (modeViewsCrtIndex != -1)
             pGuiInterface  = mode->viewInterfaces()->value(modeViewsCrtIndex);
-            pModeViewIndex = mode->viewSettings()->value(modeViewsCrtIndex)->index();
-        }
     }
 }
 
@@ -814,11 +811,10 @@ void CentralWidget::updateGui()
     // tab, as needed, and retrieve the GUI interface for the view we are after
 
     GuiInterface *guiInterface;
-    int modeViewIndex;
 
-    updateModeGui(GuiViewSettings::Editing, guiInterface, modeViewIndex);
-    updateModeGui(GuiViewSettings::Simulation, guiInterface, modeViewIndex);
-    updateModeGui(GuiViewSettings::Analysis, guiInterface, modeViewIndex);
+    updateModeGui(GuiViewSettings::Editing, guiInterface);
+    updateModeGui(GuiViewSettings::Simulation, guiInterface);
+    updateModeGui(GuiViewSettings::Analysis, guiInterface);
 
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
@@ -834,7 +830,7 @@ void CentralWidget::updateGui()
     } else {
         // There is a current file, so retrieve its view
 
-        QWidget *newView = guiInterface->viewWidget(fileName, modeViewIndex);
+        QWidget *newView = guiInterface->viewWidget(fileName);
 
         if (!newView) {
             // The interface doesn't have a view for the current file, so use
@@ -894,7 +890,7 @@ QString CentralWidget::modeViewName(const GuiViewSettings::Mode &pMode)
     CentralWidgetMode *mode = mModes.value(pMode);
     int modeViewsCrtIndex = mode->views()->currentIndex();
 
-    return mode->viewInterfaces()->value(modeViewsCrtIndex)->viewName(mode->viewSettings()->value(modeViewsCrtIndex)->index());
+    return mode->viewInterfaces()->value(modeViewsCrtIndex)->viewName();
 }
 
 //==============================================================================

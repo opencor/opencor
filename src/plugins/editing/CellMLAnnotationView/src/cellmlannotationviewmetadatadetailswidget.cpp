@@ -89,7 +89,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
     // Update our unsupported metadata message
 
-    mUnsupportedMetadataMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName(0)));
+    mUnsupportedMetadataMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName()));
 }
 
 //==============================================================================
