@@ -8,11 +8,11 @@
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "commonwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
-#include <QSplitter>
+class QLabel;
 
 //==============================================================================
 
@@ -23,6 +23,15 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class BorderedWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -32,8 +41,7 @@ class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataDetailsWidget : public QSplitter,
-                                                  public Core::CommonWidget
+class CellmlAnnotationViewMetadataDetailsWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -49,6 +57,9 @@ private:
     CellmlAnnotationViewWidget *mParent;
 
     Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
+
+    Core::BorderedWidget *mBorderedUnsupportedMetadataMsg;
+    QLabel *mUnsupportedMetadataMsg;
 
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
 };

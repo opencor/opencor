@@ -36,6 +36,11 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRa
     mTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     mGui->layout->addWidget(mTreeView);
+
+    // Some further initialisations which are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
+
+    retranslateUi();
 }
 
 //==============================================================================
@@ -54,6 +59,13 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
     // Retranslate our GUI
 
     mGui->retranslateUi(this);
+
+    // Update the header labels
+
+    mDataModel->setHorizontalHeaderLabels(QStringList() << tr("#")
+                                                        << tr("Subject")
+                                                        << tr("Predicate")
+                                                        << tr("Object"));
 }
 
 //==============================================================================
@@ -63,15 +75,6 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(const CellMLSup
     // Hide ourselves (to avoid any flickering during the updaate)
 
     setVisible(false);
-
-    // Update the header labels
-    // Note: we do it here (rather than in the constructor) in case the user
-    //       decides to change languages...
-
-    mDataModel->setHorizontalHeaderLabels(QStringList() << tr("#")
-                                                        << tr("Subject")
-                                                        << tr("Predicate")
-                                                        << tr("Object"));
 
     // Remove all previous RDF triples from our tree view
 

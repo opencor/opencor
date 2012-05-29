@@ -217,6 +217,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of metadata...</source>
+        <translation>Désolé, mais la vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas ce type de métadonnées...</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataRawViewDetailsWidget</name>
     <message>
         <source>#</source>

@@ -54,6 +54,12 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::retranslateUi
     // Retranslate our GUI
 
     mGui->retranslateUi(this);
+
+    // Update the header labels
+
+    mDataModel->setHorizontalHeaderLabels(QStringList() << tr("Qualifier")
+                                                        << tr("Resource")
+                                                        << tr("Id"));
 }
 
 //==============================================================================
@@ -63,14 +69,6 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     // Hide ourselves (to avoid any flickering during the updaate)
 
     setVisible(false);
-
-    // Update the header labels
-    // Note: we do it here (rather than in the constructor) in case the user
-    //       decides to change languages...
-
-    mDataModel->setHorizontalHeaderLabels(QStringList() << tr("Qualifier")
-                                                        << tr("Resource")
-                                                        << tr("Id"));
 
     // Remove all previous RDF triples from our tree view
 

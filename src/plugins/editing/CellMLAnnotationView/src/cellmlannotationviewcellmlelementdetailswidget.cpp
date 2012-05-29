@@ -65,6 +65,8 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
+    // For the rest of our GUI, it's easier to just update it, so...
+
     updateGui(mItems);
 }
 

@@ -19,10 +19,11 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
-                                                       const QString &pFileName) :
+                                                       CellMLAnnotationViewPlugin *pPluginParent, const QString &pFileName) :
     QSplitter(pParent),
     CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewWidget),
+    mPluginParent(pPluginParent),
     mListsWidget(0),
     mDetailsWidget(0)
 {
@@ -85,6 +86,15 @@ void CellmlAnnotationViewWidget::retranslateUi()
 
     mListsWidget->retranslateUi();
     mDetailsWidget->retranslateUi();
+}
+
+//==============================================================================
+
+CellMLAnnotationViewPlugin * CellmlAnnotationViewWidget::pluginParent() const
+{
+    // Return our pointer to the plugin parent
+
+    return mPluginParent;
 }
 
 //==============================================================================

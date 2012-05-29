@@ -61,10 +61,8 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    if (currentWidget() == mCellmlDetails)
-        return mCellmlDetails->retranslateUi();
-    else
-        return mMetadataDetails->retranslateUi();
+    mCellmlDetails->retranslateUi();
+    mMetadataDetails->retranslateUi();
 }
 
 //==============================================================================

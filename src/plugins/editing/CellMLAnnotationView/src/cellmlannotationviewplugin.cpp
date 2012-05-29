@@ -179,7 +179,7 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
     // We are dealing with a CellML file, so create a new CellML annotation view
     // widget
 
-    CellmlAnnotationViewWidget *widget = new CellmlAnnotationViewWidget(mMainWindow, pFileName);
+    CellmlAnnotationViewWidget *widget = new CellmlAnnotationViewWidget(mMainWindow, this, pFileName);
 
     // Initialise our new CellML annotation view widget's sizes
 

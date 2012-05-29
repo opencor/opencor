@@ -68,8 +68,6 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
     mRawView->retranslateUi();
     mBioModelsDotNetView->retranslateUi();
-
-    updateGui(mRdfTriples);
 }
 
 //==============================================================================
