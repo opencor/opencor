@@ -61,6 +61,7 @@ private:
     Core::BorderedWidget *mBorderedUnsupportedMetadataMsg;
     QLabel *mUnsupportedMetadataMsg;
 
+    Core::BorderedWidget *mBorderedMetadataViewDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
 };
 

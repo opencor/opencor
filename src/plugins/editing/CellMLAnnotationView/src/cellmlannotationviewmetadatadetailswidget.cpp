@@ -54,13 +54,15 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widget
 
-    mMetadataViewDetails    = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
 
-    // Add our widgets to our layout
+    mBorderedMetadataViewDetails = new Core::BorderedWidget(mMetadataViewDetails,
+                                                            false, true, false, false);
+
+    // Add our bordered widgets to our layout
 
     mGui->layout->addWidget(mBorderedUnsupportedMetadataMsg);
-    mGui->layout->addWidget(new Core::BorderedWidget(mMetadataViewDetails,
-                                                     false, true, false, false));
+    mGui->layout->addWidget(mBorderedMetadataViewDetails);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -99,11 +101,15 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known or not
 
-    mBorderedUnsupportedMetadataMsg->setVisible(pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown);
+    CellMLSupport::CellmlFileRdfTriple::Type rdfTriplesType = pRdfTriples.type();
+
+    mBorderedUnsupportedMetadataMsg->setVisible(rdfTriplesType == CellMLSupport::CellmlFileRdfTriple::Unknown);
+    mBorderedMetadataViewDetails->setVisible(rdfTriplesType == CellMLSupport::CellmlFileRdfTriple::Unknown);
 
     // Update our Metadata view details GUI
 
-    mMetadataViewDetails->updateGui(pRdfTriples);
+    if (mBorderedMetadataViewDetails->isVisible())
+        mMetadataViewDetails->updateGui(pRdfTriples);
 }
 
 //==============================================================================
