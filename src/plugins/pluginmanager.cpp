@@ -48,7 +48,7 @@ PluginManager::PluginManager(QSettings *pSettings,
                       +QDir::separator()+qApp->applicationName();
 #endif
 
-    mPluginsDir = QDir::toNativeSeparators(mPluginsDir);
+    mPluginsDir = QDir::toNativeSeparators(QDir(mPluginsDir).canonicalPath());
 
     // Retrieve the list of plugins available for loading
 
