@@ -37,6 +37,8 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
 
     QVBoxLayout *widgetLayout = new QVBoxLayout(mWidget);
 
+    widgetLayout->setMargin(0);
+
     mWidget->setLayout(widgetLayout);
 
     QWidget *gridWidget = new QWidget(mWidget);
