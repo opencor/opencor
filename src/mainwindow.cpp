@@ -164,7 +164,7 @@ MainWindow::MainWindow() :
         if (i18nInterface)
             // Keep track of some information
 
-            i18nInterface->setI18nPluginName(plugin->name());
+            i18nInterface->setPluginName(plugin->name());
 
         // Core interface
 

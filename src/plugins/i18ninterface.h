@@ -25,12 +25,12 @@ class I18nInterface : Interface
 
 public:
     void setLocale(const QString &pLocale);
-    void setI18nPluginName(const QString &pI18nPluginName);
+    void setPluginName(const QString &pPluginName);
 
     virtual void retranslateUi();
 
 private:
-    QString mI18nPluginName;
+    QString mPluginName;
 
     QTranslator mTranslator;
 };
