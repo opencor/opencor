@@ -217,7 +217,9 @@ MainWindow::~MainWindow()
     //       call the finalize method and this method is not overriden by any
     //       other interface, so...
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+    Plugins loadedPlugins = mPluginManager->loadedPlugins();
+
+    foreach (Plugin *plugin, loadedPlugins) {
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
         if (coreInterface)
@@ -229,7 +231,7 @@ MainWindow::~MainWindow()
     // Note: not all of them may have things to destroy, but we better assume
     //       they all do in case they were ever to be modified...
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+    foreach (Plugin *plugin, loadedPlugins) {
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
         FileInterface *fileInterface = qobject_cast<FileInterface *>(plugin->instance());
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());

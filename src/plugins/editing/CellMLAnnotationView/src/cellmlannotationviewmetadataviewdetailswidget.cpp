@@ -88,7 +88,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
         addWidget(mEmptyView);
     else
         switch (pRdfTriples.type()) {
-        case CellMLSupport::CellmlFileRdfTriple::BioModelNetQualifier:
+        case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
             addWidget(mBioModelsDotNetView);
 
             break;

@@ -65,7 +65,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
         if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifiers[i]))) {
             // It looks like we might be dealing with a model qualifier
 
-            mType = BioModelNetQualifier;
+            mType = BioModelsDotNetQualifier;
 
             mModelQualifierType = (ModelQualifierType) (i+1);
 
@@ -77,14 +77,14 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
             if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifiers[i]))){
                 // It looks like we might be dealing with a model qualifier
 
-                mType = BioModelNetQualifier;
+                mType = BioModelsDotNetQualifier;
 
                 mBioQualifierType = (BioQualifierType) (i+1);
 
                 break;
             }
 
-    if (mType == BioModelNetQualifier) {
+    if (mType == BioModelsDotNetQualifier) {
         // We seem to be dealing with either a model or a bio(logy) qualifier,
         // so check whether its object is either a valid MIRIAM URN or a valid
         // identifiers.org URI
