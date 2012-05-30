@@ -8,12 +8,11 @@
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "widget.h"
+#include "commonwidget.h"
 
 //==============================================================================
 
-#include <QStandardItem>
-#include <QStyledItemDelegate>
+#include <QScrollArea>
 
 //==============================================================================
 
@@ -23,20 +22,11 @@ namespace Ui {
 
 //==============================================================================
 
-class QVBoxLayout;
+class QGridLayout;
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class TreeView;
-}   // namespace Core
-
-//==============================================================================
-
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -45,7 +35,8 @@ class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget : public Core::Widget
+class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget : public QScrollArea,
+                                                                     public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -62,8 +53,10 @@ private:
 
     Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *mGui;
 
-    Core::TreeView *mTreeView;
-    QStandardItemModel *mDataModel;
+    QWidget *mWidget;
+    QGridLayout *mLayout;
+
+    CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 };
 
 //==============================================================================

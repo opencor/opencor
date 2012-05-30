@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget</class>
- <widget class="QWidget" name="CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget">
+ <widget class="QScrollArea" name="CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -10,14 +10,12 @@
     <height>240</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="layout">
-   <property name="spacing">
-    <number>0</number>
-   </property>
-   <property name="margin">
-    <number>0</number>
-   </property>
-  </layout>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <property name="widgetResizable">
+   <bool>true</bool>
+  </property>
  </widget>
  <resources/>
  <connections/>

@@ -12,30 +12,43 @@
 
 //==============================================================================
 
+#include <QGridLayout>
+#include <QLabel>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
 CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
-    Widget(pParent),
+    QScrollArea(pParent),
+    CommonWidget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget)
+    mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
+    mRdfTriples(CellMLSupport::CellmlFileRdfTriples())
 {
     // Set up the GUI
 
     mGui->setupUi(this);
 
-    mTreeView  = new Core::TreeView(this);
-    mDataModel = new QStandardItemModel(mTreeView);
+    mWidget = new QWidget(this);
 
-    mTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mTreeView->setFrameShape(QFrame::NoFrame);
-    mTreeView->setModel(mDataModel);
-    mTreeView->setRootIsDecorated(false);
-    mTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    QVBoxLayout *widgetLayout = new QVBoxLayout(mWidget);
 
-    mGui->layout->addWidget(mTreeView);
+    mWidget->setLayout(widgetLayout);
+
+    QWidget *gridWidget = new QWidget(mWidget);
+
+    mLayout = new QGridLayout(gridWidget);
+
+    gridWidget->setLayout(mLayout);
+
+    widgetLayout->addWidget(gridWidget);
+    widgetLayout->addStretch();
+
+    setWidget(mWidget);
 }
 
 //==============================================================================
@@ -55,11 +68,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::retranslateUi
 
     mGui->retranslateUi(this);
 
-    // Update the header labels
+    // For the rest of our GUI, it's easier to just update it, so...
 
-    mDataModel->setHorizontalHeaderLabels(QStringList() << tr("Qualifier")
-                                                        << tr("Resource")
-                                                        << tr("Id"));
+    updateGui(mRdfTriples);
 }
 
 //==============================================================================
@@ -70,30 +81,54 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
     setVisible(false);
 
-    // Remove all previous RDF triples from our tree view
+    // Keep track of the RDF triples
 
-    while (mDataModel->rowCount())
-        foreach (QStandardItem *item, mDataModel->takeRow(0))
-            delete item;
+    mRdfTriples = pRdfTriples;
 
-    // Add the 'new' RDF triples to our tree view
+    // Remove everything from our form layout
+
+    for (int i = 0, iMax = mLayout->count(); i < iMax; ++i) {
+        QLayoutItem *item = mLayout->takeAt(0);
+
+        delete item->widget();
+        delete item;
+    }
+
+    // Create labels to act as headers
+
+    mLayout->addWidget(mParent->newLabel(mWidget, tr("Qualifier"), true, 1.25,
+                                         Qt::AlignCenter),
+                       0, 0);
+    mLayout->addWidget(mParent->newLabel(mWidget, tr("Resource"), true, 1.25,
+                                         Qt::AlignCenter),
+                       0, 1);
+    mLayout->addWidget(mParent->newLabel(mWidget, tr("Id"), true, 1.25,
+                                         Qt::AlignCenter),
+                       0, 2);
+
+    // Add the RDF triples information to our layout
     // Note: for the RDF triple's subject, we try to remove the CellML file's
     //       URI base, thus only leaving the equivalent of a CellML element
     //       cmeta:id which will speak more to the user than a possibly long URI
     //       reference...
 
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)
-        mDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem((rdfTriple->modelQualifierType() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
-                                                                                                     rdfTriple->modelQualifierTypeAsString():
-                                                                                                     rdfTriple->bioQualifierTypeAsString())
-                                                                            << new QStandardItem(rdfTriple->resource())
-                                                                            << new QStandardItem(rdfTriple->id()));
+    int row = 0;
 
-    // Make sure that all the columns have their contents fit
-
-    mTreeView->resizeColumnToContents(0);
-    mTreeView->resizeColumnToContents(1);
-    mTreeView->resizeColumnToContents(2);
+    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
+        mLayout->addWidget(mParent->newLabel(mWidget,
+                                             (rdfTriple->modelQualifierType() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                                                 rdfTriple->modelQualifierTypeAsString():
+                                                 rdfTriple->bioQualifierTypeAsString(),
+                                             false, 1.0, Qt::AlignCenter),
+                           ++row, 0);
+        mLayout->addWidget(mParent->newLabel(mWidget, rdfTriple->resource(),
+                                             false, 1.0, Qt::AlignCenter),
+                           row, 1);
+        mLayout->addWidget(mParent->newLabel(mWidget,
+                                             "<a href=\""+rdfTriple->id()+"\">"+rdfTriple->id()+"</a>",
+                                             false, 1.0, Qt::AlignCenter),
+                           row, 2);
+    }
 
     // Re-show ourselves
 

@@ -174,7 +174,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     noViewMsgFont.setPointSize(1.5*noViewMsgFont.pointSize());
 
-    mNoViewMsg->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    mNoViewMsg->setAlignment(Qt::AlignCenter);
     mNoViewMsg->setFont(noViewMsgFont);
     mNoViewMsg->setWordWrap(true);
 

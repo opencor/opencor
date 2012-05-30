@@ -93,7 +93,7 @@ private:
     QFormLayout *mLayout;
     QComboBox *mCmetaIdValue;
 
-    void addRowToCellmlFormLayout(const QString &pLabel, const QString &pValue);
+    void addRow(const QString &pLabel, const QString &pValue);
 
     QString typeAsString(const Type &pType) const;
 };

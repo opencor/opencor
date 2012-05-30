@@ -13,6 +13,10 @@
 
 //==============================================================================
 
+#include <QLabel>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -186,6 +190,30 @@ void CellmlAnnotationViewWidget::emitSplitterMoved()
     // Let whoever know that our splitter has been moved
 
     emit splitterMoved(sizes());
+}
+
+//==============================================================================
+
+QLabel * CellmlAnnotationViewWidget::newLabel(QWidget *pParent,
+                                              const QString &pText,
+                                              const bool &pBold,
+                                              const double &fontPercentage,
+                                              const Qt::Alignment &pAlignment)
+{
+    // Create and return a label, allowing to set its alignment and bold
+    // properties
+
+    QLabel *res = new QLabel(pText, pParent);
+
+    QFont font = res->font();
+
+    font.setBold(pBold);
+    font.setPointSize(fontPercentage*font.pointSize());
+
+    res->setAlignment(pAlignment);
+    res->setFont(font);
+
+    return res;
 }
 
 //==============================================================================
