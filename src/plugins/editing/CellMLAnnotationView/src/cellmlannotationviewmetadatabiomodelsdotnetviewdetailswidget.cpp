@@ -117,6 +117,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         //       element cmeta:id which will speak more to the user than a
         //       possibly long URI reference...
 
+        QString firstMiriamUrn = QString();
         int row = 0;
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
@@ -130,8 +131,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                                                  false, 1.0, Qt::AlignCenter),
                                row, 1);
 
+            QString miriamUrn = "urn:miriam:"+rdfTriple->resource()+":"+rdfTriple->id();
             QLabel *id = mParent->newLabel(mWidget,
-                                           "<a href=\"urn:miriam:"+rdfTriple->resource()+":"+rdfTriple->id()+"\">"+rdfTriple->id()+"</a>",
+                                           "<a href=\""+miriamUrn+"\">"+rdfTriple->id()+"</a>",
                                            false, 1.0, Qt::AlignCenter);
 
             id->setContextMenuPolicy(Qt::NoContextMenu);
@@ -139,15 +141,47 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             //       when a label is a link...
 
             connect(id, SIGNAL(linkActivated(const QString &)),
-                    this, SIGNAL(miriamUrnLookupRequested(const QString &)));
+                    this, SLOT(lookupMiriamUrn(const QString &)));
 
             mLayout->addWidget(id, row, 2);
+
+            if (row == 1)
+                firstMiriamUrn = miriamUrn;
         }
+
+        // Request for the first MIRIAM URN to be looked up
+
+        lookupMiriamUrn(firstMiriamUrn);
     }
 
     // Re-show ourselves
 
     setVisible(true);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupMiriamUrn(const QString &pMiriamUrn) const
+{
+    // Make the row corresponding to the MIRIAM URN bold
+
+    for (int i = 1, iMax = mLayout->rowCount(); i < iMax; ++i) {
+        QLabel *qualifier = qobject_cast<QLabel *>(mLayout->itemAtPosition(i, 0)->widget());
+        QLabel *resource  = qobject_cast<QLabel *>(mLayout->itemAtPosition(i, 1)->widget());
+        QLabel *id        = qobject_cast<QLabel *>(mLayout->itemAtPosition(i, 2)->widget());
+
+        QFont font = id->font();
+
+        font.setBold(id->text().contains(pMiriamUrn));
+
+        qualifier->setFont(font);
+        resource->setFont(font);
+        id->setFont(font);
+    }
+
+    // Let people know that we want to lookup a MIRIAM URN
+
+    emit miriamUrnLookupRequested(pMiriamUrn);
 }
 
 //==============================================================================

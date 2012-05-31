@@ -60,6 +60,9 @@ private:
 
 Q_SIGNALS:
     void miriamUrnLookupRequested(const QString &pId) const;
+
+private Q_SLOTS:
+    void lookupMiriamUrn(const QString &pMiriamUrn) const;
 };
 
 //==============================================================================
