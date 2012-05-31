@@ -128,11 +128,11 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                            row, 1);
 
         QLabel *id = mParent->newLabel(mWidget,
-                                       "<a href=\""+rdfTriple->id()+"\">"+rdfTriple->id()+"</a>",
+                                       "<a href=\"urn:miriam:"+rdfTriple->resource()+":"+rdfTriple->id()+"\">"+rdfTriple->id()+"</a>",
                                        false, 1.0, Qt::AlignCenter);
 
         connect(id, SIGNAL(linkActivated(const QString &)),
-                this, SIGNAL(idActivated(const QString &)));
+                this, SIGNAL(miriamUrnRequested(const QString &)));
 
         mLayout->addWidget(id, row, 2);
     }

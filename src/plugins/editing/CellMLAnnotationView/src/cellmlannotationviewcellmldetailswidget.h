@@ -69,7 +69,7 @@ private Q_SLOTS:
 
     void newCmetaIdValue(const QString &pCmetaIdValue);
 
-    void idActivated(const QString &pId) const;
+    void miriamUrnRequested(const QString &pMiriamUrn) const;
 };
 
 //==============================================================================

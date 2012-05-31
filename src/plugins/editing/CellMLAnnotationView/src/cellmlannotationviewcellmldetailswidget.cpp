@@ -42,8 +42,8 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     // A connection to handle the status bar
 
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(idActivated(const QString &)),
-            this, SLOT(idActivated(const QString &)));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(miriamUrnRequested(const QString &)),
+            this, SLOT(miriamUrnRequested(const QString &)));
 
     // Add our details widgets to our splitter
 
@@ -147,9 +147,9 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCm
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::idActivated(const QString &pId) const
+void CellmlAnnotationViewCellmlDetailsWidget::miriamUrnRequested(const QString &pMiriamUrn) const
 {
-qDebug(">>> Requested id = %s", qPrintable(pId));
+qDebug(">>> Requested MIRIAM URN = %s", qPrintable(pMiriamUrn));
 }
 
 //==============================================================================

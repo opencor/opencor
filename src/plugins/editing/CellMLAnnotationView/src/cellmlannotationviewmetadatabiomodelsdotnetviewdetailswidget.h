@@ -59,7 +59,7 @@ private:
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
 Q_SIGNALS:
-    void idActivated(const QString &pId) const;
+    void miriamUrnRequested(const QString &pId) const;
 };
 
 //==============================================================================
