@@ -108,6 +108,15 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
 
 //==============================================================================
 
+CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget * CellmlAnnotationViewMetadataViewDetailsWidget::bioModelsDotNetView() const
+{
+    // Return our BioModels.Net view
+
+    return mBioModelsDotNetView;
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

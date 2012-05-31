@@ -126,10 +126,15 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         mLayout->addWidget(mParent->newLabel(mWidget, rdfTriple->resource(),
                                              false, 1.0, Qt::AlignCenter),
                            row, 1);
-        mLayout->addWidget(mParent->newLabel(mWidget,
-                                             "<a href=\""+rdfTriple->id()+"\">"+rdfTriple->id()+"</a>",
-                                             false, 1.0, Qt::AlignCenter),
-                           row, 2);
+
+        QLabel *id = mParent->newLabel(mWidget,
+                                       "<a href=\""+rdfTriple->id()+"\">"+rdfTriple->id()+"</a>",
+                                       false, 1.0, Qt::AlignCenter);
+
+        connect(id, SIGNAL(linkActivated(const QString &)),
+                this, SIGNAL(idActivated(const QString &)));
+
+        mLayout->addWidget(id, row, 2);
     }
 
     // Re-show ourselves

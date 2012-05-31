@@ -543,8 +543,8 @@ void MainWindow::loadSettings()
 
     if (   !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
         || !restoreState(mSettings->value(SettingsState).toByteArray())) {
-        // The geometry and/or state of the main window couldn't be
-        // retrieved, so go with some default settins
+        // The geometry and/or state of the main window couldn't be retrieved,
+        // so go with some default settins
 
         // Default size and position of the main window
 

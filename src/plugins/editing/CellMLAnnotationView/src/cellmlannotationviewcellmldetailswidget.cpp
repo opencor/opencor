@@ -4,6 +4,7 @@
 
 #include "borderedwidget.h"
 #include "cellmlannotationviewcellmldetailswidget.h"
+#include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 
@@ -38,6 +39,11 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
     mCellmlElementDetails = new CellmlAnnotationViewCellmlElementDetailsWidget(pParent);
     mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
     mWebView              = new QWebView(pParent);
+
+    // A connection to handle the status bar
+
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(idActivated(const QString &)),
+            this, SLOT(idActivated(const QString &)));
 
     // Add our details widgets to our splitter
 
@@ -137,6 +143,13 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCm
         mMetadataViewDetails->updateGui();
     else
         mMetadataViewDetails->updateGui(mParent->rdfTriples(pCmetaIdValue));
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlDetailsWidget::idActivated(const QString &pId) const
+{
+qDebug(">>> Requested id = %s", qPrintable(pId));
 }
 
 //==============================================================================

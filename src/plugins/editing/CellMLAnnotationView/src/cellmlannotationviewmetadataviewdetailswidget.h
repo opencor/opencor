@@ -53,6 +53,8 @@ public:
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples = CellMLSupport::CellmlFileRdfTriples());
 
+    CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *bioModelsDotNetView() const;
+
 private:
     CellmlAnnotationViewWidget *mParent;
 

@@ -57,6 +57,9 @@ private:
     QGridLayout *mLayout;
 
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
+
+Q_SIGNALS:
+    void idActivated(const QString &pId) const;
 };
 
 //==============================================================================
