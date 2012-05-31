@@ -15,7 +15,15 @@
 //==============================================================================
 
 #include <QComboBox>
+#include <QFile>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QWebView>
+
+//==============================================================================
+
+#include <QJsonParser>
 
 //==============================================================================
 
@@ -28,7 +36,8 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
     QSplitter(pParent),
     CommonWidget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewCellmlDetailsWidget)
+    mGui(new Ui::CellmlAnnotationViewCellmlDetailsWidget),
+    mWebViewStatus(Empty)
 {
     // Set up the GUI
 
@@ -42,8 +51,8 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     // A connection to handle the status bar
 
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(miriamUrnRequested(const QString &)),
-            this, SLOT(miriamUrnRequested(const QString &)));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(miriamUrnLookupRequested(const QString &)),
+            this, SLOT(miriamUrnLookupRequested(const QString &)));
 
     // Add our details widgets to our splitter
 
@@ -58,6 +67,27 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
+
+    // Retrieve the list of models in the CellML Model Repository as JSON code
+    // from http://models.cellml.org/workspace/rest/contents.json
+
+    mNetworkAccessManager = new QNetworkAccessManager(this);
+
+    // Make sure that we get told when the download of our Internet file is
+    // complete
+
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
+            this, SLOT(miriamUrnDownloadFinished(QNetworkReply *)) );
+
+    // Retrieve the output template
+
+    QFile cellmlAnnotationViewWebBrowserOutputFile(":cellmlAnnotationViewWebBrowserOutput");
+
+    cellmlAnnotationViewWebBrowserOutputFile.open(QIODevice::ReadOnly);
+
+    mOutputTemplate = QString(cellmlAnnotationViewWebBrowserOutputFile.readAll());
+
+    cellmlAnnotationViewWebBrowserOutputFile.close();
 }
 
 //==============================================================================
@@ -79,6 +109,8 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
     mCellmlElementDetails->retranslateUi();
     mMetadataViewDetails->retranslateUi();
+
+    updateWebView();
 }
 
 //==============================================================================
@@ -93,6 +125,12 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
         disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
                    this, SLOT(newCmetaIdValue(const QString &)));
     }
+
+    // 'Clean up' our web view
+
+    mWebViewStatus = Empty;
+
+    updateWebView();
 
     // Update our CellML element details GUI
 
@@ -147,9 +185,145 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCm
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::miriamUrnRequested(const QString &pMiriamUrn) const
+void CellmlAnnotationViewCellmlDetailsWidget::miriamUrnLookupRequested(const QString &pMiriamUrn) const
 {
-qDebug(">>> Requested MIRIAM URN = %s", qPrintable(pMiriamUrn));
+    // The user requested a MIRIAM URN to be looked up, so...
+
+    QNetworkRequest networkRequest = QNetworkRequest(QUrl("http://www.ebi.ac.uk/miriamws/main/rest/resolve/"+pMiriamUrn));
+
+    networkRequest.setRawHeader("Accept", "application/json");
+
+    mNetworkAccessManager->get(networkRequest);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlDetailsWidget::miriamUrnDownloadFinished(QNetworkReply *pNetworkReply)
+{
+    // Output the list of models, should we have retrieved it without any
+    // problem
+
+    if (pNetworkReply->error() == QNetworkReply::NoError) {
+        // We should be getting some JSON code which we can then be used to
+        // retrieve the first URL associated with the MIRIAM URN
+
+        QJson::Parser jsonParser;
+        bool parsingOk;
+
+        QVariantMap res = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
+
+        if (parsingOk) {
+            // The parsing went fine, so try to retrieve the first corresponding
+            // URL
+
+            QUrl miriamUrl = QUrl();
+
+            QVariant uri = res["uri"];
+            QVariantList uriList;
+
+            if (uri.type() == QVariant::Map)
+                // Case where there is only one URI item
+
+                uriList << QVariantList() << uri;
+            else
+                // Case where there is more than one URI item
+
+                uriList = uri.toList();
+
+            // Go through our different URI items and see whether one of them
+            // contains a non-deprecated URL and, if so, then use it
+
+            foreach (const QVariant &uriItem, uriList) {
+                QVariantMap uriItemProperties = uriItem.toMap();
+
+                // There are up to three possible properties, the first of which
+                // is optional and tell us whether the URI item is deprecated or
+                // not
+
+                QVariant deprecated = uriItemProperties["@deprecated"];
+
+                if (   (deprecated.type() == QVariant::String)
+                    && !deprecated.toString().compare("true"))
+                    // The URI item is deprecated, so...
+
+                    continue;
+
+                // Next, we should have the type of the URI item which should be
+                // a URL
+
+                QVariant type = uriItemProperties["@type"];
+
+                if (   (type.type() != QVariant::String)
+                    || type.toString().compare("URL"))
+                    // The URI item is not a URL, so...
+
+                    continue;
+
+                // Finally, we should have the URL itself
+
+                QVariant url = uriItemProperties["$"];
+
+                if (url.type() == QVariant::String) {
+                    // This is our first non-deprecated URL, so...
+
+                    miriamUrl.setUrl(url.toString());
+
+                    break;
+                }
+            }
+
+            // Make sure that we have found a corresponding URL
+
+            if (miriamUrl.isEmpty())
+                // We haven't found any corresponding URL, so...
+
+                mWebViewStatus = NoCorrespondingUrl;
+            else
+                // We found a corresponding URL, so look it up...
+
+                mWebViewStatus = WebPage;
+
+                mWebView->setUrl(miriamUrl);
+        } else {
+            mWebViewStatus = FailedResolution;
+        }
+    } else {
+        // Something went wrong, so...
+
+        mWebViewStatus = ProblemOccurred;
+    }
+
+    // Update our Web view
+
+    updateWebView();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlDetailsWidget::updateWebView() const
+{
+    switch (mWebViewStatus) {
+    case WebPage:
+        // Nothing to do...
+
+        break;
+    case NoCorrespondingUrl:
+        mWebView->setHtml(mOutputTemplate.arg(tr("Sorry, but no corresponding URL could be found for the MIRIAM URN...")));
+
+        break;
+    case FailedResolution:
+        mWebView->setHtml(mOutputTemplate.arg(tr("Sorry, but the resolution of the MIRIAM URN failed...")));
+
+        break;
+    case ProblemOccurred:
+        mWebView->setHtml(mOutputTemplate.arg(tr("Sorry, but a problem occurred during the resolution of the MIRIAM URN...")));
+
+        break;
+    default:
+        // Empty
+
+        mWebView->setUrl(QUrl());
+    }
 }
 
 //==============================================================================

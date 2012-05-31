@@ -58,6 +58,7 @@ ADD_PLUGIN(CellMLAnnotationView
         Computer
         Core
         ${LLVM_PLUGIN}
+        QJson
         RICORDOSupport
     OPENCOR_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}

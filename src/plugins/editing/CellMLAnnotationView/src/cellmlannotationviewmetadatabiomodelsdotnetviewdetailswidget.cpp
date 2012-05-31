@@ -96,45 +96,53 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         delete item;
     }
 
-    // Create labels to act as headers
+    // Update the GUI itself, but only if there is at least one RDF triple
 
-    mLayout->addWidget(mParent->newLabel(mWidget, tr("Qualifier"), true, 1.25,
-                                         Qt::AlignCenter),
-                       0, 0);
-    mLayout->addWidget(mParent->newLabel(mWidget, tr("Resource"), true, 1.25,
-                                         Qt::AlignCenter),
-                       0, 1);
-    mLayout->addWidget(mParent->newLabel(mWidget, tr("Id"), true, 1.25,
-                                         Qt::AlignCenter),
-                       0, 2);
+    if (pRdfTriples.count()) {
+        // Create labels to act as headers
 
-    // Add the RDF triples information to our layout
-    // Note: for the RDF triple's subject, we try to remove the CellML file's
-    //       URI base, thus only leaving the equivalent of a CellML element
-    //       cmeta:id which will speak more to the user than a possibly long URI
-    //       reference...
+        mLayout->addWidget(mParent->newLabel(mWidget, tr("Qualifier"), true, 1.25,
+                                             Qt::AlignCenter),
+                           0, 0);
+        mLayout->addWidget(mParent->newLabel(mWidget, tr("Resource"), true, 1.25,
+                                             Qt::AlignCenter),
+                           0, 1);
+        mLayout->addWidget(mParent->newLabel(mWidget, tr("Id"), true, 1.25,
+                                             Qt::AlignCenter),
+                           0, 2);
 
-    int row = 0;
+        // Add the RDF triples information to our layout
+        // Note: for the RDF triple's subject, we try to remove the CellML
+        //       file's URI base, thus only leaving the equivalent of a CellML
+        //       element cmeta:id which will speak more to the user than a
+        //       possibly long URI reference...
 
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
-        mLayout->addWidget(mParent->newLabel(mWidget,
-                                             (rdfTriple->modelQualifierType() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
-                                                 rdfTriple->modelQualifierTypeAsString():
-                                                 rdfTriple->bioQualifierTypeAsString(),
-                                             false, 1.0, Qt::AlignCenter),
-                           ++row, 0);
-        mLayout->addWidget(mParent->newLabel(mWidget, rdfTriple->resource(),
-                                             false, 1.0, Qt::AlignCenter),
-                           row, 1);
+        int row = 0;
 
-        QLabel *id = mParent->newLabel(mWidget,
-                                       "<a href=\"urn:miriam:"+rdfTriple->resource()+":"+rdfTriple->id()+"\">"+rdfTriple->id()+"</a>",
-                                       false, 1.0, Qt::AlignCenter);
+        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
+            mLayout->addWidget(mParent->newLabel(mWidget,
+                                                 (rdfTriple->modelQualifierType() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                                                     rdfTriple->modelQualifierTypeAsString():
+                                                     rdfTriple->bioQualifierTypeAsString(),
+                                                 false, 1.0, Qt::AlignCenter),
+                               ++row, 0);
+            mLayout->addWidget(mParent->newLabel(mWidget, rdfTriple->resource(),
+                                                 false, 1.0, Qt::AlignCenter),
+                               row, 1);
 
-        connect(id, SIGNAL(linkActivated(const QString &)),
-                this, SIGNAL(miriamUrnRequested(const QString &)));
+            QLabel *id = mParent->newLabel(mWidget,
+                                           "<a href=\"urn:miriam:"+rdfTriple->resource()+":"+rdfTriple->id()+"\">"+rdfTriple->id()+"</a>",
+                                           false, 1.0, Qt::AlignCenter);
 
-        mLayout->addWidget(id, row, 2);
+            id->setContextMenuPolicy(Qt::NoContextMenu);
+            // Note: the above remove the context menu automatically added by Qt
+            //       when a label is a link...
+
+            connect(id, SIGNAL(linkActivated(const QString &)),
+                    this, SIGNAL(miriamUrnLookupRequested(const QString &)));
+
+            mLayout->addWidget(id, row, 2);
+        }
     }
 
     // Re-show ourselves

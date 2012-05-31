@@ -28,6 +28,21 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlDetailsWidget</name>
+    <message>
+        <source>Sorry, but no corresponding URL could be found for the MIRIAM URN...</source>
+        <translation>Désolé, mais aucune URL correspondante n&apos;a pu être trouvée pour l&apos;URN MIRIAM...</translation>
+    </message>
+    <message>
+        <source>Sorry, but the resolution of the MIRIAM URN failed...</source>
+        <translation>Désolé, mais la résolution de l&apos;URN MIRIAM a échoué...</translation>
+    </message>
+    <message>
+        <source>Sorry, but a problem occurred during the resolution of the MIRIAM URN...</source>
+        <translation>Désolé, mais il y a eu un problème durant la résolution de l&apos;URN MIRIAM...</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlElementDetailsWidget</name>
     <message>
         <source>cmeta:id:</source>

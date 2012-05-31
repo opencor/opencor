@@ -56,8 +56,8 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     connect(mCellmlModelRepositoryWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(customContextMenu(const QPoint &)));
 
-    // Retrieve the list of models in the CellML Model Repository as JSON code
-    // from http://models.cellml.org/workspace/rest/contents.json
+    // Create a network access manager so that we can then retrieve a list of
+    // CellML models from the CellML Model Repository
 
     mNetworkAccessManager = new QNetworkAccessManager(this);
 
@@ -206,17 +206,10 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
         QJson::Parser jsonParser;
         bool parsingOk;
 
-        QVariantMap res = jsonParser.parse (pNetworkReply->readAll(), &parsingOk).toMap();
+        QVariantMap res = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
 
         if (parsingOk) {
-            // Retrieve the name of the keys
-
-            QStringList keys;
-
-            foreach (const QVariant &keyVariant, res["keys"].toList())
-                keys << keyVariant.toString();
-
-            // Retrieve the list of models itself
+            // Retrieve the list of CellML models
 
             foreach (const QVariant &modelVariant, res["values"].toList()) {
                 QVariantList modelDetailsVariant = modelVariant.toList();

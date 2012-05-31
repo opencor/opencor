@@ -16,6 +16,8 @@
 
 //==============================================================================
 
+class QNetworkAccessManager;
+class QNetworkReply;
 class QWebView;
 
 //==============================================================================
@@ -58,6 +60,22 @@ private:
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;
 
+    QNetworkAccessManager *mNetworkAccessManager;
+
+    enum WebViewStatus {
+        Empty,
+        WebPage,
+        NoCorrespondingUrl,
+        FailedResolution,
+        ProblemOccurred
+    };
+
+    WebViewStatus mWebViewStatus;
+
+    QString mOutputTemplate;
+
+    void updateWebView() const;
+
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
@@ -69,7 +87,8 @@ private Q_SLOTS:
 
     void newCmetaIdValue(const QString &pCmetaIdValue);
 
-    void miriamUrnRequested(const QString &pMiriamUrn) const;
+    void miriamUrnLookupRequested(const QString &pMiriamUrn) const;
+    void miriamUrnDownloadFinished(QNetworkReply *pNetworkReply);
 };
 
 //==============================================================================
