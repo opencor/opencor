@@ -924,3 +924,14 @@ MACRO(DEPLOY_WINDOWS_BINARY_FILE FILENAME)
 
     INSTALL(FILES ${FILENAME} DESTINATION bin)
 ENDMACRO()
+
+MACRO(DEPLOY_LINUX_FILE DIRNAME FILENAME)
+    # Copy the Linux file to its destination, so we can test things without
+    # first having to deploy OpenCOR
+
+    COPY_FILE_TO_BUILD_DIR(${DIRNAME} ${FILENAME})
+
+    # Install the Linux file
+
+    INSTALL(FILES ${FILENAME} DESTINATION ${DIRNAME})
+ENDMACRO()

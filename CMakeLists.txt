@@ -618,16 +618,16 @@ ELSE()
 
     # Qt configuration file to tell OpenCOR where to look for plugins
 
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/qt.conf DESTINATION bin)
+    DEPLOY_LINUX_FILE(bin ${CMAKE_SOURCE_DIR}/distrib/linux/qt.conf)
 
     # SQLite plugin (required to see the help file)
 
-    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/sqldrivers)
+    DEPLOY_LINUX_FILE(plugins/sqldrivers ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     # Some image format plugins (required to see some web pages)
 
-    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/libqgif${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
-    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/libqjpeg${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
+    DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats/libqgif${CMAKE_SHARED_LIBRARY_SUFFIX})
+    DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats/libqjpeg${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     # Shell script to run OpenCOR
 
