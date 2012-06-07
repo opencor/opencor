@@ -72,7 +72,9 @@ private:
 
     WebViewStatus mWebViewStatus;
 
-    QString mOutputTemplate;
+    QString mErrorMsgTemplate;
+
+    QString mMiriamUrn;
 
     void updateWebView() const;
 
@@ -87,7 +89,7 @@ private Q_SLOTS:
 
     void newCmetaIdValue(const QString &pCmetaIdValue);
 
-    void miriamUrnLookupRequested(const QString &pMiriamUrn) const;
+    void miriamUrnLookupRequested(const QString &pMiriamUrn);
     void miriamUrnDownloadFinished(QNetworkReply *pNetworkReply);
 };
 

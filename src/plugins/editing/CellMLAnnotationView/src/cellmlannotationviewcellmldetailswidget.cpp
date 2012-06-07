@@ -37,7 +37,8 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewCellmlDetailsWidget),
-    mWebViewStatus(Empty)
+    mWebViewStatus(Empty),
+    mMiriamUrn(QString())
 {
     // Set up the GUI
 
@@ -81,13 +82,13 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     // Retrieve the output template
 
-    QFile cellmlAnnotationViewWebBrowserOutputFile(":cellmlAnnotationViewWebBrowserOutput");
+    QFile cellmlAnnotationViewWidgetErrorFile(":cellmlAnnotationViewWidgetError");
 
-    cellmlAnnotationViewWebBrowserOutputFile.open(QIODevice::ReadOnly);
+    cellmlAnnotationViewWidgetErrorFile.open(QIODevice::ReadOnly);
 
-    mOutputTemplate = QString(cellmlAnnotationViewWebBrowserOutputFile.readAll());
+    mErrorMsgTemplate = QString(cellmlAnnotationViewWidgetErrorFile.readAll());
 
-    cellmlAnnotationViewWebBrowserOutputFile.close();
+    cellmlAnnotationViewWidgetErrorFile.close();
 }
 
 //==============================================================================
@@ -185,9 +186,11 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCm
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::miriamUrnLookupRequested(const QString &pMiriamUrn) const
+void CellmlAnnotationViewCellmlDetailsWidget::miriamUrnLookupRequested(const QString &pMiriamUrn)
 {
     // The user requested a MIRIAM URN to be looked up, so...
+
+    mMiriamUrn = pMiriamUrn;
 
     QNetworkRequest networkRequest = QNetworkRequest(QUrl("http://www.ebi.ac.uk/miriamws/main/rest/resolve/"+pMiriamUrn));
 
@@ -302,21 +305,23 @@ void CellmlAnnotationViewCellmlDetailsWidget::miriamUrnDownloadFinished(QNetwork
 
 void CellmlAnnotationViewCellmlDetailsWidget::updateWebView() const
 {
+    QString errorMsg = QString();
+
     switch (mWebViewStatus) {
     case WebPage:
         // Nothing to do...
 
         break;
     case NoCorrespondingUrl:
-        mWebView->setHtml(mOutputTemplate.arg(tr("Sorry, but no corresponding URL could be found for the MIRIAM URN...")));
+        errorMsg = tr("No corresponding URL could be found for the MIRIAM URN (%1).").arg(mMiriamUrn);
 
         break;
     case FailedResolution:
-        mWebView->setHtml(mOutputTemplate.arg(tr("Sorry, but the resolution of the MIRIAM URN failed...")));
+        errorMsg = tr("The resolution of the MIRIAM URN failed (%1).").arg(mMiriamUrn);
 
         break;
     case ProblemOccurred:
-        mWebView->setHtml(mOutputTemplate.arg(tr("Sorry, but a problem occurred during the resolution of the MIRIAM URN...")));
+        errorMsg = tr("A problem occurred during the resolution of the MIRIAM URN (%1).").arg(mMiriamUrn);
 
         break;
     default:
@@ -324,6 +329,14 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateWebView() const
 
         mWebView->setUrl(QUrl());
     }
+
+    // Check whether we have an error message to show
+
+    if (!errorMsg.isEmpty())
+        mWebView->setHtml(mErrorMsgTemplate.arg(tr("Error"),
+                                                errorMsg,
+                                                tr("Please contact the <a href=\"http://www.ebi.ac.uk/miriam/main/mdb?section=contact\">MIRIAM people</a> about this error."),
+                                                tr("Copyright")+" ©2011-2012"));
 }
 
 //==============================================================================
