@@ -492,6 +492,11 @@ IF(WIN32)
 
     INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/qsqlite${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/sqldrivers)
 
+    # Some image format plugins (required to see some web pages)
+
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/qgif${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/qjpeg${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
+
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
@@ -617,7 +622,12 @@ ELSE()
 
     # SQLite plugin (required to see the help file)
 
-    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.so DESTINATION plugins/sqldrivers)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/sqldrivers)
+
+    # Some image format plugins (required to see some web pages)
+
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/libqgif${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/libqjpeg${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
 
     # Shell script to run OpenCOR
 
