@@ -225,16 +225,16 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
 
 void CellmlFileRuntime::couldNotGenerateModelCodeIssue()
 {
-    mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("the model code could not be generated")));
+    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                               tr("the model code could not be generated"));
 }
 
 //==============================================================================
 
 void CellmlFileRuntime::unexpectedProblemDuringModelCompilationIssue()
 {
-    mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("an unexpected problem occurred while trying to compile the model")));
+    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                               tr("an unexpected problem occurred while trying to compile the model"));
 }
 
 //==============================================================================
@@ -256,20 +256,20 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
         iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
 
         if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
-            mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                           tr("the model is underconstrained (i.e. some variables need to be initialised or computed)")));
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
         } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
-            mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                           tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)")));
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
         } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
-            mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                           tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)")));
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
         }
     } else {
         // The code generation didn't go fine, so...
 
-        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("a problem occurred during the compilation of the model: %1").arg(codeGenerationErrorMessage)));
+        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                   tr("a problem occurred during the compilation of the model: %1").arg(codeGenerationErrorMessage));
     }
 }
 
@@ -490,8 +490,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
     if (!mOdeCodeInformation) {
         // No ODE code information could be retrieved, so...
 
-        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("no code information could be retrieved for the model")));
+        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                   tr("no code information could be retrieved for the model"));
 
         return this;
     }
@@ -606,19 +606,19 @@ void CellmlFileRuntime::checkFunction(const QString &pFunctionName)
         // Something went wrong with the parsing of the function, so output the
         // error(s) that was(were) found
 
-        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the '%1' function could not be parsed").arg(pFunctionName)));
+        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                   tr("the '%1' function could not be parsed").arg(pFunctionName));
 
-        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                       mComputerEngine->parserError().message(),
-                                       mComputerEngine->parserError().line(),
-                                       mComputerEngine->parserError().column()));
+        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                   mComputerEngine->parserError().message(),
+                                   mComputerEngine->parserError().line(),
+                                   mComputerEngine->parserError().column());
     } else if (!mComputerEngine->error().isEmpty()) {
         // Something went wrong with the addition of the function, so output the
         // error that was found
 
-        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the '%1' function could not be compiled (%2)").arg(pFunctionName, mComputerEngine->error().message())));
+        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                   tr("the '%1' function could not be compiled (%2)").arg(pFunctionName, mComputerEngine->error().message()));
     }
 }
 

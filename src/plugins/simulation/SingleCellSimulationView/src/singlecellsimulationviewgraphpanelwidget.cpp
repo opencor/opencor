@@ -134,7 +134,7 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addCurve()
 
     // Add it to our list of curves
 
-    mPlotCurves.append(res);
+    mPlotCurves << res;
 
     // Return it to the caller
 

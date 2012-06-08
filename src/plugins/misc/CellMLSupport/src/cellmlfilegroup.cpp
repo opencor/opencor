@@ -26,7 +26,7 @@ CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
         if (relationshipReference)
             // We have a relationship reference, so add it to our list
 
-            mRelationshipReferences.append(new CellmlFileRelationshipReference(relationshipReference));
+            mRelationshipReferences << new CellmlFileRelationshipReference(relationshipReference);
         else
             // No more relationship references, so...
 
@@ -44,7 +44,7 @@ CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
         if (componentReference)
             // We have a component reference, so add it to our list
 
-            mComponentReferences.append(new CellmlFileComponentReference(componentReference));
+            mComponentReferences << new CellmlFileComponentReference(componentReference);
         else
             // No more component references, so...
 

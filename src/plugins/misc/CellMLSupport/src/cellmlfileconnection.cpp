@@ -30,7 +30,7 @@ CellmlFileConnection::CellmlFileConnection(iface::cellml_api::Connection *pConne
         if (mapVariables)
             // We have variables to map, so add them to our list
 
-            mVariableMappings.append(new CellmlFileMapVariablesItem(mapVariables));
+            mVariableMappings << new CellmlFileMapVariablesItem(mapVariables);
         else
             // No more variables to map, so...
 

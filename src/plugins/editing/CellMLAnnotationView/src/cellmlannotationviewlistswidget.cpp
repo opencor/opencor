@@ -619,7 +619,7 @@ void CellmlAnnotationViewListsWidget::populateMetadataDataModel()
 
                 mMetadataDataModel->invisibleRootItem()->appendRow(metadataItem);
 
-                ids.append(id);
+                ids << id;
             }
         }
 

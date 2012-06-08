@@ -111,7 +111,7 @@ bool ComputerEngineData::addExternalFunction(const QString &pExternalFunctionNam
     } else {
         // The external function is not yet in our list, so add it
 
-        mExternalFunctions.append(externalFunction);
+        mExternalFunctions << externalFunction;
 
         return true;
     }
@@ -478,7 +478,7 @@ llvm::Function * ComputerEngine::compileFunction(ComputerFunction *pFunction)
             // Keep track of the fact that we have already defined the external
             // function
 
-            mExternalFunctions.append(externalFunction);
+            mExternalFunctions << externalFunction;
         }
 
     // Add the TBAA information, if needed

@@ -223,7 +223,7 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 
     // Keep track of our new CellML annotation view widget
 
-    mWidgets.append(widget);
+    mWidgets << widget;
 
     // We are all done, so return our new CellML annotation view widget
 

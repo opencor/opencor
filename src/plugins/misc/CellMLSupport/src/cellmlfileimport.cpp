@@ -28,7 +28,7 @@ CellmlFileImport::CellmlFileImport(iface::cellml_api::CellMLImport *pCellmlImpor
         if (importUnit)
             // We have a unit import, so add it to our list
 
-            mUnits.append(new CellmlFileImportUnit(importUnit));
+            mUnits << new CellmlFileImportUnit(importUnit);
         else
             // No more unit imports, so...
 
@@ -46,7 +46,7 @@ CellmlFileImport::CellmlFileImport(iface::cellml_api::CellMLImport *pCellmlImpor
         if (importComponent)
             // We have a component import, so add it to our list
 
-            mComponents.append(new CellmlFileImportComponent(importComponent));
+            mComponents << new CellmlFileImportComponent(importComponent);
         else
             // No more component imports, so...
 

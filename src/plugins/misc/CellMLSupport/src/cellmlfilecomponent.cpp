@@ -36,7 +36,7 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
         if (unit)
             // We have a unit, so add it to our list
 
-            mUnits.append(new CellmlFileUnit(unit));
+            mUnits << new CellmlFileUnit(unit);
         else
             // No more units, so...
 
@@ -54,7 +54,7 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
         if (variable)
             // We have a variable, so add it to our list
 
-            mVariables.append(new CellmlFileVariable(variable));
+            mVariables << new CellmlFileVariable(variable);
         else
             // No more variables, so...
 
@@ -72,7 +72,7 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
         if (mathmlElement)
             // We have a MathML element, so add it to our list
 
-            mMathmlElements.append(new CellmlFileMathmlElement(mathmlElement));
+            mMathmlElements << new CellmlFileMathmlElement(mathmlElement);
         else
             // No more MathML elements, so...
 

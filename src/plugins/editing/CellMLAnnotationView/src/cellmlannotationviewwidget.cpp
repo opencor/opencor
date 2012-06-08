@@ -135,7 +135,7 @@ void CellmlAnnotationViewWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple
 {
     // Add pRdfTriple to pRdfTriples
 
-    pRdfTriples.append(pRdfTriple);
+    pRdfTriples << pRdfTriple;
 
     // Recursively add all the RDF triples which subject matches pRdfTriple's
     // object
@@ -162,8 +162,8 @@ CellMLSupport::CellmlFileRdfTriples CellmlAnnotationViewWidget::rdfTriples(const
         // from the group of RDF triples in which we are interested
 
         if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)
-            // We have an RDF triple of which we can make sense, so retrieve its
-            // group name
+            // We have an RDF triple of which we can make sense, so retrieve and
+            // check its group name
 
             if (!pCmetaId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
                 // It's the correct group name, so add it to our list

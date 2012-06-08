@@ -267,7 +267,7 @@ void SingleCellSimulationViewWidget::addSolverInterface(SolverInterface *pSolver
     if (!mSolverInterfaces.contains(pSolverInterface))
         // The solver interface is not yet in our list, so...
 
-        mSolverInterfaces.append(pSolverInterface);
+        mSolverInterfaces << pSolverInterface;
 }
 
 //==============================================================================
@@ -673,8 +673,8 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
             else
                 daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
 
-            xData.append(voi);
-            yData.append(mStates[mStatesIndex]);
+            xData << voi;
+            yData << mStates[mStatesIndex];
 
             // Make sure that the graph panel is up-to-date
             //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
@@ -726,8 +726,8 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
             // Last bit of simulation data
 
-            xData.append(voi);
-            yData.append(mStates[mStatesIndex]);
+            xData << voi;
+            yData << mStates[mStatesIndex];
 
             // Make sure that the graph panel is up-to-date
             //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH

@@ -87,7 +87,7 @@ bool ComputerFunction::addParameter(const ComputerParameter &pParameter)
     } else {
         // The parameter is not yet in our list, so add it
 
-        mParameters.append(pParameter);
+        mParameters << pParameter;
 
         return true;
     }
@@ -108,7 +108,7 @@ void ComputerFunction::addEquation(ComputerEquation *pEquation)
 {
     // Add an equation to the function
 
-    mEquations.append(pEquation);
+    mEquations << pEquation;
 }
 
 //==============================================================================

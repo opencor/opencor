@@ -27,7 +27,7 @@ CellmlFileComponentReference::CellmlFileComponentReference(iface::cellml_api::Co
         if (componentReference)
             // We have a component reference, so add it to our list
 
-            mComponentReferences.append(new CellmlFileComponentReference(componentReference));
+            mComponentReferences << new CellmlFileComponentReference(componentReference);
         else
             // No more component references, so...
 

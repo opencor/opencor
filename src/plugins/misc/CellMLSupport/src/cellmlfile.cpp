@@ -142,8 +142,8 @@ bool CellmlFile::load()
     } catch (iface::cellml_api::CellMLException &) {
         // Something went wrong with the loading of the model, so...
 
-        mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage()))));
+        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                   tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage())));
 
         return false;
     }
@@ -168,8 +168,8 @@ bool CellmlFile::load()
             // Something went wrong with the full instantiation of the imports,
             // so...
 
-            mIssues.append(CellmlFileIssue(CellmlFileIssue::Error,
-                                           tr("the model's imports could not be fully instantiated")));
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model's imports could not be fully instantiated"));
 
             return false;
         }
@@ -189,7 +189,7 @@ bool CellmlFile::load()
         if (import)
             // We have an import, so add it to our list
 
-            mImports.append(new CellmlFileImport(import));
+            mImports << new CellmlFileImport(import);
         else
             // No more imports, so...
 
@@ -207,7 +207,7 @@ bool CellmlFile::load()
         if (unit)
             // We have a unit, so add it to our list
 
-            mUnits.append(new CellmlFileUnit(unit));
+            mUnits << new CellmlFileUnit(unit);
         else
             // No more units, so...
 
@@ -225,7 +225,7 @@ bool CellmlFile::load()
         if (component)
             // We have a component, so add it to our list
 
-            mComponents.append(new CellmlFileComponent(component));
+            mComponents << new CellmlFileComponent(component);
         else
             // No more components, so...
 
@@ -243,7 +243,7 @@ bool CellmlFile::load()
         if (group)
             // We have a group, so add it to our list
 
-            mGroups.append(new CellmlFileGroup(group));
+            mGroups << new CellmlFileGroup(group);
         else
             // No more groups, so...
 
@@ -261,7 +261,7 @@ bool CellmlFile::load()
         if (connection)
             // We have a connection, so add it to our list
 
-            mConnections.append(new CellmlFileConnection(connection));
+            mConnections << new CellmlFileConnection(connection);
         else
             // No more connections, so...
 
@@ -288,7 +288,7 @@ bool CellmlFile::load()
                 if (triple)
                     // We have a triple, so add it to our list
 
-                    mMetadata.append(new CellmlFileRdfTriple(triple));
+                    mMetadata << new CellmlFileRdfTriple(triple);
                 else
                     // No more triples, so...
 
@@ -478,9 +478,9 @@ bool CellmlFile::isValid()
 
             // Append the issue to our list
 
-            mIssues.append(CellmlFileIssue(issueType,
-                                           QString::fromStdWString(cellmlValidityIssue->description()),
-                                           line, column, importedFile));
+            mIssues << CellmlFileIssue(issueType,
+                                       QString::fromStdWString(cellmlValidityIssue->description()),
+                                       line, column, importedFile);
         }
 
 #ifdef QT_DEBUG
