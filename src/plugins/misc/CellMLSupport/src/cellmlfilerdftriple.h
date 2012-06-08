@@ -71,8 +71,6 @@ public:
     BioQualifierType bioQualifierType() const;
     QString bioQualifierTypeAsString() const;
 
-    QString miriamUrn() const;
-
     QString resource() const;
     QString id() const;
 
@@ -86,7 +84,8 @@ private:
     ModelQualifierType mModelQualifierType;
     BioQualifierType mBioQualifierType;
 
-    QString mMiriamUrn;
+    QString mResource;
+    QString mId;
 };
 
 //==============================================================================

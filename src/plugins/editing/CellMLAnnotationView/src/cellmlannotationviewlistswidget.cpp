@@ -592,9 +592,9 @@ void CellmlAnnotationViewListsWidget::populateMetadataDataModel()
         // <variable units="micromolar" public_interface="out" cmeta:id="C_C" name="C" initial_value="0.01">
         //   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
         //     <rdf:Description rdf:about="#C_C">
-        //       <bqbiol:isVersionOf rdf:resource="urn:miriam:uniprot:Q4KLA0"/>
-        //       <bqbiol:isVersionOf rdf:resource="urn:miriam:interpro:IPR006670"/>
-        //       <bqbiol:isVersionOf rdf:resource="urn:miriam:obo.sbo:sbo%3A0000252"/>
+        //       <bqbiol:isVersionOf rdf:resource="http://identifiers.org/uniprot/Q4KLA0"/>
+        //       <bqbiol:isVersionOf rdf:resource="http://identifiers.org/interpro/IPR006670"/>
+        //       <bqbiol:isVersionOf rdf:resource="http://identifiers.org/obo.sbo/sbo:0000252"/>
         //     </rdf:Description>
         //   </rdf:RDF>
         // </variable>

@@ -19,7 +19,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
     mType(Unknown),
     mModelQualifierType(ModelUnknown),
     mBioQualifierType(BioUnknown),
-    mMiriamUrn(QString())
+    mResource(QString()),
+    mId(QString())
 {
     // Retrieve the RDF triple's subject, predicate and object information
 
@@ -42,14 +43,21 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
     //          http://biomodels.net/biology-qualifiers/<yyy>
     //
     //       where <xxx> and <yyy> are one of the values in modelQualifiers and
-    //       bioQualifiers below. The object of the RDF triple must also have
-    //       the following form:
+    //       bioQualifiers below. The object of the RDF triple must have one of
+    //       the following two formats:
     //
-    //          urn:miriam:<collection>:<identifier>
+    //          urn:miriam:<resource>:<identifier>
+    //          http://identifiers.org/<resource>/<identifier>
     //
     //       For example:
     //
-    //          urn:miriam:uniprot:P62158
+    //          urn:miriam:uniprot:Q4KLA0
+    //          http://identifiers.org/uniprot/Q4KLA0
+    //
+    //       The former is a MIRIAM URN while the latter is an identifiers.org
+    //       URI. MIRIAM URNs are being deprecated in favour of identifiers.org
+    //       URIs. Still, we should and do support both formats and keep track
+    //       of their information in the form of a resource and an id...
 
     QStringList modelQualifiers = QStringList() << "is" << "isDerivedFrom"
                                                 << "isDescribedBy";
@@ -92,16 +100,21 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
         QString objectAsString = mObject->asString();
 
         if (QRegExp("^urn:miriam:[a-zA-Z0-9\\._%]+:[a-zA-Z0-9\\._%]+").exactMatch(objectAsString)) {
-            // The object is a valid MIRIAM URN, so...
+            // The object is a valid MIRIAM URN, so retrieve its corresponding
+            // resource and id
 
-            mMiriamUrn = objectAsString;
+            QStringList objectAsStringList = objectAsString.split(":");
+
+            mResource = objectAsStringList[2].replace("%3A", ":");
+            mId       = objectAsStringList[3].replace("%3A", ":");
         } else if (QRegExp("^http://identifiers.org/[a-zA-Z0-9\\._:]+/[a-zA-Z0-9\\._:]+").exactMatch(objectAsString)) {
             // The object is a valid identifiers.org URI, so retrieve its
-            // corresponding MIRIAM URN
+            // corresponding resource and id
 
             QStringList uriParts = objectAsString.remove("http://identifiers.org/").replace(":", "%3A").split("/");
 
-            mMiriamUrn = "urn:miriam:"+uriParts[0]+":"+uriParts[1];
+            mResource = uriParts[0];
+            mId       = uriParts[1];
         } else {
             // The object is neither a valid MIRIAM URN nor a valid
             // identifiers.org URI which means that the RDF triple is not a
@@ -242,35 +255,20 @@ QString CellmlFileRdfTriple::bioQualifierTypeAsString() const
 
 //==============================================================================
 
-QString CellmlFileRdfTriple::miriamUrn() const
-{
-    // Return the RDF triple's MIRIAM URN
-
-    return mMiriamUrn;
-}
-
-//==============================================================================
-
 QString CellmlFileRdfTriple::resource() const
 {
-    // Return the RDF triple's resource from its MIRIAM URN
+    // Return the RDF triple's resource
 
-    if (!mMiriamUrn.isEmpty())
-        return QString(mMiriamUrn.split(":")[2]).replace("%3A", ":");
-    else
-        return QString();
+    return mResource;
 }
 
 //==============================================================================
 
 QString CellmlFileRdfTriple::id() const
 {
-    // Return the RDF triple's id from its MIRIAM URN
+    // Return the RDF triple's id
 
-    if (!mMiriamUrn.isEmpty())
-        return QString(mMiriamUrn.split(":")[3]).replace("%3A", ":");
-    else
-        return QString();
+    return mId;
 }
 
 //==============================================================================
