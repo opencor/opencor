@@ -208,7 +208,26 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             mCmetaIdValue->addItems(mParent->listsWidget()->metadataIds());
 
             mCmetaIdValue->setEditable(true);
-            mCmetaIdValue->setEditText(cmetaId);
+
+            bool cmetaIdFound = false;
+
+            for (int i = 0, iMax = mCmetaIdValue->count(); i < iMax; ++i)
+                if (!cmetaId.compare(mCmetaIdValue->itemText(i))) {
+                    // The cmeta:id could be found in our list of metadata ids,
+                    // so set our cmeta:id index to it
+
+                    mCmetaIdValue->setCurrentIndex(i);
+
+                    cmetaIdFound = true;
+
+                    break;
+                }
+
+            if (!cmetaIdFound)
+                // The cmeta:id couldn't be found in our list of metadata ids,
+                // so 'manually' set it
+
+                mCmetaIdValue->setEditText(cmetaId);
 
             mLayout->addRow(mParent->newLabel(mWidget, tr("cmeta:id:"), true),
                             mCmetaIdValue);
