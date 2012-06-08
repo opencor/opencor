@@ -117,7 +117,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         //       element cmeta:id which will speak more to the user than a
         //       possibly long URI reference...
 
-        QString firstMiriamUrn = QString();
+        QString firstResourceId = QString();
         int row = 0;
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
@@ -131,9 +131,10 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                                                  false, 1.0, Qt::AlignCenter),
                                row, 1);
 
-            QString miriamUrn = "urn:miriam:"+rdfTriple->resource()+":"+rdfTriple->id();
+            QString resourceId = rdfTriple->resource()+"|"+rdfTriple->id();
+
             QLabel *id = mParent->newLabel(mWidget,
-                                           "<a href=\""+miriamUrn+"\">"+rdfTriple->id()+"</a>",
+                                           "<a href=\""+resourceId+"\">"+rdfTriple->id()+"</a>",
                                            false, 1.0, Qt::AlignCenter);
 
             id->setContextMenuPolicy(Qt::NoContextMenu);
@@ -141,17 +142,17 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             //       when a label is a link...
 
             connect(id, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupMiriamUrn(const QString &)));
+                    this, SLOT(lookupResourceId(const QString &)));
 
             mLayout->addWidget(id, row, 2);
 
             if (row == 1)
-                firstMiriamUrn = miriamUrn;
+                firstResourceId = resourceId;
         }
 
-        // Request for the first MIRIAM URN to be looked up
+        // Request for the first resource id to be looked up
 
-        lookupMiriamUrn(firstMiriamUrn);
+        lookupResourceId(firstResourceId);
     }
 
     // Re-show ourselves
@@ -161,9 +162,15 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupMiriamUrn(const QString &pMiriamUrn) const
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceId(const QString &pResourceId) const
 {
-    // Make the row corresponding to the MIRIAM URN bold
+    // Retrieve the resource and id
+
+    QStringList resourceIdAsStringList = pResourceId.split("|");
+    QString resourceAsString = resourceIdAsStringList[0];
+    QString idAsString = resourceIdAsStringList[1];
+
+    // Make the row corresponding to the resource id bold
 
     for (int i = 1, iMax = mLayout->rowCount(); i < iMax; ++i) {
         QLabel *qualifier = qobject_cast<QLabel *>(mLayout->itemAtPosition(i, 0)->widget());
@@ -172,16 +179,17 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupMiriamU
 
         QFont font = id->font();
 
-        font.setBold(id->text().contains(pMiriamUrn));
+        font.setBold(   !resource->text().compare(resourceAsString)
+                     && !id->text().compare("<a href=\""+pResourceId+"\">"+idAsString+"</a>"));
 
         qualifier->setFont(font);
         resource->setFont(font);
         id->setFont(font);
     }
 
-    // Let people know that we want to lookup a MIRIAM URN
+    // Let people know that we want to lookup a resource id
 
-    emit miriamUrnLookupRequested(pMiriamUrn);
+    emit resourceIdLookupRequested(resourceAsString, idAsString);
 }
 
 //==============================================================================

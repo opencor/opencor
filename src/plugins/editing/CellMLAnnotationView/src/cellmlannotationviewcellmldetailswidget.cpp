@@ -52,8 +52,8 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     // A connection to handle the status bar
 
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(miriamUrnLookupRequested(const QString &)),
-            this, SLOT(miriamUrnLookupRequested(const QString &)));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceIdLookupRequested(const QString &, const QString &)),
+            this, SLOT(resourceIdLookupRequested(const QString &, const QString &)));
 
     // Add our details widgets to our splitter
 
@@ -186,13 +186,14 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCm
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::miriamUrnLookupRequested(const QString &pMiriamUrn)
+void CellmlAnnotationViewCellmlDetailsWidget::resourceIdLookupRequested(const QString &pResource,
+                                                                        const QString &pId)
 {
     // The user requested a MIRIAM URN to be looked up, so...
 
-    mMiriamUrn = pMiriamUrn;
+    mMiriamUrn = "urn:miriam:"+pResource+":"+pId;
 
-    QNetworkRequest networkRequest = QNetworkRequest(QUrl("http://www.ebi.ac.uk/miriamws/main/rest/resolve/"+pMiriamUrn));
+    QNetworkRequest networkRequest = QNetworkRequest(QUrl("http://www.ebi.ac.uk/miriamws/main/rest/resolve/"+mMiriamUrn));
 
     networkRequest.setRawHeader("Accept", "application/json");
 

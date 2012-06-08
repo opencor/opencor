@@ -59,10 +59,11 @@ private:
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
 Q_SIGNALS:
-    void miriamUrnLookupRequested(const QString &pId) const;
+    void resourceIdLookupRequested(const QString &pResource,
+                                   const QString &pId) const;
 
 private Q_SLOTS:
-    void lookupMiriamUrn(const QString &pMiriamUrn) const;
+    void lookupResourceId(const QString &pResourceId) const;
 };
 
 //==============================================================================

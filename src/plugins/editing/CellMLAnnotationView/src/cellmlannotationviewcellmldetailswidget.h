@@ -89,7 +89,8 @@ private Q_SLOTS:
 
     void newCmetaIdValue(const QString &pCmetaIdValue);
 
-    void miriamUrnLookupRequested(const QString &pMiriamUrn);
+    void resourceIdLookupRequested(const QString &pResource,
+                                   const QString &pId);
     void miriamUrnDownloadFinished(QNetworkReply *pNetworkReply);
 };
 
