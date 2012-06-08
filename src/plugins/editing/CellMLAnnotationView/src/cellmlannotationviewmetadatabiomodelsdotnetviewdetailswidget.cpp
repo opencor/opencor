@@ -121,30 +121,40 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         int row = 0;
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
+            // Qualifier
+
             mLayout->addWidget(mParent->newLabel(mWidget,
                                                  (rdfTriple->modelQualifierType() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
                                                      rdfTriple->modelQualifierTypeAsString():
                                                      rdfTriple->bioQualifierTypeAsString(),
                                                  false, 1.0, Qt::AlignCenter),
                                ++row, 0);
-            mLayout->addWidget(mParent->newLabel(mWidget, rdfTriple->resource(),
-                                                 false, 1.0, Qt::AlignCenter),
-                               row, 1);
+
+            // Resource
 
             QString resourceId = rdfTriple->resource()+"|"+rdfTriple->id();
 
-            QLabel *id = mParent->newLabel(mWidget,
-                                           "<a href=\""+resourceId+"\">"+rdfTriple->id()+"</a>",
-                                           false, 1.0, Qt::AlignCenter);
+            QLabel *resource = mParent->newLabelLink(mWidget,
+                                                     "<a href=\""+resourceId+"\">"+rdfTriple->resource()+"</a>",
+                                                     false, 1.0, Qt::AlignCenter);
 
-            id->setContextMenuPolicy(Qt::NoContextMenu);
-            // Note: the above remove the context menu automatically added by Qt
-            //       when a label is a link...
+            connect(resource, SIGNAL(linkActivated(const QString &)),
+                    this, SLOT(lookupResource(const QString &)));
+
+            mLayout->addWidget(resource, row, 1);
+
+            // Id
+
+            QLabel *id = mParent->newLabelLink(mWidget,
+                                               "<a href=\""+resourceId+"\">"+rdfTriple->id()+"</a>",
+                                               false, 1.0, Qt::AlignCenter);
 
             connect(id, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResourceId(const QString &)));
 
             mLayout->addWidget(id, row, 2);
+
+            // Keep track of the very first resource id
 
             if (row == 1)
                 firstResourceId = resourceId;
@@ -162,7 +172,8 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceId(const QString &pResourceId) const
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceOrResourceId(const QString &pResourceId,
+                                                                                              const bool &pLookupResource) const
 {
     // Retrieve the resource and id
 
@@ -180,7 +191,8 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
 
     forever {
         if (mLayout->itemAtPosition(++row, 0)) {
-            // Valid row, so check whether to make it bold or not
+            // Valid row, so check whether to make it bold (and italic in some
+            // cases) or not
 
             QLabel *qualifier = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 0)->widget());
             QLabel *resource  = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 1)->widget());
@@ -188,12 +200,18 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
 
             QFont font = id->font();
 
-            font.setBold(   !resource->text().compare(resourceAsString)
+            font.setBold(   !resource->text().compare("<a href=\""+pResourceId+"\">"+resourceAsString+"</a>")
                          && !id->text().compare("<a href=\""+pResourceId+"\">"+idAsString+"</a>"));
+            font.setItalic(false);
+
+            QFont italicFont = id->font();
+
+            italicFont.setBold(font.bold());
+            italicFont.setItalic(font.bold());
 
             qualifier->setFont(font);
-            resource->setFont(font);
-            id->setFont(font);
+            resource->setFont(pLookupResource?italicFont:font);
+            id->setFont(!pLookupResource?italicFont:font);
         } else {
             // No more rows, so...
 
@@ -203,7 +221,28 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
 
     // Let people know that we want to lookup a resource id
 
-    emit resourceIdLookupRequested(resourceAsString, idAsString);
+    if (pLookupResource)
+        emit resourceLookupRequested(resourceAsString);
+    else
+        emit resourceIdLookupRequested(resourceAsString, idAsString);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pResourceId) const
+{
+    // Call our generic function
+
+    lookupResourceOrResourceId(pResourceId, true);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceId(const QString &pResourceId) const
+{
+    // Call our generic function
+
+    lookupResourceOrResourceId(pResourceId, false);
 }
 
 //==============================================================================

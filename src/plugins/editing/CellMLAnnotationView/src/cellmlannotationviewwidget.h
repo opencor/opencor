@@ -60,8 +60,12 @@ public:
 
     static QLabel * newLabel(QWidget *pParent, const QString &pText,
                              const bool &pBold = false,
-                             const double &fontPercentage = 1.0,
+                             const double &pFontPercentage = 1.0,
                              const Qt::Alignment &pAlignment = Qt::AlignLeft|Qt::AlignVCenter);
+    static QLabel * newLabelLink(QWidget *pParent, const QString &pText,
+                                 const bool &pBold = false,
+                                 const double &pFontPercentage = 1.0,
+                                 const Qt::Alignment &pAlignment = Qt::AlignLeft|Qt::AlignVCenter);
 
 private:
     Ui::CellmlAnnotationViewWidget *mGui;

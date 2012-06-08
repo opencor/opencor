@@ -58,11 +58,16 @@ private:
 
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
+    void lookupResourceOrResourceId(const QString &pResourceId,
+                                    const bool &pLookupResource) const;
+
 Q_SIGNALS:
+    void resourceLookupRequested(const QString &pResource) const;
     void resourceIdLookupRequested(const QString &pResource,
                                    const QString &pId) const;
 
 private Q_SLOTS:
+    void lookupResource(const QString &pResourceId) const;
     void lookupResourceId(const QString &pResourceId) const;
 };
 

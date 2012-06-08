@@ -197,21 +197,42 @@ void CellmlAnnotationViewWidget::emitSplitterMoved()
 QLabel * CellmlAnnotationViewWidget::newLabel(QWidget *pParent,
                                               const QString &pText,
                                               const bool &pBold,
-                                              const double &fontPercentage,
+                                              const double &pFontPercentage,
                                               const Qt::Alignment &pAlignment)
 {
-    // Create and return a label, allowing to set its alignment and bold
-    // properties
+    // Create and return a label, allowing to set some of its properties
 
     QLabel *res = new QLabel(pText, pParent);
 
     QFont font = res->font();
 
     font.setBold(pBold);
-    font.setPointSize(fontPercentage*font.pointSize());
+    font.setPointSize(pFontPercentage*font.pointSize());
 
     res->setAlignment(pAlignment);
     res->setFont(font);
+
+    return res;
+}
+
+//==============================================================================
+
+QLabel * CellmlAnnotationViewWidget::newLabelLink(QWidget *pParent,
+                                                  const QString &pText,
+                                                  const bool &pBold,
+                                                  const double &pFontPercentage,
+                                                  const Qt::Alignment &pAlignment)
+{
+    // Create a label link, allowing to set set some of its properties
+
+    QLabel *res = newLabel(pParent, pText, pBold, pFontPercentage, pAlignment);
+
+    // Prevent Qt from associating a context menu with the label (something
+    // which it does automatically when a label is a link...)
+
+    res->setContextMenuPolicy(Qt::NoContextMenu);
+
+    // Return our label link
 
     return res;
 }

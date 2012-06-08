@@ -71,6 +71,7 @@ private Q_SLOTS:
 
     void newCmetaIdValue(const QString &pCmetaIdValue);
 
+    void resourceLookupRequested(const QString &pResource);
     void resourceIdLookupRequested(const QString &pResource,
                                    const QString &pId);
 };

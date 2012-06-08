@@ -48,8 +48,10 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
     mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
     mWebView              = new QWebView(pParent);
 
-    // A connection to handle the status bar
+    // A connection to handle the looking up of a resource and a resource id
 
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceLookupRequested(const QString &)),
+            this, SLOT(resourceLookupRequested(const QString &)));
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceIdLookupRequested(const QString &, const QString &)),
             this, SLOT(resourceIdLookupRequested(const QString &, const QString &)));
 
@@ -157,6 +159,16 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCm
         mMetadataViewDetails->updateGui();
     else
         mMetadataViewDetails->updateGui(mParent->rdfTriples(pCmetaIdValue));
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlDetailsWidget::resourceLookupRequested(const QString &pResource)
+{
+    // The user requested a resource to be looked up, so retrieve it using
+    // identifiers.org
+
+    mWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
 }
 
 //==============================================================================
