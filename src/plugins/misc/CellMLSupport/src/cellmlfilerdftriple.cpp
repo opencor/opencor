@@ -111,10 +111,10 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
             // The object is a valid identifiers.org URI, so retrieve its
             // corresponding resource and id
 
-            QStringList uriParts = objectAsString.remove("http://identifiers.org/").replace(":", "%3A").split("/");
+            QStringList objectAsStringList = objectAsString.remove("http://identifiers.org/").split("/");
 
-            mResource = uriParts[0];
-            mId       = uriParts[1];
+            mResource = objectAsStringList[0];
+            mId       = objectAsStringList[1];
         } else {
             // The object is neither a valid MIRIAM URN nor a valid
             // identifiers.org URI which means that the RDF triple is not a
