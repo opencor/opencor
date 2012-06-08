@@ -141,7 +141,7 @@ void CellmlAnnotationViewWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple
     // object
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             cellmlFile()->metadata())
+             cellmlFile()->rdfTriples())
         if (!rdfTriple->subject()->asString().compare(pRdfTriple->object()->asString()))
             addRdfTriple(pRdfTriples, rdfTriple);
 }
@@ -157,7 +157,7 @@ CellMLSupport::CellmlFileRdfTriples CellmlAnnotationViewWidget::rdfTriples(const
     QString uriBase = cellmlFile()->uriBase();
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             cellmlFile()->metadata())
+             cellmlFile()->rdfTriples())
         // Retrieve the RDF triple's subject so we can determine whether it's
         // from the group of RDF triples in which we are interested
 

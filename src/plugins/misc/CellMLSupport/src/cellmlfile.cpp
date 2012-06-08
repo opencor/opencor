@@ -51,7 +51,7 @@ CellmlFile::CellmlFile(const QString &pFileName) :
     mComponents(CellmlFileComponents()),
     mGroups(CellmlFileGroups()),
     mConnections(CellmlFileConnections()),
-    mMetadata(CellmlFileRdfTriples())
+    mRdfTriples(CellmlFileRdfTriples())
 {
     // Instantiate our runtime object
 
@@ -90,7 +90,7 @@ void CellmlFile::reset()
     clearComponents();
     clearGroups();
     clearConnections();
-    clearMetadata();
+    clearRdfTriples();
 
     mIssues.clear();
 
@@ -268,7 +268,7 @@ bool CellmlFile::load()
             break;
     }
 
-    // Retrieve all the metadata associated with the model
+    // Retrieve all the RDF triples associated with the model
 
     ObjRef<iface::cellml_api::RDFRepresentation> rdfRepresentation = mCellmlApiModel->getRDFRepresentation(L"http://www.cellml.org/RDF/API");
 
@@ -288,7 +288,7 @@ bool CellmlFile::load()
                 if (triple)
                     // We have a triple, so add it to our list
 
-                    mMetadata << new CellmlFileRdfTriple(triple);
+                    mRdfTriples << new CellmlFileRdfTriple(triple);
                 else
                     // No more triples, so...
 
@@ -597,11 +597,11 @@ CellmlFileConnections CellmlFile::connections() const
 
 //==============================================================================
 
-CellmlFileRdfTriples CellmlFile::metadata() const
+CellmlFileRdfTriples CellmlFile::rdfTriples() const
 {
-    // Return the CellML file's metadata
+    // Return the CellML file's RDF triples
 
-    return mMetadata;
+    return mRdfTriples;
 }
 
 //==============================================================================
@@ -677,14 +677,14 @@ void CellmlFile::clearConnections()
 
 //==============================================================================
 
-void CellmlFile::clearMetadata()
+void CellmlFile::clearRdfTriples()
 {
-    // Delete all the metadata and clear our list
+    // Delete all the RDF triples and clear our list
 
-    foreach (CellmlFileRdfTriple *triple, mMetadata)
+    foreach (CellmlFileRdfTriple *triple, mRdfTriples)
         delete triple;
 
-    mMetadata.clear();
+    mRdfTriples.clear();
 }
 
 //==============================================================================

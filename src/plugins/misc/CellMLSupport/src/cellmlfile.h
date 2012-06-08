@@ -52,7 +52,7 @@ public:
     CellmlFileComponents components() const;
     CellmlFileGroups groups() const;
     CellmlFileConnections connections() const;
-    CellmlFileRdfTriples metadata() const;
+    CellmlFileRdfTriples rdfTriples() const;
 
     QString uriBase() const;
 
@@ -67,7 +67,7 @@ private:
     CellmlFileComponents mComponents;
     CellmlFileGroups mGroups;
     CellmlFileConnections mConnections;
-    CellmlFileRdfTriples mMetadata;
+    CellmlFileRdfTriples mRdfTriples;
 
     bool mIsValid;
 
@@ -86,7 +86,7 @@ private:
     void clearComponents();
     void clearGroups();
     void clearConnections();
-    void clearMetadata();
+    void clearRdfTriples();
 };
 
 //==============================================================================

@@ -566,7 +566,7 @@ void CellmlAnnotationViewListsWidget::populateMetadataDataModel()
     QStringList ids = QStringList();
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             mParent->cellmlFile()->metadata())
+             mParent->cellmlFile()->rdfTriples())
         // Retrieve the RDF triple's subject so we can determine to which group
         // of RDF triples it should be added
         // Note: the RDF triple is part of an rdf:Description element which is
