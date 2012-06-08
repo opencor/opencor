@@ -146,7 +146,9 @@ void CellmlAnnotationViewCellmlDetailsWidget::emitSplitterMoved()
 void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCmetaIdValue)
 {
     // The cmeta:id value of our CellML element has changed, so update its
-    // metadata details
+    // metadata details, but first 'clean up' our web view
+
+    mWebView->setUrl(QString());
 
     if (pCmetaIdValue.isEmpty())
         // The CellML element doesn't have a cmeta:id value, so we don't want

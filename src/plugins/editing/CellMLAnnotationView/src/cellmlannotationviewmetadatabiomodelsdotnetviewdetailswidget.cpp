@@ -171,20 +171,34 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
     QString idAsString = resourceIdAsStringList[1];
 
     // Make the row corresponding to the resource id bold
+    // Note: to use mLayout->rowCount() to determine the number of rows isn't an
+    //       option since no matter whether we remove rows (in updateGui()), the
+    //       returned value will be the maximum number of rows that there has
+    //       ever been, so...
 
-    for (int i = 1, iMax = mLayout->rowCount(); i < iMax; ++i) {
-        QLabel *qualifier = qobject_cast<QLabel *>(mLayout->itemAtPosition(i, 0)->widget());
-        QLabel *resource  = qobject_cast<QLabel *>(mLayout->itemAtPosition(i, 1)->widget());
-        QLabel *id        = qobject_cast<QLabel *>(mLayout->itemAtPosition(i, 2)->widget());
+    int row = 0;
 
-        QFont font = id->font();
+    forever {
+        if (mLayout->itemAtPosition(++row, 0)) {
+            // Valid row, so check whether to make it bold or not
 
-        font.setBold(   !resource->text().compare(resourceAsString)
-                     && !id->text().compare("<a href=\""+pResourceId+"\">"+idAsString+"</a>"));
+            QLabel *qualifier = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 0)->widget());
+            QLabel *resource  = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 1)->widget());
+            QLabel *id        = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 2)->widget());
 
-        qualifier->setFont(font);
-        resource->setFont(font);
-        id->setFont(font);
+            QFont font = id->font();
+
+            font.setBold(   !resource->text().compare(resourceAsString)
+                         && !id->text().compare("<a href=\""+pResourceId+"\">"+idAsString+"</a>"));
+
+            qualifier->setFont(font);
+            resource->setFont(font);
+            id->setFont(font);
+        } else {
+            // No more rows, so...
+
+            break;
+        }
     }
 
     // Let people know that we want to lookup a resource id
