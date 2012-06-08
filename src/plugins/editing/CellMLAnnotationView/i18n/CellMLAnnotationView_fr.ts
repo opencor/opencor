@@ -28,33 +28,6 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlDetailsWidget</name>
-    <message>
-        <source>No corresponding URL could be found for the MIRIAM URN (%1).</source>
-        <translation>Aucune URL correspondante n&apos;a pu être trouvée pour l&apos;URN MIRIAM (%1).</translation>
-    </message>
-    <message>
-        <source>The resolution of the MIRIAM URN failed (%1).</source>
-        <translation>La résolution de l&apos;URN MIRIAM a échoué (%1).</translation>
-    </message>
-    <message>
-        <source>A problem occurred during the resolution of the MIRIAM URN (%1).</source>
-        <translation>Il y a eu un problème durant la résolution de l&apos;URN MIRIAM (%1).</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Erreur</translation>
-    </message>
-    <message>
-        <source>Copyright</source>
-        <translation>Tous droits réservés</translation>
-    </message>
-    <message>
-        <source>Please contact the &lt;a href=&quot;http://www.ebi.ac.uk/miriam/main/mdb?section=contact&quot;&gt;MIRIAM people&lt;/a&gt; about this error.</source>
-        <translation>Veuillez contacter les &lt;a href=&quot;http://www.ebi.ac.uk/miriam/main/mdb?section=contact&quot;&gt;gens de MIRIAM&lt;/a&gt; au sujet de cette erreur.</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlElementDetailsWidget</name>
     <message>
         <source>cmeta:id:</source>

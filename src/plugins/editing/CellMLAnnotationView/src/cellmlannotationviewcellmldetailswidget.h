@@ -60,24 +60,6 @@ private:
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;
 
-    QNetworkAccessManager *mNetworkAccessManager;
-
-    enum WebViewStatus {
-        Empty,
-        WebPage,
-        NoCorrespondingUrl,
-        FailedResolution,
-        ProblemOccurred
-    };
-
-    WebViewStatus mWebViewStatus;
-
-    QString mErrorMsgTemplate;
-
-    QString mMiriamUrn;
-
-    void updateWebView() const;
-
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
@@ -91,7 +73,6 @@ private Q_SLOTS:
 
     void resourceIdLookupRequested(const QString &pResource,
                                    const QString &pId);
-    void miriamUrnDownloadFinished(QNetworkReply *pNetworkReply);
 };
 
 //==============================================================================

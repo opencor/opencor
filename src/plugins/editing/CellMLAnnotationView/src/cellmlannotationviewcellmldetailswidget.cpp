@@ -36,9 +36,7 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
     QSplitter(pParent),
     CommonWidget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewCellmlDetailsWidget),
-    mWebViewStatus(Empty),
-    mMiriamUrn(QString())
+    mGui(new Ui::CellmlAnnotationViewCellmlDetailsWidget)
 {
     // Set up the GUI
 
@@ -68,27 +66,6 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
-
-    // Retrieve the list of models in the CellML Model Repository as JSON code
-    // from http://models.cellml.org/workspace/rest/contents.json
-
-    mNetworkAccessManager = new QNetworkAccessManager(this);
-
-    // Make sure that we get told when the download of our Internet file is
-    // complete
-
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
-            this, SLOT(miriamUrnDownloadFinished(QNetworkReply *)) );
-
-    // Retrieve the output template
-
-    QFile cellmlAnnotationViewWidgetErrorFile(":cellmlAnnotationViewWidgetError");
-
-    cellmlAnnotationViewWidgetErrorFile.open(QIODevice::ReadOnly);
-
-    mErrorMsgTemplate = QString(cellmlAnnotationViewWidgetErrorFile.readAll());
-
-    cellmlAnnotationViewWidgetErrorFile.close();
 }
 
 //==============================================================================
@@ -110,8 +87,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
     mCellmlElementDetails->retranslateUi();
     mMetadataViewDetails->retranslateUi();
-
-    updateWebView();
 }
 
 //==============================================================================
@@ -129,9 +104,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
     // 'Clean up' our web view
 
-    mWebViewStatus = Empty;
-
-    updateWebView();
+    mWebView->setUrl(QString());
 
     // Update our CellML element details GUI
 
@@ -189,155 +162,10 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCm
 void CellmlAnnotationViewCellmlDetailsWidget::resourceIdLookupRequested(const QString &pResource,
                                                                         const QString &pId)
 {
-    // The user requested a MIRIAM URN to be looked up, so...
+    // The user requested a resource id to be looked up, so retrieve it using
+    // identifiers.org
 
-    mMiriamUrn = "urn:miriam:"+pResource+":"+pId;
-
-    QNetworkRequest networkRequest = QNetworkRequest(QUrl("http://www.ebi.ac.uk/miriamws/main/rest/resolve/"+mMiriamUrn));
-
-    networkRequest.setRawHeader("Accept", "application/json");
-
-    mNetworkAccessManager->get(networkRequest);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewCellmlDetailsWidget::miriamUrnDownloadFinished(QNetworkReply *pNetworkReply)
-{
-    // Output the list of models, should we have retrieved it without any
-    // problem
-
-    if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // We should be getting some JSON code which we can then be used to
-        // retrieve the first URL associated with the MIRIAM URN
-
-        QJson::Parser jsonParser;
-        bool parsingOk;
-
-        QVariantMap res = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
-
-        if (parsingOk) {
-            // The parsing went fine, so try to retrieve the first corresponding
-            // URL
-
-            QUrl miriamUrl = QUrl();
-
-            QVariant uri = res["uri"];
-            QVariantList uriList;
-
-            if (uri.type() == QVariant::Map)
-                // Case where there is only one URI item
-
-                uriList << QVariantList() << uri;
-            else
-                // Case where there is more than one URI item
-
-                uriList = uri.toList();
-
-            // Go through our different URI items and see whether one of them
-            // contains a non-deprecated URL and, if so, then use it
-
-            foreach (const QVariant &uriItem, uriList) {
-                QVariantMap uriItemProperties = uriItem.toMap();
-
-                // There are up to three possible properties, the first of which
-                // is optional and tell us whether the URI item is deprecated or
-                // not
-
-                QVariant deprecated = uriItemProperties["@deprecated"];
-
-                if (   (deprecated.type() == QVariant::String)
-                    && !deprecated.toString().compare("true"))
-                    // The URI item is deprecated, so...
-
-                    continue;
-
-                // Next, we should have the type of the URI item which should be
-                // a URL
-
-                QVariant type = uriItemProperties["@type"];
-
-                if (   (type.type() != QVariant::String)
-                    || type.toString().compare("URL"))
-                    // The URI item is not a URL, so...
-
-                    continue;
-
-                // Finally, we should have the URL itself
-
-                QVariant url = uriItemProperties["$"];
-
-                if (url.type() == QVariant::String) {
-                    // This is our first non-deprecated URL, so...
-
-                    miriamUrl.setUrl(url.toString());
-
-                    break;
-                }
-            }
-
-            // Make sure that we have found a corresponding URL
-
-            if (miriamUrl.isEmpty())
-                // We haven't found any corresponding URL, so...
-
-                mWebViewStatus = NoCorrespondingUrl;
-            else
-                // We found a corresponding URL, so look it up...
-
-                mWebViewStatus = WebPage;
-
-                mWebView->setUrl(miriamUrl);
-        } else {
-            mWebViewStatus = FailedResolution;
-        }
-    } else {
-        // Something went wrong, so...
-
-        mWebViewStatus = ProblemOccurred;
-    }
-
-    // Update our Web view
-
-    updateWebView();
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewCellmlDetailsWidget::updateWebView() const
-{
-    QString errorMsg = QString();
-
-    switch (mWebViewStatus) {
-    case WebPage:
-        // Nothing to do...
-
-        break;
-    case NoCorrespondingUrl:
-        errorMsg = tr("No corresponding URL could be found for the MIRIAM URN (%1).").arg(mMiriamUrn);
-
-        break;
-    case FailedResolution:
-        errorMsg = tr("The resolution of the MIRIAM URN failed (%1).").arg(mMiriamUrn);
-
-        break;
-    case ProblemOccurred:
-        errorMsg = tr("A problem occurred during the resolution of the MIRIAM URN (%1).").arg(mMiriamUrn);
-
-        break;
-    default:
-        // Empty
-
-        mWebView->setUrl(QUrl());
-    }
-
-    // Check whether we have an error message to show
-
-    if (!errorMsg.isEmpty())
-        mWebView->setHtml(mErrorMsgTemplate.arg(tr("Error"),
-                                                errorMsg,
-                                                tr("Please contact the <a href=\"http://www.ebi.ac.uk/miriam/main/mdb?section=contact\">MIRIAM people</a> about this error."),
-                                                tr("Copyright")+" ©2011-2012"));
+    mWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
 }
 
 //==============================================================================
