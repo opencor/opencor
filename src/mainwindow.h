@@ -52,6 +52,8 @@ public:
 
     void restart(const bool &pSaveSettings) const;
 
+    void handleArguments(const QString &pArguments) const;
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void showEvent(QShowEvent *pEvent);
@@ -90,18 +92,10 @@ private:
     void updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
                         QAction *pAction);
 
-#ifdef Q_WS_WIN
-    void showSelf() const;
-#else
     void showSelf();
-#endif
 
 private Q_SLOTS:
-#ifdef Q_WS_WIN
-    void singleAppMsgRcvd(const QString &) const;
-#else
-    void singleAppMsgRcvd(const QString &);
-#endif
+    void singleAppMsgRcvd(const QString &pArguments);
 
     void on_actionFullScreen_triggered();
     void on_actionSystem_triggered();

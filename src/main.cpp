@@ -71,8 +71,10 @@ int main(int pArgc, char *pArgv[])
     // on as normal, otherwise exit since we only want one instance of OpenCOR
     // at any given time
 
+    QString arguments = app->arguments().join("|");
+
     if (app->isRunning()) {
-        app->sendMessage(app->arguments().join(" "));
+        app->sendMessage(arguments);
 
         delete app;
 
@@ -101,8 +103,8 @@ int main(int pArgc, char *pArgv[])
 
     app->setActivationWindow(win);
 
-    // Make sure that OpenCOR can handle the message sent by another
-    // instance of itself
+    // Make sure that OpenCOR can handle the message sent by another instance of
+    // itself
 
     QObject::connect(app, SIGNAL(messageReceived(const QString &)),
                      win, SLOT(singleAppMsgRcvd(const QString &)));
@@ -110,6 +112,10 @@ int main(int pArgc, char *pArgv[])
     // Show the main window
 
     win->show();
+
+    // Handle the arguments
+
+    win->handleArguments(arguments);
 
     // Execute the application
 

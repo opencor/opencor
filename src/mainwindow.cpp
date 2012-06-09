@@ -824,11 +824,7 @@ void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &
 
 //==============================================================================
 
-#ifdef Q_WS_WIN
-void MainWindow::showSelf() const
-#else
 void MainWindow::showSelf()
-#endif
 {
     // Note: to show ourselves, one would normally use activateWindow() (and
     //       possibly raise()), but depending on the operating system it may or
@@ -912,11 +908,17 @@ void MainWindow::showSelf()
 
 //==============================================================================
 
-#ifdef Q_WS_WIN
-void MainWindow::singleAppMsgRcvd(const QString &) const
-#else
-void MainWindow::singleAppMsgRcvd(const QString &)
-#endif
+void MainWindow::handleArguments(const QString &pArguments) const
+{
+    // Handle the arguments that were passed to OpenCOR
+
+Q_UNUSED(pArguments);
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void MainWindow::singleAppMsgRcvd(const QString &pArguments)
 {
     // We have just received a message from another instance of OpenCOR, so
     // bring ourselves to the foreground
@@ -925,7 +927,7 @@ void MainWindow::singleAppMsgRcvd(const QString &)
 
     // Now, we must handle the arguments that were passed to OpenCOR
 
-    // TODO: handle the arguments passed to the 'official' instance of OpenCOR
+    handleArguments(pArguments);
 }
 
 //==============================================================================
