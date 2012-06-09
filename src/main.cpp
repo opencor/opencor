@@ -109,13 +109,13 @@ int main(int pArgc, char *pArgv[])
     QObject::connect(app, SIGNAL(messageReceived(const QString &)),
                      win, SLOT(singleAppMsgRcvd(const QString &)));
 
-    // Show the main window
-
-    win->show();
-
     // Handle the arguments
 
     win->handleArguments(arguments);
+
+    // Show the main window
+
+    win->show();
 
     // Execute the application
 
