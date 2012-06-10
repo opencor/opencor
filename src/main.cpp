@@ -66,12 +66,17 @@ int main(int pArgc, char *pArgv[])
 #endif
 
     // Send a message (containing the arguments that were passed to this
-    // instance of OpenCOR) to the 'official' instance of OpenCOR, should there
-    // be one. If there is no 'official' instance of OpenCOR, then just carry
-    // on as normal, otherwise exit since we only want one instance of OpenCOR
-    // at any given time
+    // instance of OpenCOR minus the first argument since it corresponds to the
+    // full path to the executable which we are not interested in) to the
+    // 'official' instance of OpenCOR, should there be one. If there is no
+    // 'official' instance of OpenCOR, then just carry on as normal, otherwise
+    // exit since we only want one instance of OpenCOR at any given time
 
-    QString arguments = app->arguments().join("|");
+    QStringList appArguments = app->arguments();
+
+    appArguments.removeFirst();
+
+    QString arguments = appArguments.join("|");
 
     if (app->isRunning()) {
         app->sendMessage(arguments);

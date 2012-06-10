@@ -54,6 +54,8 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &pPlugins);
 
+    virtual void handleArguments(const QStringList &pArguments) const;
+
     virtual void retranslateUi();
 
 private:

@@ -181,7 +181,7 @@ public:
     explicit GuiInterface();
 
     virtual QWidget * viewWidget(const QString &pFileName);
-    virtual QWidget * newViewWidget(const QString &);
+    virtual QWidget * newViewWidget(const QString &pFileName);
     virtual QString viewName();
 
     GuiSettings * guiSettings() const;

@@ -52,7 +52,7 @@ class FileInterface : Interface
 
 public:
     virtual QList<FileType> fileTypes() const;
-    virtual QString fileTypeDescription(const QString &) const;
+    virtual QString fileTypeDescription(const QString &pMimeType) const;
 };
 
 //==============================================================================

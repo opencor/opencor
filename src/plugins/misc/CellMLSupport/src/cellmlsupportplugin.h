@@ -42,7 +42,7 @@ public:
     virtual void initializationsDone(const Plugins &);
 
     virtual QList<FileType> fileTypes() const;
-    virtual QString fileTypeDescription(const QString &mMimeType) const;
+    virtual QString fileTypeDescription(const QString &pMimeType) const;
 };
 
 //==============================================================================

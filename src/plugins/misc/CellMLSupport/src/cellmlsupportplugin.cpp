@@ -57,17 +57,17 @@ QList<FileType> CellMLSupportPlugin::fileTypes() const
 
 //==============================================================================
 
-QString CellMLSupportPlugin::fileTypeDescription(const QString &mMimeType) const
+QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
 {
     // Return the description for the requested MIME type, that is as long as it
     // is for the CellML MIME type
 
-    if (!mMimeType.compare(CellmlMimeType))
+    if (!pMimeType.compare(CellmlMimeType))
         return tr("CellML File");
     else
         // Not a MIME type that we can recognise, so...
 
-        return FileInterface::fileTypeDescription(mMimeType);
+        return FileInterface::fileTypeDescription(pMimeType);
 }
 
 //==============================================================================

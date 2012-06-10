@@ -323,9 +323,11 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * GuiInterface::newViewWidget(const QString &)
+QWidget * GuiInterface::newViewWidget(const QString &pFileName)
 {
     // Create and return no widget by default...
+
+    Q_UNUSED(pFileName);
 
     return 0;
 }

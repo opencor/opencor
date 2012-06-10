@@ -39,13 +39,16 @@ public:
     virtual void initialize();
     virtual void finalize();
 
-    virtual void initializationsDone(const Plugins &);
+    virtual void initializationsDone(const Plugins &pPlugins);
 
-    virtual void loadSettings(QSettings *);
-    virtual void saveSettings(QSettings *) const;
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual void loadingOfSettingsDone(const Plugins &);
+    virtual void loadingOfSettingsDone(const Plugins &pPlugins);
 
+    virtual void handleArguments(const QStringList &pArguments) const;
+
+protected:
     void loadWindowSettings(QSettings *pSettings,
                             Core::DockWidget *pWindow);
     void saveWindowSettings(QSettings *pSettings,

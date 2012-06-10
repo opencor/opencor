@@ -253,6 +253,20 @@ void CorePlugin::loadingOfSettingsDone(const Plugins &pPlugins)
 
 //==============================================================================
 
+void CorePlugin::handleArguments(const QStringList &pArguments) const
+{
+    // Check the arguments and if any of them is an existing file, then open it
+
+    foreach (const QString &argument, pArguments)
+        if (QFileInfo(argument).exists())
+            // The argument corresponds to the name of an existing file, so open
+            // it
+
+            mCentralWidget->openFile(argument);
+}
+
+//==============================================================================
+
 void CorePlugin::retranslateUi()
 {
     // Retranslate our different File actions

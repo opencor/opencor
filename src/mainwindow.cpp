@@ -910,10 +910,15 @@ void MainWindow::showSelf()
 
 void MainWindow::handleArguments(const QString &pArguments) const
 {
-    // Handle the arguments that were passed to OpenCOR
+    // Handle the arguments that were passed to OpenCOR by passing them to the
+    // Core plugin, should it be loaded
 
-Q_UNUSED(pArguments);
-//---GRY--- TO BE DONE...
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+
+        if (coreInterface)
+            coreInterface->handleArguments(pArguments.split("|"));
+    }
 }
 
 //==============================================================================

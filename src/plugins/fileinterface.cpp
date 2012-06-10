@@ -56,9 +56,11 @@ QList<FileType> FileInterface::fileTypes() const
 
 //==============================================================================
 
-QString FileInterface::fileTypeDescription(const QString &) const
+QString FileInterface::fileTypeDescription(const QString &pMimeType) const
 {
     // By default, there is no description for the requested MIME type
+
+    Q_UNUSED(pMimeType);
 
     return QString();
 }
