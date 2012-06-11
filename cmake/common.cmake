@@ -540,11 +540,21 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC_FILE})
                 # The test exists, so build it
 
-                # Definition to make sure that the test can properly use bits
-                # which come from the Core plugin
+                # On Linux and Mac OS X, we need to refer to some bits from the
+                # Core plugin even if we don't use them, so...
 
                 IF(WIN32)
-                    ADD_DEFINITIONS(-DCore_PLUGIN)
+                    SET(CORE_SOURCES_MOC)
+                    SET(CORE_SOURCES)
+                ELSE()
+                    SET(CORE_SOURCES_MOC
+                        ../../misc/Core/src/dockwidget.h
+                    )
+
+                    SET(CORE_SOURCES
+                        ../../misc/Core/src/commonwidget.cpp
+                        ../../misc/Core/src/dockwidget.cpp
+                    )
                 ENDIF()
 
                 # Rules to build the test
@@ -553,8 +563,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ../../plugin.h
                     ../../pluginmanager.h
 
-                    ../../misc/Core/src/dockwidget.h
-                    ../../misc/Core/src/widget.h
+                    ${CORE_SOURCES_MOC}
 
                     ${HEADERS_MOC}
                     ${TEST_HEADER_MOC_FILE}
@@ -569,9 +578,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ../../plugininfo.cpp
                     ../../pluginmanager.cpp
 
-                    ../../misc/Core/src/commonwidget.cpp
-                    ../../misc/Core/src/dockwidget.cpp
-                    ../../misc/Core/src/widget.cpp
+                    ${CORE_SOURCES}
 
                     ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}
