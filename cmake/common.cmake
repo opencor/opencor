@@ -544,17 +544,23 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ../../plugin.h
                     ../../pluginmanager.h
 
+                    ../../misc/Core/src/dockwidget.h
+
                     ${HEADERS_MOC}
                     ${TEST_HEADER_MOC_FILE}
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../../test/testutils.cpp
+
                     ../../coreinterface.cpp
                     ../../interface.cpp
                     ../../plugin.cpp
                     ../../plugininfo.cpp
                     ../../pluginmanager.cpp
+
+                    ../../misc/Core/src/commonwidget.cpp
+                    ../../misc/Core/src/dockwidget.cpp
 
                     ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}
