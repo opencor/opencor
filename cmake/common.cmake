@@ -540,11 +540,21 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC_FILE})
                 # The test exists, so build it
 
+                # Definition to make sure that the test can properly use bits
+                # which come from the Core plugin
+
+                IF(WIN32)
+                    ADD_DEFINITIONS(-DCore_PLUGIN)
+                ENDIF()
+
+                # Rules to build the test
+
                 QT4_WRAP_CPP(TEST_SOURCES_MOC
                     ../../plugin.h
                     ../../pluginmanager.h
 
                     ../../misc/Core/src/dockwidget.h
+                    ../../misc/Core/src/widget.h
 
                     ${HEADERS_MOC}
                     ${TEST_HEADER_MOC_FILE}
@@ -561,6 +571,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                     ../../misc/Core/src/commonwidget.cpp
                     ../../misc/Core/src/dockwidget.cpp
+                    ../../misc/Core/src/widget.cpp
 
                     ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}
