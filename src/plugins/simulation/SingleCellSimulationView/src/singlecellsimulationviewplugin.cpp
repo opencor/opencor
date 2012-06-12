@@ -124,6 +124,8 @@ bool SingleCellSimulationViewPlugin::deleteViewWidget(const QString &pFileName)
 
     if (!GuiInterface::deleteViewWidget(pFileName))
         return false;
+
+    return false;
 }
 
 //==============================================================================
