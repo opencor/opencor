@@ -543,6 +543,15 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 //==============================================================================
 
+QString CellmlFile::fileName() const
+{
+    // Return the CellML file's name
+
+    return mFileName;
+}
+
+//==============================================================================
+
 CellmlFileModel * CellmlFile::model() const
 {
     // Return the CellML file's model

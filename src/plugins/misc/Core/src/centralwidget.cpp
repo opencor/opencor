@@ -113,7 +113,8 @@ CentralWidgetViewSettings * CentralWidgetMode::viewSettings() const
 CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
     mGui(new Ui::CentralWidget),
-    mStatus(Starting)
+    mStatus(Starting),
+    mLoadedPlugins(Plugins())
 {
     // Set up the GUI
 
@@ -414,8 +415,12 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CentralWidget::loadingOfSettingsDone(const Plugins &)
+void CentralWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 {
+    // Keep track of the loaded plugins
+
+    mLoadedPlugins = pLoadedPlugins;
+
     // Update our status now that all the plugins  are fully ready
 
     mStatus = Idling;
@@ -527,6 +532,24 @@ bool CentralWidget::closeFile(const int &pIndex)
         // Next, we must close the tab
 
         mFileTabs->removeTab(realIndex);
+
+        // Ask all the view plugins to remove the corresponding view for the
+        // file, but only if we are not stopping since we cannot otherwise
+        // guarantee that all the plugins are loaded and working fine
+        // Note: it's fine to do it this way, since our widgets' parent will, by
+        //       default, delete them for us (unless a plugin has been badly
+        //       coded!)...
+
+        if (mStatus != Stopping)
+            foreach (Plugin *plugin, mLoadedPlugins) {
+                GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+                if (guiInterface) {
+                    mContents->removeWidget(guiInterface->viewWidget(fileName));
+
+                    guiInterface->deleteViewWidget(fileName);
+                }
+            }
 
         // Unregister the file from our file manager
 

@@ -118,6 +118,16 @@ QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
+bool SingleCellSimulationViewPlugin::deleteViewWidget(const QString &pFileName)
+{
+    // First, call our parent's version
+
+    if (!GuiInterface::deleteViewWidget(pFileName))
+        return false;
+}
+
+//==============================================================================
+
 QString SingleCellSimulationViewPlugin::viewName()
 {
     // Return our single cell view's name

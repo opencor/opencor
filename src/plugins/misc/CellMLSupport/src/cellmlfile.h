@@ -45,6 +45,8 @@ public:
 
     CellmlFileRuntime * runtime();
 
+    QString fileName() const;
+
     CellmlFileModel * model() const;
 
     CellmlFileImports imports() const;

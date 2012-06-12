@@ -182,6 +182,7 @@ public:
 
     virtual QWidget * viewWidget(const QString &pFileName);
     virtual QWidget * newViewWidget(const QString &pFileName);
+    virtual bool deleteViewWidget(const QString &pFileName);
     virtual QString viewName();
 
     GuiSettings * guiSettings() const;
@@ -214,7 +215,7 @@ protected:
 
     GuiSettings *mGuiSettings;
 
-    GuiViewWidgets mModeViewWidgets;
+    GuiViewWidgets mViewWidgets;
 
 private:
     virtual void destroy();

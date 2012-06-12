@@ -8,6 +8,7 @@
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
+#include "coreutils.h"
 
 //==============================================================================
 
@@ -228,6 +229,40 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
     // We are all done, so return our new CellML annotation view widget
 
     return widget;
+}
+
+//==============================================================================
+
+bool CellMLAnnotationViewPlugin::deleteViewWidget(const QString &pFileName)
+{
+    // First, call our parent's version
+
+    if (!GuiInterface::deleteViewWidget(pFileName))
+        return false;
+
+    // Check that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        // We are not dealing with a CellML file, so...
+
+        return false;
+
+    // We are dealing with a CellML file, so delete its view widget
+
+    for (int i = 0, iMax = mWidgets.count(); i < iMax; ++i)
+        if (!Core::nativeCanonicalFileName(pFileName).compare(mWidgets[i]->cellmlFile()->fileName())) {
+            // We are dealing with the right CellML file, so...
+
+            delete mWidgets[i];
+
+            mWidgets.removeAt(i);
+
+            return true;
+        }
+
+    // We couldn't find the CellML file, so...
+
+    return false;
 }
 
 //==============================================================================

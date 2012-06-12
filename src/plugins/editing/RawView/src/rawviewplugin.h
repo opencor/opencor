@@ -32,6 +32,7 @@ public:
     explicit RawViewPlugin();
 
     virtual QWidget * newViewWidget(const QString &pFileName);
+    virtual bool deleteViewWidget(const QString &pFileName);
     virtual QString viewName();
 };
 

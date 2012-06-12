@@ -101,6 +101,16 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
+bool RawCellMLViewPlugin::deleteViewWidget(const QString &pFileName)
+{
+    // First, call our parent's version
+
+    if (!GuiInterface::deleteViewWidget(pFileName))
+        return false;
+}
+
+//==============================================================================
+
 QString RawCellMLViewPlugin::viewName()
 {
     // Return our raw CellML view's name

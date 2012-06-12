@@ -272,7 +272,7 @@ GuiViewSettings * GuiSettings::view() const
 
 GuiInterface::GuiInterface() :
     mMainWindow(0),
-    mModeViewWidgets(GuiViewWidgets())
+    mViewWidgets(GuiViewWidgets())
 {
     // Create our GUI settings object
 
@@ -289,7 +289,7 @@ void GuiInterface::destroy()
 
     // Delete our view widgets
 
-    foreach (QWidget *viewWidget, mModeViewWidgets)
+    foreach (QWidget *viewWidget, mViewWidgets)
         delete viewWidget;
 }
 
@@ -302,7 +302,7 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName)
     // Retrieve, from our list of view widgets, the view widget associated with
     // the file name
 
-    QWidget *res = mModeViewWidgets.value(pFileName);
+    QWidget *res = mViewWidgets.value(pFileName);
 
     // Check whether we got an empty view widget or not, and if so then create a
     // view widget for the file and keep track of it
@@ -313,7 +313,7 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName)
         // Only keep track of the view widget if it is a real one
 
         if (res)
-            mModeViewWidgets.insert(pFileName, res);
+            mViewWidgets.insert(pFileName, res);
     }
 
     // Return the view widget
@@ -330,6 +330,21 @@ QWidget * GuiInterface::newViewWidget(const QString &pFileName)
     Q_UNUSED(pFileName);
 
     return 0;
+}
+
+//==============================================================================
+
+bool GuiInterface::deleteViewWidget(const QString &pFileName)
+{
+    // Remove the widget from our list, if there is one for the given file name
+
+    if (mViewWidgets.value(pFileName)) {
+        mViewWidgets.remove(pFileName);
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

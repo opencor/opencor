@@ -55,6 +55,16 @@ QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
 
 //==============================================================================
 
+bool RawViewPlugin::deleteViewWidget(const QString &pFileName)
+{
+    // First, call our parent's version
+
+    if (!GuiInterface::deleteViewWidget(pFileName))
+        return false;
+}
+
+//==============================================================================
+
 QString RawViewPlugin::viewName()
 {
     // Return our raw view's name

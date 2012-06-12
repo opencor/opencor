@@ -90,7 +90,7 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual void loadingOfSettingsDone(const Plugins &);
+    virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
     bool openFile(const QString &pFileName);
     bool activateFile(const QString &pFileName);
@@ -123,6 +123,8 @@ private:
     Ui::CentralWidget *mGui;
 
     Status mStatus;
+
+    Plugins mLoadedPlugins;
 
     QTabBar *mModeTabs;
     QTabBar *mFileTabs;
