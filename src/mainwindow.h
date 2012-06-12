@@ -95,7 +95,8 @@ private:
     void showSelf();
 
 private Q_SLOTS:
-    void singleAppMsgRcvd(const QString &pArguments);
+    void fileOpenRequest(const QString &pFileName);
+    void messageReceived(const QString &pArguments);
 
     void on_actionFullScreen_triggered();
     void on_actionSystem_triggered();

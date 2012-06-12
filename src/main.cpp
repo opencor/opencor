@@ -108,11 +108,13 @@ int main(int pArgc, char *pArgv[])
 
     app->setActivationWindow(win);
 
-    // Make sure that OpenCOR can handle the message sent by another instance of
-    // itself
+    // Make sure that OpenCOR can handle a file opening request, as well as a
+    // message sent by another instance of itself
 
+    QObject::connect(app, SIGNAL(fileOpenRequest(const QString &)),
+                     win, SLOT(fileOpenRequest(const QString &)));
     QObject::connect(app, SIGNAL(messageReceived(const QString &)),
-                     win, SLOT(singleAppMsgRcvd(const QString &)));
+                     win, SLOT(messageReceived(const QString &)));
 
     // Handle the arguments
 

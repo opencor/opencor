@@ -923,7 +923,17 @@ void MainWindow::handleArguments(const QString &pArguments) const
 
 //==============================================================================
 
-void MainWindow::singleAppMsgRcvd(const QString &pArguments)
+void MainWindow::fileOpenRequest(const QString &pFileName)
+{
+    // We have received a request to open a file, so handle it as an argument
+    // that was passed to OpenCOR
+
+    handleArguments(pFileName);
+}
+
+//==============================================================================
+
+void MainWindow::messageReceived(const QString &pArguments)
 {
     // We have just received a message from another instance of OpenCOR, so
     // bring ourselves to the foreground
