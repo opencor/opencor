@@ -235,7 +235,7 @@ QWidget * CellMLAnnotationViewPlugin::newViewWidget(const QString &pFileName)
 
 bool CellMLAnnotationViewPlugin::deleteViewWidget(const QString &pFileName)
 {
-    // First, call our parent's version
+    // Our parent's version keeps track of our view widgets, so call it...
 
     if (!GuiInterface::deleteViewWidget(pFileName))
         return false;

@@ -103,10 +103,9 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 
 bool RawCellMLViewPlugin::deleteViewWidget(const QString &pFileName)
 {
-    // First, call our parent's version
+//---GRY--- TO BE DONE...
 
-    if (!GuiInterface::deleteViewWidget(pFileName))
-        return false;
+    Q_UNUSED(pFileName);
 
     return false;
 }

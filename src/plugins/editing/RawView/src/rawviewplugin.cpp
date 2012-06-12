@@ -57,10 +57,12 @@ QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
 
 bool RawViewPlugin::deleteViewWidget(const QString &pFileName)
 {
-    // First, call our parent's version
+    // Our parent's version keeps track of our view widgets, so call it...
 
     if (!GuiInterface::deleteViewWidget(pFileName))
         return false;
+
+//---GRY--- TO BE DONE...
 
     return false;
 }
