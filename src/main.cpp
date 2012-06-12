@@ -37,7 +37,7 @@ int main(int pArgc, char *pArgv[])
 
     // Create the application
 
-    QtSingleApplication *app = new QtSingleApplication(pArgc, pArgv);
+    SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(pArgc, pArgv);
 
     // Some general initialisations
 
