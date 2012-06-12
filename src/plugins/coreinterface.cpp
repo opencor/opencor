@@ -30,11 +30,11 @@ void CoreInterface::finalize()
 
 //==============================================================================
 
-void CoreInterface::initializationsDone(const Plugins &pPlugins)
+void CoreInterface::initializationsDone(const Plugins &pLoadedPlugins)
 {
     // Nothing to do by default...
 
-    Q_UNUSED(pPlugins);
+    Q_UNUSED(pLoadedPlugins);
 }
 
 //==============================================================================
@@ -57,11 +57,11 @@ void CoreInterface::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreInterface::loadingOfSettingsDone(const Plugins &pPlugins)
+void CoreInterface::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 {
     // Nothing to do by default...
 
-    Q_UNUSED(pPlugins)
+    Q_UNUSED(pLoadedPlugins)
 }
 
 //==============================================================================

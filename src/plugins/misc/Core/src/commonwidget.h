@@ -57,7 +57,7 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual void loadingOfSettingsDone(const Plugins &);
+    virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
 protected:
     QSize defaultSize(const double &pRatio) const;

@@ -51,23 +51,29 @@ void CommonWidget::retranslateUi()
 
 //==============================================================================
 
-void CommonWidget::loadSettings(QSettings *)
+void CommonWidget::loadSettings(QSettings *pSettings)
 {
     // Nothing to do by default...
+
+    Q_UNUSED(pSettings);
 }
 
 //==============================================================================
 
-void CommonWidget::saveSettings(QSettings *) const
+void CommonWidget::saveSettings(QSettings *pSettings) const
 {
     // Nothing to do by default...
+
+    Q_UNUSED(pSettings);
 }
 
 //==============================================================================
 
-void CommonWidget::loadingOfSettingsDone(const Plugins &)
+void CommonWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 {
     // Nothing to do by default...
+
+    Q_UNUSED(pLoadedPlugins);
 }
 
 //==============================================================================
