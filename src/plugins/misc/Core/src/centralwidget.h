@@ -115,7 +115,8 @@ protected:
 private:
     enum Status {
         Starting,
-        Running,
+        Idling,
+        Updating,
         Stopping
     };
 

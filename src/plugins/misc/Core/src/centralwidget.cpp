@@ -418,7 +418,7 @@ void CentralWidget::loadingOfSettingsDone(const Plugins &)
 {
     // Update our status now that all the plugins  are fully ready
 
-    mStatus = Running;
+    mStatus = Idling;
 
     // Update the GUI
 
@@ -508,6 +508,11 @@ void CentralWidget::nextFile()
 
 bool CentralWidget::closeFile(const int &pIndex)
 {
+    if (mStatus == Updating)
+        // We are updating the GUI, so we can't close the file for now
+
+        return false;
+
     // Close the file at the given tab index or the current tab index, if no tab
     // index is provided, and then return the name of the file that was closed,
     // if any
@@ -801,11 +806,15 @@ void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
 
 void CentralWidget::updateGui()
 {
-    if (mStatus != Running)
+    if ((mStatus == Starting) || (mStatus == Stopping))
         // We are either starting or stopping, so too risky to update the GUI
         // during that time (e.g. things may not be fully initialised)
 
         return;
+
+    // Update our status to reflect the fact that we are updating the GUI
+
+    mStatus = Updating;
 
     // Show/hide the editing, simulation and analysis modes' corresponding views
     // tab, as needed, and retrieve the GUI interface for the view we are after
@@ -851,11 +860,12 @@ void CentralWidget::updateGui()
     }
 
     // Give the focus to the new view
-    // Note: we must ensure that we haven't, in the meantime, been stopping
-    //       OpenCOR...
 
-    if (mStatus != Running)
-        mContents->currentWidget()->setFocus();
+    mContents->currentWidget()->setFocus();
+
+    // We are done updating the GUI, so...
+
+    mStatus = Idling;
 }
 
 //==============================================================================
