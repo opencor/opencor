@@ -851,8 +851,11 @@ void CentralWidget::updateGui()
     }
 
     // Give the focus to the new view
+    // Note: we must ensure that we haven't, in the meantime, been stopping
+    //       OpenCOR...
 
-    mContents->currentWidget()->setFocus();
+    if (mStatus != Running)
+        mContents->currentWidget()->setFocus();
 }
 
 //==============================================================================
