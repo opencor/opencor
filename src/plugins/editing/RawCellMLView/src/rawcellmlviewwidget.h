@@ -64,7 +64,6 @@ public:
 private:
     Ui::RawCellmlViewWidget *mGui;
 
-    QMap<QString, QScintillaSupport::QScintilla *> mEditors;
     QMap<QString, Core::BorderedWidget *> mBorderedEditors;
 
     Viewer::ViewerWidget *mViewer;

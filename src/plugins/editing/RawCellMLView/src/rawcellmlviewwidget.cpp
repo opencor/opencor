@@ -35,7 +35,6 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
     mGui(new Ui::RawCellmlViewWidget),
-    mEditors(QMap<QString, QScintillaSupport::QScintilla *>()),
     mBorderedEditors(QMap<QString, Core::BorderedWidget *>()),
     mBorderedEditor(0),
     mBorderedViewerHeight(0),
