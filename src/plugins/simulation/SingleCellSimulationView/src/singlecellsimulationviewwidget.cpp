@@ -461,9 +461,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mVoiStep   =  0.01;   // s
         mVoiOutput =  0.01;   // s
     }
-
-//    mVoiEnd *= 10;
-//---GRY--- JUST FOR TESTING...
 }
 
 //==============================================================================

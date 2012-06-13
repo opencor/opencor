@@ -44,7 +44,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     virtual QWidget * viewWidget(const QString &pFileName);
-    virtual bool deleteViewWidget(const QString &pFileName);
+    virtual void deleteViewWidget(const QString &pFileName);
     virtual QString viewName();
 
 private:

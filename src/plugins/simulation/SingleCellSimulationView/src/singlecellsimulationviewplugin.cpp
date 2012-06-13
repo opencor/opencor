@@ -99,7 +99,7 @@ void SingleCellSimulationViewPlugin::saveSettings(QSettings *pSettings) const
 QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName)
 {
     // Check that we are dealing with a CellML file and, if so, return our
-    // generic simulation view widget
+    // generic simulation view widget after having initialised it
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         // We are not dealing with a CellML file, so...
@@ -107,24 +107,13 @@ QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName)
         return 0;
 
     // We are dealing with a CellML file, so update our generic simulation view
-    // widget using the passed CellML file
+    // widget using the given CellML file
 
     mViewWidget->initialize(pFileName);
 
     // Our generic simulation view widget is now ready, so...
 
     return mViewWidget;
-}
-
-//==============================================================================
-
-bool SingleCellSimulationViewPlugin::deleteViewWidget(const QString &pFileName)
-{
-//---GRY--- TO BE DONE...
-
-    Q_UNUSED(pFileName);
-
-    return false;
 }
 
 //==============================================================================

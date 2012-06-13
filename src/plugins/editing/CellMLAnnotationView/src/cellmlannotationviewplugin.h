@@ -41,12 +41,13 @@ class CellMLAnnotationViewPlugin : public QObject, public CoreInterface,
 
 public:
     explicit CellMLAnnotationViewPlugin();
+    ~CellMLAnnotationViewPlugin();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual QWidget * newViewWidget(const QString &pFileName);
-    virtual bool deleteViewWidget(const QString &pFileName);
+    virtual QWidget * viewWidget(const QString &pFileName);
+    virtual void deleteViewWidget(const QString &pFileName);
     virtual QString viewName();
 
     virtual void retranslateUi();
@@ -56,7 +57,7 @@ private:
     QList<int> mListsWidgetSizes;
     QList<int> mCellmlDetailsWidgetSizes;
 
-    QList<CellmlAnnotationViewWidget *> mWidgets;
+    QMap<QString, CellmlAnnotationViewWidget *> mViewWidgets;
 
 private Q_SLOTS:
     void splitterMoved(const QList<int> &pSizes);

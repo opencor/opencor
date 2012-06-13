@@ -169,10 +169,6 @@ private:
 
 //==============================================================================
 
-typedef QMap<QString, QWidget *> GuiViewWidgets;
-
-//==============================================================================
-
 class GuiInterface : Interface
 {
     friend class MainWindow;
@@ -181,8 +177,7 @@ public:
     explicit GuiInterface();
 
     virtual QWidget * viewWidget(const QString &pFileName);
-    virtual QWidget * newViewWidget(const QString &pFileName);
-    virtual bool deleteViewWidget(const QString &pFileName);
+    virtual void deleteViewWidget(const QString &pFileName);
     virtual QString viewName();
 
     GuiSettings * guiSettings() const;
@@ -214,8 +209,6 @@ protected:
     QMainWindow *mMainWindow;
 
     GuiSettings *mGuiSettings;
-
-    GuiViewWidgets mViewWidgets;
 
 private:
     virtual void destroy();

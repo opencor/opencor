@@ -271,8 +271,7 @@ GuiViewSettings * GuiSettings::view() const
 //==============================================================================
 
 GuiInterface::GuiInterface() :
-    mMainWindow(0),
-    mViewWidgets(GuiViewWidgets())
+    mMainWindow(0)
 {
     // Create our GUI settings object
 
@@ -286,44 +285,11 @@ void GuiInterface::destroy()
     // Delete our GUI settings object
 
     delete mGuiSettings;
-
-    // Delete our view widgets
-
-    foreach (QWidget *viewWidget, mViewWidgets)
-        delete viewWidget;
 }
 
 //==============================================================================
 
 QWidget * GuiInterface::viewWidget(const QString &pFileName)
-{
-    // Return the view widget associated with the given file name
-
-    // Retrieve, from our list of view widgets, the view widget associated with
-    // the file name
-
-    QWidget *res = mViewWidgets.value(pFileName);
-
-    // Check whether we got an empty view widget or not, and if so then create a
-    // view widget for the file and keep track of it
-
-    if (!res) {
-        res = newViewWidget(pFileName);
-
-        // Only keep track of the view widget if it is a real one
-
-        if (res)
-            mViewWidgets.insert(pFileName, res);
-    }
-
-    // Return the view widget
-
-    return res;
-}
-
-//==============================================================================
-
-QWidget * GuiInterface::newViewWidget(const QString &pFileName)
 {
     // Create and return no view widget by default...
 
@@ -334,24 +300,11 @@ QWidget * GuiInterface::newViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-bool GuiInterface::deleteViewWidget(const QString &pFileName)
+void GuiInterface::deleteViewWidget(const QString &pFileName)
 {
-    // Remove the view widget from our list, if there is one for the given file
-    // name
+    // No view widget to delete by default...
 
-    if (mViewWidgets.value(pFileName)) {
-        // We are managing view widgets for the plugin and we found the one
-        // corresponding to the given file name, so remove it
-
-        mViewWidgets.remove(pFileName);
-
-        return true;
-    } else {
-        // Either we are not managing view widgets for the plugin or we couldn't
-        // find the one corresponding to the given file name, so...
-
-        return false;
-    }
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================

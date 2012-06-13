@@ -268,7 +268,7 @@ void PluginsWindow::saveSettings(QSettings *pSettings) const
 
 QString PluginsWindow::versionAsString(const PluginInfo::Version &pVersion) const
 {
-    // Return the passed version as a string
+    // Return the given version as a string
     // Note: ideally, this function would be part of the CoreInterface class,
     //       but this class is used by all the plugins and because this method
     //       requires a translation, well... we can't have it there since a

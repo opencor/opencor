@@ -37,7 +37,6 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mGui(new Ui::RawCellmlViewWidget),
     mEditors(QMap<QString, QScintillaSupport::QScintilla *>()),
     mBorderedEditors(QMap<QString, Core::BorderedWidget *>()),
-    mEditor(0),
     mBorderedEditor(0),
     mBorderedViewerHeight(0),
     mBorderedEditorHeight(0)
@@ -141,7 +140,6 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
     // Retrieve the editor associated with the file name, if any
 
-    mEditor = mEditors.value(pFileName);
     mBorderedEditor = mBorderedEditors.value(pFileName);
 
     if (!mBorderedEditor) {
@@ -164,26 +162,24 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
             file.close();
         }
 
-        mEditor = new QScintillaSupport::QScintilla(parentWidget(), fileContents, fileIsWritable,
-                                                    new QsciLexerXML(this));
-        mBorderedEditor = new Core::BorderedWidget(mEditor,
+        mBorderedEditor = new Core::BorderedWidget(new QScintillaSupport::QScintilla(parentWidget(), fileContents, fileIsWritable,
+                                                                                     new QsciLexerXML(this)),
                                                    true, false, false, false);
 
-        // Keep track of the editor and add it to ourselves
+        // Keep track of our bordered editor and add it to ourselves
 
-        mEditors.insert(pFileName, mEditor);
         mBorderedEditors.insert(pFileName, mBorderedEditor);
 
         addWidget(mBorderedEditor);
     }
 
-    // Make sure that the 'new' editor is visible
+    // Make sure that 'new' bordered editor is visible
 
     mBorderedEditor->show();
 
     // Set the raw CellML view widget's focus proxy to the 'new' editor
 
-    setFocusProxy(mEditor);
+    setFocusProxy(mBorderedEditor->widget());
 
     // Adjust our sizes
 
@@ -209,6 +205,24 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
                 newSizes << 0;
 
         setSizes(newSizes);
+    }
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::finalize(const QString &pFileName)
+{
+    // Remove the bordered editor, should there be one for the given file name
+
+    Core::BorderedWidget *borderedEditor  = mBorderedEditors.value(pFileName);
+
+    if (borderedEditor) {
+        // There is a bordered editor for the given file name, so delete it and
+        // remove it from our list
+
+        delete borderedEditor;
+
+        mBorderedEditors.remove(pFileName);
     }
 }
 

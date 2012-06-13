@@ -82,7 +82,7 @@ void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 {
     // Check that we are dealing with a CellML file and, if so, return our
-    // generic raw CellML view widget
+    // generic raw CellML view widget after having initialised it
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         // We are not dealing with a CellML file, so...
@@ -90,7 +90,7 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
         return 0;
 
     // We are dealing with a CellML file, so update our generic raw CellML view
-    // widget using the passed CellML file
+    // widget using the given CellML file
 
     mViewWidget->initialize(pFileName);
 
@@ -101,13 +101,11 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-bool RawCellMLViewPlugin::deleteViewWidget(const QString &pFileName)
+void RawCellMLViewPlugin::deleteViewWidget(const QString &pFileName)
 {
-//---GRY--- TO BE DONE...
+    // Ask our generic raw CellML view widget to finalise the given file
 
-    Q_UNUSED(pFileName);
-
-    return false;
+    mViewWidget->finalize(pFileName);
 }
 
 //==============================================================================

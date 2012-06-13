@@ -59,6 +59,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize(const QString &pFileName);
+    void finalize(const QString &pFileName);
 
 private:
     Ui::RawCellmlViewWidget *mGui;
@@ -69,7 +70,6 @@ private:
     Viewer::ViewerWidget *mViewer;
     Core::BorderedWidget *mBorderedViewer;
 
-    QScintillaSupport::QScintilla *mEditor;
     Core::BorderedWidget *mBorderedEditor;
 
     int mBorderedViewerHeight;

@@ -37,7 +37,8 @@ Q_EXPORT_PLUGIN2(RawView, RawViewPlugin)
 
 //==============================================================================
 
-RawViewPlugin::RawViewPlugin()
+RawViewPlugin::RawViewPlugin() :
+    mViewWidgets(QMap<QString, RawViewWidget *>())
 {
     // Set our settings
 
@@ -46,25 +47,54 @@ RawViewPlugin::RawViewPlugin()
 
 //==============================================================================
 
-QWidget * RawViewPlugin::newViewWidget(const QString &pFileName)
+RawViewPlugin::~RawViewPlugin()
 {
-    // Create and return a raw view widget
+    // Delete our view widgets
 
-    return new RawViewWidget(mMainWindow, pFileName);
+    foreach (QWidget *viewWidget, mViewWidgets)
+        delete viewWidget;
 }
 
 //==============================================================================
 
-bool RawViewPlugin::deleteViewWidget(const QString &pFileName)
+QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Our parent's version keeps track of our view widgets, so call it...
+    // Retrieve from our list the view widget associated with the file name
 
-    if (!GuiInterface::deleteViewWidget(pFileName))
-        return false;
+    RawViewWidget *res = mViewWidgets.value(pFileName);
 
-//---GRY--- TO BE DONE...
+    // Create a new view widget, if none could be retrieved
 
-    return false;
+    if (!res) {
+        res = new RawViewWidget(mMainWindow, pFileName);
+
+        // Keep track of our new view widget
+
+        mViewWidgets.insert(pFileName, res);
+    }
+
+    // Return our view widget
+
+    return res;
+}
+
+//==============================================================================
+
+void RawViewPlugin::deleteViewWidget(const QString &pFileName)
+{
+    // Remove the view widget from our list, should there be one for the given
+    // file name
+
+    RawViewWidget *viewWidget = mViewWidgets.value(pFileName);
+
+    if (viewWidget) {
+        // There is a view widget for the given file name, so delete it and
+        // remove it from our list
+
+        delete viewWidget;
+
+        mViewWidgets.remove(pFileName);
+    }
 }
 
 //==============================================================================

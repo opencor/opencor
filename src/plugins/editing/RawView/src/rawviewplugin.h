@@ -22,6 +22,10 @@ PLUGININFO_FUNC RawViewPluginInfo();
 
 //==============================================================================
 
+class RawViewWidget;
+
+//==============================================================================
+
 class RawViewPlugin : public QObject, public GuiInterface, public I18nInterface
 {
     Q_OBJECT
@@ -30,10 +34,14 @@ class RawViewPlugin : public QObject, public GuiInterface, public I18nInterface
 
 public:
     explicit RawViewPlugin();
+    ~RawViewPlugin();
 
-    virtual QWidget * newViewWidget(const QString &pFileName);
-    virtual bool deleteViewWidget(const QString &pFileName);
+    virtual QWidget * viewWidget(const QString &pFileName);
+    virtual void deleteViewWidget(const QString &pFileName);
     virtual QString viewName();
+
+private:
+    QMap<QString, RawViewWidget *> mViewWidgets;
 };
 
 //==============================================================================
