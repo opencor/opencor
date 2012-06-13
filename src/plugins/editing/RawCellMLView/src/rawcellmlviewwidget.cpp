@@ -223,6 +223,10 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
         delete borderedEditor;
 
         mBorderedEditors.remove(pFileName);
+
+        // Reset our memory of who is the current bordered editor
+
+        mBorderedEditor = 0;
     }
 }
 
