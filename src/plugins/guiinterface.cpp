@@ -325,7 +325,7 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName)
 
 QWidget * GuiInterface::newViewWidget(const QString &pFileName)
 {
-    // Create and return no widget by default...
+    // Create and return no view widget by default...
 
     Q_UNUSED(pFileName);
 
@@ -336,13 +336,20 @@ QWidget * GuiInterface::newViewWidget(const QString &pFileName)
 
 bool GuiInterface::deleteViewWidget(const QString &pFileName)
 {
-    // Remove the widget from our list, if there is one for the given file name
+    // Remove the view widget from our list, if there is one for the given file
+    // name
 
     if (mViewWidgets.value(pFileName)) {
+        // We are managing view widgets for the plugin and we found the one
+        // corresponding to the given file name, so remove it
+
         mViewWidgets.remove(pFileName);
 
         return true;
     } else {
+        // Either we are not managing view widgets for the plugin or we couldn't
+        // find the one corresponding to the given file name, so...
+
         return false;
     }
 }
