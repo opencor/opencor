@@ -300,6 +300,17 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
+bool GuiInterface::hasViewWidget(const QString &pFileName) const
+{
+    // There is no view widget by default...
+
+    Q_UNUSED(pFileName);
+
+    return false;
+}
+
+//==============================================================================
+
 void GuiInterface::deleteViewWidget(const QString &pFileName)
 {
     // No view widget to delete by default...

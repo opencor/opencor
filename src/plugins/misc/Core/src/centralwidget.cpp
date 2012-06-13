@@ -544,7 +544,7 @@ bool CentralWidget::closeFile(const int &pIndex)
             foreach (Plugin *plugin, mLoadedPlugins) {
                 GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-                if (guiInterface) {
+                if (guiInterface && guiInterface->hasViewWidget(fileName)) {
                     mContents->removeWidget(guiInterface->viewWidget(fileName));
 
                     guiInterface->deleteViewWidget(fileName);

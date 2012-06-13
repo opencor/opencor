@@ -209,6 +209,15 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
+bool RawCellmlViewWidget::isManaged(const QString &pFileName) const
+{
+    // Return whether the given file name is managed
+
+    return mBorderedEditors.value(pFileName);
+}
+
+//==============================================================================
+
 void RawCellmlViewWidget::finalize(const QString &pFileName)
 {
     // Remove the bordered editor, should there be one for the given file name

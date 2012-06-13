@@ -101,6 +101,15 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
+bool RawCellMLViewPlugin::hasViewWidget(const QString &pFileName) const
+{
+    // Return whether a view widget exists or not for the given file name
+
+    return mViewWidget->isManaged(pFileName);
+}
+
+//==============================================================================
+
 void RawCellMLViewPlugin::deleteViewWidget(const QString &pFileName)
 {
     // Ask our generic raw CellML view widget to finalise the given file
