@@ -225,13 +225,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     foreach (CentralWidgetMode *mode, mModes)
         connect(mode->views(), SIGNAL(currentChanged(int)),
                 this, SLOT(updateGui()));
-
-    // Some connections to handle the opening/closing of a file
-
-    connect(this, SIGNAL(fileOpened(const QString &)),
-            this, SLOT(updateGui()));
-    connect(this, SIGNAL(fileClosed(const QString &)),
-            this, SLOT(updateGui()));
 }
 
 //==============================================================================
@@ -449,20 +442,23 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     Core::FileManager::instance()->manage(pFileName);
 
-    // Create a new tab, insert it just after the current tab and make it the
-    // new current one
+    // Create a new tab, insert it just after the current tab, set the full name
+    // of the file as the tool tip for the new tab, and make the new tab the
+    // current one
+    // Note #1: the tool tip allow us, for example, to retrieve the name of a
+    //          file which we want to close (see CentralWidget::closeFile())...
+    // Note #2: the order in which we handle things for mFileTabs is important,
+    //          e.g. the tool tip is needed by UpdateGui() which is called when
+    //          changing the current index...
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
     QFileInfo fileInfo = nativeFileName;
+    int fileTabIndex = mFileTabs->insertTab(mFileTabs->currentIndex()+1,
+                                            fileInfo.fileName());
 
-    mFileTabs->setCurrentIndex(mFileTabs->insertTab(mFileTabs->currentIndex()+1,
-                                                    fileInfo.fileName()));
+    mFileTabs->setTabToolTip(fileTabIndex, nativeFileName);
 
-    // Set the full name of the file as the tool tip for the new tab
-    // Note: this, for example, allows us to retrieve the name of a file which
-    //       we want to close (see CentralWidget::closeFile())
-
-    mFileTabs->setTabToolTip(mFileTabs->currentIndex(), nativeFileName);
+    mFileTabs->setCurrentIndex(fileTabIndex);
 
     // Everything went fine, so let people know that the file has been opened,
     // as well as whether we can navigate and/or close files
