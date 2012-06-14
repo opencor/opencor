@@ -18,10 +18,6 @@
 
 //==============================================================================
 
-using namespace OpenCOR;
-
-//==============================================================================
-
 int main(int pArgc, char *pArgv[])
 {
     // Create the application
@@ -30,13 +26,13 @@ int main(int pArgc, char *pArgv[])
 
     // Some general initialisations
 
-    initApplication(app);
+    OpenCOR::initApplication(app);
 
     // Try to run OpenCOR as a console application
 
     int res;
 
-    if (!consoleApplication(app, &res)) {
+    if (!OpenCOR::consoleApplication(app, &res)) {
         // OpenCOR wasn't run as a proper console application, so start its GUI
         // version instead
 
@@ -46,7 +42,7 @@ int main(int pArgc, char *pArgv[])
             // This is a safeguard from accidentally running a non-renamed (to
             // '.com') console version of OpenCOR
 
-            error(app, "the console version of "+app->applicationName()+" has the wrong extension ('.exe' instead of '.com').");
+            OpenCOR::error(app, "the console version of "+app->applicationName()+" has the wrong extension ('.exe' instead of '.com').");
 
             res = -1;
         } else {
@@ -55,7 +51,7 @@ int main(int pArgc, char *pArgv[])
             if (!QFileInfo(guiAppFilePath).exists()) {
                 // We can't find the GUI version of OpenCOR, so...
 
-                error(app, "the GUI version of "+app->applicationName()+" cannot be found.");
+                OpenCOR::error(app, "the GUI version of "+app->applicationName()+" cannot be found.");
 
                 res = -1;
             } else {
