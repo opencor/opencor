@@ -512,7 +512,7 @@ void CentralWidget::nextFile()
 
 bool CentralWidget::closeFile(const int &pIndex)
 {
-    if (mStatus == Updating)
+    if (mStatus == UpdatingGui)
         // We are updating the GUI, so we can't close the file for now
 
         return false;
@@ -829,14 +829,14 @@ void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
 void CentralWidget::updateGui()
 {
     if (mStatus != Idling)
-        // We are either starting, updating or stopping, so too risky to update
-        // the GUI during that time (e.g. things may not be fully initialised)
+        // We are doing something, so too risky to update the GUI during that
+        // time (e.g. things may not be fully initialised)
 
         return;
 
     // Update our status to reflect the fact that we are updating the GUI
 
-    mStatus = Updating;
+    mStatus = UpdatingGui;
 
     // Show/hide the editing, simulation and analysis modes' corresponding views
     // tab, as needed, and retrieve the GUI interface for the view we are after
@@ -885,7 +885,7 @@ void CentralWidget::updateGui()
 
     mContents->currentWidget()->setFocus();
 
-    // We are done updating the GUI, so...
+    // We are done with updating the GUI, so...
 
     mStatus = Idling;
 }

@@ -116,7 +116,7 @@ private:
     enum Status {
         Starting,
         Idling,
-        Updating,
+        UpdatingGui,
         Stopping
     };
 
