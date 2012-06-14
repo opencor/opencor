@@ -677,12 +677,14 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
 
     // Make sure that we are not already updating a CellML node
 
-    static bool alreadyUpdatingCellmlNode = false;
+    static QStringList cellmlFileBeingUpdated;
 
-    if (alreadyUpdatingCellmlNode)
+    QString cellmlFileName = mParent->cellmlFile()->fileName();
+
+    if (cellmlFileBeingUpdated.contains(cellmlFileName))
         return;
 
-    alreadyUpdatingCellmlNode = true;
+    cellmlFileBeingUpdated << cellmlFileName;
 
     // Loop while there are CellML nodes to update
     // Note: this is done because a CellML node may take time to update, so we
@@ -696,8 +698,8 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
 
         mCellmlIndexes.removeFirst();
 
-        // Retrieve all the CellML items which properties we want to be added to the
-        // details GUI
+        // Retrieve all the CellML items which properties we want to be added to
+        // the details GUI
 
         CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
 
@@ -781,8 +783,8 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
 
                     break;
                 default:
-                    // Either an error, warning, category or metadata, so nothing to
-                    // show/do...
+                    // Either an error, warning, category or metadata, so
+                    // nothing to show/do...
 
                     ;
                 }
@@ -807,7 +809,7 @@ void CellmlAnnotationViewListsWidget::updateCellmlNode(const QModelIndex &pNewIn
 
     // We are done, so...
 
-    alreadyUpdatingCellmlNode = false;
+    cellmlFileBeingUpdated.removeAt(cellmlFileBeingUpdated.indexOf(cellmlFileName));
 }
 
 //==============================================================================
