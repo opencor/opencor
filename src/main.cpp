@@ -52,7 +52,7 @@ int main(int pArgc, char *pArgv[])
     //       Windows, hence the ../winConsole/main.cpp file which is used to
     //       generate the console version of OpenCOR...
 
-    if (consoleApplication(app, &res)) {
+    if (OpenCOR::consoleApplication(app, &res)) {
         // OpenCOR was run as a proper console application, so...
 
         delete app;
