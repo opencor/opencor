@@ -18,10 +18,6 @@
 
 //==============================================================================
 
-using namespace OpenCOR;
-
-//==============================================================================
-
 void removeInstances()
 {
     // Remove all 'global' instances
@@ -41,7 +37,7 @@ int main(int pArgc, char *pArgv[])
 
     // Some general initialisations
 
-    initApplication(app);
+    OpenCOR::initApplication(app);
 
 #ifndef Q_WS_WIN
     // Try to run OpenCOR as a console application
@@ -101,7 +97,7 @@ int main(int pArgc, char *pArgv[])
 
     // Create the main window
 
-    MainWindow *win = new MainWindow();
+    OpenCOR::MainWindow *win = new OpenCOR::MainWindow();
 
     // Keep track of the main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)
