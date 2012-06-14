@@ -219,15 +219,17 @@ bool CellmlAnnotationViewListsWidget::eventFilter(QObject *pObject,
             updateCellmlNode(mCellmlTreeView->currentIndex(), QModelIndex());
         else if (pObject == mMetadataTreeView)
             updateMetadataNode(mMetadataTreeView->currentIndex(), QModelIndex());
-        else
-            return QWidget::eventFilter(pObject, pEvent);
 
-        return true;
+        break;
     default:
-        // Another type of event which we don't handle, so...
+        // Another type of event which we don't handle, so nothing to do...
 
-        return QWidget::eventFilter(pObject, pEvent);
+        ;
     }
+
+    // Default handling of the event
+
+    return QWidget::eventFilter(pObject, pEvent);
 }
 
 //==============================================================================
