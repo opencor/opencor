@@ -441,7 +441,7 @@ bool CentralWidget::openFile(const QString &pFileName)
     // Check whether or not the file is already opened
 
     if (activateFile(pFileName))
-        // The file is already opened and got selected, so...
+        // The file is already opened and, if anything, got selected, so...
 
         return false;
 
@@ -828,9 +828,9 @@ void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
 
 void CentralWidget::updateGui()
 {
-    if ((mStatus == Starting) || (mStatus == Stopping))
-        // We are either starting or stopping, so too risky to update the GUI
-        // during that time (e.g. things may not be fully initialised)
+    if (mStatus != Idling)
+        // We are either starting, updating or stopping, so too risky to update
+        // the GUI during that time (e.g. things may not be fully initialised)
 
         return;
 
