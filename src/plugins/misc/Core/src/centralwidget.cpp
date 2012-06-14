@@ -460,6 +460,18 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     mFileTabs->setCurrentIndex(fileTabIndex);
 
+    // Explicitely update the GUI in case this is the first file we are opening
+    // Note: indeed, the first time we 'insert' a tab, the currentChanged()
+    //       event is triggered, itself triggerring the updateGui() method. Yet,
+    //       we need the tab's tooltip to be set for updateGui() to work
+    //       properly. This is the reason we call setTabToolTip() before calling
+    //       setCurrentIndex() even though the latter triggers the
+    //       currentChanged() event. It's just that the very first time we
+    //       'insert' a tab, the 'current index' is already correct, so...
+
+    if (mFileTabs->count() == 1)
+        updateGui();
+
     // Everything went fine, so let people know that the file has been opened,
     // as well as whether we can navigate and/or close files
 
@@ -847,7 +859,7 @@ void CentralWidget::updateGui()
     // there be one)
 
     int fileTabsCrtIndex = mFileTabs->currentIndex();
-    QString fileName = (fileTabsCrtIndex == -1)?QString():mFileTabs->tabToolTip(mFileTabs->currentIndex());
+    QString fileName = (fileTabsCrtIndex == -1)?QString():mFileTabs->tabToolTip(fileTabsCrtIndex);
 
     if (fileName.isEmpty()) {
         // There is no current file, so show our logo instead
