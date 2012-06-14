@@ -114,7 +114,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
     mGui(new Ui::CentralWidget),
     mStatus(Starting),
-    mLoadedPlugins(Plugins())
+    mLoadedPlugins(Plugins()),
+    mFileNames(QStringList())
 {
     // Set up the GUI
 
@@ -208,12 +209,14 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Some connections to handle our files tab bar
 
-    connect(mFileTabs, SIGNAL(tabCloseRequested(int)),
-            this, SLOT(closeFile(const int &)));
     connect(mFileTabs, SIGNAL(currentChanged(int)),
             this, SLOT(fileSelected(const int &)));
     connect(mFileTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
+    connect(mFileTabs, SIGNAL(tabMoved(int, int)),
+            this, SLOT(fileMoved(const int &, const int &)));
+    connect(mFileTabs, SIGNAL(tabCloseRequested(int)),
+            this, SLOT(closeFile(const int &)));
 
     // A connection to handle our modes tab bar
 
@@ -390,7 +393,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     QStringList openedFiles = QStringList();
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-        openedFiles << mFileTabs->tabToolTip(i);
+        openedFiles << mFileNames[i];
 
     pSettings->setValue(SettingsOpenedFiles, openedFiles);
 
@@ -453,24 +456,15 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
     QFileInfo fileInfo = nativeFileName;
-    int fileTabIndex = mFileTabs->insertTab(mFileTabs->currentIndex()+1,
-                                            fileInfo.fileName());
+    int fileTabIndex = mFileTabs->currentIndex()+1;
+
+    mFileNames.insert(fileTabIndex, nativeFileName);
+
+    mFileTabs->insertTab(fileTabIndex, fileInfo.fileName());
 
     mFileTabs->setTabToolTip(fileTabIndex, nativeFileName);
 
     mFileTabs->setCurrentIndex(fileTabIndex);
-
-    // Explicitely update the GUI in case this is the first file we are opening
-    // Note: indeed, the first time we 'insert' a tab, the currentChanged()
-    //       event is triggered, itself triggerring the updateGui() method. Yet,
-    //       we need the tab's tooltip to be set for updateGui() to work
-    //       properly. This is the reason we call setTabToolTip() before calling
-    //       setCurrentIndex() even though the latter triggers the
-    //       currentChanged() event. It's just that the very first time we
-    //       'insert' a tab, the 'current index' is already correct, so...
-
-    if (mFileTabs->count() == 1)
-        updateGui();
 
     // Everything went fine, so let people know that the file has been opened,
     // as well as whether we can navigate and/or close files
@@ -534,9 +528,11 @@ bool CentralWidget::closeFile(const int &pIndex)
     if (realIndex != -1) {
         // There is a file currently opened, so first retrieve its file name
 
-        QString fileName = mFileTabs->tabToolTip(realIndex);
+        QString fileName = mFileNames[realIndex];
 
         // Next, we must close the tab
+
+        mFileNames.removeAt(realIndex);
 
         mFileTabs->removeTab(realIndex);
 
@@ -598,7 +594,7 @@ bool CentralWidget::activateFile(const QString &pFileName)
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-        if (!mFileTabs->tabToolTip(i).compare(nativeFileName)) {
+        if (!mFileNames[i].compare(nativeFileName)) {
             // We have found the file, so set the current index to that of its
             // tab
 
@@ -620,7 +616,17 @@ void CentralWidget::fileSelected(const int &pIndex)
 {
     // Let people know that a file has been selected
 
-    emit fileSelected(mFileTabs->tabToolTip(pIndex));
+    emit fileSelected((pIndex == -1)?QString():mFileNames[pIndex]);
+}
+
+//==============================================================================
+
+void CentralWidget::fileMoved(const int &pFromIndex, const int &pToIndex)
+{
+    // Update our list of file names to reflect the fact that a tab has been
+    // moved
+
+    mFileNames.move(pFromIndex, pToIndex);
 }
 
 //==============================================================================
@@ -639,7 +645,7 @@ QString CentralWidget::activeFileName() const
     // Return the name of the file currently active, if any
 
     if (mFileTabs->count())
-        return mFileTabs->tabToolTip(mFileTabs->currentIndex());
+        return mFileNames[mFileTabs->currentIndex()];
     else
         return QString();
 }
@@ -859,7 +865,7 @@ void CentralWidget::updateGui()
     // there be one)
 
     int fileTabsCrtIndex = mFileTabs->currentIndex();
-    QString fileName = (fileTabsCrtIndex == -1)?QString():mFileTabs->tabToolTip(fileTabsCrtIndex);
+    QString fileName = (fileTabsCrtIndex == -1)?QString():mFileNames[fileTabsCrtIndex];
 
     if (fileName.isEmpty()) {
         // There is no current file, so show our logo instead

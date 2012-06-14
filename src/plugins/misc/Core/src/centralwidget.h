@@ -129,6 +129,8 @@ private:
     QTabBar *mModeTabs;
     QTabBar *mFileTabs;
 
+    QStringList mFileNames;
+
     QStackedWidget *mContents;
 
     QWidget *mLogoView;
@@ -175,6 +177,7 @@ private Q_SLOTS:
     bool closeFile(const int &pIndex = -1);
     void closeAllFiles();
     void fileSelected(const int &pIndex);
+    void fileMoved(const int &pFromIndex, const int &pToIndex);
     void updateGui();
 };
 
