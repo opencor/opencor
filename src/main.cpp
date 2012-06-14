@@ -33,7 +33,8 @@ int main(int pArgc, char *pArgv[])
 
     // Create the application
 
-    SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(pArgc, pArgv);
+    SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(QFileInfo(pArgv[0]).baseName(),
+                                                                                 pArgc, pArgv);
 
     // Some general initialisations
 
