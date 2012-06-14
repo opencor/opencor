@@ -342,14 +342,13 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     emit navigateFilesEnabled(false);
     emit closeFilesEnabled(false);
 
-    // Retrieve the files that were previously opened
+    // Retrieve and open the files that were previously opened
 
     QStringList openedFiles;
 
     openedFiles = pSettings->value(SettingsOpenedFiles).toStringList();
 
-    for (int i = 0, iMax = openedFiles.count(); i < iMax; ++i)
-        openFile(openedFiles[i]);
+    openFiles(openedFiles);
 
     // Retrieve the current file
 
