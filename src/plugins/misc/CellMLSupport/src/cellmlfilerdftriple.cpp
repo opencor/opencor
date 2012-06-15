@@ -17,8 +17,8 @@ namespace CellMLSupport {
 
 CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
     mType(Unknown),
-    mModelQualifierType(ModelUnknown),
-    mBioQualifierType(BioUnknown),
+    mModelQualifier(ModelUnknown),
+    mBioQualifier(BioUnknown),
     mResource(QString()),
     mId(QString())
 {
@@ -75,7 +75,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
 
             mType = BioModelsDotNetQualifier;
 
-            mModelQualifierType = (ModelQualifierType) (i+1);
+            mModelQualifier = (ModelQualifier) (i+1);
 
             break;
         }
@@ -87,7 +87,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
 
                 mType = BioModelsDotNetQualifier;
 
-                mBioQualifierType = (BioQualifierType) (i+1);
+                mBioQualifier = (BioQualifier) (i+1);
 
                 break;
             }
@@ -122,8 +122,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
 
             mType = Unknown;
 
-            mModelQualifierType = ModelUnknown;
-            mBioQualifierType   = BioUnknown;
+            mModelQualifier = ModelUnknown;
+            mBioQualifier   = BioUnknown;
         }
     }
 }
@@ -177,20 +177,20 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriple::type() const
 
 //==============================================================================
 
-CellmlFileRdfTriple::ModelQualifierType CellmlFileRdfTriple::modelQualifierType() const
+CellmlFileRdfTriple::ModelQualifier CellmlFileRdfTriple::modelQualifier() const
 {
-    // Return the RDF triple's model qualifier type
+    // Return the RDF triple's model qualifier
 
-    return mModelQualifierType;
+    return mModelQualifier;
 }
 
 //==============================================================================
 
-QString CellmlFileRdfTriple::modelQualifierTypeAsString() const
+QString CellmlFileRdfTriple::modelQualifierAsString() const
 {
-    // Return the RDF triple's model qualifier type as a string
+    // Return the RDF triple's model qualifier as a string
 
-    switch (mModelQualifierType) {
+    switch (mModelQualifier) {
     case ModelIs:
         return "model:is";
     case ModelIsDerivedFrom:
@@ -206,20 +206,20 @@ QString CellmlFileRdfTriple::modelQualifierTypeAsString() const
 
 //==============================================================================
 
-CellmlFileRdfTriple::BioQualifierType CellmlFileRdfTriple::bioQualifierType() const
+CellmlFileRdfTriple::BioQualifier CellmlFileRdfTriple::bioQualifier() const
 {
-    // Return the RDF triple's bio(logy) qualifier type
+    // Return the RDF triple's bio(logy) qualifier
 
-    return mBioQualifierType;
+    return mBioQualifier;
 }
 
 //==============================================================================
 
-QString CellmlFileRdfTriple::bioQualifierTypeAsString() const
+QString CellmlFileRdfTriple::bioQualifierAsString() const
 {
-    // Return the RDF triple's bio(logy) qualifier type as a string
+    // Return the RDF triple's bio(logy) qualifier as a string
 
-    switch (mBioQualifierType) {
+    switch (mBioQualifier) {
     case BioEncodes:
         return "bio:encodes";
     case BioHasPart:

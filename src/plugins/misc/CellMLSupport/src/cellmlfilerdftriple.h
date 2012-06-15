@@ -32,14 +32,14 @@ public:
         BioModelsDotNetQualifier
     };
 
-    enum ModelQualifierType {
+    enum ModelQualifier {
         ModelUnknown,
         ModelIs,
         ModelIsDerivedFrom,
         ModelIsDescribedBy
     };
 
-    enum BioQualifierType {
+    enum BioQualifier {
         BioUnknown,
         BioEncodes,
         BioHasPart,
@@ -65,11 +65,11 @@ public:
 
     Type type() const;
 
-    ModelQualifierType modelQualifierType() const;
-    QString modelQualifierTypeAsString() const;
+    ModelQualifier modelQualifier() const;
+    QString modelQualifierAsString() const;
 
-    BioQualifierType bioQualifierType() const;
-    QString bioQualifierTypeAsString() const;
+    BioQualifier bioQualifier() const;
+    QString bioQualifierAsString() const;
 
     QString resource() const;
     QString id() const;
@@ -81,8 +81,8 @@ private:
 
     Type mType;
 
-    ModelQualifierType mModelQualifierType;
-    BioQualifierType mBioQualifierType;
+    ModelQualifier mModelQualifier;
+    BioQualifier mBioQualifier;
 
     QString mResource;
     QString mId;

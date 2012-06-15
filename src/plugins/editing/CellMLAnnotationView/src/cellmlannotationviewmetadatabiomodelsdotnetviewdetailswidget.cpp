@@ -117,25 +117,30 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         //       element cmeta:id which will speak more to the user than a
         //       possibly long URI reference...
 
-        QString firstResourceId = QString();
+        QString firstRdfTripleInfo = QString();
         int row = 0;
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
             // Qualifier
 
-            mLayout->addWidget(mParent->newLabel(mWidget,
-                                                 (rdfTriple->modelQualifierType() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
-                                                     rdfTriple->modelQualifierTypeAsString():
-                                                     rdfTriple->bioQualifierTypeAsString(),
-                                                 false, 1.0, Qt::AlignCenter),
-                               ++row, 0);
+            QString qualifierAsString = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                                            rdfTriple->modelQualifierAsString():
+                                            rdfTriple->bioQualifierAsString();
+            QString rdfTripleInfo = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
+
+            QLabel *qualifier = mParent->newLabelLink(mWidget,
+                                                      "<a href=\""+rdfTripleInfo+"\">"+qualifierAsString+"</a>",
+                                                      false, 1.0, Qt::AlignCenter);
+
+            connect(qualifier, SIGNAL(linkActivated(const QString &)),
+                    this, SLOT(lookupQualifier(const QString &)));
+
+            mLayout->addWidget(qualifier, ++row, 0);
 
             // Resource
 
-            QString resourceId = rdfTriple->resource()+"|"+rdfTriple->id();
-
             QLabel *resource = mParent->newLabelLink(mWidget,
-                                                     "<a href=\""+resourceId+"\">"+rdfTriple->resource()+"</a>",
+                                                     "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->resource()+"</a>",
                                                      false, 1.0, Qt::AlignCenter);
 
             connect(resource, SIGNAL(linkActivated(const QString &)),
@@ -146,7 +151,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             // Id
 
             QLabel *id = mParent->newLabelLink(mWidget,
-                                               "<a href=\""+resourceId+"\">"+rdfTriple->id()+"</a>",
+                                               "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->id()+"</a>",
                                                false, 1.0, Qt::AlignCenter);
 
             connect(id, SIGNAL(linkActivated(const QString &)),
@@ -157,12 +162,12 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             // Keep track of the very first resource id
 
             if (row == 1)
-                firstResourceId = resourceId;
+                firstRdfTripleInfo = rdfTripleInfo;
         }
 
         // Request for the first resource id to be looked up
 
-        lookupResourceId(firstResourceId);
+        lookupResourceId(firstRdfTripleInfo);
     }
 
     // Re-show ourselves
@@ -172,16 +177,17 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceOrResourceId(const QString &pResourceId,
-                                                                                              const bool &pLookupResource) const
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup(const QString &pRdfTripleInfo,
+                                                                                 const Type &pType) const
 {
-    // Retrieve the resource and id
+    // Retrieve the RDF triple information
 
-    QStringList resourceIdAsStringList = pResourceId.split("|");
-    QString resourceAsString = resourceIdAsStringList[0];
-    QString idAsString = resourceIdAsStringList[1];
+    QStringList rdfTripleInfoAsStringList = pRdfTripleInfo.split("|");
+    QString qualifierAsString = rdfTripleInfoAsStringList[0];
+    QString resourceAsString = rdfTripleInfoAsStringList[1];
+    QString idAsString = rdfTripleInfoAsStringList[2];
 
-    // Make the row corresponding to the resource id bold
+    // Make the row corresponding to the qualifier, resource or id bold
     // Note: to use mLayout->rowCount() to determine the number of rows isn't an
     //       option since no matter whether we remove rows (in updateGui()), the
     //       returned value will be the maximum number of rows that there has
@@ -200,8 +206,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
 
             QFont font = id->font();
 
-            font.setBold(   !resource->text().compare("<a href=\""+pResourceId+"\">"+resourceAsString+"</a>")
-                         && !id->text().compare("<a href=\""+pResourceId+"\">"+idAsString+"</a>"));
+            font.setBold(   !qualifier->text().compare("<a href=\""+pRdfTripleInfo+"\">"+qualifierAsString+"</a>")
+                         && !resource->text().compare("<a href=\""+pRdfTripleInfo+"\">"+resourceAsString+"</a>")
+                         && !id->text().compare("<a href=\""+pRdfTripleInfo+"\">"+idAsString+"</a>"));
             font.setItalic(false);
 
             QFont italicFont = id->font();
@@ -209,9 +216,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
             italicFont.setBold(font.bold());
             italicFont.setItalic(font.bold());
 
-            qualifier->setFont(font);
-            resource->setFont(pLookupResource?italicFont:font);
-            id->setFont(!pLookupResource?italicFont:font);
+            qualifier->setFont((pType == Qualifier)?italicFont:font);
+            resource->setFont((pType == Resource)?italicFont:font);
+            id->setFont((pType == Id)?italicFont:font);
         } else {
             // No more rows, so...
 
@@ -221,28 +228,47 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
 
     // Let people know that we want to lookup a resource id
 
-    if (pLookupResource)
+    switch (pType) {
+    case Qualifier:
+        emit qualifierLookupRequested(qualifierAsString);
+
+        break;
+    case Resource:
         emit resourceLookupRequested(resourceAsString);
-    else
+
+        break;
+    case Id:
         emit resourceIdLookupRequested(resourceAsString, idAsString);
+
+        break;
+    }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pResourceId) const
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInfo) const
 {
-    // Call our generic function
+    // Call our generic lookup function
 
-    lookupResourceOrResourceId(pResourceId, true);
+    genericLookup(pRdfTripleInfo, Qualifier);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceId(const QString &pResourceId) const
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pRdfTripleInfo) const
 {
-    // Call our generic function
+    // Call our generic lookup function
 
-    lookupResourceOrResourceId(pResourceId, false);
+    genericLookup(pRdfTripleInfo, Resource);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceId(const QString &pRdfTripleInfo) const
+{
+    // Call our generic lookup function
+
+    genericLookup(pRdfTripleInfo, Id);
 }
 
 //==============================================================================

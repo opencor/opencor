@@ -58,17 +58,24 @@ private:
 
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
-    void lookupResourceOrResourceId(const QString &pResourceId,
-                                    const bool &pLookupResource) const;
+    enum Type {
+        Qualifier,
+        Resource,
+        Id
+    };
+
+    void genericLookup(const QString &pRdfTripleInfo, const Type &pType) const;
 
 Q_SIGNALS:
+    void qualifierLookupRequested(const QString &pQualifier) const;
     void resourceLookupRequested(const QString &pResource) const;
     void resourceIdLookupRequested(const QString &pResource,
                                    const QString &pId) const;
 
 private Q_SLOTS:
-    void lookupResource(const QString &pResourceId) const;
-    void lookupResourceId(const QString &pResourceId) const;
+    void lookupQualifier(const QString &pRdfTripleInfo) const;
+    void lookupResource(const QString &pRdfTripleInfo) const;
+    void lookupResourceId(const QString &pRdfTripleInfo) const;
 };
 
 //==============================================================================
