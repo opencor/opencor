@@ -448,11 +448,14 @@ bool CentralWidget::openFile(const QString &pFileName)
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
     // current one
-    // Note #1: the tool tip allow us, for example, to retrieve the name of a
-    //          file which we want to close (see CentralWidget::closeFile())...
-    // Note #2: the order in which we handle things for mFileTabs is important,
-    //          e.g. the tool tip is needed by UpdateGui() which is called when
-    //          changing the current index...
+    // Note #1: mFileNames is, for example, used to retrieve the name of a file
+    //          which we want to close (see CentralWidget::closeFile()), so we
+    //          must make sure that the order of its contents matches that of
+    //          the tabs...
+    // Note #2: rather than using mFileNames, we could have used a tab's tool
+    //          tip, but this makes it a bit tricky to handle with regards to
+    //          connections and therefore some events triggering updateGui() to
+    //          be called when the tool tip has not yet been assigned, so...
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
     QFileInfo fileInfo = nativeFileName;
