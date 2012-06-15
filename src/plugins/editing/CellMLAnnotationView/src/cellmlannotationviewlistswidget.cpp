@@ -211,16 +211,23 @@ bool CellmlAnnotationViewListsWidget::eventFilter(QObject *pObject,
                                                   QEvent *pEvent)
 {
     switch (pEvent->type()) {
-    case QEvent::FocusIn:
+    case QEvent::FocusIn: {
+        static QObject *previousObject = 0;
+
         // Check whether we are dealing with one of our tree views and, if so,
         // update their details
 
-        if (pObject == mCellmlTreeView)
-            updateCellmlNode(mCellmlTreeView->currentIndex(), QModelIndex());
-        else if (pObject == mMetadataTreeView)
-            updateMetadataNode(mMetadataTreeView->currentIndex(), QModelIndex());
+        if (pObject != previousObject) {
+            previousObject = pObject;
+
+            if (pObject == mCellmlTreeView)
+                updateCellmlNode(mCellmlTreeView->currentIndex(), QModelIndex());
+            else if (pObject == mMetadataTreeView)
+                updateMetadataNode(mMetadataTreeView->currentIndex(), QModelIndex());
+        }
 
         break;
+    }
     default:
         // Another type of event which we don't handle, so nothing to do...
 
