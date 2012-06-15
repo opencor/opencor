@@ -39,6 +39,8 @@ QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent,
                                    const bool &pHorizontal = true);
 
+QString CORE_EXPORT copyright();
+
 //==============================================================================
 
 }   // namespace Core

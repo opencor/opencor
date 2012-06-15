@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include <QApplication>
+#include <QDate>
 #include <QDir>
 #include <QFile>
 #include <QFrame>
@@ -165,6 +166,15 @@ QFrame * newLineWidget(QWidget *pParent, const bool &pHorizontal)
     }
 
     return res;
+}
+
+//==============================================================================
+
+QString copyright()
+{
+    // Return a generic copyright
+
+    return QObject::tr("Copyright")+" ©2011-"+QString::number(QDate::currentDate().year());
 }
 
 //==============================================================================

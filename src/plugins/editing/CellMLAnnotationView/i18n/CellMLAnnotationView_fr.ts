@@ -28,6 +28,137 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlDetailsWidget</name>
+    <message>
+        <source>Identity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The modelling object represented by the model element is identical with the subject of the referenced resource (modeling object B). For instance, this qualifier might be used to link an encoded model to a database of models.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Origin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The modelling object represented by the model element is derived from the modelling object represented by the referenced resource (modelling object B). This relation may be used, for instance, to express a refinement or adaptation in usage for a previously described modeling component.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The modelling object represented by the model element is described by the subject of the referenced resource (modeling object B). This relation might be used to link a model or a kinetic law to the literature that describes it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encodement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element encodes, directly or transitivity, the subject of the referenced resource (biological entity B). This relation may be used to express, for example, that a specific DNA sequence encodes a particular protein.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element includes the subject of the referenced resource (biological entity B), either physically or logically. This relation might be used to link a complex to the description of its components.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The subject of the referenced resource (biological entity B) is a property of the biological entity represented by the model element. This relation might be used when a biological entity exhibits a certain enzymatic activity or exerts a specific function.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The subject of the referenced resource (biological entity B) is a version or an instance of the biological entity represented by the model element. This relation may be used to represent an isoform of modified form of a biological entity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Indentity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element has identity with the subject of the referenced resource (modeling object B). This relation might be used to link a reaction to its exact counterpart in a database, for instance.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element is described by the subject of the referenced resource (biological entity B). This relation should be used, for instance, to link a species or a parameter to the literature that describes the concentration of that species or the value of that parameter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element is encoded, directly, or transitivity, by the subject of the referenced resource (biological entity B). This relation may be used to express, for example, that a protein is encoded by a specific DNA sequence.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Homolog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element is homologous to the subject of the referenced resource (biological entity B). This relation can be used to represent biological entities that share a common ancestor.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parthood</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element is a physical or logical part of the subject of the referenced resource (biological entity B). This relation may be used to link a model component to a description of the complex in which it is a part.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property bearer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element is a property of the referenced resource (biological entity B).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hypernym</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element is a version or an instance of the subject of the referenced resource (biological entity B). This relation may be used to represent, for example, the &apos;superclass&apos; or &apos;parent&apos; form of a particular biological entity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Container</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element is physically limited to a location, which is the subject of the referenced resource (biological entity B). This relation may be used to ascribe a compartmental location, within which a reaction takes place.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Taxon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The biological entity represented by the model element is taxonomically restricted, where the restriction is the subject of the referenced resource (biological entity B). This relation may be used to ascribe a species restriction to a biochemical reaction.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlElementDetailsWidget</name>
     <message>
         <source>cmeta:id:</source>

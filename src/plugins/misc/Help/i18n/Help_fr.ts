@@ -86,10 +86,6 @@
         <source>Please &lt;a href=&quot;http://www.opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
         <translation>Veuillez &lt;a href=&quot;http://www.opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
     </message>
-    <message>
-        <source>Copyright</source>
-        <translation>Tous droits réservés</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::Help::HelpPlugin</name>

@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include <QCoreApplication>
+#include <QDate>
 #include <QDir>
 #include <QDirIterator>
 #include <QFile>
@@ -117,7 +118,7 @@ QString getAppVersion(QCoreApplication *pApp)
 
 QString getAppCopyright(const bool &pHtml)
 {
-    return QObject::tr("Copyright")+" "+QString(pHtml?"&copy;":"")+"2011-2012";
+    return QObject::tr("Copyright")+" "+QString(pHtml?"&copy;":"")+"2011-"+QString::number(QDate().year());
 }
 
 //==============================================================================

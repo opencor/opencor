@@ -103,4 +103,11 @@
         <translation>Sélectionner le fichier suivant</translation>
     </message>
 </context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Copyright</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>
