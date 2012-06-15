@@ -107,7 +107,7 @@
     <name>QObject</name>
     <message>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation>Tous droits réservés</translation>
     </message>
 </context>
 </TS>

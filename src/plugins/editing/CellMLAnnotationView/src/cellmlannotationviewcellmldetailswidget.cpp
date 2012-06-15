@@ -104,7 +104,8 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
     mCellmlElementDetails->retranslateUi();
     mMetadataViewDetails->retranslateUi();
 
-    qualifierLookupRequested(mQualifier);
+    if (!mQualifier.isEmpty())
+        qualifierLookupRequested(mQualifier);
 }
 
 //==============================================================================
@@ -269,6 +270,8 @@ void CellmlAnnotationViewCellmlDetailsWidget::resourceLookupRequested(const QStr
     // The user requested a resource to be looked up, so retrieve it using
     // identifiers.org
 
+    mQualifier = QString();
+
     mWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
 }
 
@@ -279,6 +282,8 @@ void CellmlAnnotationViewCellmlDetailsWidget::resourceIdLookupRequested(const QS
 {
     // The user requested a resource id to be looked up, so retrieve it using
     // identifiers.org
+
+    mQualifier = QString();
 
     mWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
 }
