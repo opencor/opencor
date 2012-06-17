@@ -56,7 +56,8 @@ public:
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
                    const QString &pRdfTripleInfo = QString(),
-                   const Type &pType = Unknown);
+                   const Type &pType = Unknown,
+                   const bool &pRetranslate = false);
 
 private:
     CellmlAnnotationViewWidget *mParent;
@@ -71,18 +72,25 @@ private:
     QString mRdfTripleInfo;
     Type mType;
 
-    void genericLookup(const QString &pRdfTripleInfo, const Type &pType);
+    void genericLookup(const QString &pRdfTripleInfo, const Type &pType,
+                       const bool &pRetranslate);
 
 Q_SIGNALS:
-    void qualifierLookupRequested(const QString &pQualifier) const;
-    void resourceLookupRequested(const QString &pResource) const;
+    void qualifierLookupRequested(const QString &pQualifier,
+                                  const bool &pRetranslate) const;
+    void resourceLookupRequested(const QString &pResource,
+                                 const bool &pRetranslate) const;
     void resourceIdLookupRequested(const QString &pResource,
-                                   const QString &pId) const;
+                                   const QString &pId,
+                                   const bool &pRetranslate) const;
 
 private Q_SLOTS:
-    void lookupQualifier(const QString &pRdfTripleInfo);
-    void lookupResource(const QString &pRdfTripleInfo);
-    void lookupResourceId(const QString &pRdfTripleInfo);
+    void lookupQualifier(const QString &pRdfTripleInfo,
+                         const bool &pRetranslate = false);
+    void lookupResource(const QString &pRdfTripleInfo,
+                        const bool &pRetranslate = false);
+    void lookupResourceId(const QString &pRdfTripleInfo,
+                          const bool &pRetranslate = false);
 };
 
 //==============================================================================

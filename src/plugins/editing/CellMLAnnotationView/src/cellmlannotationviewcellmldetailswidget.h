@@ -76,10 +76,13 @@ private Q_SLOTS:
 
     void newCmetaIdValue(const QString &pCmetaIdValue);
 
-    void qualifierLookupRequested(const QString &pQualifier);
-    void resourceLookupRequested(const QString &pResource);
+    void qualifierLookupRequested(const QString &pQualifier,
+                                  const bool &pRetranslate);
+    void resourceLookupRequested(const QString &pResource,
+                                 const bool &pRetranslate);
     void resourceIdLookupRequested(const QString &pResource,
-                                   const QString &pId);
+                                   const QString &pId,
+                                   const bool &pRetranslate);
 };
 
 //==============================================================================

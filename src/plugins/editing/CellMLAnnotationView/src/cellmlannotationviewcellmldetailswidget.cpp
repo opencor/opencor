@@ -51,12 +51,12 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     // A connection to handle the looking up of a resource and a resource id
 
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(qualifierLookupRequested(const QString &)),
-            this, SLOT(qualifierLookupRequested(const QString &)));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceLookupRequested(const QString &)),
-            this, SLOT(resourceLookupRequested(const QString &)));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceIdLookupRequested(const QString &, const QString &)),
-            this, SLOT(resourceIdLookupRequested(const QString &, const QString &)));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
+            this, SLOT(qualifierLookupRequested(const QString &, const bool &)));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
+            this, SLOT(resourceLookupRequested(const QString &, const bool &)));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceIdLookupRequested(const QString &, const QString &, const bool &)),
+            this, SLOT(resourceIdLookupRequested(const QString &, const QString &, const bool &)));
 
     // Add our details widgets to our splitter
 
@@ -190,8 +190,11 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCm
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::qualifierLookupRequested(const QString &pQualifier)
+void CellmlAnnotationViewCellmlDetailsWidget::qualifierLookupRequested(const QString &pQualifier,
+                                                                       const bool &pRetranslate)
 {
+    Q_UNUSED(pRetranslate);
+
     // The user requested a qualifier to be looked up, so generate a web page
     // containing some information about the qualifier
     // Note: ideally, there would be a way to refer to a particular qualifier
@@ -307,23 +310,29 @@ void CellmlAnnotationViewCellmlDetailsWidget::qualifierLookupRequested(const QSt
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::resourceLookupRequested(const QString &pResource)
+void CellmlAnnotationViewCellmlDetailsWidget::resourceLookupRequested(const QString &pResource,
+                                                                      const bool &pRetranslate)
 {
     // The user requested a resource to be looked up, so retrieve it using
-    // identifiers.org
+    // identifiers.org, but only if we are not retranslating since the looking
+    // up would already be correct
 
-    mWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
+    if (!pRetranslate)
+        mWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewCellmlDetailsWidget::resourceIdLookupRequested(const QString &pResource,
-                                                                        const QString &pId)
+                                                                        const QString &pId,
+                                                                        const bool &pRetranslate)
 {
     // The user requested a resource id to be looked up, so retrieve it using
-    // identifiers.org
+    // identifiers.org, but only if we are not retranslating since the looking
+    // up would already be correct
 
-    mWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
+    if (!pRetranslate)
+        mWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
 }
 
 //==============================================================================
