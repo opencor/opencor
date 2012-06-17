@@ -195,7 +195,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             default:
                 // Unknown, so nothing to do...
                 // Note: we can't reach this point, but it's to 'please' some
-                //       compilers...
+                //       compilers, so...
 
                 ;
             }
@@ -277,6 +277,12 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
         emit resourceIdLookupRequested(resourceAsString, idAsString);
 
         break;
+    default:
+        // Unknown, so nothing to do...
+        // Note: we should never reach this point, but it's to 'please' some
+        //       compilers, so...
+
+        ;
     }
 }
 
