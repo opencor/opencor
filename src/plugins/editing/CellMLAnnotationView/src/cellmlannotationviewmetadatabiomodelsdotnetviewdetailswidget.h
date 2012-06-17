@@ -77,12 +77,12 @@ private:
 
 Q_SIGNALS:
     void qualifierLookupRequested(const QString &pQualifier,
-                                  const bool &pRetranslate) const;
+                                  const bool &pRetranslate);
     void resourceLookupRequested(const QString &pResource,
-                                 const bool &pRetranslate) const;
+                                 const bool &pRetranslate);
     void resourceIdLookupRequested(const QString &pResource,
                                    const QString &pId,
-                                   const bool &pRetranslate) const;
+                                   const bool &pRetranslate);
 
 private Q_SLOTS:
     void lookupQualifier(const QString &pRdfTripleInfo,
