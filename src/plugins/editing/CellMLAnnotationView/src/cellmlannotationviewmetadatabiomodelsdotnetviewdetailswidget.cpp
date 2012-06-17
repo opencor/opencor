@@ -192,6 +192,12 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                 lookupResourceId(pRdfTripleInfo);
 
                 break;
+            default:
+                // Unknown, so nothing to do...
+                // Note: we can't reach this point, but it's to 'please' some
+                //       compilers...
+
+                ;
             }
     }
 
