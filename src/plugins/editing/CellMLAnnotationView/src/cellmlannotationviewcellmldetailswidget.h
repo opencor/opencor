@@ -60,8 +60,6 @@ private:
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;
 
-    QString mQualifier;
-
     QString mQualifierInformationTemplate;
 
     QString mModelQualifierSvg;

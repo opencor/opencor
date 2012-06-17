@@ -40,13 +40,23 @@ class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget : public QScr
 {
     Q_OBJECT
 
+private:
+    enum Type {
+        Unknown,
+        Qualifier,
+        Resource,
+        Id
+    };
+
 public:
     explicit CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget();
 
     virtual void retranslateUi();
 
-    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
+    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
+                   const QString &pRdfTripleInfo = QString(),
+                   const Type &pType = Unknown);
 
 private:
     CellmlAnnotationViewWidget *mParent;
@@ -58,13 +68,10 @@ private:
 
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
-    enum Type {
-        Qualifier,
-        Resource,
-        Id
-    };
+    QString mRdfTripleInfo;
+    Type mType;
 
-    void genericLookup(const QString &pRdfTripleInfo, const Type &pType) const;
+    void genericLookup(const QString &pRdfTripleInfo, const Type &pType);
 
 Q_SIGNALS:
     void qualifierLookupRequested(const QString &pQualifier) const;
@@ -73,9 +80,9 @@ Q_SIGNALS:
                                    const QString &pId) const;
 
 private Q_SLOTS:
-    void lookupQualifier(const QString &pRdfTripleInfo) const;
-    void lookupResource(const QString &pRdfTripleInfo) const;
-    void lookupResourceId(const QString &pRdfTripleInfo) const;
+    void lookupQualifier(const QString &pRdfTripleInfo);
+    void lookupResource(const QString &pRdfTripleInfo);
+    void lookupResourceId(const QString &pRdfTripleInfo);
 };
 
 //==============================================================================

@@ -27,7 +27,9 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
-    mRdfTriples(CellMLSupport::CellmlFileRdfTriples())
+    mRdfTriples(CellMLSupport::CellmlFileRdfTriples()),
+    mRdfTripleInfo(QString()),
+    mType(Unknown)
 {
     // Set up the GUI
 
@@ -72,12 +74,14 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::retranslateUi
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mRdfTriples);
+    updateGui(mRdfTriples, mRdfTripleInfo, mType);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
+                                                                             const QString &pRdfTripleInfo,
+                                                                             const Type &pType)
 {
     // Hide ourselves (to avoid any flickering during the updaate)
 
@@ -165,9 +169,30 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                 firstRdfTripleInfo = rdfTripleInfo;
         }
 
-        // Request for the first resource id to be looked up
+        // Request for something to be looked up, be it the first resource id or
+        // an 'old' qualifier, resource or resource id
 
-        lookupResourceId(firstRdfTripleInfo);
+        if (pRdfTripleInfo.isEmpty() && (pType == Unknown))
+            // Nothing 'old' to look up, so look up the first resource id
+
+            lookupResourceId(firstRdfTripleInfo);
+        else
+            // Look up an 'old' qualifier, resource or resource id
+
+            switch (pType) {
+            case Qualifier:
+                lookupQualifier(pRdfTripleInfo);
+
+                break;
+            case Resource:
+                lookupResource(pRdfTripleInfo);
+
+                break;
+            case Id:
+                lookupResourceId(pRdfTripleInfo);
+
+                break;
+            }
     }
 
     // Re-show ourselves
@@ -178,7 +203,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 //==============================================================================
 
 void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup(const QString &pRdfTripleInfo,
-                                                                                 const Type &pType) const
+                                                                                 const Type &pType)
 {
     // Retrieve the RDF triple information
 
@@ -186,6 +211,11 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
     QString qualifierAsString = rdfTripleInfoAsStringList[0];
     QString resourceAsString = rdfTripleInfoAsStringList[1];
     QString idAsString = rdfTripleInfoAsStringList[2];
+
+    // Keep track of the RDF triple information and type
+
+    mRdfTripleInfo = pRdfTripleInfo;
+    mType          = pType;
 
     // Make the row corresponding to the qualifier, resource or id bold
     // Note: to use mLayout->rowCount() to determine the number of rows isn't an
@@ -246,7 +276,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInfo) const
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInfo)
 {
     // Call our generic lookup function
 
@@ -255,7 +285,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifi
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pRdfTripleInfo) const
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pRdfTripleInfo)
 {
     // Call our generic lookup function
 
@@ -264,7 +294,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceId(const QString &pRdfTripleInfo) const
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceId(const QString &pRdfTripleInfo)
 {
     // Call our generic lookup function
 

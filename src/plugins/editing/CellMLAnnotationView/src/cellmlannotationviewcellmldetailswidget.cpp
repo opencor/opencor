@@ -37,8 +37,7 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
     QSplitter(pParent),
     CommonWidget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewCellmlDetailsWidget),
-    mQualifier(QString())
+    mGui(new Ui::CellmlAnnotationViewCellmlDetailsWidget)
 {
     // Set up the GUI
 
@@ -117,9 +116,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
     mCellmlElementDetails->retranslateUi();
     mMetadataViewDetails->retranslateUi();
-
-    if (!mQualifier.isEmpty())
-        qualifierLookupRequested(mQualifier);
 }
 
 //==============================================================================
@@ -206,10 +202,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::qualifierLookupRequested(const QSt
 
     if (pQualifier.isEmpty())
         return;
-
-    // Keep track of the qualifier (useful when wanting to retranslate OpenCOR)
-
-    mQualifier = pQualifier;
 
     // Generate the web page containing some information about the qualifier
 
@@ -320,8 +312,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::resourceLookupRequested(const QStr
     // The user requested a resource to be looked up, so retrieve it using
     // identifiers.org
 
-    mQualifier = QString();
-
     mWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
 }
 
@@ -332,8 +322,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::resourceIdLookupRequested(const QS
 {
     // The user requested a resource id to be looked up, so retrieve it using
     // identifiers.org
-
-    mQualifier = QString();
 
     mWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
 }
