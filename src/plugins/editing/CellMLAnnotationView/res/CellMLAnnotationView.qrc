@@ -3,6 +3,8 @@
         <file>oxygen/actions/list-add.png</file>
         <file>oxygen/actions/list-remove.png</file>
         <file alias="qualifierInformation">qualifierInformation.html</file>
+        <file alias="modelQualifier">modelQualifier.svg</file>
+        <file alias="biologyQualifier">biologyQualifier.svg</file>
         <file alias="CellMLAnnotationView_fr">../../../../../build/CellMLAnnotationView_fr.qm</file>
     </qresource>
 </RCC>

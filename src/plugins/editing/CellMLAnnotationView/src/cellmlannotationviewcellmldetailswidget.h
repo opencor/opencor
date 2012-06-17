@@ -64,6 +64,9 @@ private:
 
     QString mQualifierInformationTemplate;
 
+    QString mModelQualifierSvg;
+    QString mBiologyQualifierSvg;
+
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
