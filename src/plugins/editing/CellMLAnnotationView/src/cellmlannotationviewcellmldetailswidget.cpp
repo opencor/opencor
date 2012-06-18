@@ -246,7 +246,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::qualifierLookupRequested(const QSt
         qualifierSvg = mBiologyQualifierSvg;
 
         shortDescription = tr("Version");
-        longDescription  = tr("The subject of the referenced resource (\"Biological Entity B\") is a version or an instance of the biological entity represented by the model element. This relation may be used to represent an isoform of modified form of a biological entity.");
+        longDescription  = tr("The subject of the referenced resource (\"Biological Entity B\") is a version or an instance of the biological entity represented by the model element. This relation may be used to represent an isoform or modified form of a biological entity.");
     } else if (!pQualifier.compare("bio:is")) {
         qualifierSvg = mBiologyQualifierSvg;
 

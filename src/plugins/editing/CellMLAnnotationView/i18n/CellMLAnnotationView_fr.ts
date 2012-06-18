@@ -82,8 +82,8 @@
         <translation></translation>
     </message>
     <message>
-        <source>The subject of the referenced resource (&quot;Biological Entity B&quot;) is a version or an instance of the biological entity represented by the model element. This relation may be used to represent an isoform of modified form of a biological entity.</source>
-        <translation>Le sujet dont la ressource est référencée (&quot;Biological Entity B&quot;) est une version ou une instance de l&apos;entité biologique représentée par l&apos;élément du modèle. Cette relation peut être utilisée pour représenter un isoforme ou une forme modifiée d&apos;une entité biologique.</translation>
+        <source>The subject of the referenced resource (&quot;Biological Entity B&quot;) is a version or an instance of the biological entity represented by the model element. This relation may be used to represent an isoform or modified form of a biological entity.</source>
+        <translation>Le sujet dont la ressource est référencée (&quot;Biological Entity B&quot;) est une version ou une instance de l&apos;entité biologique représentée par l&apos;élément du modèle. Cette relation peut être utilisée pour représenter une isoforme ou forme modifiée d&apos;une entité biologique.</translation>
     </message>
     <message>
         <source>Indentity</source>
