@@ -71,8 +71,8 @@
         <translation>&amp;Supprimer</translation>
     </message>
     <message>
-        <source>Remove the active graph panel</source>
-        <translation>Supprimer le panneau graphique actif</translation>
+        <source>Remove the current graph panel</source>
+        <translation>Supprimer le panneau graphique courant</translation>
     </message>
 </context>
 </TS>

@@ -111,7 +111,7 @@
     <string>&amp;Remove</string>
    </property>
    <property name="statusTip">
-    <string>Remove the active graph panel</string>
+    <string>Remove the current graph panel</string>
    </property>
   </action>
  </widget>
