@@ -79,12 +79,26 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCell
     //          on any of the platforms we are targetting, but let's not
     //          complain...
 
-    // Ask the CellML or metadata details GUI to update itself
+    // Ask the CellML or metadata details GUI to update itself, but only if it
+    // is done using new data
 
-    if (currentWidget() == mCellmlDetails)
-        mCellmlDetails->updateGui(pItems);
-    else
-        mMetadataDetails->updateGui(pRdfTriples);
+    if (currentWidget() == mCellmlDetails) {
+        static CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
+
+        if (pItems != items) {
+            items = pItems;
+
+            mCellmlDetails->updateGui(pItems);
+        }
+    } else {
+        static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples();
+
+        if (pRdfTriples != rdfTriples) {
+            rdfTriples = pRdfTriples;
+
+            mMetadataDetails->updateGui(pRdfTriples);
+        }
+    }
 }
 
 //==============================================================================

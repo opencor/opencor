@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CellmlAnnotationViewListsWidget</name>
+    <name>CellmlAnnotationViewCellmlListWidget</name>
     <message>
         <source>&amp;Expand All</source>
         <translation>Tout &amp;Etendre</translation>
@@ -290,7 +290,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewListsWidget</name>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlListWidget</name>
     <message>
         <source>Imports</source>
         <translation></translation>

@@ -2,6 +2,7 @@
 // CellML annotation view widget
 //==============================================================================
 
+#include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
@@ -71,7 +72,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Select the first CellML node from our CellML list
 
-    mListsWidget->selectFirstCellmlNode();
+    mListsWidget->cellmlList()->selectFirstNode();
 }
 
 //==============================================================================

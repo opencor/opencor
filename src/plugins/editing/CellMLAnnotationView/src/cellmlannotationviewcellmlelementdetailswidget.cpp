@@ -3,7 +3,9 @@
 //==============================================================================
 
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
+#include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewlistswidget.h"
+#include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "treeview.h"
 
@@ -22,6 +24,17 @@
 
 namespace OpenCOR {
 namespace CellMLAnnotationView {
+
+//==============================================================================
+
+bool CellmlAnnotationViewCellmlElementDetailsWidget::Item::operator==(const Item &pItem) const
+{
+    // Return whether the given item is equal to the current one
+
+    return    (type == pItem.type)
+           && (element == pItem.element)
+           && (number == pItem.number);
+}
 
 //==============================================================================
 
@@ -205,7 +218,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             mCmetaIdValue = new QComboBox(mWidget);
 
-            mCmetaIdValue->addItems(mParent->listsWidget()->metadataIds());
+            mCmetaIdValue->addItems(mParent->listsWidget()->metadataList()->ids());
 
             mCmetaIdValue->setEditable(true);
 
@@ -235,10 +248,10 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             // Make our cmeta:id value the widget to tab to after our CellML
             // tree view
 
-            setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->cellmlTreeView()),
+            setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->cellmlList()->treeView()),
                         mCmetaIdValue);
             setTabOrder(mCmetaIdValue,
-                        qobject_cast<QWidget *>(mParent->listsWidget()->metadataTreeView()));
+                        qobject_cast<QWidget *>(mParent->listsWidget()->metadataList()->treeView()));
         } else {
             // Not our 'main' current item, so just display its cmeta:id
 

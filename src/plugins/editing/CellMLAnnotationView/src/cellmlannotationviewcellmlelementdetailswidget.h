@@ -65,6 +65,8 @@ public:
         Type type;
         CellMLSupport::CellmlFileElement *element;
         int number;
+
+        bool operator==(const Item &pItem) const;
     };
 
     typedef QList<Item> Items;

@@ -7,12 +7,10 @@
 
 //==============================================================================
 
-#include "cellmlfile.h"
 #include "commonwidget.h"
 
 //==============================================================================
 
-#include <QModelIndex>
 #include <QSplitter>
 
 //==============================================================================
@@ -23,27 +21,14 @@ namespace Ui {
 
 //==============================================================================
 
-class QStandardItemModel;
-
-//==============================================================================
-
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class TreeView;
-}   // namespace Core
-
-//==============================================================================
-
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
+class CellmlAnnotationViewCellmlListWidget;
+class CellmlAnnotationViewMetadataListWidget;
 class CellmlAnnotationViewWidget;
-class CellmlElementItem;
-class CellmlElementItemDelegate;
 
 //==============================================================================
 
@@ -58,48 +43,16 @@ public:
 
     virtual void retranslateUi();
 
-    void selectFirstCellmlNode();
-
-    Core::TreeView *cellmlTreeView() const;
-    Core::TreeView *metadataTreeView() const;
-
-    QStringList metadataIds() const;
-
-protected:
-    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
+    CellmlAnnotationViewCellmlListWidget * cellmlList() const;
+    CellmlAnnotationViewMetadataListWidget * metadataList() const;
 
 private:
     CellmlAnnotationViewWidget *mParent;
 
     Ui::CellmlAnnotationViewListsWidget *mGui;
 
-    Core::TreeView *mCellmlTreeView;
-    QStandardItemModel *mCellmlDataModel;
-    CellmlElementItemDelegate *mCellmlElementItemDelegate;
-
-    Core::TreeView *mMetadataTreeView;
-    QStandardItemModel *mMetadataDataModel;
-
-    QList<QModelIndex> mCellmlIndexes;
-    QList<QModelIndex> mMetadataIndexes;
-
-    void retranslateCellmlDataItem(CellmlElementItem *pCellmlElementItem);
-
-    void initTreeView(Core::TreeView *pTreeView, QStandardItemModel *pDataModel,
-                      CellmlElementItemDelegate *pItemDelegate = 0);
-
-    void populateCellmlDataModel();
-    void populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
-                                const CellMLSupport::CellmlFileUnits pUnits);
-    void populateComponentReferenceDataModel(CellmlElementItem *pCellmlElementItem,
-                                             CellMLSupport::CellmlFileComponentReference *pComponentReference);
-
-    void populateMetadataDataModel();
-
-    void indexExpandAll(const QModelIndex &pIndex) const;
-    void indexCollapseAll(const QModelIndex &pIndex) const;
-
-    bool indexIsAllExpanded(const QModelIndex &pIndex) const;
+    CellmlAnnotationViewCellmlListWidget *mCellmlList;
+    CellmlAnnotationViewMetadataListWidget *mMetadataList;
 
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
@@ -109,18 +62,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void emitSplitterMoved();
-
-    void resizeCellmlTreeViewToContents();
-
-    void updateCellmlNode(const QModelIndex &pNewIndex,
-                          const QModelIndex &pOldIndex);
-    void updateMetadataNode(const QModelIndex &pNewIndex,
-                            const QModelIndex &pOldIndex);
-
-    void cellmlTreeViewContextMenu(const QPoint &pPosition) const;
-
-    void on_actionExpandAll_triggered();
-    void on_actionCollapseAll_triggered();
 };
 
 //==============================================================================
