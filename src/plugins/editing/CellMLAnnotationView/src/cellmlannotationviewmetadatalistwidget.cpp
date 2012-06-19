@@ -9,6 +9,8 @@
 #include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
+#include "coreutils.h"
+#include "toolbar.h"
 #include "treeview.h"
 
 //==============================================================================
@@ -17,7 +19,9 @@
 
 //==============================================================================
 
+#include <QMenu>
 #include <QStandardItemModel>
+#include <QToolButton>
 
 //==============================================================================
 
@@ -36,6 +40,22 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
 
     mGui->setupUi(this);
 
+    // Create a toolbar with different buttons
+
+    Core::ToolBar *toolbar = new Core::ToolBar(this);
+    QToolButton *removeButton = new QToolButton(this);
+    QMenu *removeMenu = new QMenu(this);
+
+    removeMenu->addAction(mGui->actionRemoveCurrentMetadata);
+    removeMenu->addAction(mGui->actionRemoveAllMetadata);
+
+    removeButton->setDefaultAction(mGui->actionRemoveMetadata);
+    removeButton->setMenu(removeMenu);
+    removeButton->setPopupMode(QToolButton::MenuButtonPopup);
+
+    toolbar->addAction(mGui->actionAddMetadata);
+    toolbar->addWidget(removeButton);
+
     // Create and customise our tree view which will contain all of the metadata
     // from a CellML file
 
@@ -52,6 +72,8 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
 
     // Populate ourselves
 
+    mGui->layout->addWidget(toolbar);
+    mGui->layout->addWidget(Core::newLineWidget(this));
     mGui->layout->addWidget(mTreeView);
 
     // Set an event filter for our tree view
@@ -79,6 +101,15 @@ CellmlAnnotationViewMetadataListWidget::~CellmlAnnotationViewMetadataListWidget(
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::retranslateUi()
+{
+    // Retranslate our GUI
+
+    mGui->retranslateUi(this);
 }
 
 //==============================================================================

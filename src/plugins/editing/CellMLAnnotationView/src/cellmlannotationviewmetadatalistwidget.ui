@@ -18,7 +18,49 @@
     <number>0</number>
    </property>
   </layout>
+  <action name="actionAddMetadata">
+   <property name="icon">
+    <iconset resource="../res/CellMLAnnotationView.qrc">
+     <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Add Metadata</string>
+   </property>
+   <property name="statusTip">
+    <string>Add a metadata</string>
+   </property>
+  </action>
+  <action name="actionRemoveMetadata">
+   <property name="icon">
+    <iconset resource="../res/CellMLAnnotationView.qrc">
+     <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Remove Metadata</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove the current metadata or all the metadata</string>
+   </property>
+  </action>
+  <action name="actionRemoveCurrentMetadata">
+   <property name="text">
+    <string>&amp;Current</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove the current metadata</string>
+   </property>
+  </action>
+  <action name="actionRemoveAllMetadata">
+   <property name="text">
+    <string>&amp;All</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove all the metadata</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../res/CellMLAnnotationView.qrc"/>
+ </resources>
  <connections/>
 </ui>

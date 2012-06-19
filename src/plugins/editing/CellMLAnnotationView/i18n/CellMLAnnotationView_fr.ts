@@ -21,6 +21,41 @@
     </message>
 </context>
 <context>
+    <name>CellmlAnnotationViewMetadataListWidget</name>
+    <message>
+        <source>Add a metadata</source>
+        <translation>Ajouter une métadonnée</translation>
+    </message>
+    <message>
+        <source>&amp;Add Metadata</source>
+        <translation>&amp;Ajouter Métadonnée</translation>
+    </message>
+    <message>
+        <source>&amp;Remove Metadata</source>
+        <translation>&amp;Supprimer Métadonnée</translation>
+    </message>
+    <message>
+        <source>Remove the current metadata or all the metadata</source>
+        <translation>Supprimer la métadonnée courante ou toutes les métadonnées</translation>
+    </message>
+    <message>
+        <source>&amp;Current</source>
+        <translation>&amp;Courante</translation>
+    </message>
+    <message>
+        <source>Remove the current metadata</source>
+        <translation>Supprimer la métadonnée courante</translation>
+    </message>
+    <message>
+        <source>&amp;All</source>
+        <translation>&amp;Toutes</translation>
+    </message>
+    <message>
+        <source>Remove all the metadata</source>
+        <translation>Supprimer toutes les métadonnées</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>
     <message>
         <source>CellML Annotation</source>
@@ -351,7 +386,7 @@
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>
     <message>
         <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of metadata...</source>
-        <translation>Désolé, mais la vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas ce type de métadonnées...</translation>
+        <translation>Désolé, mais la vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas ce type de métadonnée...</translation>
     </message>
 </context>
 <context>

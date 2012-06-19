@@ -55,6 +55,8 @@ public:
     explicit CellmlAnnotationViewMetadataListWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataListWidget();
 
+    virtual void retranslateUi();
+
     Core::TreeView * treeView() const;
 
     QStringList ids() const;
