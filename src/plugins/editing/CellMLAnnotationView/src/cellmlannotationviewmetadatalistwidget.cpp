@@ -330,6 +330,87 @@ QStringList CellmlAnnotationViewMetadataListWidget::ids() const
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataListWidget::on_actionAddMetadata_triggered()
+{
+    // Generate a metadata id, making sure that it's not already taken
+
+    QStringList crtIds = ids();
+
+    QString baseMetadataId = tr("Metadata");
+    QString templateMetadataId = baseMetadataId+" (%1)";
+
+    int metadataIdNb = 1;
+    QString metadataId = baseMetadataId;
+
+    while (crtIds.contains(metadataId))
+        metadataId = templateMetadataId.arg(++metadataIdNb);
+
+    // Create our new metadata item
+
+    QStandardItem *metadataItem = new QStandardItem(metadataId);
+
+    metadataItem->setIcon(QIcon(":CellMLSupport_metadataNode"));
+
+    mDataModel->invisibleRootItem()->appendRow(metadataItem);
+
+    // Scroll down to our newly added metadata item, just in case, and offer the
+    // user to edit it, but all of this only if the current item is not already
+    // being edited
+
+    if (false) {
+//---GRY--- ARGH, MIGHT HAVE TO DERIVE FROM QTreeView TO BE ABLE TO TELL WHETHER
+//          THE CURRENT ITEM IS BEING EDITED. INDEED, WE WOULD NEED ACCESS TO
+//          state(), BUT IT'S PROTECTED...
+        mTreeView->scrollToBottom();
+
+        mTreeView->edit(metadataItem->index());
+    }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::on_actionRemoveMetadata_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::on_actionRemoveAllMetadata_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::on_actionClearMetadata_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::on_actionClearCurrentMetadata_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::on_actionClearAllMetadata_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

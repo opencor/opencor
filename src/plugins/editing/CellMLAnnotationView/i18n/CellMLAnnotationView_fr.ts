@@ -406,6 +406,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataListWidget</name>
+    <message>
+        <source>Metadata</source>
+        <translation>Métadonnée</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataRawViewDetailsWidget</name>
     <message>
         <source>#</source>

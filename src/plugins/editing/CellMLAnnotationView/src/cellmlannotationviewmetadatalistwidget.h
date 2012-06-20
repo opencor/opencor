@@ -79,6 +79,16 @@ private:
 private Q_SLOTS:
     void updateActions();
     void updateNode(const QModelIndex &pNewIndex, const QModelIndex &pOldIndex);
+
+    void on_actionAddMetadata_triggered();
+
+    void on_actionRemoveMetadata_triggered();
+    void on_actionRemoveCurrentMetadata_triggered();
+    void on_actionRemoveAllMetadata_triggered();
+
+    void on_actionClearMetadata_triggered();
+    void on_actionClearCurrentMetadata_triggered();
+    void on_actionClearAllMetadata_triggered();
 };
 
 //==============================================================================
