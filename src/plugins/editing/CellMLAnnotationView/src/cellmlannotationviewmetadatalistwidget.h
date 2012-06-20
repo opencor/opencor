@@ -77,6 +77,7 @@ private:
     void populateDataModel();
 
 private Q_SLOTS:
+    void updateActions();
     void updateNode(const QModelIndex &pNewIndex, const QModelIndex &pOldIndex);
 };
 

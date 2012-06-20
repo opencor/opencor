@@ -101,12 +101,18 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
 
     // A connection to handle the change of node
 
+    connect(mTreeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+            this, SLOT(updateActions()));
     connect(mTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updateNode(const QModelIndex &, const QModelIndex &)));
 
     // Populate our tree view
 
     populateDataModel();
+
+    // Update our actions for the first time round
+
+    updateActions();
 
     // Resize our tree view, just to be on the safe side
 
@@ -233,6 +239,23 @@ void CellmlAnnotationViewMetadataListWidget::populateDataModel()
     // Sort the ids
 
     mDataModel->sort(0);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::updateActions()
+{
+    // Enable/disable the removal/clearing of metadata
+
+    bool enabled = mTreeView->selectionModel()->selectedIndexes().count();
+
+    mGui->actionRemoveMetadata->setEnabled(enabled);
+    mGui->actionRemoveCurrentMetadata->setEnabled(enabled);
+    mGui->actionRemoveAllMetadata->setEnabled(enabled);
+
+    mGui->actionClearMetadata->setEnabled(enabled);
+    mGui->actionClearCurrentMetadata->setEnabled(enabled);
+    mGui->actionClearAllMetadata->setEnabled(enabled);
 }
 
 //==============================================================================
