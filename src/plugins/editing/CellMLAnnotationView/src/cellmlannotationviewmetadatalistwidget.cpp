@@ -43,18 +43,37 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
     // Create a toolbar with different buttons
 
     Core::ToolBar *toolbar = new Core::ToolBar(this);
-    QToolButton *removeButton = new QToolButton(this);
-    QMenu *removeMenu = new QMenu(this);
 
-    removeMenu->addAction(mGui->actionRemoveCurrentMetadata);
-    removeMenu->addAction(mGui->actionRemoveAllMetadata);
+    // Create a menu button for our removal of metadata
 
-    removeButton->setDefaultAction(mGui->actionRemoveMetadata);
-    removeButton->setMenu(removeMenu);
-    removeButton->setPopupMode(QToolButton::MenuButtonPopup);
+    QToolButton *removeMetadataButton = new QToolButton(this);
+    QMenu *removeMetadataMenu = new QMenu(this);
+
+    removeMetadataMenu->addAction(mGui->actionRemoveCurrentMetadata);
+    removeMetadataMenu->addAction(mGui->actionRemoveAllMetadata);
+
+    removeMetadataButton->setDefaultAction(mGui->actionRemoveMetadata);
+    removeMetadataButton->setMenu(removeMetadataMenu);
+    removeMetadataButton->setPopupMode(QToolButton::MenuButtonPopup);
+
+    // Create a menu button for our clearing up of metadata
+
+    QToolButton *clearMetadataButton = new QToolButton(this);
+    QMenu *clearMetadataMenu = new QMenu(this);
+
+    clearMetadataMenu->addAction(mGui->actionClearCurrentMetadata);
+    clearMetadataMenu->addAction(mGui->actionClearAllMetadata);
+
+    clearMetadataButton->setDefaultAction(mGui->actionClearMetadata);
+    clearMetadataButton->setMenu(clearMetadataMenu);
+    clearMetadataButton->setPopupMode(QToolButton::MenuButtonPopup);
+
+    // Populate our toolbar
 
     toolbar->addAction(mGui->actionAddMetadata);
-    toolbar->addWidget(removeButton);
+    toolbar->addWidget(removeMetadataButton);
+    toolbar->addSeparator();
+    toolbar->addWidget(clearMetadataButton);
 
     // Create and customise our tree view which will contain all of the metadata
     // from a CellML file
@@ -64,7 +83,7 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
 
     mTreeView->setModel(mDataModel);
 
-    mTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    mTreeView->setEditTriggers(QAbstractItemView::EditKeyPressed);
     mTreeView->setFrameShape(QFrame::NoFrame);
     mTreeView->setHeaderHidden(true);
     mTreeView->setRootIsDecorated(false);

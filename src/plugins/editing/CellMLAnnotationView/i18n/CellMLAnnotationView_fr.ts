@@ -54,6 +54,22 @@
         <source>Remove all the metadata</source>
         <translation>Supprimer toutes les métadonnées</translation>
     </message>
+    <message>
+        <source>Clear the current metadata or all the metadata</source>
+        <translation>Nettoyer la métadonnée courante ou toutes les métadonnées</translation>
+    </message>
+    <message>
+        <source>&amp;Clear Metadata</source>
+        <translation>&amp;Nettoyer Métadonnée</translation>
+    </message>
+    <message>
+        <source>Clear the current metadata</source>
+        <translation>Nettoyer la métadonnée courante</translation>
+    </message>
+    <message>
+        <source>Clear all the metadata</source>
+        <translation>Nettoyer toutes les métadonnées</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>

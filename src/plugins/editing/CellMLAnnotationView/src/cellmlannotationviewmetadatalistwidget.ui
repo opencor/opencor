@@ -58,8 +58,37 @@
     <string>Remove all the metadata</string>
    </property>
   </action>
+  <action name="actionClearMetadata">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Clear Metadata</string>
+   </property>
+   <property name="statusTip">
+    <string>Clear the current metadata or all the metadata</string>
+   </property>
+  </action>
+  <action name="actionClearCurrentMetadata">
+   <property name="text">
+    <string>&amp;Current</string>
+   </property>
+   <property name="statusTip">
+    <string>Clear the current metadata</string>
+   </property>
+  </action>
+  <action name="actionClearAllMetadata">
+   <property name="text">
+    <string>&amp;All</string>
+   </property>
+   <property name="statusTip">
+    <string>Clear all the metadata</string>
+   </property>
+  </action>
  </widget>
  <resources>
+  <include location="../../../../../res/ui.qrc"/>
   <include location="../res/CellMLAnnotationView.qrc"/>
  </resources>
  <connections/>
