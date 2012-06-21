@@ -32,6 +32,15 @@ TreeView::TreeView(QWidget *pParent) :
 
 //==============================================================================
 
+bool TreeView::isEditing() const
+{
+    // Return whether the tree view is in editing mode or not
+
+    return state() == QAbstractItemView::EditingState;
+}
+
+//==============================================================================
+
 QSize TreeView::sizeHint() const
 {
     // Suggest a default size for the tree view

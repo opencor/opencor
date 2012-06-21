@@ -357,10 +357,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionAddMetadata_triggered()
     // user to edit it, but all of this only if the current item is not already
     // being edited
 
-    if (false) {
-//---GRY--- ARGH, MIGHT HAVE TO DERIVE FROM QTreeView TO BE ABLE TO TELL WHETHER
-//          THE CURRENT ITEM IS BEING EDITED. INDEED, WE WOULD NEED ACCESS TO
-//          state(), BUT IT'S PROTECTED...
+    if (!mTreeView->isEditing()) {
         mTreeView->scrollToBottom();
 
         mTreeView->edit(metadataItem->index());

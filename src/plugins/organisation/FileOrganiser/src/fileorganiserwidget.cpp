@@ -700,7 +700,7 @@ void FileOrganiserWidget::newFolder()
 
     // Some post-processing, but only if no other item is currently being edited
 
-    if (state() != QAbstractItemView::EditingState) {
+    if (!isEditing()) {
         // Expand the current index (so that we can see the new folder)
         // Note: this is only relevant in the case of a folder item being
         //       currently selected (i.e. it's not the root folder item)

@@ -28,6 +28,8 @@ class CORE_EXPORT TreeView : public QTreeView, public CommonWidget
 public:
     explicit TreeView(QWidget *pParent);
 
+    bool isEditing() const;
+
 protected:
     virtual QSize sizeHint() const;
 
