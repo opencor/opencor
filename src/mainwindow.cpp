@@ -61,6 +61,7 @@ static const QString HelpPlugin = "Help";
 MainWindow::MainWindow() :
     QMainWindow(),
     mGui(new Ui::MainWindow),
+    mLocale(QString()),
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
     mViewSeparator(0)
@@ -642,33 +643,37 @@ QString MainWindow::locale() const
 {
     // Return the current locale
 
-    const QString systemLocale = QLocale::system().name().left(2);
-
-    return (mLocale == SystemLocale)?systemLocale:mLocale;
+    return !mLocale.compare(SystemLocale)?
+               QLocale::system().name().left(2):
+               mLocale;
 }
 
 //==============================================================================
 
 void MainWindow::setLocale(const QString &pLocale)
 {
-    if ((pLocale != mLocale) || (pLocale == SystemLocale)) {
-        // The new locale is different from the existing one, so we need to
-        // translate everything
+    const QString systemLocale = QLocale::system().name().left(2);
 
-        const QString systemLocale = QLocale::system().name().left(2);
+    QString oldLocale = !mLocale.compare(SystemLocale)?systemLocale:mLocale;
+    QString newLocale = !pLocale.compare(SystemLocale)?systemLocale:pLocale;
 
-        QString realLocale = (pLocale == SystemLocale)?systemLocale:pLocale;
+    // Keep track of the new locale, if needed
 
+    if (pLocale.compare(mLocale))
         mLocale = pLocale;
 
+    // Check whether the new locale is different from the old one and if so,
+    // then retranslate everything
+
+    if (oldLocale.compare(newLocale)) {
         // Specify the language to be used by OpenCOR
 
         qApp->removeTranslator(&mQtTranslator);
-        mQtTranslator.load(":qt_"+realLocale);
+        mQtTranslator.load(":qt_"+newLocale);
         qApp->installTranslator(&mQtTranslator);
 
         qApp->removeTranslator(&mAppTranslator);
-        mAppTranslator.load(":app_"+realLocale);
+        mAppTranslator.load(":app_"+newLocale);
         qApp->installTranslator(&mAppTranslator);
 
         // Retranslate OpenCOR
@@ -700,7 +705,7 @@ void MainWindow::setLocale(const QString &pLocale)
             I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(loadedPlugins[i]->instance());
 
             if (i18nInterface)
-                i18nInterface->setLocale(realLocale);
+                i18nInterface->setLocale(newLocale);
         }
 
         // Reorder our various View menus, just in case
@@ -712,10 +717,10 @@ void MainWindow::setLocale(const QString &pLocale)
     // Note: it has to be done every single time, since selecting a menu item
     //       will automatically toggle its checked status, so...
 
-    mGui->actionSystem->setChecked(mLocale == SystemLocale);
+    mGui->actionSystem->setChecked(!pLocale.compare(SystemLocale));
 
-    mGui->actionEnglish->setChecked(mLocale == EnglishLocale);
-    mGui->actionFrench->setChecked(mLocale == FrenchLocale);
+    mGui->actionEnglish->setChecked(!pLocale.compare(EnglishLocale));
+    mGui->actionFrench->setChecked(!pLocale.compare(FrenchLocale));
 }
 
 //==============================================================================
