@@ -78,10 +78,10 @@ MACRO(INITIALISE_PROJECT)
         #       hard-code qmake's path so that CMake can find Qt from within
         #       Qt Creator...
 
-        SET(QT_QMAKE_EXECUTABLE /Developer/QtSDK/Desktop/Qt/4.8.0/gcc/bin/qmake)
+        SET(QT_QMAKE_EXECUTABLE /Developer/QtSDK/Desktop/Qt/4.8.1/gcc/bin/qmake)
     ENDIF()
 
-    FIND_PACKAGE(Qt4 4.8.0 REQUIRED)
+    FIND_PACKAGE(Qt4 4.8.1 REQUIRED)
 
     # Whether we are building for 32-bit or 64-bit
 
