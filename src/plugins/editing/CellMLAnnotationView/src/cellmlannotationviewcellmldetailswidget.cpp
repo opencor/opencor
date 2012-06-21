@@ -111,11 +111,21 @@ CellmlAnnotationViewCellmlDetailsWidget::~CellmlAnnotationViewCellmlDetailsWidge
 void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
+    // Note: we must also update the connection for our cmeta:id widget since it
+    //       gets recreated as a result of the retranslation...
+
+    if (mCellmlElementDetails->cmetaIdValue())
+        disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
+                   this, SLOT(newCmetaIdValue(const QString &)));
 
     mGui->retranslateUi(this);
 
     mCellmlElementDetails->retranslateUi();
     mMetadataViewDetails->retranslateUi();
+
+    if (mCellmlElementDetails->cmetaIdValue())
+        connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
+                this, SLOT(newCmetaIdValue(const QString &)));
 }
 
 //==============================================================================
