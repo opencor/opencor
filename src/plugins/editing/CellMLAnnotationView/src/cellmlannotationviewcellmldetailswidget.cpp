@@ -124,12 +124,9 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 {
     // Stop tracking any change in the cmeta:id value of our CellML element
 
-    if (mCellmlElementDetails->cmetaIdValue()) {
-        disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(currentIndexChanged(const QString &)),
-                   this, SLOT(newCmetaIdValue(const QString &)));
+    if (mCellmlElementDetails->cmetaIdValue())
         disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
                    this, SLOT(newCmetaIdValue(const QString &)));
-    }
 
     // 'Clean up' our web view
 
@@ -139,16 +136,15 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
     mCellmlElementDetails->updateGui(pItems);
 
-    // Track any change in the cmeta:id value of our CellML element
+    // Re-track any change in the cmeta:id value of our CellML element and
+    // update our metadata details GUI
 
-    connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(currentIndexChanged(const QString &)),
-            this, SLOT(newCmetaIdValue(const QString &)));
-    connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
-            this, SLOT(newCmetaIdValue(const QString &)));
+    if (mCellmlElementDetails->cmetaIdValue()) {
+        connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
+                this, SLOT(newCmetaIdValue(const QString &)));
 
-    // Update our metadata details GUI
-
-    newCmetaIdValue(mCellmlElementDetails->cmetaIdValue()->currentText());
+        newCmetaIdValue(mCellmlElementDetails->cmetaIdValue()->currentText());
+    }
 }
 
 //==============================================================================
@@ -174,18 +170,32 @@ void CellmlAnnotationViewCellmlDetailsWidget::emitSplitterMoved()
 
 void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCmetaIdValue)
 {
-    // The cmeta:id value of our CellML element has changed, so update its
-    // metadata details, but first 'clean up' our web view
+    // Retrieve the RDF triples for the cmeta:id
+
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = pCmetaIdValue.isEmpty()?
+                                                         CellMLSupport::CellmlFileRdfTriples():
+                                                         mParent->rdfTriples(pCmetaIdValue);
+
+    // Check that we are not dealing with the same RDF triples
+    // Note: this may happen when manually typing the name of a cmeta:id and the
+    //       QComboBox suggesting something for you, e.g. you start typing "C_"
+    //       and the QComboBox suggests "C_C" (which will get us here) and then
+    //       you finish typing "C_C" (which will also get us here)
+
+    static CellMLSupport::CellmlFileRdfTriples oldRdfTriples = CellMLSupport::CellmlFileRdfTriples();
+
+    if (rdfTriples == oldRdfTriples)
+        return;
+
+    oldRdfTriples = rdfTriples;
+
+    // 'Clean up' our web view
 
     mWebView->setUrl(QString());
 
-    if (pCmetaIdValue.isEmpty())
-        // The CellML element doesn't have a cmeta:id value, so we don't want
-        // any metadata to be shown for it (not even the model-wide metadata)
+    // Update its metadata details
 
-        mMetadataViewDetails->updateGui();
-    else
-        mMetadataViewDetails->updateGui(mParent->rdfTriples(pCmetaIdValue));
+    mMetadataViewDetails->updateGui(rdfTriples);
 }
 
 //==============================================================================
