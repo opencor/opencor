@@ -544,7 +544,9 @@ void CellmlAnnotationViewCellmlListWidget::updateNode(const QModelIndex &pNewInd
 
     mIndexes << pNewIndex;
 
-    // Make sure that we are not already updating a node
+    // Make sure that we are not already updating a node by checking that the
+    // CellML file for which we want to update the node is not in our list of
+    // CellML files being updated
 
     static QStringList cellmlFileBeingUpdated;
 
@@ -556,8 +558,8 @@ void CellmlAnnotationViewCellmlListWidget::updateNode(const QModelIndex &pNewInd
     cellmlFileBeingUpdated << cellmlFileName;
 
     // Loop while there are nodes to update
-    // Note: this is done because a node may take time to update, so we may end
-    //       up in a situation where several nodes need updating...
+    // Note: this is done because a node may take time to update and we may end
+    //       up in a situation where several nodes need updating, so...
 
     while (mIndexes.count()) {
         // Retrieve the first node to update

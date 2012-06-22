@@ -98,6 +98,9 @@ private:
     void addRow(const QString &pLabel, const QString &pValue);
 
     QString typeAsString(const Type &pType) const;
+
+private Q_SLOTS:
+    void newCmetaIdValue(const QString &pCmetaIdValue);
 };
 
 //==============================================================================
