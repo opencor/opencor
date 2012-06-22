@@ -20,4 +20,5 @@ ADD_PLUGIN(CoreCellMLEditing
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
 )

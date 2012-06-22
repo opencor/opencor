@@ -20,4 +20,5 @@ ADD_PLUGIN(CoreEditing
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtNetwork
 )
