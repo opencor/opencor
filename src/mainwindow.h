@@ -84,7 +84,7 @@ private:
     void loadSettings();
     void saveSettings() const;
 
-    void setLocale(const QString &pLocale);
+    void setLocale(const QString &pLocale, const bool &pForceSetting = false);
 
     void reorderViewMenu(QMenu *pViewMenu);
     void reorderViewMenus();

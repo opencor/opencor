@@ -595,10 +595,13 @@ void MainWindow::loadSettings()
     }
 
     // Retrieve and set the language to be used by OpenCOR
-    // Note: this must be done after we are done with loading the settings since
-    //       some plugins may have created widgets which may need translating...
+    // Note #1: this must be done after we are done with loading the settings
+    //          since some plugins may have created widgets which may need
+    //          translating...
+    // Note #2: the setting is forced in order to account for locale-dependent
+    //          initialisations (e.g. see CentralWidget::retranslateUi())...
 
-    setLocale(mSettings->value(SettingsLocale, SystemLocale).toString());
+    setLocale(mSettings->value(SettingsLocale, SystemLocale).toString(), true);
 }
 
 //==============================================================================
@@ -650,7 +653,7 @@ QString MainWindow::locale() const
 
 //==============================================================================
 
-void MainWindow::setLocale(const QString &pLocale)
+void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
 {
     const QString systemLocale = QLocale::system().name().left(2);
 
@@ -665,7 +668,7 @@ void MainWindow::setLocale(const QString &pLocale)
     // Check whether the new locale is different from the old one and if so,
     // then retranslate everything
 
-    if (oldLocale.compare(newLocale)) {
+    if (oldLocale.compare(newLocale) || pForceSetting) {
         // Specify the language to be used by OpenCOR
 
         qApp->removeTranslator(&mQtTranslator);
