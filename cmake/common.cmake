@@ -449,19 +449,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
-        # Make sure that our embedded plugin and the one in the plugin build
-        # directory refer to the correct version version of the other binary
-        # plugins on which they depend
+        # Make sure that the plugin refers to our embedded version of the
+        # binary plugins on which it depends
 
         FOREACH(OPENCOR_BINARY_DEPENDENCY ${OPENCOR_BINARY_DEPENDENCIES})
             STRING(REPLACE "${PLUGIN_BUILD_DIR}/" "" OPENCOR_BINARY_DEPENDENCY "${OPENCOR_BINARY_DEPENDENCY}")
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${OPENCOR_BINARY_DEPENDENCY}
-                                                                 ${PLUGIN_BUILD_DIR}/${OPENCOR_BINARY_DEPENDENCY}
-                                                                 ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${OPENCOR_BINARY_DEPENDENCY}
+                               COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${OPENCOR_BINARY_DEPENDENCY}
                                                                  @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${OPENCOR_BINARY_DEPENDENCY}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
