@@ -297,8 +297,8 @@ ADD_PLUGIN(LLVM
 
 #        lib/ExecutionEngine/OProfileJIT/OProfileJITEventListener.cpp
 #        lib/ExecutionEngine/OProfileJIT/OProfileWrapper.cpp
-# Note: we don't need the above, but we leave it so we know about it next time
-#       we update LLVM...
+# Note: we don't need the above, but we leave them so we know about them next
+#       time we update LLVM...
 
         lib/ExecutionEngine/RuntimeDyld/GDBRegistrar.cpp
         lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
