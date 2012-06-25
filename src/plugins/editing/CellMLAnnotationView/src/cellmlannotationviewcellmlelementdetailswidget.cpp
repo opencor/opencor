@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
+#include "cellmlannotationviewcellmlelementitem.h"
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
@@ -113,7 +114,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
     if (mCmetaIdValue) {
         disconnect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                   this, SLOT(newCmetaIdValue(const QString &)));
+                   this, SLOT(newCmetaId(const QString &)));
 
         mCmetaIdValue = 0;
     }
@@ -264,7 +265,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             // value
 
             connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                    this, SLOT(newCmetaIdValue(const QString &)));
+                    this, SLOT(newCmetaId(const QString &)));
         } else {
             // Not our 'main' current item, so just display its cmeta:id
 
@@ -427,13 +428,11 @@ QComboBox * CellmlAnnotationViewCellmlElementDetailsWidget::cmetaIdValue() const
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaIdValue(const QString &pCmetaIdValue)
+void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &pCmetaId)
 {
-//---GRY--- TO BE DONE...
-//          WE NEED TO UPDATE OUR CellML FILE STRUCTURE WITH THE NEW VALUE OF
-//          THE CMETA:ID
+    // Keep track of the new cmeta:id value
 
-qDebug(">>> New cmeta:id value: %s", qPrintable(pCmetaIdValue));
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->setCmetaId(pCmetaId);
 }
 
 //==============================================================================

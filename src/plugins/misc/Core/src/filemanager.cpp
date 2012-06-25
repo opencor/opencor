@@ -25,7 +25,8 @@ FileManager::FileManager(const int &pTimerInterval)
 
     // A connection to handle the timing out of our timer
 
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(checkFiles()));
+    connect(mTimer, SIGNAL(timeout()),
+            this, SLOT(checkFiles()));
 
     // Start our timer
 
@@ -131,6 +132,42 @@ File * FileManager::isManaged(const QString &pFileName) const
     // The file couldn't be found meaning it's not managed
 
     return 0;
+}
+
+//==============================================================================
+
+bool FileManager::isModified(const QString &pFileName) const
+{
+    // Return whether the file, if it is being managed, has been modified
+
+    File *file = isManaged(pFileName);
+
+    if (file)
+        return file->isModified();
+    else
+        return false;
+}
+
+//==============================================================================
+
+void FileManager::setModified(const QString &pFileName, const bool &pModified)
+{
+    // Set the modified status of the file, should it be managed
+
+    File *file = isManaged(pFileName);
+
+    if (file) {
+        // We are dealing with a managed file, so we can check its modified
+        // status and update it, if necessary, and then let people know about
+        // the new modified status
+
+        if (pModified == file->isModified())
+            return;
+
+        file->setModified(pModified);
+
+        emit fileModified(nativeCanonicalFileName(pFileName), pModified);
+    }
 }
 
 //==============================================================================

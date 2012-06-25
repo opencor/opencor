@@ -24,7 +24,8 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileImportUnit : public CellmlFileUnit
 {
 public:
-    explicit CellmlFileImportUnit(iface::cellml_api::ImportUnits *pImportUnits);
+    explicit CellmlFileImportUnit(CellmlFile *pCellmlFile,
+                                  iface::cellml_api::ImportUnits *pImportUnits);
 
     QString unitReference() const;
 

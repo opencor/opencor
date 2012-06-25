@@ -24,7 +24,8 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileUnitElement : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileUnitElement(iface::cellml_api::Unit *pUnit);
+    explicit CellmlFileUnitElement(CellmlFile *pCellmlFile,
+                                   iface::cellml_api::Unit *pUnit);
 
     int prefix() const;
     double multiplier() const;

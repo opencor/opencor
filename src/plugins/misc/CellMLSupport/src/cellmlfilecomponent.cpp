@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileComponent::CellmlFileComponent(iface::cellml_api::ImportComponent *pImportComponent) :
-    CellmlFileNamedElement(pImportComponent),
+CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
+                                         iface::cellml_api::ImportComponent *pImportComponent) :
+    CellmlFileNamedElement(pCellmlFile, pImportComponent),
     mUnits(CellmlFileUnits()),
     mVariables(CellmlFileVariables())
 {
@@ -20,8 +21,9 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::ImportComponent *pIm
 
 //==============================================================================
 
-CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pComponent) :
-    CellmlFileNamedElement(pComponent),
+CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
+                                         iface::cellml_api::CellMLComponent *pComponent) :
+    CellmlFileNamedElement(pCellmlFile, pComponent),
     mUnits(CellmlFileUnits()),
     mVariables(CellmlFileVariables())
 {
@@ -36,7 +38,7 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
         if (unit)
             // We have a unit, so add it to our list
 
-            mUnits << new CellmlFileUnit(unit);
+            mUnits << new CellmlFileUnit(pCellmlFile, unit);
         else
             // No more units, so...
 
@@ -54,7 +56,7 @@ CellmlFileComponent::CellmlFileComponent(iface::cellml_api::CellMLComponent *pCo
         if (variable)
             // We have a variable, so add it to our list
 
-            mVariables << new CellmlFileVariable(variable);
+            mVariables << new CellmlFileVariable(pCellmlFile, variable);
         else
             // No more variables, so...
 

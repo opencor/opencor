@@ -61,6 +61,8 @@ public:
 
     Core::TreeView * treeView() const;
 
+    CellmlElementItem * currentCellmlElementItem() const;
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
 

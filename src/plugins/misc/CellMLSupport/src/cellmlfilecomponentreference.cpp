@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileComponentReference::CellmlFileComponentReference(iface::cellml_api::ComponentRef *pComponentReference) :
-    CellmlFileElement(pComponentReference),
+CellmlFileComponentReference::CellmlFileComponentReference(CellmlFile *pCellmlFile,
+                                                           iface::cellml_api::ComponentRef *pComponentReference) :
+    CellmlFileElement(pCellmlFile, pComponentReference),
     mComponent(QString::fromStdWString(pComponentReference->componentName())),
     mComponentReferences(CellmlFileComponentReferences())
 {
@@ -27,7 +28,7 @@ CellmlFileComponentReference::CellmlFileComponentReference(iface::cellml_api::Co
         if (componentReference)
             // We have a component reference, so add it to our list
 
-            mComponentReferences << new CellmlFileComponentReference(componentReference);
+            mComponentReferences << new CellmlFileComponentReference(pCellmlFile, componentReference);
         else
             // No more component references, so...
 

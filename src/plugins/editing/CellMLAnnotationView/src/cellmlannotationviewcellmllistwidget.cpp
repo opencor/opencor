@@ -692,7 +692,7 @@ void CellmlAnnotationViewCellmlListWidget::treeViewContextMenu(const QPoint &pPo
     // current item is the same as the one over which we are
 
     CellmlElementItem *posItem = static_cast<CellmlElementItem *>(mDataModel->itemFromIndex(mTreeView->indexAt(mTreeView->mapFromGlobal(QCursor::pos()-mTreeView->pos()))));
-    CellmlElementItem *crtItem = static_cast<CellmlElementItem *>(mDataModel->itemFromIndex(mTreeView->currentIndex()));
+    CellmlElementItem *crtItem = currentCellmlElementItem();
 
     bool showContextMenu = (posItem == crtItem) && crtItem->hasChildren();
 
@@ -806,6 +806,15 @@ Core::TreeView * CellmlAnnotationViewCellmlListWidget::treeView() const
     // Return our tree view
 
     return mTreeView;
+}
+
+//==============================================================================
+
+CellmlElementItem * CellmlAnnotationViewCellmlListWidget::currentCellmlElementItem() const
+{
+    // Return the current CellML element item
+
+    return static_cast<CellmlElementItem *>(mDataModel->itemFromIndex(mTreeView->currentIndex()));
 }
 
 //==============================================================================

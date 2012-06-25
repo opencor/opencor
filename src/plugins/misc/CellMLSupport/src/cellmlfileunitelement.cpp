@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileUnitElement::CellmlFileUnitElement(iface::cellml_api::Unit *pUnit) :
-    CellmlFileNamedElement(pUnit),
+CellmlFileUnitElement::CellmlFileUnitElement(CellmlFile *pCellmlFile,
+                                             iface::cellml_api::Unit *pUnit) :
+    CellmlFileNamedElement(pCellmlFile, pUnit),
     mPrefix(pUnit->prefix()),
     mMultiplier(pUnit->multiplier()),
     mOffset(pUnit->offset()),

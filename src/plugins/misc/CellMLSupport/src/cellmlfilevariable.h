@@ -26,7 +26,8 @@ public:
         Out
     };
 
-    explicit CellmlFileVariable(iface::cellml_api::CellMLVariable *pVariable);
+    explicit CellmlFileVariable(CellmlFile *pCellmlFile,
+                                iface::cellml_api::CellMLVariable *pVariable);
 
     QString unit() const;
     QString initialValue() const;

@@ -20,7 +20,8 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileMapVariablesItem : public CellmlFileElement
 {
 public:
-    explicit CellmlFileMapVariablesItem(iface::cellml_api::MapVariables *pMapVariables);
+    explicit CellmlFileMapVariablesItem(CellmlFile *pCellmlFile,
+                                        iface::cellml_api::MapVariables *pMapVariables);
 
     QString firstVariable() const;
     QString secondVariable() const;

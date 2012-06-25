@@ -1,6 +1,10 @@
 //==============================================================================
 // CellML file RDF triple
 //==============================================================================
+//---GRY--- NEED TO THINK OF A WAY TO KEEP TRACK OF CHANGES TO SOME RDF TRIPLES,
+//          I.E. BE ABLE TO TELL WHETHER A CellML FILE HAS BEEN MODIFIED OR
+//          NOT...
+//==============================================================================
 
 #include "cellmlfilerdftriple.h"
 
@@ -59,15 +63,22 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
     //       URIs. Still, we should and do support both formats and keep track
     //       of their information in the form of a resource and an id...
 
-    QStringList modelQualifiers = QStringList() << "is" << "isDerivedFrom"
-                                                << "isDescribedBy";
-    QStringList bioQualifiers = QStringList() << "encodes" << "hasPart"
-                                              << "hasProperty" << "hasVersion"
-                                              << "is" << "isDescribedBy"
-                                              << "isEncodedBy" << "isHomologTo"
-                                              << "isPartOf" << "isPropertyOf"
-                                              << "isVersionOf" << "occursIn"
-                                              << "hasTaxon";
+    static const QStringList modelQualifiers = QStringList() << "is"
+                                                             << "isDerivedFrom"
+                                                             << "isDescribedBy";
+    static const QStringList bioQualifiers = QStringList() << "encodes"
+                                                           << "hasPart"
+                                                           << "hasProperty"
+                                                           << "hasVersion"
+                                                           << "is"
+                                                           << "isDescribedBy"
+                                                           << "isEncodedBy"
+                                                           << "isHomologTo"
+                                                           << "isPartOf"
+                                                           << "isPropertyOf"
+                                                           << "isVersionOf"
+                                                           << "occursIn"
+                                                           << "hasTaxon";
 
     for (int i = 0, iMax = modelQualifiers.count(); i < iMax; ++i)
         if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifiers[i]))) {

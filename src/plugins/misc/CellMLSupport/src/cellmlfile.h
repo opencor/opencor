@@ -41,6 +41,9 @@ public:
 
     bool isValid();
 
+    bool isModified() const;
+    void setModified(const bool &pModified) const;
+
     CellmlFileIssues issues() const;
 
     CellmlFileRuntime * runtime();
@@ -71,14 +74,14 @@ private:
     CellmlFileConnections mConnections;
     CellmlFileRdfTriples mRdfTriples;
 
-    bool mIsValid;
+    bool mValid;
 
     CellmlFileIssues mIssues;
 
     CellmlFileRuntime *mRuntime;
 
     bool mLoadingNeeded;
-    bool mIsValidNeeded;
+    bool mValidNeeded;
     bool mRuntimeUpdateNeeded;
 
     void reset();

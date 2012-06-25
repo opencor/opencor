@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileImport::CellmlFileImport(iface::cellml_api::CellMLImport *pCellmlImport) :
-    CellmlFileElement(pCellmlImport),
+CellmlFileImport::CellmlFileImport(CellmlFile *pCellmlFile,
+                                   iface::cellml_api::CellMLImport *pCellmlImport) :
+    CellmlFileElement(pCellmlFile, pCellmlImport),
     mXlinkHref(QString::fromStdWString(pCellmlImport->xlinkHref()->asText())),
     mUnits(CellmlFileImportUnits()),
     mComponents(CellmlFileImportComponents())
@@ -28,7 +29,7 @@ CellmlFileImport::CellmlFileImport(iface::cellml_api::CellMLImport *pCellmlImpor
         if (importUnit)
             // We have a unit import, so add it to our list
 
-            mUnits << new CellmlFileImportUnit(importUnit);
+            mUnits << new CellmlFileImportUnit(pCellmlFile, importUnit);
         else
             // No more unit imports, so...
 
@@ -46,7 +47,7 @@ CellmlFileImport::CellmlFileImport(iface::cellml_api::CellMLImport *pCellmlImpor
         if (importComponent)
             // We have a component import, so add it to our list
 
-            mComponents << new CellmlFileImportComponent(importComponent);
+            mComponents << new CellmlFileImportComponent(pCellmlFile, importComponent);
         else
             // No more component imports, so...
 

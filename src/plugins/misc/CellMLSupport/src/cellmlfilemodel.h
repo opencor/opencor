@@ -20,7 +20,8 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileModel : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileModel(iface::cellml_api::Model *pModel);
+    explicit CellmlFileModel(CellmlFile *pCellmlFile,
+                             iface::cellml_api::Model *pModel);
 };
 
 //==============================================================================

@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileMapVariablesItem::CellmlFileMapVariablesItem(iface::cellml_api::MapVariables *pMapVariables) :
-    CellmlFileElement(pMapVariables),
+CellmlFileMapVariablesItem::CellmlFileMapVariablesItem(CellmlFile *pCellmlFile,
+                                                       iface::cellml_api::MapVariables *pMapVariables) :
+    CellmlFileElement(pCellmlFile, pMapVariables),
     mFirstVariable(QString::fromStdWString(pMapVariables->firstVariableName())),
     mSecondVariable(QString::fromStdWString(pMapVariables->secondVariableName()))
 {
