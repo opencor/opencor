@@ -1,12 +1,10 @@
 #ifndef QSCINTILLASUPPORTGLOBAL_H
 #define QSCINTILLASUPPORTGLOBAL_H
 
-#include <QtGlobal>
-
 #ifdef QScintillaSupport_PLUGIN
-    #define QSCINTILLASUPPORT_EXPORT Q_DECL_EXPORT
+    #define QSCINTILLASUPPORT_EXPORT __declspec(dllexport)
 #else
-    #define QSCINTILLASUPPORT_EXPORT Q_DECL_IMPORT
+    #define QSCINTILLASUPPORT_EXPORT __declspec(dllimport)
 #endif
 
 #endif

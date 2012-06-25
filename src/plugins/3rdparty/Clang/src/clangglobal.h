@@ -1,12 +1,10 @@
 #ifndef CLANGGLOBAL_H
 #define CLANGGLOBAL_H
 
-#include <QtGlobal>
-
 #ifdef Clang_PLUGIN
-    #define CLANG_EXPORT Q_DECL_EXPORT
+    #define CLANG_EXPORT __declspec(dllexport)
 #else
-    #define CLANG_EXPORT Q_DECL_IMPORT
+    #define CLANG_EXPORT __declspec(dllimport)
 #endif
 
 #endif

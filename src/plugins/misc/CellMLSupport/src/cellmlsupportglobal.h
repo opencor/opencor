@@ -1,16 +1,10 @@
 #ifndef CELLMLSUPPORTGLOBAL_H
 #define CELLMLSUPPORTGLOBAL_H
 
-#ifdef OpenCOR_MAIN
-    #define CELLMLSUPPORT_EXPORT
+#ifdef CellMLSupport_PLUGIN
+    #define CELLMLSUPPORT_EXPORT __declspec(dllexport)
 #else
-    #include <QtGlobal>
-
-    #ifdef CellMLSupport_PLUGIN
-        #define CELLMLSUPPORT_EXPORT Q_DECL_EXPORT
-    #else
-        #define CELLMLSUPPORT_EXPORT Q_DECL_IMPORT
-    #endif
+    #define CELLMLSUPPORT_EXPORT __declspec(dllimport)
 #endif
 
 #endif

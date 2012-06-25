@@ -4,12 +4,10 @@
 #ifdef OpenCOR_MAIN
     #define CORE_EXPORT
 #else
-    #include <QtGlobal>
-
     #ifdef Core_PLUGIN
-        #define CORE_EXPORT Q_DECL_EXPORT
+        #define CORE_EXPORT __declspec(dllexport)
     #else
-        #define CORE_EXPORT Q_DECL_IMPORT
+        #define CORE_EXPORT __declspec(dllimport)
     #endif
 #endif
 

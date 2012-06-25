@@ -1,12 +1,10 @@
 #ifndef LLVMGLOBAL_H
 #define LLVMGLOBAL_H
 
-#include <QtGlobal>
-
 #ifdef LLVM_PLUGIN
-    #define LLVM_EXPORT Q_DECL_EXPORT
+    #define LLVM_EXPORT __declspec(dllexport)
 #else
-    #define LLVM_EXPORT Q_DECL_IMPORT
+    #define LLVM_EXPORT __declspec(dllimport)
 #endif
 
 #endif

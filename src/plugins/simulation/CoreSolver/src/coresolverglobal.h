@@ -1,12 +1,10 @@
 #ifndef CORESOLVERGLOBAL_H
 #define CORESOLVERGLOBAL_H
 
-#include <QtGlobal>
-
 #ifdef CoreSolver_PLUGIN
-    #define CORESOLVER_EXPORT Q_DECL_EXPORT
+    #define CORESOLVER_EXPORT __declspec(dllexport)
 #else
-    #define CORESOLVER_EXPORT Q_DECL_IMPORT
+    #define CORESOLVER_EXPORT __declspec(dllimport)
 #endif
 
 #endif
