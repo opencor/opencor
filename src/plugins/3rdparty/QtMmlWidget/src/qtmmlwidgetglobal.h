@@ -1,12 +1,10 @@
 #ifndef QTMMLWIDGETGLOBAL_H
 #define QTMMLWIDGETGLOBAL_H
 
-#include <QtGlobal>
-
 #ifdef QtMmlWidget_PLUGIN
-    #define QTMMLWIDGET_EXPORT Q_DECL_EXPORT
+    #define QTMMLWIDGET_EXPORT __declspec(dllexport)
 #else
-    #define QTMMLWIDGET_EXPORT Q_DECL_IMPORT
+    #define QTMMLWIDGET_EXPORT __declspec(dllimport)
 #endif
 
 #endif

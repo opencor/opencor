@@ -5,24 +5,26 @@ INCLUDE(common.cmake)
 # Retrieve some include files that were generated on each of our target
 # platforms
 
-SET(LLVM_CONFIG_INCLUDES_DIR ${PROJECT_SOURCE_DIR}/lib/Target/X86)
-SET(CONFIG_INCLUDE_FILES
-    X86GenAsmMatcher.inc
-    X86GenAsmWriter.inc
-    X86GenAsmWriter1.inc
-    X86GenCallingConv.inc
-    X86GenDAGISel.inc
-    X86GenDisassemblerTables.inc
-    X86GenEDInfo.inc
-    X86GenFastISel.inc
-    X86GenInstrInfo.inc
-    X86GenRegisterInfo.inc
-    X86GenSubtargetInfo.inc
+SET(CONFIG_FILES
+    lib/Target/X86/X86GenAsmMatcher.inc
+    lib/Target/X86/X86GenAsmWriter.inc
+    lib/Target/X86/X86GenAsmWriter1.inc
+    lib/Target/X86/X86GenCallingConv.inc
+    lib/Target/X86/X86GenDAGISel.inc
+    lib/Target/X86/X86GenDisassemblerTables.inc
+    lib/Target/X86/X86GenEDInfo.inc
+    lib/Target/X86/X86GenFastISel.inc
+    lib/Target/X86/X86GenInstrInfo.inc
+    lib/Target/X86/X86GenRegisterInfo.inc
+    lib/Target/X86/X86GenSubtargetInfo.inc
 )
 
-FOREACH(CONFIG_INCLUDE_FILE ${CONFIG_INCLUDE_FILES})
-    CONFIGURE_FILE(${LLVM_CONFIG_INCLUDES_DIR}/${DISTRIB_DIR}/${CONFIG_INCLUDE_FILE}
-                   ${LLVM_CONFIG_INCLUDES_DIR}/${CONFIG_INCLUDE_FILE}
+FOREACH(CONFIG_FILE ${CONFIG_FILES})
+    STRING(REPLACE "DISTRIB_DIR/" "${DISTRIB_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
+    STRING(REPLACE "DISTRIB_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
+
+    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
+                   ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
                    COPYONLY)
 ENDFOREACH()
 
@@ -297,8 +299,8 @@ ADD_PLUGIN(LLVM
 
 #        lib/ExecutionEngine/OProfileJIT/OProfileJITEventListener.cpp
 #        lib/ExecutionEngine/OProfileJIT/OProfileWrapper.cpp
-# Note: we don't need the above, but we leave it so we know about it next time
-#       we update LLVM...
+# Note: we don't need the above, but we leave them so we know about them next
+#       time we update LLVM...
 
         lib/ExecutionEngine/RuntimeDyld/GDBRegistrar.cpp
         lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp

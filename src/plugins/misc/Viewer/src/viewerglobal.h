@@ -1,12 +1,10 @@
 #ifndef VIEWERGLOBAL_H
 #define VIEWERGLOBAL_H
 
-#include <QtGlobal>
-
 #ifdef Viewer_PLUGIN
-    #define VIEWER_EXPORT Q_DECL_EXPORT
+    #define VIEWER_EXPORT __declspec(dllexport)
 #else
-    #define VIEWER_EXPORT Q_DECL_IMPORT
+    #define VIEWER_EXPORT __declspec(dllimport)
 #endif
 
 #endif

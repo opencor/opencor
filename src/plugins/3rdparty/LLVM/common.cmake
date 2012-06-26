@@ -1,5 +1,5 @@
 MACRO(RETRIEVE_LLVM_SETTINGS)
-    # Retrieve LLVM settings
+    # Retrieve some LLVM settings
 
     IF(MSVC)
         SET(LLVM_MSVC_DEFINITIONS
@@ -35,28 +35,20 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
     ENDIF()
 ENDMACRO()
 
-# Retrieve some header files that were generated on each of our target
-# platforms
+# Retrieve some header files that were generated on each of our target platforms
 
-SET(LLVM_CONFIG_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/llvm/Config)
-SET(CONFIG_HEADER_FILES
-    config.h
-    llvm-config.h
+SET(CONFIG_FILES
+    include/llvm/Config/DISTRIB_DIR/config.h
+    include/llvm/Config/DISTRIB_DIR/llvm-config.h
+
+    include/llvm/Support/DISTRIB_DIR/DataTypes.h
 )
 
-FOREACH(CONFIG_HEADER_FILE ${CONFIG_HEADER_FILES})
-    CONFIGURE_FILE(${LLVM_CONFIG_HEADERS_DIR}/${DISTRIB_DIR}/${CONFIG_HEADER_FILE}
-                   ${LLVM_CONFIG_HEADERS_DIR}/${CONFIG_HEADER_FILE}
-                   COPYONLY)
-ENDFOREACH()
+FOREACH(CONFIG_FILE ${CONFIG_FILES})
+    STRING(REPLACE "DISTRIB_DIR/" "${DISTRIB_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
+    STRING(REPLACE "DISTRIB_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
 
-SET(LLVM_CONFIG_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/llvm/Support)
-SET(CONFIG_HEADER_FILES
-    DataTypes.h
-)
-
-FOREACH(CONFIG_HEADER_FILE ${CONFIG_HEADER_FILES})
-    CONFIGURE_FILE(${LLVM_CONFIG_HEADERS_DIR}/${DISTRIB_DIR}/${CONFIG_HEADER_FILE}
-                   ${LLVM_CONFIG_HEADERS_DIR}/${CONFIG_HEADER_FILE}
+    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
+                   ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
                    COPYONLY)
 ENDFOREACH()
