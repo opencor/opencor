@@ -101,15 +101,11 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known or not
 
-    CellMLSupport::CellmlFileRdfTriple::Type rdfTriplesType = pRdfTriples.type();
-
-    mBorderedUnsupportedMetadataMsg->setVisible(rdfTriplesType == CellMLSupport::CellmlFileRdfTriple::Unknown);
-    mBorderedMetadataViewDetails->setVisible(rdfTriplesType == CellMLSupport::CellmlFileRdfTriple::Unknown);
+    mBorderedUnsupportedMetadataMsg->setVisible(pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown);
 
     // Update our Metadata view details GUI
 
-    if (mBorderedMetadataViewDetails->isVisible())
-        mMetadataViewDetails->updateGui(pRdfTriples);
+    mMetadataViewDetails->updateGui(pRdfTriples);
 }
 
 //==============================================================================
