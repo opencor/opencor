@@ -4,10 +4,14 @@
 #ifdef OpenCOR_MAIN
     #define CORE_EXPORT
 #else
-    #ifdef Core_PLUGIN
-        #define CORE_EXPORT __declspec(dllexport)
+    #ifdef _WIN32
+        #ifdef Core_PLUGIN
+            #define CORE_EXPORT __declspec(dllexport)
+        #else
+            #define CORE_EXPORT __declspec(dllimport)
+        #endif
     #else
-        #define CORE_EXPORT __declspec(dllimport)
+        #define CORE_EXPORT
     #endif
 #endif
 
