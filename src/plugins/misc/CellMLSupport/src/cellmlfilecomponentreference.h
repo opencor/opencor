@@ -32,7 +32,8 @@ typedef QList<CellmlFileComponentReference *> CellmlFileComponentReferences;
 class CELLMLSUPPORT_EXPORT CellmlFileComponentReference : public CellmlFileElement
 {
 public:
-    explicit CellmlFileComponentReference(iface::cellml_api::ComponentRef *pComponentReference);
+    explicit CellmlFileComponentReference(CellmlFile *pCellmlFile,
+                                          iface::cellml_api::ComponentRef *pComponentReference);
     ~CellmlFileComponentReference();
 
     QString component() const;

@@ -20,7 +20,8 @@ namespace Core {
 
 File::File(const QString &pFileName) :
     mFileName(nativeCanonicalFileName(pFileName)),
-    mSha1(sha1())
+    mSha1(sha1()),
+    mModified(false)
 {
 }
 
@@ -88,6 +89,27 @@ QString File::sha1() const
 
         return QString();
     }
+}
+
+//==============================================================================
+
+bool File::isModified() const
+{
+    // Return whether the file has been modified
+
+    return mModified;
+}
+
+//==============================================================================
+
+void File::setModified(const bool &pModified)
+{
+    if (pModified == mModified)
+        return;
+
+    // Set the modified status of the file
+
+    mModified = pModified;
 }
 
 //==============================================================================

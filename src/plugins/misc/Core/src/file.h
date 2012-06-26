@@ -32,9 +32,14 @@ public:
 
     Status check();
 
+    bool isModified() const;
+    void setModified(const bool &pModified);
+
 private:
     QString mFileName;
     QString mSha1;
+
+    bool mModified;
 
     QString sha1() const;
 };

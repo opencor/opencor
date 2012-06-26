@@ -74,7 +74,7 @@ public Q_SLOTS:
 private Q_SLOTS:
     void emitSplitterMoved();
 
-    void newCmetaIdValue(const QString &pCmetaIdValue);
+    void newCmetaId(const QString &pCmetaId);
 
     void qualifierLookupRequested(const QString &pQualifier,
                                   const bool &pRetranslate);

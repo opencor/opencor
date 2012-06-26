@@ -228,6 +228,11 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     foreach (CentralWidgetMode *mode, mModes)
         connect(mode->views(), SIGNAL(currentChanged(int)),
                 this, SLOT(updateGui()));
+
+    // A connection to handle a change in the modified status of a file
+
+    connect(Core::FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
+            this, SLOT(checkModeAndViewsTabs()));
 }
 
 //==============================================================================
@@ -966,6 +971,28 @@ void CentralWidget::updateNoViewMsg()
         viewName = modeViewName(GuiViewSettings::Analysis);
 
     mNoViewMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(viewName));
+}
+
+//==============================================================================
+
+void CentralWidget::checkModeAndViewsTabs()
+{
+    // Enable or disable the Mode and Views tabs, depending on whether one or
+    // several files have been modified
+
+    bool enabled = true;
+
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+        if (FileManager::instance()->isModified(mFileNames[i])) {
+            enabled = false;
+
+            break;
+        }
+
+    mModeTabs->setEnabled(enabled);
+
+    foreach (CentralWidgetMode *mode, mModes)
+        mode->views()->setEnabled(enabled);
 }
 
 //==============================================================================

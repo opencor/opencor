@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileRelationshipReference::CellmlFileRelationshipReference(iface::cellml_api::RelationshipRef *pRelationshipReference) :
-    CellmlFileElement(pRelationshipReference),
+CellmlFileRelationshipReference::CellmlFileRelationshipReference(CellmlFile *pCellmlFile,
+                                                                 iface::cellml_api::RelationshipRef *pRelationshipReference) :
+    CellmlFileElement(pCellmlFile, pRelationshipReference),
     mRelationship(QString::fromStdWString(pRelationshipReference->relationship())),
     mRelationshipNamespace(QString::fromStdWString(pRelationshipReference->relationshipNamespace()))
 {

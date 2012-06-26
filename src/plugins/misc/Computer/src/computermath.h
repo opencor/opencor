@@ -11,6 +11,10 @@
 
 //==============================================================================
 
+#include <QtGlobal>
+
+//==============================================================================
+
 extern "C" double COMPUTER_EXPORT _not(double pNb);
 extern "C" double COMPUTER_EXPORT _or(double pNb1, double pNb2);
 extern "C" double COMPUTER_EXPORT _xor(double pNb1, double pNb2);

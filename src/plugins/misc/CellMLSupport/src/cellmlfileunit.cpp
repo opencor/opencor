@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileUnit::CellmlFileUnit(iface::cellml_api::ImportUnits *pImportUnits) :
-    CellmlFileNamedElement(pImportUnits),
+CellmlFileUnit::CellmlFileUnit(CellmlFile *pCellmlFile,
+                               iface::cellml_api::ImportUnits *pImportUnits) :
+    CellmlFileNamedElement(pCellmlFile, pImportUnits),
     mBaseUnit(false),
     mUnitElements(CellmlFileUnitElements())
 {
@@ -20,8 +21,9 @@ CellmlFileUnit::CellmlFileUnit(iface::cellml_api::ImportUnits *pImportUnits) :
 
 //==============================================================================
 
-CellmlFileUnit::CellmlFileUnit(iface::cellml_api::Units *pUnits) :
-    CellmlFileNamedElement(pUnits),
+CellmlFileUnit::CellmlFileUnit(CellmlFile *pCellmlFile,
+                               iface::cellml_api::Units *pUnits) :
+    CellmlFileNamedElement(pCellmlFile, pUnits),
     mBaseUnit(pUnits->isBaseUnits()),
     mUnitElements(CellmlFileUnitElements())
 {
@@ -36,7 +38,7 @@ CellmlFileUnit::CellmlFileUnit(iface::cellml_api::Units *pUnits) :
         if (unit)
             // We have a unit, so add it to our list
 
-            mUnitElements << new CellmlFileUnitElement(unit);
+            mUnitElements << new CellmlFileUnitElement(pCellmlFile, unit);
         else
             // No more units, so...
 

@@ -26,7 +26,8 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileConnection : public CellmlFileElement
 {
 public:
-    explicit CellmlFileConnection(iface::cellml_api::Connection *pConnection);
+    explicit CellmlFileConnection(CellmlFile *pCellmlFile,
+                                  iface::cellml_api::Connection *pConnection);
     ~CellmlFileConnection();
 
     CellmlFileMapComponents * componentMapping() const;

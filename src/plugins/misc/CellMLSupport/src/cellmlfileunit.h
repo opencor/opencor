@@ -20,8 +20,10 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileUnit : public CellmlFileNamedElement
 {
 public:
-    explicit CellmlFileUnit(iface::cellml_api::ImportUnits *pImportUnits);
-    explicit CellmlFileUnit(iface::cellml_api::Units *pUnits);
+    explicit CellmlFileUnit(CellmlFile *pCellmlFile,
+                            iface::cellml_api::ImportUnits *pImportUnits);
+    explicit CellmlFileUnit(CellmlFile *pCellmlFile,
+                            iface::cellml_api::Units *pUnits);
     ~CellmlFileUnit();
 
     bool isBaseUnit() const;

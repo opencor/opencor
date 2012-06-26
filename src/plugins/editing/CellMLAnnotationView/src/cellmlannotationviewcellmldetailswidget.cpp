@@ -116,7 +116,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
     if (mCellmlElementDetails->cmetaIdValue())
         disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
-                   this, SLOT(newCmetaIdValue(const QString &)));
+                   this, SLOT(newCmetaId(const QString &)));
 
     mGui->retranslateUi(this);
 
@@ -125,7 +125,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
     if (mCellmlElementDetails->cmetaIdValue())
         connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
-                this, SLOT(newCmetaIdValue(const QString &)));
+                this, SLOT(newCmetaId(const QString &)));
 }
 
 //==============================================================================
@@ -136,7 +136,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
     if (mCellmlElementDetails->cmetaIdValue())
         disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
-                   this, SLOT(newCmetaIdValue(const QString &)));
+                   this, SLOT(newCmetaId(const QString &)));
 
     // 'Clean up' our web view
 
@@ -151,9 +151,9 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
     if (mCellmlElementDetails->cmetaIdValue()) {
         connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
-                this, SLOT(newCmetaIdValue(const QString &)));
+                this, SLOT(newCmetaId(const QString &)));
 
-        newCmetaIdValue(mCellmlElementDetails->cmetaIdValue()->currentText());
+        newCmetaId(mCellmlElementDetails->cmetaIdValue()->currentText());
     }
 }
 
@@ -178,13 +178,13 @@ void CellmlAnnotationViewCellmlDetailsWidget::emitSplitterMoved()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::newCmetaIdValue(const QString &pCmetaIdValue)
+void CellmlAnnotationViewCellmlDetailsWidget::newCmetaId(const QString &pCmetaId)
 {
     // Retrieve the RDF triples for the cmeta:id
 
-    CellMLSupport::CellmlFileRdfTriples rdfTriples = pCmetaIdValue.isEmpty()?
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = pCmetaId.isEmpty()?
                                                          CellMLSupport::CellmlFileRdfTriples():
-                                                         mParent->rdfTriples(pCmetaIdValue);
+                                                         mParent->rdfTriples(pCmetaId);
 
     // Check that we are not dealing with the same RDF triples
     // Note: this may happen when manually typing the name of a cmeta:id and the

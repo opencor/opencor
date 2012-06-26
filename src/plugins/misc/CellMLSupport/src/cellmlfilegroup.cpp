@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
-    CellmlFileElement(pGroup),
+CellmlFileGroup::CellmlFileGroup(CellmlFile *pCellmlFile,
+                                 iface::cellml_api::Group *pGroup) :
+    CellmlFileElement(pCellmlFile, pGroup),
     mRelationshipReferences(CellmlFileRelationshipReferences())
 {
     // Iterate through the relationship references and add them to our list
@@ -26,7 +27,7 @@ CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
         if (relationshipReference)
             // We have a relationship reference, so add it to our list
 
-            mRelationshipReferences << new CellmlFileRelationshipReference(relationshipReference);
+            mRelationshipReferences << new CellmlFileRelationshipReference(pCellmlFile, relationshipReference);
         else
             // No more relationship references, so...
 
@@ -44,7 +45,7 @@ CellmlFileGroup::CellmlFileGroup(iface::cellml_api::Group *pGroup) :
         if (componentReference)
             // We have a component reference, so add it to our list
 
-            mComponentReferences << new CellmlFileComponentReference(componentReference);
+            mComponentReferences << new CellmlFileComponentReference(pCellmlFile, componentReference);
         else
             // No more component references, so...
 

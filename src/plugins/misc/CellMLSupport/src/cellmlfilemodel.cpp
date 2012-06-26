@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileModel::CellmlFileModel(iface::cellml_api::Model *pModel) :
-    CellmlFileNamedElement(pModel)
+CellmlFileModel::CellmlFileModel(CellmlFile *pCellmlFile,
+                                 iface::cellml_api::Model *pModel) :
+    CellmlFileNamedElement(pCellmlFile, pModel)
 {
 }
 

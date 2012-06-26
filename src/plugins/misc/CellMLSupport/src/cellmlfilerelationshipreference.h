@@ -24,7 +24,8 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileRelationshipReference : public CellmlFileElement
 {
 public:
-    explicit CellmlFileRelationshipReference(iface::cellml_api::RelationshipRef *pRelationshipReference);
+    explicit CellmlFileRelationshipReference(CellmlFile *pCellmlFile,
+                                             iface::cellml_api::RelationshipRef *pRelationshipReference);
 
     QString relationship() const;
     QString relationshipNamespace() const;

@@ -58,6 +58,8 @@ public:
 
     File * isManaged(const QString &pFileName) const;
 
+    bool isModified(const QString &pFileName) const;
+
     int count() const;
 
 private:
@@ -70,6 +72,11 @@ Q_SIGNALS:
 
     void fileContentsChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
+
+    void fileModified(const QString &pFileName, const bool &pModified);
+
+public Q_SLOTS:
+    void setModified(const QString &pFileName, const bool &pModified);
 
 private Q_SLOTS:
     void checkFiles();

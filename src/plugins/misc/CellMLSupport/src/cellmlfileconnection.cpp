@@ -11,13 +11,14 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileConnection::CellmlFileConnection(iface::cellml_api::Connection *pConnection) :
-    CellmlFileElement(pConnection),
+CellmlFileConnection::CellmlFileConnection(CellmlFile *pCellmlFile,
+                                           iface::cellml_api::Connection *pConnection) :
+    CellmlFileElement(pCellmlFile, pConnection),
     mVariableMappings(CellmlFileMapVariables())
 {
     // Retrieve the components to map
 
-    mComponentMapping = new CellmlFileMapComponents(pConnection->componentMapping());
+    mComponentMapping = new CellmlFileMapComponents(pCellmlFile, pConnection->componentMapping());
 
     // Iterate through the variables to map and add them to our list
 
@@ -30,7 +31,7 @@ CellmlFileConnection::CellmlFileConnection(iface::cellml_api::Connection *pConne
         if (mapVariables)
             // We have variables to map, so add them to our list
 
-            mVariableMappings << new CellmlFileMapVariablesItem(mapVariables);
+            mVariableMappings << new CellmlFileMapVariablesItem(pCellmlFile, mapVariables);
         else
             // No more variables to map, so...
 

@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlfile.h"
+#include "filemanager.h"
 
 //==============================================================================
 
@@ -51,7 +52,8 @@ CellmlFile::CellmlFile(const QString &pFileName) :
     mComponents(CellmlFileComponents()),
     mGroups(CellmlFileGroups()),
     mConnections(CellmlFileConnections()),
-    mRdfTriples(CellmlFileRdfTriples())
+    mRdfTriples(CellmlFileRdfTriples()),
+    mValid(true)
 {
     // Instantiate our runtime object
 
@@ -95,7 +97,7 @@ void CellmlFile::reset()
     mIssues.clear();
 
     mLoadingNeeded       = true;
-    mIsValidNeeded       = true;
+    mValidNeeded         = true;
     mRuntimeUpdateNeeded = true;
 }
 
@@ -176,7 +178,7 @@ bool CellmlFile::load()
 
     // Extract/retrieve various things from mCellmlApiModel
 
-    mModel = new CellmlFileModel(mCellmlApiModel);
+    mModel = new CellmlFileModel(this, mCellmlApiModel);
 
     // Iterate through the imports and add them to our list
 
@@ -189,7 +191,7 @@ bool CellmlFile::load()
         if (import)
             // We have an import, so add it to our list
 
-            mImports << new CellmlFileImport(import);
+            mImports << new CellmlFileImport(this, import);
         else
             // No more imports, so...
 
@@ -207,7 +209,7 @@ bool CellmlFile::load()
         if (unit)
             // We have a unit, so add it to our list
 
-            mUnits << new CellmlFileUnit(unit);
+            mUnits << new CellmlFileUnit(this, unit);
         else
             // No more units, so...
 
@@ -225,7 +227,7 @@ bool CellmlFile::load()
         if (component)
             // We have a component, so add it to our list
 
-            mComponents << new CellmlFileComponent(component);
+            mComponents << new CellmlFileComponent(this, component);
         else
             // No more components, so...
 
@@ -243,7 +245,7 @@ bool CellmlFile::load()
         if (group)
             // We have a group, so add it to our list
 
-            mGroups << new CellmlFileGroup(group);
+            mGroups << new CellmlFileGroup(this, group);
         else
             // No more groups, so...
 
@@ -261,7 +263,7 @@ bool CellmlFile::load()
         if (connection)
             // We have a connection, so add it to our list
 
-            mConnections << new CellmlFileConnection(connection);
+            mConnections << new CellmlFileConnection(this, connection);
         else
             // No more connections, so...
 
@@ -321,10 +323,10 @@ bool CellmlFile::reload()
 
 bool CellmlFile::isValid()
 {
-    if (!mIsValidNeeded)
+    if (!mValidNeeded)
         // The file has already been validated, so...
 
-        return mIsValid;
+        return mValid;
 
     // Load (but not reload!) the file, if needed
 
@@ -490,20 +492,38 @@ bool CellmlFile::isValid()
         if (cellmlErrorsCount)
             // There are CellML errors, so...
 
-            mIsValid = false;
+            mValid = false;
         else
             // Everything went as expected, so...
 
-            mIsValid = true;
+            mValid = true;
 
-        mIsValidNeeded = false;
+        mValidNeeded = false;
 
-        return mIsValid;
+        return mValid;
     } else {
         // Something went wrong with the loading of the file, so...
 
         return false;
     }
+}
+
+//==============================================================================
+
+bool CellmlFile::isModified() const
+{
+    // Return whether the file has been modified
+
+    return Core::FileManager::instance()->isModified(fileName());
+}
+
+//==============================================================================
+
+void CellmlFile::setModified(const bool &pModified) const
+{
+    // Set the modified status of the file
+
+    Core::FileManager::instance()->setModified(fileName(), pModified);
 }
 
 //==============================================================================

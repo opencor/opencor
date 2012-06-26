@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileVariable::CellmlFileVariable(iface::cellml_api::CellMLVariable *pVariable) :
-    CellmlFileNamedElement(pVariable),
+CellmlFileVariable::CellmlFileVariable(CellmlFile *pCellmlFile,
+                                       iface::cellml_api::CellMLVariable *pVariable) :
+    CellmlFileNamedElement(pCellmlFile, pVariable),
     mUnit(QString::fromStdWString(pVariable->unitsName())),
     mInitialValue(QString::fromStdWString(pVariable->initialValue()))
 {

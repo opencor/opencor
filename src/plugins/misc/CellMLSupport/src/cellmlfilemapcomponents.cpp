@@ -11,8 +11,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileMapComponents::CellmlFileMapComponents(iface::cellml_api::MapComponents *pMapComponents) :
-    CellmlFileElement(pMapComponents),
+CellmlFileMapComponents::CellmlFileMapComponents(CellmlFile *pCellmlFile,
+                                                 iface::cellml_api::MapComponents *pMapComponents) :
+    CellmlFileElement(pCellmlFile, pMapComponents),
     mFirstComponent(QString::fromStdWString(pMapComponents->firstComponentName())),
     mSecondComponent(QString::fromStdWString(pMapComponents->secondComponentName()))
 {

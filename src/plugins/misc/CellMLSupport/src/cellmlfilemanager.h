@@ -40,9 +40,14 @@ private:
     explicit CellmlFileManager();
     ~CellmlFileManager();
 
+Q_SIGNALS:
+    void fileModified(const QString &pFileName, const bool &pModified);
+
 private Q_SLOTS:
-    void fileManaged(const QString &pFileName);
-    void fileUnmanaged(const QString &pFileName);
+    void setFileManaged(const QString &pFileName);
+    void setFileUnmanaged(const QString &pFileName);
+
+    void setModified(const QString &pFileName, const bool &pModified);
 };
 
 //==============================================================================

@@ -100,7 +100,7 @@ private:
     QString typeAsString(const Type &pType) const;
 
 private Q_SLOTS:
-    void newCmetaIdValue(const QString &pCmetaIdValue);
+    void newCmetaId(const QString &pCmetaId);
 };
 
 //==============================================================================

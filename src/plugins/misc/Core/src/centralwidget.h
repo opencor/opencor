@@ -179,6 +179,7 @@ private Q_SLOTS:
     void fileSelected(const int &pIndex);
     void fileMoved(const int &pFromIndex, const int &pToIndex);
     void updateGui();
+    void checkModeAndViewsTabs();
 };
 
 //==============================================================================

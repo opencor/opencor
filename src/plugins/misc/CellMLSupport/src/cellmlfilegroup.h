@@ -22,7 +22,8 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileGroup : public CellmlFileElement
 {
 public:
-    explicit CellmlFileGroup(iface::cellml_api::Group *pGroup);
+    explicit CellmlFileGroup(CellmlFile *pCellmlFile,
+                             iface::cellml_api::Group *pGroup);
     ~CellmlFileGroup();
 
     CellmlFileRelationshipReferences relationshipReferences() const;
