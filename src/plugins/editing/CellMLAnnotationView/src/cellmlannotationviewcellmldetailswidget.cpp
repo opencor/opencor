@@ -339,6 +339,9 @@ void CellmlAnnotationViewCellmlDetailsWidget::resourceLookupRequested(const QStr
 
     if (!pRetranslate)
         mWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
+        //---GRY--- NOTE THAT redirect=true DOESN'T WORK AT THE MOMENT, SO WE DO
+        //          END UP WITH A FRAME, BUT THE identifiers.org GUYS ARE GOING
+        //          TO 'FIX' THAT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
 }
 
 //==============================================================================
