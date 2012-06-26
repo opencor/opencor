@@ -353,22 +353,29 @@ void CellmlAnnotationViewMetadataListWidget::on_actionAddMetadata_triggered()
 
     mDataModel->invisibleRootItem()->appendRow(metadataItem);
 
-    // Scroll down to our newly added metadata item, just in case, and offer the
-    // user to edit it, but all of this only if the current item is not already
-    // being edited
+    // Sort our metadata items
 
-    if (!mTreeView->isEditing()) {
-        mTreeView->scrollToBottom();
+    mTreeView->sortByColumn(0, Qt::AscendingOrder);
 
+    // Scroll down to our current metadata item
+
+    mTreeView->scrollTo(mTreeView->currentIndex(),
+                        QAbstractItemView::PositionAtCenter);
+
+    // Edit our new metadata item, but only if our current metadata item is not
+    // already being edited
+
+    if (!mTreeView->isEditing())
         mTreeView->edit(metadataItem->index());
-    }
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataListWidget::on_actionRemoveMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Remove the current metadata
+
+    on_actionRemoveCurrentMetadata_triggered();
 }
 
 //==============================================================================
@@ -389,7 +396,9 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveAllMetadata_triggere
 
 void CellmlAnnotationViewMetadataListWidget::on_actionClearMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Clear the current metadata
+
+    on_actionClearCurrentMetadata_triggered();
 }
 
 //==============================================================================
