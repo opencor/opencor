@@ -83,6 +83,8 @@ private Q_SLOTS:
     void resourceIdLookupRequested(const QString &pResource,
                                    const QString &pId,
                                    const bool &pRetranslate);
+
+    void metadataUpdated();
 };
 
 //==============================================================================

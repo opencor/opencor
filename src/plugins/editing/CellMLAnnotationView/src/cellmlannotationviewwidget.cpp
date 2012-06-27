@@ -2,6 +2,7 @@
 // CellML annotation view widget
 //==============================================================================
 
+#include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewdetailswidget.h"
@@ -67,6 +68,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
+
+    // A connection to let our details widget know when some/all metadata
+    // has/have removed
+
+    connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
+            mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
 
     // Make our lists widget our focus proxy
 

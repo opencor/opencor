@@ -101,20 +101,31 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
 
     mTreeView->installEventFilter(this);
 
-    // A connection to handle the change of node
+    // A couple of connections to handle the change of node
 
     connect(mTreeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
             this, SLOT(updateActions()));
     connect(mTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updateNode(const QModelIndex &, const QModelIndex &)));
 
+    // A couple of connections to handle the addition/removal of a node
+
+    connect(mTreeView->model(), SIGNAL(rowsInserted(const QModelIndex &, int, int)),
+            this, SLOT(updateActions()));
+    connect(mTreeView->model(), SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
+            this, SLOT(updateActions()));
+
+    // A couple of connections to make sure that our tree view has the focus
+    // whenever a node is added/removed
+
+    connect(mTreeView->model(), SIGNAL(rowsInserted(const QModelIndex &, int, int)),
+            mTreeView, SLOT(setFocus()));
+    connect(mTreeView->model(), SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
+            mTreeView, SLOT(setFocus()));
+
     // Populate our tree view
 
     populateDataModel();
-
-    // Update our actions for the first time round
-
-    updateActions();
 
     // Resize our tree view, just to be on the safe side
 
@@ -387,7 +398,27 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_trig
     // Remove the current metadata, i.e. all the RDF triples which subject is
     // the same as the cmeta:id
 
-    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeRdfTriples(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
+    QString cmetaId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
+
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeRdfTriples(cmetaId);
+
+    // Remove the entry for the cmeta:id from our data model
+
+    for (int i = 0, iMax = mDataModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *item = mDataModel->invisibleRootItem()->child(i);
+
+        if (!item->text().compare(cmetaId)) {
+            delete item;
+
+            mDataModel->removeRow(i);
+
+            break;
+        }
+    }
+
+    // Let people know that some metadata has been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================
@@ -397,6 +428,17 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveAllMetadata_triggere
     // Remove all the metadata, i.e. all the RDF triples
 
     mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeAllRdfTriples();
+
+    // Clean the data model
+
+    for (int i = 0, iMax = mDataModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+        delete mDataModel->invisibleRootItem()->child(i);
+
+    mDataModel->clear();
+
+    // Let people know that all the metadata have been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================

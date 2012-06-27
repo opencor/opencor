@@ -132,7 +132,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems)
 {
-    // Stop tracking any change in the cmeta:id value of our CellML element
+    // Stop tracking changes to the cmeta:id value of our CellML element
 
     if (mCellmlElementDetails->cmetaIdValue())
         disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
@@ -146,8 +146,8 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
     mCellmlElementDetails->updateGui(pItems);
 
-    // Re-track any change in the cmeta:id value of our CellML element and
-    // update our metadata details GUI
+    // Re-track changes to the cmeta:id value of our CellML element and update
+    // our metadata details GUI
 
     if (mCellmlElementDetails->cmetaIdValue()) {
         connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
@@ -356,6 +356,16 @@ void CellmlAnnotationViewCellmlDetailsWidget::resourceIdLookupRequested(const QS
 
     if (!pRetranslate)
         mWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlDetailsWidget::metadataUpdated()
+{
+    // Some metadata has been updated, so we need to update the metadata
+    // information we show to the user
+
+    newCmetaId(mCellmlElementDetails->cmetaIdValue()->currentText());
 }
 
 //==============================================================================

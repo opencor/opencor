@@ -76,6 +76,9 @@ private:
 
     void populateDataModel();
 
+Q_SIGNALS:
+    void metadataUpdated();
+
 private Q_SLOTS:
     void updateActions();
     void updateNode(const QModelIndex &pNewIndex, const QModelIndex &pOldIndex);
