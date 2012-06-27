@@ -61,6 +61,11 @@ public:
 
     QString uriBase() const;
 
+    CellmlFileRdfTriples rdfTriples(const QString &pCmetaId) const;
+
+    void removeRdfTriples(const QString &pCmetaId);
+    void removeAllRdfTriples();
+
 private:
     QString mFileName;
 

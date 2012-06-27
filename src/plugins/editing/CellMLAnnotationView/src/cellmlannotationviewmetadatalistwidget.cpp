@@ -6,7 +6,9 @@
 #include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmlelementitem.h"
 #include "cellmlannotationviewcellmlelementitemdelegate.h"
+#include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewdetailswidget.h"
+#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
@@ -297,7 +299,7 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
 
         // Update the details GUI
 
-        mParent->detailsWidget()->updateGui(mParent->rdfTriples(mDataModel->itemFromIndex(crtIndex)->text()));
+        mParent->detailsWidget()->updateGui(mParent->cellmlFile()->rdfTriples(mDataModel->itemFromIndex(crtIndex)->text()));
     }
 
     // We are done, so...
@@ -382,14 +384,19 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveMetadata_triggered()
 
 void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Remove the current metadata, i.e. all the RDF triples which subject is
+    // the same as the cmeta:id
+
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeRdfTriples(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataListWidget::on_actionRemoveAllMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Remove all the metadata, i.e. all the RDF triples
+
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeAllRdfTriples();
 }
 
 //==============================================================================

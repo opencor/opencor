@@ -52,7 +52,7 @@ CellmlFile::CellmlFile(const QString &pFileName) :
     mComponents(CellmlFileComponents()),
     mGroups(CellmlFileGroups()),
     mConnections(CellmlFileConnections()),
-    mRdfTriples(CellmlFileRdfTriples()),
+    mRdfTriples(CellmlFileRdfTriples(this)),
     mValid(true)
 {
     // Instantiate our runtime object
@@ -514,7 +514,7 @@ bool CellmlFile::isModified() const
 {
     // Return whether the file has been modified
 
-    return Core::FileManager::instance()->isModified(fileName());
+    return Core::FileManager::instance()->isModified(mFileName);
 }
 
 //==============================================================================
@@ -523,7 +523,8 @@ void CellmlFile::setModified(const bool &pModified) const
 {
     // Set the modified status of the file
 
-    Core::FileManager::instance()->setModified(fileName(), pModified);
+    if (pModified != isModified())
+        Core::FileManager::instance()->setModified(mFileName, pModified);
 }
 
 //==============================================================================
@@ -642,6 +643,36 @@ QString CellmlFile::uriBase() const
     ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
 
     return QString::fromStdWString(xmlBase->asText());
+}
+
+//==============================================================================
+
+CellmlFileRdfTriples CellmlFile::rdfTriples(const QString &pCmetaId) const
+{
+    // Return all the RDF triples which are directly or indirectly associated
+    // with pCmetaId
+
+    return mRdfTriples.contains(pCmetaId);
+}
+
+//==============================================================================
+
+void CellmlFile::removeRdfTriples(const QString &pCmetaId)
+{
+    // Remove all the RDF triples which subject value is pCmetaId
+
+    if (mRdfTriples.remove(pCmetaId))
+        setModified(true);
+}
+
+//==============================================================================
+
+void CellmlFile::removeAllRdfTriples()
+{
+    // Remove all the RDF triples
+
+    if (mRdfTriples.removeAll())
+        setModified(true);
 }
 
 //==============================================================================

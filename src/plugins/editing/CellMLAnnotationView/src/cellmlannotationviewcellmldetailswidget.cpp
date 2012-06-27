@@ -184,7 +184,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaId(const QString &pCmetaId
 
     CellMLSupport::CellmlFileRdfTriples rdfTriples = pCmetaId.isEmpty()?
                                                          CellMLSupport::CellmlFileRdfTriples():
-                                                         mParent->rdfTriples(pCmetaId);
+                                                         mParent->cellmlFile()->rdfTriples(pCmetaId);
 
     // Check that we are not dealing with the same RDF triples
     // Note: this may happen when manually typing the name of a cmeta:id and the
@@ -192,7 +192,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaId(const QString &pCmetaId
     //       and the QComboBox suggests "C_C" (which will get us here) and then
     //       you finish typing "C_C" (which will also get us here)
 
-    static CellMLSupport::CellmlFileRdfTriples oldRdfTriples = CellMLSupport::CellmlFileRdfTriples();
+    static CellMLSupport::CellmlFileRdfTriples oldRdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
 
     if (rdfTriples == oldRdfTriples)
         return;

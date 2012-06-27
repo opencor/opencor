@@ -138,6 +138,15 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 
 //==============================================================================
 
+CellmlFile * CellmlFileElement::cellmlFile() const
+{
+    // Return the CellML file from which the CellML element comes
+
+    return mCellmlFile;
+}
+
+//==============================================================================
+
 QString CellmlFileElement::cmetaId() const
 {
     // Return the CellML element's cmeta:id

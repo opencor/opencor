@@ -23,7 +23,7 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataViewDetailsWidget),
-    mRdfTriples(CellMLSupport::CellmlFileRdfTriples())
+    mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile()))
 {
     // Set up the GUI
 

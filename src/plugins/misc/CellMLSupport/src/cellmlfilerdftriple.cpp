@@ -6,6 +6,7 @@
 //          NOT...
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "cellmlfilerdftriple.h"
 
 //==============================================================================
@@ -284,6 +285,13 @@ QString CellmlFileRdfTriple::id() const
 
 //==============================================================================
 
+CellmlFileRdfTriples::CellmlFileRdfTriples(CellmlFile *pCellmlFile) :
+    mCellmlFile(pCellmlFile)
+{
+}
+
+//==============================================================================
+
 CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
 {
     // Return the type of the RDF triples
@@ -299,19 +307,19 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
         // the first RDF triple and consider its type as the default type for
         // all our RDF triples
 
-        CellmlFileRdfTriple *crtRdfTriple = first();
+        CellmlFileRdfTriple *rdfTriple = first();
 
-        QString subject = crtRdfTriple->subject()->asString();
-        CellmlFileRdfTriple::Type res = crtRdfTriple->type();
+        QString subject = rdfTriple->subject()->asString();
+        CellmlFileRdfTriple::Type res = rdfTriple->type();
 
         // Go through the remaining RDF triples and make sure that their type
         // is consistent with that of the first one
 
         for (int i = 2, iMax = count(); i < iMax; ++i) {
-            crtRdfTriple = at(i);
+            rdfTriple = at(i);
 
-            if (   crtRdfTriple->subject()->asString().compare(subject)
-                || (crtRdfTriple->type() != res))
+            if (   rdfTriple->subject()->asString().compare(subject)
+                || (rdfTriple->type() != res))
                 // The subject and/or the type of the current RDF triple is
                 // different from that of the first RDF triple, so...
 
@@ -322,6 +330,92 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
 
         return res;
     }
+}
+
+//==============================================================================
+
+void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
+                                             CellmlFileRdfTriple *pRdfTriple) const
+{
+    // Add pRdfTriple to pRdfTriples
+
+    pRdfTriples << pRdfTriple;
+
+    // Recursively add all the RDF triples which subject matches pRdfTriple's
+    // object
+
+    for (int i = 0, iMax = count(); i < iMax; ++i) {
+        CellmlFileRdfTriple *rdfTriple = at(i);
+
+        if (!rdfTriple->subject()->asString().compare(pRdfTriple->object()->asString()))
+            recursiveContains(pRdfTriples, rdfTriple);
+    }
+}
+
+//==============================================================================
+
+CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pCmetaId) const
+{
+    Q_ASSERT(mCellmlFile);
+
+    // Return all the RDF triples which are directly or indirectly associated
+    // with pCmetaId
+
+    CellmlFileRdfTriples res = CellmlFileRdfTriples(mCellmlFile);
+
+    QString uriBase = mCellmlFile->uriBase();
+
+    for (int i = 0, iMax = count(); i < iMax; ++i) {
+        // Retrieve the RDF triple's subject so we can determine whether it's
+        // from the group of RDF triples in which we are interested
+
+        CellmlFileRdfTriple *rdfTriple = at(i);
+
+        if (rdfTriple->subject()->type() == CellmlFileRdfTripleElement::UriReference)
+            // We have an RDF triple of which we can make sense, so retrieve and
+            // check its group name
+
+            if (!pCmetaId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
+                // It's the correct group name, so add it to our list
+
+                recursiveContains(res, rdfTriple);
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+bool CellmlFileRdfTriples::remove(const QString &pCmetaId)
+{
+    // Remove all the RDF triples which are directly or indirectly associated
+    // with pCmetaId
+
+    CellmlFileRdfTriples rdfTriples = contains(pCmetaId);
+
+    for (int i = 0, iMax = rdfTriples.count(); i < iMax; ++i)
+        removeOne(rdfTriples[i]);
+
+    return rdfTriples.count();
+}
+
+//==============================================================================
+
+bool CellmlFileRdfTriples::removeAll()
+{
+    // Remove all the RDF triples
+
+    int oldCount = count();
+
+    for (int i = count()-1; i >= 0; --i) {
+        CellmlFileRdfTriple *rdfTriple = at(i);
+
+        removeAt(i);
+
+        delete rdfTriple;
+    }
+
+    return oldCount != count();
 }
 
 //==============================================================================

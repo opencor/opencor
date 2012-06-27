@@ -91,7 +91,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCell
             mCellmlDetails->updateGui(pItems);
         }
     } else {
-        static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples();
+        static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
 
         if (pRdfTriples != rdfTriples) {
             rdfTriples = pRdfTriples;
