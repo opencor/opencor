@@ -5,8 +5,10 @@
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewdetailswidget.h"
+#include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
+#include "treeview.h"
 
 //==============================================================================
 
@@ -72,7 +74,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Select the first CellML node from our CellML list
 
-    mListsWidget->cellmlList()->selectFirstNode();
+    mListsWidget->cellmlList()->treeView()->selectFirstNode();
+    mListsWidget->metadataList()->treeView()->selectFirstNode();
 }
 
 //==============================================================================
