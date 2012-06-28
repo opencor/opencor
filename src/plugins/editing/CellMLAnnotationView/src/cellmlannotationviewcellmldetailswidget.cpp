@@ -182,9 +182,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaId(const QString &pCmetaId
 {
     // Retrieve the RDF triples for the cmeta:id
 
-    CellMLSupport::CellmlFileRdfTriples rdfTriples = pCmetaId.isEmpty()?
-                                                         CellMLSupport::CellmlFileRdfTriples():
-                                                         mParent->cellmlFile()->rdfTriples(pCmetaId);
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = mParent->cellmlFile()->rdfTriples(pCmetaId);
 
     // Check that we are not dealing with the same RDF triples
     // Note: this may happen when manually typing the name of a cmeta:id and the
