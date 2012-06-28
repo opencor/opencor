@@ -59,6 +59,7 @@ public:
 
     Core::TreeView * treeView() const;
 
+    QString currentId() const;
     QStringList ids() const;
 
 protected:

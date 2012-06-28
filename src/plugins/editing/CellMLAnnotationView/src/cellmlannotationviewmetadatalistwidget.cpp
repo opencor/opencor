@@ -329,6 +329,15 @@ Core::TreeView * CellmlAnnotationViewMetadataListWidget::treeView() const
 
 //==============================================================================
 
+QString CellmlAnnotationViewMetadataListWidget::currentId() const
+{
+    // Return the current id
+
+    return mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
+}
+
+//==============================================================================
+
 QStringList CellmlAnnotationViewMetadataListWidget::ids() const
 {
     // Return the full list of ids
@@ -454,14 +463,27 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearMetadata_triggered()
 
 void CellmlAnnotationViewMetadataListWidget::on_actionClearCurrentMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Clear the current metadata, i.e. all the RDF triples which subject is the
+    // same as the cmeta:id
+
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeRdfTriples(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
+
+    // Let people know that some metadata has been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataListWidget::on_actionClearAllMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Clear all the metadata, i.e. all the RDF triples
+
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeAllRdfTriples();
+
+    // Let people know that all the metadata have been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================

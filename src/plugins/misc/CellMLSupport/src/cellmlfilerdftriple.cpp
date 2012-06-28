@@ -301,7 +301,7 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
     if (isEmpty()) {
         // There are no RDF triples, so...
 
-        return CellmlFileRdfTriple::Unknown;
+        return CellmlFileRdfTriple::Empty;
     } else {
         // There is at least one RDF triple, so retrieve the subject and type of
         // the first RDF triple and consider its type as the default type for

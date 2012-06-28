@@ -6,6 +6,7 @@
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewdetailswidget.h"
+#include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
@@ -74,6 +75,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
             mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
+    connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
+            mDetailsWidget->metadataDetails(), SLOT(metadataUpdated()));
 
     // Make our lists widget our focus proxy
 

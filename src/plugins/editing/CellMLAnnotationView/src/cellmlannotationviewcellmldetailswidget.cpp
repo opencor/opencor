@@ -132,6 +132,17 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems)
 {
+    static CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
+
+    if (pItems == items)
+        // We want to show the same items, so...
+
+        return;
+
+    // Keep track of the items
+
+    items = pItems;
+
     // Stop tracking changes to the cmeta:id value of our CellML element
 
     if (mCellmlElementDetails->cmetaIdValue())

@@ -33,7 +33,8 @@ class CELLMLSUPPORT_EXPORT CellmlFileRdfTriple
 public:
     enum Type {
         Unknown,
-        BioModelsDotNetQualifier
+        BioModelsDotNetQualifier,
+        Empty
     };
 
     enum ModelQualifier {
