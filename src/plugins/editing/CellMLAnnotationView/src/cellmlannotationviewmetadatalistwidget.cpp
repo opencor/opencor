@@ -115,12 +115,10 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
     connect(mTreeView->model(), SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
             this, SLOT(updateActions()));
 
-    // A couple of connections to make sure that our tree view has the focus
-    // whenever a node is added/removed
+    // A connection to make sure that our tree view has the focus whenever some
+    // metadata has been updated
 
-    connect(mTreeView->model(), SIGNAL(rowsInserted(const QModelIndex &, int, int)),
-            mTreeView, SLOT(setFocus()));
-    connect(mTreeView->model(), SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
+    connect(this, SIGNAL(metadataUpdated()),
             mTreeView, SLOT(setFocus()));
 
     // Populate our tree view
