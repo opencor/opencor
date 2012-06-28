@@ -57,8 +57,6 @@ public:
 
     virtual void retranslateUi();
 
-    void selectFirstNode();
-
     Core::TreeView * treeView() const;
 
     CellmlElementItem * currentCellmlElementItem() const;

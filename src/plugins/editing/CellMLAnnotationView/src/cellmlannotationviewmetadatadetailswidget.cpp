@@ -3,10 +3,13 @@
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
+#include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
+#include "treeview.h"
 
 //==============================================================================
 
@@ -98,18 +101,35 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
+    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
+
+    if (pRdfTriples == rdfTriples)
+        // We want to show the same RDF triples, so...
+
+        return;
+
+    // Keep track of the RDF triples
+
+    rdfTriples = pRdfTriples;
+
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known or not
 
-    CellMLSupport::CellmlFileRdfTriple::Type rdfTriplesType = pRdfTriples.type();
-
-    mBorderedUnsupportedMetadataMsg->setVisible(rdfTriplesType == CellMLSupport::CellmlFileRdfTriple::Unknown);
-    mBorderedMetadataViewDetails->setVisible(rdfTriplesType == CellMLSupport::CellmlFileRdfTriple::Unknown);
+    mBorderedUnsupportedMetadataMsg->setVisible(pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown);
 
     // Update our Metadata view details GUI
 
-    if (mBorderedMetadataViewDetails->isVisible())
-        mMetadataViewDetails->updateGui(pRdfTriples);
+    mMetadataViewDetails->updateGui(pRdfTriples);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataDetailsWidget::metadataUpdated()
+{
+    // Some metadata has been updated, so we need to update the metadata
+    // information we show to the user
+
+    updateGui(mParent->cellmlFile()->rdfTriples(mParent->listsWidget()->metadataList()->currentId()));
 }
 
 //==============================================================================

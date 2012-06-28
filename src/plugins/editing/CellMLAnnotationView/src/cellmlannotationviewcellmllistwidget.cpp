@@ -222,16 +222,6 @@ bool CellmlAnnotationViewCellmlListWidget::eventFilter(QObject *pObject,
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::selectFirstNode()
-{
-    // Select the first node, if any
-
-    if (mDataModel->invisibleRootItem()->rowCount())
-        mTreeView->setCurrentIndex(mDataModel->invisibleRootItem()->child(0)->index());
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 {
     // Make sure that the CellML file was properly loaded

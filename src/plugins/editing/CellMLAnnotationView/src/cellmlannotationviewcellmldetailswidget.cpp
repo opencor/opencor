@@ -132,7 +132,18 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems)
 {
-    // Stop tracking any change in the cmeta:id value of our CellML element
+    static CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
+
+    if (pItems == items)
+        // We want to show the same items, so...
+
+        return;
+
+    // Keep track of the items
+
+    items = pItems;
+
+    // Stop tracking changes to the cmeta:id value of our CellML element
 
     if (mCellmlElementDetails->cmetaIdValue())
         disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
@@ -146,8 +157,8 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
     mCellmlElementDetails->updateGui(pItems);
 
-    // Re-track any change in the cmeta:id value of our CellML element and
-    // update our metadata details GUI
+    // Re-track changes to the cmeta:id value of our CellML element and update
+    // our metadata details GUI
 
     if (mCellmlElementDetails->cmetaIdValue()) {
         connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
@@ -182,9 +193,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaId(const QString &pCmetaId
 {
     // Retrieve the RDF triples for the cmeta:id
 
-    CellMLSupport::CellmlFileRdfTriples rdfTriples = pCmetaId.isEmpty()?
-                                                         CellMLSupport::CellmlFileRdfTriples():
-                                                         mParent->rdfTriples(pCmetaId);
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = mParent->cellmlFile()->rdfTriples(pCmetaId);
 
     // Check that we are not dealing with the same RDF triples
     // Note: this may happen when manually typing the name of a cmeta:id and the
@@ -192,7 +201,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaId(const QString &pCmetaId
     //       and the QComboBox suggests "C_C" (which will get us here) and then
     //       you finish typing "C_C" (which will also get us here)
 
-    static CellMLSupport::CellmlFileRdfTriples oldRdfTriples = CellMLSupport::CellmlFileRdfTriples();
+    static CellMLSupport::CellmlFileRdfTriples oldRdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
 
     if (rdfTriples == oldRdfTriples)
         return;
@@ -339,6 +348,9 @@ void CellmlAnnotationViewCellmlDetailsWidget::resourceLookupRequested(const QStr
 
     if (!pRetranslate)
         mWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
+        //---GRY--- NOTE THAT redirect=true DOESN'T WORK AT THE MOMENT, SO WE DO
+        //          END UP WITH A FRAME, BUT THE identifiers.org GUYS ARE GOING
+        //          TO 'FIX' THAT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
 }
 
 //==============================================================================
@@ -353,6 +365,17 @@ void CellmlAnnotationViewCellmlDetailsWidget::resourceIdLookupRequested(const QS
 
     if (!pRetranslate)
         mWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlDetailsWidget::metadataUpdated()
+{
+    // Some metadata has been updated, so we need to update the metadata
+    // information we show to the user
+
+    if (mCellmlElementDetails->cmetaIdValue())
+        newCmetaId(mCellmlElementDetails->cmetaIdValue()->currentText());
 }
 
 //==============================================================================

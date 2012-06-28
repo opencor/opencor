@@ -6,7 +6,9 @@
 #include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmlelementitem.h"
 #include "cellmlannotationviewcellmlelementitemdelegate.h"
+#include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewdetailswidget.h"
+#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
@@ -99,20 +101,29 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
 
     mTreeView->installEventFilter(this);
 
-    // A connection to handle the change of node
+    // A couple of connections to handle the change of node
 
     connect(mTreeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
             this, SLOT(updateActions()));
     connect(mTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updateNode(const QModelIndex &, const QModelIndex &)));
 
+    // A couple of connections to handle the addition/removal of a node
+
+    connect(mTreeView->model(), SIGNAL(rowsInserted(const QModelIndex &, int, int)),
+            this, SLOT(updateActions()));
+    connect(mTreeView->model(), SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
+            this, SLOT(updateActions()));
+
+    // A connection to make sure that our tree view has the focus whenever some
+    // metadata has been updated
+
+    connect(this, SIGNAL(metadataUpdated()),
+            mTreeView, SLOT(setFocus()));
+
     // Populate our tree view
 
     populateDataModel();
-
-    // Update our actions for the first time round
-
-    updateActions();
 
     // Resize our tree view, just to be on the safe side
 
@@ -297,7 +308,7 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
 
         // Update the details GUI
 
-        mParent->detailsWidget()->updateGui(mParent->rdfTriples(mDataModel->itemFromIndex(crtIndex)->text()));
+        mParent->detailsWidget()->updateGui(mParent->cellmlFile()->rdfTriples(mDataModel->itemFromIndex(crtIndex)->text()));
     }
 
     // We are done, so...
@@ -312,6 +323,15 @@ Core::TreeView * CellmlAnnotationViewMetadataListWidget::treeView() const
     // Return our tree view
 
     return mTreeView;
+}
+
+//==============================================================================
+
+QString CellmlAnnotationViewMetadataListWidget::currentId() const
+{
+    // Return the current id
+
+    return mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
 }
 
 //==============================================================================
@@ -353,57 +373,115 @@ void CellmlAnnotationViewMetadataListWidget::on_actionAddMetadata_triggered()
 
     mDataModel->invisibleRootItem()->appendRow(metadataItem);
 
-    // Scroll down to our newly added metadata item, just in case, and offer the
-    // user to edit it, but all of this only if the current item is not already
-    // being edited
+    // Sort our metadata items
 
-    if (!mTreeView->isEditing()) {
-        mTreeView->scrollToBottom();
+    mTreeView->sortByColumn(0, Qt::AscendingOrder);
 
+    // Scroll down to our current metadata item
+
+    mTreeView->scrollTo(mTreeView->currentIndex(),
+                        QAbstractItemView::PositionAtCenter);
+
+    // Edit our new metadata item, but only if our current metadata item is not
+    // already being edited
+
+    if (!mTreeView->isEditing())
         mTreeView->edit(metadataItem->index());
-    }
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataListWidget::on_actionRemoveMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Remove the current metadata
+
+    on_actionRemoveCurrentMetadata_triggered();
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Remove the current metadata, i.e. all the RDF triples which subject is
+    // the same as the cmeta:id
+
+    QString cmetaId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
+
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeRdfTriples(cmetaId);
+
+    // Remove the entry for the cmeta:id from our data model
+
+    for (int i = 0, iMax = mDataModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *item = mDataModel->invisibleRootItem()->child(i);
+
+        if (!item->text().compare(cmetaId)) {
+            delete item;
+
+            mDataModel->removeRow(i);
+
+            break;
+        }
+    }
+
+    // Let people know that some metadata has been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataListWidget::on_actionRemoveAllMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Remove all the metadata, i.e. all the RDF triples
+
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeAllRdfTriples();
+
+    // Clean the data model
+
+    for (int i = 0, iMax = mDataModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+        delete mDataModel->invisibleRootItem()->child(i);
+
+    mDataModel->clear();
+
+    // Let people know that all the metadata have been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataListWidget::on_actionClearMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Clear the current metadata
+
+    on_actionClearCurrentMetadata_triggered();
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataListWidget::on_actionClearCurrentMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Clear the current metadata, i.e. all the RDF triples which subject is the
+    // same as the cmeta:id
+
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeRdfTriples(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
+
+    // Let people know that some metadata has been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataListWidget::on_actionClearAllMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Clear all the metadata, i.e. all the RDF triples
+
+    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeAllRdfTriples();
+
+    // Let people know that all the metadata have been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================

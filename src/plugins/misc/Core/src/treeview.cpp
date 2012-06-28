@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include <QDrag>
+#include <QStandardItemModel>
 
 //==============================================================================
 
@@ -28,6 +29,18 @@ TreeView::TreeView(QWidget *pParent) :
 #endif
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setUniformRowHeights(true);
+}
+
+//==============================================================================
+
+void TreeView::selectFirstNode()
+{
+    // Select the first node, if any
+
+    QStandardItemModel *treeViewModel = static_cast<QStandardItemModel *>(model());
+
+    if (treeViewModel && treeViewModel->invisibleRootItem()->rowCount())
+        setCurrentIndex(treeViewModel->invisibleRootItem()->child(0)->index());
 }
 
 //==============================================================================

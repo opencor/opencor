@@ -23,7 +23,7 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataViewDetailsWidget),
-    mRdfTriples(CellMLSupport::CellmlFileRdfTriples())
+    mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile()))
 {
     // Set up the GUI
 
@@ -89,6 +89,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
     else
         switch (pRdfTriples.type()) {
         case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
+        case CellMLSupport::CellmlFileRdfTriple::Empty:
             addWidget(mBioModelsDotNetView);
 
             mBioModelsDotNetView->updateGui(pRdfTriples);

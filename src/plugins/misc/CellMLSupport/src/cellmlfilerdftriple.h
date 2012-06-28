@@ -24,12 +24,17 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+class CellmlFile;
+
+//==============================================================================
+
 class CELLMLSUPPORT_EXPORT CellmlFileRdfTriple
 {
 public:
     enum Type {
         Unknown,
-        BioModelsDotNetQualifier
+        BioModelsDotNetQualifier,
+        Empty
     };
 
     enum ModelQualifier {
@@ -93,7 +98,20 @@ private:
 class CELLMLSUPPORT_EXPORT CellmlFileRdfTriples: public QList<CellmlFileRdfTriple *>
 {
 public:
+    explicit CellmlFileRdfTriples(CellmlFile *pCellmlFile = 0);
+
     CellmlFileRdfTriple::Type type() const;
+
+    CellmlFileRdfTriples contains(const QString &pCmetaId) const;
+
+    bool remove(const QString &pCmetaId);
+    bool removeAll();
+
+private:
+    CellmlFile *mCellmlFile;
+
+    void recursiveContains(CellmlFileRdfTriples &pRdfTriples,
+                           CellmlFileRdfTriple *pRdfTriple) const;
 };
 
 //==============================================================================

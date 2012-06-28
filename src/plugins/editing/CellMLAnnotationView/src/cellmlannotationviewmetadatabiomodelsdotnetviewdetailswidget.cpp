@@ -27,7 +27,7 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
-    mRdfTriples(CellMLSupport::CellmlFileRdfTriples()),
+    mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile())),
     mRdfTripleInfo(QString()),
     mType(Unknown)
 {

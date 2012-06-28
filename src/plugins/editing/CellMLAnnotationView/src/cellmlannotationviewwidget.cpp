@@ -2,11 +2,15 @@
 // CellML annotation view widget
 //==============================================================================
 
+#include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewdetailswidget.h"
+#include "cellmlannotationviewmetadatadetailswidget.h"
+#include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
+#include "treeview.h"
 
 //==============================================================================
 
@@ -66,13 +70,22 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
 
+    // A connection to let our details widget know when some/all metadata
+    // has/have removed
+
+    connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
+            mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
+    connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
+            mDetailsWidget->metadataDetails(), SLOT(metadataUpdated()));
+
     // Make our lists widget our focus proxy
 
     setFocusProxy(mListsWidget);
 
     // Select the first CellML node from our CellML list
 
-    mListsWidget->cellmlList()->selectFirstNode();
+    mListsWidget->cellmlList()->treeView()->selectFirstNode();
+    mListsWidget->metadataList()->treeView()->selectFirstNode();
 }
 
 //==============================================================================
@@ -128,51 +141,6 @@ CellmlAnnotationViewDetailsWidget * CellmlAnnotationViewWidget::detailsWidget() 
     // Return our details widget
 
     return mDetailsWidget;
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
-                                              CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const
-{
-    // Add pRdfTriple to pRdfTriples
-
-    pRdfTriples << pRdfTriple;
-
-    // Recursively add all the RDF triples which subject matches pRdfTriple's
-    // object
-
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             cellmlFile()->rdfTriples())
-        if (!rdfTriple->subject()->asString().compare(pRdfTriple->object()->asString()))
-            addRdfTriple(pRdfTriples, rdfTriple);
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFileRdfTriples CellmlAnnotationViewWidget::rdfTriples(const QString &pCmetaId) const
-{
-    // Return all the RDF triples associated with pCmetaId
-
-    CellMLSupport::CellmlFileRdfTriples res = CellMLSupport::CellmlFileRdfTriples();
-
-    QString uriBase = cellmlFile()->uriBase();
-
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             cellmlFile()->rdfTriples())
-        // Retrieve the RDF triple's subject so we can determine whether it's
-        // from the group of RDF triples in which we are interested
-
-        if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)
-            // We have an RDF triple of which we can make sense, so retrieve and
-            // check its group name
-
-            if (!pCmetaId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
-                // It's the correct group name, so add it to our list
-
-                addRdfTriple(res, rdfTriple);
-
-    return res;
 }
 
 //==============================================================================

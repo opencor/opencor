@@ -48,6 +48,7 @@ public:
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 
     CellmlAnnotationViewCellmlDetailsWidget * cellmlDetails() const;
+    CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
 
 private:
     CellmlAnnotationViewWidget *mParent;

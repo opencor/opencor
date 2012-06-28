@@ -82,30 +82,17 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCell
     // Ask the CellML or metadata details GUI to update itself, but only if it
     // is done using new data
 
-    if (currentWidget() == mCellmlDetails) {
-        static CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
-
-        if (pItems != items) {
-            items = pItems;
-
-            mCellmlDetails->updateGui(pItems);
-        }
-    } else {
-        static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples();
-
-        if (pRdfTriples != rdfTriples) {
-            rdfTriples = pRdfTriples;
-
-            mMetadataDetails->updateGui(pRdfTriples);
-        }
-    }
+    if (currentWidget() == mCellmlDetails)
+        mCellmlDetails->updateGui(pItems);
+    else
+        mMetadataDetails->updateGui(pRdfTriples);
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems)
 {
-    // Make our CellML details GUI the default default widget
+    // Make our CellML details GUI the default widget
 
     removeWidget(mMetadataDetails);
     addWidget(mCellmlDetails);
@@ -119,7 +106,7 @@ void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCell
 
 void CellmlAnnotationViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    // Make our metadata details GUI the default default widget
+    // Make our metadata details GUI the default widget
 
     removeWidget(mCellmlDetails);
     addWidget(mMetadataDetails);
@@ -136,6 +123,15 @@ CellmlAnnotationViewCellmlDetailsWidget * CellmlAnnotationViewDetailsWidget::cel
     // Return our CellML details widget
 
     return mCellmlDetails;
+}
+
+//==============================================================================
+
+CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewDetailsWidget::metadataDetails() const
+{
+    // Return our metadata details widget
+
+    return mMetadataDetails;
 }
 
 //==============================================================================

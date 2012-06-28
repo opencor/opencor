@@ -59,6 +59,7 @@ public:
 
     Core::TreeView * treeView() const;
 
+    QString currentId() const;
     QStringList ids() const;
 
 protected:
@@ -75,6 +76,9 @@ private:
     QList<QModelIndex> mIndexes;
 
     void populateDataModel();
+
+Q_SIGNALS:
+    void metadataUpdated();
 
 private Q_SLOTS:
     void updateActions();

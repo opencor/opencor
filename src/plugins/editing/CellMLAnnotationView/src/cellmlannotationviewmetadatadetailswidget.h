@@ -63,6 +63,9 @@ private:
 
     Core::BorderedWidget *mBorderedMetadataViewDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
+
+private Q_SLOTS:
+    void metadataUpdated();
 };
 
 //==============================================================================
