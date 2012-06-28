@@ -365,7 +365,8 @@ void CellmlAnnotationViewCellmlDetailsWidget::metadataUpdated()
     // Some metadata has been updated, so we need to update the metadata
     // information we show to the user
 
-    newCmetaId(mCellmlElementDetails->cmetaIdValue()->currentText());
+    if (mCellmlElementDetails->cmetaIdValue())
+        newCmetaId(mCellmlElementDetails->cmetaIdValue()->currentText());
 }
 
 //==============================================================================
