@@ -6,43 +6,43 @@ INCLUDE(common.cmake)
 # platforms
 
 SET(CONFIG_FILES
-    include/clang/AST/AttrImpl.inc
-    include/clang/AST/Attrs.inc
-    include/clang/AST/DeclNodes.inc
-    include/clang/AST/StmtNodes.inc
+    include/clang/AST/DISTRIB_DIR/AttrImpl.inc
+    include/clang/AST/DISTRIB_DIR/Attrs.inc
+    include/clang/AST/DISTRIB_DIR/DeclNodes.inc
+    include/clang/AST/DISTRIB_DIR/StmtNodes.inc
 
-    include/clang/Basic/arm_neon.inc
-    include/clang/Basic/AttrList.inc
-    include/clang/Basic/DiagnosticAnalysisKinds.inc
-    include/clang/Basic/DiagnosticASTKinds.inc
-    include/clang/Basic/DiagnosticCommonKinds.inc
-    include/clang/Basic/DiagnosticDriverKinds.inc
-    include/clang/Basic/DiagnosticFrontendKinds.inc
-    include/clang/Basic/DiagnosticGroups.inc
-    include/clang/Basic/DiagnosticLexKinds.inc
-    include/clang/Basic/DiagnosticParseKinds.inc
-    include/clang/Basic/DiagnosticSemaKinds.inc
-    include/clang/Basic/DiagnosticSerializationKinds.inc
-    include/clang/Basic/Version.inc
+    include/clang/Basic/DISTRIB_DIR/arm_neon.inc
+    include/clang/Basic/DISTRIB_DIR/AttrList.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticAnalysisKinds.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticASTKinds.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticCommonKinds.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticDriverKinds.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticFrontendKinds.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticGroups.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticLexKinds.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticParseKinds.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticSemaKinds.inc
+    include/clang/Basic/DISTRIB_DIR/DiagnosticSerializationKinds.inc
+    include/clang/Basic/DISTRIB_DIR/Version.inc
 
-    include/clang/Config/config.h
+    include/clang/Config/DISTRIB_DIR/config.h
 
-    include/clang/Driver/CC1AsOptions.inc
-    include/clang/Driver/CC1Options.inc
-    include/clang/Driver/Options.inc
+    include/clang/Driver/DISTRIB_DIR/CC1AsOptions.inc
+    include/clang/Driver/DISTRIB_DIR/CC1Options.inc
+    include/clang/Driver/DISTRIB_DIR/Options.inc
 
-    include/clang/Lex/AttrSpellings.inc
+    include/clang/Lex/DISTRIB_DIR/AttrSpellings.inc
 
-    include/clang/Parse/AttrLateParsed.inc
+    include/clang/Parse/DISTRIB_DIR/AttrLateParsed.inc
 
-    include/clang/Sema/AttrParsedAttrKinds.inc
-    include/clang/Sema/AttrParsedAttrList.inc
-    include/clang/Sema/AttrTemplateInstantiate.inc
+    include/clang/Sema/DISTRIB_DIR/AttrParsedAttrKinds.inc
+    include/clang/Sema/DISTRIB_DIR/AttrParsedAttrList.inc
+    include/clang/Sema/DISTRIB_DIR/AttrTemplateInstantiate.inc
 
-    include/clang/Serialization/AttrPCHRead.inc
-    include/clang/Serialization/AttrPCHWrite.inc
+    include/clang/Serialization/DISTRIB_DIR/AttrPCHRead.inc
+    include/clang/Serialization/DISTRIB_DIR/AttrPCHWrite.inc
 
-    lib/StaticAnalyzer/Checkers/Checkers.inc
+    lib/StaticAnalyzer/Checkers/DISTRIB_DIR/Checkers.inc
 )
 
 FOREACH(CONFIG_FILE ${CONFIG_FILES})
