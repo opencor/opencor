@@ -20,9 +20,6 @@
 #include "llvm/OperandTraits.h"
 #include "llvm/DerivedTypes.h"
 #include "llvm/ADT/Twine.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -90,12 +87,7 @@ public:
 //                          UnaryInstruction Class
 //===----------------------------------------------------------------------===//
 
-/*---OPENCOR---
 class UnaryInstruction : public Instruction {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT UnaryInstruction : public Instruction {
-//---OPENCOR--- END
   void *operator new(size_t, unsigned);      // Do not implement
 
 protected:
@@ -145,12 +137,7 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(UnaryInstruction, Value)
 //                           BinaryOperator Class
 //===----------------------------------------------------------------------===//
 
-/*---OPENCOR---
 class BinaryOperator : public Instruction {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT BinaryOperator : public Instruction {
-//---OPENCOR--- END
   void *operator new(size_t, unsigned); // Do not implement
 protected:
   void init(BinaryOps iType);
@@ -400,12 +387,7 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(BinaryOperator, Value)
 ///
 /// if (isa<CastInst>(Instr)) { ... }
 /// @brief Base class of casting instructions.
-/*---OPENCOR---
 class CastInst : public UnaryInstruction {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT CastInst : public UnaryInstruction {
-//---OPENCOR--- END
   virtual void anchor();
 protected:
   /// @brief Constructor with insert-before-instruction semantics for subclasses
@@ -644,12 +626,7 @@ public:
 
 /// This class is the base class for the comparison instructions.
 /// @brief Abstract base class of comparison instructions.
-/*---OPENCOR---
 class CmpInst : public Instruction {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT CmpInst : public Instruction {
-//---OPENCOR--- END
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
   CmpInst(); // do not implement
 protected:

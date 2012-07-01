@@ -21,9 +21,6 @@
 #include <iterator>
 #include "llvm/Support/DataTypes.h"
 #include "llvm/Support/PointerLikeTypeTraits.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -47,12 +44,7 @@ class SmallPtrSetIteratorImpl;
 /// (-2), to allow deletion.  The hash table is resized when the table is 3/4 or
 /// more.  When this happens, the table is doubled in size.
 ///
-/*---OPENCOR---
 class SmallPtrSetImpl {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT SmallPtrSetImpl {
-//---OPENCOR--- END
   friend class SmallPtrSetIteratorImpl;
 protected:
   /// SmallArray - Points to a fixed size set of buckets, used in 'small mode'.

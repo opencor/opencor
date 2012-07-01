@@ -22,9 +22,6 @@
 #define LLVM_ANALYSIS_VERIFIER_H
 
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -49,12 +46,7 @@ enum VerifierFailureAction {
 /// Check a module or function for validity.  When the pass is used, the
 /// action indicated by the \p action argument will be used if errors are
 /// found.
-/*---OPENCOR---
 FunctionPass *createVerifierPass(
-*/
-//---OPENCOR--- BEGIN
-FunctionPass LLVM_EXPORT *createVerifierPass(
-//---OPENCOR--- END
   VerifierFailureAction action = AbortProcessAction ///< Action to take
 );
 

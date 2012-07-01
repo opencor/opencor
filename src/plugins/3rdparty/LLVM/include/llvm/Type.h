@@ -17,9 +17,6 @@
 
 #include "llvm/Support/Casting.h"
 #include "llvm/Support/DataTypes.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -40,12 +37,7 @@ template<class GraphType> struct GraphTraits;
 /// in class Type and in derived classes.  Once allocated, Types are never
 /// free'd.
 /// 
-/*---OPENCOR---
 class Type {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Type {
-//---OPENCOR--- END
 public:
   //===--------------------------------------------------------------------===//
   /// Definitions of all of the base types for the Type system.  Based on this

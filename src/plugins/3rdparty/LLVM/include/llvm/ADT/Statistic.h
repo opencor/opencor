@@ -28,19 +28,11 @@
 
 #include "llvm/Support/Atomic.h"
 #include "llvm/Support/Valgrind.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 class raw_ostream;
 
-/*---OPENCOR---
 class Statistic {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Statistic {
-//---OPENCOR--- END
 public:
   const char *Name;
   const char *Desc;
@@ -131,12 +123,7 @@ protected:
   static llvm::Statistic VARNAME = { DEBUG_TYPE, DESC, 0, 0 }
 
 /// \brief Enable the collection and printing of statistics.
-/*---OPENCOR---
 void EnableStatistics();
-*/
-//---OPENCOR--- BEGIN
-void LLVM_EXPORT EnableStatistics();
-//---OPENCOR--- END
 
 /// \brief Check if statistics are enabled.
 bool AreStatisticsEnabled();

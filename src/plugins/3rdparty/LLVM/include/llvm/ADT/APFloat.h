@@ -102,9 +102,6 @@
 
 // APInt contains static functions implementing bignum arithmetic.
 #include "llvm/ADT/APInt.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -125,12 +122,7 @@ namespace llvm {
     lfMoreThanHalf              // 1xxxxx  x's not all zero
   };
 
-/*---OPENCOR---
   class APFloat {
-*/
-//---OPENCOR--- BEGIN
-  class LLVM_EXPORT APFloat {
-//---OPENCOR--- END
   public:
 
     /* We support the following floating point semantics.  */

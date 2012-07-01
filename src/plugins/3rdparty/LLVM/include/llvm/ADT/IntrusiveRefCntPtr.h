@@ -24,9 +24,6 @@
 #include <cassert>
 
 #include "llvm/Support/Casting.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -66,12 +63,7 @@ namespace llvm {
 ///  inherit from RefCountedBaseVPTR can't be allocated on stack -
 ///  attempting to do this will produce a compile error.
 //===----------------------------------------------------------------------===//
-/*---OPENCOR---
   class RefCountedBaseVPTR {
-*/
-//---OPENCOR--- BEGIN
-  class LLVM_EXPORT RefCountedBaseVPTR {
-//---OPENCOR--- END
     mutable unsigned ref_cnt;
     virtual void anchor();
 

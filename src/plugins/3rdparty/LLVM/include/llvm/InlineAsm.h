@@ -19,9 +19,6 @@
 #include "llvm/Value.h"
 #include "llvm/ADT/StringRef.h"
 #include <vector>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -35,12 +32,7 @@ class ConstantUniqueMap;
 template<class ConstantClass, class TypeClass, class ValType>
 struct ConstantCreator;
 
-/*---OPENCOR---
 class InlineAsm : public Value {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT InlineAsm : public Value {
-//---OPENCOR--- END
   friend struct ConstantCreator<InlineAsm, PointerType, InlineAsmKeyType>;
   friend class ConstantUniqueMap<InlineAsmKeyType, const InlineAsmKeyType&,
                                  PointerType, InlineAsm, false>;

@@ -29,9 +29,6 @@
 #include <cstdarg>
 #include <utility>
 #include <vector>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -43,12 +40,7 @@ namespace cl {
 //===----------------------------------------------------------------------===//
 // ParseCommandLineOptions - Command line option processing entry point.
 //
-/*---OPENCOR---
 void ParseCommandLineOptions(int argc, const char * const *argv,
-*/
-//---OPENCOR--- BEGIN
-void LLVM_EXPORT ParseCommandLineOptions(int argc, const char * const *argv,
-//---OPENCOR--- END
                              const char *Overview = 0,
                              bool ReadResponseFiles = false);
 
@@ -81,12 +73,7 @@ void AddExtraVersionPrinter(void (*func)());
 // With -print-options print the difference between option values and defaults.
 // With -print-all-options print all option values.
 // (Currently not perfect, but best-effort.)
-/*---OPENCOR---
 void PrintOptionValues();
-*/
-//---OPENCOR--- BEGIN
-void LLVM_EXPORT PrintOptionValues();
-//---OPENCOR--- END
 
 // MarkOptionsChanged - Internal helper function.
 void MarkOptionsChanged();
@@ -1689,12 +1676,7 @@ struct extrahelp {
   explicit extrahelp(const char* help);
 };
 
-/*---OPENCOR---
 void PrintVersionMessage();
-*/
-//---OPENCOR--- BEGIN
-void LLVM_EXPORT PrintVersionMessage();
-//---OPENCOR--- END
 // This function just prints the help message, exactly the same way as if the
 // -help option had been given on the command line.
 // NOTE: THIS FUNCTION TERMINATES THE PROGRAM!

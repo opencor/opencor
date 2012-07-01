@@ -33,12 +33,7 @@ template <typename T> class SmallVectorImpl;
 /// infrastructure, including the type and constant uniquing tables.
 /// LLVMContext itself provides no locking guarantees, so you should be careful
 /// to have one context per thread.
-/*---OPENCOR---
 class LLVMContext {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT LLVMContext {
-//---OPENCOR--- END
 public:
   LLVMContextImpl *const pImpl;
   LLVMContext();

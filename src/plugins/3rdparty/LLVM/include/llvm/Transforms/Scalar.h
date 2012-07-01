@@ -14,9 +14,6 @@
 
 #ifndef LLVM_TRANSFORMS_SCALAR_H
 #define LLVM_TRANSFORMS_SCALAR_H
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -332,45 +329,25 @@ Pass *createCorrelatedValuePropagationPass();
 //
 // ObjCARCAPElim - ObjC ARC autorelease pool elimination.
 //
-/*---OPENCOR---
 Pass *createObjCARCAPElimPass();
-*/
-//---OPENCOR--- BEGIN
-Pass LLVM_EXPORT *createObjCARCAPElimPass();
-//---OPENCOR--- END
 
 //===----------------------------------------------------------------------===//
 //
 // ObjCARCExpand - ObjC ARC preliminary simplifications.
 //
-/*---OPENCOR---
 Pass *createObjCARCExpandPass();
-*/
-//---OPENCOR--- BEGIN
-Pass LLVM_EXPORT *createObjCARCExpandPass();
-//---OPENCOR--- END
 
 //===----------------------------------------------------------------------===//
 //
 // ObjCARCContract - Late ObjC ARC cleanups.
 //
-/*---OPENCOR---
 Pass *createObjCARCContractPass();
-*/
-//---OPENCOR--- BEGIN
-Pass LLVM_EXPORT *createObjCARCContractPass();
-//---OPENCOR--- END
 
 //===----------------------------------------------------------------------===//
 //
 // ObjCARCOpt - ObjC ARC optimization.
 //
-/*---OPENCOR---
 Pass *createObjCARCOptPass();
-*/
-//---OPENCOR--- BEGIN
-Pass LLVM_EXPORT *createObjCARCOptPass();
-//---OPENCOR--- END
 
 //===----------------------------------------------------------------------===//
 //

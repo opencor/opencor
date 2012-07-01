@@ -18,9 +18,6 @@
 #include "llvm/Support/Compiler.h"
 #include "llvm/ADT/StringRef.h"
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
   class Twine;
@@ -76,30 +73,15 @@ namespace llvm {
   /// standard error, followed by a newline.
   /// After the error handler is called this function will call exit(1), it 
   /// does not return.
-/*---OPENCOR---
   LLVM_ATTRIBUTE_NORETURN void report_fatal_error(const char *reason);
-*/
-//---OPENCOR--- BEGIN
-  LLVM_ATTRIBUTE_NORETURN void LLVM_EXPORT report_fatal_error(const char *reason);
-//---OPENCOR--- END
   LLVM_ATTRIBUTE_NORETURN void report_fatal_error(const std::string &reason);
   LLVM_ATTRIBUTE_NORETURN void report_fatal_error(StringRef reason);
-/*---OPENCOR---
   LLVM_ATTRIBUTE_NORETURN void report_fatal_error(const Twine &reason);
-*/
-//---OPENCOR--- BEGIN
-  LLVM_ATTRIBUTE_NORETURN void LLVM_EXPORT report_fatal_error(const Twine &reason);
-//---OPENCOR--- END
 
   /// This function calls abort(), and prints the optional message to stderr.
   /// Use the llvm_unreachable macro (that adds location info), instead of
   /// calling this function directly.
-/*---OPENCOR---
   LLVM_ATTRIBUTE_NORETURN void llvm_unreachable_internal(const char *msg=0,
-*/
-//---OPENCOR--- BEGIN
-  LLVM_ATTRIBUTE_NORETURN void LLVM_EXPORT llvm_unreachable_internal(const char *msg=0,
-//---OPENCOR--- END
                                                          const char *file=0,
                                                          unsigned line=0);
 }

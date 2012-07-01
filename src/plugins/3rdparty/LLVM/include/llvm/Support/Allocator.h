@@ -21,9 +21,6 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstddef>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 template <typename T> struct ReferenceAdder { typedef T& result; };
@@ -74,12 +71,7 @@ public:
 /// MallocSlabAllocator - The default slab allocator for the bump allocator
 /// is an adapter class for MallocAllocator that just forwards the method
 /// calls and translates the arguments.
-/*---OPENCOR---
 class MallocSlabAllocator : public SlabAllocator {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT MallocSlabAllocator : public SlabAllocator {
-//---OPENCOR--- END
   /// Allocator - The underlying allocator that we forward to.
   ///
   MallocAllocator Allocator;
@@ -95,12 +87,7 @@ public:
 /// very simple memory allocation strategies.  In particular, this just keeps
 /// allocating memory, and never deletes it until the entire block is dead. This
 /// makes allocation speedy, but must only be used when the trade-off is ok.
-/*---OPENCOR---
 class BumpPtrAllocator {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT BumpPtrAllocator {
-//---OPENCOR--- END
   BumpPtrAllocator(const BumpPtrAllocator &); // do not implement
   void operator=(const BumpPtrAllocator &);   // do not implement
 

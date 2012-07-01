@@ -28,9 +28,6 @@
 #include "llvm/ADT/PointerIntPair.h"
 #include <cstddef>
 #include <iterator>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -57,12 +54,7 @@ public:
 
 /// Use is here to make keeping the "use" list of a Value up-to-date really
 /// easy.
-/*---OPENCOR---
 class Use {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Use {
-//---OPENCOR--- END
 public:
   /// swap - provide a fast substitute to std::swap<Use>
   /// that also works with less standard-compliant compilers

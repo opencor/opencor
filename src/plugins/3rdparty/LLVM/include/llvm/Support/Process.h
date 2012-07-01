@@ -15,9 +15,6 @@
 #define LLVM_SYSTEM_PROCESS_H
 
 #include "llvm/Support/TimeValue.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 namespace sys {
@@ -26,12 +23,7 @@ namespace sys {
   /// currently executing process.
   /// @since 1.4
   /// @brief An abstraction for operating system processes.
-/*---OPENCOR---
   class Process {
-*/
-//---OPENCOR--- BEGIN
-  class LLVM_EXPORT Process {
-//---OPENCOR--- END
     /// @name Accessors
     /// @{
     public:

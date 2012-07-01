@@ -21,9 +21,6 @@
 #include <string>
 #include <vector>
 #include <utility>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -31,12 +28,7 @@ class Timer;
 class TimerGroup;
 class raw_ostream;
 
-/*---OPENCOR---
 class TimeRecord {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT TimeRecord {
-//---OPENCOR--- END
   double WallTime;       // Wall clock time elapsed in seconds
   double UserTime;       // User time elapsed
   double SystemTime;     // System time elapsed
@@ -89,12 +81,7 @@ public:
 /// when its TimerGroup is destroyed.  Timers do not print their information
 /// if they are never started.
 ///
-/*---OPENCOR---
 class Timer {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Timer {
-//---OPENCOR--- END
   TimeRecord Time;
   std::string Name;      // The name of this time variable.
   bool Started;          // Has this time variable ever been started?

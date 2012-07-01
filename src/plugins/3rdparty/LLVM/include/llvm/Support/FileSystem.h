@@ -42,9 +42,6 @@
 #if HAVE_SYS_STAT_H
 #include <sys/stat.h>
 #endif
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 namespace sys {
@@ -177,12 +174,7 @@ private:
 /// @param path A path that is modified to be an absolute path.
 /// @returns errc::success if \a path has been made absolute, otherwise a
 ///          platform specific error_code.
-/*---OPENCOR---
 error_code make_absolute(SmallVectorImpl<char> &path);
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT make_absolute(SmallVectorImpl<char> &path);
-//---OPENCOR--- END
 
 /// @brief Copy the file at \a from to the path \a to.
 ///
@@ -193,12 +185,7 @@ error_code LLVM_EXPORT make_absolute(SmallVectorImpl<char> &path);
 ///          errc::file_exists if \a to already exists and \a copt ==
 ///          copy_option::fail_if_exists. Otherwise a platform specific
 ///          error_code.
-/*---OPENCOR---
 error_code copy_file(const Twine &from, const Twine &to,
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT copy_file(const Twine &from, const Twine &to,
-//---OPENCOR--- END
                      copy_option copt = copy_option::fail_if_exists);
 
 /// @brief Create all the non-existent directories in path.
@@ -215,12 +202,7 @@ error_code create_directories(const Twine &path, bool &existed);
 /// @param existed Set to true if \a path already existed, false otherwise.
 /// @returns errc::success if is_directory(path) and existed have been set,
 ///          otherwise a platform specific error_code.
-/*---OPENCOR---
 error_code create_directory(const Twine &path, bool &existed);
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT create_directory(const Twine &path, bool &existed);
-//---OPENCOR--- END
 
 /// @brief Create a hard link from \a from to \a to.
 ///
@@ -243,12 +225,7 @@ error_code create_symlink(const Twine &to, const Twine &from);
 /// @param result Holds the current path on return.
 /// @results errc::success if the current path has been stored in result,
 ///          otherwise a platform specific error_code.
-/*---OPENCOR---
 error_code current_path(SmallVectorImpl<char> &result);
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT current_path(SmallVectorImpl<char> &result);
-//---OPENCOR--- END
 
 /// @brief Remove path. Equivalent to POSIX remove().
 ///
@@ -257,12 +234,7 @@ error_code LLVM_EXPORT current_path(SmallVectorImpl<char> &result);
 ///                undefined otherwise.
 /// @results errc::success if path has been removed and existed has been
 ///          successfully set, otherwise a platform specific error_code.
-/*---OPENCOR---
 error_code remove(const Twine &path, bool &existed);
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT remove(const Twine &path, bool &existed);
-//---OPENCOR--- END
 
 /// @brief Recursively remove all files below \a path, then \a path. Files are
 ///        removed as if by POSIX remove().
@@ -277,12 +249,7 @@ error_code remove_all(const Twine &path, uint32_t &num_removed);
 ///
 /// @param from The path to rename from.
 /// @param to The path to rename to. This is created.
-/*---OPENCOR---
 error_code rename(const Twine &from, const Twine &to);
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT rename(const Twine &from, const Twine &to);
-//---OPENCOR--- END
 
 /// @brief Resize path to size. File is resized as if by POSIX truncate().
 ///
@@ -310,12 +277,7 @@ bool exists(file_status status);
 ///               it does not. Undefined otherwise.
 /// @results errc::success if result has been successfully set, otherwise a
 ///          platform specific error_code.
-/*---OPENCOR---
 error_code exists(const Twine &path, bool &result);
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT exists(const Twine &path, bool &result);
-//---OPENCOR--- END
 
 /// @brief Simpler version of exists for clients that don't need to
 ///        differentiate between an error and false.
@@ -345,12 +307,7 @@ bool equivalent(file_status A, file_status B);
 ///               inode (or equivalent).
 /// @results errc::success if result has been successfully set, otherwise a
 ///          platform specific error_code.
-/*---OPENCOR---
 error_code equivalent(const Twine &A, const Twine &B, bool &result);
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT equivalent(const Twine &A, const Twine &B, bool &result);
-//---OPENCOR--- END
 
 /// @brief Get file size.
 ///
@@ -364,12 +321,7 @@ error_code file_size(const Twine &path, uint64_t &result);
 ///
 /// @param status A file_status previously returned from status.
 /// @results status.type() == file_type::directory_file.
-/*---OPENCOR---
 bool is_directory(file_status status);
-*/
-//---OPENCOR--- BEGIN
-bool LLVM_EXPORT is_directory(file_status status);
-//---OPENCOR--- END
 
 /// @brief Is path a directory?
 ///
@@ -378,12 +330,7 @@ bool LLVM_EXPORT is_directory(file_status status);
 ///               Undefined otherwise.
 /// @results errc::success if result has been successfully set, otherwise a
 ///          platform specific error_code.
-/*---OPENCOR---
 error_code is_directory(const Twine &path, bool &result);
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT is_directory(const Twine &path, bool &result);
-//---OPENCOR--- END
 
 /// @brief Does status represent a regular file?
 ///
@@ -474,12 +421,7 @@ error_code status_known(const Twine &path, bool &result);
 ///        directory will be prepended.
 /// @results errc::success if result_{fd,path} have been successfully set,
 ///          otherwise a platform specific error_code.
-/*---OPENCOR---
 error_code unique_file(const Twine &model, int &result_fd,
-*/
-//---OPENCOR--- BEGIN
-error_code LLVM_EXPORT unique_file(const Twine &model, int &result_fd,
-//---OPENCOR--- END
                              SmallVectorImpl<char> &result_path,
                              bool makeAbsolute = true);
 
@@ -571,12 +513,7 @@ error_code GetMainExecutable(const char *argv0, void *MainAddr,
 /// directory_entry - A single entry in a directory. Caches the status either
 /// from the result of the iteration syscall, or the first time status is
 /// called.
-/*---OPENCOR---
 class directory_entry {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT directory_entry {
-//---OPENCOR--- END
   std::string Path;
   mutable file_status Status;
 
@@ -608,16 +545,9 @@ public:
 namespace detail {
   struct DirIterState;
 
-/*---OPENCOR---
   error_code directory_iterator_construct(DirIterState&, StringRef);
   error_code directory_iterator_increment(DirIterState&);
   error_code directory_iterator_destruct(DirIterState&);
-*/
-//---OPENCOR--- BEGIN
-  error_code LLVM_EXPORT directory_iterator_construct(DirIterState&, StringRef);
-  error_code LLVM_EXPORT directory_iterator_increment(DirIterState&);
-  error_code LLVM_EXPORT directory_iterator_destruct(DirIterState&);
-//---OPENCOR--- END
 
   /// DirIterState - Keeps state for the directory_iterator. It is reference
   /// counted in order to preserve InputIterator semantics on copy.

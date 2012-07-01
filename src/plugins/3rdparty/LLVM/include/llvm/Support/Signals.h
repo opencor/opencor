@@ -16,9 +16,6 @@
 #define LLVM_SYSTEM_SIGNALS_H
 
 #include "llvm/Support/Path.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 namespace sys {
@@ -30,12 +27,7 @@ namespace sys {
   /// This function registers signal handlers to ensure that if a signal gets
   /// delivered that the named file is removed.
   /// @brief Remove a file if a fatal signal occurs.
-/*---OPENCOR---
   bool RemoveFileOnSignal(const Path &Filename, std::string* ErrMsg = 0);
-*/
-//---OPENCOR--- BEGIN
-  bool LLVM_EXPORT RemoveFileOnSignal(const Path &Filename, std::string* ErrMsg = 0);
-//---OPENCOR--- END
 
   /// This function removes a file from the list of files to be removed on
   /// signal delivery.

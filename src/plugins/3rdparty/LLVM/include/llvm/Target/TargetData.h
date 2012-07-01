@@ -23,9 +23,6 @@
 #include "llvm/Pass.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/Support/DataTypes.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -74,12 +71,7 @@ struct TargetAlignElem {
 /// is required to generate the right target data for the target being codegen'd
 /// to.  If some measure of portability is desired, an empty string may be
 /// specified in the module.
-/*---OPENCOR---
 class TargetData : public ImmutablePass {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT TargetData : public ImmutablePass {
-//---OPENCOR--- END
 private:
   bool          LittleEndian;          ///< Defaults to false
   unsigned      PointerMemSize;        ///< Pointer size in bytes
@@ -328,12 +320,7 @@ public:
 /// StructLayout - used to lazily calculate structure layout information for a
 /// target machine, based on the TargetData structure.
 ///
-/*---OPENCOR---
 class StructLayout {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT StructLayout {
-//---OPENCOR--- END
   uint64_t StructSize;
   unsigned StructAlignment;
   unsigned NumElements;

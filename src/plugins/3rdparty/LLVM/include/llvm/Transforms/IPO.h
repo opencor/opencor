@@ -16,9 +16,6 @@
 #define LLVM_TRANSFORMS_IPO_H
 
 #include <vector>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -33,12 +30,7 @@ class GlobalValue;
 // These functions removes symbols from functions and modules.  If OnlyDebugInfo
 // is true, only debugging information is removed from the module.
 //
-/*---OPENCOR---
 ModulePass *createStripSymbolsPass(bool OnlyDebugInfo = false);
-*/
-//---OPENCOR--- BEGIN
-ModulePass LLVM_EXPORT *createStripSymbolsPass(bool OnlyDebugInfo = false);
-//---OPENCOR--- END
 
 //===----------------------------------------------------------------------===//
 //
@@ -96,24 +88,13 @@ ModulePass *createGVExtractionPass(std::vector<GlobalValue*>& GVs, bool
 /// The -inline-threshold command line option takes precedence over the
 /// threshold given here.
 Pass *createFunctionInliningPass();
-/*---OPENCOR---
 Pass *createFunctionInliningPass(int Threshold);
-*/
-//---OPENCOR--- BEGIN
-Pass LLVM_EXPORT *createFunctionInliningPass(int Threshold);
-//---OPENCOR--- END
 
 //===----------------------------------------------------------------------===//
 /// createAlwaysInlinerPass - Return a new pass object that inlines only 
 /// functions that are marked as "always_inline".
-/*---OPENCOR---
 Pass *createAlwaysInlinerPass();
 Pass *createAlwaysInlinerPass(bool InsertLifetime);
-*/
-//---OPENCOR--- BEGIN
-Pass LLVM_EXPORT *createAlwaysInlinerPass();
-Pass LLVM_EXPORT *createAlwaysInlinerPass(bool InsertLifetime);
-//---OPENCOR--- END
 
 //===----------------------------------------------------------------------===//
 /// createPruneEHPass - Return a new pass object which transforms invoke

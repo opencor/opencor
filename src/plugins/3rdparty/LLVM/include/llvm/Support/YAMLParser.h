@@ -46,9 +46,6 @@
 
 #include <limits>
 #include <utility>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 class MemoryBuffer;
@@ -78,12 +75,7 @@ std::string escape(StringRef Input);
 
 /// @brief This class represents a YAML stream potentially containing multiple
 ///        documents.
-/*---OPENCOR---
 class Stream {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Stream {
-//---OPENCOR--- END
 public:
   Stream(StringRef Input, SourceMgr &);
   ~Stream();
@@ -185,12 +177,7 @@ public:
 ///
 /// Example:
 ///   Adena
-/*---OPENCOR---
 class ScalarNode : public Node {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ScalarNode : public Node {
-//---OPENCOR--- END
 public:
   ScalarNode(OwningPtr<Document> &D, StringRef Anchor, StringRef Val)
     : Node(NK_Scalar, D, Anchor)
@@ -232,12 +219,7 @@ private:
 ///
 /// Example:
 ///   Section: .text
-/*---OPENCOR---
 class KeyValueNode : public Node {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT KeyValueNode : public Node {
-//---OPENCOR--- END
 public:
   KeyValueNode(OwningPtr<Document> &D)
     : Node(NK_KeyValue, D, StringRef())
@@ -349,12 +331,7 @@ void skip(CollectionType &C) {
 /// Example:
 ///   Name: _main
 ///   Scope: Global
-/*---OPENCOR---
 class MappingNode : public Node {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT MappingNode : public Node {
-//---OPENCOR--- END
 public:
   enum MappingType {
     MT_Block,
@@ -407,12 +384,7 @@ private:
 /// Example:
 ///   - Hello
 ///   - World
-/*---OPENCOR---
 class SequenceNode : public Node {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT SequenceNode : public Node {
-//---OPENCOR--- END
 public:
   enum SequenceType {
     ST_Block,
@@ -489,12 +461,7 @@ private:
 
 /// @brief A YAML Stream is a sequence of Documents. A document contains a root
 ///        node.
-/*---OPENCOR---
 class Document {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Document {
-//---OPENCOR--- END
 public:
   /// @brief Root for parsing a node. Returns a single node.
   Node *parseBlockNode();

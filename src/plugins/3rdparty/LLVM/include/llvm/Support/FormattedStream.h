@@ -16,21 +16,13 @@
 #define LLVM_SUPPORT_FORMATTEDSTREAM_H
 
 #include "llvm/Support/raw_ostream.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm 
 {
   /// formatted_raw_ostream - Formatted raw_fd_ostream to handle
   /// asm-specific constructs.
   ///
-/*---OPENCOR---
   class formatted_raw_ostream : public raw_ostream {
-*/
-//---OPENCOR--- BEGIN
-  class LLVM_EXPORT formatted_raw_ostream : public raw_ostream {
-//---OPENCOR--- END
   public:
     /// DELETE_STREAM - Tell the destructor to delete the held stream.
     ///

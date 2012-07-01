@@ -18,9 +18,6 @@
 #include "llvm/Support/MathExtras.h"
 #include <cassert>
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 class Type;
@@ -257,12 +254,7 @@ class AttributeListImpl;
 
 /// AttrListPtr - This class manages the ref count for the opaque
 /// AttributeListImpl object and provides accessors for it.
-/*---OPENCOR---
 class AttrListPtr {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT AttrListPtr {
-//---OPENCOR--- END
   /// AttrList - The attributes that we are managing.  This can be null
   /// to represent the empty attributes list.
   AttributeListImpl *AttrList;

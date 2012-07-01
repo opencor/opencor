@@ -15,9 +15,6 @@
 
 #ifndef LLVM_SUPPORT_PRETTYSTACKTRACE_H
 #define LLVM_SUPPORT_PRETTYSTACKTRACE_H
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
   class raw_ostream;
@@ -33,12 +30,7 @@ namespace llvm {
   /// subclasses of this and declare them on the program stack: when they are
   /// constructed and destructed, they will add their symbolic frames to a
   /// virtual stack trace.  This gets dumped out if the program crashes.
-/*---OPENCOR---
   class PrettyStackTraceEntry {
-*/
-//---OPENCOR--- BEGIN
-  class LLVM_EXPORT PrettyStackTraceEntry {
-//---OPENCOR--- END
     const PrettyStackTraceEntry *NextEntry;
     PrettyStackTraceEntry(const PrettyStackTraceEntry &); // DO NOT IMPLEMENT
     void operator=(const PrettyStackTraceEntry&);         // DO NOT IMPLEMENT
@@ -56,12 +48,7 @@ namespace llvm {
   /// PrettyStackTraceString - This object prints a specified string (which
   /// should not contain newlines) to the stream as the stack trace when a crash
   /// occurs.
-/*---OPENCOR---
   class PrettyStackTraceString : public PrettyStackTraceEntry {
-*/
-//---OPENCOR--- BEGIN
-  class LLVM_EXPORT PrettyStackTraceString : public PrettyStackTraceEntry {
-//---OPENCOR--- END
     const char *Str;
   public:
     PrettyStackTraceString(const char *str) : Str(str) {}

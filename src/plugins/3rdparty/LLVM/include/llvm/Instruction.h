@@ -18,9 +18,6 @@
 #include "llvm/User.h"
 #include "llvm/ADT/ilist_node.h"
 #include "llvm/Support/DebugLoc.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -30,12 +27,7 @@ class MDNode;
 template<typename ValueSubClass, typename ItemParentClass>
   class SymbolTableListTraits;
 
-/*---OPENCOR---
 class Instruction : public User, public ilist_node<Instruction> {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Instruction : public User, public ilist_node<Instruction> {
-//---OPENCOR--- END
   void operator=(const Instruction &);     // Do not implement
   Instruction(const Instruction &);        // Do not implement
 

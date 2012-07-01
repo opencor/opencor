@@ -19,9 +19,6 @@
 #define LLVM_ASSEMBLY_PRINTMODULEPASS_H
 
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
   class FunctionPass;
@@ -30,12 +27,7 @@ namespace llvm {
   
   /// createPrintModulePass - Create and return a pass that writes the
   /// module to the specified raw_ostream.
-/*---OPENCOR---
   ModulePass *createPrintModulePass(raw_ostream *OS,
-*/
-//---OPENCOR--- BEGIN
-  ModulePass LLVM_EXPORT *createPrintModulePass(raw_ostream *OS,
-//---OPENCOR--- END
                                     bool DeleteStream=false,
                                     const std::string &Banner = "");
   

@@ -226,9 +226,6 @@ template <> struct hash<std::error_code>;
 #include "llvm/Support/type_traits.h"
 #include <cerrno>
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 // This must be here instead of a .inc file because it is used in the definition
 // of the enum values below.
@@ -625,12 +622,7 @@ class error_code;
 
 class _do_message;
 
-/*---OPENCOR---
 class error_category
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT error_category
-//---OPENCOR--- END
 {
 public:
   virtual ~error_category();
@@ -662,14 +654,8 @@ public:
   virtual std::string message(int ev) const;
 };
 
-/*---OPENCOR---
 const error_category& generic_category();
 const error_category& system_category();
-*/
-//---OPENCOR--- BEGIN
-const error_category LLVM_EXPORT & generic_category();
-const error_category LLVM_EXPORT & system_category();
-//---OPENCOR--- END
 
 /// Get the error_category used for errno values from POSIX functions. This is
 /// the same as the system_category on POSIX systems, but is the same as the
@@ -735,12 +721,7 @@ inline bool operator<(const error_condition& _x, const error_condition& _y) {
 
 // error_code
 
-/*---OPENCOR---
 class error_code {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT error_code {
-//---OPENCOR--- END
   int _val_;
   const error_category* _cat_;
 public:

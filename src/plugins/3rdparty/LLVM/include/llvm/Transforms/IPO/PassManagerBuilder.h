@@ -16,9 +16,6 @@
 #define LLVM_SUPPORT_PASSMANAGERBUILDER_H
 
 #include <vector>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
   class TargetLibraryInfo;
@@ -50,12 +47,7 @@ namespace llvm {
 ///   Builder.addExtension(PassManagerBuilder::EP_LoopOptimizerEnd,
 ///                        addMyLoopPass);
 ///   ...
-/*---OPENCOR---
 class PassManagerBuilder {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT PassManagerBuilder {
-//---OPENCOR--- END
 public:
 
   /// Extensions are passed the builder itself (so they can see how it is

@@ -33,20 +33,12 @@
 //    namespace - this define makes this impossible.
 #define snprintf _snprintf
 #endif
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
 /// format_object_base - This is a helper class used for handling formatted
 /// output.  It is the abstract base class of a templated derived class.
-/*---OPENCOR---
 class format_object_base {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT format_object_base {
-//---OPENCOR--- END
 protected:
   const char *Fmt;
   virtual void home(); // Out of line virtual method.

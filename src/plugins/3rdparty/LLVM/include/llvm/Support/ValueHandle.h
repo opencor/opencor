@@ -17,9 +17,6 @@
 #include "llvm/ADT/DenseMapInfo.h"
 #include "llvm/ADT/PointerIntPair.h"
 #include "llvm/Value.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 class ValueHandleBase;
@@ -40,12 +37,7 @@ public:
 /// the value is deleted or ReplaceAllUsesWith'd.  See the specific handles
 /// below for details.
 ///
-/*---OPENCOR---
 class ValueHandleBase {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ValueHandleBase {
-//---OPENCOR--- END
   friend class Value;
 protected:
   /// HandleBaseKind - This indicates what sub class the handle actually is.
@@ -370,12 +362,7 @@ template<> struct simplify_type<TrackingVH<Value> >
 /// takes it out of the map before calling setValPtr() (since the map has to
 /// rearrange itself when the pointer changes).  Unlike ValueHandleBase, this
 /// class has a vtable and a virtual destructor.
-/*---OPENCOR---
 class CallbackVH : public ValueHandleBase {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT CallbackVH : public ValueHandleBase {
-//---OPENCOR--- END
 protected:
   CallbackVH(const CallbackVH &RHS)
     : ValueHandleBase(Callback, RHS) {}

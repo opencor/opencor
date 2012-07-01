@@ -16,9 +16,6 @@
 
 #include "llvm/Support/DataTypes.h"
 #include "llvm/ADT/StringRef.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 template<typename T> class SmallVectorImpl;
@@ -102,12 +99,7 @@ static inline std::string itostr(int64_t X) {
 /// StrInStrNoCase - Portable version of strcasestr.  Locates the first
 /// occurrence of string 's1' in string 's2', ignoring case.  Returns
 /// the offset of s2 in s1 or npos if s2 cannot be found.
-/*---OPENCOR---
 StringRef::size_type StrInStrNoCase(StringRef s1, StringRef s2);
-*/
-//---OPENCOR--- BEGIN
-StringRef::size_type LLVM_EXPORT StrInStrNoCase(StringRef s1, StringRef s2);
-//---OPENCOR--- END
 
 /// getToken - This function extracts one token from source, ignoring any
 /// leading characters that appear in the Delimiters string, and ending the

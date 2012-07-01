@@ -20,9 +20,6 @@
 
 #include "llvm/Type.h"
 #include "llvm/Support/DataTypes.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -36,12 +33,7 @@ class StringRef;
 /// represent the built-in integer types: Int1Ty, Int8Ty, Int16Ty, Int32Ty and
 /// Int64Ty.
 /// @brief Integer representation type
-/*---OPENCOR---
 class IntegerType : public Type {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT IntegerType : public Type {
-//---OPENCOR--- END
   friend class LLVMContextImpl;
   
 protected:
@@ -101,12 +93,7 @@ public:
 
 /// FunctionType - Class to represent function types
 ///
-/*---OPENCOR---
 class FunctionType : public Type {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT FunctionType : public Type {
-//---OPENCOR--- END
   FunctionType(const FunctionType &);                   // Do not implement
   const FunctionType &operator=(const FunctionType &);  // Do not implement
   FunctionType(Type *Result, ArrayRef<Type*> Params, bool IsVarArgs);
@@ -199,12 +186,7 @@ public:
 /// elements as defined by TargetData (which is required to match what the code
 /// generator for a target expects).
 ///
-/*---OPENCOR---
 class StructType : public CompositeType {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT StructType : public CompositeType {
-//---OPENCOR--- END
   StructType(const StructType &);                   // Do not implement
   const StructType &operator=(const StructType &);  // Do not implement
   StructType(LLVMContext &C)
@@ -351,12 +333,7 @@ public:
 
 /// ArrayType - Class to represent array types.
 ///
-/*---OPENCOR---
 class ArrayType : public SequentialType {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ArrayType : public SequentialType {
-//---OPENCOR--- END
   uint64_t NumElements;
 
   ArrayType(const ArrayType &);                   // Do not implement
@@ -383,12 +360,7 @@ public:
 
 /// VectorType - Class to represent vector types.
 ///
-/*---OPENCOR---
 class VectorType : public SequentialType {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT VectorType : public SequentialType {
-//---OPENCOR--- END
   unsigned NumElements;
 
   VectorType(const VectorType &);                   // Do not implement
@@ -456,12 +428,7 @@ public:
 
 /// PointerType - Class to represent pointers.
 ///
-/*---OPENCOR---
 class PointerType : public SequentialType {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT PointerType : public SequentialType {
-//---OPENCOR--- END
   PointerType(const PointerType &);                   // Do not implement
   const PointerType &operator=(const PointerType &);  // Do not implement
   explicit PointerType(Type *ElType, unsigned AddrSpace);

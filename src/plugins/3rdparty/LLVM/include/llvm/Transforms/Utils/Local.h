@@ -14,9 +14,6 @@
 
 #ifndef LLVM_TRANSFORMS_UTILS_LOCAL_H
 #define LLVM_TRANSFORMS_UTILS_LOCAL_H
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -155,12 +152,7 @@ AllocaInst *DemotePHIToStack(PHINode *P, Instruction *AllocaPoint = 0);
 /// we can determine, return it, otherwise return 0.  If PrefAlign is specified,
 /// and it is more than the alignment of the ultimate object, see if we can
 /// increase the alignment of the ultimate object, making this check succeed.
-/*---OPENCOR---
 unsigned getOrEnforceKnownAlignment(Value *V, unsigned PrefAlign,
-*/
-//---OPENCOR--- BEGIN
-unsigned LLVM_EXPORT getOrEnforceKnownAlignment(Value *V, unsigned PrefAlign,
-//---OPENCOR--- END
                                     const TargetData *TD = 0);
 
 /// getKnownAlignment - Try to infer an alignment for the specified pointer.

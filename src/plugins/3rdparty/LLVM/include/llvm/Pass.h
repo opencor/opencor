@@ -30,9 +30,6 @@
 #define LLVM_PASS_H
 
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -81,12 +78,7 @@ enum PassKind {
 /// interprocedural optimization or you do not fit into any of the more
 /// constrained passes described below.
 ///
-/*---OPENCOR---
 class Pass {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Pass {
-//---OPENCOR--- END
   AnalysisResolver *Resolver;  // Used to resolve analysis
   const void *PassID;
   PassKind Kind;
@@ -229,12 +221,7 @@ public:
 /// interprocedural optimizations and analyses.  ModulePasses may do anything
 /// they want to the program.
 ///
-/*---OPENCOR---
 class ModulePass : public Pass {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ModulePass : public Pass {
-//---OPENCOR--- END
 public:
   /// createPrinterPass - Get a module printer pass.
   Pass *createPrinterPass(raw_ostream &O, const std::string &Banner) const;
@@ -260,12 +247,7 @@ public:
 /// not need to be run.  This is useful for things like target information and
 /// "basic" versions of AnalysisGroups.
 ///
-/*---OPENCOR---
 class ImmutablePass : public ModulePass {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ImmutablePass : public ModulePass {
-//---OPENCOR--- END
 public:
   /// initializePass - This method may be overriden by immutable passes to allow
   /// them to perform various initialization actions they require.  This is
@@ -380,12 +362,7 @@ public:
 /// If the user specifies the -time-passes argument on an LLVM tool command line
 /// then the value of this boolean will be true, otherwise false.
 /// @brief This is the storage for the -time-passes option.
-/*---OPENCOR---
 extern bool TimePassesIsEnabled;
-*/
-//---OPENCOR--- BEGIN
-extern bool LLVM_EXPORT TimePassesIsEnabled;
-//---OPENCOR--- END
 
 } // End llvm namespace
 

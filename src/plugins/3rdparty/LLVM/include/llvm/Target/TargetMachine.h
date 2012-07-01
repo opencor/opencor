@@ -19,9 +19,6 @@
 #include "llvm/ADT/StringRef.h"
 #include <cassert>
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -53,12 +50,7 @@ class raw_ostream;
 /// the target machine.  All target-specific information should be accessible
 /// through this interface.
 ///
-/*---OPENCOR---
 class TargetMachine {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT TargetMachine {
-//---OPENCOR--- END
   TargetMachine(const TargetMachine &);   // DO NOT IMPLEMENT
   void operator=(const TargetMachine &);  // DO NOT IMPLEMENT
 protected: // Can only create subclasses.

@@ -16,21 +16,13 @@
 
 #include "llvm/Support/Threading.h"
 #include <cassert>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm
 {
   namespace sys
   {
     /// @brief Platform agnostic Mutex class.
-/*---OPENCOR---
     class MutexImpl
-*/
-//---OPENCOR--- BEGIN
-    class LLVM_EXPORT MutexImpl
-//---OPENCOR--- END
     {
     /// @name Constructors
     /// @{

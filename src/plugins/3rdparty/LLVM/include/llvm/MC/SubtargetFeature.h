@@ -21,9 +21,6 @@
 #include <vector>
 #include "llvm/ADT/Triple.h"
 #include "llvm/Support/DataTypes.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
   class raw_ostream;
@@ -74,12 +71,7 @@ struct SubtargetInfoKV {
 /// specification.
 ///
 
-/*---OPENCOR---
 class SubtargetFeatures {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT SubtargetFeatures {
-//---OPENCOR--- END
   std::vector<std::string> Features;    // Subtarget features as a vector
 public:
   explicit SubtargetFeatures(const StringRef Initial = "");

@@ -12,9 +12,6 @@
 
 #include "llvm/Pass.h"
 #include "llvm/ADT/DenseMap.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
   class Triple;
@@ -225,12 +222,7 @@ namespace llvm {
 /// TargetLibraryInfo - This immutable pass captures information about what
 /// library functions are available for the current target, and allows a
 /// frontend to disable optimizations through -fno-builtin etc.
-/*---OPENCOR---
 class TargetLibraryInfo : public ImmutablePass {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT TargetLibraryInfo : public ImmutablePass {
-//---OPENCOR--- END
   virtual void anchor();
   unsigned char AvailableArray[(LibFunc::NumLibFuncs+3)/4];
   llvm::DenseMap<unsigned, std::string> CustomNames;

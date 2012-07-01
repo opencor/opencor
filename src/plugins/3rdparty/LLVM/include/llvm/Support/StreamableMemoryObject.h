@@ -15,9 +15,6 @@
 #include "llvm/Support/MemoryObject.h"
 #include "llvm/Support/DataStream.h"
 #include <vector>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -177,12 +174,7 @@ private:
   void operator=(const StreamingMemoryObject&);  // DO NOT IMPLEMENT
 };
 
-/*---OPENCOR---
 StreamableMemoryObject *getNonStreamedMemoryObject(
-*/
-//---OPENCOR--- BEGIN
-StreamableMemoryObject LLVM_EXPORT *getNonStreamedMemoryObject(
-//---OPENCOR--- END
     const unsigned char *Start, const unsigned char *End);
 
 }

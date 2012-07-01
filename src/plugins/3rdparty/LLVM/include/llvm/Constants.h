@@ -26,9 +26,6 @@
 #include "llvm/ADT/APInt.h"
 #include "llvm/ADT/APFloat.h"
 #include "llvm/ADT/ArrayRef.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -50,12 +47,7 @@ struct ConvertConstantType;
 /// This is the shared class of boolean and integer constants. This class 
 /// represents both boolean and integral constants.
 /// @brief Class for constant integers.
-/*---OPENCOR---
 class ConstantInt : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantInt : public Constant {
-//---OPENCOR--- END
   virtual void anchor();
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
   ConstantInt(const ConstantInt &);      // DO NOT IMPLEMENT
@@ -239,12 +231,7 @@ public:
 //===----------------------------------------------------------------------===//
 /// ConstantFP - Floating Point Values [float, double]
 ///
-/*---OPENCOR---
 class ConstantFP : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantFP : public Constant {
-//---OPENCOR--- END
   APFloat Val;
   virtual void anchor();
   void *operator new(size_t, unsigned);// DO NOT IMPLEMENT
@@ -313,12 +300,7 @@ public:
 //===----------------------------------------------------------------------===//
 /// ConstantAggregateZero - All zero aggregate value
 ///
-/*---OPENCOR---
 class ConstantAggregateZero : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantAggregateZero : public Constant {
-//---OPENCOR--- END
   void *operator new(size_t, unsigned);                      // DO NOT IMPLEMENT
   ConstantAggregateZero(const ConstantAggregateZero &);      // DO NOT IMPLEMENT
 protected:
@@ -362,12 +344,7 @@ public:
 //===----------------------------------------------------------------------===//
 /// ConstantArray - Constant Array Declarations
 ///
-/*---OPENCOR---
 class ConstantArray : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantArray : public Constant {
-//---OPENCOR--- END
   friend struct ConstantArrayCreator<ConstantArray, ArrayType>;
   ConstantArray(const ConstantArray &);      // DO NOT IMPLEMENT
 protected:
@@ -406,12 +383,7 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(ConstantArray, Constant)
 //===----------------------------------------------------------------------===//
 // ConstantStruct - Constant Struct Declarations
 //
-/*---OPENCOR---
 class ConstantStruct : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantStruct : public Constant {
-//---OPENCOR--- END
   friend struct ConstantArrayCreator<ConstantStruct, StructType>;
   ConstantStruct(const ConstantStruct &);      // DO NOT IMPLEMENT
 protected:
@@ -471,12 +443,7 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(ConstantStruct, Constant)
 //===----------------------------------------------------------------------===//
 /// ConstantVector - Constant Vector Declarations
 ///
-/*---OPENCOR---
 class ConstantVector : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantVector : public Constant {
-//---OPENCOR--- END
   friend struct ConstantArrayCreator<ConstantVector, VectorType>;
   ConstantVector(const ConstantVector &);      // DO NOT IMPLEMENT
 protected:
@@ -523,12 +490,7 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(ConstantVector, Constant)
 //===----------------------------------------------------------------------===//
 /// ConstantPointerNull - a constant pointer value that points to null
 ///
-/*---OPENCOR---
 class ConstantPointerNull : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantPointerNull : public Constant {
-//---OPENCOR--- END
   void *operator new(size_t, unsigned);                  // DO NOT IMPLEMENT
   ConstantPointerNull(const ConstantPointerNull &);      // DO NOT IMPLEMENT
 protected:
@@ -570,12 +532,7 @@ public:
 ///
 /// This is the common base class of ConstantDataArray and ConstantDataVector.
 ///
-/*---OPENCOR---
 class ConstantDataSequential : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantDataSequential : public Constant {
-//---OPENCOR--- END
   friend class LLVMContextImpl;
   /// DataElements - A pointer to the bytes underlying this constant (which is
   /// owned by the uniquing StringMap).
@@ -697,12 +654,7 @@ private:
 /// data values (i.e. ConstantInt/ConstantFP).  This Constant node has no
 /// operands because it stores all of the elements of the constant as densely
 /// packed data, instead of as Value*'s.
-/*---OPENCOR---
 class ConstantDataArray : public ConstantDataSequential {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantDataArray : public ConstantDataSequential {
-//---OPENCOR--- END
   void *operator new(size_t, unsigned);            // DO NOT IMPLEMENT
   ConstantDataArray(const ConstantDataArray &);    // DO NOT IMPLEMENT
   virtual void anchor();
@@ -807,12 +759,7 @@ public:
 
 /// BlockAddress - The address of a basic block.
 ///
-/*---OPENCOR---
 class BlockAddress : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT BlockAddress : public Constant {
-//---OPENCOR--- END
   void *operator new(size_t, unsigned);                  // DO NOT IMPLEMENT
   void *operator new(size_t s) { return User::operator new(s, 2); }
   BlockAddress(Function *F, BasicBlock *BB);
@@ -855,12 +802,7 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(BlockAddress, Value)
 /// This class uses the standard Instruction opcodes to define the various
 /// constant expressions.  The Opcode field for the ConstantExpr class is
 /// maintained in the Value::SubclassData field.
-/*---OPENCOR---
 class ConstantExpr : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ConstantExpr : public Constant {
-//---OPENCOR--- END
   friend struct ConstantCreator<ConstantExpr,Type,
                             std::pair<unsigned, std::vector<Constant*> > >;
   friend struct ConvertConstantType<ConstantExpr, Type>;
@@ -1171,12 +1113,7 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(ConstantExpr, Constant)
 /// can appear to have different bit patterns at each use. See
 /// LangRef.html#undefvalues for details.
 ///
-/*---OPENCOR---
 class UndefValue : public Constant {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT UndefValue : public Constant {
-//---OPENCOR--- END
   void *operator new(size_t, unsigned); // DO NOT IMPLEMENT
   UndefValue(const UndefValue &);      // DO NOT IMPLEMENT
 protected:

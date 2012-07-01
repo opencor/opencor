@@ -23,9 +23,6 @@
 #include "llvm/ADT/Triple.h"
 #include <string>
 #include <cassert>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
   class AsmPrinter;
@@ -456,12 +453,7 @@ namespace llvm {
   };
 
   /// TargetRegistry - Generic interface to target specific features.
-/*---OPENCOR---
   struct TargetRegistry {
-*/
-//---OPENCOR--- BEGIN
-  struct LLVM_EXPORT TargetRegistry {
-//---OPENCOR--- END
     class iterator {
       const Target *Current;
       explicit iterator(Target *T) : Current(T) {}

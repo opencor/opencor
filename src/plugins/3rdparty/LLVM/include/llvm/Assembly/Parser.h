@@ -60,12 +60,7 @@ Module LLVM_EXPORT *ParseAssemblyString(
 /// ParseAssemblyFile and ParseAssemblyString are wrappers around this function.
 /// @brief Parse LLVM Assembly from a MemoryBuffer. This function *always*
 /// takes ownership of the MemoryBuffer.
-/*---OPENCOR---
 Module *ParseAssembly(
-*/
-//---OPENCOR--- BEGIN
-Module LLVM_EXPORT *ParseAssembly(
-//---OPENCOR--- END
     MemoryBuffer *F,     ///< The MemoryBuffer containing assembly
     Module *M,           ///< A module to add the assembly too.
     SMDiagnostic &Err,   ///< Error result info.
