@@ -19,6 +19,9 @@
 #include "llvm/ADT/ilist.h"
 #include "llvm/ADT/Twine.h"
 #include "llvm/Support/DataTypes.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -67,7 +70,12 @@ private:
 /// modifying a program. However, the verifier will ensure that basic blocks
 /// are "well formed".
 /// @brief LLVM Basic Block Representation
+/*---OPENCOR---
 class BasicBlock : public Value, // Basic blocks are data objects also
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT BasicBlock : public Value, // Basic blocks are data objects also
+//---OPENCOR--- END
                    public ilist_node<BasicBlock> {
   friend class BlockAddress;
 public:

@@ -11,6 +11,9 @@
 #define LLVM_ADT_TRIPLE_H
 
 #include "llvm/ADT/Twine.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 // Some system headers or GCC predefined macros conflict with identifiers in
 // this file.  Undefine them here.
@@ -38,7 +41,12 @@ namespace llvm {
 ///
 /// See autoconf/config.guess for a glimpse into what triples look like in
 /// practice.
+/*---OPENCOR---
 class Triple {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Triple {
+//---OPENCOR--- END
 public:
   enum ArchType {
     UnknownArch,

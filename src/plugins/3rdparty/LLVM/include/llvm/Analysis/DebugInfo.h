@@ -21,6 +21,9 @@
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/Dwarf.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class BasicBlock;
@@ -48,7 +51,12 @@ namespace llvm {
   /// DIDescriptor - A thin wraper around MDNode to access encoded debug info.
   /// This should not be stored in a container, because underly MDNode may
   /// change in certain situations.
+/*---OPENCOR---
   class DIDescriptor {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DIDescriptor {
+//---OPENCOR--- END
   public:
     enum {
       FlagPrivate            = 1 << 0,
@@ -142,7 +150,12 @@ namespace llvm {
   };
 
   /// DIArray - This descriptor holds an array of descriptors.
+/*---OPENCOR---
   class DIArray : public DIDescriptor {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DIArray : public DIDescriptor {
+//---OPENCOR--- END
   public:
     explicit DIArray(const MDNode *N = 0)
       : DIDescriptor(N) {}
@@ -154,7 +167,12 @@ namespace llvm {
   };
 
   /// DIScope - A base class for various scopes.
+/*---OPENCOR---
   class DIScope : public DIDescriptor {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DIScope : public DIDescriptor {
+//---OPENCOR--- END
     virtual void anchor();
   public:
     explicit DIScope(const MDNode *N = 0) : DIDescriptor (N) {}
@@ -165,7 +183,12 @@ namespace llvm {
   };
 
   /// DICompileUnit - A wrapper for a compile unit.
+/*---OPENCOR---
   class DICompileUnit : public DIScope {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DICompileUnit : public DIScope {
+//---OPENCOR--- END
     virtual void anchor();
   public:
     explicit DICompileUnit(const MDNode *N = 0) : DIScope(N) {}
@@ -205,7 +228,12 @@ namespace llvm {
   };
 
   /// DIFile - This is a wrapper for a file.
+/*---OPENCOR---
   class DIFile : public DIScope {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DIFile : public DIScope {
+//---OPENCOR--- END
     virtual void anchor();
   public:
     explicit DIFile(const MDNode *N = 0) : DIScope(N) {
@@ -234,7 +262,12 @@ namespace llvm {
   /// DIType - This is a wrapper for a type.
   /// FIXME: Types should be factored much better so that CV qualifiers and
   /// others do not require a huge and empty descriptor full of zeros.
+/*---OPENCOR---
   class DIType : public DIScope {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DIType : public DIScope {
+//---OPENCOR--- END
     virtual void anchor();
   protected:
     // This ctor is used when the Tag has already been validated by a derived
@@ -412,7 +445,12 @@ namespace llvm {
   /// DICompositeType - This descriptor holds a type that can refer to multiple
   /// other types, like a function or struct.
   /// FIXME: Why is this a DIDerivedType??
+/*---OPENCOR---
   class DICompositeType : public DIDerivedType {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DICompositeType : public DIDerivedType {
+//---OPENCOR--- END
     virtual void anchor();
   public:
     explicit DICompositeType(const MDNode *N = 0)
@@ -476,7 +514,12 @@ namespace llvm {
   };
 
   /// DISubprogram - This is a wrapper for a subprogram (e.g. a function).
+/*---OPENCOR---
   class DISubprogram : public DIScope {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DISubprogram : public DIScope {
+//---OPENCOR--- END
     virtual void anchor();
   public:
     explicit DISubprogram(const MDNode *N = 0) : DIScope(N) {}
@@ -716,7 +759,12 @@ namespace llvm {
   };
 
   /// DILexicalBlock - This is a wrapper for a lexical block.
+/*---OPENCOR---
   class DILexicalBlock : public DIScope {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DILexicalBlock : public DIScope {
+//---OPENCOR--- END
     virtual void anchor();
   public:
     explicit DILexicalBlock(const MDNode *N = 0) : DIScope(N) {}
@@ -735,7 +783,12 @@ namespace llvm {
 
   /// DILexicalBlockFile - This is a wrapper for a lexical block with
   /// a filename change.
+/*---OPENCOR---
   class DILexicalBlockFile : public DIScope {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DILexicalBlockFile : public DIScope {
+//---OPENCOR--- END
     virtual void anchor();
   public:
     explicit DILexicalBlockFile(const MDNode *N = 0) : DIScope(N) {}
@@ -755,7 +808,12 @@ namespace llvm {
   };
 
   /// DINameSpace - A wrapper for a C++ style name space.
+/*---OPENCOR---
   class DINameSpace : public DIScope { 
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DINameSpace : public DIScope {
+//---OPENCOR--- END
     virtual void anchor();
   public:
     explicit DINameSpace(const MDNode *N = 0) : DIScope(N) {}

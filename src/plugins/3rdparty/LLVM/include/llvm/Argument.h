@@ -18,6 +18,9 @@
 #include "llvm/Attributes.h"
 #include "llvm/ADT/ilist_node.h"
 #include "llvm/ADT/Twine.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -29,7 +32,12 @@ template<typename ValueSubClass, typename ItemParentClass>
 /// in the body of a function, it represents the value of the actual argument
 /// the function was called with.
 /// @brief LLVM Argument representation  
+/*---OPENCOR---
 class Argument : public Value, public ilist_node<Argument> {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Argument : public Value, public ilist_node<Argument> {
+//---OPENCOR--- END
   virtual void anchor();
   Function *Parent;
 

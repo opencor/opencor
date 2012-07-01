@@ -13,6 +13,9 @@
 
 #include "llvm/Support/DataTypes.h"
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 #ifndef LLVM_SYSTEM_TIMEVALUE_H
 #define LLVM_SYSTEM_TIMEVALUE_H
@@ -28,7 +31,12 @@ namespace sys {
   /// timeout, etc.
   /// @since 1.4
   /// @brief Provides an abstraction for a fixed point in time.
+/*---OPENCOR---
   class TimeValue {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT TimeValue {
+//---OPENCOR--- END
 
   /// @name Constants
   /// @{

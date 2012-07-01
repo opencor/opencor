@@ -15,6 +15,9 @@
 #include "llvm/Support/ErrorHandling.h"
 #include <cassert>
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   template <typename T>
@@ -78,7 +81,12 @@ namespace llvm {
   /// so we provide two additional methods (and accompanying operator+
   /// overloads) to guarantee that particularly important cases (cstring plus
   /// StringRef) codegen as desired.
+/*---OPENCOR---
   class Twine {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT Twine {
+//---OPENCOR--- END
     /// NodeKind - Represent the type of an argument.
     enum NodeKind {
       /// An empty string; the result of concatenating anything with it is also

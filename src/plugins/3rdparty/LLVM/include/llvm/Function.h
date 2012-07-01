@@ -24,6 +24,9 @@
 #include "llvm/Argument.h"
 #include "llvm/Attributes.h"
 #include "llvm/Support/Compiler.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -67,7 +70,12 @@ private:
   mutable ilist_half_node<Argument> Sentinel;
 };
 
+/*---OPENCOR---
 class Function : public GlobalValue,
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Function : public GlobalValue,
+//---OPENCOR--- END
                  public ilist_node<Function> {
 public:
   typedef iplist<Argument> ArgumentListType;

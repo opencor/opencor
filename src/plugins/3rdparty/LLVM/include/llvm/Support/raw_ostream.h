@@ -16,6 +16,9 @@
 
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/DataTypes.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class format_object_base;
@@ -26,7 +29,12 @@ namespace llvm {
 /// that can *only* output to a stream.  It does not support seeking, reopening,
 /// rewinding, line buffered disciplines etc. It is a simple buffer that outputs
 /// a chunk at a time.
+/*---OPENCOR---
 class raw_ostream {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT raw_ostream {
+//---OPENCOR--- END
 private:
   // Do not implement. raw_ostream is noncopyable.
   void operator=(const raw_ostream &);
@@ -296,7 +304,12 @@ private:
 
 /// raw_fd_ostream - A raw_ostream that writes to a file descriptor.
 ///
+/*---OPENCOR---
 class raw_fd_ostream : public raw_ostream {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT raw_fd_ostream : public raw_ostream {
+//---OPENCOR--- END
   int FD;
   bool ShouldClose;
 
@@ -410,11 +423,21 @@ public:
 
 /// outs() - This returns a reference to a raw_ostream for standard output.
 /// Use it like: outs() << "foo" << "bar";
+/*---OPENCOR---
 raw_ostream &outs();
+*/
+//---OPENCOR--- BEGIN
+raw_ostream LLVM_EXPORT &outs();
+//---OPENCOR--- END
 
 /// errs() - This returns a reference to a raw_ostream for standard error.
 /// Use it like: errs() << "foo" << "bar";
+/*---OPENCOR---
 raw_ostream &errs();
+*/
+//---OPENCOR--- BEGIN
+raw_ostream LLVM_EXPORT &errs();
+//---OPENCOR--- END
 
 /// nulls() - This returns a reference to a raw_ostream which simply discards
 /// output.
@@ -426,7 +449,12 @@ raw_ostream &nulls();
 
 /// raw_string_ostream - A raw_ostream that writes to an std::string.  This is a
 /// simple adaptor class. This class does not encounter output errors.
+/*---OPENCOR---
 class raw_string_ostream : public raw_ostream {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT raw_string_ostream : public raw_ostream {
+//---OPENCOR--- END
   std::string &OS;
 
   /// write_impl - See raw_ostream::write_impl.
@@ -450,7 +478,12 @@ public:
 /// raw_svector_ostream - A raw_ostream that writes to an SmallVector or
 /// SmallString.  This is a simple adaptor class. This class does not
 /// encounter output errors.
+/*---OPENCOR---
 class raw_svector_ostream : public raw_ostream {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT raw_svector_ostream : public raw_ostream {
+//---OPENCOR--- END
   SmallVectorImpl<char> &OS;
 
   /// write_impl - See raw_ostream::write_impl.

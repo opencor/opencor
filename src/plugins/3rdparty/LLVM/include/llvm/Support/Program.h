@@ -15,6 +15,9 @@
 #define LLVM_SYSTEM_PROGRAM_H
 
 #include "llvm/Support/Path.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 class error_code;
@@ -29,7 +32,12 @@ namespace sys {
   /// class is used to specify the location of the Program.
   /// @since 1.4
   /// @brief An abstraction for finding and executing programs.
+/*---OPENCOR---
   class Program {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT Program {
+//---OPENCOR--- END
     /// Opaque handle for target specific data.
     void *Data_;
 

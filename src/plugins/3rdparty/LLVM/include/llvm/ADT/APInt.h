@@ -21,6 +21,9 @@
 #include <climits>
 #include <cstring>
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class Deserializer;
@@ -71,7 +74,12 @@ namespace llvm {
 ///     uses in its IR. This simplifies its use for LLVM.
 ///
 /// @brief Class for arbitrary precision integers.
+/*---OPENCOR---
 class APInt {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT APInt {
+//---OPENCOR--- END
   unsigned BitWidth;      ///< The number of bits in this APInt.
 
   /// This union is used to store the integer value. When the

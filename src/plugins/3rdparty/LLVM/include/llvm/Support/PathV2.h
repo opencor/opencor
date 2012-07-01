@@ -20,6 +20,9 @@
 #include "llvm/ADT/Twine.h"
 #include "llvm/Support/DataTypes.h"
 #include <iterator>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 namespace sys {
@@ -46,14 +49,25 @@ namespace path {
 /// ../        => ..,.
 /// C:\foo\bar => C:,/,foo,bar
 ///
+/*---OPENCOR---
 class const_iterator {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT const_iterator {
+//---OPENCOR--- END
   StringRef Path;      //< The entire path.
   StringRef Component; //< The current component. Not necessarily in Path.
   size_t    Position;  //< The iterators current position within Path.
 
   // An end iterator has Position = Path.size() + 1.
+/*---OPENCOR---
   friend const_iterator begin(StringRef path);
   friend const_iterator end(StringRef path);
+*/
+//---OPENCOR--- BEGIN
+  friend const_iterator LLVM_EXPORT begin(StringRef path);
+  friend const_iterator LLVM_EXPORT end(StringRef path);
+//---OPENCOR--- END
 
 public:
   typedef const StringRef value_type;
@@ -80,12 +94,22 @@ typedef std::reverse_iterator<const_iterator> reverse_iterator;
 /// @brief Get begin iterator over \a path.
 /// @param path Input path.
 /// @returns Iterator initialized with the first component of \a path.
+/*---OPENCOR---
 const_iterator begin(StringRef path);
+*/
+//---OPENCOR--- BEGIN
+const_iterator LLVM_EXPORT begin(StringRef path);
+//---OPENCOR--- END
 
 /// @brief Get end iterator over \a path.
 /// @param path Input path.
 /// @returns Iterator initialized to the end of \a path.
+/*---OPENCOR---
 const_iterator end(StringRef path);
+*/
+//---OPENCOR--- BEGIN
+const_iterator LLVM_EXPORT end(StringRef path);
+//---OPENCOR--- END
 
 /// @brief Get reverse begin iterator over \a path.
 /// @param path Input path.
@@ -112,7 +136,12 @@ inline reverse_iterator rend(StringRef path) {
 /// /                      => /
 ///
 /// @param path A path that is modified to not have a file component.
+/*---OPENCOR---
 void remove_filename(SmallVectorImpl<char> &path);
+*/
+//---OPENCOR--- BEGIN
+void LLVM_EXPORT remove_filename(SmallVectorImpl<char> &path);
+//---OPENCOR--- END
 
 /// @brief Replace the file extension of \a path with \a extension.
 ///
@@ -124,7 +153,12 @@ void remove_filename(SmallVectorImpl<char> &path);
 /// @param extension The extension to be added. It may be empty. It may also
 ///                  optionally start with a '.', if it does not, one will be
 ///                  prepended.
+/*---OPENCOR---
 void replace_extension(SmallVectorImpl<char> &path, const Twine &extension);
+*/
+//---OPENCOR--- BEGIN
+void LLVM_EXPORT replace_extension(SmallVectorImpl<char> &path, const Twine &extension);
+//---OPENCOR--- END
 
 /// @brief Append to path.
 ///
@@ -134,7 +168,12 @@ void replace_extension(SmallVectorImpl<char> &path, const Twine &extension);
 ///
 /// @param path Set to \a path + \a component.
 /// @param component The component to be appended to \a path.
+/*---OPENCOR---
 void append(SmallVectorImpl<char> &path, const Twine &a,
+*/
+//---OPENCOR--- BEGIN
+void LLVM_EXPORT append(SmallVectorImpl<char> &path, const Twine &a,
+//---OPENCOR--- END
                                          const Twine &b = "",
                                          const Twine &c = "",
                                          const Twine &d = "");
@@ -148,7 +187,12 @@ void append(SmallVectorImpl<char> &path, const Twine &a,
 /// @param path Set to \a path + [\a begin, \a end).
 /// @param begin Start of components to append.
 /// @param end One past the end of components to append.
+/*---OPENCOR---
 void append(SmallVectorImpl<char> &path,
+*/
+//---OPENCOR--- BEGIN
+void LLVM_EXPORT append(SmallVectorImpl<char> &path,
+//---OPENCOR--- END
             const_iterator begin, const_iterator end);
 
 /// @}
@@ -161,7 +205,12 @@ void append(SmallVectorImpl<char> &path,
 ///
 /// @param path A path that is transformed to native format.
 /// @param result Holds the result of the transformation.
+/*---OPENCOR---
 void native(const Twine &path, SmallVectorImpl<char> &result);
+*/
+//---OPENCOR--- BEGIN
+void LLVM_EXPORT native(const Twine &path, SmallVectorImpl<char> &result);
+//---OPENCOR--- END
 
 /// @}
 /// @name Lexical Observers
@@ -214,7 +263,12 @@ const StringRef relative_path(StringRef path);
 ///
 /// @param path Input path.
 /// @result The parent path of \a path if one exists, otherwise "".
+/*---OPENCOR---
 const StringRef parent_path(StringRef path);
+*/
+//---OPENCOR--- BEGIN
+const StringRef LLVM_EXPORT parent_path(StringRef path);
+//---OPENCOR--- END
 
 /// @brief Get filename.
 ///
@@ -226,7 +280,12 @@ const StringRef parent_path(StringRef path);
 /// @param path Input path.
 /// @result The filename part of \a path. This is defined as the last component
 ///         of \a path.
+/*---OPENCOR---
 const StringRef filename(StringRef path);
+*/
+//---OPENCOR--- BEGIN
+const StringRef LLVM_EXPORT filename(StringRef path);
+//---OPENCOR--- END
 
 /// @brief Get stem.
 ///
@@ -242,7 +301,12 @@ const StringRef filename(StringRef path);
 ///
 /// @param path Input path.
 /// @result The stem of \a path.
+/*---OPENCOR---
 const StringRef stem(StringRef path);
+*/
+//---OPENCOR--- BEGIN
+const LLVM_EXPORT StringRef stem(StringRef path);
+//---OPENCOR--- END
 
 /// @brief Get extension.
 ///
@@ -256,13 +320,23 @@ const StringRef stem(StringRef path);
 ///
 /// @param path Input path.
 /// @result The extension of \a path.
+/*---OPENCOR---
 const StringRef extension(StringRef path);
+*/
+//---OPENCOR--- BEGIN
+const StringRef LLVM_EXPORT extension(StringRef path);
+//---OPENCOR--- END
 
 /// @brief Check whether the given char is a path separator on the host OS.
 ///
 /// @param value a character
 /// @result true if \a value is a path separator character on the host OS
+/*---OPENCOR---
 bool is_separator(char value);
+*/
+//---OPENCOR--- BEGIN
+bool LLVM_EXPORT is_separator(char value);
+//---OPENCOR--- END
 
 /// @brief Get the typical temporary directory for the system, e.g., 
 /// "/var/tmp" or "C:/TEMP"
@@ -273,7 +347,12 @@ bool is_separator(char value);
 /// (e.g., TEMP on Windows, TMPDIR on *nix) to specify a temporary directory.
 ///
 /// @param Result Holds the resulting path name.
+/*---OPENCOR---
 void system_temp_directory(bool erasedOnReboot, SmallVectorImpl<char> &result);
+*/
+//---OPENCOR--- BEGIN
+void LLVM_EXPORT system_temp_directory(bool erasedOnReboot, SmallVectorImpl<char> &result);
+//---OPENCOR--- END
 
 /// @brief Has root name?
 ///
@@ -343,13 +422,23 @@ bool has_extension(const Twine &path);
 ///
 /// @param path Input path.
 /// @result True if the path is absolute, false if it is not.
+/*---OPENCOR---
 bool is_absolute(const Twine &path);
+*/
+//---OPENCOR--- BEGIN
+bool LLVM_EXPORT is_absolute(const Twine &path);
+//---OPENCOR--- END
 
 /// @brief Is path relative?
 ///
 /// @param path Input path.
 /// @result True if the path is relative, false if it is not.
+/*---OPENCOR---
 bool is_relative(const Twine &path);
+*/
+//---OPENCOR--- BEGIN
+bool LLVM_EXPORT is_relative(const Twine &path);
+//---OPENCOR--- END
 
 } // end namespace path
 } // end namespace sys

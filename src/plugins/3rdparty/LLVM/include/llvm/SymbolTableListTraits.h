@@ -26,6 +26,9 @@
 #define LLVM_SYMBOLTABLELISTTRAITS_H
 
 #include "llvm/ADT/ilist.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 class ValueSymbolTable;
@@ -38,7 +41,12 @@ template<typename Ty> struct ilist_traits;
 // ItemParentClass - The type of object that owns the list, e.g. BasicBlock.
 //
 template<typename ValueSubClass, typename ItemParentClass>
+/*---OPENCOR---
 class SymbolTableListTraits : public ilist_default_traits<ValueSubClass> {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT SymbolTableListTraits : public ilist_default_traits<ValueSubClass> {
+//---OPENCOR--- END
   typedef ilist_traits<ValueSubClass> TraitsClass;
 public:
   SymbolTableListTraits() {}

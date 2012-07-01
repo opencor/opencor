@@ -29,11 +29,19 @@
 #include "llvm/Support/Path.h"
 #include <vector>
 #include <cassert>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
 namespace DOT {  // Private functions...
+/*---OPENCOR---
   std::string EscapeString(const std::string &Label);
+*/
+//---OPENCOR--- BEGIN
+std::string LLVM_EXPORT EscapeString(const std::string &Label);
+//---OPENCOR--- END
 }
 
 namespace GraphProgram {
@@ -46,7 +54,12 @@ namespace GraphProgram {
    };
 }
 
+/*---OPENCOR---
 void DisplayGraph(const sys::Path& Filename, bool wait=true, GraphProgram::Name program = GraphProgram::DOT);
+*/
+//---OPENCOR--- BEGIN
+void LLVM_EXPORT DisplayGraph(const sys::Path& Filename, bool wait=true, GraphProgram::Name program = GraphProgram::DOT);
+//---OPENCOR--- END
 
 template<typename GraphType>
 class GraphWriter {

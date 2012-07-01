@@ -22,12 +22,20 @@
 #include <cstring>
 #include <iterator>
 #include <memory>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
 /// SmallVectorBase - This is all the non-templated stuff common to all
 /// SmallVectors.
+/*---OPENCOR---
 class SmallVectorBase {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT SmallVectorBase {
+//---OPENCOR--- END
 protected:
   void *BeginX, *EndX, *CapacityX;
 

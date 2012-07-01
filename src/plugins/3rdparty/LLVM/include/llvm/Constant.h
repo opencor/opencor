@@ -15,6 +15,9 @@
 #define LLVM_CONSTANT_H
 
 #include "llvm/User.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class APInt;
@@ -38,7 +41,12 @@ namespace llvm {
 /// Constants are created on demand as needed and never deleted: thus clients 
 /// don't have to worry about the lifetime of the objects.
 /// @brief LLVM Constant Representation
+/*---OPENCOR---
 class Constant : public User {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Constant : public User {
+//---OPENCOR--- END
   void operator=(const Constant &);     // Do not implement
   Constant(const Constant &);           // Do not implement
   virtual void anchor();

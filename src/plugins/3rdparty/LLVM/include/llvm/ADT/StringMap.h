@@ -17,6 +17,9 @@
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/Allocator.h"
 #include <cstring>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   template<typename ValueT>
@@ -50,7 +53,12 @@ public:
 
 /// StringMapImpl - This is the base class of StringMap that is shared among
 /// all of its instantiations.
+/*---OPENCOR---
 class StringMapImpl {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT StringMapImpl {
+//---OPENCOR--- END
 protected:
   // Array of NumBuckets pointers to entries, null pointers are holes.
   // TheTable[NumBuckets] contains a sentinel value for easy iteration. Follwed

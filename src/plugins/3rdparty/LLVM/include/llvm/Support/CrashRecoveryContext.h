@@ -11,6 +11,9 @@
 #define LLVM_SUPPORT_CRASHRECOVERYCONTEXT_H
 
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 class StringRef;
@@ -42,7 +45,12 @@ class CrashRecoveryContextCleanup;
 ///    }
 ///
 /// Crash recovery contexts may not be nested.
+/*---OPENCOR---
 class CrashRecoveryContext {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT CrashRecoveryContext {
+//---OPENCOR--- END
   void *Impl;
   CrashRecoveryContextCleanup *head;
 
@@ -97,7 +105,12 @@ public:
   const std::string &getBacktrace() const;
 };
 
+/*---OPENCOR---
 class CrashRecoveryContextCleanup {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT CrashRecoveryContextCleanup {
+//---OPENCOR--- END
 protected:
   CrashRecoveryContext *context;
   CrashRecoveryContextCleanup(CrashRecoveryContext *context)

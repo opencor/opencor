@@ -18,6 +18,9 @@
 
 #include "llvm/ADT/ArrayRef.h"
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -58,7 +61,12 @@ namespace Intrinsic {
 
   /// Intrinsic::getAttributes(ID) - Return the attributes for an intrinsic.
   ///
+/*---OPENCOR---
   AttrListPtr getAttributes(ID id);
+*/
+//---OPENCOR--- BEGIN
+  AttrListPtr LLVM_EXPORT getAttributes(ID id);
+//---OPENCOR--- END
 
   /// Intrinsic::getDeclaration(M, ID) - Create or insert an LLVM Function
   /// declaration for an intrinsic, and return it.
@@ -68,11 +76,21 @@ namespace Intrinsic {
   /// overloaded intrinsic, Tys should point to an array of numTys pointers to
   /// Type, and must provide exactly one type for each overloaded type in the
   /// intrinsic.
+/*---OPENCOR---
   Function *getDeclaration(Module *M, ID id,
+*/
+//---OPENCOR--- BEGIN
+  Function LLVM_EXPORT *getDeclaration(Module *M, ID id,
+//---OPENCOR--- END
                            ArrayRef<Type*> Tys = ArrayRef<Type*>());
                            
   /// Map a GCC builtin name to an intrinsic ID.
+/*---OPENCOR---
   ID getIntrinsicForGCCBuiltin(const char *Prefix, const char *BuiltinName);
+*/
+//---OPENCOR--- BEGIN
+  ID LLVM_EXPORT getIntrinsicForGCCBuiltin(const char *Prefix, const char *BuiltinName);
+//---OPENCOR--- END
   
 } // End Intrinsic namespace
 

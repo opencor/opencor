@@ -18,6 +18,9 @@
 #define LLVM_PASSMANAGER_H
 
 #include "llvm/Pass.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -42,7 +45,12 @@ public:
 };
 
 /// PassManager manages ModulePassManagers
+/*---OPENCOR---
 class PassManager : public PassManagerBase {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT PassManager : public PassManagerBase {
+//---OPENCOR--- END
 public:
 
   PassManager();
@@ -65,7 +73,12 @@ private:
 };
 
 /// FunctionPassManager manages FunctionPasses and BasicBlockPassManagers.
+/*---OPENCOR---
 class FunctionPassManager : public PassManagerBase {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT FunctionPassManager : public PassManagerBase {
+//---OPENCOR--- END
 public:
   /// FunctionPassManager ctor - This initializes the pass manager.  It needs,
   /// but does not take ownership of, the specified Module.

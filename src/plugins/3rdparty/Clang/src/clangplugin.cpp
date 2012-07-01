@@ -22,7 +22,7 @@ PLUGININFO_FUNC ClangPluginInfo()
                           PluginInfo::General,
                           PluginInfo::ThirdParty,
                           false,
-                          QStringList(),
+                          QStringList() << "LLVM",
                           descriptions);
 }
 

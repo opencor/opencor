@@ -23,6 +23,9 @@
 #include "llvm/ADT/Twine.h"
 #include "llvm/Support/ValueHandle.h"
 #include "llvm/Transforms/Utils/ValueMapper.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -111,7 +114,12 @@ BasicBlock *CloneBasicBlock(const BasicBlock *BB,
 /// If ModuleLevelChanges is false, VMap contains no non-identity GlobalValue
 /// mappings.
 ///
+/*---OPENCOR---
 Function *CloneFunction(const Function *F,
+*/
+//---OPENCOR--- BEGIN
+Function LLVM_EXPORT *CloneFunction(const Function *F,
+//---OPENCOR--- END
                         ValueToValueMapTy &VMap,
                         bool ModuleLevelChanges,
                         ClonedCodeInfo *CodeInfo = 0);

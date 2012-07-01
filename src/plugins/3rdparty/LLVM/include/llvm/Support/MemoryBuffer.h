@@ -16,6 +16,9 @@
 
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/DataTypes.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -32,7 +35,12 @@ template<class T> class OwningPtr;
 /// be more efficient for clients which are reading all the data to stop
 /// reading when they encounter a '\0' than to continually check the file
 /// position to see if it has reached the end of the file.
+/*---OPENCOR---
 class MemoryBuffer {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT MemoryBuffer {
+//---OPENCOR--- END
   const char *BufferStart; // Start of the buffer.
   const char *BufferEnd;   // End of the buffer.
 

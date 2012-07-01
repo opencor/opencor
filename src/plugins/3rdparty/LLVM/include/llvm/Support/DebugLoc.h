@@ -16,6 +16,9 @@
 #define LLVM_SUPPORT_DEBUGLOC_H
 
 #include "llvm/ADT/DenseMapInfo.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class MDNode;
@@ -24,7 +27,12 @@ namespace llvm {
   /// DebugLoc - Debug location id.  This is carried by Instruction, SDNode,
   /// and MachineInstr to compactly encode file/line/scope information for an
   /// operation.
+/*---OPENCOR---
   class DebugLoc {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DebugLoc {
+//---OPENCOR--- END
     friend struct DenseMapInfo<DebugLoc>;
 
     /// getEmptyKey() - A private constructor that returns an unknown that is

@@ -19,6 +19,9 @@
 #include "llvm/OperandTraits.h"
 #include "llvm/ADT/ilist_node.h"
 #include "llvm/ADT/Twine.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -26,7 +29,12 @@ class Module;
 template<typename ValueSubClass, typename ItemParentClass>
   class SymbolTableListTraits;
 
+/*---OPENCOR---
 class GlobalAlias : public GlobalValue, public ilist_node<GlobalAlias> {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT GlobalAlias : public GlobalValue, public ilist_node<GlobalAlias> {
+//---OPENCOR--- END
   friend class SymbolTableListTraits<GlobalAlias, Module>;
   void operator=(const GlobalAlias &);     // Do not implement
   GlobalAlias(const GlobalAlias &);     // Do not implement

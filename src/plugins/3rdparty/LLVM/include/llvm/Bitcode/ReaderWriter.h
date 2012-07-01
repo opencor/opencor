@@ -15,6 +15,9 @@
 #define LLVM_BITCODE_H
 
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class BitstreamWriter;
@@ -30,7 +33,12 @@ namespace llvm {
   /// this takes ownership of 'buffer' and returns a non-null pointer.  On
   /// error, this returns null, *does not* take ownership of Buffer, and fills
   /// in *ErrMsg with an error description if ErrMsg is non-null.
+/*---OPENCOR---
   Module *getLazyBitcodeModule(MemoryBuffer *Buffer,
+*/
+//---OPENCOR--- BEGIN
+  Module LLVM_EXPORT *getLazyBitcodeModule(MemoryBuffer *Buffer,
+//---OPENCOR--- END
                                LLVMContext &Context,
                                std::string *ErrMsg = 0);
 
@@ -55,7 +63,12 @@ namespace llvm {
   /// ParseBitcodeFile - Read the specified bitcode file, returning the module.
   /// If an error occurs, this returns null and fills in *ErrMsg if it is
   /// non-null.  This method *never* takes ownership of Buffer.
+/*---OPENCOR---
   Module *ParseBitcodeFile(MemoryBuffer *Buffer, LLVMContext &Context,
+*/
+//---OPENCOR--- BEGIN
+  Module LLVM_EXPORT *ParseBitcodeFile(MemoryBuffer *Buffer, LLVMContext &Context,
+//---OPENCOR--- END
                            std::string *ErrMsg = 0);
 
   /// WriteBitcodeToFile - Write the specified module to the specified
@@ -65,7 +78,12 @@ namespace llvm {
 
   /// createBitcodeWriterPass - Create and return a pass that writes the module
   /// to the specified ostream.
+/*---OPENCOR---
   ModulePass *createBitcodeWriterPass(raw_ostream &Str);
+*/
+//---OPENCOR--- BEGIN
+  ModulePass LLVM_EXPORT *createBitcodeWriterPass(raw_ostream &Str);
+//---OPENCOR--- END
 
 
   /// isBitcodeWrapper - Return true if the given bytes are the magic bytes

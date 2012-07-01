@@ -19,13 +19,21 @@
 #define LLVM_GLOBALVALUE_H
 
 #include "llvm/Constant.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
 class PointerType;
 class Module;
 
+/*---OPENCOR---
 class GlobalValue : public Constant {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT GlobalValue : public Constant {
+//---OPENCOR--- END
   GlobalValue(const GlobalValue &);             // do not implement
 public:
   /// @brief An enumeration for the kinds of linkage for global values.

@@ -22,6 +22,9 @@
 #include "llvm/ADT/StringRef.h"
 #include "llvm/ADT/Twine.h"
 #include "llvm/Support/ConstantFolder.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class MDNode;
@@ -42,7 +45,12 @@ protected:
 };
 
 /// IRBuilderBase - Common base class shared among various IRBuilders.
+/*---OPENCOR---
 class IRBuilderBase {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT IRBuilderBase {
+//---OPENCOR--- END
   DebugLoc CurDbgLocation;
 protected:
   BasicBlock *BB;

@@ -20,6 +20,9 @@
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/FoldingSet.h"
 #include "llvm/ADT/ilist_node.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 class Constant;
@@ -35,7 +38,12 @@ template<typename ValueSubClass, typename ItemParentClass>
 /// MDString - a single uniqued string.
 /// These are used to efficiently contain a byte sequence for metadata.
 /// MDString is always unnamed.
+/*---OPENCOR---
 class MDString : public Value {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT MDString : public Value {
+//---OPENCOR--- END
   virtual void anchor();
   MDString(const MDString &);            // DO NOT IMPLEMENT
 
@@ -70,7 +78,12 @@ class MDNodeOperand;
   
 //===----------------------------------------------------------------------===//
 /// MDNode - a tuple of other values.
+/*---OPENCOR---
 class MDNode : public Value, public FoldingSetNode {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT MDNode : public Value, public FoldingSetNode {
+//---OPENCOR--- END
   MDNode(const MDNode &);                // DO NOT IMPLEMENT
   void operator=(const MDNode &);        // DO NOT IMPLEMENT
   friend class MDNodeOperand;
@@ -185,7 +198,12 @@ private:
 /// NamedMDNode - a tuple of MDNodes. Despite its name, a NamedMDNode isn't
 /// itself an MDNode. NamedMDNodes belong to modules, have names, and contain
 /// lists of MDNodes.
+/*---OPENCOR---
 class NamedMDNode : public ilist_node<NamedMDNode> {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT NamedMDNode : public ilist_node<NamedMDNode> {
+//---OPENCOR--- END
   friend class SymbolTableListTraits<NamedMDNode, Module>;
   friend struct ilist_traits<NamedMDNode>;
   friend class LLVMContextImpl;

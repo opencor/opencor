@@ -24,6 +24,9 @@
 #include "llvm/OperandTraits.h"
 #include "llvm/ADT/ilist_node.h"
 #include "llvm/ADT/Twine.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -32,7 +35,12 @@ class Constant;
 template<typename ValueSubClass, typename ItemParentClass>
   class SymbolTableListTraits;
 
+/*---OPENCOR---
 class GlobalVariable : public GlobalValue, public ilist_node<GlobalVariable> {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT GlobalVariable : public GlobalValue, public ilist_node<GlobalVariable> {
+//---OPENCOR--- END
   friend class SymbolTableListTraits<GlobalVariable, Module>;
   void *operator new(size_t, unsigned);       // Do not implement
   void operator=(const GlobalVariable &);     // Do not implement

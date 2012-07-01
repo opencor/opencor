@@ -1,5 +1,64 @@
 PROJECT(ClangPlugin)
 
+INCLUDE(common.cmake)
+
+# Retrieve some include files that were generated on each of our target
+# platforms
+
+SET(CONFIG_FILES
+    include/clang/AST/AttrImpl.inc
+    include/clang/AST/Attrs.inc
+    include/clang/AST/DeclNodes.inc
+    include/clang/AST/StmtNodes.inc
+
+    include/clang/Basic/arm_neon.inc
+    include/clang/Basic/AttrList.inc
+    include/clang/Basic/DiagnosticAnalysisKinds.inc
+    include/clang/Basic/DiagnosticASTKinds.inc
+    include/clang/Basic/DiagnosticCommonKinds.inc
+    include/clang/Basic/DiagnosticDriverKinds.inc
+    include/clang/Basic/DiagnosticFrontendKinds.inc
+    include/clang/Basic/DiagnosticGroups.inc
+    include/clang/Basic/DiagnosticLexKinds.inc
+    include/clang/Basic/DiagnosticParseKinds.inc
+    include/clang/Basic/DiagnosticSemaKinds.inc
+    include/clang/Basic/DiagnosticSerializationKinds.inc
+    include/clang/Basic/Version.inc
+
+    include/clang/Config/config.h
+
+    include/clang/Driver/CC1AsOptions.inc
+    include/clang/Driver/CC1Options.inc
+    include/clang/Driver/Options.inc
+
+    include/clang/Lex/AttrSpellings.inc
+
+    include/clang/Parse/AttrLateParsed.inc
+
+    include/clang/Sema/AttrParsedAttrKinds.inc
+    include/clang/Sema/AttrParsedAttrList.inc
+    include/clang/Sema/AttrTemplateInstantiate.inc
+
+    include/clang/Serialization/AttrPCHRead.inc
+    include/clang/Serialization/AttrPCHWrite.inc
+
+    lib/StaticAnalyzer/Checkers/Checkers.inc
+)
+
+FOREACH(CONFIG_FILE ${CONFIG_FILES})
+    STRING(REPLACE "DISTRIB_DIR/" "${DISTRIB_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
+    STRING(REPLACE "DISTRIB_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
+
+    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
+                   ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
+                   COPYONLY)
+ENDFOREACH()
+
+# Retrieve some LLVM and Clang settings
+
+RETRIEVE_LLVM_SETTINGS()
+RETRIEVE_CLANG_SETTINGS()
+
 # Add the plugin
 
 SET(Clang_PLUGIN
@@ -13,11 +72,427 @@ ADD_PLUGIN(Clang
     SOURCES
         ../../plugininfo.cpp
 
+        lib/Analysis/AnalysisDeclContext.cpp
+        lib/Analysis/CallGraph.cpp
+        lib/Analysis/CFG.cpp
+        lib/Analysis/CFGReachabilityAnalysis.cpp
+        lib/Analysis/CFGStmtMap.cpp
+        lib/Analysis/CocoaConventions.cpp
+        lib/Analysis/Dominators.cpp
+        lib/Analysis/FormatString.cpp
+        lib/Analysis/LiveVariables.cpp
+        lib/Analysis/PostOrderCFGView.cpp
+        lib/Analysis/PrintfFormatString.cpp
+        lib/Analysis/ProgramPoint.cpp
+        lib/Analysis/PseudoConstantAnalysis.cpp
+        lib/Analysis/ReachableCode.cpp
+        lib/Analysis/ScanfFormatString.cpp
+        lib/Analysis/ThreadSafety.cpp
+        lib/Analysis/UninitializedValues.cpp
+
+        lib/ARCMigrate/ARCMT.cpp
+        lib/ARCMigrate/ARCMTActions.cpp
+        lib/ARCMigrate/FileRemapper.cpp
+        lib/ARCMigrate/ObjCMT.cpp
+        lib/ARCMigrate/PlistReporter.cpp
+        lib/ARCMigrate/TransAPIUses.cpp
+        lib/ARCMigrate/TransARCAssign.cpp
+        lib/ARCMigrate/TransAutoreleasePool.cpp
+        lib/ARCMigrate/TransBlockObjCVariable.cpp
+        lib/ARCMigrate/TransEmptyStatementsAndDealloc.cpp
+        lib/ARCMigrate/TransformActions.cpp
+        lib/ARCMigrate/Transforms.cpp
+        lib/ARCMigrate/TransGCAttrs.cpp
+        lib/ARCMigrate/TransGCCalls.cpp
+        lib/ARCMigrate/TransProperties.cpp
+        lib/ARCMigrate/TransRetainReleaseDealloc.cpp
+        lib/ARCMigrate/TransUnbridgedCasts.cpp
+        lib/ARCMigrate/TransUnusedInitDelegate.cpp
+        lib/ARCMigrate/TransZeroOutPropsInDealloc.cpp
+
+        lib/AST/APValue.cpp
+        lib/AST/ASTConsumer.cpp
+        lib/AST/ASTContext.cpp
+        lib/AST/ASTDiagnostic.cpp
+        lib/AST/ASTImporter.cpp
+        lib/AST/AttrImpl.cpp
+        lib/AST/CXXInheritance.cpp
+        lib/AST/Decl.cpp
+        lib/AST/DeclarationName.cpp
+        lib/AST/DeclBase.cpp
+        lib/AST/DeclCXX.cpp
+        lib/AST/DeclFriend.cpp
+        lib/AST/DeclGroup.cpp
+        lib/AST/DeclObjC.cpp
+        lib/AST/DeclPrinter.cpp
+        lib/AST/DeclTemplate.cpp
+        lib/AST/DumpXML.cpp
+        lib/AST/Expr.cpp
+        lib/AST/ExprClassification.cpp
+        lib/AST/ExprConstant.cpp
+        lib/AST/ExprCXX.cpp
+        lib/AST/ExternalASTSource.cpp
+        lib/AST/InheritViz.cpp
+        lib/AST/ItaniumCXXABI.cpp
+        lib/AST/ItaniumMangle.cpp
+        lib/AST/LambdaMangleContext.cpp
+        lib/AST/Mangle.cpp
+        lib/AST/MicrosoftCXXABI.cpp
+        lib/AST/MicrosoftMangle.cpp
+        lib/AST/NestedNameSpecifier.cpp
+        lib/AST/NSAPI.cpp
+        lib/AST/ParentMap.cpp
+        lib/AST/RecordLayout.cpp
+        lib/AST/RecordLayoutBuilder.cpp
+        lib/AST/SelectorLocationsKind.cpp
+        lib/AST/Stmt.cpp
+        lib/AST/StmtDumper.cpp
+        lib/AST/StmtIterator.cpp
+        lib/AST/StmtPrinter.cpp
+        lib/AST/StmtProfile.cpp
+        lib/AST/StmtViz.cpp
+        lib/AST/TemplateBase.cpp
+        lib/AST/TemplateName.cpp
+        lib/AST/Type.cpp
+        lib/AST/TypeLoc.cpp
+        lib/AST/TypePrinter.cpp
+        lib/AST/VTableBuilder.cpp
+        lib/AST/VTTBuilder.cpp
+
+        lib/Basic/Builtins.cpp
+        lib/Basic/ConvertUTF.c
+        lib/Basic/Diagnostic.cpp
+        lib/Basic/DiagnosticIDs.cpp
+        lib/Basic/FileManager.cpp
+        lib/Basic/FileSystemStatCache.cpp
+        lib/Basic/IdentifierTable.cpp
+        lib/Basic/LangOptions.cpp
+        lib/Basic/Module.cpp
+        lib/Basic/SourceLocation.cpp
+        lib/Basic/SourceManager.cpp
+        lib/Basic/TargetInfo.cpp
+        lib/Basic/Targets.cpp
+        lib/Basic/TokenKinds.cpp
+        lib/Basic/Version.cpp
+        lib/Basic/VersionTuple.cpp
+
+        lib/CodeGen/BackendUtil.cpp
+        lib/CodeGen/CGBlocks.cpp
+        lib/CodeGen/CGBuiltin.cpp
+        lib/CodeGen/CGCall.cpp
+        lib/CodeGen/CGClass.cpp
+        lib/CodeGen/CGCUDANV.cpp
+        lib/CodeGen/CGCUDARuntime.cpp
+        lib/CodeGen/CGCXX.cpp
+        lib/CodeGen/CGCXXABI.cpp
+        lib/CodeGen/CGCleanup.cpp
+        lib/CodeGen/CGDebugInfo.cpp
+        lib/CodeGen/CGDecl.cpp
+        lib/CodeGen/CGDeclCXX.cpp
+        lib/CodeGen/CGException.cpp
+        lib/CodeGen/CGExpr.cpp
+        lib/CodeGen/CGExprAgg.cpp
+        lib/CodeGen/CGExprComplex.cpp
+        lib/CodeGen/CGExprConstant.cpp
+        lib/CodeGen/CGExprCXX.cpp
+        lib/CodeGen/CGExprScalar.cpp
+        lib/CodeGen/CGObjC.cpp
+        lib/CodeGen/CGObjCGNU.cpp
+        lib/CodeGen/CGObjCMac.cpp
+        lib/CodeGen/CGObjCRuntime.cpp
+        lib/CodeGen/CGOpenCLRuntime.cpp
+        lib/CodeGen/CGRecordLayoutBuilder.cpp
+        lib/CodeGen/CGRTTI.cpp
+        lib/CodeGen/CGStmt.cpp
+        lib/CodeGen/CGVTables.cpp
+        lib/CodeGen/CGVTT.cpp
+        lib/CodeGen/CodeGenAction.cpp
+        lib/CodeGen/CodeGenFunction.cpp
+        lib/CodeGen/CodeGenModule.cpp
+        lib/CodeGen/CodeGenTBAA.cpp
+        lib/CodeGen/CodeGenTypes.cpp
+        lib/CodeGen/ItaniumCXXABI.cpp
+        lib/CodeGen/MicrosoftCXXABI.cpp
+        lib/CodeGen/ModuleBuilder.cpp
+        lib/CodeGen/TargetInfo.cpp
+
+        lib/Driver/Action.cpp
+        lib/Driver/Arg.cpp
+        lib/Driver/ArgList.cpp
+        lib/Driver/CC1Options.cpp
+        lib/Driver/CC1AsOptions.cpp
+        lib/Driver/Compilation.cpp
+        lib/Driver/Driver.cpp
+        lib/Driver/DriverOptions.cpp
+        lib/Driver/Job.cpp
+        lib/Driver/Option.cpp
+        lib/Driver/OptTable.cpp
+        lib/Driver/Phases.cpp
+        lib/Driver/Tool.cpp
+        lib/Driver/ToolChain.cpp
+        lib/Driver/ToolChains.cpp
+        lib/Driver/WindowsToolChain.cpp
+        lib/Driver/Tools.cpp
+        lib/Driver/Types.cpp
+
+        lib/Edit/Commit.cpp
+        lib/Edit/EditedSource.cpp
+        lib/Edit/RewriteObjCFoundationAPI.cpp
+
+        lib/Frontend/ASTConsumers.cpp
+        lib/Frontend/ASTMerge.cpp
+        lib/Frontend/ASTUnit.cpp
+        lib/Frontend/CacheTokens.cpp
+        lib/Frontend/ChainedDiagnosticConsumer.cpp
+        lib/Frontend/ChainedIncludesSource.cpp
+        lib/Frontend/CompilerInstance.cpp
+        lib/Frontend/CompilerInvocation.cpp
+        lib/Frontend/CreateInvocationFromCommandLine.cpp
+        lib/Frontend/DependencyFile.cpp
+        lib/Frontend/DependencyGraph.cpp
+        lib/Frontend/DiagnosticRenderer.cpp
+        lib/Frontend/FrontendAction.cpp
+        lib/Frontend/FrontendActions.cpp
+        lib/Frontend/FrontendOptions.cpp
+        lib/Frontend/HeaderIncludeGen.cpp
+        lib/Frontend/InitHeaderSearch.cpp
+        lib/Frontend/InitPreprocessor.cpp
+        lib/Frontend/LangStandards.cpp
+        lib/Frontend/LayoutOverrideSource.cpp
+        lib/Frontend/LogDiagnosticPrinter.cpp
+        lib/Frontend/MultiplexConsumer.cpp
+        lib/Frontend/PrintPreprocessedOutput.cpp
+        lib/Frontend/SerializedDiagnosticPrinter.cpp
+        lib/Frontend/TextDiagnostic.cpp
+        lib/Frontend/TextDiagnosticBuffer.cpp
+        lib/Frontend/TextDiagnosticPrinter.cpp
+        lib/Frontend/VerifyDiagnosticConsumer.cpp
+        lib/Frontend/Warnings.cpp
+
+        lib/FrontendTool/ExecuteCompilerInvocation.cpp
+
+        lib/Lex/HeaderMap.cpp
+        lib/Lex/HeaderSearch.cpp
+        lib/Lex/Lexer.cpp
+        lib/Lex/LiteralSupport.cpp
+        lib/Lex/MacroArgs.cpp
+        lib/Lex/MacroInfo.cpp
+        lib/Lex/ModuleMap.cpp
+        lib/Lex/PPCaching.cpp
+        lib/Lex/PPCallbacks.cpp
+        lib/Lex/PPDirectives.cpp
+        lib/Lex/PPExpressions.cpp
+        lib/Lex/PPLexerChange.cpp
+        lib/Lex/PPMacroExpansion.cpp
+        lib/Lex/PTHLexer.cpp
+        lib/Lex/Pragma.cpp
+        lib/Lex/PreprocessingRecord.cpp
+        lib/Lex/Preprocessor.cpp
+        lib/Lex/PreprocessorLexer.cpp
+        lib/Lex/ScratchBuffer.cpp
+        lib/Lex/TokenConcatenation.cpp
+        lib/Lex/TokenLexer.cpp
+
+        lib/Parse/ParseAST.cpp
+        lib/Parse/ParseCXXInlineMethods.cpp
+        lib/Parse/ParseDecl.cpp
+        lib/Parse/ParseDeclCXX.cpp
+        lib/Parse/ParseExpr.cpp
+        lib/Parse/ParseExprCXX.cpp
+        lib/Parse/ParseInit.cpp
+        lib/Parse/ParseObjc.cpp
+        lib/Parse/ParsePragma.cpp
+        lib/Parse/ParseStmt.cpp
+        lib/Parse/ParseTemplate.cpp
+        lib/Parse/ParseTentative.cpp
+        lib/Parse/Parser.cpp
+
+        lib/Rewrite/DeltaTree.cpp
+        lib/Rewrite/FixItRewriter.cpp
+        lib/Rewrite/FrontendActions.cpp
+        lib/Rewrite/HTMLPrint.cpp
+        lib/Rewrite/HTMLRewrite.cpp
+        lib/Rewrite/RewriteMacros.cpp
+        lib/Rewrite/RewriteModernObjC.cpp
+        lib/Rewrite/RewriteObjC.cpp
+        lib/Rewrite/RewriteRope.cpp
+        lib/Rewrite/RewriteTest.cpp
+        lib/Rewrite/Rewriter.cpp
+        lib/Rewrite/TokenRewriter.cpp
+
+        lib/Sema/AnalysisBasedWarnings.cpp
+        lib/Sema/AttributeList.cpp
+        lib/Sema/CodeCompleteConsumer.cpp
+        lib/Sema/DeclSpec.cpp
+        lib/Sema/DelayedDiagnostic.cpp
+        lib/Sema/IdentifierResolver.cpp
+        lib/Sema/JumpDiagnostics.cpp
+        lib/Sema/Scope.cpp
+        lib/Sema/Sema.cpp
+        lib/Sema/SemaAccess.cpp
+        lib/Sema/SemaAttr.cpp
+        lib/Sema/SemaCXXScopeSpec.cpp
+        lib/Sema/SemaCast.cpp
+        lib/Sema/SemaChecking.cpp
+        lib/Sema/SemaCodeComplete.cpp
+        lib/Sema/SemaConsumer.cpp
+        lib/Sema/SemaDecl.cpp
+        lib/Sema/SemaDeclAttr.cpp
+        lib/Sema/SemaDeclCXX.cpp
+        lib/Sema/SemaDeclObjC.cpp
+        lib/Sema/SemaExceptionSpec.cpp
+        lib/Sema/SemaExpr.cpp
+        lib/Sema/SemaExprCXX.cpp
+        lib/Sema/SemaExprMember.cpp
+        lib/Sema/SemaExprObjC.cpp
+        lib/Sema/SemaFixItUtils.cpp
+        lib/Sema/SemaInit.cpp
+        lib/Sema/SemaLambda.cpp
+        lib/Sema/SemaLookup.cpp
+        lib/Sema/SemaObjCProperty.cpp
+        lib/Sema/SemaOverload.cpp
+        lib/Sema/SemaPseudoObject.cpp
+        lib/Sema/SemaStmt.cpp
+        lib/Sema/SemaStmtAttr.cpp
+        lib/Sema/SemaTemplate.cpp
+        lib/Sema/SemaTemplateDeduction.cpp
+        lib/Sema/SemaTemplateInstantiate.cpp
+        lib/Sema/SemaTemplateInstantiateDecl.cpp
+        lib/Sema/SemaTemplateVariadic.cpp
+        lib/Sema/SemaType.cpp
+        lib/Sema/TargetAttributesSema.cpp
+
+        lib/Serialization/ASTCommon.cpp
+        lib/Serialization/ASTReader.cpp
+        lib/Serialization/ASTReaderDecl.cpp
+        lib/Serialization/ASTReaderStmt.cpp
+        lib/Serialization/ASTWriter.cpp
+        lib/Serialization/ASTWriterDecl.cpp
+        lib/Serialization/ASTWriterStmt.cpp
+        lib/Serialization/GeneratePCH.cpp
+        lib/Serialization/Module.cpp
+        lib/Serialization/ModuleManager.cpp
+
+        lib/StaticAnalyzer/Checkers/AdjustedReturnValueChecker.cpp
+        lib/StaticAnalyzer/Checkers/AnalyzerStatsChecker.cpp
+        lib/StaticAnalyzer/Checkers/ArrayBoundChecker.cpp
+        lib/StaticAnalyzer/Checkers/ArrayBoundCheckerV2.cpp
+        lib/StaticAnalyzer/Checkers/AttrNonNullChecker.cpp
+        lib/StaticAnalyzer/Checkers/BasicObjCFoundationChecks.cpp
+        lib/StaticAnalyzer/Checkers/BoolAssignmentChecker.cpp
+        lib/StaticAnalyzer/Checkers/BuiltinFunctionChecker.cpp
+        lib/StaticAnalyzer/Checkers/CStringChecker.cpp
+        lib/StaticAnalyzer/Checkers/CStringSyntaxChecker.cpp
+        lib/StaticAnalyzer/Checkers/CallAndMessageChecker.cpp
+        lib/StaticAnalyzer/Checkers/CastSizeChecker.cpp
+        lib/StaticAnalyzer/Checkers/CastToStructChecker.cpp
+        lib/StaticAnalyzer/Checkers/CheckObjCDealloc.cpp
+        lib/StaticAnalyzer/Checkers/CheckObjCInstMethSignature.cpp
+        lib/StaticAnalyzer/Checkers/CheckSecuritySyntaxOnly.cpp
+        lib/StaticAnalyzer/Checkers/CheckSizeofPointer.cpp
+        lib/StaticAnalyzer/Checkers/CheckerDocumentation.cpp
+        lib/StaticAnalyzer/Checkers/ChrootChecker.cpp
+        lib/StaticAnalyzer/Checkers/ClangCheckers.cpp
+        lib/StaticAnalyzer/Checkers/CommonBugCategories.cpp
+        lib/StaticAnalyzer/Checkers/DeadStoresChecker.cpp
+        lib/StaticAnalyzer/Checkers/DebugCheckers.cpp
+        lib/StaticAnalyzer/Checkers/DereferenceChecker.cpp
+        lib/StaticAnalyzer/Checkers/DivZeroChecker.cpp
+        lib/StaticAnalyzer/Checkers/FixedAddressChecker.cpp
+        lib/StaticAnalyzer/Checkers/GenericTaintChecker.cpp
+        lib/StaticAnalyzer/Checkers/IdempotentOperationChecker.cpp
+        lib/StaticAnalyzer/Checkers/IteratorsChecker.cpp
+        lib/StaticAnalyzer/Checkers/LLVMConventionsChecker.cpp
+        lib/StaticAnalyzer/Checkers/MacOSKeychainAPIChecker.cpp
+        lib/StaticAnalyzer/Checkers/MacOSXAPIChecker.cpp
+        lib/StaticAnalyzer/Checkers/MallocChecker.cpp
+        lib/StaticAnalyzer/Checkers/MallocOverflowSecurityChecker.cpp
+        lib/StaticAnalyzer/Checkers/MallocSizeofChecker.cpp
+        lib/StaticAnalyzer/Checkers/NSAutoreleasePoolChecker.cpp
+        lib/StaticAnalyzer/Checkers/NSErrorChecker.cpp
+        lib/StaticAnalyzer/Checkers/NoReturnFunctionChecker.cpp
+        lib/StaticAnalyzer/Checkers/OSAtomicChecker.cpp
+        lib/StaticAnalyzer/Checkers/ObjCAtSyncChecker.cpp
+        lib/StaticAnalyzer/Checkers/ObjCContainersASTChecker.cpp
+        lib/StaticAnalyzer/Checkers/ObjCContainersChecker.cpp
+        lib/StaticAnalyzer/Checkers/ObjCSelfInitChecker.cpp
+        lib/StaticAnalyzer/Checkers/ObjCUnusedIVarsChecker.cpp
+        lib/StaticAnalyzer/Checkers/PointerArithChecker.cpp
+        lib/StaticAnalyzer/Checkers/PointerSubChecker.cpp
+        lib/StaticAnalyzer/Checkers/PthreadLockChecker.cpp
+        lib/StaticAnalyzer/Checkers/RetainCountChecker.cpp
+        lib/StaticAnalyzer/Checkers/ReturnPointerRangeChecker.cpp
+        lib/StaticAnalyzer/Checkers/ReturnUndefChecker.cpp
+        lib/StaticAnalyzer/Checkers/StackAddrEscapeChecker.cpp
+        lib/StaticAnalyzer/Checkers/StreamChecker.cpp
+        lib/StaticAnalyzer/Checkers/TaintTesterChecker.cpp
+        lib/StaticAnalyzer/Checkers/UndefBranchChecker.cpp
+        lib/StaticAnalyzer/Checkers/UndefCapturedBlockVarChecker.cpp
+        lib/StaticAnalyzer/Checkers/UndefResultChecker.cpp
+        lib/StaticAnalyzer/Checkers/UndefinedArraySubscriptChecker.cpp
+        lib/StaticAnalyzer/Checkers/UndefinedAssignmentChecker.cpp
+        lib/StaticAnalyzer/Checkers/UnixAPIChecker.cpp
+        lib/StaticAnalyzer/Checkers/UnreachableCodeChecker.cpp
+        lib/StaticAnalyzer/Checkers/VLASizeChecker.cpp
+        lib/StaticAnalyzer/Checkers/VirtualCallChecker.cpp
+
+        lib/StaticAnalyzer/Core/AnalysisManager.cpp
+        lib/StaticAnalyzer/Core/BasicConstraintManager.cpp
+        lib/StaticAnalyzer/Core/BasicValueFactory.cpp
+        lib/StaticAnalyzer/Core/BlockCounter.cpp
+        lib/StaticAnalyzer/Core/BugReporter.cpp
+        lib/StaticAnalyzer/Core/BugReporterVisitors.cpp
+        lib/StaticAnalyzer/Core/Checker.cpp
+        lib/StaticAnalyzer/Core/CheckerContext.cpp
+        lib/StaticAnalyzer/Core/CheckerHelpers.cpp
+        lib/StaticAnalyzer/Core/CheckerManager.cpp
+        lib/StaticAnalyzer/Core/CheckerRegistry.cpp
+        lib/StaticAnalyzer/Core/CoreEngine.cpp
+        lib/StaticAnalyzer/Core/Environment.cpp
+        lib/StaticAnalyzer/Core/ExplodedGraph.cpp
+        lib/StaticAnalyzer/Core/ExprEngine.cpp
+        lib/StaticAnalyzer/Core/ExprEngineC.cpp
+        lib/StaticAnalyzer/Core/ExprEngineCXX.cpp
+        lib/StaticAnalyzer/Core/ExprEngineCallAndReturn.cpp
+        lib/StaticAnalyzer/Core/ExprEngineObjC.cpp
+        lib/StaticAnalyzer/Core/FunctionSummary.cpp
+        lib/StaticAnalyzer/Core/HTMLDiagnostics.cpp
+        lib/StaticAnalyzer/Core/MemRegion.cpp
+        lib/StaticAnalyzer/Core/ObjCMessage.cpp
+        lib/StaticAnalyzer/Core/PathDiagnostic.cpp
+        lib/StaticAnalyzer/Core/PlistDiagnostics.cpp
+        lib/StaticAnalyzer/Core/ProgramState.cpp
+        lib/StaticAnalyzer/Core/RangeConstraintManager.cpp
+        lib/StaticAnalyzer/Core/RegionStore.cpp
+        lib/StaticAnalyzer/Core/SValBuilder.cpp
+        lib/StaticAnalyzer/Core/SVals.cpp
+        lib/StaticAnalyzer/Core/SimpleConstraintManager.cpp
+        lib/StaticAnalyzer/Core/SimpleSValBuilder.cpp
+        lib/StaticAnalyzer/Core/Store.cpp
+        lib/StaticAnalyzer/Core/SubEngine.cpp
+        lib/StaticAnalyzer/Core/SymbolManager.cpp
+        lib/StaticAnalyzer/Core/TextPathDiagnostics.cpp
+
+        lib/StaticAnalyzer/Frontend/AnalysisConsumer.cpp
+        lib/StaticAnalyzer/Frontend/CheckerRegistration.cpp
+        lib/StaticAnalyzer/Frontend/FrontendActions.cpp
+
+        lib/Tooling/CompilationDatabase.cpp
+        lib/Tooling/Tooling.cpp
+
         src/clangplugin.cpp
     HEADERS_MOC
         src/clangplugin.h
     INCLUDE_DIRS
+        include
         src
+    DEFINITIONS
+        ${LLVM_DEFINITIONS}
+        ${CLANG_DEFINITIONS}
+    OPENCOR_DEPENDENCIES
+        ${LLVM_PLUGIN}
+    OPENCOR_BINARY_DEPENDENCIES
+        ${LLVM_BINARY_PLUGIN}
     QT_DEPENDENCIES
         QtCore
 )

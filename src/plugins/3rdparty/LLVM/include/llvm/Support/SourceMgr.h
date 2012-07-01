@@ -19,6 +19,9 @@
 #include "llvm/Support/SMLoc.h"
 #include "llvm/ADT/ArrayRef.h"
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class MemoryBuffer;
@@ -29,7 +32,12 @@ namespace llvm {
 
 /// SourceMgr - This owns the files read by a parser, handles include stacks,
 /// and handles diagnostic wrangling.
+/*---OPENCOR---
 class SourceMgr {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT SourceMgr {
+//---OPENCOR--- END
 public:
   enum DiagKind {
     DK_Error,

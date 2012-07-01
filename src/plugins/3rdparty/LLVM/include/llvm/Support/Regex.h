@@ -15,6 +15,9 @@
 #define LLVM_SUPPORT_REGEX_H
 
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 struct llvm_regex;
 
@@ -22,7 +25,12 @@ namespace llvm {
   class StringRef;
   template<typename T> class SmallVectorImpl;
 
+/*---OPENCOR---
   class Regex {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT Regex {
+//---OPENCOR--- END
   public:
     enum {
       NoFlags=0,

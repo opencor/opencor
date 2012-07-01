@@ -24,6 +24,9 @@
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/Support/ErrorHandling.h"
 #include <iterator>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -54,7 +57,12 @@ enum SynchronizationScope {
 
 /// AllocaInst - an instruction to allocate memory on the stack
 ///
+/*---OPENCOR---
 class AllocaInst : public UnaryInstruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT AllocaInst : public UnaryInstruction {
+//---OPENCOR--- END
 protected:
   virtual AllocaInst *clone_impl() const;
 public:
@@ -133,7 +141,12 @@ private:
 /// LoadInst - an instruction for reading from memory.  This uses the
 /// SubclassData field in Value to store whether or not the load is volatile.
 ///
+/*---OPENCOR---
 class LoadInst : public UnaryInstruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT LoadInst : public UnaryInstruction {
+//---OPENCOR--- END
   void AssertOK();
 protected:
   virtual LoadInst *clone_impl() const;
@@ -252,7 +265,12 @@ private:
 
 /// StoreInst - an instruction for storing to memory
 ///
+/*---OPENCOR---
 class StoreInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT StoreInst : public Instruction {
+//---OPENCOR--- END
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
   void AssertOK();
 protected:
@@ -379,7 +397,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(StoreInst, Value)
 
 /// FenceInst - an instruction for ordering other memory operations
 ///
+/*---OPENCOR---
 class FenceInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT FenceInst : public Instruction {
+//---OPENCOR--- END
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
   void Init(AtomicOrdering Ordering, SynchronizationScope SynchScope);
 protected:
@@ -447,7 +470,12 @@ private:
 /// specified value is in a memory location, and, if it is, stores a new value
 /// there.  Returns the value that was loaded.
 ///
+/*---OPENCOR---
 class AtomicCmpXchgInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT AtomicCmpXchgInst : public Instruction {
+//---OPENCOR--- END
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
   void Init(Value *Ptr, Value *Cmp, Value *NewVal,
             AtomicOrdering Ordering, SynchronizationScope SynchScope);
@@ -554,7 +582,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(AtomicCmpXchgInst, Value)
 /// combines it with another value, and then stores the result back.  Returns
 /// the old value.
 ///
+/*---OPENCOR---
 class AtomicRMWInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT AtomicRMWInst : public Instruction {
+//---OPENCOR--- END
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
 protected:
   virtual AtomicRMWInst *clone_impl() const;
@@ -707,7 +740,12 @@ static inline Type *checkGEPType(Type *Ty) {
 /// GetElementPtrInst - an instruction for type-safe pointer arithmetic to
 /// access elements of arrays and structs
 ///
+/*---OPENCOR---
 class GetElementPtrInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT GetElementPtrInst : public Instruction {
+//---OPENCOR--- END
   GetElementPtrInst(const GetElementPtrInst &GEPI);
   void init(Value *Ptr, ArrayRef<Value *> IdxList, const Twine &NameStr);
 
@@ -896,7 +934,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(GetElementPtrInst, Value)
 /// to the constructor. It only operates on integers or pointers. The operands
 /// must be identical types.
 /// @brief Represent an integer comparison operator.
+/*---OPENCOR---
 class ICmpInst: public CmpInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT ICmpInst: public CmpInst {
+//---OPENCOR--- END
 protected:
   /// @brief Clone an identical ICmpInst
   virtual ICmpInst *clone_impl() const;
@@ -1047,7 +1090,12 @@ public:
 /// to the constructor. It only operates on floating point values or packed
 /// vectors of floating point values. The operands must be identical types.
 /// @brief Represents a floating point comparison operator.
+/*---OPENCOR---
 class FCmpInst: public CmpInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT FCmpInst: public CmpInst {
+//---OPENCOR--- END
 protected:
   /// @brief Clone an identical FCmpInst
   virtual FCmpInst *clone_impl() const;
@@ -1154,7 +1202,12 @@ public:
 /// field to indicate whether or not this is a tail call.  The rest of the bits
 /// hold the calling convention of the call.
 ///
+/*---OPENCOR---
 class CallInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT CallInst : public Instruction {
+//---OPENCOR--- END
   AttrListPtr AttributeList; ///< parameter attributes for call
   CallInst(const CallInst &CI);
   void init(Value *Func, ArrayRef<Value *> Args, const Twine &NameStr);
@@ -1407,7 +1460,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(CallInst, Value)
 
 /// SelectInst - This class represents the LLVM 'select' instruction.
 ///
+/*---OPENCOR---
 class SelectInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT SelectInst : public Instruction {
+//---OPENCOR--- END
   void init(Value *C, Value *S1, Value *S2) {
     assert(!areInvalidOperands(C, S1, S2) && "Invalid operands for select");
     Op<0>() = C;
@@ -1484,7 +1542,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(SelectInst, Value)
 /// VAArgInst - This class represents the va_arg llvm instruction, which returns
 /// an argument of the specified type given a va_list and increments that list
 ///
+/*---OPENCOR---
 class VAArgInst : public UnaryInstruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT VAArgInst : public UnaryInstruction {
+//---OPENCOR--- END
 protected:
   virtual VAArgInst *clone_impl() const;
 
@@ -1521,7 +1584,12 @@ public:
 /// ExtractElementInst - This instruction extracts a single (scalar)
 /// element from a VectorType value
 ///
+/*---OPENCOR---
 class ExtractElementInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT ExtractElementInst : public Instruction {
+//---OPENCOR--- END
   ExtractElementInst(Value *Vec, Value *Idx, const Twine &NameStr = "",
                      Instruction *InsertBefore = 0);
   ExtractElementInst(Value *Vec, Value *Idx, const Twine &NameStr,
@@ -1582,7 +1650,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(ExtractElementInst, Value)
 /// InsertElementInst - This instruction inserts a single (scalar)
 /// element into a VectorType value
 ///
+/*---OPENCOR---
 class InsertElementInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT InsertElementInst : public Instruction {
+//---OPENCOR--- END
   InsertElementInst(Value *Vec, Value *NewElt, Value *Idx,
                     const Twine &NameStr = "",
                     Instruction *InsertBefore = 0);
@@ -1641,7 +1714,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(InsertElementInst, Value)
 /// ShuffleVectorInst - This instruction constructs a fixed permutation of two
 /// input vectors.
 ///
+/*---OPENCOR---
 class ShuffleVectorInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT ShuffleVectorInst : public Instruction {
+//---OPENCOR--- END
 protected:
   virtual ShuffleVectorInst *clone_impl() const;
 
@@ -1722,7 +1800,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(ShuffleVectorInst, Value)
 /// ExtractValueInst - This instruction extracts a struct member or array
 /// element value from an aggregate value.
 ///
+/*---OPENCOR---
 class ExtractValueInst : public UnaryInstruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT ExtractValueInst : public UnaryInstruction {
+//---OPENCOR--- END
   SmallVector<unsigned, 4> Indices;
 
   ExtractValueInst(const ExtractValueInst &EVI);
@@ -1829,7 +1912,12 @@ ExtractValueInst::ExtractValueInst(Value *Agg,
 /// InsertValueInst - This instruction inserts a struct field of array element
 /// value into an aggregate value.
 ///
+/*---OPENCOR---
 class InsertValueInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT InsertValueInst : public Instruction {
+//---OPENCOR--- END
   SmallVector<unsigned, 4> Indices;
 
   void *operator new(size_t, unsigned); // Do not implement
@@ -1962,7 +2050,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(InsertValueInst, Value)
 // node, that can not exist in nature, but can be synthesized in a computer
 // scientist's overactive imagination.
 //
+/*---OPENCOR---
 class PHINode : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT PHINode : public Instruction {
+//---OPENCOR--- END
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
   /// ReservedSpace - The number of operands actually allocated.  NumOperands is
   /// the number actually in use.
@@ -2163,7 +2256,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(PHINode, Value)
 /// SubclassData field in Value to store whether or not the landingpad is a
 /// cleanup.
 ///
+/*---OPENCOR---
 class LandingPadInst : public Instruction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT LandingPadInst : public Instruction {
+//---OPENCOR--- END
   /// ReservedSpace - The number of operands actually allocated.  NumOperands is
   /// the number actually in use.
   unsigned ReservedSpace;
@@ -2265,7 +2363,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(LandingPadInst, Value)
 /// ReturnInst - Return a value (possibly void), from a function.  Execution
 /// does not continue in this function any longer.
 ///
+/*---OPENCOR---
 class ReturnInst : public TerminatorInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT ReturnInst : public TerminatorInst {
+//---OPENCOR--- END
   ReturnInst(const ReturnInst &RI);
 
 private:
@@ -2337,7 +2440,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(ReturnInst, Value)
 //===---------------------------------------------------------------------------
 /// BranchInst - Conditional or Unconditional Branch instruction.
 ///
+/*---OPENCOR---
 class BranchInst : public TerminatorInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT BranchInst : public TerminatorInst {
+//---OPENCOR--- END
   /// Ops list - Branches are strange.  The operands are ordered:
   ///  [Cond, FalseDest,] TrueDest.  This makes some accessors faster because
   /// they don't have to check for cond/uncond branchness. These are mostly
@@ -2437,7 +2545,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(BranchInst, Value)
 //===---------------------------------------------------------------------------
 /// SwitchInst - Multiway switch
 ///
+/*---OPENCOR---
 class SwitchInst : public TerminatorInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT SwitchInst : public TerminatorInst {
+//---OPENCOR--- END
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
   unsigned ReservedSpace;
   // Operand[0]    = Value to switch on
@@ -2732,7 +2845,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(SwitchInst, Value)
 //===---------------------------------------------------------------------------
 /// IndirectBrInst - Indirect Branch Instruction.
 ///
+/*---OPENCOR---
 class IndirectBrInst : public TerminatorInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT IndirectBrInst : public TerminatorInst {
+//---OPENCOR--- END
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
   unsigned ReservedSpace;
   // Operand[0]    = Value to switch on
@@ -2831,7 +2949,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(IndirectBrInst, Value)
 /// InvokeInst - Invoke instruction.  The SubclassData field is used to hold the
 /// calling convention of the call.
 ///
+/*---OPENCOR---
 class InvokeInst : public TerminatorInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT InvokeInst : public TerminatorInst {
+//---OPENCOR--- END
   AttrListPtr AttributeList;
   InvokeInst(const InvokeInst &BI);
   void init(Value *Func, BasicBlock *IfNormal, BasicBlock *IfException,
@@ -3068,7 +3191,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(InvokeInst, Value)
 //===---------------------------------------------------------------------------
 /// ResumeInst - Resume the propagation of an exception.
 ///
+/*---OPENCOR---
 class ResumeInst : public TerminatorInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT ResumeInst : public TerminatorInst {
+//---OPENCOR--- END
   ResumeInst(const ResumeInst &RI);
 
   explicit ResumeInst(Value *Exn, Instruction *InsertBefore=0);
@@ -3121,7 +3249,12 @@ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(ResumeInst, Value)
 /// presence of this instruction indicates some higher level knowledge that the
 /// end of the block cannot be reached.
 ///
+/*---OPENCOR---
 class UnreachableInst : public TerminatorInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT UnreachableInst : public TerminatorInst {
+//---OPENCOR--- END
   void *operator new(size_t, unsigned);  // DO NOT IMPLEMENT
 protected:
   virtual UnreachableInst *clone_impl() const;
@@ -3561,7 +3694,12 @@ public:
 //===----------------------------------------------------------------------===//
 
 /// @brief This class represents a no-op cast from one type to another.
+/*---OPENCOR---
 class BitCastInst : public CastInst {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT BitCastInst : public CastInst {
+//---OPENCOR--- END
 protected:
   /// @brief Clone an identical BitCastInst
   virtual BitCastInst *clone_impl() const;

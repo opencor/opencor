@@ -17,6 +17,9 @@
 #include <limits>
 #include <string>
 #include <utility>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   template<typename T>
@@ -26,10 +29,20 @@ namespace llvm {
   class StringRef;
 
   /// Helper functions for StringRef::getAsInteger.
+/*---OPENCOR---
   bool getAsUnsignedInteger(StringRef Str, unsigned Radix,
+*/
+//---OPENCOR--- BEGIN
+  bool LLVM_EXPORT getAsUnsignedInteger(StringRef Str, unsigned Radix,
+//---OPENCOR--- END
                             unsigned long long &Result);
 
+/*---OPENCOR---
   bool getAsSignedInteger(StringRef Str, unsigned Radix, long long &Result);
+*/
+//---OPENCOR--- BEGIN
+  bool LLVM_EXPORT getAsSignedInteger(StringRef Str, unsigned Radix, long long &Result);
+//---OPENCOR--- END
 
   /// StringRef - Represent a constant reference to a string, i.e. a character
   /// array and a length, which need not be null terminated.
@@ -38,7 +51,12 @@ namespace llvm {
   /// situations where the character data resides in some other buffer, whose
   /// lifetime extends past that of the StringRef. For this reason, it is not in
   /// general safe to store a StringRef.
+/*---OPENCOR---
   class StringRef {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT StringRef {
+//---OPENCOR--- END
   public:
     typedef const char *iterator;
     typedef const char *const_iterator;

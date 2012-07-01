@@ -20,6 +20,9 @@
 #include <set>
 #include <string>
 #include <vector>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 #define LLVM_PATH_DEPRECATED_MSG(replacement) \
   "PathV1 has been deprecated and will be removed as soon as all LLVM and" \
@@ -88,7 +91,12 @@ namespace sys {
   /// notion that the operation modifies the file system.
   /// @since 1.4
   /// @brief An abstraction for operating system paths.
+/*---OPENCOR---
   class Path {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT Path {
+//---OPENCOR--- END
     /// @name Constructors
     /// @{
     public:
@@ -623,7 +631,12 @@ namespace sys {
   /// operating systems so we want to be careful and explicit about where we
   /// allow this operation in LLVM.
   /// @brief Path with file status class.
+/*---OPENCOR---
   class PathWithStatus : public Path {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT PathWithStatus : public Path {
+//---OPENCOR--- END
     /// @name Constructors
     /// @{
     public:
@@ -735,7 +748,12 @@ namespace sys {
 
   /// This is the OS-specific path separator: a colon on Unix or a semicolon
   /// on Windows.
+/*---OPENCOR---
   extern const char PathSeparator;
+*/
+//---OPENCOR--- BEGIN
+  extern const char LLVM_EXPORT PathSeparator;
+//---OPENCOR--- END
 }
 
 }

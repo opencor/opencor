@@ -17,6 +17,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   namespace sys { class Path; }
@@ -38,7 +41,12 @@ class StringRef;
 /// QuietWarnings and QuietErrors flags. It can also be instructed to verbosely
 /// print out the linking actions it is taking with the Verbose flag.
 /// @brief The LLVM Linker.
+/*---OPENCOR---
 class Linker {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Linker {
+//---OPENCOR--- END
 
   /// @name Types
   /// @{

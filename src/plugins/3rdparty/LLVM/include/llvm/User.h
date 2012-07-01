@@ -21,6 +21,9 @@
 
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Value.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -30,7 +33,12 @@ namespace llvm {
 template <class>
 struct OperandTraits;
 
+/*---OPENCOR---
 class User : public Value {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT User : public Value {
+//---OPENCOR--- END
   User(const User &);             // Do not implement
   void *operator new(size_t);     // Do not implement
   template <unsigned>

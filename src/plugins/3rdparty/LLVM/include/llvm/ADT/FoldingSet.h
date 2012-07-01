@@ -19,6 +19,9 @@
 #include "llvm/Support/DataTypes.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/StringRef.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class APFloat;
@@ -108,7 +111,12 @@ class FoldingSetNodeID;
 /// in the bucket via a singly linked list.  The last node in the list points
 /// back to the bucket to facilitate node removal.
 ///
+/*---OPENCOR---
 class FoldingSetImpl {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT FoldingSetImpl {
+//---OPENCOR--- END
 protected:
   /// Buckets - Array of bucket chains.
   ///
@@ -287,7 +295,12 @@ public:
 /// a node.  When all the bits are gathered this class is used to produce a
 /// hash value for the node.
 ///
+/*---OPENCOR---
 class FoldingSetNodeID {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT FoldingSetNodeID {
+//---OPENCOR--- END
   /// Bits - Vector of all the data bits that make the node unique.
   /// Use a SmallVector to avoid a heap allocation in the common case.
   SmallVector<unsigned, 32> Bits;
@@ -520,7 +533,12 @@ public:
 //===----------------------------------------------------------------------===//
 /// FoldingSetIteratorImpl - This is the common iterator support shared by all
 /// folding sets, which knows how to walk the folding set hash table.
+/*---OPENCOR---
 class FoldingSetIteratorImpl {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT FoldingSetIteratorImpl {
+//---OPENCOR--- END
 protected:
   FoldingSetNode *NodePtr;
   FoldingSetIteratorImpl(void **Bucket);

@@ -14,6 +14,9 @@
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/system_error.h"
 #include <utility> // for std::pair
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -25,7 +28,12 @@ namespace llvm {
 /// system to ensure that only a single process can create that ".lock" file.
 /// When the lock file is removed, the owning process has finished the
 /// operation.
+/*---OPENCOR---
 class LockFileManager {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT LockFileManager {
+//---OPENCOR--- END
 public:
   /// \brief Describes the state of a lock file.
   enum LockFileState {

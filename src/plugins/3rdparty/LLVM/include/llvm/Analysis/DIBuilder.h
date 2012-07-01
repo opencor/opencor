@@ -18,6 +18,9 @@
 #include "llvm/Support/DataTypes.h"
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/StringRef.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class BasicBlock;
@@ -44,7 +47,12 @@ namespace llvm {
   class DITemplateValueParameter;
   class DIObjCProperty;
 
+/*---OPENCOR---
   class DIBuilder {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT DIBuilder {
+//---OPENCOR--- END
     private:
     Module &M;
     LLVMContext & VMContext;

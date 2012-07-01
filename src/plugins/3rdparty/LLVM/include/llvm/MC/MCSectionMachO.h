@@ -16,13 +16,21 @@
 
 #include "llvm/MC/MCSection.h"
 #include "llvm/ADT/StringRef.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
 /// MCSectionMachO - This represents a section on a Mach-O system (used by
 /// Mac OS X).  On a Mac system, these are also described in
 /// /usr/include/mach-o/loader.h.
+/*---OPENCOR---
 class MCSectionMachO : public MCSection {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT MCSectionMachO : public MCSection {
+//---OPENCOR--- END
   char SegmentName[16];  // Not necessarily null terminated!
   char SectionName[16];  // Not necessarily null terminated!
 

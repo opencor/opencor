@@ -16,6 +16,9 @@
 
 #include "llvm/Use.h"
 #include "llvm/Support/Casting.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -57,7 +60,12 @@ class StringRef;
 /// llvm/Support/ValueHandle.h for details.
 ///
 /// @brief LLVM Value Representation
+/*---OPENCOR---
 class Value {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Value {
+//---OPENCOR--- END
   const unsigned char SubclassID;   // Subclass identifier (for isa/dyn_cast)
   unsigned char HasValueHandle : 1; // Has a ValueHandle pointing to this?
 protected:

@@ -16,10 +16,18 @@
 #define LLVM_APSINT_H
 
 #include "llvm/ADT/APInt.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
+/*---OPENCOR---
 class APSInt : public APInt {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT APSInt : public APInt {
+//---OPENCOR--- END
   bool IsUnsigned;
 public:
   /// Default constructor that creates an uninitialized APInt.
