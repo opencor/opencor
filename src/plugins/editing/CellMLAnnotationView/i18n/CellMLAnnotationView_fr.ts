@@ -397,6 +397,10 @@
         <source>Id</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Remove</source>
+        <translation>Supprimer</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>

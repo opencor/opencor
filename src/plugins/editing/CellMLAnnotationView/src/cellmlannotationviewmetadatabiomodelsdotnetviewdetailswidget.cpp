@@ -14,6 +14,7 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include <QPushButton>
 
 //==============================================================================
 
@@ -22,14 +23,17 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                                                                           const bool &pEditingMode) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
     mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile())),
     mRdfTripleInfo(QString()),
-    mType(Unknown)
+    mType(Unknown),
+    mEditingMode(pEditingMode),
+    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>())
 {
     // Set up the GUI
 
@@ -164,6 +168,26 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
             mLayout->addWidget(id, row, 2);
 
+            // Remove button, if needed
+
+            if (mEditingMode) {
+                QPushButton *remove = new QPushButton(tr("Remove"), mWidget);
+
+                remove->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+                // Note: by default, a QPushButton has a Minimum/Fixed size
+                //       policy, but this means that its width may grow if there
+                //       is space. However, we don't want that. Instead, we want
+                //       its width to be as big as necessary and not bigger,
+                //       so...
+
+                mRdfTriplesMapping.insert(remove, rdfTriple);
+
+                connect(remove, SIGNAL(clicked()),
+                        this, SLOT(removeRdfTriple()));
+
+                mLayout->addWidget(remove, row, 3);
+            }
+
             // Keep track of the very first resource id
 
             if (row == 1)
@@ -174,32 +198,13 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         // an 'old' qualifier, resource or resource id
 
         if (pRdfTripleInfo.isEmpty() && (pType == Unknown))
-            // Nothing 'old' to look up, so look up the first resource id
+            // Nothing 'old' to lookup, so lookup the first resource id
 
-            lookupResourceId(firstRdfTripleInfo);
+            genericLookup(firstRdfTripleInfo, Id, pRetranslate);
         else
-            // Look up an 'old' qualifier, resource or resource id
+            // Lookup an 'old' qualifier, resource or resource id
 
-            switch (pType) {
-            case Qualifier:
-                lookupQualifier(pRdfTripleInfo, pRetranslate);
-
-                break;
-            case Resource:
-                lookupResource(pRdfTripleInfo, pRetranslate);
-
-                break;
-            case Id:
-                lookupResourceId(pRdfTripleInfo, pRetranslate);
-
-                break;
-            default:
-                // Unknown, so nothing to do...
-                // Note: we can't reach this point, but it's to 'please' some
-                //       compilers, so...
-
-                ;
-            }
+            genericLookup(pRdfTripleInfo, pType, pRetranslate);
     }
 
     // Re-show ourselves
@@ -233,7 +238,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
 
     int row = 0;
 
-    forever {
+    forever
         if (mLayout->itemAtPosition(++row, 0)) {
             // Valid row, so check whether to make it bold (and italic in some
             // cases) or not
@@ -262,9 +267,8 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
 
             break;
         }
-    }
 
-    // Let people know that we want to lookup a resource id
+    // Let people know that we want to lookup something
 
     switch (pType) {
     case Qualifier:
@@ -317,6 +321,101 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
     // Call our generic lookup function
 
     genericLookup(pRdfTripleInfo, Id, pRetranslate);
+}
+
+//==============================================================================
+
+QString CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::rdfTripleInfo(const int &pRow) const
+{
+    // Return the RDF triple information for the given row
+
+    QString res = QString();
+
+    // Retrieve the item for the first label link from the given row
+
+    QLayoutItem *item = mLayout->itemAtPosition(pRow, 0);
+
+    if (!item)
+        // No item could be retrieved, so...
+
+        return res;
+
+    // Retrieve the text from the item's widget which is a QLabel
+
+    res = static_cast<QLabel *>(item->widget())->text();
+
+    // Extract the RDF triple information from the text
+
+    res.remove(QRegExp("^[^\"]*\""));
+    res.remove(QRegExp("\"[^\"]*$"));
+
+    // We are done with retrieving the RDF triple information for the given row,
+    // so...
+
+    return res;
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTriple()
+{
+    // Retrieve the RDF triple associated with the remove button
+
+    QObject *button = sender();
+
+    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(button);
+
+    // Remove the RDF triple from the CellML file and from our set of RDF
+    // triples this widget uses
+
+    mParent->cellmlFile()->removeRdfTriple(rdfTriple);
+    mRdfTriples.remove(rdfTriple);
+
+    // Retrieve the number of the row we want to delete, as well as the total
+    // number of rows
+    // Note: should some RDF triples have been removed, then to call
+    //       mLayout->rowCount() won't give us the correct number of rows, so...
+
+    int row = -1;
+    int rowMax = mLayout->rowCount();
+
+    for (int i = 1, iMax = mLayout->rowCount(); i < iMax; ++i) {
+        QLayoutItem *item = mLayout->itemAtPosition(i, 3);
+
+        if (!item) {
+            // The row doesn't exist anymore, so...
+
+            rowMax = i;
+
+            break;
+        }
+
+        if (item->widget() == button)
+            // This is the row we want to remove
+
+            row = i;
+    }
+
+    // Make sure that row and rowMax have meaningful values
+
+    Q_ASSERT(row > 0);
+    Q_ASSERT(rowMax > row);
+
+    // Determine the 'new' RDF triple information to lookup
+
+    if (mRdfTriples.isEmpty()) {
+        mRdfTripleInfo = QString();
+        mType = Unknown;
+    } else if (!rdfTripleInfo(row).compare(mRdfTripleInfo)) {
+        // The RDF triple information is related to the row we want to delete,
+        // so we need to find some new one
+
+        mRdfTripleInfo = rdfTripleInfo((rowMax-1 > row)?row+1:row-1);
+    }
+
+    // Update the GUI to reflect the removal of the RDF triple
+
+    updateGui(mRdfTriples, mRdfTripleInfo, mType);
 }
 
 //==============================================================================

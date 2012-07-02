@@ -63,6 +63,7 @@ public:
 
     CellmlFileRdfTriples rdfTriples(const QString &pCmetaId) const;
 
+    void removeRdfTriple(CellmlFileRdfTriple *pRdfTriple);
     void removeRdfTriples(const QString &pCmetaId);
     void removeAllRdfTriples();
 

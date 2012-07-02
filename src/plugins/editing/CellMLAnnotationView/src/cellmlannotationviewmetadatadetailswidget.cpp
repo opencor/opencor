@@ -57,7 +57,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widget
 
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, true);
 
     mBorderedMetadataViewDetails = new Core::BorderedWidget(mMetadataViewDetails,
                                                             false, true, false, false);

@@ -59,8 +59,8 @@
         <translation>&amp;Page d&apos;Accueil</translation>
     </message>
     <message>
-        <source>Look up the OpenCOR home page</source>
-        <translation>Consulter la page d&apos;accueil d&apos;OpenCOR</translation>
+        <source>Open the OpenCOR home page</source>
+        <translation>Ouvrir la page d&apos;accueil d&apos;OpenCOR</translation>
     </message>
     <message>
         <source>&amp;About...</source>

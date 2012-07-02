@@ -139,7 +139,7 @@
     <string>Home &amp;Page</string>
    </property>
    <property name="statusTip">
-    <string>Look up the OpenCOR home page</string>
+    <string>Open the OpenCOR home page</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>

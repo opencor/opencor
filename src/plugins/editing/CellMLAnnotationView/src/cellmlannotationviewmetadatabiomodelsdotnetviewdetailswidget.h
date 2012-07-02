@@ -49,7 +49,8 @@ private:
     };
 
 public:
-    explicit CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                          const bool &pEditingMode);
     ~CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget();
 
     virtual void retranslateUi();
@@ -72,8 +73,14 @@ private:
     QString mRdfTripleInfo;
     Type mType;
 
+    bool mEditingMode;
+
+    QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
+
     void genericLookup(const QString &pRdfTripleInfo, const Type &pType,
                        const bool &pRetranslate);
+
+    QString rdfTripleInfo(const int &pRow) const;
 
 Q_SIGNALS:
     void qualifierLookupRequested(const QString &pQualifier,
@@ -91,6 +98,7 @@ private Q_SLOTS:
                         const bool &pRetranslate = false);
     void lookupResourceId(const QString &pRdfTripleInfo,
                           const bool &pRetranslate = false);
+    void removeRdfTriple();
 };
 
 //==============================================================================

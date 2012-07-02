@@ -46,7 +46,7 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
     // Create our details widgets
 
     mCellmlElementDetails = new CellmlAnnotationViewCellmlElementDetailsWidget(pParent);
-    mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
+    mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, false);
     mWebView              = new QWebView(pParent);
 
     // A connection to handle the looking up of a resource and a resource id

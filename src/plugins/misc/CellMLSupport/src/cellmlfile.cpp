@@ -657,6 +657,16 @@ CellmlFileRdfTriples CellmlFile::rdfTriples(const QString &pCmetaId) const
 
 //==============================================================================
 
+void CellmlFile::removeRdfTriple(CellmlFileRdfTriple *pRdfTriple)
+{
+    // Remove the RDF triple
+
+    if (mRdfTriples.remove(pRdfTriple))
+        setModified(true);
+}
+
+//==============================================================================
+
 void CellmlFile::removeRdfTriples(const QString &pCmetaId)
 {
     // Remove all the RDF triples which subject value is pCmetaId

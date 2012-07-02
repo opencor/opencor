@@ -104,6 +104,7 @@ public:
 
     CellmlFileRdfTriples contains(const QString &pCmetaId) const;
 
+    bool remove(CellmlFileRdfTriple *pRdfTriple);
     bool remove(const QString &pCmetaId);
     bool removeAll();
 

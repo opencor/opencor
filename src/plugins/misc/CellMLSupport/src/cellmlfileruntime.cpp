@@ -539,7 +539,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
     //          SIMILAR TO A LevMar. USING IDA, THE WAY TO DO IT IS PROBABLY BY
     //          MAKING A CALL TO IDACalcIC()?...
 
-    initializeConstantsString.replace(QRegExp("rootfind_[0-9]+\\(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret\\);\\r\\n"), "");
+    initializeConstantsString.remove(QRegExp("rootfind_[0-9]+\\(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret\\);\\r\\n"));
 
     mComputerEngine->addFunction(QString("void initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(initializeConstantsString));
     checkFunction("initializeConstants");
