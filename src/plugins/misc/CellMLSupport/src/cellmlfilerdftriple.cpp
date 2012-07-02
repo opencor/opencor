@@ -415,8 +415,6 @@ bool CellmlFileRdfTriples::removeAll()
 {
     // Remove all the RDF triples
 
-    int oldCount = count();
-
     for (int i = count()-1; i >= 0; --i) {
         CellmlFileRdfTriple *rdfTriple = at(i);
 
