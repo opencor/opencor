@@ -32,6 +32,14 @@ UserMessageWidget::UserMessageWidget(QWidget *pParent,
     setAutoFillBackground(true);
     setBackgroundRole(QPalette::Base);
 
+    // Increase the size of the font
+
+    QFont font = mGui->label->font();
+
+    font.setPointSize(1.5*font.pointSize());
+
+    mGui->label->setFont(font);
+
     // 'Initialise' the label
 
     updateLabel();
