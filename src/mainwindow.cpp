@@ -441,7 +441,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
                 mFileNewMenu = new QMenu(this);
 
-                mFileNewMenu->menuAction()->setIcon(QIcon(":oxygen/mimetypes/application-x-zerosize.png"));
+                mFileNewMenu->menuAction()->setIcon(QIcon(":/oxygen/mimetypes/application-x-zerosize.png"));
 
                 // Add the New menu to our File menu and add a separator after
                 // it

@@ -6,6 +6,7 @@
 #include "coreutils.h"
 #include "filemanager.h"
 #include "plugin.h"
+#include "usermessagewidget.h"
 
 //==============================================================================
 
@@ -161,30 +162,15 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mContents->addWidget(mLogoView);
 
-    // Create our no view widget which contains a label which will display a
-    // customised warning message to let the user know that there view doesn't
-    // support the type of the current file
+    // Create our no view message widget which will display a customised message
+    // to let the user know that there view doesn't support the type of the
+    // current file
 
-    mNoView = new QWidget(this);
+    mNoViewMsg = new UserMessageWidget(this);
 
-    mNoView->setBackgroundRole(QPalette::Base);
-    mNoView->setAutoFillBackground(true);
-
-    mNoViewMsg = new QLabel(mNoView);
-
-    QFont noViewMsgFont = mNoViewMsg->font();
-
-    noViewMsgFont.setPointSize(1.5*noViewMsgFont.pointSize());
-
-    mNoViewMsg->setAlignment(Qt::AlignCenter);
-    mNoViewMsg->setFont(noViewMsgFont);
-    mNoViewMsg->setWordWrap(true);
-
-    mNoView->setLayout(new QVBoxLayout(mNoView));
-    mNoView->layout()->addWidget(mNoViewMsg);
-
-    mNoView->setVisible(false);
-    // Note: we don't initially want to see our no-view widget...
+    mNoViewMsg->setIcon(":/oxygen/actions/help-about.png");
+    mNoViewMsg->setVisible(false);
+    // Note: we don't initially want to see our no view message widget, so...
 
     // Create and set up our central widget
 
@@ -889,7 +875,7 @@ void CentralWidget::updateGui()
             // The interface doesn't have a view for the current file, so use
             // our no-view widget instead and update its message
 
-            newView = mNoView;
+            newView = mNoViewMsg;
 
             updateNoViewMsg();
         }
@@ -970,7 +956,7 @@ void CentralWidget::updateNoViewMsg()
     else
         viewName = modeViewName(GuiViewSettings::Analysis);
 
-    mNoViewMsg->setText(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(viewName));
+    mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(viewName));
 }
 
 //==============================================================================
