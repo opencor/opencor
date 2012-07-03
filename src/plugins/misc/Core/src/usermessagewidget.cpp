@@ -15,11 +15,13 @@ namespace Core {
 
 //==============================================================================
 
-UserMessageWidget::UserMessageWidget(QWidget *pParent) :
+UserMessageWidget::UserMessageWidget(QWidget *pParent,
+                                     const QString &pIcon,
+                                     const QString &pMessage) :
     Widget(pParent),
     mGui(new Ui::UserMessageWidget),
-    mIcon(QString()),
-    mMessage(QString())
+    mIcon(pIcon),
+    mMessage(pMessage)
 {
     // Set up the GUI
 
@@ -29,6 +31,10 @@ UserMessageWidget::UserMessageWidget(QWidget *pParent) :
 
     setAutoFillBackground(true);
     setBackgroundRole(QPalette::Base);
+
+    // 'Initialise' the label
+
+    updateLabel();
 }
 
 //==============================================================================

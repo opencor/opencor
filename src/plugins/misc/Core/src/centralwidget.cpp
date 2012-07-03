@@ -166,9 +166,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // to let the user know that there view doesn't support the type of the
     // current file
 
-    mNoViewMsg = new UserMessageWidget(this);
+    mNoViewMsg = new UserMessageWidget(this, ":/oxygen/actions/help-about.png");
 
-    mNoViewMsg->setIcon(":/oxygen/actions/help-about.png");
     mNoViewMsg->setVisible(false);
     // Note: we don't initially want to see our no view message widget, so...
 

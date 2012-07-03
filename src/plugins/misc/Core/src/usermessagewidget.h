@@ -28,7 +28,9 @@ class CORE_EXPORT UserMessageWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit UserMessageWidget(QWidget *pParent);
+    explicit UserMessageWidget(QWidget *pParent,
+                               const QString &pIcon = QString(),
+                               const QString &pMessage = QString());
     ~UserMessageWidget();
 
     void setIcon(const QString &pIcon);
