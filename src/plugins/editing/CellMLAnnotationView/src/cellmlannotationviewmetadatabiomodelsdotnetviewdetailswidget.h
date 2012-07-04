@@ -77,8 +77,9 @@ private:
 
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
-    void genericLookup(const QString &pRdfTripleInfo, const Type &pType,
-                       const bool &pRetranslate);
+    void genericLookup(const QString &pRdfTripleInfo = QString(),
+                       const Type &pType = Unknown,
+                       const bool &pRetranslate = false);
 
     QString rdfTripleInfo(const int &pRow) const;
 
@@ -90,6 +91,7 @@ Q_SIGNALS:
     void resourceIdLookupRequested(const QString &pResource,
                                    const QString &pId,
                                    const bool &pRetranslate);
+    void unknownLookupRequested();
 
 private Q_SLOTS:
     void lookupQualifier(const QString &pRdfTripleInfo,

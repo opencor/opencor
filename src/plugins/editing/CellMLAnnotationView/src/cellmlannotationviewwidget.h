@@ -23,6 +23,7 @@ namespace Ui {
 //==============================================================================
 
 class QLabel;
+class QWebView;
 
 //==============================================================================
 
@@ -65,6 +66,17 @@ public:
                                  const double &pFontPercentage = 1.0,
                                  const Qt::Alignment &pAlignment = Qt::AlignLeft|Qt::AlignVCenter);
 
+    void updateWebViewerWithQualifierDetails(QWebView *pWebView,
+                                             const QString &pQualifier,
+                                             const bool &pRetranslate);
+    void updateWebViewerWithResourceDetails(QWebView *pWebView,
+                                            const QString &pResource,
+                                            const bool &pRetranslate);
+    void updateWebViewerWithResourceIdDetails(QWebView *pWebView,
+                                              const QString &pResource,
+                                              const QString &pId,
+                                              const bool &pRetranslate);
+
 private:
     Ui::CellmlAnnotationViewWidget *mGui;
 
@@ -74,6 +86,11 @@ private:
 
     CellmlAnnotationViewListsWidget *mListsWidget;
     CellmlAnnotationViewDetailsWidget *mDetailsWidget;
+
+    QString mModelQualifierSvg;
+    QString mBiologyQualifierSvg;
+
+    QString mQualifierInformationTemplate;
 
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);

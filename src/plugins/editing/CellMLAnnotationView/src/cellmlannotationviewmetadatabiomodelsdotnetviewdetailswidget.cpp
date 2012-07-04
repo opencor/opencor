@@ -205,6 +205,13 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             // Lookup an 'old' qualifier, resource or resource id
 
             genericLookup(pRdfTripleInfo, pType, pRetranslate);
+    } else {
+        // No RDF triple left, so ask for an 'unknown' to be looked up
+        // Note: we do this to let people know that there is nothing to lookup
+        //       and that they can 'clean' whatever they use to show a lookup to
+        //       the user...
+
+        genericLookup();
     }
 
     // Re-show ourselves
@@ -221,9 +228,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
     // Retrieve the RDF triple information
 
     QStringList rdfTripleInfoAsStringList = pRdfTripleInfo.split("|");
-    QString qualifierAsString = rdfTripleInfoAsStringList[0];
-    QString resourceAsString = rdfTripleInfoAsStringList[1];
-    QString idAsString = rdfTripleInfoAsStringList[2];
+    QString qualifierAsString = pRdfTripleInfo.isEmpty()?QString():rdfTripleInfoAsStringList[0];
+    QString resourceAsString = pRdfTripleInfo.isEmpty()?QString():rdfTripleInfoAsStringList[1];
+    QString idAsString = pRdfTripleInfo.isEmpty()?QString():rdfTripleInfoAsStringList[2];
 
     // Keep track of the RDF triple information and type
 
@@ -285,11 +292,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
 
         break;
     default:
-        // Unknown, so nothing to do...
-        // Note: we should never reach this point, but it's to 'please' some
-        //       compilers, so...
+        // Unknown
 
-        ;
+        emit unknownLookupRequested();
     }
 }
 
