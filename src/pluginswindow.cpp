@@ -114,8 +114,8 @@ PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
         // Create the item corresponding to the current plugin
 
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?
-                                                          QIcon(":oxygen/actions/dialog-ok-apply.png"):
-                                                          QIcon(":oxygen/actions/edit-delete.png"),
+                                                          QIcon(":/oxygen/actions/dialog-ok-apply.png"):
+                                                          QIcon(":/oxygen/actions/edit-delete.png"),
                                                       plugin->name());
 
         // Only manageable plugins and plugins that are of the right type are

@@ -14,7 +14,6 @@
 
 #include <QMap>
 #include <QTabBar>
-#include <QWidget>
 
 //==============================================================================
 
@@ -45,6 +44,10 @@ typedef QMap<int, QString> CentralWidgetViewNames;
 
 typedef QMap<int, GuiInterface *> CentralWidgetViewInterfaces;
 typedef QMap<int, GuiViewSettings *> CentralWidgetViewSettings;
+
+//==============================================================================
+
+class UserMessageWidget;
 
 //==============================================================================
 
@@ -135,8 +138,7 @@ private:
 
     QWidget *mLogoView;
 
-    QWidget *mNoView;
-    QLabel *mNoViewMsg;
+    UserMessageWidget *mNoViewMsg;
 
     QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
 

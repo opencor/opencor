@@ -46,10 +46,11 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
     // Create our details widgets
 
     mCellmlElementDetails = new CellmlAnnotationViewCellmlElementDetailsWidget(pParent);
-    mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
+    mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, false);
     mWebView              = new QWebView(pParent);
 
-    // A connection to handle the looking up of a resource and a resource id
+    // Some connections to handle the looking up of a qualifier, resource and
+    // resource id
 
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
             this, SLOT(qualifierLookupRequested(const QString &, const bool &)));

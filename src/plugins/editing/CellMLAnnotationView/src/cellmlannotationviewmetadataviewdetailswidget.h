@@ -46,7 +46,8 @@ class CellmlAnnotationViewMetadataViewDetailsWidget : public QStackedWidget,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                           const bool &pEditingMode);
     ~CellmlAnnotationViewMetadataViewDetailsWidget();
 
     virtual void retranslateUi();
@@ -62,7 +63,6 @@ private:
 
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
-    QWidget *mEmptyView;
     CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
     CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *mBioModelsDotNetView;
 };

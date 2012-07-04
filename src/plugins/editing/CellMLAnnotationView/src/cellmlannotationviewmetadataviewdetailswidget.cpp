@@ -18,7 +18,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                                             const bool &pEditingMode) :
     QStackedWidget(pParent),
     CommonWidget(pParent),
     mParent(pParent),
@@ -31,19 +32,15 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
     // Create our different metadata views
 
-    mEmptyView           = new QWidget(pParent);
     mRawView             = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
-    mBioModelsDotNetView = new CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(pParent);
+    mBioModelsDotNetView = new CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(pParent, pEditingMode);
 
-    // Make our empty view the default widget
+    // Make our raw view the default widget
     // Note: for the GUI to be properly initialised, we must add and immediately
     //       remove the views which we don't yet need. Not to do that may mess
     //       things up in our parent, so...
 
-    addWidget(mEmptyView);
-
     addWidget(mRawView);
-    removeWidget(mRawView);
 
     addWidget(mBioModelsDotNetView);
     removeWidget(mBioModelsDotNetView);
@@ -80,28 +77,24 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
 
     // Decide on which view to use and update it, if needed
 
-    removeWidget(mEmptyView);
     removeWidget(mRawView);
     removeWidget(mBioModelsDotNetView);
 
-    if (pRdfTriples.isEmpty())
-        addWidget(mEmptyView);
-    else
-        switch (pRdfTriples.type()) {
-        case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
-        case CellMLSupport::CellmlFileRdfTriple::Empty:
-            addWidget(mBioModelsDotNetView);
+    switch (pRdfTriples.type()) {
+    case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
+    case CellMLSupport::CellmlFileRdfTriple::Empty:
+        addWidget(mBioModelsDotNetView);
 
-            mBioModelsDotNetView->updateGui(pRdfTriples);
+        mBioModelsDotNetView->updateGui(pRdfTriples);
 
-            break;
-        default:
-            // Unknown type, so...
+        break;
+    default:
+        // Unknown type, so...
 
-            addWidget(mRawView);
+        addWidget(mRawView);
 
-            mRawView->updateGui(pRdfTriples);
-        }
+        mRawView->updateGui(pRdfTriples);
+    }
 }
 
 //==============================================================================

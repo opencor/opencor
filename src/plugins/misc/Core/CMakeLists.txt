@@ -24,6 +24,7 @@ ADD_PLUGIN(Core
         src/organisationwidget.cpp
         src/toolbar.cpp
         src/treeview.cpp
+        src/usermessagewidget.cpp
         src/widget.cpp
     HEADERS_MOC
         ../../plugin.h
@@ -37,9 +38,11 @@ ADD_PLUGIN(Core
         src/organisationwidget.h
         src/toolbar.h
         src/treeview.h
+        src/usermessagewidget.h
         src/widget.h
     UIS
         src/centralwidget.ui
+        src/usermessagewidget.ui
     INCLUDE_DIRS
         src
     QT_DEPENDENCIES

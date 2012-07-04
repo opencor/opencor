@@ -386,17 +386,27 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pCmetaId) con
 
 //==============================================================================
 
+bool CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
+{
+    // Remove the given RDF triple
+
+    return removeOne(pRdfTriple);
+}
+
+//==============================================================================
+
 bool CellmlFileRdfTriples::remove(const QString &pCmetaId)
 {
     // Remove all the RDF triples which are directly or indirectly associated
     // with pCmetaId
 
+    bool res = true;
     CellmlFileRdfTriples rdfTriples = contains(pCmetaId);
 
     for (int i = 0, iMax = rdfTriples.count(); i < iMax; ++i)
-        removeOne(rdfTriples[i]);
+        res = res && removeOne(rdfTriples[i]);
 
-    return rdfTriples.count();
+    return res;
 }
 
 //==============================================================================
@@ -404,8 +414,6 @@ bool CellmlFileRdfTriples::remove(const QString &pCmetaId)
 bool CellmlFileRdfTriples::removeAll()
 {
     // Remove all the RDF triples
-
-    int oldCount = count();
 
     for (int i = count()-1; i >= 0; --i) {
         CellmlFileRdfTriple *rdfTriple = at(i);
@@ -415,7 +423,7 @@ bool CellmlFileRdfTriples::removeAll()
         delete rdfTriple;
     }
 
-    return oldCount != count();
+    return isEmpty();
 }
 
 //==============================================================================

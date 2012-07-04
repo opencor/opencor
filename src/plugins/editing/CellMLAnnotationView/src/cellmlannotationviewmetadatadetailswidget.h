@@ -13,6 +13,8 @@
 //==============================================================================
 
 class QLabel;
+class QSplitter;
+class QWebView;
 
 //==============================================================================
 
@@ -28,6 +30,7 @@ namespace OpenCOR {
 
 namespace Core {
     class BorderedWidget;
+    class UserMessageWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -59,12 +62,22 @@ private:
     Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
 
     Core::BorderedWidget *mBorderedUnsupportedMetadataMsg;
-    QLabel *mUnsupportedMetadataMsg;
+    Core::UserMessageWidget *mUnsupportedMetadataMsg;
 
-    Core::BorderedWidget *mBorderedMetadataViewDetails;
+    QSplitter *mSplitter;
+
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
+    QWebView *mWebView;
 
 private Q_SLOTS:
+    void qualifierLookupRequested(const QString &pQualifier,
+                                  const bool &pRetranslate);
+    void resourceLookupRequested(const QString &pResource,
+                                 const bool &pRetranslate);
+    void resourceIdLookupRequested(const QString &pResource,
+                                   const QString &pId,
+                                   const bool &pRetranslate);
+
     void metadataUpdated();
 };
 
