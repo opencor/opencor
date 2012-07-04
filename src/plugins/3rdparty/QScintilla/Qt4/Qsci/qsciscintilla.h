@@ -1,7 +1,7 @@
 // This module defines the "official" high-level API of the Qt port of
 // Scintilla.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 

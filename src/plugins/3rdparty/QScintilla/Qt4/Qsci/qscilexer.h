@@ -1,6 +1,6 @@
 // This defines the interface to the QsciLexer class.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -255,9 +255,9 @@ public:
     //! should only be re-implemented by custom lexers.
     virtual int styleBitsNeeded() const;
 
-    //! \internal Returns the string of characters that comprise a word.
-    //! The default is 0 which implies the upper and lower case alphabetic
-    //! characters and underscore.
+    //! Returns the string of characters that comprise a word.  The default is
+    //! 0 which implies the upper and lower case alphabetic characters and
+    //! underscore.
     virtual const char *wordCharacters() const;
 
     //! The colour, paper, font and end-of-line for each style number, and

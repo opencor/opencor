@@ -1,6 +1,6 @@
 // This defines the interface to the QsciLexerCPP class.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -172,7 +172,7 @@ public:
     //! \internal Returns the style used for braces for brace matching.
     int braceStyle() const;
 
-    //! \internal Returns the string of characters that comprise a word.
+    //! Returns the string of characters that comprise a word.
     const char *wordCharacters() const;
 
     //! Returns the foreground colour of the text for style number \a style.
@@ -192,7 +192,11 @@ public:
     QColor defaultPaper(int style) const;
 
     //! Returns the set of keywords for the keyword set \a set recognised
-    //! by the lexer as a space separated string.
+    //! by the lexer as a space separated string.  Set 1 is normally used for
+    //! primary keywords and identifiers.  Set 2 is normally used for secondary
+    //! keywords and identifiers.  Set 3 is normally used for documentation
+    //! comment keywords.  Set 4 is normally used for global classes and
+    //! typedefs.
     const char *keywords(int set) const;
 
     //! Returns the descriptive name for style number \a style.  If the

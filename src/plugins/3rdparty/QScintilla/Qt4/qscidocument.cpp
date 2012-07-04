@@ -1,6 +1,6 @@
 // This module implements the QsciDocument class.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -129,8 +129,13 @@ void QsciDocument::display(QsciScintillaBase *qsb, const QsciDocument *from)
 {
     void *ndoc = (from ? from->pdoc->doc : 0);
 
+    // SCI_SETDOCPOINTER appears to reset the EOL mode so save and restore it.
+    int eol_mode = qsb->SendScintilla(QsciScintillaBase::SCI_GETEOLMODE);
+
     qsb->SendScintilla(QsciScintillaBase::SCI_SETDOCPOINTER, 0, ndoc);
     ndoc = qsb->SendScintillaPtrResult(QsciScintillaBase::SCI_GETDOCPOINTER);
+
+    qsb->SendScintilla(QsciScintillaBase::SCI_SETEOLMODE, eol_mode);
 
     pdoc->doc = ndoc;
     ++pdoc->nr_displays;
