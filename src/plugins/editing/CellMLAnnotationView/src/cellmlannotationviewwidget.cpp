@@ -82,10 +82,13 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     setFocusProxy(mListsWidget);
 
-    // Select the first CellML node from our CellML list
+    // Select the first node from our lists
+    // Note: our CellML list is our primary list, so we must select the first
+    //       node of our lists in a reverse order, i.e. finish with our CellML
+    //       list...
 
-    mListsWidget->cellmlList()->treeView()->selectFirstNode();
     mListsWidget->metadataList()->treeView()->selectFirstNode();
+    mListsWidget->cellmlList()->treeView()->selectFirstNode();
 }
 
 //==============================================================================

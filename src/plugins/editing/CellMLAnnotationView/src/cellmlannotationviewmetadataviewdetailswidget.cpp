@@ -77,12 +77,10 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
 
     // Decide on which view to use and update it, if needed
 
-    removeWidget(mRawView);
-    removeWidget(mBioModelsDotNetView);
-
     switch (pRdfTriples.type()) {
     case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
     case CellMLSupport::CellmlFileRdfTriple::Empty:
+        removeWidget(mRawView);
         addWidget(mBioModelsDotNetView);
 
         mBioModelsDotNetView->updateGui(pRdfTriples);
@@ -91,6 +89,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
     default:
         // Unknown type, so...
 
+        removeWidget(mBioModelsDotNetView);
         addWidget(mRawView);
 
         mRawView->updateGui(pRdfTriples);
