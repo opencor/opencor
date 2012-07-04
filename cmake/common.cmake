@@ -719,6 +719,23 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
 
+    # A few Mac OS X specific things
+
+    IF(APPLE)
+        # Make sure that the copy of our plugin in our main build directory
+        # refers to the system version of the Qt libraries on which it depends
+        # Note: indeed, right now, it refers to our embedded version of the Qt
+        #       libraries while, if we want the tests to work, it should refer
+        #       to the system version of the Qt libraries, so...
+
+        FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
+            ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_UPDATE_MAC_OS_X_QT_REFERENCE ALL
+                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                 ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                 ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ENDFOREACH()
+    ENDIF()
+
     # Package the plugin itself
 
     INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
