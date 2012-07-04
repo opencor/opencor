@@ -123,13 +123,13 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
         disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
                    this, SLOT(newCmetaId(const QString &)));
 
-    // 'Clean up' our web view
-
-    mWebView->setUrl(QString());
-
     // Update our CellML element details GUI
 
     mCellmlElementDetails->updateGui(pItems);
+
+    // 'Clean up' our web view
+
+    mWebView->setUrl(QString());
 
     // Re-track changes to the cmeta:id value of our CellML element and update
     // our metadata details GUI
@@ -156,7 +156,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateSizes(const QList<int> &pSiz
 
 void CellmlAnnotationViewCellmlDetailsWidget::emitSplitterMoved()
 {
-    // Let whoever know that our splitter has been moved
+    // Let people know that our splitter has been moved
 
     emit splitterMoved(sizes());
 }
@@ -182,13 +182,13 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaId(const QString &pCmetaId
 
     oldRdfTriples = rdfTriples;
 
-    // 'Clean up' our web view
-
-    mWebView->setUrl(QString());
-
     // Update its metadata details
 
     mMetadataViewDetails->updateGui(rdfTriples);
+
+    // 'Clean up' our web view
+
+    mWebView->setUrl(QString());
 }
 
 //==============================================================================

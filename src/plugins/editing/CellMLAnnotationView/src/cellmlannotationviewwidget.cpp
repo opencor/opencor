@@ -187,7 +187,7 @@ void CellmlAnnotationViewWidget::updateSizes(const QList<int> &pSizes)
 
 void CellmlAnnotationViewWidget::emitSplitterMoved()
 {
-    // Let whoever know that our splitter has been moved
+    // Let people know that our splitter has been moved
 
     emit splitterMoved(sizes());
 }

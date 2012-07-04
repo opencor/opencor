@@ -39,6 +39,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
+class CellmlAnnotationViewMetadataEditDetailsWidget;
 class CellmlAnnotationViewMetadataViewDetailsWidget;
 class CellmlAnnotationViewWidget;
 
@@ -56,6 +57,8 @@ public:
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 
+    QSplitter * splitter() const;
+
 private:
     CellmlAnnotationViewWidget *mParent;
 
@@ -66,10 +69,19 @@ private:
 
     QSplitter *mSplitter;
 
+    CellmlAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;
 
+Q_SIGNALS:
+    void splitterMoved(const QList<int> &pSizes);
+
+public Q_SLOTS:
+    void updateSizes(const QList<int> &pSizes);
+
 private Q_SLOTS:
+    void emitSplitterMoved();
+
     void qualifierLookupRequested(const QString &pQualifier,
                                   const bool &pRetranslate);
     void resourceLookupRequested(const QString &pResource,
