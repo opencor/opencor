@@ -115,6 +115,11 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
     connect(mTreeView->model(), SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
             this, SLOT(updateActions()));
 
+    // A connection to handle the editing of a node
+
+    connect(mDataModel, SIGNAL(itemChanged(QStandardItem *)),
+            this, SLOT(itemChanged(QStandardItem *)));
+
     // A connection to make sure that our tree view has the focus whenever some
     // metadata has been updated
 
@@ -306,6 +311,10 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
 
         mIndexes.removeFirst();
 
+        // Keep track of the id
+
+        mCurrentId = mDataModel->itemFromIndex(crtIndex)->text();
+
         // Update the details GUI
 
         mParent->detailsWidget()->updateGui(mParent->cellmlFile()->rdfTriples(mDataModel->itemFromIndex(crtIndex)->text()));
@@ -314,6 +323,30 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
     // We are done, so...
 
     alreadyUpdatingNode = false;
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::itemChanged(QStandardItem * pItem)
+{
+    // An id has been renamed, so resort our list
+
+    QString id = pItem->text();
+
+qDebug("----------------------");
+qDebug("Old id: %s", qPrintable(mCurrentId));
+qDebug("New id: %s", qPrintable(id));
+//---GRY--- UPDATE THE CELLML FILE METADATA...
+
+    mDataModel->sort(0);
+
+    // Make sure that the renamed id is selected
+
+    setCurrentId(id);
+
+    // Let people know that some metadata has been renamed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================
@@ -332,6 +365,34 @@ QString CellmlAnnotationViewMetadataListWidget::currentId() const
     // Return the current id
 
     return mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataListWidget::setCurrentId(const QString &pId)
+{
+    // Set the given id as our new current id
+
+    for (int i = 0, iMax = mDataModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *standardItem = mDataModel->invisibleRootItem()->child(i);
+
+        if (!pId.compare(standardItem->text())) {
+            // We have found our new current id in our list, so select it and
+            // force its details to be shown
+            // Note: we need to force its details to be shown (by 'resetting'
+            //       the current index) because it may already be the current id
+            //       (e.g. we were viewing some CellML element information and
+            //       decided to edit the metadata associated with the CellML
+            //       element's cmeta:id), so...
+
+            QModelIndex index = mDataModel->indexFromItem(standardItem);
+
+            mTreeView->setCurrentIndex(QModelIndex());
+            mTreeView->setCurrentIndex(index);
+
+            break;
+        }
+    }
 }
 
 //==============================================================================
@@ -384,6 +445,10 @@ void CellmlAnnotationViewMetadataListWidget::on_actionAddMetadata_triggered()
 
     // Edit our new metadata item, but only if our current metadata item is not
     // already being edited
+    // Note: whether a metadata item is being edited or not, we are going to end
+    //       up editing a metadata item and upon editing, we emit the
+    //       metadataUpdated signal (see itemChanged()) which is exactly what we
+    //       want...
 
     if (!mTreeView->isEditing())
         mTreeView->edit(metadataItem->index());

@@ -23,6 +23,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QStandardItem;
 class QStandardItemModel;
 
 //==============================================================================
@@ -60,6 +61,8 @@ public:
     Core::TreeView * treeView() const;
 
     QString currentId() const;
+    void setCurrentId(const QString &pId);
+
     QStringList ids() const;
 
 protected:
@@ -75,6 +78,8 @@ private:
 
     QList<QModelIndex> mIndexes;
 
+    QString mCurrentId;
+
     void populateDataModel();
 
 Q_SIGNALS:
@@ -83,6 +88,8 @@ Q_SIGNALS:
 private Q_SLOTS:
     void updateActions();
     void updateNode(const QModelIndex &pNewIndex, const QModelIndex &pOldIndex);
+
+    void itemChanged(QStandardItem *pItem);
 
     void on_actionAddMetadata_triggered();
 

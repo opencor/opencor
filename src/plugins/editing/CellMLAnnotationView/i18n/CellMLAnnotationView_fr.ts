@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>CellmlAnnotationViewCellmlElementDetailsWidget</name>
+    <message>
+        <source>Edit the metadata</source>
+        <translation>Editer la métadonnée</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Editer</translation>
+    </message>
+</context>
+<context>
     <name>CellmlAnnotationViewCellmlListWidget</name>
     <message>
         <source>&amp;Expand All</source>
@@ -18,6 +29,17 @@
     <message>
         <source>Collapse all the children nodes</source>
         <translation>Réduire tous les noeuds enfants</translation>
+    </message>
+</context>
+<context>
+    <name>CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget</name>
+    <message>
+        <source>Remove</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <source>Remove the metadata information</source>
+        <translation>Supprimer les informations pour la métadonnée</translation>
     </message>
 </context>
 <context>
@@ -265,10 +287,6 @@
     <message>
         <source>Id</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Supprimer</translation>
     </message>
 </context>
 <context>

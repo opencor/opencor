@@ -81,6 +81,7 @@ public:
                      const int &pNumber = -1);
 
     void updateGui(const Items &pItems);
+    void updateGui();
 
     QComboBox * cmetaIdValue() const;
 
@@ -101,6 +102,8 @@ private:
 
 private Q_SLOTS:
     void newCmetaId(const QString &pCmetaId);
+
+    void on_actionEditMetadata_triggered();
 };
 
 //==============================================================================

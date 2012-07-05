@@ -20,6 +20,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QScrollBar>
+#include <QToolButton>
 
 //==============================================================================
 
@@ -82,7 +83,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mItems);
+    updateGui();
 }
 
 //==============================================================================
@@ -106,7 +107,7 @@ CellmlAnnotationViewCellmlElementDetailsWidget::Item CellmlAnnotationViewCellmlE
 
 void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pItems)
 {
-    // Hide ourselves (to avoid any flickering during the updaate)
+    // Hide ourselves (to avoid any flickering during the update)
 
     setVisible(false);
 
@@ -225,8 +226,21 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
         QString cmetaId = item.element->cmetaId();
 
         if (i == iLast) {
-            // This is our 'main' current item, so we want to allow the user to
-            // edit its cmeta:id
+            // This is our 'main' item, so we want to allow the user to edit its
+            // cmeta:id. For this, we use a QComboBox, but we also want to have
+            // a QToolButton to allow the user to switch to the editing mode of
+            // the metadata associated with the cmeta:id, so we create a meta
+            // widget which contains both a QComboBox and a QToolButton
+
+            QWidget *cmetaIdWidget = new QWidget(mWidget);
+
+            QHBoxLayout *cmetaIdWidgetLayout = new QHBoxLayout(cmetaIdWidget);
+
+            cmetaIdWidgetLayout->setMargin(0);
+
+            cmetaIdWidget->setLayout(cmetaIdWidgetLayout);
+
+            // Create our QComboBox widget
 
             mCmetaIdValue = new QComboBox(mWidget);
 
@@ -254,15 +268,29 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
                 mCmetaIdValue->setEditText(cmetaId);
 
+            // Create our QToolButton
+
+            QToolButton *editButton = new QToolButton(mWidget);
+
+            editButton->setDefaultAction(mGui->actionEditMetadata);
+
+            // Add our QComboBox and QToolButton to our cmeta:id widget
+
+            cmetaIdWidgetLayout->addWidget(mCmetaIdValue);
+            cmetaIdWidgetLayout->addWidget(editButton);
+
+            // Add our cmeta:id widget to our main layout
+
             mLayout->addRow(mParent->newLabel(mWidget, tr("cmeta:id:"), true),
-                            mCmetaIdValue);
+                            cmetaIdWidget);
 
             // Make our cmeta:id value the widget to tab to after our CellML
             // tree view
 
             setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->cellmlList()->treeView()),
                         mCmetaIdValue);
-            setTabOrder(mCmetaIdValue,
+            setTabOrder(mCmetaIdValue, editButton);
+            setTabOrder(editButton,
                         qobject_cast<QWidget *>(mParent->listsWidget()->metadataList()->treeView()));
 
             // Create a connection to keep track of changes to our cmeta:id
@@ -271,7 +299,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
                     this, SLOT(newCmetaId(const QString &)));
         } else {
-            // Not our 'main' current item, so just display its cmeta:id
+            // Not our 'main' item, so just display its cmeta:id
 
             addRow(tr("cmeta:id:"), cmetaId.isEmpty()?"/":cmetaId);
         }
@@ -374,6 +402,17 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
 //==============================================================================
 
+void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui()
+{
+    // Update the GUI using our existing items
+    // Note: this can be as a result of, for example, a need to retranslate the
+    //       GUI or a change in the metadata...
+
+    updateGui(mItems);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewCellmlElementDetailsWidget::addRow(const QString &pLabel,
                                                             const QString &pValue)
 {
@@ -437,6 +476,15 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &p
     // Keep track of the new cmeta:id value
 
     mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->setCmetaId(pCmetaId);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlElementDetailsWidget::on_actionEditMetadata_triggered()
+{
+    // Switch to the editing side of the metadata
+
+    mParent->listsWidget()->metadataList()->setCurrentId(mCmetaIdValue->currentText());
 }
 
 //==============================================================================

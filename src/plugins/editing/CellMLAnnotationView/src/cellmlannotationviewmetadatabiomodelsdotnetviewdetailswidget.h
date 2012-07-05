@@ -102,6 +102,7 @@ private Q_SLOTS:
                         const bool &pRetranslate = false);
     void lookupResourceId(const QString &pRdfTripleInfo,
                           const bool &pRetranslate = false);
+
     void removeRdfTriple();
 };
 

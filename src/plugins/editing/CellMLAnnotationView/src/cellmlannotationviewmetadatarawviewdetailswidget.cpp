@@ -72,7 +72,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    // Hide ourselves (to avoid any flickering during the updaate)
+    // Hide ourselves (to avoid any flickering during the update)
 
     setVisible(false);
 
