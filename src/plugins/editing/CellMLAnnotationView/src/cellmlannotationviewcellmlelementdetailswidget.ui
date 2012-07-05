@@ -16,21 +16,7 @@
   <property name="widgetResizable">
    <bool>true</bool>
   </property>
-  <action name="actionEditMetadata">
-   <property name="icon">
-    <iconset resource="../res/CellMLAnnotationView.qrc">
-     <normaloff>:/oxygen/actions/format-list-unordered.png</normaloff>:/oxygen/actions/format-list-unordered.png</iconset>
-   </property>
-   <property name="toolTip">
-    <string>Edit</string>
-   </property>
-   <property name="statusTip">
-    <string>Edit the metadata</string>
-   </property>
-  </action>
  </widget>
- <resources>
-  <include location="../res/CellMLAnnotationView.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

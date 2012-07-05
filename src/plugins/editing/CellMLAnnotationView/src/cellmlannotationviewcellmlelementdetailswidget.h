@@ -103,7 +103,7 @@ private:
 private Q_SLOTS:
     void newCmetaId(const QString &pCmetaId);
 
-    void on_actionEditMetadata_triggered();
+    void editMetadata() const;
 };
 
 //==============================================================================

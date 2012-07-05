@@ -19,8 +19,8 @@
 #include <QComboBox>
 #include <QFormLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QScrollBar>
-#include <QToolButton>
 
 //==============================================================================
 
@@ -228,9 +228,9 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
         if (i == iLast) {
             // This is our 'main' item, so we want to allow the user to edit its
             // cmeta:id. For this, we use a QComboBox, but we also want to have
-            // a QToolButton to allow the user to switch to the editing mode of
+            // a QPushButton to allow the user to switch to the editing mode of
             // the metadata associated with the cmeta:id, so we create a meta
-            // widget which contains both a QComboBox and a QToolButton
+            // widget which contains both a QComboBox and a QPushButton
 
             QWidget *cmetaIdWidget = new QWidget(mWidget);
 
@@ -268,11 +268,23 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
                 mCmetaIdValue->setEditText(cmetaId);
 
-            // Create our QToolButton
+            // Create our QPushButton
 
-            QToolButton *editButton = new QToolButton(mWidget);
+            QPushButton *editButton = new QPushButton(mWidget);
+            // Note #1: ideally, we could assign a QAction to our QPushButton,
+            //          but this cannot be done, so... we assign a few
+            //          properties by hand...
+            // Note #2: to use a QToolButton would allow us to assign a QAction
+            //          to it, but a QToolButton doesn't look quite the same as
+            //          a QPushButton on some platforms, so...
 
-            editButton->setDefaultAction(mGui->actionEditMetadata);
+            editButton->setIcon(QIcon(":/oxygen/actions/format-list-unordered.png"));
+            editButton->setStatusTip(tr("Edit the metadata"));
+            editButton->setToolTip(tr("Edit"));
+            editButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+            connect(editButton, SIGNAL(clicked()),
+                    this, SLOT(editMetadata()));
 
             // Add our QComboBox and QToolButton to our cmeta:id widget
 
@@ -480,7 +492,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &p
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementDetailsWidget::on_actionEditMetadata_triggered()
+void CellmlAnnotationViewCellmlElementDetailsWidget::editMetadata() const
 {
     // Switch to the editing side of the metadata
 

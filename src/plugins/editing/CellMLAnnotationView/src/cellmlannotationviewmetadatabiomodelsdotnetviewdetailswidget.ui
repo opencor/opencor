@@ -16,24 +16,7 @@
   <property name="widgetResizable">
    <bool>true</bool>
   </property>
-  <action name="actionRemoveMetadataInformation">
-   <property name="icon">
-    <iconset resource="../../../../../res/ui.qrc">
-     <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="toolTip">
-    <string>Remove</string>
-   </property>
-   <property name="statusTip">
-    <string>Remove the metadata information</string>
-   </property>
-  </action>
  </widget>
- <resources>
-  <include location="../../../../../res/ui.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -14,7 +14,7 @@
 
 #include <QGridLayout>
 #include <QLabel>
-#include <QToolButton>
+#include <QPushButton>
 
 //==============================================================================
 
@@ -182,17 +182,23 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             // Remove button, if needed
 
             if (mEditingMode) {
-                QToolButton *removeButton = new QToolButton(mWidget);
+                QPushButton *removeButton = new QPushButton(mWidget);
+                // Note #1: ideally, we could assign a QAction to our
+                //          QPushButton, but this cannot be done, so... we
+                //          assign a few properties by hand...
+                // Note #2: to use a QToolButton would allow us to assign a
+                //          QAction to it, but a QToolButton doesn't look quite
+                //          the same as a QPushButton on some platforms, so...
 
-                removeButton->setDefaultAction(mGui->actionRemoveMetadataInformation);
+                removeButton->setIcon(QIcon(":/oxygen/actions/edit-delete.png"));
+                removeButton->setStatusTip(tr("Remove the metadata information"));
+                removeButton->setToolTip(tr("Remove"));
+                removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
                 mRdfTriplesMapping.insert(removeButton, rdfTriple);
 
                 connect(removeButton, SIGNAL(clicked()),
                         this, SLOT(removeRdfTriple()));
-                // Note: we don't rely on mGui->actionRemoveMetadataInformation
-                //       and its triggered event since we need sender() to give
-                //       us the remove button which was clicked...
 
                 mLayout->addWidget(removeButton, row, 3);
             }
