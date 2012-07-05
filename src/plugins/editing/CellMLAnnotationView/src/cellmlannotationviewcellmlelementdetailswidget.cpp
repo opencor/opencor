@@ -286,7 +286,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             connect(editButton, SIGNAL(clicked()),
                     this, SLOT(editMetadata()));
 
-            // Add our QComboBox and QToolButton to our cmeta:id widget
+            // Add our QComboBox and QPushButton to our cmeta:id widget
 
             cmetaIdWidgetLayout->addWidget(mCmetaIdValue);
             cmetaIdWidgetLayout->addWidget(editButton);
