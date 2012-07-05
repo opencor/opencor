@@ -62,8 +62,6 @@ public:
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
                                iface::cellml_api::MapVariables *pMapVariables);
 
-    CellmlFile *cellmlFile() const;
-
     QString cmetaId() const;
     void setCmetaId(const QString &pCmetaId);
 

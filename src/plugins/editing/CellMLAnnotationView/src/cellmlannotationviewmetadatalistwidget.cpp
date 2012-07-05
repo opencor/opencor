@@ -407,7 +407,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_trig
 
     QString cmetaId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
 
-    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeRdfTriples(cmetaId);
+    mParent->cellmlFile()->removeRdfTriples(cmetaId);
 
     // Remove the entry for the cmeta:id from our data model
 
@@ -434,7 +434,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveAllMetadata_triggere
 {
     // Remove all the metadata, i.e. all the RDF triples
 
-    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeAllRdfTriples();
+    mParent->cellmlFile()->removeAllRdfTriples();
 
     // Clean the data model
 
@@ -464,7 +464,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearCurrentMetadata_trigg
     // Clear the current metadata, i.e. all the RDF triples which subject is the
     // same as the cmeta:id
 
-    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeRdfTriples(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
+    mParent->cellmlFile()->removeRdfTriples(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
 
     // Let people know that some metadata has been removed
 
@@ -477,7 +477,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearAllMetadata_triggered
 {
     // Clear all the metadata, i.e. all the RDF triples
 
-    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->cellmlFile()->removeAllRdfTriples();
+    mParent->cellmlFile()->removeAllRdfTriples();
 
     // Let people know that all the metadata have been removed
 
