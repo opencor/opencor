@@ -51,10 +51,14 @@ CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElemen
 
     mGui->setupUi(this);
 
+    // Create the widget (and its layout) which will contain our GUI
+
     mWidget = new QWidget(this);
     mLayout = new QFormLayout(mWidget);
 
     mWidget->setLayout(mLayout);
+
+    // Add our widget to our scroll area
 
     setWidget(mWidget);
 }

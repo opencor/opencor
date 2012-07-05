@@ -21,6 +21,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QGridLayout;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -43,6 +47,9 @@ private:
     CellmlAnnotationViewWidget *mParent;
 
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
+
+    QWidget *mWidget;
+    QGridLayout *mLayout;
 };
 
 //==============================================================================
