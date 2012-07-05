@@ -93,6 +93,8 @@ Q_SIGNALS:
                                    const bool &pRetranslate);
     void unknownLookupRequested();
 
+    void metadataUpdated();
+
 private Q_SLOTS:
     void lookupQualifier(const QString &pRdfTripleInfo,
                          const bool &pRetranslate = false);

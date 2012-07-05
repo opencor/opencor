@@ -421,6 +421,10 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     // Update the GUI to reflect the removal of the RDF triple
 
     updateGui(mRdfTriples, mRdfTripleInfo, mType);
+
+    // Let people know that some metadata has been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================

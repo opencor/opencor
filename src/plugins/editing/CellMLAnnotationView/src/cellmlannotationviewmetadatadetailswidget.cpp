@@ -234,6 +234,15 @@ QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
 
 //==============================================================================
 
+CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataViewDetails() const
+{
+    // Return our metadata view details widget
+
+    return mMetadataViewDetails;
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

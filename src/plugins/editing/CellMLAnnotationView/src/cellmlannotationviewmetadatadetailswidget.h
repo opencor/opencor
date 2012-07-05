@@ -59,6 +59,8 @@ public:
 
     QSplitter * splitter() const;
 
+    CellmlAnnotationViewMetadataViewDetailsWidget * metadataViewDetails() const;
+
 private:
     CellmlAnnotationViewWidget *mParent;
 

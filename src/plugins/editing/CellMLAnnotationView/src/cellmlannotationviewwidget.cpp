@@ -6,8 +6,10 @@
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewdetailswidget.h"
+#include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
+#include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "coreutils.h"
@@ -97,13 +99,23 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
 
-    // A connection to let our details widget know when some/all metadata
-    // has/have removed
+    // Some connections to let our CellML and metadata details widgets know when
+    // some/all metadata has/have been removed
 
     connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
             mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
     connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
             mDetailsWidget->metadataDetails(), SLOT(metadataUpdated()));
+
+    // Some connections to let our CellML details widget know when some RDF
+    // triple has been removed
+    // Note: we must not let our metadata details widget know about it, since
+    //       the removal of RDF triple/s is done directly from it, so it's
+    //       already up to date and to ask it to update itself would 'reset' it,
+    //       so...
+
+    connect(mDetailsWidget->metadataDetails()->metadataViewDetails()->bioModelsDotNetView(), SIGNAL(metadataUpdated()),
+            mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
 
     // Make our lists widget our focus proxy
 
