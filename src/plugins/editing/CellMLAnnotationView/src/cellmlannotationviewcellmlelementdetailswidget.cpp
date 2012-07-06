@@ -397,19 +397,16 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
                    static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(item.element)->secondVariable());
     }
 
-    // Allow ourselves to be updated again
-
-    setUpdatesEnabled(true);
-
     // Scroll down to the bottom of ourselves, just in case things don't fit
     // within the viewport
-    // Note: for this, we need to be up-to-date, hence we make a call to
-    //       qApp->processEvents() and this can only be done when we are once
-    //       again visible...
 
     qApp->processEvents();
 
     verticalScrollBar()->setValue(verticalScrollBar()->maximum());
+
+    // Allow ourselves to be updated again
+
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================
