@@ -99,9 +99,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                                                                              const Type &pType,
                                                                              const bool &pRetranslate)
 {
-    // Hide ourselves (to avoid any flickering during the update)
+    // Prevent ourselves from being updated (to avoid any flickering)
 
-    setVisible(false);
+    setUpdatesEnabled(false);
 
     // Keep track of the RDF triples
 
@@ -229,9 +229,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         genericLookup();
     }
 
-    // Re-show ourselves
+    // Allow ourselves to be updated again
 
-    setVisible(true);
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================

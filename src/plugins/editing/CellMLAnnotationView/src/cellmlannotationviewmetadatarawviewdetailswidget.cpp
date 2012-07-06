@@ -72,9 +72,9 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    // Hide ourselves (to avoid any flickering during the update)
+    // Prevent ourselves from being updated (to avoid any flickering)
 
-    setVisible(false);
+    setUpdatesEnabled(false);
 
     // Remove all previous RDF triples from our tree view
 
@@ -104,9 +104,9 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(const CellMLSup
     mTreeView->resizeColumnToContents(2);
     mTreeView->resizeColumnToContents(3);
 
-    // Re-show ourselves
+    // Allow ourselves to be updated again
 
-    setVisible(true);
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================

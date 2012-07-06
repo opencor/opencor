@@ -107,9 +107,9 @@ CellmlAnnotationViewCellmlElementDetailsWidget::Item CellmlAnnotationViewCellmlE
 
 void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pItems)
 {
-    // Hide ourselves (to avoid any flickering during the update)
+    // Prevent ourselves from being updated (to avoid any flickering)
 
-    setVisible(false);
+    setUpdatesEnabled(false);
 
     // Keep track of the items
 
@@ -397,9 +397,9 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
                    static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(item.element)->secondVariable());
     }
 
-    // Re-show ourselves
+    // Allow ourselves to be updated again
 
-    setVisible(true);
+    setUpdatesEnabled(true);
 
     // Scroll down to the bottom of ourselves, just in case things don't fit
     // within the viewport

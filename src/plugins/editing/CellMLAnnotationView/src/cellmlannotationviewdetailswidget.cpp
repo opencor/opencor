@@ -70,15 +70,6 @@ void CellmlAnnotationViewDetailsWidget::retranslateUi()
 void CellmlAnnotationViewDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems,
                                                   const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    // The widget which updateGui() method we call must first hide itself before
-    // being updated (and then re-show itself once it has been updated), this to
-    // avoid any flickering)
-    // Note #1: one would normally use setUpdatesEnabled(), but it still results
-    //          in bad flickering on Mac OS X, so...
-    // Note #2: it's surprising that setVisible() doesn't cause any flickering
-    //          on any of the platforms we are targetting, but let's not
-    //          complain...
-
     // Ask the CellML or metadata details GUI to update itself, but only if it
     // is done using new data
 
