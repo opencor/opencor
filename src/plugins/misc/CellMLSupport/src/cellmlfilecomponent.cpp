@@ -100,29 +100,29 @@ CellmlFileComponent::~CellmlFileComponent()
 
 //==============================================================================
 
-CellmlFileUnits CellmlFileComponent::units() const
+CellmlFileUnits * CellmlFileComponent::units()
 {
     // Return the component's units
 
-    return mUnits;
+    return &mUnits;
 }
 
 //==============================================================================
 
-CellmlFileVariables CellmlFileComponent::variables() const
+CellmlFileVariables * CellmlFileComponent::variables()
 {
     // Return the component's variables
 
-    return mVariables;
+    return &mVariables;
 }
 
 //==============================================================================
 
-CellmlFileMathmlElements CellmlFileComponent::mathmlElements() const
+CellmlFileMathmlElements * CellmlFileComponent::mathmlElements()
 {
     // Return the component's MathML elements
 
-    return mMathmlElements;
+    return &mMathmlElements;
 }
 
 //==============================================================================

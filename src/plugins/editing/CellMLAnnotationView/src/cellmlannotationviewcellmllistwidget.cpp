@@ -245,7 +245,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
     // Retrieve the model's imports
 
-    if (mParent->cellmlFile()->imports().count()) {
+    if (mParent->cellmlFile()->imports()->count()) {
         // Imports category
 
         CellmlElementItem *importsItem = new CellmlElementItem(CellmlElementItem::Import,
@@ -256,7 +256,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
         // Retrieve the model's imports themselves
 
         foreach (CellMLSupport::CellmlFileImport *import,
-                 mParent->cellmlFile()->imports()) {
+                 *mParent->cellmlFile()->imports()) {
             // A model import
 
             CellmlElementItem *importItem = new CellmlElementItem(CellmlElementItem::Import,
@@ -312,7 +312,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
     // Retrieve the model's components
 
-    if (mParent->cellmlFile()->components().count()) {
+    if (mParent->cellmlFile()->components()->count()) {
         // Components category
 
         CellmlElementItem *componentsItem = new CellmlElementItem(CellmlElementItem::Component,
@@ -323,7 +323,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
         // Retrieve the model's components themselves
 
         foreach (CellMLSupport::CellmlFileComponent *component,
-                 mParent->cellmlFile()->components()) {
+                 *mParent->cellmlFile()->components()) {
             // A model's component
 
             CellmlElementItem *componentItem = new CellmlElementItem(CellmlElementItem::Component,
@@ -337,7 +337,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
             // Retrieve the model's component's variables
 
-            if (component->variables().count()) {
+            if (component->variables()->count()) {
                 // Variables category
 
                 CellmlElementItem *variablesItem = new CellmlElementItem(CellmlElementItem::Variable,
@@ -348,7 +348,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
                 // Retrieve the model's component's variables themselves
 
                 foreach (CellMLSupport::CellmlFileVariable *variable,
-                         component->variables())
+                         *component->variables())
                     variablesItem->appendRow(new CellmlElementItem(CellmlElementItem::Variable,
                                                                    variable));
             }
@@ -357,7 +357,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
     // Retrieve the model's groups
 
-    if (mParent->cellmlFile()->groups().count()) {
+    if (mParent->cellmlFile()->groups()->count()) {
         // Groups category
 
         CellmlElementItem *groupsItem = new CellmlElementItem(CellmlElementItem::Group,
@@ -369,7 +369,8 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
         int counter = 0;
 
-        foreach (CellMLSupport::CellmlFileGroup *group, mParent->cellmlFile()->groups()) {
+        foreach (CellMLSupport::CellmlFileGroup *group,
+                 *mParent->cellmlFile()->groups()) {
             // A model's group
 
             CellmlElementItem *groupItem = new CellmlElementItem(CellmlElementItem::Group,
@@ -420,7 +421,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
     // Retrieve the model's connections
 
-    if (mParent->cellmlFile()->connections().count()) {
+    if (mParent->cellmlFile()->connections()->count()) {
         // Connections category
 
         CellmlElementItem *connectionsItem = new CellmlElementItem(CellmlElementItem::Connection,
@@ -432,7 +433,8 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
         int counter = 0;
 
-        foreach (CellMLSupport::CellmlFileConnection *connection, mParent->cellmlFile()->connections()) {
+        foreach (CellMLSupport::CellmlFileConnection *connection,
+                 *mParent->cellmlFile()->connections()) {
             // A model's connection
 
             CellmlElementItem *connectionItem = new CellmlElementItem(CellmlElementItem::Connection,
@@ -459,11 +461,11 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 //==============================================================================
 
 void CellmlAnnotationViewCellmlListWidget::populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
-                                                                  const CellMLSupport::CellmlFileUnits pUnits)
+                                                                  CellMLSupport::CellmlFileUnits *pUnits)
 {
     // Retrieve the units
 
-    if (pUnits.count()) {
+    if (pUnits->count()) {
         // Units category
 
         CellmlElementItem *unitsItem = new CellmlElementItem(CellmlElementItem::Unit,
@@ -473,7 +475,7 @@ void CellmlAnnotationViewCellmlListWidget::populateUnitsDataModel(CellmlElementI
 
         // Retrieve the units themselves
 
-        foreach (CellMLSupport::CellmlFileUnit *unit, pUnits) {
+        foreach (CellMLSupport::CellmlFileUnit *unit, *pUnits) {
             CellmlElementItem *unitItem = new CellmlElementItem(CellmlElementItem::Unit,
                                                                 unit);
 

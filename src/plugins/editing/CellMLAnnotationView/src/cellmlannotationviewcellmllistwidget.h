@@ -79,7 +79,7 @@ private:
 
     void populateDataModel();
     void populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
-                                const CellMLSupport::CellmlFileUnits pUnits);
+                                CellMLSupport::CellmlFileUnits *pUnits);
     void populateComponentReferenceDataModel(CellmlElementItem *pCellmlElementItem,
                                              CellMLSupport::CellmlFileComponentReference *pComponentReference);
 

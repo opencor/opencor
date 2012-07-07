@@ -123,13 +123,13 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
         disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
                    this, SLOT(newCmetaId(const QString &)));
 
-    // Update our CellML element details GUI
-
-    mCellmlElementDetails->updateGui(pItems);
-
     // 'Clean up' our web view
 
     mWebView->setUrl(QString());
+
+    // Update our CellML element details GUI
+
+    mCellmlElementDetails->updateGui(pItems);
 
     // Re-track changes to the cmeta:id value of our CellML element and update
     // our metadata details GUI
@@ -185,10 +185,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaId(const QString &pCmetaId
     // Update its metadata details
 
     mMetadataViewDetails->updateGui(rdfTriples);
-
-    // 'Clean up' our web view
-
-    mWebView->setUrl(QString());
 }
 
 //==============================================================================

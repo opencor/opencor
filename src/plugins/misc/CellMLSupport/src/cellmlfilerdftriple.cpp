@@ -354,12 +354,12 @@ void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
 
 //==============================================================================
 
-CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pCmetaId) const
+CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pId) const
 {
     Q_ASSERT(mCellmlFile);
 
     // Return all the RDF triples which are directly or indirectly associated
-    // with pCmetaId
+    // with pId
 
     CellmlFileRdfTriples res = CellmlFileRdfTriples(mCellmlFile);
 
@@ -375,7 +375,7 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pCmetaId) con
             // We have an RDF triple of which we can make sense, so retrieve and
             // check its group name
 
-            if (!pCmetaId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
+            if (!pId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
                 // It's the correct group name, so add it to our list
 
                 recursiveContains(res, rdfTriple);
@@ -388,23 +388,40 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pCmetaId) con
 
 bool CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
 {
+    Q_ASSERT(mCellmlFile);
+
     // Remove the given RDF triple
 
-    return removeOne(pRdfTriple);
+    if (removeOne(pRdfTriple)) {
+        mCellmlFile->setModified(true);
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
 
-bool CellmlFileRdfTriples::remove(const QString &pCmetaId)
+bool CellmlFileRdfTriples::remove(const QString &pId)
 {
+    Q_ASSERT(mCellmlFile);
+
     // Remove all the RDF triples which are directly or indirectly associated
-    // with pCmetaId
+    // with pId
 
     bool res = true;
-    CellmlFileRdfTriples rdfTriples = contains(pCmetaId);
+    CellmlFileRdfTriples rdfTriples = contains(pId);
 
     for (int i = 0, iMax = rdfTriples.count(); i < iMax; ++i)
-        res = res && removeOne(rdfTriples[i]);
+        if (!removeOne(rdfTriples[i])) {
+            res = false;
+
+            break;
+        }
+
+    if (res)
+        mCellmlFile->setModified(true);
 
     return res;
 }
@@ -413,7 +430,11 @@ bool CellmlFileRdfTriples::remove(const QString &pCmetaId)
 
 bool CellmlFileRdfTriples::removeAll()
 {
+    Q_ASSERT(mCellmlFile);
+
     // Remove all the RDF triples
+
+    bool res = false;
 
     for (int i = count()-1; i >= 0; --i) {
         CellmlFileRdfTriple *rdfTriple = at(i);
@@ -421,9 +442,30 @@ bool CellmlFileRdfTriples::removeAll()
         removeAt(i);
 
         delete rdfTriple;
+
+        res = true;
     }
 
-    return isEmpty();
+    if (res)
+        mCellmlFile->setModified(true);
+
+    return res;
+}
+
+//==============================================================================
+
+bool CellmlFileRdfTriples::renameId(const QString &pOldId,
+                                    const QString &pNewId)
+{
+    Q_ASSERT(mCellmlFile);
+
+    // Rename the pOldId association of all the RDF triples to pNewId
+
+    bool res = true;
+
+//---GRY--- TO BE DONE...
+
+    return res;
 }
 
 //==============================================================================

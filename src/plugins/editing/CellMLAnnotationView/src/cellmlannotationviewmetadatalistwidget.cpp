@@ -195,7 +195,7 @@ void CellmlAnnotationViewMetadataListWidget::populateDataModel()
     QStringList ids = QStringList();
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             mParent->cellmlFile()->rdfTriples())
+             *mParent->cellmlFile()->rdfTriples())
         // Retrieve the RDF triple's subject so we can determine to which group
         // of RDF triples it should be added
         // Note: the RDF triple is part of an rdf:Description element which is
@@ -313,7 +313,7 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
 
         // Keep track of the id
 
-        mCurrentId = mDataModel->itemFromIndex(crtIndex)->text();
+        mId = mDataModel->itemFromIndex(crtIndex)->text();
 
         // Update the details GUI
 
@@ -329,20 +329,19 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
 
 void CellmlAnnotationViewMetadataListWidget::itemChanged(QStandardItem * pItem)
 {
-    // An id has been renamed, so resort our list
+    // An id has been renamed, update the metadata in the CellML file
 
-    QString id = pItem->text();
+    QString newId = pItem->text();
 
-qDebug("----------------------");
-qDebug("Old id: %s", qPrintable(mCurrentId));
-qDebug("New id: %s", qPrintable(id));
-//---GRY--- UPDATE THE CELLML FILE METADATA...
+    mParent->cellmlFile()->rdfTriples()->renameId(mId, newId);
+
+    // Resort our list
 
     mDataModel->sort(0);
 
-    // Make sure that the renamed id is selected
+    // Make sure that the new id is selected
 
-    setCurrentId(id);
+    setCurrentId(newId);
 
     // Let people know that some metadata has been renamed
 
@@ -364,7 +363,12 @@ QString CellmlAnnotationViewMetadataListWidget::currentId() const
 {
     // Return the current id
 
-    return mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
+    QModelIndex currentIndex = mTreeView->currentIndex();
+
+    if (currentIndex.isValid())
+        return mDataModel->itemFromIndex(currentIndex)->text();
+    else
+        return QString();
 }
 
 //==============================================================================
@@ -472,7 +476,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_trig
 
     QString cmetaId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
 
-    mParent->cellmlFile()->removeRdfTriples(cmetaId);
+    mParent->cellmlFile()->rdfTriples()->remove(cmetaId);
 
     // Remove the entry for the cmeta:id from our data model
 
@@ -499,7 +503,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveAllMetadata_triggere
 {
     // Remove all the metadata, i.e. all the RDF triples
 
-    mParent->cellmlFile()->removeAllRdfTriples();
+    mParent->cellmlFile()->rdfTriples()->removeAll();
 
     // Clean the data model
 
@@ -529,7 +533,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearCurrentMetadata_trigg
     // Clear the current metadata, i.e. all the RDF triples which subject is the
     // same as the cmeta:id
 
-    mParent->cellmlFile()->removeRdfTriples(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
+    mParent->cellmlFile()->rdfTriples()->remove(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
 
     // Let people know that some metadata has been removed
 
@@ -542,7 +546,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearAllMetadata_triggered
 {
     // Clear all the metadata, i.e. all the RDF triples
 
-    mParent->cellmlFile()->removeAllRdfTriples();
+    mParent->cellmlFile()->rdfTriples()->removeAll();
 
     // Let people know that all the metadata have been removed
 

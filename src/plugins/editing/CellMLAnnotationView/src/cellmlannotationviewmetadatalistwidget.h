@@ -78,7 +78,7 @@ private:
 
     QList<QModelIndex> mIndexes;
 
-    QString mCurrentId;
+    QString mId;
 
     void populateDataModel();
 

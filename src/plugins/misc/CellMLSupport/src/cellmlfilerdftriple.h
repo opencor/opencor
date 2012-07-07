@@ -102,11 +102,13 @@ public:
 
     CellmlFileRdfTriple::Type type() const;
 
-    CellmlFileRdfTriples contains(const QString &pCmetaId) const;
+    CellmlFileRdfTriples contains(const QString &pId) const;
 
     bool remove(CellmlFileRdfTriple *pRdfTriple);
-    bool remove(const QString &pCmetaId);
+    bool remove(const QString &pId);
     bool removeAll();
+
+    bool renameId(const QString &pOldId, const QString &pNewId);
 
 private:
     CellmlFile *mCellmlFile;

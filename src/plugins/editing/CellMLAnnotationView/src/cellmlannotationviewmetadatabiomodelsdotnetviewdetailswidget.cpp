@@ -388,7 +388,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     // Remove the RDF triple from the CellML file and from our set of RDF
     // triples this widget uses
 
-    mParent->cellmlFile()->removeRdfTriple(rdfTriple);
+    mParent->cellmlFile()->rdfTriples()->remove(rdfTriple);
     mRdfTriples.remove(rdfTriple);
 
     // Retrieve the number of the row we want to delete, as well as the total

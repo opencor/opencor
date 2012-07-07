@@ -145,13 +145,13 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
 //---GRY--- CHECK WHETHER WE NEED TO CLEAN OR UPDATE OUR METADATA EDIT DETAILS
 //          GUI...
 
-    // Update our Metadata view details GUI
-
-    mMetadataViewDetails->updateGui(pRdfTriples);
-
     // 'Clean up' our web view
 
     mWebView->setUrl(QString());
+
+    // Update our Metadata view details GUI
+
+    mMetadataViewDetails->updateGui(pRdfTriples);
 }
 
 //==============================================================================
