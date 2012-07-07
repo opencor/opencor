@@ -319,19 +319,16 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
         QString subject = rdfTriple->subject()->asString();
         CellmlFileRdfTriple::Type res = rdfTriple->type();
 
-        // Go through the remaining RDF triples and make sure that their type
-        // is consistent with that of the first one
+        // Go through the RDF triples and make sure that their type is
+        // consistent with that of the first RDF triple
 
-        for (int i = 2, iMax = count(); i < iMax; ++i) {
-            rdfTriple = at(i);
-
+        foreach (CellmlFileRdfTriple *rdfTriple, *this)
             if (   rdfTriple->subject()->asString().compare(subject)
                 || (rdfTriple->type() != res))
                 // The subject and/or the type of the current RDF triple is
                 // different from that of the first RDF triple, so...
 
                 return CellmlFileRdfTriple::Unknown;
-        }
 
         // All of the RDF triples have the same type, so...
 
@@ -351,12 +348,9 @@ void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
     // Recursively add all the RDF triples which subject matches pRdfTriple's
     // object
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        CellmlFileRdfTriple *rdfTriple = at(i);
-
+    foreach (CellmlFileRdfTriple *rdfTriple, *this)
         if (!rdfTriple->subject()->asString().compare(pRdfTriple->object()->asString()))
             recursiveContains(pRdfTriples, rdfTriple);
-    }
 }
 
 //==============================================================================
@@ -372,11 +366,9 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) 
 
     QString uriBase = mCellmlFile->uriBase();
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
+    foreach (CellmlFileRdfTriple *rdfTriple, *this)
         // Retrieve the RDF triple's subject so we can determine whether it's
         // from the group of RDF triples in which we are interested
-
-        CellmlFileRdfTriple *rdfTriple = at(i);
 
         if (rdfTriple->subject()->type() == CellmlFileRdfTripleElement::UriReference)
             // We have an RDF triple of which we can make sense, so retrieve and
@@ -386,7 +378,6 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) 
                 // It's the correct group name, so add it to our list
 
                 recursiveContains(res, rdfTriple);
-    }
 
     return res;
 }

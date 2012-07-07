@@ -44,14 +44,11 @@ bool ComputerParameters::contains(const ComputerParameter &pParameter) const
     // Note: we only check the name of the parameter, not whether it is a
     //       pointer...
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        const ComputerParameter &parameter = at(i);
-
+    foreach (const ComputerParameter &parameter, *this)
         if (!parameter.name().compare(pParameter.name()))
             // The parameter is already in our list of parameters, so...
 
             return true;
-    }
 
     // The parameter couldn't be found in our list of parameters, so...
 
