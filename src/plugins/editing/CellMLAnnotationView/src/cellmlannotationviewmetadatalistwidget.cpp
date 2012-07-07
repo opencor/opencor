@@ -333,7 +333,7 @@ void CellmlAnnotationViewMetadataListWidget::itemChanged(QStandardItem * pItem)
 
     QString newId = pItem->text();
 
-    mParent->cellmlFile()->rdfTriples()->renameId(mId, newId);
+    mParent->cellmlFile()->rdfTriples()->renameMetadataId(mId, newId);
 
     // Resort our list
 

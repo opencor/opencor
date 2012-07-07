@@ -285,11 +285,9 @@ QString CellmlFileRdfTriple::id() const
 
 //==============================================================================
 
-void CellmlFileRdfTriple::setId(const QString &pId)
+void CellmlFileRdfTriple::setMetadataId(const QString &pMetadataId)
 {
-    if (pId.compare(mId)) {
 //---GRY--- TO BE DONE...
-    }
 }
 
 //==============================================================================
@@ -363,12 +361,12 @@ void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
 
 //==============================================================================
 
-CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pId) const
+CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) const
 {
     Q_ASSERT(mCellmlFile);
 
     // Return all the RDF triples which are directly or indirectly associated
-    // with pId
+    // with pMetadataId
 
     CellmlFileRdfTriples res = CellmlFileRdfTriples(mCellmlFile);
 
@@ -384,7 +382,7 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pId) const
             // We have an RDF triple of which we can make sense, so retrieve and
             // check its group name
 
-            if (!pId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
+            if (!pMetadataId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
                 // It's the correct group name, so add it to our list
 
                 recursiveContains(res, rdfTriple);
@@ -407,16 +405,16 @@ void CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
 
 //==============================================================================
 
-void CellmlFileRdfTriples::remove(const QString &pId)
+void CellmlFileRdfTriples::remove(const QString &pMetadataId)
 {
     Q_ASSERT(mCellmlFile);
 
     // Remove all the RDF triples which are directly or indirectly associated
-    // with pId
+    // with pMetadataId
 
     bool res = true;
 
-    foreach (CellmlFileRdfTriple *rdfTriple, contains(pId))
+    foreach (CellmlFileRdfTriple *rdfTriple, contains(pMetadataId))
         if (!removeOne(rdfTriple)) {
             res = false;
 
@@ -450,8 +448,8 @@ void CellmlFileRdfTriples::removeAll()
 
 //==============================================================================
 
-void CellmlFileRdfTriples::renameId(const QString &pOldId,
-                                    const QString &pNewId)
+void CellmlFileRdfTriples::renameMetadataId(const QString &pOldMetadataId,
+                                            const QString &pNewMetadataId)
 {
     Q_ASSERT(mCellmlFile);
 
@@ -459,8 +457,8 @@ void CellmlFileRdfTriples::renameId(const QString &pOldId,
 
     bool res = false;
 
-    foreach (CellmlFileRdfTriple *rdfTriple, contains(pOldId)) {
-        rdfTriple->setId(pNewId);
+    foreach (CellmlFileRdfTriple *rdfTriple, contains(pOldMetadataId)) {
+        rdfTriple->setMetadataId(pNewMetadataId);
 
         res = true;
     }
