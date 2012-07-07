@@ -77,7 +77,9 @@ public:
     QString bioQualifierAsString() const;
 
     QString resource() const;
+
     QString id() const;
+    void setId(const QString &pId);
 
 private:
     CellmlFileRdfTripleElement *mSubject;
@@ -104,11 +106,11 @@ public:
 
     CellmlFileRdfTriples contains(const QString &pId) const;
 
-    bool remove(CellmlFileRdfTriple *pRdfTriple);
-    bool remove(const QString &pId);
-    bool removeAll();
+    void remove(CellmlFileRdfTriple *pRdfTriple);
+    void remove(const QString &pId);
+    void removeAll();
 
-    bool renameId(const QString &pOldId, const QString &pNewId);
+    void renameId(const QString &pOldId, const QString &pNewId);
 
 private:
     CellmlFile *mCellmlFile;

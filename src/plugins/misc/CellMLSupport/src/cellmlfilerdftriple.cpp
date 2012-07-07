@@ -285,6 +285,15 @@ QString CellmlFileRdfTriple::id() const
 
 //==============================================================================
 
+void CellmlFileRdfTriple::setId(const QString &pId)
+{
+    if (pId.compare(mId)) {
+//---GRY--- TO BE DONE...
+    }
+}
+
+//==============================================================================
+
 CellmlFileRdfTriples::CellmlFileRdfTriples(CellmlFile *pCellmlFile) :
     mCellmlFile(pCellmlFile)
 {
@@ -386,24 +395,19 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pId) const
 
 //==============================================================================
 
-bool CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
+void CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
 {
     Q_ASSERT(mCellmlFile);
 
     // Remove the given RDF triple
 
-    if (removeOne(pRdfTriple)) {
+    if (removeOne(pRdfTriple))
         mCellmlFile->setModified(true);
-
-        return true;
-    } else {
-        return false;
-    }
 }
 
 //==============================================================================
 
-bool CellmlFileRdfTriples::remove(const QString &pId)
+void CellmlFileRdfTriples::remove(const QString &pId)
 {
     Q_ASSERT(mCellmlFile);
 
@@ -411,10 +415,9 @@ bool CellmlFileRdfTriples::remove(const QString &pId)
     // with pId
 
     bool res = true;
-    CellmlFileRdfTriples rdfTriples = contains(pId);
 
-    for (int i = 0, iMax = rdfTriples.count(); i < iMax; ++i)
-        if (!removeOne(rdfTriples[i])) {
+    foreach (CellmlFileRdfTriple *rdfTriple, contains(pId))
+        if (!removeOne(rdfTriple)) {
             res = false;
 
             break;
@@ -422,13 +425,11 @@ bool CellmlFileRdfTriples::remove(const QString &pId)
 
     if (res)
         mCellmlFile->setModified(true);
-
-    return res;
 }
 
 //==============================================================================
 
-bool CellmlFileRdfTriples::removeAll()
+void CellmlFileRdfTriples::removeAll()
 {
     Q_ASSERT(mCellmlFile);
 
@@ -436,36 +437,36 @@ bool CellmlFileRdfTriples::removeAll()
 
     bool res = false;
 
-    for (int i = count()-1; i >= 0; --i) {
-        CellmlFileRdfTriple *rdfTriple = at(i);
+    foreach (CellmlFileRdfTriple *rdfTriple, *this)
+        if (removeOne(rdfTriple)) {
+            delete rdfTriple;
 
-        removeAt(i);
-
-        delete rdfTriple;
-
-        res = true;
-    }
+            res = true;
+        }
 
     if (res)
         mCellmlFile->setModified(true);
-
-    return res;
 }
 
 //==============================================================================
 
-bool CellmlFileRdfTriples::renameId(const QString &pOldId,
+void CellmlFileRdfTriples::renameId(const QString &pOldId,
                                     const QString &pNewId)
 {
     Q_ASSERT(mCellmlFile);
 
     // Rename the pOldId association of all the RDF triples to pNewId
 
-    bool res = true;
+    bool res = false;
 
-//---GRY--- TO BE DONE...
+    foreach (CellmlFileRdfTriple *rdfTriple, contains(pOldId)) {
+        rdfTriple->setId(pNewId);
 
-    return res;
+        res = true;
+    }
+
+    if (res)
+        mCellmlFile->setModified(true);
 }
 
 //==============================================================================
