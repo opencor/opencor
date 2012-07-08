@@ -24,9 +24,6 @@
 #include <list>
 #include <set>
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
   template<typename T> class ArrayRef;
@@ -47,12 +44,7 @@ namespace driver {
 
 /// Driver - Encapsulate logic for constructing compilation processes
 /// from a set of gcc-driver-like command line arguments.
-/*---OPENCOR---
 class Driver {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Driver {
-//---OPENCOR--- END
   OptTable *Opts;
 
   DiagnosticsEngine &Diags;
@@ -191,7 +183,7 @@ private:
   /// arguments, after applying the standard argument translations.
   DerivedArgList *TranslateInputArgs(const InputArgList &Args) const;
 
-  // getFinalPhase - Determine which compilation mode we are in and record
+  // getFinalPhase - Determine which compilation mode we are in and record 
   // which option we used to determine the final phase.
   phases::ID getFinalPhase(const DerivedArgList &DAL, Arg **FinalPhaseArg = 0)
     const;
@@ -257,12 +249,12 @@ public:
   /// ArgList.
   InputArgList *ParseArgStrings(ArrayRef<const char *> Args);
 
-  /// BuildInputs - Construct the list of inputs and their types from
+  /// BuildInputs - Construct the list of inputs and their types from 
   /// the given arguments.
   ///
   /// \param TC - The default host tool chain.
   /// \param Args - The input arguments.
-  /// \param Inputs - The list to store the resulting compilation
+  /// \param Inputs - The list to store the resulting compilation 
   /// inputs onto.
   void BuildInputs(const ToolChain &TC, const DerivedArgList &Args,
                    InputList &Inputs) const;
@@ -300,10 +292,10 @@ public:
   /// temporary files, etc.
   int ExecuteCompilation(const Compilation &C,
                          const Command *&FailingCommand) const;
-
-  /// generateCompilationDiagnostics - Generate diagnostics information
+  
+  /// generateCompilationDiagnostics - Generate diagnostics information 
   /// including preprocessed source file(s).
-  ///
+  /// 
   void generateCompilationDiagnostics(Compilation &C,
                                       const Command *FailingCommand);
 
@@ -384,7 +376,7 @@ public:
                                  const char *BaseInput,
                                  bool AtTopLevel) const;
 
-  /// GetTemporaryPath - Return the pathname of a temporary file to use
+  /// GetTemporaryPath - Return the pathname of a temporary file to use 
   /// as part of compilation; the file will have the given prefix and suffix.
   ///
   /// GCC goes to extra lengths here to be a bit more robust.

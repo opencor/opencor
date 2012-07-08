@@ -22,9 +22,6 @@
 #include <list>
 #include <string>
 #include <utility>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 class raw_fd_ostream;
@@ -66,12 +63,7 @@ class TargetInfo;
 /// in to the compiler instance for everything. When possible, utility functions
 /// come in two forms; a short form that reuses the CompilerInstance objects,
 /// and a long form that takes explicit instances of any required objects.
-/*---OPENCOR---
 class CompilerInstance : public ModuleLoader {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT CompilerInstance : public ModuleLoader {
-//---OPENCOR--- END
   /// The options used in this compiler instance.
   IntrusiveRefCntPtr<CompilerInvocation> Invocation;
 
@@ -101,7 +93,7 @@ class LLVM_EXPORT CompilerInstance : public ModuleLoader {
 
   /// \brief The semantic analysis object.
   OwningPtr<Sema> TheSema;
-
+  
   /// \brief The frontend timer
   OwningPtr<llvm::Timer> FrontendTimer;
 
@@ -111,15 +103,15 @@ class LLVM_EXPORT CompilerInstance : public ModuleLoader {
   /// \brief The set of top-level modules that has already been loaded,
   /// along with the module map
   llvm::DenseMap<const IdentifierInfo *, Module *> KnownModules;
-
+  
   /// \brief The location of the module-import keyword for the last module
-  /// import.
+  /// import. 
   SourceLocation LastModuleImportLoc;
-
+  
   /// \brief The result of the last module import.
   ///
   Module *LastModuleImportResult;
-
+  
   /// \brief Holds information about the output file.
   ///
   /// If TempFilename is not empty we must rename it to Filename at the end.
@@ -287,7 +279,7 @@ public:
   void setDiagnostics(DiagnosticsEngine *Value);
 
   DiagnosticConsumer &getDiagnosticClient() const {
-    assert(Diagnostics && Diagnostics->getClient() &&
+    assert(Diagnostics && Diagnostics->getClient() && 
            "Compiler instance has no diagnostic client!");
     return *Diagnostics->getClient();
   }
@@ -317,7 +309,7 @@ public:
     assert(FileMgr && "Compiler instance has no file manager!");
     return *FileMgr;
   }
-
+  
   void resetAndLeakFileManager() {
     FileMgr.resetWithoutRelease();
   }
@@ -336,7 +328,7 @@ public:
     assert(SourceMgr && "Compiler instance has no source manager!");
     return *SourceMgr;
   }
-
+  
   void resetAndLeakSourceManager() {
     SourceMgr.resetWithoutRelease();
   }
@@ -373,7 +365,7 @@ public:
     assert(Context && "Compiler instance has no AST context!");
     return *Context;
   }
-
+  
   void resetAndLeakASTContext() {
     Context.resetWithoutRelease();
   }
@@ -384,7 +376,7 @@ public:
   /// \brief Replace the current Sema; the compiler instance takes ownership
   /// of S.
   void setSema(Sema *S);
-
+  
   /// }
   /// @name ASTConsumer
   /// {
@@ -408,14 +400,14 @@ public:
   /// @name Semantic analysis
   /// {
   bool hasSema() const { return TheSema != 0; }
-
-  Sema &getSema() const {
+  
+  Sema &getSema() const { 
     assert(TheSema && "Compiler instance has no Sema object!");
     return *TheSema;
   }
-
+  
   Sema *takeSema() { return TheSema.take(); }
-
+  
   /// }
   /// @name Module Management
   /// {
@@ -484,7 +476,7 @@ public:
   /// attached to (and, then, owned by) the DiagnosticsEngine inside this AST
   /// unit.
   ///
-  /// \param ShouldOwnClient If Client is non-NULL, specifies whether
+  /// \param ShouldOwnClient If Client is non-NULL, specifies whether 
   /// the diagnostic object should take ownership of the client.
   ///
   /// \param ShouldCloneClient If Client is non-NULL, specifies whether that
@@ -575,7 +567,7 @@ public:
   /// \brief Create the Sema object to be used for parsing.
   void createSema(TranslationUnitKind TUKind,
                   CodeCompleteConsumer *CompletionConsumer);
-
+  
   /// Create the frontend timer and replace any existing one with it.
   void createFrontendTimer();
 
@@ -661,7 +653,7 @@ public:
                 const FrontendOptions &Opts);
 
   /// }
-
+  
   virtual Module *loadModule(SourceLocation ImportLoc, ModuleIdPath Path,
                              Module::NameVisibilityKind Visibility,
                              bool IsInclusionDirective);

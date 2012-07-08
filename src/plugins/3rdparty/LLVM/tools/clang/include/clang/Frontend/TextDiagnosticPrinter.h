@@ -18,21 +18,13 @@
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Basic/LLVM.h"
 #include "llvm/ADT/OwningPtr.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace clang {
 class DiagnosticOptions;
 class LangOptions;
 class TextDiagnostic;
 
-/*---OPENCOR---
 class TextDiagnosticPrinter : public DiagnosticConsumer {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT TextDiagnosticPrinter : public DiagnosticConsumer {
-//---OPENCOR--- END
   raw_ostream &OS;
   const LangOptions *LangOpts;
   const DiagnosticOptions *DiagOpts;
