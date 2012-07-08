@@ -15,6 +15,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QStackedWidget>
 
 //==============================================================================
 
@@ -29,6 +30,8 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
+    mGridWidget(0),
+    mGridLayout(0),
     mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile())),
     mRdfTripleInfo(QString()),
     mType(Unknown),
@@ -39,33 +42,11 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
 
     mGui->setupUi(this);
 
-    // Create the widget (and its layout) which will contain our GUI
+    // Create a stacked widget which will contain our GUI
 
-    mWidget = new QWidget(this);
+    mWidget = new QStackedWidget(this);
 
-    QVBoxLayout *widgetLayout = new QVBoxLayout(mWidget);
-
-    widgetLayout->setMargin(0);
-
-    mWidget->setLayout(widgetLayout);
-
-    // Create another (grid) widget (and its layout) which will contain the
-    // BioModels.Net information and add it to our main widget together with
-    // some stretch
-    // Note: the stretch is to ensure that the contents of our grid widget
-    //       doesn't take all the vertical space, but only the vertical space
-    //       which is actually needed to display its contents...
-
-    QWidget *gridWidget = new QWidget(mWidget);
-
-    mLayout = new QGridLayout(gridWidget);
-
-    gridWidget->setLayout(mLayout);
-
-    widgetLayout->addWidget(gridWidget);
-    widgetLayout->addStretch();
-
-    // Add our widget to our scroll area
+    // Add our stacked widget to our scroll area
 
     setWidget(mWidget);
 }
@@ -99,6 +80,11 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                                                                              const Type &pType,
                                                                              const bool &pRetranslate)
 {
+    // Note: we are using a grid layout to dislay the contents of our view, but
+    //       to update the contents unfortunately results in some very bad
+    //       flickering on Mac OS X. This can, however, be addressed using a
+    //       stacked widget with a grid-based widget...
+
     // Prevent ourselves from being updated (to avoid any flickering)
 
     setUpdatesEnabled(false);
@@ -107,29 +93,29 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
     mRdfTriples = pRdfTriples;
 
-    // Remove everything from our form layout
+    // Create a new widget and layout
 
-    for (int i = 0, iMax = mLayout->count(); i < iMax; ++i) {
-        QLayoutItem *item = mLayout->takeAt(0);
+    QWidget *newGridWidget = new QWidget(this);
+    QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
 
-        delete item->widget();
-        delete item;
-    }
+    newGridWidget->setLayout(newGridLayout);
 
-    // Update the GUI itself, but only if there is at least one RDF triple
+    // Populate our new layout, but only if there is at least one RDF triple
+
+    QString firstRdfTripleInfo = QString();
 
     if (pRdfTriples.count()) {
         // Create labels to act as headers
 
-        mLayout->addWidget(mParent->newLabel(mWidget, tr("Qualifier"), true, 1.25,
-                                             Qt::AlignCenter),
-                           0, 0);
-        mLayout->addWidget(mParent->newLabel(mWidget, tr("Resource"), true, 1.25,
-                                             Qt::AlignCenter),
-                           0, 1);
-        mLayout->addWidget(mParent->newLabel(mWidget, tr("Id"), true, 1.25,
-                                             Qt::AlignCenter),
-                           0, 2);
+        newGridLayout->addWidget(mParent->newLabel(mWidget, tr("Qualifier"), true, 1.25,
+                                                   Qt::AlignCenter),
+                                 0, 0);
+        newGridLayout->addWidget(mParent->newLabel(mWidget, tr("Resource"), true, 1.25,
+                                                   Qt::AlignCenter),
+                                 0, 1);
+        newGridLayout->addWidget(mParent->newLabel(mWidget, tr("Id"), true, 1.25,
+                                                   Qt::AlignCenter),
+                                 0, 2);
 
         // Add the RDF triples information to our layout
         // Note: for the RDF triple's subject, we try to remove the CellML
@@ -137,7 +123,6 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         //       element cmeta:id which will speak more to the user than a
         //       possibly long URI reference...
 
-        QString firstRdfTripleInfo = QString();
         int row = 0;
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
@@ -155,7 +140,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupQualifier(const QString &)));
 
-            mLayout->addWidget(qualifierLabel, ++row, 0);
+            newGridLayout->addWidget(qualifierLabel, ++row, 0);
 
             // Resource
 
@@ -166,7 +151,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResource(const QString &)));
 
-            mLayout->addWidget(resourceLabel, row, 1);
+            newGridLayout->addWidget(resourceLabel, row, 1);
 
             // Id
 
@@ -177,7 +162,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResourceId(const QString &)));
 
-            mLayout->addWidget(idLabel, row, 2);
+            newGridLayout->addWidget(idLabel, row, 2);
 
             // Remove button, if needed
 
@@ -200,7 +185,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                 connect(removeButton, SIGNAL(clicked()),
                         this, SLOT(removeRdfTriple()));
 
-                mLayout->addWidget(removeButton, row, 3);
+                newGridLayout->addWidget(removeButton, row, 3);
             }
 
             // Keep track of the very first resource id
@@ -209,8 +194,41 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                 firstRdfTripleInfo = rdfTripleInfo;
         }
 
-        // Request for something to be looked up, be it the first resource id or
-        // an 'old' qualifier, resource or resource id
+        // Have all the rows take a minimum of vertical space
+
+        newGridLayout->setRowStretch(++row, 1);
+    }
+
+    // Add our new widget to our stacked widget
+
+    mWidget->addWidget(newGridWidget);
+
+    // Get rid of our old widget and layout (and of its contents)
+
+    if (mGridWidget) {
+        mWidget->removeWidget(mGridWidget);
+
+        for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
+            QLayoutItem *item = mGridLayout->takeAt(0);
+
+            delete item->widget();
+            delete item;
+        }
+
+        delete mGridLayout;
+        delete mGridWidget;
+    }
+
+    // Keep track of our new widget and layout
+
+    mGridWidget = newGridWidget;
+    mGridLayout = newGridLayout;
+
+    // Request for something to be looked up
+
+    if (pRdfTriples.count()) {
+        // Request for the first resource id or an 'old' qualifier, resource or
+        // resource id to be looked up
 
         if (pRdfTripleInfo.isEmpty() && (pType == Unknown))
             // Nothing 'old' to lookup, so lookup the first resource id
@@ -253,21 +271,21 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
     mType          = pType;
 
     // Make the row corresponding to the qualifier, resource or id bold
-    // Note: to use mLayout->rowCount() to determine the number of rows isn't an
-    //       option since no matter whether we remove rows (in updateGui()), the
-    //       returned value will be the maximum number of rows that there has
-    //       ever been, so...
+    // Note: to use mGridLayout->rowCount() to determine the number of rows
+    //       isn't an option since no matter whether we remove rows (in
+    //       updateGui()), the returned value will be the maximum number of rows
+    //       that there has ever been, so...
 
     int row = 0;
 
     forever
-        if (mLayout->itemAtPosition(++row, 0)) {
+        if (mGridLayout->itemAtPosition(++row, 0)) {
             // Valid row, so check whether to make it bold (and italic in some
             // cases) or not
 
-            QLabel *qualifierLabel = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 0)->widget());
-            QLabel *resourceLabel  = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 1)->widget());
-            QLabel *idLabel        = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 2)->widget());
+            QLabel *qualifierLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
+            QLabel *resourceLabel  = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
+            QLabel *idLabel        = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
 
             QFont font = idLabel->font();
 
@@ -353,7 +371,7 @@ QString CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::rdfTripleI
 
     // Retrieve the item for the first label link from the given row
 
-    QLayoutItem *item = mLayout->itemAtPosition(pRow, 0);
+    QLayoutItem *item = mGridLayout->itemAtPosition(pRow, 0);
 
     if (!item)
         // No item could be retrieved, so...
@@ -394,13 +412,14 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     // Retrieve the number of the row we want to delete, as well as the total
     // number of rows
     // Note: should some RDF triples have been removed, then to call
-    //       mLayout->rowCount() won't give us the correct number of rows, so...
+    //       mGridLayout->rowCount() won't give us the correct number of rows,
+    //       so...
 
     int row = -1;
-    int rowMax = mLayout->rowCount();
+    int rowMax = mGridLayout->rowCount();
 
-    for (int i = 1, iMax = mLayout->rowCount(); i < iMax; ++i) {
-        QLayoutItem *item = mLayout->itemAtPosition(i, 3);
+    for (int i = 1, iMax = mGridLayout->rowCount(); i < iMax; ++i) {
+        QLayoutItem *item = mGridLayout->itemAtPosition(i, 3);
 
         if (!item) {
             // The row doesn't exist anymore, so...

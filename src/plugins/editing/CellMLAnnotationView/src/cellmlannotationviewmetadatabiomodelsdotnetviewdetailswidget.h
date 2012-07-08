@@ -23,6 +23,7 @@ namespace Ui {
 //==============================================================================
 
 class QGridLayout;
+class QStackedWidget;
 
 //==============================================================================
 
@@ -65,8 +66,10 @@ private:
 
     Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *mGui;
 
-    QWidget *mWidget;
-    QGridLayout *mLayout;
+    QStackedWidget *mWidget;
+
+    QWidget *mGridWidget;
+    QGridLayout *mGridLayout;
 
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
