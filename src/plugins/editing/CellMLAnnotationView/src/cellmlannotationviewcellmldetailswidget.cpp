@@ -5,6 +5,7 @@
 #include "borderedwidget.h"
 #include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
+#include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 
@@ -123,10 +124,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
         disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
                    this, SLOT(newCmetaId(const QString &)));
 
-    // 'Clean up' our web view
-
-    mWebView->setUrl(QString());
-
     // Update our CellML element details GUI
 
     mCellmlElementDetails->updateGui(pItems);
@@ -140,6 +137,12 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
         newCmetaId(mCellmlElementDetails->cmetaIdValue()->currentText());
     }
+
+    // 'Clean up' our web view, should the raw view of our metadata details view
+    // be visible
+
+    if (mMetadataViewDetails->rawView()->isVisible())
+        mWebView->setUrl(QUrl());
 }
 
 //==============================================================================
@@ -224,7 +227,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::unknownLookupRequested()
 {
     // We are 'asked' to lookup something unknown, so 'clean up' our web view
 
-    mWebView->setUrl(QString());
+    mWebView->setUrl(QUrl());
 }
 
 //==============================================================================

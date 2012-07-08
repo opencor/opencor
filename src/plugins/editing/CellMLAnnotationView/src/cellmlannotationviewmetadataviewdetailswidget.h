@@ -54,6 +54,7 @@ public:
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples = CellMLSupport::CellmlFileRdfTriples());
 
+    CellmlAnnotationViewMetadataRawViewDetailsWidget *rawView() const;
     CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *bioModelsDotNetView() const;
 
 private:

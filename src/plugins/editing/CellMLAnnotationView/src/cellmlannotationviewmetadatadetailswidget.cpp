@@ -8,6 +8,7 @@
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
+#include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
@@ -145,13 +146,15 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
 //---GRY--- CHECK WHETHER WE NEED TO CLEAN OR UPDATE OUR METADATA EDIT DETAILS
 //          GUI...
 
-    // 'Clean up' our web view
-
-    mWebView->setUrl(QString());
-
     // Update our Metadata view details GUI
 
     mMetadataViewDetails->updateGui(pRdfTriples);
+
+    // 'Clean up' our web view, should the raw view of our metadata details view
+    // be visible
+
+    if (mMetadataViewDetails->rawView()->isVisible())
+        mWebView->setUrl(QUrl());
 }
 
 //==============================================================================
@@ -210,7 +213,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::unknownLookupRequested()
 {
     // We are 'asked' to lookup something unknown, so 'clean up' our web view
 
-    mWebView->setUrl(QString());
+    mWebView->setUrl(QUrl());
 }
 
 //==============================================================================

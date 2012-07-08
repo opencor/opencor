@@ -380,11 +380,29 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
     // identifiers.org, but only if we are not retranslating since the looking
     // up would already be correct
 
-    if (!pRetranslate)
-        pWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
+    if (!pRetranslate) {
+        static QMap<QWebView *, QUrl> oldUrls = QMap<QWebView *, QUrl>();
+        // Note: updating the URL of the web view results in it being refreshed,
+        //       even if the URL is the same as the one before in which case it
+        //       looks like some kind of a big flickering. We therefore want to
+        //       avoid setting the URL if it's the same as the previous one.
+        //       Normally, we would check the (current) URL of the web view, but
+        //       this won't work if the URL redirects to another (as is the case
+        //       with identifiers.org URLs), so instead we keep track of the URL
+        //       ourselves...
+
+        QUrl oldUrl = oldUrls.value(pWebView);
+        QUrl newUrl = "http://identifiers.org/"+pResource+"/?redirect=true";
         //---GRY--- NOTE THAT redirect=true DOESN'T WORK AT THE MOMENT, SO WE DO
         //          END UP WITH A FRAME, BUT THE identifiers.org GUYS ARE GOING
         //          TO 'FIX' THAT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
+
+        if (newUrl != oldUrl) {
+            oldUrls.insert(pWebView, newUrl);
+
+            pWebView->setUrl(newUrl);
+        }
+    }
 }
 
 //==============================================================================
@@ -398,8 +416,19 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceIdDetails(QWebView *
     // identifiers.org, but only if we are not retranslating since the looking
     // up would already be correct
 
-    if (!pRetranslate)
-        pWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
+    if (!pRetranslate) {
+        static QMap<QWebView *, QUrl> oldUrls = QMap<QWebView *, QUrl>();
+        // Note: see comment in updateWebViewerWithResourceDetails()...
+
+        QUrl oldUrl = oldUrls.value(pWebView);
+        QUrl newUrl = "http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true";
+
+        if (newUrl != oldUrl) {
+            oldUrls.insert(pWebView, newUrl);
+
+            pWebView->setUrl(newUrl);
+        }
+    }
 }
 
 //==============================================================================

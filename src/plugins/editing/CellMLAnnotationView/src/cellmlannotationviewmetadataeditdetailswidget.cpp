@@ -11,7 +11,7 @@
 
 //==============================================================================
 
-#include <QGridLayout>
+#include <QStackedWidget>
 
 //==============================================================================
 
@@ -30,33 +30,11 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mGui->setupUi(this);
 
-    // Create the widget (and its layout) which will contain our GUI
+    // Create a stacked widget which will contain our GUI
 
-    mWidget = new QWidget(this);
+    mWidget = new QStackedWidget(this);
 
-    QVBoxLayout *widgetLayout = new QVBoxLayout(mWidget);
-
-    widgetLayout->setMargin(0);
-
-    mWidget->setLayout(widgetLayout);
-
-    // Create another (grid) widget (and its layout) which will contain the
-    // BioModels.Net information and add it to our main widget together with
-    // some stretch
-    // Note: the stretch is to ensure that the contents of our grid widget
-    //       doesn't take all the vertical space, but only the vertical space
-    //       which is actually needed to display its contents...
-
-    QWidget *gridWidget = new QWidget(mWidget);
-
-    mLayout = new QGridLayout(gridWidget);
-
-    gridWidget->setLayout(mLayout);
-
-    widgetLayout->addWidget(gridWidget);
-    widgetLayout->addStretch();
-
-    // Add our widget to our scroll area
+    // Add our stacked widget to our scroll area
 
     setWidget(mWidget);
 }
