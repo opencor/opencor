@@ -52,20 +52,16 @@ public:
 
     CellmlFileModel * model() const;
 
-    CellmlFileImports imports() const;
-    CellmlFileUnits units() const;
-    CellmlFileComponents components() const;
-    CellmlFileGroups groups() const;
-    CellmlFileConnections connections() const;
-    CellmlFileRdfTriples rdfTriples() const;
+    CellmlFileImports * imports();
+    CellmlFileUnits * units();
+    CellmlFileComponents * components();
+    CellmlFileGroups * groups();
+    CellmlFileConnections * connections();
+    CellmlFileRdfTriples * rdfTriples();
 
     QString uriBase() const;
 
     CellmlFileRdfTriples rdfTriples(const QString &pCmetaId) const;
-
-    void removeRdfTriple(CellmlFileRdfTriple *pRdfTriple);
-    void removeRdfTriples(const QString &pCmetaId);
-    void removeAllRdfTriples();
 
 private:
     QString mFileName;

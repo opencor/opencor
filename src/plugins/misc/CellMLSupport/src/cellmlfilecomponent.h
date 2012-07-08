@@ -33,9 +33,9 @@ public:
                                  iface::cellml_api::CellMLComponent *pComponent);
     ~CellmlFileComponent();
 
-    CellmlFileUnits units() const;
-    CellmlFileVariables variables() const;
-    CellmlFileMathmlElements mathmlElements() const;
+    CellmlFileUnits * units();
+    CellmlFileVariables * variables();
+    CellmlFileMathmlElements * mathmlElements();
 
 private:
     CellmlFileUnits mUnits;

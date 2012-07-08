@@ -79,7 +79,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlDetailsWidget</name>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewWidget</name>
     <message>
         <source>Identity</source>
         <translation>Identité</translation>
@@ -339,6 +339,14 @@
         <source>Model</source>
         <translation>Modèle</translation>
     </message>
+    <message>
+        <source>Edit the metadata</source>
+        <translation>Editer la métadonnée</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Editer</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlListWidget</name>
@@ -400,6 +408,10 @@
     <message>
         <source>Remove</source>
         <translation>Supprimer</translation>
+    </message>
+    <message>
+        <source>Remove the metadata information</source>
+        <translation>Supprimer les informations pour la métadonnée</translation>
     </message>
 </context>
 <context>

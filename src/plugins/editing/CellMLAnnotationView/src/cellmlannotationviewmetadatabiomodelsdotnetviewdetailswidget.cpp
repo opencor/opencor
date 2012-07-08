@@ -39,6 +39,8 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
 
     mGui->setupUi(this);
 
+    // Create the widget (and its layout) which will contain our GUI
+
     mWidget = new QWidget(this);
 
     QVBoxLayout *widgetLayout = new QVBoxLayout(mWidget);
@@ -46,6 +48,13 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     widgetLayout->setMargin(0);
 
     mWidget->setLayout(widgetLayout);
+
+    // Create another (grid) widget (and its layout) which will contain the
+    // BioModels.Net information and add it to our main widget together with
+    // some stretch
+    // Note: the stretch is to ensure that the contents of our grid widget
+    //       doesn't take all the vertical space, but only the vertical space
+    //       which is actually needed to display its contents...
 
     QWidget *gridWidget = new QWidget(mWidget);
 
@@ -55,6 +64,8 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
 
     widgetLayout->addWidget(gridWidget);
     widgetLayout->addStretch();
+
+    // Add our widget to our scroll area
 
     setWidget(mWidget);
 }
@@ -88,9 +99,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                                                                              const Type &pType,
                                                                              const bool &pRetranslate)
 {
-    // Hide ourselves (to avoid any flickering during the updaate)
+    // Prevent ourselves from being updated (to avoid any flickering)
 
-    setVisible(false);
+    setUpdatesEnabled(false);
 
     // Keep track of the RDF triples
 
@@ -137,55 +148,59 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                                             rdfTriple->bioQualifierAsString();
             QString rdfTripleInfo = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
 
-            QLabel *qualifier = mParent->newLabelLink(mWidget,
-                                                      "<a href=\""+rdfTripleInfo+"\">"+qualifierAsString+"</a>",
-                                                      false, 1.0, Qt::AlignCenter);
+            QLabel *qualifierLabel = mParent->newLabelLink(mWidget,
+                                                           "<a href=\""+rdfTripleInfo+"\">"+qualifierAsString+"</a>",
+                                                           false, 1.0, Qt::AlignCenter);
 
-            connect(qualifier, SIGNAL(linkActivated(const QString &)),
+            connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupQualifier(const QString &)));
 
-            mLayout->addWidget(qualifier, ++row, 0);
+            mLayout->addWidget(qualifierLabel, ++row, 0);
 
             // Resource
 
-            QLabel *resource = mParent->newLabelLink(mWidget,
-                                                     "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->resource()+"</a>",
-                                                     false, 1.0, Qt::AlignCenter);
+            QLabel *resourceLabel = mParent->newLabelLink(mWidget,
+                                                          "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->resource()+"</a>",
+                                                          false, 1.0, Qt::AlignCenter);
 
-            connect(resource, SIGNAL(linkActivated(const QString &)),
+            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResource(const QString &)));
 
-            mLayout->addWidget(resource, row, 1);
+            mLayout->addWidget(resourceLabel, row, 1);
 
             // Id
 
-            QLabel *id = mParent->newLabelLink(mWidget,
-                                               "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->id()+"</a>",
-                                               false, 1.0, Qt::AlignCenter);
+            QLabel *idLabel = mParent->newLabelLink(mWidget,
+                                                    "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->id()+"</a>",
+                                                    false, 1.0, Qt::AlignCenter);
 
-            connect(id, SIGNAL(linkActivated(const QString &)),
+            connect(idLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResourceId(const QString &)));
 
-            mLayout->addWidget(id, row, 2);
+            mLayout->addWidget(idLabel, row, 2);
 
             // Remove button, if needed
 
             if (mEditingMode) {
-                QPushButton *remove = new QPushButton(tr("Remove"), mWidget);
+                QPushButton *removeButton = new QPushButton(mWidget);
+                // Note #1: ideally, we could assign a QAction to our
+                //          QPushButton, but this cannot be done, so... we
+                //          assign a few properties by hand...
+                // Note #2: to use a QToolButton would allow us to assign a
+                //          QAction to it, but a QToolButton doesn't look quite
+                //          the same as a QPushButton on some platforms, so...
 
-                remove->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-                // Note: by default, a QPushButton has a Minimum/Fixed size
-                //       policy, but this means that its width may grow if there
-                //       is space. However, we don't want that. Instead, we want
-                //       its width to be as big as necessary and not bigger,
-                //       so...
+                removeButton->setIcon(QIcon(":/oxygen/actions/edit-delete.png"));
+                removeButton->setStatusTip(tr("Remove the metadata information"));
+                removeButton->setToolTip(tr("Remove"));
+                removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-                mRdfTriplesMapping.insert(remove, rdfTriple);
+                mRdfTriplesMapping.insert(removeButton, rdfTriple);
 
-                connect(remove, SIGNAL(clicked()),
+                connect(removeButton, SIGNAL(clicked()),
                         this, SLOT(removeRdfTriple()));
 
-                mLayout->addWidget(remove, row, 3);
+                mLayout->addWidget(removeButton, row, 3);
             }
 
             // Keep track of the very first resource id
@@ -205,11 +220,18 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             // Lookup an 'old' qualifier, resource or resource id
 
             genericLookup(pRdfTripleInfo, pType, pRetranslate);
+    } else {
+        // No RDF triple left, so ask for an 'unknown' to be looked up
+        // Note: we do this to let people know that there is nothing to lookup
+        //       and that they can 'clean' whatever they use to show a lookup to
+        //       the user...
+
+        genericLookup();
     }
 
-    // Re-show ourselves
+    // Allow ourselves to be updated again
 
-    setVisible(true);
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================
@@ -221,9 +243,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
     // Retrieve the RDF triple information
 
     QStringList rdfTripleInfoAsStringList = pRdfTripleInfo.split("|");
-    QString qualifierAsString = rdfTripleInfoAsStringList[0];
-    QString resourceAsString = rdfTripleInfoAsStringList[1];
-    QString idAsString = rdfTripleInfoAsStringList[2];
+    QString qualifierAsString = pRdfTripleInfo.isEmpty()?QString():rdfTripleInfoAsStringList[0];
+    QString resourceAsString = pRdfTripleInfo.isEmpty()?QString():rdfTripleInfoAsStringList[1];
+    QString idAsString = pRdfTripleInfo.isEmpty()?QString():rdfTripleInfoAsStringList[2];
 
     // Keep track of the RDF triple information and type
 
@@ -243,25 +265,25 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
             // Valid row, so check whether to make it bold (and italic in some
             // cases) or not
 
-            QLabel *qualifier = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 0)->widget());
-            QLabel *resource  = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 1)->widget());
-            QLabel *id        = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 2)->widget());
+            QLabel *qualifierLabel = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 0)->widget());
+            QLabel *resourceLabel  = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 1)->widget());
+            QLabel *idLabel        = qobject_cast<QLabel *>(mLayout->itemAtPosition(row, 2)->widget());
 
-            QFont font = id->font();
+            QFont font = idLabel->font();
 
-            font.setBold(   !qualifier->text().compare("<a href=\""+pRdfTripleInfo+"\">"+qualifierAsString+"</a>")
-                         && !resource->text().compare("<a href=\""+pRdfTripleInfo+"\">"+resourceAsString+"</a>")
-                         && !id->text().compare("<a href=\""+pRdfTripleInfo+"\">"+idAsString+"</a>"));
+            font.setBold(   !qualifierLabel->text().compare("<a href=\""+pRdfTripleInfo+"\">"+qualifierAsString+"</a>")
+                         && !resourceLabel->text().compare("<a href=\""+pRdfTripleInfo+"\">"+resourceAsString+"</a>")
+                         && !idLabel->text().compare("<a href=\""+pRdfTripleInfo+"\">"+idAsString+"</a>"));
             font.setItalic(false);
 
-            QFont italicFont = id->font();
+            QFont italicFont = idLabel->font();
 
             italicFont.setBold(font.bold());
             italicFont.setItalic(font.bold());
 
-            qualifier->setFont((pType == Qualifier)?italicFont:font);
-            resource->setFont((pType == Resource)?italicFont:font);
-            id->setFont((pType == Id)?italicFont:font);
+            qualifierLabel->setFont((pType == Qualifier)?italicFont:font);
+            resourceLabel->setFont((pType == Resource)?italicFont:font);
+            idLabel->setFont((pType == Id)?italicFont:font);
         } else {
             // No more rows, so...
 
@@ -285,11 +307,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
 
         break;
     default:
-        // Unknown, so nothing to do...
-        // Note: we should never reach this point, but it's to 'please' some
-        //       compilers, so...
+        // Unknown
 
-        ;
+        emit unknownLookupRequested();
     }
 }
 
@@ -368,7 +388,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     // Remove the RDF triple from the CellML file and from our set of RDF
     // triples this widget uses
 
-    mParent->cellmlFile()->removeRdfTriple(rdfTriple);
+    mParent->cellmlFile()->rdfTriples()->remove(rdfTriple);
     mRdfTriples.remove(rdfTriple);
 
     // Retrieve the number of the row we want to delete, as well as the total
@@ -416,6 +436,10 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     // Update the GUI to reflect the removal of the RDF triple
 
     updateGui(mRdfTriples, mRdfTripleInfo, mType);
+
+    // Let people know that some metadata has been removed
+
+    emit metadataUpdated();
 }
 
 //==============================================================================

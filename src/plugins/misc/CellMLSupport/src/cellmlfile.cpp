@@ -582,56 +582,56 @@ CellmlFileModel * CellmlFile::model() const
 
 //==============================================================================
 
-CellmlFileImports CellmlFile::imports() const
+CellmlFileImports * CellmlFile::imports()
 {
     // Return the CellML file's imports
 
-    return mImports;
+    return &mImports;
 }
 
 //==============================================================================
 
-CellmlFileUnits CellmlFile::units() const
+CellmlFileUnits * CellmlFile::units()
 {
     // Return the CellML file's units
 
-    return mUnits;
+    return &mUnits;
 }
 
 //==============================================================================
 
-CellmlFileComponents CellmlFile::components() const
+CellmlFileComponents * CellmlFile::components()
 {
     // Return the CellML file's components
 
-    return mComponents;
+    return &mComponents;
 }
 
 //==============================================================================
 
-CellmlFileGroups CellmlFile::groups() const
+CellmlFileGroups * CellmlFile::groups()
 {
     // Return the CellML file's groups
 
-    return mGroups;
+    return &mGroups;
 }
 
 //==============================================================================
 
-CellmlFileConnections CellmlFile::connections() const
+CellmlFileConnections * CellmlFile::connections()
 {
     // Return the CellML file's connections
 
-    return mConnections;
+    return &mConnections;
 }
 
 //==============================================================================
 
-CellmlFileRdfTriples CellmlFile::rdfTriples() const
+CellmlFileRdfTriples * CellmlFile::rdfTriples()
 {
     // Return the CellML file's RDF triples
 
-    return mRdfTriples;
+    return &mRdfTriples;
 }
 
 //==============================================================================
@@ -653,36 +653,6 @@ CellmlFileRdfTriples CellmlFile::rdfTriples(const QString &pCmetaId) const
     // with pCmetaId
 
     return mRdfTriples.contains(pCmetaId);
-}
-
-//==============================================================================
-
-void CellmlFile::removeRdfTriple(CellmlFileRdfTriple *pRdfTriple)
-{
-    // Remove the RDF triple
-
-    if (mRdfTriples.remove(pRdfTriple))
-        setModified(true);
-}
-
-//==============================================================================
-
-void CellmlFile::removeRdfTriples(const QString &pCmetaId)
-{
-    // Remove all the RDF triples which subject value is pCmetaId
-
-    if (mRdfTriples.remove(pCmetaId))
-        setModified(true);
-}
-
-//==============================================================================
-
-void CellmlFile::removeAllRdfTriples()
-{
-    // Remove all the RDF triples
-
-    if (mRdfTriples.removeAll())
-        setModified(true);
 }
 
 //==============================================================================

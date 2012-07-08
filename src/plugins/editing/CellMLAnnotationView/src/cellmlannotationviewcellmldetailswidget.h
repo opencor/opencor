@@ -60,11 +60,6 @@ private:
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;
 
-    QString mQualifierInformationTemplate;
-
-    QString mModelQualifierSvg;
-    QString mBiologyQualifierSvg;
-
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
@@ -83,6 +78,7 @@ private Q_SLOTS:
     void resourceIdLookupRequested(const QString &pResource,
                                    const QString &pId,
                                    const bool &pRetranslate);
+    void unknownLookupRequested();
 
     void metadataUpdated();
 };

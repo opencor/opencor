@@ -17,6 +17,9 @@
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
 #include "llvm/ADT/StringRef.h"
 #include "clang/Basic/LLVM.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   template<typename T, unsigned> class SmallVector;
@@ -109,7 +112,12 @@ public:
 
 /// \brief Used for handling and querying diagnostic IDs. Can be used and shared
 /// by multiple Diagnostics for multiple translation units.
+/*---OPENCOR---
 class DiagnosticIDs : public RefCountedBase<DiagnosticIDs> {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT DiagnosticIDs : public RefCountedBase<DiagnosticIDs> {
+//---OPENCOR--- END
 public:
   /// Level - The level of the diagnostic, after it has been through mapping.
   enum Level {
@@ -158,20 +166,20 @@ public:
     bool ignored;
     return isBuiltinExtensionDiag(DiagID, ignored);
   }
-  
+
   /// isBuiltinExtensionDiag - Determine whether the given built-in diagnostic
   /// ID is for an extension of some sort.  This also returns EnabledByDefault,
   /// which is set to indicate whether the diagnostic is ignored by default (in
   /// which case -pedantic enables it) or treated as a warning/error by default.
   ///
   static bool isBuiltinExtensionDiag(unsigned DiagID, bool &EnabledByDefault);
-  
+
 
   /// getWarningOptionForDiag - Return the lowest-level warning option that
   /// enables the specified diagnostic.  If there is no -Wfoo flag that controls
   /// the diagnostic, this returns null.
   static StringRef getWarningOptionForDiag(unsigned DiagID);
-  
+
   /// getCategoryNumberForDiag - Return the category number that a specified
   /// DiagID belongs to, or 0 if no category.
   static unsigned getCategoryNumberForDiag(unsigned DiagID);
@@ -182,7 +190,7 @@ public:
   /// getCategoryNameFromID - Given a category ID, return the name of the
   /// category.
   static StringRef getCategoryNameFromID(unsigned CategoryID);
-  
+
   /// isARCDiagnostic - Return true if a given diagnostic falls into an
   /// ARC diagnostic category;
   static bool isARCDiagnostic(unsigned DiagID);
@@ -193,26 +201,26 @@ public:
     /// \brief The diagnostic should not be reported, but it should cause
     /// template argument deduction to fail.
     ///
-    /// The vast majority of errors that occur during template argument 
+    /// The vast majority of errors that occur during template argument
     /// deduction fall into this category.
     SFINAE_SubstitutionFailure,
-    
+
     /// \brief The diagnostic should be suppressed entirely.
     ///
     /// Warnings generally fall into this category.
     SFINAE_Suppress,
-    
+
     /// \brief The diagnostic should be reported.
     ///
-    /// The diagnostic should be reported. Various fatal errors (e.g., 
+    /// The diagnostic should be reported. Various fatal errors (e.g.,
     /// template instantiation depth exceeded) fall into this category.
     SFINAE_Report,
-    
+
     /// \brief The diagnostic is an access-control diagnostic, which will be
     /// substitution failures in some contexts and reported in others.
     SFINAE_AccessControl
   };
-  
+
   /// \brief Determines whether the given built-in diagnostic ID is
   /// for an error that is suppressed if it occurs during C++ template
   /// argument deduction.
@@ -243,7 +251,7 @@ private:
   /// \param Diags [out] - On return, the diagnostics in the group.
   void getDiagnosticsInGroup(const WarningOption *Group,
                              llvm::SmallVectorImpl<diag::kind> &Diags) const;
- 
+
   /// \brief Based on the way the client configured the DiagnosticsEngine
   /// object, classify the specified diagnostic ID into a Level, consumable by
   /// the DiagnosticClient.

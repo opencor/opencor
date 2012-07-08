@@ -79,6 +79,8 @@ public:
     QString resource() const;
     QString id() const;
 
+    void setMetadataId(const QString &pMetadataId);
+
 private:
     CellmlFileRdfTripleElement *mSubject;
     CellmlFileRdfTripleElement *mPredicate;
@@ -102,11 +104,14 @@ public:
 
     CellmlFileRdfTriple::Type type() const;
 
-    CellmlFileRdfTriples contains(const QString &pCmetaId) const;
+    CellmlFileRdfTriples contains(const QString &pMetadataId) const;
 
-    bool remove(CellmlFileRdfTriple *pRdfTriple);
-    bool remove(const QString &pCmetaId);
-    bool removeAll();
+    void remove(CellmlFileRdfTriple *pRdfTriple);
+    void remove(const QString &pMetadataId);
+    void removeAll();
+
+    void renameMetadataId(const QString &pOldMetadataId,
+                          const QString &pNewMetadataId);
 
 private:
     CellmlFile *mCellmlFile;

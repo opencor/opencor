@@ -1,6 +1,6 @@
 // This module implements the "official" low-level API.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -77,6 +77,86 @@ static bool lexersLinked = false;
 // The list of instances.
 static QList<QsciScintillaBase *> poolList;
 
+// Mime support.
+static const QLatin1String mimeTextPlain("text/plain");
+static const QLatin1String mimeRectangularWin("MSDEVColumnSelect");
+static const QLatin1String mimeRectangular("text/x-qscintilla-rectangular");
+static const QLatin1String utiRectangularMac("com.scintilla.utf16-plain-text.rectangular");
+
+#if QT_VERSION >= 0x040200 && defined(Q_OS_MAC)
+#include <QMacPasteboardMime>
+
+class RectangularPasteboardMime : public QMacPasteboardMime
+{
+public:
+    RectangularPasteboardMime() : QMacPasteboardMime(MIME_ALL)
+    {
+    }
+
+    bool canConvert(const QString &mime, QString flav)
+    {
+        return mime == mimeRectangular && flav == utiRectangularMac;
+    }
+
+    QList<QByteArray> convertFromMime(const QString &, QVariant data, QString)
+    {
+        QList<QByteArray> converted;
+
+        converted.append(data.toByteArray());
+
+        return converted;
+    }
+
+    QVariant convertToMime(const QString &, QList<QByteArray> data, QString)
+    {
+        QByteArray converted;
+
+        foreach (QByteArray i, data)
+        {
+            converted += i;
+        }
+
+        return QVariant(converted);
+    }
+
+    QString convertorName()
+    {
+        return QString("QScintillaRectangular");
+    }
+
+    QString flavorFor(const QString &mime)
+    {
+        if (mime == mimeRectangular)
+            return QString(utiRectangularMac);
+
+        return QString();
+    }
+
+    QString mimeFor(QString flav)
+    {
+        if (flav == utiRectangularMac)
+            return QString(mimeRectangular);
+
+        return QString();
+    }
+
+    static void initialise()
+    {
+        if (!instance)
+        {
+            instance = new RectangularPasteboardMime();
+
+            qRegisterDraggedTypes(QStringList(utiRectangularMac));
+        }
+    }
+
+private:
+    static RectangularPasteboardMime *instance;
+};
+
+RectangularPasteboardMime *RectangularPasteboardMime::instance;
+#endif
+
 
 // The ctor.
 QsciScintillaBase::QsciScintillaBase(QWidget *parent)
@@ -97,6 +177,10 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
     viewport()->setAttribute(Qt::WA_NoSystemBackground);
 
     triple_click.setSingleShot(true);
+
+#if QT_VERSION >= 0x040200 && defined(Q_OS_MAC)
+    RectangularPasteboardMime::initialise();
+#endif
 
     sci = new QsciScintillaQt(this);
 
@@ -554,7 +638,9 @@ void QsciScintillaBase::mousePressEvent(QMouseEvent *e)
         {
             int pos = sci->PositionFromLocation(pt);
 
+            sci->sel.Clear();
             sci->SetSelection(pos, pos);
+
             sci->pasteFromClipboard(QClipboard::Selection);
         }
     }
@@ -638,6 +724,7 @@ void QsciScintillaBase::dragMoveEvent(QDragMoveEvent *e)
 void QsciScintillaBase::dropEvent(QDropEvent *e)
 {
     bool moving;
+    int len;
     const char *s;
     bool rectangular;
 
@@ -648,11 +735,17 @@ void QsciScintillaBase::dropEvent(QDropEvent *e)
 
     moving = (e->dropAction() == Qt::MoveAction);
 
-    QByteArray ba = fromMimeData(e->mimeData(), rectangular);
+    QByteArray text = fromMimeData(e->mimeData(), rectangular);
+    len = text.length();
+    s = text.data();
 
-    s = ba.data();
+    s = QSCI_SCI_NAMESPACE(Document)::TransformLineEnds(&len, s, len,
+                sci->pdoc->eolMode);
 
     sci->DropAt(sci->posDrop, s, moving, rectangular);
+
+    delete[] s;
+
     sci->Redraw();
 }
 
@@ -670,29 +763,33 @@ void QsciScintillaBase::acceptAction(QDropEvent *e)
 // See if a MIME data object can be decoded.
 bool QsciScintillaBase::canInsertFromMimeData(const QMimeData *source) const
 {
-    return !source->data(QLatin1String("text/plain")).isEmpty();
+    return source->hasFormat(mimeTextPlain);
 }
 
 
 // Create text from a MIME data object.
 QByteArray QsciScintillaBase::fromMimeData(const QMimeData *source, bool &rectangular) const
 {
-    QByteArray data = source->data(QLatin1String("text/plain"));
-
-    // See if it is rectangular.
-    int size = data.size();
-
-    if (size > 2 && data.at(size - 1) == '\0' && data.at(size - 2) == '\n')
-    {
+    // See if it is rectangular.  We try all of the different formats that
+    // Scintilla supports in case we are working across different platforms.
+    if (source->hasFormat(mimeRectangularWin))
         rectangular = true;
-        data.chop(1);
-    }
+    else if (source->hasFormat(mimeRectangular))
+        rectangular = true;
     else
-    {
         rectangular = false;
-    }
 
-    return data;
+    // Note that we don't support Scintilla's hack of adding a '\0' as Qt
+    // strips it off under the covers when pasting from another process.
+    QString utf8 = source->text();
+    QByteArray text;
+
+    if (sci->IsUnicodeMode())
+        text = utf8.toUtf8();
+    else
+        text = utf8.toLatin1();
+
+    return text;
 }
 
 
@@ -700,14 +797,26 @@ QByteArray QsciScintillaBase::fromMimeData(const QMimeData *source, bool &rectan
 QMimeData *QsciScintillaBase::toMimeData(const QByteArray &text, bool rectangular) const
 {
     QMimeData *mime = new QMimeData;
-    QByteArray data(text);
 
-    // This is the hack that Scintilla uses to mark rectangular text.  The text
-    // will have a trailing '\n' if it is rectangular.
+    QString utf8;
+
+    if (sci->IsUnicodeMode())
+        utf8 = QString::fromUtf8(text.constData(), text.size());
+    else
+        utf8 = QString::fromLatin1(text.constData(), text.size());
+
+    mime->setText(utf8);
+
     if (rectangular)
-        data.append('\0');
-
-    mime->setData(QLatin1String("text/plain"), data);
+    {
+        // Use the platform specific "standard" for specifying a rectangular
+        // selection.
+#if defined(Q_OS_WIN)
+        mime->setData(mimeRectangularWin, QByteArray());
+#else
+        mime->setData(mimeRectangular, QByteArray());
+#endif
+    }
 
     return mime;
 }

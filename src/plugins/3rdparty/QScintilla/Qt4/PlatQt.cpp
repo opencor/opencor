@@ -1,6 +1,6 @@
 // This module implements the portability layer for the Qt port of Scintilla.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -842,7 +842,7 @@ public:
     virtual Function FindFunction(const char *name)
     {
         if (m)
-            return m->resolve(name);
+            return (Function)m->resolve(name);
 
         return 0;
     }

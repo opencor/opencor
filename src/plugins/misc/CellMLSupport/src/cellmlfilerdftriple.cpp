@@ -285,6 +285,17 @@ QString CellmlFileRdfTriple::id() const
 
 //==============================================================================
 
+void CellmlFileRdfTriple::setMetadataId(const QString &pMetadataId)
+{
+    // Update the URI reference of the subject of the RDF triple by renaming its
+    // metadata id to pMetadataId
+    // Note: setUriReference() will only work if the subject is a URI reference
+
+    mSubject->setUriReference(mSubject->uriReference().remove(QRegExp("#[^#]*$"))+"#"+pMetadataId);
+}
+
+//==============================================================================
+
 CellmlFileRdfTriples::CellmlFileRdfTriples(CellmlFile *pCellmlFile) :
     mCellmlFile(pCellmlFile)
 {
@@ -312,19 +323,16 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
         QString subject = rdfTriple->subject()->asString();
         CellmlFileRdfTriple::Type res = rdfTriple->type();
 
-        // Go through the remaining RDF triples and make sure that their type
-        // is consistent with that of the first one
+        // Go through the RDF triples and make sure that their type is
+        // consistent with that of the first RDF triple
 
-        for (int i = 2, iMax = count(); i < iMax; ++i) {
-            rdfTriple = at(i);
-
+        foreach (CellmlFileRdfTriple *rdfTriple, *this)
             if (   rdfTriple->subject()->asString().compare(subject)
                 || (rdfTriple->type() != res))
                 // The subject and/or the type of the current RDF triple is
                 // different from that of the first RDF triple, so...
 
                 return CellmlFileRdfTriple::Unknown;
-        }
 
         // All of the RDF triples have the same type, so...
 
@@ -344,86 +352,114 @@ void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
     // Recursively add all the RDF triples which subject matches pRdfTriple's
     // object
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        CellmlFileRdfTriple *rdfTriple = at(i);
-
+    foreach (CellmlFileRdfTriple *rdfTriple, *this)
         if (!rdfTriple->subject()->asString().compare(pRdfTriple->object()->asString()))
             recursiveContains(pRdfTriples, rdfTriple);
-    }
 }
 
 //==============================================================================
 
-CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pCmetaId) const
+CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) const
 {
     Q_ASSERT(mCellmlFile);
 
     // Return all the RDF triples which are directly or indirectly associated
-    // with pCmetaId
+    // with pMetadataId
 
     CellmlFileRdfTriples res = CellmlFileRdfTriples(mCellmlFile);
 
     QString uriBase = mCellmlFile->uriBase();
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
+    foreach (CellmlFileRdfTriple *rdfTriple, *this)
         // Retrieve the RDF triple's subject so we can determine whether it's
         // from the group of RDF triples in which we are interested
 
-        CellmlFileRdfTriple *rdfTriple = at(i);
-
         if (rdfTriple->subject()->type() == CellmlFileRdfTripleElement::UriReference)
             // We have an RDF triple of which we can make sense, so retrieve and
-            // check its group name
+            // check its metadata id
 
-            if (!pCmetaId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
-                // It's the correct group name, so add it to our list
+            if (!pMetadataId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
+                // It's the correct metadata id, so add it to our list
 
                 recursiveContains(res, rdfTriple);
-    }
 
     return res;
 }
 
 //==============================================================================
 
-bool CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
+void CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
 {
+    Q_ASSERT(mCellmlFile);
+
     // Remove the given RDF triple
 
-    return removeOne(pRdfTriple);
+    if (removeOne(pRdfTriple))
+        mCellmlFile->setModified(true);
 }
 
 //==============================================================================
 
-bool CellmlFileRdfTriples::remove(const QString &pCmetaId)
+void CellmlFileRdfTriples::remove(const QString &pMetadataId)
 {
+    Q_ASSERT(mCellmlFile);
+
     // Remove all the RDF triples which are directly or indirectly associated
-    // with pCmetaId
+    // with pMetadataId
 
     bool res = true;
-    CellmlFileRdfTriples rdfTriples = contains(pCmetaId);
 
-    for (int i = 0, iMax = rdfTriples.count(); i < iMax; ++i)
-        res = res && removeOne(rdfTriples[i]);
+    foreach (CellmlFileRdfTriple *rdfTriple, contains(pMetadataId))
+        if (!removeOne(rdfTriple)) {
+            res = false;
 
-    return res;
+            break;
+        }
+
+    if (res)
+        mCellmlFile->setModified(true);
 }
 
 //==============================================================================
 
-bool CellmlFileRdfTriples::removeAll()
+void CellmlFileRdfTriples::removeAll()
 {
+    Q_ASSERT(mCellmlFile);
+
     // Remove all the RDF triples
 
-    for (int i = count()-1; i >= 0; --i) {
-        CellmlFileRdfTriple *rdfTriple = at(i);
+    bool res = false;
 
-        removeAt(i);
+    foreach (CellmlFileRdfTriple *rdfTriple, *this)
+        if (removeOne(rdfTriple)) {
+            delete rdfTriple;
 
-        delete rdfTriple;
+            res = true;
+        }
+
+    if (res)
+        mCellmlFile->setModified(true);
+}
+
+//==============================================================================
+
+void CellmlFileRdfTriples::renameMetadataId(const QString &pOldMetadataId,
+                                            const QString &pNewMetadataId)
+{
+    Q_ASSERT(mCellmlFile);
+
+    // Rename the pOldId association of all the RDF triples to pNewId
+
+    bool res = false;
+
+    foreach (CellmlFileRdfTriple *rdfTriple, contains(pOldMetadataId)) {
+        rdfTriple->setMetadataId(pNewMetadataId);
+
+        res = true;
     }
 
-    return isEmpty();
+    if (res)
+        mCellmlFile->setModified(true);
 }
 
 //==============================================================================

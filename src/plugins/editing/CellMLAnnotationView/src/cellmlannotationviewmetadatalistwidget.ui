@@ -60,8 +60,8 @@
   </action>
   <action name="actionClearMetadata">
    <property name="icon">
-    <iconset resource="../../../../../res/ui.qrc">
-     <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
+    <iconset resource="../res/CellMLAnnotationView.qrc">
+     <normaloff>:/oxygen/actions/edit-clear-list.png</normaloff>:/oxygen/actions/edit-clear-list.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Clear Metadata</string>
@@ -88,7 +88,6 @@
   </action>
  </widget>
  <resources>
-  <include location="../../../../../res/ui.qrc"/>
   <include location="../res/CellMLAnnotationView.qrc"/>
  </resources>
  <connections/>

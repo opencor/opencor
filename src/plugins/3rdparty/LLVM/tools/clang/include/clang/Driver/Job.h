@@ -13,6 +13,9 @@
 #include "clang/Driver/Util.h"
 #include "llvm/ADT/SmallVector.h"
 #include "clang/Basic/LLVM.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace clang {
 namespace driver {
@@ -45,7 +48,12 @@ public:
 
   /// Command - An executable path/name and argument vector to
   /// execute.
+/*---OPENCOR---
 class Command : public Job {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Command : public Job {
+//---OPENCOR--- END
   virtual void anchor();
 
   /// Source - The action which caused the creation of this job.
@@ -82,7 +90,12 @@ public:
 };
 
   /// JobList - A sequence of jobs to perform.
+/*---OPENCOR---
 class JobList : public Job {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT JobList : public Job {
+//---OPENCOR--- END
 public:
   typedef SmallVector<Job*, 4> list_type;
   typedef list_type::size_type size_type;

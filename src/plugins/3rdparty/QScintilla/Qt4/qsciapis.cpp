@@ -1,6 +1,6 @@
 // This module implements the QsciAPIs class.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -587,6 +587,13 @@ void QsciAPIs::autoCompletionSelected(const QString &selection)
     }
 
     origin = qLowerBound(prep->raw_apis, owords);
+    /*
+     * There is a bug somewhere, either in qLowerBound() or QList (or in GCC as
+     * it seems to be Linux specific and the Qt code is the same on all
+     * platforms) that the following line seems to fix.  Note that it is
+     * actually the call to detach() within begin() that is the important bit.
+     */
+    prep->raw_apis.begin();
     origin_len = owords.length();
 }
 

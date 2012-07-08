@@ -1937,7 +1937,7 @@ int Document::WordPartRight(int pos) {
 	return pos;
 }
 
-bool IsLineEndChar(char c) {
+static bool IsLineEndChar(char c) {
 	return (c == '\n' || c == '\r');
 }
 
@@ -2011,6 +2011,9 @@ int Document::BraceMatch(int position, int /*maxReStyle*/) {
 /**
  * Implementation of RegexSearchBase for the default built-in regular expression engine
  */
+#ifdef SCI_NAMESPACE
+namespace Scintilla {
+#endif
 class BuiltinRegex : public RegexSearchBase {
 public:
 	BuiltinRegex(CharClassify *charClassTable) : search(charClassTable), substituted(NULL) {}
@@ -2029,8 +2032,14 @@ private:
 	RESearch search;
 	char *substituted;
 };
+#ifdef SCI_NAMESPACE
+}
+#endif
 
 // Define a way for the Regular Expression code to access the document
+#ifdef SCI_NAMESPACE
+namespace Scintilla {
+#endif
 class DocumentIndexer : public CharacterIndexer {
 	Document *pdoc;
 	int end;
@@ -2049,6 +2058,9 @@ public:
 			return pdoc->CharAt(index);
 	}
 };
+#ifdef SCI_NAMESPACE
+}
+#endif
 
 long BuiltinRegex::FindText(Document *doc, int minPos, int maxPos, const char *s,
                         bool caseSensitive, bool, bool, int flags,
