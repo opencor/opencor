@@ -380,11 +380,15 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
     // identifiers.org, but only if we are not retranslating since the looking
     // up would already be correct
 
-    if (!pRetranslate)
-        pWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
+    if (!pRetranslate) {
+        QUrl newUrl = "http://identifiers.org/"+pResource+"/?redirect=true";
         //---GRY--- NOTE THAT redirect=true DOESN'T WORK AT THE MOMENT, SO WE DO
         //          END UP WITH A FRAME, BUT THE identifiers.org GUYS ARE GOING
         //          TO 'FIX' THAT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
+
+        if (newUrl != pWebView->url())
+            pWebView->setUrl(newUrl);
+    }
 }
 
 //==============================================================================
@@ -398,8 +402,12 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceIdDetails(QWebView *
     // identifiers.org, but only if we are not retranslating since the looking
     // up would already be correct
 
-    if (!pRetranslate)
-        pWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
+    if (!pRetranslate) {
+        QUrl newUrl = "http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true";
+
+        if (newUrl != pWebView->url())
+            pWebView->setUrl(newUrl);
+    }
 }
 
 //==============================================================================

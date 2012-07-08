@@ -98,6 +98,15 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
 
 //==============================================================================
 
+CellmlAnnotationViewMetadataRawViewDetailsWidget * CellmlAnnotationViewMetadataViewDetailsWidget::rawView() const
+{
+    // Return our raw view
+
+    return mRawView;
+}
+
+//==============================================================================
+
 CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget * CellmlAnnotationViewMetadataViewDetailsWidget::bioModelsDotNetView() const
 {
     // Return our BioModels.Net view
