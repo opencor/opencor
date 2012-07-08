@@ -287,7 +287,11 @@ QString CellmlFileRdfTriple::id() const
 
 void CellmlFileRdfTriple::setMetadataId(const QString &pMetadataId)
 {
-//---GRY--- TO BE DONE...
+    // Update the URI reference of the subject of the RDF triple by renaming its
+    // metadata id to pMetadataId
+    // Note: setUriReference() will only work if the subject is a URI reference
+
+    mSubject->setUriReference(mSubject->uriReference().remove(QRegExp("#[^#]*$"))+"#"+pMetadataId);
 }
 
 //==============================================================================
@@ -372,10 +376,10 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) 
 
         if (rdfTriple->subject()->type() == CellmlFileRdfTripleElement::UriReference)
             // We have an RDF triple of which we can make sense, so retrieve and
-            // check its group name
+            // check its metadata id
 
             if (!pMetadataId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
-                // It's the correct group name, so add it to our list
+                // It's the correct metadata id, so add it to our list
 
                 recursiveContains(res, rdfTriple);
 

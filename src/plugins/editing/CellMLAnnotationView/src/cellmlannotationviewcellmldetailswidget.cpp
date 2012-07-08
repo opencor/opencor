@@ -106,16 +106,16 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems)
 {
-    static CellmlAnnotationViewCellmlElementDetailsWidget::Items items = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
+    static CellmlAnnotationViewCellmlElementDetailsWidget::Items oldItems = CellmlAnnotationViewCellmlElementDetailsWidget::Items();
 
-    if (pItems == items)
+    if (pItems == oldItems)
         // We want to show the same items, so...
 
         return;
 
     // Keep track of the items
 
-    items = pItems;
+    oldItems = pItems;
 
     // Stop tracking changes to the cmeta:id value of our CellML element
 
@@ -234,9 +234,17 @@ void CellmlAnnotationViewCellmlDetailsWidget::metadataUpdated()
     // Some metadata has been updated, so we need to update the metadata
     // information we show to the user
 
+    if (mCellmlElementDetails->cmetaIdValue())
+        disconnect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
+                   this, SLOT(newCmetaId(const QString &)));
+
     QString cmetaIdValue = mCellmlElementDetails->cmetaIdValue()?mCellmlElementDetails->cmetaIdValue()->currentText():QString();
 
     mCellmlElementDetails->updateGui();
+
+    if (mCellmlElementDetails->cmetaIdValue())
+        connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
+                this, SLOT(newCmetaId(const QString &)));
 
     newCmetaId(cmetaIdValue);
 }
