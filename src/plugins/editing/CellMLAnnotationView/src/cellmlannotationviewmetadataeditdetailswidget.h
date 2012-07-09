@@ -21,6 +21,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QGridLayout;
 class QStackedWidget;
 
 //==============================================================================
@@ -43,12 +44,21 @@ public:
     explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
+    virtual void retranslateUi();
+
 private:
     CellmlAnnotationViewWidget *mParent;
 
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
-    QStackedWidget *mWidget;
+    QWidget *mWidget;
+
+    QStackedWidget *mStackedWidget;
+
+    QWidget *mGridWidget;
+    QGridLayout *mGridLayout;
+
+    void updateGui();
 };
 
 //==============================================================================

@@ -95,7 +95,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
     // Create a new widget and layout
 
-    QWidget *newGridWidget = new QWidget(this);
+    QWidget *newGridWidget = new QWidget(mWidget);
     QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
 
     newGridWidget->setLayout(newGridLayout);
@@ -107,14 +107,17 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     if (pRdfTriples.count()) {
         // Create labels to act as headers
 
-        newGridLayout->addWidget(mParent->newLabel(mWidget, tr("Qualifier"), true, 1.25,
-                                                   Qt::AlignCenter),
+        newGridLayout->addWidget(mParent->newLabel(mWidget,
+                                                   tr("Qualifier"),
+                                                   true, 1.25, Qt::AlignCenter),
                                  0, 0);
-        newGridLayout->addWidget(mParent->newLabel(mWidget, tr("Resource"), true, 1.25,
-                                                   Qt::AlignCenter),
+        newGridLayout->addWidget(mParent->newLabel(mWidget,
+                                                   tr("Resource"),
+                                                   true, 1.25, Qt::AlignCenter),
                                  0, 1);
-        newGridLayout->addWidget(mParent->newLabel(mWidget, tr("Id"), true, 1.25,
-                                                   Qt::AlignCenter),
+        newGridLayout->addWidget(mParent->newLabel(mWidget,
+                                                   tr("Id"),
+                                                   true, 1.25, Qt::AlignCenter),
                                  0, 2);
 
         // Add the RDF triples information to our layout
@@ -200,8 +203,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     } else {
         // No RDF triples, so...
 
-        newGridLayout->addWidget(mParent->newLabel(mWidget, tr("No data available..."), false, 1.25,
-                                                   Qt::AlignCenter),
+        newGridLayout->addWidget(mParent->newLabel(mWidget,
+                                                   tr("No data available..."),
+                                                   false, 1.25, Qt::AlignCenter),
                                  0, 0);
     }
 
