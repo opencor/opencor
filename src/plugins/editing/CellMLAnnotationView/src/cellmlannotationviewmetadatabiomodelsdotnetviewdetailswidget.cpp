@@ -197,6 +197,12 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         // Have all the rows take a minimum of vertical space
 
         newGridLayout->setRowStretch(++row, 1);
+    } else {
+        // No RDF triples, so...
+
+        newGridLayout->addWidget(mParent->newLabel(mWidget, tr("No data available..."), false, 1.25,
+                                                   Qt::AlignCenter),
+                                 0, 0);
     }
 
     // Add our new widget to our stacked widget

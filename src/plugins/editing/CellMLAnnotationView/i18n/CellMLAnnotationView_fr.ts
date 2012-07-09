@@ -282,6 +282,10 @@
         <source>Remove the metadata information</source>
         <translation>Supprimer les informations pour la métadonnée</translation>
     </message>
+    <message>
+        <source>No data available...</source>
+        <translation>Aucune donnée disponible...</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>
