@@ -202,7 +202,16 @@ QString CellmlFileRdfTriple::modelQualifierAsString() const
 {
     // Return the RDF triple's model qualifier as a string
 
-    switch (mModelQualifier) {
+    return modelQualifierAsString(mModelQualifier);
+}
+
+//==============================================================================
+
+QString CellmlFileRdfTriple::modelQualifierAsString(const ModelQualifier &pModelQualifier)
+{
+    // Return the RDF triple's model qualifier as a string
+
+    switch (pModelQualifier) {
     case ModelIs:
         return "model:is";
     case ModelIsDerivedFrom:
@@ -231,7 +240,16 @@ QString CellmlFileRdfTriple::bioQualifierAsString() const
 {
     // Return the RDF triple's bio(logy) qualifier as a string
 
-    switch (mBioQualifier) {
+    return bioQualifierAsString(mBioQualifier);
+}
+
+//==============================================================================
+
+QString CellmlFileRdfTriple::bioQualifierAsString(const BioQualifier &pBioQualifier)
+{
+    // Return the RDF triple's bio(logy) qualifier as a string
+
+    switch (pBioQualifier) {
     case BioEncodes:
         return "bio:encodes";
     case BioHasPart:
@@ -263,6 +281,30 @@ QString CellmlFileRdfTriple::bioQualifierAsString() const
 
         return "bio:unknown";
     }
+}
+
+//==============================================================================
+
+QStringList CellmlFileRdfTriple::qualifiersAsStringList()
+{
+    // Return (in alphabetical order) all the qualifiers which we support
+
+    return QStringList() << bioQualifierAsString(BioEncodes)
+                         << bioQualifierAsString(BioHasPart)
+                         << bioQualifierAsString(BioHasProperty)
+                         << bioQualifierAsString(BioHasVersion)
+                         << bioQualifierAsString(BioIs)
+                         << bioQualifierAsString(BioIsDescribedBy)
+                         << bioQualifierAsString(BioIsEncodedBy)
+                         << bioQualifierAsString(BioIsHomologTo)
+                         << bioQualifierAsString(BioIsPartOf)
+                         << bioQualifierAsString(BioIsPropertyOf)
+                         << bioQualifierAsString(BioIsVersionOf)
+                         << bioQualifierAsString(BioOccursIn)
+                         << bioQualifierAsString(BioHasTaxon)
+                         << modelQualifierAsString(ModelIs)
+                         << modelQualifierAsString(ModelIsDerivedFrom)
+                         << modelQualifierAsString(ModelIsDescribedBy);
 }
 
 //==============================================================================

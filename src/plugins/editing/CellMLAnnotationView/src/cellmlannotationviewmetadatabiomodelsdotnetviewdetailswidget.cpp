@@ -107,15 +107,15 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     if (pRdfTriples.count()) {
         // Create labels to act as headers
 
-        newGridLayout->addWidget(mParent->newLabel(mWidget,
+        newGridLayout->addWidget(mParent->newLabel(newGridWidget,
                                                    tr("Qualifier"),
                                                    true, 1.25, Qt::AlignCenter),
                                  0, 0);
-        newGridLayout->addWidget(mParent->newLabel(mWidget,
+        newGridLayout->addWidget(mParent->newLabel(newGridWidget,
                                                    tr("Resource"),
                                                    true, 1.25, Qt::AlignCenter),
                                  0, 1);
-        newGridLayout->addWidget(mParent->newLabel(mWidget,
+        newGridLayout->addWidget(mParent->newLabel(newGridWidget,
                                                    tr("Id"),
                                                    true, 1.25, Qt::AlignCenter),
                                  0, 2);
@@ -136,7 +136,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                                             rdfTriple->bioQualifierAsString();
             QString rdfTripleInfo = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
 
-            QLabel *qualifierLabel = mParent->newLabelLink(mWidget,
+            QLabel *qualifierLabel = mParent->newLabelLink(newGridWidget,
                                                            "<a href=\""+rdfTripleInfo+"\">"+qualifierAsString+"</a>",
                                                            false, 1.0, Qt::AlignCenter);
 
@@ -147,7 +147,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
             // Resource
 
-            QLabel *resourceLabel = mParent->newLabelLink(mWidget,
+            QLabel *resourceLabel = mParent->newLabelLink(newGridWidget,
                                                           "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->resource()+"</a>",
                                                           false, 1.0, Qt::AlignCenter);
 
@@ -158,7 +158,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
             // Id
 
-            QLabel *idLabel = mParent->newLabelLink(mWidget,
+            QLabel *idLabel = mParent->newLabelLink(newGridWidget,
                                                     "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->id()+"</a>",
                                                     false, 1.0, Qt::AlignCenter);
 
@@ -170,7 +170,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             // Remove button, if needed
 
             if (mEditingMode) {
-                QPushButton *removeButton = new QPushButton(mWidget);
+                QPushButton *removeButton = new QPushButton(newGridWidget);
                 // Note #1: ideally, we could assign a QAction to our
                 //          QPushButton, but this cannot be done, so... we
                 //          assign a few properties by hand...
@@ -203,7 +203,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     } else {
         // No RDF triples, so...
 
-        newGridLayout->addWidget(mParent->newLabel(mWidget,
+        newGridLayout->addWidget(mParent->newLabel(newGridWidget,
                                                    tr("No data available..."),
                                                    false, 1.25, Qt::AlignCenter),
                                  0, 0);

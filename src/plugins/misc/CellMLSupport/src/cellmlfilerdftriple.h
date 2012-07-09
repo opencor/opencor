@@ -72,9 +72,13 @@ public:
 
     ModelQualifier modelQualifier() const;
     QString modelQualifierAsString() const;
+    static QString modelQualifierAsString(const ModelQualifier &pModelQualifier);
 
     BioQualifier bioQualifier() const;
     QString bioQualifierAsString() const;
+    static QString bioQualifierAsString(const BioQualifier &pBioQualifier);
+
+    static QStringList qualifiersAsStringList();
 
     QString resource() const;
     QString id() const;

@@ -21,6 +21,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QFormLayout;
 class QGridLayout;
 class QStackedWidget;
 
@@ -52,6 +53,9 @@ private:
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QWidget *mWidget;
+
+    QWidget *mFormWidget;
+    QFormLayout *mFormLayout;
 
     QStackedWidget *mStackedWidget;
 

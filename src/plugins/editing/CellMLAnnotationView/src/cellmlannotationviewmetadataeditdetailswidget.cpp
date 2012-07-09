@@ -12,8 +12,10 @@
 
 //==============================================================================
 
+#include <QComboBox>
 #include <QFormLayout>
 #include <QLabel>
+#include <QLineEdit>
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
@@ -42,15 +44,16 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     QVBoxLayout *layout = new QVBoxLayout(mWidget);
 
+    layout->setMargin(0);
+
     mWidget->setLayout(layout);
 
-    // Create a form widget which will contain the lookup and BioModels.Net
-    // fields
+    // Create a form widget which will contain the qualifier and term fields
 
-    QWidget *formWidget = new QWidget(mWidget);
-    QFormLayout *formLayout = new QFormLayout(formWidget);
+    mFormWidget = new QWidget(mWidget);
+    mFormLayout = new QFormLayout(mFormWidget);
 
-    formWidget->setLayout(formLayout);
+    mFormWidget->setLayout(mFormLayout);
 
     // Create a stacked widget which will contain the suggested ontological
     // terms
@@ -61,7 +64,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     // Add our 'internal' widgets to our main widget
 
-    layout->addWidget(formWidget);
+    layout->addWidget(mFormWidget);
     layout->addWidget(Core::newLineWidget(mWidget));
     layout->addWidget(mStackedWidget);
 
@@ -104,6 +107,33 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
     // Prevent ourselves from being updated (to avoid any flickering)
 
     setUpdatesEnabled(false);
+
+    // Deal with the form part of our GUI
+
+    // Remove everything from our form layout
+
+    for (int i = 0, iMax = mFormLayout->count(); i < iMax; ++i) {
+        QLayoutItem *item = mFormLayout->takeAt(0);
+
+        delete item->widget();
+        delete item;
+    }
+
+    // Add the qualifier and term fields
+
+    QComboBox *qualifierValue = new QComboBox(mFormWidget);
+
+    qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
+
+    mFormLayout->addRow(mParent->newLabel(mFormWidget, tr("Qualifier:"), true),
+                        qualifierValue);
+
+    QLineEdit *termValue = new QLineEdit(mFormWidget);
+
+    mFormLayout->addRow(mParent->newLabel(mFormWidget, tr("Term:"), true),
+                        termValue);
+
+    // Deal with the grid part of our GUI
 
     // Create a new widget and layout
 

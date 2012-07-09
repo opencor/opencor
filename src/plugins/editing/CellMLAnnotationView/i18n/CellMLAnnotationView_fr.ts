@@ -300,6 +300,14 @@
         <source>No data available...</source>
         <translation>Aucune donnée disponible...</translation>
     </message>
+    <message>
+        <source>Qualifier:</source>
+        <translation>Qualificatif :</translation>
+    </message>
+    <message>
+        <source>Term:</source>
+        <translation>Terme :</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataListWidget</name>
