@@ -143,11 +143,9 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
 
     mBorderedUnsupportedMetadataMsg->setVisible(pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown);
 
-//---GRY--- CHECK WHETHER WE NEED TO CLEAN OR UPDATE OUR METADATA EDIT DETAILS
-//          GUI...
+    // Update our Metadata edit and view details GUIs
 
-    // Update our Metadata view details GUI
-
+    mMetadataEditDetails->updateGui(!mBorderedUnsupportedMetadataMsg->isVisible());
     mMetadataViewDetails->updateGui(pRdfTriples);
 
     // 'Clean up' our web view, should the raw view of our metadata details view

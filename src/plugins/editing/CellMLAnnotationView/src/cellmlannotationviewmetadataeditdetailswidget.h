@@ -48,6 +48,8 @@ public:
 
     virtual void retranslateUi();
 
+    void updateGui(const bool &pPopulate = true);
+
 private:
     CellmlAnnotationViewWidget *mParent;
 
@@ -64,7 +66,8 @@ private:
     QWidget *mGridWidget;
     QGridLayout *mGridLayout;
 
-    void updateGui();
+private Q_SLOTS:
+    void newTerm(const QString &pTerm);
 };
 
 //==============================================================================

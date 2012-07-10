@@ -78,7 +78,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopulate)
 {
     // Note: we are using certain layouts to dislay the contents of our view,
     //       but this unfortunately results in some very bad flickering on Mac
@@ -97,64 +97,76 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
 
     newMainWidget->setLayout(newMainLayout);
 
-    // Deal with the form part of our GUI
+    // Populate our GUI, but only if requested
 
-    // Create a form widget which will contain our term and qualifier fields
+    QWidget *newFormWidget = 0;
+    QFormLayout *newFormLayout = 0;
+    QWidget *newGridWidget = 0;
+    QGridLayout *newGridLayout = 0;
 
-    QWidget *newFormWidget = new QWidget(newMainWidget);
-    QFormLayout *newFormLayout = new QFormLayout(newFormWidget);
+    if (pPopulate) {
+        // Deal with the form part of our GUI
 
-    newFormWidget->setLayout(newFormLayout);
+        // Create a form widget which will contain our term and qualifier fields
 
-    // Add our term and qualifier fields
+        newFormWidget = new QWidget(newMainWidget);
+        newFormLayout = new QFormLayout(newFormWidget);
 
-    QLineEdit *termValue = new QLineEdit(newFormWidget);
+        newFormWidget->setLayout(newFormLayout);
 
-    newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Term:"), true),
-                          termValue);
+        // Add our term and qualifier fields
 
-    QComboBox *qualifierValue = new QComboBox(newFormWidget);
+        QLineEdit *termValue = new QLineEdit(newFormWidget);
 
-    qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
+        connect(termValue, SIGNAL(textChanged(const QString &)),
+                this, SLOT(newTerm(const QString &)));
 
-    newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Qualifier:"), true),
-                          qualifierValue);
+        newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Term:"), true),
+                              termValue);
 
-    // Make our term value the widget to tab to after our metadata tree view
+        QComboBox *qualifierValue = new QComboBox(newFormWidget);
 
-    setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->metadataList()->treeView()),
-                termValue);
-    setTabOrder(termValue, qualifierValue);
+        qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
-    // Deal with the grid part of our GUI
+        newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Qualifier:"), true),
+                              qualifierValue);
 
-    // Create a new widget and layout
+        // Make our term value the widget to tab to after our metadata tree view
 
-    QWidget *newGridWidget = new QWidget(newMainWidget);
-    QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
+        setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->metadataList()->treeView()),
+                    termValue);
+        setTabOrder(termValue, qualifierValue);
 
-    newGridWidget->setLayout(newGridLayout);
+        // Deal with the grid part of our GUI
 
-    // Populate our new layout, but only if there is at least one RDF triple
-    // Note: the two calls to setRowStretch() ensures that our grid layout takes
-    //       as much vertical space as possible (otherwise our form layout might
-    //       take some vertical space making it look a bit odd if there are no
-    //       data available)...
+        // Create a new widget and layout
 
-    newGridLayout->setRowStretch(0, 1);
+        newGridWidget = new QWidget(newMainWidget);
+        newGridLayout = new QGridLayout(newGridWidget);
 
-    newGridLayout->addWidget(mParent->newLabel(newMainWidget,
-                                               tr("No data available..."),
-                                               false, 1.25, Qt::AlignCenter),
-                             1, 0);
+        newGridWidget->setLayout(newGridLayout);
 
-    newGridLayout->setRowStretch(2, 1);
+        // Populate our new layout, but only if there is at least one RDF triple
+        // Note: the two calls to setRowStretch() ensures that our grid layout takes
+        //       as much vertical space as possible (otherwise our form layout might
+        //       take some vertical space making it look a bit odd if there are no
+        //       data available)...
 
-    // Add our 'internal' widgets to our new main widget
+        newGridLayout->setRowStretch(0, 1);
 
-    newMainLayout->addWidget(newFormWidget);
-    newMainLayout->addWidget(Core::newLineWidget(mWidget));
-    newMainLayout->addWidget(newGridWidget);
+        newGridLayout->addWidget(mParent->newLabel(newMainWidget,
+                                                   tr("No data available..."),
+                                                   false, 1.25, Qt::AlignCenter),
+                                 1, 0);
+
+        newGridLayout->setRowStretch(2, 1);
+
+        // Add our 'internal' widgets to our new main widget
+
+        newMainLayout->addWidget(newFormWidget);
+        newMainLayout->addWidget(Core::newLineWidget(mWidget));
+        newMainLayout->addWidget(newGridWidget);
+    }
 
     // Add our new widget to our stacked widget
 
@@ -209,6 +221,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
     // Allow ourselves to be updated again
 
     setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::newTerm(const QString &pTerm)
+{
+//---GRY---
+qDebug(">>> New term: %s", qPrintable(pTerm));
 }
 
 //==============================================================================
