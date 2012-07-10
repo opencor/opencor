@@ -81,9 +81,8 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                                                                              const bool &pRetranslate)
 {
     // Note: we are using a grid layout to dislay the contents of our view, but
-    //       to update the contents unfortunately results in some very bad
-    //       flickering on Mac OS X. This can, however, be addressed using a
-    //       stacked widget with a grid-based widget...
+    //       this unfortunately results in some very bad flickering on Mac OS X.
+    //       This can, however, be addressed using a stacked widget, so...
 
     // Prevent ourselves from being updated (to avoid any flickering)
 
@@ -213,7 +212,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
     mWidget->addWidget(newGridWidget);
 
-    // Get rid of our old widget and layout (and of its contents)
+    // Get rid of our old widget and layout (and its contents)
 
     if (mGridWidget) {
         mWidget->removeWidget(mGridWidget);
@@ -225,7 +224,6 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             delete item;
         }
 
-        delete mGridLayout;
         delete mGridWidget;
     }
 

@@ -31,6 +31,10 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataEditDetailsWidget),
+    mMainWidget(0),
+    mMainLayout(0),
+    mFormWidget(0),
+    mFormLayout(0),
     mGridWidget(0),
     mGridLayout(0)
 {
@@ -38,35 +42,9 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mGui->setupUi(this);
 
-    // Create a widget which will contain our GUI
+    // Create a stacked widget which will contain our GUI
 
-    mWidget = new QWidget(this);
-
-    QVBoxLayout *layout = new QVBoxLayout(mWidget);
-
-    layout->setMargin(0);
-
-    mWidget->setLayout(layout);
-
-    // Create a form widget which will contain the qualifier and term fields
-
-    mFormWidget = new QWidget(mWidget);
-    mFormLayout = new QFormLayout(mFormWidget);
-
-    mFormWidget->setLayout(mFormLayout);
-
-    // Create a stacked widget which will contain the suggested ontological
-    // terms
-
-    mStackedWidget = new QStackedWidget(mWidget);
-
-    updateGui();
-
-    // Add our 'internal' widgets to our main widget
-
-    layout->addWidget(mFormWidget);
-    layout->addWidget(Core::newLineWidget(mWidget));
-    layout->addWidget(mStackedWidget);
+    mWidget = new QStackedWidget(this);
 
     // Add our stacked widget to our scroll area
 
@@ -99,65 +77,85 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
 {
-    // Note: we are using a grid layout to dislay the contents of our view, but
-    //       to update the contents unfortunately results in some very bad
-    //       flickering on Mac OS X. This can, however, be addressed using a
-    //       stacked widget with a grid-based widget...
+    // Note: we are using certain layouts to dislay the contents of our view,
+    //       but this unfortunately results in some very bad flickering on Mac
+    //       OS X. This can, however, be addressed using a stacked widget, so...
 
     // Prevent ourselves from being updated (to avoid any flickering)
 
     setUpdatesEnabled(false);
 
+    // Create a widget which will contain our GUI
+
+    QWidget *newMainWidget = new QWidget(this);
+    QVBoxLayout *newMainLayout = new QVBoxLayout(newMainWidget);
+
+//    newMainLayout->setMargin(0);
+
+    newMainWidget->setLayout(newMainLayout);
+
     // Deal with the form part of our GUI
 
-    // Remove everything from our form layout
+    // Create a form widget which will contain the qualifier and term fields
 
-    for (int i = 0, iMax = mFormLayout->count(); i < iMax; ++i) {
-        QLayoutItem *item = mFormLayout->takeAt(0);
+    QWidget *newFormWidget = new QWidget(newMainWidget);
+    QFormLayout *newFormLayout = new QFormLayout(newFormWidget);
 
-        delete item->widget();
-        delete item;
-    }
+    newFormWidget->setLayout(newFormLayout);
 
     // Add the qualifier and term fields
 
-    QComboBox *qualifierValue = new QComboBox(mFormWidget);
+    QComboBox *qualifierValue = new QComboBox(newFormWidget);
 
     qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
-    mFormLayout->addRow(mParent->newLabel(mFormWidget, tr("Qualifier:"), true),
-                        qualifierValue);
+    newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Qualifier:"), true),
+                          qualifierValue);
 
-    QLineEdit *termValue = new QLineEdit(mFormWidget);
+    QLineEdit *termValue = new QLineEdit(newFormWidget);
 
-    mFormLayout->addRow(mParent->newLabel(mFormWidget, tr("Term:"), true),
-                        termValue);
+    newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Term:"), true),
+                          termValue);
 
     // Deal with the grid part of our GUI
 
     // Create a new widget and layout
 
-    QWidget *newGridWidget = new QWidget(mStackedWidget);
+    QWidget *newGridWidget = new QWidget(newMainWidget);
     QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
 
     newGridWidget->setLayout(newGridLayout);
 
     // Populate our new layout, but only if there is at least one RDF triple
 
-    newGridLayout->addWidget(mParent->newLabel(mStackedWidget,
+    newGridLayout->addWidget(mParent->newLabel(newMainWidget,
                                                tr("No data available..."),
                                                false, 1.25, Qt::AlignCenter),
                              0, 0);
 
+    // Add our 'internal' widgets to our new main widget
+
+    newMainLayout->addWidget(newFormWidget);
+    newMainLayout->addWidget(Core::newLineWidget(mWidget));
+    newMainLayout->addWidget(newGridWidget);
+
     // Add our new widget to our stacked widget
 
-    mStackedWidget->addWidget(newGridWidget);
+    mWidget->addWidget(newMainWidget);
 
-    // Get rid of our old widget and layout (and of its contents)
+    // Remove the contents of our old form layout
 
-    if (mGridWidget) {
-        mStackedWidget->removeWidget(mGridWidget);
+    if (mFormWidget)
+        for (int i = 0, iMax = mFormLayout->count(); i < iMax; ++i) {
+            QLayoutItem *item = mFormLayout->takeAt(0);
 
+            delete item->widget();
+            delete item;
+        }
+
+    // Remove the contents of our old grid layout
+
+    if (mGridWidget)
         for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
             QLayoutItem *item = mGridLayout->takeAt(0);
 
@@ -165,11 +163,28 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
             delete item;
         }
 
-        delete mGridLayout;
-        delete mGridWidget;
+    // Get rid of our old main widget and layout (and its contents)
+
+    if (mMainWidget) {
+        mWidget->removeWidget(mMainWidget);
+
+        for (int i = 0, iMax = mMainLayout->count(); i < iMax; ++i) {
+            QLayoutItem *item = mMainLayout->takeAt(0);
+
+            delete item->widget();
+            delete item;
+        }
+
+        delete mMainWidget;
     }
 
-    // Keep track of our new widget and layout
+    // Keep track of our new main widgets and layouts
+
+    mMainWidget = newMainWidget;
+    mMainLayout = newMainLayout;
+
+    mFormWidget = newFormWidget;
+    mFormLayout = newFormLayout;
 
     mGridWidget = newGridWidget;
     mGridLayout = newGridLayout;
