@@ -45,6 +45,11 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
     mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, false);
     mWebView              = new QWebView(pParent);
 
+    mBorderedMetadataViewDetails = new Core::BorderedWidget(mMetadataViewDetails,
+                                                            true, true, true, false);
+    mBorderedWebView = new Core::BorderedWidget(mWebView,
+                                                true, true, false, false);
+
     // Some connections to handle the looking up of a qualifier, resource and
     // resource id
 
@@ -61,10 +66,8 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     addWidget(new Core::BorderedWidget(mCellmlElementDetails,
                                        false, true, true, false));
-    addWidget(new Core::BorderedWidget(mMetadataViewDetails,
-                                       true, true, true, false));
-    addWidget(new Core::BorderedWidget(mWebView,
-                                       true, true, false, false));
+    addWidget(mBorderedMetadataViewDetails);
+    addWidget(mBorderedWebView);
 
     // Keep track of our splitter being moved
 
@@ -138,11 +141,14 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
         newCmetaId(mCellmlElementDetails->cmetaIdValue()->currentText());
     }
 
-    // 'Clean up' our web view, should the raw view of our metadata details view
-    // be visible
+    // Show/hide our web viewer, depending on whether the type of the metadata
+    // is known or not
 
-    if (mMetadataViewDetails->rawView()->isVisible())
-        mWebView->setUrl(QUrl());
+    bool isUnknownMetadata = mMetadataViewDetails->rawView()->isVisible();
+
+    mBorderedWebView->setVisible(!isUnknownMetadata);
+
+    mBorderedMetadataViewDetails->setBottomBorderVisible(!isUnknownMetadata);
 }
 
 //==============================================================================

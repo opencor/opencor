@@ -71,6 +71,10 @@ private:
 
     QSplitter *mSplitter;
 
+    Core::BorderedWidget *mBorderedMetadataEditDetails;
+    Core::BorderedWidget *mBorderedMetadataViewDetails;
+    Core::BorderedWidget *mBorderedWebView;
+
     CellmlAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;

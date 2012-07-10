@@ -29,6 +29,16 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class BorderedWidget;
+    class UserMessageWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -55,6 +65,9 @@ private:
     CellmlAnnotationViewWidget *mParent;
 
     Ui::CellmlAnnotationViewCellmlDetailsWidget *mGui;
+
+    Core::BorderedWidget *mBorderedMetadataViewDetails;
+    Core::BorderedWidget *mBorderedWebView;
 
     CellmlAnnotationViewCellmlElementDetailsWidget *mCellmlElementDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;

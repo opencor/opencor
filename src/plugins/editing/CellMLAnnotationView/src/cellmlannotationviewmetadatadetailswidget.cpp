@@ -60,6 +60,13 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, true);
     mWebView             = new QWebView(pParent);
 
+    mBorderedMetadataEditDetails = new Core::BorderedWidget(mMetadataEditDetails,
+                                                            false, true, true, false);
+    mBorderedMetadataViewDetails = new Core::BorderedWidget(mMetadataViewDetails,
+                                                            true, true, true, false);
+    mBorderedWebView = new Core::BorderedWidget(mWebView,
+                                                true, true, false, false);
+
     // Some connections to handle the looking up of a qualifier, resource and
     // resource id
 
@@ -74,12 +81,9 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Populate our splitter widget
 
-    mSplitter->addWidget(new Core::BorderedWidget(mMetadataEditDetails,
-                                                  false, true, true, false));
-    mSplitter->addWidget(new Core::BorderedWidget(mMetadataViewDetails,
-                                                  true, true, true, false));
-    mSplitter->addWidget(new Core::BorderedWidget(mWebView,
-                                                  true, true, false, false));
+    mSplitter->addWidget(mBorderedMetadataEditDetails);
+    mSplitter->addWidget(mBorderedMetadataViewDetails);
+    mSplitter->addWidget(mBorderedWebView);
 
     // Keep track of our splitter being moved
 
@@ -141,17 +145,20 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known or not
 
-    mBorderedUnsupportedMetadataMsg->setVisible(pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown);
+    bool isUnknownMetadata = pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
 
-    // Update our Metadata edit and view details GUIs
+    mBorderedUnsupportedMetadataMsg->setVisible(isUnknownMetadata);
 
-    mMetadataEditDetails->updateGui(!mBorderedUnsupportedMetadataMsg->isVisible());
+    // Show/hide and update our metadata edit and view details GUIs, as well as
+    // our web viewer
+
+    mBorderedMetadataEditDetails->setVisible(!isUnknownMetadata);
+    mBorderedWebView->setVisible(!isUnknownMetadata);
+
+    mBorderedMetadataViewDetails->setTopBorderVisible(!isUnknownMetadata);
+    mBorderedMetadataViewDetails->setBottomBorderVisible(!isUnknownMetadata);
+
     mMetadataViewDetails->updateGui(pRdfTriples);
-
-    // 'Clean up' our web view, should we be showing unsupported metadata
-
-    if (mBorderedUnsupportedMetadataMsg->isVisible())
-        mWebView->setUrl(QUrl());
 }
 
 //==============================================================================
