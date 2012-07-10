@@ -2,9 +2,12 @@
 // CellML annotation view metadata edit details widget
 //==============================================================================
 
+#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
+#include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
+#include "treeview.h"
 
 //==============================================================================
 
@@ -90,20 +93,25 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
     QWidget *newMainWidget = new QWidget(this);
     QVBoxLayout *newMainLayout = new QVBoxLayout(newMainWidget);
 
-//    newMainLayout->setMargin(0);
+    newMainLayout->setMargin(0);
 
     newMainWidget->setLayout(newMainLayout);
 
     // Deal with the form part of our GUI
 
-    // Create a form widget which will contain the qualifier and term fields
+    // Create a form widget which will contain our term and qualifier fields
 
     QWidget *newFormWidget = new QWidget(newMainWidget);
     QFormLayout *newFormLayout = new QFormLayout(newFormWidget);
 
     newFormWidget->setLayout(newFormLayout);
 
-    // Add the qualifier and term fields
+    // Add our term and qualifier fields
+
+    QLineEdit *termValue = new QLineEdit(newFormWidget);
+
+    newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Term:"), true),
+                          termValue);
 
     QComboBox *qualifierValue = new QComboBox(newFormWidget);
 
@@ -112,10 +120,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
     newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Qualifier:"), true),
                           qualifierValue);
 
-    QLineEdit *termValue = new QLineEdit(newFormWidget);
+    // Make our term value the widget to tab to after our metadata tree view
 
-    newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Term:"), true),
-                          termValue);
+    setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->metadataList()->treeView()),
+                termValue);
+    setTabOrder(termValue, qualifierValue);
 
     // Deal with the grid part of our GUI
 
@@ -127,11 +136,19 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
     newGridWidget->setLayout(newGridLayout);
 
     // Populate our new layout, but only if there is at least one RDF triple
+    // Note: the two calls to setRowStretch() ensures that our grid layout takes
+    //       as much vertical space as possible (otherwise our form layout might
+    //       take some vertical space making it look a bit odd if there are no
+    //       data available)...
+
+    newGridLayout->setRowStretch(0, 1);
 
     newGridLayout->addWidget(mParent->newLabel(newMainWidget,
                                                tr("No data available..."),
                                                false, 1.25, Qt::AlignCenter),
-                             0, 0);
+                             1, 0);
+
+    newGridLayout->setRowStretch(2, 1);
 
     // Add our 'internal' widgets to our new main widget
 

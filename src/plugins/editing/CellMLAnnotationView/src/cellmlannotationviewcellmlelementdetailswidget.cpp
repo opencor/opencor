@@ -115,14 +115,9 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
     mItems = pItems;
 
-    // Reset our cmeta:id widget
+    // Reset our cmeta:id value widget (in case there are no items to show)
 
-    if (mCmetaIdValue) {
-        disconnect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                   this, SLOT(newCmetaId(const QString &)));
-
-        mCmetaIdValue = 0;
-    }
+    mCmetaIdValue = 0;
 
     // Remove everything from our form layout
 
@@ -240,7 +235,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             cmetaIdWidget->setLayout(cmetaIdWidgetLayout);
 
-            // Create our QComboBox widget
+            // Create our cmeta:id value widget
 
             mCmetaIdValue = new QComboBox(mWidget);
 
@@ -268,7 +263,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
                 mCmetaIdValue->setEditText(cmetaId);
 
-            // Create our QPushButton
+            // Create our edit button widget
 
             QPushButton *editButton = new QPushButton(mWidget);
             // Note #1: ideally, we could assign a QAction to our QPushButton,
@@ -302,8 +297,6 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->cellmlList()->treeView()),
                         mCmetaIdValue);
             setTabOrder(mCmetaIdValue, editButton);
-            setTabOrder(editButton,
-                        qobject_cast<QWidget *>(mParent->listsWidget()->metadataList()->treeView()));
 
             // Create a connection to keep track of changes to our cmeta:id
             // value
