@@ -148,10 +148,9 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
     mMetadataEditDetails->updateGui(!mBorderedUnsupportedMetadataMsg->isVisible());
     mMetadataViewDetails->updateGui(pRdfTriples);
 
-    // 'Clean up' our web view, should the raw view of our metadata details view
-    // be visible
+    // 'Clean up' our web view, should we be showing unsupported metadata
 
-    if (mMetadataViewDetails->rawView()->isVisible())
+    if (mBorderedUnsupportedMetadataMsg->isVisible())
         mWebView->setUrl(QUrl());
 }
 
