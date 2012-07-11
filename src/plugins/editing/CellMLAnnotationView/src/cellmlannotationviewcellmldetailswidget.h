@@ -49,6 +49,8 @@ public:
 
     void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
 
+    CellmlAnnotationViewCellmlMetadataDetailsWidget *cellmlMetadataDetails() const;
+
 private:
     CellmlAnnotationViewWidget *mParent;
 
@@ -65,8 +67,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void emitSplitterMoved();
-
-    void newCmetaId(const QString &pCmetaId);
 
     void metadataUpdated();
 };

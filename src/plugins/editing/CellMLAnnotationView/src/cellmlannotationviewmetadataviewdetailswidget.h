@@ -62,8 +62,6 @@ private:
 
     Ui::CellmlAnnotationViewMetadataViewDetailsWidget *mGui;
 
-    CellMLSupport::CellmlFileRdfTriples mRdfTriples;
-
     CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
     CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *mBioModelsDotNetView;
 };

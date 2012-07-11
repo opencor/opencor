@@ -2,11 +2,15 @@
 // CellML annotation view CellML element details widget
 //==============================================================================
 
+#include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
 #include "cellmlannotationviewcellmlelementitem.h"
 #include "cellmlannotationviewcellmllistwidget.h"
+#include "cellmlannotationviewcellmlmetadatadetailswidget.h"
+#include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
+#include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "treeview.h"
 
@@ -78,12 +82,20 @@ CellmlAnnotationViewCellmlElementDetailsWidget::~CellmlAnnotationViewCellmlEleme
 void CellmlAnnotationViewCellmlElementDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
+    // Note: we must also update the connection for our cmeta:id widget since it
+    //       gets recreated as a result calling updateGui()...
+
+    if (mCmetaIdValue)
+        disconnect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
+                   this, SLOT(newCmetaId(const QString &)));
 
     mGui->retranslateUi(this);
 
-    // For the rest of our GUI, it's easier to just update it, so...
-
     updateGui();
+
+    if (mCmetaIdValue)
+        connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
+                this, SLOT(newCmetaId(const QString &)));
 }
 
 //==============================================================================
@@ -107,6 +119,12 @@ CellmlAnnotationViewCellmlElementDetailsWidget::Item CellmlAnnotationViewCellmlE
 
 void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pItems)
 {
+    // Stop tracking changes to the cmeta:id value of our CellML element
+
+    if (mCmetaIdValue)
+        disconnect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
+                   this, SLOT(newCmetaId(const QString &)));
+
     // Prevent ourselves from being updated (to avoid any flickering)
 
     setUpdatesEnabled(false);
@@ -302,7 +320,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             // value
 
             connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                    this, SLOT(newCmetaId(const QString &)));
+                    this, SLOT(trackCmetaId(const QString &)));
         } else {
             // Not our 'main' item, so just display its cmeta:id
 
@@ -400,6 +418,16 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
     // Allow ourselves to be updated again
 
     setUpdatesEnabled(true);
+
+    // Re-track changes to the cmeta:id value of our CellML element and update
+    // our metadata details GUI
+
+    if (mCmetaIdValue) {
+        connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
+                this, SLOT(newCmetaId(const QString &)));
+
+        newCmetaId(mCmetaIdValue->currentText());
+    }
 }
 
 //==============================================================================
@@ -410,7 +438,11 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui()
     // Note: this can be as a result of, for example, a need to retranslate the
     //       GUI or a change in the metadata...
 
+    QString cmetaId = mCmetaIdValue?mCmetaIdValue->currentText():QString();
+
     updateGui(mItems);
+
+    newCmetaId(cmetaId);
 }
 
 //==============================================================================
@@ -474,6 +506,32 @@ QComboBox * CellmlAnnotationViewCellmlElementDetailsWidget::cmetaIdValue() const
 //==============================================================================
 
 void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &pCmetaId)
+{
+    // Retrieve the RDF triples for the cmeta:id
+
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = mParent->cellmlFile()->rdfTriples(pCmetaId);
+
+    // Check that we are not dealing with the same RDF triples
+    // Note: this may happen when manually typing the name of a cmeta:id and the
+    //       QComboBox suggesting something for you, e.g. you start typing "C_"
+    //       and the QComboBox suggests "C_C" (which will get us here) and then
+    //       you finish typing "C_C" (which will also get us here)
+
+    static CellMLSupport::CellmlFileRdfTriples oldRdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
+
+    if (rdfTriples == oldRdfTriples)
+        return;
+
+    oldRdfTriples = rdfTriples;
+
+    // Update its metadata details
+
+    mParent->detailsWidget()->cellmlDetails()->cellmlMetadataDetails()->metadataViewDetails()->updateGui(rdfTriples);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlElementDetailsWidget::trackCmetaId(const QString &pCmetaId)
 {
     // Keep track of the new cmeta:id value
 
