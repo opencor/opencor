@@ -19,8 +19,16 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QStackedWidget>
+#include <QVariant>
 #include <QVBoxLayout>
+
+//==============================================================================
+
+#include <QJsonParser>
 
 //==============================================================================
 
@@ -39,7 +47,10 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mFormWidget(0),
     mFormLayout(0),
     mGridWidget(0),
-    mGridLayout(0)
+    mGridLayout(0),
+    mErrorMsg(QString()),
+    mTermUrl(QString()),
+    mOtherTermUrl(QString())
 {
     // Set up the GUI
 
@@ -52,6 +63,17 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Add our stacked widget to our scroll area
 
     setWidget(mWidget);
+
+    // Create a network access manager so that we can then retrieve a list of
+    // CellML models from the CellML Model Repository
+
+    mNetworkAccessManager = new QNetworkAccessManager(this);
+
+    // Make sure that we get told when the download of our Internet file is
+    // complete
+
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
+            this, SLOT(finished(QNetworkReply *)) );
 }
 
 //==============================================================================
@@ -227,8 +249,89 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::newTerm(const QString &pTerm)
 {
-//---GRY---
-qDebug(">>> New term: %s", qPrintable(pTerm));
+    // Retrieve some possible ontological terms based on the given term
+
+    QString termUrl = QString("http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=%1&full_info=1").arg(pTerm);
+
+    if (mTermUrl.isEmpty()) {
+        // No other term is being looked up, so keep track of the given term and
+        // look it up
+
+        mTermUrl = termUrl;
+
+        mNetworkAccessManager->get(QNetworkRequest(termUrl));
+    } else {
+        // Another term is already being looked up, so keep track of the given
+        // term for later
+
+        mOtherTermUrl = termUrl;
+    }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNetworkReply)
+{
+    // Output the list of models, should we have retrieved it without any
+    // problem
+
+    if (pNetworkReply->error() == QNetworkReply::NoError) {
+        // Parse the JSON code
+
+        QJson::Parser jsonParser;
+        bool parsingOk;
+
+        QVariantMap resultMap = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
+
+static int counter = 0;
+qDebug("---[%03d]--------------------------------------", ++counter);
+qDebug("URL: %s", qPrintable(pNetworkReply->url().toString()));
+
+        if (parsingOk) {
+            // Retrieve the list of CellML models
+
+            foreach (const QVariant &ontologicalsTermVariant, resultMap["result"].toList()) {
+                QVariantList ontologicalTermVariant = ontologicalsTermVariant.toList();
+
+                if (ontologicalTermVariant.count()) {
+                    // The ontological term variant has some contents, so we can
+                    // extract the MIRIAM URN and the name
+                    // Note: we need to check this as it appears that
+                    //       semanticSBML may return an empty ontological term
+                    //       variant, so...
+
+                    QVariantMap ontologicalTermMap = ontologicalTermVariant[0].toMap();
+
+qDebug(">>> %s ---> %s", qPrintable(ontologicalTermMap["uri"].toString()),
+                         qPrintable(ontologicalTermMap["name"].toString()));
+                }
+            }
+
+            // Everything went fine, so...
+
+            mErrorMsg = QString();
+        } else {
+            // Something went wrong, so...
+
+            mErrorMsg = jsonParser.errorString();
+        }
+    } else {
+        // Something went wrong, so...
+
+        mErrorMsg = pNetworkReply->errorString();
+    }
+
+    // We are done, so...
+
+    mTermUrl = QString();
+
+    // Check whether there is another term to look up
+
+    if (!mOtherTermUrl.isEmpty()) {
+        mNetworkAccessManager->get(QNetworkRequest(mOtherTermUrl));
+
+        mOtherTermUrl = QString();
+    }
 }
 
 //==============================================================================

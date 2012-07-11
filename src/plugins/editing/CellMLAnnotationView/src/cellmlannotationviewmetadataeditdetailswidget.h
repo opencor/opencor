@@ -23,6 +23,8 @@ namespace Ui {
 
 class QFormLayout;
 class QGridLayout;
+class QNetworkAccessManager;
+class QNetworkReply;
 class QStackedWidget;
 class QVBoxLayout;
 
@@ -66,8 +68,15 @@ private:
     QWidget *mGridWidget;
     QGridLayout *mGridLayout;
 
+    QNetworkAccessManager *mNetworkAccessManager;
+    QString mErrorMsg;
+
+    QString mTermUrl;
+    QString mOtherTermUrl;
+
 private Q_SLOTS:
     void newTerm(const QString &pTerm);
+    void finished(QNetworkReply *pNetworkReply);
 };
 
 //==============================================================================
