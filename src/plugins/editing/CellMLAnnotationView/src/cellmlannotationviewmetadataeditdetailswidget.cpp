@@ -293,14 +293,8 @@ qDebug("URL: %s", qPrintable(pNetworkReply->url().toString()));
             foreach (const QVariant &ontologicalsTermVariant, resultMap["result"].toList()) {
                 QVariantList ontologicalTermVariant = ontologicalsTermVariant.toList();
 
-                if (ontologicalTermVariant.count()) {
-                    // The ontological term variant has some contents, so we can
-                    // extract the MIRIAM URN and the name
-                    // Note: we need to check this as it appears that
-                    //       semanticSBML may return an empty ontological term
-                    //       variant, so...
-
-                    QVariantMap ontologicalTermMap = ontologicalTermVariant[0].toMap();
+                for (int i = 0, iMax = ontologicalTermVariant.count(); i < iMax; ++i) {
+                    QVariantMap ontologicalTermMap = ontologicalTermVariant[i].toMap();
 
 qDebug(">>> %s ---> %s", qPrintable(ontologicalTermMap["uri"].toString()),
                          qPrintable(ontologicalTermMap["name"].toString()));
