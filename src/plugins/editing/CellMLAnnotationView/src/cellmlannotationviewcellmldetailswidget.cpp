@@ -5,8 +5,6 @@
 #include "borderedwidget.h"
 #include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmlmetadatadetailswidget.h"
-#include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
-#include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 
@@ -17,7 +15,6 @@
 //==============================================================================
 
 #include <QComboBox>
-#include <QWebView>
 
 //==============================================================================
 
