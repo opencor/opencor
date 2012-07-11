@@ -195,8 +195,6 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
     mModelNames.clear();
     mModelUrls.clear();
 
-    mErrorMsg.clear();
-
     // Output the list of models, should we have retrieved it without any
     // problem
 
@@ -217,6 +215,14 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
                 mModelNames << modelDetailsVariant[0].toString();
                 mModelUrls << modelDetailsVariant[1].toString();
             }
+
+            // Everything went fine, so...
+
+            mErrorMsg = QString();
+        } else {
+            // Something went wrong, so...
+
+            mErrorMsg = jsonParser.errorString();
         }
     } else {
         // Something went wrong, so...
