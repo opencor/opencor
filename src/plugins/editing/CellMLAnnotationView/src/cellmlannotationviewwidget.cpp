@@ -40,7 +40,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     mGui(new Ui::CellmlAnnotationViewWidget),
     mPluginParent(pPluginParent),
     mListsWidget(0),
-    mDetailsWidget(0)
+    mDetailsWidget(0),
+    oldWebViewUrls(QMap<QWebView *, QUrl>())
 {
     // Set up the GUI
 
@@ -363,6 +364,8 @@ void CellmlAnnotationViewWidget::updateWebViewerWithQualifierDetails(QWebView *p
 
     // Show the information
 
+    oldWebViewUrls.insert(pWebView, QUrl());
+
     pWebView->setHtml(mQualifierInformationTemplate.arg(pQualifier,
                                                         qualifierSvg,
                                                         shortDescription,
@@ -381,7 +384,6 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
     // up would already be correct
 
     if (!pRetranslate) {
-        static QMap<QWebView *, QUrl> oldUrls = QMap<QWebView *, QUrl>();
         // Note: updating the URL of the web view results in it being refreshed,
         //       even if the URL is the same as the one before in which case it
         //       looks like some kind of a big flickering. We therefore want to
@@ -391,14 +393,14 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
         //       with identifiers.org URLs), so instead we keep track of the URL
         //       ourselves...
 
-        QUrl oldUrl = oldUrls.value(pWebView);
+        QUrl oldUrl = oldWebViewUrls.value(pWebView);
         QUrl newUrl = "http://identifiers.org/"+pResource+"/?redirect=true";
         //---GRY--- NOTE THAT redirect=true DOESN'T WORK AT THE MOMENT, SO WE DO
         //          END UP WITH A FRAME, BUT THE identifiers.org GUYS ARE GOING
         //          TO 'FIX' THAT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
 
         if (newUrl != oldUrl) {
-            oldUrls.insert(pWebView, newUrl);
+            oldWebViewUrls.insert(pWebView, newUrl);
 
             pWebView->setUrl(newUrl);
         }
@@ -417,14 +419,13 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceIdDetails(QWebView *
     // up would already be correct
 
     if (!pRetranslate) {
-        static QMap<QWebView *, QUrl> oldUrls = QMap<QWebView *, QUrl>();
         // Note: see comment in updateWebViewerWithResourceDetails()...
 
-        QUrl oldUrl = oldUrls.value(pWebView);
+        QUrl oldUrl = oldWebViewUrls.value(pWebView);
         QUrl newUrl = "http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true";
 
         if (newUrl != oldUrl) {
-            oldUrls.insert(pWebView, newUrl);
+            oldWebViewUrls.insert(pWebView, newUrl);
 
             pWebView->setUrl(newUrl);
         }

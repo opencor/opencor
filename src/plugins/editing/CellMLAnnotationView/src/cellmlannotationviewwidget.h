@@ -92,6 +92,8 @@ private:
 
     QString mQualifierInformationTemplate;
 
+    QMap<QWebView *, QUrl> oldWebViewUrls;
+
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
