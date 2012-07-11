@@ -4,6 +4,7 @@
 
 #include "borderedwidget.h"
 #include "cellmlannotationviewcellmldetailswidget.h"
+#include "cellmlannotationviewcellmlmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
@@ -17,10 +18,6 @@
 
 #include <QComboBox>
 #include <QWebView>
-
-//==============================================================================
-
-#include <QJsonParser>
 
 //==============================================================================
 
@@ -41,33 +38,14 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     // Create our details widgets
 
-    mCellmlElementDetails = new CellmlAnnotationViewCellmlElementDetailsWidget(pParent);
-    mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, false);
-    mWebView              = new QWebView(pParent);
-
-    mBorderedMetadataViewDetails = new Core::BorderedWidget(mMetadataViewDetails,
-                                                            true, true, true, false);
-    mBorderedWebView = new Core::BorderedWidget(mWebView,
-                                                true, true, false, false);
-
-    // Some connections to handle the looking up of a qualifier, resource and
-    // resource id
-
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
-            this, SLOT(qualifierLookupRequested(const QString &, const bool &)));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
-            this, SLOT(resourceLookupRequested(const QString &, const bool &)));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceIdLookupRequested(const QString &, const QString &, const bool &)),
-            this, SLOT(resourceIdLookupRequested(const QString &, const QString &, const bool &)));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(unknownLookupRequested()),
-            this, SLOT(unknownLookupRequested()));
+    mCellmlElementDetails  = new CellmlAnnotationViewCellmlElementDetailsWidget(pParent);
+    mCellmlMetadataDetails = new CellmlAnnotationViewCellmlMetadataDetailsWidget(pParent);
 
     // Add our details widgets to our splitter
 
     addWidget(new Core::BorderedWidget(mCellmlElementDetails,
                                        false, true, true, false));
-    addWidget(mBorderedMetadataViewDetails);
-    addWidget(mBorderedWebView);
+    addWidget(mCellmlMetadataDetails);
 
     // Keep track of our splitter being moved
 
@@ -99,7 +77,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     mCellmlElementDetails->retranslateUi();
-    mMetadataViewDetails->retranslateUi();
+    mCellmlMetadataDetails->retranslateUi();
 
     if (mCellmlElementDetails->cmetaIdValue())
         connect(mCellmlElementDetails->cmetaIdValue(), SIGNAL(editTextChanged(const QString &)),
@@ -140,15 +118,6 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
         newCmetaId(mCellmlElementDetails->cmetaIdValue()->currentText());
     }
-
-    // Show/hide our web viewer, depending on whether the type of the metadata
-    // is known or not
-
-    bool isUnknownMetadata = mMetadataViewDetails->rawView()->isVisible();
-
-    mBorderedWebView->setVisible(!isUnknownMetadata);
-
-    mBorderedMetadataViewDetails->setBottomBorderVisible(!isUnknownMetadata);
 }
 
 //==============================================================================
@@ -193,47 +162,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::newCmetaId(const QString &pCmetaId
 
     // Update its metadata details
 
-    mMetadataViewDetails->updateGui(rdfTriples);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewCellmlDetailsWidget::qualifierLookupRequested(const QString &pQualifier,
-                                                                       const bool &pRetranslate)
-{
-    // Ask our parent to update our web viewer for us
-
-    mParent->updateWebViewerWithQualifierDetails(mWebView, pQualifier, pRetranslate);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewCellmlDetailsWidget::resourceLookupRequested(const QString &pResource,
-                                                                      const bool &pRetranslate)
-{
-    // Ask our parent to update our web viewer for us
-
-    mParent->updateWebViewerWithResourceDetails(mWebView, pResource, pRetranslate);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewCellmlDetailsWidget::resourceIdLookupRequested(const QString &pResource,
-                                                                        const QString &pId,
-                                                                        const bool &pRetranslate)
-{
-    // Ask our parent to update our web viewer for us
-
-    mParent->updateWebViewerWithResourceIdDetails(mWebView, pResource, pId, pRetranslate);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewCellmlDetailsWidget::unknownLookupRequested()
-{
-    // We are 'asked' to lookup something unknown, so 'clean up' our web view
-
-    mWebView->setUrl(QUrl());
+    mCellmlMetadataDetails->metadataViewDetails()->updateGui(rdfTriples);
 }
 
 //==============================================================================

@@ -16,8 +16,6 @@
 
 //==============================================================================
 
-class QNetworkAccessManager;
-class QNetworkReply;
 class QWebView;
 
 //==============================================================================
@@ -29,21 +27,11 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class BorderedWidget;
-    class UserMessageWidget;
-}   // namespace Core
-
-//==============================================================================
-
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataViewDetailsWidget;
+class CellmlAnnotationViewCellmlMetadataDetailsWidget;
 class CellmlAnnotationViewWidget;
 
 //==============================================================================
@@ -66,12 +54,8 @@ private:
 
     Ui::CellmlAnnotationViewCellmlDetailsWidget *mGui;
 
-    Core::BorderedWidget *mBorderedMetadataViewDetails;
-    Core::BorderedWidget *mBorderedWebView;
-
     CellmlAnnotationViewCellmlElementDetailsWidget *mCellmlElementDetails;
-    CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
-    QWebView *mWebView;
+    CellmlAnnotationViewCellmlMetadataDetailsWidget *mCellmlMetadataDetails;
 
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
@@ -83,15 +67,6 @@ private Q_SLOTS:
     void emitSplitterMoved();
 
     void newCmetaId(const QString &pCmetaId);
-
-    void qualifierLookupRequested(const QString &pQualifier,
-                                  const bool &pRetranslate);
-    void resourceLookupRequested(const QString &pResource,
-                                 const bool &pRetranslate);
-    void resourceIdLookupRequested(const QString &pResource,
-                                   const QString &pId,
-                                   const bool &pRetranslate);
-    void unknownLookupRequested();
 
     void metadataUpdated();
 };

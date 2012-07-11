@@ -22,6 +22,7 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewcellmllistwidget.cpp
         src/cellmlannotationviewdetailswidget.cpp
         src/cellmlannotationviewlistswidget.cpp
+        src/cellmlannotationviewcellmlmetadatadetailswidget.cpp
         src/cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.cpp
         src/cellmlannotationviewmetadatadetailswidget.cpp
         src/cellmlannotationviewmetadataeditdetailswidget.cpp
@@ -36,6 +37,7 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewcellmllistwidget.h
         src/cellmlannotationviewdetailswidget.h
         src/cellmlannotationviewlistswidget.h
+        src/cellmlannotationviewcellmlmetadatadetailswidget.h
         src/cellmlannotationviewmetadatadetailswidget.h
         src/cellmlannotationviewmetadataeditdetailswidget.h
         src/cellmlannotationviewmetadatalistwidget.h
@@ -50,6 +52,7 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewcellmllistwidget.ui
         src/cellmlannotationviewdetailswidget.ui
         src/cellmlannotationviewlistswidget.ui
+        src/cellmlannotationviewcellmlmetadatadetailswidget.ui
         src/cellmlannotationviewmetadatadetailswidget.ui
         src/cellmlannotationviewmetadataeditdetailswidget.ui
         src/cellmlannotationviewmetadatalistwidget.ui
