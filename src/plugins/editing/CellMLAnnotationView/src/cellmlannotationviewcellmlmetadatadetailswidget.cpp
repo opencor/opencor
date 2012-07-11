@@ -89,16 +89,31 @@ void CellmlAnnotationViewCellmlMetadataDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlMetadataDetailsWidget::updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems)
+void CellmlAnnotationViewCellmlMetadataDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
+    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
+
+    if (pRdfTriples == rdfTriples)
+        // We want to show the same RDF triples, so...
+
+        return;
+
+    // Keep track of the RDF triples
+
+    rdfTriples = pRdfTriples;
+
     // Show/hide our web viewer, depending on whether the type of the metadata
     // is known or not
 
-    bool isUnknownMetadata = mMetadataViewDetails->rawView()->isVisible();
+    bool isUnknownMetadata = pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
 
     mBorderedWebView->setVisible(!isUnknownMetadata);
 
     mBorderedMetadataViewDetails->setBottomBorderVisible(!isUnknownMetadata);
+
+    // Update our metadata view details
+
+    mMetadataViewDetails->updateGui(pRdfTriples);
 }
 
 //==============================================================================

@@ -526,7 +526,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &p
 
     // Update its metadata details
 
-    mParent->detailsWidget()->cellmlDetails()->cellmlMetadataDetails()->metadataViewDetails()->updateGui(rdfTriples);
+    mParent->detailsWidget()->cellmlDetails()->cellmlMetadataDetails()->updateGui(rdfTriples);
 }
 
 //==============================================================================

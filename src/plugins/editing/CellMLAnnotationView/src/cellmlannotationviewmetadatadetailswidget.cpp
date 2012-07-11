@@ -149,14 +149,16 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
 
     mBorderedUnsupportedMetadataMsg->setVisible(isUnknownMetadata);
 
-    // Show/hide and update our metadata edit and view details GUIs, as well as
-    // our web viewer
+    // Show/hide our metadata edit details and web viewer, depending on whether
+    // the type of the metadata is known or not
 
     mBorderedMetadataEditDetails->setVisible(!isUnknownMetadata);
     mBorderedWebView->setVisible(!isUnknownMetadata);
 
     mBorderedMetadataViewDetails->setTopBorderVisible(!isUnknownMetadata);
     mBorderedMetadataViewDetails->setBottomBorderVisible(!isUnknownMetadata);
+
+    // Update our metadata view details
 
     mMetadataViewDetails->updateGui(pRdfTriples);
 }

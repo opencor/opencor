@@ -55,7 +55,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
+    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 
     CellmlAnnotationViewMetadataViewDetailsWidget *metadataViewDetails() const;
 
