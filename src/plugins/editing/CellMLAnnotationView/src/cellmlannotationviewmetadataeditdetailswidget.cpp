@@ -155,11 +155,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
         newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
                               qualifierValue);
 
-        // Make our term value the widget to tab to after our metadata tree view
+        // Let people know that the GUI has been populated
 
-        setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->metadataList()->treeView()),
-                    termValue);
-        setTabOrder(termValue, qualifierValue);
+        emit guiPopulated(termValue, qualifierValue);
 
         // Deal with the grid part of our GUI
 
@@ -171,10 +169,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
         newGridWidget->setLayout(newGridLayout);
 
         // Populate our new layout, but only if there is at least one RDF triple
-        // Note: the two calls to setRowStretch() ensures that our grid layout takes
-        //       as much vertical space as possible (otherwise our form layout might
-        //       take some vertical space making it look a bit odd if there are no
-        //       data available)...
+        // Note: the two calls to setRowStretch() ensures that our grid layout
+        //       takes as much vertical space as possible (otherwise our form
+        //       layout might take some vertical space making it look a bit odd
+        //       if there are no data available)...
 
         newGridLayout->setRowStretch(0, 1);
 

@@ -22,7 +22,9 @@ namespace Ui {
 
 //==============================================================================
 
+class QComboBox;
 class QLabel;
+class QLineEdit;
 class QWebView;
 
 //==============================================================================
@@ -91,6 +93,8 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void emitSplitterMoved();
+
+    void updateTabOrder(QLineEdit *pTermValue, QComboBox *pQualifierValue);
 };
 
 //==============================================================================

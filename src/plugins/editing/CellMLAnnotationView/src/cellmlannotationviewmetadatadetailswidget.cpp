@@ -245,6 +245,15 @@ QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
 
 //==============================================================================
 
+CellmlAnnotationViewMetadataEditDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataEditDetails() const
+{
+    // Return our metadata edit details widget
+
+    return mMetadataEditDetails;
+}
+
+//==============================================================================
+
 CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataViewDetails() const
 {
     // Return our metadata view details widget

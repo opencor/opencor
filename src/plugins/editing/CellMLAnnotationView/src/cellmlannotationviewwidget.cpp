@@ -8,6 +8,7 @@
 #include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
+#include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
@@ -21,8 +22,10 @@
 
 //==============================================================================
 
+#include <QComboBox>
 #include <QFile>
 #include <QLabel>
+#include <QLineEdit>
 #include <QWebView>
 
 //==============================================================================
@@ -115,6 +118,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(metadataEditingRequested(const QString &)),
             mListsWidget->metadataList(), SLOT(setCurrentId(const QString &)));
+
+    // A connection to reset the tab order following a GUI update of the
+    // metadata edit details
+
+    connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(guiPopulated(QLineEdit *, QComboBox *)),
+            this, SLOT(updateTabOrder(QLineEdit *, QComboBox *)));
 
     // Some connections to let our CellML and metadata details widgets know when
     // some/all metadata has/have been removed
@@ -392,6 +401,18 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceIdDetails(QWebView *
             pWebView->setUrl(newUrl);
         }
     }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::updateTabOrder(QLineEdit *pTermValue,
+                                                QComboBox *pQualifierValue)
+{
+    // Update the tab order for our metadata list
+
+    setTabOrder(qobject_cast<QWidget *>(mListsWidget->metadataList()->treeView()),
+                pTermValue);
+    setTabOrder(pTermValue, pQualifierValue);
 }
 
 //==============================================================================

@@ -22,8 +22,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QComboBox;
 class QFormLayout;
 class QGridLayout;
+class QLineEdit;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QStackedWidget;
@@ -76,6 +78,9 @@ private:
 
     QString mTermUrl;
     QString mOtherTermUrl;
+
+Q_SIGNALS:
+    void guiPopulated(QLineEdit *pTermValue, QComboBox *pQualifierValue);
 
 private Q_SLOTS:
     void newTerm(const QString &pTerm);
