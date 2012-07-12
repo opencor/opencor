@@ -261,6 +261,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlMetadataDetailsWidget</name>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support the type of metadata associated with the current CellML element...</source>
+        <translation>Désolé, mais la vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas le type de métadonnée associé avec l&apos;élément CellML courant...</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget</name>
     <message>
         <source>Qualifier</source>

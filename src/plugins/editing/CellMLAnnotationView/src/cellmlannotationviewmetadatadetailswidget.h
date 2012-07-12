@@ -64,7 +64,6 @@ public:
 
 private:
     CellmlAnnotationViewWidget *mParent;
-    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
 

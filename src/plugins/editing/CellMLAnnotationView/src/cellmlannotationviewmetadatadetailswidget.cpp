@@ -33,7 +33,6 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     Widget(pParent),
     mParent(pParent),
-    mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget)
 {
     // Set up the GUI
@@ -131,7 +130,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mCellmlFile);
+    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples();
 
     if (pRdfTriples == rdfTriples)
         // We want to show the same RDF triples, so...

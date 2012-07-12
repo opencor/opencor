@@ -8,6 +8,7 @@
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
+#include "usermessagewidget.h"
 
 //==============================================================================
 
@@ -25,15 +26,27 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewCellmlMetadataDetailsWidget::CellmlAnnotationViewCellmlMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
-    QSplitter(pParent),
-    CommonWidget(pParent),
+    Widget(pParent),
     mParent(pParent),
-    mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewCellmlMetadataDetailsWidget)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // Create our unsupported metadata message widget
+
+    mUnsupportedMetadataMsg = new Core::UserMessageWidget(pParent,
+                                                          ":/oxygen/actions/help-about.png");
+    mBorderedUnsupportedMetadataMsg = new Core::BorderedWidget(mUnsupportedMetadataMsg,
+                                                               true, true, false, false);
+
+    mBorderedUnsupportedMetadataMsg->setVisible(false);
+    // Note: we don't initially want to see it, so...
+
+    // Create our splitter widget
+
+    mSplitter = new QSplitter(Qt::Vertical, pParent);
 
     // Create our details widgets
 
@@ -57,15 +70,26 @@ CellmlAnnotationViewCellmlMetadataDetailsWidget::CellmlAnnotationViewCellmlMetad
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(unknownLookupRequested()),
             this, SLOT(unknownLookupRequested()));
 
-    // Add our details widgets to our splitter
+    // Populate our splitter widget
 
-    addWidget(mBorderedMetadataViewDetails);
-    addWidget(mBorderedWebView);
+    mSplitter->addWidget(mBorderedMetadataViewDetails);
+    mSplitter->addWidget(mBorderedWebView);
 
     // Keep track of our splitter being moved
 
-    connect(this, SIGNAL(splitterMoved(int,int)),
+    connect(mSplitter, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
+
+    // Add our unsupported metadata message widget and splitter widget to our
+    // layout
+
+    mGui->layout->addWidget(mBorderedUnsupportedMetadataMsg);
+    mGui->layout->addWidget(mSplitter);
+
+    // Some further initialisations which are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
+
+    retranslateUi();
 }
 
 //==============================================================================
@@ -86,13 +110,17 @@ void CellmlAnnotationViewCellmlMetadataDetailsWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     mMetadataViewDetails->retranslateUi();
+
+    // Update our unsupported metadata message
+
+    mUnsupportedMetadataMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support the type of metadata associated with the current CellML element...").arg(mParent->pluginViewName()));
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewCellmlMetadataDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mCellmlFile);
+    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples();
 
     if (pRdfTriples == rdfTriples)
         // We want to show the same RDF triples, so...
@@ -103,10 +131,15 @@ void CellmlAnnotationViewCellmlMetadataDetailsWidget::updateGui(const CellMLSupp
 
     rdfTriples = pRdfTriples;
 
-    // Show/hide our web viewer, depending on whether the type of the metadata
-    // is known or not
+    // Show/hide our unsupported metadata message depending on whether the type
+    // of the RDF triples is known or not
 
     bool isUnknownMetadata = pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
+
+    mBorderedUnsupportedMetadataMsg->setVisible(isUnknownMetadata);
+
+    // Show/hide our web viewer, depending on whether the type of the metadata
+    // is known or not
 
     mBorderedWebView->setVisible(!isUnknownMetadata);
 
@@ -119,21 +152,12 @@ void CellmlAnnotationViewCellmlMetadataDetailsWidget::updateGui(const CellMLSupp
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewCellmlMetadataDetailsWidget::metadataViewDetails() const
-{
-    // Return our metadata view details widget
-
-    return mMetadataViewDetails;
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewCellmlMetadataDetailsWidget::updateSizes(const QList<int> &pSizes)
 {
-    // The splitter of another CellmlAnnotationViewCellmlDetailsWidget object
+    // The splitter of another CellmlAnnotationViewMetadataDetailsWidget object
     // has been moved, so update our sizes
 
-    setSizes(pSizes);
+    mSplitter->setSizes(pSizes);
 }
 
 //==============================================================================
@@ -142,7 +166,16 @@ void CellmlAnnotationViewCellmlMetadataDetailsWidget::emitSplitterMoved()
 {
     // Let people know that our splitter has been moved
 
-    emit splitterMoved(sizes());
+    emit splitterMoved(mSplitter->sizes());
+}
+
+//==============================================================================
+
+CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewCellmlMetadataDetailsWidget::metadataViewDetails() const
+{
+    // Return our metadata view details widget
+
+    return mMetadataViewDetails;
 }
 
 //==============================================================================
@@ -183,6 +216,15 @@ void CellmlAnnotationViewCellmlMetadataDetailsWidget::unknownLookupRequested()
     // We are 'asked' to lookup something unknown, so 'clean up' our web view
 
     mWebView->setUrl(QUrl());
+}
+
+//==============================================================================
+
+QSplitter * CellmlAnnotationViewCellmlMetadataDetailsWidget::splitter() const
+{
+    // Return our splitter widget
+
+    return mSplitter;
 }
 
 //==============================================================================
