@@ -2,13 +2,6 @@
 // CellML annotation view metadata list widget
 //==============================================================================
 
-#include "borderedwidget.h"
-#include "cellmlannotationviewcellmldetailswidget.h"
-#include "cellmlannotationviewcellmlelementitem.h"
-#include "cellmlannotationviewcellmlelementitemdelegate.h"
-#include "cellmlannotationviewcellmllistwidget.h"
-#include "cellmlannotationviewdetailswidget.h"
-#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"

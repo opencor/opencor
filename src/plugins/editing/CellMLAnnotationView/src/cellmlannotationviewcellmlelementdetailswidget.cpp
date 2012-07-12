@@ -10,7 +10,6 @@
 #include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
-#include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "treeview.h"
 
