@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlannotationviewcellmlelementdetailswidget.h"
 #include "cellmlfile.h"
 #include "widget.h"
 
@@ -65,7 +66,7 @@ protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
 
 private:
-    CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewCellmlListWidget *mGui;
 
@@ -88,12 +89,17 @@ private:
 
     bool indexIsAllExpanded(const QModelIndex &pIndex) const;
 
+Q_SIGNALS:
+    void cellmlElementDetailsRequested(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
+
 private Q_SLOTS:
     void resizeTreeViewToContents();
 
     void updateNode(const QModelIndex &pNewIndex, const QModelIndex &pOldIndex);
 
     void treeViewContextMenu(const QPoint &pPosition) const;
+
+    void cmetaIdChanged(const QString &pCmetaId) const;
 
     void on_actionExpandAll_triggered();
     void on_actionCollapseAll_triggered();

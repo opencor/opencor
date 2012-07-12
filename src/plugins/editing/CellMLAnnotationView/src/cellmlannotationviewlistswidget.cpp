@@ -22,7 +22,6 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotationViewWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
-    mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewListsWidget)
 {
     // Set up the GUI

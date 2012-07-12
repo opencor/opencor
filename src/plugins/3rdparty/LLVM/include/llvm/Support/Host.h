@@ -16,6 +16,9 @@
 
 #include "llvm/ADT/StringMap.h"
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 namespace sys {
@@ -40,14 +43,24 @@ namespace sys {
   ///   CPU_TYPE-VENDOR-OPERATING_SYSTEM
   /// or
   ///   CPU_TYPE-VENDOR-KERNEL-OPERATING_SYSTEM
+/*---OPENCOR---
   std::string getDefaultTargetTriple();
+*/
+//---OPENCOR--- BEGIN
+  std::string LLVM_EXPORT getDefaultTargetTriple();
+//---OPENCOR--- END
 
   /// getHostCPUName - Get the LLVM name for the host CPU. The particular format
   /// of the name is target dependent, and suitable for passing as -mcpu to the
   /// target which matches the host.
   ///
   /// \return - The host CPU name, or empty if the CPU could not be determined.
+/*---OPENCOR---
   std::string getHostCPUName();
+*/
+//---OPENCOR--- BEGIN
+  std::string LLVM_EXPORT getHostCPUName();
+//---OPENCOR--- END
 
   /// getHostCPUFeatures - Get the LLVM names for the host CPU features.
   /// The particular format of the names are target dependent, and suitable for

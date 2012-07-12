@@ -19,7 +19,7 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     Widget(pParent),
-    mParent(pParent),
+    mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataRawViewDetailsWidget)
 {
     // Set up the GUI
@@ -88,7 +88,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(const CellMLSup
     //       cmeta:id which will speak more to the user than a possibly long URI
     //       reference...
 
-    QString uriBase = mParent->cellmlFile()->uriBase();
+    QString uriBase = mCellmlFile->uriBase();
     int rdfTripleCounter = 0;
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)

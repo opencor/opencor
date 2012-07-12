@@ -8,8 +8,10 @@
 #include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
+#include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
+#include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "coreutils.h"
@@ -21,8 +23,11 @@
 
 //==============================================================================
 
+#include <QComboBox>
 #include <QFile>
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QWebView>
 
 //==============================================================================
@@ -39,8 +44,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewWidget),
     mPluginParent(pPluginParent),
-    mListsWidget(0),
-    mDetailsWidget(0)
+    oldWebViewUrls(QMap<QWebView *, QUrl>())
 {
     // Set up the GUI
 
@@ -99,16 +103,52 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
 
+    // A connection to let our details widget know that we want to see the
+    // details of some CellML element
+
+    connect(mListsWidget->cellmlList(), SIGNAL(cellmlElementDetailsRequested(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &)),
+            mDetailsWidget, SLOT(updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &)));
+
+    // A connection to let our details widget know that we want to see the
+    // details of some metadata
+
+    connect(mListsWidget->metadataList(), SIGNAL(metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &)),
+            mDetailsWidget, SLOT(updateGui(const CellMLSupport::CellmlFileRdfTriples &)));
+
+    // A connection to update our CellML file following a change in the cmeta:id
+    // value of one the current CellML element
+
+    connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(cmetaIdChanged(const QString &)),
+            mListsWidget->cellmlList(), SLOT(cmetaIdChanged(const QString &)));
+
+    // A connection to let our metadata list know that we want to edit some
+    // metadata
+
+    connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(metadataEditingRequested(const QString &)),
+            mListsWidget->metadataList(), SLOT(setCurrentId(const QString &)));
+
+    // A connection to reset the tab order following a GUI update of the
+    // CellML details
+
+    connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(guiPopulated(QComboBox *, QPushButton *)),
+            this, SLOT(updateTabOrder(QComboBox *, QPushButton *)));
+
+    // A connection to reset the tab order following a GUI update of the
+    // metadata edit details
+
+    connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(guiPopulated(QLineEdit *, QComboBox *)),
+            this, SLOT(updateTabOrder(QLineEdit *, QComboBox *)));
+
     // Some connections to let our CellML and metadata details widgets know when
     // some/all metadata has/have been removed
 
     connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
             mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
     connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
-            mDetailsWidget->metadataDetails(), SLOT(metadataUpdated()));
+            this, SLOT(updateMetadataDetails()));
 
-    // Some connections to let our CellML details widget know when some RDF
-    // triple has been removed
+    // A connection to let our CellML details widget know when some RDF triple
+    // has been removed
     // Note: we must not let our metadata details widget know about it, since
     //       the removal of RDF triple/s is done directly from it, so it's
     //       already up to date and to ask it to update itself would 'reset' it,
@@ -151,18 +191,18 @@ void CellmlAnnotationViewWidget::retranslateUi()
 
 //==============================================================================
 
-CellMLAnnotationViewPlugin * CellmlAnnotationViewWidget::pluginParent() const
+QString CellmlAnnotationViewWidget::pluginViewName() const
 {
     // Return our pointer to the plugin parent
 
-    return mPluginParent;
+    return mPluginParent->viewName();
 }
 
 //==============================================================================
 
 CellMLSupport::CellmlFile * CellmlAnnotationViewWidget::cellmlFile() const
 {
-    // Return our pointer to the CellML file
+    // Return the CellML file
 
     return mCellmlFile;
 }
@@ -206,47 +246,11 @@ void CellmlAnnotationViewWidget::emitSplitterMoved()
 
 //==============================================================================
 
-QLabel * CellmlAnnotationViewWidget::newLabel(QWidget *pParent,
-                                              const QString &pText,
-                                              const bool &pBold,
-                                              const double &pFontPercentage,
-                                              const Qt::Alignment &pAlignment)
+QStringList CellmlAnnotationViewWidget::metadataIds() const
 {
-    // Create and return a label, allowing to set some of its properties
+    // Return the list of metadata ids
 
-    QLabel *res = new QLabel(pText, pParent);
-
-    QFont font = res->font();
-
-    font.setBold(pBold);
-    font.setPointSize(pFontPercentage*font.pointSize());
-
-    res->setAlignment(pAlignment);
-    res->setFont(font);
-
-    return res;
-}
-
-//==============================================================================
-
-QLabel * CellmlAnnotationViewWidget::newLabelLink(QWidget *pParent,
-                                                  const QString &pText,
-                                                  const bool &pBold,
-                                                  const double &pFontPercentage,
-                                                  const Qt::Alignment &pAlignment)
-{
-    // Create a label link, allowing to set set some of its properties
-
-    QLabel *res = newLabel(pParent, pText, pBold, pFontPercentage, pAlignment);
-
-    // Prevent Qt from associating a context menu with the label (something
-    // which it does automatically when a label is a link...)
-
-    res->setContextMenuPolicy(Qt::NoContextMenu);
-
-    // Return our label link
-
-    return res;
+    return mListsWidget->metadataList()->ids();
 }
 
 //==============================================================================
@@ -363,6 +367,8 @@ void CellmlAnnotationViewWidget::updateWebViewerWithQualifierDetails(QWebView *p
 
     // Show the information
 
+    oldWebViewUrls.insert(pWebView, QUrl());
+
     pWebView->setHtml(mQualifierInformationTemplate.arg(pQualifier,
                                                         qualifierSvg,
                                                         shortDescription,
@@ -381,7 +387,6 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
     // up would already be correct
 
     if (!pRetranslate) {
-        static QMap<QWebView *, QUrl> oldUrls = QMap<QWebView *, QUrl>();
         // Note: updating the URL of the web view results in it being refreshed,
         //       even if the URL is the same as the one before in which case it
         //       looks like some kind of a big flickering. We therefore want to
@@ -391,14 +396,14 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
         //       with identifiers.org URLs), so instead we keep track of the URL
         //       ourselves...
 
-        QUrl oldUrl = oldUrls.value(pWebView);
+        QUrl oldUrl = oldWebViewUrls.value(pWebView);
         QUrl newUrl = "http://identifiers.org/"+pResource+"/?redirect=true";
         //---GRY--- NOTE THAT redirect=true DOESN'T WORK AT THE MOMENT, SO WE DO
         //          END UP WITH A FRAME, BUT THE identifiers.org GUYS ARE GOING
         //          TO 'FIX' THAT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
 
         if (newUrl != oldUrl) {
-            oldUrls.insert(pWebView, newUrl);
+            oldWebViewUrls.insert(pWebView, newUrl);
 
             pWebView->setUrl(newUrl);
         }
@@ -417,18 +422,51 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceIdDetails(QWebView *
     // up would already be correct
 
     if (!pRetranslate) {
-        static QMap<QWebView *, QUrl> oldUrls = QMap<QWebView *, QUrl>();
         // Note: see comment in updateWebViewerWithResourceDetails()...
 
-        QUrl oldUrl = oldUrls.value(pWebView);
+        QUrl oldUrl = oldWebViewUrls.value(pWebView);
         QUrl newUrl = "http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true";
 
         if (newUrl != oldUrl) {
-            oldUrls.insert(pWebView, newUrl);
+            oldWebViewUrls.insert(pWebView, newUrl);
 
             pWebView->setUrl(newUrl);
         }
     }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::updateTabOrder(QComboBox *pCmetaIdValue,
+                                                QPushButton *pEditButton)
+{
+    // Update the tab order for our CellML list
+
+    setTabOrder(qobject_cast<QWidget *>(mListsWidget->cellmlList()->treeView()),
+                pCmetaIdValue);
+    setTabOrder(pCmetaIdValue, pEditButton);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::updateTabOrder(QLineEdit *pTermValue,
+                                                QComboBox *pQualifierValue)
+{
+    // Update the tab order for our metadata list
+
+    setTabOrder(qobject_cast<QWidget *>(mListsWidget->metadataList()->treeView()),
+                pTermValue);
+    setTabOrder(pTermValue, pQualifierValue);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::updateMetadataDetails() const
+{
+    // Some metadata has been updated, so we need to update the metadata
+    // information we show to the user
+
+    mDetailsWidget->metadataDetails()->updateGui(mCellmlFile->rdfTriples(mListsWidget->metadataList()->currentId()));
 }
 
 //==============================================================================

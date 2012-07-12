@@ -22,12 +22,20 @@
 #include <cstring>
 #include <iterator>
 #include <memory>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
 /// SmallVectorBase - This is all the non-templated stuff common to all
 /// SmallVectors.
+/*---OPENCOR---
 class SmallVectorBase {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT SmallVectorBase {
+//---OPENCOR--- END
 protected:
   void *BeginX, *EndX, *CapacityX;
 
@@ -63,7 +71,7 @@ public:
   size_t size_in_bytes() const {
     return size_t((char*)EndX - (char*)BeginX);
   }
-  
+
   /// capacity_in_bytes - This returns capacity()*sizeof(T).
   size_t capacity_in_bytes() const {
     return size_t((char*)CapacityX - (char*)BeginX);
@@ -170,7 +178,7 @@ protected:
   /// grow - double the size of the allocated memory, guaranteeing space for at
   /// least one more element or MinSize if specified.
   void grow(size_t MinSize = 0);
-  
+
 public:
   void push_back(const T &Elt) {
     if (this->EndX < this->CapacityX) {
@@ -182,7 +190,7 @@ public:
     this->grow();
     goto Retry;
   }
-  
+
   void pop_back() {
     this->setEnd(this->end()-1);
     this->end()->~T();
@@ -259,7 +267,7 @@ public:
     this->grow();
     goto Retry;
   }
-  
+
   void pop_back() {
     this->setEnd(this->end()-1);
   }

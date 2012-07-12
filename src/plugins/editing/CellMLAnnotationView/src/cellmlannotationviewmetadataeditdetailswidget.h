@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -21,7 +22,14 @@ namespace Ui {
 
 //==============================================================================
 
+class QComboBox;
+class QFormLayout;
+class QGridLayout;
+class QLineEdit;
+class QNetworkAccessManager;
+class QNetworkReply;
 class QStackedWidget;
+class QVBoxLayout;
 
 //==============================================================================
 
@@ -43,12 +51,36 @@ public:
     explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
-private:
-    CellmlAnnotationViewWidget *mParent;
+    virtual void retranslateUi();
 
+    void updateGui(const bool &pPopulate = true);
+
+private:
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QStackedWidget *mWidget;
+
+    QWidget *mMainWidget;
+    QVBoxLayout *mMainLayout;
+
+    QWidget *mFormWidget;
+    QFormLayout *mFormLayout;
+
+    QWidget *mGridWidget;
+    QGridLayout *mGridLayout;
+
+    QNetworkAccessManager *mNetworkAccessManager;
+    QString mErrorMsg;
+
+    QString mTermUrl;
+    QString mOtherTermUrl;
+
+Q_SIGNALS:
+    void guiPopulated(QLineEdit *pTermValue, QComboBox *pQualifierValue);
+
+private Q_SLOTS:
+    void newTerm(const QString &pTerm);
+    void finished(QNetworkReply *pNetworkReply);
 };
 
 //==============================================================================

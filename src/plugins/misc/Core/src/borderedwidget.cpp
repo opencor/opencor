@@ -39,24 +39,26 @@ BorderedWidget::BorderedWidget(QWidget *pWidget,
     // Add some real line widgets to the top, left, bottom and/or right of
     // ourselves, if required
 
-    int fromColumn = pLeft?0:1;
-    int columnSpan = pLeft+1+pRight;
+    mTopBorder    = Core::newLineWidget(this, true);
+    mLeftBorder   = Core::newLineWidget(this, false);
+    mBottomBorder = Core::newLineWidget(this, true);
+    mRightBorder  = Core::newLineWidget(this, false);
 
-    if (pTop)
-        gridLayout->addWidget(Core::newLineWidget(this, true),
-                              0, fromColumn, 1, columnSpan);
-
-    if (pLeft)
-        gridLayout->addWidget(Core::newLineWidget(this, false), 1, 0);
-
+    gridLayout->addWidget(mTopBorder, 0, 0, 1, 3);
+    gridLayout->addWidget(mLeftBorder, 1, 0);
     gridLayout->addWidget(pWidget, 1, 1);
+    gridLayout->addWidget(mBottomBorder, 2, 0, 1, 3);
+    gridLayout->addWidget(mRightBorder, 1, 2);
 
-    if (pBottom)
-        gridLayout->addWidget(Core::newLineWidget(this, true),
-                              2, fromColumn, 1, columnSpan);
+    setTopBorderVisible(pTop);
+    setLeftBorderVisible(pLeft);
+    setBottomBorderVisible(pBottom);
+    setRightBorderVisible(pRight);
 
-    if (pRight)
-        gridLayout->addWidget(Core::newLineWidget(this, false), 1, 2);
+    // Make sure that our widget takes as much space as possible
+
+    gridLayout->setRowStretch(1, 1);
+    gridLayout->setColumnStretch(1, 1);
 
     // Keep track of our bordered widget
 
@@ -70,6 +72,42 @@ QWidget * BorderedWidget::widget()
     // Return our bordered widget
 
     return mWidget;
+}
+
+//==============================================================================
+
+void BorderedWidget::setTopBorderVisible(const bool &pVisible) const
+{
+    // Show/hide the top border
+
+    mTopBorder->setVisible(pVisible);
+}
+
+//==============================================================================
+
+void BorderedWidget::setLeftBorderVisible(const bool &pVisible) const
+{
+    // Show/hide the left border
+
+    mLeftBorder->setVisible(pVisible);
+}
+
+//==============================================================================
+
+void BorderedWidget::setBottomBorderVisible(const bool &pVisible) const
+{
+    // Show/hide the bottom border
+
+    mBottomBorder->setVisible(pVisible);
+}
+
+//==============================================================================
+
+void BorderedWidget::setRightBorderVisible(const bool &pVisible) const
+{
+    // Show/hide the right border
+
+    mRightBorder->setVisible(pVisible);
 }
 
 //==============================================================================

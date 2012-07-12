@@ -61,7 +61,6 @@ public:
     Core::TreeView * treeView() const;
 
     QString currentId() const;
-    void setCurrentId(const QString &pId);
 
     QStringList ids() const;
 
@@ -69,7 +68,7 @@ protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
 
 private:
-    CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewMetadataListWidget *mGui;
 
@@ -83,7 +82,11 @@ private:
     void populateDataModel();
 
 Q_SIGNALS:
+    void metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
     void metadataUpdated();
+
+public Q_SLOTS:
+    void setCurrentId(const QString &pId);
 
 private Q_SLOTS:
     void updateActions();

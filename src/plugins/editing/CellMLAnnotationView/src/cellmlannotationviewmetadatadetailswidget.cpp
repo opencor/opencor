@@ -10,7 +10,6 @@
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
-#include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "treeview.h"
 #include "usermessagewidget.h"
@@ -60,6 +59,13 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, true);
     mWebView             = new QWebView(pParent);
 
+    mBorderedMetadataEditDetails = new Core::BorderedWidget(mMetadataEditDetails,
+                                                            false, true, true, false);
+    mBorderedMetadataViewDetails = new Core::BorderedWidget(mMetadataViewDetails,
+                                                            true, true, true, false);
+    mBorderedWebView = new Core::BorderedWidget(mWebView,
+                                                true, true, false, false);
+
     // Some connections to handle the looking up of a qualifier, resource and
     // resource id
 
@@ -74,12 +80,9 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Populate our splitter widget
 
-    mSplitter->addWidget(new Core::BorderedWidget(mMetadataEditDetails,
-                                                  false, true, true, false));
-    mSplitter->addWidget(new Core::BorderedWidget(mMetadataViewDetails,
-                                                  true, true, true, false));
-    mSplitter->addWidget(new Core::BorderedWidget(mWebView,
-                                                  true, true, false, false));
+    mSplitter->addWidget(mBorderedMetadataEditDetails);
+    mSplitter->addWidget(mBorderedMetadataViewDetails);
+    mSplitter->addWidget(mBorderedWebView);
 
     // Keep track of our splitter being moved
 
@@ -120,14 +123,14 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
     // Update our unsupported metadata message
 
-    mUnsupportedMetadataMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName()));
+    mUnsupportedMetadataMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginViewName()));
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
+    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples();
 
     if (pRdfTriples == rdfTriples)
         // We want to show the same RDF triples, so...
@@ -141,20 +144,22 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::C
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known or not
 
-    mBorderedUnsupportedMetadataMsg->setVisible(pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown);
+    bool isUnknownMetadata = pRdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
 
-//---GRY--- CHECK WHETHER WE NEED TO CLEAN OR UPDATE OUR METADATA EDIT DETAILS
-//          GUI...
+    mBorderedUnsupportedMetadataMsg->setVisible(isUnknownMetadata);
 
-    // Update our Metadata view details GUI
+    // Show/hide our metadata edit details and web viewer, depending on whether
+    // the type of the metadata is known or not
+
+    mBorderedMetadataEditDetails->setVisible(!isUnknownMetadata);
+    mBorderedWebView->setVisible(!isUnknownMetadata);
+
+    mBorderedMetadataViewDetails->setTopBorderVisible(!isUnknownMetadata);
+    mBorderedMetadataViewDetails->setBottomBorderVisible(!isUnknownMetadata);
+
+    // Update our metadata view details
 
     mMetadataViewDetails->updateGui(pRdfTriples);
-
-    // 'Clean up' our web view, should the raw view of our metadata details view
-    // be visible
-
-    if (mMetadataViewDetails->rawView()->isVisible())
-        mWebView->setUrl(QUrl());
 }
 
 //==============================================================================
@@ -218,21 +223,20 @@ void CellmlAnnotationViewMetadataDetailsWidget::unknownLookupRequested()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::metadataUpdated()
-{
-    // Some metadata has been updated, so we need to update the metadata
-    // information we show to the user
-
-    updateGui(mParent->cellmlFile()->rdfTriples(mParent->listsWidget()->metadataList()->currentId()));
-}
-
-//==============================================================================
-
 QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
 {
     // Return our splitter widget
 
     return mSplitter;
+}
+
+//==============================================================================
+
+CellmlAnnotationViewMetadataEditDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataEditDetails() const
+{
+    // Return our metadata edit details widget
+
+    return mMetadataEditDetails;
 }
 
 //==============================================================================

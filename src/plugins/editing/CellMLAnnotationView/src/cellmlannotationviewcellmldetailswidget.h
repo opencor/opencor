@@ -16,8 +16,6 @@
 
 //==============================================================================
 
-class QNetworkAccessManager;
-class QNetworkReply;
 class QWebView;
 
 //==============================================================================
@@ -33,7 +31,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataViewDetailsWidget;
+class CellmlAnnotationViewCellmlMetadataDetailsWidget;
 class CellmlAnnotationViewWidget;
 
 //==============================================================================
@@ -51,14 +49,14 @@ public:
 
     void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
 
-private:
-    CellmlAnnotationViewWidget *mParent;
+    CellmlAnnotationViewCellmlElementDetailsWidget *cellmlElementDetails() const;
+    CellmlAnnotationViewCellmlMetadataDetailsWidget *cellmlMetadataDetails() const;
 
+private:
     Ui::CellmlAnnotationViewCellmlDetailsWidget *mGui;
 
     CellmlAnnotationViewCellmlElementDetailsWidget *mCellmlElementDetails;
-    CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
-    QWebView *mWebView;
+    CellmlAnnotationViewCellmlMetadataDetailsWidget *mCellmlMetadataDetails;
 
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
@@ -68,17 +66,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void emitSplitterMoved();
-
-    void newCmetaId(const QString &pCmetaId);
-
-    void qualifierLookupRequested(const QString &pQualifier,
-                                  const bool &pRetranslate);
-    void resourceLookupRequested(const QString &pResource,
-                                 const bool &pRetranslate);
-    void resourceIdLookupRequested(const QString &pResource,
-                                   const QString &pId,
-                                   const bool &pRetranslate);
-    void unknownLookupRequested();
 
     void metadataUpdated();
 };

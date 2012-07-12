@@ -8,6 +8,10 @@
 
 //==============================================================================
 
+#include <QApplication>
+
+//==============================================================================
+
 #include "llvm/LLVMContext.h"
 
 #ifdef Q_WS_WIN
@@ -28,6 +32,29 @@
 #include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/DynamicLibrary.h"
+
+
+
+#include "llvm/Module.h"
+#include "llvm/ADT/OwningPtr.h"
+#include "llvm/ADT/SmallString.h"
+//#include "llvm/ExecutionEngine/JIT.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+#include "llvm/Support/ManagedStatic.h"
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/Support/Host.h"
+#include "llvm/Support/Path.h"
+#include "llvm/Support/TargetSelect.h"
+
+#include "clang/CodeGen/CodeGenAction.h"
+#include "clang/Driver/Compilation.h"
+#include "clang/Driver/Driver.h"
+#include "clang/Driver/Tool.h"
+#include "clang/Frontend/CompilerInvocation.h"
+#include "clang/Frontend/CompilerInstance.h"
+#include "clang/Frontend/DiagnosticOptions.h"
+#include "clang/Frontend/FrontendDiagnostic.h"
+#include "clang/Frontend/TextDiagnosticPrinter.h"
 
 //==============================================================================
 
@@ -274,8 +301,142 @@ ComputerError ComputerEngine::parserError()
 
 //==============================================================================
 
+llvm::sys::Path GetExecutablePath(const char *Argv0) {
+  // This just needs to be some symbol in the binary; C++ doesn't
+  // allow taking the address of ::main however.
+  void *MainAddr = (void*) (intptr_t) GetExecutablePath;
+  return llvm::sys::Path::GetMainExecutable(Argv0, MainAddr);
+}
+
 llvm::Function * ComputerEngine::addFunction(const QString &pFunction)
 {
+
+
+
+    qDebug(">>> 01");
+    void *MainAddr = (void*) (intptr_t) GetExecutablePath;
+    qDebug(">>> 02");
+    llvm::sys::Path path = GetExecutablePath(qPrintable(qApp->applicationFilePath()));
+    qDebug(">>> 03");
+    clang::TextDiagnosticPrinter *diagnosticClient = new clang::TextDiagnosticPrinter(llvm::errs(),
+                                                                                      clang::DiagnosticOptions());
+    qDebug(">>> 04");
+    llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs> diagnosticId = llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs());
+    qDebug(">>> 05");
+    clang::DiagnosticsEngine diagnostics = clang::DiagnosticsEngine(diagnosticId, diagnosticClient);
+    qDebug(">>> 06");
+    clang::driver::Driver driver = clang::driver::Driver(path.str(),
+                                                         llvm::sys::getDefaultTargetTriple(),
+                                                         "a.out",
+                                                         false,   //---GRY--- MIGHT WANT TO USE true?
+                                                         diagnostics);
+    qDebug(">>> 07");
+
+//    driver.setTitle("clang interpreter");
+
+    llvm::SmallVector<const char *, 16> args;
+    qDebug(">>> 08");
+
+    args.push_back("C:\\Users\\Alan\\Desktop\\test.c");
+//    args.push_back("-fsyntax-only");   //---GRY--- DO WE REALLY NEED THIS FLAG?
+    qDebug(">>> 09");
+
+    llvm::OwningPtr<clang::driver::Compilation> compilation(driver.BuildCompilation(args));
+//    llvm::OwningPtr<clang::driver::Compilation> compilation(driver.BuildCompilation(llvm::ArrayRef<const char *>()));
+    qDebug(">>> 10");
+
+    if (!compilation)
+      return 0;
+
+    // We expect to get back exactly one command job, so if we didn't then
+    // something failed...
+
+    const clang::driver::JobList &jobList = compilation->getJobs();
+    qDebug(">>> 11");
+
+    if (jobList.size() != 1 || !llvm::isa<clang::driver::Command>(*jobList.begin())) {
+//      llvm::SmallString<256> message;
+//      llvm::raw_svector_ostream output(message);
+//      compilation->PrintJob(output, compilation->getJobs(), "; ", true);
+//      diagnostics.Report(clang::diag::err_fe_expected_compiler_job) << output.str();
+        qDebug(">>> Something failed...");
+      return 0;
+    }
+    qDebug(">>> 12");
+
+    const clang::driver::Command *command = llvm::cast<clang::driver::Command>(*jobList.begin());
+    qDebug(">>> 13");
+
+    if (llvm::StringRef(command->getCreator().getName()) != "clang") {
+//      diagnostics.Report(clang::diag::err_fe_expected_clang_command);
+        qDebug(">>> Not a Clang command...");
+      return 0;
+    }
+    qDebug(">>> 14");
+
+    // Initialize a compiler invocation object from the clang (-cc1) arguments.
+    const clang::driver::ArgStringList &CCArgs = command->getArguments();
+    qDebug(">>> 15");
+    llvm::OwningPtr<clang::CompilerInvocation> CI(new clang::CompilerInvocation);
+    qDebug(">>> 16");
+    clang::CompilerInvocation::CreateFromArgs(*CI,
+                                       const_cast<const char **>(CCArgs.data()),
+                                       const_cast<const char **>(CCArgs.data()) +
+                                         CCArgs.size(),
+                                       diagnostics);
+    qDebug(">>> 17");
+
+    // Show the invocation, with -v.
+    if (CI->getHeaderSearchOpts().Verbose) {
+//      llvm::errs() << "clang invocation:\n";
+//      compilation->PrintJob(llvm::errs(), compilation->getJobs(), "\n", true);
+//      llvm::errs() << "\n";
+    }
+    qDebug(">>> 18");
+
+    // FIXME: This is copied from cc1_main.cpp; simplify and eliminate.
+
+    // Create a compiler instance to handle the actual work.
+    clang::CompilerInstance Clang;
+    qDebug(">>> 19");
+    Clang.setInvocation(CI.take());
+    qDebug(">>> 20");
+
+    // Create the compilers actual diagnostics engine.
+    Clang.createDiagnostics(int(CCArgs.size()),const_cast<char**>(CCArgs.data()));
+    qDebug(">>> 21");
+    if (!Clang.hasDiagnostics())
+      return 0;
+    qDebug(">>> 22");
+
+    // Infer the builtin include path if unspecified.
+    if (Clang.getHeaderSearchOpts().UseBuiltinIncludes &&
+        Clang.getHeaderSearchOpts().ResourceDir.empty())
+      Clang.getHeaderSearchOpts().ResourceDir =
+        clang::CompilerInvocation::GetResourcesPath(qPrintable(qApp->applicationFilePath()),
+                                                    MainAddr);
+    qDebug(">>> 23");
+
+    // Create and execute the frontend to generate an LLVM bitcode module.
+    llvm::OwningPtr<clang::CodeGenAction> Act(new clang::EmitLLVMOnlyAction());
+    qDebug(">>> 24");
+    if (!Clang.ExecuteAction(*Act))
+      return 0;
+    qDebug(">>> 25");
+
+//    int Res = 255;
+//    if (llvm::Module *Module = Act->takeModule())
+//      Res = Execute(Module, envp);
+
+    // Shutdown.
+
+    llvm::llvm_shutdown();
+    qDebug(">>> 26");
+
+
+
+//------------------------------------------------------------------------------
+
     // Reset the engine's error
 
     mError = ComputerError();

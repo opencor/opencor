@@ -2,12 +2,16 @@
 // CellML annotation view CellML element details widget
 //==============================================================================
 
+#include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
 #include "cellmlannotationviewcellmlelementitem.h"
 #include "cellmlannotationviewcellmllistwidget.h"
+#include "cellmlannotationviewcellmlmetadatadetailswidget.h"
+#include "cellmlannotationviewdetailswidget.h"
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
+#include "coreutils.h"
 #include "treeview.h"
 
 //==============================================================================
@@ -44,6 +48,7 @@ CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElemen
     QScrollArea(pParent),
     CommonWidget(pParent),
     mParent(pParent),
+    mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewCellmlElementDetailsWidget),
     mItems(Items()),
     mCmetaIdValue(0)
@@ -62,6 +67,12 @@ CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElemen
     // Add our widget to our scroll area
 
     setWidget(mWidget);
+
+    // Handle the change in the contents of our GUI through the change in the
+    // range of our vertical scroll bar
+
+    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+            this, SLOT(showCmetaIdValue()));
 }
 
 //==============================================================================
@@ -78,12 +89,20 @@ CellmlAnnotationViewCellmlElementDetailsWidget::~CellmlAnnotationViewCellmlEleme
 void CellmlAnnotationViewCellmlElementDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
+    // Note: we must also update the connection for our cmeta:id widget since it
+    //       gets recreated as a result calling updateGui()...
+
+    if (mCmetaIdValue)
+        disconnect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
+                   this, SLOT(updateCellmlElementMetadataDetails(const QString &)));
 
     mGui->retranslateUi(this);
 
-    // For the rest of our GUI, it's easier to just update it, so...
-
     updateGui();
+
+    if (mCmetaIdValue)
+        connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
+                this, SLOT(updateCellmlElementMetadataDetails(const QString &)));
 }
 
 //==============================================================================
@@ -107,6 +126,12 @@ CellmlAnnotationViewCellmlElementDetailsWidget::Item CellmlAnnotationViewCellmlE
 
 void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pItems)
 {
+    // Stop tracking changes to the cmeta:id value of our CellML element
+
+    if (mCmetaIdValue)
+        disconnect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
+                   this, SLOT(updateCellmlElementMetadataDetails(const QString &)));
+
     // Prevent ourselves from being updated (to avoid any flickering)
 
     setUpdatesEnabled(false);
@@ -115,14 +140,9 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
     mItems = pItems;
 
-    // Reset our cmeta:id widget
+    // Reset our cmeta:id value widget (in case there are no items to show)
 
-    if (mCmetaIdValue) {
-        disconnect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                   this, SLOT(newCmetaId(const QString &)));
-
-        mCmetaIdValue = 0;
-    }
+    mCmetaIdValue = 0;
 
     // Remove everything from our form layout
 
@@ -217,8 +237,8 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
         // Add a bold centered label as a header to let the user know what type
         // of item we are talking about
 
-        mLayout->addRow(mParent->newLabel(mWidget, typeAsString(item.type),
-                                          true, 1.25, Qt::AlignCenter));
+        mLayout->addRow(Core::newLabel(mWidget, typeAsString(item.type),
+                                       true, 1.25, Qt::AlignCenter));
 
         // Show the item's cmeta:id, keeping in mind that we only want to allow
         // the editing of the cmeta:id of the very first item
@@ -240,11 +260,11 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             cmetaIdWidget->setLayout(cmetaIdWidgetLayout);
 
-            // Create our QComboBox widget
+            // Create our cmeta:id value widget
 
             mCmetaIdValue = new QComboBox(mWidget);
 
-            mCmetaIdValue->addItems(mParent->listsWidget()->metadataList()->ids());
+            mCmetaIdValue->addItems(mParent->metadataIds());
 
             mCmetaIdValue->setEditable(true);
 
@@ -268,7 +288,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
                 mCmetaIdValue->setEditText(cmetaId);
 
-            // Create our QPushButton
+            // Create our edit button widget
 
             QPushButton *editButton = new QPushButton(mWidget);
             // Note #1: ideally, we could assign a QAction to our QPushButton,
@@ -293,23 +313,18 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             // Add our cmeta:id widget to our main layout
 
-            mLayout->addRow(mParent->newLabel(mWidget, tr("cmeta:id:"), true),
+            mLayout->addRow(Core::newLabel(mWidget, tr("cmeta:id:"), true),
                             cmetaIdWidget);
 
-            // Make our cmeta:id value the widget to tab to after our CellML
-            // tree view
+            // Let people know that the GUI has been populated
 
-            setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->cellmlList()->treeView()),
-                        mCmetaIdValue);
-            setTabOrder(mCmetaIdValue, editButton);
-            setTabOrder(editButton,
-                        qobject_cast<QWidget *>(mParent->listsWidget()->metadataList()->treeView()));
+            emit guiPopulated(mCmetaIdValue, editButton);
 
-            // Create a connection to keep track of changes to our cmeta:id
-            // value
+            // Create a connection to let people know whenever the cmeta:id
+            // value has changed
 
             connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                    this, SLOT(newCmetaId(const QString &)));
+                    this, SIGNAL(cmetaIdChanged(const QString &)));
         } else {
             // Not our 'main' item, so just display its cmeta:id
 
@@ -397,16 +412,19 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
                    static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(item.element)->secondVariable());
     }
 
-    // Scroll down to the bottom of ourselves, just in case things don't fit
-    // within the viewport
-
-    qApp->processEvents();
-
-    verticalScrollBar()->setValue(verticalScrollBar()->maximum());
-
     // Allow ourselves to be updated again
 
     setUpdatesEnabled(true);
+
+    // Re-track changes to the cmeta:id value of our CellML element and update
+    // our metadata details GUI
+
+    if (mCmetaIdValue) {
+        connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
+                this, SLOT(updateCellmlElementMetadataDetails(const QString &)));
+
+        updateCellmlElementMetadataDetails(mCmetaIdValue->currentText());
+    }
 }
 
 //==============================================================================
@@ -417,7 +435,11 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui()
     // Note: this can be as a result of, for example, a need to retranslate the
     //       GUI or a change in the metadata...
 
+    QString cmetaId = mCmetaIdValue?mCmetaIdValue->currentText():QString();
+
     updateGui(mItems);
+
+    updateCellmlElementMetadataDetails(cmetaId);
 }
 
 //==============================================================================
@@ -427,8 +449,8 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::addRow(const QString &pLabe
 {
     // Add a row to our form layout
 
-    mLayout->addRow(mParent->newLabel(mWidget, pLabel, true),
-                    mParent->newLabel(mWidget, pValue));
+    mLayout->addRow(Core::newLabel(mWidget, pLabel, true),
+                    Core::newLabel(mWidget, pValue));
 }
 
 //==============================================================================
@@ -480,20 +502,48 @@ QComboBox * CellmlAnnotationViewCellmlElementDetailsWidget::cmetaIdValue() const
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &pCmetaId)
+void CellmlAnnotationViewCellmlElementDetailsWidget::showCmetaIdValue()
 {
-    // Keep track of the new cmeta:id value
+    // Make sure that the cmeta:id value is visible within our scroll area
 
-    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->setCmetaId(pCmetaId);
+    if (mCmetaIdValue)
+        ensureWidgetVisible(mCmetaIdValue);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementDetailsWidget::editMetadata() const
+void CellmlAnnotationViewCellmlElementDetailsWidget::updateCellmlElementMetadataDetails(const QString &pCmetaId)
 {
-    // Switch to the editing side of the metadata
+    // Retrieve the RDF triples for the cmeta:id
 
-    mParent->listsWidget()->metadataList()->setCurrentId(mCmetaIdValue->currentText());
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pCmetaId);
+
+    // Check that we are not dealing with the same RDF triples
+    // Note: this may happen when manually typing the name of a cmeta:id and the
+    //       QComboBox suggesting something for you, e.g. you start typing "C_"
+    //       and the QComboBox suggests "C_C" (which will get us here) and then
+    //       you finish typing "C_C" (which will also get us here)
+
+    static CellMLSupport::CellmlFileRdfTriples oldRdfTriples = CellMLSupport::CellmlFileRdfTriples(mCellmlFile);
+
+    if (rdfTriples == oldRdfTriples)
+        return;
+
+    oldRdfTriples = rdfTriples;
+
+    // Let people know that we want to see some information about the CellML
+    // element metadata
+
+    emit cellmlElementMetadataDetailsRequested(rdfTriples);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlElementDetailsWidget::editMetadata()
+{
+    // Let people know that we would like to edit the metadata
+
+    emit metadataEditingRequested(mCmetaIdValue->currentText());
 }
 
 //==============================================================================

@@ -22,8 +22,9 @@ namespace Ui {
 
 //==============================================================================
 
-class QFormLayout;
 class QComboBox;
+class QFormLayout;
+class QPushButton;
 
 //==============================================================================
 
@@ -87,6 +88,7 @@ public:
 
 private:
     CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewCellmlElementDetailsWidget *mGui;
 
@@ -100,10 +102,20 @@ private:
 
     QString typeAsString(const Type &pType) const;
 
-private Q_SLOTS:
-    void newCmetaId(const QString &pCmetaId);
+Q_SIGNALS:
+    void guiPopulated(QComboBox *pCmetaIdValue, QPushButton *pEditButton);
 
-    void editMetadata() const;
+    void cmetaIdChanged(const QString &pCmetaId);
+
+    void cellmlElementMetadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
+    void metadataEditingRequested(const QString &pCmetaId);
+
+private Q_SLOTS:
+    void showCmetaIdValue();
+
+    void updateCellmlElementMetadataDetails(const QString &pCmetaId);
+
+    void editMetadata();
 };
 
 //==============================================================================

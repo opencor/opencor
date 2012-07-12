@@ -261,6 +261,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlMetadataDetailsWidget</name>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support the type of metadata associated with the current CellML element...</source>
+        <translation>Désolé, mais la vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas le type de métadonnée associé avec l&apos;élément CellML courant...</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget</name>
     <message>
         <source>Qualifier</source>
@@ -282,12 +289,31 @@
         <source>Remove the metadata information</source>
         <translation>Supprimer les informations pour la métadonnée</translation>
     </message>
+    <message>
+        <source>No data available...</source>
+        <translation>Aucune donnée disponible...</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>
     <message>
         <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of metadata...</source>
         <translation>Désolé, mais la vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas ce type de métadonnée...</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataEditDetailsWidget</name>
+    <message>
+        <source>No data available...</source>
+        <translation>Aucune donnée disponible...</translation>
+    </message>
+    <message>
+        <source>Qualifier:</source>
+        <translation>Qualificatif :</translation>
+    </message>
+    <message>
+        <source>Term:</source>
+        <translation>Terme :</translation>
     </message>
 </context>
 <context>

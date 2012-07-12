@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -47,8 +48,6 @@ public:
     CellmlAnnotationViewMetadataListWidget * metadataList() const;
 
 private:
-    CellmlAnnotationViewWidget *mParent;
-
     Ui::CellmlAnnotationViewListsWidget *mGui;
 
     CellmlAnnotationViewCellmlListWidget *mCellmlList;

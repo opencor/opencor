@@ -59,6 +59,7 @@ public:
 
     QSplitter * splitter() const;
 
+    CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
     CellmlAnnotationViewMetadataViewDetailsWidget * metadataViewDetails() const;
 
 private:
@@ -70,6 +71,10 @@ private:
     Core::UserMessageWidget *mUnsupportedMetadataMsg;
 
     QSplitter *mSplitter;
+
+    Core::BorderedWidget *mBorderedMetadataEditDetails;
+    Core::BorderedWidget *mBorderedMetadataViewDetails;
+    Core::BorderedWidget *mBorderedWebView;
 
     CellmlAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
@@ -92,8 +97,6 @@ private Q_SLOTS:
                                    const QString &pId,
                                    const bool &pRetranslate);
     void unknownLookupRequested();
-
-    void metadataUpdated();
 };
 
 //==============================================================================

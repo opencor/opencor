@@ -12,6 +12,10 @@
 
 //==============================================================================
 
+class QFrame;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 
@@ -28,8 +32,18 @@ public:
 
     QWidget * widget();
 
+    void setTopBorderVisible(const bool &pVisible) const;
+    void setLeftBorderVisible(const bool &pVisible) const;
+    void setBottomBorderVisible(const bool &pVisible) const;
+    void setRightBorderVisible(const bool &pVisible) const;
+
 private:
     QWidget *mWidget;
+
+    QFrame *mTopBorder;
+    QFrame *mLeftBorder;
+    QFrame *mBottomBorder;
+    QFrame *mRightBorder;
 };
 
 //==============================================================================

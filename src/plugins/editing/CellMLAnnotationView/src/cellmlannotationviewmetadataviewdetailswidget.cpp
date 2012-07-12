@@ -22,9 +22,7 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
                                                                                              const bool &pEditingMode) :
     QStackedWidget(pParent),
     CommonWidget(pParent),
-    mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewMetadataViewDetailsWidget),
-    mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile()))
+    mGui(new Ui::CellmlAnnotationViewMetadataViewDetailsWidget)
 {
     // Set up the GUI
 
@@ -71,10 +69,6 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    // Keep track of the RDF triples
-
-    mRdfTriples = pRdfTriples;
-
     // Decide on which view to use and update it, if needed
 
     switch (pRdfTriples.type()) {

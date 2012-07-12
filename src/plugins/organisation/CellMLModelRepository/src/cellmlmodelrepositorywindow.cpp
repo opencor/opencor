@@ -195,8 +195,6 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
     mModelNames.clear();
     mModelUrls.clear();
 
-    mErrorMsg.clear();
-
     // Output the list of models, should we have retrieved it without any
     // problem
 
@@ -206,17 +204,25 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
         QJson::Parser jsonParser;
         bool parsingOk;
 
-        QVariantMap res = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
+        QVariantMap resultMap = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
 
         if (parsingOk) {
             // Retrieve the list of CellML models
 
-            foreach (const QVariant &modelVariant, res["values"].toList()) {
+            foreach (const QVariant &modelVariant, resultMap["values"].toList()) {
                 QVariantList modelDetailsVariant = modelVariant.toList();
 
                 mModelNames << modelDetailsVariant[0].toString();
                 mModelUrls << modelDetailsVariant[1].toString();
             }
+
+            // Everything went fine, so...
+
+            mErrorMsg = QString();
+        } else {
+            // Something went wrong, so...
+
+            mErrorMsg = jsonParser.errorString();
         }
     } else {
         // Something went wrong, so...
