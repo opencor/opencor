@@ -226,16 +226,6 @@ void CellmlAnnotationViewMetadataDetailsWidget::unknownLookupRequested()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::metadataUpdated()
-{
-    // Some metadata has been updated, so we need to update the metadata
-    // information we show to the user
-
-    updateGui(mCellmlFile->rdfTriples(mParent->listsWidget()->metadataList()->currentId()));
-}
-
-//==============================================================================
-
 QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
 {
     // Return our splitter widget

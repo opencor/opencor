@@ -75,9 +75,9 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Retrieve and load, in case it's necessary, the requested CellML file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    cellmlFile->load();
+    mCellmlFile->load();
 
     // Customise our GUI which consists of two main parts:
     //
@@ -89,8 +89,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Create our two main parts
 
-    mListsWidget   = new CellmlAnnotationViewListsWidget(this, cellmlFile);
-    mDetailsWidget = new CellmlAnnotationViewDetailsWidget(this, cellmlFile);
+    mListsWidget   = new CellmlAnnotationViewListsWidget(this, mCellmlFile);
+    mDetailsWidget = new CellmlAnnotationViewDetailsWidget(this, mCellmlFile);
 
     // Populate ourselves
 
@@ -144,7 +144,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
             mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
     connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
-            mDetailsWidget->metadataDetails(), SLOT(metadataUpdated()));
+            this, SLOT(updateMetadataDetails()));
 
     // A connection to let our CellML details widget know when some RDF triple
     // has been removed
@@ -438,6 +438,16 @@ void CellmlAnnotationViewWidget::updateTabOrder(QLineEdit *pTermValue,
     setTabOrder(qobject_cast<QWidget *>(mListsWidget->metadataList()->treeView()),
                 pTermValue);
     setTabOrder(pTermValue, pQualifierValue);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::updateMetadataDetails() const
+{
+    // Some metadata has been updated, so we need to update the metadata
+    // information we show to the user
+
+    mDetailsWidget->metadataDetails()->updateGui(mCellmlFile->rdfTriples(mListsWidget->metadataList()->currentId()));
 }
 
 //==============================================================================

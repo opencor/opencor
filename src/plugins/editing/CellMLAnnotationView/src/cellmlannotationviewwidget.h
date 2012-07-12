@@ -74,6 +74,8 @@ private:
 
     CellMLAnnotationViewPlugin *mPluginParent;
 
+    CellMLSupport::CellmlFile *mCellmlFile;
+
     CellmlAnnotationViewListsWidget *mListsWidget;
     CellmlAnnotationViewDetailsWidget *mDetailsWidget;
 
@@ -95,6 +97,8 @@ private Q_SLOTS:
 
     void updateTabOrder(QComboBox *pCmetaIdValue, QPushButton *pEditButton);
     void updateTabOrder(QLineEdit *pTermValue, QComboBox *pQualifierValue);
+
+    void updateMetadataDetails() const;
 };
 
 //==============================================================================

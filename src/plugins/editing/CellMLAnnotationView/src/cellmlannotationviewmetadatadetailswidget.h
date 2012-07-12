@@ -99,8 +99,6 @@ private Q_SLOTS:
                                    const QString &pId,
                                    const bool &pRetranslate);
     void unknownLookupRequested();
-
-    void metadataUpdated();
 };
 
 //==============================================================================
