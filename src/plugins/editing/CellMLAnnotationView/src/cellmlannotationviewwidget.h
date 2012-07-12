@@ -58,6 +58,8 @@ public:
     CellmlAnnotationViewListsWidget * listsWidget() const;
     CellmlAnnotationViewDetailsWidget * detailsWidget() const;
 
+    QStringList metadataIds() const;
+
     void updateWebViewerWithQualifierDetails(QWebView *pWebView,
                                              const QString &pQualifier,
                                              const bool &pRetranslate);

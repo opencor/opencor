@@ -259,7 +259,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             mCmetaIdValue = new QComboBox(mWidget);
 
-            mCmetaIdValue->addItems(mParent->listsWidget()->metadataList()->ids());
+            mCmetaIdValue->addItems(mParent->metadataIds());
 
             mCmetaIdValue->setEditable(true);
 

@@ -236,6 +236,15 @@ void CellmlAnnotationViewWidget::emitSplitterMoved()
 
 //==============================================================================
 
+QStringList CellmlAnnotationViewWidget::metadataIds() const
+{
+    // Return the list of metadata ids
+
+    return mListsWidget->metadataList()->ids();
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewWidget::updateWebViewerWithQualifierDetails(QWebView *pWebView,
                                                                      const QString &pQualifier,
                                                                      const bool &pRetranslate)
