@@ -143,14 +143,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
         connect(termValue, SIGNAL(textChanged(const QString &)),
                 this, SLOT(newTerm(const QString &)));
 
-        newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Term:"), true),
+        newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), true),
                               termValue);
 
         QComboBox *qualifierValue = new QComboBox(newFormWidget);
 
         qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
-        newFormLayout->addRow(mParent->newLabel(newFormWidget, tr("Qualifier:"), true),
+        newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
                               qualifierValue);
 
         // Make our term value the widget to tab to after our metadata tree view
@@ -176,9 +176,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
         newGridLayout->setRowStretch(0, 1);
 
-        newGridLayout->addWidget(mParent->newLabel(newMainWidget,
-                                                   tr("No data available..."),
-                                                   false, 1.25, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(newMainWidget,
+                                                tr("No data available..."),
+                                                false, 1.25, Qt::AlignCenter),
                                  1, 0);
 
         newGridLayout->setRowStretch(2, 1);

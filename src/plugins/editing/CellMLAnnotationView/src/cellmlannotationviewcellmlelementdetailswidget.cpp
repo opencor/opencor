@@ -11,6 +11,7 @@
 #include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
+#include "coreutils.h"
 #include "treeview.h"
 
 //==============================================================================
@@ -229,8 +230,8 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
         // Add a bold centered label as a header to let the user know what type
         // of item we are talking about
 
-        mLayout->addRow(mParent->newLabel(mWidget, typeAsString(item.type),
-                                          true, 1.25, Qt::AlignCenter));
+        mLayout->addRow(Core::newLabel(mWidget, typeAsString(item.type),
+                                       true, 1.25, Qt::AlignCenter));
 
         // Show the item's cmeta:id, keeping in mind that we only want to allow
         // the editing of the cmeta:id of the very first item
@@ -305,7 +306,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             // Add our cmeta:id widget to our main layout
 
-            mLayout->addRow(mParent->newLabel(mWidget, tr("cmeta:id:"), true),
+            mLayout->addRow(Core::newLabel(mWidget, tr("cmeta:id:"), true),
                             cmetaIdWidget);
 
             // Make our cmeta:id value the widget to tab to after our CellML
@@ -451,8 +452,8 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::addRow(const QString &pLabe
 {
     // Add a row to our form layout
 
-    mLayout->addRow(mParent->newLabel(mWidget, pLabel, true),
-                    mParent->newLabel(mWidget, pValue));
+    mLayout->addRow(Core::newLabel(mWidget, pLabel, true),
+                    Core::newLabel(mWidget, pValue));
 }
 
 //==============================================================================

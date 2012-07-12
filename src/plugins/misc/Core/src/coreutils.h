@@ -16,6 +16,7 @@
 //==============================================================================
 
 class QFrame;
+class QLabel;
 class QWidget;
 
 //==============================================================================
@@ -38,6 +39,15 @@ QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent,
                                    const bool &pHorizontal = true);
+
+QLabel CORE_EXPORT * newLabel(QWidget *pParent, const QString &pText,
+                              const bool &pBold = false,
+                              const double &pFontPercentage = 1.0,
+                              const Qt::Alignment &pAlignment = Qt::AlignLeft|Qt::AlignVCenter);
+QLabel CORE_EXPORT * newLabelLink(QWidget *pParent, const QString &pText,
+                                  const bool &pBold = false,
+                                  const double &pFontPercentage = 1.0,
+                                  const Qt::Alignment &pAlignment = Qt::AlignLeft|Qt::AlignVCenter);
 
 QString CORE_EXPORT copyright();
 

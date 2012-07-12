@@ -4,6 +4,7 @@
 
 #include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
+#include "coreutils.h"
 #include "treeview.h"
 
 //==============================================================================
@@ -106,17 +107,17 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     if (pRdfTriples.count()) {
         // Create labels to act as headers
 
-        newGridLayout->addWidget(mParent->newLabel(newGridWidget,
-                                                   tr("Qualifier"),
-                                                   true, 1.25, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("Qualifier"),
+                                                true, 1.25, Qt::AlignCenter),
                                  0, 0);
-        newGridLayout->addWidget(mParent->newLabel(newGridWidget,
-                                                   tr("Resource"),
-                                                   true, 1.25, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("Resource"),
+                                                true, 1.25, Qt::AlignCenter),
                                  0, 1);
-        newGridLayout->addWidget(mParent->newLabel(newGridWidget,
-                                                   tr("Id"),
-                                                   true, 1.25, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("Id"),
+                                                true, 1.25, Qt::AlignCenter),
                                  0, 2);
 
         // Add the RDF triples information to our layout
@@ -135,9 +136,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                                             rdfTriple->bioQualifierAsString();
             QString rdfTripleInfo = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
 
-            QLabel *qualifierLabel = mParent->newLabelLink(newGridWidget,
-                                                           "<a href=\""+rdfTripleInfo+"\">"+qualifierAsString+"</a>",
-                                                           false, 1.0, Qt::AlignCenter);
+            QLabel *qualifierLabel = Core::newLabelLink(newGridWidget,
+                                                        "<a href=\""+rdfTripleInfo+"\">"+qualifierAsString+"</a>",
+                                                        false, 1.0, Qt::AlignCenter);
 
             connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupQualifier(const QString &)));
@@ -146,9 +147,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
             // Resource
 
-            QLabel *resourceLabel = mParent->newLabelLink(newGridWidget,
-                                                          "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->resource()+"</a>",
-                                                          false, 1.0, Qt::AlignCenter);
+            QLabel *resourceLabel = Core::newLabelLink(newGridWidget,
+                                                       "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->resource()+"</a>",
+                                                       false, 1.0, Qt::AlignCenter);
 
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResource(const QString &)));
@@ -157,9 +158,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
             // Id
 
-            QLabel *idLabel = mParent->newLabelLink(newGridWidget,
-                                                    "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->id()+"</a>",
-                                                    false, 1.0, Qt::AlignCenter);
+            QLabel *idLabel = Core::newLabelLink(newGridWidget,
+                                                 "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->id()+"</a>",
+                                                 false, 1.0, Qt::AlignCenter);
 
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResourceId(const QString &)));
@@ -202,9 +203,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     } else {
         // No RDF triples, so...
 
-        newGridLayout->addWidget(mParent->newLabel(newGridWidget,
-                                                   tr("No data available..."),
-                                                   false, 1.25, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("No data available..."),
+                                                false, 1.25, Qt::AlignCenter),
                                  0, 0);
     }
 

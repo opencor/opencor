@@ -11,6 +11,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFrame>
+#include <QLabel>
 #include <QResource>
 #include <QSettings>
 #include <QWidget>
@@ -164,6 +165,47 @@ QFrame * newLineWidget(QWidget *pParent, const bool &pHorizontal)
         res->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
         res->setFixedWidth(1);
     }
+
+    return res;
+}
+
+//==============================================================================
+
+QLabel * newLabel(QWidget *pParent, const QString &pText, const bool &pBold,
+                  const double &pFontPercentage,
+                  const Qt::Alignment &pAlignment)
+{
+    // Create and return a label, allowing to set some of its properties
+
+    QLabel *res = new QLabel(pText, pParent);
+
+    QFont font = res->font();
+
+    font.setBold(pBold);
+    font.setPointSize(pFontPercentage*font.pointSize());
+
+    res->setAlignment(pAlignment);
+    res->setFont(font);
+
+    return res;
+}
+
+//==============================================================================
+
+QLabel * newLabelLink(QWidget *pParent, const QString &pText, const bool &pBold,
+                      const double &pFontPercentage,
+                      const Qt::Alignment &pAlignment)
+{
+    // Create a label link, allowing to set set some of its properties
+
+    QLabel *res = newLabel(pParent, pText, pBold, pFontPercentage, pAlignment);
+
+    // Prevent Qt from associating a context menu with the label (something
+    // which it does automatically when a label is a link...)
+
+    res->setContextMenuPolicy(Qt::NoContextMenu);
+
+    // Return our label link
 
     return res;
 }
