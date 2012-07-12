@@ -53,7 +53,9 @@ public:
 
     virtual void retranslateUi();
 
-    CellMLAnnotationViewPlugin * pluginParent() const;
+    QString pluginViewName() const;
+
+    CellMLSupport::CellmlFile * cellmlFile() const;
 
     CellmlAnnotationViewListsWidget * listsWidget() const;
     CellmlAnnotationViewDetailsWidget * detailsWidget() const;

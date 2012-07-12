@@ -51,7 +51,6 @@ private:
 
 public:
     explicit CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                          CellMLSupport::CellmlFile *pCellmlFile,
                                                                           const bool &pEditingMode);
     ~CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget();
 

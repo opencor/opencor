@@ -47,7 +47,6 @@ class CellmlAnnotationViewMetadataViewDetailsWidget : public QStackedWidget,
 
 public:
     explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                           CellMLSupport::CellmlFile *pCellmlFile,
                                                            const bool &pEditingMode);
     ~CellmlAnnotationViewMetadataViewDetailsWidget();
 

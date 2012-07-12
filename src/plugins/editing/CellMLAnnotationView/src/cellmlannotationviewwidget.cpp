@@ -11,6 +11,7 @@
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
+#include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "coreutils.h"
@@ -89,8 +90,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Create our two main parts
 
-    mListsWidget   = new CellmlAnnotationViewListsWidget(this, mCellmlFile);
-    mDetailsWidget = new CellmlAnnotationViewDetailsWidget(this, mCellmlFile);
+    mListsWidget   = new CellmlAnnotationViewListsWidget(this);
+    mDetailsWidget = new CellmlAnnotationViewDetailsWidget(this);
 
     // Populate ourselves
 
@@ -190,11 +191,20 @@ void CellmlAnnotationViewWidget::retranslateUi()
 
 //==============================================================================
 
-CellMLAnnotationViewPlugin * CellmlAnnotationViewWidget::pluginParent() const
+QString CellmlAnnotationViewWidget::pluginViewName() const
 {
     // Return our pointer to the plugin parent
 
-    return mPluginParent;
+    return mPluginParent->viewName();
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFile * CellmlAnnotationViewWidget::cellmlFile() const
+{
+    // Return the CellML file
+
+    return mCellmlFile;
 }
 
 //==============================================================================

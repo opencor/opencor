@@ -37,8 +37,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                                             CellMLSupport::CellmlFile *pCellmlFile) :
+CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataEditDetailsWidget),

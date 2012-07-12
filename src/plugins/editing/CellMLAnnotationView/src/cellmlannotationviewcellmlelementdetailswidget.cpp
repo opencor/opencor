@@ -44,12 +44,11 @@ bool CellmlAnnotationViewCellmlElementDetailsWidget::Item::operator==(const Item
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElementDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                                               CellMLSupport::CellmlFile *pCellmlFile) :
+CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElementDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mParent(pParent),
-    mCellmlFile(pCellmlFile),
+    mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewCellmlElementDetailsWidget),
     mItems(Items()),
     mCmetaIdValue(0)

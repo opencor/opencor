@@ -26,15 +26,14 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                                                                           CellMLSupport::CellmlFile *pCellmlFile,
                                                                                                                            const bool &pEditingMode) :
     QScrollArea(pParent),
     CommonWidget(pParent),
-    mCellmlFile(pCellmlFile),
+    mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
     mGridWidget(0),
     mGridLayout(0),
-    mRdfTriples(CellMLSupport::CellmlFileRdfTriples(pCellmlFile)),
+    mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mCellmlFile)),
     mRdfTripleInfo(QString()),
     mType(Unknown),
     mEditingMode(pEditingMode),

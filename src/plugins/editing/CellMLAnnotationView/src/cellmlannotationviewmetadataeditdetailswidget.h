@@ -48,8 +48,7 @@ class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                           CellMLSupport::CellmlFile *pCellmlFile);
+    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
     virtual void retranslateUi();

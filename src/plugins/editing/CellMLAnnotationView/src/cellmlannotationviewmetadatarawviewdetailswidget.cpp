@@ -17,10 +17,9 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                                                   CellMLSupport::CellmlFile *pCellmlFile) :
+CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     Widget(pParent),
-    mCellmlFile(pCellmlFile),
+    mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataRawViewDetailsWidget)
 {
     // Set up the GUI

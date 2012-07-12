@@ -19,8 +19,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                 CellMLSupport::CellmlFile *pCellmlFile) :
+CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotationViewWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewListsWidget)
@@ -31,8 +30,8 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
 
     // Create our CellML and metadata lists
 
-    mCellmlList   = new CellmlAnnotationViewCellmlListWidget(pParent, pCellmlFile);
-    mMetadataList = new CellmlAnnotationViewMetadataListWidget(pParent, pCellmlFile);
+    mCellmlList   = new CellmlAnnotationViewCellmlListWidget(pParent);
+    mMetadataList = new CellmlAnnotationViewMetadataListWidget(pParent);
 
     // Populate ourselves
 

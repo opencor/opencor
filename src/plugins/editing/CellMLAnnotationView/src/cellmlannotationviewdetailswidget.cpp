@@ -18,8 +18,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                     CellMLSupport::CellmlFile *pCellmlFile) :
+CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QStackedWidget(pParent),
     CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewDetailsWidget)
@@ -30,8 +29,8 @@ CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(CellmlAnnot
 
     // Create our CellML and metadata details GUIs
 
-    mCellmlDetails   = new CellmlAnnotationViewCellmlDetailsWidget(pParent, pCellmlFile);
-    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pParent, pCellmlFile);
+    mCellmlDetails   = new CellmlAnnotationViewCellmlDetailsWidget(pParent);
+    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pParent);
 
     // Make our CellML details GUI the default widget
     // Note: for the GUI to be properly initialised, we must add and immediately

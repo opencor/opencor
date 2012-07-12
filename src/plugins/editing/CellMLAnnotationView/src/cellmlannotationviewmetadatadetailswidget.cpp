@@ -10,7 +10,6 @@
 #include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
-#include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "treeview.h"
 #include "usermessagewidget.h"
@@ -31,11 +30,10 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                                     CellMLSupport::CellmlFile *pCellmlFile) :
+CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     Widget(pParent),
     mParent(pParent),
-    mCellmlFile(pCellmlFile),
+    mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget)
 {
     // Set up the GUI
@@ -58,8 +56,8 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widgets
 
-    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pParent, pCellmlFile);
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, pCellmlFile, true);
+    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pParent);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, true);
     mWebView             = new QWebView(pParent);
 
     mBorderedMetadataEditDetails = new Core::BorderedWidget(mMetadataEditDetails,
@@ -126,7 +124,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
     // Update our unsupported metadata message
 
-    mUnsupportedMetadataMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName()));
+    mUnsupportedMetadataMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginViewName()));
 }
 
 //==============================================================================
