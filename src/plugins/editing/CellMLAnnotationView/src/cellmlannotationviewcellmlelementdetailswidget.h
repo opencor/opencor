@@ -22,8 +22,9 @@ namespace Ui {
 
 //==============================================================================
 
-class QFormLayout;
 class QComboBox;
+class QFormLayout;
+class QPushButton;
 
 //==============================================================================
 
@@ -103,6 +104,8 @@ private:
     QString typeAsString(const Type &pType) const;
 
 Q_SIGNALS:
+    void guiPopulated(QComboBox *pCmetaIdValue, QPushButton *pEditButton);
+
     void cellmlElementMetadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
     void metadataEditingRequested(const QString &pCmetaId);
 

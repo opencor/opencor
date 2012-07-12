@@ -26,6 +26,7 @@
 #include <QFile>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QWebView>
 
 //==============================================================================
@@ -118,6 +119,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(metadataEditingRequested(const QString &)),
             mListsWidget->metadataList(), SLOT(setCurrentId(const QString &)));
+
+    // A connection to reset the tab order following a GUI update of the
+    // CellML details
+
+    connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(guiPopulated(QComboBox *, QPushButton *)),
+            this, SLOT(updateTabOrder(QComboBox *, QPushButton *)));
 
     // A connection to reset the tab order following a GUI update of the
     // metadata edit details
@@ -401,6 +408,18 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceIdDetails(QWebView *
             pWebView->setUrl(newUrl);
         }
     }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::updateTabOrder(QComboBox *pCmetaIdValue,
+                                                QPushButton *pEditButton)
+{
+    // Update the tab order for our CellML list
+
+    setTabOrder(qobject_cast<QWidget *>(mListsWidget->cellmlList()->treeView()),
+                pCmetaIdValue);
+    setTabOrder(pCmetaIdValue, pEditButton);
 }
 
 //==============================================================================

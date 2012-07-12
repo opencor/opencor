@@ -311,12 +311,9 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             mLayout->addRow(Core::newLabel(mWidget, tr("cmeta:id:"), true),
                             cmetaIdWidget);
 
-            // Make our cmeta:id value the widget to tab to after our CellML
-            // tree view
+            // Let people know that the GUI has been populated
 
-            setTabOrder(qobject_cast<QWidget *>(mParent->listsWidget()->cellmlList()->treeView()),
-                        mCmetaIdValue);
-            setTabOrder(mCmetaIdValue, editButton);
+            emit guiPopulated(mCmetaIdValue, editButton);
 
             // Create a connection to keep track of changes to our cmeta:id
             // value
