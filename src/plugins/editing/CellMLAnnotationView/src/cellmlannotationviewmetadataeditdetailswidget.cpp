@@ -41,8 +41,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
                                                                                              CellMLSupport::CellmlFile *pCellmlFile) :
     QScrollArea(pParent),
     CommonWidget(pParent),
-    mParent(pParent),
-    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewMetadataEditDetailsWidget),
     mMainWidget(0),
     mMainLayout(0),

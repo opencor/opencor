@@ -57,9 +57,6 @@ public:
     void updateGui(const bool &pPopulate = true);
 
 private:
-    CellmlAnnotationViewWidget *mParent;
-    CellMLSupport::CellmlFile *mCellmlFile;
-
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QStackedWidget *mWidget;

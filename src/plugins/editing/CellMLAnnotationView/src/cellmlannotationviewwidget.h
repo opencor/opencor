@@ -74,8 +74,6 @@ private:
 
     CellMLAnnotationViewPlugin *mPluginParent;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
-
     CellmlAnnotationViewListsWidget *mListsWidget;
     CellmlAnnotationViewDetailsWidget *mDetailsWidget;
 

@@ -49,9 +49,6 @@ public:
     CellmlAnnotationViewMetadataListWidget * metadataList() const;
 
 private:
-    CellmlAnnotationViewWidget *mParent;
-    CellMLSupport::CellmlFile *mCellmlFile;
-
     Ui::CellmlAnnotationViewListsWidget *mGui;
 
     CellmlAnnotationViewCellmlListWidget *mCellmlList;

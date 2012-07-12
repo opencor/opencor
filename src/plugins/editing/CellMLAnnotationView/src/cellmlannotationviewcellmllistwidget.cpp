@@ -27,7 +27,6 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewWidget *pParent,
                                                                            CellMLSupport::CellmlFile *pCellmlFile) :
     Widget(pParent),
-    mParent(pParent),
     mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewCellmlListWidget),
     mIndexes(QList<QModelIndex>())

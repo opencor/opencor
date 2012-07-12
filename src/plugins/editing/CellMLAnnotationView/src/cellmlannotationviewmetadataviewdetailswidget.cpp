@@ -23,8 +23,6 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
                                                                                              const bool &pEditingMode) :
     QStackedWidget(pParent),
     CommonWidget(pParent),
-    mParent(pParent),
-    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewMetadataViewDetailsWidget)
 {
     // Set up the GUI

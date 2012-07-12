@@ -75,9 +75,9 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Retrieve and load, in case it's necessary, the requested CellML file
 
-    mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    mCellmlFile->load();
+    cellmlFile->load();
 
     // Customise our GUI which consists of two main parts:
     //
@@ -89,8 +89,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Create our two main parts
 
-    mListsWidget   = new CellmlAnnotationViewListsWidget(this, mCellmlFile);
-    mDetailsWidget = new CellmlAnnotationViewDetailsWidget(this, mCellmlFile);
+    mListsWidget   = new CellmlAnnotationViewListsWidget(this, cellmlFile);
+    mDetailsWidget = new CellmlAnnotationViewDetailsWidget(this, cellmlFile);
 
     // Populate ourselves
 

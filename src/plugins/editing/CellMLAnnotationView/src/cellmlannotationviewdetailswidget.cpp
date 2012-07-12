@@ -22,8 +22,6 @@ CellmlAnnotationViewDetailsWidget::CellmlAnnotationViewDetailsWidget(CellmlAnnot
                                                                      CellMLSupport::CellmlFile *pCellmlFile) :
     QStackedWidget(pParent),
     CommonWidget(pParent),
-    mParent(pParent),
-    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewDetailsWidget)
 {
     // Set up the GUI

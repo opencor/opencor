@@ -30,7 +30,6 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
                                                                                                                            const bool &pEditingMode) :
     QScrollArea(pParent),
     CommonWidget(pParent),
-    mParent(pParent),
     mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
     mGridWidget(0),

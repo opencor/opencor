@@ -67,7 +67,6 @@ protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
 
 private:
-    CellmlAnnotationViewWidget *mParent;
     CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewCellmlListWidget *mGui;

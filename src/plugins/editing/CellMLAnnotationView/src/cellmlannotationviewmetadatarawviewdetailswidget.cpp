@@ -20,7 +20,6 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
                                                                                                    CellMLSupport::CellmlFile *pCellmlFile) :
     Widget(pParent),
-    mParent(pParent),
     mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewMetadataRawViewDetailsWidget)
 {

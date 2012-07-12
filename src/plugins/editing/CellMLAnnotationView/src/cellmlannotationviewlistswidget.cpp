@@ -23,8 +23,6 @@ CellmlAnnotationViewListsWidget::CellmlAnnotationViewListsWidget(CellmlAnnotatio
                                                                  CellMLSupport::CellmlFile *pCellmlFile) :
     QSplitter(pParent),
     CommonWidget(pParent),
-    mParent(pParent),
-    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewListsWidget)
 {
     // Set up the GUI

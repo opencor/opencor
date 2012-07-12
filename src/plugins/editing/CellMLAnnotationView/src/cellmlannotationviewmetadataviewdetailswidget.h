@@ -59,9 +59,6 @@ public:
     CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *bioModelsDotNetView() const;
 
 private:
-    CellmlAnnotationViewWidget *mParent;
-    CellMLSupport::CellmlFile *mCellmlFile;
-
     Ui::CellmlAnnotationViewMetadataViewDetailsWidget *mGui;
 
     CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;

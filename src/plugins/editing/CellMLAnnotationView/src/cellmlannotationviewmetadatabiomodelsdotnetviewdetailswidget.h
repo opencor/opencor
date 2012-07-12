@@ -63,7 +63,6 @@ public:
                    const bool &pRetranslate = false);
 
 private:
-    CellmlAnnotationViewWidget *mParent;
     CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *mGui;
