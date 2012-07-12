@@ -111,6 +111,8 @@ Q_SIGNALS:
     void metadataEditingRequested(const QString &pCmetaId);
 
 private Q_SLOTS:
+    void showCmetaIdValue();
+
     void updateCellmlElementMetadataDetails(const QString &pCmetaId);
 
     void editMetadata();

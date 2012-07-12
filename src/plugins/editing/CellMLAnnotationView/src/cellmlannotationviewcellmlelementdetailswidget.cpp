@@ -67,6 +67,12 @@ CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElemen
     // Add our widget to our scroll area
 
     setWidget(mWidget);
+
+    // Handle the change in the contents of our GUI through the change in the
+    // range of our vertical scroll bar
+
+    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+            this, SLOT(showCmetaIdValue()));
 }
 
 //==============================================================================
@@ -406,13 +412,6 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
                    static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(item.element)->secondVariable());
     }
 
-    // Scroll down to the bottom of ourselves, just in case things don't fit
-    // within the viewport
-
-    qApp->processEvents();
-
-    verticalScrollBar()->setValue(verticalScrollBar()->maximum());
-
     // Allow ourselves to be updated again
 
     setUpdatesEnabled(true);
@@ -499,6 +498,16 @@ QComboBox * CellmlAnnotationViewCellmlElementDetailsWidget::cmetaIdValue() const
     // Return our cmeta:id value widget
 
     return mCmetaIdValue;
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlElementDetailsWidget::showCmetaIdValue()
+{
+    // Make sure that the cmeta:id value is visible within our scroll area
+
+    if (mCmetaIdValue)
+        ensureWidgetVisible(mCmetaIdValue);
 }
 
 //==============================================================================
