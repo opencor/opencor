@@ -61,7 +61,6 @@ public:
     Core::TreeView * treeView() const;
 
     QString currentId() const;
-    void setCurrentId(const QString &pId);
 
     QStringList ids() const;
 
@@ -84,6 +83,9 @@ private:
 
 Q_SIGNALS:
     void metadataUpdated();
+
+public Q_SLOTS:
+    void setCurrentId(const QString &pId);
 
 private Q_SLOTS:
     void updateActions();

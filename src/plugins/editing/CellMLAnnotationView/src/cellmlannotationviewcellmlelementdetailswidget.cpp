@@ -540,11 +540,11 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::trackCmetaId(const QString 
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementDetailsWidget::editMetadata() const
+void CellmlAnnotationViewCellmlElementDetailsWidget::editMetadata()
 {
-    // Switch to the editing side of the metadata
+    // Let people know that we would like to edit the metadata
 
-    mParent->listsWidget()->metadataList()->setCurrentId(mCmetaIdValue->currentText());
+    emit metadataEditingRequested(mCmetaIdValue->currentText());
 }
 
 //==============================================================================

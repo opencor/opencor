@@ -93,6 +93,15 @@ void CellmlAnnotationViewCellmlDetailsWidget::updateGui(const CellmlAnnotationVi
 
 //==============================================================================
 
+CellmlAnnotationViewCellmlElementDetailsWidget * CellmlAnnotationViewCellmlDetailsWidget::cellmlElementDetails() const
+{
+    // Return our CellML element details widget
+
+    return mCellmlElementDetails;
+}
+
+//==============================================================================
+
 CellmlAnnotationViewCellmlMetadataDetailsWidget * CellmlAnnotationViewCellmlDetailsWidget::cellmlMetadataDetails() const
 {
     // Return our CellML metadata details widget

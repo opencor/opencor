@@ -100,11 +100,14 @@ private:
 
     QString typeAsString(const Type &pType) const;
 
+Q_SIGNALS:
+    void metadataEditingRequested(const QString &pCmetaId);
+
 private Q_SLOTS:
     void newCmetaId(const QString &pCmetaId);
     void trackCmetaId(const QString &pCmetaId);
 
-    void editMetadata() const;
+    void editMetadata();
 };
 
 //==============================================================================

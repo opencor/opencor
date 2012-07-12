@@ -108,8 +108,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
             mDetailsWidget->metadataDetails(), SLOT(metadataUpdated()));
 
-    // Some connections to let our CellML details widget know when some RDF
-    // triple has been removed
+    // A connection to let our CellML details widget know when some RDF triple
+    // has been removed
     // Note: we must not let our metadata details widget know about it, since
     //       the removal of RDF triple/s is done directly from it, so it's
     //       already up to date and to ask it to update itself would 'reset' it,
@@ -117,6 +117,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     connect(mDetailsWidget->metadataDetails()->metadataViewDetails()->bioModelsDotNetView(), SIGNAL(metadataUpdated()),
             mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
+
+    // A connection to let our metadata list know that we want to edit some
+    // metadata
+
+    connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(metadataEditingRequested(const QString &)),
+            mListsWidget->metadataList(), SLOT(setCurrentId(const QString &)));
 
     // Make our lists widget our focus proxy
 

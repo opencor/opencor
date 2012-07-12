@@ -49,6 +49,7 @@ public:
 
     void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
 
+    CellmlAnnotationViewCellmlElementDetailsWidget *cellmlElementDetails() const;
     CellmlAnnotationViewCellmlMetadataDetailsWidget *cellmlMetadataDetails() const;
 
 private:
