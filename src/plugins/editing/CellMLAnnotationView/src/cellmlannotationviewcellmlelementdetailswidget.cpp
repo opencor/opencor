@@ -523,9 +523,10 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &p
 
     oldRdfTriples = rdfTriples;
 
-    // Update its metadata details
+    // Let people know that we want to see some information about the CellML
+    // element metadata
 
-    mParent->detailsWidget()->cellmlDetails()->cellmlMetadataDetails()->updateGui(rdfTriples);
+    emit cellmlElementMetadataDetailsRequested(rdfTriples);
 }
 
 //==============================================================================

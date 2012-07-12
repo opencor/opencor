@@ -48,6 +48,12 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
+
+    // A connection to let our metadata details widget know that we want to see
+    // the details of some CellML element metadata
+
+    connect(mCellmlElementDetails, SIGNAL(cellmlElementMetadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &)),
+            mCellmlMetadataDetails, SLOT(updateGui(const CellMLSupport::CellmlFileRdfTriples &)));
 }
 
 //==============================================================================

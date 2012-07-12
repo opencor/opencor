@@ -101,6 +101,7 @@ private:
     QString typeAsString(const Type &pType) const;
 
 Q_SIGNALS:
+    void cellmlElementMetadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
     void metadataEditingRequested(const QString &pCmetaId);
 
 private Q_SLOTS:
