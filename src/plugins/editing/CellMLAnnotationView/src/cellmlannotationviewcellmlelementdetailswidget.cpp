@@ -89,7 +89,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::retranslateUi()
 
     if (mCmetaIdValue)
         disconnect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                   this, SLOT(newCmetaId(const QString &)));
+                   this, SLOT(updateCellmlElementMetadataDetails(const QString &)));
 
     mGui->retranslateUi(this);
 
@@ -97,7 +97,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::retranslateUi()
 
     if (mCmetaIdValue)
         connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                this, SLOT(newCmetaId(const QString &)));
+                this, SLOT(updateCellmlElementMetadataDetails(const QString &)));
 }
 
 //==============================================================================
@@ -125,7 +125,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
     if (mCmetaIdValue)
         disconnect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                   this, SLOT(newCmetaId(const QString &)));
+                   this, SLOT(updateCellmlElementMetadataDetails(const QString &)));
 
     // Prevent ourselves from being updated (to avoid any flickering)
 
@@ -315,11 +315,11 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             emit guiPopulated(mCmetaIdValue, editButton);
 
-            // Create a connection to keep track of changes to our cmeta:id
-            // value
+            // Create a connection to let people know whenever the cmeta:id
+            // value has changed
 
             connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                    this, SLOT(trackCmetaId(const QString &)));
+                    this, SIGNAL(cmetaIdChanged(const QString &)));
         } else {
             // Not our 'main' item, so just display its cmeta:id
 
@@ -423,9 +423,9 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
     if (mCmetaIdValue) {
         connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                this, SLOT(newCmetaId(const QString &)));
+                this, SLOT(updateCellmlElementMetadataDetails(const QString &)));
 
-        newCmetaId(mCmetaIdValue->currentText());
+        updateCellmlElementMetadataDetails(mCmetaIdValue->currentText());
     }
 }
 
@@ -441,7 +441,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui()
 
     updateGui(mItems);
 
-    newCmetaId(cmetaId);
+    updateCellmlElementMetadataDetails(cmetaId);
 }
 
 //==============================================================================
@@ -504,7 +504,7 @@ QComboBox * CellmlAnnotationViewCellmlElementDetailsWidget::cmetaIdValue() const
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &pCmetaId)
+void CellmlAnnotationViewCellmlElementDetailsWidget::updateCellmlElementMetadataDetails(const QString &pCmetaId)
 {
     // Retrieve the RDF triples for the cmeta:id
 
@@ -527,15 +527,6 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &p
     // element metadata
 
     emit cellmlElementMetadataDetailsRequested(rdfTriples);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewCellmlElementDetailsWidget::trackCmetaId(const QString &pCmetaId)
-{
-    // Keep track of the new cmeta:id value
-
-    mParent->listsWidget()->cellmlList()->currentCellmlElementItem()->element()->setCmetaId(pCmetaId);
 }
 
 //==============================================================================

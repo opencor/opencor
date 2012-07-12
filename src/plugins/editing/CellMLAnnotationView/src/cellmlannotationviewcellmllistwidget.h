@@ -101,6 +101,8 @@ private Q_SLOTS:
 
     void treeViewContextMenu(const QPoint &pPosition) const;
 
+    void cmetaIdChanged(const QString &pCmetaId) const;
+
     void on_actionExpandAll_triggered();
     void on_actionCollapseAll_triggered();
 };

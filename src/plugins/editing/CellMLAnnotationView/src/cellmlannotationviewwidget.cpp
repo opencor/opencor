@@ -114,6 +114,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mListsWidget->metadataList(), SIGNAL(metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &)),
             mDetailsWidget, SLOT(updateGui(const CellMLSupport::CellmlFileRdfTriples &)));
 
+    // A connection to update our CellML file following a change in the cmeta:id
+    // value of one the current CellML element
+
+    connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(cmetaIdChanged(const QString &)),
+            mListsWidget->cellmlList(), SLOT(cmetaIdChanged(const QString &)));
+
     // A connection to let our metadata list know that we want to edit some
     // metadata
 

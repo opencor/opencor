@@ -106,12 +106,13 @@ private:
 Q_SIGNALS:
     void guiPopulated(QComboBox *pCmetaIdValue, QPushButton *pEditButton);
 
+    void cmetaIdChanged(const QString &pCmetaId);
+
     void cellmlElementMetadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
     void metadataEditingRequested(const QString &pCmetaId);
 
 private Q_SLOTS:
-    void newCmetaId(const QString &pCmetaId);
-    void trackCmetaId(const QString &pCmetaId);
+    void updateCellmlElementMetadataDetails(const QString &pCmetaId);
 
     void editMetadata();
 };
