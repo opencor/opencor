@@ -42,7 +42,8 @@ class CellmlAnnotationViewCellmlDetailsWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewCellmlDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewCellmlDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                     CellMLSupport::CellmlFile *pCellmlFile);
     ~CellmlAnnotationViewCellmlDetailsWidget();
 
     virtual void retranslateUi();
@@ -54,6 +55,7 @@ public:
 
 private:
     CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewCellmlDetailsWidget *mGui;
 

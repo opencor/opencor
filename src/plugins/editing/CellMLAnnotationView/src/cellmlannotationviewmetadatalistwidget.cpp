@@ -25,9 +25,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(CellmlAnnotationViewWidget *pParent,
+                                                                               CellMLSupport::CellmlFile *pCellmlFile) :
     Widget(pParent),
     mParent(pParent),
+    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewMetadataListWidget),
     mIndexes(QList<QModelIndex>())
 {
@@ -177,18 +179,18 @@ void CellmlAnnotationViewMetadataListWidget::populateDataModel()
 {
     // Make sure that the CellML file was properly loaded
 
-    if (mParent->cellmlFile()->issues().count())
+    if (mCellmlFile->issues().count())
         // There are issues, so...
 
         return;
 
     // Retrieve the id of the different groups of triples
 
-    QString uriBase = mParent->cellmlFile()->uriBase();
+    QString uriBase = mCellmlFile->uriBase();
     QStringList ids = QStringList();
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-             *mParent->cellmlFile()->rdfTriples())
+             *mCellmlFile->rdfTriples())
         // Retrieve the RDF triple's subject so we can determine to which group
         // of RDF triples it should be added
         // Note: the RDF triple is part of an rdf:Description element which is
@@ -277,7 +279,7 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
     // Make sure that the details GUI is valid and that we have a valid
     // pNewIndex
 
-    if (!mParent->detailsWidget() || (pNewIndex == QModelIndex()))
+    if (pNewIndex == QModelIndex())
         return;
 
     // Keep track of the fact that there is a node to update
@@ -311,7 +313,7 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
         // Let people know that we want to see some information about the
         // current CellML element
 
-        emit metadataDetailsRequested(mParent->cellmlFile()->rdfTriples(mDataModel->itemFromIndex(crtIndex)->text()));
+        emit metadataDetailsRequested(mCellmlFile->rdfTriples(mDataModel->itemFromIndex(crtIndex)->text()));
     }
 
     // We are done, so...
@@ -327,7 +329,7 @@ void CellmlAnnotationViewMetadataListWidget::itemChanged(QStandardItem * pItem)
 
     QString newId = pItem->text();
 
-    mParent->cellmlFile()->rdfTriples()->renameMetadataId(mId, newId);
+    mCellmlFile->rdfTriples()->renameMetadataId(mId, newId);
 
     // Resort our list
 
@@ -470,7 +472,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_trig
 
     QString cmetaId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
 
-    mParent->cellmlFile()->rdfTriples()->remove(cmetaId);
+    mCellmlFile->rdfTriples()->remove(cmetaId);
 
     // Remove the entry for the cmeta:id from our data model
 
@@ -497,7 +499,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveAllMetadata_triggere
 {
     // Remove all the metadata, i.e. all the RDF triples
 
-    mParent->cellmlFile()->rdfTriples()->removeAll();
+    mCellmlFile->rdfTriples()->removeAll();
 
     // Clean the data model
 
@@ -527,7 +529,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearCurrentMetadata_trigg
     // Clear the current metadata, i.e. all the RDF triples which subject is the
     // same as the cmeta:id
 
-    mParent->cellmlFile()->rdfTriples()->remove(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
+    mCellmlFile->rdfTriples()->remove(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
 
     // Let people know that some metadata has been removed
 
@@ -540,7 +542,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearAllMetadata_triggered
 {
     // Clear all the metadata, i.e. all the RDF triples
 
-    mParent->cellmlFile()->rdfTriples()->removeAll();
+    mCellmlFile->rdfTriples()->removeAll();
 
     // Let people know that all the metadata have been removed
 

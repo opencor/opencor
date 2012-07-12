@@ -53,7 +53,8 @@ class CellmlAnnotationViewCellmlListWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewWidget *pParent,
+                                                  CellMLSupport::CellmlFile *pCellmlFile);
     ~CellmlAnnotationViewCellmlListWidget();
 
     virtual void retranslateUi();
@@ -67,6 +68,7 @@ protected:
 
 private:
     CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewCellmlListWidget *mGui;
 

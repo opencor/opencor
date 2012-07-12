@@ -39,8 +39,6 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewWidget),
     mPluginParent(pPluginParent),
-    mListsWidget(0),
-    mDetailsWidget(0),
     oldWebViewUrls(QMap<QWebView *, QUrl>())
 {
     // Set up the GUI
@@ -87,8 +85,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     // Create our two main parts
 
-    mListsWidget   = new CellmlAnnotationViewListsWidget(this);
-    mDetailsWidget = new CellmlAnnotationViewDetailsWidget(this);
+    mListsWidget   = new CellmlAnnotationViewListsWidget(this, mCellmlFile);
+    mDetailsWidget = new CellmlAnnotationViewDetailsWidget(this, mCellmlFile);
 
     // Populate ourselves
 
@@ -175,15 +173,6 @@ CellMLAnnotationViewPlugin * CellmlAnnotationViewWidget::pluginParent() const
     // Return our pointer to the plugin parent
 
     return mPluginParent;
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFile * CellmlAnnotationViewWidget::cellmlFile() const
-{
-    // Return our pointer to the CellML file
-
-    return mCellmlFile;
 }
 
 //==============================================================================

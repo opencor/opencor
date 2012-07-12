@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -38,7 +39,8 @@ class CellmlAnnotationViewListsWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewListsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewListsWidget(CellmlAnnotationViewWidget *pParent,
+                                             CellMLSupport::CellmlFile *pCellmlFile);
     ~CellmlAnnotationViewListsWidget();
 
     virtual void retranslateUi();
@@ -48,6 +50,7 @@ public:
 
 private:
     CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewListsWidget *mGui;
 

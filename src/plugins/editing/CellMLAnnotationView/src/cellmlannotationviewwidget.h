@@ -52,8 +52,6 @@ public:
 
     CellMLAnnotationViewPlugin * pluginParent() const;
 
-    CellMLSupport::CellmlFile * cellmlFile() const;
-
     CellmlAnnotationViewListsWidget * listsWidget() const;
     CellmlAnnotationViewDetailsWidget * detailsWidget() const;
 

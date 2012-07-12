@@ -44,10 +44,12 @@ bool CellmlAnnotationViewCellmlElementDetailsWidget::Item::operator==(const Item
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElementDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewCellmlElementDetailsWidget::CellmlAnnotationViewCellmlElementDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                                               CellMLSupport::CellmlFile *pCellmlFile) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mParent(pParent),
+    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewCellmlElementDetailsWidget),
     mItems(Items()),
     mCmetaIdValue(0)
@@ -509,7 +511,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &p
 {
     // Retrieve the RDF triples for the cmeta:id
 
-    CellMLSupport::CellmlFileRdfTriples rdfTriples = mParent->cellmlFile()->rdfTriples(pCmetaId);
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pCmetaId);
 
     // Check that we are not dealing with the same RDF triples
     // Note: this may happen when manually typing the name of a cmeta:id and the
@@ -517,7 +519,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::newCmetaId(const QString &p
     //       and the QComboBox suggests "C_C" (which will get us here) and then
     //       you finish typing "C_C" (which will also get us here)
 
-    static CellMLSupport::CellmlFileRdfTriples oldRdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
+    static CellMLSupport::CellmlFileRdfTriples oldRdfTriples = CellMLSupport::CellmlFileRdfTriples(mCellmlFile);
 
     if (rdfTriples == oldRdfTriples)
         return;

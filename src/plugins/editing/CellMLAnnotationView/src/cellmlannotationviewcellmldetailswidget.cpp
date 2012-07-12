@@ -23,10 +23,12 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                                 CellMLSupport::CellmlFile *pCellmlFile) :
     QSplitter(pParent),
     CommonWidget(pParent),
     mParent(pParent),
+    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewCellmlDetailsWidget)
 {
     // Set up the GUI
@@ -35,8 +37,8 @@ CellmlAnnotationViewCellmlDetailsWidget::CellmlAnnotationViewCellmlDetailsWidget
 
     // Create our details widgets
 
-    mCellmlElementDetails  = new CellmlAnnotationViewCellmlElementDetailsWidget(pParent);
-    mCellmlMetadataDetails = new CellmlAnnotationViewCellmlMetadataDetailsWidget(pParent);
+    mCellmlElementDetails  = new CellmlAnnotationViewCellmlElementDetailsWidget(pParent, pCellmlFile);
+    mCellmlMetadataDetails = new CellmlAnnotationViewCellmlMetadataDetailsWidget(pParent, pCellmlFile);
 
     // Add our details widgets to our splitter
 

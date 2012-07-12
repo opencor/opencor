@@ -50,7 +50,8 @@ class CellmlAnnotationViewMetadataRawViewDetailsWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                              CellMLSupport::CellmlFile *pCellmlFile);
     ~CellmlAnnotationViewMetadataRawViewDetailsWidget();
 
     virtual void retranslateUi();
@@ -59,6 +60,7 @@ public:
 
 private:
     CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewMetadataRawViewDetailsWidget *mGui;
 

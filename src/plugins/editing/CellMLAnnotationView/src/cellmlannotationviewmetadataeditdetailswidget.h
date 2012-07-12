@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -45,7 +46,8 @@ class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                           CellMLSupport::CellmlFile *pCellmlFile);
     ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
     virtual void retranslateUi();
@@ -54,6 +56,7 @@ public:
 
 private:
     CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 

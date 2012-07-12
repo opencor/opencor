@@ -26,14 +26,16 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                                                                           CellMLSupport::CellmlFile *pCellmlFile,
                                                                                                                            const bool &pEditingMode) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mParent(pParent),
+    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
     mGridWidget(0),
     mGridLayout(0),
-    mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile())),
+    mRdfTriples(CellMLSupport::CellmlFileRdfTriples(pCellmlFile)),
     mRdfTripleInfo(QString()),
     mType(Unknown),
     mEditingMode(pEditingMode),
@@ -415,7 +417,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     // Remove the RDF triple from the CellML file and from our set of RDF
     // triples this widget uses
 
-    mParent->cellmlFile()->rdfTriples()->remove(rdfTriple);
+    mCellmlFile->rdfTriples()->remove(rdfTriple);
     mRdfTriples.remove(rdfTriple);
 
     // Retrieve the number of the row we want to delete, as well as the total

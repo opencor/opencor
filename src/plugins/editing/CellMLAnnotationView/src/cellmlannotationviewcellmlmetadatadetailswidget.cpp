@@ -24,10 +24,12 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlMetadataDetailsWidget::CellmlAnnotationViewCellmlMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewCellmlMetadataDetailsWidget::CellmlAnnotationViewCellmlMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                                                 CellMLSupport::CellmlFile *pCellmlFile) :
     QSplitter(pParent),
     CommonWidget(pParent),
     mParent(pParent),
+    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewCellmlMetadataDetailsWidget)
 {
     // Set up the GUI
@@ -36,7 +38,7 @@ CellmlAnnotationViewCellmlMetadataDetailsWidget::CellmlAnnotationViewCellmlMetad
 
     // Create our details widgets
 
-    mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, false);
+    mMetadataViewDetails  = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, pCellmlFile, false);
     mWebView              = new QWebView(pParent);
 
     mBorderedMetadataViewDetails = new Core::BorderedWidget(mMetadataViewDetails,
@@ -91,7 +93,7 @@ void CellmlAnnotationViewCellmlMetadataDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewCellmlMetadataDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
+    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mCellmlFile);
 
     if (pRdfTriples == rdfTriples)
         // We want to show the same RDF triples, so...

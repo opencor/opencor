@@ -31,9 +31,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                                     CellMLSupport::CellmlFile *pCellmlFile) :
     Widget(pParent),
     mParent(pParent),
+    mCellmlFile(pCellmlFile),
     mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget)
 {
     // Set up the GUI
@@ -56,8 +58,8 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widgets
 
-    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pParent);
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, true);
+    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pParent, pCellmlFile);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, pCellmlFile, true);
     mWebView             = new QWebView(pParent);
 
     mBorderedMetadataEditDetails = new Core::BorderedWidget(mMetadataEditDetails,
@@ -131,7 +133,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
 {
-    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mParent->cellmlFile());
+    static CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mCellmlFile);
 
     if (pRdfTriples == rdfTriples)
         // We want to show the same RDF triples, so...
@@ -229,7 +231,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::metadataUpdated()
     // Some metadata has been updated, so we need to update the metadata
     // information we show to the user
 
-    updateGui(mParent->cellmlFile()->rdfTriples(mParent->listsWidget()->metadataList()->currentId()));
+    updateGui(mCellmlFile->rdfTriples(mParent->listsWidget()->metadataList()->currentId()));
 }
 
 //==============================================================================
