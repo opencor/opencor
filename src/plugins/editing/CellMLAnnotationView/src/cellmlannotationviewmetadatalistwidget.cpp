@@ -315,9 +315,10 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
 
         mId = mDataModel->itemFromIndex(crtIndex)->text();
 
-        // Update the details GUI
+        // Let people know that we want to see some information about the
+        // current CellML element
 
-        mParent->detailsWidget()->updateGui(mParent->cellmlFile()->rdfTriples(mDataModel->itemFromIndex(crtIndex)->text()));
+        emit metadataDetailsRequested(mParent->cellmlFile()->rdfTriples(mDataModel->itemFromIndex(crtIndex)->text()));
     }
 
     // We are done, so...

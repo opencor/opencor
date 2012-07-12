@@ -82,6 +82,7 @@ private:
     void populateDataModel();
 
 Q_SIGNALS:
+    void metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
     void metadataUpdated();
 
 public Q_SLOTS:

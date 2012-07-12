@@ -44,9 +44,6 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
-    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
-
     CellmlAnnotationViewCellmlDetailsWidget * cellmlDetails() const;
     CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
 
@@ -60,6 +57,10 @@ private:
 
     void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems,
                    const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
+
+public Q_SLOTS:
+    void updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
+    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 };
 
 //==============================================================================

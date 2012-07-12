@@ -100,6 +100,24 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(this, SIGNAL(splitterMoved(int,int)),
             this, SLOT(emitSplitterMoved()));
 
+    // A connection to let our details widget know that we want to see the
+    // details of some CellML element
+
+    connect(mListsWidget->cellmlList(), SIGNAL(cellmlElementDetailsRequested(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &)),
+            mDetailsWidget, SLOT(updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &)));
+
+    // A connection to let our details widget know that we want to see the
+    // details of some metadata
+
+    connect(mListsWidget->metadataList(), SIGNAL(metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &)),
+            mDetailsWidget, SLOT(updateGui(const CellMLSupport::CellmlFileRdfTriples &)));
+
+    // A connection to let our metadata list know that we want to edit some
+    // metadata
+
+    connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(metadataEditingRequested(const QString &)),
+            mListsWidget->metadataList(), SLOT(setCurrentId(const QString &)));
+
     // Some connections to let our CellML and metadata details widgets know when
     // some/all metadata has/have been removed
 
@@ -117,12 +135,6 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 
     connect(mDetailsWidget->metadataDetails()->metadataViewDetails()->bioModelsDotNetView(), SIGNAL(metadataUpdated()),
             mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
-
-    // A connection to let our metadata list know that we want to edit some
-    // metadata
-
-    connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(metadataEditingRequested(const QString &)),
-            mListsWidget->metadataList(), SLOT(setCurrentId(const QString &)));
 
     // Make our lists widget our focus proxy
 

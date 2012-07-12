@@ -664,9 +664,10 @@ void CellmlAnnotationViewCellmlListWidget::updateNode(const QModelIndex &pNewInd
         for (int i = 0, iMax = itemsCount >> 1; i < iMax; ++i)
             items.swap(i, itemsCount-(i+1));
 
-        // Update the details GUI
+        // Let people know that we want to see some information about the
+        // current CellML element
 
-        mParent->detailsWidget()->updateGui(items);
+        emit cellmlElementDetailsRequested(items);
     }
 
     // We are done, so...
