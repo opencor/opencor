@@ -183,7 +183,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
         // Add our 'internal' widgets to our new main widget
 
         newMainLayout->addWidget(newFormWidget);
-        newMainLayout->addWidget(Core::newLineWidget(mWidget));
+        newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
         newMainLayout->addWidget(newGridWidget);
     }
 
