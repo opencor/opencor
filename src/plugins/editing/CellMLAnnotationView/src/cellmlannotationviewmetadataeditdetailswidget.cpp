@@ -48,6 +48,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mGridWidget(0),
     mGridLayout(0),
     mErrorMsg(QString()),
+    mTerm(QString()),
     mTermUrl(QString()),
     mOtherTermUrl(QString())
 {
@@ -146,8 +147,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
         QLineEdit *termValue = new QLineEdit(newFormWidget);
 
+        termValue->setText(mTerm);
+
         connect(termValue, SIGNAL(textChanged(const QString &)),
-                this, SLOT(newTerm(const QString &)));
+                this, SLOT(lookupTerm(const QString &)));
 
         newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), true),
                               termValue);
@@ -244,8 +247,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::newTerm(const QString &pTerm)
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pTerm)
 {
+    // Keep track of the term to lookup
+
+    mTerm = pTerm;
+
     // Retrieve some possible ontological terms based on the given term
 
     QString termUrl = QString("http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=%1&full_info=1").arg(pTerm);

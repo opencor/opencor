@@ -72,6 +72,7 @@ private:
     QNetworkAccessManager *mNetworkAccessManager;
     QString mErrorMsg;
 
+    QString mTerm;
     QString mTermUrl;
     QString mOtherTermUrl;
 
@@ -79,7 +80,7 @@ Q_SIGNALS:
     void guiPopulated(QComboBox *pQualifierValue, QLineEdit *pTermValue);
 
 private Q_SLOTS:
-    void newTerm(const QString &pTerm);
+    void lookupTerm(const QString &pTerm);
     void finished(QNetworkReply *pNetworkReply);
 };
 
