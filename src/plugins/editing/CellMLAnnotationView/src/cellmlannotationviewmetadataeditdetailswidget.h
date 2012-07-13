@@ -47,14 +47,6 @@ class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
 {
     Q_OBJECT
 
-public:
-    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewMetadataEditDetailsWidget();
-
-    virtual void retranslateUi();
-
-    void updateGui();
-
 private:
     struct Item
     {
@@ -65,6 +57,15 @@ private:
 
     typedef QList<Item> Items;
 
+public:
+    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    ~CellmlAnnotationViewMetadataEditDetailsWidget();
+
+    virtual void retranslateUi();
+
+    void updateGui(const Items &pItems, const QString &pErrorMsg);
+
+private:
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QStackedWidget *mWidget;
@@ -88,7 +89,10 @@ private:
     QString mTermUrl;
     QString mOtherTermUrl;
 
-    void updateGui(const Items &pItems, const QString &pErrorMsg);
+    Items mItems;
+    QString mErrorMsg;
+
+    void updateItemsGui(const Items &pItems, const QString &pErrorMsg);
 
     static Item item(const QString &pResource, const QString &pId,
                      const QString &pName);

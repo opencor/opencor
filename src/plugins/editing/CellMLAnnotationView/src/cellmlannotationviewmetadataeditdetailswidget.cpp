@@ -52,7 +52,9 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mQualifierValue(0),
     mTerm(QString()),
     mTermUrl(QString()),
-    mOtherTermUrl(QString())
+    mOtherTermUrl(QString()),
+    mItems(Items()),
+    mErrorMsg(QString())
 {
     // Set up the GUI
 
@@ -97,12 +99,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui();
+    updateGui(mItems, mErrorMsg);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
+                                                              const QString &pErrorMsg)
 {
     // Note: we are using certain layouts to dislay the contents of our view,
     //       but this unfortunately results in some very bad flickering on Mac
@@ -138,6 +141,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
                           mQualifierValue);
 
     QLineEdit *termValue = new QLineEdit(newFormWidget);
+
+    termValue->setText(mTerm);
+    // Note: we set the text to whatever term was previously being looked up and
+    //       this before tracking changes to the term since we don't want to
+    //       trigger a call to lookupTerm(). Indeed, we might come here as a
+    //       result of a retranslation so we shouldn't lookup for the term and,
+    //       instead, we should call updateItemsGui() which we do at the end of
+    //       this procedure...
 
     connect(termValue, SIGNAL(textChanged(const QString &)),
             this, SLOT(lookupTerm(const QString &)));
@@ -212,28 +223,19 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
     mGridWidget = 0;   // Note: this will be set by our
     mGridLayout = 0;   //       other updateGui() function...
 
-    // Reset the term which was being looked up, if any
-
-    if (mTerm.isEmpty())
-        // There is no term, so manually call our other updateGui() method
-        // since, if anything, we want the GUI to tell us that there is no data
-
-        updateGui(Items(), QString());
-    else
-        // Set the term normally which will trigger a call to lookupTerm() and
-        // then to our other updateGui() method
-
-        termValue->setText(mTerm);
-
     // Allow ourselves to be updated again
 
     setUpdatesEnabled(true);
+
+    // Update our items GUI
+
+    updateItemsGui(pItems, pErrorMsg);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
-                                                              const QString &pErrorMsg)
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
+                                                                   const QString &pErrorMsg)
 {
     // Make sure that our items widget exists
 
@@ -243,6 +245,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     // Prevent ourselves from being updated (to avoid any flickering)
 
     setUpdatesEnabled(false);
+
+    // Keep track of the items and error message
+
+    mItems = pItems;
+    mErrorMsg = pErrorMsg;
 
     // Create a new widget and layout
 
@@ -467,7 +474,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNet
         // No other term to lookup, so we can update our GUI with the results of
         // the lookup
 
-        updateGui(items, errorMsg);
+        updateItemsGui(items, errorMsg);
     }
 }
 
