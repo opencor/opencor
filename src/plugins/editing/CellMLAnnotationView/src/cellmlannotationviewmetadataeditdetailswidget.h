@@ -56,6 +56,15 @@ public:
     void updateGui(const bool &pPopulate = true);
 
 private:
+    struct Item
+    {
+        QString resource;
+        QString id;
+        QString name;
+    };
+
+    typedef QList<Item> Items;
+
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QStackedWidget *mWidget;
@@ -70,11 +79,15 @@ private:
     QGridLayout *mGridLayout;
 
     QNetworkAccessManager *mNetworkAccessManager;
-    QString mErrorMsg;
 
     QString mTerm;
     QString mTermUrl;
     QString mOtherTermUrl;
+
+    void updateGui(const Items &pItems, const QString &pErrorMsg);
+
+    static Item item(const QString &pResource, const QString &pId,
+                     const QString &pName);
 
 Q_SIGNALS:
     void guiPopulated(QComboBox *pQualifierValue, QLineEdit *pTermValue);

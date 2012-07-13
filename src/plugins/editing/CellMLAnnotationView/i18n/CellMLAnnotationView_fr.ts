@@ -304,10 +304,6 @@
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataEditDetailsWidget</name>
     <message>
-        <source>No data available...</source>
-        <translation>Aucune donnée disponible...</translation>
-    </message>
-    <message>
         <source>Qualifier:</source>
         <translation>Qualificatif :</translation>
     </message>

@@ -47,7 +47,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mFormLayout(0),
     mGridWidget(0),
     mGridLayout(0),
-    mErrorMsg(QString()),
     mTerm(QString()),
     mTermUrl(QString()),
     mOtherTermUrl(QString())
@@ -123,14 +122,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
     QWidget *newFormWidget = 0;
     QFormLayout *newFormLayout = 0;
-    QWidget *newGridWidget = 0;
-    QGridLayout *newGridLayout = 0;
+    QStackedWidget *newStackedWidget = 0;
 
     QLineEdit *termValue = 0;
 
     if (pPopulate) {
-        // Deal with the form part of our GUI
-
         // Create a form widget which will contain our qualifier and term fields
 
         newFormWidget = new QWidget(newMainWidget);
@@ -159,35 +155,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
         emit guiPopulated(qualifierValue, termValue);
 
-        // Deal with the grid part of our GUI
+        // Create a stacked widget which will contain a grid with the results of
+        // the lookup
 
-        // Create a new widget and layout
-
-        newGridWidget = new QWidget(newMainWidget);
-        newGridLayout = new QGridLayout(newGridWidget);
-
-        newGridWidget->setLayout(newGridLayout);
-
-        // Populate our new layout, but only if there is at least one RDF triple
-        // Note: the two calls to setRowStretch() ensures that our grid layout
-        //       takes as much vertical space as possible (otherwise our form
-        //       layout might take some vertical space making it look a bit odd
-        //       if there are no data available)...
-
-        newGridLayout->setRowStretch(0, 1);
-
-        newGridLayout->addWidget(Core::newLabel(newMainWidget,
-                                                tr("No data available..."),
-                                                false, 1.25, Qt::AlignCenter),
-                                 1, 0);
-
-        newGridLayout->setRowStretch(2, 1);
+        newStackedWidget = new QStackedWidget(newMainWidget);
 
         // Add our 'internal' widgets to our new main widget
 
         newMainLayout->addWidget(newFormWidget);
         newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
-        newMainLayout->addWidget(newGridWidget);
+        newMainLayout->addWidget(newStackedWidget);
     }
 
     // Add our new widget to our stacked widget
@@ -199,16 +176,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
     if (mFormWidget)
         for (int i = 0, iMax = mFormLayout->count(); i < iMax; ++i) {
             QLayoutItem *item = mFormLayout->takeAt(0);
-
-            delete item->widget();
-            delete item;
-        }
-
-    // Remove the contents of our old grid layout
-
-    if (mGridWidget)
-        for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
-            QLayoutItem *item = mGridLayout->takeAt(0);
 
             delete item->widget();
             delete item;
@@ -237,9 +204,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
     mFormWidget = newFormWidget;
     mFormLayout = newFormLayout;
 
-    mGridWidget = newGridWidget;
-    mGridLayout = newGridLayout;
-
     // Reset the term which was being looked up, if any
 
     if (termValue)
@@ -248,6 +212,45 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
     // Allow ourselves to be updated again
 
     setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
+                                                              const QString &pErrorMsg)
+{
+//---GRY--- TO BE DONE...
+
+if (pItems.isEmpty()) {
+    if (pErrorMsg.isEmpty())
+        qDebug(">>> No ontological terms were retrieved...");
+    else
+        qDebug(">>> Something went wrong: %s", qPrintable(pErrorMsg));
+} else {
+    foreach (const Item &item, pItems) {
+        qDebug(">>> Ontological term:");
+        qDebug(">>>    ---> Resource: %s", qPrintable(item.resource));
+        qDebug(">>>    ---> Id:       %s", qPrintable(item.id));
+        qDebug(">>>    ---> Name:     %s", qPrintable(item.name));
+    }
+}
+}
+
+//==============================================================================
+
+CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadataEditDetailsWidget::item(const QString &pResource,
+                                                                                                        const QString &pId,
+                                                                                                        const QString &pName)
+{
+    // Return a formatted Item 'object'
+
+    Item res;
+
+    res.resource = pResource;
+    res.id       = pId;
+    res.name     = pName;
+
+    return res;
 }
 
 //==============================================================================
@@ -281,8 +284,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pT
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNetworkReply)
 {
-    // Output the list of models, should we have retrieved it without any
-    // problem
+    // Retrieve the list of ontological terms, should we have retrieved it
+    // without any problem
+
+    Items items = Items();
+    QString errorMsg = QString();
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON code
@@ -292,48 +298,65 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNet
 
         QVariantMap resultMap = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
 
-static int counter = 0;
-qDebug("---[%03d]--------------------------------------", ++counter);
-qDebug("URL: %s", qPrintable(pNetworkReply->url().toString()));
-
         if (parsingOk) {
-            // Retrieve the list of CellML models
+            // Retrieve the list of ontological terms
 
             foreach (const QVariant &ontologicalsTermVariant, resultMap["result"].toList()) {
                 QVariantList ontologicalTermVariant = ontologicalsTermVariant.toList();
 
                 for (int i = 0, iMax = ontologicalTermVariant.count(); i < iMax; ++i) {
+                    // At this stage, we have an ontological term in the form of
+                    // a MIRIAM URN and a name (as well as a URL, but we don't
+                    // care about it), so we need to decode the MIRIAM URN to
+                    // retrieve the corresponding resource and id
+
                     QVariantMap ontologicalTermMap = ontologicalTermVariant[i].toMap();
 
-qDebug(">>> %s ---> %s", qPrintable(ontologicalTermMap["uri"].toString()),
-                         qPrintable(ontologicalTermMap["name"].toString()));
+                    QString resource = QString();
+                    QString id = QString();
+
+                    CellMLSupport::CellmlFileRdfTriple::decodeMiriamUrn(ontologicalTermMap["uri"].toString(),
+                                                                        resource, id);
+
+                    // Add the ontological term to our list
+
+                    items << item(resource, id,
+                                  ontologicalTermMap["name"].toString());
                 }
             }
-
-            // Everything went fine, so...
-
-            mErrorMsg = QString();
         } else {
             // Something went wrong, so...
 
-            mErrorMsg = jsonParser.errorString();
+            errorMsg = jsonParser.errorString();
         }
     } else {
         // Something went wrong, so...
 
-        mErrorMsg = pNetworkReply->errorString();
+        errorMsg = pNetworkReply->errorString();
     }
 
-    // We are done, so...
+    // We are done looking up the term, so...
 
     mTermUrl = QString();
 
-    // Check whether there is another term to look up
+    // Lookup another term, should there be one to lookup, or update the GUI
+    // with the results of the lookup
 
     if (!mOtherTermUrl.isEmpty()) {
+        // There is another term to lookup, so...
+
         mNetworkAccessManager->get(QNetworkRequest(mOtherTermUrl));
 
         mOtherTermUrl = QString();
+    } else {
+        // No other term to lookup, so we can update our GUI with the results of
+        // the lookup
+
+static int counter = 0;
+qDebug("---[%03d]--------------------------------------", ++counter);
+qDebug("URL: %s", qPrintable(pNetworkReply->url().toString()));
+
+        updateGui(items, errorMsg);
     }
 }
 
