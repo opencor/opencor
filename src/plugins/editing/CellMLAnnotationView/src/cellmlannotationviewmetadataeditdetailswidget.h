@@ -76,7 +76,7 @@ private:
     QWidget *mFormWidget;
     QFormLayout *mFormLayout;
 
-    QStackedWidget *mItemsWidget;
+    QScrollArea *mItemsScrollArea;
 
     QWidget *mGridWidget;
     QGridLayout *mGridLayout;

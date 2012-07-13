@@ -46,7 +46,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mMainLayout(0),
     mFormWidget(0),
     mFormLayout(0),
-    mItemsWidget(0),
+    mItemsScrollArea(0),
     mGridWidget(0),
     mGridLayout(0),
     mQualifierValue(0),
@@ -160,16 +160,20 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     emit guiPopulated(mQualifierValue, termValue);
 
-    // Create a stacked widget which will contain a grid with the results of our
-    // ontological terms lookup
+    // Create a stacked widget (within a scroll area, so that only the items get
+    // scrolled, not the whole metadata edit details widget) which will contain
+    // a grid with the results of our ontological terms lookup
 
-    QStackedWidget *newItemsWidget = new QStackedWidget(newMainWidget);
+    QScrollArea *newItemsScrollArea = new QScrollArea(newMainWidget);
+
+    newItemsScrollArea->setFrameShape(QFrame::NoFrame);
+    newItemsScrollArea->setWidgetResizable(true);
 
     // Add our 'internal' widgets to our new main widget
 
     newMainLayout->addWidget(newFormWidget);
     newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
-    newMainLayout->addWidget(newItemsWidget);
+    newMainLayout->addWidget(newItemsScrollArea);
 
     // Add our new widget to our stacked widget
 
@@ -185,15 +189,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
             delete item;
         }
 
-    // Remove the contents of our old grid layout
+    // Reset the widget of our old items scroll area
+    // Note: this will automatically delete the old grid widget...
 
-    if (mGridWidget)
-        for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
-            QLayoutItem *item = mGridLayout->takeAt(0);
-
-            delete item->widget();
-            delete item;
-        }
+    if (mItemsScrollArea)
+        mItemsScrollArea->setWidget(0);
 
     // Get rid of our old main widget and layout (and its contents)
 
@@ -218,7 +218,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     mFormWidget = newFormWidget;
     mFormLayout = newFormLayout;
 
-    mItemsWidget = newItemsWidget;
+    mItemsScrollArea = newItemsScrollArea;
 
     mGridWidget = 0;   // Note: this will be set by our
     mGridLayout = 0;   //       other updateGui() function...
@@ -237,10 +237,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
                                                                    const QString &pErrorMsg)
 {
-    // Make sure that our items widget exists
-
-    if (!mItemsWidget)
-        return;
+    Q_ASSERT(mItemsScrollArea);
 
     // Prevent ourselves from being updated (to avoid any flickering)
 
@@ -253,7 +250,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     // Create a new widget and layout
 
-    QWidget *newGridWidget = new QWidget(mItemsWidget);
+    QWidget *newGridWidget = new QWidget(mItemsScrollArea);
     QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
 
     newGridWidget->setLayout(newGridLayout);
@@ -329,24 +326,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         }
     }
 
-    // Add our new widget to our stacked widget
+    // Set our new grid widget as the widget for our scroll area
+    // Note: this will automatically delete the old grid widget...
 
-    mItemsWidget->addWidget(newGridWidget);
-
-    // Remove the contents of our old grid layout
-
-    if (mGridWidget) {
-        mItemsWidget->removeWidget(mGridWidget);
-
-        for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
-            QLayoutItem *item = mGridLayout->takeAt(0);
-
-            delete item->widget();
-            delete item;
-        }
-
-        delete mGridWidget;
-    }
+    mItemsScrollArea->setWidget(newGridWidget);
 
     // Keep track of our new grid widgets and layouts
 
