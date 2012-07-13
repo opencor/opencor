@@ -38,6 +38,29 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
+bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &pItem) const
+{
+    // Return whether the current item is lower than the given one
+
+    int nameComparison     = name.compare(pItem.name);
+    int resourceComparison = resource.compare(pItem.resource);
+    int idComparison       = id.compare(pItem.id);
+
+    return (nameComparison < 0)?
+               true:
+               (nameComparison > 0)?
+                   false:
+                   (resourceComparison < 0)?
+                       true:
+                       (resourceComparison > 0)?
+                           false:
+                           (idComparison < 0)?
+                               true:
+                               false;
+}
+
+//==============================================================================
+
 CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
     CommonWidget(pParent),
@@ -343,17 +366,17 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadataEditDetailsWidget::item(const QString &pResource,
-                                                                                                        const QString &pId,
-                                                                                                        const QString &pName)
+CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadataEditDetailsWidget::item(const QString &pName,
+                                                                                                        const QString &pResource,
+                                                                                                        const QString &pId)
 {
     // Return a formatted Item 'object'
 
     Item res;
 
+    res.name     = pName;
     res.resource = pResource;
     res.id       = pId;
-    res.name     = pName;
 
     return res;
 }
@@ -425,8 +448,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNet
 
                     // Add the ontological term to our list
 
-                    items << item(resource, id,
-                                  ontologicalTermMap["name"].toString());
+                    items << item(ontologicalTermMap["name"].toString(),
+                                  resource, id);
                 }
             }
         } else {
@@ -455,7 +478,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNet
         mOtherTermUrl = QString();
     } else {
         // No other term to lookup, so we can update our GUI with the results of
-        // the lookup
+        // the lookup after having sorted them
+
+        qSort(items.begin(), items.end());
 
         updateItemsGui(items, errorMsg);
     }

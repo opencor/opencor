@@ -50,9 +50,11 @@ class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
 private:
     struct Item
     {
+        QString name;
         QString resource;
         QString id;
-        QString name;
+
+        bool operator<(const Item &pItem) const;
     };
 
     typedef QList<Item> Items;
@@ -94,8 +96,8 @@ private:
 
     void updateItemsGui(const Items &pItems, const QString &pErrorMsg);
 
-    static Item item(const QString &pResource, const QString &pId,
-                     const QString &pName);
+    static Item item(const QString &pName,
+                     const QString &pResource, const QString &pId);
 
 Q_SIGNALS:
     void guiPopulated(QComboBox *pQualifierValue, QLineEdit *pTermValue);

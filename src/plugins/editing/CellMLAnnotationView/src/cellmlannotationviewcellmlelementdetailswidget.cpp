@@ -36,7 +36,7 @@ namespace CellMLAnnotationView {
 
 bool CellmlAnnotationViewCellmlElementDetailsWidget::Item::operator==(const Item &pItem) const
 {
-    // Return whether the given item is equal to the current one
+    // Return whether the current item is equal to the given one
 
     return    (type == pItem.type)
            && (element == pItem.element)
