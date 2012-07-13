@@ -22,6 +22,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QPushButton>
 #include <QStackedWidget>
 #include <QVariant>
 #include <QVBoxLayout>
@@ -48,6 +49,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mItemsWidget(0),
     mGridWidget(0),
     mGridLayout(0),
+    mQualifierValue(0),
     mTerm(QString()),
     mTermUrl(QString()),
     mOtherTermUrl(QString())
@@ -128,12 +130,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
 
     // Add our qualifier and term fields
 
-    QComboBox *qualifierValue = new QComboBox(newFormWidget);
+    mQualifierValue = new QComboBox(newFormWidget);
 
-    qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
+    mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
     newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
-                          qualifierValue);
+                          mQualifierValue);
 
     QLineEdit *termValue = new QLineEdit(newFormWidget);
 
@@ -145,7 +147,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
 
     // Let people know that the GUI has been populated
 
-    emit guiPopulated(qualifierValue, termValue);
+    emit guiPopulated(mQualifierValue, termValue);
 
     // Create a stacked widget which will contain a grid with the results of our
     // ontological terms lookup
@@ -262,11 +264,51 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     } else {
         // Some items to show
 
+        int row = 0;
+
         foreach (const Item &item, pItems) {
             qDebug(">>> Ontological term:");
             qDebug(">>>    ---> Resource: %s", qPrintable(item.resource));
             qDebug(">>>    ---> Id:       %s", qPrintable(item.id));
             qDebug(">>>    ---> Name:     %s", qPrintable(item.name));
+
+            // Qualifier
+
+            newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                    mQualifierValue->currentText(),
+                                                    false, 1.0, Qt::AlignCenter),
+                                     ++row, 0);
+
+            // Resource
+
+            newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                    item.resource,
+                                                    false, 1.0, Qt::AlignCenter),
+                                     row, 1);
+
+            // Id
+
+            newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                    item.id,
+                                                    false, 1.0, Qt::AlignCenter),
+                                     row, 2);
+
+            // Add button
+
+            QPushButton *addButton = new QPushButton(newGridWidget);
+            // Note #1: ideally, we could assign a QAction to our
+            //          QPushButton, but this cannot be done, so... we
+            //          assign a few properties by hand...
+            // Note #2: to use a QToolButton would allow us to assign a
+            //          QAction to it, but a QToolButton doesn't look quite
+            //          the same as a QPushButton on some platforms, so...
+
+            addButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
+            addButton->setStatusTip(tr("Add the metadata information"));
+            addButton->setToolTip(tr("Add"));
+            addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+            newGridLayout->addWidget(addButton, row, 3);
         }
     }
 

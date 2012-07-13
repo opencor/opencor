@@ -82,6 +82,8 @@ private:
 
     QNetworkAccessManager *mNetworkAccessManager;
 
+    QComboBox *mQualifierValue;
+
     QString mTerm;
     QString mTermUrl;
     QString mOtherTermUrl;

@@ -315,6 +315,14 @@
         <source>No data available...</source>
         <translation>Aucune donnée disponible...</translation>
     </message>
+    <message>
+        <source>Add the metadata information</source>
+        <translation>Ajouter les informations pour la métadonnée</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Ajouter</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataListWidget</name>
