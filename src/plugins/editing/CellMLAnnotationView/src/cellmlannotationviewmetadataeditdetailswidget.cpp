@@ -262,15 +262,30 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
                                                 false, 1.25, Qt::AlignCenter),
                                  1, 0);
     } else {
-        // Some items to show
+        // Create labels to act as headers
+
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("Name"),
+                                                true, 1.25, Qt::AlignCenter),
+                                 0, 0);
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("Resource"),
+                                                true, 1.25, Qt::AlignCenter),
+                                 0, 1);
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("Id"),
+                                                true, 1.25, Qt::AlignCenter),
+                                 0, 2);
+
+        // Add the items
 
         int row = 0;
 
         foreach (const Item &item, pItems) {
-            // Qualifier
+            // Name
 
             newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                    mQualifierValue->currentText(),
+                                                    item.name,
                                                     false, 1.0, Qt::AlignCenter),
                                      ++row, 0);
 
