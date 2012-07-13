@@ -126,6 +126,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
     QWidget *newGridWidget = 0;
     QGridLayout *newGridLayout = 0;
 
+    QLineEdit *termValue = 0;
+
     if (pPopulate) {
         // Deal with the form part of our GUI
 
@@ -145,9 +147,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
         newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
                               qualifierValue);
 
-        QLineEdit *termValue = new QLineEdit(newFormWidget);
-
-        termValue->setText(mTerm);
+        termValue = new QLineEdit(newFormWidget);
 
         connect(termValue, SIGNAL(textChanged(const QString &)),
                 this, SLOT(lookupTerm(const QString &)));
@@ -239,6 +239,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
     mGridWidget = newGridWidget;
     mGridLayout = newGridLayout;
+
+    // Reset the term which was being looked up, if any
+
+    if (termValue)
+        termValue->setText(mTerm);
 
     // Allow ourselves to be updated again
 
