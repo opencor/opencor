@@ -128,14 +128,21 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
     if (pPopulate) {
         // Deal with the form part of our GUI
 
-        // Create a form widget which will contain our term and qualifier fields
+        // Create a form widget which will contain our qualifier and term fields
 
         newFormWidget = new QWidget(newMainWidget);
         newFormLayout = new QFormLayout(newFormWidget);
 
         newFormWidget->setLayout(newFormLayout);
 
-        // Add our term and qualifier fields
+        // Add our qualifier and term fields
+
+        QComboBox *qualifierValue = new QComboBox(newFormWidget);
+
+        qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
+
+        newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
+                              qualifierValue);
 
         QLineEdit *termValue = new QLineEdit(newFormWidget);
 
@@ -145,16 +152,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
         newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), true),
                               termValue);
 
-        QComboBox *qualifierValue = new QComboBox(newFormWidget);
-
-        qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
-
-        newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
-                              qualifierValue);
-
         // Let people know that the GUI has been populated
 
-        emit guiPopulated(termValue, qualifierValue);
+        emit guiPopulated(qualifierValue, termValue);
 
         // Deal with the grid part of our GUI
 

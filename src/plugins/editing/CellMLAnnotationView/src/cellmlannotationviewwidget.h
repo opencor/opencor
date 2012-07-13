@@ -100,7 +100,7 @@ private Q_SLOTS:
     void emitSplitterMoved();
 
     void updateTabOrder(QComboBox *pCmetaIdValue, QPushButton *pEditButton);
-    void updateTabOrder(QLineEdit *pTermValue, QComboBox *pQualifierValue);
+    void updateTabOrder(QComboBox *pQualifierValue, QLineEdit *pTermValue);
 
     void updateMetadataDetails() const;
 };

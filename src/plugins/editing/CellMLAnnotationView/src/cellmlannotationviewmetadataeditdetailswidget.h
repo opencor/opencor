@@ -76,7 +76,7 @@ private:
     QString mOtherTermUrl;
 
 Q_SIGNALS:
-    void guiPopulated(QLineEdit *pTermValue, QComboBox *pQualifierValue);
+    void guiPopulated(QComboBox *pQualifierValue, QLineEdit *pTermValue);
 
 private Q_SLOTS:
     void newTerm(const QString &pTerm);
