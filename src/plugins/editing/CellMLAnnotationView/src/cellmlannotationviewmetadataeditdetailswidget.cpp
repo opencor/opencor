@@ -452,10 +452,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNet
         // No other term to lookup, so we can update our GUI with the results of
         // the lookup
 
-static int counter = 0;
-qDebug("---[%03d]--------------------------------------", ++counter);
-qDebug("URL: %s", qPrintable(pNetworkReply->url().toString()));
-
         updateGui(items, errorMsg);
     }
 }
