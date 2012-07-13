@@ -267,11 +267,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
         int row = 0;
 
         foreach (const Item &item, pItems) {
-            qDebug(">>> Ontological term:");
-            qDebug(">>>    ---> Resource: %s", qPrintable(item.resource));
-            qDebug(">>>    ---> Id:       %s", qPrintable(item.id));
-            qDebug(">>>    ---> Name:     %s", qPrintable(item.name));
-
             // Qualifier
 
             newGridLayout->addWidget(Core::newLabel(newGridWidget,
