@@ -25,6 +25,7 @@ namespace Ui {
 class QComboBox;
 class QFormLayout;
 class QPushButton;
+class QStackedWidget;
 
 //==============================================================================
 
@@ -94,11 +95,15 @@ private:
 
     Items mItems;
 
-    QWidget *mWidget;
-    QFormLayout *mLayout;
+    QStackedWidget *mWidget;
+
+    QWidget *mFormWidget;
+    QFormLayout *mFormLayout;
+
     QComboBox *mCmetaIdValue;
 
-    void addRow(const QString &pLabel, const QString &pValue);
+    void addRowToForm(QWidget *pFormWidget,
+                      const QString &pLabel, const QString &pValue);
 
     QString typeAsString(const Type &pType) const;
 
