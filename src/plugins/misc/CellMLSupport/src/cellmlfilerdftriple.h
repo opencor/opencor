@@ -85,6 +85,9 @@ public:
 
     void setMetadataId(const QString &pMetadataId);
 
+    static void decodeMiriamUrn(const QString &pMiriamUrn, QString &pResource, QString &pId);
+    static void decodeIdentifiersDotOrgUri(const QString &pIdentifiersDotOrgUri, QString &pResource, QString &pId);
+
 private:
     CellmlFileRdfTripleElement *mSubject;
     CellmlFileRdfTripleElement *mPredicate;

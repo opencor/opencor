@@ -22,6 +22,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QPushButton>
 #include <QStackedWidget>
 #include <QVariant>
 #include <QVBoxLayout>
@@ -45,11 +46,15 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mMainLayout(0),
     mFormWidget(0),
     mFormLayout(0),
+    mItemsScrollArea(0),
     mGridWidget(0),
     mGridLayout(0),
-    mErrorMsg(QString()),
+    mQualifierValue(0),
+    mTerm(QString()),
     mTermUrl(QString()),
-    mOtherTermUrl(QString())
+    mOtherTermUrl(QString()),
+    mItems(Items()),
+    mErrorMsg(QString())
 {
     // Set up the GUI
 
@@ -94,12 +99,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui();
+    updateGui(mItems, mErrorMsg);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopulate)
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
+                                                              const QString &pErrorMsg)
 {
     // Note: we are using certain layouts to dislay the contents of our view,
     //       but this unfortunately results in some very bad flickering on Mac
@@ -118,74 +124,56 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
     newMainWidget->setLayout(newMainLayout);
 
-    // Populate our GUI, but only if requested
+    // Create a form widget which will contain our qualifier and term fields
 
-    QWidget *newFormWidget = 0;
-    QFormLayout *newFormLayout = 0;
-    QWidget *newGridWidget = 0;
-    QGridLayout *newGridLayout = 0;
+    QWidget *newFormWidget = new QWidget(newMainWidget);
+    QFormLayout *newFormLayout = new QFormLayout(newFormWidget);
 
-    if (pPopulate) {
-        // Deal with the form part of our GUI
+    newFormWidget->setLayout(newFormLayout);
 
-        // Create a form widget which will contain our term and qualifier fields
+    // Add our qualifier and term fields
 
-        newFormWidget = new QWidget(newMainWidget);
-        newFormLayout = new QFormLayout(newFormWidget);
+    mQualifierValue = new QComboBox(newFormWidget);
 
-        newFormWidget->setLayout(newFormLayout);
+    mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
-        // Add our term and qualifier fields
+    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
+                          mQualifierValue);
 
-        QLineEdit *termValue = new QLineEdit(newFormWidget);
+    QLineEdit *termValue = new QLineEdit(newFormWidget);
 
-        connect(termValue, SIGNAL(textChanged(const QString &)),
-                this, SLOT(newTerm(const QString &)));
+    termValue->setText(mTerm);
+    // Note: we set the text to whatever term was previously being looked up and
+    //       this before tracking changes to the term since we don't want to
+    //       trigger a call to lookupTerm(). Indeed, we might come here as a
+    //       result of a retranslation so we shouldn't lookup for the term and,
+    //       instead, we should call updateItemsGui() which we do at the end of
+    //       this procedure...
 
-        newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), true),
-                              termValue);
+    connect(termValue, SIGNAL(textChanged(const QString &)),
+            this, SLOT(lookupTerm(const QString &)));
 
-        QComboBox *qualifierValue = new QComboBox(newFormWidget);
+    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), true),
+                          termValue);
 
-        qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
+    // Let people know that the GUI has been populated
 
-        newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
-                              qualifierValue);
+    emit guiPopulated(mQualifierValue, termValue);
 
-        // Let people know that the GUI has been populated
+    // Create a stacked widget (within a scroll area, so that only the items get
+    // scrolled, not the whole metadata edit details widget) which will contain
+    // a grid with the results of our ontological terms lookup
 
-        emit guiPopulated(termValue, qualifierValue);
+    QScrollArea *newItemsScrollArea = new QScrollArea(newMainWidget);
 
-        // Deal with the grid part of our GUI
+    newItemsScrollArea->setFrameShape(QFrame::NoFrame);
+    newItemsScrollArea->setWidgetResizable(true);
 
-        // Create a new widget and layout
+    // Add our 'internal' widgets to our new main widget
 
-        newGridWidget = new QWidget(newMainWidget);
-        newGridLayout = new QGridLayout(newGridWidget);
-
-        newGridWidget->setLayout(newGridLayout);
-
-        // Populate our new layout, but only if there is at least one RDF triple
-        // Note: the two calls to setRowStretch() ensures that our grid layout
-        //       takes as much vertical space as possible (otherwise our form
-        //       layout might take some vertical space making it look a bit odd
-        //       if there are no data available)...
-
-        newGridLayout->setRowStretch(0, 1);
-
-        newGridLayout->addWidget(Core::newLabel(newMainWidget,
-                                                tr("No data available..."),
-                                                false, 1.25, Qt::AlignCenter),
-                                 1, 0);
-
-        newGridLayout->setRowStretch(2, 1);
-
-        // Add our 'internal' widgets to our new main widget
-
-        newMainLayout->addWidget(newFormWidget);
-        newMainLayout->addWidget(Core::newLineWidget(mWidget));
-        newMainLayout->addWidget(newGridWidget);
-    }
+    newMainLayout->addWidget(newFormWidget);
+    newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
+    newMainLayout->addWidget(newItemsScrollArea);
 
     // Add our new widget to our stacked widget
 
@@ -201,15 +189,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
             delete item;
         }
 
-    // Remove the contents of our old grid layout
+    // Reset the widget of our old items scroll area
+    // Note: this will automatically delete the old grid widget...
 
-    if (mGridWidget)
-        for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
-            QLayoutItem *item = mGridLayout->takeAt(0);
-
-            delete item->widget();
-            delete item;
-        }
+    if (mItemsScrollArea)
+        mItemsScrollArea->setWidget(0);
 
     // Get rid of our old main widget and layout (and its contents)
 
@@ -234,6 +218,121 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
     mFormWidget = newFormWidget;
     mFormLayout = newFormLayout;
 
+    mItemsScrollArea = newItemsScrollArea;
+
+    mGridWidget = 0;   // Note: this will be set by our
+    mGridLayout = 0;   //       other updateGui() function...
+
+    // Allow ourselves to be updated again
+
+    setUpdatesEnabled(true);
+
+    // Update our items GUI
+
+    updateItemsGui(pItems, pErrorMsg);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
+                                                                   const QString &pErrorMsg)
+{
+    Q_ASSERT(mItemsScrollArea);
+
+    // Prevent ourselves from being updated (to avoid any flickering)
+
+    setUpdatesEnabled(false);
+
+    // Keep track of the items and error message
+
+    mItems = pItems;
+    mErrorMsg = pErrorMsg;
+
+    // Create a new widget and layout
+
+    QWidget *newGridWidget = new QWidget(mItemsScrollArea);
+    QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
+
+    newGridWidget->setLayout(newGridLayout);
+
+    // Populate our new layout, but only if there is at least one item
+
+    if (pItems.isEmpty()) {
+        // No items to show, so either there is no data available or an error
+        // occurred
+
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                pErrorMsg.isEmpty()?tr("No data available..."):pErrorMsg,
+                                                false, 1.25, Qt::AlignCenter),
+                                 1, 0);
+    } else {
+        // Create labels to act as headers
+
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("Name"),
+                                                true, 1.25, Qt::AlignCenter),
+                                 0, 0);
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("Resource"),
+                                                true, 1.25, Qt::AlignCenter),
+                                 0, 1);
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                tr("Id"),
+                                                true, 1.25, Qt::AlignCenter),
+                                 0, 2);
+
+        // Add the items
+
+        int row = 0;
+
+        foreach (const Item &item, pItems) {
+            // Name
+
+            newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                    item.name,
+                                                    false, 1.0, Qt::AlignCenter),
+                                     ++row, 0);
+
+            // Resource
+
+            newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                    item.resource,
+                                                    false, 1.0, Qt::AlignCenter),
+                                     row, 1);
+
+            // Id
+
+            newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                    item.id,
+                                                    false, 1.0, Qt::AlignCenter),
+                                     row, 2);
+
+            // Add button
+
+            QPushButton *addButton = new QPushButton(newGridWidget);
+            // Note #1: ideally, we could assign a QAction to our
+            //          QPushButton, but this cannot be done, so... we
+            //          assign a few properties by hand...
+            // Note #2: to use a QToolButton would allow us to assign a
+            //          QAction to it, but a QToolButton doesn't look quite
+            //          the same as a QPushButton on some platforms, so...
+
+            addButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
+            addButton->setStatusTip(tr("Add the metadata information"));
+            addButton->setToolTip(tr("Add"));
+            addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+            newGridLayout->addWidget(addButton, row, 3);
+        }
+    }
+
+    // Set our new grid widget as the widget for our scroll area
+    // Note: this will automatically delete the old grid widget...
+
+    mItemsScrollArea->setWidget(newGridWidget);
+
+    // Keep track of our new grid widgets and layouts
+
     mGridWidget = newGridWidget;
     mGridLayout = newGridLayout;
 
@@ -244,8 +343,29 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::newTerm(const QString &pTerm)
+CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadataEditDetailsWidget::item(const QString &pResource,
+                                                                                                        const QString &pId,
+                                                                                                        const QString &pName)
 {
+    // Return a formatted Item 'object'
+
+    Item res;
+
+    res.resource = pResource;
+    res.id       = pId;
+    res.name     = pName;
+
+    return res;
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pTerm)
+{
+    // Keep track of the term to lookup
+
+    mTerm = pTerm;
+
     // Retrieve some possible ontological terms based on the given term
 
     QString termUrl = QString("http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=%1&full_info=1").arg(pTerm);
@@ -269,8 +389,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::newTerm(const QString &pTerm
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNetworkReply)
 {
-    // Output the list of models, should we have retrieved it without any
-    // problem
+    // Retrieve the list of ontological terms, should we have retrieved it
+    // without any problem
+
+    Items items = Items();
+    QString errorMsg = QString();
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON code
@@ -280,48 +403,61 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNet
 
         QVariantMap resultMap = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
 
-static int counter = 0;
-qDebug("---[%03d]--------------------------------------", ++counter);
-qDebug("URL: %s", qPrintable(pNetworkReply->url().toString()));
-
         if (parsingOk) {
-            // Retrieve the list of CellML models
+            // Retrieve the list of ontological terms
 
             foreach (const QVariant &ontologicalsTermVariant, resultMap["result"].toList()) {
                 QVariantList ontologicalTermVariant = ontologicalsTermVariant.toList();
 
                 for (int i = 0, iMax = ontologicalTermVariant.count(); i < iMax; ++i) {
+                    // At this stage, we have an ontological term in the form of
+                    // a MIRIAM URN and a name (as well as a URL, but we don't
+                    // care about it), so we need to decode the MIRIAM URN to
+                    // retrieve the corresponding resource and id
+
                     QVariantMap ontologicalTermMap = ontologicalTermVariant[i].toMap();
 
-qDebug(">>> %s ---> %s", qPrintable(ontologicalTermMap["uri"].toString()),
-                         qPrintable(ontologicalTermMap["name"].toString()));
+                    QString resource = QString();
+                    QString id = QString();
+
+                    CellMLSupport::CellmlFileRdfTriple::decodeMiriamUrn(ontologicalTermMap["uri"].toString(),
+                                                                        resource, id);
+
+                    // Add the ontological term to our list
+
+                    items << item(resource, id,
+                                  ontologicalTermMap["name"].toString());
                 }
             }
-
-            // Everything went fine, so...
-
-            mErrorMsg = QString();
         } else {
             // Something went wrong, so...
 
-            mErrorMsg = jsonParser.errorString();
+            errorMsg = jsonParser.errorString();
         }
     } else {
         // Something went wrong, so...
 
-        mErrorMsg = pNetworkReply->errorString();
+        errorMsg = pNetworkReply->errorString();
     }
 
-    // We are done, so...
+    // We are done looking up the term, so...
 
     mTermUrl = QString();
 
-    // Check whether there is another term to look up
+    // Lookup another term, should there be one to lookup, or update the GUI
+    // with the results of the lookup
 
     if (!mOtherTermUrl.isEmpty()) {
+        // There is another term to lookup, so...
+
         mNetworkAccessManager->get(QNetworkRequest(mOtherTermUrl));
 
         mOtherTermUrl = QString();
+    } else {
+        // No other term to lookup, so we can update our GUI with the results of
+        // the lookup
+
+        updateItemsGui(items, errorMsg);
     }
 }
 

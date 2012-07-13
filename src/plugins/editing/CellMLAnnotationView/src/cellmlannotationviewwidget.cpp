@@ -136,8 +136,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // A connection to reset the tab order following a GUI update of the
     // metadata edit details
 
-    connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(guiPopulated(QLineEdit *, QComboBox *)),
-            this, SLOT(updateTabOrder(QLineEdit *, QComboBox *)));
+    connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(guiPopulated(QComboBox *, QLineEdit *)),
+            this, SLOT(updateTabOrder(QComboBox *, QLineEdit *)));
 
     // Some connections to let our CellML and metadata details widgets know when
     // some/all metadata has/have been removed
@@ -449,14 +449,14 @@ void CellmlAnnotationViewWidget::updateTabOrder(QComboBox *pCmetaIdValue,
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::updateTabOrder(QLineEdit *pTermValue,
-                                                QComboBox *pQualifierValue)
+void CellmlAnnotationViewWidget::updateTabOrder(QComboBox *pQualifierValue,
+                                                QLineEdit *pTermValue)
 {
     // Update the tab order for our metadata list
 
     setTabOrder(qobject_cast<QWidget *>(mListsWidget->metadataList()->treeView()),
-                pTermValue);
-    setTabOrder(pTermValue, pQualifierValue);
+                pQualifierValue);
+    setTabOrder(pQualifierValue, pTermValue);
 }
 
 //==============================================================================

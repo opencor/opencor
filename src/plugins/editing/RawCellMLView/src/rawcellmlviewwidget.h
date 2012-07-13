@@ -65,12 +65,11 @@ public:
 private:
     Ui::RawCellmlViewWidget *mGui;
 
-    QMap<QString, Core::BorderedWidget *> mBorderedEditors;
-
-    Viewer::ViewerWidget *mViewer;
     Core::BorderedWidget *mBorderedViewer;
+    Viewer::ViewerWidget *mViewer;
 
     Core::BorderedWidget *mBorderedEditor;
+    QMap<QString, Core::BorderedWidget *> mBorderedEditors;
 
     int mBorderedViewerHeight;
     int mBorderedEditorHeight;

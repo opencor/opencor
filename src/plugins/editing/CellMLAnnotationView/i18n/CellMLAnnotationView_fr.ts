@@ -304,16 +304,36 @@
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataEditDetailsWidget</name>
     <message>
-        <source>No data available...</source>
-        <translation>Aucune donnée disponible...</translation>
-    </message>
-    <message>
         <source>Qualifier:</source>
         <translation>Qualificatif :</translation>
     </message>
     <message>
         <source>Term:</source>
         <translation>Terme :</translation>
+    </message>
+    <message>
+        <source>No data available...</source>
+        <translation>Aucune donnée disponible...</translation>
+    </message>
+    <message>
+        <source>Add the metadata information</source>
+        <translation>Ajouter les informations pour la métadonnée</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Ajouter</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Nom</translation>
+    </message>
+    <message>
+        <source>Resource</source>
+        <translation>Ressource</translation>
+    </message>
+    <message>
+        <source>Id</source>
+        <translation></translation>
     </message>
 </context>
 <context>

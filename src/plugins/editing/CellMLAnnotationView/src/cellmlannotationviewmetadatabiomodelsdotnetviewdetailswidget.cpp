@@ -178,7 +178,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                 //          QAction to it, but a QToolButton doesn't look quite
                 //          the same as a QPushButton on some platforms, so...
 
-                removeButton->setIcon(QIcon(":/oxygen/actions/edit-delete.png"));
+                removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
                 removeButton->setStatusTip(tr("Remove the metadata information"));
                 removeButton->setToolTip(tr("Remove"));
                 removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);

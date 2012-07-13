@@ -47,13 +47,23 @@ class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
 {
     Q_OBJECT
 
+private:
+    struct Item
+    {
+        QString resource;
+        QString id;
+        QString name;
+    };
+
+    typedef QList<Item> Items;
+
 public:
     explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
     virtual void retranslateUi();
 
-    void updateGui(const bool &pPopulate = true);
+    void updateGui(const Items &pItems, const QString &pErrorMsg);
 
 private:
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
@@ -66,20 +76,32 @@ private:
     QWidget *mFormWidget;
     QFormLayout *mFormLayout;
 
+    QScrollArea *mItemsScrollArea;
+
     QWidget *mGridWidget;
     QGridLayout *mGridLayout;
 
     QNetworkAccessManager *mNetworkAccessManager;
-    QString mErrorMsg;
 
+    QComboBox *mQualifierValue;
+
+    QString mTerm;
     QString mTermUrl;
     QString mOtherTermUrl;
 
+    Items mItems;
+    QString mErrorMsg;
+
+    void updateItemsGui(const Items &pItems, const QString &pErrorMsg);
+
+    static Item item(const QString &pResource, const QString &pId,
+                     const QString &pName);
+
 Q_SIGNALS:
-    void guiPopulated(QLineEdit *pTermValue, QComboBox *pQualifierValue);
+    void guiPopulated(QComboBox *pQualifierValue, QLineEdit *pTermValue);
 
 private Q_SLOTS:
-    void newTerm(const QString &pTerm);
+    void lookupTerm(const QString &pTerm);
     void finished(QNetworkReply *pNetworkReply);
 };
 

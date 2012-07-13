@@ -115,18 +115,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
             // The object is a valid MIRIAM URN, so retrieve its corresponding
             // resource and id
 
-            QStringList objectAsStringList = objectAsString.split(":");
-
-            mResource = objectAsStringList[2].replace("%3A", ":");
-            mId       = objectAsStringList[3].replace("%3A", ":");
+            decodeMiriamUrn(objectAsString, mResource, mId);
         } else if (QRegExp("^http://identifiers.org/[a-zA-Z0-9\\._:]+/[a-zA-Z0-9\\._:]+").exactMatch(objectAsString)) {
             // The object is a valid identifiers.org URI, so retrieve its
             // corresponding resource and id
 
-            QStringList objectAsStringList = objectAsString.remove("http://identifiers.org/").split("/");
-
-            mResource = objectAsStringList[0];
-            mId       = objectAsStringList[1];
+            decodeIdentifiersDotOrgUri(objectAsString, mResource, mId);
         } else {
             // The object is neither a valid MIRIAM URN nor a valid
             // identifiers.org URI which means that the RDF triple is not a
@@ -380,6 +374,37 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
 
         return res;
     }
+}
+
+//==============================================================================
+
+void CellmlFileRdfTriple::decodeMiriamUrn(const QString &pMiriamUrn,
+                                          QString &pResource, QString &pId)
+{
+    // Decode the MIRIAM URN to retrieve the corresponding resource and id
+
+    QStringList miriamUrnList = pMiriamUrn.split(":");
+
+    pResource = miriamUrnList[2].replace("%3A", ":");
+    pId       = miriamUrnList[3].replace("%3A", ":");
+}
+
+//==============================================================================
+
+void CellmlFileRdfTriple::decodeIdentifiersDotOrgUri(const QString &pIdentifiersDotOrgUri,
+                                                     QString &pResource,
+                                                     QString &pId)
+{
+    // Decode the identifiers.org URI to retrieve the corresponding resource and
+    // id
+
+    QString identifiersDotOrgUri = pIdentifiersDotOrgUri;
+    // Note: the above is because pIdentifiersDotOrgUri is a const, so we can't
+    //       directly use QString::remove() on it...
+    QStringList identifiersDotOrgUriList = identifiersDotOrgUri.remove("http://identifiers.org/").split("/");
+
+    pResource = identifiersDotOrgUriList[0];
+    pId       = identifiersDotOrgUriList[1];
 }
 
 //==============================================================================
