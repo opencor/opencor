@@ -311,6 +311,10 @@
         <source>Term:</source>
         <translation>Terme :</translation>
     </message>
+    <message>
+        <source>No data available...</source>
+        <translation>Aucune donnée disponible...</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataListWidget</name>

@@ -45,6 +45,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mMainLayout(0),
     mFormWidget(0),
     mFormLayout(0),
+    mItemsWidget(0),
     mGridWidget(0),
     mGridLayout(0),
     mTerm(QString()),
@@ -99,7 +100,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopulate)
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui()
 {
     // Note: we are using certain layouts to dislay the contents of our view,
     //       but this unfortunately results in some very bad flickering on Mac
@@ -118,54 +119,44 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 
     newMainWidget->setLayout(newMainLayout);
 
-    // Populate our GUI, but only if requested
+    // Create a form widget which will contain our qualifier and term fields
 
-    QWidget *newFormWidget = 0;
-    QFormLayout *newFormLayout = 0;
-    QStackedWidget *newStackedWidget = 0;
+    QWidget *newFormWidget = new QWidget(newMainWidget);
+    QFormLayout *newFormLayout = new QFormLayout(newFormWidget);
 
-    QLineEdit *termValue = 0;
+    newFormWidget->setLayout(newFormLayout);
 
-    if (pPopulate) {
-        // Create a form widget which will contain our qualifier and term fields
+    // Add our qualifier and term fields
 
-        newFormWidget = new QWidget(newMainWidget);
-        newFormLayout = new QFormLayout(newFormWidget);
+    QComboBox *qualifierValue = new QComboBox(newFormWidget);
 
-        newFormWidget->setLayout(newFormLayout);
+    qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
-        // Add our qualifier and term fields
+    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
+                          qualifierValue);
 
-        QComboBox *qualifierValue = new QComboBox(newFormWidget);
+    QLineEdit *termValue = new QLineEdit(newFormWidget);
 
-        qualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
+    connect(termValue, SIGNAL(textChanged(const QString &)),
+            this, SLOT(lookupTerm(const QString &)));
 
-        newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
-                              qualifierValue);
+    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), true),
+                          termValue);
 
-        termValue = new QLineEdit(newFormWidget);
+    // Let people know that the GUI has been populated
 
-        connect(termValue, SIGNAL(textChanged(const QString &)),
-                this, SLOT(lookupTerm(const QString &)));
+    emit guiPopulated(qualifierValue, termValue);
 
-        newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), true),
-                              termValue);
+    // Create a stacked widget which will contain a grid with the results of our
+    // ontological terms lookup
 
-        // Let people know that the GUI has been populated
+    QStackedWidget *newItemsWidget = new QStackedWidget(newMainWidget);
 
-        emit guiPopulated(qualifierValue, termValue);
+    // Add our 'internal' widgets to our new main widget
 
-        // Create a stacked widget which will contain a grid with the results of
-        // the lookup
-
-        newStackedWidget = new QStackedWidget(newMainWidget);
-
-        // Add our 'internal' widgets to our new main widget
-
-        newMainLayout->addWidget(newFormWidget);
-        newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
-        newMainLayout->addWidget(newStackedWidget);
-    }
+    newMainLayout->addWidget(newFormWidget);
+    newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
+    newMainLayout->addWidget(newItemsWidget);
 
     // Add our new widget to our stacked widget
 
@@ -176,6 +167,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
     if (mFormWidget)
         for (int i = 0, iMax = mFormLayout->count(); i < iMax; ++i) {
             QLayoutItem *item = mFormLayout->takeAt(0);
+
+            delete item->widget();
+            delete item;
+        }
+
+    // Remove the contents of our old grid layout
+
+    if (mGridWidget)
+        for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
+            QLayoutItem *item = mGridLayout->takeAt(0);
 
             delete item->widget();
             delete item;
@@ -204,9 +205,22 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
     mFormWidget = newFormWidget;
     mFormLayout = newFormLayout;
 
+    mItemsWidget = newItemsWidget;
+
+    mGridWidget = 0;   // Note: this will be set by our
+    mGridLayout = 0;   //       other updateGui() function...
+
     // Reset the term which was being looked up, if any
 
-    if (termValue)
+    if (mTerm.isEmpty())
+        // There is no term, so manually call our other updateGui() method
+        // since, if anything, we want the GUI to tell us that there is no data
+
+        updateGui(Items(), QString());
+    else
+        // Set the term normally which will trigger a call to lookupTerm() and
+        // then to our other updateGui() method
+
         termValue->setText(mTerm);
 
     // Allow ourselves to be updated again
@@ -219,21 +233,70 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const bool &pPopul
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
                                                               const QString &pErrorMsg)
 {
-//---GRY--- TO BE DONE...
+    // Make sure that our items widget exists
 
-if (pItems.isEmpty()) {
-    if (pErrorMsg.isEmpty())
-        qDebug(">>> No ontological terms were retrieved...");
-    else
-        qDebug(">>> Something went wrong: %s", qPrintable(pErrorMsg));
-} else {
-    foreach (const Item &item, pItems) {
-        qDebug(">>> Ontological term:");
-        qDebug(">>>    ---> Resource: %s", qPrintable(item.resource));
-        qDebug(">>>    ---> Id:       %s", qPrintable(item.id));
-        qDebug(">>>    ---> Name:     %s", qPrintable(item.name));
+    if (!mItemsWidget)
+        return;
+
+    // Prevent ourselves from being updated (to avoid any flickering)
+
+    setUpdatesEnabled(false);
+
+    // Create a new widget and layout
+
+    QWidget *newGridWidget = new QWidget(mItemsWidget);
+    QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
+
+    newGridWidget->setLayout(newGridLayout);
+
+    // Populate our new layout, but only if there is at least one item
+
+    if (pItems.isEmpty()) {
+        // No items to show, so either there is no data available or an error
+        // occurred
+
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                pErrorMsg.isEmpty()?tr("No data available..."):pErrorMsg,
+                                                false, 1.25, Qt::AlignCenter),
+                                 1, 0);
+    } else {
+        // Some items to show
+
+        foreach (const Item &item, pItems) {
+            qDebug(">>> Ontological term:");
+            qDebug(">>>    ---> Resource: %s", qPrintable(item.resource));
+            qDebug(">>>    ---> Id:       %s", qPrintable(item.id));
+            qDebug(">>>    ---> Name:     %s", qPrintable(item.name));
+        }
     }
-}
+
+    // Add our new widget to our stacked widget
+
+    mItemsWidget->addWidget(newGridWidget);
+
+    // Remove the contents of our old grid layout
+
+    if (mGridWidget) {
+        mItemsWidget->removeWidget(mGridWidget);
+
+        for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
+            QLayoutItem *item = mGridLayout->takeAt(0);
+
+            delete item->widget();
+            delete item;
+        }
+
+        delete mGridWidget;
+    }
+
+    // Keep track of our new grid widgets and layouts
+
+    mGridWidget = newGridWidget;
+    mGridLayout = newGridLayout;
+
+    // Allow ourselves to be updated again
+
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================

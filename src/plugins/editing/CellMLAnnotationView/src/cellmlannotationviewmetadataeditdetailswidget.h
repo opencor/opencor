@@ -53,7 +53,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const bool &pPopulate = true);
+    void updateGui();
 
 private:
     struct Item
@@ -74,6 +74,8 @@ private:
 
     QWidget *mFormWidget;
     QFormLayout *mFormLayout;
+
+    QStackedWidget *mItemsWidget;
 
     QWidget *mGridWidget;
     QGridLayout *mGridLayout;
