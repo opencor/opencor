@@ -240,7 +240,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
         // of item we are talking about
 
         newFormLayout->addRow(Core::newLabel(newFormWidget, typeAsString(item.type),
-                                             true, 1.25, Qt::AlignCenter));
+                                             1.25, true, false, Qt::AlignCenter));
 
         // Show the item's cmeta:id, keeping in mind that we only want to allow
         // the editing of the cmeta:id of the very first item
@@ -315,7 +315,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             // Add our cmeta:id widget to our main layout
 
-            newFormLayout->addRow(Core::newLabel(newFormWidget, tr("cmeta:id:"), true),
+            newFormLayout->addRow(Core::newLabel(newFormWidget, tr("cmeta:id:"), 1.0, true),
                                   cmetaIdWidget);
 
             // Let people know that the GUI has been populated
@@ -492,7 +492,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::addRowToForm(QWidget *pForm
 {
     // Add a row to our form layout
 
-    qobject_cast<QFormLayout *>(pFormWidget->layout())->addRow(Core::newLabel(pFormWidget, pLabel, true),
+    qobject_cast<QFormLayout *>(pFormWidget->layout())->addRow(Core::newLabel(pFormWidget, pLabel, 1.0, true),
                                                                Core::newLabel(pFormWidget, pValue));
 }
 

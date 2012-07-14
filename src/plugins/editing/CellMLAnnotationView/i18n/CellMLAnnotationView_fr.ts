@@ -293,6 +293,14 @@
         <source>No data available...</source>
         <translation>Aucune donnée disponible...</translation>
     </message>
+    <message>
+        <source>(1 term)</source>
+        <translation>(1 terme)</translation>
+    </message>
+    <message>
+        <source>(%1 terms)</source>
+        <translation>(%1 termes)</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>
@@ -334,6 +342,14 @@
     <message>
         <source>Id</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>(1 term)</source>
+        <translation>(1 terme)</translation>
+    </message>
+    <message>
+        <source>(%1 terms)</source>
+        <translation>(%1 termes)</translation>
     </message>
 </context>
 <context>
