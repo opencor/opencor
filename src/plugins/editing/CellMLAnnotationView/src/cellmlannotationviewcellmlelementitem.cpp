@@ -3,7 +3,7 @@
 //==============================================================================
 
 #include "cellmlannotationviewcellmlelementitem.h"
-#include "cellmlfileimport.h"
+#include "cellmlfile.h"
 
 //==============================================================================
 

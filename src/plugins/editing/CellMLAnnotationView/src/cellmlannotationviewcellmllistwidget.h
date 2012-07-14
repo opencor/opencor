@@ -8,13 +8,11 @@
 //==============================================================================
 
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
-#include "cellmlfile.h"
 #include "widget.h"
 
 //==============================================================================
 
 #include <QModelIndex>
-#include <QSplitter>
 
 //==============================================================================
 
@@ -35,6 +33,13 @@ namespace OpenCOR {
 namespace Core {
     class TreeView;
 }   // namespace Core
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFile;
+    class CellmlFileComponentReference;
+}   // namespace CellMLSupport
 
 //==============================================================================
 
