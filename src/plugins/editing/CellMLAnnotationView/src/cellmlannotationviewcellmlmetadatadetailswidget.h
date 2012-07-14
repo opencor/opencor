@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlannotationviewcellmlelementdetailswidget.h"
+#include "cellmlfile.h"
 #include "widget.h"
 
 //==============================================================================

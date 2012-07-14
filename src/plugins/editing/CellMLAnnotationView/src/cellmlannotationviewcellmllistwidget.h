@@ -8,13 +8,11 @@
 //==============================================================================
 
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
-#include "cellmlfile.h"
 #include "widget.h"
 
 //==============================================================================
 
 #include <QModelIndex>
-#include <QSplitter>
 
 //==============================================================================
 
@@ -38,13 +36,20 @@ namespace Core {
 
 //==============================================================================
 
+namespace CellMLSupport {
+    class CellmlFile;
+    class CellmlFileComponentReference;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
 class CellmlAnnotationViewWidget;
-class CellmlElementItem;
-class CellmlElementItemDelegate;
+class CellmlAnnotationViewCellmlElementItem;
+class CellmlAnnotationViewCellmlElementItemDelegate;
 
 //==============================================================================
 
@@ -60,7 +65,7 @@ public:
 
     Core::TreeView * treeView() const;
 
-    CellmlElementItem * currentCellmlElementItem() const;
+    CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -72,16 +77,16 @@ private:
 
     Core::TreeView *mTreeView;
     QStandardItemModel *mDataModel;
-    CellmlElementItemDelegate *mItemDelegate;
+    CellmlAnnotationViewCellmlElementItemDelegate *mItemDelegate;
 
     QList<QModelIndex> mIndexes;
 
-    void retranslateDataItem(CellmlElementItem *pCellmlElementItem);
+    void retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem);
 
     void populateDataModel();
-    void populateUnitsDataModel(CellmlElementItem *pCellmlElementItem,
+    void populateUnitsDataModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
                                 CellMLSupport::CellmlFileUnits *pUnits);
-    void populateComponentReferenceDataModel(CellmlElementItem *pCellmlElementItem,
+    void populateComponentReferenceDataModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
                                              CellMLSupport::CellmlFileComponentReference *pComponentReference);
 
     void indexExpandAll(const QModelIndex &pIndex) const;

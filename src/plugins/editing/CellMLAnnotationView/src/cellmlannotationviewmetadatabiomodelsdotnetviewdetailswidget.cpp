@@ -5,7 +5,6 @@
 #include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
-#include "treeview.h"
 
 //==============================================================================
 
@@ -109,16 +108,25 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                 tr("Qualifier"),
-                                                true, 1.25, Qt::AlignCenter),
+                                                1.25, true, false, Qt::AlignCenter),
                                  0, 0);
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                 tr("Resource"),
-                                                true, 1.25, Qt::AlignCenter),
+                                                1.25, true, false, Qt::AlignCenter),
                                  0, 1);
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                 tr("Id"),
-                                                true, 1.25, Qt::AlignCenter),
+                                                1.25, true, false, Qt::AlignCenter),
                                  0, 2);
+
+        // Number of terms
+
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                (pRdfTriples.count() == 1)?
+                                                    tr("(1 term)"):
+                                                    tr("(%1 terms)").arg(QString::number(pRdfTriples.count())),
+                                                1.0, false, true, Qt::AlignCenter),
+                                 0, 3);
 
         // Add the RDF triples information to our layout
         // Note: for the RDF triple's subject, we try to remove the CellML
@@ -138,7 +146,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
             QLabel *qualifierLabel = Core::newLabelLink(newGridWidget,
                                                         "<a href=\""+rdfTripleInfo+"\">"+qualifierAsString+"</a>",
-                                                        false, 1.0, Qt::AlignCenter);
+                                                        1.0, false, false, Qt::AlignCenter);
 
             connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupQualifier(const QString &)));
@@ -149,7 +157,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
             QLabel *resourceLabel = Core::newLabelLink(newGridWidget,
                                                        "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->resource()+"</a>",
-                                                       false, 1.0, Qt::AlignCenter);
+                                                       1.0, false, false, Qt::AlignCenter);
 
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResource(const QString &)));
@@ -160,7 +168,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
             QLabel *idLabel = Core::newLabelLink(newGridWidget,
                                                  "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->id()+"</a>",
-                                                 false, 1.0, Qt::AlignCenter);
+                                                 1.0, false, false, Qt::AlignCenter);
 
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResourceId(const QString &)));
@@ -188,7 +196,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
                 connect(removeButton, SIGNAL(clicked()),
                         this, SLOT(removeRdfTriple()));
 
-                newGridLayout->addWidget(removeButton, row, 3);
+                newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);
             }
 
             // Keep track of the very first resource id
@@ -200,12 +208,19 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         // Have all the rows take a minimum of vertical space
 
         newGridLayout->setRowStretch(++row, 1);
+
+        // Have the remove buttons column take as little horizontal space as
+        // possible compared to the other columns
+
+        newGridLayout->setColumnStretch(0, 1);
+        newGridLayout->setColumnStretch(1, 1);
+        newGridLayout->setColumnStretch(2, 1);
     } else {
         // No RDF triples, so...
 
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                 tr("No data available..."),
-                                                false, 1.25, Qt::AlignCenter),
+                                                1.25, false, false, Qt::AlignCenter),
                                  0, 0);
     }
 

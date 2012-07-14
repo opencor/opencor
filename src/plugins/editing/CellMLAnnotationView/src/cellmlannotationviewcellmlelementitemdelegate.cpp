@@ -1,5 +1,5 @@
 //==============================================================================
-// CellML element item delegate
+// CellML annotation view CellML element item delegate
 //==============================================================================
 
 #include "cellmlannotationviewcellmlelementitem.h"
@@ -12,8 +12,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlElementItemDelegate::CellmlElementItemDelegate(QWidget *pParent,
-                                                     QStandardItemModel *pDataModel) :
+CellmlAnnotationViewCellmlElementItemDelegate::CellmlAnnotationViewCellmlElementItemDelegate(QWidget *pParent,
+                                                                                             QStandardItemModel *pDataModel) :
     QStyledItemDelegate(pParent),
     mCellmlDataModel(pDataModel)
 {
@@ -21,22 +21,22 @@ CellmlElementItemDelegate::CellmlElementItemDelegate(QWidget *pParent,
 
 //==============================================================================
 
-void CellmlElementItemDelegate::paint(QPainter *pPainter,
-                                      const QStyleOptionViewItem &pOption,
-                                      const QModelIndex &pIndex) const
+void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
+                                                          const QStyleOptionViewItem &pOption,
+                                                          const QModelIndex &pIndex) const
 {
     // Paint the item as normal, except for the items which are not checkable
     // (i.e. plugins which the user cannot decide whether to load) in which case
     // we paint them as if they were disabled
 
-    CellmlElementItem *cellmlElementItem = static_cast<CellmlElementItem *>(mCellmlDataModel->itemFromIndex(pIndex));
+    CellmlAnnotationViewCellmlElementItem *cellmlElementItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mCellmlDataModel->itemFromIndex(pIndex));
 
     QStyleOptionViewItemV4 option(pOption);
 
     initStyleOption(&option, pIndex);
 
-    if (   (cellmlElementItem->type() == CellmlElementItem::Error)
-        || (cellmlElementItem->type() == CellmlElementItem::Warning)
+    if (   (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Error)
+        || (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Warning)
         || cellmlElementItem->isCategory()) {
         // This is an error/warning/category item, so prevent it from being
         // hoverable. Otherwise, show the item enabled since it's actually

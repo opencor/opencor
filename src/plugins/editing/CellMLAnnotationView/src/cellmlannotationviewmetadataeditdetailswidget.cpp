@@ -2,12 +2,9 @@
 // CellML annotation view metadata edit details widget
 //==============================================================================
 
-#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
-#include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
-#include "treeview.h"
 
 //==============================================================================
 
@@ -160,7 +157,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
-    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), true),
+    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), 1.0, true),
                           mQualifierValue);
 
     QLineEdit *termValue = new QLineEdit(newFormWidget);
@@ -176,7 +173,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     connect(termValue, SIGNAL(textChanged(const QString &)),
             this, SLOT(lookupTerm(const QString &)));
 
-    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), true),
+    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), 1.0, true),
                           termValue);
 
     // Let people know that the GUI has been populated
@@ -286,23 +283,32 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                 pErrorMsg.isEmpty()?tr("No data available..."):pErrorMsg,
-                                                false, 1.25, Qt::AlignCenter),
+                                                1.25, false, false, Qt::AlignCenter),
                                  1, 0);
     } else {
         // Create labels to act as headers
 
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                 tr("Name"),
-                                                true, 1.25, Qt::AlignCenter),
+                                                1.25, true, false, Qt::AlignCenter),
                                  0, 0);
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                 tr("Resource"),
-                                                true, 1.25, Qt::AlignCenter),
+                                                1.25, true, false, Qt::AlignCenter),
                                  0, 1);
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                 tr("Id"),
-                                                true, 1.25, Qt::AlignCenter),
+                                                1.25, true, false, Qt::AlignCenter),
                                  0, 2);
+
+        // Number of terms
+
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                (pItems.count() == 1)?
+                                                    tr("(1 term)"):
+                                                    tr("(%1 terms)").arg(QString::number(pItems.count())),
+                                                1.0, false, true, Qt::AlignCenter),
+                                 0, 3);
 
         // Add the items
 
@@ -313,21 +319,21 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
             newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                     item.name,
-                                                    false, 1.0, Qt::AlignCenter),
+                                                    1.0, false, false, Qt::AlignCenter),
                                      ++row, 0);
 
             // Resource
 
             newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                     item.resource,
-                                                    false, 1.0, Qt::AlignCenter),
+                                                    1.0, false, false, Qt::AlignCenter),
                                      row, 1);
 
             // Id
 
             newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                     item.id,
-                                                    false, 1.0, Qt::AlignCenter),
+                                                    1.0, false, false, Qt::AlignCenter),
                                      row, 2);
 
             // Add button
@@ -345,8 +351,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             addButton->setToolTip(tr("Add"));
             addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-            newGridLayout->addWidget(addButton, row, 3);
+            newGridLayout->addWidget(addButton, row, 3, Qt::AlignCenter);
         }
+
+        // Have the remove buttons column take as little horizontal space as
+        // possible compared to the other columns
+
+        newGridLayout->setColumnStretch(0, 1);
+        newGridLayout->setColumnStretch(1, 1);
+        newGridLayout->setColumnStretch(2, 1);
     }
 
     // Set our new grid widget as the widget for our scroll area

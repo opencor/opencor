@@ -25,7 +25,6 @@
 
 #include <QComboBox>
 #include <QFile>
-#include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QWebView>

@@ -171,8 +171,9 @@ QFrame * newLineWidget(QWidget *pParent, const bool &pHorizontal)
 
 //==============================================================================
 
-QLabel * newLabel(QWidget *pParent, const QString &pText, const bool &pBold,
+QLabel * newLabel(QWidget *pParent, const QString &pText,
                   const double &pFontPercentage,
+                  const bool &pBold, const bool &pItalic,
                   const Qt::Alignment &pAlignment)
 {
     // Create and return a label, allowing to set some of its properties
@@ -182,6 +183,7 @@ QLabel * newLabel(QWidget *pParent, const QString &pText, const bool &pBold,
     QFont font = res->font();
 
     font.setBold(pBold);
+    font.setItalic(pItalic);
     font.setPointSize(pFontPercentage*font.pointSize());
 
     res->setAlignment(pAlignment);
@@ -192,13 +194,15 @@ QLabel * newLabel(QWidget *pParent, const QString &pText, const bool &pBold,
 
 //==============================================================================
 
-QLabel * newLabelLink(QWidget *pParent, const QString &pText, const bool &pBold,
+QLabel * newLabelLink(QWidget *pParent, const QString &pText,
                       const double &pFontPercentage,
+                      const bool &pBold, const bool &pItalic,
                       const Qt::Alignment &pAlignment)
 {
     // Create a label link, allowing to set set some of its properties
 
-    QLabel *res = newLabel(pParent, pText, pBold, pFontPercentage, pAlignment);
+    QLabel *res = newLabel(pParent, pText, pFontPercentage,
+                           pBold, pItalic, pAlignment);
 
     // Prevent Qt from associating a context menu with the label (something
     // which it does automatically when a label is a link...)

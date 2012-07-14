@@ -3,15 +3,11 @@
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
-#include "cellmlannotationviewmetadatalistwidget.h"
-#include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
-#include "treeview.h"
 #include "usermessagewidget.h"
 
 //==============================================================================

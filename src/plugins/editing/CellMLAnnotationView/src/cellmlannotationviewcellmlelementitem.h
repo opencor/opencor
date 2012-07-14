@@ -1,13 +1,9 @@
 //==============================================================================
-// CellML element item
+// CellML annotation view CellML element item
 //==============================================================================
 
 #ifndef CELLMLANNOTATIONVIEWCELLMLELEMENTITEM_H
 #define CELLMLANNOTATIONVIEWCELLMLELEMENTITEM_H
-
-//==============================================================================
-
-#include "cellmlfile.h"
 
 //==============================================================================
 
@@ -16,11 +12,20 @@
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileElement;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlElementItem : public QStandardItem
+class CellmlAnnotationViewCellmlElementItem : public QStandardItem
 {
 public:
     enum Type
@@ -44,11 +49,11 @@ public:
         VariableMapping       = QStandardItem::UserType+16
     };
 
-    explicit CellmlElementItem(const bool &pError, const QString &pText);
-    explicit CellmlElementItem(const Type &pType, const QString &pText);
-    explicit CellmlElementItem(const Type &pType,
-                               CellMLSupport::CellmlFileElement *pElement,
-                               const int pNumber = -1);
+    explicit CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText);
+    explicit CellmlAnnotationViewCellmlElementItem(const Type &pType, const QString &pText);
+    explicit CellmlAnnotationViewCellmlElementItem(const Type &pType,
+                                                   CellMLSupport::CellmlFileElement *pElement,
+                                                   const int pNumber = -1);
 
     bool isCategory() const;
     virtual int type() const;
