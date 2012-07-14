@@ -6,15 +6,10 @@
 #include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmlmetadatadetailswidget.h"
 #include "cellmlannotationviewwidget.h"
-#include "cellmlannotationviewmetadataviewdetailswidget.h"
 
 //==============================================================================
 
 #include "ui_cellmlannotationviewcellmldetailswidget.h"
-
-//==============================================================================
-
-#include <QComboBox>
 
 //==============================================================================
 

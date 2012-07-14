@@ -2,17 +2,9 @@
 // CellML annotation view CellML element details widget
 //==============================================================================
 
-#include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmlelementdetailswidget.h"
-#include "cellmlannotationviewcellmlelementitem.h"
-#include "cellmlannotationviewcellmllistwidget.h"
-#include "cellmlannotationviewcellmlmetadatadetailswidget.h"
-#include "cellmlannotationviewdetailswidget.h"
-#include "cellmlannotationviewlistswidget.h"
-#include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
-#include "treeview.h"
 
 //==============================================================================
 

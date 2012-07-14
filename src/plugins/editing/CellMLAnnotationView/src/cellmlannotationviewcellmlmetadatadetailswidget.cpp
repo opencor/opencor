@@ -5,7 +5,6 @@
 #include "borderedwidget.h"
 #include "cellmlannotationviewcellmlmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
-#include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "usermessagewidget.h"

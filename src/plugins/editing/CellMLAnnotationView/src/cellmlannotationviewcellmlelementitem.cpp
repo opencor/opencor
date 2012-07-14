@@ -1,5 +1,5 @@
 //==============================================================================
-// CellML element item
+// CellML annotation view CellML element item
 //==============================================================================
 
 #include "cellmlannotationviewcellmlelementitem.h"
@@ -12,7 +12,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlElementItem::CellmlElementItem(const bool &pError, const QString &pText) :
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText) :
     QStandardItem(pText),
     mCategory(false),
     mType(pError?Error:Warning),
@@ -35,8 +35,8 @@ CellmlElementItem::CellmlElementItem(const bool &pError, const QString &pText) :
 
 //==============================================================================
 
-CellmlElementItem::CellmlElementItem(const Type &pType,
-                                     const QString &pText) :
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
+                                                                             const QString &pText) :
     QStandardItem(pText),
     mCategory(true),
     mType(pType),
@@ -57,9 +57,9 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
 
 //==============================================================================
 
-CellmlElementItem::CellmlElementItem(const Type &pType,
-                                     CellMLSupport::CellmlFileElement *pElement,
-                                     const int pNumber) :
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
+                                                                             CellMLSupport::CellmlFileElement *pElement,
+                                                                             const int pNumber) :
     QStandardItem(),
     mCategory(false),
     mType(pType),
@@ -122,7 +122,7 @@ CellmlElementItem::CellmlElementItem(const Type &pType,
 
 //==============================================================================
 
-void CellmlElementItem::setIcon(const Type &pType)
+void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 {
     // Determine the icon to be used for the item
 
@@ -188,7 +188,7 @@ void CellmlElementItem::setIcon(const Type &pType)
 
 //==============================================================================
 
-bool CellmlElementItem::isCategory() const
+bool CellmlAnnotationViewCellmlElementItem::isCategory() const
 {
     // Return wether the CellML element item is a category or not
 
@@ -197,7 +197,7 @@ bool CellmlElementItem::isCategory() const
 
 //==============================================================================
 
-int CellmlElementItem::type() const
+int CellmlAnnotationViewCellmlElementItem::type() const
 {
     // Return the CellML element item's type
 
@@ -206,7 +206,7 @@ int CellmlElementItem::type() const
 
 //==============================================================================
 
-int CellmlElementItem::number() const
+int CellmlAnnotationViewCellmlElementItem::number() const
 {
     // Return the CellML element item's number
 
@@ -215,7 +215,7 @@ int CellmlElementItem::number() const
 
 //==============================================================================
 
-CellMLSupport::CellmlFileElement * CellmlElementItem::element() const
+CellMLSupport::CellmlFileElement * CellmlAnnotationViewCellmlElementItem::element() const
 {
     // Return the CellML element item's element
 

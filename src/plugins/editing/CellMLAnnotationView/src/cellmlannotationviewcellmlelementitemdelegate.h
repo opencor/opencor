@@ -1,5 +1,5 @@
 //==============================================================================
-// CellML element item delegate
+// CellML annotation view CellML element item delegate
 //==============================================================================
 
 #ifndef CELLMLANNOTATIONVIEWCELLMLELEMENTITEMDELEGATE_H
@@ -20,11 +20,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlElementItemDelegate : public QStyledItemDelegate
+class CellmlAnnotationViewCellmlElementItemDelegate : public QStyledItemDelegate
 {
 public:
-    explicit CellmlElementItemDelegate(QWidget *pParent,
-                                       QStandardItemModel *pDataModel);
+    explicit CellmlAnnotationViewCellmlElementItemDelegate(QWidget *pParent,
+                                                           QStandardItemModel *pDataModel);
 
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;

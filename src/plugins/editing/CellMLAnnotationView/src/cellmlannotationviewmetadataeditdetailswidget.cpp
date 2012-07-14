@@ -2,12 +2,9 @@
 // CellML annotation view metadata edit details widget
 //==============================================================================
 
-#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
-#include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
-#include "treeview.h"
 
 //==============================================================================
 

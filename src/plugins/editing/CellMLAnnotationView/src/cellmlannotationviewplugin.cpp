@@ -10,7 +10,6 @@
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
-#include "coreutils.h"
 
 //==============================================================================
 
