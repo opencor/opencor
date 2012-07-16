@@ -380,8 +380,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::disableLookup
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInformation,
-                                                                                   const bool &pRetranslate)
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of information
 
@@ -389,13 +388,12 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifi
 
     // Call our generic lookup function
 
-    genericLookup(pRdfTripleInformation, Qualifier, pRetranslate);
+    genericLookup(pRdfTripleInformation, Qualifier);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pRdfTripleInformation,
-                                                                                  const bool &pRetranslate)
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of information
 
@@ -403,13 +401,12 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
 
     // Call our generic lookup function
 
-    genericLookup(pRdfTripleInformation, Resource, pRetranslate);
+    genericLookup(pRdfTripleInformation, Resource);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupId(const QString &pRdfTripleInformation,
-                                                                            const bool &pRetranslate)
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupId(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of information
 
@@ -417,7 +414,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupId(cons
 
     // Call our generic lookup function
 
-    genericLookup(pRdfTripleInformation, Id, pRetranslate);
+    genericLookup(pRdfTripleInformation, Id);
 }
 
 //==============================================================================

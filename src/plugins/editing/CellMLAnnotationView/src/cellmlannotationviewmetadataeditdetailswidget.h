@@ -133,14 +133,11 @@ Q_SIGNALS:
 private Q_SLOTS:
     void disableLookupInformation();
 
-    void qualifierChanged(const QString &pQualifier,
-                          const bool &pRetranslate = false);
+    void qualifierChanged(const QString &pQualifier);
 
-    void lookupQualifier(const bool &pRetranslate = false);
-    void lookupResource(const QString &pInformation,
-                        const bool &pRetranslate = false);
-    void lookupId(const QString &pInformation,
-                  const bool &pRetranslate = false);
+    void lookupQualifier();
+    void lookupResource(const QString &pInformation);
+    void lookupId(const QString &pInformation);
 
     void lookupTerm(const QString &pTerm);
     void termLookupFinished(QNetworkReply *pNetworkReply);

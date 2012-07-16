@@ -101,12 +101,9 @@ Q_SIGNALS:
 private Q_SLOTS:
     void disableLookupInformation();
 
-    void lookupQualifier(const QString &pRdfTripleInformation,
-                         const bool &pRetranslate = false);
-    void lookupResource(const QString &pRdfTripleInformation,
-                        const bool &pRetranslate = false);
-    void lookupId(const QString &pRdfTripleInformation,
-                  const bool &pRetranslate = false);
+    void lookupQualifier(const QString &pRdfTripleInformation);
+    void lookupResource(const QString &pRdfTripleInformation);
+    void lookupId(const QString &pRdfTripleInformation);
 
     void removeRdfTriple();
 };

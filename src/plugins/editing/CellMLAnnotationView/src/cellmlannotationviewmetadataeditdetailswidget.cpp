@@ -572,8 +572,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::disableLookupInformation()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QString &pQualifier,
-                                                                     const bool &pRetranslate)
+void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QString &pQualifier)
 {
     // Lookup the qualifier, if requested
 
@@ -584,13 +583,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
 
         // Call our generic lookup function
 
-        genericLookup(pQualifier, Qualifier, pRetranslate);
+        genericLookup(pQualifier, Qualifier);
     }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier(const bool &pRetranslate)
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier()
 {
     // Enable the looking up of information
 
@@ -605,7 +604,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier(const bool &
     if (mLookupButton->isChecked())
         // We want to look something up, so...
 
-        genericLookup(mQualifierValue->currentText(), Qualifier, pRetranslate);
+        genericLookup(mQualifierValue->currentText(), Qualifier);
     else
         // We don't want to look anything up anymore, so...
 
@@ -614,8 +613,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier(const bool &
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString &pInformation,
-                                                                   const bool &pRetranslate)
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString &pInformation)
 {
     // Enable the looking up of information
 
@@ -623,13 +621,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString
 
     // Call our generic lookup function
 
-    genericLookup(pInformation, Resource, pRetranslate);
+    genericLookup(pInformation, Resource);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pInformation,
-                                                             const bool &pRetranslate)
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pInformation)
 {
     // Enable the looking up of information
 
@@ -637,7 +634,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pInf
 
     // Call our generic lookup function
 
-    genericLookup(pInformation, Id, pRetranslate);
+    genericLookup(pInformation, Id);
 }
 
 //==============================================================================
