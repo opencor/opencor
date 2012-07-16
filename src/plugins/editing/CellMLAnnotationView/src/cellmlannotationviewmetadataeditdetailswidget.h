@@ -95,6 +95,7 @@ private:
 
     QComboBox *mQualifierValue;
     QPushButton *mLookupButton;
+    bool mLookupButtonIsChecked;
 
     QString mTerm;
     QString mTermUrl;

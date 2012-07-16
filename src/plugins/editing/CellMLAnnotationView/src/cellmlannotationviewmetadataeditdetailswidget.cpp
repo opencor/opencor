@@ -71,6 +71,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mGridLayout(0),
     mQualifierValue(0),
     mLookupButton(0),
+    mLookupButtonIsChecked(false),
     mTerm(QString()),
     mTermUrl(QString()),
     mOtherTermUrl(QString()),
@@ -188,6 +189,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     //          on some platforms, so...
 
     mLookupButton->setCheckable(true);
+    mLookupButton->setChecked(mLookupButtonIsChecked);
     mLookupButton->setIcon(QIcon(":/oxygen/categories/applications-internet.png"));
     mLookupButton->setStatusTip(tr("Look up the qualifier"));
     mLookupButton->setToolTip(tr("Look Up"));
@@ -593,6 +595,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier(const bool &
     // Enable the looking up of information
 
     mLookupInformation = true;
+
+    // Keep track of the checked status of our lookup button
+
+    mLookupButtonIsChecked = mLookupButton->isChecked();
 
     // Call our generic lookup function
 
