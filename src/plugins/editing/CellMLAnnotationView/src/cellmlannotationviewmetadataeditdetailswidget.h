@@ -94,6 +94,7 @@ private:
     QNetworkAccessManager *mNetworkAccessManager;
 
     QComboBox *mQualifierValue;
+    QPushButton *mLookupButton;
 
     QString mTerm;
     QString mTermUrl;
@@ -130,6 +131,9 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void disableLookupInformation();
+
+    void qualifierChanged(const QString &pQualifier,
+                          const bool &pRetranslate = false);
 
     void lookupQualifier(const bool &pRetranslate = false);
     void lookupResource(const QString &pInformation,

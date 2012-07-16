@@ -70,6 +70,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mGridWidget(0),
     mGridLayout(0),
     mQualifierValue(0),
+    mLookupButton(0),
     mTerm(QString()),
     mTermUrl(QString()),
     mOtherTermUrl(QString()),
@@ -174,27 +175,31 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
+    connect(mQualifierValue, SIGNAL(currentIndexChanged(const QString &)),
+            this, SLOT(qualifierChanged(const QString &)));
+
     // Create our qualifier lookup button widget
 
-    QPushButton *lookupButton = new QPushButton(qualifierWidget);
+    mLookupButton = new QPushButton(qualifierWidget);
     // Note #1: ideally, we could assign a QAction to our QPushButton, but this
     //          cannot be done, so... we assign a few properties by hand...
     // Note #2: to use a QToolButton would allow us to assign a QAction to it,
     //          but a QToolButton doesn't look quite the same as a QPushButton
     //          on some platforms, so...
 
-    lookupButton->setIcon(QIcon(":/oxygen/categories/applications-internet.png"));
-    lookupButton->setStatusTip(tr("Look up the qualifier"));
-    lookupButton->setToolTip(tr("Look Up"));
-    lookupButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    mLookupButton->setCheckable(true);
+    mLookupButton->setIcon(QIcon(":/oxygen/categories/applications-internet.png"));
+    mLookupButton->setStatusTip(tr("Look up the qualifier"));
+    mLookupButton->setToolTip(tr("Look Up"));
+    mLookupButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    connect(lookupButton, SIGNAL(clicked()),
+    connect(mLookupButton, SIGNAL(clicked()),
             this, SLOT(lookupQualifier()));
 
     // Add our QComboBox and QPushButton to our cmeta:id widget
 
     qualifierWidgetLayout->addWidget(mQualifierValue);
-    qualifierWidgetLayout->addWidget(lookupButton);
+    qualifierWidgetLayout->addWidget(mLookupButton);
 
     // Add our cmeta:id widget to our main layout
 
@@ -221,7 +226,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Let people know that the GUI has been populated
 
-    emit guiPopulated(mQualifierValue, lookupButton, termValue);
+    emit guiPopulated(mQualifierValue, mLookupButton, termValue);
 
     // Create a stacked widget (within a scroll area, so that only the items get
     // scrolled, not the whole metadata edit details widget) which will contain
@@ -336,10 +341,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                                 1.25, false, false, Qt::AlignCenter),
                                  0, 0);
 
-        // Let people know that there is nothing to look up anymore, if needed
+        // Pretend that we want to look nothing up, if needed
+        // Note: this is in case a resource or id used to be looked up, in which
+        //       case we don't want it to be anymore...
 
         if (mLookupInformation && (mType != Qualifier))
-            emit noLookupRequested();
+            genericLookup();
     } else {
         // Create labels to act as headers
 
@@ -477,6 +484,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString 
     mInformation = pInformation;
     mType = pType;
 
+    // Toggle the lookup button, if needed
+
+    if ((mType != Qualifier) && mLookupButton->isChecked())
+        mLookupButton->toggle();
+
     // Make the row corresponding to the resource or id bold
     // Note: to use mGridLayout->rowCount() to determine the number of rows
     //       isn't an option since the returned value will be the maximum number
@@ -558,6 +570,24 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::disableLookupInformation()
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QString &pQualifier,
+                                                                     const bool &pRetranslate)
+{
+    // Lookup the qualifier, if requested
+
+    if (mLookupButton->isChecked()) {
+        // Enable the looking up of information
+
+        mLookupInformation = true;
+
+        // Call our generic lookup function
+
+        genericLookup(pQualifier, Qualifier, pRetranslate);
+    }
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier(const bool &pRetranslate)
 {
     // Enable the looking up of information
@@ -566,7 +596,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier(const bool &
 
     // Call our generic lookup function
 
-    genericLookup(mQualifierValue->currentText(), Qualifier, pRetranslate);
+    if (mLookupButton->isChecked())
+        // We want to look something up, so...
+
+        genericLookup(mQualifierValue->currentText(), Qualifier, pRetranslate);
+    else
+        // We don't want to look anything up anymore, so...
+
+        genericLookup();
 }
 
 //==============================================================================
