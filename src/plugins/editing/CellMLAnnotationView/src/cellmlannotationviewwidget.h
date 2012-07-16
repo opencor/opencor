@@ -68,10 +68,10 @@ public:
     void updateWebViewerWithResourceDetails(QWebView *pWebView,
                                             const QString &pResource,
                                             const bool &pRetranslate);
-    void updateWebViewerWithResourceIdDetails(QWebView *pWebView,
-                                              const QString &pResource,
-                                              const QString &pId,
-                                              const bool &pRetranslate);
+    void updateWebViewerWithIdDetails(QWebView *pWebView,
+                                      const QString &pResource,
+                                      const QString &pId,
+                                      const bool &pRetranslate);
 
 private:
     Ui::CellmlAnnotationViewWidget *mGui;

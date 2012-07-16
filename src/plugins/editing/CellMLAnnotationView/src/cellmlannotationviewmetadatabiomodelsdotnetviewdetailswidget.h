@@ -43,7 +43,7 @@ class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget : public QScr
 
 private:
     enum Type {
-        Unknown,
+        No,
         Qualifier,
         Resource,
         Id
@@ -58,8 +58,7 @@ public:
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
                    const QString &pRdfTripleInformation = QString(),
-                   const Type &pType = Unknown,
-                   const bool &pRetranslate = false);
+                   const Type &pType = No, const bool &pRetranslate = false);
 
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
@@ -83,7 +82,7 @@ private:
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
     void genericLookup(const QString &pRdfTripleInformation = QString(),
-                       const Type &pType = Unknown,
+                       const Type &pType = No,
                        const bool &pRetranslate = false);
 
     QString rdfTripleInformation(const int &pRow) const;
@@ -93,9 +92,9 @@ Q_SIGNALS:
                                   const bool &pRetranslate);
     void resourceLookupRequested(const QString &pResource,
                                  const bool &pRetranslate);
-    void resourceIdLookupRequested(const QString &pResource, const QString &pId,
-                                   const bool &pRetranslate);
-    void unknownLookupRequested();
+    void idLookupRequested(const QString &pResource, const QString &pId,
+                           const bool &pRetranslate);
+    void noLookupRequested();
 
     void metadataUpdated();
 
@@ -106,8 +105,8 @@ private Q_SLOTS:
                          const bool &pRetranslate = false);
     void lookupResource(const QString &pRdfTripleInformation,
                         const bool &pRetranslate = false);
-    void lookupResourceId(const QString &pRdfTripleInformation,
-                          const bool &pRetranslate = false);
+    void lookupId(const QString &pRdfTripleInformation,
+                  const bool &pRetranslate = false);
 
     void removeRdfTriple();
 };

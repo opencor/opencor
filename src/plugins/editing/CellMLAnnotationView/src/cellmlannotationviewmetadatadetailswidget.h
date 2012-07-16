@@ -90,9 +90,9 @@ private Q_SLOTS:
 
     void lookupQualifier(const QString &pQualifier, const bool &pRetranslate);
     void lookupResource(const QString &pResource, const bool &pRetranslate);
-    void lookupResourceId(const QString &pResource, const QString &pId,
-                          const bool &pRetranslate);
-    void unknownLookupRequested();
+    void lookupId(const QString &pResource, const QString &pId,
+                  const bool &pRetranslate);
+    void lookupNothing();
 };
 
 //==============================================================================

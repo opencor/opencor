@@ -75,9 +75,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mOtherTermUrl(QString()),
     mItems(Items()),
     mErrorMsg(QString()),
-    mQualifier(QString()),
-    mResource(QString()),
-    mId(QString()),
+    mInformation(QString()),
+    mType(No),
     mLookupInformation(false)
 {
     // Set up the GUI
@@ -300,7 +299,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     if (mLookupInformation)
         // Look up an 'old' qualifier, resource or resource id
 
-        genericLookup(mQualifier, mResource, mId, pRetranslate);
+        genericLookup(mInformation, mType, pRetranslate);
 }
 
 //==============================================================================
@@ -335,7 +334,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
                                                 pErrorMsg.isEmpty()?tr("No data available..."):pErrorMsg,
                                                 1.25, false, false, Qt::AlignCenter),
-                                 1, 0);
+                                 0, 0);
+
+        // Let people know that there is nothing to look up anymore, if needed
+
+        if (mLookupInformation && (mType != Qualifier))
+            emit noLookupRequested();
     } else {
         // Create labels to act as headers
 
@@ -375,17 +379,27 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
             // Resource
 
-            newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                    item.resource,
-                                                    1.0, false, false, Qt::AlignCenter),
-                                     row, 1);
+            QString information = item.resource+"|"+item.id;
+
+            QLabel *resourceLabel = Core::newLabelLink(newGridWidget,
+                                                       "<a href=\""+information+"\">"+item.resource+"</a>",
+                                                       1.0, false, false, Qt::AlignCenter);
+
+            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
+                    this, SLOT(lookupResource(const QString &)));
+
+            newGridLayout->addWidget(resourceLabel, row, 1);
 
             // Id
 
-            newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                    item.id,
-                                                    1.0, false, false, Qt::AlignCenter),
-                                     row, 2);
+            QLabel *idLabel = Core::newLabelLink(newGridWidget,
+                                                 "<a href=\""+information+"\">"+item.id+"</a>",
+                                                 1.0, false, false, Qt::AlignCenter);
+
+            connect(idLabel, SIGNAL(linkActivated(const QString &)),
+                    this, SLOT(lookupId(const QString &)));
+
+            newGridLayout->addWidget(idLabel, row, 2);
 
             // Add button
 
@@ -447,25 +461,86 @@ CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadata
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString &pQualifier,
-                                                                  const QString &pResource,
-                                                                  const QString &pId,
+void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString &pInformation,
+                                                                  const Type &pType,
                                                                   const bool &pRetranslate)
 {
-    // Let people know that we want to look up something
+    // Retrieve the information
 
-    if (!pQualifier.isEmpty())
-        // We want to look up a qualifier
+    QStringList informationAsStringList = pInformation.split("|");
+    QString qualifierAsString = (pType != Qualifier)?QString():pInformation;
+    QString resourceAsString = (pInformation.isEmpty() || (pType == Qualifier))?QString():informationAsStringList[0];
+    QString idAsString = (pInformation.isEmpty() || (pType == Qualifier))?QString():informationAsStringList[1];
 
-        emit qualifierLookupRequested(pQualifier, pRetranslate);
-    else if (pId.isEmpty())
-        // We want to look up a resource
+    // Keep track of the information
 
-        emit resourceLookupRequested(pResource, pRetranslate);
-    else
-        // We want to look up a resource id
+    mInformation = pInformation;
+    mType = pType;
 
-        emit resourceIdLookupRequested(pResource, pId, pRetranslate);
+    // Make the row corresponding to the resource or id bold
+    // Note: to use mGridLayout->rowCount() to determine the number of rows
+    //       isn't an option since the returned value will be the maximum number
+    //       of rows that there has ever been, so...
+
+    int row = 0;
+
+    forever
+        if (mGridLayout->itemAtPosition(++row, 0)) {
+            // Valid row, so check whether to make it bold (and italic in some
+            // cases) or not
+
+            QLabel *nameLabel     = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
+            QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
+            QLabel *idLabel       = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
+
+            QFont font = idLabel->font();
+
+            font.setBold(   mLookupInformation
+                         && !resourceLabel->text().compare("<a href=\""+pInformation+"\">"+resourceAsString+"</a>")
+                         && !idLabel->text().compare("<a href=\""+pInformation+"\">"+idAsString+"</a>"));
+            font.setItalic(false);
+
+            QFont italicFont = idLabel->font();
+
+            italicFont.setBold(font.bold());
+            italicFont.setItalic(font.bold());
+
+            nameLabel->setFont(font);
+            resourceLabel->setFont((pType == Resource)?italicFont:font);
+            idLabel->setFont((pType == Id)?italicFont:font);
+        } else {
+            // No more rows, so...
+
+            break;
+        }
+
+    // Check that we have something to look up
+
+    if (!mLookupInformation)
+        // Nothing to look up, so...
+
+        return;
+
+    // Let people know that we want to look something up
+
+    switch (pType) {
+    case Qualifier:
+        emit qualifierLookupRequested(qualifierAsString, pRetranslate);
+
+        break;
+    case Resource:
+        emit resourceLookupRequested(resourceAsString, pRetranslate);
+
+        break;
+    case Id:
+        emit idLookupRequested(resourceAsString, idAsString, pRetranslate);
+
+        break;
+    default:
+        // No
+
+        emit noLookupRequested();
+    }
 }
 
 //==============================================================================
@@ -491,8 +566,35 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier(const bool &
 
     // Call our generic lookup function
 
-    genericLookup(mQualifierValue->currentText(), QString(), QString(),
-                  pRetranslate);
+    genericLookup(mQualifierValue->currentText(), Qualifier, pRetranslate);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString &pInformation,
+                                                                   const bool &pRetranslate)
+{
+    // Enable the looking up of information
+
+    mLookupInformation = true;
+
+    // Call our generic lookup function
+
+    genericLookup(pInformation, Resource, pRetranslate);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pInformation,
+                                                             const bool &pRetranslate)
+{
+    // Enable the looking up of information
+
+    mLookupInformation = true;
+
+    // Call our generic lookup function
+
+    genericLookup(pInformation, Id, pRetranslate);
 }
 
 //==============================================================================

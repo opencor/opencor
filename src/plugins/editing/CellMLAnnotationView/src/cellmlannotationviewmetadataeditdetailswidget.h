@@ -69,6 +69,13 @@ public:
                    const bool &pRetranslate = false);
 
 private:
+    enum Type {
+        No,
+        Qualifier,
+        Resource,
+        Id
+    };
+
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QStackedWidget *mWidget;
@@ -95,9 +102,8 @@ private:
     Items mItems;
     QString mErrorMsg;
 
-    QString mQualifier;
-    QString mResource;
-    QString mId;
+    QString mInformation;
+    Type mType;
 
     bool mLookupInformation;
 
@@ -106,9 +112,8 @@ private:
     static Item item(const QString &pName,
                      const QString &pResource, const QString &pId);
 
-    void genericLookup(const QString &pQualifier = QString(),
-                       const QString &pResource = QString(),
-                       const QString &pId = QString(),
+    void genericLookup(const QString &pInformation = QString(),
+                       const Type &pType = No,
                        const bool &pRetranslate = false);
 
 Q_SIGNALS:
@@ -119,13 +124,18 @@ Q_SIGNALS:
                                   const bool &pRetranslate);
     void resourceLookupRequested(const QString &pResource,
                                  const bool &pRetranslate);
-    void resourceIdLookupRequested(const QString &pResource, const QString &pId,
-                                   const bool &pRetranslate);
+    void idLookupRequested(const QString &pResource, const QString &pId,
+                           const bool &pRetranslate);
+    void noLookupRequested();
 
 private Q_SLOTS:
     void disableLookupInformation();
 
     void lookupQualifier(const bool &pRetranslate = false);
+    void lookupResource(const QString &pInformation,
+                        const bool &pRetranslate = false);
+    void lookupId(const QString &pInformation,
+                  const bool &pRetranslate = false);
 
     void lookupTerm(const QString &pTerm);
     void termLookupFinished(QNetworkReply *pNetworkReply);

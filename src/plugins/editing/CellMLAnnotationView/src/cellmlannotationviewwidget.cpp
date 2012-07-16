@@ -411,10 +411,10 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::updateWebViewerWithResourceIdDetails(QWebView *pWebView,
-                                                                      const QString &pResource,
-                                                                      const QString &pId,
-                                                                      const bool &pRetranslate)
+void CellmlAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView,
+                                                              const QString &pResource,
+                                                              const QString &pId,
+                                                              const bool &pRetranslate)
 {
     // The user requested a resource id to be looked up, so retrieve it using
     // identifiers.org, but only if we are not retranslating since the looking
