@@ -62,15 +62,36 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mBorderedWebView = new Core::BorderedWidget(mWebView,
                                                 true, true, false, false);
 
+    // Some connections to handle the looking up of a qualifier from our
+    // metadata edit details view, as well as the disabling of information
+    // lookup for the metadata view details widget
+
+    connect(mMetadataEditDetails, SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
+            mMetadataViewDetails->bioModelsDotNetView(), SLOT(disableLookupInformation()));
+    connect(mMetadataEditDetails, SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
+            this, SLOT(lookupQualifier(const QString &, const bool &)));
+
     // Some connections to handle the looking up of a qualifier, resource and
-    // resource id
+    // resource id from our BioModels.Net view, as well as the disabling of
+    // information lookup for the metadata edit details widget
 
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
-            this, SLOT(qualifierLookupRequested(const QString &, const bool &)));
+            mMetadataEditDetails, SLOT(disableLookupInformation()));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
+            this, SLOT(lookupQualifier(const QString &, const bool &)));
+
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
-            this, SLOT(resourceLookupRequested(const QString &, const bool &)));
+            mMetadataEditDetails, SLOT(disableLookupInformation()));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
+            this, SLOT(lookupResource(const QString &, const bool &)));
+
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceIdLookupRequested(const QString &, const QString &, const bool &)),
-            this, SLOT(resourceIdLookupRequested(const QString &, const QString &, const bool &)));
+            mMetadataEditDetails, SLOT(disableLookupInformation()));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceIdLookupRequested(const QString &, const QString &, const bool &)),
+            this, SLOT(lookupResourceId(const QString &, const QString &, const bool &)));
+
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(unknownLookupRequested()),
+            mMetadataEditDetails, SLOT(disableLookupInformation()));
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(unknownLookupRequested()),
             this, SLOT(unknownLookupRequested()));
 
@@ -179,8 +200,8 @@ void CellmlAnnotationViewMetadataDetailsWidget::emitSplitterMoved()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::qualifierLookupRequested(const QString &pQualifier,
-                                                                         const bool &pRetranslate)
+void CellmlAnnotationViewMetadataDetailsWidget::lookupQualifier(const QString &pQualifier,
+                                                                const bool &pRetranslate)
 {
     // Ask our parent to update our web viewer for us
 
@@ -189,8 +210,8 @@ void CellmlAnnotationViewMetadataDetailsWidget::qualifierLookupRequested(const Q
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::resourceLookupRequested(const QString &pResource,
-                                                                        const bool &pRetranslate)
+void CellmlAnnotationViewMetadataDetailsWidget::lookupResource(const QString &pResource,
+                                                               const bool &pRetranslate)
 {
     // Ask our parent to update our web viewer for us
 
@@ -199,9 +220,9 @@ void CellmlAnnotationViewMetadataDetailsWidget::resourceLookupRequested(const QS
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::resourceIdLookupRequested(const QString &pResource,
-                                                                          const QString &pId,
-                                                                          const bool &pRetranslate)
+void CellmlAnnotationViewMetadataDetailsWidget::lookupResourceId(const QString &pResource,
+                                                                 const QString &pId,
+                                                                 const bool &pRetranslate)
 {
     // Ask our parent to update our web viewer for us
 

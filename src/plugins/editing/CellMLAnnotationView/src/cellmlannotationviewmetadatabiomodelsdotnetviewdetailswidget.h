@@ -57,7 +57,7 @@ public:
     virtual void retranslateUi();
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
-                   const QString &pRdfTripleInfo = QString(),
+                   const QString &pRdfTripleInformation = QString(),
                    const Type &pType = Unknown,
                    const bool &pRetranslate = false);
 
@@ -73,37 +73,40 @@ private:
 
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
-    QString mRdfTripleInfo;
+    QString mRdfTripleInformation;
     Type mType;
+
+    bool mLookupInformation;
 
     bool mEditingMode;
 
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
-    void genericLookup(const QString &pRdfTripleInfo = QString(),
+    void genericLookup(const QString &pRdfTripleInformation = QString(),
                        const Type &pType = Unknown,
                        const bool &pRetranslate = false);
 
-    QString rdfTripleInfo(const int &pRow) const;
+    QString rdfTripleInformation(const int &pRow) const;
 
 Q_SIGNALS:
     void qualifierLookupRequested(const QString &pQualifier,
                                   const bool &pRetranslate);
     void resourceLookupRequested(const QString &pResource,
                                  const bool &pRetranslate);
-    void resourceIdLookupRequested(const QString &pResource,
-                                   const QString &pId,
+    void resourceIdLookupRequested(const QString &pResource, const QString &pId,
                                    const bool &pRetranslate);
     void unknownLookupRequested();
 
     void metadataUpdated();
 
 private Q_SLOTS:
-    void lookupQualifier(const QString &pRdfTripleInfo,
+    void disableLookupInformation();
+
+    void lookupQualifier(const QString &pRdfTripleInformation,
                          const bool &pRetranslate = false);
-    void lookupResource(const QString &pRdfTripleInfo,
+    void lookupResource(const QString &pRdfTripleInformation,
                         const bool &pRetranslate = false);
-    void lookupResourceId(const QString &pRdfTripleInfo,
+    void lookupResourceId(const QString &pRdfTripleInformation,
                           const bool &pRetranslate = false);
 
     void removeRdfTriple();

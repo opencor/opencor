@@ -65,7 +65,8 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const Items &pItems, const QString &pErrorMsg);
+    void updateGui(const Items &pItems, const QString &pErrorMsg,
+                   const bool &pRetranslate = false);
 
 private:
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
@@ -94,18 +95,40 @@ private:
     Items mItems;
     QString mErrorMsg;
 
+    QString mQualifier;
+    QString mResource;
+    QString mId;
+
+    bool mLookupInformation;
+
     void updateItemsGui(const Items &pItems, const QString &pErrorMsg);
 
     static Item item(const QString &pName,
                      const QString &pResource, const QString &pId);
 
+    void genericLookup(const QString &pQualifier = QString(),
+                       const QString &pResource = QString(),
+                       const QString &pId = QString(),
+                       const bool &pRetranslate = false);
+
 Q_SIGNALS:
     void guiPopulated(QComboBox *pQualifierValue, QPushButton *pLookupButton,
                       QLineEdit *pTermValue);
 
+    void qualifierLookupRequested(const QString &pQualifier,
+                                  const bool &pRetranslate);
+    void resourceLookupRequested(const QString &pResource,
+                                 const bool &pRetranslate);
+    void resourceIdLookupRequested(const QString &pResource, const QString &pId,
+                                   const bool &pRetranslate);
+
 private Q_SLOTS:
+    void disableLookupInformation();
+
+    void lookupQualifier(const bool &pRetranslate = false);
+
     void lookupTerm(const QString &pTerm);
-    void finished(QNetworkReply *pNetworkReply);
+    void termLookupFinished(QNetworkReply *pNetworkReply);
 };
 
 //==============================================================================

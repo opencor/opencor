@@ -88,13 +88,10 @@ public Q_SLOTS:
 private Q_SLOTS:
     void emitSplitterMoved();
 
-    void qualifierLookupRequested(const QString &pQualifier,
-                                  const bool &pRetranslate);
-    void resourceLookupRequested(const QString &pResource,
-                                 const bool &pRetranslate);
-    void resourceIdLookupRequested(const QString &pResource,
-                                   const QString &pId,
-                                   const bool &pRetranslate);
+    void lookupQualifier(const QString &pQualifier, const bool &pRetranslate);
+    void lookupResource(const QString &pResource, const bool &pRetranslate);
+    void lookupResourceId(const QString &pResource, const QString &pId,
+                          const bool &pRetranslate);
     void unknownLookupRequested();
 };
 

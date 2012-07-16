@@ -74,7 +74,11 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTermUrl(QString()),
     mOtherTermUrl(QString()),
     mItems(Items()),
-    mErrorMsg(QString())
+    mErrorMsg(QString()),
+    mQualifier(QString()),
+    mResource(QString()),
+    mId(QString()),
+    mLookupInformation(false)
 {
     // Set up the GUI
 
@@ -97,7 +101,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // complete
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
-            this, SLOT(finished(QNetworkReply *)) );
+            this, SLOT(termLookupFinished(QNetworkReply *)) );
 }
 
 //==============================================================================
@@ -119,13 +123,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mItems, mErrorMsg);
+    updateGui(mItems, mErrorMsg, true);
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
-                                                              const QString &pErrorMsg)
+                                                              const QString &pErrorMsg,
+                                                              const bool &pRetranslate)
 {
     // Note: we are using certain layouts to dislay the contents of our view,
     //       but this unfortunately results in some very bad flickering on Mac
@@ -170,9 +175,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
-//    connect(mQualifierValue, SIGNAL(currentIndexChanged(int)),
-//            this, SIGNAL(qualifierChanged(const int &)));
-
     // Create our qualifier lookup button widget
 
     QPushButton *lookupButton = new QPushButton(qualifierWidget);
@@ -187,8 +189,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     lookupButton->setToolTip(tr("Look Up"));
     lookupButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-//    connect(lookupButton, SIGNAL(clicked()),
-//            this, SLOT(lookupInformation()));
+    connect(lookupButton, SIGNAL(clicked()),
+            this, SLOT(lookupQualifier()));
 
     // Add our QComboBox and QPushButton to our cmeta:id widget
 
@@ -292,6 +294,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     // Update our items GUI
 
     updateItemsGui(pItems, pErrorMsg);
+
+    // Request for something to be looked up, if needed
+
+    if (mLookupInformation)
+        // Look up an 'old' qualifier, resource or resource id
+
+        genericLookup(mQualifier, mResource, mId, pRetranslate);
 }
 
 //==============================================================================
@@ -438,6 +447,56 @@ CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadata
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString &pQualifier,
+                                                                  const QString &pResource,
+                                                                  const QString &pId,
+                                                                  const bool &pRetranslate)
+{
+    // Let people know that we want to look up something
+
+    if (!pQualifier.isEmpty())
+        // We want to look up a qualifier
+
+        emit qualifierLookupRequested(pQualifier, pRetranslate);
+    else if (pId.isEmpty())
+        // We want to look up a resource
+
+        emit resourceLookupRequested(pResource, pRetranslate);
+    else
+        // We want to look up a resource id
+
+        emit resourceIdLookupRequested(pResource, pId, pRetranslate);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::disableLookupInformation()
+{
+    // Disable the looking up of information
+
+    mLookupInformation = false;
+
+    // Update the GUI by pretending to be interested in looking something up
+
+    genericLookup();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier(const bool &pRetranslate)
+{
+    // Enable the looking up of information
+
+    mLookupInformation = true;
+
+    // Call our generic lookup function
+
+    genericLookup(mQualifierValue->currentText(), QString(), QString(),
+                  pRetranslate);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pTerm)
 {
     // Keep track of the term to look up
@@ -465,7 +524,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pT
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNetworkReply)
+void CellmlAnnotationViewMetadataEditDetailsWidget::termLookupFinished(QNetworkReply *pNetworkReply)
 {
     // Retrieve the list of ontological terms, should we have retrieved it
     // without any problem
