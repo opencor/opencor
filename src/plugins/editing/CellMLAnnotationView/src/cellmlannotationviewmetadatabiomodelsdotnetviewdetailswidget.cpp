@@ -255,16 +255,16 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         // resource id to be looked up
 
         if (pRdfTripleInfo.isEmpty() && (pType == Unknown))
-            // Nothing 'old' to lookup, so lookup the first resource id
+            // Nothing 'old' to look up, so look up the first resource id
 
             genericLookup(firstRdfTripleInfo, Id, pRetranslate);
         else
-            // Lookup an 'old' qualifier, resource or resource id
+            // Look up an 'old' qualifier, resource or resource id
 
             genericLookup(pRdfTripleInfo, pType, pRetranslate);
     } else {
         // No RDF triple left, so ask for an 'unknown' to be looked up
-        // Note: we do this to let people know that there is nothing to lookup
+        // Note: we do this to let people know that there is nothing to look up
         //       and that they can 'clean' whatever they use to show a lookup to
         //       the user...
 
@@ -332,7 +332,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
             break;
         }
 
-    // Let people know that we want to lookup something
+    // Let people know that we want to look up something
 
     switch (pType) {
     case Qualifier:
@@ -464,7 +464,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     Q_ASSERT(row > 0);
     Q_ASSERT(rowMax > row);
 
-    // Determine the 'new' RDF triple information to lookup
+    // Determine the 'new' RDF triple information to look up
 
     if (mRdfTriples.isEmpty()) {
         mRdfTripleInfo = QString();

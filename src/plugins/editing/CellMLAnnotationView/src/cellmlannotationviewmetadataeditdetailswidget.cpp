@@ -151,14 +151,56 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     newFormWidget->setLayout(newFormLayout);
 
-    // Add our qualifier and term fields
+    // Add our qualifier field
 
-    mQualifierValue = new QComboBox(newFormWidget);
+    // Create a widget which will contain both our qualifier value widget and a
+    // button to look up the qualifier
+
+    QWidget *qualifierWidget = new QWidget(newFormWidget);
+
+    QHBoxLayout *qualifierWidgetLayout = new QHBoxLayout(qualifierWidget);
+
+    qualifierWidgetLayout->setMargin(0);
+
+    qualifierWidget->setLayout(qualifierWidgetLayout);
+
+    // Create our qualifier value widget
+
+    mQualifierValue = new QComboBox(qualifierWidget);
 
     mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
+//    connect(mQualifierValue, SIGNAL(currentIndexChanged(int)),
+//            this, SIGNAL(qualifierChanged(const int &)));
+
+    // Create our qualifier lookup button widget
+
+    QPushButton *lookupButton = new QPushButton(qualifierWidget);
+    // Note #1: ideally, we could assign a QAction to our QPushButton, but this
+    //          cannot be done, so... we assign a few properties by hand...
+    // Note #2: to use a QToolButton would allow us to assign a QAction to it,
+    //          but a QToolButton doesn't look quite the same as a QPushButton
+    //          on some platforms, so...
+
+    lookupButton->setIcon(QIcon(":/oxygen/categories/applications-internet.png"));
+    lookupButton->setStatusTip(tr("Look up the qualifier"));
+    lookupButton->setToolTip(tr("Look Up"));
+    lookupButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+//    connect(lookupButton, SIGNAL(clicked()),
+//            this, SLOT(lookupInformation()));
+
+    // Add our QComboBox and QPushButton to our cmeta:id widget
+
+    qualifierWidgetLayout->addWidget(mQualifierValue);
+    qualifierWidgetLayout->addWidget(lookupButton);
+
+    // Add our cmeta:id widget to our main layout
+
     newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), 1.0, true),
-                          mQualifierValue);
+                          qualifierWidget);
+
+    // Add our term field
 
     QLineEdit *termValue = new QLineEdit(newFormWidget);
 
@@ -166,7 +208,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     // Note: we set the text to whatever term was previously being looked up and
     //       this before tracking changes to the term since we don't want to
     //       trigger a call to lookupTerm(). Indeed, we might come here as a
-    //       result of a retranslation so we shouldn't lookup for the term and,
+    //       result of a retranslation so we shouldn't look up for the term and,
     //       instead, we should call updateItemsGui() which we do at the end of
     //       this procedure...
 
@@ -178,7 +220,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Let people know that the GUI has been populated
 
-    emit guiPopulated(mQualifierValue, termValue);
+    emit guiPopulated(mQualifierValue, lookupButton, termValue);
 
     // Create a stacked widget (within a scroll area, so that only the items get
     // scrolled, not the whole metadata edit details widget) which will contain
@@ -398,7 +440,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadata
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pTerm)
 {
-    // Keep track of the term to lookup
+    // Keep track of the term to look up
 
     mTerm = pTerm;
 
@@ -480,18 +522,18 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::finished(QNetworkReply *pNet
 
     mTermUrl = QString();
 
-    // Lookup another term, should there be one to lookup, or update the GUI
+    // Look up another term, should there be one to look up, or update the GUI
     // with the results of the lookup
 
     if (!mOtherTermUrl.isEmpty()) {
-        // There is another term to lookup, so...
+        // There is another term to look up, so...
 
         mNetworkAccessManager->get(QNetworkRequest(mOtherTermUrl));
 
         mOtherTermUrl = QString();
     } else {
-        // No other term to lookup, so we can update our GUI with the results of
-        // the lookup after having sorted them
+        // No other term to look up, so we can update our GUI with the results
+        // of the lookup after having sorted them
 
         qSort(items.begin(), items.end());
 

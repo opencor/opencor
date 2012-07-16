@@ -1038,7 +1038,7 @@ void MainWindow::on_actionPreferences_triggered()
 
 void MainWindow::on_actionHomePage_triggered()
 {
-    // Lookup OpenCOR's home page
+    // Look up OpenCOR's home page
 
     QDesktopServices::openUrl(QUrl(OpencorHomepageUrl));
 }

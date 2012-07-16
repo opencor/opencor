@@ -351,6 +351,14 @@
         <source>(%1 terms)</source>
         <translation>(%1 termes)</translation>
     </message>
+    <message>
+        <source>Look up the qualifier</source>
+        <translation>Vérifier le qualificatif</translation>
+    </message>
+    <message>
+        <source>Look Up</source>
+        <translation>Vérifier</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataListWidget</name>

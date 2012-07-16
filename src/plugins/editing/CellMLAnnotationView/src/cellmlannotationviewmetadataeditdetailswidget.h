@@ -27,6 +27,7 @@ class QGridLayout;
 class QLineEdit;
 class QNetworkAccessManager;
 class QNetworkReply;
+class QPushButton;
 class QStackedWidget;
 class QVBoxLayout;
 
@@ -99,7 +100,8 @@ private:
                      const QString &pResource, const QString &pId);
 
 Q_SIGNALS:
-    void guiPopulated(QComboBox *pQualifierValue, QLineEdit *pTermValue);
+    void guiPopulated(QComboBox *pQualifierValue, QPushButton *pLookupButton,
+                      QLineEdit *pTermValue);
 
 private Q_SLOTS:
     void lookupTerm(const QString &pTerm);

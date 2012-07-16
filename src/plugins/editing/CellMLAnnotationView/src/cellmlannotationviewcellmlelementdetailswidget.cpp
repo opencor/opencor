@@ -256,7 +256,7 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
             // Create our cmeta:id value widget
 
-            mCmetaIdValue = new QComboBox(newFormWidget);
+            mCmetaIdValue = new QComboBox(cmetaIdWidget);
 
             mCmetaIdValue->addItems(mParent->metadataIds());
 
@@ -282,9 +282,12 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
 
                 mCmetaIdValue->setEditText(cmetaId);
 
+            connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
+                    this, SIGNAL(cmetaIdChanged(const QString &)));
+
             // Create our edit button widget
 
-            QPushButton *editButton = new QPushButton(newFormWidget);
+            QPushButton *editButton = new QPushButton(cmetaIdWidget);
             // Note #1: ideally, we could assign a QAction to our QPushButton,
             //          but this cannot be done, so... we assign a few
             //          properties by hand...
@@ -313,12 +316,6 @@ void CellmlAnnotationViewCellmlElementDetailsWidget::updateGui(const Items &pIte
             // Let people know that the GUI has been populated
 
             emit guiPopulated(mCmetaIdValue, editButton);
-
-            // Create a connection to let people know whenever the cmeta:id
-            // value has changed
-
-            connect(mCmetaIdValue, SIGNAL(editTextChanged(const QString &)),
-                    this, SIGNAL(cmetaIdChanged(const QString &)));
         } else {
             // Not our 'main' item, so just display its cmeta:id
 

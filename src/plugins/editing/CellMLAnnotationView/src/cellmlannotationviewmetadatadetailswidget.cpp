@@ -212,7 +212,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::resourceIdLookupRequested(const 
 
 void CellmlAnnotationViewMetadataDetailsWidget::unknownLookupRequested()
 {
-    // We are 'asked' to lookup something unknown, so 'clean up' our web view
+    // We are 'asked' to look up something unknown, so 'clean up' our web view
 
     mWebView->setUrl(QUrl());
 }
