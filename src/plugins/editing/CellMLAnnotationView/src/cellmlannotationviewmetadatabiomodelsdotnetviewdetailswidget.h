@@ -58,7 +58,9 @@ public:
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
                    const QString &pRdfTripleInformation = QString(),
-                   const Type &pType = No, const bool &pRetranslate = false);
+                   const Type &pType = No,
+                   const int &pVerticalScrollBarPosition = 0,
+                   const bool &pRetranslate = false);
 
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
@@ -78,6 +80,8 @@ private:
     bool mLookupInformation;
 
     bool mEditingMode;
+
+    int mVerticalScrollBarPosition;
 
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
@@ -110,6 +114,8 @@ private Q_SLOTS:
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
     void showLastRdfTriple();
+
+    void trackVerticalScrollBarPosition(const int &pPosition);
 };
 
 //==============================================================================

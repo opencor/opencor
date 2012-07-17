@@ -38,7 +38,8 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     mType(No),
     mLookupInformation(true),
     mEditingMode(pEditingMode),
-    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>())
+    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
+    mVerticalScrollBarPosition(0)
 {
     // Set up the GUI
 
@@ -51,6 +52,11 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     // Add our stacked widget to our scroll area
 
     setWidget(mWidget);
+
+    // Keep track of the position of our vertical scroll bar
+
+    connect(verticalScrollBar(), SIGNAL(sliderMoved(int)),
+            this, SLOT(trackVerticalScrollBarPosition(const int &)));
 }
 
 //==============================================================================
@@ -72,7 +78,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::retranslateUi
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mRdfTriples, mRdfTripleInformation, mType, true);
+    updateGui(mRdfTriples, mRdfTripleInformation, mType, mVerticalScrollBarPosition, true);
 }
 
 //==============================================================================
@@ -80,6 +86,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::retranslateUi
 void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
                                                                              const QString &pRdfTripleInformation,
                                                                              const Type &pType,
+                                                                             const int &pVerticalScrollBarPosition,
                                                                              const bool &pRetranslate)
 {
     // Note: we are using a grid layout to dislay the contents of our view, but
@@ -279,6 +286,10 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             genericLookup();
         }
     }
+
+    // Set the position of our vertical scroll bar 
+
+    verticalScrollBar()->setValue(pVerticalScrollBarPosition);
 }
 
 //==============================================================================
@@ -536,7 +547,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::addRdfTriple(
 
     // Update the GUI to reflect the addition of our RDF triple
 
-    updateGui(mRdfTriples, mRdfTripleInformation, mType);
+    updateGui(mRdfTriples, mRdfTripleInformation, mType, mVerticalScrollBarPosition);
 }
 
 //==============================================================================
@@ -561,6 +572,15 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showLastRdfTr
     // Make sure that the last RDF triple is visible
 
     ensureWidgetVisible(mGridLayout->itemAtPosition(row-1, 0)->widget());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::trackVerticalScrollBarPosition(const int &pPosition)
+{
+    // Keep track of the new position of our vertical scroll bar
+
+    mVerticalScrollBarPosition = pPosition;
 }
 
 //==============================================================================
