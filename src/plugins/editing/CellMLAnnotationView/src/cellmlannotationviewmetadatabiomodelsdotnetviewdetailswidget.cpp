@@ -39,7 +39,8 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     mLookupInformation(true),
     mEditingMode(pEditingMode),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
-    mVerticalScrollBarPosition(0)
+    mVerticalScrollBarPosition(0),
+    mNeighbourRow(0)
 {
     // Set up the GUI
 
@@ -287,7 +288,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
         }
     }
 
-    // Set the position of our vertical scroll bar 
+    // Set the position of our vertical scroll bar
 
     verticalScrollBar()->setValue(pVerticalScrollBarPosition);
 }
@@ -487,7 +488,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     int row = -1;
     int rowMax = mGridLayout->rowCount();
 
-    for (int i = 1, iMax = mGridLayout->rowCount(); i < iMax; ++i) {
+    for (int i = 1; i < rowMax; ++i) {
         QLayoutItem *item = mGridLayout->itemAtPosition(i, 3);
 
         if (!item) {
@@ -509,6 +510,10 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     Q_ASSERT(row > 0);
     Q_ASSERT(rowMax > row);
 
+    // Determine the neighbour row which we want to be visible
+
+    mNeighbourRow = (rowMax-1 > row)?row:row-1;
+
     // Determine the 'new' RDF triple information to look up
 
     if (mRdfTriples.isEmpty()) {
@@ -516,10 +521,17 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
         mType = No;
     } else if (!rdfTripleInformation(row).compare(mRdfTripleInformation)) {
         // The RDF triple information is related to the row we want to delete,
-        // so we need to find some new one
+        // so we need to find a new one
 
         mRdfTripleInformation = rdfTripleInformation((rowMax-1 > row)?row+1:row-1);
     }
+
+    // Make sure that the neighbour of the removed RDF triple will be made
+    // visible, this by handling the change in the range of our vertical scroll
+    // bar which will result in showNeighbourRdfTriple() being called
+
+    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+            this, SLOT(showNeighbourRdfTriple()));
 
     // Update the GUI to reflect the removal of the RDF triple
 
@@ -552,10 +564,23 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::addRdfTriple(
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showNeighbourRdfTriple()
+{
+    // No need to show our neighbour RDF triple, so...
+
+    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+               this, SLOT(showNeighbourRdfTriple()));
+
+    // Make sure that the last RDF triple is visible
+
+    ensureWidgetVisible(mGridLayout->itemAtPosition(mNeighbourRow, 0)->widget());
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showLastRdfTriple()
 {
-    // No need to handle the change in the contents of our GUI through the
-    // change in the range of our vertical scroll bar
+    // No need to show our last RDF triple, so...
 
     disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
                this, SLOT(showLastRdfTriple()));

@@ -83,6 +83,8 @@ private:
 
     int mVerticalScrollBarPosition;
 
+    int mNeighbourRow;
+
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
     void genericLookup(const QString &pRdfTripleInformation = QString(),
@@ -113,6 +115,7 @@ private Q_SLOTS:
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
+    void showNeighbourRdfTriple();
     void showLastRdfTriple();
 
     void trackVerticalScrollBarPosition(const int &pPosition);
