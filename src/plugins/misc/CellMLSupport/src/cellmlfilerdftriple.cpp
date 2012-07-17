@@ -1,10 +1,6 @@
 //==============================================================================
 // CellML file RDF triple
 //==============================================================================
-//---GRY--- NEED TO THINK OF A WAY TO KEEP TRACK OF CHANGES TO SOME RDF TRIPLES,
-//          I.E. BE ABLE TO TELL WHETHER A CellML FILE HAS BEEN MODIFIED OR
-//          NOT...
-//==============================================================================
 
 #include "cellmlfile.h"
 #include "cellmlfilerdftriple.h"

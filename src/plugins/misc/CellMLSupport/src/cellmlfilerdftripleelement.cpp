@@ -127,13 +127,8 @@ void CellmlFileRdfTripleElement::setUriReference(const QString &pUriReference)
     // Set the URI reference, but only if the RDF triple element is a URI
     // reference
 
-    if ((mType == UriReference) && pUriReference.compare(mUriReference)) {
+    if ((mType == UriReference) && pUriReference.compare(mUriReference))
         mUriReference = pUriReference;
-
-//---GRY--- NEED TO UPDATE THE CellML FILE ITSELF, BUT HOW CAN THIS BE DONE (IF
-//          AT ALL)?!...
-//          SEE https://tracker.physiomeproject.org/show_bug.cgi?id=3319
-    }
 }
 
 //==============================================================================
