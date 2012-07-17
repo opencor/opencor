@@ -96,7 +96,7 @@ Q_SIGNALS:
                            const bool &pRetranslate);
     void noLookupRequested();
 
-    void metadataUpdated();
+    void metadataRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
     void disableLookupInformation();

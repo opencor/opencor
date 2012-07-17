@@ -455,9 +455,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
 {
     // Retrieve the RDF triple associated with the remove button
 
-    QObject *button = sender();
+    QObject *removeButton = sender();
 
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(button);
+    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(removeButton);
 
     // Remove the RDF triple from the CellML file and from our set of RDF
     // triples this widget uses
@@ -485,7 +485,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
             break;
         }
 
-        if (item->widget() == button)
+        if (item->widget() == removeButton)
             // This is the row we want to remove
 
             row = i;
@@ -514,7 +514,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
 
     // Let people know that some metadata has been removed
 
-    emit metadataUpdated();
+    emit metadataRemoved(rdfTriple);
 }
 
 //==============================================================================

@@ -82,7 +82,10 @@ private:
 
 Q_SIGNALS:
     void metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
-    void metadataUpdated();
+
+    void metadataRenamed(const QString &pOldId, const QString &pNewId);
+    void metadataRemoved(const QString &pCmetaId);
+    void allMetadataRemoved();
 
 public Q_SLOTS:
     void setCurrentId(const QString &pId);

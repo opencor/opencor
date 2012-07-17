@@ -130,7 +130,7 @@ void CellmlAnnotationViewCellmlDetailsWidget::emitSplitterMoved()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlDetailsWidget::metadataUpdated()
+void CellmlAnnotationViewCellmlDetailsWidget::updateMetadataDetails()
 {
     // Some metadata has been updated, so we need to update the metadata
     // information we show to the user

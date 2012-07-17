@@ -138,12 +138,24 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(guiPopulated(QComboBox *, QPushButton *, QLineEdit *)),
             this, SLOT(updateTabOrder(QComboBox *, QPushButton *, QLineEdit *)));
 
-    // Some connections to let our CellML and metadata details widgets know when
-    // some/all metadata has/have been removed
+    // Some connections to let our CellML details widgets know when some/all
+    // metadata has/have been removed/renamed
 
-    connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
-            mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
-    connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
+    connect(mListsWidget->metadataList(), SIGNAL(metadataRenamed(const QString &, const QString &)),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
+    connect(mListsWidget->metadataList(), SIGNAL(metadataRemoved(const QString &)),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
+    connect(mListsWidget->metadataList(), SIGNAL(allMetadataRemoved()),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
+
+    // Some connections to let our metadata details widgets know when some/all
+    // metadata has/have been removed/renamed
+
+    connect(mListsWidget->metadataList(), SIGNAL(metadataRenamed(const QString &, const QString &)),
+            this, SLOT(updateMetadataDetails()));
+    connect(mListsWidget->metadataList(), SIGNAL(metadataRemoved(const QString &)),
+            this, SLOT(updateMetadataDetails()));
+    connect(mListsWidget->metadataList(), SIGNAL(allMetadataRemoved()),
             this, SLOT(updateMetadataDetails()));
 
     // A connection to let our CellML details widget know when some RDF triple

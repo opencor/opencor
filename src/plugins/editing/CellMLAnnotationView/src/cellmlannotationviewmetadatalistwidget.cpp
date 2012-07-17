@@ -113,10 +113,14 @@ CellmlAnnotationViewMetadataListWidget::CellmlAnnotationViewMetadataListWidget(C
     connect(mDataModel, SIGNAL(itemChanged(QStandardItem *)),
             this, SLOT(itemChanged(QStandardItem *)));
 
-    // A connection to make sure that our tree view has the focus whenever some
-    // metadata has been updated
+    // Some connections to make sure that our tree view has the focus whenever
+    // some metadata has been renamed or removed
 
-    connect(this, SIGNAL(metadataUpdated()),
+    connect(this, SIGNAL(metadataRenamed(const QString &, const QString &)),
+            mTreeView, SLOT(setFocus()));
+    connect(this, SIGNAL(metadataRemoved(const QString &)),
+            mTreeView, SLOT(setFocus()));
+    connect(this, SIGNAL(allMetadataRemoved()),
             mTreeView, SLOT(setFocus()));
 
     // Populate our tree view
@@ -339,7 +343,7 @@ void CellmlAnnotationViewMetadataListWidget::itemChanged(QStandardItem * pItem)
 
     // Let people know that some metadata has been renamed
 
-    emit metadataUpdated();
+    emit metadataRenamed(mId, newId);
 }
 
 //==============================================================================
@@ -488,7 +492,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_trig
 
     // Let people know that some metadata has been removed
 
-    emit metadataUpdated();
+    emit metadataRemoved(cmetaId);
 }
 
 //==============================================================================
@@ -508,7 +512,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveAllMetadata_triggere
 
     // Let people know that all the metadata have been removed
 
-    emit metadataUpdated();
+    emit allMetadataRemoved();
 }
 
 //==============================================================================
@@ -527,11 +531,13 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearCurrentMetadata_trigg
     // Clear the current metadata, i.e. all the RDF triples which subject is the
     // same as the cmeta:id
 
-    mCellmlFile->rdfTriples()->remove(mDataModel->itemFromIndex(mTreeView->currentIndex())->text());
+    QString cmetaId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
+
+    mCellmlFile->rdfTriples()->remove(cmetaId);
 
     // Let people know that some metadata has been removed
 
-    emit metadataUpdated();
+    emit metadataRemoved(cmetaId);
 }
 
 //==============================================================================
@@ -544,7 +550,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearAllMetadata_triggered
 
     // Let people know that all the metadata have been removed
 
-    emit metadataUpdated();
+    emit allMetadataRemoved();
 }
 
 //==============================================================================
