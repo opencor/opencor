@@ -20,6 +20,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QPushButton>
+#include <QScrollBar>
 #include <QStackedWidget>
 #include <QVariant>
 #include <QVBoxLayout>
@@ -82,7 +83,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mInformation(QString()),
     mType(No),
     mLookupInformation(false),
-    mItemsMapping(QMap<QObject *, Item>())
+    mItemsMapping(QMap<QObject *, Item>()),
+    mItemsVerticalScrollBarPosition(0)
 {
     // Set up the GUI
 
@@ -127,13 +129,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mItems, mErrorMsg, true);
+    updateGui(mItems, mErrorMsg, mItemsVerticalScrollBarPosition, true);
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
                                                               const QString &pErrorMsg,
+                                                              const int &pItemsVerticalScrollBarPosition,
                                                               const bool &pRetranslate)
 {
     // Note: we are using certain layouts to dislay the contents of our view,
@@ -248,6 +251,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
     newMainLayout->addWidget(newItemsScrollArea);
 
+    // Keep track of the position of our items vertical scroll bar
+
+    connect(newItemsScrollArea->verticalScrollBar(), SIGNAL(sliderMoved(int)),
+            this, SLOT(trackItemsVerticalScrollBarPosition(const int &)));
+
     // Add our new widget to our stacked widget
 
     mWidget->addWidget(newMainWidget);
@@ -262,11 +270,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
             delete item;
         }
 
-    // Reset the widget of our old items scroll area
-    // Note: this will automatically delete the old grid widget...
+    // Reset the widget of our old items scroll area and stop tracking the
+    // position of its vertical scroll bar
+    // Note: the resetting this will automatically delete our old grid widget...
 
-    if (mItemsScrollArea)
+    if (mItemsScrollArea) {
         mItemsScrollArea->setWidget(0);
+
+        disconnect(mItemsScrollArea->verticalScrollBar(), SIGNAL(sliderMoved(int)),
+                   this, SLOT(trackItemsVerticalScrollBarPosition(const int &)));
+    }
 
     // Get rid of our old main widget and layout (and its contents)
 
@@ -310,6 +323,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
         // Look up an 'old' qualifier, resource or resource id
 
         genericLookup(mInformation, mType, pRetranslate);
+
+    // Set the position of our vertical scroll bar
+
+    mItemsScrollArea->verticalScrollBar()->setValue(pItemsVerticalScrollBarPosition);
 }
 
 //==============================================================================
@@ -787,6 +804,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRdfTriple()
     // Let people know that some metadata has been added
 
     emit metadataAdded(rdfTriple);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::trackItemsVerticalScrollBarPosition(const int &pPosition)
+{
+    // Keep track of the new position of our vertical scroll bar
+
+    mItemsVerticalScrollBarPosition = pPosition;
 }
 
 //==============================================================================

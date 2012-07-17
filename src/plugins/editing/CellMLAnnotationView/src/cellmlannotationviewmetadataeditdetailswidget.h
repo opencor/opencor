@@ -67,6 +67,7 @@ public:
     virtual void retranslateUi();
 
     void updateGui(const Items &pItems, const QString &pErrorMsg,
+                   const int &pItemsVerticalScrollBarPosition = 0,
                    const bool &pRetranslate = false);
 
 private:
@@ -115,6 +116,8 @@ private:
 
     QMap<QObject *, Item> mItemsMapping;
 
+    int mItemsVerticalScrollBarPosition;
+
     void updateItemsGui(const Items &pItems, const QString &pErrorMsg);
 
     static Item item(const QString &pName,
@@ -151,6 +154,8 @@ private Q_SLOTS:
     void termLookupFinished(QNetworkReply *pNetworkReply);
 
     void addRdfTriple();
+
+    void trackItemsVerticalScrollBarPosition(const int &pPosition);
 };
 
 //==============================================================================
