@@ -38,9 +38,9 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     mType(No),
     mLookupInformation(true),
     mEditingMode(pEditingMode),
-    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
     mVerticalScrollBarPosition(0),
-    mNeighbourRow(0)
+    mNeighbourRow(0),
+    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>())
 {
     // Set up the GUI
 

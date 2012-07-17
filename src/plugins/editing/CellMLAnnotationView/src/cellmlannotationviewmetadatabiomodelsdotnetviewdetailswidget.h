@@ -78,11 +78,9 @@ private:
     Type mType;
 
     bool mLookupInformation;
-
     bool mEditingMode;
 
     int mVerticalScrollBarPosition;
-
     int mNeighbourRow;
 
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
