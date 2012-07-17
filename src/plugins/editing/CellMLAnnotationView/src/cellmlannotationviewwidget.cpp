@@ -165,8 +165,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     //       already up to date and to ask it to update itself would 'reset' it,
     //       so...
 
-    connect(mDetailsWidget->metadataDetails()->metadataViewDetails()->bioModelsDotNetView(), SIGNAL(metadataUpdated()),
-            mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
+    connect(mDetailsWidget->metadataDetails()->metadataViewDetails()->bioModelsDotNetView(), SIGNAL(metadataRemoved(CellMLSupport::CellmlFileRdfTriple *)),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
 
     // Make our lists widget our focus proxy
 
