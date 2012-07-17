@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -76,6 +77,9 @@ private:
         Id
     };
 
+    CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
+
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QStackedWidget *mWidget;
@@ -109,6 +113,8 @@ private:
 
     bool mLookupInformation;
 
+    QMap<QObject *, Item> mItemsMapping;
+
     void updateItemsGui(const Items &pItems, const QString &pErrorMsg);
 
     static Item item(const QString &pName,
@@ -130,6 +136,8 @@ Q_SIGNALS:
                            const bool &pRetranslate);
     void noLookupRequested();
 
+    void metadataAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+
 private Q_SLOTS:
     void disableLookupInformation();
 
@@ -141,6 +149,8 @@ private Q_SLOTS:
 
     void lookupTerm(const QString &pTerm);
     void termLookupFinished(QNetworkReply *pNetworkReply);
+
+    void addRdfTriple();
 };
 
 //==============================================================================

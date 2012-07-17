@@ -110,6 +110,12 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(noLookupRequested()),
             this, SLOT(lookupNothing()));
 
+    // A connection to handle the addition of some metadata to our CellML file,
+    // therefore needing to update our BioModels.Net view
+
+    connect(mMetadataEditDetails, SIGNAL(metadataAdded(CellMLSupport::CellmlFileRdfTriple *)),
+            mMetadataViewDetails->bioModelsDotNetView(), SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
+
     // Populate our splitter widget
 
     mSplitter->addWidget(mBorderedMetadataEditDetails);

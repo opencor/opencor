@@ -16,6 +16,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNode) :
+    mId(QString()),
     mUriReference(QString()),
     mLexicalForm(QString()),
     mLanguage(QString()),
@@ -90,6 +91,18 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
             }
         }
     }
+}
+
+//==============================================================================
+
+CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(const QString &pUriReference) :
+    mType(UriReference),
+    mId(QString()),
+    mUriReference(pUriReference),
+    mLexicalForm(QString()),
+    mLanguage(QString()),
+    mDataTypeUri(QString())
+{
 }
 
 //==============================================================================

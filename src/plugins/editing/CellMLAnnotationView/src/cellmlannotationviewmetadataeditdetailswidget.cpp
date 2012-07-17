@@ -61,6 +61,8 @@ bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &
 CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
     CommonWidget(pParent),
+    mParent(pParent),
+    mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataEditDetailsWidget),
     mMainWidget(0),
     mMainLayout(0),
@@ -79,7 +81,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mErrorMsg(QString()),
     mInformation(QString()),
     mType(No),
-    mLookupInformation(false)
+    mLookupInformation(false),
+    mItemsMapping(QMap<QObject *, Item>())
 {
     // Set up the GUI
 
@@ -425,6 +428,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             addButton->setToolTip(tr("Add"));
             addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
+            mItemsMapping.insert(addButton, item);
+
+            connect(addButton, SIGNAL(clicked()),
+                    this, SLOT(addRdfTriple()));
+
             newGridLayout->addWidget(addButton, row, 3, Qt::AlignCenter);
         }
 
@@ -740,6 +748,45 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookupFinished(QNetworkR
 
         updateItemsGui(items, errorMsg);
     }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::addRdfTriple()
+{
+    // Retrieve the item associated with the add button
+
+    QObject *addButton = sender();
+
+    Item item = mItemsMapping.value(addButton);
+
+    // Determine what the subject of the item's corresponding RDF triple should
+    // be
+
+    QString rdfTripleSubject = QUrl::fromLocalFile(mCellmlFile->fileName()).toString()+"#"+mParent->currentMetadataId();
+
+    // Add the item as a RDF triple to the CellML file
+
+    CellMLSupport::CellmlFileRdfTriple *rdfTriple;
+
+    if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+        // We want to use a biology qualifier, so...
+
+        rdfTriple = new CellMLSupport::CellmlFileRdfTriple(rdfTripleSubject,
+                                                           CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
+                                                           item.resource, item.id);
+    else
+        // We want to use a model qualifier, so...
+
+        rdfTriple = new CellMLSupport::CellmlFileRdfTriple(rdfTripleSubject,
+                                                           CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                           item.resource, item.id);
+
+    mCellmlFile->rdfTriples()->add(rdfTriple);
+
+    // Let people know that some metadata has been added
+
+    emit metadataAdded(rdfTriple);
 }
 
 //==============================================================================

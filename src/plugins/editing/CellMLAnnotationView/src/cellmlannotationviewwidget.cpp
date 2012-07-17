@@ -159,12 +159,14 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
             this, SLOT(updateMetadataDetails()));
 
     // A connection to let our CellML details widget know when some RDF triple
-    // has been removed
+    // has been added/removed
     // Note: we must not let our metadata details widget know about it, since
-    //       the removal of RDF triple/s is done directly from it, so it's
-    //       already up to date and to ask it to update itself would 'reset' it,
-    //       so...
+    //       the addition/removal of a RDF triple is done directly from it, so
+    //       it's already up to date and to ask it to update itself would
+    //       'reset' it, so...
 
+    connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(metadataAdded(CellMLSupport::CellmlFileRdfTriple *)),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
     connect(mDetailsWidget->metadataDetails()->metadataViewDetails()->bioModelsDotNetView(), SIGNAL(metadataRemoved(CellMLSupport::CellmlFileRdfTriple *)),
             mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
 
@@ -253,6 +255,15 @@ void CellmlAnnotationViewWidget::emitSplitterMoved()
     // Let people know that our splitter has been moved
 
     emit splitterMoved(sizes());
+}
+
+//==============================================================================
+
+QString CellmlAnnotationViewWidget::currentMetadataId() const
+{
+    // Return the current metadata id
+
+    return mListsWidget->metadataList()->currentId();
 }
 
 //==============================================================================

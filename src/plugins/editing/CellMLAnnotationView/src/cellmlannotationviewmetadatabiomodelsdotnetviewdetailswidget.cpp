@@ -15,6 +15,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QScrollBar>
 #include <QStackedWidget>
 
 //==============================================================================
@@ -122,12 +123,13 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
         // Number of terms
 
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                (pRdfTriples.count() == 1)?
-                                                    tr("(1 term)"):
-                                                    tr("(%1 terms)").arg(QString::number(pRdfTriples.count())),
-                                                1.0, false, true, Qt::AlignCenter),
-                                 0, 3);
+        if (mEditingMode)
+            newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                    (pRdfTriples.count() == 1)?
+                                                        tr("(1 term)"):
+                                                        tr("(%1 terms)").arg(QString::number(pRdfTriples.count())),
+                                                    1.0, false, true, Qt::AlignCenter),
+                                     0, 3);
 
         // Add the RDF triples information to our layout
         // Note: for the RDF triple's subject, we try to remove the CellML
@@ -515,6 +517,50 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     // Let people know that some metadata has been removed
 
     emit metadataRemoved(rdfTriple);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+{
+    // Add the RDF triple to our set of RDF triples this widget uses
+
+    mRdfTriples.add(pRdfTriple);
+
+    // Make sure that the newly added RDF triple will be made visible, this by
+    // handling the change in the range of our vertical scroll bar which will
+    // result in showLastRdfTriple() being called
+
+    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+            this, SLOT(showLastRdfTriple()));
+
+    // Update the GUI to reflect the addition of our RDF triple
+
+    updateGui(mRdfTriples, mRdfTripleInformation, mType);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showLastRdfTriple()
+{
+    // No need to handle the change in the contents of our GUI through the
+    // change in the range of our vertical scroll bar
+
+    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+               this, SLOT(showLastRdfTriple()));
+
+    // Determine the number of rows in our grid layout
+    // Note: to use mGridLayout->rowCount() isn't an option since no matter
+    //       whether we remove rows (in updateGui()), the returned value will be
+    //       the maximum number of rows that there has ever been, so...
+
+    int row = 0;
+
+    while (mGridLayout->itemAtPosition(++row, 0));
+
+    // Make sure that the last RDF triple is visible
+
+    ensureWidgetVisible(mGridLayout->itemAtPosition(row-1, 0)->widget());
 }
 
 //==============================================================================

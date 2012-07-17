@@ -106,6 +106,10 @@ private Q_SLOTS:
     void lookupId(const QString &pRdfTripleInformation);
 
     void removeRdfTriple();
+
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+
+    void showLastRdfTriple();
 };
 
 //==============================================================================

@@ -60,6 +60,7 @@ public:
     CellmlAnnotationViewListsWidget * listsWidget() const;
     CellmlAnnotationViewDetailsWidget * detailsWidget() const;
 
+    QString currentMetadataId() const;
     QStringList metadataIds() const;
 
     void updateWebViewerWithQualifierDetails(QWebView *pWebView,

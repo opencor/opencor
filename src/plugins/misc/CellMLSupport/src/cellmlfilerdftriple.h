@@ -41,7 +41,9 @@ public:
         ModelUnknown,
         ModelIs,
         ModelIsDerivedFrom,
-        ModelIsDescribedBy
+        ModelIsDescribedBy,
+        FirstModelQualifier = ModelIs,
+        LastModelQualifier = ModelIsDescribedBy
     };
 
     enum BioQualifier {
@@ -58,10 +60,18 @@ public:
         BioIsPropertyOf,
         BioIsVersionOf,
         BioOccursIn,
-        BioHasTaxon
+        BioHasTaxon,
+        FirstBioQualifier = BioEncodes,
+        LastBioQualifier = BioHasTaxon
     };
 
     explicit CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple);
+    explicit CellmlFileRdfTriple(const QString pSubject,
+                                 const ModelQualifier &pModelQualifier,
+                                 const QString &pResource, const QString &pId);
+    explicit CellmlFileRdfTriple(const QString pSubject,
+                                 const BioQualifier &pBioQualifier,
+                                 const QString &pResource, const QString &pId);
     ~CellmlFileRdfTriple();
 
     CellmlFileRdfTripleElement * subject() const;
@@ -112,6 +122,8 @@ public:
     CellmlFileRdfTriple::Type type() const;
 
     CellmlFileRdfTriples contains(const QString &pMetadataId) const;
+
+    void add(CellmlFileRdfTriple *pRdfTriple);
 
     void remove(CellmlFileRdfTriple *pRdfTriple);
     void remove(const QString &pMetadataId);
