@@ -7,6 +7,6 @@ TITLE Packaging OpenCOR...
 
 CD build
 
-cpack
+cpack -C CPackConfig.cmake
 
 CD ..

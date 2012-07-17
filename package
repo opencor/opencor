@@ -9,7 +9,7 @@ echo "\033[44;37;1mPackaging OpenCOR...\033[0m"
 
 cd build
 
-cpack
+cpack -C CPackConfig.cmake
 
 cd ..
 
