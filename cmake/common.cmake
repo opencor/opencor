@@ -510,17 +510,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Package the plugin itself
 
-    IF(WIN32)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
-                                                            ${PLUGIN_BUILD_DIR}/${CMAKE_BUILD_TYPE}/${PLUGIN_FILENAME})
-        # Note: the above ensures that the DLL is where CPack expects it to be.
-        #       Indeed, MSVC generates it elsewhere, so...
-
-        INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION plugins/${MAIN_PROJECT_NAME})
-    ELSEIF(NOT APPLE)
-        INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION plugins/${MAIN_PROJECT_NAME})
-    ENDIF()
+    INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
 
     # Create some tests, if any and if required
 
