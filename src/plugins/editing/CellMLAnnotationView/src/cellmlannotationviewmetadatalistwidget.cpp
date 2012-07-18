@@ -472,16 +472,16 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_trig
     // Remove the current metadata, i.e. all the RDF triples which subject is
     // the same as the cmeta:id
 
-    QString cmetaId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
+    QString metadataId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
 
-    mCellmlFile->rdfTriples()->remove(cmetaId);
+    mCellmlFile->rdfTriples()->remove(metadataId);
 
     // Remove the entry for the cmeta:id from our data model
 
     for (int i = 0, iMax = mDataModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *item = mDataModel->invisibleRootItem()->child(i);
 
-        if (!item->text().compare(cmetaId)) {
+        if (!item->text().compare(metadataId)) {
             delete item;
 
             mDataModel->removeRow(i);
@@ -492,7 +492,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionRemoveCurrentMetadata_trig
 
     // Let people know that some metadata has been removed
 
-    emit metadataRemoved(cmetaId);
+    emit metadataRemoved(metadataId);
 }
 
 //==============================================================================
@@ -531,13 +531,13 @@ void CellmlAnnotationViewMetadataListWidget::on_actionClearCurrentMetadata_trigg
     // Clear the current metadata, i.e. all the RDF triples which subject is the
     // same as the cmeta:id
 
-    QString cmetaId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
+    QString metadataId = mDataModel->itemFromIndex(mTreeView->currentIndex())->text();
 
-    mCellmlFile->rdfTriples()->remove(cmetaId);
+    mCellmlFile->rdfTriples()->remove(metadataId);
 
     // Let people know that some metadata has been removed
 
-    emit metadataRemoved(cmetaId);
+    emit metadataRemoved(metadataId);
 }
 
 //==============================================================================
