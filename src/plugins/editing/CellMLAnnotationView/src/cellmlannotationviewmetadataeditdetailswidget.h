@@ -118,9 +118,9 @@ private:
     int mItemsVerticalScrollBarPosition;
 
     void updateGui(const Items &pItems, const QString &pErrorMsg,
-                   const bool &pLookupTerm = false,
-                   const int &pItemsVerticalScrollBarPosition = 0,
-                   const bool &pRetranslate = false);
+                   const bool &pLookupTerm,
+                   const int &pItemsVerticalScrollBarPosition,
+                   const bool &pRetranslate);
     void updateItemsGui(const Items &pItems, const QString &pErrorMsg,
                         const bool &pLookupTerm);
 
