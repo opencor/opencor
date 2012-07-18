@@ -120,14 +120,14 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
 
         contents += leadingSpaces+"</ul>";
     } else if (mModelNames.empty()) {
-        if (mErrorMsg.size()) {
+        if (mErrorMsg.count()) {
             // Something went wrong while trying to retrieve the list of models,
             // so...
 
             QString errorMsg = mErrorMsg.left(1).toLower()+mErrorMsg.right(mErrorMsg.size()-1);
             QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
 
-            contents = leadingSpaces+"Error: "+errorMsg+dots;
+            contents = leadingSpaces+tr("Error: ")+errorMsg+dots;
         } else {
             // The list is still being loaded, so...
 

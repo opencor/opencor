@@ -66,10 +66,6 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const Items &pItems, const QString &pErrorMsg,
-                   const int &pItemsVerticalScrollBarPosition = 0,
-                   const bool &pRetranslate = false);
-
 private:
     enum Type {
         No,
@@ -91,6 +87,8 @@ private:
     QWidget *mFormWidget;
     QFormLayout *mFormLayout;
 
+    QLineEdit *mTermValue;
+
     QScrollArea *mItemsScrollArea;
 
     QWidget *mGridWidget;
@@ -108,6 +106,7 @@ private:
 
     Items mItems;
     QString mErrorMsg;
+    bool mLookupTerm;
 
     QString mInformation;
     Type mType;
@@ -118,7 +117,12 @@ private:
 
     int mItemsVerticalScrollBarPosition;
 
-    void updateItemsGui(const Items &pItems, const QString &pErrorMsg);
+    void updateGui(const Items &pItems, const QString &pErrorMsg,
+                   const bool &pLookupTerm = false,
+                   const int &pItemsVerticalScrollBarPosition = 0,
+                   const bool &pRetranslate = false);
+    void updateItemsGui(const Items &pItems, const QString &pErrorMsg,
+                        const bool &pLookupTerm);
 
     static Item item(const QString &pName,
                      const QString &pResource, const QString &pId);

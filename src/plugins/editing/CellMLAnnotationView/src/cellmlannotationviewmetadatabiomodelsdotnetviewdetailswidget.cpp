@@ -55,6 +55,8 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     setWidget(mWidget);
 
     // Keep track of the position of our vertical scroll bar
+    // Note: this is required to make sure that the position doesn't get reset
+    //       as a result of retranslating the GUI...
 
     connect(verticalScrollBar(), SIGNAL(sliderMoved(int)),
             this, SLOT(trackVerticalScrollBarPosition(const int &)));

@@ -69,6 +69,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mMainLayout(0),
     mFormWidget(0),
     mFormLayout(0),
+    mTermValue(0),
     mItemsScrollArea(0),
     mGridWidget(0),
     mGridLayout(0),
@@ -80,6 +81,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mOtherTermUrl(QString()),
     mItems(Items()),
     mErrorMsg(QString()),
+    mLookupTerm(false),
     mInformation(QString()),
     mType(No),
     mLookupInformation(false),
@@ -129,13 +131,25 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mItems, mErrorMsg, mItemsVerticalScrollBarPosition, true);
+    if (mErrorMsg.isEmpty())
+        // We are not currently facing an error in the retrieval of ontological
+        // terms, so update the GUI as we normally would
+
+        updateGui(mItems, mErrorMsg, mLookupTerm,
+                  mItemsVerticalScrollBarPosition, true);
+    else
+        // Something went wrong during the retrieval of ontological terms, so do
+        // as if we wanted to try to retrieve the ontological terms again, if
+        // anything at least to get the error message translated
+
+        lookupTerm(mTermValue->text());
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
                                                               const QString &pErrorMsg,
+                                                              const bool &pLookupTerm,
                                                               const int &pItemsVerticalScrollBarPosition,
                                                               const bool &pRetranslate)
 {
@@ -216,9 +230,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Add our term field
 
-    QLineEdit *termValue = new QLineEdit(newFormWidget);
+    mTermValue = new QLineEdit(newFormWidget);
 
-    termValue->setText(mTerm);
+    mTermValue->setText(mTerm);
     // Note: we set the text to whatever term was previously being looked up and
     //       this before tracking changes to the term since we don't want to
     //       trigger a call to lookupTerm(). Indeed, we might come here as a
@@ -226,15 +240,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     //       instead, we should call updateItemsGui() which we do at the end of
     //       this procedure...
 
-    connect(termValue, SIGNAL(textChanged(const QString &)),
+    connect(mTermValue, SIGNAL(textChanged(const QString &)),
             this, SLOT(lookupTerm(const QString &)));
 
     newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), 1.0, true),
-                          termValue);
+                          mTermValue);
 
     // Let people know that the GUI has been populated
 
-    emit guiPopulated(mQualifierValue, mLookupButton, termValue);
+    emit guiPopulated(mQualifierValue, mLookupButton, mTermValue);
 
     // Create a stacked widget (within a scroll area, so that only the items get
     // scrolled, not the whole metadata edit details widget) which will contain
@@ -252,6 +266,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     newMainLayout->addWidget(newItemsScrollArea);
 
     // Keep track of the position of our items vertical scroll bar
+    // Note: this is required to make sure that the position doesn't get reset
+    //       as a result of retranslating the GUI...
 
     connect(newItemsScrollArea->verticalScrollBar(), SIGNAL(sliderMoved(int)),
             this, SLOT(trackItemsVerticalScrollBarPosition(const int &)));
@@ -315,7 +331,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Update our items GUI
 
-    updateItemsGui(pItems, pErrorMsg);
+    updateItemsGui(pItems, pErrorMsg, pLookupTerm);
 
     // Request for something to be looked up, if needed
 
@@ -332,7 +348,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
-                                                                   const QString &pErrorMsg)
+                                                                   const QString &pErrorMsg,
+                                                                   const bool &pLookupTerm)
 {
     Q_ASSERT(mItemsScrollArea);
 
@@ -340,10 +357,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     setUpdatesEnabled(false);
 
-    // Keep track of the items and error message
+    // Keep track of some information
 
     mItems = pItems;
     mErrorMsg = pErrorMsg;
+    mLookupTerm = pLookupTerm;
 
     // Create a new widget and layout
 
@@ -354,22 +372,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     // Populate our new layout, but only if there is at least one item
 
-    if (pItems.isEmpty()) {
-        // No items to show, so either there is no data available or an error
-        // occurred
-
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                pErrorMsg.isEmpty()?tr("No data available..."):pErrorMsg,
-                                                1.25, false, false, Qt::AlignCenter),
-                                 0, 0);
-
-        // Pretend that we want to look nothing up, if needed
-        // Note: this is in case a resource or id used to be looked up, in which
-        //       case we don't want it to be anymore...
-
-        if (mLookupInformation && (mType != Qualifier))
-            genericLookup();
-    } else {
+    if (pItems.count()) {
         // Create labels to act as headers
 
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
@@ -459,6 +462,33 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         newGridLayout->setColumnStretch(0, 1);
         newGridLayout->setColumnStretch(1, 1);
         newGridLayout->setColumnStretch(2, 1);
+    } else {
+        // No items to show, so either there is no data available or an error
+        // occurred
+
+        QString labelText;
+
+        if (pLookupTerm) {
+            labelText = tr("Please wait while the list of terms is being loaded...");
+        } else if (pErrorMsg.isEmpty()) {
+            labelText = tr("No data available...");
+        } else {
+            QString errorMsg = pErrorMsg.left(1).toLower()+pErrorMsg.right(pErrorMsg.size()-1);
+            QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
+
+            labelText = tr("Error: ")+errorMsg+dots;
+        }
+
+        newGridLayout->addWidget(Core::newLabel(newGridWidget, labelText,
+                                                1.25, false, false, Qt::AlignCenter),
+                                 0, 0);
+
+        // Pretend that we want to look nothing up, if needed
+        // Note: this is in case a resource or id used to be looked up, in which
+        //       case we don't want it to be anymore...
+
+        if (mLookupInformation && (mType != Qualifier))
+            genericLookup();
     }
 
     // Set our new grid widget as the widget for our scroll area
@@ -670,6 +700,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pT
 
     mTerm = pTerm;
 
+    // Update our items' GUI
+
+    updateItemsGui(Items(), QString(), true);
+
     // Retrieve some possible ontological terms based on the given term
 
     QString termUrl = QString("http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=%1&full_info=1").arg(pTerm);
@@ -763,7 +797,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookupFinished(QNetworkR
 
         qSort(items.begin(), items.end());
 
-        updateItemsGui(items, errorMsg);
+        updateItemsGui(items, errorMsg, false);
     }
 }
 
