@@ -124,7 +124,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // metadata
 
     connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(metadataEditingRequested(const QString &)),
-            mListsWidget->metadataList(), SLOT(setCurrentId(const QString &)));
+            mListsWidget->metadataList(), SLOT(setCurrentMetadataId(const QString &)));
 
     // A connection to reset the tab order following a GUI update of the
     // CellML details
