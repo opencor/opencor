@@ -460,6 +460,8 @@ IF(WIN32)
 
     SET(CPACK_GENERATOR NSIS ZIP)
 
+    SET(CPACK_SYSTEM_NAME "Windows")
+
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
 
     # OpenCOR itself
@@ -529,6 +531,8 @@ ELSEIF(APPLE)
 
     SET(CPACK_GENERATOR PackageMaker ZIP)
 
+    SET(CPACK_SYSTEM_NAME "MacOSX")
+
     SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macosx/welcome.txt")
     SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
@@ -553,6 +557,14 @@ ELSE()
     # Select TGZ as the packager on Linux
 
     SET(CPACK_GENERATOR TGZ)
+
+    SET(CPACK_SYSTEM_NAME "Linux")
+
+    IF(64BIT_MODE)
+        SET(CPACK_SYSTEM_NAME "${CPACK_SYSTEM_NAME}64")
+    ELSE()
+        SET(CPACK_SYSTEM_NAME "${CPACK_SYSTEM_NAME}32")
+    ENDIF()
 
     # OpenCOR itself
 
