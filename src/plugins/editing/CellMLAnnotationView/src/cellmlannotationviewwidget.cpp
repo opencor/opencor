@@ -263,7 +263,7 @@ QString CellmlAnnotationViewWidget::currentMetadataId() const
 {
     // Return the current metadata id
 
-    return mListsWidget->metadataList()->currentId();
+    return mListsWidget->metadataList()->currentMetadataId();
 }
 
 //==============================================================================
@@ -272,7 +272,7 @@ QStringList CellmlAnnotationViewWidget::metadataIds() const
 {
     // Return the list of metadata ids
 
-    return mListsWidget->metadataList()->ids();
+    return mListsWidget->metadataList()->metadataIds();
 }
 
 //==============================================================================
@@ -490,7 +490,7 @@ void CellmlAnnotationViewWidget::updateMetadataDetails() const
     // Some metadata has been updated, so we need to update the metadata
     // information we show to the user
 
-    mDetailsWidget->metadataDetails()->updateGui(mCellmlFile->rdfTriples(mListsWidget->metadataList()->currentId()));
+    mDetailsWidget->metadataDetails()->updateGui(mCellmlFile->rdfTriples(mListsWidget->metadataList()->currentMetadataId()));
 }
 
 //==============================================================================

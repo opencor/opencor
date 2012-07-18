@@ -186,10 +186,10 @@ void CellmlAnnotationViewMetadataListWidget::populateDataModel()
 
         return;
 
-    // Retrieve the id of the different groups of triples
+    // Retrieve the metadata id of the different groups of triples
 
     QString uriBase = mCellmlFile->uriBase();
-    QStringList ids = QStringList();
+    QStringList metadataIds = QStringList();
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
              *mCellmlFile->rdfTriples())
@@ -200,9 +200,9 @@ void CellmlAnnotationViewMetadataListWidget::populateDataModel()
         //       has an rdf:about attribute which may or not have a value
         //       assigned to it. If no value was assigned, then the RDF triple
         //       is valid at the whole CellML model level. On the other hand, if
-        //       a value was assigned (and of the format #<id>), then it will be
-        //       associated to any CellML element which cmeta:id value is <id>.
-        //       A couple of examples:
+        //       a value was assigned (and of the format #<metadataId>), then it
+        //       will be associated to any CellML element which cmeta:id value
+        //       is <metadataId>. A couple of examples:
         //
         // <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
         //   <rdf:Description rdf:about="">
@@ -228,28 +228,29 @@ void CellmlAnnotationViewMetadataListWidget::populateDataModel()
         if (rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference) {
             // We have an RDF triple of which we can make sense, so add it to
             // the correct group of RDF triples
-            // Note: we want the id of the group to be the same as that of the
-            //       cmeta:id of a CellML element. This means that we must
-            //       remove the URI base (and hash character) which makes the
-            //       beginning of the RDF triple's subject's URI reference...
+            // Note: we want the metadata id of the group to be the same as that
+            //       of the cmeta:id of a CellML element. This means that we
+            //       must remove the URI base (and hash character) which makes
+            //       the beginning of the RDF triple's subject's URI
+            //       reference...
 
-            QString id = rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"));
+            QString metadataId = rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"));
 
-            if (!ids.contains(id)) {
-                // The id hasn't already been added, so add it and keep track of
-                // it
+            if (!metadataIds.contains(metadataId)) {
+                // The metadata id hasn't already been added, so add it and keep
+                // track of it
 
-                QStandardItem *item = new QStandardItem(id);
+                QStandardItem *item = new QStandardItem(metadataId);
 
                 item->setIcon(QIcon(":CellMLSupport_metadataNode"));
 
                 mDataModel->invisibleRootItem()->appendRow(item);
 
-                ids << id;
+                metadataIds << metadataId;
             }
         }
 
-    // Sort the ids
+    // Sort the metadata ids
 
     mDataModel->sort(0);
 }
@@ -308,9 +309,9 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
 
         mIndexes.removeFirst();
 
-        // Keep track of the id
+        // Keep track of the metadata id
 
-        mId = mDataModel->itemFromIndex(crtIndex)->text();
+        mMetadataId = mDataModel->itemFromIndex(crtIndex)->text();
 
         // Let people know that we want to see some information about the
         // current CellML element
@@ -327,23 +328,23 @@ void CellmlAnnotationViewMetadataListWidget::updateNode(const QModelIndex &pNewI
 
 void CellmlAnnotationViewMetadataListWidget::itemChanged(QStandardItem * pItem)
 {
-    // An id has been renamed, update the metadata in the CellML file
+    // A metadata id has been renamed, so update the metadata in the CellML file
 
-    QString newId = pItem->text();
+    QString newMetadataId = pItem->text();
 
-    mCellmlFile->rdfTriples()->renameMetadataId(mId, newId);
+    mCellmlFile->rdfTriples()->renameMetadataId(mMetadataId, newMetadataId);
 
     // Resort our list
 
     mDataModel->sort(0);
 
-    // Make sure that the new id is selected
+    // Make sure that the new metadata id is selected
 
-    setCurrentId(newId);
+    setCurrentMetadataId(newMetadataId);
 
     // Let people know that some metadata has been renamed
 
-    emit metadataRenamed(mId, newId);
+    emit metadataRenamed(mMetadataId, newMetadataId);
 }
 
 //==============================================================================
@@ -357,9 +358,9 @@ Core::TreeView * CellmlAnnotationViewMetadataListWidget::treeView() const
 
 //==============================================================================
 
-QString CellmlAnnotationViewMetadataListWidget::currentId() const
+QString CellmlAnnotationViewMetadataListWidget::currentMetadataId() const
 {
-    // Return the current id
+    // Return the current metadata id
 
     QModelIndex currentIndex = mTreeView->currentIndex();
 
@@ -371,21 +372,21 @@ QString CellmlAnnotationViewMetadataListWidget::currentId() const
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataListWidget::setCurrentId(const QString &pId)
+void CellmlAnnotationViewMetadataListWidget::setCurrentMetadataId(const QString &pMetadataId)
 {
-    // Set the given id as our new current id
+    // Set the given metadata id as our new current metadata id
 
     for (int i = 0, iMax = mDataModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *standardItem = mDataModel->invisibleRootItem()->child(i);
 
-        if (!pId.compare(standardItem->text())) {
-            // We have found our new current id in our list, so select it and
-            // force its details to be shown
+        if (!pMetadataId.compare(standardItem->text())) {
+            // We have found our new current metadata id in our list, so select
+            // it and force its details to be shown
             // Note: we need to force its details to be shown (by 'resetting'
-            //       the current index) because it may already be the current id
-            //       (e.g. we were viewing some CellML element information and
-            //       decided to edit the metadata associated with the CellML
-            //       element's cmeta:id), so...
+            //       the current index) because it may already be the current
+            //       metadata id (e.g. we were viewing some CellML element
+            //       information and decided to edit the metadata associated
+            //       with the CellML element's cmeta:id), so...
 
             QModelIndex index = mDataModel->indexFromItem(standardItem);
 
@@ -399,9 +400,9 @@ void CellmlAnnotationViewMetadataListWidget::setCurrentId(const QString &pId)
 
 //==============================================================================
 
-QStringList CellmlAnnotationViewMetadataListWidget::ids() const
+QStringList CellmlAnnotationViewMetadataListWidget::metadataIds() const
 {
-    // Return the full list of ids
+    // Return the full list of metadata ids
 
     QStringList res = QStringList();
 
@@ -417,7 +418,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionAddMetadata_triggered()
 {
     // Generate a metadata id, making sure that it's not already taken
 
-    QStringList crtIds = ids();
+    QStringList crtMetadataIds = metadataIds();
 
     QString baseMetadataId = tr("Metadata");
     QString templateMetadataId = baseMetadataId+" (%1)";
@@ -425,7 +426,7 @@ void CellmlAnnotationViewMetadataListWidget::on_actionAddMetadata_triggered()
     int metadataIdNb = 1;
     QString metadataId = baseMetadataId;
 
-    while (crtIds.contains(metadataId))
+    while (crtMetadataIds.contains(metadataId))
         metadataId = templateMetadataId.arg(++metadataIdNb);
 
     // Create our new metadata item
