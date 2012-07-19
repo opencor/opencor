@@ -2,10 +2,7 @@
 // CellMLAnnotationView plugin
 //==============================================================================
 
-#include "cellmlannotationviewcellmldetailswidget.h"
 #include "cellmlannotationviewcellmlmetadatadetailswidget.h"
-#include "cellmlannotationviewdetailswidget.h"
-#include "cellmlannotationviewlistswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
