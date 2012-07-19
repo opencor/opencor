@@ -49,9 +49,9 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     mTreeView->setHeaderHidden(true);
     mTreeView->setRootIsDecorated(false);
     mTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
-    // Note: the selection mode we are opting for means that there is always a
-    //       node which is selected, so that's something we must keep in mind
-    //       when showing the context menu...
+    // Note: the selection mode we are opting for means that there is always
+    //       going to be a CellML element which is selected, so it's something
+    //       that we must keep in mind when showing the context menu...
 
     // Populate ourselves
 
@@ -64,21 +64,17 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     connect(mTreeView, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(treeViewContextMenu(const QPoint &)));
 
-    // Set an event filter for our tree view
-
-    mTreeView->installEventFilter(this);
-
-    // Some connections to handle the expansion/collapse of a node
+    // Some connections to handle the expansion/collapse of a CellML element
 
     connect(mTreeView, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
     connect(mTreeView, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
 
-    // Some connections to handle the change of node
+    // Some connections to handle the change of CellML element
 
     connect(mTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateNode(const QModelIndex &, const QModelIndex &)));
+            this, SLOT(updateMetadataDetails(const QModelIndex &, const QModelIndex &)));
 
     // Populate our tree view
 
@@ -115,7 +111,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // Retranslate some of the nodes in our tree view
+    // Retranslate some of the CellML elements in our tree view
 
     retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(mDataModel->invisibleRootItem()));
 }
@@ -124,7 +120,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateUi()
 
 void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem)
 {
-    // Retranslate some of the node's children
+    // Retranslate some of the CellML element's children
 
     for (int i = 0, iMax = pCellmlElementItem->rowCount(); i < iMax; ++i)
         retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(pCellmlElementItem->child(i)));
@@ -174,7 +170,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
         }
     else
         // We are not dealing with a category, so check the type and see whether
-        // a node needs retranslating
+        // a CellML element needs retranslating
 
         switch (pCellmlElementItem->type()) {
         case CellmlAnnotationViewCellmlElementItem::Group:
@@ -190,31 +186,6 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             ;
         }
-}
-
-//==============================================================================
-
-bool CellmlAnnotationViewCellmlListWidget::eventFilter(QObject *pObject,
-                                                       QEvent *pEvent)
-{
-    Q_UNUSED(pObject);
-
-    switch (pEvent->type()) {
-    case QEvent::FocusIn: {
-        // Note: to override focusInEvent() is not what we want since it won't
-        //       be triggered when selecting a node in the CellML list after
-        //       having selecting a node in the metadata list. Indeed, it's
-        //       already 'in focus', so...
-
-        updateNode(mTreeView->currentIndex(), QModelIndex());
-
-        return true;
-    }
-    default:
-        // Another type of event which we don't handle ourselves, so...
-
-        return QWidget::eventFilter(pObject, pEvent);
-    }
 }
 
 //==============================================================================
@@ -522,24 +493,23 @@ void CellmlAnnotationViewCellmlListWidget::resizeTreeViewToContents()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::updateNode(const QModelIndex &pNewIndex,
-                                                      const QModelIndex &pOldIndex)
+void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelIndex &pNewIndex,
+                                                                 const QModelIndex &pOldIndex)
 {
     Q_UNUSED(pOldIndex);
 
-    // Make sure that the details GUI is valid and that we have a valid
-    // pNewIndex
+    // Make sure that we have a valid new index
 
     if (pNewIndex == QModelIndex())
         return;
 
-    // Keep track of the fact that there is a node to update
+    // Keep track of the fact that there is a CellML element to update
 
     mIndexes << pNewIndex;
 
-    // Make sure that we are not already updating a node by checking that the
-    // CellML file for which we want to update the node is not in our list of
-    // CellML files being updated
+    // Make sure that we are not already updating a CellML element by checking
+    // that the CellML file for which we want to update an element is not in our
+    // list of CellML files being updated
 
     static QStringList cellmlFileBeingUpdated;
 
@@ -550,12 +520,13 @@ void CellmlAnnotationViewCellmlListWidget::updateNode(const QModelIndex &pNewInd
 
     cellmlFileBeingUpdated << cellmlFileName;
 
-    // Loop while there are nodes to update
-    // Note: this is done because a node may take time to update and we may end
-    //       up in a situation where several nodes need updating, so...
+    // Loop while there are CellML elements to update
+    // Note: this is done because a CellML element may take time to update and
+    //       we may end up in a situation where several CellML elements need
+    //       updating, so...
 
 //    while (mIndexes.count()) {
-//        // Retrieve the first node to update
+//        // Retrieve the first CellML element to update
 
 //        QModelIndex crtIndex = mIndexes.first();
 
@@ -714,7 +685,7 @@ void CellmlAnnotationViewCellmlListWidget::treeViewContextMenu(const QPoint &pPo
 
 void CellmlAnnotationViewCellmlListWidget::on_actionExpandAll_triggered()
 {
-    // Expand all the nodes below the current one
+    // Expand all the CellML elements below the current one
     // Note: we disable and then re-enable updates before expanding all the
     //       index since it may end up in quite a few updates...
 
@@ -731,7 +702,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionExpandAll_triggered()
 
 void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
 {
-    // Collapse all the nodes below the current one
+    // Collapse all the CellML elements below the current one
     // Note: see the note in on_actionExpandAll_triggered() above...
 
     mTreeView->setUpdatesEnabled(false);
@@ -747,7 +718,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
 
 void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIndex) const
 {
-    // Recursively expand all the nodes below the current one
+    // Recursively expand all the CellML elements below the current one
     // Note: the test with against pIndex.child(0, 0) is to ensure that we are
     //       not trying to expand an index which item has no children. Indeed,
     //       a call to expand() is quite expensive, so the fewer of those we
@@ -767,7 +738,7 @@ void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIn
 
 void CellmlAnnotationViewCellmlListWidget::indexCollapseAll(const QModelIndex &pIndex) const
 {
-    // Recursively collapse all the nodes below the current one
+    // Recursively collapse all the CellML elements below the current one
     // Note: see the note in indexExpandAll() above...
 
     if (pIndex.child(0, 0) != QModelIndex()) {
@@ -784,8 +755,8 @@ void CellmlAnnotationViewCellmlListWidget::indexCollapseAll(const QModelIndex &p
 
 bool CellmlAnnotationViewCellmlListWidget::indexIsAllExpanded(const QModelIndex &pIndex) const
 {
-    // Recursively check that the current node and all of its children are
-    // expanded
+    // Recursively check that the current CellML element and all of its children
+    // are expanded
     // Note: see the note in indexExpandAll() above...
 
     if (pIndex.child(0, 0) != QModelIndex()) {

@@ -21,57 +21,6 @@
     </message>
 </context>
 <context>
-    <name>CellmlAnnotationViewMetadataListWidget</name>
-    <message>
-        <source>Add a metadata</source>
-        <translation>Ajouter une métadonnée</translation>
-    </message>
-    <message>
-        <source>&amp;Add Metadata</source>
-        <translation>&amp;Ajouter Métadonnée</translation>
-    </message>
-    <message>
-        <source>&amp;Remove Metadata</source>
-        <translation>&amp;Supprimer Métadonnée</translation>
-    </message>
-    <message>
-        <source>Remove the current metadata or all the metadata</source>
-        <translation>Supprimer la métadonnée courante ou toutes les métadonnées</translation>
-    </message>
-    <message>
-        <source>&amp;Current</source>
-        <translation>&amp;Courante</translation>
-    </message>
-    <message>
-        <source>Remove the current metadata</source>
-        <translation>Supprimer la métadonnée courante</translation>
-    </message>
-    <message>
-        <source>&amp;All</source>
-        <translation>&amp;Toutes</translation>
-    </message>
-    <message>
-        <source>Remove all the metadata</source>
-        <translation>Supprimer toutes les métadonnées</translation>
-    </message>
-    <message>
-        <source>Clear the current metadata or all the metadata</source>
-        <translation>Nettoyer la métadonnée courante ou toutes les métadonnées</translation>
-    </message>
-    <message>
-        <source>&amp;Clear Metadata</source>
-        <translation>&amp;Nettoyer Métadonnée</translation>
-    </message>
-    <message>
-        <source>Clear the current metadata</source>
-        <translation>Nettoyer la métadonnée courante</translation>
-    </message>
-    <message>
-        <source>Clear all the metadata</source>
-        <translation>Nettoyer toutes les métadonnées</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>
     <message>
         <source>CellML Annotation</source>
@@ -227,13 +176,6 @@
     <message>
         <source>Error: </source>
         <translation>Erreur :</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataListWidget</name>
-    <message>
-        <source>Metadata</source>
-        <translation>Métadonnée</translation>
     </message>
 </context>
 <context>

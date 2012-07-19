@@ -60,9 +60,6 @@ public:
 
     CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
 
-protected:
-    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
-
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
@@ -93,7 +90,8 @@ private:
 private Q_SLOTS:
     void resizeTreeViewToContents();
 
-    void updateNode(const QModelIndex &pNewIndex, const QModelIndex &pOldIndex);
+    void updateMetadataDetails(const QModelIndex &pNewIndex,
+                               const QModelIndex &pOldIndex);
 
     void treeViewContextMenu(const QPoint &pPosition) const;
 

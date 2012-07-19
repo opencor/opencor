@@ -8,7 +8,6 @@
 #include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
-#include "cellmlannotationviewmetadatalistwidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
