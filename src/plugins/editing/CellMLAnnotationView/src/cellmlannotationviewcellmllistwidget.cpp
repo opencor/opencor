@@ -342,12 +342,16 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
                 componentItem->appendRow(variablesItem);
 
-                // Retrieve the model's component's variables themselves
+                // Retrieve the model's component's variables themselves, but
+                // only add a variable if neither its public nor its private
+                // interface is equal to "in"
 
                 foreach (CellMLSupport::CellmlFileVariable *variable,
                          *component->variables())
-                    variablesItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Variable,
-                                                                                       variable));
+                    if (   (variable->publicInterface()  != CellMLSupport::CellmlFileVariable::In)
+                        && (variable->privateInterface() != CellMLSupport::CellmlFileVariable::In))
+                        variablesItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Variable,
+                                                                                           variable));
             }
         }
     }
