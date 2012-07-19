@@ -728,7 +728,11 @@ void CellmlAnnotationViewCellmlListWidget::on_actionExpandAll_triggered()
     //       index since it may end up in quite a few updates...
 
     mTreeView->setUpdatesEnabled(false);
+        qApp->setOverrideCursor(Qt::WaitCursor);
+
         indexExpandAll(mTreeView->currentIndex());
+
+        qApp->restoreOverrideCursor();
     mTreeView->setUpdatesEnabled(true);
 }
 
@@ -740,7 +744,11 @@ void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
     // Note: see the note in on_actionExpandAll_triggered() above...
 
     mTreeView->setUpdatesEnabled(false);
+        qApp->setOverrideCursor(Qt::WaitCursor);
+
         indexCollapseAll(mTreeView->currentIndex());
+
+        qApp->restoreOverrideCursor();
     mTreeView->setUpdatesEnabled(true);
 }
 
