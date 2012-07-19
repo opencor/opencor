@@ -712,15 +712,6 @@ void CellmlAnnotationViewCellmlListWidget::treeViewContextMenu(const QPoint &pPo
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::cmetaIdChanged(const QString &pCmetaId) const
-{
-    // Update the cmeta:id value of the current CellML element
-
-    currentCellmlElementItem()->element()->setCmetaId(pCmetaId);
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewCellmlListWidget::on_actionExpandAll_triggered()
 {
     // Expand all the nodes below the current one
