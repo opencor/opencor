@@ -814,7 +814,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRdfTriple()
     // Determine what the subject of the item's corresponding RDF triple should
     // be
 
-    QString rdfTripleSubject = QUrl::fromLocalFile(mCellmlFile->fileName()).toString()+"#"+mParent->currentMetadataId();
+    QString rdfTripleSubject = QUrl::fromLocalFile(mCellmlFile->fileName()).toString()+"#"+mParent->currentCmetaId();
 
     // Add the item as a RDF triple to the CellML file
 
