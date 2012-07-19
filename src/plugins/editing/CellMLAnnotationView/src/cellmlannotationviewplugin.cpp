@@ -44,10 +44,7 @@ Q_EXPORT_PLUGIN2(CellMLAnnotationView, CellMLAnnotationViewPlugin)
 
 CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin() :
     mSizes(QList<int>()),
-//    mListsWidgetSizes(QList<int>()),
-//    mCellmlDetailsWidgetSizes(QList<int>()),
-//    mCellmlMetadataDetailsWidgetSizes(QList<int>()),
-//    mMetadataDetailsWidgetSizes(QList<int>()),
+    mMetadataDetailsWidgetSizes(QList<int>()),
     mViewWidgets(QMap<QString, CellmlAnnotationViewWidget *>())
 {
     // Set our settings
@@ -67,17 +64,11 @@ CellMLAnnotationViewPlugin::~CellMLAnnotationViewPlugin()
 
 //==============================================================================
 
-static const QString SettingsCellmlAnnotationWidget                                      = "CellmlAnnotationWidget";
-static const QString SettingsCellmlAnnotationWidgetSizesCount                            = "SizesCount";
-static const QString SettingsCellmlAnnotationWidgetSizes                                 = "Sizes%1";
-//static const QString SettingsCellmlAnnotationWidgetListsWidgetSizesCount                 = "ListsWidgetSizesCount";
-//static const QString SettingsCellmlAnnotationWidgetListsWidgetSizes                      = "ListsWidgetSizes%1";
-//static const QString SettingsCellmlAnnotationWidgetCellmlDetailsWidgetSizesCount         = "CellmlDetailsWidgetSizesCount";
-//static const QString SettingsCellmlAnnotationWidgetCellmlDetailsWidgetSizes              = "CellmlDetailsWidgetSizes%1";
-//static const QString SettingsCellmlAnnotationWidgetCellmlMetadataDetailsWidgetSizesCount = "CellmlMetadataDetailsWidgetSizesCount";
-//static const QString SettingsCellmlAnnotationWidgetCellmlMetadataDetailsWidgetSizes      = "CellmlMetadataDetailsWidgetSizes%1";
-//static const QString SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount       = "MetadataDetailsWidgetSizesCount";
-//static const QString SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes            = "MetadataDetailsWidgetSizes%1";
+static const QString SettingsCellmlAnnotationWidget                                = "CellmlAnnotationWidget";
+static const QString SettingsCellmlAnnotationWidgetSizesCount                      = "SizesCount";
+static const QString SettingsCellmlAnnotationWidgetSizes                           = "Sizes%1";
+static const QString SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount = "MetadataDetailsWidgetSizesCount";
+static const QString SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes      = "MetadataDetailsWidgetSizes%1";
 
 //==============================================================================
 
@@ -106,74 +97,23 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
                 mSizes << pSettings->value(SettingsCellmlAnnotationWidgetSizes.arg(QString::number(i))).toInt();
         }
 
-//        // View widget sizes
+        // Metadata details view widget sizes
 
-//        int listsWidgetSizesCount = pSettings->value(SettingsCellmlAnnotationWidgetListsWidgetSizesCount, 0).toInt();
+        int metadataDetailsWidgetSizesCount = pSettings->value(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount, 0).toInt();
 
-//        if (!listsWidgetSizesCount) {
-//            // There are no previous view widget sizes, so get some default ones
+        if (!metadataDetailsWidgetSizesCount) {
+            // There are no previous view widget sizes, so get some default ones
 
-//            mListsWidgetSizes << 0.65*qApp->desktop()->screenGeometry().height()
-//                              << 0.35*qApp->desktop()->screenGeometry().height();
-//        } else {
-//            // There are previous view widget sizes, so use them to initialise
-//            // mListsWidgetSizes
+            mMetadataDetailsWidgetSizes << 0.25*qApp->desktop()->screenGeometry().height()
+                                        << 0.25*qApp->desktop()->screenGeometry().height()
+                                        << 0.50*qApp->desktop()->screenGeometry().height();
+        } else {
+            // There are previous view widget sizes, so use them to initialise
+            // mMetadataDetailsWidgetSizes
 
-//            for (int i = 0; i < listsWidgetSizesCount; ++i)
-//                mListsWidgetSizes << pSettings->value(SettingsCellmlAnnotationWidgetListsWidgetSizes.arg(QString::number(i))).toInt();
-//        }
-
-//        // CellML details view widget sizes
-
-//        int cellmlDetailsWidgetSizesCount = pSettings->value(SettingsCellmlAnnotationWidgetCellmlDetailsWidgetSizesCount, 0).toInt();
-
-//        if (!cellmlDetailsWidgetSizesCount) {
-//            // There are no previous view widget sizes, so get some default ones
-
-//            mCellmlDetailsWidgetSizes << 0.25*qApp->desktop()->screenGeometry().height()
-//                                      << 0.75*qApp->desktop()->screenGeometry().height();
-//        } else {
-//            // There are previous view widget sizes, so use them to initialise
-//            // mCellmlDetailsWidgetSizes
-
-//            for (int i = 0; i < cellmlDetailsWidgetSizesCount; ++i)
-//                mCellmlDetailsWidgetSizes << pSettings->value(SettingsCellmlAnnotationWidgetCellmlDetailsWidgetSizes.arg(QString::number(i))).toInt();
-//        }
-
-//        // CellML metadata details view widget sizes
-
-//        int cellmlMetadataDetailsWidgetSizesCount = pSettings->value(SettingsCellmlAnnotationWidgetCellmlMetadataDetailsWidgetSizesCount, 0).toInt();
-
-//        if (!cellmlMetadataDetailsWidgetSizesCount) {
-//            // There are no previous view widget sizes, so get some default ones
-
-//            mCellmlMetadataDetailsWidgetSizes << 0.25*qApp->desktop()->screenGeometry().height()
-//                                              << 0.75*qApp->desktop()->screenGeometry().height();
-//        } else {
-//            // There are previous view widget sizes, so use them to initialise
-//            // mCellmlMetadataDetailsWidgetSizes
-
-//            for (int i = 0; i < cellmlMetadataDetailsWidgetSizesCount; ++i)
-//                mCellmlMetadataDetailsWidgetSizes << pSettings->value(SettingsCellmlAnnotationWidgetCellmlMetadataDetailsWidgetSizes.arg(QString::number(i))).toInt();
-//        }
-
-//        // Metadata details view widget sizes
-
-//        int metadataDetailsWidgetSizesCount = pSettings->value(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount, 0).toInt();
-
-//        if (!metadataDetailsWidgetSizesCount) {
-//            // There are no previous view widget sizes, so get some default ones
-
-//            mMetadataDetailsWidgetSizes << 0.25*qApp->desktop()->screenGeometry().height()
-//                                        << 0.25*qApp->desktop()->screenGeometry().height()
-//                                        << 0.50*qApp->desktop()->screenGeometry().height();
-//        } else {
-//            // There are previous view widget sizes, so use them to initialise
-//            // mMetadataDetailsWidgetSizes
-
-//            for (int i = 0; i < metadataDetailsWidgetSizesCount; ++i)
-//                mMetadataDetailsWidgetSizes << pSettings->value(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(QString::number(i))).toInt();
-//        }
+            for (int i = 0; i < metadataDetailsWidgetSizesCount; ++i)
+                mMetadataDetailsWidgetSizes << pSettings->value(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(QString::number(i))).toInt();
+        }
     pSettings->endGroup();
 }
 
@@ -196,33 +136,12 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
         for (int i = 0, iMax = mSizes.count(); i < iMax; ++i)
             pSettings->setValue(SettingsCellmlAnnotationWidgetSizes.arg(QString::number(i)), mSizes[i]);
 
-//        // View widget sizes
+        // Metadata details view widget sizes
 
-//        pSettings->setValue(SettingsCellmlAnnotationWidgetListsWidgetSizesCount, mListsWidgetSizes.count());
+        pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount, mMetadataDetailsWidgetSizes.count());
 
-//        for (int i = 0, iMax = mListsWidgetSizes.count(); i < iMax; ++i)
-//            pSettings->setValue(SettingsCellmlAnnotationWidgetListsWidgetSizes.arg(QString::number(i)), mListsWidgetSizes[i]);
-
-//        // CellML details view widget sizes
-
-//        pSettings->setValue(SettingsCellmlAnnotationWidgetCellmlDetailsWidgetSizesCount, mCellmlDetailsWidgetSizes.count());
-
-//        for (int i = 0, iMax = mCellmlDetailsWidgetSizes.count(); i < iMax; ++i)
-//            pSettings->setValue(SettingsCellmlAnnotationWidgetCellmlDetailsWidgetSizes.arg(QString::number(i)), mCellmlDetailsWidgetSizes[i]);
-
-//        // CellML metadata details view widget sizes
-
-//        pSettings->setValue(SettingsCellmlAnnotationWidgetCellmlMetadataDetailsWidgetSizesCount, mCellmlMetadataDetailsWidgetSizes.count());
-
-//        for (int i = 0, iMax = mCellmlMetadataDetailsWidgetSizes.count(); i < iMax; ++i)
-//            pSettings->setValue(SettingsCellmlAnnotationWidgetCellmlMetadataDetailsWidgetSizes.arg(QString::number(i)), mCellmlMetadataDetailsWidgetSizes[i]);
-
-//        // Metadata details view widget sizes
-
-//        pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount, mMetadataDetailsWidgetSizes.count());
-
-//        for (int i = 0, iMax = mMetadataDetailsWidgetSizes.count(); i < iMax; ++i)
-//            pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(QString::number(i)), mMetadataDetailsWidgetSizes[i]);
+        for (int i = 0, iMax = mMetadataDetailsWidgetSizes.count(); i < iMax; ++i)
+            pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(QString::number(i)), mMetadataDetailsWidgetSizes[i]);
     pSettings->endGroup();
 }
 
@@ -249,23 +168,14 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
         // Initialise our new view widget's sizes
 
         res->setSizes(mSizes);
-//        res->listsWidget()->setSizes(mListsWidgetSizes);
-//        res->detailsWidget()->cellmlDetails()->setSizes(mCellmlDetailsWidgetSizes);
-//        res->detailsWidget()->cellmlDetails()->cellmlMetadataDetails()->splitter()->setSizes(mCellmlMetadataDetailsWidgetSizes);
-//        res->detailsWidget()->metadataDetails()->splitter()->setSizes(mMetadataDetailsWidgetSizes);
+        res->metadataDetails()->splitter()->setSizes(mMetadataDetailsWidgetSizes);
 
         // Keep track of the splitter move in our new view widget
 
         connect(res, SIGNAL(splitterMoved(const QList<int> &)),
                 this, SLOT(splitterMoved(const QList<int> &)));
-//        connect(res->listsWidget(), SIGNAL(splitterMoved(const QList<int> &)),
-//                this, SLOT(listsWidgetSplitterMoved(const QList<int> &)));
-//        connect(res->detailsWidget()->cellmlDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-//                this, SLOT(cellmlDetailsWidgetSplitterMoved(const QList<int> &)));
-//        connect(res->detailsWidget()->cellmlDetails()->cellmlMetadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-//                this, SLOT(cellmlMetadataDetailsWidgetSplitterMoved(const QList<int> &)));
-//        connect(res->detailsWidget()->metadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-//                this, SLOT(metadataDetailsWidgetSplitterMoved(const QList<int> &)));
+        connect(res->metadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
+                this, SLOT(metadataDetailsWidgetSplitterMoved(const QList<int> &)));
 
         // Some other connections to handle splitter moves between our view
         // widgets
@@ -276,28 +186,16 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 
             connect(res, SIGNAL(splitterMoved(const QList<int> &)),
                     viewWidget, SLOT(updateSizes(const QList<int> &)));
-//            connect(res->listsWidget(), SIGNAL(splitterMoved(const QList<int> &)),
-//                    viewWidget->listsWidget(), SLOT(updateSizes(const QList<int> &)));
-//            connect(res->detailsWidget()->cellmlDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-//                    viewWidget->detailsWidget()->cellmlDetails(), SLOT(updateSizes(const QList<int> &)));
-//            connect(res->detailsWidget()->cellmlDetails()->cellmlMetadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-//                    viewWidget->detailsWidget()->cellmlDetails()->cellmlMetadataDetails(), SLOT(updateSizes(const QList<int> &)));
-//            connect(res->detailsWidget()->metadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-//                    viewWidget->detailsWidget()->metadataDetails(), SLOT(updateSizes(const QList<int> &)));
+            connect(res->metadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
+                    viewWidget->metadataDetails(), SLOT(updateSizes(const QList<int> &)));
 
             // Make sur that the other view widget is aware of any splitter move
             // occuring in our new view widget
 
             connect(viewWidget, SIGNAL(splitterMoved(const QList<int> &)),
                     res, SLOT(updateSizes(const QList<int> &)));
-//            connect(viewWidget->listsWidget(), SIGNAL(splitterMoved(const QList<int> &)),
-//                    res->listsWidget(), SLOT(updateSizes(const QList<int> &)));
-//            connect(viewWidget->detailsWidget()->cellmlDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-//                    res->detailsWidget()->cellmlDetails(), SLOT(updateSizes(const QList<int> &)));
-//            connect(viewWidget->detailsWidget()->cellmlDetails()->cellmlMetadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-//                    res->detailsWidget()->cellmlDetails()->cellmlMetadataDetails(), SLOT(updateSizes(const QList<int> &)));
-//            connect(viewWidget->detailsWidget()->metadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-//                    res->detailsWidget()->metadataDetails(), SLOT(updateSizes(const QList<int> &)));
+            connect(viewWidget->metadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
+                    res->metadataDetails(), SLOT(updateSizes(const QList<int> &)));
         }
 
         // Keep track of our new view widget
@@ -369,43 +267,13 @@ void CellMLAnnotationViewPlugin::splitterMoved(const QList<int> &pSizes)
 
 //==============================================================================
 
-//void CellMLAnnotationViewPlugin::listsWidgetSplitterMoved(const QList<int> &pSizes)
-//{
-//    // The splitter of one of our CellML annotation view's lists widgets has
-//    // been moved, so update things
+void CellMLAnnotationViewPlugin::metadataDetailsWidgetSplitterMoved(const QList<int> &pSizes)
+{
+    // The splitter of one of our CellML annotation view's metadata details
+    // widgets has been moved, so update things
 
-//    mListsWidgetSizes = pSizes;
-//}
-
-//==============================================================================
-
-//void CellMLAnnotationViewPlugin::cellmlDetailsWidgetSplitterMoved(const QList<int> &pSizes)
-//{
-//    // The splitter of one of our CellML annotation view's CellML details
-//    // widgets has been moved, so update things
-
-//    mCellmlDetailsWidgetSizes = pSizes;
-//}
-
-//==============================================================================
-
-//void CellMLAnnotationViewPlugin::cellmlMetadataDetailsWidgetSplitterMoved(const QList<int> &pSizes)
-//{
-//    // The splitter of one of our CellML annotation view's CellML metadata
-//    // details widgets has been moved, so update things
-
-//    mCellmlMetadataDetailsWidgetSizes = pSizes;
-//}
-
-//==============================================================================
-
-//void CellMLAnnotationViewPlugin::metadataDetailsWidgetSplitterMoved(const QList<int> &pSizes)
-//{
-//    // The splitter of one of our CellML annotation view's metadata details
-//    // widgets has been moved, so update things
-
-//    mMetadataDetailsWidgetSizes = pSizes;
-//}
+    mMetadataDetailsWidgetSizes = pSizes;
+}
 
 //==============================================================================
 

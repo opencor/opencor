@@ -198,6 +198,15 @@ QString CellmlAnnotationViewWidget::currentCmetaId() const
 
 //==============================================================================
 
+CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewWidget::metadataDetails() const
+{
+    // Return our metadata details widget
+
+    return mMetadataDetails;
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewWidget::updateWebViewerWithQualifierDetails(QWebView *pWebView,
                                                                      const QString &pQualifier,
                                                                      const bool &pRetranslate)

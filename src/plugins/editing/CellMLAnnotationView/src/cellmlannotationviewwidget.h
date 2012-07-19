@@ -59,6 +59,8 @@ public:
 
     QString currentCmetaId() const;
 
+    CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
+
     void updateWebViewerWithQualifierDetails(QWebView *pWebView,
                                              const QString &pQualifier,
                                              const bool &pRetranslate);

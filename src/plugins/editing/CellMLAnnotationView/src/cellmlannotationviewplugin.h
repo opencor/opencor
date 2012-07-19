@@ -55,19 +55,13 @@ public:
 
 private:
     QList<int> mSizes;
-//    QList<int> mListsWidgetSizes;
-//    QList<int> mCellmlDetailsWidgetSizes;
-//    QList<int> mCellmlMetadataDetailsWidgetSizes;
-//    QList<int> mMetadataDetailsWidgetSizes;
+    QList<int> mMetadataDetailsWidgetSizes;
 
     QMap<QString, CellmlAnnotationViewWidget *> mViewWidgets;
 
 private Q_SLOTS:
     void splitterMoved(const QList<int> &pSizes);
-//    void listsWidgetSplitterMoved(const QList<int> &pSizes);
-//    void cellmlDetailsWidgetSplitterMoved(const QList<int> &pSizes);
-//    void cellmlMetadataDetailsWidgetSplitterMoved(const QList<int> &pSizes);
-//    void metadataDetailsWidgetSplitterMoved(const QList<int> &pSizes);
+    void metadataDetailsWidgetSplitterMoved(const QList<int> &pSizes);
 };
 
 //==============================================================================
