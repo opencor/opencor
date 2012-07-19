@@ -565,7 +565,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
         mComputerEngine->addFunction(QString("void computeStateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
         checkFunction("computeStateInformation");
     }
-
+mComputerEngine->module()->dump();
 #ifdef QT_DEBUG
     qDebug(" - CellML binary code time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif

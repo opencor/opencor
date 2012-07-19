@@ -460,14 +460,18 @@ IF(WIN32)
 
     SET(CPACK_GENERATOR NSIS ZIP)
 
+    SET(CPACK_SYSTEM_NAME "Windows")
+
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
 
-    # OpenCOR itself
+    # Install both the GUI and consolve version of OpenCOR
+    # Note: we would normally use
+    #           INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+    #       for the GUI version of OpenCOR, but for some reasons it doesn't
+    #       work (anymore?) while it works fine on Linux and Mac OS X. Could
+    #       that have something to do with us now using MSVC?...
 
-    INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-
-    # The console version of OpenCOR
-
+    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.exe DESTINATION bin)
     INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
 
     # MSVC files required by OpenCOR
@@ -529,6 +533,8 @@ ELSEIF(APPLE)
 
     SET(CPACK_GENERATOR PackageMaker ZIP)
 
+    SET(CPACK_SYSTEM_NAME "MacOSX")
+
     SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macosx/welcome.txt")
     SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
@@ -553,6 +559,14 @@ ELSE()
     # Select TGZ as the packager on Linux
 
     SET(CPACK_GENERATOR TGZ)
+
+    SET(CPACK_SYSTEM_NAME "Linux")
+
+    IF(64BIT_MODE)
+        SET(CPACK_SYSTEM_NAME "${CPACK_SYSTEM_NAME}64")
+    ELSE()
+        SET(CPACK_SYSTEM_NAME "${CPACK_SYSTEM_NAME}32")
+    ENDIF()
 
     # OpenCOR itself
 

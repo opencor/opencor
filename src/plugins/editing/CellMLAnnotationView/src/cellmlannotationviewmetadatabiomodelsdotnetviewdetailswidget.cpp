@@ -15,6 +15,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QScrollBar>
 #include <QStackedWidget>
 
 //==============================================================================
@@ -33,9 +34,12 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     mGridWidget(0),
     mGridLayout(0),
     mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mCellmlFile)),
-    mRdfTripleInfo(QString()),
-    mType(Unknown),
+    mRdfTripleInformation(QString()),
+    mType(No),
+    mLookupInformation(true),
     mEditingMode(pEditingMode),
+    mVerticalScrollBarPosition(0),
+    mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>())
 {
     // Set up the GUI
@@ -49,6 +53,13 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     // Add our stacked widget to our scroll area
 
     setWidget(mWidget);
+
+    // Keep track of the position of our vertical scroll bar
+    // Note: this is required to make sure that the position doesn't get reset
+    //       as a result of retranslating the GUI...
+
+    connect(verticalScrollBar(), SIGNAL(sliderMoved(int)),
+            this, SLOT(trackVerticalScrollBarPosition(const int &)));
 }
 
 //==============================================================================
@@ -70,14 +81,15 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::retranslateUi
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mRdfTriples, mRdfTripleInfo, mType, true);
+    updateGui(mRdfTriples, mRdfTripleInformation, mType, mVerticalScrollBarPosition, true);
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
-                                                                             const QString &pRdfTripleInfo,
+                                                                             const QString &pRdfTripleInformation,
                                                                              const Type &pType,
+                                                                             const int &pVerticalScrollBarPosition,
                                                                              const bool &pRetranslate)
 {
     // Note: we are using a grid layout to dislay the contents of our view, but
@@ -101,7 +113,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
     // Populate our new layout, but only if there is at least one RDF triple
 
-    QString firstRdfTripleInfo = QString();
+    QString firstRdfTripleInformation = QString();
 
     if (pRdfTriples.count()) {
         // Create labels to act as headers
@@ -121,12 +133,13 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
         // Number of terms
 
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                (pRdfTriples.count() == 1)?
-                                                    tr("(1 term)"):
-                                                    tr("(%1 terms)").arg(QString::number(pRdfTriples.count())),
-                                                1.0, false, true, Qt::AlignCenter),
-                                 0, 3);
+        if (mEditingMode)
+            newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                    (pRdfTriples.count() == 1)?
+                                                        tr("(1 term)"):
+                                                        tr("(%1 terms)").arg(QString::number(pRdfTriples.count())),
+                                                    1.0, false, true, Qt::AlignCenter),
+                                     0, 3);
 
         // Add the RDF triples information to our layout
         // Note: for the RDF triple's subject, we try to remove the CellML
@@ -142,10 +155,10 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             QString qualifierAsString = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
                                             rdfTriple->modelQualifierAsString():
                                             rdfTriple->bioQualifierAsString();
-            QString rdfTripleInfo = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
+            QString rdfTripleInformation = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
 
             QLabel *qualifierLabel = Core::newLabelLink(newGridWidget,
-                                                        "<a href=\""+rdfTripleInfo+"\">"+qualifierAsString+"</a>",
+                                                        "<a href=\""+rdfTripleInformation+"\">"+qualifierAsString+"</a>",
                                                         1.0, false, false, Qt::AlignCenter);
 
             connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
@@ -156,7 +169,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             // Resource
 
             QLabel *resourceLabel = Core::newLabelLink(newGridWidget,
-                                                       "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->resource()+"</a>",
+                                                       "<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
                                                        1.0, false, false, Qt::AlignCenter);
 
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
@@ -167,11 +180,11 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             // Id
 
             QLabel *idLabel = Core::newLabelLink(newGridWidget,
-                                                 "<a href=\""+rdfTripleInfo+"\">"+rdfTriple->id()+"</a>",
+                                                 "<a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>",
                                                  1.0, false, false, Qt::AlignCenter);
 
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupResourceId(const QString &)));
+                    this, SLOT(lookupId(const QString &)));
 
             newGridLayout->addWidget(idLabel, row, 2);
 
@@ -202,7 +215,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
             // Keep track of the very first resource id
 
             if (row == 1)
-                firstRdfTripleInfo = rdfTripleInfo;
+                firstRdfTripleInformation = rdfTripleInformation;
         }
 
         // Have all the rows take a minimum of vertical space
@@ -248,51 +261,57 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     mGridWidget = newGridWidget;
     mGridLayout = newGridLayout;
 
-    // Request for something to be looked up
-
-    if (pRdfTriples.count()) {
-        // Request for the first resource id or an 'old' qualifier, resource or
-        // resource id to be looked up
-
-        if (pRdfTripleInfo.isEmpty() && (pType == Unknown))
-            // Nothing 'old' to lookup, so lookup the first resource id
-
-            genericLookup(firstRdfTripleInfo, Id, pRetranslate);
-        else
-            // Lookup an 'old' qualifier, resource or resource id
-
-            genericLookup(pRdfTripleInfo, pType, pRetranslate);
-    } else {
-        // No RDF triple left, so ask for an 'unknown' to be looked up
-        // Note: we do this to let people know that there is nothing to lookup
-        //       and that they can 'clean' whatever they use to show a lookup to
-        //       the user...
-
-        genericLookup();
-    }
-
     // Allow ourselves to be updated again
 
     setUpdatesEnabled(true);
+
+    // Request for something to be looked up, if needed
+
+    if (mLookupInformation) {
+        if (pRdfTriples.count()) {
+            // Request for the first resource id or an 'old' qualifier, resource
+            // or resource id to be looked up
+
+            if (pRdfTripleInformation.isEmpty() && (pType == No))
+                // Nothing 'old' to look up, so look up the first resource id
+
+                genericLookup(firstRdfTripleInformation, Id, pRetranslate);
+            else
+                // Look up an 'old' qualifier, resource or resource id
+
+                genericLookup(pRdfTripleInformation, pType, pRetranslate);
+        } else {
+            // No RDF triple left, so ask for 'nothing' to be looked up
+            // Note: we do this to let people know that there is nothing to look
+            //       up and that they can 'clean' whatever they use to show a
+            //       lookup to the user...
+
+            genericLookup();
+        }
+    }
+
+    // Set the position of our vertical scroll bar
+
+    verticalScrollBar()->setValue(pVerticalScrollBarPosition);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup(const QString &pRdfTripleInfo,
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup(const QString &pRdfTripleInformation,
                                                                                  const Type &pType,
                                                                                  const bool &pRetranslate)
 {
     // Retrieve the RDF triple information
 
-    QStringList rdfTripleInfoAsStringList = pRdfTripleInfo.split("|");
-    QString qualifierAsString = pRdfTripleInfo.isEmpty()?QString():rdfTripleInfoAsStringList[0];
-    QString resourceAsString = pRdfTripleInfo.isEmpty()?QString():rdfTripleInfoAsStringList[1];
-    QString idAsString = pRdfTripleInfo.isEmpty()?QString():rdfTripleInfoAsStringList[2];
+    QStringList rdfTripleInformationAsStringList = pRdfTripleInformation.split("|");
+    QString qualifierAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[0];
+    QString resourceAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[1];
+    QString idAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[2];
 
     // Keep track of the RDF triple information and type
 
-    mRdfTripleInfo = pRdfTripleInfo;
-    mType          = pType;
+    mRdfTripleInformation = pRdfTripleInformation;
+    mType = pType;
 
     // Make the row corresponding to the qualifier, resource or id bold
     // Note: to use mGridLayout->rowCount() to determine the number of rows
@@ -313,9 +332,10 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
 
             QFont font = idLabel->font();
 
-            font.setBold(   !qualifierLabel->text().compare("<a href=\""+pRdfTripleInfo+"\">"+qualifierAsString+"</a>")
-                         && !resourceLabel->text().compare("<a href=\""+pRdfTripleInfo+"\">"+resourceAsString+"</a>")
-                         && !idLabel->text().compare("<a href=\""+pRdfTripleInfo+"\">"+idAsString+"</a>"));
+            font.setBold(   mLookupInformation
+                         && !qualifierLabel->text().compare("<a href=\""+pRdfTripleInformation+"\">"+qualifierAsString+"</a>")
+                         && !resourceLabel->text().compare("<a href=\""+pRdfTripleInformation+"\">"+resourceAsString+"</a>")
+                         && !idLabel->text().compare("<a href=\""+pRdfTripleInformation+"\">"+idAsString+"</a>"));
             font.setItalic(false);
 
             QFont italicFont = idLabel->font();
@@ -332,7 +352,14 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
             break;
         }
 
-    // Let people know that we want to lookup something
+    // Check that we have something to look up
+
+    if (!mLookupInformation)
+        // Nothing to look up, so...
+
+        return;
+
+    // Let people know that we want to look something up
 
     switch (pType) {
     case Qualifier:
@@ -344,50 +371,71 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
 
         break;
     case Id:
-        emit resourceIdLookupRequested(resourceAsString, idAsString,
-                                       pRetranslate);
+        emit idLookupRequested(resourceAsString, idAsString, pRetranslate);
 
         break;
     default:
-        // Unknown
+        // No
 
-        emit unknownLookupRequested();
+        emit noLookupRequested();
     }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInfo,
-                                                                                   const bool &pRetranslate)
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::disableLookupInformation()
 {
-    // Call our generic lookup function
+    // Disable the looking up of information
 
-    genericLookup(pRdfTripleInfo, Qualifier, pRetranslate);
+    mLookupInformation = false;
+
+    // Update the GUI by pretending to be interested in looking something up
+
+    genericLookup();
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pRdfTripleInfo,
-                                                                                  const bool &pRetranslate)
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInformation)
 {
+    // Enable the looking up of information
+
+    mLookupInformation = true;
+
     // Call our generic lookup function
 
-    genericLookup(pRdfTripleInfo, Resource, pRetranslate);
+    genericLookup(pRdfTripleInformation, Qualifier);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourceId(const QString &pRdfTripleInfo,
-                                                                                    const bool &pRetranslate)
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pRdfTripleInformation)
 {
+    // Enable the looking up of information
+
+    mLookupInformation = true;
+
     // Call our generic lookup function
 
-    genericLookup(pRdfTripleInfo, Id, pRetranslate);
+    genericLookup(pRdfTripleInformation, Resource);
 }
 
 //==============================================================================
 
-QString CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::rdfTripleInfo(const int &pRow) const
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupId(const QString &pRdfTripleInformation)
+{
+    // Enable the looking up of information
+
+    mLookupInformation = true;
+
+    // Call our generic lookup function
+
+    genericLookup(pRdfTripleInformation, Id);
+}
+
+//==============================================================================
+
+QString CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::rdfTripleInformation(const int &pRow) const
 {
     // Return the RDF triple information for the given row
 
@@ -423,9 +471,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
 {
     // Retrieve the RDF triple associated with the remove button
 
-    QObject *button = sender();
+    QObject *removeButton = sender();
 
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(button);
+    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(removeButton);
 
     // Remove the RDF triple from the CellML file and from our set of RDF
     // triples this widget uses
@@ -442,7 +490,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     int row = -1;
     int rowMax = mGridLayout->rowCount();
 
-    for (int i = 1, iMax = mGridLayout->rowCount(); i < iMax; ++i) {
+    for (int i = 1; i < rowMax; ++i) {
         QLayoutItem *item = mGridLayout->itemAtPosition(i, 3);
 
         if (!item) {
@@ -453,7 +501,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
             break;
         }
 
-        if (item->widget() == button)
+        if (item->widget() == removeButton)
             // This is the row we want to remove
 
             row = i;
@@ -464,25 +512,102 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     Q_ASSERT(row > 0);
     Q_ASSERT(rowMax > row);
 
-    // Determine the 'new' RDF triple information to lookup
+    // Determine the neighbour row which we want to be visible
+
+    mNeighbourRow = (rowMax-1 > row)?row:row-1;
+
+    // Determine the 'new' RDF triple information to look up
 
     if (mRdfTriples.isEmpty()) {
-        mRdfTripleInfo = QString();
-        mType = Unknown;
-    } else if (!rdfTripleInfo(row).compare(mRdfTripleInfo)) {
+        mRdfTripleInformation = QString();
+        mType = No;
+    } else if (!rdfTripleInformation(row).compare(mRdfTripleInformation)) {
         // The RDF triple information is related to the row we want to delete,
-        // so we need to find some new one
+        // so we need to find a new one
 
-        mRdfTripleInfo = rdfTripleInfo((rowMax-1 > row)?row+1:row-1);
+        mRdfTripleInformation = rdfTripleInformation((rowMax-1 > row)?row+1:row-1);
     }
+
+    // Make sure that the neighbour of the removed RDF triple will be made
+    // visible, this by handling the change in the range of our vertical scroll
+    // bar which will result in showNeighbourRdfTriple() being called
+
+    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+            this, SLOT(showNeighbourRdfTriple()));
 
     // Update the GUI to reflect the removal of the RDF triple
 
-    updateGui(mRdfTriples, mRdfTripleInfo, mType);
+    updateGui(mRdfTriples, mRdfTripleInformation, mType);
 
     // Let people know that some metadata has been removed
 
-    emit metadataUpdated();
+    emit metadataRemoved(rdfTriple);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+{
+    // Add the RDF triple to our set of RDF triples this widget uses
+
+    mRdfTriples.add(pRdfTriple);
+
+    // Make sure that the newly added RDF triple will be made visible, this by
+    // handling the change in the range of our vertical scroll bar which will
+    // result in showLastRdfTriple() being called
+
+    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+            this, SLOT(showLastRdfTriple()));
+
+    // Update the GUI to reflect the addition of our RDF triple
+
+    updateGui(mRdfTriples, mRdfTripleInformation, mType, mVerticalScrollBarPosition);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showNeighbourRdfTriple()
+{
+    // No need to show our neighbour RDF triple, so...
+
+    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+               this, SLOT(showNeighbourRdfTriple()));
+
+    // Make sure that the last RDF triple is visible
+
+    ensureWidgetVisible(mGridLayout->itemAtPosition(mNeighbourRow, 0)->widget());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showLastRdfTriple()
+{
+    // No need to show our last RDF triple, so...
+
+    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+               this, SLOT(showLastRdfTriple()));
+
+    // Determine the number of rows in our grid layout
+    // Note: to use mGridLayout->rowCount() isn't an option since no matter
+    //       whether we remove rows (in updateGui()), the returned value will be
+    //       the maximum number of rows that there has ever been, so...
+
+    int row = 0;
+
+    while (mGridLayout->itemAtPosition(++row, 0));
+
+    // Make sure that the last RDF triple is visible
+
+    ensureWidgetVisible(mGridLayout->itemAtPosition(row-1, 0)->widget());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::trackVerticalScrollBarPosition(const int &pPosition)
+{
+    // Keep track of the new position of our vertical scroll bar
+
+    mVerticalScrollBarPosition = pPosition;
 }
 
 //==============================================================================

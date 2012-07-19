@@ -426,7 +426,12 @@ raw_ostream LLVM_EXPORT &errs();
 
 /// nulls() - This returns a reference to a raw_ostream which simply discards
 /// output.
+/*---OPENCOR---
 raw_ostream &nulls();
+*/
+//---OPENCOR--- BEGIN
+raw_ostream LLVM_EXPORT &nulls();
+//---OPENCOR--- END
 
 //===----------------------------------------------------------------------===//
 // Output Stream Adaptors

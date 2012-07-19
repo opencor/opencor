@@ -61,13 +61,13 @@ CellmlAnnotationViewCellmlMetadataDetailsWidget::CellmlAnnotationViewCellmlMetad
     // resource id
 
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
-            this, SLOT(qualifierLookupRequested(const QString &, const bool &)));
+            this, SLOT(lookupQualifier(const QString &, const bool &)));
     connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
-            this, SLOT(resourceLookupRequested(const QString &, const bool &)));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceIdLookupRequested(const QString &, const QString &, const bool &)),
-            this, SLOT(resourceIdLookupRequested(const QString &, const QString &, const bool &)));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(unknownLookupRequested()),
-            this, SLOT(unknownLookupRequested()));
+            this, SLOT(lookupResource(const QString &, const bool &)));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
+            this, SLOT(lookupId(const QString &, const QString &, const bool &)));
+    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(noLookupRequested()),
+            this, SLOT(lookupNothing()));
 
     // Populate our splitter widget
 
@@ -179,8 +179,8 @@ CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewCellmlMetada
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlMetadataDetailsWidget::qualifierLookupRequested(const QString &pQualifier,
-                                                                               const bool &pRetranslate)
+void CellmlAnnotationViewCellmlMetadataDetailsWidget::lookupQualifier(const QString &pQualifier,
+                                                                      const bool &pRetranslate)
 {
     // Ask our parent to update our web viewer for us
 
@@ -189,8 +189,8 @@ void CellmlAnnotationViewCellmlMetadataDetailsWidget::qualifierLookupRequested(c
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlMetadataDetailsWidget::resourceLookupRequested(const QString &pResource,
-                                                                              const bool &pRetranslate)
+void CellmlAnnotationViewCellmlMetadataDetailsWidget::lookupResource(const QString &pResource,
+                                                                     const bool &pRetranslate)
 {
     // Ask our parent to update our web viewer for us
 
@@ -199,20 +199,20 @@ void CellmlAnnotationViewCellmlMetadataDetailsWidget::resourceLookupRequested(co
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlMetadataDetailsWidget::resourceIdLookupRequested(const QString &pResource,
-                                                                                const QString &pId,
-                                                                                const bool &pRetranslate)
+void CellmlAnnotationViewCellmlMetadataDetailsWidget::lookupId(const QString &pResource,
+                                                               const QString &pId,
+                                                               const bool &pRetranslate)
 {
     // Ask our parent to update our web viewer for us
 
-    mParent->updateWebViewerWithResourceIdDetails(mWebView, pResource, pId, pRetranslate);
+    mParent->updateWebViewerWithIdDetails(mWebView, pResource, pId, pRetranslate);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlMetadataDetailsWidget::unknownLookupRequested()
+void CellmlAnnotationViewCellmlMetadataDetailsWidget::lookupNothing()
 {
-    // We are 'asked' to lookup something unknown, so 'clean up' our web view
+    // We are 'asked' to look nothing up, so 'clean up' our web view
 
     mWebView->setUrl(QUrl());
 }

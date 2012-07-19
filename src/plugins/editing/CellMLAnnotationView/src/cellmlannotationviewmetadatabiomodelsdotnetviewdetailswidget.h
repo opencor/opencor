@@ -43,7 +43,7 @@ class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget : public QScr
 
 private:
     enum Type {
-        Unknown,
+        No,
         Qualifier,
         Resource,
         Id
@@ -57,8 +57,9 @@ public:
     virtual void retranslateUi();
 
     void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
-                   const QString &pRdfTripleInfo = QString(),
-                   const Type &pType = Unknown,
+                   const QString &pRdfTripleInformation = QString(),
+                   const Type &pType = No,
+                   const int &pVerticalScrollBarPosition = 0,
                    const bool &pRetranslate = false);
 
 private:
@@ -73,40 +74,49 @@ private:
 
     CellMLSupport::CellmlFileRdfTriples mRdfTriples;
 
-    QString mRdfTripleInfo;
+    QString mRdfTripleInformation;
     Type mType;
 
+    bool mLookupInformation;
     bool mEditingMode;
+
+    int mVerticalScrollBarPosition;
+    int mNeighbourRow;
 
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
-    void genericLookup(const QString &pRdfTripleInfo = QString(),
-                       const Type &pType = Unknown,
+    void genericLookup(const QString &pRdfTripleInformation = QString(),
+                       const Type &pType = No,
                        const bool &pRetranslate = false);
 
-    QString rdfTripleInfo(const int &pRow) const;
+    QString rdfTripleInformation(const int &pRow) const;
 
 Q_SIGNALS:
     void qualifierLookupRequested(const QString &pQualifier,
                                   const bool &pRetranslate);
     void resourceLookupRequested(const QString &pResource,
                                  const bool &pRetranslate);
-    void resourceIdLookupRequested(const QString &pResource,
-                                   const QString &pId,
-                                   const bool &pRetranslate);
-    void unknownLookupRequested();
+    void idLookupRequested(const QString &pResource, const QString &pId,
+                           const bool &pRetranslate);
+    void noLookupRequested();
 
-    void metadataUpdated();
+    void metadataRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
-    void lookupQualifier(const QString &pRdfTripleInfo,
-                         const bool &pRetranslate = false);
-    void lookupResource(const QString &pRdfTripleInfo,
-                        const bool &pRetranslate = false);
-    void lookupResourceId(const QString &pRdfTripleInfo,
-                          const bool &pRetranslate = false);
+    void disableLookupInformation();
+
+    void lookupQualifier(const QString &pRdfTripleInformation);
+    void lookupResource(const QString &pRdfTripleInformation);
+    void lookupId(const QString &pRdfTripleInformation);
 
     void removeRdfTriple();
+
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+
+    void showNeighbourRdfTriple();
+    void showLastRdfTriple();
+
+    void trackVerticalScrollBarPosition(const int &pPosition);
 };
 
 //==============================================================================

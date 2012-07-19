@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -27,6 +28,7 @@ class QGridLayout;
 class QLineEdit;
 class QNetworkAccessManager;
 class QNetworkReply;
+class QPushButton;
 class QStackedWidget;
 class QVBoxLayout;
 
@@ -64,9 +66,17 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const Items &pItems, const QString &pErrorMsg);
-
 private:
+    enum Type {
+        No,
+        Qualifier,
+        Resource,
+        Id
+    };
+
+    CellmlAnnotationViewWidget *mParent;
+    CellMLSupport::CellmlFile *mCellmlFile;
+
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QStackedWidget *mWidget;
@@ -77,6 +87,8 @@ private:
     QWidget *mFormWidget;
     QFormLayout *mFormLayout;
 
+    QLineEdit *mTermValue;
+
     QScrollArea *mItemsScrollArea;
 
     QWidget *mGridWidget;
@@ -85,6 +97,8 @@ private:
     QNetworkAccessManager *mNetworkAccessManager;
 
     QComboBox *mQualifierValue;
+    QPushButton *mLookupButton;
+    bool mLookupButtonIsChecked;
 
     QString mTerm;
     QString mTermUrl;
@@ -92,18 +106,60 @@ private:
 
     Items mItems;
     QString mErrorMsg;
+    bool mLookupTerm;
 
-    void updateItemsGui(const Items &pItems, const QString &pErrorMsg);
+    QString mInformation;
+    Type mType;
+
+    bool mLookupInformation;
+
+    QMap<QObject *, Item> mItemsMapping;
+
+    int mItemsVerticalScrollBarPosition;
+
+    void updateGui(const Items &pItems, const QString &pErrorMsg,
+                   const bool &pLookupTerm,
+                   const int &pItemsVerticalScrollBarPosition,
+                   const bool &pRetranslate);
+    void updateItemsGui(const Items &pItems, const QString &pErrorMsg,
+                        const bool &pLookupTerm);
 
     static Item item(const QString &pName,
                      const QString &pResource, const QString &pId);
 
+    void genericLookup(const QString &pInformation = QString(),
+                       const Type &pType = No,
+                       const bool &pRetranslate = false);
+
 Q_SIGNALS:
-    void guiPopulated(QComboBox *pQualifierValue, QLineEdit *pTermValue);
+    void guiPopulated(QComboBox *pQualifierValue, QPushButton *pLookupButton,
+                      QLineEdit *pTermValue);
+
+    void qualifierLookupRequested(const QString &pQualifier,
+                                  const bool &pRetranslate);
+    void resourceLookupRequested(const QString &pResource,
+                                 const bool &pRetranslate);
+    void idLookupRequested(const QString &pResource, const QString &pId,
+                           const bool &pRetranslate);
+    void noLookupRequested();
+
+    void metadataAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
+    void disableLookupInformation();
+
+    void qualifierChanged(const QString &pQualifier);
+
+    void lookupQualifier();
+    void lookupResource(const QString &pInformation);
+    void lookupId(const QString &pInformation);
+
     void lookupTerm(const QString &pTerm);
-    void finished(QNetworkReply *pNetworkReply);
+    void termLookupFinished(QNetworkReply *pNetworkReply);
+
+    void addRdfTriple();
+
+    void trackItemsVerticalScrollBarPosition(const int &pPosition);
 };
 
 //==============================================================================

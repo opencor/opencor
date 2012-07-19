@@ -59,9 +59,9 @@ public:
 
     Core::TreeView * treeView() const;
 
-    QString currentId() const;
+    QString currentMetadataId() const;
 
-    QStringList ids() const;
+    QStringList metadataIds() const;
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -76,16 +76,20 @@ private:
 
     QList<QModelIndex> mIndexes;
 
-    QString mId;
+    QString mMetadataId;
 
     void populateDataModel();
 
 Q_SIGNALS:
     void metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
-    void metadataUpdated();
+
+    void metadataRenamed(const QString &pOldMetadataId,
+                         const QString &pNewMetadataId);
+    void metadataRemoved(const QString &pMetadataId);
+    void allMetadataRemoved();
 
 public Q_SLOTS:
-    void setCurrentId(const QString &pId);
+    void setCurrentMetadataId(const QString &pMetadataId);
 
 private Q_SLOTS:
     void updateActions();

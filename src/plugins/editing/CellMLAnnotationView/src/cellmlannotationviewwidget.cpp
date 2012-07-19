@@ -124,7 +124,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // metadata
 
     connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(metadataEditingRequested(const QString &)),
-            mListsWidget->metadataList(), SLOT(setCurrentId(const QString &)));
+            mListsWidget->metadataList(), SLOT(setCurrentMetadataId(const QString &)));
 
     // A connection to reset the tab order following a GUI update of the
     // CellML details
@@ -135,26 +135,40 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // A connection to reset the tab order following a GUI update of the
     // metadata edit details
 
-    connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(guiPopulated(QComboBox *, QLineEdit *)),
-            this, SLOT(updateTabOrder(QComboBox *, QLineEdit *)));
+    connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(guiPopulated(QComboBox *, QPushButton *, QLineEdit *)),
+            this, SLOT(updateTabOrder(QComboBox *, QPushButton *, QLineEdit *)));
 
-    // Some connections to let our CellML and metadata details widgets know when
-    // some/all metadata has/have been removed
+    // Some connections to let our CellML details widgets know when some/all
+    // metadata has/have been removed/renamed
 
-    connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
-            mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
-    connect(mListsWidget->metadataList(), SIGNAL(metadataUpdated()),
+    connect(mListsWidget->metadataList(), SIGNAL(metadataRenamed(const QString &, const QString &)),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
+    connect(mListsWidget->metadataList(), SIGNAL(metadataRemoved(const QString &)),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
+    connect(mListsWidget->metadataList(), SIGNAL(allMetadataRemoved()),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
+
+    // Some connections to let our metadata details widgets know when some/all
+    // metadata has/have been removed/renamed
+
+    connect(mListsWidget->metadataList(), SIGNAL(metadataRenamed(const QString &, const QString &)),
+            this, SLOT(updateMetadataDetails()));
+    connect(mListsWidget->metadataList(), SIGNAL(metadataRemoved(const QString &)),
+            this, SLOT(updateMetadataDetails()));
+    connect(mListsWidget->metadataList(), SIGNAL(allMetadataRemoved()),
             this, SLOT(updateMetadataDetails()));
 
     // A connection to let our CellML details widget know when some RDF triple
-    // has been removed
+    // has been added/removed
     // Note: we must not let our metadata details widget know about it, since
-    //       the removal of RDF triple/s is done directly from it, so it's
-    //       already up to date and to ask it to update itself would 'reset' it,
-    //       so...
+    //       the addition/removal of a RDF triple is done directly from it, so
+    //       it's already up to date and to ask it to update itself would
+    //       'reset' it, so...
 
-    connect(mDetailsWidget->metadataDetails()->metadataViewDetails()->bioModelsDotNetView(), SIGNAL(metadataUpdated()),
-            mDetailsWidget->cellmlDetails(), SLOT(metadataUpdated()));
+    connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(metadataAdded(CellMLSupport::CellmlFileRdfTriple *)),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
+    connect(mDetailsWidget->metadataDetails()->metadataViewDetails()->bioModelsDotNetView(), SIGNAL(metadataRemoved(CellMLSupport::CellmlFileRdfTriple *)),
+            mDetailsWidget->cellmlDetails(), SLOT(updateMetadataDetails()));
 
     // Make our lists widget our focus proxy
 
@@ -245,11 +259,20 @@ void CellmlAnnotationViewWidget::emitSplitterMoved()
 
 //==============================================================================
 
+QString CellmlAnnotationViewWidget::currentMetadataId() const
+{
+    // Return the current metadata id
+
+    return mListsWidget->metadataList()->currentMetadataId();
+}
+
+//==============================================================================
+
 QStringList CellmlAnnotationViewWidget::metadataIds() const
 {
     // Return the list of metadata ids
 
-    return mListsWidget->metadataList()->ids();
+    return mListsWidget->metadataList()->metadataIds();
 }
 
 //==============================================================================
@@ -411,10 +434,10 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::updateWebViewerWithResourceIdDetails(QWebView *pWebView,
-                                                                      const QString &pResource,
-                                                                      const QString &pId,
-                                                                      const bool &pRetranslate)
+void CellmlAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView,
+                                                              const QString &pResource,
+                                                              const QString &pId,
+                                                              const bool &pRetranslate)
 {
     // The user requested a resource id to be looked up, so retrieve it using
     // identifiers.org, but only if we are not retranslating since the looking
@@ -449,13 +472,15 @@ void CellmlAnnotationViewWidget::updateTabOrder(QComboBox *pCmetaIdValue,
 //==============================================================================
 
 void CellmlAnnotationViewWidget::updateTabOrder(QComboBox *pQualifierValue,
+                                                QPushButton *pLookupButton,
                                                 QLineEdit *pTermValue)
 {
     // Update the tab order for our metadata list
 
     setTabOrder(qobject_cast<QWidget *>(mListsWidget->metadataList()->treeView()),
                 pQualifierValue);
-    setTabOrder(pQualifierValue, pTermValue);
+    setTabOrder(pQualifierValue, pLookupButton);
+    setTabOrder(pLookupButton, pTermValue);
 }
 
 //==============================================================================
@@ -465,7 +490,7 @@ void CellmlAnnotationViewWidget::updateMetadataDetails() const
     // Some metadata has been updated, so we need to update the metadata
     // information we show to the user
 
-    mDetailsWidget->metadataDetails()->updateGui(mCellmlFile->rdfTriples(mListsWidget->metadataList()->currentId()));
+    mDetailsWidget->metadataDetails()->updateGui(mCellmlFile->rdfTriples(mListsWidget->metadataList()->currentMetadataId()));
 }
 
 //==============================================================================

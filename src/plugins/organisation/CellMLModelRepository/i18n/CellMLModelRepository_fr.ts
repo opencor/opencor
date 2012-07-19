@@ -57,5 +57,9 @@
         <source>Please wait while the list of CellML models is being loaded...</source>
         <translation>Veuillez patienter pendant que la liste de modèles CellML se charge...</translation>
     </message>
+    <message>
+        <source>Error: </source>
+        <translation>Erreur :</translation>
+    </message>
 </context>
 </TS>

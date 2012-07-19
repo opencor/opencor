@@ -60,6 +60,7 @@ public:
     CellmlAnnotationViewListsWidget * listsWidget() const;
     CellmlAnnotationViewDetailsWidget * detailsWidget() const;
 
+    QString currentMetadataId() const;
     QStringList metadataIds() const;
 
     void updateWebViewerWithQualifierDetails(QWebView *pWebView,
@@ -68,10 +69,10 @@ public:
     void updateWebViewerWithResourceDetails(QWebView *pWebView,
                                             const QString &pResource,
                                             const bool &pRetranslate);
-    void updateWebViewerWithResourceIdDetails(QWebView *pWebView,
-                                              const QString &pResource,
-                                              const QString &pId,
-                                              const bool &pRetranslate);
+    void updateWebViewerWithIdDetails(QWebView *pWebView,
+                                      const QString &pResource,
+                                      const QString &pId,
+                                      const bool &pRetranslate);
 
 private:
     Ui::CellmlAnnotationViewWidget *mGui;
@@ -100,7 +101,8 @@ private Q_SLOTS:
     void emitSplitterMoved();
 
     void updateTabOrder(QComboBox *pCmetaIdValue, QPushButton *pEditButton);
-    void updateTabOrder(QComboBox *pQualifierValue, QLineEdit *pTermValue);
+    void updateTabOrder(QComboBox *pQualifierValue, QPushButton *pLookupButton,
+                        QLineEdit *pTermValue);
 
     void updateMetadataDetails() const;
 };

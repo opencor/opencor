@@ -1,10 +1,6 @@
 //==============================================================================
 // CellML file RDF triple
 //==============================================================================
-//---GRY--- NEED TO THINK OF A WAY TO KEEP TRACK OF CHANGES TO SOME RDF TRIPLES,
-//          I.E. BE ABLE TO TELL WHETHER A CellML FILE HAS BEEN MODIFIED OR
-//          NOT...
-//==============================================================================
 
 #include "cellmlfile.h"
 #include "cellmlfilerdftriple.h"
@@ -47,9 +43,10 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
     //          http://biomodels.net/model-qualifiers/<xxx>
     //          http://biomodels.net/biology-qualifiers/<yyy>
     //
-    //       where <xxx> and <yyy> are one of the values in modelQualifiers and
-    //       bioQualifiers below. The object of the RDF triple must have one of
-    //       the following two formats:
+    //       where <xxx> and <yyy> are one of the values returned by
+    //       modelQualifierAsString() and bioQualifierAsString() below (minus
+    //       the "model:" and "bio:" parts, respectively). The object of the RDF
+    //       triple must have one of the following two formats:
     //
     //          urn:miriam:<resource>:<identifier>
     //          http://identifiers.org/<resource>/<identifier>
@@ -64,42 +61,25 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
     //       URIs. Still, we should and do support both formats and keep track
     //       of their information in the form of a resource and an id...
 
-    static const QStringList modelQualifiers = QStringList() << "is"
-                                                             << "isDerivedFrom"
-                                                             << "isDescribedBy";
-    static const QStringList bioQualifiers = QStringList() << "encodes"
-                                                           << "hasPart"
-                                                           << "hasProperty"
-                                                           << "hasVersion"
-                                                           << "is"
-                                                           << "isDescribedBy"
-                                                           << "isEncodedBy"
-                                                           << "isHomologTo"
-                                                           << "isPartOf"
-                                                           << "isPropertyOf"
-                                                           << "isVersionOf"
-                                                           << "occursIn"
-                                                           << "hasTaxon";
-
-    for (int i = 0, iMax = modelQualifiers.count(); i < iMax; ++i)
-        if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifiers[i]))) {
+    for (int i = FirstModelQualifier; i <= LastModelQualifier; ++i)
+        if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(ModelQualifier(i)).remove(QRegExp("^model:"))))) {
             // It looks like we might be dealing with a model qualifier
 
             mType = BioModelsDotNetQualifier;
 
-            mModelQualifier = (ModelQualifier) (i+1);
+            mModelQualifier = ModelQualifier(i);
 
             break;
         }
 
     if (mType == Unknown)
-        for (int i = 0, iMax = bioQualifiers.count(); i < iMax; ++i)
-            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifiers[i]))){
+        for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i)
+            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(QRegExp("^bio:"))))){
                 // It looks like we might be dealing with a model qualifier
 
                 mType = BioModelsDotNetQualifier;
 
-                mBioQualifier = (BioQualifier) (i+1);
+                mBioQualifier = BioQualifier(i);
 
                 break;
             }
@@ -132,6 +112,44 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
             mBioQualifier   = BioUnknown;
         }
     }
+}
+
+//==============================================================================
+
+CellmlFileRdfTriple::CellmlFileRdfTriple(const QString pSubject,
+                                         const ModelQualifier &pModelQualifier,
+                                         const QString &pResource,
+                                         const QString &pId) :
+    mType(BioModelsDotNetQualifier),
+    mModelQualifier(pModelQualifier),
+    mBioQualifier(BioUnknown),
+    mResource(pResource),
+    mId(pId)
+{
+    // Create our RDF triple elements
+
+    mSubject   = new CellmlFileRdfTripleElement(pSubject);
+    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(pModelQualifier).remove(QRegExp("^model:"))));
+    mObject    = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
+}
+
+//==============================================================================
+
+CellmlFileRdfTriple::CellmlFileRdfTriple(const QString pSubject,
+                                         const BioQualifier &pBioQualifier,
+                                         const QString &pResource,
+                                         const QString &pId) :
+    mType(BioModelsDotNetQualifier),
+    mModelQualifier(ModelUnknown),
+    mBioQualifier(pBioQualifier),
+    mResource(pResource),
+    mId(pId)
+{
+    // Create our RDF triple elements
+
+    mSubject   = new CellmlFileRdfTripleElement(pSubject);
+    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(pBioQualifier).remove(QRegExp("^bio:"))));
+    mObject    = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
 }
 
 //==============================================================================
@@ -325,7 +343,8 @@ void CellmlFileRdfTriple::setMetadataId(const QString &pMetadataId)
 {
     // Update the URI reference of the subject of the RDF triple by renaming its
     // metadata id to pMetadataId
-    // Note: setUriReference() will only work if the subject is a URI reference
+    // Note: setUriReference() will only work if the subject is a URI
+    //       reference...
 
     mSubject->setUriReference(mSubject->uriReference().remove(QRegExp("#[^#]*$"))+"#"+pMetadataId);
 }
@@ -451,6 +470,19 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) 
                 recursiveContains(res, rdfTriple);
 
     return res;
+}
+
+//==============================================================================
+
+void CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
+{
+    Q_ASSERT(mCellmlFile);
+
+    // Add the given RDF triple
+
+    append(pRdfTriple);
+
+    mCellmlFile->setModified(true);
 }
 
 //==============================================================================
