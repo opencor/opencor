@@ -114,17 +114,11 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 //    connect(mListsWidget->metadataList(), SIGNAL(metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &)),
 //            mDetailsWidget, SLOT(updateGui(const CellMLSupport::CellmlFileRdfTriples &)));
 
-    // A connection to let our metadata list know that we want to edit some
-    // metadata
-
-//    connect(mDetailsWidget->cellmlDetails()->cellmlElementDetails(), SIGNAL(metadataEditingRequested(const QString &)),
-//            mListsWidget->metadataList(), SLOT(setCurrentMetadataId(const QString &)));
-
     // A connection to reset the tab order following a GUI update of the
     // metadata edit details
 
-//    connect(mDetailsWidget->metadataDetails()->metadataEditDetails(), SIGNAL(guiPopulated(QComboBox *, QPushButton *, QLineEdit *)),
-//            this, SLOT(updateTabOrder(QComboBox *, QPushButton *, QLineEdit *)));
+    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(guiPopulated(QComboBox *, QPushButton *, QLineEdit *)),
+            this, SLOT(updateTabOrder(QComboBox *, QPushButton *, QLineEdit *)));
 
     // Make our CellML list widget our focus proxy
 
@@ -387,17 +381,17 @@ void CellmlAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView
 
 //==============================================================================
 
-//void CellmlAnnotationViewWidget::updateTabOrder(QComboBox *pQualifierValue,
-//                                                QPushButton *pLookupButton,
-//                                                QLineEdit *pTermValue)
-//{
-//    // Update the tab order for our metadata list
+void CellmlAnnotationViewWidget::updateTabOrder(QComboBox *pQualifierValue,
+                                                QPushButton *pLookupButton,
+                                                QLineEdit *pTermValue)
+{
+    // Update the tab order for our metadata list
 
-//    setTabOrder(qobject_cast<QWidget *>(mListsWidget->metadataList()->treeView()),
-//                pQualifierValue);
-//    setTabOrder(pQualifierValue, pLookupButton);
-//    setTabOrder(pLookupButton, pTermValue);
-//}
+    setTabOrder(qobject_cast<QWidget *>(mCellmlList->treeView()),
+                pQualifierValue);
+    setTabOrder(pQualifierValue, pLookupButton);
+    setTabOrder(pLookupButton, pTermValue);
+}
 
 //==============================================================================
 

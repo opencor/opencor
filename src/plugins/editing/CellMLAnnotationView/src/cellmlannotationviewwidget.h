@@ -96,8 +96,8 @@ public Q_SLOTS:
 private Q_SLOTS:
     void emitSplitterMoved();
 
-//    void updateTabOrder(QComboBox *pQualifierValue, QPushButton *pLookupButton,
-//                        QLineEdit *pTermValue);
+    void updateTabOrder(QComboBox *pQualifierValue, QPushButton *pLookupButton,
+                        QLineEdit *pTermValue);
 };
 
 //==============================================================================
