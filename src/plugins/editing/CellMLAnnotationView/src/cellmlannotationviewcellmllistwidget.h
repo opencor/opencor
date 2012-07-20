@@ -84,8 +84,8 @@ private:
 
     bool indexIsAllExpanded(const QModelIndex &pIndex) const;
 
-//Q_SIGNALS:
-//    void cellmlElementDetailsRequested(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
+Q_SIGNALS:
+    void metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
 
 private Q_SLOTS:
     void resizeTreeViewToContents();

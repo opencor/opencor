@@ -102,16 +102,10 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
             this, SLOT(emitSplitterMoved()));
 
     // A connection to let our details widget know that we want to see the
-    // details of some CellML element
+    // metadata details of some CellML element
 
-//    connect(mListsWidget->cellmlList(), SIGNAL(cellmlElementDetailsRequested(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &)),
-//            mDetailsWidget, SLOT(updateGui(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &)));
-
-    // A connection to let our details widget know that we want to see the
-    // details of some metadata
-
-//    connect(mListsWidget->metadataList(), SIGNAL(metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &)),
-//            mDetailsWidget, SLOT(updateGui(const CellMLSupport::CellmlFileRdfTriples &)));
+    connect(mCellmlList, SIGNAL(metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &)),
+            mMetadataDetails, SLOT(updateGui(const CellMLSupport::CellmlFileRdfTriples &)));
 
     // Make our CellML list widget our focus proxy
 
