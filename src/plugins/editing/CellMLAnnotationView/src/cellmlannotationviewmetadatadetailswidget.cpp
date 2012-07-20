@@ -29,8 +29,7 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     Widget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget),
-    mCellmlFileElement(0)
+    mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget)
 {
     // Set up the GUI
 
@@ -169,17 +168,15 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlFileElement)
+void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement)
 {
-    // Keep track of the CellML file element
-
-    mCellmlFileElement = pCellmlFileElement;
+    if (!pCellmlElement)
+        return;
 
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known or not
 
-    CellMLSupport::CellmlFileRdfTriples rdfTriples = pCellmlFileElement->rdfTriples();
-    bool isUnknownMetadata = rdfTriples.type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
+    bool isUnknownMetadata = pCellmlElement->rdfTriples().type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
 
     mBorderedUnsupportedMetadataMsg->setVisible(isUnknownMetadata);
 
@@ -194,7 +191,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlF
 
     // Update our metadata view details
 
-    mMetadataViewDetails->updateGui(rdfTriples);
+    mMetadataViewDetails->updateGui(pCellmlElement);
 }
 
 //==============================================================================

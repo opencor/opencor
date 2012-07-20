@@ -77,8 +77,6 @@ private:
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;
 
-    CellMLSupport::CellmlFileElement *mCellmlFileElement;
-
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
@@ -86,7 +84,7 @@ private Q_SLOTS:
     void updateSizes(const QList<int> &pSizes);
     void emitSplitterMoved();
 
-    void updateGui(CellMLSupport::CellmlFileElement *pCellmlFileElement);
+    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
 
     void lookupQualifier(const QString &pQualifier, const bool &pRetranslate);
     void lookupResource(const QString &pResource, const bool &pRetranslate);

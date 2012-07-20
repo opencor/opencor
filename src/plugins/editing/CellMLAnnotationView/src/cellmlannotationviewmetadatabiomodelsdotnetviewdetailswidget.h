@@ -56,7 +56,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
+    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement,
                    const QString &pRdfTripleInformation = QString(),
                    const Type &pType = No,
                    const int &pVerticalScrollBarPosition = 0,
@@ -72,7 +72,7 @@ private:
     QWidget *mGridWidget;
     QGridLayout *mGridLayout;
 
-    CellMLSupport::CellmlFileRdfTriples mRdfTriples;
+    CellMLSupport::CellmlFileElement *mCellmlElement;
 
     QString mRdfTripleInformation;
     Type mType;
