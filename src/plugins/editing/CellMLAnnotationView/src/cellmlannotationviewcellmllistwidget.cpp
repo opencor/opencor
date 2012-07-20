@@ -534,7 +534,9 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
         // Let people know that we request to see some metadata details
 
-        emit metadataDetailsRequested(mCellmlFile->rdfTriples(currentCellmlElementItem()->element()->cmetaId()));
+        CellmlAnnotationViewCellmlElementItem *crtItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mDataModel->itemFromIndex(crtIndex));
+
+        emit metadataDetailsRequested(mCellmlFile->rdfTriples(crtItem->element()->cmetaId()));
     }
 
     // We are done, so...
