@@ -2,9 +2,11 @@
 // CellML annotation view metadata edit details widget
 //==============================================================================
 
+#include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
+#include "treeview.h"
 
 //==============================================================================
 
@@ -69,13 +71,13 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mMainLayout(0),
     mFormWidget(0),
     mFormLayout(0),
-    mTermValue(0),
     mItemsScrollArea(0),
     mGridWidget(0),
     mGridLayout(0),
     mQualifierValue(0),
     mLookupButton(0),
     mLookupButtonIsChecked(false),
+    mTermValue(0),
     mTerm(QString()),
     mTermUrl(QString()),
     mOtherTermUrl(QString()),
@@ -246,9 +248,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), 1.0, true),
                           mTermValue);
 
-    // Let people know that the GUI has been populated
+    // Reset the tab order from our parent's CellML list's tree view
+    // Note: ideally, we would take advantage of Qt's signal/slot approach with
+    //       the signal being emitted here and the slot being implemented in
+    //       mParent, but this wouldn't work here since updateGui() gets called
+    //       as part of the creation of this metadata details widget, so...
 
-    emit guiPopulated(mQualifierValue, mLookupButton, mTermValue);
+    setTabOrder(qobject_cast<QWidget *>(mParent->cellmlList()->treeView()),
+                mQualifierValue);
+    setTabOrder(mQualifierValue, mLookupButton);
+    setTabOrder(mLookupButton, mTermValue);
 
     // Create a stacked widget (within a scroll area, so that only the items get
     // scrolled, not the whole metadata edit details widget) which will contain

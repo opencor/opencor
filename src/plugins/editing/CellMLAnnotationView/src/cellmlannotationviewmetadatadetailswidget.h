@@ -82,10 +82,8 @@ private:
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
-public Q_SLOTS:
-    void updateSizes(const QList<int> &pSizes);
-
 private Q_SLOTS:
+    void updateSizes(const QList<int> &pSizes);
     void emitSplitterMoved();
 
     void lookupQualifier(const QString &pQualifier, const bool &pRetranslate);

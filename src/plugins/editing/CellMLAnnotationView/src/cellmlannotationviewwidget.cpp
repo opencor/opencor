@@ -113,12 +113,6 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
 //    connect(mListsWidget->metadataList(), SIGNAL(metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &)),
 //            mDetailsWidget, SLOT(updateGui(const CellMLSupport::CellmlFileRdfTriples &)));
 
-    // A connection to reset the tab order following a GUI update of the
-    // metadata edit details
-
-    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(guiPopulated(QComboBox *, QPushButton *, QLineEdit *)),
-            this, SLOT(updateTabOrder(QComboBox *, QPushButton *, QLineEdit *)));
-
     // Make our CellML list widget our focus proxy
 
     setFocusProxy(mCellmlList);
@@ -194,6 +188,15 @@ QString CellmlAnnotationViewWidget::currentCmetaId() const
     // Return the current metadata id
 
     return mCellmlList->currentCellmlElementItem()->element()->cmetaId();
+}
+
+//==============================================================================
+
+CellmlAnnotationViewCellmlListWidget * CellmlAnnotationViewWidget::cellmlList() const
+{
+    // Return our CellML list widget
+
+    return mCellmlList;
 }
 
 //==============================================================================
@@ -385,20 +388,6 @@ void CellmlAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView
             pWebView->setUrl(newUrl);
         }
     }
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewWidget::updateTabOrder(QComboBox *pQualifierValue,
-                                                QPushButton *pLookupButton,
-                                                QLineEdit *pTermValue)
-{
-    // Update the tab order for our metadata list
-
-    setTabOrder(qobject_cast<QWidget *>(mCellmlList->treeView()),
-                pQualifierValue);
-    setTabOrder(pQualifierValue, pLookupButton);
-    setTabOrder(pLookupButton, pTermValue);
 }
 
 //==============================================================================

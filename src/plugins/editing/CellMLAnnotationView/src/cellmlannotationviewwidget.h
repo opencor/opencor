@@ -59,6 +59,7 @@ public:
 
     QString currentCmetaId() const;
 
+    CellmlAnnotationViewCellmlListWidget * cellmlList() const;
     CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
 
     void updateWebViewerWithQualifierDetails(QWebView *pWebView,
@@ -92,14 +93,9 @@ private:
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
-public Q_SLOTS:
-    void updateSizes(const QList<int> &pSizes);
-
 private Q_SLOTS:
+    void updateSizes(const QList<int> &pSizes);
     void emitSplitterMoved();
-
-    void updateTabOrder(QComboBox *pQualifierValue, QPushButton *pLookupButton,
-                        QLineEdit *pTermValue);
 };
 
 //==============================================================================
