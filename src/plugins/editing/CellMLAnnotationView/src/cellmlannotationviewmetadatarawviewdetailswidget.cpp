@@ -74,8 +74,11 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
+void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement)
 {
+    if (!pCellmlElement)
+        return;
+
     // Prevent ourselves from being updated (to avoid any flickering)
 
     setUpdatesEnabled(false);
@@ -95,7 +98,8 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(const CellMLSup
     QString uriBase = mCellmlFile->uriBase();
     int rdfTripleCounter = 0;
 
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples)
+    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
+             pCellmlElement->rdfTriples())
         mDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
                                                                             << new QStandardItem(rdfTriple->subject()->asString().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?")))
                                                                             << new QStandardItem(rdfTriple->predicate()->asString())

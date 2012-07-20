@@ -508,9 +508,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin itself
+    # Package the plugin itself, but only if we are not on Mac OS X since it
+    # will have already been copied
 
-    INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
+    IF(NOT APPLE)
+        INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
+    ENDIF()
 
     # Create some tests, if any and if required
 
@@ -726,9 +729,12 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin itself
+    # Package the plugin itself, but only if we are not on Mac OS X since it
+    # will have already been copied
 
-    INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
+    IF(NOT APPLE)
+        INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
+    ENDIF()
 ENDMACRO()
 
 MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)

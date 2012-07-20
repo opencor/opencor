@@ -67,17 +67,20 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples)
+void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement)
 {
+    if (!pCellmlElement)
+        return;
+
     // Decide on which view to use and update it, if needed
 
-    switch (pRdfTriples.type()) {
+    switch (pCellmlElement->rdfTriples().type()) {
     case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
     case CellMLSupport::CellmlFileRdfTriple::Empty:
         removeWidget(mRawView);
         addWidget(mBioModelsDotNetView);
 
-        mBioModelsDotNetView->updateGui(pRdfTriples);
+        mBioModelsDotNetView->updateGui(pCellmlElement);
 
         break;
     default:
@@ -86,7 +89,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(const CellMLSuppor
         removeWidget(mBioModelsDotNetView);
         addWidget(mRawView);
 
-        mRawView->updateGui(pRdfTriples);
+        mRawView->updateGui(pCellmlElement);
     }
 }
 

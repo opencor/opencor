@@ -15,47 +15,29 @@ ADD_PLUGIN(CellMLAnnotationView
         ../../interface.cpp
         ../../plugininfo.cpp
 
-        src/cellmlannotationviewcellmldetailswidget.cpp
-        src/cellmlannotationviewcellmlelementdetailswidget.cpp
         src/cellmlannotationviewcellmlelementitem.cpp
         src/cellmlannotationviewcellmlelementitemdelegate.cpp
         src/cellmlannotationviewcellmllistwidget.cpp
-        src/cellmlannotationviewdetailswidget.cpp
-        src/cellmlannotationviewlistswidget.cpp
-        src/cellmlannotationviewcellmlmetadatadetailswidget.cpp
         src/cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.cpp
         src/cellmlannotationviewmetadatadetailswidget.cpp
         src/cellmlannotationviewmetadataeditdetailswidget.cpp
-        src/cellmlannotationviewmetadatalistwidget.cpp
         src/cellmlannotationviewmetadatarawviewdetailswidget.cpp
         src/cellmlannotationviewmetadataviewdetailswidget.cpp
         src/cellmlannotationviewplugin.cpp
         src/cellmlannotationviewwidget.cpp
     HEADERS_MOC
-        src/cellmlannotationviewcellmldetailswidget.h
-        src/cellmlannotationviewcellmlelementdetailswidget.h
         src/cellmlannotationviewcellmllistwidget.h
-        src/cellmlannotationviewdetailswidget.h
-        src/cellmlannotationviewlistswidget.h
-        src/cellmlannotationviewcellmlmetadatadetailswidget.h
         src/cellmlannotationviewmetadatadetailswidget.h
         src/cellmlannotationviewmetadataeditdetailswidget.h
-        src/cellmlannotationviewmetadatalistwidget.h
         src/cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h
         src/cellmlannotationviewmetadatarawviewdetailswidget.h
         src/cellmlannotationviewmetadataviewdetailswidget.h
         src/cellmlannotationviewplugin.h
         src/cellmlannotationviewwidget.h
     UIS
-        src/cellmlannotationviewcellmldetailswidget.ui
-        src/cellmlannotationviewcellmlelementdetailswidget.ui
         src/cellmlannotationviewcellmllistwidget.ui
-        src/cellmlannotationviewdetailswidget.ui
-        src/cellmlannotationviewlistswidget.ui
-        src/cellmlannotationviewcellmlmetadatadetailswidget.ui
         src/cellmlannotationviewmetadatadetailswidget.ui
         src/cellmlannotationviewmetadataeditdetailswidget.ui
-        src/cellmlannotationviewmetadatalistwidget.ui
         src/cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.ui
         src/cellmlannotationviewmetadatarawviewdetailswidget.ui
         src/cellmlannotationviewmetadataviewdetailswidget.ui

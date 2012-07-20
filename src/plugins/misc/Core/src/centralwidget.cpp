@@ -888,16 +888,21 @@ void CentralWidget::updateGui()
         mContents->addWidget(newView);
     }
 
-    // Give the focus to the new view, but without having the view 'resetting'
-    // the widget in it which is to get the focus (e.g. in the CellML Annotation
-    // view, we might have been editing some metadata, so we don't want the
-    // CellML element details to get the focus)
+    // Give the focus to the new view after first checking whether it has a
+    // focused widget
 
-    QWidget *oldFocusProxy = mContents->currentWidget()->focusProxy();
+    if (mContents->currentWidget()->focusWidget())
+        // The new view has a focused widget, so just focus it (indeed, say that
+        // we are using the CellML Annotation view and that we are editing some
+        // metadata, then we don't want the CellML element list to get the focus
+        // back, so...)
 
-    mContents->currentWidget()->setFocusProxy(0);
-    mContents->currentWidget()->setFocus();
-    mContents->currentWidget()->setFocusProxy(oldFocusProxy);
+        mContents->currentWidget()->focusWidget()->setFocus();
+    else
+        // The new view doesn't have a focused widget, so simply give the focus
+        // to our new view
+
+        mContents->currentWidget()->setFocus();
 
     // We are done with updating the GUI, so...
 

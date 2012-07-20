@@ -87,8 +87,6 @@ private:
     QWidget *mFormWidget;
     QFormLayout *mFormLayout;
 
-    QLineEdit *mTermValue;
-
     QScrollArea *mItemsScrollArea;
 
     QWidget *mGridWidget;
@@ -99,6 +97,8 @@ private:
     QComboBox *mQualifierValue;
     QPushButton *mLookupButton;
     bool mLookupButtonIsChecked;
+
+    QLineEdit *mTermValue;
 
     QString mTerm;
     QString mTermUrl;
@@ -132,9 +132,6 @@ private:
                        const bool &pRetranslate = false);
 
 Q_SIGNALS:
-    void guiPopulated(QComboBox *pQualifierValue, QPushButton *pLookupButton,
-                      QLineEdit *pTermValue);
-
     void qualifierLookupRequested(const QString &pQualifier,
                                   const bool &pRetranslate);
     void resourceLookupRequested(const QString &pResource,

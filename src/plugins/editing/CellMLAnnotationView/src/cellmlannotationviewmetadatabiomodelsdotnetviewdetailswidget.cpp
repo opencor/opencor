@@ -33,7 +33,7 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
     mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
     mGridWidget(0),
     mGridLayout(0),
-    mRdfTriples(CellMLSupport::CellmlFileRdfTriples(mCellmlFile)),
+    mCellmlElement(0),
     mRdfTripleInformation(QString()),
     mType(No),
     mLookupInformation(true),
@@ -81,17 +81,21 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::retranslateUi
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mRdfTriples, mRdfTripleInformation, mType, mVerticalScrollBarPosition, true);
+    updateGui(mCellmlElement, mRdfTripleInformation, mType,
+              mVerticalScrollBarPosition, true);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples,
+void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement,
                                                                              const QString &pRdfTripleInformation,
                                                                              const Type &pType,
                                                                              const int &pVerticalScrollBarPosition,
                                                                              const bool &pRetranslate)
 {
+    if (!pCellmlElement)
+        return;
+
     // Note: we are using a grid layout to dislay the contents of our view, but
     //       this unfortunately results in some very bad flickering on Mac OS X.
     //       This can, however, be addressed using a stacked widget, so...
@@ -100,9 +104,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
     setUpdatesEnabled(false);
 
-    // Keep track of the RDF triples
+    // Keep track of the CellML element
 
-    mRdfTriples = pRdfTriples;
+    mCellmlElement = pCellmlElement;
 
     // Create a new widget and layout
 
@@ -113,9 +117,10 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
     // Populate our new layout, but only if there is at least one RDF triple
 
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = pCellmlElement->rdfTriples();
     QString firstRdfTripleInformation = QString();
 
-    if (pRdfTriples.count()) {
+    if (rdfTriples.count()) {
         // Create labels to act as headers
 
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
@@ -135,9 +140,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
         if (mEditingMode)
             newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                    (pRdfTriples.count() == 1)?
+                                                    (rdfTriples.count() == 1)?
                                                         tr("(1 term)"):
-                                                        tr("(%1 terms)").arg(QString::number(pRdfTriples.count())),
+                                                        tr("(%1 terms)").arg(QString::number(rdfTriples.count())),
                                                     1.0, false, true, Qt::AlignCenter),
                                      0, 3);
 
@@ -149,7 +154,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
 
         int row = 0;
 
-        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
+        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
             // Qualifier
 
             QString qualifierAsString = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
@@ -268,7 +273,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(con
     // Request for something to be looked up, if needed
 
     if (mLookupInformation) {
-        if (pRdfTriples.count()) {
+        if (rdfTriples.count()) {
             // Request for the first resource id or an 'old' qualifier, resource
             // or resource id to be looked up
 
@@ -471,15 +476,17 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
 {
     // Retrieve the RDF triple associated with the remove button
 
-    QObject *removeButton = sender();
+//    QObject *removeButton = sender();
 
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(removeButton);
+//    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(removeButton);
 
     // Remove the RDF triple from the CellML file and from our set of RDF
     // triples this widget uses
 
-    mCellmlFile->rdfTriples()->remove(rdfTriple);
-    mRdfTriples.remove(rdfTriple);
+//    mCellmlFile->rdfTriples()->remove(rdfTriple);
+//---GRY--- THIS SHOULD BE REMOVED FROM THE ELEMENT TO WHICH THE RDF TRIPLE WAS
+//          ASSOCIATED...
+//   mRdfTriples.remove(rdfTriple);
 
     // Retrieve the number of the row we want to delete, as well as the total
     // number of rows
@@ -487,61 +494,61 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
     //       mGridLayout->rowCount() won't give us the correct number of rows,
     //       so...
 
-    int row = -1;
-    int rowMax = mGridLayout->rowCount();
+//    int row = -1;
+//    int rowMax = mGridLayout->rowCount();
 
-    for (int i = 1; i < rowMax; ++i) {
-        QLayoutItem *item = mGridLayout->itemAtPosition(i, 3);
+//    for (int i = 1; i < rowMax; ++i) {
+//        QLayoutItem *item = mGridLayout->itemAtPosition(i, 3);
 
-        if (!item) {
-            // The row doesn't exist anymore, so...
+//        if (!item) {
+//            // The row doesn't exist anymore, so...
 
-            rowMax = i;
+//            rowMax = i;
 
-            break;
-        }
+//            break;
+//        }
 
-        if (item->widget() == removeButton)
-            // This is the row we want to remove
+//        if (item->widget() == removeButton)
+//            // This is the row we want to remove
 
-            row = i;
-    }
+//            row = i;
+//    }
 
-    // Make sure that row and rowMax have meaningful values
+//    // Make sure that row and rowMax have meaningful values
 
-    Q_ASSERT(row > 0);
-    Q_ASSERT(rowMax > row);
+//    Q_ASSERT(row > 0);
+//    Q_ASSERT(rowMax > row);
 
-    // Determine the neighbour row which we want to be visible
+//    // Determine the neighbour row which we want to be visible
 
-    mNeighbourRow = (rowMax-1 > row)?row:row-1;
+//    mNeighbourRow = (rowMax-1 > row)?row:row-1;
 
-    // Determine the 'new' RDF triple information to look up
+//    // Determine the 'new' RDF triple information to look up
 
-    if (mRdfTriples.isEmpty()) {
-        mRdfTripleInformation = QString();
-        mType = No;
-    } else if (!rdfTripleInformation(row).compare(mRdfTripleInformation)) {
-        // The RDF triple information is related to the row we want to delete,
-        // so we need to find a new one
+//    if (mRdfTriples.isEmpty()) {
+//        mRdfTripleInformation = QString();
+//        mType = No;
+//    } else if (!rdfTripleInformation(row).compare(mRdfTripleInformation)) {
+//        // The RDF triple information is related to the row we want to delete,
+//        // so we need to find a new one
 
-        mRdfTripleInformation = rdfTripleInformation((rowMax-1 > row)?row+1:row-1);
-    }
+//        mRdfTripleInformation = rdfTripleInformation((rowMax-1 > row)?row+1:row-1);
+//    }
 
-    // Make sure that the neighbour of the removed RDF triple will be made
-    // visible, this by handling the change in the range of our vertical scroll
-    // bar which will result in showNeighbourRdfTriple() being called
+//    // Make sure that the neighbour of the removed RDF triple will be made
+//    // visible, this by handling the change in the range of our vertical scroll
+//    // bar which will result in showNeighbourRdfTriple() being called
 
-    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-            this, SLOT(showNeighbourRdfTriple()));
+//    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+//            this, SLOT(showNeighbourRdfTriple()));
 
-    // Update the GUI to reflect the removal of the RDF triple
+//    // Update the GUI to reflect the removal of the RDF triple
 
-    updateGui(mRdfTriples, mRdfTripleInformation, mType);
+//    updateGui(mRdfTriples, mRdfTripleInformation, mType);
 
-    // Let people know that some metadata has been removed
+//    // Let people know that some metadata has been removed
 
-    emit metadataRemoved(rdfTriple);
+//    emit metadataRemoved(rdfTriple);
 }
 
 //==============================================================================
@@ -550,18 +557,18 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::addRdfTriple(
 {
     // Add the RDF triple to our set of RDF triples this widget uses
 
-    mRdfTriples.add(pRdfTriple);
+//    mRdfTriples.add(pRdfTriple);
 
-    // Make sure that the newly added RDF triple will be made visible, this by
-    // handling the change in the range of our vertical scroll bar which will
-    // result in showLastRdfTriple() being called
+//    // Make sure that the newly added RDF triple will be made visible, this by
+//    // handling the change in the range of our vertical scroll bar which will
+//    // result in showLastRdfTriple() being called
 
-    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-            this, SLOT(showLastRdfTriple()));
+//    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+//            this, SLOT(showLastRdfTriple()));
 
-    // Update the GUI to reflect the addition of our RDF triple
+//    // Update the GUI to reflect the addition of our RDF triple
 
-    updateGui(mRdfTriples, mRdfTripleInformation, mType, mVerticalScrollBarPosition);
+//    updateGui(mRdfTriples, mRdfTripleInformation, mType, mVerticalScrollBarPosition);
 }
 
 //==============================================================================

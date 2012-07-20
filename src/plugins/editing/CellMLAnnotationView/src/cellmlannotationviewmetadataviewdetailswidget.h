@@ -52,7 +52,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples = CellMLSupport::CellmlFileRdfTriples());
+    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
 
     CellmlAnnotationViewMetadataRawViewDetailsWidget *rawView() const;
     CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *bioModelsDotNetView() const;

@@ -54,8 +54,6 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
-
     QSplitter * splitter() const;
 
     CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
@@ -82,11 +80,11 @@ private:
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
-public Q_SLOTS:
-    void updateSizes(const QList<int> &pSizes);
-
 private Q_SLOTS:
+    void updateSizes(const QList<int> &pSizes);
     void emitSplitterMoved();
+
+    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
 
     void lookupQualifier(const QString &pQualifier, const bool &pRetranslate);
     void lookupResource(const QString &pResource, const bool &pRetranslate);

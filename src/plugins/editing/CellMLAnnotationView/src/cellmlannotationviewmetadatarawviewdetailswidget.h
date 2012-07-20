@@ -50,7 +50,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(const CellMLSupport::CellmlFileRdfTriples &pRdfTriples);
+    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
 
 private:
     CellMLSupport::CellmlFile *mCellmlFile;

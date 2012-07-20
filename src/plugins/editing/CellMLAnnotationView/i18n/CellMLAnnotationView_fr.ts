@@ -21,200 +21,10 @@
     </message>
 </context>
 <context>
-    <name>CellmlAnnotationViewMetadataListWidget</name>
-    <message>
-        <source>Add a metadata</source>
-        <translation>Ajouter une métadonnée</translation>
-    </message>
-    <message>
-        <source>&amp;Add Metadata</source>
-        <translation>&amp;Ajouter Métadonnée</translation>
-    </message>
-    <message>
-        <source>&amp;Remove Metadata</source>
-        <translation>&amp;Supprimer Métadonnée</translation>
-    </message>
-    <message>
-        <source>Remove the current metadata or all the metadata</source>
-        <translation>Supprimer la métadonnée courante ou toutes les métadonnées</translation>
-    </message>
-    <message>
-        <source>&amp;Current</source>
-        <translation>&amp;Courante</translation>
-    </message>
-    <message>
-        <source>Remove the current metadata</source>
-        <translation>Supprimer la métadonnée courante</translation>
-    </message>
-    <message>
-        <source>&amp;All</source>
-        <translation>&amp;Toutes</translation>
-    </message>
-    <message>
-        <source>Remove all the metadata</source>
-        <translation>Supprimer toutes les métadonnées</translation>
-    </message>
-    <message>
-        <source>Clear the current metadata or all the metadata</source>
-        <translation>Nettoyer la métadonnée courante ou toutes les métadonnées</translation>
-    </message>
-    <message>
-        <source>&amp;Clear Metadata</source>
-        <translation>&amp;Nettoyer Métadonnée</translation>
-    </message>
-    <message>
-        <source>Clear the current metadata</source>
-        <translation>Nettoyer la métadonnée courante</translation>
-    </message>
-    <message>
-        <source>Clear all the metadata</source>
-        <translation>Nettoyer toutes les métadonnées</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>
     <message>
         <source>CellML Annotation</source>
         <translation>Annotation CellML</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlElementDetailsWidget</name>
-    <message>
-        <source>cmeta:id:</source>
-        <translation>cmeta:id :</translation>
-    </message>
-    <message>
-        <source>Group #%1</source>
-        <translation>Groupe n° %1</translation>
-    </message>
-    <message>
-        <source>Connection #%1</source>
-        <translation>Connexion n° %1</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>Nom :</translation>
-    </message>
-    <message>
-        <source>xlink:href:</source>
-        <translation>xlink:href :</translation>
-    </message>
-    <message>
-        <source>Unit reference:</source>
-        <translation>Référence unité :</translation>
-    </message>
-    <message>
-        <source>Component reference:</source>
-        <translation>Référence de composant :</translation>
-    </message>
-    <message>
-        <source>Unit:</source>
-        <translation>Unité :</translation>
-    </message>
-    <message>
-        <source>Initial value:</source>
-        <translation>Valeur initiale :</translation>
-    </message>
-    <message>
-        <source>Public interface:</source>
-        <translation>Interface publique :</translation>
-    </message>
-    <message>
-        <source>Private interface:</source>
-        <translation>Interface privée :</translation>
-    </message>
-    <message>
-        <source>Relationship:</source>
-        <translation>Relation :</translation>
-    </message>
-    <message>
-        <source>Relationship namespace:</source>
-        <translation>Espace de noms pour la relation :</translation>
-    </message>
-    <message>
-        <source>Component:</source>
-        <translation>Composant :</translation>
-    </message>
-    <message>
-        <source>First component:</source>
-        <translation>Premier composant :</translation>
-    </message>
-    <message>
-        <source>Second component:</source>
-        <translation>Deuxième composant :</translation>
-    </message>
-    <message>
-        <source>First variable:</source>
-        <translation>Première variable :</translation>
-    </message>
-    <message>
-        <source>Second variable:</source>
-        <translation>Deuxième variable :</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation>Import</translation>
-    </message>
-    <message>
-        <source>Imported unit</source>
-        <translation>Unité importée</translation>
-    </message>
-    <message>
-        <source>Imported component</source>
-        <translation>Composant importé</translation>
-    </message>
-    <message>
-        <source>Unit</source>
-        <translation>Unité</translation>
-    </message>
-    <message>
-        <source>Unit element</source>
-        <translation>Elément unité</translation>
-    </message>
-    <message>
-        <source>Component</source>
-        <translation>Composant</translation>
-    </message>
-    <message>
-        <source>Variable</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Group</source>
-        <translation>Groupe</translation>
-    </message>
-    <message>
-        <source>Relationshop reference</source>
-        <translation>Référence de relation</translation>
-    </message>
-    <message>
-        <source>Component reference</source>
-        <translation>Référence de composant</translation>
-    </message>
-    <message>
-        <source>Connection</source>
-        <translation>Connexion</translation>
-    </message>
-    <message>
-        <source>Component mapping</source>
-        <translation>Association de composant</translation>
-    </message>
-    <message>
-        <source>Variable mapping</source>
-        <translation>Association de variable</translation>
-    </message>
-    <message>
-        <source>Model</source>
-        <translation>Modèle</translation>
-    </message>
-    <message>
-        <source>Edit the metadata</source>
-        <translation>Editer la métadonnée</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Editer</translation>
     </message>
 </context>
 <context>
@@ -258,13 +68,6 @@
     <message>
         <source>Connection #%1</source>
         <translation>Connexion n° %1</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlMetadataDetailsWidget</name>
-    <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support the type of metadata associated with the current CellML element...</source>
-        <translation>Désolé, mais la vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas le type de métadonnée associé avec l&apos;élément CellML courant...</translation>
     </message>
 </context>
 <context>
@@ -366,13 +169,6 @@
     <message>
         <source>Error: </source>
         <translation>Erreur :</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataListWidget</name>
-    <message>
-        <source>Metadata</source>
-        <translation>Métadonnée</translation>
     </message>
 </context>
 <context>

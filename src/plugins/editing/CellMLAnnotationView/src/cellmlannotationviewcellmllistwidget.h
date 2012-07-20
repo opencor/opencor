@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlannotationviewcellmlelementdetailswidget.h"
+#include "cellmlfile.h"
 #include "widget.h"
 
 //==============================================================================
@@ -36,13 +36,6 @@ namespace Core {
 
 //==============================================================================
 
-namespace CellMLSupport {
-    class CellmlFile;
-    class CellmlFileComponentReference;
-}   // namespace CellMLSupport
-
-//==============================================================================
-
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -66,9 +59,6 @@ public:
     Core::TreeView * treeView() const;
 
     CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
-
-protected:
-    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
 
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
@@ -95,16 +85,15 @@ private:
     bool indexIsAllExpanded(const QModelIndex &pIndex) const;
 
 Q_SIGNALS:
-    void cellmlElementDetailsRequested(const CellmlAnnotationViewCellmlElementDetailsWidget::Items &pItems);
+    void metadataDetailsRequested(CellMLSupport::CellmlFileElement *pCellFileElement);
 
 private Q_SLOTS:
     void resizeTreeViewToContents();
 
-    void updateNode(const QModelIndex &pNewIndex, const QModelIndex &pOldIndex);
+    void updateMetadataDetails(const QModelIndex &pNewIndex,
+                               const QModelIndex &pOldIndex);
 
     void treeViewContextMenu(const QPoint &pPosition) const;
-
-    void cmetaIdChanged(const QString &pCmetaId) const;
 
     void on_actionExpandAll_triggered();
     void on_actionCollapseAll_triggered();

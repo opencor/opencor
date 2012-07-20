@@ -35,8 +35,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewListsWidget;
-class CellmlAnnotationViewDetailsWidget;
+class CellmlAnnotationViewCellmlListWidget;
+class CellmlAnnotationViewMetadataDetailsWidget;
 class CellMLAnnotationViewPlugin;
 
 //==============================================================================
@@ -57,11 +57,8 @@ public:
 
     CellMLSupport::CellmlFile * cellmlFile() const;
 
-    CellmlAnnotationViewListsWidget * listsWidget() const;
-    CellmlAnnotationViewDetailsWidget * detailsWidget() const;
-
-    QString currentMetadataId() const;
-    QStringList metadataIds() const;
+    CellmlAnnotationViewCellmlListWidget * cellmlList() const;
+    CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
 
     void updateWebViewerWithQualifierDetails(QWebView *pWebView,
                                              const QString &pQualifier,
@@ -81,8 +78,8 @@ private:
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    CellmlAnnotationViewListsWidget *mListsWidget;
-    CellmlAnnotationViewDetailsWidget *mDetailsWidget;
+    CellmlAnnotationViewCellmlListWidget *mCellmlList;
+    CellmlAnnotationViewMetadataDetailsWidget *mMetadataDetails;
 
     QString mModelQualifierSvg;
     QString mBiologyQualifierSvg;
@@ -94,17 +91,9 @@ private:
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
-public Q_SLOTS:
-    void updateSizes(const QList<int> &pSizes);
-
 private Q_SLOTS:
+    void updateSizes(const QList<int> &pSizes);
     void emitSplitterMoved();
-
-    void updateTabOrder(QComboBox *pCmetaIdValue, QPushButton *pEditButton);
-    void updateTabOrder(QComboBox *pQualifierValue, QPushButton *pLookupButton,
-                        QLineEdit *pTermValue);
-
-    void updateMetadataDetails() const;
 };
 
 //==============================================================================
