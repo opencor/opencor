@@ -57,8 +57,6 @@ public:
 
     CellMLSupport::CellmlFile * cellmlFile() const;
 
-    QString currentCmetaId() const;
-
     CellmlAnnotationViewCellmlListWidget * cellmlList() const;
     CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
 

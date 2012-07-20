@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfilerdftriple.h"
 #include "cellmlsupportglobal.h"
 
 //==============================================================================
@@ -62,13 +63,14 @@ public:
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
                                iface::cellml_api::MapVariables *pMapVariables);
 
-    QString cmetaId() const;
-    void setCmetaId(const QString &pCmetaId);
+    CellmlFileRdfTriples rdfTriples() const;
 
 private:
     CellmlFile *mCellmlFile;
 
     iface::cellml_api::CellMLElement *mCellmlElement;
+
+    QString mCmetaId;
 };
 
 //==============================================================================

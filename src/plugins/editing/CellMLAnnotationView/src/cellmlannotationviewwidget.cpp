@@ -104,8 +104,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     // A connection to let our details widget know that we want to see the
     // metadata details of some CellML element
 
-    connect(mCellmlList, SIGNAL(metadataDetailsRequested(const CellMLSupport::CellmlFileRdfTriples &)),
-            mMetadataDetails, SLOT(updateGui(const CellMLSupport::CellmlFileRdfTriples &)));
+    connect(mCellmlList, SIGNAL(metadataDetailsRequested(CellMLSupport::CellmlFileElement *)),
+            mMetadataDetails, SLOT(updateGui(CellMLSupport::CellmlFileElement *)));
 
     // Make our CellML list widget our focus proxy
 
@@ -173,15 +173,6 @@ void CellmlAnnotationViewWidget::emitSplitterMoved()
     // Let people know that our splitter has been moved
 
     emit splitterMoved(sizes());
-}
-
-//==============================================================================
-
-QString CellmlAnnotationViewWidget::currentCmetaId() const
-{
-    // Return the current metadata id
-
-    return mCellmlList->currentCellmlElementItem()->element()->cmetaId();
 }
 
 //==============================================================================

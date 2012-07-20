@@ -823,7 +823,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRdfTriple()
     // Determine what the subject of the item's corresponding RDF triple should
     // be
 
-    QString rdfTripleSubject = QUrl::fromLocalFile(mCellmlFile->fileName()).toString()+"#"+mParent->currentCmetaId();
+//    QString rdfTripleSubject = QUrl::fromLocalFile(mCellmlFile->fileName()).toString()+"#"+mParent->currentCmetaId();
+QString rdfTripleSubject = QString();
+//---GRY--- THIS SHOULD BE DONE THROUGH THE ELEMENT...
 
     // Add the item as a RDF triple to the CellML file
 
@@ -842,7 +844,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRdfTriple()
                                                            CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                            item.resource, item.id);
 
-    mCellmlFile->rdfTriples()->add(rdfTriple);
+//    mCellmlFile->rdfTriples()->add(rdfTriple);
+//---GRY--- THIS SHOULD BE ADDED THROUGH THE ELEMENT TO WHICH THE RDF TRIPLE IS
+//          TO BE ASSOCIATED...
 
     // Let people know that some metadata has been added
 

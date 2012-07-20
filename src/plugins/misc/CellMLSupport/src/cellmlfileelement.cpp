@@ -15,7 +15,8 @@ namespace CellMLSupport {
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::Model *pModel) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pModel)
+    mCellmlElement(pModel),
+    mCmetaId(QString::fromStdWString(pModel->cmetaId()))
 {
 }
 
@@ -24,7 +25,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::CellMLImport *pCellmlImport) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pCellmlImport)
+    mCellmlElement(pCellmlImport),
+    mCmetaId(QString::fromStdWString(pCellmlImport->cmetaId()))
 {
 }
 
@@ -33,7 +35,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::ImportUnits *pImportUnits) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pImportUnits)
+    mCellmlElement(pImportUnits),
+    mCmetaId(QString::fromStdWString(pImportUnits->cmetaId()))
 {
 }
 
@@ -42,7 +45,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::ImportComponent *pImportComponent) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pImportComponent)
+    mCellmlElement(pImportComponent),
+    mCmetaId(QString::fromStdWString(pImportComponent->cmetaId()))
 {
 }
 
@@ -51,7 +55,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::Units *pUnits) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pUnits)
+    mCellmlElement(pUnits),
+    mCmetaId(QString::fromStdWString(pUnits->cmetaId()))
 {
 }
 
@@ -60,7 +65,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::Unit *pUnit) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pUnit)
+    mCellmlElement(pUnit),
+    mCmetaId(QString::fromStdWString(pUnit->cmetaId()))
 {
 }
 
@@ -69,7 +75,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::CellMLComponent *pComponent) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pComponent)
+    mCellmlElement(pComponent),
+    mCmetaId(QString::fromStdWString(pComponent->cmetaId()))
 {
 }
 
@@ -78,7 +85,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::CellMLVariable *pVariable) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pVariable)
+    mCellmlElement(pVariable),
+    mCmetaId(QString::fromStdWString(pVariable->cmetaId()))
 {
 }
 
@@ -87,7 +95,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::Group *pGroup) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pGroup)
+    mCellmlElement(pGroup),
+    mCmetaId(QString::fromStdWString(pGroup->cmetaId()))
 {
 }
 
@@ -96,7 +105,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::RelationshipRef *pRelationshipRef) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pRelationshipRef)
+    mCellmlElement(pRelationshipRef),
+    mCmetaId(QString::fromStdWString(pRelationshipRef->cmetaId()))
 {
 }
 
@@ -105,7 +115,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::ComponentRef *pComponentRef) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pComponentRef)
+    mCellmlElement(pComponentRef),
+    mCmetaId(QString::fromStdWString(pComponentRef->cmetaId()))
 {
 }
 
@@ -114,7 +125,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::Connection *pConnection) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pConnection)
+    mCellmlElement(pConnection),
+    mCmetaId(QString::fromStdWString(pConnection->cmetaId()))
 {
 }
 
@@ -123,7 +135,8 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::MapComponents *pMapComponents) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pMapComponents)
+    mCellmlElement(pMapComponents),
+    mCmetaId(QString::fromStdWString(pMapComponents->cmetaId()))
 {
 }
 
@@ -132,32 +145,28 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
                                      iface::cellml_api::MapVariables *pMapVariables) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pMapVariables)
+    mCellmlElement(pMapVariables),
+    mCmetaId(QString::fromStdWString(pMapVariables->cmetaId()))
 {
 }
 
 //==============================================================================
 
-QString CellmlFileElement::cmetaId() const
+CellmlFileRdfTriples CellmlFileElement::rdfTriples() const
 {
-    // Return the CellML element's cmeta:id
+    // Return all the RDF triples associated with the element
 
-    return QString::fromStdWString(mCellmlElement->cmetaId());
-}
+    // Check that the element has a 'proper' cmeta:id
 
-//==============================================================================
+    if (mCmetaId.count())
+        // The element has a 'proper' cmeta:id, so we can retrieve and return
+        // the RDF triples associated with it
 
-void CellmlFileElement::setCmetaId(const QString &pCmetaId)
-{
-    // Set the CellML element's new cmeta:id
+        return mCellmlFile->rdfTriples(mCmetaId);
+    else
+        // The element doesn't have a 'proper' cmeta:id, so...
 
-    if (pCmetaId.compare(cmetaId())) {
-        // The cmeta:id is different, so update it
-
-        mCellmlElement->cmetaId(pCmetaId.toStdWString());
-
-        mCellmlFile->setModified(true);
-    }
+        return CellmlFileRdfTriples();
 }
 
 //==============================================================================
