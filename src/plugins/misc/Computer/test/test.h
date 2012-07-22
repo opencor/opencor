@@ -33,9 +33,6 @@ class Test : public QObject
 private:
     OpenCOR::Computer::ComputerEngine *mComputerEngine;
 
-    llvm::Function * mFunction;
-    double mResult;
-
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
@@ -82,8 +79,6 @@ private Q_SLOTS:
 
     void arbitraryLogFunctionTests();
     void powFunctionTests();
-    void quotFunctionTests();
-    void remFunctionTests();
 
     void gcdFunctionTests();
     void lcmFunctionTests();

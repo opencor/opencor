@@ -22,7 +22,12 @@ namespace clang {
 class Preprocessor;
 class SourceManager;
 
+/*---OPENCOR---
 class TextDiagnosticBuffer : public DiagnosticConsumer {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT TextDiagnosticBuffer : public DiagnosticConsumer {
+//---OPENCOR--- END
 public:
   typedef std::vector<std::pair<SourceLocation, std::string> > DiagList;
   typedef DiagList::iterator iterator;
