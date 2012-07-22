@@ -105,12 +105,7 @@ public:
   EmitCodeGenOnlyAction(llvm::LLVMContext *_VMContext = 0);
 };
 
-/*---OPENCOR---
 class EmitObjAction : public CodeGenAction {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT EmitObjAction : public CodeGenAction {
-//---OPENCOR--- END
   virtual void anchor();
 public:
   EmitObjAction(llvm::LLVMContext *_VMContext = 0);
