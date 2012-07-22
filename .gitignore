@@ -19,9 +19,10 @@
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/AST/Attrs.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/AST/DeclNodes.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/AST/StmtNodes.inc
+/src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/arm_neon.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/AttrList.inc
-/src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/DiagnosticASTKinds.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/DiagnosticAnalysisKinds.inc
+/src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/DiagnosticASTKinds.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/DiagnosticCommonKinds.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/DiagnosticDriverKinds.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/DiagnosticFrontendKinds.inc
@@ -31,7 +32,6 @@
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/DiagnosticSemaKinds.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/DiagnosticSerializationKinds.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/Version.inc
-/src/plugins/3rdparty/LLVM/tools/clang/include/clang/Basic/arm_neon.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Config/config.h
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Driver/CC1AsOptions.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/Driver/CC1Options.inc

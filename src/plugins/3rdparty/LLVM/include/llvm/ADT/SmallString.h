@@ -22,12 +22,7 @@ namespace llvm {
 /// SmallString - A SmallString is just a SmallVector with methods and accessors
 /// that make it work better as a string (e.g. operator+ etc).
 template<unsigned InternalLen>
-/*---OPENCOR---
 class SmallString : public SmallVector<char, InternalLen> {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT SmallString : public SmallVector<char, InternalLen> {
-//---OPENCOR--- END
 public:
   /// Default ctor - Initialize to empty.
   SmallString() {}

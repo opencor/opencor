@@ -17,9 +17,6 @@
 #include "llvm/Support/Atomic.h"
 #include "llvm/Support/Threading.h"
 #include "llvm/Support/Valgrind.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -100,12 +97,7 @@ public:
 };
 
 /// llvm_shutdown - Deallocate and destroy all ManagedStatic variables.
-/*---OPENCOR---
 void llvm_shutdown();
-*/
-//---OPENCOR--- BEGIN
-void LLVM_EXPORT llvm_shutdown();
-//---OPENCOR--- END
 
 
 /// llvm_shutdown_obj - This is a simple helper class that calls

@@ -463,12 +463,7 @@ public:
 /// raw_svector_ostream - A raw_ostream that writes to an SmallVector or
 /// SmallString.  This is a simple adaptor class. This class does not
 /// encounter output errors.
-/*---OPENCOR---
 class raw_svector_ostream : public raw_ostream {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT raw_svector_ostream : public raw_ostream {
-//---OPENCOR--- END
   SmallVectorImpl<char> &OS;
 
   /// write_impl - See raw_ostream::write_impl.
@@ -496,12 +491,7 @@ public:
 };
 
 /// raw_null_ostream - A raw_ostream that discards all output.
-/*---OPENCOR---
 class raw_null_ostream : public raw_ostream {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT raw_null_ostream : public raw_ostream {
-//---OPENCOR--- END
   /// write_impl - See raw_ostream::write_impl.
   virtual void write_impl(const char *Ptr, size_t size);
 

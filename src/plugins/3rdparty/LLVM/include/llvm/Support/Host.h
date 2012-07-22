@@ -55,12 +55,7 @@ namespace sys {
   /// target which matches the host.
   ///
   /// \return - The host CPU name, or empty if the CPU could not be determined.
-/*---OPENCOR---
   std::string getHostCPUName();
-*/
-//---OPENCOR--- BEGIN
-  std::string LLVM_EXPORT getHostCPUName();
-//---OPENCOR--- END
 
   /// getHostCPUFeatures - Get the LLVM names for the host CPU features.
   /// The particular format of the names are target dependent, and suitable for
