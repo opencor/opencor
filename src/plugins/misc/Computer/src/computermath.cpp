@@ -12,76 +12,6 @@
 
 //==============================================================================
 
-double _not(double pNb)
-{
-    return !pNb;
-}
-
-//==============================================================================
-
-double _or(double pNb1, double pNb2)
-{
-    return pNb1 || pNb2;
-}
-
-//==============================================================================
-
-double _xor(double pNb1, double pNb2)
-{
-    return (pNb1 != 0) ^ (pNb2 != 0);
-}
-
-//==============================================================================
-
-double _and(double pNb1, double pNb2)
-{
-    return pNb1 && pNb2;
-}
-
-//==============================================================================
-
-double eq(double pNb1, double pNb2)
-{
-    return pNb1 == pNb2;
-}
-
-//==============================================================================
-
-double neq(double pNb1, double pNb2)
-{
-    return pNb1 != pNb2;
-}
-
-//==============================================================================
-
-double lt(double pNb1, double pNb2)
-{
-    return pNb1 < pNb2;
-}
-
-//==============================================================================
-
-double gt(double pNb1, double pNb2)
-{
-    return pNb1 > pNb2;
-}
-
-//==============================================================================
-
-double le(double pNb1, double pNb2)
-{
-    return pNb1 <= pNb2;
-}
-
-//==============================================================================
-
-double ge(double pNb1, double pNb2)
-{
-    return pNb1 >= pNb2;
-}
-
-//==============================================================================
-
 double factorial(double pNb)
 {
     double res = 1.0;
@@ -94,16 +24,9 @@ double factorial(double pNb)
 
 //==============================================================================
 
-double arbitraryLog(double pNb, double pBase)
+double arbitrary_log(double pNb, double pBase)
 {
     return std::log(pNb)/std::log(pBase);
-}
-
-//==============================================================================
-
-double quot(double pNb1, double pNb2)
-{
-    return (pNb1-fmod(pNb1, pNb2))/pNb2;
 }
 
 //==============================================================================
@@ -153,7 +76,7 @@ double lcmPair(double pNb1, double pNb2)
 
 //==============================================================================
 
-double gcd(int pCount, ...)
+double gcd_multi(int pCount, ...)
 {
     if (!pCount)
         return 1.0;
@@ -172,7 +95,7 @@ double gcd(int pCount, ...)
 
 //==============================================================================
 
-double lcm(int pCount, ...)
+double lcm_multi(int pCount, ...)
 {
     if (!pCount)
         return 1.0;
@@ -191,31 +114,7 @@ double lcm(int pCount, ...)
 
 //==============================================================================
 
-double max(int pCount, ...)
-{
-    if (!pCount)
-        return strtod("NAN", NULL);
-
-    va_list parameters;
-
-    va_start(parameters, pCount);
-        double res = va_arg(parameters, double);
-        double otherParameter;
-
-        while (--pCount) {
-            otherParameter = va_arg(parameters, double);
-
-            if (otherParameter > res)
-                res = otherParameter;
-        }
-    va_end(parameters);
-
-    return res;
-}
-
-//==============================================================================
-
-double min(int pCount, ...)
+double multi_min(int pCount, ...)
 {
     if (!pCount)
         return strtod("NAN", NULL);
@@ -230,6 +129,30 @@ double min(int pCount, ...)
             otherParameter = va_arg(parameters, double);
 
             if (otherParameter < res)
+                res = otherParameter;
+        }
+    va_end(parameters);
+
+    return res;
+}
+
+//==============================================================================
+
+double multi_max(int pCount, ...)
+{
+    if (!pCount)
+        return strtod("NAN", NULL);
+
+    va_list parameters;
+
+    va_start(parameters, pCount);
+        double res = va_arg(parameters, double);
+        double otherParameter;
+
+        while (--pCount) {
+            otherParameter = va_arg(parameters, double);
+
+            if (otherParameter > res)
                 res = otherParameter;
         }
     va_end(parameters);
@@ -263,13 +186,6 @@ double atanh(double pNb)
     return 0.5*(log(1+pNb)-log(1-pNb));
 }
 #endif
-
-//==============================================================================
-
-double piecewise(double pCondition, double pTrue, double pFalse)
-{
-    return pCondition?pTrue:pFalse;
-}
 
 //==============================================================================
 // End of file

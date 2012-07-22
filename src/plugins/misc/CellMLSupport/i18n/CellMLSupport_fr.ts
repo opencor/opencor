@@ -46,14 +46,6 @@
         <translation>aucune information de code n&apos;a pu être trouvée pour le modèle</translation>
     </message>
     <message>
-        <source>the &apos;%1&apos; function could not be parsed</source>
-        <translation>La fonction &apos;%1&apos; n&apos;a pas pu être analysée</translation>
-    </message>
-    <message>
-        <source>the &apos;%1&apos; function could not be compiled (%2)</source>
-        <translation>La fonction &apos;%1&apos; n&apos;a pas pu être compilée (%2)</translation>
-    </message>
-    <message>
         <source>the model code could not be generated</source>
         <translation>Le code pour le modèle n&apos;a pas pu être généré</translation>
     </message>

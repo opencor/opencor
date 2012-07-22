@@ -13,18 +13,11 @@ ADD_PLUGIN(Computer
         ../../plugininfo.cpp
 
         src/computerengine.cpp
-        src/computerequation.cpp
         src/computererror.cpp
-        src/computerexternalfunction.cpp
-        src/computerfunction.cpp
         src/computermath.cpp
-        src/computerparameter.cpp
-        src/computerparser.cpp
         src/computerplugin.cpp
-        src/computerscanner.cpp
     HEADERS_MOC
         src/computerengine.h
-        src/computerparser.h
         src/computerplugin.h
     INCLUDE_DIRS
         src

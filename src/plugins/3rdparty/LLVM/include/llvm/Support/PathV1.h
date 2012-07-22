@@ -20,6 +20,9 @@
 #include <set>
 #include <string>
 #include <vector>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 #define LLVM_PATH_DEPRECATED_MSG(replacement) \
   "PathV1 has been deprecated and will be removed as soon as all LLVM and" \
@@ -88,7 +91,12 @@ namespace sys {
   /// notion that the operation modifies the file system.
   /// @since 1.4
   /// @brief An abstraction for operating system paths.
+/*---OPENCOR---
   class Path {
+*/
+//---OPENCOR--- BEGIN
+  class LLVM_EXPORT Path {
+//---OPENCOR--- END
     /// @name Constructors
     /// @{
     public:
