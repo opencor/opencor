@@ -47,7 +47,7 @@ class ArgList;
 /// if Diags is non-null, report the error(s).
 bool ParseDiagnosticArgs(DiagnosticOptions &Opts, driver::ArgList &Args,
                          DiagnosticsEngine *Diags = 0);
-
+  
 class CompilerInvocationBase : public RefCountedBase<CompilerInvocation> {
 protected:
   /// Options controlling the language variant.
@@ -56,11 +56,11 @@ public:
   CompilerInvocationBase();
 
   CompilerInvocationBase(const CompilerInvocationBase &X);
-
+  
   LangOptions *getLangOpts() { return LangOpts.getPtr(); }
   const LangOptions *getLangOpts() const { return LangOpts.getPtr(); }
 };
-
+  
 /// CompilerInvocation - Helper class for holding the data necessary to invoke
 /// the compiler.
 ///
@@ -77,7 +77,7 @@ class LLVM_EXPORT CompilerInvocation : public CompilerInvocationBase {
   AnalyzerOptions AnalyzerOpts;
 
   MigratorOptions MigratorOpts;
-
+  
   /// Options controlling IRgen and the backend.
   CodeGenOptions CodeGenOpts;
 
@@ -155,11 +155,11 @@ public:
   /// \param LangStd - The input language standard.
   static void setLangDefaults(LangOptions &Opts, InputKind IK,
                    LangStandard::Kind LangStd = LangStandard::lang_unspecified);
-
-  /// \brief Retrieve a module hash string that is suitable for uniquely
+  
+  /// \brief Retrieve a module hash string that is suitable for uniquely 
   /// identifying the conditions under which the module was built.
   std::string getModuleHash() const;
-
+  
   /// @}
   /// @name Option Subgroups
   /// @{
@@ -173,7 +173,7 @@ public:
   const MigratorOptions &getMigratorOpts() const {
     return MigratorOpts;
   }
-
+  
   CodeGenOptions &getCodeGenOpts() { return CodeGenOpts; }
   const CodeGenOptions &getCodeGenOpts() const {
     return CodeGenOpts;

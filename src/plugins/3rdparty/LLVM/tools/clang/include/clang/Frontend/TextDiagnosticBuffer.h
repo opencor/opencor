@@ -16,6 +16,9 @@
 
 #include "clang/Basic/Diagnostic.h"
 #include <vector>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace clang {
 

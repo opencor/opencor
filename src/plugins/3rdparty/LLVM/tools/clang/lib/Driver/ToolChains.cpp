@@ -1900,11 +1900,11 @@ static LinuxDistro DetectLinuxDistro(llvm::Triple::ArchType Arch) {
              Data.find("release 6") != StringRef::npos)
       return RHEL6;
     else if ((Data.startswith("Red Hat Enterprise Linux") ||
-          Data.startswith("CentOS")) &&
+	      Data.startswith("CentOS")) &&
              Data.find("release 5") != StringRef::npos)
       return RHEL5;
     else if ((Data.startswith("Red Hat Enterprise Linux") ||
-          Data.startswith("CentOS")) &&
+	      Data.startswith("CentOS")) &&
              Data.find("release 4") != StringRef::npos)
       return RHEL4;
     return UnknownDistro;

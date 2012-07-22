@@ -115,7 +115,7 @@ InputArgList *Driver::ParseArgStrings(ArrayRef<const char *> ArgList) {
     }
 
     // Warn about -mcpu= without an argument.
-    if (A->getOption().matches(options::OPT_mcpu_EQ) &&
+    if (A->getOption().matches(options::OPT_mcpu_EQ) && 
         A->containsValue("")) {
       Diag(clang::diag::warn_drv_empty_joined_argument) << A->getAsString(*Args);
     }
@@ -253,7 +253,7 @@ Compilation *Driver::BuildCompilation(ArrayRef<const char *> ArgList) {
   if (char *env = ::getenv("COMPILER_PATH")) {
     StringRef CompilerPath = env;
     while (!CompilerPath.empty()) {
-      std::pair<StringRef, StringRef> Split = CompilerPath.split(':');
+      std::pair<StringRef, StringRef> Split = CompilerPath.split(':');      
       PrefixDirs.push_back(Split.first);
       CompilerPath = Split.second;
     }
@@ -376,7 +376,7 @@ Compilation *Driver::BuildCompilation(ArrayRef<const char *> ArgList) {
 void Driver::generateCompilationDiagnostics(Compilation &C,
                                             const Command *FailingCommand) {
   if (C.getArgs().hasArg(options::OPT_fno_crash_diagnostics))
-    return;
+    return;  
 
   // Don't try to generate diagnostics for link jobs.
   if (FailingCommand->getCreator().isLinkJob())
@@ -873,7 +873,7 @@ void Driver::BuildUniversalActions(const ToolChain &TC,
     if (A && !A->getOption().matches(options::OPT_g0) &&
         !A->getOption().matches(options::OPT_gstabs) &&
         ContainsCompileOrAssembleAction(Actions.back())) {
-
+ 
       // Add a 'dsymutil' step if necessary, when debug info is enabled and we
       // have a compile input. We need to run 'dsymutil' ourselves in such cases
       // because the debug info will refer to a temporary object file which is
@@ -1564,7 +1564,7 @@ std::string Driver::GetProgramPath(const char *Name, const ToolChain &TC,
   return Name;
 }
 
-std::string Driver::GetTemporaryPath(StringRef Prefix, const char *Suffix)
+std::string Driver::GetTemporaryPath(StringRef Prefix, const char *Suffix) 
   const {
   // FIXME: This is lame; sys::Path should provide this function (in particular,
   // it should know how to find the temporary files dir).
