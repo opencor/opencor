@@ -25,6 +25,7 @@ ADD_PLUGIN_BINARY(LLVM
     INCLUDE_DIRS
         include
         src
+        tools/clang/include
     QT_DEPENDENCIES
         QtCore
 )

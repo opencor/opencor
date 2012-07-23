@@ -29,26 +29,21 @@
     #pragma warning(default: 4146)
 #endif
 
-#include "llvm/ADT/OwningPtr.h"
-#include "llvm/ADT/SmallString.h"
-#include "llvm/Assembly/Parser.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/TargetSelect.h"
-#include "llvm/Support/DynamicLibrary.h"
 #include "llvm/Support/Host.h"
-#include "llvm/Support/ManagedStatic.h"
 #include "llvm/Support/Path.h"
 #include "llvm/Support/raw_ostream.h"
 
+#include "clang/Basic/Diagnostic.h"
 #include "clang/CodeGen/CodeGenAction.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
+#include "clang/Driver/Job.h"
 #include "clang/Driver/Tool.h"
 #include "clang/Frontend/CompilerInvocation.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/DiagnosticOptions.h"
-#include "clang/Frontend/FrontendDiagnostic.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 
 //==============================================================================
