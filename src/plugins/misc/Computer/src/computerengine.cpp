@@ -207,12 +207,17 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
                                  "a.out", true, diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
+    // Note: in gcc, the -O3 option comes with a warning: "Under some
+    //       circumstances where these optimizations are not favorable, this
+    //       option might actually make a program slower." This is the reason
+    //       we use -O2 to build OpenCOR. In Clang, however, there is no such
+    //       warning, hence we use -O3 to compile a model...
 
     llvm::SmallVector<const char *, 16> compilationArguments;
 
     compilationArguments.push_back(appFileName);
     compilationArguments.push_back("-fsyntax-only");
-    compilationArguments.push_back("-O2");
+    compilationArguments.push_back("-O3");
     compilationArguments.push_back("-Werror");
     compilationArguments.push_back(tempFileName);
 
