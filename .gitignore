@@ -5,16 +5,7 @@
 /src/plugins/3rdparty/LLVM/include/llvm/Config/llvm-config.h
 /src/plugins/3rdparty/LLVM/include/llvm/Support/DataTypes.h
 /src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenAsmMatcher.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenAsmWriter.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenAsmWriter1.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenCallingConv.inc
 /src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenDAGISel.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenDisassemblerTables.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenEDInfo.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenFastISel.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenInstrInfo.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenRegisterInfo.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenSubtargetInfo.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/AST/AttrImpl.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/AST/Attrs.inc
 /src/plugins/3rdparty/LLVM/tools/clang/include/clang/AST/DeclNodes.inc

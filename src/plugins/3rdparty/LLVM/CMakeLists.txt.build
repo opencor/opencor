@@ -7,16 +7,7 @@ INCLUDE(common.cmake)
 
 SET(CONFIG_FILES
     lib/Target/X86/DISTRIB_DIR/X86GenAsmMatcher.inc
-    lib/Target/X86/DISTRIB_DIR/X86GenAsmWriter.inc
-    lib/Target/X86/DISTRIB_DIR/X86GenAsmWriter1.inc
-    lib/Target/X86/DISTRIB_DIR/X86GenCallingConv.inc
     lib/Target/X86/DISTRIB_DIR/X86GenDAGISel.inc
-    lib/Target/X86/DISTRIB_DIR/X86GenDisassemblerTables.inc
-    lib/Target/X86/DISTRIB_DIR/X86GenEDInfo.inc
-    lib/Target/X86/DISTRIB_DIR/X86GenFastISel.inc
-    lib/Target/X86/DISTRIB_DIR/X86GenInstrInfo.inc
-    lib/Target/X86/DISTRIB_DIR/X86GenRegisterInfo.inc
-    lib/Target/X86/DISTRIB_DIR/X86GenSubtargetInfo.inc
 
     tools/clang/include/clang/AST/DISTRIB_DIR/AttrImpl.inc
     tools/clang/include/clang/AST/DISTRIB_DIR/Attrs.inc
