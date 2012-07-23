@@ -150,7 +150,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
 
     QByteArray tempFileByteArray = QString(QDir::tempPath()+QDir::separator()+QFileInfo(appFileName).baseName()+".c").toLatin1();
     const char *tempFileName = tempFileByteArray.constData();
-    QFile tempFile = tempFileName;
+    QFile tempFile(tempFileName);
 
     if (!tempFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         // The temporary file can't be opened, so...
