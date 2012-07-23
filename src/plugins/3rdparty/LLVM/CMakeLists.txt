@@ -8,44 +8,6 @@ INCLUDE(common.cmake)
 SET(CONFIG_FILES
     lib/Target/X86/DISTRIB_DIR/X86GenAsmMatcher.inc
     lib/Target/X86/DISTRIB_DIR/X86GenDAGISel.inc
-
-    tools/clang/include/clang/AST/DISTRIB_DIR/AttrImpl.inc
-    tools/clang/include/clang/AST/DISTRIB_DIR/Attrs.inc
-    tools/clang/include/clang/AST/DISTRIB_DIR/DeclNodes.inc
-    tools/clang/include/clang/AST/DISTRIB_DIR/StmtNodes.inc
-
-    tools/clang/include/clang/Basic/DISTRIB_DIR/arm_neon.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/AttrList.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticAnalysisKinds.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticASTKinds.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticCommonKinds.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticDriverKinds.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticFrontendKinds.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticGroups.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticLexKinds.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticParseKinds.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticSemaKinds.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/DiagnosticSerializationKinds.inc
-    tools/clang/include/clang/Basic/DISTRIB_DIR/Version.inc
-
-    tools/clang/include/clang/Config/DISTRIB_DIR/config.h
-
-    tools/clang/include/clang/Driver/DISTRIB_DIR/CC1AsOptions.inc
-    tools/clang/include/clang/Driver/DISTRIB_DIR/CC1Options.inc
-    tools/clang/include/clang/Driver/DISTRIB_DIR/Options.inc
-
-    tools/clang/include/clang/Lex/DISTRIB_DIR/AttrSpellings.inc
-
-    tools/clang/include/clang/Parse/DISTRIB_DIR/AttrLateParsed.inc
-
-    tools/clang/include/clang/Sema/DISTRIB_DIR/AttrParsedAttrKinds.inc
-    tools/clang/include/clang/Sema/DISTRIB_DIR/AttrParsedAttrList.inc
-    tools/clang/include/clang/Sema/DISTRIB_DIR/AttrTemplateInstantiate.inc
-
-    tools/clang/include/clang/Serialization/DISTRIB_DIR/AttrPCHRead.inc
-    tools/clang/include/clang/Serialization/DISTRIB_DIR/AttrPCHWrite.inc
-
-    tools/clang/lib/StaticAnalyzer/Checkers/DISTRIB_DIR/Checkers.inc
 )
 
 FOREACH(CONFIG_FILE ${CONFIG_FILES})
