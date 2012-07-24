@@ -223,21 +223,21 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
                 firstRdfTripleInformation = rdfTripleInformation;
         }
 
-        // Have all the rows take a minimum of vertical space
-
-        newGridLayout->setRowStretch(++row, 1);
-
         // Have the remove buttons column take as little horizontal space as
         // possible compared to the other columns
 
         newGridLayout->setColumnStretch(0, 1);
         newGridLayout->setColumnStretch(1, 1);
         newGridLayout->setColumnStretch(2, 1);
+
+        // Have all the rows take a minimum of vertical space
+
+        newGridLayout->setRowStretch(++row, 1);
     } else {
         // No RDF triples, so...
 
         newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                tr("No data available..."),
+                                                tr("There is no metadata associated with the current CellML element..."),
                                                 1.25, false, false, Qt::AlignCenter),
                                  0, 0);
     }

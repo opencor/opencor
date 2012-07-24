@@ -485,7 +485,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             labelText = tr("Please wait while we are retrieving possible terms for '%1'...").arg(mTerm);
         } else if (pErrorMsg.isEmpty()) {
             if (mTerm.isEmpty())
-                labelText = tr("Please enter a term to search...");
+                labelText = tr("Please enter above a term to search...");
             else
                 labelText = tr("Sorry, but no terms were found for '%1'...").arg(mTerm);
         } else {

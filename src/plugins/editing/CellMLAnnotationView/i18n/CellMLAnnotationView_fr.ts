@@ -128,8 +128,8 @@
         <translation>Erreur :</translation>
     </message>
     <message>
-        <source>Please enter a term to search...</source>
-        <translation>Veuillez entrer un terme à rechercher...</translation>
+        <source>Please enter above a term to search...</source>
+        <translation>Veuillez entrer plus haut un terme à rechercher...</translation>
     </message>
     <message>
         <source>Sorry, but no terms were found for &apos;%1&apos;...</source>
@@ -171,8 +171,8 @@
         <translation>Supprimer</translation>
     </message>
     <message>
-        <source>No data available...</source>
-        <translation>Aucune donnée disponible...</translation>
+        <source>There is no metadata associated with the current CellML element...</source>
+        <translation>Il n&apos;y a pas de métadonnées associées avec l&apos;élément CellML courant...</translation>
     </message>
 </context>
 <context>
