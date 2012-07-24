@@ -88,10 +88,6 @@
         <translation>Terme :</translation>
     </message>
     <message>
-        <source>No data available...</source>
-        <translation>Aucune donnée disponible...</translation>
-    </message>
-    <message>
         <source>Add the metadata information</source>
         <translation>Ajouter les informations pour la métadonnée</translation>
     </message>
@@ -128,12 +124,20 @@
         <translation>Vérifier</translation>
     </message>
     <message>
-        <source>Please wait while the list of terms is being loaded...</source>
-        <translation>Veuillez patienter pendant que la liste de termes se charge...</translation>
-    </message>
-    <message>
         <source>Error: </source>
         <translation>Erreur :</translation>
+    </message>
+    <message>
+        <source>Please enter a term to search...</source>
+        <translation>Veuillez entrer un terme à rechercher...</translation>
+    </message>
+    <message>
+        <source>Sorry, but no terms were found for &apos;%1&apos;...</source>
+        <translation>Désolé, mais aucuns termes n&apos;ont été trouvés pour &apos;%1&apos;...</translation>
+    </message>
+    <message>
+        <source>Please wait while we are retrieving possible terms for &apos;%1&apos;...</source>
+        <translation>Veuillez patienter pendant que nous retrouvons des termes possibles pour &apos;%1&apos;...</translation>
     </message>
 </context>
 <context>

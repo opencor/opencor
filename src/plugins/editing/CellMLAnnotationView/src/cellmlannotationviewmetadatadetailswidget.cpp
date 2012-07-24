@@ -112,11 +112,16 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     connect(mMetadataViewDetails->normalView(), SIGNAL(noLookupRequested()),
             this, SLOT(lookupNothing()));
 
-    // A connection to handle the addition of some metadata to our CellML file,
-    // therefore needing to update our normal view
+    // A connection to handle the request for metadata addition to our current
+    // CellML element
 
-    connect(mMetadataEditDetails, SIGNAL(metadataAdded(CellMLSupport::CellmlFileRdfTriple *)),
-            mMetadataViewDetails->normalView(), SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
+//    connect(mMetadataEditDetails, SIGNAL(metadataAdded(CellMLSupport::CellmlFileRdfTriple *)),
+//            mMetadataViewDetails->normalView(), SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
+
+    connect(mMetadataEditDetails, SIGNAL(metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &, const QString &, const QString &)),
+            this, SLOT(addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &, const QString &, const QString &)));
+    connect(mMetadataEditDetails, SIGNAL(metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &, const QString &, const QString &)),
+            this, SLOT(addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &, const QString &, const QString &)));
 
     // Populate our splitter widget
 
@@ -215,6 +220,33 @@ void CellmlAnnotationViewMetadataDetailsWidget::emitSplitterMoved()
 
 //==============================================================================
 
+QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
+{
+    // Return our splitter widget
+
+    return mSplitter;
+}
+
+//==============================================================================
+
+CellmlAnnotationViewMetadataEditDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataEditDetails() const
+{
+    // Return our metadata edit details widget
+
+    return mMetadataEditDetails;
+}
+
+//==============================================================================
+
+CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataViewDetails() const
+{
+    // Return our metadata view details widget
+
+    return mMetadataViewDetails;
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataDetailsWidget::lookupQualifier(const QString &pQualifier,
                                                                 const bool &pRetranslate)
 {
@@ -255,29 +287,30 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookupNothing()
 
 //==============================================================================
 
-QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
+void CellmlAnnotationViewMetadataDetailsWidget::addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                                            const QString &pResource,
+                                                            const QString &pId)
 {
-    // Return our splitter widget
+//---GRY--- TO BE DONE...
 
-    return mSplitter;
+qDebug(">>> Adding some metadata:");
+qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier)));
+qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
+qDebug(">>>  ---> Id:        %s", qPrintable(pId));
 }
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataEditDetails() const
+void CellmlAnnotationViewMetadataDetailsWidget::addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                                            const QString &pResource,
+                                                            const QString &pId)
 {
-    // Return our metadata edit details widget
+//---GRY--- TO BE DONE...
 
-    return mMetadataEditDetails;
-}
-
-//==============================================================================
-
-CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataViewDetails() const
-{
-    // Return our metadata view details widget
-
-    return mMetadataViewDetails;
+qDebug(">>> Adding some metadata:");
+qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier)));
+qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
+qDebug(">>>  ---> Id:        %s", qPrintable(pId));
 }
 
 //==============================================================================

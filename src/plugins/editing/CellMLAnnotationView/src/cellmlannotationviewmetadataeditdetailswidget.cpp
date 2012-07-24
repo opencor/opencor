@@ -134,15 +134,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
     // For the rest of our GUI, it's easier to just update it, so...
 
     if (mErrorMsg.isEmpty())
-        // We are not currently facing an error in the retrieval of ontological
-        // terms, so update the GUI as we normally would
+        // We are not currently facing an error in the retrieval of terms, so
+        // update the GUI as we normally would
 
         updateGui(mItems, mErrorMsg, mLookupTerm,
                   mItemsVerticalScrollBarPosition, true);
     else
-        // Something went wrong during the retrieval of ontological terms, so do
-        // as if we wanted to try to retrieve the ontological terms again, if
-        // anything at least to get the error message translated
+        // Something went wrong during the retrieval of terms, so do as if we
+        // wanted to try to retrieve the terms again, if anything at least to
+        // get the error message translated
 
         lookupTerm(mTermValue->text());
 }
@@ -261,7 +261,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Create a stacked widget (within a scroll area, so that only the items get
     // scrolled, not the whole metadata edit details widget) which will contain
-    // a grid with the results of our ontological terms lookup
+    // a grid with the results of our terms lookup
 
     QScrollArea *newItemsScrollArea = new QScrollArea(newMainWidget);
 
@@ -471,6 +471,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         newGridLayout->setColumnStretch(0, 1);
         newGridLayout->setColumnStretch(1, 1);
         newGridLayout->setColumnStretch(2, 1);
+
+        // Have all the rows take a minimum of vertical space
+
+        newGridLayout->setRowStretch(++row, 1);
     } else {
         // No items to show, so either there is no data available or an error
         // occurred
@@ -478,9 +482,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         QString labelText;
 
         if (pLookupTerm) {
-            labelText = tr("Please wait while the list of terms is being loaded...");
+            labelText = tr("Please wait while we are retrieving possible terms for '%1'...").arg(mTerm);
         } else if (pErrorMsg.isEmpty()) {
-            labelText = tr("No data available...");
+            if (mTerm.isEmpty())
+                labelText = tr("Please enter a term to search...");
+            else
+                labelText = tr("Sorry, but no terms were found for '%1'...").arg(mTerm);
         } else {
             QString errorMsg = pErrorMsg.left(1).toLower()+pErrorMsg.right(pErrorMsg.size()-1);
             QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
@@ -703,6 +710,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pInf
 
 //==============================================================================
 
+static const QString SemanticSbmlUrlStart = "http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=";
+static const QString SemanticSbmlUrlEnd   = "&full_info=1";
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pTerm)
 {
     // Keep track of the term to look up
@@ -713,9 +725,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pT
 
     updateItemsGui(Items(), QString(), true);
 
-    // Retrieve some possible ontological terms based on the given term
+    // Retrieve some possible terms based on the given term
 
-    QString termUrl = QString("http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=%1&full_info=1").arg(pTerm);
+    QString termUrl = SemanticSbmlUrlStart+pTerm+SemanticSbmlUrlEnd;
 
     if (mTermUrl.isEmpty()) {
         // No other term is being looked up, so keep track of the given term and
@@ -736,57 +748,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pT
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::termLookupFinished(QNetworkReply *pNetworkReply)
 {
-    // Retrieve the list of ontological terms, should we have retrieved it
-    // without any problem
-
-    Items items = Items();
-    QString errorMsg = QString();
-
-    if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // Parse the JSON code
-
-        QJson::Parser jsonParser;
-        bool parsingOk;
-
-        QVariantMap resultMap = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
-
-        if (parsingOk) {
-            // Retrieve the list of ontological terms
-
-            foreach (const QVariant &ontologicalsTermVariant, resultMap["result"].toList()) {
-                QVariantList ontologicalTermVariant = ontologicalsTermVariant.toList();
-
-                for (int i = 0, iMax = ontologicalTermVariant.count(); i < iMax; ++i) {
-                    // At this stage, we have an ontological term in the form of
-                    // a MIRIAM URN and a name (as well as a URL, but we don't
-                    // care about it), so we need to decode the MIRIAM URN to
-                    // retrieve the corresponding resource and id
-
-                    QVariantMap ontologicalTermMap = ontologicalTermVariant[i].toMap();
-
-                    QString resource = QString();
-                    QString id = QString();
-
-                    CellMLSupport::CellmlFileRdfTriple::decodeMiriamUrn(ontologicalTermMap["uri"].toString(),
-                                                                        resource, id);
-
-                    // Add the ontological term to our list
-
-                    items << item(ontologicalTermMap["name"].toString(),
-                                  resource, id);
-                }
-            }
-        } else {
-            // Something went wrong, so...
-
-            errorMsg = jsonParser.errorString();
-        }
-    } else {
-        // Something went wrong, so...
-
-        errorMsg = pNetworkReply->errorString();
-    }
-
     // We are done looking up the term, so...
 
     mTermUrl = QString();
@@ -801,8 +762,68 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookupFinished(QNetworkR
 
         mOtherTermUrl = QString();
     } else {
-        // No other term to look up, so we can update our GUI with the results
-        // of the lookup after having sorted them
+        // No other term to look up, so make sure that the network reply we got
+        // corresponds to that of the current term
+
+        if (mTerm.compare(pNetworkReply->url().toString()
+                                              .remove(QRegExp("^"+QRegExp::escape(SemanticSbmlUrlStart)))
+                                              .remove(QRegExp(QRegExp::escape(SemanticSbmlUrlEnd)+"$"))))
+            // Not the correct term, so...
+
+            return;
+
+        // The network reply is for the current term, so retrieve the list of
+        // terms, should we have retrieved it without any problem
+
+        Items items = Items();
+        QString errorMsg = QString();
+
+        if (pNetworkReply->error() == QNetworkReply::NoError) {
+            // Parse the JSON code
+
+            QJson::Parser jsonParser;
+            bool parsingOk;
+
+            QVariantMap resultMap = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
+
+            if (parsingOk) {
+                // Retrieve the list of terms
+
+                foreach (const QVariant &termsVariant, resultMap["result"].toList()) {
+                    QVariantList termVariant = termsVariant.toList();
+
+                    for (int i = 0, iMax = termVariant.count(); i < iMax; ++i) {
+                        // At this stage, we have an term in the form of a MIRIAM
+                        // URN and a name (as well as a URL, but we don't care about
+                        // it), so we need to decode the MIRIAM URN to retrieve the
+                        // corresponding resource and id
+
+                        QVariantMap termMap = termVariant[i].toMap();
+
+                        QString resource = QString();
+                        QString id = QString();
+
+                        CellMLSupport::CellmlFileRdfTriple::decodeMiriamUrn(termMap["uri"].toString(),
+                                                                            resource, id);
+
+                        // Add the term to our list
+
+                        items << item(termMap["name"].toString(), resource, id);
+                    }
+                }
+            } else {
+                // Something went wrong, so...
+
+                errorMsg = jsonParser.errorString();
+            }
+        } else {
+            // Something went wrong, so...
+
+            errorMsg = pNetworkReply->errorString();
+        }
+
+        // Update our GUI with the results of the lookup after having sorted
+        // them
 
         qSort(items.begin(), items.end());
 
@@ -816,41 +837,20 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRdfTriple()
 {
     // Retrieve the item associated with the add button
 
-    QObject *addButton = sender();
+    Item item = mItemsMapping.value(sender());
 
-    Item item = mItemsMapping.value(addButton);
-
-    // Determine what the subject of the item's corresponding RDF triple should
-    // be
-
-//    QString rdfTripleSubject = QUrl::fromLocalFile(mCellmlFile->fileName()).toString()+"#"+mParent->currentCmetaId();
-QString rdfTripleSubject = QString();
-//---GRY--- THIS SHOULD BE DONE THROUGH THE ELEMENT...
-
-    // Add the item as a RDF triple to the CellML file
-
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple;
+    // Let people know that we want to add an item
 
     if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-        // We want to use a biology qualifier, so...
+        // We want to add an item connected to a biology qualifier
 
-        rdfTriple = new CellMLSupport::CellmlFileRdfTriple(rdfTripleSubject,
-                                                           CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                                           item.resource, item.id);
+        emit metadataAdditionRequested(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
+                                       item.resource, item.id);
     else
-        // We want to use a model qualifier, so...
+        // We want to add an item connected to a model qualifier
 
-        rdfTriple = new CellMLSupport::CellmlFileRdfTriple(rdfTripleSubject,
-                                                           CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                           item.resource, item.id);
-
-//    mCellmlFile->rdfTriples()->add(rdfTriple);
-//---GRY--- THIS SHOULD BE ADDED THROUGH THE ELEMENT TO WHICH THE RDF TRIPLE IS
-//          TO BE ASSOCIATED...
-
-    // Let people know that some metadata has been added
-
-    emit metadataAdded(rdfTriple);
+        emit metadataAdditionRequested(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                       item.resource, item.id);
 }
 
 //==============================================================================
