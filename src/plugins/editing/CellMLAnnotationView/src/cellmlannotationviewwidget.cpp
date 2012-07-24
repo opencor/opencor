@@ -107,6 +107,17 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mCellmlList, SIGNAL(metadataDetailsRequested(CellMLSupport::CellmlFileElement *)),
             mMetadataDetails, SLOT(updateGui(CellMLSupport::CellmlFileElement *)));
 
+    // A connection to handle the request for metadata addition to our current
+    // CellML element
+
+//    connect(mMetadataEditDetails, SIGNAL(metadataAdded(CellMLSupport::CellmlFileRdfTriple *)),
+//            mMetadataViewDetails->normalView(), SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
+
+    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &, const QString &, const QString &)),
+            this, SLOT(addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &, const QString &, const QString &)));
+    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &, const QString &, const QString &)),
+            this, SLOT(addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &, const QString &, const QString &)));
+
     // Make our CellML list widget our focus proxy
 
     setFocusProxy(mCellmlList);
@@ -373,6 +384,36 @@ void CellmlAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView
             pWebView->setUrl(newUrl);
         }
     }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                             const QString &pResource,
+                                             const QString &pId)
+{
+//---GRY--- TO BE DONE...
+
+qDebug("---------------------------------------");
+qDebug(">>> Adding some metadata for '%s':", qPrintable(mCellmlList->currentCellmlElementItem()->text()));
+qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier)));
+qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
+qDebug(">>>  ---> Id:        %s", qPrintable(pId));
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                             const QString &pResource,
+                                             const QString &pId)
+{
+//---GRY--- TO BE DONE...
+
+qDebug("---------------------------------------");
+qDebug(">>> Adding some metadata for '%s':", qPrintable(mCellmlList->currentCellmlElementItem()->text()));
+qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier)));
+qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
+qDebug(">>>  ---> Id:        %s", qPrintable(pId));
 }
 
 //==============================================================================
