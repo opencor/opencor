@@ -7,6 +7,10 @@
 
 //==============================================================================
 
+#include <QStringList>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -171,16 +175,65 @@ CellmlFileRdfTriples CellmlFileElement::rdfTriples() const
 
 //==============================================================================
 
+void CellmlFileElement::generateUniqueCmetaId()
+{
+    // In order to generate a unique cmeta:id, we need to know what cmeta:ids
+    // are currently in use the CellML file, meaning we first need to retrieve
+    // all the RDF triples in the CellML file
+
+    CellmlFileRdfTriples *rdfTriples = mCellmlFile->rdfTriples();
+
+    // Next, we need to retrieve all the cmeta:ids from our different RDF
+    // triples
+
+    QStringList cmetaIds = QStringList();
+
+    foreach (CellmlFileRdfTriple *rdfTriple, *rdfTriples) {
+        QString cmetaId = rdfTriple->metadataId();
+
+        if (!cmetaIds.contains(cmetaId))
+            cmetaIds << cmetaId;
+    }
+
+    // Now, we try different cmeta:id values until we find one which is not
+    // present in our list
+
+    int counter = 0;
+
+    forever {
+        mCmetaId = QString("id_%1").arg(++counter, 5, 10, QChar('0'));
+
+        if (!cmetaIds.contains(mCmetaId))
+            // We have found a unique cmeta:id, so...
+
+            return;
+    }
+}
+
+//==============================================================================
+
+QString CellmlFileElement::rdfTripleSubject() const
+{
+    // Return the subject which should be used for an RDF triple
+
+    return QUrl::fromLocalFile(mCellmlFile->fileName()).toString()+"#"+mCmetaId;
+}
+
+//==============================================================================
+
 void CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                                     const QString &pResource,
                                     const QString &pId)
 {
-//---GRY--- TO BE DONE...
-qDebug("---------------------------------------");
-qDebug(">>> Adding some metadata:");
-qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier)));
-qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
-qDebug(">>>  ---> Id:        %s", qPrintable(pId));
+    // Make sure that we have a cmeta:id or generate one if needed
+
+    if (mCmetaId.isEmpty())
+        generateUniqueCmetaId();
+
+    // Add our metadata to our CellML file, this as an RDF triple
+
+    mCellmlFile->rdfTriples()->add(new CellMLSupport::CellmlFileRdfTriple(mCellmlFile, rdfTripleSubject(),
+                                                                          pModelQualifier, pResource, pId));
 }
 
 //==============================================================================
@@ -189,12 +242,15 @@ void CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::Bi
                                     const QString &pResource,
                                     const QString &pId)
 {
-//---GRY--- TO BE DONE...
-qDebug("---------------------------------------");
-qDebug(">>> Adding some metadata:");
-qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier)));
-qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
-qDebug(">>>  ---> Id:        %s", qPrintable(pId));
+    // Make sure that we have a cmeta:id or generate one if needed
+
+    if (mCmetaId.isEmpty())
+        generateUniqueCmetaId();
+
+    // Add our metadata to our CellML file, this as an RDF triple
+
+    mCellmlFile->rdfTriples()->add(new CellMLSupport::CellmlFileRdfTriple(mCellmlFile, rdfTripleSubject(),
+                                                                          pBioQualifier, pResource, pId));
 }
 
 //==============================================================================

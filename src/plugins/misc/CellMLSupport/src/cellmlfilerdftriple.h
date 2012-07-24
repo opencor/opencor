@@ -65,11 +65,14 @@ public:
         LastBioQualifier = BioHasTaxon
     };
 
-    explicit CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple);
-    explicit CellmlFileRdfTriple(const QString pSubject,
+    explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+                                 iface::rdf_api::Triple *pRdfTriple);
+    explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+                                 const QString pSubject,
                                  const ModelQualifier &pModelQualifier,
                                  const QString &pResource, const QString &pId);
-    explicit CellmlFileRdfTriple(const QString pSubject,
+    explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+                                 const QString pSubject,
                                  const BioQualifier &pBioQualifier,
                                  const QString &pResource, const QString &pId);
     ~CellmlFileRdfTriple();
@@ -79,6 +82,8 @@ public:
     CellmlFileRdfTripleElement * object() const;
 
     Type type() const;
+
+    QString metadataId() const;
 
     ModelQualifier modelQualifier() const;
     QString modelQualifierAsString() const;
@@ -93,12 +98,12 @@ public:
     QString resource() const;
     QString id() const;
 
-    void setMetadataId(const QString &pMetadataId);
-
     static void decodeMiriamUrn(const QString &pMiriamUrn, QString &pResource, QString &pId);
     static void decodeIdentifiersDotOrgUri(const QString &pIdentifiersDotOrgUri, QString &pResource, QString &pId);
 
 private:
+    CellmlFile *mCellmlFile;
+
     CellmlFileRdfTripleElement *mSubject;
     CellmlFileRdfTripleElement *mPredicate;
     CellmlFileRdfTripleElement *mObject;
@@ -128,9 +133,6 @@ public:
     void remove(CellmlFileRdfTriple *pRdfTriple);
     void remove(const QString &pMetadataId);
     void removeAll();
-
-    void renameMetadataId(const QString &pOldMetadataId,
-                          const QString &pNewMetadataId);
 
 private:
     CellmlFile *mCellmlFile;

@@ -76,6 +76,9 @@ private:
     iface::cellml_api::CellMLElement *mCellmlElement;
 
     QString mCmetaId;
+
+    void generateUniqueCmetaId();
+    QString rdfTripleSubject() const;
 };
 
 //==============================================================================

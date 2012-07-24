@@ -290,7 +290,7 @@ bool CellmlFile::load()
                 if (triple)
                     // We have a triple, so add it to our list
 
-                    mRdfTriples << new CellmlFileRdfTriple(triple);
+                    mRdfTriples << new CellmlFileRdfTriple(this, triple);
                 else
                     // No more triples, so...
 

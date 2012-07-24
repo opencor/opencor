@@ -72,7 +72,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
                 //       use our own id instead...
 
                 static QMap<QString, QString> ids;
-                static int idCounter = 0;
+                static int counter = 0;
 
                 QString id = QString::fromStdString(pNode->objid()).trimmed();
 
@@ -84,7 +84,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
                     // There is no genId value for the current id, so generate
                     // one and keep track of it
 
-                    mId.sprintf("id:%05d", ++idCounter);
+                    mId = QString("id_%1").arg(++counter, 5, 10, QChar('0'));
 
                     ids.insert(id, mId);
                 }

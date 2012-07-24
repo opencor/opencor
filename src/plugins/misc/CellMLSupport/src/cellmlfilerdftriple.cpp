@@ -16,7 +16,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
+CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+                                         iface::rdf_api::Triple *pRdfTriple) :
+    mCellmlFile(pCellmlFile),
     mType(Unknown),
     mModelQualifier(ModelUnknown),
     mBioQualifier(BioUnknown),
@@ -116,10 +118,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(iface::rdf_api::Triple *pRdfTriple) :
 
 //==============================================================================
 
-CellmlFileRdfTriple::CellmlFileRdfTriple(const QString pSubject,
+CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+                                         const QString pSubject,
                                          const ModelQualifier &pModelQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
+    mCellmlFile(pCellmlFile),
     mType(BioModelsDotNetQualifier),
     mModelQualifier(pModelQualifier),
     mBioQualifier(BioUnknown),
@@ -135,10 +139,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(const QString pSubject,
 
 //==============================================================================
 
-CellmlFileRdfTriple::CellmlFileRdfTriple(const QString pSubject,
+CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+                                         const QString pSubject,
                                          const BioQualifier &pBioQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
+    mCellmlFile(pCellmlFile),
     mType(BioModelsDotNetQualifier),
     mModelQualifier(ModelUnknown),
     mBioQualifier(pBioQualifier),
@@ -197,6 +203,23 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriple::type() const
     // Return the RDF triple's type
 
     return mType;
+}
+
+//==============================================================================
+
+QString CellmlFileRdfTriple::metadataId() const
+{
+    // Return the RDF triple's metadata id
+
+    if (mSubject->type() == CellmlFileRdfTripleElement::UriReference)
+        // The subject of our RDF triple is a URI reference, so we can retrieve
+        // its metadata id
+
+        return mSubject->uriReference().remove(QRegExp("^"+QRegExp::escape(mCellmlFile->uriBase())+"#?"));
+    else
+        // We don't recognise the subject of our RDF triple, so...
+
+        return QString();
 }
 
 //==============================================================================
@@ -335,18 +358,6 @@ QString CellmlFileRdfTriple::id() const
     // Return the RDF triple's id
 
     return mId;
-}
-
-//==============================================================================
-
-void CellmlFileRdfTriple::setMetadataId(const QString &pMetadataId)
-{
-    // Update the URI reference of the subject of the RDF triple by renaming its
-    // metadata id to pMetadataId
-    // Note: setUriReference() will only work if the subject is a URI
-    //       reference...
-
-    mSubject->setUriReference(mSubject->uriReference().remove(QRegExp("#[^#]*$"))+"#"+pMetadataId);
 }
 
 //==============================================================================
@@ -504,7 +515,7 @@ void CellmlFileRdfTriples::remove(const QString &pMetadataId)
     Q_ASSERT(mCellmlFile);
 
     // Remove all the RDF triples which are directly or indirectly associated
-    // with pMetadataId
+    // with the given metadata id
 
     bool res = true;
 
@@ -535,27 +546,6 @@ void CellmlFileRdfTriples::removeAll()
 
             res = true;
         }
-
-    if (res)
-        mCellmlFile->setModified(true);
-}
-
-//==============================================================================
-
-void CellmlFileRdfTriples::renameMetadataId(const QString &pOldMetadataId,
-                                            const QString &pNewMetadataId)
-{
-    Q_ASSERT(mCellmlFile);
-
-    // Rename the pOldId association of all the RDF triples to pNewId
-
-    bool res = false;
-
-    foreach (CellmlFileRdfTriple *rdfTriple, contains(pOldMetadataId)) {
-        rdfTriple->setMetadataId(pNewMetadataId);
-
-        res = true;
-    }
 
     if (res)
         mCellmlFile->setModified(true);
