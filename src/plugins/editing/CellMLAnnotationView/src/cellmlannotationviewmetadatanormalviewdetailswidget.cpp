@@ -302,6 +302,25 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+{
+    if (!pRdfTriple)
+        return;
+
+    // Make sure that the given RDF triple will be visible, this by handling the
+    // change in the range of our vertical scroll bar which will result in
+    // showLastRdfTriple() being called
+
+    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+            this, SLOT(showLastRdfTriple()));
+
+    // Update the GUI to reflect the addition of the given RDF triple
+
+    updateGui(mCellmlElement, mRdfTripleInformation, mType, mVerticalScrollBarPosition);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QString &pRdfTripleInformation,
                                                                         const Type &pType,
                                                                         const bool &pRetranslate)
@@ -549,26 +568,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 //    // Let people know that some metadata has been removed
 
 //    emit metadataRemoved(rdfTriple);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
-{
-    // Add the RDF triple to our set of RDF triples this widget uses
-
-//    mRdfTriples.add(pRdfTriple);
-
-//    // Make sure that the newly added RDF triple will be made visible, this by
-//    // handling the change in the range of our vertical scroll bar which will
-//    // result in showLastRdfTriple() being called
-
-//    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-//            this, SLOT(showLastRdfTriple()));
-
-//    // Update the GUI to reflect the addition of our RDF triple
-
-//    updateGui(mRdfTriples, mRdfTripleInformation, mType, mVerticalScrollBarPosition);
 }
 
 //==============================================================================

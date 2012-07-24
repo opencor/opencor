@@ -392,15 +392,10 @@ void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfT
                                              const QString &pResource,
                                              const QString &pId)
 {
-    // Add the metadata to the current CellML element
+    // Add the metadata to the current CellML element and ask our details widget
+    // to also add it to itself
 
-    CellMLSupport::CellmlFileElement *currentElement = mCellmlList->currentCellmlElementItem()->element();
-
-    currentElement->addMetadata(pModelQualifier, pResource, pId);
-
-    // Ask our details widget to update itself
-
-    mMetadataDetails->updateGui(currentElement);
+    mMetadataDetails->addRdfTriple(mCellmlList->currentCellmlElementItem()->element()->addMetadata(pModelQualifier, pResource, pId));
 }
 
 //==============================================================================
@@ -409,15 +404,10 @@ void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfT
                                              const QString &pResource,
                                              const QString &pId)
 {
-    // Add the metadata to the current CellML element
+    // Add the metadata to the current CellML element and ask our details widget
+    // to also add it to itself
 
-    CellMLSupport::CellmlFileElement *currentElement = mCellmlList->currentCellmlElementItem()->element();
-
-    currentElement->addMetadata(pBioQualifier, pResource, pId);
-
-    // Ask our details widget to update itself
-
-    mMetadataDetails->updateGui(currentElement);
+    mMetadataDetails->addRdfTriple(mCellmlList->currentCellmlElementItem()->element()->addMetadata(pBioQualifier, pResource, pId));
 }
 
 //==============================================================================

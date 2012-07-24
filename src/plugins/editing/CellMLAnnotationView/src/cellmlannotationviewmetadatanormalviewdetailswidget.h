@@ -62,6 +62,8 @@ public:
                    const int &pVerticalScrollBarPosition = 0,
                    const bool &pRetranslate = false);
 
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
@@ -110,8 +112,6 @@ private Q_SLOTS:
     void lookupId(const QString &pRdfTripleInformation);
 
     void removeRdfTriple();
-
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
     void showNeighbourRdfTriple();
     void showLastRdfTriple();

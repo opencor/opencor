@@ -221,9 +221,9 @@ QString CellmlFileElement::rdfTripleSubject() const
 
 //==============================================================================
 
-void CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
-                                    const QString &pResource,
-                                    const QString &pId)
+CellMLSupport::CellmlFileRdfTriple * CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                                                    const QString &pResource,
+                                                                    const QString &pId)
 {
     // Make sure that we have a cmeta:id or generate one if needed
 
@@ -232,15 +232,15 @@ void CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::Mo
 
     // Add our metadata to our CellML file, this as an RDF triple
 
-    mCellmlFile->rdfTriples()->add(new CellMLSupport::CellmlFileRdfTriple(mCellmlFile, rdfTripleSubject(),
-                                                                          pModelQualifier, pResource, pId));
+    return mCellmlFile->rdfTriples()->add(new CellMLSupport::CellmlFileRdfTriple(mCellmlFile, rdfTripleSubject(),
+                                                                                 pModelQualifier, pResource, pId));
 }
 
 //==============================================================================
 
-void CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                                    const QString &pResource,
-                                    const QString &pId)
+CellMLSupport::CellmlFileRdfTriple * CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                                                    const QString &pResource,
+                                                                    const QString &pId)
 {
     // Make sure that we have a cmeta:id or generate one if needed
 
@@ -249,8 +249,8 @@ void CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::Bi
 
     // Add our metadata to our CellML file, this as an RDF triple
 
-    mCellmlFile->rdfTriples()->add(new CellMLSupport::CellmlFileRdfTriple(mCellmlFile, rdfTripleSubject(),
-                                                                          pBioQualifier, pResource, pId));
+    return mCellmlFile->rdfTriples()->add(new CellMLSupport::CellmlFileRdfTriple(mCellmlFile, rdfTripleSubject(),
+                                                                                 pBioQualifier, pResource, pId));
 }
 
 //==============================================================================

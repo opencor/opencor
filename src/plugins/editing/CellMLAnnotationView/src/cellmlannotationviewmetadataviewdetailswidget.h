@@ -54,6 +54,8 @@ public:
 
     void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
 
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+
     CellmlAnnotationViewMetadataRawViewDetailsWidget *rawView() const;
     CellmlAnnotationViewMetadataNormalViewDetailsWidget *normalView() const;
 

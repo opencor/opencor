@@ -54,6 +54,8 @@ public:
 
     virtual void retranslateUi();
 
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+
     QSplitter * splitter() const;
 
     CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;

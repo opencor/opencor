@@ -485,7 +485,7 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) 
 
 //==============================================================================
 
-void CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
+CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 {
     Q_ASSERT(mCellmlFile);
 
@@ -494,6 +494,8 @@ void CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
     append(pRdfTriple);
 
     mCellmlFile->setModified(true);
+
+    return pRdfTriple;
 }
 
 //==============================================================================

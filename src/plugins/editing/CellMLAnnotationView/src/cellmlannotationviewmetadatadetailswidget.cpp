@@ -190,6 +190,18 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlF
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+{
+    if (!pRdfTriple)
+        return;
+
+    // Add the given RDF triple to our metadata view details
+
+    mMetadataViewDetails->addRdfTriple(pRdfTriple);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataDetailsWidget::updateSizes(const QList<int> &pSizes)
 {
     // The splitter of another CellmlAnnotationViewMetadataDetailsWidget object

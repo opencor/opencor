@@ -128,7 +128,7 @@ public:
 
     CellmlFileRdfTriples contains(const QString &pMetadataId) const;
 
-    void add(CellmlFileRdfTriple *pRdfTriple);
+    CellmlFileRdfTriple * add(CellmlFileRdfTriple *pRdfTriple);
 
     void remove(CellmlFileRdfTriple *pRdfTriple);
     void remove(const QString &pMetadataId);
