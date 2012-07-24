@@ -65,6 +65,11 @@ public:
 
     CellmlFileRdfTriples rdfTriples() const;
 
+    void addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                     const QString &pResource, const QString &pId);
+    void addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                     const QString &pResource, const QString &pId);
+
 private:
     CellmlFile *mCellmlFile;
 

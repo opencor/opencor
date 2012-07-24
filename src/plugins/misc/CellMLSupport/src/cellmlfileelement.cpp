@@ -171,6 +171,34 @@ CellmlFileRdfTriples CellmlFileElement::rdfTriples() const
 
 //==============================================================================
 
+void CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                    const QString &pResource,
+                                    const QString &pId)
+{
+//---GRY--- TO BE DONE...
+qDebug("---------------------------------------");
+qDebug(">>> Adding some metadata:");
+qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier)));
+qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
+qDebug(">>>  ---> Id:        %s", qPrintable(pId));
+}
+
+//==============================================================================
+
+void CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                    const QString &pResource,
+                                    const QString &pId)
+{
+//---GRY--- TO BE DONE...
+qDebug("---------------------------------------");
+qDebug(">>> Adding some metadata:");
+qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier)));
+qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
+qDebug(">>>  ---> Id:        %s", qPrintable(pId));
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 

@@ -388,32 +388,36 @@ void CellmlAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                                             const QString &pResource,
-                                             const QString &pId)
-{
-//---GRY--- TO BE DONE...
-
-qDebug("---------------------------------------");
-qDebug(">>> Adding some metadata for '%s':", qPrintable(mCellmlList->currentCellmlElementItem()->text()));
-qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier)));
-qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
-qDebug(">>>  ---> Id:        %s", qPrintable(pId));
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                                              const QString &pResource,
                                              const QString &pId)
 {
-//---GRY--- TO BE DONE...
+    // Add the metadata to the current CellML element
 
-qDebug("---------------------------------------");
-qDebug(">>> Adding some metadata for '%s':", qPrintable(mCellmlList->currentCellmlElementItem()->text()));
-qDebug(">>>  ---> Qualifier: %s", qPrintable(CellMLSupport::CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier)));
-qDebug(">>>  ---> Resource:  %s", qPrintable(pResource));
-qDebug(">>>  ---> Id:        %s", qPrintable(pId));
+    CellMLSupport::CellmlFileElement *currentElement = mCellmlList->currentCellmlElementItem()->element();
+
+    currentElement->addMetadata(pModelQualifier, pResource, pId);
+
+    // Ask our details widget to update itself
+
+    mMetadataDetails->updateGui(currentElement);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                             const QString &pResource,
+                                             const QString &pId)
+{
+    // Add the metadata to the current CellML element
+
+    CellMLSupport::CellmlFileElement *currentElement = mCellmlList->currentCellmlElementItem()->element();
+
+    currentElement->addMetadata(pBioQualifier, pResource, pId);
+
+    // Ask our details widget to update itself
+
+    mMetadataDetails->updateGui(currentElement);
 }
 
 //==============================================================================

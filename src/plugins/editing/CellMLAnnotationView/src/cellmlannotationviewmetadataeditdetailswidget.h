@@ -140,10 +140,10 @@ Q_SIGNALS:
                            const bool &pRetranslate);
     void noLookupRequested();
 
-    void metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+    void metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                                    const QString &pResource,
                                    const QString &pId);
-    void metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+    void metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                                    const QString &pResource,
                                    const QString &pId);
 
