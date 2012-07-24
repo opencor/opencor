@@ -1,9 +1,9 @@
 //==============================================================================
-// CellML annotation view metadata BioModels.Net view details widget
+// CellML annotation view metadata normal view details widget
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWMETADATABIOMODELSDOTNETVIEWDETAILSWIDGET_H
-#define CELLMLANNOTATIONVIEWMETADATABIOMODELSDOTNETVIEWDETAILSWIDGET_H
+#ifndef CELLMLANNOTATIONVIEWMETADATANORMALVIEWDETAILSWIDGET_H
+#define CELLMLANNOTATIONVIEWMETADATANORMALVIEWDETAILSWIDGET_H
 
 //==============================================================================
 
@@ -17,7 +17,7 @@
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget;
+    class CellmlAnnotationViewMetadataNormalViewDetailsWidget;
 }
 
 //==============================================================================
@@ -36,8 +36,8 @@ class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget : public QScrollArea,
-                                                                     public Core::CommonWidget
+class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public QScrollArea,
+                                                            public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -50,9 +50,9 @@ private:
     };
 
 public:
-    explicit CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                          const bool &pEditingMode);
-    ~CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget();
+    explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                 const bool &pEditingMode);
+    ~CellmlAnnotationViewMetadataNormalViewDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -65,7 +65,7 @@ public:
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *mGui;
+    Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget *mGui;
 
     QStackedWidget *mWidget;
 

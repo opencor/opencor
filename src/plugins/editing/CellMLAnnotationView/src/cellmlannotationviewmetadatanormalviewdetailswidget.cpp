@@ -1,14 +1,14 @@
 //==============================================================================
-// CellML annotation view metadata BioModels.Net view details widget
+// CellML annotation view metadata normal view details widget
 //==============================================================================
 
-#include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
+#include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
 
 //==============================================================================
 
-#include "ui_cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
+#include "ui_cellmlannotationviewmetadatanormalviewdetailswidget.h"
 
 //==============================================================================
 
@@ -25,12 +25,12 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                                                                           const bool &pEditingMode) :
+CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
+                                                                                                         const bool &pEditingMode) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mCellmlFile(pParent->cellmlFile()),
-    mGui(new Ui::CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget),
+    mGui(new Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget),
     mGridWidget(0),
     mGridLayout(0),
     mCellmlElement(0),
@@ -64,7 +64,7 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::CellmlAnnotationVi
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::~CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget()
+CellmlAnnotationViewMetadataNormalViewDetailsWidget::~CellmlAnnotationViewMetadataNormalViewDetailsWidget()
 {
     // Delete the GUI
 
@@ -73,7 +73,7 @@ CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::~CellmlAnnotationV
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::retranslateUi()
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -87,11 +87,11 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::retranslateUi
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement,
-                                                                             const QString &pRdfTripleInformation,
-                                                                             const Type &pType,
-                                                                             const int &pVerticalScrollBarPosition,
-                                                                             const bool &pRetranslate)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement,
+                                                                    const QString &pRdfTripleInformation,
+                                                                    const Type &pType,
+                                                                    const int &pVerticalScrollBarPosition,
+                                                                    const bool &pRetranslate)
 {
     if (!pCellmlElement)
         return;
@@ -302,9 +302,9 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::updateGui(Cel
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup(const QString &pRdfTripleInformation,
-                                                                                 const Type &pType,
-                                                                                 const bool &pRetranslate)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QString &pRdfTripleInformation,
+                                                                        const Type &pType,
+                                                                        const bool &pRetranslate)
 {
     // Retrieve the RDF triple information
 
@@ -388,7 +388,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::genericLookup
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::disableLookupInformation()
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookupInformation()
 {
     // Disable the looking up of information
 
@@ -401,7 +401,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::disableLookup
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInformation)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of information
 
@@ -414,7 +414,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupQualifi
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResource(const QString &pRdfTripleInformation)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupResource(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of information
 
@@ -427,7 +427,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupResourc
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupId(const QString &pRdfTripleInformation)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupId(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of information
 
@@ -440,7 +440,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::lookupId(cons
 
 //==============================================================================
 
-QString CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::rdfTripleInformation(const int &pRow) const
+QString CellmlAnnotationViewMetadataNormalViewDetailsWidget::rdfTripleInformation(const int &pRow) const
 {
     // Return the RDF triple information for the given row
 
@@ -472,7 +472,7 @@ QString CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::rdfTripleI
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTriple()
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 {
     // Retrieve the RDF triple associated with the remove button
 
@@ -553,7 +553,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::removeRdfTrip
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
 {
     // Add the RDF triple to our set of RDF triples this widget uses
 
@@ -573,7 +573,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::addRdfTriple(
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showNeighbourRdfTriple()
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showNeighbourRdfTriple()
 {
     // No need to show our neighbour RDF triple, so...
 
@@ -587,7 +587,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showNeighbour
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showLastRdfTriple()
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple()
 {
     // No need to show our last RDF triple, so...
 
@@ -610,7 +610,7 @@ void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::showLastRdfTr
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget::trackVerticalScrollBarPosition(const int &pPosition)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::trackVerticalScrollBarPosition(const int &pPosition)
 {
     // Keep track of the new position of our vertical scroll bar
 

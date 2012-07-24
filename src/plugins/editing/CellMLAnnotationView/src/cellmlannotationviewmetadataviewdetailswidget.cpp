@@ -2,7 +2,7 @@
 // CellML annotation view metadata view details widget
 //==============================================================================
 
-#include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
+#include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
@@ -30,8 +30,8 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
     // Create our different metadata views
 
-    mRawView             = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
-    mBioModelsDotNetView = new CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget(pParent, pEditingMode);
+    mRawView    = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
+    mNormalView = new CellmlAnnotationViewMetadataNormalViewDetailsWidget(pParent, pEditingMode);
 
     // Make our raw view the default widget
     // Note: for the GUI to be properly initialised, we must add and immediately
@@ -40,8 +40,8 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
     addWidget(mRawView);
 
-    addWidget(mBioModelsDotNetView);
-    removeWidget(mBioModelsDotNetView);
+    addWidget(mNormalView);
+    removeWidget(mNormalView);
 }
 
 //==============================================================================
@@ -62,7 +62,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     mRawView->retranslateUi();
-    mBioModelsDotNetView->retranslateUi();
+    mNormalView->retranslateUi();
 }
 
 //==============================================================================
@@ -78,15 +78,15 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(CellMLSupport::Cel
     case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
     case CellMLSupport::CellmlFileRdfTriple::Empty:
         removeWidget(mRawView);
-        addWidget(mBioModelsDotNetView);
+        addWidget(mNormalView);
 
-        mBioModelsDotNetView->updateGui(pCellmlElement);
+        mNormalView->updateGui(pCellmlElement);
 
         break;
     default:
         // Unknown type, so...
 
-        removeWidget(mBioModelsDotNetView);
+        removeWidget(mNormalView);
         addWidget(mRawView);
 
         mRawView->updateGui(pCellmlElement);
@@ -104,11 +104,11 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget * CellmlAnnotationViewMetadataV
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget * CellmlAnnotationViewMetadataViewDetailsWidget::bioModelsDotNetView() const
+CellmlAnnotationViewMetadataNormalViewDetailsWidget * CellmlAnnotationViewMetadataViewDetailsWidget::normalView() const
 {
-    // Return our BioModels.Net view
+    // Return our normal view
 
-    return mBioModelsDotNetView;
+    return mNormalView;
 }
 
 //==============================================================================

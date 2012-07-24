@@ -34,7 +34,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget;
+class CellmlAnnotationViewMetadataNormalViewDetailsWidget;
 class CellmlAnnotationViewMetadataRawViewDetailsWidget;
 class CellmlAnnotationViewWidget;
 
@@ -55,13 +55,13 @@ public:
     void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
 
     CellmlAnnotationViewMetadataRawViewDetailsWidget *rawView() const;
-    CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *bioModelsDotNetView() const;
+    CellmlAnnotationViewMetadataNormalViewDetailsWidget *normalView() const;
 
 private:
     Ui::CellmlAnnotationViewMetadataViewDetailsWidget *mGui;
 
     CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
-    CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget *mBioModelsDotNetView;
+    CellmlAnnotationViewMetadataNormalViewDetailsWidget *mNormalView;
 };
 
 //==============================================================================

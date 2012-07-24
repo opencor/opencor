@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget</class>
- <widget class="QScrollArea" name="CellmlAnnotationViewMetadataBioModelsDotNetViewDetailsWidget">
+ <class>CellmlAnnotationViewMetadataNormalViewDetailsWidget</class>
+ <widget class="QScrollArea" name="CellmlAnnotationViewMetadataNormalViewDetailsWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

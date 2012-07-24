@@ -3,7 +3,7 @@
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "cellmlannotationviewmetadatabiomodelsdotnetviewdetailswidget.h"
+#include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
@@ -69,54 +69,54 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // lookup for the metadata view details widget
 
     connect(mMetadataEditDetails, SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
-            mMetadataViewDetails->bioModelsDotNetView(), SLOT(disableLookupInformation()));
+            mMetadataViewDetails->normalView(), SLOT(disableLookupInformation()));
     connect(mMetadataEditDetails, SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
             this, SLOT(lookupQualifier(const QString &, const bool &)));
 
     connect(mMetadataEditDetails, SIGNAL(resourceLookupRequested(const QString &, const bool &)),
-            mMetadataViewDetails->bioModelsDotNetView(), SLOT(disableLookupInformation()));
+            mMetadataViewDetails->normalView(), SLOT(disableLookupInformation()));
     connect(mMetadataEditDetails, SIGNAL(resourceLookupRequested(const QString &, const bool &)),
             this, SLOT(lookupResource(const QString &, const bool &)));
 
     connect(mMetadataEditDetails, SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
-            mMetadataViewDetails->bioModelsDotNetView(), SLOT(disableLookupInformation()));
+            mMetadataViewDetails->normalView(), SLOT(disableLookupInformation()));
     connect(mMetadataEditDetails, SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
             this, SLOT(lookupId(const QString &, const QString &, const bool &)));
 
     connect(mMetadataEditDetails, SIGNAL(noLookupRequested()),
-            mMetadataViewDetails->bioModelsDotNetView(), SLOT(disableLookupInformation()));
+            mMetadataViewDetails->normalView(), SLOT(disableLookupInformation()));
     connect(mMetadataEditDetails, SIGNAL(noLookupRequested()),
             this, SLOT(lookupNothing()));
 
     // Some connections to handle the looking up of a qualifier, resource and
-    // resource id from our BioModels.Net view, as well as the disabling of
-    // information lookup for the metadata edit details widget
+    // resource id from our normal view, as well as the disabling of information
+    // lookup for the metadata edit details widget
 
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
             mMetadataEditDetails, SLOT(disableLookupInformation()));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
             this, SLOT(lookupQualifier(const QString &, const bool &)));
 
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
             mMetadataEditDetails, SLOT(disableLookupInformation()));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
             this, SLOT(lookupResource(const QString &, const bool &)));
 
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
             mMetadataEditDetails, SLOT(disableLookupInformation()));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
             this, SLOT(lookupId(const QString &, const QString &, const bool &)));
 
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(noLookupRequested()),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(noLookupRequested()),
             mMetadataEditDetails, SLOT(disableLookupInformation()));
-    connect(mMetadataViewDetails->bioModelsDotNetView(), SIGNAL(noLookupRequested()),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(noLookupRequested()),
             this, SLOT(lookupNothing()));
 
     // A connection to handle the addition of some metadata to our CellML file,
-    // therefore needing to update our BioModels.Net view
+    // therefore needing to update our normal view
 
     connect(mMetadataEditDetails, SIGNAL(metadataAdded(CellMLSupport::CellmlFileRdfTriple *)),
-            mMetadataViewDetails->bioModelsDotNetView(), SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
+            mMetadataViewDetails->normalView(), SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
 
     // Populate our splitter widget
 
