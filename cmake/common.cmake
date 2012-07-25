@@ -886,7 +886,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR DEST_DIRNAME DIRNAME FILENAME)
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${FILENAME}
-                                                            ${REAL_DEST_DIRNAME}/${ARGN}/${FILENAME})
+                                                            ${REAL_DEST_DIRNAME}/${ARGN})
     ENDIF()
 ENDMACRO()
 
