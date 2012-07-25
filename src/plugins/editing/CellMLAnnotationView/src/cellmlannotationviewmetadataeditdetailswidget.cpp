@@ -420,10 +420,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
             // Resource
 
-            QString information = item.resource+"|"+item.id;
+            QString itemInformation = item.resource+"|"+item.id;
 
             QLabel *resourceLabel = Core::newLabelLink(newGridWidget,
-                                                       "<a href=\""+information+"\">"+item.resource+"</a>",
+                                                       "<a href=\""+itemInformation+"\">"+item.resource+"</a>",
                                                        1.0, false, false, Qt::AlignCenter);
 
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
@@ -434,7 +434,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             // Id
 
             QLabel *idLabel = Core::newLabelLink(newGridWidget,
-                                                 "<a href=\""+information+"\">"+item.id+"</a>",
+                                                 "<a href=\""+itemInformation+"\">"+item.id+"</a>",
                                                  1.0, false, false, Qt::AlignCenter);
 
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
@@ -541,20 +541,20 @@ CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadata
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString &pInformation,
+void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString &pItemInformation,
                                                                   const Type &pType,
                                                                   const bool &pRetranslate)
 {
     // Retrieve the information
 
-    QStringList informationAsStringList = pInformation.split("|");
-    QString qualifierAsString = (pType != Qualifier)?QString():pInformation;
-    QString resourceAsString = (pInformation.isEmpty() || (pType == Qualifier))?QString():informationAsStringList[0];
-    QString idAsString = (pInformation.isEmpty() || (pType == Qualifier))?QString():informationAsStringList[1];
+    QStringList itemInformationAsStringList = pItemInformation.split("|");
+    QString qualifierAsString = (pType != Qualifier)?QString():pItemInformation;
+    QString resourceAsString = (pItemInformation.isEmpty() || (pType == Qualifier))?QString():itemInformationAsStringList[0];
+    QString idAsString = (pItemInformation.isEmpty() || (pType == Qualifier))?QString():itemInformationAsStringList[1];
 
     // Keep track of the information
 
-    mInformation = pInformation;
+    mInformation = pItemInformation;
     mType = pType;
 
     // Toggle the lookup button, if needed
@@ -581,8 +581,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString 
             QFont font = idLabel->font();
 
             font.setBold(   mLookupInformation
-                         && !resourceLabel->text().compare("<a href=\""+pInformation+"\">"+resourceAsString+"</a>")
-                         && !idLabel->text().compare("<a href=\""+pInformation+"\">"+idAsString+"</a>"));
+                         && !resourceLabel->text().compare("<a href=\""+pItemInformation+"\">"+resourceAsString+"</a>")
+                         && !idLabel->text().compare("<a href=\""+pItemInformation+"\">"+idAsString+"</a>"));
             font.setItalic(false);
 
             QFont italicFont = idLabel->font();
@@ -684,7 +684,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString &pInformation)
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString &pItemInformation)
 {
     // Enable the looking up of information
 
@@ -692,12 +692,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString
 
     // Call our generic lookup function
 
-    genericLookup(pInformation, Resource);
+    genericLookup(pItemInformation, Resource);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pInformation)
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pItemInformation)
 {
     // Enable the looking up of information
 
@@ -705,7 +705,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pInf
 
     // Call our generic lookup function
 
-    genericLookup(pInformation, Id);
+    genericLookup(pItemInformation, Id);
 }
 
 //==============================================================================

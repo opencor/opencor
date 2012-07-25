@@ -127,7 +127,7 @@ private:
     static Item item(const QString &pName,
                      const QString &pResource, const QString &pId);
 
-    void genericLookup(const QString &pInformation = QString(),
+    void genericLookup(const QString &pItemInformation = QString(),
                        const Type &pType = No,
                        const bool &pRetranslate = false);
 
@@ -153,8 +153,8 @@ private Q_SLOTS:
     void qualifierChanged(const QString &pQualifier);
 
     void lookupQualifier();
-    void lookupResource(const QString &pInformation);
-    void lookupId(const QString &pInformation);
+    void lookupResource(const QString &pItemInformation);
+    void lookupId(const QString &pItemInformation);
 
     void lookupTerm(const QString &pTerm);
     void termLookupFinished(QNetworkReply *pNetworkReply);
