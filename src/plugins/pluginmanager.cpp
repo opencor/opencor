@@ -82,10 +82,10 @@ PluginManager::PluginManager(QSettings *pSettings,
 
     // Knowing which plugins are required, we must now ensure that these are
     // loaded first. Note that this is not required on Windows (even though it
-    // clearly doesn't harm having them loaded first!), but on Linux and Mac OS
-    // X it certainly is since otherwise the plugin's status will be wrong
-    // (indeed, on those systems, we check that dependencies are first loaded
-    // before loading the plugin itself), so...
+    // clearly doesn't harm having them loaded first!), but on Linux and OS X it
+    // certainly is since otherwise the plugin's status will be wrong (indeed,
+    // on those systems, we check that dependencies are first loaded before
+    // loading the plugin itself), so...
 
     QStringList orderedFileNames;
 

@@ -97,7 +97,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
         return;
 
     // Note: we are using a grid layout to dislay the contents of our view, but
-    //       this unfortunately results in some very bad flickering on Mac OS X.
+    //       this unfortunately results in some very bad flickering on OS X.
     //       This can, however, be addressed using a stacked widget, so...
 
     // Prevent ourselves from being updated (to avoid any flickering)

@@ -71,7 +71,7 @@ void QScintilla::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are not dropping
     // URIs
-    // Note: this is not (currently?) needed on Windows and Mac OS X, but if we
+    // Note: this is not (currently?) needed on Windows and OS X, but if we
     //       don't have that check on Linux, then to drop some files on our
     //       Scintilla editor will result in the text/plain version of the data
     //       (e.g. file:///home/me/myFile) to be inserted in the text, so...

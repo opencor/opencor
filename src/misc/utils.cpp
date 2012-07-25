@@ -61,19 +61,22 @@ QString getOsName()
         return "Microsoft Windows";
     }
 #elif defined(Q_WS_MAC)
-    // Note: the version of Qt that we use on Mac OS X only supports Mac OS X
-    //       10.5 and above, so...
+    // Note #1: the version of Qt that we use on OS X only supports Mac OS X
+    //          10.5 and above, so...
+    // Note #2: from version 10.7, Apple uses OS X rather than Mac OS X...
 
     switch (QSysInfo::MacintoshVersion) {
     case QSysInfo::MV_10_5:
         return "Mac OS X 10.5 (Leopard)";
     case QSysInfo::MV_10_6:
         return "Mac OS X 10.6 (Snow Leopard)";
-    case 0x0009:
-        // The value above should become QSysInfo::MV_10_7 once Qt officially
-        // supports Mac OS X 10.7 (Lion)
+    case QSysInfo::MV_10_7:
+        return "OS X 10.7 (Lion)";
+    case 0x0010:
+        // The value above should become QSysInfo::MV_10_8 once Qt officially
+        // supports OS X 10.8 (Mountain Lion)
 
-        return "Mac OS X 10.7 (Lion)";
+        return "OS X 10.8 (Mountain Lion)";
     default:
         return "Mac OS X";
     }

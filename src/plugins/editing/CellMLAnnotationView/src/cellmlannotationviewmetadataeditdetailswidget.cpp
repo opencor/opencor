@@ -156,8 +156,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
                                                               const bool &pRetranslate)
 {
     // Note: we are using certain layouts to dislay the contents of our view,
-    //       but this unfortunately results in some very bad flickering on Mac
-    //       OS X. This can, however, be addressed using a stacked widget, so...
+    //       but this unfortunately results in some very bad flickering on OS X.
+    //       This can, however, be addressed using a stacked widget, so...
 
     // Prevent ourselves from being updated (to avoid any flickering)
 

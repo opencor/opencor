@@ -86,10 +86,10 @@ MainWindow::MainWindow() :
 
     mGui->setupUi(this);
     // Note: the application icon (which needs to be set for Linux, but neither
-    //       for Windows nor Mac OS X, since it's set through CMake in those
-    //       cases (see CMakeLists.txt)) is set within the GUI file. This being
-    //       said, it's good to have it set for all three platforms, since it
-    //       can then be used in, for example, the about box, so...
+    //       for Windows nor OS X, since it's set through CMake in those cases
+    //       (see CMakeLists.txt)) is set within the GUI file. This being said,
+    //       it's good to have it set for all three platforms, since it can then
+    //       be used in, for example, the about box, so...
 
     // A connection to handle the status bar
 
@@ -120,18 +120,16 @@ MainWindow::MainWindow() :
 #endif
 
 #ifdef Q_WS_MAC
-    // A special shortcut to have OpenCOR minimised on Mac OS X when pressing
-    // Cmd+M
-    // Note: indeed, when pressing Cmd+M on Mac OS X, the active application
-    //       is expected to minimise itself, so...
+    // A special shortcut to have OpenCOR minimised on OS X when pressing Cmd+M
+    // Note: indeed, when pressing Cmd+M on OS X, the active application is
+    //       expected to minimise itself, so...
 
     new QShortcut(QKeySequence("Ctrl+M"),
                   this, SLOT(showMinimized()));
 
-    // A special shortcut to have OpenCOR hidden on Mac OS X when pressing
-    // Cmd+H
-    // Note: indeed, when pressing Cmd+H on Mac OS X, the active application
-    //       is expected to hide itself, so...
+    // A special shortcut to have OpenCOR hidden on OS X when pressing Cmd+H
+    // Note: indeed, when pressing Cmd+H on OS X, the active application is
+    //       expected to hide itself, so...
 
     new QShortcut(QKeySequence("Ctrl+H"),
                   this, SLOT(hide()));
@@ -311,10 +309,10 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 
         // Bring ourselves to the foreground
         // Note: indeed, when starting/restarting OpenCOR (as a result of a
-        //       Reset All in the case of a restart), OpenCOR will on Mac OS X
-        //       be behind any other application. Now, because it doesn't harm
-        //       to bring ourselves to the foreground when on Windows or Linux,
-        //       we may as well do it on those platforms too...
+        //       Reset All in the case of a restart), OpenCOR will on OS X be
+        //       behind any other application. Now, because it doesn't harm to
+        //       bring ourselves to the foreground when on Windows or Linux, we
+        //       may as well do it on those platforms too...
 
         showSelf();
     }
@@ -888,9 +886,9 @@ void MainWindow::showSelf()
 
     activateWindow();
     raise();
-    // Note: raise() is not always required (e.g. on Mac OS X, it's required
-    //       when starting OpenCOR, but it's not when we come here as a result
-    //       of trying to start another instance of OpenCOR), but better be safe
+    // Note: raise() is not always required (e.g. on OS X, it's required when
+    //       starting OpenCOR, but it's not when we come here as a result of
+    //       trying to start another instance of OpenCOR), but better be safe
     //       than sorry, so...
 #else
     // Show ourselves the X11 way

@@ -5,7 +5,7 @@ PROJECT(OpenCOR)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # Name of the main project and location of the built OpenCOR binary
-# Note: these are required, on Mac OS X, to determine where plugins should be
+# Note: these are required, on OS X, to determine where plugins should be
 #       copied, so...
 
 SET(MAIN_PROJECT_NAME ${PROJECT_NAME})
@@ -118,8 +118,8 @@ UPDATE_LANGUAGE_FILES(${PROJECT_NAME} FALSE)
 INCLUDE_THIRD_PARTY_LIBRARY(. LibQxt)
 INCLUDE_THIRD_PARTY_LIBRARY(. QtSingleApplication)
 
-# Set the application icon, but only for Windows and Mac OS X, since in the
-# case of Linux, it's done through res/OpenCOR.qrc
+# Set the application icon, but only for Windows and OS X, since in the case of
+# Linux, it's done through res/OpenCOR.qrc
 
 IF(WIN32)
     SET(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc)
@@ -292,9 +292,9 @@ IF(NOT APPLE)
     ENDIF()
 ENDIF()
 
-# Some Mac OS X specific information, as well as some pre- and post-processing
-# Note: the post-processing ensures that OpenCOR can be used on any Mac OS X
-#       machine that doesn't have Qt and the SQLite plugin
+# Some OS X specific information, as well as some pre- and post-processing
+# Note: the post-processing ensures that OpenCOR can be used on any OS X machine
+# that doesn't have Qt and the SQLite plugin
 
 IF(APPLE)
     # Configure and use our own Info.plist file
@@ -411,9 +411,9 @@ IF(APPLE)
     # Add the SQLite plugin to the bundle (required by the Help plugin)
     # Note: this would, ideally, be done as part of the packaging, but we do it
     #       here, since it allows us to test things as if Qt wasn't installed
-    #       on our development Mac OS X machine (which is useful since we
-    #       cannot have a virtual machine with a 'blank' Mac OS X system on it
-    #       unlike with Windows and Linux)...
+    #       on our development OS X machine (which is useful since we cannot
+    #       have a virtual machine with a 'blank' OS X system on it unlike with
+    #       Windows and Linux)...
 
     SET(SQLDRIVERS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers)
 
@@ -468,8 +468,8 @@ IF(WIN32)
     # Note: we would normally use
     #           INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
     #       for the GUI version of OpenCOR, but for some reasons it doesn't
-    #       work (anymore?) while it works fine on Linux and Mac OS X. Could
-    #       that have something to do with us now using MSVC?...
+    #       work (anymore?) while it works fine on Linux and OS X. Could that
+    #       have something to do with us now using MSVC?...
 
     INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.exe DESTINATION bin)
     INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
@@ -529,7 +529,7 @@ IF(WIN32)
         System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
     ")
 ELSEIF(APPLE)
-    # Select PackageMaker and ZIP as the packagers on Mac OS X
+    # Select PackageMaker and ZIP as the packagers on OS X
 
     SET(CPACK_GENERATOR PackageMaker ZIP)
 

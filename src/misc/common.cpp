@@ -105,8 +105,8 @@ bool consoleApplication(QCoreApplication *pApp, int *pRes)
 
     // Specify the type of command line options that are allowed
     // Note #1: we don't rely on the QxtCommandOptions::showUsage() method
-    // Note #2: we don't distinguish between Windows and Linux / Mac OS X when
-    //          it comes to the formatting of the command line options
+    // Note #2: we don't distinguish between Windows and Linux / OS X when it
+    //          comes to the formatting of the command line options
 
     QxtCommandOptions cmdLineOptions;
 

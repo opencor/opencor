@@ -378,7 +378,7 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
 
     if (pEvent->modifiers() & Qt::ControlModifier) {
         // The user has pressed the Ctrl key (on Windows and Linux) or the Alt
-        // key (on Mac OS X)
+        // key (on OS X)
 
         int delta = pEvent->delta();
 

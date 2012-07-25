@@ -61,8 +61,8 @@ Plugin::Plugin(const QString &pFileName,
             // Note: the reason we only do this on non-Windows systems is that
             //       on Windows a shared library's dependencies must be loaded
             //       before the shared library itself can be loaded while on
-            //       Linux / Mac OS X, it's possible to load a shared library
-            //       even if its dependencies are not loaded, so...
+            //       Linux / OS X, it's possible to load a shared library even
+            //       if its dependencies are not loaded, so...
 
 #ifndef Q_WS_WIN
             bool pluginDependenciesLoaded = true;

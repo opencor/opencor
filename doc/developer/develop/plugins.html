@@ -79,7 +79,7 @@
         </h2>
 
         <p>
-            Our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>ADD_PLUGIN</code></a> macro is used to take care of the deployment of a plugin. However, on Mac OS X, we must ensure that all the Qt libraries required by the plugins are embedded within the OpenCOR bundle and, more precisely, within <code>[OpenCOR.app]/Contents/Frameworks</code>. Indeed, <code>macdeployqt</code> can only deploy the libraries required by OpenCOR itself, not its plugins. So, it is up to us to determine which libraries are required and to deploy them:
+            Our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>ADD_PLUGIN</code></a> macro is used to take care of the deployment of a plugin. However, on OS X, we must ensure that all the Qt libraries required by the plugins are embedded within the OpenCOR bundle and, more precisely, within <code>[OpenCOR.app]/Contents/Frameworks</code>. Indeed, <code>macdeployqt</code> can only deploy the libraries required by OpenCOR itself, not its plugins. So, it is up to us to determine which libraries are required and to deploy them:
         </p>
 
         <ul>

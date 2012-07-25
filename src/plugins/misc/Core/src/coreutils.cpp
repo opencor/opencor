@@ -76,19 +76,19 @@ void * instance(const QString &pClassName, void *pDefaultGlobalInstance)
     // Retrieve the 'global' instance associated with a given class
     // Note: initially, the plan was to have a static instance of a given class
     //       and return its address. However, this approach doesn't work on
-    //       Windows and Linux (but does on Mac OS X). Indeed, say that the Core
+    //       Windows and Linux (but does on OS X). Indeed, say that the Core
     //       plugin is required by two other plugins, then these two plugins
     //       won't get the same 'copy' of the Core plugin. (It seems like) each
-    //       'copy' gets its own address space. (This is not the case on Mac OS
-    //       X, (most likely) because of the way applications are bundled on
-    //       that platform.) To address this issue, we keep track of the address
-    //       of a 'global' instance using QSettings. Now, this approach works
-    //       fine on both Windows and Linux, but... not on Mac OS X (!!). (It
-    //       would seem that) there are some read/write conflicts (when using
-    //       QSettings). These conflicts would normally be addressed using a
-    //       mutex, but then we would be back to the issue of being able to
-    //       share something between different plugins. So, instead, we, on Mac
-    //       OS X, revert to our original plan...
+    //       'copy' gets its own address space. (This is not the case on OS X,
+    //       (most likely) because of the way applications are bundled on that
+    //       platform.) To address this issue, we keep track of the address of a
+    //       'global' instance using QSettings. Now, this approach works fine on
+    //       both Windows and Linux, but... not on OS X (!!). (It would seem
+    //       that) there are some read/write conflicts (when using QSettings).
+    //       These conflicts would normally be addressed using a mutex, but then
+    //       we would be back to the issue of being able to share something
+    //       between different plugins. So, instead, we, on OS X, revert to our
+    //       original plan...
 
 #ifdef Q_WS_MAC
     return (void *) pDefaultGlobalInstance;

@@ -51,7 +51,7 @@ MACRO(INITIALISE_PROJECT)
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
             # Note #1: -Wl,-s strips all the symbols, thus reducing the final
             #          size of OpenCOR or one its shared libraries...
-            # Note #2: the above linking option has become obsolete on Mac OS X,
+            # Note #2: the above linking option has become obsolete on OS X,
             #          so...
         ENDIF()
     ENDIF()
@@ -74,9 +74,8 @@ MACRO(INITIALISE_PROJECT)
     IF(APPLE)
         # Note: the Qt SDK doesn't, by default, make the Qt binaries available
         #       to the user, hence we must update the user's PATH. However, this
-        #       doesn't work on Mac OS X when using Qt Creator, so we must
-        #       hard-code qmake's path so that CMake can find Qt from within
-        #       Qt Creator...
+        #       doesn't work on OS X when using Qt Creator, so we must hard-code
+        #       qmake's path so that CMake can find Qt from within Qt Creator...
 
         SET(QT_QMAKE_EXECUTABLE /Developer/QtSDK/Desktop/Qt/4.8.1/gcc/bin/qmake)
     ENDIF()
@@ -418,7 +417,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # On Windows, make a copy of the plugin to our main build directory, since
-    # this is where it will be on Linux and Mac OS X and where any test which
+    # this is where it will be on Linux and OS X and where any test which
     # requires the plugin will expect it to be, but this is not where MSVC
     # generates the plugin, so...
 
@@ -428,7 +427,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                             ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
     ENDIF()
 
-    # A few Mac OS X specific things
+    # A few OS X specific things
 
     IF(APPLE)
         # Clean up our plugin's id
@@ -508,8 +507,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin itself, but only if we are not on Mac OS X since it
-    # will have already been copied
+    # Package the plugin itself, but only if we are not on OS X since it will
+    # have already been copied
 
     IF(NOT APPLE)
         INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
@@ -528,8 +527,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC_FILE})
                 # The test exists, so build it
 
-                # On Linux and Mac OS X, we need to refer to some bits from the
-                # Core plugin even if we don't use them, so...
+                # On Linux and OS X, we need to refer to some bits from the Core
+                # plugin even if we don't use them, so...
 
                 IF(WIN32)
                     SET(CORE_SOURCES_MOC)
@@ -625,8 +624,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_NAME_FILEPATH}
                                                                     ${DEST_TESTS_DIR}/${TEST_NAME_FILEPATH})
 
-                # Make sure that, on Mac OS X, the test refers to our test
-                # version of the external libraries on which it depends
+                # Make sure that, on OS X, the test refers to our test version
+                # of the external libraries on which it depends
 
                 IF(APPLE)
                     FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
@@ -712,7 +711,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
 
-    # A few Mac OS X specific things
+    # A few OS X specific things
 
     IF(APPLE)
         # Make sure that the copy of our plugin in our main build directory
@@ -729,8 +728,8 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin itself, but only if we are not on Mac OS X since it
-    # will have already been copied
+    # Package the plugin itself, but only if we are not on OS X since it will
+    # have already been copied
 
     IF(NOT APPLE)
         INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})

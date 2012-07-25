@@ -102,8 +102,8 @@ void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
                                       const bool &pBottom, const bool &pRight)
 {
 #ifdef Q_WS_MAC
-    // There is no need to draw a border on Mac OS X if we are docked, so unless
-    // we want to force the drawing we just return
+    // There is no need to draw a border on OS X if we are docked, so unless we
+    // want to force the drawing we just return
 
     if (!pForceDrawing)
         return;

@@ -925,9 +925,9 @@ QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
     res->setTabsClosable(pTabsClosable);
     res->setUsesScrollButtons(true);
     // Note #1: the above property is style dependent and it happens that it's
-    //          not enabled on Mac OS X, so... set it in all cases, even though
-    //          it's already set on Windows and Linux, but one can never know
-    //          what the future holds, so...
+    //          not enabled on OS X, so... set it in all cases, even though it's
+    //          already set on Windows and Linux, but one can never know what
+    //          the future holds, so...
     // Note #2: if the above property is not enabled and many files are opened,
     //          then the central widget will widen reducing the width of any
     //          docked window which is clearly not what we want, so...
