@@ -153,13 +153,7 @@ IF(ENABLE_TESTING)
         ${QT_QTCORE_LIBRARY}
     )
 
-    # Copy our main test program to our tests directory which we create if
-    # needed
-
-    IF(NOT EXISTS ${DEST_TESTS_DIR})
-        ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_PROGRAM} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_TESTS_DIR})
-    ENDIF()
+    # Copy our main test program to our tests directory
 
     SET(MAIN_TEST_FILENAME ${RUNTESTS_PROGRAM}${CMAKE_EXECUTABLE_SUFFIX})
 
@@ -280,7 +274,8 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 IF(NOT APPLE)
     # Copy the OpenCOR executable to the build/bin folder
 
-    COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+    COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}
+                           ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     IF(WIN32)
         # Copy the OpenCOR executable to the build/Release folder, so that
@@ -288,7 +283,8 @@ IF(NOT APPLE)
         # that make.bat asks for the OpenCOR executable to be generated in
         # build to match what does Qt Creator, so...
 
-        COPY_FILE_TO_BUILD_DIR(Release ${CMAKE_BINARY_DIR}/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+        COPY_FILE_TO_BUILD_DIR(Release ${CMAKE_BINARY_DIR}
+                               ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
     ENDIF()
 ENDIF()
 
@@ -317,14 +313,12 @@ IF(APPLE)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
                        COMMAND ${CMAKE_COMMAND} -E remove -f ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
 
-    # Remove the PlugIns directory left from a previous build
+    # Remove the PlugIns directory which might have been left from a previous
+    # build
     # Note: this prevents us from getting error messages...
 
-    FOREACH(QT_FOLDER accessible bearer codecs graphicssystems imageformats
-                      phonon_backend qmltooling)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E remove_directory ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${QT_FOLDER})
-    ENDFOREACH()
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E remove_directory ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns)
 
     # Use macdeployqt to have all the Qt files required by OpenCOR added to the
     # bundle
@@ -417,19 +411,14 @@ IF(APPLE)
 
     SET(SQLDRIVERS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers)
 
-    IF(NOT EXISTS ${SQLDRIVERS_DIR})
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E make_directory ${SQLDRIVERS_DIR})
-    ENDIF()
-
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib
-                                                        ${SQLDRIVERS_DIR})
+                                                        ${SQLDRIVERS_DIR}/libqsqlite.dylib)
 
     # Make sure that the SQLite plugin refers to our embedded version
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND install_name_tool -id @rpath/PlugIns/sqldrivers/libqsqlite.dylib
+                       COMMAND install_name_tool -id libqsqlite.dylib
                                                      ${SQLDRIVERS_DIR}/libqsqlite.dylib)
 
     # Make sure that the SQLite plugin refers to our embedded version of QtCore
@@ -471,7 +460,7 @@ IF(WIN32)
     #       work (anymore?) while it works fine on Linux and OS X. Could that
     #       have something to do with us now using MSVC?...
 
-    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.exe DESTINATION bin)
+    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} DESTINATION bin)
     INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
 
     # MSVC files required by OpenCOR
@@ -483,7 +472,8 @@ IF(WIN32)
     #       a registry key which is not set, so...
 
     FOREACH(MSVC_LIBRARY msvcp100 msvcr100)
-        DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86/${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86
+                                   ${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 
     # Qt files required by OpenCOR
@@ -632,16 +622,20 @@ ELSE()
 
     # Qt configuration file to tell OpenCOR where to look for plugins
 
-    DEPLOY_LINUX_FILE(bin ${CMAKE_SOURCE_DIR}/distrib/linux/qt.conf)
+    DEPLOY_LINUX_FILE(bin ${CMAKE_SOURCE_DIR}/distrib/linux
+                      qt.conf)
 
     # SQLite plugin (required to see the help file)
 
-    DEPLOY_LINUX_FILE(plugins/sqldrivers ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite${CMAKE_SHARED_LIBRARY_SUFFIX})
+    DEPLOY_LINUX_FILE(plugins/sqldrivers ${QT_PLUGINS_DIR}/sqldrivers
+                      libqsqlite${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     # Some image format plugins (required to see some web pages)
 
-    DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats/libqgif${CMAKE_SHARED_LIBRARY_SUFFIX})
-    DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats/libqjpeg${CMAKE_SHARED_LIBRARY_SUFFIX})
+    DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats
+                      libqgif${CMAKE_SHARED_LIBRARY_SUFFIX})
+    DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats
+                      libqjpeg${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     # Shell script to run OpenCOR
 
