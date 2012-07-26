@@ -428,7 +428,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                             ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
     ENDIF()
 
-    # A few OS X specific things
+    # A few things specific to OS X
 
     IF(APPLE)
         # Clean up our plugin's id
@@ -471,8 +471,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
-        # Make sure that the plugin refers to our embedded version of the
-        # external dependencies on which it depends
+        # Make sure that the plugin refers to our embedded version of its
+        # external dependencies
         # Note #1: we do it in two different ways, since some external libraries
         #          we use refer to the library itself (e.g. CellML) while others
         #          refer to some @executable_path information (e.g. LLVM), so...
@@ -702,7 +702,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
 
-    # A few OS X specific things
+    # A few things specific to OS X
 
     IF(APPLE)
         # Make sure that the copy of our plugin in our main build directory
