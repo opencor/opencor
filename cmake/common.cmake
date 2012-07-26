@@ -69,6 +69,12 @@ MACRO(INITIALISE_PROJECT)
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /IGNORE:4099")
     ENDIF()
 
+    # Make sure that we can use install_name_tool without any prolem
+
+    IF(APPLE)
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -headerpad_max_install_names")
+    ENDIF()
+
     # Required packages
 
     IF(APPLE)
@@ -76,7 +82,7 @@ MACRO(INITIALISE_PROJECT)
         # set in the user's PATH. So, we manually set QT_QMAKE_EXECUTABLE since,
         # among other things, CMake checks this variable to find Qt...
 
-        EXECUTE_PROCESS(COMMAND which qmake 
+        EXECUTE_PROCESS(COMMAND which qmake
                         OUTPUT_STRIP_TRAILING_WHITESPACE
                         OUTPUT_VARIABLE QT_QMAKE_EXECUTABLE)
     ENDIF()
@@ -198,14 +204,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     FOREACH(PARAMETER ${ARGN})
         IF(${PARAMETER} STREQUAL "THIRD_PARTY")
-            # We are dealing with a third-party plugin, so disable warnings
-            # since it may generate some and this is not something we have or
+            # We are dealing with a third-party plugin, so disable all warnings
+            # since it may generate some and this is not something we can or
             # should have control over
 
             IF(WIN32)
-                STRING(REPLACE "/W3 /WX" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+                STRING(REPLACE "/W3 /WX" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
             ELSE()
-                STRING(REPLACE "-Wall -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+                STRING(REPLACE "-Wall -Werror" "-w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
             ENDIF()
 
             # Add a definition in case of compilation from within Qt Creator

@@ -226,7 +226,7 @@ void IdaSolver::initialize(const double &pVoiStart,
 
         IDASetId(mSolver, idVector);
         IDACalcIC(mSolver, IDA_YA_YDP_INIT,
-                  pVoiStart+pPositiveDirection?VoiEpsilon:-VoiEpsilon);
+                  pVoiStart+(pPositiveDirection?VoiEpsilon:-VoiEpsilon));
 
         N_VDestroy_Serial(idVector);
         delete[] id;
@@ -243,7 +243,7 @@ void IdaSolver::initialize(const double &pVoiStart,
         // Compute the model's new initial conditions
 
         IDACalcIC(mSolver, IDA_YA_YDP_INIT,
-                  pVoiStart+pPositiveDirection?VoiEpsilon:-VoiEpsilon);
+                  pVoiStart+(pPositiveDirection?VoiEpsilon:-VoiEpsilon));
     }
 }
 
