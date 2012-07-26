@@ -77,7 +77,7 @@ MACRO(INITIALISE_PROJECT)
         #       doesn't work on OS X when using Qt Creator, so we must hard-code
         #       qmake's path so that CMake can find Qt from within Qt Creator...
 
-        SET(QT_QMAKE_EXECUTABLE /Developer/QtSDK/Desktop/Qt/4.8.1/gcc/bin/qmake)
+        SET(QT_QMAKE_EXECUTABLE /Applications/QtSDK/Desktop/Qt/4.8.1/gcc/bin/qmake)
     ENDIF()
 
     FIND_PACKAGE(Qt4 4.8.1 REQUIRED)
@@ -113,7 +113,7 @@ MACRO(INITIALISE_PROJECT)
     IF(WIN32)
         SET(DISTRIB_DIR windows/x86)
     ELSEIF(APPLE)
-        SET(DISTRIB_DIR macosx)
+        SET(DISTRIB_DIR osx)
     ELSE()
         IF(64BIT_MODE)
             SET(DISTRIB_DIR linux/x64)

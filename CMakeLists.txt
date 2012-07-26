@@ -300,7 +300,7 @@ IF(APPLE)
 
     SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macosx/Info.plist.in ${InfoPlistFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${InfoPlistFile})
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile}
@@ -523,9 +523,9 @@ ELSEIF(APPLE)
 
     SET(CPACK_GENERATOR PackageMaker ZIP)
 
-    SET(CPACK_SYSTEM_NAME "MacOSX")
+    SET(CPACK_SYSTEM_NAME "OSX")
 
-    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macosx/welcome.txt")
+    SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/osx/welcome.txt")
     SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
 
@@ -541,7 +541,7 @@ ELSEIF(APPLE)
 
     SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/macosx/application.sh.in ${ShellFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${ShellFile})
 
     INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
