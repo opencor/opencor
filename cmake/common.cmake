@@ -428,7 +428,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                             ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
     ENDIF()
 
-    # A few things specific to OS X
+    # A few OS X specific things
 
     IF(APPLE)
         # Clean up our plugin's id
@@ -471,8 +471,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
-        # Make sure that the plugin refers to our embedded version of its
-        # external dependencies
+        # Make sure that the plugin refers to our embedded version of the
+        # external dependencies on which it depends
         # Note #1: we do it in two different ways, since some external libraries
         #          we use refer to the library itself (e.g. CellML) while others
         #          refer to some @executable_path information (e.g. LLVM), so...
@@ -493,18 +493,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
-
-            # Second, for the 'test' version of the plugin
-
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                 ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
-
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                 ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                 ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
 
@@ -702,7 +690,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
 
-    # A few things specific to OS X
+    # A few OS X specific things
 
     IF(APPLE)
         # Make sure that the copy of our plugin in our main build directory
