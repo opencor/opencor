@@ -58,7 +58,10 @@
                     <li>
                         <a href = "http://qt.nokia.com/downloads/sdk-mac-os-cpp">OS X</a>.
                         <div>
-                            <strong>Note:</strong> you might want to install the SDK under <code>/Applications</code> rather than your home folder as suggested by the installer.
+                            <strong>Note #1:</strong> you might want to install the SDK under <code>/Applications</code> rather than your home folder as suggested by the installer.
+                        </div>
+                        <div>
+                            <strong>Note #2:</strong> Qt 4.8.1 does not yet support <a href="http://www.apple.com/osx/">OS X</a> 10.8 (Mountain Lion), so <a href="res/qglobal.patch">here</a> is a patch for both <code>/Applications/QtSDK/Desktop/Qt/4.8.1/gcc/include/QtCore/qglobal.h</code> and <code>/Applications/QtSDK/Desktop/Qt/4.8.1/gcc/lib/QtCore.framework/Headers/qglobal.h</code>.
                         </div>
                     </li>
                 </ul>

@@ -1,0 +1,14 @@
+327c327,330
+< #  if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_7)
+---
+> #  if !defined(MAC_OS_X_VERSION_10_8)
+> #       define MAC_OS_X_VERSION_10_8 MAC_OS_X_VERSION_10_7 + 1
+> #  endif
+> #  if (MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_8)
+1605a1609
+>         MV_10_8 = 0x000A,
+1615c1619,1620
+<         MV_LION = MV_10_7
+---
+>         MV_LION = MV_10_7,
+>         MV_MOUNTAINLION = MV_10_8
