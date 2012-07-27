@@ -18,6 +18,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QLabel;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 
@@ -35,6 +39,8 @@ public:
 
     void setIcon(const QString &pIcon);
     void setMessage(const QString &pMessage);
+
+    QLabel *label() const;
 
 private:
     Ui::UserMessageWidget *mGui;

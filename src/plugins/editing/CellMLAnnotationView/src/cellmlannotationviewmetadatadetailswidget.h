@@ -94,6 +94,8 @@ private Q_SLOTS:
     void lookupId(const QString &pResource, const QString &pId,
                   const bool &pRetranslate);
     void lookupNothing();
+
+    void removeAllMetadata();
 };
 
 //==============================================================================

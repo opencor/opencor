@@ -112,6 +112,12 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     connect(mMetadataViewDetails->normalView(), SIGNAL(noLookupRequested()),
             this, SLOT(lookupNothing()));
 
+    // A connection to handle the clicking of the link in the unsupported
+    // message
+
+    connect(mUnsupportedMetadataMsg->label(), SIGNAL(linkActivated(const QString &)),
+            this, SLOT(removeAllMetadata()));
+
     // Populate our splitter widget
 
     mSplitter->addWidget(mBorderedMetadataEditDetails);
@@ -157,7 +163,14 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
     // Update our unsupported metadata message
 
-    mUnsupportedMetadataMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginViewName()));
+    mUnsupportedMetadataMsg->setMessage( "<div align=center>"
+                                         "    <p>"
+                                         "        "+tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginViewName())
+                                        +"    </p>"
+                                         "    <p>"
+                                         "        "+tr("Please click <a href=\"here\">here</a> to remove the existing metadata.")
+                                        +"    </p>"
+                                         "</div>");
 }
 
 //==============================================================================
@@ -284,6 +297,15 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookupNothing()
     // We are 'asked' to look nothing up, so 'clean up' our web view
 
     mWebView->setUrl(QUrl());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataDetailsWidget::removeAllMetadata()
+{
+//---GRY--- TO BE DONE...
+
+qDebug(">>> Remove the existing metadata...");
 }
 
 //==============================================================================

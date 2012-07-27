@@ -101,6 +101,15 @@ void UserMessageWidget::setMessage(const QString &pMessage)
 
 //==============================================================================
 
+QLabel * UserMessageWidget::label() const
+{
+    // Return our label
+
+    return mGui->label;
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 
