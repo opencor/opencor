@@ -50,8 +50,7 @@ private:
     };
 
 public:
-    explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                 const bool &pEditingMode);
+    explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataNormalViewDetailsWidget();
 
     virtual void retranslateUi();
@@ -80,7 +79,6 @@ private:
     Type mType;
 
     bool mLookupInformation;
-    bool mEditingMode;
 
     int mVerticalScrollBarPosition;
     int mNeighbourRow;

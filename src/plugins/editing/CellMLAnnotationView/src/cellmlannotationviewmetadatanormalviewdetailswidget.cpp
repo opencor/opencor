@@ -25,8 +25,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                                                         const bool &pEditingMode) :
+CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mCellmlFile(pParent->cellmlFile()),
@@ -37,7 +36,6 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mRdfTripleInformation(QString()),
     mType(No),
     mLookupInformation(true),
-    mEditingMode(pEditingMode),
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>())
@@ -138,13 +136,12 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
 
         // Number of terms
 
-        if (mEditingMode)
-            newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                    (rdfTriples.count() == 1)?
-                                                        tr("(1 term)"):
-                                                        tr("(%1 terms)").arg(QString::number(rdfTriples.count())),
-                                                    1.0, false, true, Qt::AlignCenter),
-                                     0, 3);
+        newGridLayout->addWidget(Core::newLabel(newGridWidget,
+                                                (rdfTriples.count() == 1)?
+                                                    tr("(1 term)"):
+                                                    tr("(%1 terms)").arg(QString::number(rdfTriples.count())),
+                                                1.0, false, true, Qt::AlignCenter),
+                                 0, 3);
 
         // Add the RDF triples information to our layout
         // Note: for the RDF triple's subject, we try to remove the CellML
@@ -193,29 +190,27 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
 
             newGridLayout->addWidget(idLabel, row, 2);
 
-            // Remove button, if needed
+            // Remove button
 
-            if (mEditingMode) {
-                QPushButton *removeButton = new QPushButton(newGridWidget);
-                // Note #1: ideally, we could assign a QAction to our
-                //          QPushButton, but this cannot be done, so... we
-                //          assign a few properties by hand...
-                // Note #2: to use a QToolButton would allow us to assign a
-                //          QAction to it, but a QToolButton doesn't look quite
-                //          the same as a QPushButton on some platforms, so...
+            QPushButton *removeButton = new QPushButton(newGridWidget);
+            // Note #1: ideally, we could assign a QAction to our
+            //          QPushButton, but this cannot be done, so... we
+            //          assign a few properties by hand...
+            // Note #2: to use a QToolButton would allow us to assign a
+            //          QAction to it, but a QToolButton doesn't look quite
+            //          the same as a QPushButton on some platforms, so...
 
-                removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
-                removeButton->setStatusTip(tr("Remove the metadata information"));
-                removeButton->setToolTip(tr("Remove"));
-                removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+            removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
+            removeButton->setStatusTip(tr("Remove the metadata information"));
+            removeButton->setToolTip(tr("Remove"));
+            removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-                mRdfTriplesMapping.insert(removeButton, rdfTriple);
+            mRdfTriplesMapping.insert(removeButton, rdfTriple);
 
-                connect(removeButton, SIGNAL(clicked()),
-                        this, SLOT(removeRdfTriple()));
+            connect(removeButton, SIGNAL(clicked()),
+                    this, SLOT(removeRdfTriple()));
 
-                newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);
-            }
+            newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);
 
             // Keep track of the very first resource id
 

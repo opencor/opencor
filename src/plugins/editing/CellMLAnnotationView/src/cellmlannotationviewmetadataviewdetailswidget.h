@@ -46,8 +46,7 @@ class CellmlAnnotationViewMetadataViewDetailsWidget : public QStackedWidget,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                           const bool &pEditingMode);
+    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataViewDetailsWidget();
 
     virtual void retranslateUi();

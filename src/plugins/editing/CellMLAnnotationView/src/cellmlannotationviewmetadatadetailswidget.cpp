@@ -52,7 +52,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // Create our details widgets
 
     mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pParent);
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent, true);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
     mWebView             = new QWebView(pParent);
 
     mWebView->setAcceptDrops(false);

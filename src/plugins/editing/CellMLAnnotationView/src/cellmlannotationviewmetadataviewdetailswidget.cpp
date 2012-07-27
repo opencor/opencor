@@ -18,8 +18,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent,
-                                                                                             const bool &pEditingMode) :
+CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QStackedWidget(pParent),
     CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataViewDetailsWidget)
@@ -31,7 +30,7 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
     // Create our different metadata views
 
     mRawView    = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
-    mNormalView = new CellmlAnnotationViewMetadataNormalViewDetailsWidget(pParent, pEditingMode);
+    mNormalView = new CellmlAnnotationViewMetadataNormalViewDetailsWidget(pParent);
 
     // Make our raw view the default widget
     // Note: for the GUI to be properly initialised, we must add and immediately
