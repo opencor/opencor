@@ -42,6 +42,13 @@ class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public QScrollArea,
     Q_OBJECT
 
 private:
+    enum Information {
+        None,
+        First,
+        Any,
+        Last
+    };
+
     enum Type {
         No,
         Qualifier,
@@ -58,6 +65,7 @@ public:
     void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement,
                    const QString &pRdfTripleInformation = QString(),
                    const Type &pType = No,
+                   const Information &pLookupInformation = First,
                    const int &pVerticalScrollBarPosition = 0,
                    const bool &pRetranslate = false);
 
@@ -78,7 +86,7 @@ private:
     QString mRdfTripleInformation;
     Type mType;
 
-    bool mLookupInformation;
+    Information mLookupInformation;
 
     int mVerticalScrollBarPosition;
     int mNeighbourRow;
