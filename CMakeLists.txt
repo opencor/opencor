@@ -313,12 +313,14 @@ IF(APPLE)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
                        COMMAND ${CMAKE_COMMAND} -E remove -f ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
 
-    # Remove the PlugIns directory which might have been left from a previous
-    # build
-    # Note: this prevents us from getting error messages...
+    # Remove the PlugIns directory left from a previous build
+    # Note: this prevents us from getting some error messages...
 
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E remove_directory ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns)
+    FOREACH(QT_FOLDER accessible bearer codecs graphicssystems imageformats
+                      phonon_backend qmltooling)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E remove_directory ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${QT_FOLDER})
+    ENDFOREACH()
 
     # Use macdeployqt to have all the Qt files required by OpenCOR added to the
     # bundle

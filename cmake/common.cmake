@@ -407,7 +407,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         SET(PLUGIN_BUILD_DIR ${LIBRARY_OUTPUT_PATH})
     ENDIF()
 
-    # Move the plugin to our plugins directory
+    # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
     #       plugins in OpenCOR without first having to package OpenCOR...
 
@@ -674,7 +674,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR})
 
-    # Move the plugin to our plugins directory
+    # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
     #       plugins in OpenCOR without first having to package and deploy it...
 
