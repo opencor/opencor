@@ -168,8 +168,8 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
                                          "        "+tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginViewName())
                                         +"    </p>"
                                          "    <p>"
-                                         "        "+tr("Please click <a href=\"here\">here</a> to remove the existing metadata.")
-                                        +"    </p>"
+                                         "        <small><em>("+tr("Please click <a href=\"here\">here</a> if you want to remove the existing metadata.")+")</em></small>"
+                                         "    </p>"
                                          "</div>");
 }
 

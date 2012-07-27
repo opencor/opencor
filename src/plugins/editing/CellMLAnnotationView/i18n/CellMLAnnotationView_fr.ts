@@ -77,8 +77,8 @@
         <translation>Désolé, mais la vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas ce type de métadonnée...</translation>
     </message>
     <message>
-        <source>Please click &lt;a href=&quot;here&quot;&gt;here&lt;/a&gt; to remove the existing metadata.</source>
-        <translation>Veuillez cliquer &lt;a href=&quot;ici&quot;&gt;ici&lt;/a&gt; pour supprimer la ou les métadonnées actuelles.</translation>
+        <source>Please click &lt;a href=&quot;here&quot;&gt;here&lt;/a&gt; if you want to remove the existing metadata.</source>
+        <translation>Veuillez cliquer &lt;a href=&quot;ici&quot;&gt;ici&lt;/a&gt; si vous voulez supprimer la ou les métadonnées actuelles.</translation>
     </message>
 </context>
 <context>
