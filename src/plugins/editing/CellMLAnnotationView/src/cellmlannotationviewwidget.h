@@ -99,8 +99,6 @@ private Q_SLOTS:
                      const QString &pResource, const QString &pId) const;
     void addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                      const QString &pResource, const QString &pId) const;
-
-    void removeAllMetadata() const;
 };
 
 //==============================================================================

@@ -115,12 +115,6 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mMetadataDetails->metadataEditDetails(), SIGNAL(metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &, const QString &, const QString &)),
             this, SLOT(addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &, const QString &, const QString &)));
 
-    // A connection to handle the request for all metadata removal to our
-    // current CellML element
-
-    connect(mMetadataDetails, SIGNAL(allMetadataRemovalRequested()),
-            this, SLOT(removeAllMetadata()));
-
     // Make our CellML list widget our focus proxy
 
     setFocusProxy(mCellmlList);
@@ -411,20 +405,6 @@ void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfT
     // to also add it to itself
 
     mMetadataDetails->addRdfTriple(mCellmlList->currentCellmlElementItem()->element()->addMetadata(pBioQualifier, pResource, pId));
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewWidget::removeAllMetadata() const
-{
-    // Remove all the metadata from the current CellML element and ask our
-    // details widget to update itself
-
-    CellMLSupport::CellmlFileElement *cellmlElement = mCellmlList->currentCellmlElementItem()->element();
-
-    cellmlElement->removeAllMetadata();
-
-    mMetadataDetails->updateGui(cellmlElement);
 }
 
 //==============================================================================

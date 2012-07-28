@@ -29,7 +29,8 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     Widget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget)
+    mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget),
+    mCellmlElement(0)
 {
     // Set up the GUI
 
@@ -180,6 +181,10 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlF
     if (!pCellmlElement)
         return;
 
+    // Keep track of the CellML element
+
+    mCellmlElement = pCellmlElement;
+
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known or not
 
@@ -303,10 +308,12 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookupNothing()
 
 void CellmlAnnotationViewMetadataDetailsWidget::removeAllMetadata()
 {
-    // Let people know that we want to remove all the metadata associated with
-    // the current CellML element
+    // Remove all the metadata from the current CellML element and ask our
+    // details widget to update itself
 
-    emit allMetadataRemovalRequested();
+    mCellmlElement->removeAllMetadata();
+
+    updateGui(mCellmlElement);
 }
 
 //==============================================================================
