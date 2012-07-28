@@ -201,8 +201,9 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlF
     mBorderedMetadataViewDetails->setTopBorderVisible(!isUnknownMetadata);
     mBorderedMetadataViewDetails->setBottomBorderVisible(!isUnknownMetadata);
 
-    // Update our metadata view details
+    // Update our metadata edit and view details
 
+    mMetadataEditDetails->updateGui(pCellmlElement);
     mMetadataViewDetails->updateGui(pCellmlElement);
 }
 

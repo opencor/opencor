@@ -66,6 +66,8 @@ public:
 
     virtual void retranslateUi();
 
+    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
+
 private:
     enum Type {
         No,
@@ -117,6 +119,8 @@ private:
 
     int mItemsVerticalScrollBarPosition;
 
+    CellMLSupport::CellmlFileElement *mCellmlElement;
+
     void updateGui(const Items &pItems, const QString &pErrorMsg,
                    const bool &pLookupTerm,
                    const int &pItemsVerticalScrollBarPosition,
@@ -140,12 +144,7 @@ Q_SIGNALS:
                            const bool &pRetranslate);
     void noLookupRequested();
 
-    void metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
-                                   const QString &pResource,
-                                   const QString &pId);
-    void metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                                   const QString &pResource,
-                                   const QString &pId);
+    void rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
     void disableLookupInformation();
@@ -159,7 +158,7 @@ private Q_SLOTS:
     void lookupTerm(const QString &pTerm);
     void termLookupFinished(QNetworkReply *pNetworkReply);
 
-    void addRdfTriple();
+    void addMetadata();
 
     void trackItemsVerticalScrollBarPosition(const int &pPosition);
 };

@@ -107,13 +107,10 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
     connect(mCellmlList, SIGNAL(metadataDetailsRequested(CellMLSupport::CellmlFileElement *)),
             mMetadataDetails, SLOT(updateGui(CellMLSupport::CellmlFileElement *)));
 
-    // A connection to handle the request for metadata addition to our current
-    // CellML element
+    // A connection to handle the fact that an RDF triple has been added
 
-    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &, const QString &, const QString &)),
-            this, SLOT(addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &, const QString &, const QString &)));
-    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(metadataAdditionRequested(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &, const QString &, const QString &)),
-            this, SLOT(addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &, const QString &, const QString &)));
+    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *)),
+            this, SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
 
     // Make our CellML list widget our focus proxy
 
@@ -385,26 +382,11 @@ void CellmlAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
-                                             const QString &pResource,
-                                             const QString &pId) const
+void CellmlAnnotationViewWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const
 {
-    // Add the metadata to the current CellML element and ask our details widget
-    // to also add it to itself
+    // Add the given RDF triple to our details widget
 
-    mMetadataDetails->addRdfTriple(mCellmlList->currentCellmlElementItem()->element()->addMetadata(pModelQualifier, pResource, pId));
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewWidget::addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                                             const QString &pResource,
-                                             const QString &pId) const
-{
-    // Add the metadata to the current CellML element and ask our details widget
-    // to also add it to itself
-
-    mMetadataDetails->addRdfTriple(mCellmlList->currentCellmlElementItem()->element()->addMetadata(pBioQualifier, pResource, pId));
+    mMetadataDetails->addRdfTriple(pRdfTriple);
 }
 
 //==============================================================================

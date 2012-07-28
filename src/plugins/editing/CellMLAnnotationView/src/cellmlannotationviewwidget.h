@@ -95,10 +95,7 @@ private Q_SLOTS:
     void updateSizes(const QList<int> &pSizes);
     void emitSplitterMoved();
 
-    void addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
-                     const QString &pResource, const QString &pId) const;
-    void addMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                     const QString &pResource, const QString &pId) const;
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const;
 };
 
 //==============================================================================
