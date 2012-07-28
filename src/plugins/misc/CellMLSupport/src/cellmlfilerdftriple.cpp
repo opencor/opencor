@@ -224,6 +224,19 @@ QString CellmlFileRdfTriple::metadataId() const
 
 //==============================================================================
 
+QString CellmlFileRdfTriple::qualifierAsString() const
+{
+    // Return the RDF triple's model or bio(logy) qualifier as a string
+
+    return (mModelQualifier != ModelUnknown)?
+                modelQualifierAsString():
+                (mBioQualifier != BioUnknown)?
+                    bioQualifierAsString():
+                    "unknown";
+}
+
+//==============================================================================
+
 CellmlFileRdfTriple::ModelQualifier CellmlFileRdfTriple::modelQualifier() const
 {
     // Return the RDF triple's model qualifier

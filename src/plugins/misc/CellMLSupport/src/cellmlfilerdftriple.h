@@ -85,6 +85,8 @@ public:
 
     QString metadataId() const;
 
+    QString qualifierAsString() const;
+
     ModelQualifier modelQualifier() const;
     QString modelQualifierAsString() const;
     static QString modelQualifierAsString(const ModelQualifier &pModelQualifier);

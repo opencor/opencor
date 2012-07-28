@@ -65,6 +65,7 @@ public:
 
     CellmlFileRdfTriples rdfTriples() const;
 
+    bool hasMetadata(const QString &pQualifier, const QString &pResource, const QString &pId);
     bool hasMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                      const QString &pResource, const QString &pId);
     bool hasMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
