@@ -255,6 +255,18 @@ CellMLSupport::CellmlFileRdfTriple * CellmlFileElement::addMetadata(const CellML
 
 //==============================================================================
 
+void CellmlFileElement::removeAllMetadata()
+{
+    Q_ASSERT(!mCmetaId.isEmpty());
+
+    // Remove, from our CellML file, all the metadata associated with the CellML
+    // element's cmeta:id
+
+    return mCellmlFile->rdfTriples()->remove(mCmetaId);
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 

@@ -82,6 +82,8 @@ private:
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
+    void allMetadataRemovalRequested();
+
 public Q_SLOTS:
     void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
 

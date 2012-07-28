@@ -303,9 +303,10 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookupNothing()
 
 void CellmlAnnotationViewMetadataDetailsWidget::removeAllMetadata()
 {
-//---GRY--- TO BE DONE...
+    // Let people know that we want to remove all the metadata associated with
+    // the current CellML element
 
-qDebug(">>> Remove the existing metadata...");
+    emit allMetadataRemovalRequested();
 }
 
 //==============================================================================

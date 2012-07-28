@@ -839,7 +839,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRdfTriple()
 
     Item item = mItemsMapping.value(sender());
 
-    // Let people know that we want to add an item
+    // Let people know that we want to add an item to the current CellML element
 
     if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
         // We want to add an item connected to a biology qualifier

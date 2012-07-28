@@ -72,6 +72,8 @@ public:
                                                      const QString &pResource,
                                                      const QString &pId);
 
+    void removeAllMetadata();
+
 private:
     CellmlFile *mCellmlFile;
 
