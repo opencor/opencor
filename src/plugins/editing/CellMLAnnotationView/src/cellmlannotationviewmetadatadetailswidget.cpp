@@ -188,23 +188,25 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlF
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known or not
 
-    bool isUnknownMetadata = pCellmlElement->rdfTriples().type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
+    bool isKnownMetadata = pCellmlElement->rdfTriples().type() != CellMLSupport::CellmlFileRdfTriple::Unknown;
 
-    mBorderedUnsupportedMetadataMsg->setVisible(isUnknownMetadata);
+    mBorderedUnsupportedMetadataMsg->setVisible(!isKnownMetadata);
 
     // Show/hide our metadata edit details and web viewer, depending on whether
     // the type of the metadata is known or not
 
-    mBorderedMetadataEditDetails->setVisible(!isUnknownMetadata);
-    mBorderedWebView->setVisible(!isUnknownMetadata);
+    mBorderedMetadataEditDetails->setVisible(isKnownMetadata);
+    mBorderedWebView->setVisible(isKnownMetadata);
 
-    mBorderedMetadataViewDetails->setTopBorderVisible(!isUnknownMetadata);
-    mBorderedMetadataViewDetails->setBottomBorderVisible(!isUnknownMetadata);
+    mBorderedMetadataViewDetails->setTopBorderVisible(isKnownMetadata);
+    mBorderedMetadataViewDetails->setBottomBorderVisible(isKnownMetadata);
 
-    // Update our metadata edit and view details
+    // Update our metadata edit and view details, if needed
 
-    mMetadataEditDetails->updateGui(pCellmlElement);
-    mMetadataViewDetails->updateGui(pCellmlElement);
+    if (isKnownMetadata) {
+        mMetadataEditDetails->updateGui(pCellmlElement);
+        mMetadataViewDetails->updateGui(pCellmlElement);
+    }
 }
 
 //==============================================================================
