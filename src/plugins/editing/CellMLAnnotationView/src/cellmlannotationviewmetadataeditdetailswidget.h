@@ -97,8 +97,10 @@ private:
     QNetworkAccessManager *mNetworkAccessManager;
 
     QComboBox *mQualifierValue;
-    QPushButton *mLookupButton;
-    bool mLookupButtonIsChecked;
+    QPushButton *mLookupQualifierButton;
+
+    int mQualifierIndex;
+    bool mLookupQualifierButtonIsChecked;
 
     QLineEdit *mTermValue;
 
@@ -149,6 +151,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void disableLookupInformation();
 
+    void qualifierChanged(const int &pQualifierIndex);
     void qualifierChanged(const QString &pQualifier);
 
     void lookupQualifier();
