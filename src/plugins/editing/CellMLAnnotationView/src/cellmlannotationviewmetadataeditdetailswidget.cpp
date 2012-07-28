@@ -135,17 +135,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    if (mErrorMsg.isEmpty())
-        // We are not currently facing an error in the retrieval of terms, so
-        // update the GUI as we normally would
-
-        updateGui(mItems, mErrorMsg, mLookupTerm, mItemsVerticalScrollBarPosition, true);
-    else
-        // Something went wrong during a previous retrieval of terms, so do as
-        // if we wanted to try to retrieve the terms again, if anything at least
-        // to get the error message translated
-
-        lookupTerm(mTermValue->text());
+    updateGui(mItems, mErrorMsg, mLookupTerm, mItemsVerticalScrollBarPosition, true);
 }
 
 //==============================================================================
@@ -160,36 +150,28 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
     // or disabled depending on whehter they are associated with the CellML
     // element
 
-    if (mErrorMsg.isEmpty()) {
-        int row = 0;
+    int row = 0;
 
-        forever
-            if (mGridLayout->itemAtPosition(++row, 0)) {
-                // Valid row, so check whether to make it bold (and italic in some
-                // cases) or not
+    forever
+        if (mGridLayout->itemAtPosition(++row, 0)) {
+            // Valid row, so check whether to make it bold (and italic in some
+            // cases) or not
 
-                QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
+            QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
 
-                Item item = mItemsMapping.value(addButton);
+            Item item = mItemsMapping.value(addButton);
 
-                if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-                    addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
-                                                                       item.resource, item.id));
-                else
-                    addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                                       item.resource, item.id));
-            } else {
-                // No more rows, so...
+            if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+                addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                                                   item.resource, item.id));
+            else
+                addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                                   item.resource, item.id));
+        } else {
+            // No more rows, so...
 
-                break;
-            }
-    } else {
-        // Something went wrong during a previous retrieval of terms, so do as
-        // if we wanted to try to retrieve the terms again, if anything at least
-        // to get the error message translated
-
-        lookupTerm(mTermValue->text());
-    }
+            break;
+        }
 }
 
 //==============================================================================
@@ -714,6 +696,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
 
         genericLookup(pQualifier, Qualifier);
     }
+
+    // Update the enabled state of our add buttons
+
+    updateGui(mCellmlElement);
 }
 
 //==============================================================================
@@ -893,9 +879,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookupFinished(QNetworkR
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::addMetadata()
 {
+    // Retrieve the add button
+
+    QPushButton *addButton = qobject_cast<QPushButton *>(sender());
+
     // Retrieve the item associated with the add button
 
-    Item item = mItemsMapping.value(sender());
+    Item item = mItemsMapping.value(addButton);
 
     // Add the metadata as an RDF triple to our CellML element
 
@@ -907,6 +897,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addMetadata()
     else
         rdfTriple = mCellmlElement->addMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                 item.resource, item.id);
+
+    // Disable the add button, now that we have added some metadata
+
+    addButton->setEnabled(false);
 
     // Let people know that we have added an RDF triple
 
