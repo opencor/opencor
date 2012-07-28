@@ -138,12 +138,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
         // We are not currently facing an error in the retrieval of terms, so
         // update the GUI as we normally would
 
-        updateGui(mItems, mErrorMsg, mLookupTerm,
-                  mItemsVerticalScrollBarPosition, true);
+        updateGui(mItems, mErrorMsg, mLookupTerm, mItemsVerticalScrollBarPosition, true);
     else
-        // Something went wrong during the retrieval of terms, so do as if we
-        // wanted to try to retrieve the terms again, if anything at least to
-        // get the error message translated
+        // Something went wrong during a previous retrieval of terms, so do as
+        // if we wanted to try to retrieve the terms again, if anything at least
+        // to get the error message translated
 
         lookupTerm(mTermValue->text());
 }
@@ -155,6 +154,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
     // Keep track of the CellML element
 
     mCellmlElement = pCellmlElement;
+
+    // Update the retrieved items, if any, since they may end up being enabled
+    // or disabled depending on whehter they are associated to the CellML
+    // element
+
+    if (mErrorMsg.isEmpty())
+//---GRY--- TO BE DONE...
+        ;
+    else
+        lookupTerm(mTermValue->text());
 }
 
 //==============================================================================

@@ -84,20 +84,20 @@
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataEditDetailsWidget</name>
     <message>
+        <source>Look up the qualifier</source>
+        <translation>Vérifier le qualificatif</translation>
+    </message>
+    <message>
+        <source>Look Up</source>
+        <translation>Vérifier</translation>
+    </message>
+    <message>
         <source>Qualifier:</source>
         <translation>Qualificatif :</translation>
     </message>
     <message>
         <source>Term:</source>
         <translation>Terme :</translation>
-    </message>
-    <message>
-        <source>Add the metadata information</source>
-        <translation>Ajouter les informations pour la métadonnée</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation>Ajouter</translation>
     </message>
     <message>
         <source>Name</source>
@@ -120,16 +120,16 @@
         <translation>(%1 termes)</translation>
     </message>
     <message>
-        <source>Look up the qualifier</source>
-        <translation>Vérifier le qualificatif</translation>
+        <source>Add the metadata information</source>
+        <translation>Ajouter les informations pour la métadonnée</translation>
     </message>
     <message>
-        <source>Look Up</source>
-        <translation>Vérifier</translation>
+        <source>Add</source>
+        <translation>Ajouter</translation>
     </message>
     <message>
-        <source>Error: </source>
-        <translation>Erreur :</translation>
+        <source>Please wait while we are retrieving possible terms for &apos;%1&apos;...</source>
+        <translation>Veuillez patienter pendant que nous retrouvons des termes possibles pour &apos;%1&apos;...</translation>
     </message>
     <message>
         <source>Please enter above a term to search...</source>
@@ -140,8 +140,8 @@
         <translation>Désolé, mais aucuns termes n&apos;ont été trouvés pour &apos;%1&apos;...</translation>
     </message>
     <message>
-        <source>Please wait while we are retrieving possible terms for &apos;%1&apos;...</source>
-        <translation>Veuillez patienter pendant que nous retrouvons des termes possibles pour &apos;%1&apos;...</translation>
+        <source>Error: </source>
+        <translation>Erreur : </translation>
     </message>
 </context>
 <context>

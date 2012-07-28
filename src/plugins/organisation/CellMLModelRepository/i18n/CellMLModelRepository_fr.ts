@@ -59,7 +59,7 @@
     </message>
     <message>
         <source>Error: </source>
-        <translation>Erreur :</translation>
+        <translation>Erreur : </translation>
     </message>
 </context>
 </TS>
