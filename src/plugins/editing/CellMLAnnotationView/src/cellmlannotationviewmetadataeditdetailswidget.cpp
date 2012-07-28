@@ -157,14 +157,39 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
     mCellmlElement = pCellmlElement;
 
     // Update the retrieved items, if any, since they may end up being enabled
-    // or disabled depending on whehter they are associated to the CellML
+    // or disabled depending on whehter they are associated with the CellML
     // element
 
-    if (mErrorMsg.isEmpty())
-//---GRY--- TO BE DONE...
-        ;
-    else
+    if (mErrorMsg.isEmpty()) {
+        int row = 0;
+
+        forever
+            if (mGridLayout->itemAtPosition(++row, 0)) {
+                // Valid row, so check whether to make it bold (and italic in some
+                // cases) or not
+
+                QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
+
+                Item item = mItemsMapping.value(addButton);
+
+                if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+                    addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                                                       item.resource, item.id));
+                else
+                    addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                                       item.resource, item.id));
+            } else {
+                // No more rows, so...
+
+                break;
+            }
+    } else {
+        // Something went wrong during a previous retrieval of terms, so do as
+        // if we wanted to try to retrieve the terms again, if anything at least
+        // to get the error message translated
+
         lookupTerm(mTermValue->text());
+    }
 }
 
 //==============================================================================
@@ -876,11 +901,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addMetadata()
 
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
 
-    if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-        rdfTriple = mCellmlElement->addMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
+    if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+        rdfTriple = mCellmlElement->addMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
                                                 item.resource, item.id);
     else
-        rdfTriple = mCellmlElement->addMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+        rdfTriple = mCellmlElement->addMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                 item.resource, item.id);
 
     // Let people know that we have added an RDF triple

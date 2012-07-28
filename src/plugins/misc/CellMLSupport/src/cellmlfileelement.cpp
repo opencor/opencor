@@ -221,6 +221,66 @@ QString CellmlFileElement::rdfTripleSubject() const
 
 //==============================================================================
 
+bool CellmlFileElement::hasMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                    const QString &pResource, const QString &pId)
+{
+    // Return whether the given metadata is associated with the CellML element
+
+    if (mCmetaId.isEmpty())
+        // The CellML element doesn't have a cmeta:id, so...
+
+        return false;
+
+    // Go through the RDF triples associated with the CellML element and check
+    // whether one of them corresponds to the given metadata
+
+    CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(mCmetaId);
+
+    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples)
+        if (   (pModelQualifier == rdfTriple->modelQualifier())
+            && !pResource.compare(rdfTriple->resource())
+            && !pId.compare(rdfTriple->id()))
+            // This is the metadata we are after, so...
+
+            return true;
+
+    // We couldn't find the metadata, so...
+
+    return false;
+}
+
+//==============================================================================
+
+bool CellmlFileElement::hasMetadata(const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                    const QString &pResource, const QString &pId)
+{
+    // Return whether the given metadata is associated with the CellML element
+
+    if (mCmetaId.isEmpty())
+        // The CellML element doesn't have a cmeta:id, so...
+
+        return false;
+
+    // Go through the RDF triples associated with the CellML element and check
+    // whether one of them corresponds to the given metadata
+
+    CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(mCmetaId);
+
+    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples)
+        if (   (pBioQualifier == rdfTriple->bioQualifier())
+            && !pResource.compare(rdfTriple->resource())
+            && !pId.compare(rdfTriple->id()))
+            // This is the metadata we are after, so...
+
+            return true;
+
+    // We couldn't find the metadata, so...
+
+    return false;
+}
+
+//==============================================================================
+
 CellMLSupport::CellmlFileRdfTriple * CellmlFileElement::addMetadata(const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                                                                     const QString &pResource,
                                                                     const QString &pId)

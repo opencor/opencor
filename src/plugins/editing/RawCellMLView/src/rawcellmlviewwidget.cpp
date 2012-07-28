@@ -143,7 +143,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
     if (!mBorderedEditor) {
         // No editor exists for the file name, so create and set up a Scintilla
-        // editor with an XML lexer associated to it
+        // editor with an XML lexer associated with it
 
         QFile file(pFileName);
         QString fileContents = QString();
