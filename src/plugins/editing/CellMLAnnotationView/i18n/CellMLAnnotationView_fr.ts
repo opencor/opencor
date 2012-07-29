@@ -120,8 +120,8 @@
         <translation>(%1 termes)</translation>
     </message>
     <message>
-        <source>Add the metadata information</source>
-        <translation>Ajouter les informations pour la métadonnée</translation>
+        <source>Add the term</source>
+        <translation>Ajouter le terme</translation>
     </message>
     <message>
         <source>Add</source>
@@ -132,16 +132,20 @@
         <translation>Veuillez patienter pendant que nous retrouvons des termes possibles pour &apos;%1&apos;...</translation>
     </message>
     <message>
-        <source>Please enter above a term to search...</source>
-        <translation>Veuillez entrer plus haut un terme à rechercher...</translation>
+        <source>Please enter a term to search above...</source>
+        <translation>Veuillez entrer un terme à chercher plus haut...</translation>
     </message>
     <message>
         <source>Sorry, but no terms were found for &apos;%1&apos;...</source>
         <translation>Désolé, mais aucuns termes n&apos;ont été trouvés pour &apos;%1&apos;...</translation>
     </message>
     <message>
-        <source>Error: </source>
-        <translation>Erreur : </translation>
+        <source>&lt;strong&gt;Information:&lt;/strong&gt; you can directly add &apos;%1&apos;...</source>
+        <translation>&lt;strong&gt;Information :&lt;/strong&gt; vous pouvez directement ajouter &apos;%1&apos;...</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
+        <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
     </message>
 </context>
 <context>
@@ -167,8 +171,8 @@
         <translation>(%1 termes)</translation>
     </message>
     <message>
-        <source>Remove the metadata information</source>
-        <translation>Supprimer les informations pour la métadonnée</translation>
+        <source>Remove the term</source>
+        <translation>Supprimer le terme</translation>
     </message>
     <message>
         <source>Remove</source>

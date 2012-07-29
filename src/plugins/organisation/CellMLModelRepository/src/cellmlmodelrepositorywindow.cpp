@@ -127,7 +127,7 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
             QString errorMsg = mErrorMsg.left(1).toLower()+mErrorMsg.right(mErrorMsg.size()-1);
             QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
 
-            contents = leadingSpaces+tr("Error: ")+errorMsg+dots;
+            contents = leadingSpaces+tr("<strong>Error:</strong> ")+errorMsg+dots;
         } else {
             // The list is still being loaded, so...
 

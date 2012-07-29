@@ -79,6 +79,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mQualifierIndex(0),
     mLookupQualifierButtonIsChecked(false),
     mTermValue(0),
+    mAddTermButton(0),
     mTerm(QString()),
     mTermUrl(QString()),
     mOtherTermUrl(QString()),
@@ -113,7 +114,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // complete
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
-            this, SLOT(termLookupFinished(QNetworkReply *)) );
+            this, SLOT(termLookedUp(QNetworkReply *)) );
 }
 
 //==============================================================================
@@ -256,28 +257,61 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     qualifierWidgetLayout->addWidget(mQualifierValue);
     qualifierWidgetLayout->addWidget(mLookupQualifierButton);
 
-    // Add our cmeta:id widget to our main layout
+    // Add our qualifier widget to our main layout
 
     newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), 1.0, true),
                           qualifierWidget);
 
     // Add our term field
 
-    mTermValue = new QLineEdit(newFormWidget);
+    // Create a widget which will contain both our qualifier value widget and a
+    // button to look up the qualifier
+
+    QWidget *termWidget = new QWidget(newFormWidget);
+
+    QHBoxLayout *termWidgetLayout = new QHBoxLayout(termWidget);
+
+    termWidgetLayout->setMargin(0);
+
+    termWidget->setLayout(termWidgetLayout);
+
+    // Create our term value widget
+
+    mTermValue = new QLineEdit(termWidget);
 
     mTermValue->setText(mTerm);
     // Note: we set the text to whatever term was previously being looked up and
     //       this before tracking changes to the term since we don't want to
-    //       trigger a call to lookupTerm(). Indeed, we might come here as a
+    //       trigger a call to termChanged(). Indeed, we might come here as a
     //       result of a retranslation so we shouldn't look up for the term and,
     //       instead, we should call updateItemsGui() which we do at the end of
     //       this procedure...
 
     connect(mTermValue, SIGNAL(textChanged(const QString &)),
-            this, SLOT(lookupTerm(const QString &)));
+            this, SLOT(termChanged(const QString &)));
+
+    // Create our add term button widget
+
+    mAddTermButton = new QPushButton(termWidget);
+
+    mAddTermButton->setEnabled(false);
+    mAddTermButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
+    mAddTermButton->setStatusTip(tr("Add the term"));
+    mAddTermButton->setToolTip(tr("Add"));
+    mAddTermButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    connect(mAddTermButton, SIGNAL(clicked()),
+            this, SLOT(addTerm()));
+
+    // Add our QComboBox and QPushButton to our cmeta:id widget
+
+    termWidgetLayout->addWidget(mTermValue);
+    termWidgetLayout->addWidget(mAddTermButton);
+
+    // Add our term widget to our main layout
 
     newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), 1.0, true),
-                          mTermValue);
+                          termWidget);
 
     // Reset the tab order from our parent's CellML list's tree view
     // Note: ideally, we would take advantage of Qt's signal/slot approach with
@@ -289,6 +323,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
                 mQualifierValue);
     setTabOrder(mQualifierValue, mLookupQualifierButton);
     setTabOrder(mLookupQualifierButton, mTermValue);
+    setTabOrder(mTermValue, mAddTermButton);
 
     // Create a stacked widget (within a scroll area, so that only the items get
     // scrolled, not the whole metadata edit details widget) which will contain
@@ -484,7 +519,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             //          the same as a QPushButton on some platforms, so...
 
             addButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
-            addButton->setStatusTip(tr("Add the metadata information"));
+            addButton->setStatusTip(tr("Add the term"));
             addButton->setToolTip(tr("Add"));
             addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -512,18 +547,20 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
         QString labelText;
 
-        if (pLookupTerm) {
+        if (mTerm.isEmpty()) {
+            labelText = tr("Please enter a term to search above...");
+        } else if (pLookupTerm) {
             labelText = tr("Please wait while we are retrieving possible terms for '%1'...").arg(mTerm);
         } else if (pErrorMsg.isEmpty()) {
-            if (mTerm.isEmpty())
-                labelText = tr("Please enter above a term to search...");
+            if (mAddTermButton->isEnabled())
+                labelText = tr("<strong>Information:</strong> you can directly add '%1'...").arg(mTerm);
             else
                 labelText = tr("Sorry, but no terms were found for '%1'...").arg(mTerm);
         } else {
             QString errorMsg = pErrorMsg.left(1).toLower()+pErrorMsg.right(pErrorMsg.size()-1);
             QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
 
-            labelText = tr("Error: ")+errorMsg+dots;
+            labelText = tr("<strong>Error:</strong> ")+errorMsg+dots;
         }
 
         newGridLayout->addWidget(Core::newLabel(newGridWidget, labelText,
@@ -759,38 +796,46 @@ static const QString SemanticSbmlUrlEnd   = "&full_info=1";
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm(const QString &pTerm)
+void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &pTerm)
 {
     // Keep track of the term to look up
 
     mTerm = pTerm;
 
+    // Check whether the term could be directly added, resulting in the add term
+    // button being enabled/disabled, depending on the case
+
+    mAddTermButton->setEnabled(pTerm.contains(QRegExp("^[0-9a-z]+(.[0-9a-z]+)?/[0-9A-Z]+(:[0-9A-Z]+)?$")));
+
     // Update our items' GUI
 
-    updateItemsGui(Items(), QString(), true);
+    updateItemsGui(Items(), QString(), !mAddTermButton->isEnabled());
 
-    // Retrieve some possible terms based on the given term
+    // Retrieve some possible terms based on the given term, but only if the
+    // term cannot be added directly
 
-    QString termUrl = SemanticSbmlUrlStart+pTerm+SemanticSbmlUrlEnd;
+    if (!mAddTermButton->isEnabled()) {
+        QString termUrl = SemanticSbmlUrlStart+pTerm+SemanticSbmlUrlEnd;
 
-    if (mTermUrl.isEmpty()) {
-        // No other term is being looked up, so keep track of the given term and
-        // look it up
+        if (mTermUrl.isEmpty()) {
+            // No other term is being looked up, so keep track of the given term
+            // and look it up
 
-        mTermUrl = termUrl;
+            mTermUrl = termUrl;
 
-        mNetworkAccessManager->get(QNetworkRequest(termUrl));
-    } else {
-        // Another term is already being looked up, so keep track of the given
-        // term for later
+            mNetworkAccessManager->get(QNetworkRequest(termUrl));
+        } else {
+            // Another term is already being looked up, so keep track of the
+            // given term for later
 
-        mOtherTermUrl = termUrl;
+            mOtherTermUrl = termUrl;
+        }
     }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::termLookupFinished(QNetworkReply *pNetworkReply)
+void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
 {
     // We are done looking up the term, so...
 
@@ -914,6 +959,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::trackItemsVerticalScrollBarP
     // Keep track of the new position of our vertical scroll bar
 
     mItemsVerticalScrollBarPosition = pPosition;
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> Add '%s' to the current CellML element...", qPrintable(mTerm));
 }
 
 //==============================================================================

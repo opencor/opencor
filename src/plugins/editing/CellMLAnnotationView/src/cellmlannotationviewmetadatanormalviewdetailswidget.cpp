@@ -203,7 +203,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
             //          the same as a QPushButton on some platforms, so...
 
             removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
-            removeButton->setStatusTip(tr("Remove the metadata information"));
+            removeButton->setStatusTip(tr("Remove the term"));
             removeButton->setToolTip(tr("Remove"));
             removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 

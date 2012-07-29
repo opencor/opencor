@@ -101,6 +101,7 @@ private:
     bool mLookupQualifierButtonIsChecked;
 
     QLineEdit *mTermValue;
+    QPushButton *mAddTermButton;
 
     QString mTerm;
     QString mTermUrl;
@@ -159,12 +160,14 @@ private Q_SLOTS:
     void lookupResource(const QString &pItemInformation);
     void lookupId(const QString &pItemInformation);
 
-    void lookupTerm(const QString &pTerm);
-    void termLookupFinished(QNetworkReply *pNetworkReply);
+    void termChanged(const QString &pTerm);
+    void termLookedUp(QNetworkReply *pNetworkReply);
 
     void addMetadata();
 
     void trackItemsVerticalScrollBarPosition(const int &pPosition);
+
+    void addTerm();
 };
 
 //==============================================================================

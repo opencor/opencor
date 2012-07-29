@@ -58,8 +58,8 @@
         <translation>Veuillez patienter pendant que la liste de modèles CellML se charge...</translation>
     </message>
     <message>
-        <source>Error: </source>
-        <translation>Erreur : </translation>
+        <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
+        <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
     </message>
 </context>
 </TS>
