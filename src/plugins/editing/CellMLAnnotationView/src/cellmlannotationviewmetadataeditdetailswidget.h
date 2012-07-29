@@ -66,8 +66,6 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
-
 private:
     enum Type {
         No,
@@ -147,6 +145,9 @@ Q_SIGNALS:
     void noLookupRequested();
 
     void rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+
+public Q_SLOTS:
+    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
 
 private Q_SLOTS:
     void disableLookupInformation();

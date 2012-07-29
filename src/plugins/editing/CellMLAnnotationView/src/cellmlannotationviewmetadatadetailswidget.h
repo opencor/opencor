@@ -98,6 +98,8 @@ private Q_SLOTS:
     void lookupNothing();
 
     void removeAllMetadata();
+
+    void updateMetadataEditDetails();
 };
 
 //==============================================================================

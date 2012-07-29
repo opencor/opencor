@@ -113,6 +113,13 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     connect(mMetadataViewDetails->normalView(), SIGNAL(noLookupRequested()),
             this, SLOT(lookupNothing()));
 
+    // A connection to handle the removal of an RDF triple from our normal view
+    // and to have our metadata edit details widget update itself with regards
+    // to possible terms (i.e. enable/disable add buttons)
+
+    connect(mMetadataViewDetails->normalView(), SIGNAL(rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *)),
+            this, SLOT(updateMetadataEditDetails()));
+
     // A connection to handle the clicking of the link in the unsupported
     // message
 
@@ -317,6 +324,15 @@ void CellmlAnnotationViewMetadataDetailsWidget::removeAllMetadata()
     mCellmlElement->removeAllMetadata();
 
     updateGui(mCellmlElement);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
+{
+    // Update our metadata edit details widget
+
+    mMetadataEditDetails->updateGui(mCellmlElement);
 }
 
 //==============================================================================

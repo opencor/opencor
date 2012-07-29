@@ -108,7 +108,7 @@ Q_SIGNALS:
                            const bool &pRetranslate);
     void noLookupRequested();
 
-    void metadataRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
     void disableLookupInformation();
