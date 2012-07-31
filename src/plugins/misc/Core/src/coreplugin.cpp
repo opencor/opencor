@@ -85,18 +85,12 @@ void CorePlugin::initialize()
                                     QKeySequence::Close);
     mFileCloseAllAction = newAction(mMainWindow);
 
-    mFilePrintAction = newAction(mMainWindow, false,
-                                 ":/oxygen/actions/document-print.png",
-                                 QKeySequence::Print);
-
 //---GRY--- WE DISABLE SOME OF THE ABOVE ACTIONS SINCE THEY ARE NOT YET
 //          IMPLEMENTED...
 
 mFileSaveAction->setEnabled(false);
 mFileSaveAsAction->setEnabled(false);
 mFileSaveAllAction->setEnabled(false);
-
-mFilePrintAction->setEnabled(false);
 
     // Some connections to handle our various actions
 
@@ -138,8 +132,6 @@ mFilePrintAction->setEnabled(false);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAllAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFilePrintAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
 
     mGuiSettings->setCentralWidget(mCentralWidget);
@@ -284,9 +276,6 @@ void CorePlugin::retranslateUi()
                       tr("Close the current file"));
     retranslateAction(mFileCloseAllAction, tr("Close All"),
                       tr("Close all the files"));
-
-    retranslateAction(mFilePrintAction, tr("&Print..."),
-                      tr("Print the current file"));
 
     // Retranslate our central widget
 

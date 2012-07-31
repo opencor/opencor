@@ -121,7 +121,6 @@
   </action>
  </widget>
  <resources>
-  <include location="../../Core/res/Core.qrc"/>
   <include location="../res/Help.qrc"/>
  </resources>
  <connections/>

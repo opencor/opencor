@@ -71,7 +71,6 @@ private:
     QAction *mFileNextAction;
     QAction *mFileCloseAction;
     QAction *mFileCloseAllAction;
-    QAction *mFilePrintAction;
 
     QDir mActiveDir;
 

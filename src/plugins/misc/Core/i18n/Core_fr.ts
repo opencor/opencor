@@ -71,14 +71,6 @@
         <translation>Fermer tous les fichiers</translation>
     </message>
     <message>
-        <source>&amp;Print...</source>
-        <translation>Im&amp;primer...</translation>
-    </message>
-    <message>
-        <source>Print the current file</source>
-        <translation>Imprimer le fichier actuel</translation>
-    </message>
-    <message>
         <source>Open File</source>
         <translation>Ouvrir Fichier</translation>
     </message>
