@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CheckForUpdatesWindow</name>
-    <message>
-        <source>Check for Updates</source>
-        <translation>Vérifier pour des Mises à Jour</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <source>&amp;File</source>
@@ -79,10 +72,6 @@
         <translation>Réinitialiser tous les paramètres utilisateurs</translation>
     </message>
     <message>
-        <source>Show/hide the Help toolbar</source>
-        <translation>Montrer/cacher la barre d&apos;outils Aide</translation>
-    </message>
-    <message>
         <source>&amp;System</source>
         <translation>&amp;Système</translation>
     </message>
@@ -107,24 +96,8 @@
         <translation>Montrer/cacher la barre d&apos;état</translation>
     </message>
     <message>
-        <source>&amp;Preferences...</source>
-        <translation>&amp;Préférences...</translation>
-    </message>
-    <message>
-        <source>Preferences for OpenCOR</source>
-        <translation>Préférences pour OpenCOR</translation>
-    </message>
-    <message>
         <source>Plu&amp;gins...</source>
         <translation>E&amp;xtensions...</translation>
-    </message>
-    <message>
-        <source>Check for &amp;Updates...</source>
-        <translation>Vérifier pour des Mises à Jo&amp;ur...</translation>
-    </message>
-    <message>
-        <source>Check for updates</source>
-        <translation>Vérifier pour des mises à jour</translation>
     </message>
 </context>
 <context>
@@ -306,13 +279,6 @@
     <message>
         <source>Show only selectable plugins</source>
         <translation>Montrer seulement les extensions sélectables</translation>
-    </message>
-</context>
-<context>
-    <name>PreferencesWindow</name>
-    <message>
-        <source>Preferences</source>
-        <translation>Préférences</translation>
     </message>
 </context>
 <context>

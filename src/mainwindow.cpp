@@ -2,7 +2,6 @@
 // Main window
 //==============================================================================
 
-#include "checkforupdateswindow.h"
 #include "common.h"
 #include "fileinterface.h"
 #include "i18ninterface.h"
@@ -10,7 +9,6 @@
 #include "plugin.h"
 #include "pluginmanager.h"
 #include "pluginswindow.h"
-#include "preferenceswindow.h"
 #include "solverinterface.h"
 #include "utils.h"
 
@@ -994,7 +992,7 @@ void MainWindow::on_actionFrench_triggered()
 
 void MainWindow::on_actionPlugins_triggered()
 {
-    // Plugins' preferences
+    // Plugins preferences
 
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins window
@@ -1023,33 +1021,11 @@ void MainWindow::on_actionPlugins_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionPreferences_triggered()
-{
-    // User's preferences
-
-    OpenCOR::PreferencesWindow preferencesWindow(this);
-
-    preferencesWindow.exec();
-}
-
-//==============================================================================
-
 void MainWindow::on_actionHomePage_triggered()
 {
     // Look up OpenCOR's home page
 
     QDesktopServices::openUrl(QUrl(OpencorHomepageUrl));
-}
-
-//==============================================================================
-
-void MainWindow::on_actionCheckForUpdates_triggered()
-{
-    // Check for updates
-
-    OpenCOR::CheckForUpdatesWindow checkForUpdatesWindow(this);
-
-    checkForUpdatesWindow.exec();
 }
 
 //==============================================================================

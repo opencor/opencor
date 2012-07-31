@@ -4,14 +4,12 @@
         <file>flags/en.png</file>
         <file>flags/fr.png</file>
         <file>oxygen/actions/application-exit.png</file>
-        <file>oxygen/actions/configure.png</file>
         <file>oxygen/actions/dialog-ok-apply.png</file>
         <file>oxygen/actions/edit-delete.png</file>
         <file>oxygen/actions/help-about.png</file>
         <file>oxygen/actions/system-reboot.png</file>
         <file>oxygen/actions/view-fullscreen.png</file>
         <file>oxygen/apps/preferences-plugin.png</file>
-        <file>oxygen/apps/system-software-update.png</file>
         <file>oxygen/categories/applications-education-language.png</file>
         <file>oxygen/categories/applications-internet.png</file>
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
