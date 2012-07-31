@@ -217,7 +217,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     // A connection to handle a change in the modified status of a file
 
     connect(Core::FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
-            this, SLOT(checkModeAndViewsTabs()));
+            this, SLOT(fileModified()));
 }
 
 //==============================================================================
@@ -972,7 +972,7 @@ void CentralWidget::updateNoViewMsg()
 
 //==============================================================================
 
-void CentralWidget::checkModeAndViewsTabs()
+void CentralWidget::fileModified()
 {
     // Enable or disable the Mode and Views tabs, depending on whether one or
     // several files have been modified, and update the tab text if necessary
