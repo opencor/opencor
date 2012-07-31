@@ -104,6 +104,8 @@ private:
     QPushButton *mAddTermButton;
 
     QString mTerm;
+    bool mTermIsDirect;
+
     QString mTermUrl;
     QString mOtherTermUrl;
 
@@ -163,11 +165,10 @@ private Q_SLOTS:
     void termChanged(const QString &pTerm);
     void termLookedUp(QNetworkReply *pNetworkReply);
 
-    void addMetadata();
+    void addTerm();
+    void addRetrievedTerm();
 
     void trackItemsVerticalScrollBarPosition(const int &pPosition);
-
-    void addTerm();
 };
 
 //==============================================================================

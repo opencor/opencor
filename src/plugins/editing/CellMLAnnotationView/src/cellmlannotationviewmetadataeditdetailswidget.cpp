@@ -81,6 +81,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTermValue(0),
     mAddTermButton(0),
     mTerm(QString()),
+    mTermIsDirect(false),
     mTermUrl(QString()),
     mOtherTermUrl(QString()),
     mItems(Items()),
@@ -137,6 +138,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
     // For the rest of our GUI, it's easier to just update it, so...
 
     updateGui(mItems, mErrorMsg, mLookupTerm, mItemsVerticalScrollBarPosition, true);
+
+    // Update the enabled state of our various add buttons
+
+    updateGui(mCellmlElement);
 }
 
 //==============================================================================
@@ -147,9 +152,22 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
 
     mCellmlElement = pCellmlElement;
 
-    // Update the retrieved items, if any, since they may end up being enabled
-    // or disabled depending on whehter they are associated with the CellML
-    // element
+    // Update the add term button, depending on whether the direct term is
+    // already associated with the CellML element or not
+
+    if (mTermIsDirect) {
+        QStringList termInformation = mTerm.split("/");
+
+        if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+            mAddTermButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                                                    termInformation[0], termInformation[1]));
+        else
+            mAddTermButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                                    termInformation[0], termInformation[1]));
+    }
+
+    // Enable or disable the add buttons for the retrieved terms, depending on
+    // whether they are already associated with the CellML element or not
 
     int row = 0;
 
@@ -526,7 +544,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             mItemsMapping.insert(addButton, item);
 
             connect(addButton, SIGNAL(clicked()),
-                    this, SLOT(addMetadata()));
+                    this, SLOT(addRetrievedTerm()));
 
             newGridLayout->addWidget(addButton, row, 3, Qt::AlignCenter);
         }
@@ -552,7 +570,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         } else if (pLookupTerm) {
             labelText = tr("Please wait while we are retrieving possible terms for '%1'...").arg(mTerm);
         } else if (pErrorMsg.isEmpty()) {
-            if (mAddTermButton->isEnabled())
+            if (mTermIsDirect)
                 labelText = tr("<strong>Information:</strong> you can directly add '%1'...").arg(mTerm);
             else
                 labelText = tr("Sorry, but no terms were found for '%1'...").arg(mTerm);
@@ -734,7 +752,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
         genericLookup(pQualifier, Qualifier);
     }
 
-    // Update the enabled state of our add buttons
+    // Update the enabled state of our various add buttons
 
     updateGui(mCellmlElement);
 }
@@ -805,16 +823,24 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // Check whether the term could be directly added, resulting in the add term
     // button being enabled/disabled, depending on the case
 
-    mAddTermButton->setEnabled(pTerm.contains(QRegExp("^[0-9a-z]+(.[0-9a-z]+)?/[0-9A-Z]+(:[0-9A-Z]+)?$")));
+    mTermIsDirect = pTerm.contains(QRegExp("^[0-9a-z]+(.[0-9a-z]+)?/[0-9A-Z]+(:[0-9A-Z]+)?$"));
 
     // Update our items' GUI
 
-    updateItemsGui(Items(), QString(), !mAddTermButton->isEnabled());
+    updateItemsGui(Items(), QString(), !mTermIsDirect);
 
     // Retrieve some possible terms based on the given term, but only if the
     // term cannot be added directly
 
-    if (!mAddTermButton->isEnabled()) {
+    if (mTermIsDirect) {
+        // We are dealing with a direct term, so just update the enabled state
+        // of our various add buttons
+
+        updateGui(mCellmlElement);
+    } else {
+        // We are not dealing with a direct term, so retrieve some possible
+        // terms
+
         QString termUrl = SemanticSbmlUrlStart+pTerm+SemanticSbmlUrlEnd;
 
         if (mTermUrl.isEmpty()) {
@@ -917,12 +943,41 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         qSort(items.begin(), items.end());
 
         updateItemsGui(items, errorMsg, false);
+
+        // Update the enabled state of our various add buttons
+
+        updateGui(mCellmlElement);
     }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::addMetadata()
+void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
+{
+    // Add the term to our CellML element as an RDF triple
+
+    CellMLSupport::CellmlFileRdfTriple *rdfTriple;
+    QStringList termInformation = mTerm.split("/");
+
+    if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+        rdfTriple = mCellmlElement->addMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                                termInformation[0], termInformation[1]);
+    else
+        rdfTriple = mCellmlElement->addMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                termInformation[0], termInformation[1]);
+
+    // Disable the add term buton, now that we have added the term
+
+    mAddTermButton->setEnabled(false);
+
+    // Let people know that we have added an RDF triple
+
+    emit rdfTripleAdded(rdfTriple);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::addRetrievedTerm()
 {
     // Retrieve the add button
 
@@ -932,7 +987,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addMetadata()
 
     Item item = mItemsMapping.value(addButton);
 
-    // Add the metadata as an RDF triple to our CellML element
+    // Add the retrieved term to our CellML element as an RDF triple
 
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
 
@@ -943,7 +998,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addMetadata()
         rdfTriple = mCellmlElement->addMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                 item.resource, item.id);
 
-    // Disable the add button, now that we have added some metadata
+    // Disable the add button, now that we have added the retrieved term
 
     addButton->setEnabled(false);
 
@@ -959,14 +1014,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::trackItemsVerticalScrollBarP
     // Keep track of the new position of our vertical scroll bar
 
     mItemsVerticalScrollBarPosition = pPosition;
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
-{
-//---GRY--- TO BE DONE...
-qDebug(">>> Add '%s' to the current CellML element...", qPrintable(mTerm));
 }
 
 //==============================================================================
