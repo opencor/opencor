@@ -49,8 +49,6 @@ void CorePlugin::initialize()
     mCentralWidget = new CentralWidget(mMainWindow);
 
     // Create our different File actions
-//---GRY--- ALL THE SAVE-RELATED ACTIONS SHOULD BE INVISIBLE UNLESS THE EDITING
-//          MODE IS ACTIVE
 
     mFileOpenAction = newAction(mMainWindow, false,
                                 ":/oxygen/actions/document-open.png",
@@ -58,16 +56,13 @@ void CorePlugin::initialize()
 
     mFileSaveAction    = newAction(mMainWindow, false,
                                    ":/oxygen/actions/document-save.png",
-                                   QKeySequence::Save,
-                                   mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
+                                   QKeySequence::Save);
     mFileSaveAsAction  = newAction(mMainWindow, false,
                                    ":/oxygen/actions/document-save-as.png",
-                                   QKeySequence::SaveAs,
-                                   mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
+                                   QKeySequence::SaveAs);
     mFileSaveAllAction = newAction(mMainWindow, false,
                                    ":/oxygen/actions/document-save-all.png",
-                                   QKeySequence::UnknownKey,
-                                   mCentralWidget->isModeEnabled(GuiViewSettings::Editing));
+                                   QKeySequence::UnknownKey);
 
     mFilePreviousAction = newAction(mMainWindow, false,
                                     ":/oxygen/actions/go-previous.png",

@@ -188,17 +188,14 @@ public:
                                  const QString &pName);
     static QAction * newAction(QMainWindow *pMainWindow, const bool &pCheckable,
                                const QString &pIconResource,
-                               const QList<QKeySequence> &pKeySequences,
-                               const bool &pVisible = true);
+                               const QList<QKeySequence> &pKeySequences);
     static QAction * newAction(QMainWindow *pMainWindow, const bool &pCheckable,
                                const QString &pIconResource,
-                               const QKeySequence::StandardKey &pStandardKey = QKeySequence::UnknownKey,
-                               const bool &pVisible = true);
+                               const QKeySequence::StandardKey &pStandardKey = QKeySequence::UnknownKey);
     static QAction * newAction(QMainWindow *pMainWindow,
                                const bool &pCheckable = false,
                                const QString &pIconResource = QString(),
-                               const QKeySequence &pKeySequence = QKeySequence(),
-                               const bool &pVisible = true);
+                               const QKeySequence &pKeySequence = QKeySequence());
 
     static void connectDockWidgetToAction(QDockWidget *pDockWidget, QAction *pAction);
 

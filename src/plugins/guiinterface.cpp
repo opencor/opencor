@@ -399,8 +399,7 @@ QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow,
 QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
                                   const bool &pCheckable,
                                   const QString &pIconResource,
-                                  const QList<QKeySequence> &pKeySequences,
-                                  const bool &pVisible)
+                                  const QList<QKeySequence> &pKeySequences)
 {
     // Create and return an action
 
@@ -409,7 +408,6 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
     res->setCheckable(pCheckable);
     res->setIcon(QIcon(pIconResource));
     res->setShortcuts(pKeySequences);
-    res->setVisible(pVisible);
 
     return res;
 }
@@ -419,13 +417,12 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
 QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
                                   const bool &pCheckable,
                                   const QString &pIconResource,
-                                  const QKeySequence::StandardKey &pStandardKey,
-                                  const bool &pVisible)
+                                  const QKeySequence::StandardKey &pStandardKey)
 {
     // Create and return an action
 
     return newAction(pMainWindow, pCheckable, pIconResource,
-                     QKeySequence::keyBindings(pStandardKey), pVisible);
+                     QKeySequence::keyBindings(pStandardKey));
 }
 
 //==============================================================================
@@ -433,13 +430,12 @@ QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
 QAction * GuiInterface::newAction(QMainWindow *pMainWindow,
                                   const bool &pCheckable,
                                   const QString &pIconResource,
-                                  const QKeySequence &pKeySequence,
-                                  const bool &pVisible)
+                                  const QKeySequence &pKeySequence)
 {
     // Create and return an action
 
     return newAction(pMainWindow, pCheckable, pIconResource,
-                     QList<QKeySequence>() << pKeySequence, pVisible);
+                     QList<QKeySequence>() << pKeySequence);
 }
 
 //==============================================================================
