@@ -975,15 +975,26 @@ void CentralWidget::updateNoViewMsg()
 void CentralWidget::checkModeAndViewsTabs()
 {
     // Enable or disable the Mode and Views tabs, depending on whether one or
-    // several files have been modified
+    // several files have been modified, and update the tab text if necessary
 
     bool enabled = true;
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
         if (FileManager::instance()->isModified(mFileNames[i])) {
+            // The current file has been modified, so the Mode and Views tabs
+            // should be disabled
+
             enabled = false;
 
-            break;
+            // Update the tab text, if needed
+
+            if (!mFileTabs->tabText(i).contains(QRegExp("*$")))
+                mFileTabs->setTabText(i, mFileTabs->tabText(i)+"*");
+        } else {
+            // The current isn't modified, so update its tab text, if needed
+
+            if (mFileTabs->tabText(i).contains(QRegExp("*$")))
+                mFileTabs->setTabText(i, mFileTabs->tabText(i).replace(QRegExp("*$"), ""));
         }
 
     mModeTabs->setEnabled(enabled);
