@@ -46,7 +46,7 @@ private:
 
 //==============================================================================
 
-class FileInterface : Interface
+class FileInterface : public Interface
 {
 public:
     virtual QList<FileType> fileTypes() const;

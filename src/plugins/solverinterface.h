@@ -43,7 +43,7 @@ typedef QMap<QString, PropertyType> Properties;
 
 //==============================================================================
 
-class SolverInterface : Interface
+class SolverInterface : public Interface
 {
 public:
     virtual QString name() const = 0;

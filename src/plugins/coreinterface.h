@@ -31,7 +31,7 @@ namespace Core {
 
 //==============================================================================
 
-class CoreInterface : Interface
+class CoreInterface : public Interface
 {
 public:
     virtual void initialize();

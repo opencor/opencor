@@ -169,8 +169,10 @@ private:
 
 //==============================================================================
 
-class GuiInterface : Interface
+class GuiInterface : public Interface
 {
+    friend class MainWindow;
+
 public:
     explicit GuiInterface();
 

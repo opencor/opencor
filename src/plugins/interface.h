@@ -13,6 +13,8 @@ namespace OpenCOR {
 
 class Interface
 {
+    friend class MainWindow;
+
 protected:
     virtual void destroy();
 };

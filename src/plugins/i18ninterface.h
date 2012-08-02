@@ -19,7 +19,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class I18nInterface : Interface
+class I18nInterface : public Interface
 {
 public:
     void setLocale(const QString &pLocale);
