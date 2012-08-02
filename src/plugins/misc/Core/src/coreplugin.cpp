@@ -85,13 +85,6 @@ void CorePlugin::initialize()
                                     QKeySequence::Close);
     mFileCloseAllAction = newAction(mMainWindow);
 
-//---GRY--- WE DISABLE SOME OF THE ABOVE ACTIONS SINCE THEY ARE NOT YET
-//          IMPLEMENTED...
-
-mFileSaveAction->setEnabled(false);
-mFileSaveAsAction->setEnabled(false);
-mFileSaveAllAction->setEnabled(false);
-
     // Some connections to handle our various actions
 
     connect(mFileOpenAction, SIGNAL(triggered(bool)),
@@ -109,14 +102,21 @@ mFileSaveAllAction->setEnabled(false);
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mCentralWidget, SIGNAL(navigateFilesEnabled(const bool &)),
+    connect(mCentralWidget, SIGNAL(canSaveFile(const bool &)),
+            mFileSaveAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
+            mFileSaveAsAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, SIGNAL(canSaveFileAll(const bool &)),
+            mFileSaveAllAction, SLOT(setEnabled(bool)));
+
+    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(const bool &)),
             mFilePreviousAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(navigateFilesEnabled(const bool &)),
+    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(const bool &)),
             mFileNextAction, SLOT(setEnabled(bool)));
 
-    connect(mCentralWidget, SIGNAL(closeFilesEnabled(const bool &)),
+    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
             mFileCloseAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(closeFilesEnabled(const bool &)),
+    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
             mFileCloseAllAction, SLOT(setEnabled(bool)));
 
     // Set our settings
@@ -230,12 +230,12 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CorePlugin::loadingOfSettingsDone(const Plugins &pPlugins)
+void CorePlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 {
     // Let our central widget know that all the other plugins have now loaded
     // their settings
 
-    mCentralWidget->loadingOfSettingsDone(pPlugins);
+    mCentralWidget->loadingOfSettingsDone(pLoadedPlugins);
 }
 
 //==============================================================================

@@ -52,7 +52,7 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual void loadingOfSettingsDone(const Plugins &pPlugins);
+    virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
     virtual void handleArguments(const QStringList &pArguments) const;
 

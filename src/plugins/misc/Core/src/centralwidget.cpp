@@ -325,8 +325,11 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
 
-    emit navigateFilesEnabled(false);
-    emit closeFilesEnabled(false);
+    emit canSaveFile(false);
+    emit canSaveFileAll(false);
+
+    emit atLeastOneFile(false);
+    emit atLeastTwoFiles(false);
 
     // Retrieve and open the files that were previously opened
 
@@ -463,8 +466,9 @@ bool CentralWidget::openFile(const QString &pFileName)
     // as well as whether we can navigate and/or close files
 
     emit fileOpened(nativeFileName);
-    emit navigateFilesEnabled(mFileTabs->count() > 1);
-    emit closeFilesEnabled(mFileTabs->count());
+
+    emit atLeastOneFile(mFileTabs->count());
+    emit atLeastTwoFiles(mFileTabs->count() > 1);
 
     // Everything went fine, so...
 
@@ -555,8 +559,9 @@ bool CentralWidget::closeFile(const int &pIndex)
         // as well as whether we can navigate and/or close the remaining files
 
         emit fileClosed(fileName);
-        emit navigateFilesEnabled(mFileTabs->count() > 1);
-        emit closeFilesEnabled(mFileTabs->count());
+
+        emit atLeastOneFile(mFileTabs->count());
+        emit atLeastTwoFiles(mFileTabs->count() > 1);
 
         // Everything went fine, so...
 
@@ -1001,6 +1006,11 @@ void CentralWidget::fileModified()
 
     foreach (CentralWidgetMode *mode, mModes)
         mode->views()->setEnabled(enabled);
+
+    // Let people know that we can save at least one file
+
+    emit canSaveFile(true);
+    emit canSaveFileAll(true);
 }
 
 //==============================================================================
