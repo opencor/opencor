@@ -177,14 +177,22 @@ public Q_SLOTS:
     void openFiles(const QStringList &pFileNames);
 
 private Q_SLOTS:
+    void updateGui();
+
+    void fileModified();
+
+    bool saveFile(const int &pIndex = -1);
+    bool saveFileAs(const int &pIndex);
+    void saveAllFiles();
+
     void previousFile();
     void nextFile();
+
     bool closeFile(const int &pIndex = -1);
     void closeAllFiles();
+
     void fileSelected(const int &pIndex);
     void fileMoved(const int &pFromIndex, const int &pToIndex);
-    void updateGui();
-    void fileModified();
 };
 
 //==============================================================================

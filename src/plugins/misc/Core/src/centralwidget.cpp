@@ -487,6 +487,35 @@ void CentralWidget::openFiles(const QStringList &pFileNames)
 
 //==============================================================================
 
+bool CentralWidget::saveFile(const int &pIndex)
+{
+Q_UNUSED(pIndex);
+
+//---GRY--- TO BE DONE...
+
+return false;
+}
+
+//==============================================================================
+
+bool CentralWidget::saveFileAs(const int &pIndex)
+{
+Q_UNUSED(pIndex);
+
+//---GRY--- TO BE DONE...
+
+return false;
+}
+
+//==============================================================================
+
+void CentralWidget::saveAllFiles()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 void CentralWidget::previousFile()
 {
     // Select the previous file
