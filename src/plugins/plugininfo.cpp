@@ -35,11 +35,29 @@ PluginInfo::Version PluginInfo::version() const
 
 //==============================================================================
 
+void PluginInfo::setVersion(const Version &pVersion)
+{
+    // Set the plugin's version
+
+    mVersion = pVersion;
+}
+
+//==============================================================================
+
 PluginInfo::Type PluginInfo::type() const
 {
     // Return the plugin's type
 
     return mType;
+}
+
+//==============================================================================
+
+void PluginInfo::setType(const Type &pType)
+{
+    // Set the plugin's type
+
+    mType = pType;
 }
 
 //==============================================================================
@@ -53,6 +71,15 @@ PluginInfo::Category PluginInfo::category() const
 
 //==============================================================================
 
+void PluginInfo::setCategory(const Category &pCategory)
+{
+    // Set the plugin's category
+
+    mCategory = pCategory;
+}
+
+//==============================================================================
+
 bool PluginInfo::manageable() const
 {
     // Return the plugin's manageability
@@ -62,11 +89,29 @@ bool PluginInfo::manageable() const
 
 //==============================================================================
 
+void PluginInfo::setManageable(const bool &pManageable)
+{
+    // Set the plugin's manageability
+
+    mManageable = pManageable;
+}
+
+//==============================================================================
+
 QStringList PluginInfo::dependencies() const
 {
     // Return the plugin's (direct) dependencies
 
     return mDependencies;
+}
+
+//==============================================================================
+
+void PluginInfo::setDependencies(const QStringList &pDependencies)
+{
+    // Set the plugin's dependencies
+
+    mDependencies = pDependencies;
 }
 
 //==============================================================================
@@ -81,22 +126,24 @@ QStringList PluginInfo::fullDependencies() const
 
 //==============================================================================
 
+void PluginInfo::setFullDependencies(const QStringList &pFullDependencies)
+{
+    // Set the plugin's full dependencies
+
+    mFullDependencies = pFullDependencies;
+}
+
+//==============================================================================
+
 QString PluginInfo::description(const QString &pLocale) const
 {
     // Return the plugin's description using the provided locale or the first
     // description if no description can be found for the provided locale
 
-    return OpenCOR::description(mDescriptions, pLocale);
-}
+    // Return the plugin's description using the provided locale or the first
+    // description if no description can be found for the provided locale
 
-//==============================================================================
-
-QString description(const Descriptions &pDescriptions, const QString &pLocale)
-{
-    // Return the description using the provided locale or the first description
-    // if no description can be found for the provided locale
-
-    if (pDescriptions.isEmpty()) {
+    if (mDescriptions.isEmpty()) {
         // No description is avalable, so...
 
         return QString();
@@ -104,10 +151,28 @@ QString description(const Descriptions &pDescriptions, const QString &pLocale)
         // At least one description is available, so return the one that
         // matches our locale our the first description if there is no match
 
-        QString res = pDescriptions.value(pLocale);
+        QString res = mDescriptions.value(pLocale);
 
-        return res.isEmpty()?pDescriptions.begin().value():res;
+        return res.isEmpty()?mDescriptions.begin().value():res;
     }
+}
+
+//==============================================================================
+
+Descriptions PluginInfo::descriptions() const
+{
+    // Return the plugin's descriptions
+
+    return mDescriptions;
+}
+
+//==============================================================================
+
+void PluginInfo::setDescriptions(const Descriptions &pDescriptions)
+{
+    // Set the plugin's descriptions
+
+    mDescriptions = pDescriptions;
 }
 
 //==============================================================================

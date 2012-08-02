@@ -291,9 +291,9 @@ void GuiInterface::destroy()
 
 QWidget * GuiInterface::viewWidget(const QString &pFileName)
 {
-    // Create and return no view widget by default...
-
     Q_UNUSED(pFileName);
+
+    // Create and return no view widget by default...
 
     return 0;
 }
@@ -302,9 +302,9 @@ QWidget * GuiInterface::viewWidget(const QString &pFileName)
 
 bool GuiInterface::hasViewWidget(const QString &pFileName) const
 {
-    // There is no view widget by default...
-
     Q_UNUSED(pFileName);
+
+    // There is no view widget by default...
 
     return false;
 }
@@ -313,9 +313,9 @@ bool GuiInterface::hasViewWidget(const QString &pFileName) const
 
 void GuiInterface::deleteViewWidget(const QString &pFileName)
 {
-    // No view widget to delete by default...
-
     Q_UNUSED(pFileName);
+
+    // No view widget to delete by default...
 }
 
 //==============================================================================

@@ -32,25 +32,25 @@ class FileOrganiserModel : public QStandardItemModel
 {
     Q_OBJECT
 
-    friend class FileOrganiserWidget;
-
 public:
     explicit FileOrganiserModel(QObject *pParent);
 
     virtual QStringList mimeTypes() const;
     virtual QMimeData * mimeData(const QModelIndexList &pIndexes) const;
 
-private:
-    void encodeHierarchyData(const QModelIndex &pIndex, QDataStream &pStream,
-                             const int &pLevel = 0) const;
     QByteArray encodeHierarchyData(const QModelIndex &pIndex) const;
-    QByteArray encodeData(const QModelIndexList &pIndexes) const;
 
-    QModelIndex decodeHierarchyData(QDataStream &pStream) const;
     QModelIndex decodeHierarchyData(QByteArray &pData) const;
     QModelIndexList decodeData(QByteArray &pData) const;
 
     QString filePath(const QModelIndex &pFileIndex) const;
+
+private:
+    void encodeHierarchyData(const QModelIndex &pIndex, QDataStream &pStream,
+                             const int &pLevel = 0) const;
+    QByteArray encodeData(const QModelIndexList &pIndexes) const;
+
+    QModelIndex decodeHierarchyData(QDataStream &pStream) const;
 };
 
 //==============================================================================

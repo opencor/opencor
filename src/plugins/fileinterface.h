@@ -48,8 +48,6 @@ private:
 
 class FileInterface : Interface
 {
-    friend class MainWindow;
-
 public:
     virtual QList<FileType> fileTypes() const;
     virtual QString fileTypeDescription(const QString &pMimeType) const;

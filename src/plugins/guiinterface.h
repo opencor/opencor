@@ -171,8 +171,6 @@ private:
 
 class GuiInterface : Interface
 {
-    friend class MainWindow;
-
 public:
     explicit GuiInterface();
 

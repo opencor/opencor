@@ -33,8 +33,6 @@ namespace Core {
 
 class CoreInterface : Interface
 {
-    friend class MainWindow;
-
 public:
     virtual void initialize();
     virtual void finalize();

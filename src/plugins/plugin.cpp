@@ -45,7 +45,7 @@ Plugin::Plugin(const QString &pFileName,
         // Now, retrieve the plugin's full dependencies (i.e. both its direct
         // and indirect dependencies)
 
-        mInfo.mFullDependencies = requiredPlugins(pPluginsDir, mName);
+        mInfo.setFullDependencies(requiredPlugins(pPluginsDir, mName));
 
         // Try to load the plugin, but only if it uses the right plugin version,
         // if it is either a general plugin or one of the type we are happy
@@ -275,13 +275,13 @@ PluginInfo Plugin::info(const QString &pFileName)
         PluginInfo *pluginInfo = static_cast<PluginInfo *>(pluginInfoFunc());
         PluginInfo res;
 
-        res.mVersion          = pluginInfo->mVersion;
-        res.mType             = pluginInfo->mType;
-        res.mCategory         = pluginInfo->mCategory;
-        res.mManageable       = pluginInfo->mManageable;
-        res.mDependencies     = pluginInfo->mDependencies;
-        res.mFullDependencies = QStringList();
-        res.mDescriptions     = pluginInfo->mDescriptions;
+        res.setVersion(pluginInfo->version());
+        res.setType(pluginInfo->type());
+        res.setCategory(pluginInfo->category());
+        res.setManageable(pluginInfo->manageable());
+        res.setDependencies(pluginInfo->dependencies());
+        res.setFullDependencies(QStringList());
+        res.setDescriptions(pluginInfo->descriptions());
 
         delete pluginInfo;
 

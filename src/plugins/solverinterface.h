@@ -45,8 +45,6 @@ typedef QMap<QString, PropertyType> Properties;
 
 class SolverInterface : Interface
 {
-    friend class MainWindow;
-
 public:
     virtual QString name() const = 0;
     virtual Solver::Type type() const = 0;

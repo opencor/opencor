@@ -21,8 +21,6 @@ namespace OpenCOR {
 
 class I18nInterface : Interface
 {
-    friend class MainWindow;
-
 public:
     void setLocale(const QString &pLocale);
     void setPluginName(const QString &pPluginName);

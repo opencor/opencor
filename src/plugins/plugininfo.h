@@ -46,8 +46,6 @@ typedef QMap<QString, QString> Descriptions;
 
 class PluginInfo
 {
-    friend class Plugin;
-
 public:
     enum Version
     {
@@ -82,12 +80,27 @@ public:
                         const Descriptions &pDescriptions = Descriptions());
 
     Version version() const;
+    void setVersion(const Version &pVersion);
+
     Type type() const;
+    void setType(const Type &pType);
+
     Category category() const;
+    void setCategory(const Category &pCategory);
+
     bool manageable() const;
+    void setManageable(const bool &pManageable);
+
     QStringList dependencies() const;
+    void setDependencies(const QStringList &pDependencies);
+
     QStringList fullDependencies() const;
+    void setFullDependencies(const QStringList &pFullDependencies);
+
     QString description(const QString &pLocale = EnglishLocale) const;
+
+    Descriptions descriptions() const;
+    void setDescriptions(const Descriptions &pDescriptions);
 
 private:
     Version mVersion;
@@ -98,10 +111,6 @@ private:
     QStringList mFullDependencies;
     Descriptions mDescriptions;
 };
-
-//==============================================================================
-
-QString description(const Descriptions &pDescriptions, const QString &pLocale);
 
 //==============================================================================
 
