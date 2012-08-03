@@ -8,14 +8,9 @@
 //==============================================================================
 
 #include "coreinterface.h"
-#include "fileinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
-
-//==============================================================================
-
-#include <QDir>
 
 //==============================================================================
 
@@ -59,8 +54,6 @@ public:
     virtual void retranslateUi();
 
 private:
-    QList<FileType> mSupportedFileTypes;
-
     CentralWidget *mCentralWidget;
 
     QAction *mFileOpenAction;
@@ -71,11 +64,6 @@ private:
     QAction *mFileNextAction;
     QAction *mFileCloseAction;
     QAction *mFileCloseAllAction;
-
-    QDir mActiveDir;
-
-private Q_SLOTS:
-    void openFile();
 };
 
 //==============================================================================

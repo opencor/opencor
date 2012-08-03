@@ -7,11 +7,13 @@
 
 //==============================================================================
 
-#include "widget.h"
+#include "fileinterface.h"
 #include "guiinterface.h"
+#include "widget.h"
 
 //==============================================================================
 
+#include <QDir>
 #include <QMap>
 #include <QTabBar>
 
@@ -85,7 +87,7 @@ class CentralWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit CentralWidget(QWidget *pParent);
+    explicit CentralWidget(QMainWindow *pMainWindow);
     ~CentralWidget();
 
     virtual void retranslateUi();
@@ -95,18 +97,15 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
-    void openFile(const QString &pFileName);
-    bool activateFile(const QString &pFileName);
-
-    QString activeFileName() const;
-
-    bool isModeEnabled(const GuiViewSettings::Mode &pMode) const;
+    void setSupportedFileTypes(const QList<FileType> &pSupportedFileTypes);
 
     void addView(Plugin *pPlugin, GuiViewSettings *pSettings);
 
     QTabBar * newTabBar(const QTabBar::Shape &pShape,
                         const bool &pMovable = false,
                         const bool &pTabsClosable = false);
+
+    void openFile(const QString &pFileName);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
@@ -121,6 +120,8 @@ private:
         Stopping
     };
 
+    QMainWindow *mMainWindow;
+
     Ui::CentralWidget *mGui;
 
     Status mStatus;
@@ -129,6 +130,10 @@ private:
 
     QTabBar *mModeTabs;
     QTabBar *mFileTabs;
+
+    QDir mActiveDir;
+
+    QList<FileType> mSupportedFileTypes;
 
     QStringList mFileNames;
 
@@ -161,6 +166,11 @@ private:
 
     void updateNoViewMsg();
 
+    bool activateFile(const QString &pFileName);
+
+    void saveFile(const int &pIndex);
+    void saveFileAs(const int &pIndex);
+
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);
     void fileClosed(const QString &pFileName);
@@ -172,16 +182,16 @@ Q_SIGNALS:
     void atLeastOneFile(const bool &pAtLeastOneFile);
     void atLeastTwoFiles(const bool &pAtLeastTwoFiles);
 
-public Q_SLOTS:
-    void openFiles(const QStringList &pFileNames);
-
 private Q_SLOTS:
     void updateGui();
 
+    void openFile();
+    void openFiles(const QStringList &pFileNames);
+
     void fileModified();
 
-    bool saveFile(const int &pIndex = -1);
-    bool saveFileAs(const int &pIndex);
+    void saveFile();
+    void saveFileAs();
     void saveAllFiles();
 
     void previousFile();

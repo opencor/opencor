@@ -15,8 +15,10 @@
 //==============================================================================
 
 #include <QDragEnterEvent>
+#include <QFileDialog>
 #include <QFileInfo>
 #include <QLabel>
+#include <QMainWindow>
 #include <QSettings>
 #include <QStackedWidget>
 #include <QUrl>
@@ -111,11 +113,14 @@ CentralWidgetViewSettings * CentralWidgetMode::viewSettings() const
 
 //==============================================================================
 
-CentralWidget::CentralWidget(QWidget *pParent) :
-    Widget(pParent),
+CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
+    Widget(pMainWindow),
+    mMainWindow(pMainWindow),
     mGui(new Ui::CentralWidget),
     mStatus(Starting),
     mLoadedPlugins(Plugins()),
+    mActiveDir(QDir()),
+    mSupportedFileTypes(QList<FileType>()),
     mFileNames(QStringList()),
     mGuiInterface(0)
 {
@@ -321,6 +326,10 @@ void CentralWidget::loadModeSettings(QSettings *pSettings,
 
 //==============================================================================
 
+static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
+
+//==============================================================================
+
 void CentralWidget::loadSettings(QSettings *pSettings)
 {
     // Let the user know of a few default things about ourselves by emitting a
@@ -356,6 +365,11 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Editing);
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Simulation);
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Analysis);
+
+    // Retrieve the active directory
+
+    mActiveDir.setPath(pSettings->value(SettingsFileDialogDirectory,
+                                        QDir::currentPath()).toString());
 }
 
 //==============================================================================
@@ -400,6 +414,10 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     saveModeSettings(pSettings, GuiViewSettings::Editing);
     saveModeSettings(pSettings, GuiViewSettings::Simulation);
     saveModeSettings(pSettings, GuiViewSettings::Analysis);
+
+    // Keep track of the active directory
+
+    pSettings->setValue(SettingsFileDialogDirectory, mActiveDir.path());
 }
 
 //==============================================================================
@@ -417,6 +435,15 @@ void CentralWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
     // Update the GUI
 
     updateGui();
+}
+
+//==============================================================================
+
+void CentralWidget::setSupportedFileTypes(const QList<FileType> &pSupportedFileTypes)
+{
+    // Set the supported file types
+
+    mSupportedFileTypes = pSupportedFileTypes;
 }
 
 //==============================================================================
@@ -484,31 +511,98 @@ void CentralWidget::openFiles(const QStringList &pFileNames)
 
 //==============================================================================
 
-bool CentralWidget::saveFile(const int &pIndex)
+void CentralWidget::openFile()
 {
-Q_UNUSED(pIndex);
+    // Ask for the file(s) to be opened
 
-//---GRY--- TO BE DONE...
+    QString supportedFileTypes;
 
-return false;
+    foreach (const FileType &supportedFileType, mSupportedFileTypes)
+        supportedFileTypes +=  ";;"
+                              +supportedFileType.description()
+                              +" (*."+supportedFileType.fileExtension()+")";
+
+    QStringList files = QFileDialog::getOpenFileNames(mMainWindow,
+                                                      tr("Open File"),
+                                                      mActiveDir.path(),
+                                                      tr("All Files")
+                                                      +" (*"
+#ifdef Q_WS_WIN
+                                                      +".*"
+#endif
+                                                      +")"+supportedFileTypes);
+
+    if (files.count())
+        // There is at least one file which is to be opened, so we can keep
+        // track of the folder in which it is
+        // Note #1: we use the last file to determine the folder that is to be
+        //          remembered since on Windows 7, at least, it's possible to
+        //          search for files from within the file dialog box, the last
+        //          file should be the one we are 'interested' in...
+        // Note #2: this doesn't, unfortunately, address the case where the user
+        //          goes to a directory and then closes the file dialog box
+        //          without selecting any file. There might be a way to get it
+        //          to work, but that would involve using the exec method rather
+        //          than the static getOpenFilesNames method, which would result
+        //          in a non-native looking file dialog box (on Windows 7 at
+        //          least), so it's not an option unfortunately...
+
+        mActiveDir = QFileInfo(files[files.count()-1]).path();
+
+    // Open the file(s)
+
+    openFiles(files);
 }
 
 //==============================================================================
 
-bool CentralWidget::saveFileAs(const int &pIndex)
+void CentralWidget::saveFile(const int &pIndex)
+{
+    // Ask the current view to save the file for us, but only if the file has
+    // been modified
+//---GRY--- WE WILL HAVE TO THINK ABOUT WHAT TO DO ABOUT NEW FILES...
+
+    if (Core::FileManager::instance()->isModified(mFileNames[pIndex]))
+        // The file is modified, so we try to save it
+
+        mGuiInterface->saveFile(mFileNames[pIndex]);
+}
+
+//==============================================================================
+
+void CentralWidget::saveFile()
+{
+    // Save the current file
+
+    saveFile(mFileTabs->currentIndex());
+}
+
+//==============================================================================
+
+void CentralWidget::saveFileAs(const int &pIndex)
 {
 Q_UNUSED(pIndex);
 
 //---GRY--- TO BE DONE...
+}
 
-return false;
+//==============================================================================
+
+void CentralWidget::saveFileAs()
+{
+    // Save the current file under a new name
+
+    saveFileAs(mFileTabs->currentIndex());
 }
 
 //==============================================================================
 
 void CentralWidget::saveAllFiles()
 {
-//---GRY--- TO BE DONE...
+    // Go through the different files and ask the current view to save them
+
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+        saveFile(i);
 }
 
 //==============================================================================
@@ -651,27 +745,6 @@ void CentralWidget::fileMoved(const int &pFromIndex, const int &pToIndex)
     // moved
 
     mFileNames.move(pFromIndex, pToIndex);
-}
-
-//==============================================================================
-
-QString CentralWidget::activeFileName() const
-{
-    // Return the name of the file currently active, if any
-
-    if (mFileTabs->count())
-        return mFileNames[mFileTabs->currentIndex()];
-    else
-        return QString();
-}
-
-//==============================================================================
-
-bool CentralWidget::isModeEnabled(const GuiViewSettings::Mode &pMode) const
-{
-    // Return whether a particular mode is enabled
-
-    return mModes.value(pMode)->isEnabled();
 }
 
 //==============================================================================
@@ -1004,7 +1077,9 @@ void CentralWidget::fileModified()
 
     bool enabled = true;
 
-    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
+        QString tabText = mFileTabs->tabText(i);
+
         if (FileManager::instance()->isModified(mFileNames[i])) {
             // The current file has been modified, so the Mode and Views tabs
             // should be disabled
@@ -1013,14 +1088,15 @@ void CentralWidget::fileModified()
 
             // Update the tab text, if needed
 
-            if (!mFileTabs->tabText(i).contains(QRegExp("*$")))
-                mFileTabs->setTabText(i, mFileTabs->tabText(i)+"*");
+            if (!tabText.endsWith("*"))
+                mFileTabs->setTabText(i, tabText+"*");
         } else {
             // The current isn't modified, so update its tab text, if needed
 
-            if (mFileTabs->tabText(i).contains(QRegExp("*$")))
-                mFileTabs->setTabText(i, mFileTabs->tabText(i).replace(QRegExp("*$"), ""));
+            if (tabText.endsWith("*"))
+                mFileTabs->setTabText(i, tabText.remove("*"));
         }
+    }
 
     mModeTabs->setEnabled(enabled);
 

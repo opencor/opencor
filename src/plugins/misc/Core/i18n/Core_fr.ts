@@ -19,6 +19,14 @@
         <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of file...</source>
         <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas ce type de fichier...</translation>
     </message>
+    <message>
+        <source>Open File</source>
+        <translation>Ouvrir Fichier</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Tous Fichiers</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
@@ -69,14 +77,6 @@
     <message>
         <source>Close all the files</source>
         <translation>Fermer tous les fichiers</translation>
-    </message>
-    <message>
-        <source>Open File</source>
-        <translation>Ouvrir Fichier</translation>
-    </message>
-    <message>
-        <source>All Files</source>
-        <translation>Tous Fichiers</translation>
     </message>
     <message>
         <source>Previous</source>
