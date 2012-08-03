@@ -93,7 +93,7 @@ void CorePlugin::initialize()
     connect(mFileSaveAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(saveFile()));
     connect(mFileSaveAsAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(saveAsFile()));
+            mCentralWidget, SLOT(saveFileAs()));
     connect(mFileSaveAllAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(saveAllFiles()));
 
