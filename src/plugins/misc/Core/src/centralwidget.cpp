@@ -116,7 +116,8 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mGui(new Ui::CentralWidget),
     mStatus(Starting),
     mLoadedPlugins(Plugins()),
-    mFileNames(QStringList())
+    mFileNames(QStringList()),
+    mGuiInterface(0)
 {
     // Set up the GUI
 
@@ -420,19 +421,19 @@ void CentralWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-bool CentralWidget::openFile(const QString &pFileName)
+void CentralWidget::openFile(const QString &pFileName)
 {
     if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
         // No mode is available or the file doesn't exist, so...
 
-        return false;
+        return;
 
     // Check whether or not the file is already opened
 
     if (activateFile(pFileName))
         // The file is already opened and, if anything, got selected, so...
 
-        return false;
+        return;
 
     // Register the file with our file manager
 
@@ -469,10 +470,6 @@ bool CentralWidget::openFile(const QString &pFileName)
 
     emit atLeastOneFile(mFileTabs->count());
     emit atLeastTwoFiles(mFileTabs->count() > 1);
-
-    // Everything went fine, so...
-
-    return true;
 }
 
 //==============================================================================
@@ -658,15 +655,6 @@ void CentralWidget::fileMoved(const int &pFromIndex, const int &pToIndex)
 
 //==============================================================================
 
-int CentralWidget::openedFilesCount() const
-{
-    // Return the number of files currently opened
-
-    return mFileTabs->count();
-}
-
-//==============================================================================
-
 QString CentralWidget::activeFileName() const
 {
     // Return the name of the file currently active, if any
@@ -844,8 +832,7 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
-void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
-                                  GuiInterface * &pGuiInterface)
+void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode)
 {
     // Show/hide the mode's corresponding views tab, as needed
 
@@ -861,7 +848,7 @@ void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode,
         int modeViewsCrtIndex = mode->views()->currentIndex();
 
         if (modeViewsCrtIndex != -1)
-            pGuiInterface  = mode->viewInterfaces()->value(modeViewsCrtIndex);
+            mGuiInterface = mode->viewInterfaces()->value(modeViewsCrtIndex);
     }
 }
 
@@ -882,11 +869,9 @@ void CentralWidget::updateGui()
     // Show/hide the editing, simulation and analysis modes' corresponding views
     // tab, as needed, and retrieve the GUI interface for the view we are after
 
-    GuiInterface *guiInterface;
-
-    updateModeGui(GuiViewSettings::Editing, guiInterface);
-    updateModeGui(GuiViewSettings::Simulation, guiInterface);
-    updateModeGui(GuiViewSettings::Analysis, guiInterface);
+    updateModeGui(GuiViewSettings::Editing);
+    updateModeGui(GuiViewSettings::Simulation);
+    updateModeGui(GuiViewSettings::Analysis);
 
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
@@ -902,7 +887,7 @@ void CentralWidget::updateGui()
     } else {
         // There is a current file, so retrieve its view
 
-        QWidget *newView = guiInterface->viewWidget(fileName);
+        QWidget *newView = mGuiInterface->viewWidget(fileName);
 
         if (!newView) {
             // The interface doesn't have a view for the current file, so use
@@ -937,6 +922,12 @@ void CentralWidget::updateGui()
         // to our new view
 
         mContents->currentWidget()->setFocus();
+
+    // Let people know whether the file can be saved
+    // Note: it's fine if fileName is empty, since isModified() will then return
+    //       false...
+
+    emit canSaveFile(Core::FileManager::instance()->isModified(fileName));
 
     // We are done with updating the GUI, so...
 

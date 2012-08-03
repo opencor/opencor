@@ -95,10 +95,8 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
-    bool openFile(const QString &pFileName);
+    void openFile(const QString &pFileName);
     bool activateFile(const QString &pFileName);
-
-    int openedFilesCount() const;
 
     QString activeFileName() const;
 
@@ -142,6 +140,8 @@ private:
 
     QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
 
+    GuiInterface *mGuiInterface;
+
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
     void addMode(const GuiViewSettings::Mode &pMode);
@@ -155,8 +155,7 @@ private:
     void addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
                      const GuiViewSettings::Mode &pMode);
 
-    void updateModeGui(const GuiViewSettings::Mode &pMode,
-                       GuiInterface * &pGuiInterface);
+    void updateModeGui(const GuiViewSettings::Mode &pMode);
 
     QString modeViewName(const GuiViewSettings::Mode &pMode);
 

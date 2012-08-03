@@ -181,6 +181,9 @@ public:
     virtual void deleteViewWidget(const QString &pFileName);
     virtual QString viewName();
 
+    virtual bool saveFile(const QString &pFileName,
+                          const QString &pAsFileName = QString());
+
     GuiSettings * guiSettings() const;
 
     static QMenu * newMenu(QMainWindow *pMainWindow, const QString &pName);

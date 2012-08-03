@@ -329,6 +329,19 @@ QString GuiInterface::viewName()
 
 //==============================================================================
 
+bool GuiInterface::saveFile(const QString &pFileName,
+                            const QString &pAsFileName)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pAsFileName);
+
+    // The file is not saved by default...
+
+    return false;
+}
+
+//==============================================================================
+
 GuiSettings * GuiInterface::guiSettings() const
 {
     // Return the plugin's GUI settings
