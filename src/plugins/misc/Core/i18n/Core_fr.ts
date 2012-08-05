@@ -94,6 +94,18 @@
         <source>Select the next file</source>
         <translation>Sélectionner le fichier suivant</translation>
     </message>
+    <message>
+        <source>Reopen</source>
+        <translation>Réouvrir</translation>
+    </message>
+    <message>
+        <source>Clear Menu</source>
+        <translation>Nettoyer Menu</translation>
+    </message>
+    <message>
+        <source>Clear the menu</source>
+        <translation>Nettoyer le menu</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

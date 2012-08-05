@@ -64,6 +64,23 @@ private:
     QAction *mFileNextAction;
     QAction *mFileCloseAction;
     QAction *mFileCloseAllAction;
+
+    QMenu *mFileReopenSubMenu;
+
+    QAction *mFileReopenSubMenuSeparator;
+    QAction *mFileClearReopenSubMenuAction;
+
+    QStringList mRecentFileNames;
+
+    void updateFileReopenMenu();
+
+private Q_SLOTS:
+    void fileOpened(const QString &pFileName);
+    void fileClosed(const QString &pFileName);
+
+    void openRecentFile();
+
+    void clearReopenSubMenu();
 };
 
 //==============================================================================

@@ -354,7 +354,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
         QMenu *oldMenu = mMenus.value(newMenuName);
 
-        if (oldMenu) {
+        if (oldMenu && !menuSettings->action()) {
             // A menu with the same name already exists, so add the contents of
             // the new menu to the existing one
 
@@ -417,9 +417,25 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
         }
     }
 
-    // Add the actions to our different menus, but we process the actions in the
-    // right order this time, since we must add the actions rather than insert
-    // them
+    // Add some sub-menus before some menu items
+
+    foreach (GuiMenuSettings *menuSettings, pGuiSettings->menus())
+        // Insert the menu before a menu item / separator
+
+        if (menuSettings->action())
+            switch (menuSettings->type()) {
+            case GuiMenuActionSettings::File:
+                mGui->menuFile->insertMenu(menuSettings->action(),
+                                           menuSettings->menu());
+
+                break;
+            default:
+                // Not a type of interest, so do nothing...
+
+                ;
+            }
+
+    // Add some actions to some sub-menus
 
     static QString pluginForFileNewMenu = QString();
 

@@ -49,17 +49,21 @@ class GuiMenuSettings
 public:
     enum GuiMenuSettingsType
     {
+        File,
         View
     };
 
-    explicit GuiMenuSettings(const GuiMenuSettingsType &pType,
+    explicit GuiMenuSettings(const GuiMenuSettingsType &pType, QMenu *pMenu);
+    explicit GuiMenuSettings(const GuiMenuSettingsType &pType, QAction *pAction,
                              QMenu *pMenu);
 
     GuiMenuSettingsType type() const;
+    QAction * action() const;
     QMenu * menu() const;
 
 private:
     GuiMenuSettingsType mType;
+    QAction *mAction;
     QMenu *mMenu;
 };
 
@@ -144,6 +148,8 @@ public:
 
     void addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
                  QMenu *pMenu);
+    void addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
+                 QAction *pAction, QMenu *pMenu);
     void addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
                        QAction *pAction = 0);
     void setCentralWidget(Core::CentralWidget *pCentralWidget);
@@ -186,9 +192,10 @@ public:
 
     GuiSettings * guiSettings() const;
 
-    static QMenu * newMenu(QMainWindow *pMainWindow, const QString &pName);
-    static QToolBar * newToolBar(QMainWindow *pMainWindow,
-                                 const QString &pName);
+    static QMenu * newMenu(QMainWindow *pMainWindow,
+                           const QString &pNameOrIconResource,
+                           const bool &pProvidedName = true);
+
     static QAction * newAction(QMainWindow *pMainWindow, const bool &pCheckable,
                                const QString &pIconResource,
                                const QList<QKeySequence> &pKeySequences);

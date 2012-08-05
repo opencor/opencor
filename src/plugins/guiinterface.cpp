@@ -23,6 +23,17 @@ namespace OpenCOR {
 GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
                                  QMenu *pMenu) :
     mType(pType),
+    mAction(0),
+    mMenu(pMenu)
+{
+}
+
+//==============================================================================
+
+GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
+                                 QAction *pAction, QMenu *pMenu) :
+    mType(pType),
+    mAction(pAction),
     mMenu(pMenu)
 {
 }
@@ -34,6 +45,15 @@ GuiMenuSettings::GuiMenuSettingsType GuiMenuSettings::type() const
     // Return the menu's type
 
     return mType;
+}
+
+//==============================================================================
+
+QAction * GuiMenuSettings::action() const
+{
+    // Return the menu's action
+
+    return mAction;
 }
 
 //==============================================================================
@@ -178,11 +198,21 @@ void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
 
 //==============================================================================
 
+void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
+                          QAction *pAction, QMenu *pMenu)
+{
+    // Add a menu to our list
+
+    mMenus << new GuiMenuSettings(pType, pAction, pMenu);
+}
+
+//==============================================================================
+
 void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
                                 QAction *pAction)
 {
     // Add a menu action to our list
-    // Note: a null pAction means that we want to add a separator
+    // Note: a null pAction means that we want to add a separator...
 
     mMenuActions << new GuiMenuActionSettings(pType, pAction);
 }
@@ -360,49 +390,23 @@ void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
 
 //==============================================================================
 
-QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow, const QString &pName)
+QMenu * GuiInterface::newMenu(QMainWindow *pMainWindow,
+                              const QString &pNameOrIconResource,
+                              const bool &pProvidedName)
 {
-    // Create a new menu
+    // Create and return a menu
 
     QMenu *res = new QMenu(pMainWindow);
 
-    // Set the name of the menu
-
-    res->setObjectName("menu"+pName.left(1).toUpper()+pName.right(pName.size()-1));
-    // Note #1: the object name must also be set for the main window to be able
-    //          to reconcile different menus with the same name (and therefore
-    //          merge their contents, if needed)
-    // Note #2: the naming is such to respect the one used in the main window
-
-    // Return the new menu
-
-    return res;
-}
-
-//==============================================================================
-
-QToolBar * GuiInterface::newToolBar(QMainWindow *pMainWindow,
-                                    const QString &pName)
-{
-    // Create a new toolbar
-
-    QToolBar *res = new QToolBar(pMainWindow);
-
-    // Set the name of the toolbar
-
-    res->setObjectName(pName.left(1).toLower()+pName.right(pName.size()-1)+"Toolbar");
-    // Note #1: the object name must be set for QMainWindow::saveState() to work
-    //          properly...
-    // Note #2: the object name must also be set for the main window to be able
-    //          to reconcile different toolbars with the same name (and
-    //          therefore merge their contents, if needed)
-    // Note #3: the naming is such to respect the one used in the main window
-
-    // Set the icon size to that used in the Help toolbar
-
-    res->setIconSize(QSize(24, 24));
-
-    // Return the new toolbar
+    if (pProvidedName)
+        res->setObjectName("menu"+pNameOrIconResource.left(1).toUpper()+pNameOrIconResource.right(pNameOrIconResource.size()-1));
+        // Note #1: the object name must also be set for the main window to be
+        //          able to reconcile different menus with the same name (and
+        //          therefore merge their contents, if needed)...
+        // Note #2: the naming is such to respect the one used in the main
+        //          window...
+    else
+        res->menuAction()->setIcon(QIcon(pNameOrIconResource));
 
     return res;
 }

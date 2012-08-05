@@ -121,7 +121,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mLoadedPlugins(Plugins()),
     mActiveDir(QDir()),
     mSupportedFileTypes(QList<FileType>()),
-    mFileNames(QStringList()),
+    mOpenedFileNames(QStringList()),
     mGuiInterface(0)
 {
     // Set up the GUI
@@ -279,10 +279,11 @@ void CentralWidget::retranslateUi()
 
 //==============================================================================
 
-static const QString SettingsOpenedFiles        = "OpenedFiles";
-static const QString SettingsCurrentFile        = "CurrentFile";
-static const QString SettingsCurrentMode        = "CurrentMode";
-static const QString SettingsCurrentViewForMode = "CurrentViewForMode";
+static const QString SettingsOpenedFileNames     = "OpenedFileNames";
+static const QString SettingsCurrentFileName     = "CurrentFileName";
+static const QString SettingsCurrentMode         = "CurrentMode";
+static const QString SettingsCurrentViewForMode  = "CurrentViewForMode";
+static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
 
 //==============================================================================
 
@@ -326,10 +327,6 @@ void CentralWidget::loadModeSettings(QSettings *pSettings,
 
 //==============================================================================
 
-static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
-
-//==============================================================================
-
 void CentralWidget::loadSettings(QSettings *pSettings)
 {
     // Let the user know of a few default things about ourselves by emitting a
@@ -345,7 +342,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     QStringList openedFiles;
 
-    openedFiles = pSettings->value(SettingsOpenedFiles).toStringList();
+    openedFiles = pSettings->value(SettingsOpenedFileNames).toStringList();
 
     openFiles(openedFiles);
 
@@ -354,7 +351,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     if (openedFiles.count())
         // There is at least one file, so we can try to activate one of them
 
-        activateFile(openedFiles[pSettings->value(SettingsCurrentFile).toInt()]);
+        activateFile(openedFiles[pSettings->value(SettingsCurrentFileName).toInt()]);
 
     // Retrieve the currently active mode and views
     // Note: if no current mode or view can be retrieved, then we use whatever
@@ -398,16 +395,11 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the files that are opened
 
-    QStringList openedFiles = QStringList();
-
-    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-        openedFiles << mFileNames[i];
-
-    pSettings->setValue(SettingsOpenedFiles, openedFiles);
+    pSettings->setValue(SettingsOpenedFileNames, mOpenedFileNames);
 
     // Keep track of the current file
 
-    pSettings->setValue(SettingsCurrentFile, mFileTabs->currentIndex());
+    pSettings->setValue(SettingsCurrentFileName, mFileTabs->currentIndex());
 
     // Keep track of the currently active mode and views
 
@@ -469,20 +461,20 @@ void CentralWidget::openFile(const QString &pFileName)
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
     // current one
-    // Note #1: mFileNames is, for example, used to retrieve the name of a file
-    //          which we want to close (see CentralWidget::closeFile()), so we
-    //          must make sure that the order of its contents matches that of
+    // Note #1: mOpenedFileNames is, for example, used to retrieve the name of a
+    //          file which we want to close (see CentralWidget::closeFile()), so
+    //          we must make sure that the order of its contents matches that of
     //          the tabs...
-    // Note #2: rather than using mFileNames, we could have used a tab's tool
-    //          tip, but this makes it a bit tricky to handle with regards to
-    //          connections and therefore some events triggering updateGui() to
-    //          be called when the tool tip has not yet been assigned, so...
+    // Note #2: rather than using mOpenedFileNames, we could have used a tab's
+    //          tool tip, but this makes it a bit tricky to handle with regards
+    //          to connections and therefore some events triggering updateGui()
+    //          to be called when the tool tip has not yet been assigned, so...
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
     QFileInfo fileInfo = nativeFileName;
     int fileTabIndex = mFileTabs->currentIndex()+1;
 
-    mFileNames.insert(fileTabIndex, nativeFileName);
+    mOpenedFileNames.insert(fileTabIndex, nativeFileName);
 
     mFileTabs->insertTab(fileTabIndex, fileInfo.fileName());
 
@@ -562,10 +554,10 @@ void CentralWidget::saveFile(const int &pIndex)
     // been modified
 //---GRY--- WE WILL HAVE TO THINK ABOUT WHAT TO DO ABOUT NEW FILES...
 
-    if (Core::FileManager::instance()->isModified(mFileNames[pIndex]))
+    if (Core::FileManager::instance()->isModified(mOpenedFileNames[pIndex]))
         // The file is modified, so we try to save it
 
-        mGuiInterface->saveFile(mFileNames[pIndex]);
+        mGuiInterface->saveFile(mOpenedFileNames[pIndex]);
 }
 
 //==============================================================================
@@ -601,7 +593,7 @@ void CentralWidget::saveAllFiles()
 {
     // Go through the different files and ask the current view to save them
 
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mOpenedFileNames.count(); i < iMax; ++i)
         saveFile(i);
 }
 
@@ -645,11 +637,11 @@ bool CentralWidget::closeFile(const int &pIndex)
     if (realIndex != -1) {
         // There is a file currently opened, so first retrieve its file name
 
-        QString fileName = mFileNames[realIndex];
+        QString openedFileName = mOpenedFileNames[realIndex];
 
         // Next, we must close the tab
 
-        mFileNames.removeAt(realIndex);
+        mOpenedFileNames.removeAt(realIndex);
 
         mFileTabs->removeTab(realIndex);
 
@@ -664,21 +656,21 @@ bool CentralWidget::closeFile(const int &pIndex)
             foreach (Plugin *plugin, mLoadedPlugins) {
                 GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-                if (guiInterface && guiInterface->hasViewWidget(fileName)) {
-                    mContents->removeWidget(guiInterface->viewWidget(fileName));
+                if (guiInterface && guiInterface->hasViewWidget(openedFileName)) {
+                    mContents->removeWidget(guiInterface->viewWidget(openedFileName));
 
-                    guiInterface->deleteViewWidget(fileName);
+                    guiInterface->deleteViewWidget(openedFileName);
                 }
             }
 
         // Unregister the file from our file manager
 
-        Core::FileManager::instance()->unmanage(fileName);
+        Core::FileManager::instance()->unmanage(openedFileName);
 
         // Finally, we let people know about the file having just been closed,
         // as well as whether we can navigate and/or close the remaining files
 
-        emit fileClosed(fileName);
+        emit fileClosed(openedFileName);
 
         emit atLeastOneFile(mFileTabs->count());
         emit atLeastTwoFiles(mFileTabs->count() > 1);
@@ -712,7 +704,7 @@ bool CentralWidget::activateFile(const QString &pFileName)
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-        if (!mFileNames[i].compare(nativeFileName)) {
+        if (!mOpenedFileNames[i].compare(nativeFileName)) {
             // We have found the file, so set the current index to that of its
             // tab
 
@@ -734,7 +726,7 @@ void CentralWidget::fileSelected(const int &pIndex)
 {
     // Let people know that a file has been selected
 
-    emit fileSelected((pIndex == -1)?QString():mFileNames[pIndex]);
+    emit fileSelected((pIndex == -1)?QString():mOpenedFileNames[pIndex]);
 }
 
 //==============================================================================
@@ -744,7 +736,7 @@ void CentralWidget::fileMoved(const int &pFromIndex, const int &pToIndex)
     // Update our list of file names to reflect the fact that a tab has been
     // moved
 
-    mFileNames.move(pFromIndex, pToIndex);
+    mOpenedFileNames.move(pFromIndex, pToIndex);
 }
 
 //==============================================================================
@@ -950,9 +942,9 @@ void CentralWidget::updateGui()
     // there be one)
 
     int fileTabsCrtIndex = mFileTabs->currentIndex();
-    QString fileName = (fileTabsCrtIndex == -1)?QString():mFileNames[fileTabsCrtIndex];
+    QString openedFileName = (fileTabsCrtIndex == -1)?QString():mOpenedFileNames[fileTabsCrtIndex];
 
-    if (fileName.isEmpty()) {
+    if (openedFileName.isEmpty()) {
         // There is no current file, so show our logo instead
 
         mContents->removeWidget(mContents->currentWidget());
@@ -960,7 +952,7 @@ void CentralWidget::updateGui()
     } else {
         // There is a current file, so retrieve its view
 
-        QWidget *newView = mGuiInterface->viewWidget(fileName);
+        QWidget *newView = mGuiInterface->viewWidget(openedFileName);
 
         if (!newView) {
             // The interface doesn't have a view for the current file, so use
@@ -997,10 +989,10 @@ void CentralWidget::updateGui()
         mContents->currentWidget()->setFocus();
 
     // Let people know whether the file can be saved
-    // Note: it's fine if fileName is empty, since isModified() will then return
-    //       false...
+    // Note: it's fine if openedFileName is empty, since isModified() will then
+    //       return false...
 
-    emit canSaveFile(Core::FileManager::instance()->isModified(fileName));
+    emit canSaveFile(Core::FileManager::instance()->isModified(openedFileName));
 
     // We are done with updating the GUI, so...
 
@@ -1080,7 +1072,7 @@ void CentralWidget::fileModified()
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         QString tabText = mFileTabs->tabText(i);
 
-        if (FileManager::instance()->isModified(mFileNames[i])) {
+        if (FileManager::instance()->isModified(mOpenedFileNames[i])) {
             // The current file has been modified, so the Mode and Views tabs
             // should be disabled
 

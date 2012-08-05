@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>oxygen/actions/document-close.png</file>
         <file>oxygen/actions/document-open.png</file>
+        <file>oxygen/actions/document-open-recent.png</file>
         <file>oxygen/actions/document-save.png</file>
         <file>oxygen/actions/document-save-all.png</file>
         <file>oxygen/actions/document-save-as.png</file>

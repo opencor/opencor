@@ -12,6 +12,7 @@
 
 #include <QAction>
 #include <QMainWindow>
+#include <QMenu>
 #include <QSettings>
 
 //==============================================================================
@@ -85,6 +86,26 @@ void CorePlugin::initialize()
                                     QKeySequence::Close);
     mFileCloseAllAction = newAction(mMainWindow);
 
+    // Create the separator before which we will insert our reopen sub-menu
+
+    QAction *openSaveSeparator = newAction(mMainWindow);
+
+    openSaveSeparator->setSeparator(true);
+
+    // Create our reopen sub-menu
+
+    mFileReopenSubMenu = newMenu(mMainWindow,
+                                 ":/oxygen/actions/document-open-recent.png",
+                                 false);
+
+    mFileReopenSubMenuSeparator = newAction(mMainWindow);
+    mFileClearReopenSubMenuAction = newAction(mMainWindow);
+
+    mFileReopenSubMenuSeparator->setSeparator(true);
+
+    mFileReopenSubMenu->addAction(mFileReopenSubMenuSeparator);
+    mFileReopenSubMenu->addAction(mFileClearReopenSubMenuAction);
+
     // Some connections to handle our various actions
 
     connect(mFileOpenAction, SIGNAL(triggered(bool)),
@@ -126,10 +147,20 @@ void CorePlugin::initialize()
     connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
             mFileCloseAllAction, SLOT(setEnabled(bool)));
 
+    // Some connections related to our reopen sub-menu
+
+    connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
+            this, SLOT(fileOpened(const QString &)));
+    connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
+            this, SLOT(fileClosed(const QString &)));
+
+    connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
+            this, SLOT(clearReopenSubMenu()));
+
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, openSaveSeparator);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAsAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAllAction);
@@ -141,7 +172,13 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAllAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
 
+    mGuiSettings->addMenu(GuiMenuSettings::File, openSaveSeparator, mFileReopenSubMenu);
+
     mGuiSettings->setCentralWidget(mCentralWidget);
+
+    // Miscellaneous
+
+    mRecentFileNames = QStringList();
 }
 
 //==============================================================================
@@ -207,8 +244,21 @@ void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
+static const QString SettingsRecentFiles = "RecentFiles";
+
+//==============================================================================
+
 void CorePlugin::loadSettings(QSettings *pSettings)
 {
+    // Retrieve the recent files
+    // Note: it's import to retrieve the recent files before retrieving our
+    //       central widget settings since mRecentFileNames gets updated as a
+    //       result of opening/closing a file...
+
+    mRecentFileNames = pSettings->value(SettingsRecentFiles).toStringList();
+
+    updateFileReopenMenu();
+
     // Retrieve the central widget settings
 
     pSettings->beginGroup(mCentralWidget->objectName());
@@ -220,6 +270,10 @@ void CorePlugin::loadSettings(QSettings *pSettings)
 
 void CorePlugin::saveSettings(QSettings *pSettings) const
 {
+    // Keep track of the recent files
+
+    pSettings->setValue(SettingsRecentFiles, mRecentFileNames);
+
     // Keep track of the central widget settings
 
     pSettings->beginGroup(mCentralWidget->objectName());
@@ -276,9 +330,102 @@ void CorePlugin::retranslateUi()
     retranslateAction(mFileCloseAllAction, tr("Close All"),
                       tr("Close all the files"));
 
+    // Retranslate our File sub-menu and its action
+
+    retranslateMenu(mFileReopenSubMenu, tr("Reopen"));
+
+    retranslateAction(mFileClearReopenSubMenuAction, tr("Clear Menu"),
+                      tr("Clear the menu"));
+
     // Retranslate our central widget
 
     mCentralWidget->retranslateUi();
+}
+
+//==============================================================================
+
+void CorePlugin::fileOpened(const QString &pFileName)
+{
+    // Remove the file from our list of recent files and update our reopen
+    // sub-menu
+
+    mRecentFileNames.removeOne(pFileName);
+
+    updateFileReopenMenu();
+}
+
+//==============================================================================
+
+void CorePlugin::fileClosed(const QString &pFileName)
+{
+    // Add the file to our list of recent files (making sure that we don't end
+    // up with more than 10 recent file names) and update our reopen sub-menu
+
+    mRecentFileNames << pFileName;
+
+    while (mRecentFileNames.count() > 10)
+        mRecentFileNames.removeFirst();
+
+    updateFileReopenMenu();
+}
+
+//==============================================================================
+
+void CorePlugin::openRecentFile()
+{
+    // Open the recent file
+
+    mCentralWidget->openFile(qobject_cast<QAction *>(sender())->text());
+}
+
+//==============================================================================
+
+void CorePlugin::clearReopenSubMenu()
+{
+    // Indirectly clear our reopen sub-menu
+
+    mRecentFileNames.clear();
+
+    updateFileReopenMenu();
+}
+
+//==============================================================================
+
+void CorePlugin::updateFileReopenMenu()
+{
+    // Update the contents of our reopen sub-menu by first cleaning it
+
+    foreach (QAction *action, mFileReopenSubMenu->actions()) {
+        if (action != mFileReopenSubMenuSeparator)
+            disconnect(action, SIGNAL(triggered()),
+                       this, SLOT(openRecentFile()));
+        else
+            // We have reached our reopen sub-menu separator, so...
+
+            break;
+
+        mFileReopenSubMenu->removeAction(action);
+
+        delete action;
+    }
+
+    // Add the recent files to our reopen sub-menu
+
+    foreach (const QString &recentFile, mRecentFileNames) {
+        QAction *action = newAction(mMainWindow);
+
+        action->setText(recentFile);
+
+        connect(action, SIGNAL(triggered()),
+                this, SLOT(openRecentFile()));
+
+        mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator, action);
+    }
+
+    // Enable/disable our our reopen sub-menu depending on whether we have
+    // recent file names or not
+
+    mFileReopenSubMenu->setEnabled(!mRecentFileNames.isEmpty());
 }
 
 //==============================================================================
