@@ -42,7 +42,7 @@ RawViewPlugin::RawViewPlugin() :
 {
     // Set our settings
 
-    mGuiSettings->setView(GuiViewSettings::Editing);
+    mGuiSettings->setView(GuiViewSettings::Editing, QStringList());
 }
 
 //==============================================================================

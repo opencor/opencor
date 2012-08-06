@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "cellmlsupportplugin.h"
 #include "singlecellsimulationviewplugin.h"
 #include "singlecellsimulationviewwidget.h"
 #include "solverinterface.h"
@@ -43,7 +44,8 @@ SingleCellSimulationViewPlugin::SingleCellSimulationViewPlugin()
 {
     // Set our settings
 
-    mGuiSettings->setView(GuiViewSettings::Simulation);
+    mGuiSettings->setView(GuiViewSettings::Simulation,
+                          QStringList() << CellMLSupport::CellmlMimeType);
 }
 
 //==============================================================================

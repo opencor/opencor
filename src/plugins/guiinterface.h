@@ -101,12 +101,14 @@ public:
         Analysis
     };
 
-    explicit GuiViewSettings(const Mode &pMode);
+    explicit GuiViewSettings(const Mode &pMode, const QStringList &pMimeTypes);
 
     Mode mode() const;
+    QStringList mimeTypes() const;
 
 private:
     Mode mMode;
+    QStringList mMimeTypes;
 };
 
 //==============================================================================
@@ -157,7 +159,8 @@ public:
                    Core::DockWidget *pWindow,
                    const GuiWindowSettings::GuiWindowSettingsType &pType,
                    QAction *pAction);
-    void setView(const GuiViewSettings::Mode &pMode);
+    void setView(const GuiViewSettings::Mode &pMode,
+                 const QStringList &pMimeTypes);
 
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;

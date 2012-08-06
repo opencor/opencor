@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "cellmlsupportplugin.h"
 #include "rawcellmlviewplugin.h"
 #include "rawcellmlviewwidget.h"
 
@@ -42,7 +43,8 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 {
     // Set our settings
 
-    mGuiSettings->setView(GuiViewSettings::Editing);
+    mGuiSettings->setView(GuiViewSettings::Editing,
+                          QStringList() << CellMLSupport::CellmlMimeType);
 }
 
 //==============================================================================

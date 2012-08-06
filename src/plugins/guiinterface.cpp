@@ -94,8 +94,10 @@ QAction * GuiMenuActionSettings::action() const
 
 //==============================================================================
 
-GuiViewSettings::GuiViewSettings(const Mode &pMode) :
-    mMode(pMode)
+GuiViewSettings::GuiViewSettings(const Mode &pMode,
+                                 const QStringList &pMimeTypes) :
+    mMode(pMode),
+    mMimeTypes(pMimeTypes)
 {
 }
 
@@ -106,6 +108,15 @@ GuiViewSettings::Mode GuiViewSettings::mode() const
     // Return the view's mode
 
     return mMode;
+}
+
+//==============================================================================
+
+QStringList GuiViewSettings::mimeTypes() const
+{
+    // Return the view's MIME types
+
+    return mMimeTypes;
 }
 
 //==============================================================================
@@ -241,7 +252,8 @@ void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
 
 //==============================================================================
 
-void GuiSettings::setView(const GuiViewSettings::Mode &pMode)
+void GuiSettings::setView(const GuiViewSettings::Mode &pMode,
+                          const QStringList &pMimeTypes)
 {
     // Add and set the view
 
@@ -250,7 +262,7 @@ void GuiSettings::setView(const GuiViewSettings::Mode &pMode)
 
         delete mView;
 
-    mView = new GuiViewSettings(pMode);
+    mView = new GuiViewSettings(pMode, pMimeTypes);
 }
 
 //==============================================================================

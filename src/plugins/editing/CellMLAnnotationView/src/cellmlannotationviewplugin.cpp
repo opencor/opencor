@@ -6,6 +6,7 @@
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
+#include "cellmlsupportplugin.h"
 
 //==============================================================================
 
@@ -49,7 +50,8 @@ CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin() :
 {
     // Set our settings
 
-    mGuiSettings->setView(GuiViewSettings::Editing);
+    mGuiSettings->setView(GuiViewSettings::Editing,
+                          QStringList() << CellMLSupport::CellmlMimeType);
 }
 
 //==============================================================================
