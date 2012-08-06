@@ -19,6 +19,7 @@
 #include <QFileInfo>
 #include <QLabel>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QSettings>
 #include <QStackedWidget>
 #include <QUrl>
@@ -570,14 +571,28 @@ void CentralWidget::saveFile(const int &pIndex, const bool &pNeedFileName)
                                       +supportedFileType.description()
                                       +" (*."+supportedFileType.fileExtension()+")";
 
-        fileName = QFileDialog::getSaveFileName(mMainWindow, tr("Save File"),
-                                                mActiveDir.path(),
-                                                supportedFileTypes, 0,
-                                                QFileDialog::DontConfirmOverwrite);
+        fileName = QDir::toNativeSeparators(QFileDialog::getSaveFileName(mMainWindow, tr("Save File"),
+                                                                         mActiveDir.path(),
+                                                                         supportedFileTypes, 0,
+                                                                         QFileDialog::DontConfirmOverwrite));
+
+        // Check whether the file already exists
+
+        if (QFileInfo(fileName).exists())
+            // The file already exists, so ask whether to overwrite it
+
+            if( QMessageBox::question(mMainWindow, qApp->applicationName(),
+                                      tr("The '%1' file already exists. Do you want to overwrite it?").arg(fileName),
+                                      QMessageBox::Yes|QMessageBox::No,
+                                      QMessageBox::Yes) == QMessageBox::No )
+                // We don't want to overwrite the file, so...
+
+                return;
 
         // Update our active directory
 
-        mActiveDir = QFileInfo(fileName).path();
+        if (!fileName.isEmpty())
+            mActiveDir = QFileInfo(fileName).path();
     }
 
     if (Core::FileManager::instance()->isModified(fileName))

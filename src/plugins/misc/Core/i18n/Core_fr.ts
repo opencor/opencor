@@ -31,6 +31,10 @@
         <source>Save File</source>
         <translation>Sauvegarder Fichier</translation>
     </message>
+    <message>
+        <source>The &apos;%1&apos; file already exists. Do you want to overwrite it?</source>
+        <translation>Le fichier &apos;%1&apos; existe déjà. Voulez-vous le remplacer ?</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
