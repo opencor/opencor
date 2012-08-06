@@ -36,6 +36,15 @@ QString File::fileName() const
 
 //==============================================================================
 
+void File::setFileName(const QString &pFileName)
+{
+    // Set the new file name of the file
+
+    mFileName = pFileName;
+}
+
+//==============================================================================
+
 File::Status File::check()
 {
     // Get the current SHA1 value for the file and compare it to its currently
@@ -104,9 +113,6 @@ bool File::isModified() const
 
 void File::setModified(const bool &pModified)
 {
-    if (pModified == mModified)
-        return;
-
     // Set the modified status of the file
 
     mModified = pModified;

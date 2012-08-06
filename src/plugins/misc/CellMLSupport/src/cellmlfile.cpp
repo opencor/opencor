@@ -523,8 +523,7 @@ void CellmlFile::setModified(const bool &pModified) const
 {
     // Set the modified status of the file
 
-    if (pModified != isModified())
-        Core::FileManager::instance()->setModified(mFileName, pModified);
+    Core::FileManager::instance()->setModified(mFileName, pModified);
 }
 
 //==============================================================================
@@ -566,9 +565,18 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 QString CellmlFile::fileName() const
 {
-    // Return the CellML file's name
+    // Return the CellML file's file name
 
     return mFileName;
+}
+
+//==============================================================================
+
+void CellmlFile::setFileName(const QString &pFileName)
+{
+    // Set the CellML file's file name
+
+    mFileName = pFileName;
 }
 
 //==============================================================================

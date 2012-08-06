@@ -168,7 +168,7 @@ private:
 
     bool activateFile(const QString &pFileName);
 
-    void saveFile(const int &pIndex, const bool &pNeedFileName = false);
+    void saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);

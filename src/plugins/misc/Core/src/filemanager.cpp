@@ -172,6 +172,33 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 
 //==============================================================================
 
+FileManager::Status FileManager::rename(const QString &pOldFileName,
+                                        const QString &pNewFileName)
+{
+    // Check whether the 'old' file is managed
+
+    QString oldFileName = nativeCanonicalFileName(pOldFileName);
+    QString newFileName = nativeCanonicalFileName(pNewFileName);
+
+    File *file = isManaged(oldFileName);
+
+    if (!file) {
+        // The 'old' file is not managed, so...
+
+        return NotManaged;
+    } else {
+        // The 'old' file is managed, so we can rename it
+
+        file->setFileName(newFileName);
+
+        emit fileRenamed(oldFileName, newFileName);
+
+        return Renamed;
+    }
+}
+
+//==============================================================================
+
 int FileManager::count() const
 {
     // Return the number of files currently being managed

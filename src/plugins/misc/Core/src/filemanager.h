@@ -45,7 +45,11 @@ public:
         // As a result of unmanaging a file
 
         Removed,
-        NotManaged
+        NotManaged,
+
+        // Miscellaneous
+
+        Renamed
     };
 
     explicit FileManager(const int &pTimerInterval = 1000);
@@ -59,6 +63,8 @@ public:
     File * isManaged(const QString &pFileName) const;
 
     bool isModified(const QString &pFileName) const;
+
+    Status rename(const QString &pOldFileName, const QString &pNewFileName);
 
     int count() const;
 
@@ -74,6 +80,8 @@ Q_SIGNALS:
     void fileDeleted(const QString &pFileName);
 
     void fileModified(const QString &pFileName, const bool &pModified);
+
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
 public Q_SLOTS:
     void setModified(const QString &pFileName, const bool &pModified);

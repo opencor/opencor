@@ -49,6 +49,7 @@ public:
     CellmlFileRuntime * runtime();
 
     QString fileName() const;
+    void setFileName(const QString &pFileName);
 
     CellmlFileModel * model() const;
 

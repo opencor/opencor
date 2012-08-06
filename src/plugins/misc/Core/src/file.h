@@ -29,6 +29,7 @@ public:
     explicit File(const QString &pFileName);
 
     QString fileName() const;
+    void setFileName(const QString &pFileName);
 
     Status check();
 

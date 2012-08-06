@@ -549,17 +549,19 @@ void CentralWidget::openFile()
 
 //==============================================================================
 
-void CentralWidget::saveFile(const int &pIndex, const bool &pNeedFileName)
+void CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 {
-    // Ask the current view to save the file for us, but only if the file has
-    // been modified, but first make sure that we have a file name
+    // Save the file, under a new name if needed
 
-    QString fileName = mOpenedFileNames[pIndex];
+    // Make sure that we have a file name
 
-    if (pNeedFileName || fileName.isEmpty()) {
+    QString oldFileName = mOpenedFileNames[pIndex];
+    QString newFileName = oldFileName;
+
+    if (pNeedNewFileName || newFileName.isEmpty()) {
         // Either we want to save the file under a new name or we are dealing
-        // with a new file, so we ask the user for a file name based on the mime
-        // types supported by the view
+        // with a new file, so we ask the user for a file name based on the MIME
+        // types supported by our current view
 
         QStringList mimeTypes = mGuiInterface->guiSettings()->view()->mimeTypes();
 
@@ -571,34 +573,63 @@ void CentralWidget::saveFile(const int &pIndex, const bool &pNeedFileName)
                                       +supportedFileType.description()
                                       +" (*."+supportedFileType.fileExtension()+")";
 
-        fileName = QDir::toNativeSeparators(QFileDialog::getSaveFileName(mMainWindow, tr("Save File"),
-                                                                         mActiveDir.path(),
-                                                                         supportedFileTypes, 0,
-                                                                         QFileDialog::DontConfirmOverwrite));
+        newFileName = QDir::toNativeSeparators(QFileDialog::getSaveFileName(mMainWindow, tr("Save File"),
+                                                                            mActiveDir.path(),
+                                                                            supportedFileTypes, 0,
+                                                                            QFileDialog::DontConfirmOverwrite));
 
-        // Check whether the file already exists
+        // Check whether the 'new' file already exists
 
-        if (QFileInfo(fileName).exists())
-            // The file already exists, so ask whether to overwrite it
+        if (QFileInfo(newFileName).exists())
+            // The 'new' file already exists, so ask whether we want to
+            // overwrite it
 
             if( QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                      tr("The '%1' file already exists. Do you want to overwrite it?").arg(fileName),
+                                      tr("The '%1' file already exists. Do you want to overwrite it?").arg(newFileName),
                                       QMessageBox::Yes|QMessageBox::No,
                                       QMessageBox::Yes) == QMessageBox::No )
-                // We don't want to overwrite the file, so...
+                // We don't want to overwrite the 'new' file, so...
 
                 return;
 
-        // Update our active directory
+        // Update our active directory, if possible
 
-        if (!fileName.isEmpty())
-            mActiveDir = QFileInfo(fileName).path();
+        if (!newFileName.isEmpty())
+            mActiveDir = QFileInfo(newFileName).path();
     }
 
-    if (Core::FileManager::instance()->isModified(fileName))
-        // The file is modified, so we try to save it
+    // Check whether the 'old' file has been modified
 
-        mGuiInterface->saveFile(fileName);
+    bool needNewFileName = oldFileName.compare(newFileName);
+
+    if (Core::FileManager::instance()->isModified(oldFileName))
+        // The 'old' file has been modified, so we can try to save it
+
+        mGuiInterface->saveFile(oldFileName, newFileName);
+    else if (needNewFileName)
+        // The 'old' file hasn't been modified, but we want to save it under a
+        // new name (either as a result of a save as or because the file was
+        // new)
+
+        if (!QFile(oldFileName).copy(newFileName)) {
+            // We weren't able to save the file under a new name, so...
+
+            QMessageBox::warning(mMainWindow, tr("Save File"),
+                                 tr("Sorry, but the file could not be saved."));
+
+            return;
+        }
+
+    // Update the information about the file name, in case the 'old' and 'new'
+    // file names are different
+
+    if (   needNewFileName
+        && (Core::FileManager::instance()->rename(oldFileName, newFileName) == FileManager::Renamed)) {
+        mOpenedFileNames[pIndex] = newFileName;
+
+        mFileTabs->setTabText(pIndex, QFileInfo(newFileName).fileName());
+        mFileTabs->setTabToolTip(pIndex, newFileName);
+    }
 }
 
 //==============================================================================
