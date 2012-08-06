@@ -150,7 +150,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     if (!tempFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         // The temporary file can't be opened, so...
 
-        mError = ComputerError(tr("the '%1' temporary file could not be created").arg(tempFileName));
+        mError = ComputerError(tr("'%1' could not be created").arg(tempFileName));
 
         tempFile.remove();
 

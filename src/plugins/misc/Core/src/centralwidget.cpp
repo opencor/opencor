@@ -585,7 +585,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // overwrite it
 
             if( QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                      tr("The '%1' file already exists. Do you want to overwrite it?").arg(newFileName),
+                                      tr("'%1' already exists. Do you want to overwrite it?").arg(newFileName),
                                       QMessageBox::Yes|QMessageBox::No,
                                       QMessageBox::Yes) == QMessageBox::No )
                 // We don't want to overwrite the 'new' file, so...
@@ -602,11 +602,18 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
     bool needNewFileName = oldFileName.compare(newFileName);
 
-    if (Core::FileManager::instance()->isModified(oldFileName))
+    if (Core::FileManager::instance()->isModified(oldFileName)) {
         // The 'old' file has been modified, so we can try to save it
 
-        return mGuiInterface->saveFile(oldFileName, newFileName);
-    else if (needNewFileName)
+        if (!mGuiInterface->saveFile(oldFileName, newFileName)) {
+            // The file couldn't be saved, so...
+
+            QMessageBox::warning(mMainWindow, tr("Save File"),
+                                 tr("Sorry, but '%1' could not be saved.").arg(newFileName));
+
+            return false;
+        }
+    } else if (needNewFileName) {
         // The 'old' file hasn't been modified, but we want to save it under a
         // new name (either as a result of a save as or because the file was
         // new)
@@ -615,10 +622,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // We weren't able to save the file under a new name, so...
 
             QMessageBox::warning(mMainWindow, tr("Save File"),
-                                 tr("Sorry, but the file could not be saved."));
+                                 tr("Sorry, but '%1' could not be saved.").arg(newFileName));
 
             return false;
         }
+    }
 
     // Update the information about the file name, in case the 'old' and 'new'
     // file names are different
@@ -820,7 +828,7 @@ bool CentralWidget::canClose()
             // or ignore it
 
             int response = QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                                 tr("The '%1' file has been modified. Do you want to save it before closing it?").arg(fileName),
+                                                 tr("'%1' has been modified. Do you want to save it before closing it?").arg(fileName),
                                                  QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                                  QMessageBox::Yes);
 

@@ -8,8 +8,8 @@
         <translation>les intégrales définies ne sont pas encore supportées</translation>
     </message>
     <message>
-        <source>the &apos;%1&apos; temporary file could not be created</source>
-        <translation>le fichier temporaire &apos;%1&apos; n&apos;a pas pu être créé</translation>
+        <source>&apos;%1&apos; could not be created</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être créé</translation>
     </message>
     <message>
         <source>the compilation object could not be created</source>
