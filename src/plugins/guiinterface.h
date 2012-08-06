@@ -193,6 +193,8 @@ public:
     virtual bool saveFile(const QString &pOldFileName,
                           const QString &pNewFileName);
 
+    bool canClose();
+
     GuiSettings * guiSettings() const;
 
     static QMenu * newMenu(QMainWindow *pMainWindow,

@@ -24,6 +24,7 @@
 
 //==============================================================================
 
+#include <QCloseEvent>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFileDialog>
@@ -320,15 +321,36 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
-    // Keep track of our default settings
-    // Note: it must be done here, as opposed to the destructor, otherwise some
-    //       settings (e.g. docked windows) won't be properly saved
+    // Check our plugins that it's OK to close
 
-    saveSettings();
+    bool canClose = true;
 
-    // Default handling of the event
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-    QMainWindow::closeEvent(pEvent);
+        if (guiInterface)
+            canClose = guiInterface->canClose() && canClose;
+            // Note: we want to ask all the plugins whether we can close, hence
+            //       the order of the above test...
+    }
+
+    // Close ourselves
+
+    if (canClose) {
+        // Keep track of our default settings
+        // Note: it must be done here, as opposed to the destructor, otherwise some
+        //       settings (e.g. docked windows) won't be properly saved
+
+        saveSettings();
+
+        // Accept the event
+
+        pEvent->accept();
+    } else {
+        // Ignore the event, i.e. don't close ourselves
+
+        pEvent->ignore();
+    }
 }
 
 //==============================================================================

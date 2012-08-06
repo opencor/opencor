@@ -384,6 +384,15 @@ bool GuiInterface::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
+bool GuiInterface::canClose()
+{
+    // We can close by default...
+
+    return true;
+}
+
+//==============================================================================
+
 GuiSettings * GuiInterface::guiSettings() const
 {
     // Return the plugin's GUI settings
