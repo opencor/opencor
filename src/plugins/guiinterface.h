@@ -190,8 +190,8 @@ public:
     virtual void deleteViewWidget(const QString &pFileName);
     virtual QString viewName();
 
-    virtual bool saveFile(const QString &pFileName,
-                          const QString &pAsFileName = QString());
+    virtual bool saveFile(const QString &pOldFileName,
+                          const QString &pNewFileName);
 
     GuiSettings * guiSettings() const;
 

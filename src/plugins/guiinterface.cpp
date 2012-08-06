@@ -371,11 +371,11 @@ QString GuiInterface::viewName()
 
 //==============================================================================
 
-bool GuiInterface::saveFile(const QString &pFileName,
-                            const QString &pAsFileName)
+bool GuiInterface::saveFile(const QString &pOldFileName,
+                            const QString &pNewFileName)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pAsFileName);
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
 
     // The file is not saved by default...
 
