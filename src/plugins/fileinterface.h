@@ -34,12 +34,15 @@ public:
     explicit FileType(FileInterface *pOwner, const QString &pMimeType,
                       const QString &pFileExtension);
 
+    bool operator==(const FileType &pFileType) const;
+
     QString mimeType() const;
     QString fileExtension() const;
     QString description() const;
 
 private:
     FileInterface *mOwner;
+
     QString mMimeType;
     QString mFileExtension;
 };

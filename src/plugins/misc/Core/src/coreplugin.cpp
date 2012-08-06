@@ -194,9 +194,12 @@ void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
         FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
 
         if (fileInterface)
-            // The plugin implements our file interface, so...
+            // The plugin implements our file interface, so add the supported
+            // file types, but only if they are not already in our list
 
-            supportedFileTypes << fileInterface->fileTypes();
+            foreach (const FileType &fileType, fileInterface->fileTypes())
+                if (!supportedFileTypes.contains(fileType))
+                    supportedFileTypes << fileType;
     }
 
     mCentralWidget->setSupportedFileTypes(supportedFileTypes);
