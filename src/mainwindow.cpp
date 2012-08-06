@@ -297,11 +297,11 @@ void MainWindow::showEvent(QShowEvent *pEvent)
         // fine (i.e. it respects OpenCOR's settings that were loaded in the
         // constructor). Various connections (set in the constructor) take care
         // of this, but there is still one menu item (which tells us whether the
-        // status bar is to be shown or not) for which no connection can be set.
-        // So, we have to 'manually' set the status of that menu item here (as
-        // opposed to, say, the constructor), since we may need (on Windows at
-        // least) all of OpenCOR to be visible in order to be able to determine
-        // whether the status bar is visible or not...
+        // status bar is to be shown) for which no connection can be set. So, we
+        // have to 'manually' set the status of that menu item here (as opposed
+        // to, say, the constructor), since we may need (on Windows at least)
+        // all of OpenCOR to be visible in order to be able to determine whether
+        // the status bar is visible...
 
         mGui->actionStatusBar->setChecked(statusBar()->isVisible());
 

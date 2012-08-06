@@ -145,7 +145,7 @@ int main(int pArgc, char *pArgv[])
     delete app;
 
     // We are done with the execution of the application, so now the question is
-    // whether we need to restart or not
+    // whether we need to restart
     // Note: we do this here rather than 'within' the GUI because once we have
     //       launched a new instance of OpenCOR, we want this instance of
     //       OpenCOR to finish as soon as possible which will be the case here

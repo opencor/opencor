@@ -209,7 +209,7 @@ void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
     //  - The name of the folder item or the path of the file item
     //  - The index of its parent
     //  - The number of child items the (folder) item has, if any
-    //  - Whether the (folder) items is expanded or not
+    //  - Whether the (folder) items is expanded
 
     if (   (pItem == mDataModel->invisibleRootItem())
         || pItem->data(Item::Folder).toBool()) {
@@ -892,14 +892,14 @@ void FileOrganiserWidget::moveItem(QStandardItem *pItem,
                                        mDataModel->invisibleRootItem();
     QStandardItem *newParentItem = parentItem(pDropItem, pDropPosition);
 
-    // Second, check whether or not the (file) item points to a file which is
-    // already owned by newParentItem
+    // Second, check whether the (file) item points to a file which is already
+    // owned by newParentItem
 
     bool fileAlreadyOwned = false;
 
     if (!pItem->data(Item::Folder).toBool())
         // The current item is a file item, so retrieve its file name and check
-        // whether or not it's already owned by newParentItem
+        // whether it's already owned by newParentItem
 
         fileAlreadyOwned = ownedBy(pItem->data(Item::Path).toString(), newParentItem);
 
@@ -914,8 +914,8 @@ void FileOrganiserWidget::moveItem(QStandardItem *pItem,
         // newParentItem in which case it means that we want to move the item
         // within its current location
 
-        // First, check whether the item is a folder and, if so, whether or not
-        // it's expanded (and the same with any (in)direct child folder it may
+        // First, check whether the item is a folder and, if so, whether it's
+        // expanded (and the same with any (in)direct child folder it may
         // contain)
 
         backupExpandedInformation(pItem);

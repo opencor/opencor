@@ -105,7 +105,7 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 
 bool RawCellMLViewPlugin::hasViewWidget(const QString &pFileName) const
 {
-    // Return whether a view widget exists or not for the given file name
+    // Return whether a view widget exists for the given file name
 
     return mViewWidget->isManaged(pFileName);
 }

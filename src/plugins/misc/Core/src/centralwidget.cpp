@@ -448,7 +448,7 @@ void CentralWidget::openFile(const QString &pFileName)
 
         return;
 
-    // Check whether or not the file is already opened
+    // Check whether the file is already opened
 
     if (activateFile(pFileName))
         // The file is already opened and, if anything, got selected, so...

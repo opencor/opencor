@@ -125,7 +125,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
                                              const QString &pFunctionBody,
                                              const bool &pOutputErrors)
 {
-    // Check whether we want to compute a definite integral or not
+    // Check whether we want to compute a definite integral
 
     if (pFunctionBody.contains("defint(func")) {
         mError = ComputerError(tr("definite integrals are not yet supported"));

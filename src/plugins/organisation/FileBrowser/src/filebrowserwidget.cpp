@@ -107,7 +107,7 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
     } else {
         // The initial path exists, so retrieve some information about the
         // folder and/or file (depending on whether the initial path refers to a
-        // file or not)
+        // file)
         // Note: indeed, should mInitPath refer to a file, then to directly set
         //       the current index of the tree view to that of a file won't give
         //       us the expected behaviour (i.e. the parent folder being open
@@ -351,7 +351,7 @@ void FileBrowserWidget::goToOtherItem(QStringList &pItems,
 
     pOtherItems << crtPath;
 
-    // Retrieve the new path and check whether it still exist or not
+    // Retrieve the new path and check whether it still exists
 
     QString newItemPath = pItems.last();
 
@@ -548,8 +548,7 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
         //       Linux and OS X, but it doesn't harm adding it for these
         //       platforms too, so...)
 
-        // Check whether or not we are done initializing (which is when
-        // mInitPathDirs is empty)
+        // Check whether we are done initializing
 
         if (mInitPathDirs.isEmpty()) {
             // We are now done loading the settings for the file browser widget,

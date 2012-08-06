@@ -214,7 +214,7 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 
 bool CellMLAnnotationViewPlugin::hasViewWidget(const QString &pFileName) const
 {
-    // Return whether a view widget exists or not for the given file name
+    // Return whether a view widget exists for the given file name
 
     return mViewWidgets.value(pFileName);
 }

@@ -444,8 +444,7 @@ void HelpWidget::paintEvent(QPaintEvent *pEvent)
 
 void HelpWidget::urlChanged(const QUrl &pUrl)
 {
-    // The URL has changed, so let the user know whether it's the home page or
-    // not
+    // The URL has changed, so let the user know whether it's the home page
 
     emit notHomePage(pUrl != mHomePage);
 }
@@ -474,13 +473,12 @@ void HelpWidget::webPageChanged()
 
         if (action == pageAction(QWebPage::Back)) {
             // The current action is to tell us whether the previous help page
-            // is available or not, so send a signal to let the user know about
-            // it
+            // is available, so send a signal to let the user know about it
 
             emit backEnabled(action->isEnabled());
         } else if (action == pageAction(QWebPage::Forward)) {
             // The current action is to tell us whether the next help page is
-            // available or not, so send a signal to let the user know about it
+            // available, so send a signal to let the user know about it
 
             emit forwardEnabled(action->isEnabled());
         }

@@ -356,7 +356,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QS
     forever
         if (mGridLayout->itemAtPosition(++row, 0)) {
             // Valid row, so check whether to make it bold (and italic in some
-            // cases) or not
+            // cases)
 
             QLabel *qualifierLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
             QLabel *resourceLabel  = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());

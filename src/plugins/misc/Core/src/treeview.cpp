@@ -47,7 +47,7 @@ void TreeView::selectFirstNode()
 
 bool TreeView::isEditing() const
 {
-    // Return whether the tree view is in editing mode or not
+    // Return whether the tree view is in editing mode
 
     return state() == QAbstractItemView::EditingState;
 }

@@ -125,7 +125,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
     for (int i = 0, iMax = pCellmlElementItem->rowCount(); i < iMax; ++i)
         retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(pCellmlElementItem->child(i)));
 
-    // Check whether we are dealing with a category or not
+    // Check whether we are dealing with a category
 
     if (pCellmlElementItem->isCategory())
         // We are dealing with a category, so retranslate its type
@@ -548,7 +548,7 @@ void CellmlAnnotationViewCellmlListWidget::treeViewContextMenu(const QPoint &pPo
 {
     Q_UNUSED(pPosition);
 
-    // Determine whether to show context menu or not by checking whether the
+    // Determine whether to show the context menu by checking whether the
     // current item is the same as the one over which we are
 
     CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mDataModel->itemFromIndex(mTreeView->indexAt(mTreeView->mapFromGlobal(QCursor::pos()-mTreeView->pos()))));

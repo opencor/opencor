@@ -182,7 +182,7 @@ bool SingleCellSimulationViewGraphPanelWidget::isActive() const
 
 void SingleCellSimulationViewGraphPanelWidget::setMarkerColor()
 {
-    // Set the marker's colour based on whether the graph panel is active or not
+    // Set the marker's colour based on whether the graph panel is active
 
     QPalette markerPalette = qApp->palette();
 

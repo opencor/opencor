@@ -153,7 +153,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
     mCellmlElement = pCellmlElement;
 
     // Update the add term button, depending on whether the direct term is
-    // already associated with the CellML element or not
+    // already associated with the CellML element
 
     if (mTermIsDirect) {
         QStringList termInformation = mTerm.split("/");
@@ -167,14 +167,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
     }
 
     // Enable or disable the add buttons for the retrieved terms, depending on
-    // whether they are already associated with the CellML element or not
+    // whether they are already associated with the CellML element
 
     int row = 0;
 
     forever
         if (mGridLayout->itemAtPosition(++row, 0)) {
             // Valid row, so check whether to make it bold (and italic in some
-            // cases) or not
+            // cases)
 
             QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
 
@@ -658,7 +658,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString 
     forever
         if (mGridLayout->itemAtPosition(++row, 0)) {
             // Valid row, so check whether to make it bold (and italic in some
-            // cases) or not
+            // cases)
 
             QLabel *nameLabel     = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
             QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());

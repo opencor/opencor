@@ -426,7 +426,7 @@ void CorePlugin::updateFileReopenMenu()
     }
 
     // Enable/disable our our reopen sub-menu depending on whether we have
-    // recent file names or not
+    // recent file names
 
     mFileReopenSubMenu->setEnabled(!mRecentFileNames.isEmpty());
 }

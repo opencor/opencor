@@ -122,7 +122,7 @@ PluginManager::~PluginManager()
 
 Plugins PluginManager::plugins() const
 {
-    // Return a list of all our plugins, whether loaded or not
+    // Return a list of all our plugins, whether loaded
 
     return mPlugins;
 }

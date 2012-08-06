@@ -2,8 +2,7 @@
 // CellML file MathML element
 //==============================================================================
 //---GRY--- NEED TO THINK OF A WAY TO KEEP TRACK OF CHANGES TO A MathML ELEMENT,
-//          I.E. BE ABLE TO TELL WHETHER A CellML FILE HAS BEEN MODIFIED OR
-//          NOT...
+//          I.E. BE ABLE TO TELL WHETHER A CellML FILE HAS BEEN MODIFIED...
 //==============================================================================
 
 #include "cellmlfilemathmlelement.h"

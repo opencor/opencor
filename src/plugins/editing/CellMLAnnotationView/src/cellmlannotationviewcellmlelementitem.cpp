@@ -190,7 +190,7 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 
 bool CellmlAnnotationViewCellmlElementItem::isCategory() const
 {
-    // Return wether the CellML element item is a category or not
+    // Return whether the CellML element item is a category
 
     return mCategory;
 }
