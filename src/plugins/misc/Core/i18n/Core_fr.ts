@@ -39,6 +39,10 @@
         <source>Sorry, but the file could not be saved.</source>
         <translation>Désolé, mais le fichier n&apos;a pas pu être sauvegardé.</translation>
     </message>
+    <message>
+        <source>The &apos;%1&apos; file has been modified. Do you want to save it before closing it?</source>
+        <translation>Le fichier &apos;%1&apos; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>

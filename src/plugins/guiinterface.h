@@ -193,7 +193,7 @@ public:
     virtual bool saveFile(const QString &pOldFileName,
                           const QString &pNewFileName);
 
-    virtual bool canClose() const;
+    virtual bool canClose();
 
     GuiSettings * guiSettings() const;
 

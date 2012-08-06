@@ -347,7 +347,7 @@ void CorePlugin::retranslateUi()
 
 //==============================================================================
 
-bool CorePlugin::canClose() const
+bool CorePlugin::canClose()
 {
     // To determine whether we can close, we must ask our central widget
 

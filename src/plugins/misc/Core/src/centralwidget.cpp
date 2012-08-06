@@ -549,7 +549,7 @@ void CentralWidget::openFile()
 
 //==============================================================================
 
-void CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
+bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 {
     // Save the file, under a new name if needed
 
@@ -590,7 +590,7 @@ void CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                                       QMessageBox::Yes) == QMessageBox::No )
                 // We don't want to overwrite the 'new' file, so...
 
-                return;
+                return false;
 
         // Update our active directory, if possible
 
@@ -605,7 +605,7 @@ void CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     if (Core::FileManager::instance()->isModified(oldFileName))
         // The 'old' file has been modified, so we can try to save it
 
-        mGuiInterface->saveFile(oldFileName, newFileName);
+        return mGuiInterface->saveFile(oldFileName, newFileName);
     else if (needNewFileName)
         // The 'old' file hasn't been modified, but we want to save it under a
         // new name (either as a result of a save as or because the file was
@@ -617,7 +617,7 @@ void CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             QMessageBox::warning(mMainWindow, tr("Save File"),
                                  tr("Sorry, but the file could not be saved."));
 
-            return;
+            return false;
         }
 
     // Update the information about the file name, in case the 'old' and 'new'
@@ -630,6 +630,10 @@ void CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         mFileTabs->setTabText(pIndex, QFileInfo(newFileName).fileName());
         mFileTabs->setTabToolTip(pIndex, newFileName);
     }
+
+    // Everything went fine, so...
+
+    return true;
 }
 
 //==============================================================================
@@ -804,11 +808,39 @@ void CentralWidget::fileMoved(const int &pFromIndex, const int &pToIndex)
 
 //==============================================================================
 
-bool CentralWidget::canClose() const
+bool CentralWidget::canClose()
 {
-//---GRY--- TO BE DONE...
+    // We can close only if none of the opened files is modified
 
-return true;
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
+        QString fileName = mOpenedFileNames[i];
+
+        if (FileManager::instance()->isModified(fileName)) {
+            // The current file is modified, so ask the user whether to save it
+            // or ignore it
+
+            int response = QMessageBox::question(mMainWindow, qApp->applicationName(),
+                                                 tr("The '%1' file has been modified. Do you want to save it before closing it?").arg(fileName),
+                                                 QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
+                                                 QMessageBox::Yes);
+
+            if (response == QMessageBox::Cancel)
+                // The user wants to cancel, so...
+
+                return false;
+            else if (response == QMessageBox::Yes)
+                // The user wants to save the file
+
+                if (!saveFile(i))
+                    // The file couldn't be saved, so...
+
+                    return false;
+        }
+    }
+
+    // We checked all the opened files, so...
+
+    return true;
 }
 
 //==============================================================================

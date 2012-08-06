@@ -107,7 +107,7 @@ public:
 
     void openFile(const QString &pFileName);
 
-    bool canClose() const;
+    bool canClose();
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
@@ -170,7 +170,7 @@ private:
 
     bool activateFile(const QString &pFileName);
 
-    void saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
+    bool saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);

@@ -338,8 +338,8 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
     if (canClose) {
         // Keep track of our default settings
-        // Note: it must be done here, as opposed to the destructor, otherwise some
-        //       settings (e.g. docked windows) won't be properly saved
+        // Note: it must be done here, as opposed to the destructor, otherwise
+        //       some settings (e.g. docked windows) won't be properly saved...
 
         saveSettings();
 

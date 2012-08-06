@@ -384,7 +384,7 @@ bool GuiInterface::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-bool GuiInterface::canClose() const
+bool GuiInterface::canClose()
 {
     // We can close by default...
 
