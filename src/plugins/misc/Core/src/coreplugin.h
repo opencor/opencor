@@ -53,6 +53,8 @@ public:
 
     virtual void retranslateUi();
 
+    virtual bool canClose() const;
+
 private:
     CentralWidget *mCentralWidget;
 

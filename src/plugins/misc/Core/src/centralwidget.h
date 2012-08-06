@@ -107,6 +107,8 @@ public:
 
     void openFile(const QString &pFileName);
 
+    bool canClose() const;
+
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);

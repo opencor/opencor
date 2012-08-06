@@ -347,6 +347,15 @@ void CorePlugin::retranslateUi()
 
 //==============================================================================
 
+bool CorePlugin::canClose() const
+{
+    // To determine whether we can close, we must ask our central widget
+
+    return mCentralWidget->canClose();
+}
+
+//==============================================================================
+
 void CorePlugin::fileOpened(const QString &pFileName)
 {
     // Remove the file from our list of recent files and update our reopen

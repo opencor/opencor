@@ -804,6 +804,15 @@ void CentralWidget::fileMoved(const int &pFromIndex, const int &pToIndex)
 
 //==============================================================================
 
+bool CentralWidget::canClose() const
+{
+//---GRY--- TO BE DONE...
+
+return true;
+}
+
+//==============================================================================
+
 int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
 {
     // Return the tab index of the requested mode
