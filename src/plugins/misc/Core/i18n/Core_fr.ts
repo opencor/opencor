@@ -27,6 +27,10 @@
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>
+    <message>
+        <source>Save File</source>
+        <translation>Sauvegarder Fichier</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>

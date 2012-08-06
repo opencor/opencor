@@ -551,14 +551,34 @@ void CentralWidget::openFile()
 void CentralWidget::saveFile(const int &pIndex, const bool &pNeedFileName)
 {
     // Ask the current view to save the file for us, but only if the file has
-    // been modified
+    // been modified, but first make sure that we have a file name
 
     QString fileName = mOpenedFileNames[pIndex];
-//    bool needFileName = pNeedFileName || fileName.isEmpty();
 
-Q_UNUSED(pNeedFileName);
+    if (pNeedFileName || fileName.isEmpty()) {
+        // Either we want to save the file under a new name or we are dealing
+        // with a new file, so we ask the user for a file name based on the mime
+        // types supported by the view
 
-//---GRY--- TO BE DONE...
+        QStringList mimeTypes = mGuiInterface->guiSettings()->view()->mimeTypes();
+
+        QString supportedFileTypes;
+
+        foreach (const FileType &supportedFileType, mSupportedFileTypes)
+            if (mimeTypes.contains(supportedFileType.mimeType()))
+                supportedFileTypes +=  ";;"
+                                      +supportedFileType.description()
+                                      +" (*."+supportedFileType.fileExtension()+")";
+
+        fileName = QFileDialog::getSaveFileName(mMainWindow, tr("Save File"),
+                                                mActiveDir.path(),
+                                                supportedFileTypes, 0,
+                                                QFileDialog::DontConfirmOverwrite);
+
+        // Update our active directory
+
+        mActiveDir = QFileInfo(fileName).path();
+    }
 
     if (Core::FileManager::instance()->isModified(fileName))
         // The file is modified, so we try to save it
