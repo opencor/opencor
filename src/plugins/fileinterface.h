@@ -46,10 +46,14 @@ private:
 
 //==============================================================================
 
+typedef QList<FileType> FileTypes;
+
+//==============================================================================
+
 class FileInterface : public Interface
 {
 public:
-    virtual QList<FileType> fileTypes() const;
+    virtual FileTypes fileTypes() const;
     virtual QString fileTypeDescription(const QString &pMimeType) const;
 };
 

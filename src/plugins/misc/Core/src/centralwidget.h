@@ -97,7 +97,7 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
-    void setSupportedFileTypes(const QList<FileType> &pSupportedFileTypes);
+    void setSupportedFileTypes(const FileTypes &pSupportedFileTypes);
 
     void addView(Plugin *pPlugin, GuiViewSettings *pSettings);
 
@@ -133,7 +133,7 @@ private:
 
     QDir mActiveDir;
 
-    QList<FileType> mSupportedFileTypes;
+    FileTypes mSupportedFileTypes;
 
     QStringList mOpenedFileNames;
 
@@ -168,8 +168,7 @@ private:
 
     bool activateFile(const QString &pFileName);
 
-    void saveFile(const int &pIndex);
-    void saveFileAs(const int &pIndex);
+    void saveFile(const int &pIndex, const bool &pNeedFileName = false);
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);

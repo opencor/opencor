@@ -120,7 +120,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mStatus(Starting),
     mLoadedPlugins(Plugins()),
     mActiveDir(QDir()),
-    mSupportedFileTypes(QList<FileType>()),
+    mSupportedFileTypes(FileTypes()),
     mOpenedFileNames(QStringList()),
     mGuiInterface(0)
 {
@@ -431,7 +431,7 @@ void CentralWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CentralWidget::setSupportedFileTypes(const QList<FileType> &pSupportedFileTypes)
+void CentralWidget::setSupportedFileTypes(const FileTypes &pSupportedFileTypes)
 {
     // Set the supported file types
 
@@ -548,16 +548,22 @@ void CentralWidget::openFile()
 
 //==============================================================================
 
-void CentralWidget::saveFile(const int &pIndex)
+void CentralWidget::saveFile(const int &pIndex, const bool &pNeedFileName)
 {
     // Ask the current view to save the file for us, but only if the file has
     // been modified
-//---GRY--- WE WILL HAVE TO THINK ABOUT WHAT TO DO ABOUT NEW FILES...
 
-    if (Core::FileManager::instance()->isModified(mOpenedFileNames[pIndex]))
+    QString fileName = mOpenedFileNames[pIndex];
+//    bool needFileName = pNeedFileName || fileName.isEmpty();
+
+Q_UNUSED(pNeedFileName);
+
+//---GRY--- TO BE DONE...
+
+    if (Core::FileManager::instance()->isModified(fileName))
         // The file is modified, so we try to save it
 
-        mGuiInterface->saveFile(mOpenedFileNames[pIndex]);
+        mGuiInterface->saveFile(fileName);
 }
 
 //==============================================================================
@@ -571,20 +577,11 @@ void CentralWidget::saveFile()
 
 //==============================================================================
 
-void CentralWidget::saveFileAs(const int &pIndex)
-{
-Q_UNUSED(pIndex);
-
-//---GRY--- TO BE DONE...
-}
-
-//==============================================================================
-
 void CentralWidget::saveFileAs()
 {
     // Save the current file under a new name
 
-    saveFileAs(mFileTabs->currentIndex());
+    saveFile(mFileTabs->currentIndex(), true);
 }
 
 //==============================================================================

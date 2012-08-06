@@ -47,11 +47,11 @@ QString FileType::description() const
 
 //==============================================================================
 
-QList<FileType> FileInterface::fileTypes() const
+FileTypes FileInterface::fileTypes() const
 {
     // By default, there are no file types
 
-    return QList<FileType>();
+    return FileTypes();
 }
 
 //==============================================================================

@@ -185,10 +185,10 @@ void CorePlugin::initialize()
 
 void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the file types supported by the plugins and make our central
-    // widget aware of them
+    // Retrieve the different file types supported by our various plugins and
+    // make our central widget aware of them
 
-    QList<FileType> supportedFileTypes = QList<FileType>();
+    FileTypes supportedFileTypes = FileTypes();
 
     foreach (Plugin *loadedPlugin, pLoadedPlugins) {
         FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());

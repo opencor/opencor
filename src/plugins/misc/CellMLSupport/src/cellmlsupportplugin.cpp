@@ -47,12 +47,12 @@ void CellMLSupportPlugin::initializationsDone(const Plugins &)
 
 //==============================================================================
 
-QList<FileType> CellMLSupportPlugin::fileTypes() const
+FileTypes CellMLSupportPlugin::fileTypes() const
 {
     // Return the CellML file type that the CellMLSupport plugin supports
 
-    return QList<FileType>() << FileType(qobject_cast<FileInterface *>(this),
-                                         CellmlMimeType, CellmlFileExtension);
+    return FileTypes() << FileType(qobject_cast<FileInterface *>(this),
+                                   CellmlMimeType, CellmlFileExtension);
 }
 
 //==============================================================================
