@@ -333,8 +333,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
 
-    emit canSaveFile(false);
-    emit canSaveFileAll(false);
+    emit canSave(false);
+    emit canSaveAll(false);
 
     emit atLeastOneFile(false);
     emit atLeastTwoFiles(false);
@@ -1092,7 +1092,7 @@ void CentralWidget::updateGui()
     // Note: it's fine if openedFileName is empty, since isModified() will then
     //       return false...
 
-    emit canSaveFile(Core::FileManager::instance()->isModified(openedFileName));
+    emit canSave(Core::FileManager::instance()->isModified(openedFileName));
 
     // We are done with updating the GUI, so...
 
@@ -1197,8 +1197,8 @@ void CentralWidget::fileModified()
 
     // Let people know that we can save at least one file
 
-    emit canSaveFile(true);
-    emit canSaveFileAll(true);
+    emit canSave(true);
+    emit canSaveAll(true);
 }
 
 //==============================================================================

@@ -130,11 +130,11 @@ void CorePlugin::initialize()
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mCentralWidget, SIGNAL(canSaveFile(const bool &)),
+    connect(mCentralWidget, SIGNAL(canSave(const bool &)),
             mFileSaveAction, SLOT(setEnabled(bool)));
     connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
             mFileSaveAsAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(canSaveFileAll(const bool &)),
+    connect(mCentralWidget, SIGNAL(canSaveAll(const bool &)),
             mFileSaveAllAction, SLOT(setEnabled(bool)));
 
     connect(mCentralWidget, SIGNAL(atLeastTwoFiles(const bool &)),

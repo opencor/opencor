@@ -177,8 +177,8 @@ Q_SIGNALS:
     void fileClosed(const QString &pFileName);
     void fileSelected(const QString &pFileName);
 
-    void canSaveFile(const bool &pEnabled);
-    void canSaveFileAll(const bool &pEnabled);
+    void canSave(const bool &pEnabled);
+    void canSaveAll(const bool &pEnabled);
 
     void atLeastOneFile(const bool &pAtLeastOneFile);
     void atLeastTwoFiles(const bool &pAtLeastTwoFiles);
