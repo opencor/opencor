@@ -585,7 +585,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // overwrite it
 
             if( QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                      tr("'%1' already exists. Do you want to overwrite it?").arg(newFileName),
+                                      tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(newFileName),
                                       QMessageBox::Yes|QMessageBox::No,
                                       QMessageBox::Yes) == QMessageBox::No )
                 // We don't want to overwrite the 'new' file, so...
@@ -609,7 +609,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // The file couldn't be saved, so...
 
             QMessageBox::warning(mMainWindow, tr("Save File"),
-                                 tr("Sorry, but '%1' could not be saved.").arg(newFileName));
+                                 tr("Sorry, but <strong>%1</strong> could not be saved.").arg(newFileName));
 
             return false;
         }
@@ -622,7 +622,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // We weren't able to save the file under a new name, so...
 
             QMessageBox::warning(mMainWindow, tr("Save File"),
-                                 tr("Sorry, but '%1' could not be saved.").arg(newFileName));
+                                 tr("Sorry, but <strong>%1</strong> could not be saved.").arg(newFileName));
 
             return false;
         }
@@ -828,7 +828,7 @@ bool CentralWidget::canClose()
             // or ignore it
 
             int response = QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                                 tr("'%1' has been modified. Do you want to save it before closing it?").arg(fileName),
+                                                 tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName),
                                                  QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                                  QMessageBox::Yes);
 

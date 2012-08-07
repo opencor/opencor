@@ -128,20 +128,20 @@
         <translation>Ajouter</translation>
     </message>
     <message>
-        <source>Please wait while we are retrieving possible terms for &apos;%1&apos;...</source>
-        <translation>Veuillez patienter pendant que nous retrouvons des termes possibles pour &apos;%1&apos;...</translation>
+        <source>Please wait while we are retrieving possible terms for &lt;strong&gt;%1&lt;/strong&gt;...</source>
+        <translation>Veuillez patienter pendant que nous retrouvons des termes possibles pour &lt;strong&gt;%1&lt;/strong&gt;...</translation>
     </message>
     <message>
         <source>Please enter a term to search above...</source>
         <translation>Veuillez entrer un terme à chercher plus haut...</translation>
     </message>
     <message>
-        <source>Sorry, but no terms were found for &apos;%1&apos;...</source>
-        <translation>Désolé, mais aucuns termes n&apos;ont été trouvés pour &apos;%1&apos;...</translation>
+        <source>Sorry, but no terms were found for &lt;strong&gt;%1&lt;/strong&gt;...</source>
+        <translation>Désolé, mais aucuns termes n&apos;ont été trouvés pour &lt;strong&gt;%1&lt;/strong&gt;...</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;Information:&lt;/strong&gt; you can directly add &apos;%1&apos;...</source>
-        <translation>&lt;strong&gt;Information :&lt;/strong&gt; vous pouvez directement ajouter &apos;%1&apos;...</translation>
+        <source>&lt;strong&gt;Information:&lt;/strong&gt; you can directly add &lt;strong&gt;%1&lt;/strong&gt;...</source>
+        <translation>&lt;strong&gt;Information :&lt;/strong&gt; vous pouvez directement ajouter &lt;strong&gt;%1&lt;/strong&gt;...</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>

@@ -164,9 +164,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
         else
             mAddTermButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                                     termInformation[0], termInformation[1]));
+    } else {
+        mAddTermButton->setEnabled(false);
     }
 
-    // Enable or disable the add buttons for the retrieved terms, depending on
+    // Enable or disable the add buttons for our retrieved terms, depending on
     // whether they are already associated with the CellML element
 
     int row = 0;
@@ -568,12 +570,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         if (mTerm.isEmpty()) {
             labelText = tr("Please enter a term to search above...");
         } else if (pLookupTerm) {
-            labelText = tr("Please wait while we are retrieving possible terms for '%1'...").arg(mTerm);
+            labelText = tr("Please wait while we are retrieving possible terms for <strong>%1</strong>...").arg(mTerm);
         } else if (pErrorMsg.isEmpty()) {
             if (mTermIsDirect)
-                labelText = tr("<strong>Information:</strong> you can directly add '%1'...").arg(mTerm);
+                labelText = tr("<strong>Information:</strong> you can directly add <strong>%1</strong>...").arg(mTerm);
             else
-                labelText = tr("Sorry, but no terms were found for '%1'...").arg(mTerm);
+                labelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
         } else {
             QString errorMsg = pErrorMsg.left(1).toLower()+pErrorMsg.right(pErrorMsg.size()-1);
             QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
@@ -829,15 +831,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
     updateItemsGui(Items(), QString(), !mTermIsDirect);
 
+    // Update the enabled state of our various add buttons
+
+    updateGui(mCellmlElement);
+
     // Retrieve some possible terms based on the given term, but only if the
     // term cannot be added directly
 
-    if (mTermIsDirect) {
-        // We are dealing with a direct term, so just update the enabled state
-        // of our various add buttons
-
-        updateGui(mCellmlElement);
-    } else {
+    if (!mTermIsDirect) {
         // We are not dealing with a direct term, so retrieve some possible
         // terms
 

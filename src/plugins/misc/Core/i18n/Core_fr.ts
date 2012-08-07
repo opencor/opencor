@@ -32,16 +32,16 @@
         <translation>Sauvegarder Fichier</translation>
     </message>
     <message>
-        <source>&apos;%1&apos; already exists. Do you want to overwrite it?</source>
-        <translation>&apos;%1&apos; existe déjà. Voulez-vous le remplacer ?</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
     </message>
     <message>
-        <source>Sorry, but &apos;%1&apos; could not be saved.</source>
-        <translation>Désolé, mais &apos;%1&apos; n&apos;a pas pu être sauvegardé.</translation>
+        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be saved.</source>
+        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé.</translation>
     </message>
     <message>
-        <source>&apos;%1&apos; has been modified. Do you want to save it before closing it?</source>
-        <translation>&apos;%1&apos; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to save it before closing it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
     </message>
 </context>
 <context>

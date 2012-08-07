@@ -150,7 +150,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     if (!tempFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         // The temporary file can't be opened, so...
 
-        mError = ComputerError(tr("'%1' could not be created").arg(tempFileName));
+        mError = ComputerError(tr("<strong>%1</strong> could not be created").arg(tempFileName));
 
         tempFile.remove();
 
@@ -253,7 +253,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     QString commandName = command->getCreator().getName();
 
     if (commandName.compare("clang")) {
-        mError = ComputerError(tr("a 'clang' command was expected, but a '%1' command was found instead").arg(commandName));
+        mError = ComputerError(tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName));
 
         tempFile.remove();
 
@@ -299,7 +299,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     codeGenerationAction->setLinkModule(mModule);
 
     if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
-        mError = ComputerError(tr("the '%1' function could not be compiled").arg(pFunctionName));
+        mError = ComputerError(tr("the <strong>%1</strong> function could not be compiled").arg(pFunctionName));
 
         tempFile.remove();
 
@@ -318,7 +318,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     llvm::Function *res = mModule->getFunction(qPrintable(pFunctionName));
 
     if (!res) {
-        mError = ComputerError(tr("the '%1' function could not be found").arg(pFunctionName));
+        mError = ComputerError(tr("the <strong>%1</strong> function could not be found").arg(pFunctionName));
 
         return 0;
     }
