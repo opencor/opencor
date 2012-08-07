@@ -557,6 +557,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
     QString oldFileName = mOpenedFileNames[pIndex];
     QString newFileName = oldFileName;
+    bool hasNewFileName = false;
 
     if (pNeedNewFileName || newFileName.isEmpty()) {
         // Either we want to save the file under a new name or we are dealing
@@ -578,9 +579,17 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                                                                             supportedFileTypes, 0,
                                                                             QFileDialog::DontConfirmOverwrite));
 
-        // Check whether the 'new' file already exists
+        // Update our active directory, if possible
 
-        if (QFileInfo(newFileName).exists())
+        if (!newFileName.isEmpty())
+            mActiveDir = QFileInfo(newFileName).path();
+
+        // Check whether the 'new' file already exists after making sure that it
+        // is actually different from the 'old' file
+
+        hasNewFileName = newFileName.compare(oldFileName);
+
+        if (hasNewFileName && QFileInfo(newFileName).exists())
             // The 'new' file already exists, so ask whether we want to
             // overwrite it
 
@@ -591,21 +600,24 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 // We don't want to overwrite the 'new' file, so...
 
                 return false;
-
-        // Update our active directory, if possible
-
-        if (!newFileName.isEmpty())
-            mActiveDir = QFileInfo(newFileName).path();
     }
 
-    // Check whether the 'old' file has been modified
+    // Try to save the file in case it has been modified or it needs a new file
+    // name (either as a result of a save as or because the file was new)
 
-    bool needNewFileName = oldFileName.compare(newFileName);
+    if (   Core::FileManager::instance()->isModified(oldFileName)
+        || hasNewFileName) {
+        if (mGuiInterface->saveFile(oldFileName, newFileName)) {
+            // The file was saved, so update its file name, if needed
 
-    if (Core::FileManager::instance()->isModified(oldFileName)) {
-        // The 'old' file has been modified, so we can try to save it
+            if (   hasNewFileName
+                && (Core::FileManager::instance()->rename(oldFileName, newFileName) == FileManager::Renamed)) {
+                mOpenedFileNames[pIndex] = newFileName;
 
-        if (!mGuiInterface->saveFile(oldFileName, newFileName)) {
+                mFileTabs->setTabText(pIndex, QFileInfo(newFileName).fileName());
+                mFileTabs->setTabToolTip(pIndex, newFileName);
+            }
+        } else {
             // The file couldn't be saved, so...
 
             QMessageBox::warning(mMainWindow, tr("Save File"),
@@ -613,30 +625,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
             return false;
         }
-    } else if (needNewFileName) {
-        // The 'old' file hasn't been modified, but we want to save it under a
-        // new name (either as a result of a save as or because the file was
-        // new)
-
-        if (!QFile(oldFileName).copy(newFileName)) {
-            // We weren't able to save the file under a new name, so...
-
-            QMessageBox::warning(mMainWindow, tr("Save File"),
-                                 tr("Sorry, but <strong>%1</strong> could not be saved.").arg(newFileName));
-
-            return false;
-        }
-    }
-
-    // Update the information about the file name, in case the 'old' and 'new'
-    // file names are different
-
-    if (   needNewFileName
-        && (Core::FileManager::instance()->rename(oldFileName, newFileName) == FileManager::Renamed)) {
-        mOpenedFileNames[pIndex] = newFileName;
-
-        mFileTabs->setTabText(pIndex, QFileInfo(newFileName).fileName());
-        mFileTabs->setTabToolTip(pIndex, newFileName);
     }
 
     // Everything went fine, so...

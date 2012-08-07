@@ -39,6 +39,8 @@ public:
     bool load();
     bool reload();
 
+    bool save(const QString &pNewFileName = QString());
+
     bool isValid();
 
     bool isModified() const;
@@ -49,7 +51,6 @@ public:
     CellmlFileRuntime * runtime();
 
     QString fileName() const;
-    void setFileName(const QString &pFileName);
 
     CellmlFileModel * model() const;
 

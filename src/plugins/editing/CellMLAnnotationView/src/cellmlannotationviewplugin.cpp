@@ -158,7 +158,7 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 
         return 0;
 
-    // Retrieve from our list the view widget associated with the file name
+    // Retrieve the view widget associated with the file name
 
     CellmlAnnotationViewWidget *res = mViewWidgets.value(pFileName);
 
@@ -255,6 +255,27 @@ void CellMLAnnotationViewPlugin::retranslateUi()
 
     foreach (CellmlAnnotationViewWidget *viewWidget, mViewWidgets)
         viewWidget->retranslateUi();
+}
+
+//==============================================================================
+
+bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
+                                          const QString &pNewFileName)
+{
+    // Retrieve the view widget associated with the 'old' file name
+
+    CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
+
+    // Save the CellML file, should we have a valid view widget
+
+    if (viewWidget)
+        // We have view widget, so...
+
+        return viewWidget->cellmlFile()->save(pNewFileName);
+    else
+        // No view widget exists for the file, so...
+
+        return false;
 }
 
 //==============================================================================

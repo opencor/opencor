@@ -321,6 +321,20 @@ bool CellmlFile::reload()
 
 //==============================================================================
 
+bool CellmlFile::save(const QString &pNewFileName)
+{
+    // Update the the file name, if needed
+
+//    if (!pNewFileName.isEmpty())
+//        mFileName = pNewFileName;
+
+//---GRY--- TO BE DONE...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CellmlFile::isValid()
 {
     if (!mValidNeeded)
@@ -568,15 +582,6 @@ QString CellmlFile::fileName() const
     // Return the CellML file's file name
 
     return mFileName;
-}
-
-//==============================================================================
-
-void CellmlFile::setFileName(const QString &pFileName)
-{
-    // Set the CellML file's file name
-
-    mFileName = pFileName;
 }
 
 //==============================================================================

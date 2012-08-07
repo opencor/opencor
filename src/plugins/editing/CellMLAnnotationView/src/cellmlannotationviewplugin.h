@@ -53,6 +53,9 @@ public:
 
     virtual void retranslateUi();
 
+    virtual bool saveFile(const QString &pOldFileName,
+                          const QString &pNewFileName);
+
 private:
     QList<int> mSizes;
     QList<int> mMetadataDetailsWidgetSizes;

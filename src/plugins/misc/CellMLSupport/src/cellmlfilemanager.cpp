@@ -28,14 +28,6 @@ CellmlFileManager::CellmlFileManager() :
             this, SLOT(manageFile(const QString &)));
     connect(Core::FileManager::instance(), SIGNAL(fileUnmanaged(const QString &)),
             this, SLOT(unmanageFile(const QString &)));
-
-    connect(Core::FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
-            this, SLOT(setModified(const QString &, const bool &)));
-    connect(this, SIGNAL(fileModified(const QString &, const bool &)),
-            Core::FileManager::instance(), SLOT(setModified(const QString &, const bool &)));
-
-    connect(Core::FileManager::instance(), SIGNAL(fileRenamed(const QString &, const QString &)),
-            this, SLOT(renameFile(const QString &, const QString &)));
 }
 
 //==============================================================================
@@ -91,37 +83,6 @@ void CellmlFileManager::unmanageFile(const QString &pFileName)
 
         mCellmlFiles.remove(pFileName);
     }
-}
-
-//==============================================================================
-
-void CellmlFileManager::setModified(const QString &pFileName,
-                                    const bool &pModified)
-{
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
-
-    if (cellmlFile(nativeFileName))
-        // We are dealing with a managed CellML file, so we can let the main
-        // file manager know about the new modified status of the CellML file,
-        // should this be needed (otherwise, we will end up in a vicious circle)
-
-        if (pModified != Core::FileManager::instance()->isModified(nativeFileName))
-            emit fileModified(nativeFileName, pModified);
-}
-
-//==============================================================================
-
-void CellmlFileManager::renameFile(const QString &pOldFileName,
-                                   const QString &pNewFileName)
-{
-    // Retrieve the CellmlFile object associated with the 'old' file
-
-    CellmlFile *oldNewCellmlFile = cellmlFile(pOldFileName);
-
-    if (oldNewCellmlFile)
-        // We are dealing with a CellML file, so we can rename it
-
-        oldNewCellmlFile->setFileName(pNewFileName);
 }
 
 //==============================================================================
