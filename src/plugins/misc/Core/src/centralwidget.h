@@ -137,7 +137,7 @@ private:
 
     FileTypes mSupportedFileTypes;
 
-    QStringList mOpenedFileNames;
+    QStringList mFileNames;
 
     QStackedWidget *mContents;
 
