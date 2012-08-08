@@ -238,8 +238,11 @@ CentralWidget::~CentralWidget()
     mStatus = Stopping;
 
     // Close all the files
+    // Note: we force the closing of all the files since canClose() will have
+    //       been called before to decide what needs to be done with modified
+    //       files, so...
 
-    closeAllFiles();
+    closeAllFiles(true);
 
     // Delete our various modes
 
@@ -730,7 +733,8 @@ bool CentralWidget::closeFile(const int &pIndex)
     // index is provided, and then return the name of the file that was closed,
     // if any
 
-    int realIndex = (pIndex != -1)?pIndex:mFileTabs->currentIndex();
+    bool closingAllFiles = pIndex == -1;
+    int realIndex = closingAllFiles?mFileTabs->currentIndex():pIndex;
 
     if (realIndex != -1) {
         // There is a file currently opened, so first retrieve its file name
@@ -739,7 +743,7 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         // Check whether the file can be closed
 
-        if (!canCloseFile(realIndex))
+        if (!closingAllFiles && !canCloseFile(realIndex))
             // The file cannot be closed, so...
 
             return false;
@@ -795,8 +799,15 @@ bool CentralWidget::closeFile(const int &pIndex)
 
 //==============================================================================
 
-void CentralWidget::closeAllFiles()
+void CentralWidget::closeAllFiles(const bool &pForceClosing)
 {
+    // Check whether we can close all the files
+
+    if (!pForceClosing && !canClose())
+        // We can't close all the files, so...
+
+        return;
+
     // Close all the files
 
     while (closeFile()) {}

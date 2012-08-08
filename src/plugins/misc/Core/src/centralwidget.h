@@ -201,7 +201,7 @@ private Q_SLOTS:
     void nextFile();
 
     bool closeFile(const int &pIndex = -1);
-    void closeAllFiles();
+    void closeAllFiles(const bool &pForceClosing = false);
 
     void fileSelected(const int &pIndex);
     void fileMoved(const int &pFromIndex, const int &pToIndex);
