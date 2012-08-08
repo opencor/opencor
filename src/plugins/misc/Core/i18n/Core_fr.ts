@@ -122,6 +122,14 @@
         <source>Clear the menu</source>
         <translation>Nettoyer le menu</translation>
     </message>
+    <message>
+        <source>Reopen File</source>
+        <translation>Réouvrir Fichier</translation>
+    </message>
+    <message>
+        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; does not exist anymore.</source>
+        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus.</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

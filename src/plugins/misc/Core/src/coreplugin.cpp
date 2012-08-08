@@ -13,6 +13,7 @@
 #include <QAction>
 #include <QMainWindow>
 #include <QMenu>
+#include <QMessageBox>
 #include <QSettings>
 
 //==============================================================================
@@ -385,9 +386,31 @@ void CorePlugin::fileClosed(const QString &pFileName)
 
 void CorePlugin::openRecentFile()
 {
+    // Check that the recent file still exists
+
+    QString fileName = qobject_cast<QAction *>(sender())->text();
+
+    if (!QFileInfo(fileName).exists()) {
+        // The file doesn't exist anymore, so let the user know about it
+
+        QMessageBox::warning(mMainWindow, tr("Reopen File"),
+                             tr("Sorry, but <strong>%1</strong> does not exist anymore.").arg(fileName));
+
+        // Remove the file from our list of recent files and update our reopen
+        // sub-menu
+
+        mRecentFileNames.removeOne(fileName);
+
+        updateFileReopenMenu();
+
+        // Leave since we couldn't open the recent file
+
+        return;
+    }
+
     // Open the recent file
 
-    mCentralWidget->openFile(qobject_cast<QAction *>(sender())->text());
+    mCentralWidget->openFile(fileName);
 }
 
 //==============================================================================
