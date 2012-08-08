@@ -45,7 +45,6 @@ public:
     QString id() const;
 
     QString uriReference() const;
-    void setUriReference(const QString &pUriReference);
 
     QString lexicalForm() const;
     QString language() const;

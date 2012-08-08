@@ -474,7 +474,7 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) 
     Q_ASSERT(mCellmlFile);
 
     // Return all the RDF triples which are directly or indirectly associated
-    // with pMetadataId
+    // with the given metadata id
 
     CellmlFileRdfTriples res = CellmlFileRdfTriples(mCellmlFile);
 

@@ -132,18 +132,6 @@ QString CellmlFileRdfTripleElement::uriReference() const
     return mUriReference;
 }
 
-
-//==============================================================================
-
-void CellmlFileRdfTripleElement::setUriReference(const QString &pUriReference)
-{
-    // Set the URI reference, but only if the RDF triple element is a URI
-    // reference
-
-    if (mType == UriReference)
-        mUriReference = pUriReference;
-}
-
 //==============================================================================
 
 QString CellmlFileRdfTripleElement::lexicalForm() const
