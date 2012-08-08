@@ -349,6 +349,14 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     file.close();
 
+    // The CellML file being saved, it cannot be modified (should it have been
+    // before)
+    // Note: we must do this before making sure that mFileName is up to date
+    //       since we need the old file name to update the modified status of
+    //       the CellML file...
+
+    setModified(false);
+
     // Make sure that mFileName is up to date
 
     mFileName = fileName;
