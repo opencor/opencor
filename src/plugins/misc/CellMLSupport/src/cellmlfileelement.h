@@ -87,8 +87,7 @@ private:
 
     QString mCmetaId;
 
-    void generateUniqueCmetaId();
-    QString rdfTripleSubject() const;
+    QString rdfTripleSubject();
 };
 
 //==============================================================================
