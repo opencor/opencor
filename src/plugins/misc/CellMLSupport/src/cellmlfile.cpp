@@ -323,14 +323,16 @@ bool CellmlFile::reload()
 
 bool CellmlFile::save(const QString &pNewFileName)
 {
-    // Update the the file name, if needed
-
-//    if (!pNewFileName.isEmpty())
-//        mFileName = pNewFileName;
-
 //---GRY--- TO BE DONE...
 
-    return false;
+    bool res = false;//true;
+
+    // Update the the file name, if needed
+
+    if (res && !pNewFileName.isEmpty())
+        mFileName = pNewFileName;
+
+    return res;
 }
 
 //==============================================================================

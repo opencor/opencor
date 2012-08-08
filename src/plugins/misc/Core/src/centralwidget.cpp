@@ -224,7 +224,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     // A connection to handle a change in the modified status of a file
 
     connect(Core::FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
-            this, SLOT(fileModified()));
+            this, SLOT(updateModifiedSettings()));
 }
 
 //==============================================================================
@@ -377,9 +377,7 @@ void CentralWidget::saveModeSettings(QSettings *pSettings,
 {
     // Keep track of the mode, should it be the currently active one
 
-    int modeTabsCrtIndex = mModeTabs->currentIndex();
-
-    if (modeTabsCrtIndex == modeTabIndex(pMode))
+    if (mModeTabs->currentIndex() == modeTabIndex(pMode))
         pSettings->setValue(SettingsCurrentMode, pMode);
 
     // Keep track of the currently active view for the given mode
@@ -627,6 +625,10 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         }
     }
 
+    // Update our modified settings
+
+    updateModifiedSettings();
+
     // Everything went fine, so...
 
     return true;
@@ -684,6 +686,40 @@ void CentralWidget::nextFile()
 
 //==============================================================================
 
+bool CentralWidget::canCloseFile(const int &pIndex)
+{
+    QString fileName = mOpenedFileNames[pIndex];
+
+    if (FileManager::instance()->isModified(fileName)) {
+        // The current file is modified, so ask the user whether to save it or
+        // ignore it
+
+        int response = QMessageBox::question(mMainWindow, qApp->applicationName(),
+                                             tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName),
+                                             QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
+                                             QMessageBox::Yes);
+
+        if (response == QMessageBox::Yes) {
+            // The user wants to save the file
+
+            if (!saveFile(pIndex))
+                // The file couldn't be saved, so...
+
+                return false;
+        } else if (response == QMessageBox::Cancel) {
+            // The user wants to cancel, so...
+
+            return false;
+        }
+    }
+
+    // Everything went fine, so...
+
+    return true;
+}
+
+//==============================================================================
+
 bool CentralWidget::closeFile(const int &pIndex)
 {
     if (mStatus == UpdatingGui)
@@ -702,10 +738,16 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         QString openedFileName = mOpenedFileNames[realIndex];
 
+        // Check whether the file can be closed
+
+        if (!canCloseFile(realIndex))
+            // The file cannot be closed, so...
+
+            return false;
+
         // Next, we must close the tab
 
         mOpenedFileNames.removeAt(realIndex);
-
         mFileTabs->removeTab(realIndex);
 
         // Ask all the view plugins to remove the corresponding view for the
@@ -737,6 +779,10 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         emit atLeastOneFile(mFileTabs->count());
         emit atLeastTwoFiles(mFileTabs->count() > 1);
+
+        // Update our modified settings
+
+        updateModifiedSettings();
 
         // Everything went fine, so...
 
@@ -808,31 +854,9 @@ bool CentralWidget::canClose()
 {
     // We can close only if none of the opened files is modified
 
-    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
-        QString fileName = mOpenedFileNames[i];
-
-        if (FileManager::instance()->isModified(fileName)) {
-            // The current file is modified, so ask the user whether to save it
-            // or ignore it
-
-            int response = QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                                 tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName),
-                                                 QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
-                                                 QMessageBox::Yes);
-
-            if (response == QMessageBox::Cancel)
-                // The user wants to cancel, so...
-
-                return false;
-            else if (response == QMessageBox::Yes)
-                // The user wants to save the file
-
-                if (!saveFile(i))
-                    // The file couldn't be saved, so...
-
-                    return false;
-        }
-    }
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+        if (!canCloseFile(i))
+            return false;
 
     // We checked all the opened files, so...
 
@@ -1092,7 +1116,7 @@ void CentralWidget::updateGui()
     // Note: it's fine if openedFileName is empty, since isModified() will then
     //       return false...
 
-    emit canSave(Core::FileManager::instance()->isModified(openedFileName));
+    emit canSave(FileManager::instance()->isModified(openedFileName));
 
     // We are done with updating the GUI, so...
 
@@ -1162,12 +1186,12 @@ void CentralWidget::updateNoViewMsg()
 
 //==============================================================================
 
-void CentralWidget::fileModified()
+void CentralWidget::updateModifiedSettings()
 {
     // Enable or disable the Mode and Views tabs, depending on whether one or
     // several files have been modified, and update the tab text if necessary
 
-    bool enabled = true;
+    bool atLeastOneModifiedFile = false;
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         QString tabText = mFileTabs->tabText(i);
@@ -1176,7 +1200,7 @@ void CentralWidget::fileModified()
             // The current file has been modified, so the Mode and Views tabs
             // should be disabled
 
-            enabled = false;
+            atLeastOneModifiedFile = true;
 
             // Update the tab text, if needed
 
@@ -1190,15 +1214,17 @@ void CentralWidget::fileModified()
         }
     }
 
-    mModeTabs->setEnabled(enabled);
+    mModeTabs->setEnabled(!atLeastOneModifiedFile);
 
     foreach (CentralWidgetMode *mode, mModes)
-        mode->views()->setEnabled(enabled);
+        mode->views()->setEnabled(!atLeastOneModifiedFile);
 
     // Let people know that we can save at least one file
 
-    emit canSave(true);
-    emit canSaveAll(true);
+    emit canSave(mFileTabs->count()?
+                     FileManager::instance()->isModified(mOpenedFileNames[mFileTabs->currentIndex()]):
+                     false);
+    emit canSaveAll(atLeastOneModifiedFile);
 }
 
 //==============================================================================

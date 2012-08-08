@@ -172,6 +172,8 @@ private:
 
     bool saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
 
+    bool canCloseFile(const int &pIndex);
+
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);
     void fileClosed(const QString &pFileName);
@@ -189,7 +191,7 @@ private Q_SLOTS:
     void openFile();
     void openFiles(const QStringList &pFileNames);
 
-    void fileModified();
+    void updateModifiedSettings();
 
     void saveFile();
     void saveFileAs();
