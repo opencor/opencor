@@ -7,7 +7,9 @@
 
 //==============================================================================
 
+#include <QFile>
 #include <QRegExp>
+#include <QTextStream>
 #include <QTime>
 #include <QUrl>
 
@@ -323,16 +325,37 @@ bool CellmlFile::reload()
 
 bool CellmlFile::save(const QString &pNewFileName)
 {
-//---GRY--- TO BE DONE...
+    // Determine the file name to use for the CellML file
 
-    bool res = false;//true;
+    QString fileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
 
-    // Update the the file name, if needed
+    // (Create and) open the file for writing
 
-    if (res && !pNewFileName.isEmpty())
-        mFileName = pNewFileName;
+    QFile file(fileName);
 
-    return res;
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        // The file can't be opened, so...
+
+        file.remove();
+
+        return false;
+    }
+
+    // Write out the contents of the CellML file to the file
+
+    QTextStream out(&file);
+
+    out << QString::fromStdWString(mCellmlApiModel->serialisedText());
+
+    file.close();
+
+    // Make sure that mFileName is up to date
+
+    mFileName = fileName;
+
+    // Everything went fine, so...
+
+    return true;
 }
 
 //==============================================================================
