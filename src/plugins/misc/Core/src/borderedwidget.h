@@ -21,7 +21,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT BorderedWidget : public Core::Widget
+class CORE_EXPORT BorderedWidget : public Widget
 {
     Q_OBJECT
 

@@ -25,7 +25,7 @@ BorderedWidget::BorderedWidget(QWidget *pWidget,
     // We want our widget to be bordered by a single line which colour matches
     // that of the application's theme. Because of that colour requirement, we
     // can't use a QFrame, so instead we rely on the use of a grid layout and
-    // Core::newLineWidget()...
+    // newLineWidget()...
 
     // Create a grid layout for ourselves
 
@@ -39,10 +39,10 @@ BorderedWidget::BorderedWidget(QWidget *pWidget,
     // Add some real line widgets to the top, left, bottom and/or right of
     // ourselves, if required
 
-    mTopBorder    = Core::newLineWidget(this, true);
-    mLeftBorder   = Core::newLineWidget(this, false);
-    mBottomBorder = Core::newLineWidget(this, true);
-    mRightBorder  = Core::newLineWidget(this, false);
+    mTopBorder    = newLineWidget(this, true);
+    mLeftBorder   = newLineWidget(this, false);
+    mBottomBorder = newLineWidget(this, true);
+    mRightBorder  = newLineWidget(this, false);
 
     gridLayout->addWidget(mTopBorder, 0, 0, 1, 3);
     gridLayout->addWidget(mLeftBorder, 1, 0);
