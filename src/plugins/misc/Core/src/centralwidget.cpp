@@ -585,9 +585,10 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             mActiveDir = QFileInfo(newFileName).path();
 
         // Check whether the 'new' file already exists after making sure that it
-        // is actually different from the 'old' file
+        // is actually different from the 'old' one
 
-        hasNewFileName = newFileName.compare(oldFileName);
+        hasNewFileName =    !newFileName.isEmpty()
+                         && newFileName.compare(oldFileName);
 
         if (hasNewFileName && QFileInfo(newFileName).exists())
             // The 'new' file already exists, so ask whether we want to
