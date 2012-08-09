@@ -141,6 +141,8 @@ private:
 
     void recursiveContains(CellmlFileRdfTriples &pRdfTriples,
                            CellmlFileRdfTriple *pRdfTriple) const;
+
+    void removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples);
 };
 
 //==============================================================================

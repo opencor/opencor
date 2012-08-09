@@ -513,57 +513,51 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 
 //==============================================================================
 
+void CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples)
+{
+    Q_ASSERT(pRdfTriples.mCellmlFile);
+
+    // Remove all the given RDF triples
+
+    if (pRdfTriples.count()) {
+        foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples)
+            removeOne(rdfTriple);
+
+        pRdfTriples.mCellmlFile->setModified(true);
+    }
+}
+
+//==============================================================================
+
 void CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
 {
-    Q_ASSERT(mCellmlFile);
+    // Call our generic remove function
 
-    // Remove the given RDF triple
+    CellmlFileRdfTriples rdfTriples = CellmlFileRdfTriples(mCellmlFile);
 
-    if (removeOne(pRdfTriple))
-        mCellmlFile->setModified(true);
+    rdfTriples << pRdfTriple;
+
+    removeRdfTriples(rdfTriples);
+    // Note: yes, we must declare rdfTriples and add pRdfTriple to it before
+    //       passing it to removeRdfTriples()...
 }
 
 //==============================================================================
 
 void CellmlFileRdfTriples::remove(const QString &pMetadataId)
 {
-    Q_ASSERT(mCellmlFile);
+    // Call our generic remove function
 
-    // Remove all the RDF triples which are directly or indirectly associated
-    // with the given metadata id
-
-    bool res = true;
-
-    foreach (CellmlFileRdfTriple *rdfTriple, contains(pMetadataId))
-        if (!removeOne(rdfTriple)) {
-            res = false;
-
-            break;
-        }
-
-    if (res)
-        mCellmlFile->setModified(true);
+    removeRdfTriples(contains(pMetadataId));
 }
 
 //==============================================================================
 
 void CellmlFileRdfTriples::removeAll()
 {
-    Q_ASSERT(mCellmlFile);
+    // Call our generic remove function
 
-    // Remove all the RDF triples
-
-    bool res = false;
-
-    foreach (CellmlFileRdfTriple *rdfTriple, *this)
-        if (removeOne(rdfTriple)) {
-            delete rdfTriple;
-
-            res = true;
-        }
-
-    if (res)
-        mCellmlFile->setModified(true);
+    removeRdfTriples(*this);
 }
 
 //==============================================================================

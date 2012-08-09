@@ -206,7 +206,8 @@ QString CellmlFileElement::rdfTripleSubject()
             mCmetaId = QString("id_%1").arg(++counter, 5, 10, QChar('0'));
 
             if (!cmetaIds.contains(mCmetaId)) {
-                // We have found a unique cmeta:id, so set it to ourselves and leave
+                // We have found a unique cmeta:id, so update our CellML element
+                // and leave
 
                 mCellmlElement->cmetaId(mCmetaId.toStdWString());
 
