@@ -152,6 +152,8 @@ void CorePlugin::initialize()
 
     connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
             this, SLOT(fileOpened(const QString &)));
+    connect(mCentralWidget, SIGNAL(fileRenamed(const QString &, const QString &)),
+            this, SLOT(fileRenamed(const QString &, const QString &)));
     connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
             this, SLOT(fileClosed(const QString &)));
 
@@ -365,6 +367,19 @@ void CorePlugin::fileOpened(const QString &pFileName)
     mRecentFileNames.removeOne(pFileName);
 
     updateFileReopenMenu();
+}
+
+//==============================================================================
+
+void CorePlugin::fileRenamed(const QString &pOldFileName,
+                             const QString &pNewFileName)
+{
+    Q_UNUSED(pNewFileName);
+
+    // A file has been renamed, so we want the old file name to be added to our
+    // list of recent files, i.e. as if it had been closed
+
+    fileClosed(pOldFileName);
 }
 
 //==============================================================================

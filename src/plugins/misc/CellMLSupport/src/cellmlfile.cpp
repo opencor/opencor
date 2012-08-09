@@ -54,8 +54,7 @@ CellmlFile::CellmlFile(const QString &pFileName) :
     mComponents(CellmlFileComponents()),
     mGroups(CellmlFileGroups()),
     mConnections(CellmlFileConnections()),
-    mRdfTriples(CellmlFileRdfTriples(this)),
-    mValid(true)
+    mRdfTriples(CellmlFileRdfTriples(this))
 {
     // Instantiate our runtime object
 
@@ -95,6 +94,8 @@ void CellmlFile::reset()
     clearGroups();
     clearConnections();
     clearRdfTriples();
+
+    mValid = true;
 
     mIssues.clear();
 

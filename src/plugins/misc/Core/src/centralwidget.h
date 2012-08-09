@@ -176,6 +176,8 @@ private:
 
 Q_SIGNALS:
     void fileOpened(const QString &pFileName);
+    void fileSaved(const QString &pFileName);
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
     void fileSelected(const QString &pFileName);
 

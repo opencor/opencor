@@ -627,6 +627,14 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         }
     }
 
+    // Let people know about the file having been saved, as well as whether it
+    // was renamed
+
+    emit fileSaved(newFileName);
+
+    if (hasNewFileName)
+        emit fileRenamed(oldFileName, newFileName);
+
     // Update our modified settings
 
     updateModifiedSettings();
@@ -775,8 +783,8 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         Core::FileManager::instance()->unmanage(fileName);
 
-        // Finally, we let people know about the file having just been closed,
-        // as well as whether we can navigate and/or close the remaining files
+        // Let people know about the file having just been closed, as well as
+        // whether we can navigate and/or close the remaining files
 
         emit fileClosed(fileName);
 
