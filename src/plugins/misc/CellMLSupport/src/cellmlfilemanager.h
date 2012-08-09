@@ -43,6 +43,8 @@ private:
 private Q_SLOTS:
     void manageFile(const QString &pFileName);
     void unmanageFile(const QString &pFileName);
+
+    void renameFile(const QString &pOldFileName, const QString &pNewFileName);
 };
 
 //==============================================================================

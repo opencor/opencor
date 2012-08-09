@@ -223,7 +223,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // A connection to handle a change in the modified status of a file
 
-    connect(Core::FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
+    connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
             this, SLOT(updateModifiedSettings()));
 }
 
@@ -458,7 +458,7 @@ void CentralWidget::openFile(const QString &pFileName)
 
     // Register the file with our file manager
 
-    Core::FileManager::instance()->manage(pFileName);
+    FileManager::instance()->manage(pFileName);
 
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
@@ -606,18 +606,37 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     // Try to save the file in case it has been modified or it needs a new file
     // name (either as a result of a save as or because the file was new)
 
-    if (   Core::FileManager::instance()->isModified(oldFileName)
+    if (   FileManager::instance()->isModified(oldFileName)
         || hasNewFileName) {
         if (mGuiInterface->saveFile(oldFileName, newFileName)) {
+            // Let people know about the file having been saved
+
+            emit fileSaved(newFileName);
+
             // The file was saved, so update its file name, if needed
 
-            if (   hasNewFileName
-                && (Core::FileManager::instance()->rename(oldFileName, newFileName) == FileManager::Renamed)) {
+            if (hasNewFileName) {
+                Q_ASSERT(FileManager::instance()->rename(oldFileName, newFileName) == FileManager::Renamed);
+                // Note: we use an assertion because the call to rename() should
+                //       always be successful...
+
                 mFileNames[pIndex] = newFileName;
 
                 mFileTabs->setTabText(pIndex, QFileInfo(newFileName).fileName());
                 mFileTabs->setTabToolTip(pIndex, newFileName);
+
+                // Let people know about the file having been renamed
+
+                emit fileRenamed(oldFileName, newFileName);
             }
+
+            // Update our modified settings
+
+            updateModifiedSettings();
+
+            // Everything went fine, so...
+
+            return true;
         } else {
             // The file couldn't be saved, so...
 
@@ -626,23 +645,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
             return false;
         }
+    } else {
+        // Nothing to save, so...
+
+        return false;
     }
-
-    // Let people know about the file having been saved, as well as whether it
-    // was renamed
-
-    emit fileSaved(newFileName);
-
-    if (hasNewFileName)
-        emit fileRenamed(oldFileName, newFileName);
-
-    // Update our modified settings
-
-    updateModifiedSettings();
-
-    // Everything went fine, so...
-
-    return true;
 }
 
 //==============================================================================
@@ -782,7 +789,7 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         // Unregister the file from our file manager
 
-        Core::FileManager::instance()->unmanage(fileName);
+        FileManager::instance()->unmanage(fileName);
 
         // Let people know about the file having just been closed, as well as
         // whether we can navigate and/or close the remaining files

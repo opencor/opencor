@@ -268,14 +268,32 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
 
     // Save the CellML file, should we have a valid view widget
 
-    if (viewWidget)
-        // We have view widget, so...
+    if (viewWidget) {
+        // We have a view widget, so we can try to save the file
 
-        return viewWidget->cellmlFile()->save(pNewFileName);
-    else
+        if (viewWidget->cellmlFile()->save(pNewFileName)) {
+            // The file was properly saved, so check if we need to update our
+            // view widgets mapping
+
+            if (pNewFileName.compare(pOldFileName)) {
+                // The old and new file names are different, so we do need to
+                // update our view widgets mapping
+
+                mViewWidgets.insert(pNewFileName, mViewWidgets.value(pOldFileName));
+                mViewWidgets.remove(pOldFileName);
+            }
+
+            return true;
+        } else {
+            // The file couldn't be saved, so...
+
+            return false;
+        }
+    } else {
         // No view widget exists for the file, so...
 
         return false;
+    }
 }
 
 //==============================================================================

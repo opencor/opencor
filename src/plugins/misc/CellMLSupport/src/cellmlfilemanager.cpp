@@ -28,6 +28,9 @@ CellmlFileManager::CellmlFileManager() :
             this, SLOT(manageFile(const QString &)));
     connect(Core::FileManager::instance(), SIGNAL(fileUnmanaged(const QString &)),
             this, SLOT(unmanageFile(const QString &)));
+
+    connect(Core::FileManager::instance(), SIGNAL(fileRenamed(const QString &, const QString &)),
+            this, SLOT(renameFile(const QString &, const QString &)));
 }
 
 //==============================================================================
@@ -83,6 +86,17 @@ void CellmlFileManager::unmanageFile(const QString &pFileName)
 
         mCellmlFiles.remove(pFileName);
     }
+}
+
+//==============================================================================
+
+void CellmlFileManager::renameFile(const QString &pOldFileName,
+                                   const QString &pNewFileName)
+{
+    // The file has been renamed, so we need to update our CellML files mapping
+
+    mCellmlFiles.insert(pNewFileName, mCellmlFiles.value(pOldFileName));
+    mCellmlFiles.remove(pOldFileName);
 }
 
 //==============================================================================
