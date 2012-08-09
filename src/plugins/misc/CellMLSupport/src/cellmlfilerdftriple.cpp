@@ -515,7 +515,9 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 
 void CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples)
 {
-    Q_ASSERT(pRdfTriples.mCellmlFile);
+    CellmlFile *cellmlFile = pRdfTriples.mCellmlFile;
+
+    Q_ASSERT(cellmlFile);
 
     // Remove all the given RDF triples
 
@@ -523,7 +525,7 @@ void CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTrip
         foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples)
             removeOne(rdfTriple);
 
-        pRdfTriples.mCellmlFile->setModified(true);
+        cellmlFile->setModified(true);
     }
 }
 
