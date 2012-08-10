@@ -478,20 +478,14 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) 
 
     CellmlFileRdfTriples res = CellmlFileRdfTriples(mCellmlFile);
 
-    QString uriBase = mCellmlFile->uriBase();
-
     foreach (CellmlFileRdfTriple *rdfTriple, *this)
         // Retrieve the RDF triple's subject so we can determine whether it's
         // from the group of RDF triples in which we are interested
 
-        if (rdfTriple->subject()->type() == CellmlFileRdfTripleElement::UriReference)
-            // We have an RDF triple of which we can make sense, so retrieve and
-            // check its metadata id
+        if (!pMetadataId.compare(rdfTriple->metadataId()))
+            // It's the correct metadata id, so add it to our list
 
-            if (!pMetadataId.compare(rdfTriple->subject()->uriReference().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?"))))
-                // It's the correct metadata id, so add it to our list
-
-                recursiveContains(res, rdfTriple);
+            recursiveContains(res, rdfTriple);
 
     return res;
 }

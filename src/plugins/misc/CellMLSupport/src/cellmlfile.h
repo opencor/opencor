@@ -70,6 +70,8 @@ private:
 
     ObjRef<iface::cellml_api::Model> mCellmlApiModel;
 
+    QString mUriBase;
+
     CellmlFileModel *mModel;
     CellmlFileImports mImports;
     CellmlFileUnits mUnits;

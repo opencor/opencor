@@ -86,6 +86,8 @@ void CellmlFile::reset()
 
     mCellmlApiModel = 0;
 
+    mUriBase = QString();
+
     delete mModel;
 
     clearImports();
@@ -153,8 +155,8 @@ bool CellmlFile::load()
         return false;
     }
 
-    // In the case of a non CellML 1.0 model, we want all imports to be fully
-    // instantiated
+    // In the case of a non CellML 1.0 model, we want all the imports to be
+    // fully instantiated
 
     if (QString::fromStdWString(mCellmlApiModel->cellmlVersion()).compare(Cellml_1_0))
         try {
@@ -178,6 +180,12 @@ bool CellmlFile::load()
 
             return false;
         }
+
+    // Retrieve the URI base
+
+    ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
+
+    mUriBase = QString::fromStdWString(xmlBase->asText());
 
     // Extract/retrieve various things from mCellmlApiModel
 
@@ -687,9 +695,7 @@ QString CellmlFile::uriBase() const
 {
     // Return the CellML file's URI base
 
-    ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
-
-    return QString::fromStdWString(xmlBase->asText());
+    return mUriBase;
 }
 
 //==============================================================================

@@ -95,13 +95,14 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(CellMLSupport::
     //       cmeta:id which will speak more to the user than a possibly long URI
     //       reference...
 
-    QString uriBase = mCellmlFile->uriBase();
     int rdfTripleCounter = 0;
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
              pCellmlElement->rdfTriples())
         mDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
-                                                                            << new QStandardItem(rdfTriple->subject()->asString().remove(QRegExp("^"+QRegExp::escape(uriBase)+"#?")))
+                                                                            << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
+                                                                                                     rdfTriple->metadataId():
+                                                                                                     rdfTriple->subject()->asString())
                                                                             << new QStandardItem(rdfTriple->predicate()->asString())
                                                                             << new QStandardItem(rdfTriple->object()->asString()));
 

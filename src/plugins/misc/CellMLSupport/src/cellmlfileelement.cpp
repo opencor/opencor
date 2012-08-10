@@ -220,7 +220,7 @@ QString CellmlFileElement::rdfTripleSubject()
 
     // Return the subject which should be used for an RDF triple
 
-    return QUrl::fromLocalFile(mCellmlFile->fileName()).toString()+"#"+mCmetaId;
+    return mCellmlFile->uriBase()+"#"+mCmetaId;
 }
 
 //==============================================================================
