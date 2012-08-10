@@ -194,10 +194,10 @@ bool CellmlFile::load()
     // Iterate through the imports and add them to our list
 
     ObjRef<iface::cellml_api::CellMLImportSet> imports = mCellmlApiModel->imports();
-    ObjRef<iface::cellml_api::CellMLImportIterator> importIterator = imports->iterateImports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
 
     forever {
-        ObjRef<iface::cellml_api::CellMLImport> import = importIterator->nextImport();
+        ObjRef<iface::cellml_api::CellMLImport> import = importsIterator->nextImport();
 
         if (import)
             // We have an import, so add it to our list
@@ -212,10 +212,10 @@ bool CellmlFile::load()
     // Iterate through the units and add them to our list
 
     ObjRef<iface::cellml_api::UnitsSet> units = mCellmlApiModel->localUnits();
-    ObjRef<iface::cellml_api::UnitsIterator> unitIterator = units->iterateUnits();
+    ObjRef<iface::cellml_api::UnitsIterator> unitsIterator = units->iterateUnits();
 
     forever {
-        ObjRef<iface::cellml_api::Units> unit = unitIterator->nextUnits();
+        ObjRef<iface::cellml_api::Units> unit = unitsIterator->nextUnits();
 
         if (unit)
             // We have a unit, so add it to our list
@@ -230,10 +230,10 @@ bool CellmlFile::load()
     // Iterate through the components and add them to our list
 
     ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlApiModel->localComponents();
-    ObjRef<iface::cellml_api::CellMLComponentIterator> componentIterator = components->iterateComponents();
+    ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIterator = components->iterateComponents();
 
     forever {
-        ObjRef<iface::cellml_api::CellMLComponent> component = componentIterator->nextComponent();
+        ObjRef<iface::cellml_api::CellMLComponent> component = componentsIterator->nextComponent();
 
         if (component)
             // We have a component, so add it to our list
@@ -248,10 +248,10 @@ bool CellmlFile::load()
     // Iterate through the groups and add them to our list
 
     ObjRef<iface::cellml_api::GroupSet> groups = mCellmlApiModel->groups();
-    ObjRef<iface::cellml_api::GroupIterator> groupIterator = groups->iterateGroups();
+    ObjRef<iface::cellml_api::GroupIterator> groupsIterator = groups->iterateGroups();
 
     forever {
-        ObjRef<iface::cellml_api::Group> group = groupIterator->nextGroup();
+        ObjRef<iface::cellml_api::Group> group = groupsIterator->nextGroup();
 
         if (group)
             // We have a group, so add it to our list
@@ -266,10 +266,10 @@ bool CellmlFile::load()
     // Iterate through the connections and add them to our list
 
     ObjRef<iface::cellml_api::ConnectionSet> connections = mCellmlApiModel->connections();
-    ObjRef<iface::cellml_api::ConnectionIterator> connectionIterator = connections->iterateConnections();
+    ObjRef<iface::cellml_api::ConnectionIterator> connectionsIterator = connections->iterateConnections();
 
     forever {
-        ObjRef<iface::cellml_api::Connection> connection = connectionIterator->nextConnection();
+        ObjRef<iface::cellml_api::Connection> connection = connectionsIterator->nextConnection();
 
         if (connection)
             // We have a connection, so add it to our list
