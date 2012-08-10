@@ -17,7 +17,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
-                                         iface::rdf_api::Triple *pRdfTriple) :
+                                         iface::rdf_api::Triple *pCellmlRdfTriple) :
     mCellmlFile(pCellmlFile),
     mType(Unknown),
     mModelQualifier(ModelUnknown),
@@ -27,9 +27,9 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 {
     // Retrieve the RDF triple's subject, predicate and object information
 
-    ObjRef<iface::rdf_api::Resource> subject = pRdfTriple->subject();
-    ObjRef<iface::rdf_api::Resource> predicate = pRdfTriple->predicate();
-    ObjRef<iface::rdf_api::Node> object = pRdfTriple->object();
+    ObjRef<iface::rdf_api::Resource> subject = pCellmlRdfTriple->subject();
+    ObjRef<iface::rdf_api::Resource> predicate = pCellmlRdfTriple->predicate();
+    ObjRef<iface::rdf_api::Node> object = pCellmlRdfTriple->object();
 
     mSubject   = new CellmlFileRdfTripleElement(subject);
     mPredicate = new CellmlFileRdfTripleElement(predicate);

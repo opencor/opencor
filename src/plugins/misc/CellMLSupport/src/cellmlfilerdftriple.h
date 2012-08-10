@@ -66,7 +66,7 @@ public:
     };
 
     explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
-                                 iface::rdf_api::Triple *pRdfTriple);
+                                 iface::rdf_api::Triple *pCellmlRdfTriple);
     explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                  const QString pSubject,
                                  const ModelQualifier &pModelQualifier,
