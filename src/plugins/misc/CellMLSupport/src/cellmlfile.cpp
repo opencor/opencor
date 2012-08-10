@@ -82,7 +82,7 @@ void CellmlFile::reset()
 {
     // Reset all of the file's properties
     // Note: setting mCellmlApiModel to zero will automatically delete the
-    //       current instance, if any
+    //       current instance, if any...
 
     mCellmlApiModel = 0;
 
