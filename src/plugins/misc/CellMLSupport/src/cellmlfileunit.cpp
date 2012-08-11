@@ -33,7 +33,7 @@ CellmlFileUnit::CellmlFileUnit(CellmlFile *pCellmlFile,
     ObjRef<iface::cellml_api::UnitIterator> unitIterator = units->iterateUnits();
 
     forever {
-        ObjRef<iface::cellml_api::Unit> unit = unitIterator->nextUnit();
+        iface::cellml_api::Unit *unit = unitIterator->nextUnit();
 
         if (unit)
             // We have a unit, so add it to our list

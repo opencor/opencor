@@ -24,7 +24,7 @@ CellmlFileImport::CellmlFileImport(CellmlFile *pCellmlFile,
     ObjRef<iface::cellml_api::ImportUnitsIterator> importUnitIterator = importUnits->iterateImportUnits();
 
     forever {
-        ObjRef<iface::cellml_api::ImportUnits> importUnit = importUnitIterator->nextImportUnits();
+        iface::cellml_api::ImportUnits *importUnit = importUnitIterator->nextImportUnits();
 
         if (importUnit)
             // We have a unit import, so add it to our list
@@ -42,7 +42,7 @@ CellmlFileImport::CellmlFileImport(CellmlFile *pCellmlFile,
     ObjRef<iface::cellml_api::ImportComponentIterator> importComponentIterator = importComponents->iterateImportComponents();
 
     forever {
-        ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentIterator->nextImportComponent();
+        iface::cellml_api::ImportComponent *importComponent = importComponentIterator->nextImportComponent();
 
         if (importComponent)
             // We have a component import, so add it to our list

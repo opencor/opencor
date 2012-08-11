@@ -22,7 +22,7 @@ CellmlFileGroup::CellmlFileGroup(CellmlFile *pCellmlFile,
     ObjRef<iface::cellml_api::RelationshipRefIterator> relationshipReferenceIterator = relationshipReferences->iterateRelationshipRefs();
 
     forever {
-        ObjRef<iface::cellml_api::RelationshipRef> relationshipReference = relationshipReferenceIterator->nextRelationshipRef();
+        iface::cellml_api::RelationshipRef *relationshipReference = relationshipReferenceIterator->nextRelationshipRef();
 
         if (relationshipReference)
             // We have a relationship reference, so add it to our list
@@ -40,7 +40,7 @@ CellmlFileGroup::CellmlFileGroup(CellmlFile *pCellmlFile,
     ObjRef<iface::cellml_api::ComponentRefIterator> componentReferenceIterator = componentReferences->iterateComponentRefs();
 
     forever {
-        ObjRef<iface::cellml_api::ComponentRef> componentReference = componentReferenceIterator->nextComponentRef();
+        iface::cellml_api::ComponentRef *componentReference = componentReferenceIterator->nextComponentRef();
 
         if (componentReference)
             // We have a component reference, so add it to our list

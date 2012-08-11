@@ -23,7 +23,7 @@ CellmlFileComponentReference::CellmlFileComponentReference(CellmlFile *pCellmlFi
     ObjRef<iface::cellml_api::ComponentRefIterator> componentReferenceIterator = componentReferences->iterateComponentRefs();
 
     forever {
-        ObjRef<iface::cellml_api::ComponentRef> componentReference = componentReferenceIterator->nextComponentRef();
+        iface::cellml_api::ComponentRef *componentReference = componentReferenceIterator->nextComponentRef();
 
         if (componentReference)
             // We have a component reference, so add it to our list

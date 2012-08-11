@@ -62,6 +62,7 @@ public:
                                iface::cellml_api::MapComponents *pMapComponents);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
                                iface::cellml_api::MapVariables *pMapVariables);
+    ~CellmlFileElement();
 
     CellmlFileRdfTriples rdfTriples() const;
 

@@ -156,6 +156,16 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 
 //==============================================================================
 
+CellmlFileElement::~CellmlFileElement()
+{
+    // We took ownership of the CellML API element (i.e. mCellmlElement), so we
+    // must call its release_ref() method
+
+    mCellmlElement->release_ref();
+}
+
+//==============================================================================
+
 CellmlFileRdfTriples CellmlFileElement::rdfTriples() const
 {
     // Return all the RDF triples associated with the element

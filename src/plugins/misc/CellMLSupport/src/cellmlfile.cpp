@@ -81,10 +81,10 @@ CellmlFile::~CellmlFile()
 void CellmlFile::reset()
 {
     // Reset all of the file's properties
-    // Note: setting mCellmlModel to zero will automatically delete the current
-    //       instance, if any...
 
     mCellmlModel = 0;
+    // Note: we don't need to call release_ref() since mModel will do it for us
+    //       since we gave it ownership of mCellmlModel...
 
     mUriBase = QString();
 
@@ -188,6 +188,11 @@ bool CellmlFile::load()
     mUriBase = QString::fromStdWString(xmlBase->asText());
 
     // Extract/retrieve various things from mCellmlModel
+    // Note: like for all of our CellmlFileElement-based classes, mModel is
+    //       going to take ownership of the CellML API element (here
+    //       mCellmlModel), hence it's not declared using ObjRef<>, but this
+    //       also means that ~CellmlFileElement() must call the release_ref()
+    //       method of the CellML API element...
 
     mModel = new CellmlFileModel(this, mCellmlModel);
 
@@ -197,7 +202,7 @@ bool CellmlFile::load()
     ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
 
     forever {
-        ObjRef<iface::cellml_api::CellMLImport> import = importsIterator->nextImport();
+        iface::cellml_api::CellMLImport *import = importsIterator->nextImport();
 
         if (import)
             // We have an import, so add it to our list
@@ -215,7 +220,7 @@ bool CellmlFile::load()
     ObjRef<iface::cellml_api::UnitsIterator> unitsIterator = units->iterateUnits();
 
     forever {
-        ObjRef<iface::cellml_api::Units> unit = unitsIterator->nextUnits();
+        iface::cellml_api::Units *unit = unitsIterator->nextUnits();
 
         if (unit)
             // We have a unit, so add it to our list
@@ -233,7 +238,7 @@ bool CellmlFile::load()
     ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIterator = components->iterateComponents();
 
     forever {
-        ObjRef<iface::cellml_api::CellMLComponent> component = componentsIterator->nextComponent();
+        iface::cellml_api::CellMLComponent *component = componentsIterator->nextComponent();
 
         if (component)
             // We have a component, so add it to our list
@@ -251,7 +256,7 @@ bool CellmlFile::load()
     ObjRef<iface::cellml_api::GroupIterator> groupsIterator = groups->iterateGroups();
 
     forever {
-        ObjRef<iface::cellml_api::Group> group = groupsIterator->nextGroup();
+        iface::cellml_api::Group *group = groupsIterator->nextGroup();
 
         if (group)
             // We have a group, so add it to our list
@@ -269,7 +274,7 @@ bool CellmlFile::load()
     ObjRef<iface::cellml_api::ConnectionIterator> connectionsIterator = connections->iterateConnections();
 
     forever {
-        ObjRef<iface::cellml_api::Connection> connection = connectionsIterator->nextConnection();
+        iface::cellml_api::Connection *connection = connectionsIterator->nextConnection();
 
         if (connection)
             // We have a connection, so add it to our list
@@ -296,7 +301,7 @@ bool CellmlFile::load()
             ObjRef<iface::rdf_api::TripleEnumerator> rdfTriplesEnumerator = rdfTriples->enumerateTriples();
 
             forever {
-                ObjRef<iface::rdf_api::Triple> rdfTriple = rdfTriplesEnumerator->getNextTriple();
+                iface::rdf_api::Triple *rdfTriple = rdfTriplesEnumerator->getNextTriple();
 
                 if (rdfTriple)
                     // We have an RDF triple, so add it to our list

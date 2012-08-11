@@ -33,7 +33,7 @@ CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
     ObjRef<iface::cellml_api::UnitsIterator> unitIterator = units->iterateUnits();
 
     forever {
-        ObjRef<iface::cellml_api::Units> unit = unitIterator->nextUnits();
+        iface::cellml_api::Units *unit = unitIterator->nextUnits();
 
         if (unit)
             // We have a unit, so add it to our list
@@ -51,7 +51,7 @@ CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
     ObjRef<iface::cellml_api::CellMLVariableIterator> variableIterator = variables->iterateVariables();
 
     forever {
-        ObjRef<iface::cellml_api::CellMLVariable> variable = variableIterator->nextVariable();
+        iface::cellml_api::CellMLVariable *variable = variableIterator->nextVariable();
 
         if (variable)
             // We have a variable, so add it to our list
@@ -70,6 +70,9 @@ CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
 
     forever {
         ObjRef<iface::mathml_dom::MathMLElement> mathmlElement = mathmlElementIterator->next();
+        // Note: CellmlFileMathmlElement isn't going take ownership of
+        //       mathmlElement, hence we declare it using ObjRef<> unlike unit
+        //       and variable above...
 
         if (mathmlElement)
             // We have a MathML element, so add it to our list

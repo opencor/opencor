@@ -68,7 +68,7 @@ public:
 private:
     QString mFileName;
 
-    ObjRef<iface::cellml_api::Model> mCellmlModel;
+    iface::cellml_api::Model *mCellmlModel;
 
     QString mUriBase;
 
