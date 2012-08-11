@@ -779,8 +779,8 @@ void CellmlFile::clearRdfTriples()
 {
     // Delete all the RDF triples and clear our list
 
-    foreach (CellmlFileRdfTriple *triple, mRdfTriples)
-        delete triple;
+    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+        delete rdfTriple;
 
     mRdfTriples.clear();
 }
