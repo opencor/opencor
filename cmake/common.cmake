@@ -211,9 +211,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # We are dealing with a third-party plugin, so disable all warnings
             # since it may generate some and this is not something we can or
             # should have control over
+            # Note: for some reasons, MSVC eventually uses /W1, so we can't
+            #       replace /W3 /WX with /w since this would conflict with
+            #       /W1 and generate a warning, so...
 
             IF(WIN32)
-                STRING(REPLACE "/W3 /WX" "/w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+                STRING(REPLACE "/W3 /WX" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
             ELSE()
                 STRING(REPLACE "-Wall -Werror" "-w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
             ENDIF()
