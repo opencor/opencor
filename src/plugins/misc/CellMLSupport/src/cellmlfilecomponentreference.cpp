@@ -25,14 +25,10 @@ CellmlFileComponentReference::CellmlFileComponentReference(CellmlFile *pCellmlFi
     forever {
         iface::cellml_api::ComponentRef *componentReference = componentReferenceIterator->nextComponentRef();
 
-        if (componentReference)
-            // We have a component reference, so add it to our list
-
-            mComponentReferences << new CellmlFileComponentReference(pCellmlFile, componentReference);
-        else
-            // No more component references, so...
-
+        if (!componentReference)
             break;
+
+        mComponentReferences << new CellmlFileComponentReference(pCellmlFile, componentReference);
     }
 }
 

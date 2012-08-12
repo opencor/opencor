@@ -35,14 +35,10 @@ CellmlFileUnit::CellmlFileUnit(CellmlFile *pCellmlFile,
     forever {
         iface::cellml_api::Unit *unit = unitIterator->nextUnit();
 
-        if (unit)
-            // We have a unit, so add it to our list
-
-            mUnitElements << new CellmlFileUnitElement(pCellmlFile, unit);
-        else
-            // No more units, so...
-
+        if (!unit)
             break;
+
+        mUnitElements << new CellmlFileUnitElement(pCellmlFile, unit);
     }
 }
 

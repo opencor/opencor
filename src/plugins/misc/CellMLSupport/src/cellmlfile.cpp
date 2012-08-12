@@ -204,14 +204,10 @@ bool CellmlFile::load()
     forever {
         iface::cellml_api::CellMLImport *import = importsIterator->nextImport();
 
-        if (import)
-            // We have an import, so add it to our list
-
-            mImports << new CellmlFileImport(this, import);
-        else
-            // No more imports, so...
-
+        if (!import)
             break;
+
+        mImports << new CellmlFileImport(this, import);
     }
 
     // Iterate through the units and add them to our list
@@ -222,14 +218,10 @@ bool CellmlFile::load()
     forever {
         iface::cellml_api::Units *unit = unitsIterator->nextUnits();
 
-        if (unit)
-            // We have a unit, so add it to our list
-
-            mUnits << new CellmlFileUnit(this, unit);
-        else
-            // No more units, so...
-
+        if (!unit)
             break;
+
+        mUnits << new CellmlFileUnit(this, unit);
     }
 
     // Iterate through the components and add them to our list
@@ -240,14 +232,10 @@ bool CellmlFile::load()
     forever {
         iface::cellml_api::CellMLComponent *component = componentsIterator->nextComponent();
 
-        if (component)
-            // We have a component, so add it to our list
-
-            mComponents << new CellmlFileComponent(this, component);
-        else
-            // No more components, so...
-
+        if (!component)
             break;
+
+        mComponents << new CellmlFileComponent(this, component);
     }
 
     // Iterate through the groups and add them to our list
@@ -258,14 +246,10 @@ bool CellmlFile::load()
     forever {
         iface::cellml_api::Group *group = groupsIterator->nextGroup();
 
-        if (group)
-            // We have a group, so add it to our list
-
-            mGroups << new CellmlFileGroup(this, group);
-        else
-            // No more groups, so...
-
+        if (!group)
             break;
+
+        mGroups << new CellmlFileGroup(this, group);
     }
 
     // Iterate through the connections and add them to our list
@@ -276,14 +260,11 @@ bool CellmlFile::load()
     forever {
         iface::cellml_api::Connection *connection = connectionsIterator->nextConnection();
 
-        if (connection)
-            // We have a connection, so add it to our list
-
-            mConnections << new CellmlFileConnection(this, connection);
-        else
-            // No more connections, so...
-
+        if (!connection)
             break;
+
+        mConnections << new CellmlFileConnection(this, connection);
+
     }
 
     // Retrieve all the RDF triples associated with the model
@@ -303,14 +284,10 @@ bool CellmlFile::load()
             forever {
                 iface::rdf_api::Triple *rdfTriple = rdfTriplesEnumerator->getNextTriple();
 
-                if (rdfTriple)
-                    // We have an RDF triple, so add it to our list
-
-                    mRdfTriples << new CellmlFileRdfTriple(this, rdfTriple);
-                else
-                    // No more RDF triples, so...
-
+                if (!rdfTriple)
                     break;
+
+                mRdfTriples << new CellmlFileRdfTriple(this, rdfTriple);
             }
         }
     }
@@ -480,8 +457,6 @@ bool CellmlFile::isValid()
                         ObjRef<iface::cellml_api::CellMLElement> cellmlElementParent = cellmlElement->parentElement();
 
                         if (!cellmlElementParent)
-                            // There is no parent, so...
-
                             break;
 
                         // Check whether the parent is an imported file
@@ -490,8 +465,6 @@ bool CellmlFile::isValid()
                                                        cellml_api::Model);
 
                         if (!importedCellmlFile)
-                            // This is not an imported file, so...
-
                             continue;
 
                         // Retrieve the imported CellML element
@@ -499,8 +472,6 @@ bool CellmlFile::isValid()
                         ObjRef<iface::cellml_api::CellMLElement> importedCellmlElement = importedCellmlFile->parentElement();
 
                         if (!importedCellmlElement)
-                            // This is not an imported CellML element, so...
-
                             break;
 
                         // Check whether the imported CellML element is an
@@ -510,8 +481,6 @@ bool CellmlFile::isValid()
                                                        cellml_api::CellMLImport);
 
                         if (!importCellmlElement)
-                            // This is not an import CellML element, so...
-
                             break;
 
                         ObjRef<iface::cellml_api::URI> href = importCellmlElement->xlinkHref();

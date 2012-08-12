@@ -28,14 +28,10 @@ CellmlFileConnection::CellmlFileConnection(CellmlFile *pCellmlFile,
     forever {
         iface::cellml_api::MapVariables *mapVariables = mapVariablesIterator->nextMapVariables();
 
-        if (mapVariables)
-            // We have variables to map, so add them to our list
-
-            mVariableMappings << new CellmlFileMapVariablesItem(pCellmlFile, mapVariables);
-        else
-            // No more variables to map, so...
-
+        if (!mapVariables)
             break;
+
+        mVariableMappings << new CellmlFileMapVariablesItem(pCellmlFile, mapVariables);
     }
 }
 

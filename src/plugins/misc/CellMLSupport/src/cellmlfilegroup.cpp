@@ -24,14 +24,10 @@ CellmlFileGroup::CellmlFileGroup(CellmlFile *pCellmlFile,
     forever {
         iface::cellml_api::RelationshipRef *relationshipReference = relationshipReferenceIterator->nextRelationshipRef();
 
-        if (relationshipReference)
-            // We have a relationship reference, so add it to our list
-
-            mRelationshipReferences << new CellmlFileRelationshipReference(pCellmlFile, relationshipReference);
-        else
-            // No more relationship references, so...
-
+        if (!relationshipReference)
             break;
+
+        mRelationshipReferences << new CellmlFileRelationshipReference(pCellmlFile, relationshipReference);
     }
 
     // Iterate through the component references and add them to our list
@@ -42,14 +38,10 @@ CellmlFileGroup::CellmlFileGroup(CellmlFile *pCellmlFile,
     forever {
         iface::cellml_api::ComponentRef *componentReference = componentReferenceIterator->nextComponentRef();
 
-        if (componentReference)
-            // We have a component reference, so add it to our list
-
-            mComponentReferences << new CellmlFileComponentReference(pCellmlFile, componentReference);
-        else
-            // No more component references, so...
-
+        if (!componentReference)
             break;
+
+        mComponentReferences << new CellmlFileComponentReference(pCellmlFile, componentReference);
     }
 }
 

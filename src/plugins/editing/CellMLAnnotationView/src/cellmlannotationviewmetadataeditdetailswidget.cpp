@@ -173,26 +173,21 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
 
     int row = 0;
 
-    forever
-        if (mGridLayout->itemAtPosition(++row, 0)) {
-            // Valid row, so check whether to make it bold (and italic in some
-            // cases)
-
-            QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
-
-            Item item = mItemsMapping.value(addButton);
-
-            if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-                addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
-                                                                   item.resource, item.id));
-            else
-                addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                                   item.resource, item.id));
-        } else {
-            // No more rows, so...
-
+    forever {
+        if (!mGridLayout->itemAtPosition(++row, 0))
             break;
-        }
+
+        QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
+
+        Item item = mItemsMapping.value(addButton);
+
+        if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+            addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                                               item.resource, item.id));
+        else
+            addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                               item.resource, item.id));
+    }
 }
 
 //==============================================================================
@@ -650,42 +645,38 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString 
     if ((mType != Qualifier) && mLookupQualifierButton->isChecked())
         mLookupQualifierButton->toggle();
 
-    // Make the row corresponding to the resource or id bold
+    // Make the row corresponding to the resource or id bold (and italic in some
+    // cases)
     // Note: to use mGridLayout->rowCount() to determine the number of rows
     //       isn't an option since the returned value will be the maximum number
     //       of rows that there has ever been, so...
 
     int row = 0;
 
-    forever
-        if (mGridLayout->itemAtPosition(++row, 0)) {
-            // Valid row, so check whether to make it bold (and italic in some
-            // cases)
-
-            QLabel *nameLabel     = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
-            QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
-            QLabel *idLabel       = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
-
-            QFont font = idLabel->font();
-
-            font.setBold(   mLookupInformation
-                         && !resourceLabel->text().compare("<a href=\""+pItemInformation+"\">"+resourceAsString+"</a>")
-                         && !idLabel->text().compare("<a href=\""+pItemInformation+"\">"+idAsString+"</a>"));
-            font.setItalic(false);
-
-            QFont italicFont = idLabel->font();
-
-            italicFont.setBold(font.bold());
-            italicFont.setItalic(font.bold());
-
-            nameLabel->setFont(font);
-            resourceLabel->setFont((pType == Resource)?italicFont:font);
-            idLabel->setFont((pType == Id)?italicFont:font);
-        } else {
-            // No more rows, so...
-
+    forever {
+        if (!mGridLayout->itemAtPosition(++row, 0))
             break;
-        }
+
+        QLabel *nameLabel     = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
+        QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
+        QLabel *idLabel       = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
+
+        QFont font = idLabel->font();
+
+        font.setBold(   mLookupInformation
+                     && !resourceLabel->text().compare("<a href=\""+pItemInformation+"\">"+resourceAsString+"</a>")
+                     && !idLabel->text().compare("<a href=\""+pItemInformation+"\">"+idAsString+"</a>"));
+        font.setItalic(false);
+
+        QFont italicFont = idLabel->font();
+
+        italicFont.setBold(font.bold());
+        italicFont.setItalic(font.bold());
+
+        nameLabel->setFont(font);
+        resourceLabel->setFont((pType == Resource)?italicFont:font);
+        idLabel->setFont((pType == Id)?italicFont:font);
+    }
 
     // Check that we have something to look up
 

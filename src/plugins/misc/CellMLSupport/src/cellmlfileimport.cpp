@@ -26,14 +26,10 @@ CellmlFileImport::CellmlFileImport(CellmlFile *pCellmlFile,
     forever {
         iface::cellml_api::ImportUnits *importUnit = importUnitIterator->nextImportUnits();
 
-        if (importUnit)
-            // We have a unit import, so add it to our list
-
-            mUnits << new CellmlFileImportUnit(pCellmlFile, importUnit);
-        else
-            // No more unit imports, so...
-
+        if (!importUnit)
             break;
+
+        mUnits << new CellmlFileImportUnit(pCellmlFile, importUnit);
     }
 
     // ... and of any component imports
@@ -44,14 +40,10 @@ CellmlFileImport::CellmlFileImport(CellmlFile *pCellmlFile,
     forever {
         iface::cellml_api::ImportComponent *importComponent = importComponentIterator->nextImportComponent();
 
-        if (importComponent)
-            // We have a component import, so add it to our list
-
-            mComponents << new CellmlFileImportComponent(pCellmlFile, importComponent);
-        else
-            // No more component imports, so...
-
+        if (!importComponent)
             break;
+
+        mComponents << new CellmlFileImportComponent(pCellmlFile, importComponent);
     }
 }
 
