@@ -587,14 +587,12 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         // Update our active directory, if possible
 
-        if (!newFileName.isEmpty())
+        hasNewFileName = !newFileName.isEmpty();
+
+        if (hasNewFileName)
             mActiveDir = QFileInfo(newFileName).path();
 
-        // Check whether the 'new' file already exists after making sure that it
-        // is actually different from the 'old' one
-
-        hasNewFileName =    !newFileName.isEmpty()
-                         && newFileName.compare(oldFileName);
+        // Check whether the 'new' file already exists
 
         if (hasNewFileName && QFileInfo(newFileName).exists())
             // The 'new' file already exists, so ask whether we want to
