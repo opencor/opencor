@@ -567,10 +567,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         QStringList mimeTypes = mGuiInterface->guiSettings()->view()->mimeTypes();
 
         QString supportedFileTypes;
+        int supportedFileTypeNb = 0;
 
         foreach (const FileType &supportedFileType, mSupportedFileTypes)
             if (mimeTypes.contains(supportedFileType.mimeType()))
-                supportedFileTypes +=  ";;"
+                supportedFileTypes +=  QString((++supportedFileTypeNb == 1)?"":";;")
                                       +supportedFileType.description()
                                       +" (*."+supportedFileType.fileExtension()+")";
 
