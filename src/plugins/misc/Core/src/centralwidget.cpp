@@ -568,15 +568,23 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         QString supportedFileTypes;
         int supportedFileTypeNb = 0;
+        QString defaultFileExtension = QString();
 
         foreach (const FileType &supportedFileType, mSupportedFileTypes)
-            if (mimeTypes.contains(supportedFileType.mimeType()))
-                supportedFileTypes +=  QString((++supportedFileTypeNb == 1)?"":";;")
-                                      +supportedFileType.description()
+            if (mimeTypes.contains(supportedFileType.mimeType())) {
+                if (++supportedFileTypeNb == 1)
+                    defaultFileExtension = supportedFileType.fileExtension();
+                else
+                    supportedFileTypes += ";;";
+
+                supportedFileTypes +=  supportedFileType.description()
                                       +" (*."+supportedFileType.fileExtension()+")";
+            }
 
         newFileName = QDir::toNativeSeparators(QFileDialog::getSaveFileName(mMainWindow, tr("Save File"),
-                                                                            mActiveDir.path(),
+                                                                            newFileName.isEmpty()?
+                                                                                mActiveDir.path()+QDir::separator()+"Untitled"+"."+defaultFileExtension:
+                                                                                newFileName,
                                                                             supportedFileTypes, 0,
                                                                             QFileDialog::DontConfirmOverwrite));
 
