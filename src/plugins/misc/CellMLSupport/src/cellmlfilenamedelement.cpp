@@ -12,63 +12,63 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileNamedElement::CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                               iface::cellml_api::Model *pModel) :
-    CellmlFileElement(pCellmlFile, pModel),
-    mName(QString::fromStdWString(pModel->name()))
+                                               iface::cellml_api::Model *pCellmlApiModel) :
+    CellmlFileElement(pCellmlFile, pCellmlApiModel),
+    mName(QString::fromStdWString(pCellmlApiModel->name()))
 {
 }
 
 //==============================================================================
 
 CellmlFileNamedElement::CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                               iface::cellml_api::ImportUnits *pImportUnits) :
-    CellmlFileElement(pCellmlFile, pImportUnits),
-    mName(QString::fromStdWString(pImportUnits->name()))
+                                               iface::cellml_api::ImportUnits *pCellmlApiImportUnits) :
+    CellmlFileElement(pCellmlFile, pCellmlApiImportUnits),
+    mName(QString::fromStdWString(pCellmlApiImportUnits->name()))
 {
 }
 
 //==============================================================================
 
 CellmlFileNamedElement::CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                               iface::cellml_api::ImportComponent *pImportComponent) :
-    CellmlFileElement(pCellmlFile, pImportComponent),
-    mName(QString::fromStdWString(pImportComponent->name()))
+                                               iface::cellml_api::ImportComponent *pCellmlApiImportComponent) :
+    CellmlFileElement(pCellmlFile, pCellmlApiImportComponent),
+    mName(QString::fromStdWString(pCellmlApiImportComponent->name()))
 {
 }
 
 //==============================================================================
 
 CellmlFileNamedElement::CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                               iface::cellml_api::Units *pUnits) :
-    CellmlFileElement(pCellmlFile, pUnits),
-    mName(QString::fromStdWString(pUnits->name()))
+                                               iface::cellml_api::Units *pCellmlApiUnits) :
+    CellmlFileElement(pCellmlFile, pCellmlApiUnits),
+    mName(QString::fromStdWString(pCellmlApiUnits->name()))
 {
 }
 
 //==============================================================================
 
 CellmlFileNamedElement::CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                               iface::cellml_api::Unit *pUnit) :
-    CellmlFileElement(pCellmlFile, pUnit),
-    mName(QString::fromStdWString(pUnit->units()))
+                                               iface::cellml_api::Unit *pCellmlApiUnit) :
+    CellmlFileElement(pCellmlFile, pCellmlApiUnit),
+    mName(QString::fromStdWString(pCellmlApiUnit->units()))
 {
 }
 
 //==============================================================================
 
 CellmlFileNamedElement::CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                               iface::cellml_api::CellMLComponent *pComponent) :
-    CellmlFileElement(pCellmlFile, pComponent),
-    mName(QString::fromStdWString(pComponent->name()))
+                                               iface::cellml_api::CellMLComponent *pCellmlApiComponent) :
+    CellmlFileElement(pCellmlFile, pCellmlApiComponent),
+    mName(QString::fromStdWString(pCellmlApiComponent->name()))
 {
 }
 
 //==============================================================================
 
 CellmlFileNamedElement::CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                               iface::cellml_api::CellMLVariable *pVariable) :
-    CellmlFileElement(pCellmlFile, pVariable),
-    mName(QString::fromStdWString(pVariable->name()))
+                                               iface::cellml_api::CellMLVariable *pCellmlApiVariable) :
+    CellmlFileElement(pCellmlFile, pCellmlApiVariable),
+    mName(QString::fromStdWString(pCellmlApiVariable->name()))
 {
 }
 

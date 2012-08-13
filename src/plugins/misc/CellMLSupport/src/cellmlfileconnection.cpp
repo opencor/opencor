@@ -12,17 +12,17 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileConnection::CellmlFileConnection(CellmlFile *pCellmlFile,
-                                           iface::cellml_api::Connection *pConnection) :
-    CellmlFileElement(pCellmlFile, pConnection),
+                                           iface::cellml_api::Connection *pCellmlApiConnection) :
+    CellmlFileElement(pCellmlFile, pCellmlApiConnection),
     mVariableMappings(CellmlFileMapVariables())
 {
     // Retrieve the components to map
 
-    mComponentMapping = new CellmlFileMapComponents(pCellmlFile, pConnection->componentMapping());
+    mComponentMapping = new CellmlFileMapComponents(pCellmlFile, pCellmlApiConnection->componentMapping());
 
     // Iterate through the variables to map and add them to our list
 
-    ObjRef<iface::cellml_api::MapVariablesSet> variableMappings = pConnection->variableMappings();
+    ObjRef<iface::cellml_api::MapVariablesSet> variableMappings = pCellmlApiConnection->variableMappings();
     ObjRef<iface::cellml_api::MapVariablesIterator> mapVariablesIterator = variableMappings->iterateMapVariables();
 
     forever {

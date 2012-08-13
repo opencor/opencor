@@ -25,7 +25,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileRelationshipReference : public CellmlFileEl
 {
 public:
     explicit CellmlFileRelationshipReference(CellmlFile *pCellmlFile,
-                                             iface::cellml_api::RelationshipRef *pRelationshipReference);
+                                             iface::cellml_api::RelationshipRef *pCellmlApiRelationshipReference);
 
     QString relationship() const;
     QString relationshipNamespace() const;

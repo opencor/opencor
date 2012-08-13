@@ -28,8 +28,8 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRuntime::CellmlFileRuntime() :
-    mOdeCodeInformation(0),
-    mDaeCodeInformation(0),
+    mCellmlApiOdeCodeInformation(0),
+    mCellmlApiDaeCodeInformation(0),
     mComputerEngine(0)
 {
     // Initialise the runtime's properties
@@ -42,8 +42,8 @@ CellmlFileRuntime::CellmlFileRuntime() :
 CellmlFileRuntime::~CellmlFileRuntime()
 {
     // Delete some internal objects
-    // Note: both mOdeCodeInformation and mDaeCodeInformation get automatically
-    //       deleted, if needed, so...
+    // Note: both mCellmlApiOdeCodeInformation and mCellmlApiDaeCodeInformation
+    //       get automatically deleted, if needed, so...
 
     delete mComputerEngine;
 }
@@ -73,9 +73,9 @@ int CellmlFileRuntime::constantsCount() const
     // Return the number of constants in the model
 
     if (mModelType == Ode)
-        return mOdeCodeInformation?mOdeCodeInformation->constantIndexCount():0;
+        return mCellmlApiOdeCodeInformation?mCellmlApiOdeCodeInformation->constantIndexCount():0;
     else
-        return mDaeCodeInformation?mDaeCodeInformation->constantIndexCount():0;
+        return mCellmlApiDaeCodeInformation?mCellmlApiDaeCodeInformation->constantIndexCount():0;
 }
 
 //==============================================================================
@@ -85,9 +85,9 @@ int CellmlFileRuntime::statesCount() const
     // Return the number of states in the model
 
     if (mModelType == Ode)
-        return mOdeCodeInformation?mOdeCodeInformation->rateIndexCount():0;
+        return mCellmlApiOdeCodeInformation?mCellmlApiOdeCodeInformation->rateIndexCount():0;
     else
-        return mDaeCodeInformation?mDaeCodeInformation->rateIndexCount():0;
+        return mCellmlApiDaeCodeInformation?mCellmlApiDaeCodeInformation->rateIndexCount():0;
 }
 
 //==============================================================================
@@ -108,9 +108,9 @@ int CellmlFileRuntime::algebraicCount() const
     // Return the number of algebraic equations in the model
 
     if (mModelType == Ode)
-        return mOdeCodeInformation?mOdeCodeInformation->algebraicIndexCount():0;
+        return mCellmlApiOdeCodeInformation?mCellmlApiOdeCodeInformation->algebraicIndexCount():0;
     else
-        return mDaeCodeInformation?mDaeCodeInformation->algebraicIndexCount():0;
+        return mCellmlApiDaeCodeInformation?mCellmlApiDaeCodeInformation->algebraicIndexCount():0;
 }
 
 //==============================================================================
@@ -122,7 +122,7 @@ int CellmlFileRuntime::condVarCount() const
     if (mModelType == Ode)
         return 0;
     else
-        return mDaeCodeInformation?mDaeCodeInformation->conditionVariableCount():0;
+        return mCellmlApiDaeCodeInformation?mCellmlApiDaeCodeInformation->conditionVariableCount():0;
 }
 
 //==============================================================================
@@ -160,7 +160,7 @@ void CellmlFileRuntime::resetOdeCodeInformation()
     // Note: setting it to zero will automatically delete the current instance,
     //       if any
 
-    mOdeCodeInformation = 0;
+    mCellmlApiOdeCodeInformation = 0;
 }
 
 //==============================================================================
@@ -171,7 +171,7 @@ void CellmlFileRuntime::resetDaeCodeInformation()
     // Note: setting it to zero will automatically delete the current instance,
     //       if any
 
-    mDaeCodeInformation = 0;
+    mCellmlApiDaeCodeInformation = 0;
 }
 
 //==============================================================================
@@ -239,21 +239,21 @@ void CellmlFileRuntime::unexpectedProblemDuringModelCompilationIssue()
 
 //==============================================================================
 
-void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation)
+void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInformation *pCellmlApiCodeInformation)
 {
-    if (!pCodeInformation)
+    if (!pCellmlApiCodeInformation)
         // No code information was provided, so...
 
         return;
 
     // Retrieve the code information's latest error message
 
-    QString codeGenerationErrorMessage = QString::fromStdWString(pCodeInformation->errorMessage());
+    QString codeGenerationErrorMessage = QString::fromStdWString(pCellmlApiCodeInformation->errorMessage());
 
     if (codeGenerationErrorMessage.isEmpty()) {
         // The code generation went fine, so check the model's constraint level
 
-        iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
+        iface::cellml_services::ModelConstraintLevel constraintLevel = pCellmlApiCodeInformation->constraintLevel();
 
         if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
@@ -275,7 +275,7 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
 //==============================================================================
 
-iface::cellml_services::CodeInformation * CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
+iface::cellml_services::CodeInformation * CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pCellmlApiModel)
 {
     // Get a code generator bootstrap and create an ODE code generator
 
@@ -285,11 +285,11 @@ iface::cellml_services::CodeInformation * CellmlFileRuntime::getOdeCodeInformati
     // Generate some code for the model (i.e. 'compile' the model)
 
     try {
-        mOdeCodeInformation = codeGenerator->generateCode(pModel);
+        mCellmlApiOdeCodeInformation = codeGenerator->generateCode(pCellmlApiModel);
 
         // Check that the code generation went fine
 
-        checkCodeInformation(mOdeCodeInformation);
+        checkCodeInformation(mCellmlApiOdeCodeInformation);
     } catch (iface::cellml_api::CellMLException &) {
         couldNotGenerateModelCodeIssue();
     } catch (...) {
@@ -305,12 +305,12 @@ iface::cellml_services::CodeInformation * CellmlFileRuntime::getOdeCodeInformati
 
     // We are done, so return our code information
 
-    return mOdeCodeInformation;
+    return mCellmlApiOdeCodeInformation;
 }
 
 //==============================================================================
 
-iface::cellml_services::CodeInformation * CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
+iface::cellml_services::CodeInformation * CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pCellmlApiModel)
 {
     // Get a code generator bootstrap and create a DAE code generator
 
@@ -320,11 +320,11 @@ iface::cellml_services::CodeInformation * CellmlFileRuntime::getDaeCodeInformati
     // Generate some code for the model (i.e. 'compile' the model)
 
     try {
-        mDaeCodeInformation = codeGenerator->generateIDACode(pModel);
+        mCellmlApiDaeCodeInformation = codeGenerator->generateIDACode(pCellmlApiModel);
 
         // Check that the code generation went fine
 
-        checkCodeInformation(mDaeCodeInformation);
+        checkCodeInformation(mCellmlApiDaeCodeInformation);
     } catch (iface::cellml_api::CellMLException &) {
         couldNotGenerateModelCodeIssue();
     } catch (...) {
@@ -340,12 +340,12 @@ iface::cellml_services::CodeInformation * CellmlFileRuntime::getDaeCodeInformati
 
     // We are done, so return our code information
 
-    return mDaeCodeInformation;
+    return mCellmlApiDaeCodeInformation;
 }
 
 //==============================================================================
 
-CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
+CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlApiModel)
 {
     // Reset the runtime's properties
 
@@ -364,7 +364,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
     // Note #3: ideally, there would be a more convenient way to determine the
     //          type of a model, but well... there isn't, so...
 
-    if (!pModel)
+    if (!pCellmlApiModel)
         // No model was provided, so...
 
         return this;
@@ -379,13 +379,13 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
     time.start();
 #endif
 
-    getOdeCodeInformation(pModel);
+    getOdeCodeInformation(pCellmlApiModel);
 
 #ifdef QT_DEBUG
     qDebug(" - CellML ODE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
 
-    if (!mOdeCodeInformation) {
+    if (!mCellmlApiOdeCodeInformation) {
         // No ODE code information could be retrieved, so...
 
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
@@ -397,7 +397,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
     // An ODE code information could be retrieved, so we can determine the
     // model's type
 
-    mModelType = mOdeCodeInformation->flaggedEquations()->length()?Dae:Ode;
+    mModelType = mCellmlApiOdeCodeInformation->flaggedEquations()->length()?Dae:Ode;
 
     // If the model is of DAE type, then we must get the 'right' code
     // information
@@ -405,14 +405,14 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
     iface::cellml_services::CodeInformation *genericCodeInformation;
 
     if (mModelType == Ode)
-        genericCodeInformation = mOdeCodeInformation;
+        genericCodeInformation = mCellmlApiOdeCodeInformation;
     else
 #ifdef QT_DEBUG
     {
         time.restart();
 #endif
 
-        genericCodeInformation = getDaeCodeInformation(pModel);
+        genericCodeInformation = getDaeCodeInformation(pCellmlApiModel);
 
 #ifdef QT_DEBUG
         qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
@@ -444,21 +444,21 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pModel)
 
     if (mModelType == Ode)
         addAndCheckFunction("computeRates",
-                            QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mOdeCodeInformation->ratesString())));
+                            QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiOdeCodeInformation->ratesString())));
     else
         addAndCheckFunction("computeResiduals",
-                            QString("void computeResiduals(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->ratesString())));
+                            QString("void computeResiduals(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->ratesString())));
 
     addAndCheckFunction("computeVariables",
                         QString("void computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
 
     if (mModelType == Dae) {
         addAndCheckFunction("computeEssentialVariables",
-                            QString("void computeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->essentialVariablesString())));
+                            QString("void computeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->essentialVariablesString())));
         addAndCheckFunction("computeRootInformation",
-                            QString("void computeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->rootInformationString())));
+                            QString("void computeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->rootInformationString())));
         addAndCheckFunction("computeStateInformation",
-                            QString("void computeStateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mDaeCodeInformation->stateInformationString())));
+                            QString("void computeStateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->stateInformationString())));
     }
 
 #ifdef QT_DEBUG

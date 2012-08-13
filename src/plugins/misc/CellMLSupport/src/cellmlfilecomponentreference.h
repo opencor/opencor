@@ -33,7 +33,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileComponentReference : public CellmlFileEleme
 {
 public:
     explicit CellmlFileComponentReference(CellmlFile *pCellmlFile,
-                                          iface::cellml_api::ComponentRef *pComponentReference);
+                                          iface::cellml_api::ComponentRef *pCellmlApiComponentReference);
     ~CellmlFileComponentReference();
 
     QString component() const;

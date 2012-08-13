@@ -91,13 +91,13 @@ public:
 
     CellmlFileIssues issues() const;
 
-    CellmlFileRuntime * update(iface::cellml_api::Model *pModel = 0);
+    CellmlFileRuntime * update(iface::cellml_api::Model *pCellmlApiModel = 0);
 
 private:
     ModelType mModelType;
 
-    ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
-    ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
+    ObjRef<iface::cellml_services::CodeInformation> mCellmlApiOdeCodeInformation;
+    ObjRef<iface::cellml_services::IDACodeInformation> mCellmlApiDaeCodeInformation;
 
     Computer::ComputerEngine *mComputerEngine;
 
@@ -117,10 +117,10 @@ private:
     void couldNotGenerateModelCodeIssue();
     void unexpectedProblemDuringModelCompilationIssue();
 
-    void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
+    void checkCodeInformation(iface::cellml_services::CodeInformation *pCellmlApiCodeInformation);
 
-    iface::cellml_services::CodeInformation * getOdeCodeInformation(iface::cellml_api::Model *pModel);
-    iface::cellml_services::CodeInformation * getDaeCodeInformation(iface::cellml_api::Model *pModel);
+    iface::cellml_services::CodeInformation * getOdeCodeInformation(iface::cellml_api::Model *pCellmlApiModel);
+    iface::cellml_services::CodeInformation * getDaeCodeInformation(iface::cellml_api::Model *pCellmlApiModel);
 
     void addAndCheckFunction(const QString &pFunctionName,
                              const QString &pFunctionBody);

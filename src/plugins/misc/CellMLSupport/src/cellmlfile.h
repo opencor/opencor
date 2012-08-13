@@ -36,6 +36,8 @@ public:
     explicit CellmlFile(const QString &pFileName);
     ~CellmlFile();
 
+    iface::cellml_api::Model * cellmlApiModel() const;
+
     bool load();
     bool reload();
 
@@ -68,7 +70,10 @@ public:
 private:
     QString mFileName;
 
-    iface::cellml_api::Model *mCellmlModel;
+    iface::cellml_api::Model *mCellmlApiModel;
+
+    iface::rdf_api::RDFAPIRepresentation *mCellmlApiRdfApiRepresentation;
+    iface::rdf_api::DataSource *mCellmlApiRdfDataSource;
 
     QString mUriBase;
 

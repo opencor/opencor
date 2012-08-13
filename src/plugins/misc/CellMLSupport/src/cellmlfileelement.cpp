@@ -17,140 +17,140 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::Model *pModel) :
+                                     iface::cellml_api::Model *pCellmlApiModel) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pModel),
-    mCmetaId(QString::fromStdWString(pModel->cmetaId()))
+    mCellmlElement(pCellmlApiModel),
+    mCmetaId(QString::fromStdWString(pCellmlApiModel->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::CellMLImport *pCellmlImport) :
+                                     iface::cellml_api::CellMLImport *pCellmlApiCellmlImport) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pCellmlImport),
-    mCmetaId(QString::fromStdWString(pCellmlImport->cmetaId()))
+    mCellmlElement(pCellmlApiCellmlImport),
+    mCmetaId(QString::fromStdWString(pCellmlApiCellmlImport->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::ImportUnits *pImportUnits) :
+                                     iface::cellml_api::ImportUnits *pCellmlApiImportUnits) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pImportUnits),
-    mCmetaId(QString::fromStdWString(pImportUnits->cmetaId()))
+    mCellmlElement(pCellmlApiImportUnits),
+    mCmetaId(QString::fromStdWString(pCellmlApiImportUnits->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::ImportComponent *pImportComponent) :
+                                     iface::cellml_api::ImportComponent *pCellmlApiImportComponent) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pImportComponent),
-    mCmetaId(QString::fromStdWString(pImportComponent->cmetaId()))
+    mCellmlElement(pCellmlApiImportComponent),
+    mCmetaId(QString::fromStdWString(pCellmlApiImportComponent->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::Units *pUnits) :
+                                     iface::cellml_api::Units *pCellmlApiUnits) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pUnits),
-    mCmetaId(QString::fromStdWString(pUnits->cmetaId()))
+    mCellmlElement(pCellmlApiUnits),
+    mCmetaId(QString::fromStdWString(pCellmlApiUnits->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::Unit *pUnit) :
+                                     iface::cellml_api::Unit *pCellmlApiUnit) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pUnit),
-    mCmetaId(QString::fromStdWString(pUnit->cmetaId()))
+    mCellmlElement(pCellmlApiUnit),
+    mCmetaId(QString::fromStdWString(pCellmlApiUnit->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::CellMLComponent *pComponent) :
+                                     iface::cellml_api::CellMLComponent *pCellmlApiComponent) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pComponent),
-    mCmetaId(QString::fromStdWString(pComponent->cmetaId()))
+    mCellmlElement(pCellmlApiComponent),
+    mCmetaId(QString::fromStdWString(pCellmlApiComponent->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::CellMLVariable *pVariable) :
+                                     iface::cellml_api::CellMLVariable *pCellmlApiVariable) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pVariable),
-    mCmetaId(QString::fromStdWString(pVariable->cmetaId()))
+    mCellmlElement(pCellmlApiVariable),
+    mCmetaId(QString::fromStdWString(pCellmlApiVariable->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::Group *pGroup) :
+                                     iface::cellml_api::Group *pCellmlApiGroup) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pGroup),
-    mCmetaId(QString::fromStdWString(pGroup->cmetaId()))
+    mCellmlElement(pCellmlApiGroup),
+    mCmetaId(QString::fromStdWString(pCellmlApiGroup->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::RelationshipRef *pRelationshipRef) :
+                                     iface::cellml_api::RelationshipRef *pCellmlApiRelationshipRef) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pRelationshipRef),
-    mCmetaId(QString::fromStdWString(pRelationshipRef->cmetaId()))
+    mCellmlElement(pCellmlApiRelationshipRef),
+    mCmetaId(QString::fromStdWString(pCellmlApiRelationshipRef->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::ComponentRef *pComponentRef) :
+                                     iface::cellml_api::ComponentRef *pCellmlApiComponentRef) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pComponentRef),
-    mCmetaId(QString::fromStdWString(pComponentRef->cmetaId()))
+    mCellmlElement(pCellmlApiComponentRef),
+    mCmetaId(QString::fromStdWString(pCellmlApiComponentRef->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::Connection *pConnection) :
+                                     iface::cellml_api::Connection *pCellmlApiConnection) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pConnection),
-    mCmetaId(QString::fromStdWString(pConnection->cmetaId()))
+    mCellmlElement(pCellmlApiConnection),
+    mCmetaId(QString::fromStdWString(pCellmlApiConnection->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::MapComponents *pMapComponents) :
+                                     iface::cellml_api::MapComponents *pCellmlApiMapComponents) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pMapComponents),
-    mCmetaId(QString::fromStdWString(pMapComponents->cmetaId()))
+    mCellmlElement(pCellmlApiMapComponents),
+    mCmetaId(QString::fromStdWString(pCellmlApiMapComponents->cmetaId()))
 {
 }
 
 //==============================================================================
 
 CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::MapVariables *pMapVariables) :
+                                     iface::cellml_api::MapVariables *pCellmlApiMapVariables) :
     mCellmlFile(pCellmlFile),
-    mCellmlElement(pMapVariables),
-    mCmetaId(QString::fromStdWString(pMapVariables->cmetaId()))
+    mCellmlElement(pCellmlApiMapVariables),
+    mCmetaId(QString::fromStdWString(pCellmlApiMapVariables->cmetaId()))
 {
 }
 

@@ -28,7 +28,7 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileMathmlElement
 {
 public:
-    explicit CellmlFileMathmlElement(iface::mathml_dom::MathMLElement *pMathmlElement);
+    explicit CellmlFileMathmlElement(iface::mathml_dom::MathMLElement *pCellmlApiMathmlElement);
 
     QString className() const;
     QString mathElementStyle() const;

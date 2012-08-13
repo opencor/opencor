@@ -12,13 +12,13 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileGroup::CellmlFileGroup(CellmlFile *pCellmlFile,
-                                 iface::cellml_api::Group *pGroup) :
-    CellmlFileElement(pCellmlFile, pGroup),
+                                 iface::cellml_api::Group *pCellmlApiGroup) :
+    CellmlFileElement(pCellmlFile, pCellmlApiGroup),
     mRelationshipReferences(CellmlFileRelationshipReferences())
 {
     // Iterate through the relationship references and add them to our list
 
-    ObjRef<iface::cellml_api::RelationshipRefSet> relationshipReferences = pGroup->relationshipRefs();
+    ObjRef<iface::cellml_api::RelationshipRefSet> relationshipReferences = pCellmlApiGroup->relationshipRefs();
     ObjRef<iface::cellml_api::RelationshipRefIterator> relationshipReferenceIterator = relationshipReferences->iterateRelationshipRefs();
 
     forever {
@@ -32,7 +32,7 @@ CellmlFileGroup::CellmlFileGroup(CellmlFile *pCellmlFile,
 
     // Iterate through the component references and add them to our list
 
-    ObjRef<iface::cellml_api::ComponentRefSet> componentReferences = pGroup->componentRefs();
+    ObjRef<iface::cellml_api::ComponentRefSet> componentReferences = pCellmlApiGroup->componentRefs();
     ObjRef<iface::cellml_api::ComponentRefIterator> componentReferenceIterator = componentReferences->iterateComponentRefs();
 
     forever {

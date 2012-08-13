@@ -21,7 +21,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileModel : public CellmlFileNamedElement
 {
 public:
     explicit CellmlFileModel(CellmlFile *pCellmlFile,
-                             iface::cellml_api::Model *pModel);
+                             iface::cellml_api::Model *pCellmlApiModel);
 };
 
 //==============================================================================

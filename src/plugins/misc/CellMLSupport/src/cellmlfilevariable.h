@@ -27,7 +27,7 @@ public:
     };
 
     explicit CellmlFileVariable(CellmlFile *pCellmlFile,
-                                iface::cellml_api::CellMLVariable *pVariable);
+                                iface::cellml_api::CellMLVariable *pCellmlApiVariable);
 
     QString unit() const;
     QString initialValue() const;
@@ -44,7 +44,7 @@ private:
     CellmlFileVariableInterface mPrivateInterface;
 
     void retrieveInterfaceType(CellmlFileVariableInterface &pInterface,
-                               const iface::cellml_api::VariableInterface &pVariableInterface);
+                               const iface::cellml_api::VariableInterface &pCellmlApiVariableInterface);
 
     QString interfaceAsString(const CellmlFileVariableInterface &pInterface) const;
 };

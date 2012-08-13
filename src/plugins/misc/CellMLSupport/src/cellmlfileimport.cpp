@@ -12,15 +12,15 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileImport::CellmlFileImport(CellmlFile *pCellmlFile,
-                                   iface::cellml_api::CellMLImport *pCellmlImport) :
-    CellmlFileElement(pCellmlFile, pCellmlImport),
-    mXlinkHref(QString::fromStdWString(pCellmlImport->xlinkHref()->asText())),
+                                   iface::cellml_api::CellMLImport *pCellmlApiImport) :
+    CellmlFileElement(pCellmlFile, pCellmlApiImport),
+    mXlinkHref(QString::fromStdWString(pCellmlApiImport->xlinkHref()->asText())),
     mUnits(CellmlFileImportUnits()),
     mComponents(CellmlFileImportComponents())
 {
     // Keep track of any unit imports...
 
-    ObjRef<iface::cellml_api::ImportUnitsSet> importUnits = pCellmlImport->units();
+    ObjRef<iface::cellml_api::ImportUnitsSet> importUnits = pCellmlApiImport->units();
     ObjRef<iface::cellml_api::ImportUnitsIterator> importUnitIterator = importUnits->iterateImportUnits();
 
     forever {
@@ -34,7 +34,7 @@ CellmlFileImport::CellmlFileImport(CellmlFile *pCellmlFile,
 
     // ... and of any component imports
 
-    ObjRef<iface::cellml_api::ImportComponentSet> importComponents = pCellmlImport->components();
+    ObjRef<iface::cellml_api::ImportComponentSet> importComponents = pCellmlApiImport->components();
     ObjRef<iface::cellml_api::ImportComponentIterator> importComponentIterator = importComponents->iterateImportComponents();
 
     forever {

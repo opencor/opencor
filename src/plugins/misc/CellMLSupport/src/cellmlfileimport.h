@@ -23,7 +23,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileImport : public CellmlFileElement
 {
 public:
     explicit CellmlFileImport(CellmlFile *pCellmlFile,
-                              iface::cellml_api::CellMLImport *pCellmlImport);
+                              iface::cellml_api::CellMLImport *pCellmlApiImport);
     ~CellmlFileImport();
 
     QString xlinkHref() const;

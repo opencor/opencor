@@ -47,7 +47,9 @@ namespace CellMLSupport {
 
 CellmlFile::CellmlFile(const QString &pFileName) :
     mFileName(pFileName),
-    mCellmlModel(0),
+    mCellmlApiModel(0),
+    mCellmlApiRdfApiRepresentation(0),
+    mCellmlApiRdfDataSource(0),
     mModel(0),
     mImports(CellmlFileImports()),
     mUnits(CellmlFileUnits()),
@@ -82,9 +84,19 @@ void CellmlFile::reset()
 {
     // Reset all of the file's properties
 
-    mCellmlModel = 0;
+    mCellmlApiModel = 0;
     // Note: we don't need to call release_ref() since mModel will do it for us
-    //       since we gave it ownership of mCellmlModel...
+    //       since we gave it ownership of mCellmlApiModel...
+
+    if (mCellmlApiRdfApiRepresentation) {
+        mCellmlApiRdfApiRepresentation->release_ref();
+        mCellmlApiRdfApiRepresentation = 0;
+    }
+
+    if (mCellmlApiRdfDataSource) {
+        mCellmlApiRdfDataSource->release_ref();
+        mCellmlApiRdfDataSource = 0;
+    }
 
     mUriBase = QString();
 
@@ -104,6 +116,15 @@ void CellmlFile::reset()
     mLoadingNeeded       = true;
     mValidNeeded         = true;
     mRuntimeUpdateNeeded = true;
+}
+
+//==============================================================================
+
+iface::cellml_api::Model * CellmlFile::cellmlApiModel() const
+{
+    // Return the CellML API model associated with our CellML file
+
+    return mCellmlApiModel;
 }
 
 //==============================================================================
@@ -141,7 +162,7 @@ bool CellmlFile::load()
         time.start();
 #endif
 
-        mCellmlModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
+        mCellmlApiModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
 
 #ifdef QT_DEBUG
         qDebug(" - CellML Loading time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
@@ -158,7 +179,7 @@ bool CellmlFile::load()
     // In the case of a non CellML 1.0 model, we want all the imports to be
     // fully instantiated
 
-    if (QString::fromStdWString(mCellmlModel->cellmlVersion()).compare(Cellml_1_0))
+    if (QString::fromStdWString(mCellmlApiModel->cellmlVersion()).compare(Cellml_1_0))
         try {
 #ifdef QT_DEBUG
             QTime time;
@@ -166,7 +187,7 @@ bool CellmlFile::load()
             time.start();
 #endif
 
-            mCellmlModel->fullyInstantiateImports();
+            mCellmlApiModel->fullyInstantiateImports();
 
 #ifdef QT_DEBUG
             qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
@@ -183,22 +204,23 @@ bool CellmlFile::load()
 
     // Retrieve the URI base
 
-    ObjRef<iface::cellml_api::URI> xmlBase = mCellmlModel->xmlBase();
+    ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
 
     mUriBase = QString::fromStdWString(xmlBase->asText());
 
-    // Extract/retrieve various things from mCellmlModel
-    // Note: like for all of our CellmlFileElement-based classes, mModel is
-    //       going to take ownership of the CellML API element (here
-    //       mCellmlModel), hence it's not declared using ObjRef<>, but this
-    //       also means that ~CellmlFileElement() must call the release_ref()
-    //       method of the CellML API element...
+    // Extract/retrieve various things from mCellmlApiModel
+    // Note: like for all of our CellmlFileElement-based classes (and
+    //       CellmlFileRdfTriple), mModel is going to take ownership of the
+    //       CellML API element (here mCellmlApiModel), hence it's not declared
+    //       using ObjRef<>, but this also means that ~CellmlFileElement() (and
+    //       (~CellmlFileRdfTriple()) must call the release_ref() method of the
+    //       CellML API element...
 
-    mModel = new CellmlFileModel(this, mCellmlModel);
+    mModel = new CellmlFileModel(this, mCellmlApiModel);
 
     // Iterate through the imports and add them to our list
 
-    ObjRef<iface::cellml_api::CellMLImportSet> imports = mCellmlModel->imports();
+    ObjRef<iface::cellml_api::CellMLImportSet> imports = mCellmlApiModel->imports();
     ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
 
     forever {
@@ -212,7 +234,7 @@ bool CellmlFile::load()
 
     // Iterate through the units and add them to our list
 
-    ObjRef<iface::cellml_api::UnitsSet> units = mCellmlModel->localUnits();
+    ObjRef<iface::cellml_api::UnitsSet> units = mCellmlApiModel->localUnits();
     ObjRef<iface::cellml_api::UnitsIterator> unitsIterator = units->iterateUnits();
 
     forever {
@@ -226,7 +248,7 @@ bool CellmlFile::load()
 
     // Iterate through the components and add them to our list
 
-    ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlModel->localComponents();
+    ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlApiModel->localComponents();
     ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIterator = components->iterateComponents();
 
     forever {
@@ -240,7 +262,7 @@ bool CellmlFile::load()
 
     // Iterate through the groups and add them to our list
 
-    ObjRef<iface::cellml_api::GroupSet> groups = mCellmlModel->groups();
+    ObjRef<iface::cellml_api::GroupSet> groups = mCellmlApiModel->groups();
     ObjRef<iface::cellml_api::GroupIterator> groupsIterator = groups->iterateGroups();
 
     forever {
@@ -254,7 +276,7 @@ bool CellmlFile::load()
 
     // Iterate through the connections and add them to our list
 
-    ObjRef<iface::cellml_api::ConnectionSet> connections = mCellmlModel->connections();
+    ObjRef<iface::cellml_api::ConnectionSet> connections = mCellmlApiModel->connections();
     ObjRef<iface::cellml_api::ConnectionIterator> connectionsIterator = connections->iterateConnections();
 
     forever {
@@ -264,21 +286,19 @@ bool CellmlFile::load()
             break;
 
         mConnections << new CellmlFileConnection(this, connection);
-
     }
 
     // Retrieve all the RDF triples associated with the model
 
-    ObjRef<iface::cellml_api::RDFRepresentation> rdfRepresentation = mCellmlModel->getRDFRepresentation(L"http://www.cellml.org/RDF/API");
+    ObjRef<iface::cellml_api::RDFRepresentation> rdfRepresentation = mCellmlApiModel->getRDFRepresentation(L"http://www.cellml.org/RDF/API");
 
     if (rdfRepresentation) {
-        ObjRef<iface::rdf_api::RDFAPIRepresentation> rdfApiRepresentation;
-        QUERY_INTERFACE(rdfApiRepresentation, rdfRepresentation,
+        QUERY_INTERFACE(mCellmlApiRdfApiRepresentation, rdfRepresentation,
                         rdf_api::RDFAPIRepresentation);
 
-        if (rdfApiRepresentation) {
-            ObjRef<iface::rdf_api::DataSource> dataSource = rdfApiRepresentation->source();
-            ObjRef<iface::rdf_api::TripleSet> rdfTriples = dataSource->getAllTriples();
+        if (mCellmlApiRdfApiRepresentation) {
+            mCellmlApiRdfDataSource = mCellmlApiRdfApiRepresentation->source();
+            ObjRef<iface::rdf_api::TripleSet> rdfTriples = mCellmlApiRdfDataSource->getAllTriples();
             ObjRef<iface::rdf_api::TripleEnumerator> rdfTriplesEnumerator = rdfTriples->enumerateTriples();
 
             forever {
@@ -320,6 +340,11 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     QString fileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
 
+    // Make sure that the RDF API representation is up to date by updating its
+    // data source
+
+    mCellmlApiRdfApiRepresentation->source(mCellmlApiRdfDataSource);
+
     // (Create and) open the file for writing
 
     QFile file(fileName);
@@ -336,7 +361,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     QTextStream out(&file);
 
-    out << QString::fromStdWString(mCellmlModel->serialisedText());
+    out << QString::fromStdWString(mCellmlApiModel->serialisedText());
 
     file.close();
 
@@ -390,7 +415,7 @@ bool CellmlFile::isValid()
 #endif
 
         ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
-        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mCellmlModel);
+        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mCellmlApiModel);
 
 #ifdef QT_DEBUG
         qDebug(" - CellML validation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
@@ -579,7 +604,7 @@ CellmlFileRuntime * CellmlFile::runtime()
     if (load()) {
         // The file is loaded, so return an updated version of its runtime
 
-        mRuntime->update(mCellmlModel);
+        mRuntime->update(mCellmlApiModel);
 
         mRuntimeUpdateNeeded = !mRuntime->isValid();
 

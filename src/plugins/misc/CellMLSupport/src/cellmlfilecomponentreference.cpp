@@ -12,14 +12,14 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileComponentReference::CellmlFileComponentReference(CellmlFile *pCellmlFile,
-                                                           iface::cellml_api::ComponentRef *pComponentReference) :
-    CellmlFileElement(pCellmlFile, pComponentReference),
-    mComponent(QString::fromStdWString(pComponentReference->componentName())),
+                                                           iface::cellml_api::ComponentRef *pCellmlApiComponentReference) :
+    CellmlFileElement(pCellmlFile, pCellmlApiComponentReference),
+    mComponent(QString::fromStdWString(pCellmlApiComponentReference->componentName())),
     mComponentReferences(CellmlFileComponentReferences())
 {
     // Iterate through the component references and add them to our list
 
-    ObjRef<iface::cellml_api::ComponentRefSet> componentReferences = pComponentReference->componentRefs();
+    ObjRef<iface::cellml_api::ComponentRefSet> componentReferences = pCellmlApiComponentReference->componentRefs();
     ObjRef<iface::cellml_api::ComponentRefIterator> componentReferenceIterator = componentReferences->iterateComponentRefs();
 
     forever {

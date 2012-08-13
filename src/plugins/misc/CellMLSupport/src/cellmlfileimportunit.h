@@ -25,7 +25,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileImportUnit : public CellmlFileUnit
 {
 public:
     explicit CellmlFileImportUnit(CellmlFile *pCellmlFile,
-                                  iface::cellml_api::ImportUnits *pImportUnits);
+                                  iface::cellml_api::ImportUnits *pCellmlApiImportUnits);
 
     QString unitReference() const;
 

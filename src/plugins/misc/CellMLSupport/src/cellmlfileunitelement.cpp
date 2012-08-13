@@ -12,12 +12,12 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileUnitElement::CellmlFileUnitElement(CellmlFile *pCellmlFile,
-                                             iface::cellml_api::Unit *pUnit) :
-    CellmlFileNamedElement(pCellmlFile, pUnit),
-    mPrefix(pUnit->prefix()),
-    mMultiplier(pUnit->multiplier()),
-    mOffset(pUnit->offset()),
-    mExponent(pUnit->exponent())
+                                             iface::cellml_api::Unit *pCellmlApiUnit) :
+    CellmlFileNamedElement(pCellmlFile, pCellmlApiUnit),
+    mPrefix(pCellmlApiUnit->prefix()),
+    mMultiplier(pCellmlApiUnit->multiplier()),
+    mOffset(pCellmlApiUnit->offset()),
+    mExponent(pCellmlApiUnit->exponent())
 {
 }
 

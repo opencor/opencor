@@ -12,25 +12,25 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileVariable::CellmlFileVariable(CellmlFile *pCellmlFile,
-                                       iface::cellml_api::CellMLVariable *pVariable) :
-    CellmlFileNamedElement(pCellmlFile, pVariable),
-    mUnit(QString::fromStdWString(pVariable->unitsName())),
-    mInitialValue(QString::fromStdWString(pVariable->initialValue()))
+                                       iface::cellml_api::CellMLVariable *pCellmlApiVariable) :
+    CellmlFileNamedElement(pCellmlFile, pCellmlApiVariable),
+    mUnit(QString::fromStdWString(pCellmlApiVariable->unitsName())),
+    mInitialValue(QString::fromStdWString(pCellmlApiVariable->initialValue()))
 {
     // Retrieve the type of public and private interfaces the variable has
 
-    retrieveInterfaceType(mPublicInterface, pVariable->publicInterface());
-    retrieveInterfaceType(mPrivateInterface, pVariable->privateInterface());
+    retrieveInterfaceType(mPublicInterface, pCellmlApiVariable->publicInterface());
+    retrieveInterfaceType(mPrivateInterface, pCellmlApiVariable->privateInterface());
 }
 
 //==============================================================================
 
 void CellmlFileVariable::retrieveInterfaceType(CellmlFileVariableInterface &pInterface,
-                                               const iface::cellml_api::VariableInterface &pVariableInterface)
+                                               const iface::cellml_api::VariableInterface &pCellmlApiVariableInterface)
 {
     // Retrieve the type of interface we are dealing with
 
-    switch (pVariableInterface) {
+    switch (pCellmlApiVariableInterface) {
     case iface::cellml_api::INTERFACE_IN:
         pInterface = In;
 

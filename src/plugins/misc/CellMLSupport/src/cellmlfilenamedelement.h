@@ -21,19 +21,19 @@ class CELLMLSUPPORT_EXPORT CellmlFileNamedElement : public CellmlFileElement
 {
 public:
     explicit CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                    iface::cellml_api::Model *pModel);
+                                    iface::cellml_api::Model *pCellmlApiModel);
     explicit CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                    iface::cellml_api::ImportUnits *pImportUnits);
+                                    iface::cellml_api::ImportUnits *pCellmlApiImportUnits);
     explicit CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                    iface::cellml_api::ImportComponent *pImportComponent);
+                                    iface::cellml_api::ImportComponent *pCellmlApiImportComponent);
     explicit CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                    iface::cellml_api::Units *pUnits);
+                                    iface::cellml_api::Units *pCellmlApiUnits);
     explicit CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                    iface::cellml_api::Unit *pUnit);
+                                    iface::cellml_api::Unit *pCellmlApiUnit);
     explicit CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                    iface::cellml_api::CellMLComponent *pComponent);
+                                    iface::cellml_api::CellMLComponent *pCellmlApiComponent);
     explicit CellmlFileNamedElement(CellmlFile *pCellmlFile,
-                                    iface::cellml_api::CellMLVariable *pVariable);
+                                    iface::cellml_api::CellMLVariable *pCellmlApiVariable);
 
     QString name() const;
 

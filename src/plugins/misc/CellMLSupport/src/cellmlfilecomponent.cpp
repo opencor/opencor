@@ -12,8 +12,8 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
-                                         iface::cellml_api::ImportComponent *pImportComponent) :
-    CellmlFileNamedElement(pCellmlFile, pImportComponent),
+                                         iface::cellml_api::ImportComponent *pCellmlApiImportComponent) :
+    CellmlFileNamedElement(pCellmlFile, pCellmlApiImportComponent),
     mUnits(CellmlFileUnits()),
     mVariables(CellmlFileVariables())
 {
@@ -22,14 +22,14 @@ CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
 //==============================================================================
 
 CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
-                                         iface::cellml_api::CellMLComponent *pComponent) :
-    CellmlFileNamedElement(pCellmlFile, pComponent),
+                                         iface::cellml_api::CellMLComponent *pCellmlApiComponent) :
+    CellmlFileNamedElement(pCellmlFile, pCellmlApiComponent),
     mUnits(CellmlFileUnits()),
     mVariables(CellmlFileVariables())
 {
     // Iterate through the units and add them to our list
 
-    ObjRef<iface::cellml_api::UnitsSet> units = pComponent->units();
+    ObjRef<iface::cellml_api::UnitsSet> units = pCellmlApiComponent->units();
     ObjRef<iface::cellml_api::UnitsIterator> unitIterator = units->iterateUnits();
 
     forever {
@@ -43,7 +43,7 @@ CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
 
     // Iterate through the variables and add them to our list
 
-    ObjRef<iface::cellml_api::CellMLVariableSet> variables = pComponent->variables();
+    ObjRef<iface::cellml_api::CellMLVariableSet> variables = pCellmlApiComponent->variables();
     ObjRef<iface::cellml_api::CellMLVariableIterator> variableIterator = variables->iterateVariables();
 
     forever {
@@ -57,7 +57,7 @@ CellmlFileComponent::CellmlFileComponent(CellmlFile *pCellmlFile,
 
     // Iterate through the MathML elements and add them to our list
 
-    ObjRef<iface::cellml_api::MathList> mathmlElements = pComponent->math();
+    ObjRef<iface::cellml_api::MathList> mathmlElements = pCellmlApiComponent->math();
     ObjRef<iface::cellml_api::MathMLElementIterator> mathmlElementIterator = mathmlElements->iterate();
 
     forever {

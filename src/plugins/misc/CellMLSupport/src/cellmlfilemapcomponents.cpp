@@ -12,10 +12,10 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileMapComponents::CellmlFileMapComponents(CellmlFile *pCellmlFile,
-                                                 iface::cellml_api::MapComponents *pMapComponents) :
-    CellmlFileElement(pCellmlFile, pMapComponents),
-    mFirstComponent(QString::fromStdWString(pMapComponents->firstComponentName())),
-    mSecondComponent(QString::fromStdWString(pMapComponents->secondComponentName()))
+                                                 iface::cellml_api::MapComponents *pCellmlApiMapComponents) :
+    CellmlFileElement(pCellmlFile, pCellmlApiMapComponents),
+    mFirstComponent(QString::fromStdWString(pCellmlApiMapComponents->firstComponentName())),
+    mSecondComponent(QString::fromStdWString(pCellmlApiMapComponents->secondComponentName()))
 {
 }
 

@@ -17,8 +17,9 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
-                                         iface::rdf_api::Triple *pCellmlRdfTriple) :
+                                         iface::rdf_api::Triple *pCellmlApiRdfTriple) :
     mCellmlFile(pCellmlFile),
+    mCellmlApiRdfTriple(pCellmlApiRdfTriple),
     mType(Unknown),
     mModelQualifier(ModelUnknown),
     mBioQualifier(BioUnknown),
@@ -27,9 +28,9 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 {
     // Retrieve the RDF triple's subject, predicate and object information
 
-    ObjRef<iface::rdf_api::Resource> subject = pCellmlRdfTriple->subject();
-    ObjRef<iface::rdf_api::Resource> predicate = pCellmlRdfTriple->predicate();
-    ObjRef<iface::rdf_api::Node> object = pCellmlRdfTriple->object();
+    ObjRef<iface::rdf_api::Resource> subject = pCellmlApiRdfTriple->subject();
+    ObjRef<iface::rdf_api::Resource> predicate = pCellmlApiRdfTriple->predicate();
+    ObjRef<iface::rdf_api::Node> object = pCellmlApiRdfTriple->object();
 
     mSubject   = new CellmlFileRdfTripleElement(subject);
     mPredicate = new CellmlFileRdfTripleElement(predicate);
@@ -124,6 +125,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          const QString &pResource,
                                          const QString &pId) :
     mCellmlFile(pCellmlFile),
+    mCellmlApiRdfTriple(0),
     mType(BioModelsDotNetQualifier),
     mModelQualifier(pModelQualifier),
     mBioQualifier(BioUnknown),
@@ -145,6 +147,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          const QString &pResource,
                                          const QString &pId) :
     mCellmlFile(pCellmlFile),
+    mCellmlApiRdfTriple(0),
     mType(BioModelsDotNetQualifier),
     mModelQualifier(ModelUnknown),
     mBioQualifier(pBioQualifier),
@@ -162,11 +165,23 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
 CellmlFileRdfTriple::~CellmlFileRdfTriple()
 {
-    // Delete some internal objects
+    // Delete/release some internal objects
 
     delete mSubject;
     delete mPredicate;
     delete mObject;
+
+    if (mCellmlApiRdfTriple)
+        mCellmlApiRdfTriple->release_ref();
+}
+
+//==============================================================================
+
+iface::rdf_api::Triple * CellmlFileRdfTriple::cellmlApiRdfTriple() const
+{
+    // Return the RDF triple's RDF API triple
+
+    return mCellmlApiRdfTriple;
 }
 
 //==============================================================================
@@ -508,8 +523,21 @@ void CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTrip
     // Remove all the given RDF triples
 
     if (pRdfTriples.count()) {
-        foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples)
+        foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
+            // Remove the RDF triple from our list
+
             removeOne(rdfTriple);
+
+            // Remove the RDF triple from the CellML API data source
+
+            rdfTriple->cellmlApiRdfTriple()->unassert();
+
+            // Delete our RDF triple
+
+            delete rdfTriple;
+        }
+
+        // Some RDF triples have been removed, so...
 
         mCellmlFile->setModified(true);
     }

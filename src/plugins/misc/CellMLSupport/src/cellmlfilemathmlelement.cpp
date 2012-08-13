@@ -14,12 +14,12 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileMathmlElement::CellmlFileMathmlElement(iface::mathml_dom::MathMLElement *pMathmlElement) :
-    mClassName(QString::fromStdWString(pMathmlElement->className())),
-    mMathElementStyle(QString::fromStdWString(pMathmlElement->mathElementStyle())),
-    mId(QString::fromStdWString(pMathmlElement->id())),
-    mXref(QString::fromStdWString(pMathmlElement->xref())),
-    mHref(QString::fromStdWString(pMathmlElement->href()))
+CellmlFileMathmlElement::CellmlFileMathmlElement(iface::mathml_dom::MathMLElement *pCellmlApiMathmlElement) :
+    mClassName(QString::fromStdWString(pCellmlApiMathmlElement->className())),
+    mMathElementStyle(QString::fromStdWString(pCellmlApiMathmlElement->mathElementStyle())),
+    mId(QString::fromStdWString(pCellmlApiMathmlElement->id())),
+    mXref(QString::fromStdWString(pCellmlApiMathmlElement->xref())),
+    mHref(QString::fromStdWString(pCellmlApiMathmlElement->href()))
 {
 }
 

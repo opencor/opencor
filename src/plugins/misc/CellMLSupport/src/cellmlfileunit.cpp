@@ -12,8 +12,8 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileUnit::CellmlFileUnit(CellmlFile *pCellmlFile,
-                               iface::cellml_api::ImportUnits *pImportUnits) :
-    CellmlFileNamedElement(pCellmlFile, pImportUnits),
+                               iface::cellml_api::ImportUnits *pCellmlApiImportUnits) :
+    CellmlFileNamedElement(pCellmlFile, pCellmlApiImportUnits),
     mBaseUnit(false),
     mUnitElements(CellmlFileUnitElements())
 {
@@ -22,14 +22,14 @@ CellmlFileUnit::CellmlFileUnit(CellmlFile *pCellmlFile,
 //==============================================================================
 
 CellmlFileUnit::CellmlFileUnit(CellmlFile *pCellmlFile,
-                               iface::cellml_api::Units *pUnits) :
-    CellmlFileNamedElement(pCellmlFile, pUnits),
-    mBaseUnit(pUnits->isBaseUnits()),
+                               iface::cellml_api::Units *pCellmlApiUnits) :
+    CellmlFileNamedElement(pCellmlFile, pCellmlApiUnits),
+    mBaseUnit(pCellmlApiUnits->isBaseUnits()),
     mUnitElements(CellmlFileUnitElements())
 {
     // Iterate through the unit elements and add them to our list
 
-    ObjRef<iface::cellml_api::UnitSet> units = pUnits->unitCollection();
+    ObjRef<iface::cellml_api::UnitSet> units = pCellmlApiUnits->unitCollection();
     ObjRef<iface::cellml_api::UnitIterator> unitIterator = units->iterateUnits();
 
     forever {

@@ -21,7 +21,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileMapComponents : public CellmlFileElement
 {
 public:
     explicit CellmlFileMapComponents(CellmlFile *pCellmlFile,
-                                     iface::cellml_api::MapComponents *pMapComponents);
+                                     iface::cellml_api::MapComponents *pCellmlApiMapComponents);
 
     QString firstComponent() const;
     QString secondComponent() const;

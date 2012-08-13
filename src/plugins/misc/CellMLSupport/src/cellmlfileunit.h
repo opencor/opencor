@@ -21,9 +21,9 @@ class CELLMLSUPPORT_EXPORT CellmlFileUnit : public CellmlFileNamedElement
 {
 public:
     explicit CellmlFileUnit(CellmlFile *pCellmlFile,
-                            iface::cellml_api::ImportUnits *pImportUnits);
+                            iface::cellml_api::ImportUnits *pCellmlApiImportUnits);
     explicit CellmlFileUnit(CellmlFile *pCellmlFile,
-                            iface::cellml_api::Units *pUnits);
+                            iface::cellml_api::Units *pCellmlApiUnits);
     ~CellmlFileUnit();
 
     bool isBaseUnit() const;

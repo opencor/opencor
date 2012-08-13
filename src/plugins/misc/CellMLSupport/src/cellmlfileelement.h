@@ -35,33 +35,33 @@ class CELLMLSUPPORT_EXPORT CellmlFileElement
 {
 public:
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::Model *pModel);
+                               iface::cellml_api::Model *pCellmlApiModel);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::CellMLImport *pCellmlImport);
+                               iface::cellml_api::CellMLImport *pCellmlApiCellmlImport);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::ImportUnits *pImportUnits);
+                               iface::cellml_api::ImportUnits *pCellmlApiImportUnits);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::ImportComponent *pImportComponent);
+                               iface::cellml_api::ImportComponent *pCellmlApiImportComponent);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::Units *pUnits);
+                               iface::cellml_api::Units *pCellmlApiUnits);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::Unit *pUnit);
+                               iface::cellml_api::Unit *pCellmlApiUnit);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::CellMLComponent *pComponent);
+                               iface::cellml_api::CellMLComponent *pCellmlApiComponent);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::CellMLVariable *pVariable);
+                               iface::cellml_api::CellMLVariable *pCellmlApiVariable);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::Group *pGroup);
+                               iface::cellml_api::Group *pCellmlApiGroup);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::RelationshipRef *pRelationshipRef);
+                               iface::cellml_api::RelationshipRef *pCellmlApiRelationshipRef);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::ComponentRef *pComponentRef);
+                               iface::cellml_api::ComponentRef *pCellmlApiComponentRef);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::Connection *pConnection);
+                               iface::cellml_api::Connection *pCellmlApiConnection);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::MapComponents *pMapComponents);
+                               iface::cellml_api::MapComponents *pCellmlApiMapComponents);
     explicit CellmlFileElement(CellmlFile *pCellmlFile,
-                               iface::cellml_api::MapVariables *pMapVariables);
+                               iface::cellml_api::MapVariables *pCellmlApiMapVariables);
     ~CellmlFileElement();
 
     CellmlFileRdfTriples rdfTriples() const;

@@ -12,9 +12,9 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileImportUnit::CellmlFileImportUnit(CellmlFile *pCellmlFile,
-                                           iface::cellml_api::ImportUnits *pImportUnits) :
-    CellmlFileUnit(pCellmlFile, pImportUnits),
-    mUnitReference(QString::fromStdWString(pImportUnits->unitsRef()))
+                                           iface::cellml_api::ImportUnits *pCellmlApiImportUnits) :
+    CellmlFileUnit(pCellmlFile, pCellmlApiImportUnits),
+    mUnitReference(QString::fromStdWString(pCellmlApiImportUnits->unitsRef()))
 {
 }
 

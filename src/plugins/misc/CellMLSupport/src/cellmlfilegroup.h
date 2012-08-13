@@ -23,7 +23,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileGroup : public CellmlFileElement
 {
 public:
     explicit CellmlFileGroup(CellmlFile *pCellmlFile,
-                             iface::cellml_api::Group *pGroup);
+                             iface::cellml_api::Group *pCellmlApiGroup);
     ~CellmlFileGroup();
 
     CellmlFileRelationshipReferences relationshipReferences() const;

@@ -12,10 +12,10 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileMapVariablesItem::CellmlFileMapVariablesItem(CellmlFile *pCellmlFile,
-                                                       iface::cellml_api::MapVariables *pMapVariables) :
-    CellmlFileElement(pCellmlFile, pMapVariables),
-    mFirstVariable(QString::fromStdWString(pMapVariables->firstVariableName())),
-    mSecondVariable(QString::fromStdWString(pMapVariables->secondVariableName()))
+                                                       iface::cellml_api::MapVariables *pCellmlApiMapVariables) :
+    CellmlFileElement(pCellmlFile, pCellmlApiMapVariables),
+    mFirstVariable(QString::fromStdWString(pCellmlApiMapVariables->firstVariableName())),
+    mSecondVariable(QString::fromStdWString(pCellmlApiMapVariables->secondVariableName()))
 {
 }
 

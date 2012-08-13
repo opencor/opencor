@@ -15,7 +15,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNode) :
+CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCellmlApiRdfNode) :
     mId(QString()),
     mUriReference(QString()),
     mLexicalForm(QString()),
@@ -27,7 +27,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
     // rdf_api::TypedLiteral interface
 
     ObjRef<iface::rdf_api::URIReference> uriReference;
-    QUERY_INTERFACE(uriReference, pNode, rdf_api::URIReference);
+    QUERY_INTERFACE(uriReference, pCellmlApiRdfNode, rdf_api::URIReference);
 
     if (uriReference) {
         // The rdf_api::URIReference interface is supported, so initialise the
@@ -38,7 +38,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
         mUriReference = QString::fromStdWString(uriReference->URI()).trimmed();
     } else {
         ObjRef<iface::rdf_api::PlainLiteral> plainLiteral;
-        QUERY_INTERFACE(plainLiteral, pNode, rdf_api::PlainLiteral);
+        QUERY_INTERFACE(plainLiteral, pCellmlApiRdfNode, rdf_api::PlainLiteral);
 
         if (plainLiteral) {
             // The rdf_api::PlainLiteral interface is supported, so initialise
@@ -50,7 +50,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
             mLanguage    = QString::fromStdWString(plainLiteral->language()).trimmed();
         } else {
             ObjRef<iface::rdf_api::TypedLiteral> typedLiteral;
-            QUERY_INTERFACE(typedLiteral, pNode, rdf_api::TypedLiteral);
+            QUERY_INTERFACE(typedLiteral, pCellmlApiRdfNode, rdf_api::TypedLiteral);
 
             if (typedLiteral) {
                 // The rdf_api::TypedLiteral interface is supported, so
@@ -74,7 +74,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pNo
                 static QMap<QString, QString> ids;
                 static int counter = 0;
 
-                QString id = QString::fromStdString(pNode->objid()).trimmed();
+                QString id = QString::fromStdString(pCellmlApiRdfNode->objid()).trimmed();
 
                 mType = Id;
 

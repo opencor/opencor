@@ -28,9 +28,9 @@ class CELLMLSUPPORT_EXPORT CellmlFileComponent : public CellmlFileNamedElement
 {
 public:
     explicit CellmlFileComponent(CellmlFile *pCellmlFile,
-                                 iface::cellml_api::ImportComponent *pImportComponent);
+                                 iface::cellml_api::ImportComponent *pCellmlApiImportComponent);
     explicit CellmlFileComponent(CellmlFile *pCellmlFile,
-                                 iface::cellml_api::CellMLComponent *pComponent);
+                                 iface::cellml_api::CellMLComponent *pCellmlApiComponent);
     ~CellmlFileComponent();
 
     CellmlFileUnits * units();
