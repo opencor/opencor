@@ -471,8 +471,6 @@ void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
 
 CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) const
 {
-    Q_ASSERT(mCellmlFile);
-
     // Return all the RDF triples which are directly or indirectly associated
     // with the given metadata id
 
@@ -494,8 +492,6 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(const QString &pMetadataId) 
 
 CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 {
-    Q_ASSERT(mCellmlFile);
-
     // Add the given RDF triple
 
     append(pRdfTriple);
@@ -509,17 +505,13 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 
 void CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples)
 {
-    CellmlFile *cellmlFile = pRdfTriples.mCellmlFile;
-
-    Q_ASSERT(cellmlFile);
-
     // Remove all the given RDF triples
 
     if (pRdfTriples.count()) {
         foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples)
             removeOne(rdfTriple);
 
-        cellmlFile->setModified(true);
+        mCellmlFile->setModified(true);
     }
 }
 

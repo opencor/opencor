@@ -124,7 +124,7 @@ private:
 class CELLMLSUPPORT_EXPORT CellmlFileRdfTriples: public QList<CellmlFileRdfTriple *>
 {
 public:
-    explicit CellmlFileRdfTriples(CellmlFile *pCellmlFile = 0);
+    explicit CellmlFileRdfTriples(CellmlFile *pCellmlFile);
 
     CellmlFileRdfTriple::Type type() const;
 

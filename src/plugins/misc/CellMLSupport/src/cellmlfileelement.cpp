@@ -173,7 +173,7 @@ CellmlFileRdfTriples CellmlFileElement::rdfTriples() const
     if (mCmetaId.isEmpty())
         // The element doesn't have a 'proper' cmeta:id, so...
 
-        return CellmlFileRdfTriples();
+        return CellmlFileRdfTriples(mCellmlFile);
     else
         // The element has a 'proper' cmeta:id, so we can retrieve and return
         // the RDF triples associated with it
