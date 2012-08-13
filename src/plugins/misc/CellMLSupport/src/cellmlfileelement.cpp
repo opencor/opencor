@@ -315,11 +315,11 @@ CellMLSupport::CellmlFileRdfTriple * CellmlFileElement::addMetadata(const CellML
 void CellmlFileElement::removeAllMetadata()
 {
     // Remove, from our CellML file, all the metadata associated with the CellML
-    // element's cmeta:id, but only if the CellML element has a 'proper'
-    // cmeta:id
+    // element's cmeta:id
+    // Note: it's fine if the CellML element doesn't has a 'proper' cmeta:id
+    //       since there will then be no RDF triples to remove...
 
-    if (!mCmetaId.isEmpty())
-        mCellmlFile->rdfTriples()->remove(mCmetaId);
+    mCellmlFile->rdfTriples()->remove(mCmetaId);
 }
 
 //==============================================================================

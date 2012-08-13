@@ -624,14 +624,28 @@ void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
 
 void CellmlAnnotationViewCellmlListWidget::on_actionRemoveCurrentMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Remove the metadata associated with the current node
+
+    currentCellmlElementItem()->element()->removeAllMetadata();
+
+    // Re-update the metadata details view now that the current node doesn't
+    // have any metadata associated with it
+
+    updateMetadataDetails(mTreeView->currentIndex(), QModelIndex());
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewCellmlListWidget::on_actionRemoveAllMetadata_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Remove all the metadata associated with the CellML file
+
+    mCellmlFile->rdfTriples()->removeAll();
+
+    // Re-update the metadata details view now that the CellML file doesn't have
+    // any metadata associated with it
+
+    updateMetadataDetails(mTreeView->currentIndex(), QModelIndex());
 }
 
 //==============================================================================

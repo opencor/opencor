@@ -606,7 +606,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     // Try to save the file in case it has been modified or it needs a new file
     // name (either as a result of a save as or because the file was new)
 
-    if (   FileManager::instance()->isModified(oldFileName)
+    if (   (FileManager::instance()->isModified(oldFileName) && !pNeedNewFileName)
         || hasNewFileName) {
         if (mGuiInterface->saveFile(oldFileName, newFileName)) {
             // Let people know about the file having been saved
