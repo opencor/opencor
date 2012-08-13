@@ -38,6 +38,8 @@ public:
 
     iface::cellml_api::Model * cellmlApiModel() const;
 
+    iface::rdf_api::DataSource * cellmlApiRdfDataSource() const;
+
     bool load();
     bool reload();
 

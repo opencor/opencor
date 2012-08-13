@@ -78,6 +78,7 @@ public:
     ~CellmlFileRdfTriple();
 
     iface::rdf_api::Triple * cellmlApiRdfTriple() const;
+    void setCellmlApiRdfTriple(iface::rdf_api::Triple *pCellmlApiRdfTriple);
 
     CellmlFileRdfTripleElement * subject() const;
     CellmlFileRdfTripleElement * predicate() const;

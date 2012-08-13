@@ -129,6 +129,15 @@ iface::cellml_api::Model * CellmlFile::cellmlApiModel() const
 
 //==============================================================================
 
+iface::rdf_api::DataSource * CellmlFile::cellmlApiRdfDataSource() const
+{
+    // Return the CellML API data source associated with our CellML file
+
+    return mCellmlApiRdfDataSource;
+}
+
+//==============================================================================
+
 bool CellmlFile::load()
 {
     if (!mLoadingNeeded)

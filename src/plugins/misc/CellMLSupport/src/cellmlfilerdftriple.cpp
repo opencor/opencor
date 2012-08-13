@@ -179,9 +179,18 @@ CellmlFileRdfTriple::~CellmlFileRdfTriple()
 
 iface::rdf_api::Triple * CellmlFileRdfTriple::cellmlApiRdfTriple() const
 {
-    // Return the RDF triple's RDF API triple
+    // Return the RDF triple's CellML API RDFtriple
 
     return mCellmlApiRdfTriple;
+}
+
+//==============================================================================
+
+void CellmlFileRdfTriple::setCellmlApiRdfTriple(iface::rdf_api::Triple *pCellmlApiRdfTriple)
+{
+    // Set the RDF triple's CellML API RDF triple
+
+    mCellmlApiRdfTriple = pCellmlApiRdfTriple;
 }
 
 //==============================================================================
@@ -511,6 +520,61 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 
     append(pRdfTriple);
 
+    // Create a CellML API version of the RDF triple out
+
+    ObjRef<iface::rdf_api::Resource> subject   = already_AddRefd<iface::rdf_api::Resource>(mCellmlFile->cellmlApiRdfDataSource()->getURIReference(pRdfTriple->subject()->asString().toStdWString()));
+    ObjRef<iface::rdf_api::Resource> predicate = already_AddRefd<iface::rdf_api::Resource>(mCellmlFile->cellmlApiRdfDataSource()->getURIReference(pRdfTriple->predicate()->asString().toStdWString()));
+    ObjRef<iface::rdf_api::Node> object        = already_AddRefd<iface::rdf_api::Node>(mCellmlFile->cellmlApiRdfDataSource()->getURIReference(pRdfTriple->object()->asString().toStdWString()));
+
+    subject->createTripleOutOf(predicate, object);
+
+    // Keep, in pRdfTriple, track of the CellML API version of the RDF triple
+    // Note #1: for this, we scan through all the RDF triples in the data source
+    //          until we find the one whave just added...
+    // Note #2: is there a faster way to retrieve the CellML API version of the
+    //          RDF triple?...
+
+    ObjRef<iface::rdf_api::TripleSet> rdfTriples = mCellmlFile->cellmlApiRdfDataSource()->getAllTriples();
+    ObjRef<iface::rdf_api::TripleEnumerator> rdfTriplesEnumerator = rdfTriples->enumerateTriples();
+    iface::rdf_api::Triple *cellmlApiRdfTriple;
+
+    forever {
+        cellmlApiRdfTriple = rdfTriplesEnumerator->getNextTriple();
+
+        if (!cellmlApiRdfTriple)
+            // Note: we should never reach this point since this would mean that
+            //       we couldn't retrieve the CellML API version of the RDF
+            //       triple which we have just created...
+
+            break;
+
+        ObjRef<iface::rdf_api::Resource> cellmlApiRdfTripleSubject   = cellmlApiRdfTriple->subject();
+        ObjRef<iface::rdf_api::Resource> cellmlApiRdfTriplePredicate = cellmlApiRdfTriple->predicate();
+        ObjRef<iface::rdf_api::Node> cellmlApiRdfTripleObject        = cellmlApiRdfTriple->object();
+
+        if (   !CellmlFileRdfTripleElement(cellmlApiRdfTripleSubject).asString().compare(pRdfTriple->subject()->asString())
+            && !CellmlFileRdfTripleElement(cellmlApiRdfTriplePredicate).asString().compare(pRdfTriple->predicate()->asString())
+            && !CellmlFileRdfTripleElement(cellmlApiRdfTripleObject).asString().compare(pRdfTriple->object()->asString())) {
+            // This is the RDF triple we are after, so keep track of it and
+            // leave this loop
+
+            pRdfTriple->setCellmlApiRdfTriple(cellmlApiRdfTriple);
+
+            break;
+        } else {
+            // Not the RDF triple we are after, so...
+
+            cellmlApiRdfTriple->release_ref();
+        }
+    }
+
+    // Make sure that we actually managed to retrieve the CellML API version of
+    // our RDF triple
+
+    Q_ASSERT(cellmlApiRdfTriple);
+
+    // An RDF triple has been added, so...
+
     mCellmlFile->setModified(true);
 
     return pRdfTriple;
@@ -524,11 +588,12 @@ void CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTrip
 
     if (pRdfTriples.count()) {
         foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
-            // Remove the RDF triple from our list
+            // Remove the RDF triple
 
             removeOne(rdfTriple);
 
-            // Remove the RDF triple from the CellML API data source
+            // Remove the CellML API version of the RDF triple from its data
+            // source
 
             rdfTriple->cellmlApiRdfTriple()->unassert();
 
