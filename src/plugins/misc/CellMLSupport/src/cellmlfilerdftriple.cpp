@@ -531,10 +531,14 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
     subject->createTripleOutOf(predicate, object);
 
     // Keep track of the CellML API version of the RDF triple in pRdfTriple
-    // Note: for this, we scan through all the RDF triples which we can find in
-    //       the data source until we find the one we have just added...
+    // Note: ideally, there would be a direct way to retrieve that CellML API
+    //       version of the RDF triple, but there isn't so the best (and the
+    //       fastest) way we can do this is by retrieving all the RDF triples
+    //       which subject and object match those of our newly added CellML API
+    //       version of the RDF triple. From there, we just go through each RDF
+    //       RDF triple and check its predicate...
 
-    ObjRef<iface::rdf_api::TripleSet> rdfTriples = dataSource->getAllTriples();
+    ObjRef<iface::rdf_api::TripleSet> rdfTriples = subject->getTriplesOutOfByObject(object);
     ObjRef<iface::rdf_api::TripleEnumerator> rdfTriplesEnumerator = rdfTriples->enumerateTriples();
     iface::rdf_api::Triple *rdfTriple;
 
@@ -548,13 +552,9 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 
             break;
 
-        ObjRef<iface::rdf_api::Resource> cellmlApiRdfTripleSubject = rdfTriple->subject();
         ObjRef<iface::rdf_api::Resource> cellmlApiRdfTriplePredicate = rdfTriple->predicate();
-        ObjRef<iface::rdf_api::Node> cellmlApiRdfTripleObject = rdfTriple->object();
 
-        if (   !CellmlFileRdfTripleElement(cellmlApiRdfTripleSubject).asString().compare(pRdfTriple->subject()->asString())
-            && !CellmlFileRdfTripleElement(cellmlApiRdfTriplePredicate).asString().compare(pRdfTriple->predicate()->asString())
-            && !CellmlFileRdfTripleElement(cellmlApiRdfTripleObject).asString().compare(pRdfTriple->object()->asString())) {
+        if (!CellmlFileRdfTripleElement(cellmlApiRdfTriplePredicate).asString().compare(pRdfTriple->predicate()->asString())) {
             // This is the RDF triple we are after, so keep track of it and
             // leave this loop
 
