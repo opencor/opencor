@@ -337,6 +337,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // few signals
 
     emit canSave(false);
+    emit canSaveAs(false);
     emit canSaveAll(false);
 
     emit atLeastOneFile(false);
@@ -483,13 +484,9 @@ void CentralWidget::openFile(const QString &pFileName)
 
     mFileTabs->setCurrentIndex(fileTabIndex);
 
-    // Everything went fine, so let people know that the file has been opened,
-    // as well as whether we can navigate and/or close files
+    // Everything went fine, so let people know that the file has been opened
 
     emit fileOpened(nativeFileName);
-
-    emit atLeastOneFile(mFileTabs->count());
-    emit atLeastTwoFiles(mFileTabs->count() > 1);
 }
 
 //==============================================================================
@@ -800,13 +797,9 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         FileManager::instance()->unmanage(fileName);
 
-        // Let people know about the file having just been closed, as well as
-        // whether we can navigate and/or close the remaining files
+        // Let people know about the file having just been closed
 
         emit fileClosed(fileName);
-
-        emit atLeastOneFile(mFileTabs->count());
-        emit atLeastTwoFiles(mFileTabs->count() > 1);
 
         // Update our modified settings
 
@@ -1151,6 +1144,15 @@ void CentralWidget::updateGui()
         // to our new view
 
         mContents->currentWidget()->setFocus();
+
+    // Let people know whether we can save as, as well as whether there is/are
+    // at least one/two file/s
+
+    emit canSaveAs(   mFileTabs->count() && mGuiInterface
+                   && mGuiInterface->guiSettings()->view()->mimeTypes().count());
+
+    emit atLeastOneFile(mFileTabs->count());
+    emit atLeastTwoFiles(mFileTabs->count() > 1);
 
     // We are done with updating the GUI, so...
 

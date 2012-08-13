@@ -182,6 +182,7 @@ Q_SIGNALS:
     void fileSelected(const QString &pFileName);
 
     void canSave(const bool &pEnabled);
+    void canSaveAs(const bool &pEnabled);
     void canSaveAll(const bool &pEnabled);
 
     void atLeastOneFile(const bool &pAtLeastOneFile);

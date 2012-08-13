@@ -133,7 +133,7 @@ void CorePlugin::initialize()
 
     connect(mCentralWidget, SIGNAL(canSave(const bool &)),
             mFileSaveAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
+    connect(mCentralWidget, SIGNAL(canSaveAs(const bool &)),
             mFileSaveAsAction, SLOT(setEnabled(bool)));
     connect(mCentralWidget, SIGNAL(canSaveAll(const bool &)),
             mFileSaveAllAction, SLOT(setEnabled(bool)));
