@@ -531,12 +531,17 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
     subject->createTripleOutOf(predicate, object);
 
     // Keep track of the CellML API version of the RDF triple in pRdfTriple
-    // Note: ideally, there would be a direct way to retrieve that CellML API
-    //       version of the RDF triple, but there isn't so the best (and the
-    //       fastest) way we can do this is by retrieving all the RDF triples
-    //       which subject and object match those of our newly added CellML API
-    //       version of the RDF triple. From there, we just go through each RDF
-    //       RDF triple and check its predicate...
+    // Note: ideally, there would be an easy and direct way to retrieve that
+    //       CellML API version of the RDF triple, but there isn't so the best
+    //       (and the fastest) way we can retrieve it is by retrieving all the
+    //       RDF triples which subject and object match those of our newly added
+    //       CellML API version of the RDF triple. Most likely, this will return
+    //       only one RDF triple unless the user decided to create different RDF
+    //       triples with the same object but different predicates. This would
+    //       be a bit strange, but one never knows so we just go through all the
+    //       returned RDF triples and check their predicate against the one of
+    //       the RDF triple we have just created, assuming that there can be
+    //       only one RDF triple with a given subject, predicate and object...
 
     ObjRef<iface::rdf_api::TripleSet> rdfTriples = subject->getTriplesOutOfByObject(object);
     ObjRef<iface::rdf_api::TripleEnumerator> rdfTriplesEnumerator = rdfTriples->enumerateTriples();
