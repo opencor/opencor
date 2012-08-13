@@ -567,9 +567,8 @@ void CellmlAnnotationViewCellmlListWidget::treeViewContextMenu(const QPoint &pPo
             mGui->actionCollapseAll->setEnabled(mTreeView->isExpanded(mTreeView->currentIndex()));
         }
 
-        mGui->actionRemoveCurrentMetadata->setEnabled(false);
-        mGui->actionRemoveAllMetadata->setEnabled(false);
-//---GRY--- TO BE DONE...
+        mGui->actionRemoveCurrentMetadata->setEnabled(crtItem->element()->rdfTriples().count());
+        mGui->actionRemoveAllMetadata->setEnabled(mCellmlFile->rdfTriples()->count());
 
         // Create and show the context menu
 
