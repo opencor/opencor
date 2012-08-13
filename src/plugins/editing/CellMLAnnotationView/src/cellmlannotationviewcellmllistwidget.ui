@@ -42,6 +42,22 @@
     <string>Collapse all the children nodes</string>
    </property>
   </action>
+  <action name="actionRemoveCurrentMetadata">
+   <property name="text">
+    <string>&amp;Remove Current Metadata</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove the metadata associated with the current node</string>
+   </property>
+  </action>
+  <action name="actionRemoveAllMetadata">
+   <property name="text">
+    <string>Remove &amp;All Metadata</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove all the metadata associated with the different nodes</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../res/CellMLAnnotationView.qrc"/>

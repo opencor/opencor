@@ -97,6 +97,9 @@ private Q_SLOTS:
 
     void on_actionExpandAll_triggered();
     void on_actionCollapseAll_triggered();
+
+    void on_actionRemoveCurrentMetadata_triggered();
+    void on_actionRemoveAllMetadata_triggered();
 };
 
 //==============================================================================

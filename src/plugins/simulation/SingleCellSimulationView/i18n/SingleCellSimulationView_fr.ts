@@ -72,7 +72,7 @@
     </message>
     <message>
         <source>Remove the current graph panel</source>
-        <translation>Supprimer le panneau graphique courant</translation>
+        <translation>Supprimer le panneau graphique actuel</translation>
     </message>
 </context>
 </TS>

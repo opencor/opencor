@@ -554,7 +554,7 @@ void CellmlAnnotationViewCellmlListWidget::treeViewContextMenu(const QPoint &pPo
     CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mDataModel->itemFromIndex(mTreeView->indexAt(mTreeView->mapFromGlobal(QCursor::pos()-mTreeView->pos()))));
     CellmlAnnotationViewCellmlElementItem *crtItem = currentCellmlElementItem();
 
-    bool showContextMenu = (posItem == crtItem) && crtItem->hasChildren();
+    bool showContextMenu = (posItem == crtItem);
 
     // Create a custom context menu which items match the contents of our
     // toolbar
@@ -562,15 +562,27 @@ void CellmlAnnotationViewCellmlListWidget::treeViewContextMenu(const QPoint &pPo
     if (showContextMenu) {
         // Update the enabled status of our actions
 
-        mGui->actionExpandAll->setEnabled(!indexIsAllExpanded(mTreeView->currentIndex()));
-        mGui->actionCollapseAll->setEnabled(mTreeView->isExpanded(mTreeView->currentIndex()));
+        if (crtItem->hasChildren()) {
+            mGui->actionExpandAll->setEnabled(!indexIsAllExpanded(mTreeView->currentIndex()));
+            mGui->actionCollapseAll->setEnabled(mTreeView->isExpanded(mTreeView->currentIndex()));
+        }
+
+        mGui->actionRemoveCurrentMetadata->setEnabled(false);
+        mGui->actionRemoveAllMetadata->setEnabled(false);
+//---GRY--- TO BE DONE...
 
         // Create and show the context menu
 
         QMenu menu;
 
-        menu.addAction(mGui->actionExpandAll);
-        menu.addAction(mGui->actionCollapseAll);
+        if (crtItem->hasChildren()) {
+            menu.addAction(mGui->actionExpandAll);
+            menu.addAction(mGui->actionCollapseAll);
+            menu.addSeparator();
+        }
+
+        menu.addAction(mGui->actionRemoveCurrentMetadata);
+        menu.addAction(mGui->actionRemoveAllMetadata);
 
         menu.exec(QCursor::pos());
     }
@@ -607,6 +619,20 @@ void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
 
         qApp->restoreOverrideCursor();
     mTreeView->setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlListWidget::on_actionRemoveCurrentMetadata_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlListWidget::on_actionRemoveAllMetadata_triggered()
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================

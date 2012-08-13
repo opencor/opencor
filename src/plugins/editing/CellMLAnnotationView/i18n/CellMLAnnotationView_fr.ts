@@ -19,6 +19,22 @@
         <source>Collapse all the children nodes</source>
         <translation>Réduire tous les noeuds enfants</translation>
     </message>
+    <message>
+        <source>&amp;Remove Current Metadata</source>
+        <translation>&amp;Supprimer Métadonnées Courantes</translation>
+    </message>
+    <message>
+        <source>Remove the metadata associated with the current node</source>
+        <translation>Supprimer les métadonnées associées au noeud actuel</translation>
+    </message>
+    <message>
+        <source>Remove &amp;All Metadata</source>
+        <translation>Supprimer &amp;Toutes Métadonnées</translation>
+    </message>
+    <message>
+        <source>Remove all the metadata associated with the different nodes</source>
+        <translation>Supprimer toutes les métadonnées associées aux différents noeuds</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>
@@ -180,7 +196,7 @@
     </message>
     <message>
         <source>There is no metadata associated with the current CellML element...</source>
-        <translation>Il n&apos;y a pas de métadonnées associées avec l&apos;élément CellML courant...</translation>
+        <translation>Il n&apos;y a pas de métadonnées associées à l&apos;élément CellML actuel...</translation>
     </message>
 </context>
 <context>

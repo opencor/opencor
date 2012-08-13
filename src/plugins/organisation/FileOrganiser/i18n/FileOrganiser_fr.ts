@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Delete the current folder(s) and/or link(s) to the current file(s)</source>
-        <translation>Supprimer le(s) répertoire(s) et/ou le(s) lien(s) vers fichier(s) courant(s)</translation>
+        <translation>Supprimer le(s) répertoire(s) et/ou le(s) lien(s) vers les fichier(s) actuel(s)</translation>
     </message>
 </context>
 <context>
