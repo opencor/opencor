@@ -158,8 +158,7 @@ CellmlFileElement::CellmlFileElement(CellmlFile *pCellmlFile,
 
 CellmlFileElement::~CellmlFileElement()
 {
-    // We took ownership of the CellML API element (i.e. mCellmlElement), so we
-    // must call its release_ref() method
+    // Release some internal objects
 
     mCellmlElement->release_ref();
 }
