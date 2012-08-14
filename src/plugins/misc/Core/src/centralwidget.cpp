@@ -620,9 +620,19 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // The file was saved, so update its file name, if needed
 
             if (hasNewFileName) {
-                Q_ASSERT(FileManager::instance()->rename(oldFileName, newFileName) == FileManager::Renamed);
-                // Note: we use an assertion because the call to rename() should
-                //       always be successful...
+                // Ask our file manager to rename the file
+
+                FileManager::Status renameStatus = FileManager::instance()->rename(oldFileName, newFileName);
+
+                // Make sure that the file has indeed been renamed
+
+#ifdef QT_DEBUG
+                Q_ASSERT(renameStatus == FileManager::Renamed);
+#else
+                Q_UNUSED(renameStatus);
+#endif
+
+                // Update our file names and tabs
 
                 mFileNames[pIndex] = newFileName;
 
