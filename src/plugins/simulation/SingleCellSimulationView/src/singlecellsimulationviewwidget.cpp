@@ -376,7 +376,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     int constantsCount = mCellmlFileRuntime->constantsCount();
     int ratesCount = mCellmlFileRuntime->ratesCount();
-    mStatesCount  = mCellmlFileRuntime->statesCount();
+    mStatesCount = mCellmlFileRuntime->statesCount();
     int algebraicCount = mCellmlFileRuntime->algebraicCount();
     mCondVarCount = mCellmlFileRuntime->condVarCount();
 
