@@ -6,7 +6,7 @@ function showContentsMenu(relativePath) {
     document.write("    }");
     document.write("</style>");
 
-    document.write("<img class=\"contentsMenu\" src=\""+relativePath+"/../res/pics/oxygen/actions/help-contents.png\" width=24 height=24 alt=\"Contents\">");
+    document.write("<img class=\"contentsMenu\" src=\""+relativePath+"/../res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
 }
 
 // Note: for some very weird reasons, any file which is to be used to generate
