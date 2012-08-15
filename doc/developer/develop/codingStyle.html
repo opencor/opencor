@@ -5,12 +5,14 @@
             Coding style
         </title>
 
-        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
         <link href="../res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
+        <script src="../../res/common.js" type="text/javascript"></script>
+
         <link href="../../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css"/>
-        <script type="text/javascript" src="../../3rdparty/googleCodePrettify/prettify.js"></script>
+        <script src="../../3rdparty/googleCodePrettify/prettify.js" type="text/javascript"></script>
     </head>
     <body onload="prettyPrint()">
         <h1>
@@ -18,7 +20,7 @@
         </h1>
 
         <p>
-            No matter how great an application is, if its source code is difficult to understand and/or to maintain, it will have a limited life expectancy. This document therefore provides some simple rules which, as much as possible, ought to be respected when working on OpenCOR. These rules were taken (paraphrased, if not simply copied/pasted) from the <a href="http://qt.gitorious.org/qt-creator/qt-creator/blobs/master/doc/api/coding-style.qdoc">coding style document</a> written by the developers of <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a>:
+            No matter how great an application is, if its source code is difficult to understand and/or to maintain, it will have a limited life expectancy. This document therefore provides some simple rules which, as much as possible, ought to be respected when working on OpenCOR. These rules were taken (paraphrased, if not simply copied/pasted) from the <a href="http://qt.gitorious.org/qt-creator/qt-creator/blobs/master/doc/api/coding-style.qdoc">coding style document</a> written by the developers of <a href="http://qt-project.org/wiki/Category:Tools::QtCreator">Qt Creator</a>:
         </p>
 
         <ul>
@@ -197,7 +199,7 @@ int&amp; b;</pre>
                             </li>
                             <li>
                                 Avoid C-style casts when possible:
-                                <pre class="good prettyprint">char *blockOfMemory = reinterpret_cast<char *>(malloc(data.size()));</pre>
+                                <pre class="good prettyprint">char *blockOfMemory = reinterpret_cast&lt;char *&gt;(malloc(data.size()));</pre>
                                 <pre class="bad prettyprint">char* blockOfMemory = (char* ) malloc(data.size());</pre>
                                 Of course, in this particulare case, using <code>new</code> might be an even better option.
                             </li>
@@ -234,9 +236,9 @@ int&amp; b;</pre>
                                 <pre class="bad prettyprint">if (address.isEmpty()) {
     return false;
 }</pre>
-                                <pre class="good prettyprint">for (int i = 0; i < 10; ++i)
+                                <pre class="good prettyprint">for (int i = 0; i &lt; 10; ++i)
     qDebug("%i", i);</pre>
-                                <pre class="bad prettyprint">for (int i = 0; i < 10; ++i) {
+                                <pre class="bad prettyprint">for (int i = 0; i &lt; 10; ++i) {
     qDebug("%i", i);
 }</pre>
                                 <strong>Exception #1:</strong> use braces also if the parent statement covers several lines or if it wraps:
@@ -337,8 +339,8 @@ else {
                     <li>
                         <strong>Using <code>QObject</code>:</strong>
                         <ul>
-                            <li>Every <code>QObject</code> subclass must have a <code>Q_OBJECT</code> macro, even if it does not have signals or slots, if it is intended to be used with <code>qobject_cast<></code>.</li>
-                            <li>Normalise the arguments for signals and slots (see <a href="http://doc.qt.nokia.com/4.7/qmetaobject.html#normalizedSignature"><code>QMetaObject::normalizedSignature</code></a>) inside connect statements to safely make signal and slot lookup a few cycles faster. You can use <code>[Qt]/util/normalize</code> to normalise existing code.</li>
+                            <li>Every <code>QObject</code> subclass must have a <code>Q_OBJECT</code> macro, even if it does not have signals or slots, if it is intended to be used with <code>qobject_cast&lt;&gt;</code>.</li>
+                            <li>Normalise the arguments for signals and slots (see <a href="http://qt-project.org/doc/qt-4.8/qmetaobject.html#normalizedSignature"><code>QMetaObject::normalizedSignature</code></a>) inside connect statements to safely make signal and slot lookup a few cycles faster. You can use <code>[Qt]/util/normalize</code> to normalise existing code.</li>
                         </ul>
                     </li>
                     <li>File headers: if you create a new file, the top of the file should include a header comment equal to the one found in other source files of OpenCOR.</li>
@@ -382,7 +384,7 @@ else {
                         <strong>Casting:</strong>
                         <ul>
                             <li>Avoid C casts, prefer C++ casts (<code>static_cast</code>, <code>const_cast</code>, <code>reinterpret_cast</code>) Both <code>reinterpret_cast</code> and C-style casts are dangerous, but at least <code>reinterpret_cast</code> will not remove the const modifier.</li>
-                            <li>Do not use <code>dynamic_cast</code>, use <code>qobject_cast</code> for <code>QObject</code>, or refactor your design, for example by introducing a <code>type()</code> method (see <a href="http://doc.qt.nokia.com/latest/qlistwidgetitem.html"><code>QListWidgetItem</code></a>), unless you know what you are doing.</li>
+                            <li>Do not use <code>dynamic_cast</code>, use <code>qobject_cast</code> for <code>QObject</code>, or refactor your design, for example by introducing a <code>type()</code> method (see <a href="http://qt-project.org/doc/qt-4.8/qlistwidgetitem.html"><code>QListWidgetItem</code></a>), unless you know what you are doing.</li>
                         </ul>
                     </li>
                     <li>
@@ -464,7 +466,7 @@ if (c >= 0) {
                             <li>The destructors are not virtual, which can lead to memory leaks.</li>
                             <li>The symbols are not exported (and mostly inline), which can lead to symbol clashes.</li>
                         </ul>
-                        For example, library <code>A</code> has class <code>Q_EXPORT X: public QList&lt;QVariant&gt; {};</code> and library <code>B</code> has class <code>Q_EXPORT Y: public QList<QVariant> {};</code>. Suddenly, <code>QList</code> symbols are exported from two libraries which results in a clash.
+                        For example, library <code>A</code> has class <code>Q_EXPORT X: public QList&lt;QVariant&gt; {};</code> and library <code>B</code> has class <code>Q_EXPORT Y: public QList&lt;QVariant&gt; {};</code>. Suddenly, <code>QList</code> symbols are exported from two libraries which results in a clash.
                     </li>
                     <li>
                         <strong>Aestethics:</strong>
@@ -481,7 +483,7 @@ if (c >= 0) {
                     <li>
                         To make your code easier to read, have it fit within 80 columns whenever possible.
                         <div>
-                            <strong>Note:</strong> <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a> can be configured to display a right margin by selecting the <code>Tools|Options...</code> menu, then the <code>Text Editor</code> section, and finally the <code>Display</code> tab under the <code>Text Wrapping</code> group box.
+                            <strong>Note:</strong> <a href="http://qt-project.org/wiki/Category:Tools::QtCreator">Qt Creator</a> can be configured to display a right margin by selecting the <code>Tools|Options...</code> menu, then the <code>Text Editor</code> section, and finally the <code>Display</code> tab under the <code>Text Wrapping</code> group box.
                         </div>
                     </li>
                     <li>Do not use <code>inline</code> functions. I	t is probably better to rely on the compiler to optimise the code, if necessary, not to mention that, if badly used, <code>inline</code> functions can result in slower code. A couple of good resources on the topic can be found <a href="http://www.parashift.com/c++-faq-lite/inline-functions.html">here</a> and <a href="http://yosefk.com/c++fqa/inline.html">here</a>.</li>
@@ -517,7 +519,7 @@ if (c >= 0) {
         </ul>
 
         <div class="copyright">
-            Copyright ©2011-2012
+            <script type="text/javascript">copyright();</script>
         </div>
     </body>
 </html>

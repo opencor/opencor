@@ -5,12 +5,14 @@
             Plugins
         </title>
 
-        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
         <link href="../res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
+        <script src="../../res/common.js" type="text/javascript"></script>
+
         <link href="../../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css"/>
-        <script type="text/javascript" src="../../3rdparty/googleCodePrettify/prettify.js"></script>
+        <script src="../../3rdparty/googleCodePrettify/prettify.js" type="text/javascript"></script>
     </head>
     <body onload="prettyPrint()">
         <h1>
@@ -38,7 +40,7 @@
         </h2>
 
         <p>
-            A plugin could be released as a pure shared library, but this would make it unnecessarily cumbersome to use. So, instead, we rely on <a href="http://doc.qt.nokia.com/latest/plugins-howto.html">Qt's support for plugins</a>. To that end, we must create a couple of files, such as <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.h</code></a> for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc/Core">Core plugin</a>. A plugin may or not implement an interface (or several of them). For example, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h"><code>CorePlugin</code></a> implements both <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.h"><code>CoreInterface</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h"><code>GuiInterface</code></a> while <a href="https://github.com/opencor/opencor/blob/master/src/plugins/3rdparty/QScintilla/src/qscintillaplugin.h"><code>QScintillaPlugin</code></a> doesn't implement any interface at all since its sole purpose is to provide access to the <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla library</a>.
+            A plugin could be released as a pure shared library, but this would make it unnecessarily cumbersome to use. So, instead, we rely on <a href="http://qt-project.org/doc/qt-4.8/plugins-howto.html">Qt's support for plugins</a>. To that end, we must create a couple of files, such as <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.h</code></a> for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc/Core">Core plugin</a>. A plugin may or not implement an interface (or several of them). For example, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h"><code>CorePlugin</code></a> implements both <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.h"><code>CoreInterface</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h"><code>GuiInterface</code></a> while <a href="https://github.com/opencor/opencor/blob/master/src/plugins/3rdparty/QScintilla/src/qscintillaplugin.h"><code>QScintillaPlugin</code></a> doesn't implement any interface at all since its sole purpose is to provide access to the <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla library</a>.
         </p>
 
         <h2>
@@ -71,7 +73,7 @@
         </h2>
 
         <p>
-            To support plugin dependencies requires some classes and/or functions to be imported/exported (using <a href="http://doc.qt.nokia.com/latest/qtglobal.html#Q_DECL_IMPORT"><code>Q_DECL_IMPORT</code></a>/<a href="http://doc.qt.nokia.com/latest/qtglobal.html#Q_DECL_EXPORT"><code>Q_DECL_EXPORT</code></a>, respectively). To handle this, we must create a header file which defines a macro that refers to either <code>Q_DECL_IMPORT</code> or <code>Q_DECL_EXPORT</code>, depending on how the plugin code is to be compiled. For the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc/Core">Core plugin</a>, the header file in question is <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreglobal.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreglobal.h</code></a>.
+            To support plugin dependencies requires some classes and/or functions to be imported/exported (using <a href="http://qt-project.org/doc/qt-4.8/qtglobal.html#Q_DECL_IMPORT"><code>Q_DECL_IMPORT</code></a>/<a href="http://qt-project.org/doc/qt-4.8/qtglobal.html#Q_DECL_EXPORT"><code>Q_DECL_EXPORT</code></a>, respectively). To handle this, we must create a header file which defines a macro that refers to either <code>Q_DECL_IMPORT</code> or <code>Q_DECL_EXPORT</code>, depending on how the plugin code is to be compiled. For the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/misc/Core">Core plugin</a>, the header file in question is <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreglobal.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreglobal.h</code></a>.
         </p>
 
         <h2>
@@ -131,7 +133,7 @@ libQtCLucene.4.dylib</pre>
         </ul>
 
         <div class="copyright">
-            Copyright ©2011-2012
+            <script type="text/javascript">copyright();</script>
         </div>
     </body>
 </html>
