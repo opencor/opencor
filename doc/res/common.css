@@ -1,35 +1,42 @@
 body {
     font-family: arial, sans-serif;
     font-size: 10pt;
+    padding: 13px 0px 7px 0px;
+    /* Note: the padding is determined from the height of div.header and */
+    /*       div.copyright minus the same number of pixels each...       */
 }
 
 a {
-    color: rgba(103, 103, 103, 1);
+    color: rgb(103, 103, 103);
     text-decoration: none;
 }
 
 a:visited {
-    color: rgba(103, 103, 103, 1);
+    color: rgb(103, 103, 103);
 }
 
 a:hover {
     margin: -1px;
     border: 1px dotted rgba(103, 103, 103, 0.49);
     background-color: rgba(103, 103, 103, 0.07);
-    color: rgba(103, 103, 103, 1);
+    color: rgb(103, 103, 103);
 }
 
-h1 {
-    margin: -3px -3px 13px -3px;
-    padding: 3px 3px 3px 3px;
-    background: rgba(103, 103, 103, 1);
-    color: rgba(255, 255, 255, 1);
+div.header {
+    padding: 3px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 23px;
+    background: rgb(103, 103, 103);
+    color: rgb(255, 255, 255);
     font-size: 15pt;
     font-weight: bold;
 }
 
-h2 {
-    color: rgba(103, 103, 103, 1);
+div.section {
+    color: rgb(103, 103, 103);
     font-size: 13pt;
     font-weight: bold;
 }
@@ -47,9 +54,13 @@ pre {
 }
 
 div.copyright {
-    margin: 13px -3px -3px -3px;
-    background: rgba(0, 0, 0, 0.1);
-    color: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 17px;
+    background: rgb(229, 229, 229);
+    color: rgb(161, 161, 161);
     font-size: 9pt;
     font-weight: bold;
     text-align: center;

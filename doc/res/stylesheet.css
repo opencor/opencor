@@ -1,7 +1,8 @@
 @import url("common.css");
 
-h3 {
-    color: rgba(103, 103, 103, 1);
+div.dissemination {
+    color: rgb(103, 103, 103);
+    font-size: 11pt;
     font-style: italic;
     font-weight: normal;
 }
@@ -17,9 +18,9 @@ img.center {
 }
 
 img.shadow {
-    -moz-box-shadow: 1px 1px 10px rgba(103, 103, 103, 1);
-    -webkit-box-shadow: 1px 1px 10px rgba(103, 103, 103, 1);
-    box-shadow: 1px 1px 10px rgba(103, 103, 103, 1);
+    -moz-box-shadow: 1px 1px 10px rgb(103, 103, 103);
+    -webkit-box-shadow: 1px 1px 10px rgb(103, 103, 103);
+    box-shadow: 1px 1px 10px rgb(103, 103, 103);
 }
 
 a.image:hover {
@@ -28,7 +29,7 @@ a.image:hover {
 
     margin: 0px;
     border: none;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: rgb(255, 255, 255);
 }
 
 th {
