@@ -17,7 +17,7 @@ a:visited {
 
 a:hover {
     margin: -1px;
-    border: 1px solid rgba(103, 103, 103, 0.19);
+    border: 1px solid rgba(103, 103, 103, 0.13);
     background-color: rgba(103, 103, 103, 0.05);
     color: rgb(103, 103, 103);
 }
@@ -47,7 +47,7 @@ li {
 
 pre {
     margin: 3px 13px 3px 13px;
-    border: 1px solid rgba(103, 103, 103, 0.19);
+    border: 1px solid rgba(103, 103, 103, 0.13);
     padding: 3px;
     background: rgba(103, 103, 103, 0.05);
     white-space: pre-wrap;
