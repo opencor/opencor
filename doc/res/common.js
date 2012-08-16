@@ -36,7 +36,7 @@ function initContentsMenu(relativePath, r, g, b) {
     document.write("}");
     document.write("");
     document.write("ul.contentsMenu li ul li a:hover {");
-    document.write("    background-color: rgba("+r+", "+g+", "+b+", 0.7);");
+    document.write("    background-color: rgba("+r+", "+g+", "+b+", 0.79);");
     document.write("    color: rgb(255, 255, 255);");
     document.write("    text-decoration: none;");
     document.write("}");
