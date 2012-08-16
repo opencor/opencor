@@ -161,8 +161,8 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
 
 //==============================================================================
 
-static const int MinimumZoomLevel = 1;
-static const int DefaultZoomLevel = 9;
+static const int MinimumZoomLevel =  1;
+static const int DefaultZoomLevel = 10;
 
 //==============================================================================
 

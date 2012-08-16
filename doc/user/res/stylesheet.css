@@ -17,7 +17,7 @@ a:visited {
 }
 
 a:hover {
-    border: 1px dotted rgba(54, 96, 146, 0.49);
+    border: 1px solid rgba(54, 96, 146, 0.19);
     background-color: rgba(54, 96, 146, 0.07);
     color: rgb(54, 96, 146);
 }
@@ -31,7 +31,7 @@ div.section {
 }
 
 pre {
-    border: 1px dashed rgba(54, 96, 146, 0.49);
+    border: 1px solid rgba(54, 96, 146, 0.19);
     background: rgba(54, 96, 146, 0.07);
 }
 

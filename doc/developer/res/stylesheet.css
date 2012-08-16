@@ -4,28 +4,14 @@ a {
     color: rgb(49, 133, 155);
 }
 
-a.warning {
-    color: rgb(149, 55, 52);
-}
-
 a:visited {
     color: rgb(49, 133, 155);
 }
 
-a.warning:visited {
-    color: rgb(149, 55, 52);
-}
-
 a:hover {
-    border: 1px dotted rgba(49, 133, 155, 0.49);
+    border: 1px solid rgba(49, 133, 155, 0.19);
     background-color: rgba(49, 133, 155, 0.07);
     color: rgb(49, 133, 155);
-}
-
-a.warning:hover {
-    border: 1px dotted rgba(149, 55, 52, 0.49);
-    background-color: rgba(149, 55, 52, 0.07);
-    color: rgb(149, 55, 52);
 }
 
 div.header {
@@ -46,25 +32,18 @@ div.section a:hover {
     color: rgb(49, 133, 155);
 }
 
-p.warning {
-    border: 1px solid rgba(149, 55, 52, 0.49);
-    padding: 3px;
-    background: rgba(149, 55, 52, 0.07);
-    font-weight: bold;
-}
-
 pre {
-    border: 1px dashed rgba(49, 133, 155, 0.49);
+    border: 1px solid rgba(49, 133, 155, 0.19);
     background: rgba(49, 133, 155, 0.07);
 }
 
 pre.good {
-    border-color: rgba(118, 146, 60, 0.49);
+    border-color: rgba(118, 146, 60, 0.19);
     background: rgba(118, 146, 60, 0.07);
 }
 
 pre.bad {
-    border-color: rgba(149, 55, 52, 0.49);
+    border-color: rgba(149, 55, 52, 0.19);
     background: rgba(149, 55, 52, 0.07);
 }
 

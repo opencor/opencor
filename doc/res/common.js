@@ -26,7 +26,7 @@ function initContentsMenu(relativePath, r, g, b) {
     document.write("}");
     document.write("");
     document.write("ul.contentsMenu li ul li {");
-    document.write("    margin: 3px;");
+    document.write("    margin: 2px;");
     document.write("    background: rgb(255, 255, 255);");
     document.write("    font-size: 9pt;");
     document.write("    font-weight: normal;");

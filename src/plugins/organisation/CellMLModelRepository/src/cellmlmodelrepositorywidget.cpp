@@ -39,10 +39,6 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
 
     setFocusPolicy(Qt::NoFocus);
 
-    // Reduce the size of the font a bit
-
-    setZoomFactor(0.9);
-
     // Have links opened in the user's browser rather than in our list
 
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
