@@ -10,7 +10,7 @@ a:visited {
 
 a:hover {
     border: 1px solid rgba(49, 133, 155, 0.19);
-    background-color: rgba(49, 133, 155, 0.07);
+    background-color: rgba(49, 133, 155, 0.05);
     color: rgb(49, 133, 155);
 }
 
@@ -34,17 +34,17 @@ div.section a:hover {
 
 pre {
     border: 1px solid rgba(49, 133, 155, 0.19);
-    background: rgba(49, 133, 155, 0.07);
+    background: rgba(49, 133, 155, 0.05);
 }
 
 pre.good {
     border-color: rgba(118, 146, 60, 0.19);
-    background: rgba(118, 146, 60, 0.07);
+    background: rgba(118, 146, 60, 0.05);
 }
 
 pre.bad {
     border-color: rgba(149, 55, 52, 0.19);
-    background: rgba(149, 55, 52, 0.07);
+    background: rgba(149, 55, 52, 0.05);
 }
 
 code {
