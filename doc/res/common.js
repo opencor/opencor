@@ -18,7 +18,7 @@ function initContentsMenu(relativePath, r, g, b) {
     document.write("    position: fixed;");
     document.write("    top: 29px;");
     document.write("    right: 0px;");
-    document.write("    background: rgb(255, 255, 255);");
+    document.write("    background: rgb(249, 249, 249);");
     document.write("    border: 1px solid rgb("+r+", "+g+", "+b+");");
     document.write("    border-top-style: none;");
     document.write("    border-radius: 0px 0px 5px 5px;");
@@ -27,7 +27,6 @@ function initContentsMenu(relativePath, r, g, b) {
     document.write("");
     document.write("ul.contentsMenu li ul li {");
     document.write("    margin: 2px;");
-    document.write("    background: rgb(255, 255, 255);");
     document.write("    font-size: 9pt;");
     document.write("    font-weight: normal;");
     document.write("}");
@@ -37,7 +36,7 @@ function initContentsMenu(relativePath, r, g, b) {
     document.write("}");
     document.write("");
     document.write("ul.contentsMenu li ul li a:hover {");
-    document.write("    background-color: rgb("+r+", "+g+", "+b+");");
+    document.write("    background-color: rgba("+r+", "+g+", "+b+", 0.7);");
     document.write("    color: rgb(255, 255, 255);");
     document.write("    text-decoration: none;");
     document.write("}");
