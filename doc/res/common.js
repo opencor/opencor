@@ -1,12 +1,51 @@
-function showContentsMenuImage(relativePath) {
+function initContentsMenu(relativePath, r, g, b) {
     document.write("<style>");
-    document.write("    img.contentsMenu {");
-    document.write("        position: fixed;");
-    document.write("        right: 3px;");
-    document.write("    }");
+    document.write("ul.contentsMenu {");
+    document.write("    margin: 0px;");
+    document.write("    position: fixed;");
+    document.write("    top: 3px;");
+    document.write("    right: 3px;");
+    document.write("}");
+    document.write("");
+    document.write("ul.contentsMenu li {");
+    document.write("    list-style: none;");
+    document.write("}");
+    document.write("");
+    document.write("ul.contentsMenu li ul {");
+    document.write("    visibility: hidden;");
+    document.write("    margin: 0px;");
+    document.write("    padding: 0px;");
+    document.write("    position: fixed;");
+    document.write("    top: 29px;");
+    document.write("    right: 0px;");
+    document.write("    background: rgb(255, 255, 255);");
+    document.write("    border: 1px solid rgb("+r+", "+g+", "+b+");");
+    document.write("    border-top-style: none;");
+    document.write("    border-radius: 0px 0px 5px 5px;");
+    document.write("    box-shadow: 0px 5px 5px -5px rgb(103, 103, 103);");
+    document.write("}");
+    document.write("");
+    document.write("ul.contentsMenu li ul li {");
+    document.write("    margin: 3px;");
+    document.write("    background: rgb(255, 255, 255);");
+    document.write("    font-size: 9pt;");
+    document.write("    font-weight: normal;");
+    document.write("}");
+    document.write("");
+    document.write("ul.contentsMenu li ul li a {");
+    document.write("    display: block;");
+    document.write("}");
+    document.write("");
+    document.write("ul.contentsMenu li ul li a:hover {");
+    document.write("    background-color: rgb("+r+", "+g+", "+b+");");
+    document.write("    color: rgb(255, 255, 255);");
+    document.write("    text-decoration: none;");
+    document.write("}");
+    document.write("");
+    document.write("ul.contentsMenu li ul li.lastContentsMenuItem a {");
+    document.write("    border-radius: 0px 0px 5px 5px;");
+    document.write("}");
     document.write("</style>");
-
-    document.write("<img class=\"contentsMenu\" src=\""+relativePath+"/../res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
 }
 
 function copyright() {
@@ -14,12 +53,3 @@ function copyright() {
 
     document.write("Copyright ©2011-"+date.getFullYear());
 }
-
-// Note: for some very weird reasons, any file which is to be used to generate
-//       a Qt help must be at least 512 bytes big, so...
-
-// ############################################################################
-// ###                                                                     ####
-// ###   Just to make up for the fact that we need at least 512 bytes...   ####
-// ###                                                                     ####
-// ############################################################################
