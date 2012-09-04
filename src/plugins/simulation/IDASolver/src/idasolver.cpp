@@ -216,7 +216,7 @@ void IdaSolver::initialize(const double &pVoiStart,
 
         // Compute the model's initial conditions
         // Note: this requires retrieving the model's state information, setting
-        //       the IDA object's id vector and then calling IDACalcIC...
+        //       the IDA object's id vector and then calling IDACalcIC()...
 
         double *id = new double[pStatesCount];
 
