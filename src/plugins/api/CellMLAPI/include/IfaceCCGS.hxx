@@ -46,7 +46,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::ComputationTarget"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::ComputationTarget"; }
       virtual ~ComputationTarget() {}
       virtual already_AddRefd<iface::cellml_api::CellMLVariable>  variable() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t degree() throw(std::exception&)  = 0;
@@ -59,7 +59,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::ComputationTargetIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::ComputationTargetIterator"; }
       virtual ~ComputationTargetIterator() {}
       virtual already_AddRefd<iface::cellml_services::ComputationTarget>  nextComputationTarget() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -68,7 +68,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CodeInformation"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CodeInformation"; }
       virtual ~CodeInformation() {}
       virtual std::wstring errorMessage() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual iface::cellml_services::ModelConstraintLevel constraintLevel() throw(std::exception&)  = 0;
@@ -81,13 +81,14 @@ namespace iface
       virtual std::wstring functionsString() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::ComputationTargetIterator>  iterateTargets() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::mathml_dom::MathMLNodeList>  flaggedEquations() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_services::ComputationTarget>  missingInitial() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CCGS_PRE 
     class  PUBLIC_CCGS_POST CodeGenerator
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CodeGenerator"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CodeGenerator"; }
       virtual ~CodeGenerator() {}
       virtual std::wstring constantPattern() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void constantPattern(const std::wstring& attr) throw(std::exception&) = 0;
@@ -137,7 +138,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CustomCodeInformation"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CustomCodeInformation"; }
       virtual ~CustomCodeInformation() {}
       virtual iface::cellml_services::ModelConstraintLevel constraintLevel() throw(std::exception&)  = 0;
       virtual uint32_t indexCount() throw(std::exception&)  = 0;
@@ -150,7 +151,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CustomGenerator"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CustomGenerator"; }
       virtual ~CustomGenerator() {}
       virtual already_AddRefd<iface::cellml_services::ComputationTargetIterator>  iterateTargets() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void requestComputation(iface::cellml_services::ComputationTarget* wanted) throw(std::exception&) = 0;
@@ -163,7 +164,7 @@ namespace iface
      : public virtual iface::cellml_services::CodeInformation
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::IDACodeInformation"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::IDACodeInformation"; }
       virtual ~IDACodeInformation() {}
       virtual std::wstring essentialVariablesString() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring stateInformationString() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -175,7 +176,7 @@ namespace iface
      : public virtual iface::cellml_services::CodeGenerator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::IDACodeGenerator"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::IDACodeGenerator"; }
       virtual ~IDACodeGenerator() {}
       virtual already_AddRefd<iface::cellml_services::IDACodeInformation>  generateIDACode(iface::cellml_api::Model* sourceModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring residualPattern() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -198,7 +199,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CodeGeneratorBootstrap"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CodeGeneratorBootstrap"; }
       virtual ~CodeGeneratorBootstrap() {}
       virtual already_AddRefd<iface::cellml_services::CodeGenerator>  createCodeGenerator() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::IDACodeGenerator>  createIDACodeGenerator() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;

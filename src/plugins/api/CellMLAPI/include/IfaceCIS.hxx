@@ -46,7 +46,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::IntegrationProgressObserver"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::IntegrationProgressObserver"; }
       virtual ~IntegrationProgressObserver() {}
       virtual void computedConstants(const std::vector<double>& values) throw(std::exception&) = 0;
       virtual void results(const std::vector<double>& state) throw(std::exception&) = 0;
@@ -58,7 +58,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLIntegrationRun"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CellMLIntegrationRun"; }
       virtual ~CellMLIntegrationRun() {}
       virtual void setStepSizeControl(double epsAbs, double epsRel, double scalVar, double scalRate, double maxStep) throw(std::exception&) = 0;
       virtual void setTabulationStepControl(double tabulationStepSize, bool strictTabulation) throw(std::exception&) = 0;
@@ -73,7 +73,7 @@ namespace iface
      : public virtual iface::cellml_services::CellMLIntegrationRun
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::ODESolverRun"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::ODESolverRun"; }
       virtual ~ODESolverRun() {}
       virtual iface::cellml_services::ODEIntegrationStepType stepType() throw(std::exception&)  = 0;
       virtual void stepType(iface::cellml_services::ODEIntegrationStepType attr) throw(std::exception&) = 0;
@@ -83,7 +83,7 @@ namespace iface
      : public virtual iface::cellml_services::CellMLIntegrationRun
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::DAESolverRun"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::DAESolverRun"; }
       virtual ~DAESolverRun() {}
     };
     PUBLIC_CIS_PRE 
@@ -91,7 +91,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLCompiledModel"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CellMLCompiledModel"; }
       virtual ~CellMLCompiledModel() {}
       virtual already_AddRefd<iface::cellml_api::Model>  model() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::CodeInformation>  codeInformation() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -101,7 +101,7 @@ namespace iface
      : public virtual iface::cellml_services::CellMLCompiledModel
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::ODESolverCompiledModel"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::ODESolverCompiledModel"; }
       virtual ~ODESolverCompiledModel() {}
     };
     PUBLIC_CIS_PRE 
@@ -109,7 +109,7 @@ namespace iface
      : public virtual iface::cellml_services::CellMLCompiledModel
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::DAESolverCompiledModel"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::DAESolverCompiledModel"; }
       virtual ~DAESolverCompiledModel() {}
     };
     PUBLIC_CIS_PRE 
@@ -117,7 +117,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CellMLIntegrationService"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CellMLIntegrationService"; }
       virtual ~CellMLIntegrationService() {}
       virtual already_AddRefd<iface::cellml_services::ODESolverCompiledModel>  compileModelODE(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::DAESolverCompiledModel>  compileModelDAE(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;

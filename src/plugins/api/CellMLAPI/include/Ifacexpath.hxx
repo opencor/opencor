@@ -36,7 +36,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::xpath::XPathEvaluator"; }
+      static const char* INTERFACE_NAME() { return "xpath::XPathEvaluator"; }
       virtual ~XPathEvaluator() {}
       virtual already_AddRefd<iface::xpath::XPathExpression>  createExpression(const std::wstring& expression, iface::xpath::XPathNSResolver* resolver) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::xpath::XPathNSResolver>  createNSResolver(iface::dom::Node* nodeResolver) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -47,7 +47,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::xpath::XPathExpression"; }
+      static const char* INTERFACE_NAME() { return "xpath::XPathExpression"; }
       virtual ~XPathExpression() {}
       virtual already_AddRefd<iface::xpath::XPathResult>  evaluate(iface::dom::Node* contextNode, uint16_t type, iface::xpath::XPathResult* result) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -56,7 +56,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::xpath::XPathNSResolver"; }
+      static const char* INTERFACE_NAME() { return "xpath::XPathNSResolver"; }
       virtual ~XPathNSResolver() {}
       virtual std::wstring lookupNamespaceURI(const std::wstring& prefix) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -65,7 +65,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::xpath::XPathResult"; }
+      static const char* INTERFACE_NAME() { return "xpath::XPathResult"; }
       virtual ~XPathResult() {}
       static const uint16_t ANY_TYPE = 0;
       static const uint16_t NUMBER_TYPE = 1;
@@ -92,7 +92,7 @@ namespace iface
      : public virtual iface::dom::Node
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::xpath::XPathNamespace"; }
+      static const char* INTERFACE_NAME() { return "xpath::XPathNamespace"; }
       virtual ~XPathNamespace() {}
       static const uint16_t XPATH_NAMESPACE_NODE = 13;
       virtual already_AddRefd<iface::dom::Element>  ownerElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;

@@ -22,7 +22,7 @@ namespace iface
     class  PUBLIC_xpcom_POST IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::XPCOM::IObject"; }
+      static const char* INTERFACE_NAME() { return "XPCOM::IObject"; }
       virtual ~IObject() {}
       virtual void add_ref() throw(std::exception&) = 0;
       virtual void release_ref() throw(std::exception&) = 0;

@@ -63,7 +63,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::RDFRepresentation"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::RDFRepresentation"; }
       virtual ~RDFRepresentation() {}
       virtual std::wstring type() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -72,7 +72,7 @@ namespace iface
      : public virtual iface::cellml_api::RDFRepresentation
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::RDFXMLDOMRepresentation"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::RDFXMLDOMRepresentation"; }
       virtual ~RDFXMLDOMRepresentation() {}
       virtual already_AddRefd<iface::dom::Document>  data() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void data(iface::dom::Document* attr) throw(std::exception&) = 0;
@@ -82,7 +82,7 @@ namespace iface
      : public virtual iface::cellml_api::RDFRepresentation
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::RDFXMLStringRepresentation"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::RDFXMLStringRepresentation"; }
       virtual ~RDFXMLStringRepresentation() {}
       virtual std::wstring serialisedData() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void serialisedData(const std::wstring& attr) throw(std::exception&) = 0;
@@ -92,7 +92,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::UserData"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::UserData"; }
       virtual ~UserData() {}
     };
     PUBLIC_CellMLAPISPEC_PRE 
@@ -100,7 +100,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ImportInstantiationListener"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ImportInstantiationListener"; }
       virtual ~ImportInstantiationListener() {}
       virtual void loadCompleted(bool wasStale) throw(std::exception&) = 0;
     };
@@ -115,7 +115,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::URI"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::URI"; }
       virtual ~URI() {}
       virtual std::wstring asText() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void asText(const std::wstring& attr) throw(std::exception&) = 0;
@@ -125,7 +125,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLElement"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLElement"; }
       virtual ~CellMLElement() {}
       virtual std::wstring cellmlVersion() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring cmetaId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -146,6 +146,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::Model>  modelElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void setUserData(const std::wstring& key, iface::cellml_api::UserData* data) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::cellml_api::UserData>  getUserData(const std::wstring& key) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::UserData>  getUserDataWithDefault(const std::wstring& key, iface::cellml_api::UserData* defval) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::CellMLElement>  clone(bool deep) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring getExtensionAttributeNS(const std::wstring& ns, const std::wstring& localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void setExtensionAttributeNS(const std::wstring& ns, const std::wstring& qualifiedName, const std::wstring& value) throw(std::exception&) = 0;
@@ -157,7 +158,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLDOMElement"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLDOMElement"; }
       virtual ~CellMLDOMElement() {}
       virtual already_AddRefd<iface::dom::Element>  domElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -166,7 +167,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::NamedCellMLElement"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::NamedCellMLElement"; }
       virtual ~NamedCellMLElement() {}
       virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void name(const std::wstring& attr) throw(std::exception&) = 0;
@@ -176,7 +177,7 @@ namespace iface
      : public virtual iface::cellml_api::NamedCellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::Model"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::Model"; }
       virtual ~Model() {}
       virtual already_AddRefd<iface::cellml_api::Model>  getAlternateVersion(const std::wstring& cellmlVersion) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::GroupSet>  groups() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -220,7 +221,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::MathContainer"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::MathContainer"; }
       virtual ~MathContainer() {}
       virtual already_AddRefd<iface::cellml_api::MathList>  math() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void addMath(iface::mathml_dom::MathMLElement* x) throw(std::exception&) = 0;
@@ -233,7 +234,7 @@ namespace iface
      : public virtual iface::cellml_api::NamedCellMLElement , public virtual iface::cellml_api::MathContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLComponent"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLComponent"; }
       virtual ~CellMLComponent() {}
       virtual already_AddRefd<iface::cellml_api::CellMLVariableSet>  variables() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::UnitsSet>  units() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -250,7 +251,7 @@ namespace iface
      : public virtual iface::cellml_api::NamedCellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::Units"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::Units"; }
       virtual ~Units() {}
       virtual bool isBaseUnits() throw(std::exception&)  = 0;
       virtual void isBaseUnits(bool attr) throw(std::exception&) = 0;
@@ -261,7 +262,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::Unit"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::Unit"; }
       virtual ~Unit() {}
       virtual int32_t prefix() throw(std::exception&)  = 0;
       virtual void prefix(int32_t attr) throw(std::exception&) = 0;
@@ -279,7 +280,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLImport"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLImport"; }
       virtual ~CellMLImport() {}
       virtual already_AddRefd<iface::cellml_api::URI>  xlinkHref() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::ImportComponentSet>  components() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -298,7 +299,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLComponent
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ImportComponent"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ImportComponent"; }
       virtual ~ImportComponent() {}
       virtual std::wstring componentRef() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void componentRef(const std::wstring& attr) throw(std::exception&) = 0;
@@ -308,7 +309,7 @@ namespace iface
      : public virtual iface::cellml_api::Units
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ImportUnits"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ImportUnits"; }
       virtual ~ImportUnits() {}
       virtual std::wstring unitsRef() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void unitsRef(const std::wstring& attr) throw(std::exception&) = 0;
@@ -324,10 +325,15 @@ namespace iface
      : public virtual iface::cellml_api::NamedCellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLVariable"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLVariable"; }
       virtual ~CellMLVariable() {}
       virtual std::wstring initialValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void initialValue(const std::wstring& attr) throw(std::exception&) = 0;
+      virtual bool initialValueFromVariable() throw(std::exception&)  = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLVariable>  initialValueVariable() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void initialValueVariable(iface::cellml_api::CellMLVariable* attr) throw(std::exception&) = 0;
+      virtual double initialValueValue() throw(std::exception&)  = 0;
+      virtual void initialValueValue(double attr) throw(std::exception&) = 0;
       virtual iface::cellml_api::VariableInterface privateInterface() throw(std::exception&)  = 0;
       virtual void privateInterface(iface::cellml_api::VariableInterface attr) throw(std::exception&) = 0;
       virtual iface::cellml_api::VariableInterface publicInterface() throw(std::exception&)  = 0;
@@ -345,7 +351,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ComponentRef"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ComponentRef"; }
       virtual ~ComponentRef() {}
       virtual std::wstring componentName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void componentName(const std::wstring& attr) throw(std::exception&) = 0;
@@ -358,7 +364,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::RelationshipRef"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::RelationshipRef"; }
       virtual ~RelationshipRef() {}
       virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void name(const std::wstring& attr) throw(std::exception&) = 0;
@@ -371,7 +377,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::Group"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::Group"; }
       virtual ~Group() {}
       virtual already_AddRefd<iface::cellml_api::RelationshipRefSet>  relationshipRefs() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::ComponentRefSet>  componentRefs() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -383,7 +389,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::Connection"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::Connection"; }
       virtual ~Connection() {}
       virtual already_AddRefd<iface::cellml_api::MapComponents>  componentMapping() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::MapVariablesSet>  variableMappings() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -393,7 +399,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::MapComponents"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::MapComponents"; }
       virtual ~MapComponents() {}
       virtual std::wstring firstComponentName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void firstComponentName(const std::wstring& attr) throw(std::exception&) = 0;
@@ -409,7 +415,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::MapVariables"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::MapVariables"; }
       virtual ~MapVariables() {}
       virtual std::wstring firstVariableName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void firstVariableName(const std::wstring& attr) throw(std::exception&) = 0;
@@ -427,7 +433,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::Reaction"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::Reaction"; }
       virtual ~Reaction() {}
       virtual already_AddRefd<iface::cellml_api::VariableRefSet>  variableReferences() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual bool reversible() throw(std::exception&)  = 0;
@@ -440,7 +446,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::VariableRef"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::VariableRef"; }
       virtual ~VariableRef() {}
       virtual already_AddRefd<iface::cellml_api::CellMLVariable>  variable() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void variable(iface::cellml_api::CellMLVariable* attr) throw(std::exception&) = 0;
@@ -453,7 +459,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElement , public virtual iface::cellml_api::MathContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::Role"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::Role"; }
       virtual ~Role() {}
       typedef enum _enum_RoleType
       {
@@ -487,7 +493,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLElementIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLElementIterator"; }
       virtual ~CellMLElementIterator() {}
       virtual already_AddRefd<iface::cellml_api::CellMLElement>  next() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -496,7 +502,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::MathMLElementIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::MathMLElementIterator"; }
       virtual ~MathMLElementIterator() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLElement>  next() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -505,7 +511,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ExtensionElementList"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ExtensionElementList"; }
       virtual ~ExtensionElementList() {}
       virtual uint32_t length() throw(std::exception&)  = 0;
       virtual bool contains(iface::dom::Element* x) throw(std::exception&) = 0;
@@ -517,7 +523,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::MathList"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::MathList"; }
       virtual ~MathList() {}
       virtual uint32_t length() throw(std::exception&)  = 0;
       virtual bool contains(iface::mathml_dom::MathMLElement* x) throw(std::exception&) = 0;
@@ -528,7 +534,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ExtensionAttributeIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ExtensionAttributeIterator"; }
       virtual ~ExtensionAttributeIterator() {}
       virtual already_AddRefd<iface::dom::Attr>  nextAttribute() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -537,7 +543,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ExtensionAttributeSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ExtensionAttributeSet"; }
       virtual ~ExtensionAttributeSet() {}
       virtual already_AddRefd<iface::cellml_api::ExtensionAttributeIterator>  iterate() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -546,7 +552,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLElementSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLElementSet"; }
       virtual ~CellMLElementSet() {}
       virtual uint32_t length() throw(std::exception&)  = 0;
       virtual bool contains(iface::cellml_api::CellMLElement* x) throw(std::exception&) = 0;
@@ -557,7 +563,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::NamedCellMLElementSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::NamedCellMLElementSet"; }
       virtual ~NamedCellMLElementSet() {}
       virtual already_AddRefd<iface::cellml_api::NamedCellMLElement>  get(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -566,7 +572,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ModelIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ModelIterator"; }
       virtual ~ModelIterator() {}
       virtual already_AddRefd<iface::cellml_api::Model>  nextModel() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -575,7 +581,7 @@ namespace iface
      : public virtual iface::cellml_api::NamedCellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ModelSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ModelSet"; }
       virtual ~ModelSet() {}
       virtual already_AddRefd<iface::cellml_api::ModelIterator>  iterateModels() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::Model>  getModel(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -585,7 +591,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLComponentIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLComponentIterator"; }
       virtual ~CellMLComponentIterator() {}
       virtual already_AddRefd<iface::cellml_api::CellMLComponent>  nextComponent() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -594,7 +600,7 @@ namespace iface
      : public virtual iface::cellml_api::NamedCellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLComponentSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLComponentSet"; }
       virtual ~CellMLComponentSet() {}
       virtual already_AddRefd<iface::cellml_api::CellMLComponentIterator>  iterateComponents() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::CellMLComponent>  getComponent(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -604,7 +610,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLComponentIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ImportComponentIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ImportComponentIterator"; }
       virtual ~ImportComponentIterator() {}
       virtual already_AddRefd<iface::cellml_api::ImportComponent>  nextImportComponent() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -613,7 +619,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLComponentSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ImportComponentSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ImportComponentSet"; }
       virtual ~ImportComponentSet() {}
       virtual already_AddRefd<iface::cellml_api::ImportComponentIterator>  iterateImportComponents() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::ImportComponent>  getImportComponent(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -623,7 +629,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLVariableIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLVariableIterator"; }
       virtual ~CellMLVariableIterator() {}
       virtual already_AddRefd<iface::cellml_api::CellMLVariable>  nextVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -632,7 +638,7 @@ namespace iface
      : public virtual iface::cellml_api::NamedCellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLVariableSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLVariableSet"; }
       virtual ~CellMLVariableSet() {}
       virtual already_AddRefd<iface::cellml_api::CellMLVariableIterator>  iterateVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::CellMLVariable>  getVariable(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -642,7 +648,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::UnitsIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::UnitsIterator"; }
       virtual ~UnitsIterator() {}
       virtual already_AddRefd<iface::cellml_api::Units>  nextUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -651,7 +657,7 @@ namespace iface
      : public virtual iface::cellml_api::NamedCellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::UnitsSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::UnitsSet"; }
       virtual ~UnitsSet() {}
       virtual already_AddRefd<iface::cellml_api::UnitsIterator>  iterateUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::Units>  getUnits(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -661,7 +667,7 @@ namespace iface
      : public virtual iface::cellml_api::UnitsIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ImportUnitsIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ImportUnitsIterator"; }
       virtual ~ImportUnitsIterator() {}
       virtual already_AddRefd<iface::cellml_api::ImportUnits>  nextImportUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -670,7 +676,7 @@ namespace iface
      : public virtual iface::cellml_api::UnitsSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ImportUnitsSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ImportUnitsSet"; }
       virtual ~ImportUnitsSet() {}
       virtual already_AddRefd<iface::cellml_api::ImportUnitsIterator>  iterateImportUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::ImportUnits>  getImportUnits(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -680,7 +686,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLImportIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLImportIterator"; }
       virtual ~CellMLImportIterator() {}
       virtual already_AddRefd<iface::cellml_api::CellMLImport>  nextImport() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -689,7 +695,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLImportSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLImportSet"; }
       virtual ~CellMLImportSet() {}
       virtual already_AddRefd<iface::cellml_api::CellMLImportIterator>  iterateImports() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -698,7 +704,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::UnitIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::UnitIterator"; }
       virtual ~UnitIterator() {}
       virtual already_AddRefd<iface::cellml_api::Unit>  nextUnit() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -707,7 +713,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::UnitSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::UnitSet"; }
       virtual ~UnitSet() {}
       virtual already_AddRefd<iface::cellml_api::UnitIterator>  iterateUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -716,7 +722,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ConnectionIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ConnectionIterator"; }
       virtual ~ConnectionIterator() {}
       virtual already_AddRefd<iface::cellml_api::Connection>  nextConnection() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -725,7 +731,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ConnectionSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ConnectionSet"; }
       virtual ~ConnectionSet() {}
       virtual already_AddRefd<iface::cellml_api::ConnectionIterator>  iterateConnections() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -734,7 +740,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::GroupIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::GroupIterator"; }
       virtual ~GroupIterator() {}
       virtual already_AddRefd<iface::cellml_api::Group>  nextGroup() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -743,7 +749,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::GroupSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::GroupSet"; }
       virtual ~GroupSet() {}
       virtual already_AddRefd<iface::cellml_api::GroupIterator>  iterateGroups() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::GroupSet>  getSubsetInvolvingRelationship(const std::wstring& relName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -755,7 +761,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::RelationshipRefIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::RelationshipRefIterator"; }
       virtual ~RelationshipRefIterator() {}
       virtual already_AddRefd<iface::cellml_api::RelationshipRef>  nextRelationshipRef() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -764,7 +770,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::RelationshipRefSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::RelationshipRefSet"; }
       virtual ~RelationshipRefSet() {}
       virtual already_AddRefd<iface::cellml_api::RelationshipRefIterator>  iterateRelationshipRefs() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -773,7 +779,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ComponentRefIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ComponentRefIterator"; }
       virtual ~ComponentRefIterator() {}
       virtual already_AddRefd<iface::cellml_api::ComponentRef>  nextComponentRef() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -782,7 +788,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ComponentRefSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ComponentRefSet"; }
       virtual ~ComponentRefSet() {}
       virtual already_AddRefd<iface::cellml_api::ComponentRefIterator>  iterateComponentRefs() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -791,7 +797,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::MapVariablesIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::MapVariablesIterator"; }
       virtual ~MapVariablesIterator() {}
       virtual already_AddRefd<iface::cellml_api::MapVariables>  nextMapVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::MapVariables>  nextMapVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -801,7 +807,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::MapVariablesSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::MapVariablesSet"; }
       virtual ~MapVariablesSet() {}
       virtual already_AddRefd<iface::cellml_api::MapVariablesIterator>  iterateMapVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -810,7 +816,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ReactionIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ReactionIterator"; }
       virtual ~ReactionIterator() {}
       virtual already_AddRefd<iface::cellml_api::Reaction>  nextReaction() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -819,7 +825,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ReactionSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ReactionSet"; }
       virtual ~ReactionSet() {}
       virtual already_AddRefd<iface::cellml_api::ReactionIterator>  iterateReactions() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -828,7 +834,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::VariableRefIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::VariableRefIterator"; }
       virtual ~VariableRefIterator() {}
       virtual already_AddRefd<iface::cellml_api::VariableRef>  nextVariableRef() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -837,7 +843,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::VariableRefSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::VariableRefSet"; }
       virtual ~VariableRefSet() {}
       virtual already_AddRefd<iface::cellml_api::VariableRefIterator>  iterateVariableRefs() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -846,7 +852,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::RoleIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::RoleIterator"; }
       virtual ~RoleIterator() {}
       virtual already_AddRefd<iface::cellml_api::Role>  nextRole() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -855,7 +861,7 @@ namespace iface
      : public virtual iface::cellml_api::CellMLElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::RoleSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::RoleSet"; }
       virtual ~RoleSet() {}
       virtual already_AddRefd<iface::cellml_api::RoleIterator>  iterateRoles() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -864,7 +870,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ModelLoadedListener"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ModelLoadedListener"; }
       virtual ~ModelLoadedListener() {}
       virtual void loadCompleted(iface::cellml_api::Model* m) throw(std::exception&) = 0;
     };
@@ -873,7 +879,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::DocumentLoadedListener"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::DocumentLoadedListener"; }
       virtual ~DocumentLoadedListener() {}
       virtual void loadCompleted(iface::dom::Document* doc) throw(std::exception&) = 0;
     };
@@ -882,7 +888,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::ModelLoader"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::ModelLoader"; }
       virtual ~ModelLoader() {}
       virtual already_AddRefd<iface::cellml_api::Model>  loadFromURL(const std::wstring& URL) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void asyncLoadFromURL(const std::wstring& URL, iface::cellml_api::ModelLoadedListener* listener) throw(std::exception&) = 0;
@@ -894,7 +900,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::DOMURLLoader"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::DOMURLLoader"; }
       virtual ~DOMURLLoader() {}
       virtual already_AddRefd<iface::dom::Document>  loadDocument(const std::wstring& URL) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::dom::Document>  loadDocumentFromText(const std::wstring& xmlText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -906,7 +912,7 @@ namespace iface
      : public virtual iface::cellml_api::ModelLoader
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::DOMModelLoader"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::DOMModelLoader"; }
       virtual ~DOMModelLoader() {}
       virtual already_AddRefd<iface::cellml_api::Model>  createFromDOM(const std::wstring& url, iface::cellml_api::DOMURLLoader* loader) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::Model>  createFromDOMDocument(iface::dom::Document* doc) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -917,7 +923,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_api::CellMLBootstrap"; }
+      static const char* INTERFACE_NAME() { return "cellml_api::CellMLBootstrap"; }
       virtual ~CellMLBootstrap() {}
       virtual already_AddRefd<iface::cellml_api::DOMModelLoader>  modelLoader() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::dom::DOMImplementation>  domImplementation() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;

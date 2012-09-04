@@ -30,7 +30,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CodeExporter"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CodeExporter"; }
       virtual ~CodeExporter() {}
       virtual double rangeStart() throw(std::exception&)  = 0;
       virtual void rangeStart(double attr) throw(std::exception&) = 0;
@@ -49,7 +49,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CeLEDSExporterBootstrap"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CeLEDSExporterBootstrap"; }
       virtual ~CeLEDSExporterBootstrap() {}
       virtual already_AddRefd<iface::cellml_services::DictionaryGenerator>  createDictGenerator(const std::wstring& URL) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::DictionaryGenerator>  createDictGeneratorFromText(const std::wstring& XMLText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;

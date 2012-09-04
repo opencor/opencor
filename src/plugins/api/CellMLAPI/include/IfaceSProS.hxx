@@ -70,13 +70,13 @@ namespace iface
     class DataSet;
     class DataSetSet;
     class DataSetIterator;
-    class SamplingSensitivityAnalysis;
+    class RepeatedAnalysis;
     PUBLIC_SProS_PRE 
     class  PUBLIC_SProS_POST Bootstrap
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Bootstrap"; }
+      static const char* INTERFACE_NAME() { return "SProS::Bootstrap"; }
       virtual ~Bootstrap() {}
       virtual already_AddRefd<iface::SProS::SEDMLElement>  createEmptySEDML() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::SEDMLElement>  parseSEDMLFromURI(const std::wstring& uri, const std::wstring& relativeTo) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -89,7 +89,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Base"; }
+      static const char* INTERFACE_NAME() { return "SProS::Base"; }
       virtual ~Base() {}
       virtual already_AddRefd<iface::dom::Element>  domElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::dom::NodeList>  notes() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -107,7 +107,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::BaseSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::BaseSet"; }
       virtual ~BaseSet() {}
       virtual already_AddRefd<iface::SProS::BaseIterator>  iterateElements() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void insert(iface::SProS::Base* b) throw(std::exception&) = 0;
@@ -118,7 +118,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::BaseIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::BaseIterator"; }
       virtual ~BaseIterator() {}
       virtual already_AddRefd<iface::SProS::Base>  nextElement() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -127,7 +127,7 @@ namespace iface
      : public virtual iface::SProS::Base
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::SEDMLElement"; }
+      static const char* INTERFACE_NAME() { return "SProS::SEDMLElement"; }
       virtual ~SEDMLElement() {}
       virtual uint32_t level() throw(std::exception&)  = 0;
       virtual void level(uint32_t attr) throw(std::exception&) = 0;
@@ -140,7 +140,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::OutputSet>  outputs() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Model>  createModel() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::UniformTimeCourse>  createUniformTimeCourse() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
-      virtual already_AddRefd<iface::SProS::SamplingSensitivityAnalysis>  createSamplingSensitivityAnalysis() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::SProS::RepeatedAnalysis>  createRepeatedAnalysis() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Task>  createTask() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::DataGenerator>  createDataGenerator() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Plot2D>  createPlot2D() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -164,7 +164,7 @@ namespace iface
      : public virtual iface::SProS::Base
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::NamedElement"; }
+      static const char* INTERFACE_NAME() { return "SProS::NamedElement"; }
       virtual ~NamedElement() {}
       virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void name(const std::wstring& attr) throw(std::exception&) = 0;
@@ -174,7 +174,7 @@ namespace iface
      : public virtual iface::SProS::BaseSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::NamedElementSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::NamedElementSet"; }
       virtual ~NamedElementSet() {}
       virtual already_AddRefd<iface::SProS::NamedElementIterator>  iterateNamedElement() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -183,7 +183,7 @@ namespace iface
      : public virtual iface::SProS::BaseIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::NamedElementIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::NamedElementIterator"; }
       virtual ~NamedElementIterator() {}
       virtual already_AddRefd<iface::SProS::NamedElement>  nextNamedElement() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -192,7 +192,7 @@ namespace iface
      : public virtual iface::SProS::NamedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::NamedIdentifiedElement"; }
+      static const char* INTERFACE_NAME() { return "SProS::NamedIdentifiedElement"; }
       virtual ~NamedIdentifiedElement() {}
       virtual std::wstring id() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void id(const std::wstring& attr) throw(std::exception&) = 0;
@@ -202,7 +202,7 @@ namespace iface
      : public virtual iface::SProS::NamedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::NamedIdentifiedElementSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::NamedIdentifiedElementSet"; }
       virtual ~NamedIdentifiedElementSet() {}
       virtual already_AddRefd<iface::SProS::NamedIdentifiedElementIterator>  iterateNamedIdentifiedElements() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::NamedIdentifiedElement>  getNamedIdentifiedElementByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -212,7 +212,7 @@ namespace iface
      : public virtual iface::SProS::NamedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::NamedIdentifiedElementIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::NamedIdentifiedElementIterator"; }
       virtual ~NamedIdentifiedElementIterator() {}
       virtual already_AddRefd<iface::SProS::NamedIdentifiedElement>  nextNamedIdentifiedElement() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -221,7 +221,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Model"; }
+      static const char* INTERFACE_NAME() { return "SProS::Model"; }
       virtual ~Model() {}
       virtual std::wstring language() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void language(const std::wstring& attr) throw(std::exception&) = 0;
@@ -234,7 +234,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::ModelSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::ModelSet"; }
       virtual ~ModelSet() {}
       virtual already_AddRefd<iface::SProS::ModelIterator>  iterateModels() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Model>  getModelByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -244,7 +244,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::ModelIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::ModelIterator"; }
       virtual ~ModelIterator() {}
       virtual already_AddRefd<iface::SProS::Model>  nextModel() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -253,7 +253,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Simulation"; }
+      static const char* INTERFACE_NAME() { return "SProS::Simulation"; }
       virtual ~Simulation() {}
       virtual std::wstring algorithmKisaoID() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void algorithmKisaoID(const std::wstring& attr) throw(std::exception&) = 0;
@@ -263,7 +263,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::SimulationSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::SimulationSet"; }
       virtual ~SimulationSet() {}
       virtual already_AddRefd<iface::SProS::SimulationIterator>  iterateSimulations() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Simulation>  getSimulationByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -273,7 +273,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::SimulationIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::SimulationIterator"; }
       virtual ~SimulationIterator() {}
       virtual already_AddRefd<iface::SProS::Simulation>  nextSimulation() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -282,7 +282,7 @@ namespace iface
      : public virtual iface::SProS::Simulation
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::UniformTimeCourse"; }
+      static const char* INTERFACE_NAME() { return "SProS::UniformTimeCourse"; }
       virtual ~UniformTimeCourse() {}
       virtual double initialTime() throw(std::exception&)  = 0;
       virtual void initialTime(double attr) throw(std::exception&) = 0;
@@ -294,12 +294,12 @@ namespace iface
       virtual void numberOfPoints(uint32_t attr) throw(std::exception&) = 0;
     };
     PUBLIC_SProS_PRE 
-    class  PUBLIC_SProS_POST SamplingSensitivityAnalysis
+    class  PUBLIC_SProS_POST RepeatedAnalysis
      : public virtual iface::SProS::UniformTimeCourse
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::SamplingSensitivityAnalysis"; }
-      virtual ~SamplingSensitivityAnalysis() {}
+      static const char* INTERFACE_NAME() { return "SProS::RepeatedAnalysis"; }
+      virtual ~RepeatedAnalysis() {}
       virtual uint32_t numberOfSamples() throw(std::exception&)  = 0;
       virtual void numberOfSamples(uint32_t attr) throw(std::exception&) = 0;
     };
@@ -308,7 +308,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Task"; }
+      static const char* INTERFACE_NAME() { return "SProS::Task"; }
       virtual ~Task() {}
       virtual std::wstring simulationReferenceIdentifier() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void simulationReferenceIdentifier(const std::wstring& attr) throw(std::exception&) = 0;
@@ -324,7 +324,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::TaskSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::TaskSet"; }
       virtual ~TaskSet() {}
       virtual already_AddRefd<iface::SProS::TaskIterator>  iterateTasks() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Task>  getTaskByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -334,7 +334,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::TaskIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::TaskIterator"; }
       virtual ~TaskIterator() {}
       virtual already_AddRefd<iface::SProS::Task>  nextTask() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -343,7 +343,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::DataGenerator"; }
+      static const char* INTERFACE_NAME() { return "SProS::DataGenerator"; }
       virtual ~DataGenerator() {}
       virtual already_AddRefd<iface::SProS::ParameterSet>  parameters() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::VariableSet>  variables() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -355,7 +355,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::DataGeneratorSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::DataGeneratorSet"; }
       virtual ~DataGeneratorSet() {}
       virtual already_AddRefd<iface::SProS::DataGeneratorIterator>  iterateDataGenerators() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::DataGenerator>  getDataGeneratorByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -365,7 +365,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::DataGeneratorIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::DataGeneratorIterator"; }
       virtual ~DataGeneratorIterator() {}
       virtual already_AddRefd<iface::SProS::DataGenerator>  nextDataGenerator() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -374,7 +374,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Output"; }
+      static const char* INTERFACE_NAME() { return "SProS::Output"; }
       virtual ~Output() {}
     };
     PUBLIC_SProS_PRE 
@@ -382,7 +382,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::OutputSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::OutputSet"; }
       virtual ~OutputSet() {}
       virtual already_AddRefd<iface::SProS::OutputIterator>  iterateOutputs() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Output>  getOutputByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -392,7 +392,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::OutputIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::OutputIterator"; }
       virtual ~OutputIterator() {}
       virtual already_AddRefd<iface::SProS::Output>  nextOutput() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -401,7 +401,7 @@ namespace iface
      : public virtual iface::SProS::Output
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Plot2D"; }
+      static const char* INTERFACE_NAME() { return "SProS::Plot2D"; }
       virtual ~Plot2D() {}
       virtual already_AddRefd<iface::SProS::CurveSet>  curves() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -410,7 +410,7 @@ namespace iface
      : public virtual iface::SProS::Output
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Plot3D"; }
+      static const char* INTERFACE_NAME() { return "SProS::Plot3D"; }
       virtual ~Plot3D() {}
       virtual already_AddRefd<iface::SProS::SurfaceSet>  surfaces() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -419,7 +419,7 @@ namespace iface
      : public virtual iface::SProS::Output
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Report"; }
+      static const char* INTERFACE_NAME() { return "SProS::Report"; }
       virtual ~Report() {}
       virtual already_AddRefd<iface::SProS::DataSetSet>  datasets() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -428,7 +428,7 @@ namespace iface
      : public virtual iface::SProS::Base
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Change"; }
+      static const char* INTERFACE_NAME() { return "SProS::Change"; }
       virtual ~Change() {}
       virtual std::wstring target() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void target(const std::wstring& attr) throw(std::exception&) = 0;
@@ -438,7 +438,7 @@ namespace iface
      : public virtual iface::SProS::BaseSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::ChangeSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::ChangeSet"; }
       virtual ~ChangeSet() {}
       virtual already_AddRefd<iface::SProS::ChangeIterator>  iterateChanges() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -447,7 +447,7 @@ namespace iface
      : public virtual iface::SProS::BaseIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::ChangeIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::ChangeIterator"; }
       virtual ~ChangeIterator() {}
       virtual already_AddRefd<iface::SProS::Change>  nextChange() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -456,7 +456,7 @@ namespace iface
      : public virtual iface::SProS::Change
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::ComputeChange"; }
+      static const char* INTERFACE_NAME() { return "SProS::ComputeChange"; }
       virtual ~ComputeChange() {}
       virtual already_AddRefd<iface::SProS::VariableSet>  variables() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::ParameterSet>  parameters() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -468,7 +468,7 @@ namespace iface
      : public virtual iface::SProS::Change
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::ChangeAttribute"; }
+      static const char* INTERFACE_NAME() { return "SProS::ChangeAttribute"; }
       virtual ~ChangeAttribute() {}
       virtual std::wstring newValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -477,7 +477,7 @@ namespace iface
      : public virtual iface::SProS::Change
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::AddXML"; }
+      static const char* INTERFACE_NAME() { return "SProS::AddXML"; }
       virtual ~AddXML() {}
       virtual already_AddRefd<iface::dom::NodeList>  anyXML() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -486,7 +486,7 @@ namespace iface
      : public virtual iface::SProS::AddXML
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::ChangeXML"; }
+      static const char* INTERFACE_NAME() { return "SProS::ChangeXML"; }
       virtual ~ChangeXML() {}
     };
     PUBLIC_SProS_PRE 
@@ -494,7 +494,7 @@ namespace iface
      : public virtual iface::SProS::Change
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::RemoveXML"; }
+      static const char* INTERFACE_NAME() { return "SProS::RemoveXML"; }
       virtual ~RemoveXML() {}
     };
     PUBLIC_SProS_PRE 
@@ -502,7 +502,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Variable"; }
+      static const char* INTERFACE_NAME() { return "SProS::Variable"; }
       virtual ~Variable() {}
       virtual std::wstring target() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void target(const std::wstring& attr) throw(std::exception&) = 0;
@@ -518,7 +518,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::VariableSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::VariableSet"; }
       virtual ~VariableSet() {}
       virtual already_AddRefd<iface::SProS::VariableIterator>  iterateVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Variable>  getVariableByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -528,7 +528,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::VariableIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::VariableIterator"; }
       virtual ~VariableIterator() {}
       virtual already_AddRefd<iface::SProS::Variable>  nextVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -537,7 +537,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Parameter"; }
+      static const char* INTERFACE_NAME() { return "SProS::Parameter"; }
       virtual ~Parameter() {}
       virtual double value() throw(std::exception&)  = 0;
       virtual void value(double attr) throw(std::exception&) = 0;
@@ -547,7 +547,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::ParameterSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::ParameterSet"; }
       virtual ~ParameterSet() {}
       virtual already_AddRefd<iface::SProS::ParameterIterator>  iterateParameters() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Parameter>  getParameterByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -557,7 +557,7 @@ namespace iface
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::ParameterIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::ParameterIterator"; }
       virtual ~ParameterIterator() {}
       virtual already_AddRefd<iface::SProS::Parameter>  nextParameter() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -566,7 +566,7 @@ namespace iface
      : public virtual iface::SProS::NamedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Curve"; }
+      static const char* INTERFACE_NAME() { return "SProS::Curve"; }
       virtual ~Curve() {}
       virtual bool logX() throw(std::exception&)  = 0;
       virtual void logX(bool attr) throw(std::exception&) = 0;
@@ -586,7 +586,7 @@ namespace iface
      : public virtual iface::SProS::NamedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::CurveSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::CurveSet"; }
       virtual ~CurveSet() {}
       virtual already_AddRefd<iface::SProS::CurveIterator>  iterateCurves() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -595,7 +595,7 @@ namespace iface
      : public virtual iface::SProS::NamedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::CurveIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::CurveIterator"; }
       virtual ~CurveIterator() {}
       virtual already_AddRefd<iface::SProS::Curve>  nextCurve() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -604,7 +604,7 @@ namespace iface
      : public virtual iface::SProS::Curve
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::Surface"; }
+      static const char* INTERFACE_NAME() { return "SProS::Surface"; }
       virtual ~Surface() {}
       virtual bool logZ() throw(std::exception&)  = 0;
       virtual void logZ(bool attr) throw(std::exception&) = 0;
@@ -618,7 +618,7 @@ namespace iface
      : public virtual iface::SProS::CurveSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::SurfaceSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::SurfaceSet"; }
       virtual ~SurfaceSet() {}
       virtual already_AddRefd<iface::SProS::SurfaceIterator>  iterateSurfaces() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -627,7 +627,7 @@ namespace iface
      : public virtual iface::SProS::CurveIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::SurfaceIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::SurfaceIterator"; }
       virtual ~SurfaceIterator() {}
       virtual already_AddRefd<iface::SProS::Surface>  nextSurface() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -636,7 +636,7 @@ namespace iface
      : public virtual iface::SProS::NamedElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::DataSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::DataSet"; }
       virtual ~DataSet() {}
       virtual std::wstring dataGeneratorID() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void dataGeneratorID(const std::wstring& attr) throw(std::exception&) = 0;
@@ -648,7 +648,7 @@ namespace iface
      : public virtual iface::SProS::NamedElementSet
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::DataSetSet"; }
+      static const char* INTERFACE_NAME() { return "SProS::DataSetSet"; }
       virtual ~DataSetSet() {}
       virtual already_AddRefd<iface::SProS::DataSetIterator>  iterateDataSets() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -657,7 +657,7 @@ namespace iface
      : public virtual iface::SProS::NamedElementIterator
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::SProS::DataSetIterator"; }
+      static const char* INTERFACE_NAME() { return "SProS::DataSetIterator"; }
       virtual ~DataSetIterator() {}
       virtual already_AddRefd<iface::SProS::DataSet>  nextDataSet() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };

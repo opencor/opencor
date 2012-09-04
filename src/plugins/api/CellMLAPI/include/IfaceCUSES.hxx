@@ -24,7 +24,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::BaseUnit"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::BaseUnit"; }
       virtual ~BaseUnit() {}
       virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -33,7 +33,7 @@ namespace iface
      : public virtual iface::cellml_services::BaseUnit
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::UserBaseUnit"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::UserBaseUnit"; }
       virtual ~UserBaseUnit() {}
       virtual already_AddRefd<iface::cellml_api::Units>  cellmlUnits() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -42,7 +42,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::BaseUnitInstance"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::BaseUnitInstance"; }
       virtual ~BaseUnitInstance() {}
       virtual already_AddRefd<iface::cellml_services::BaseUnit>  unit() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual double prefix() throw(std::exception&)  = 0;
@@ -54,7 +54,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CanonicalUnitRepresentation"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CanonicalUnitRepresentation"; }
       virtual ~CanonicalUnitRepresentation() {}
       virtual uint32_t length() throw(std::exception&)  = 0;
       virtual already_AddRefd<iface::cellml_services::BaseUnitInstance>  fetchBaseUnit(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -69,7 +69,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CUSES"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CUSES"; }
       virtual ~CUSES() {}
       virtual std::wstring modelError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::CanonicalUnitRepresentation>  getUnitsByName(iface::cellml_api::CellMLElement* aContext, const std::wstring& aName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -80,7 +80,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CUSESBootstrap"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CUSESBootstrap"; }
       virtual ~CUSESBootstrap() {}
       virtual already_AddRefd<iface::cellml_services::CUSES>  createCUSESForModel(iface::cellml_api::Model* aModel, bool aStrict) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };

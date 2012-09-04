@@ -24,7 +24,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::TeLICeMResult"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::TeLICeMResult"; }
       virtual ~TeLICeMResult() {}
       virtual std::wstring errorMessage() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -33,7 +33,7 @@ namespace iface
      : public virtual iface::cellml_services::TeLICeMResult
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::TeLICeMModelResult"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::TeLICeMModelResult"; }
       virtual ~TeLICeMModelResult() {}
       virtual already_AddRefd<iface::cellml_api::Model>  modelResult() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -42,7 +42,7 @@ namespace iface
      : public virtual iface::cellml_services::TeLICeMResult
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::TeLICeMMathResult"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::TeLICeMMathResult"; }
       virtual ~TeLICeMMathResult() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLElement>  mathResult() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
@@ -51,7 +51,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::TeLICeMService"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::TeLICeMService"; }
       virtual ~TeLICeMService() {}
       virtual already_AddRefd<iface::cellml_services::TeLICeMModelResult>  parseModel(const std::wstring& aModelText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::TeLICeMMathResult>  parseMaths(iface::dom::Document* aDoc, const std::wstring& aMathText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;

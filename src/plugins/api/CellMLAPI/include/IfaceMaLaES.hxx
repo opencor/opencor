@@ -27,7 +27,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::DegreeVariable"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::DegreeVariable"; }
       virtual ~DegreeVariable() {}
       virtual already_AddRefd<iface::cellml_api::CellMLVariable>  variable() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t degree() throw(std::exception&)  = 0;
@@ -39,7 +39,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::DegreeVariableIterator"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::DegreeVariableIterator"; }
       virtual ~DegreeVariableIterator() {}
       virtual already_AddRefd<iface::cellml_services::DegreeVariable>  nextDegreeVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -48,7 +48,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::MaLaESResult"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::MaLaESResult"; }
       virtual ~MaLaESResult() {}
       virtual std::wstring compileErrors() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring expression() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -66,7 +66,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::MaLaESTransform"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::MaLaESTransform"; }
       virtual ~MaLaESTransform() {}
       virtual std::wstring compileErrors() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::MaLaESResult>  transform(iface::cellml_services::CeVAS* aCeVAS, iface::cellml_services::CUSES* aCUSES, iface::cellml_services::AnnotationSet* aAnnos, iface::mathml_dom::MathMLElement* aMathML, iface::cellml_api::CellMLElement* aContext, iface::cellml_api::CellMLVariable* aUnitsOf, iface::cellml_api::CellMLVariable* aBoundUnitsOf, uint32_t aUnitsDiffDegree) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -77,7 +77,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::MaLaESBootstrap"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::MaLaESBootstrap"; }
       virtual ~MaLaESBootstrap() {}
       virtual already_AddRefd<iface::cellml_services::MaLaESTransform>  compileTransformer(const std::wstring& specification) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };

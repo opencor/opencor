@@ -25,7 +25,7 @@ namespace iface
      : public virtual iface::events::Event
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_events::MutationEvent"; }
+      static const char* INTERFACE_NAME() { return "cellml_events::MutationEvent"; }
       virtual ~MutationEvent() {}
       static const uint16_t MODIFICATION = 1;
       static const uint16_t ADDITION = 2;

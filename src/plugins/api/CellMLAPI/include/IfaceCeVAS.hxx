@@ -24,7 +24,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::ConnectedVariableSet"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::ConnectedVariableSet"; }
       virtual ~ConnectedVariableSet() {}
       virtual already_AddRefd<iface::cellml_api::CellMLVariable>  sourceVariable() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t length() throw(std::exception&)  = 0;
@@ -35,7 +35,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CeVAS"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CeVAS"; }
       virtual ~CeVAS() {}
       virtual std::wstring modelError() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::CellMLComponentIterator>  iterateRelevantComponents() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -48,7 +48,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::cellml_services::CeVASBootstrap"; }
+      static const char* INTERFACE_NAME() { return "cellml_services::CeVASBootstrap"; }
       virtual ~CeVASBootstrap() {}
       virtual already_AddRefd<iface::cellml_services::CeVAS>  createCeVASForModel(iface::cellml_api::Model* aModel) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };

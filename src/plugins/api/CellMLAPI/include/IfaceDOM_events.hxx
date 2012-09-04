@@ -34,7 +34,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::events::EventTarget"; }
+      static const char* INTERFACE_NAME() { return "events::EventTarget"; }
       virtual ~EventTarget() {}
       virtual void addEventListener(const std::wstring& type, iface::events::EventListener* listener, bool useCapture) throw(std::exception&) = 0;
       virtual void removeEventListener(const std::wstring& type, iface::events::EventListener* listener, bool useCapture) throw(std::exception&) = 0;
@@ -45,7 +45,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::events::EventListener"; }
+      static const char* INTERFACE_NAME() { return "events::EventListener"; }
       virtual ~EventListener() {}
       virtual void handleEvent(iface::events::Event* evt) throw(std::exception&) = 0;
     };
@@ -54,7 +54,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::events::Event"; }
+      static const char* INTERFACE_NAME() { return "events::Event"; }
       virtual ~Event() {}
       static const uint16_t CAPTURING_PHASE = 1;
       static const uint16_t AT_TARGET = 2;
@@ -75,7 +75,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::events::DocumentEvent"; }
+      static const char* INTERFACE_NAME() { return "events::DocumentEvent"; }
       virtual ~DocumentEvent() {}
       virtual already_AddRefd<iface::events::Event>  createEvent(const std::wstring& domEventType) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -84,7 +84,7 @@ namespace iface
      : public virtual iface::events::Event
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::events::MutationEvent"; }
+      static const char* INTERFACE_NAME() { return "events::MutationEvent"; }
       virtual ~MutationEvent() {}
       static const uint16_t MODIFICATION = 1;
       static const uint16_t ADDITION = 2;

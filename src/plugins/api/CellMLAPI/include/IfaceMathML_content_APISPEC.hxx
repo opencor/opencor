@@ -29,7 +29,7 @@ namespace iface
      : public virtual iface::dom::DOMImplementation
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLDOMImplementation"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLDOMImplementation"; }
       virtual ~MathMLDOMImplementation() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLDocument>  createMathMLDocument() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
@@ -38,7 +38,7 @@ namespace iface
      : public virtual iface::dom::Document
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLDocument"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLDocument"; }
       virtual ~MathMLDocument() {}
       virtual std::wstring referrer() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring domain() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -49,7 +49,7 @@ namespace iface
      : public virtual iface::dom::NodeList
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLNodeList"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLNodeList"; }
       virtual ~MathMLNodeList() {}
     };
     PUBLIC_MathMLcontentAPISPEC_PRE 
@@ -57,7 +57,7 @@ namespace iface
      : public virtual iface::dom::Element
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLElement"; }
       virtual ~MathMLElement() {}
       virtual std::wstring className() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void className(const std::wstring& attr) throw(std::exception&) = 0;
@@ -76,7 +76,7 @@ namespace iface
      : public virtual iface::XPCOM::IObject
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLContainer"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLContainer"; }
       virtual ~MathMLContainer() {}
       virtual uint32_t nArguments() throw(std::exception&)  = 0;
       virtual already_AddRefd<iface::mathml_dom::MathMLNodeList>  arguments() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -97,7 +97,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLElement , public virtual iface::mathml_dom::MathMLContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLMathElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLMathElement"; }
       virtual ~MathMLMathElement() {}
       virtual std::wstring macros() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void macros(const std::wstring& attr) throw(std::exception&) = 0;
@@ -109,7 +109,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLContentElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLContentElement"; }
       virtual ~MathMLContentElement() {}
     };
     PUBLIC_MathMLcontentAPISPEC_PRE 
@@ -117,7 +117,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLContentToken"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLContentToken"; }
       virtual ~MathMLContentToken() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLNodeList>  arguments() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring definitionURL() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -135,7 +135,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentToken
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLCnElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLCnElement"; }
       virtual ~MathMLCnElement() {}
       virtual std::wstring type() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void type(const std::wstring& attr) throw(std::exception&) = 0;
@@ -148,7 +148,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentToken
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLCiElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLCiElement"; }
       virtual ~MathMLCiElement() {}
       virtual std::wstring type() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void type(const std::wstring& attr) throw(std::exception&) = 0;
@@ -158,7 +158,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentToken
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLCsymbolElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLCsymbolElement"; }
       virtual ~MathMLCsymbolElement() {}
     };
     PUBLIC_MathMLcontentAPISPEC_PRE 
@@ -166,7 +166,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement , public virtual iface::mathml_dom::MathMLContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLContentContainer"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLContentContainer"; }
       virtual ~MathMLContentContainer() {}
       virtual uint32_t nBoundVariables() throw(std::exception&)  = 0;
       virtual already_AddRefd<iface::mathml_dom::MathMLConditionElement>  condition() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -188,7 +188,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLApplyElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLApplyElement"; }
       virtual ~MathMLApplyElement() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLElement>  _cxx_operator() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void _cxx_operator(iface::mathml_dom::MathMLElement* attr) throw(std::exception&) = 0;
@@ -202,7 +202,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLFnElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLFnElement"; }
       virtual ~MathMLFnElement() {}
       virtual std::wstring definitionURL() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void definitionURL(const std::wstring& attr) throw(std::exception&) = 0;
@@ -214,7 +214,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLLambdaElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLLambdaElement"; }
       virtual ~MathMLLambdaElement() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLElement>  expression() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void expression(iface::mathml_dom::MathMLElement* attr) throw(std::exception&) = 0;
@@ -224,7 +224,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLSetElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLSetElement"; }
       virtual ~MathMLSetElement() {}
       virtual bool isExplicit() throw(std::exception&)  = 0;
       virtual std::wstring type() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -235,7 +235,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLListElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLListElement"; }
       virtual ~MathMLListElement() {}
       virtual bool isExplicit() throw(std::exception&)  = 0;
       virtual std::wstring ordering() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -246,7 +246,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentContainer
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLBvarElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLBvarElement"; }
       virtual ~MathMLBvarElement() {}
     };
     PUBLIC_MathMLcontentAPISPEC_PRE 
@@ -254,7 +254,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLPredefinedSymbol"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLPredefinedSymbol"; }
       virtual ~MathMLPredefinedSymbol() {}
       virtual std::wstring definitionURL() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void definitionURL(const std::wstring& attr) throw(std::exception&) = 0;
@@ -268,7 +268,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLPredefinedSymbol
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLTendsToElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLTendsToElement"; }
       virtual ~MathMLTendsToElement() {}
       virtual std::wstring type() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void type(const std::wstring& attr) throw(std::exception&) = 0;
@@ -278,7 +278,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLIntervalElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLIntervalElement"; }
       virtual ~MathMLIntervalElement() {}
       virtual std::wstring closure() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void closure(const std::wstring& attr) throw(std::exception&) = 0;
@@ -292,7 +292,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLConditionElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLConditionElement"; }
       virtual ~MathMLConditionElement() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLApplyElement>  condition() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void condition(iface::mathml_dom::MathMLApplyElement* attr) throw(std::exception&) = 0;
@@ -302,7 +302,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLDeclareElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLDeclareElement"; }
       virtual ~MathMLDeclareElement() {}
       virtual std::wstring type() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void type(const std::wstring& attr) throw(std::exception&) = 0;
@@ -324,7 +324,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLVectorElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLVectorElement"; }
       virtual ~MathMLVectorElement() {}
       virtual uint32_t ncomponents() throw(std::exception&)  = 0;
       virtual already_AddRefd<iface::mathml_dom::MathMLContentElement>  getComponent(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -338,7 +338,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLMatrixElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLMatrixElement"; }
       virtual ~MathMLMatrixElement() {}
       virtual uint32_t nrows() throw(std::exception&)  = 0;
       virtual uint32_t ncols() throw(std::exception&)  = 0;
@@ -354,7 +354,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLMatrixrowElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLMatrixrowElement"; }
       virtual ~MathMLMatrixrowElement() {}
       virtual uint32_t nEntries() throw(std::exception&)  = 0;
       virtual already_AddRefd<iface::mathml_dom::MathMLContentElement>  getEntry(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
@@ -368,7 +368,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLPiecewiseElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLPiecewiseElement"; }
       virtual ~MathMLPiecewiseElement() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLNodeList>  pieces() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::mathml_dom::MathMLContentElement>  otherwise() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
@@ -388,7 +388,7 @@ namespace iface
      : public virtual iface::mathml_dom::MathMLContentElement
     {
     public:
-      static const char* INTERFACE_NAME() { return "iface::mathml_dom::MathMLCaseElement"; }
+      static const char* INTERFACE_NAME() { return "mathml_dom::MathMLCaseElement"; }
       virtual ~MathMLCaseElement() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLContentElement>  caseCondition() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void caseCondition(iface::mathml_dom::MathMLContentElement* attr) throw(std::exception&) = 0;
