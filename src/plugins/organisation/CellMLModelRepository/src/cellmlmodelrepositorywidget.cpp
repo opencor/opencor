@@ -30,14 +30,8 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
     //       the border drawn by drawBorderIfDocked, so...
 
     // Prevent objects from being dropped on us
-    // Note: by default, QWebView allows for objects to be dropped on itself,
-    //       so...
 
     setAcceptDrops(false);
-
-    // Prevent the widget from taking over the scrolling of other widgets
-
-    setFocusPolicy(Qt::NoFocus);
 
     // Have links opened in the user's browser rather than in our list
 
