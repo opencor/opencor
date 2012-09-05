@@ -26,8 +26,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCe
     // it supports the rdf_api::URIReference, rdf_api::PlainLiteral or
     // rdf_api::TypedLiteral interface
 
-    ObjRef<iface::rdf_api::URIReference> uriReference;
-    QUERY_INTERFACE(uriReference, pCellmlApiRdfNode, rdf_api::URIReference);
+    ObjRef<iface::rdf_api::URIReference> uriReference = QueryInterface(pCellmlApiRdfNode);
 
     if (uriReference) {
         // The rdf_api::URIReference interface is supported, so initialise the
@@ -37,8 +36,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCe
 
         mUriReference = QString::fromStdWString(uriReference->URI()).trimmed();
     } else {
-        ObjRef<iface::rdf_api::PlainLiteral> plainLiteral;
-        QUERY_INTERFACE(plainLiteral, pCellmlApiRdfNode, rdf_api::PlainLiteral);
+        ObjRef<iface::rdf_api::PlainLiteral> plainLiteral = QueryInterface(pCellmlApiRdfNode);
 
         if (plainLiteral) {
             // The rdf_api::PlainLiteral interface is supported, so initialise
@@ -49,8 +47,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCe
             mLexicalForm = QString::fromStdWString(plainLiteral->lexicalForm()).trimmed();
             mLanguage    = QString::fromStdWString(plainLiteral->language()).trimmed();
         } else {
-            ObjRef<iface::rdf_api::TypedLiteral> typedLiteral;
-            QUERY_INTERFACE(typedLiteral, pCellmlApiRdfNode, rdf_api::TypedLiteral);
+            ObjRef<iface::rdf_api::TypedLiteral> typedLiteral = QueryInterface(pCellmlApiRdfNode);
 
             if (typedLiteral) {
                 // The rdf_api::TypedLiteral interface is supported, so

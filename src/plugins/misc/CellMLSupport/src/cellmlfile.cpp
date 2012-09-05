@@ -304,6 +304,10 @@ bool CellmlFile::load()
     if (rdfRepresentation) {
         QUERY_INTERFACE(mCellmlApiRdfApiRepresentation, rdfRepresentation,
                         rdf_api::RDFAPIRepresentation);
+        // Note: ideally, we would use QueryInterface(), but this cannot be done
+        //       because mCellmlApiRdfApiRepresentation is not an ObjRef<>, so
+        //       we have no choice but retrieve the interface using the (ugly)
+        //       QUERY_INTERFACE() macro...
 
         if (mCellmlApiRdfApiRepresentation) {
             mCellmlApiRdfDataSource = mCellmlApiRdfApiRepresentation->source();
@@ -443,9 +447,7 @@ bool CellmlFile::isValid()
 
         for (int i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
             ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
-
-            DECLARE_QUERY_INTERFACE_OBJREF(cellmlRepresentationValidityError, cellmlValidityIssue,
-                                           cellml_services::CellMLRepresentationValidityError);
+            ObjRef<iface::cellml_services::CellMLRepresentationValidityError> cellmlRepresentationValidityError = QueryInterface(cellmlValidityIssue);
 
             // Determine the issue's location
 
@@ -466,17 +468,14 @@ bool CellmlFile::isValid()
                 // We are not dealing with a CellML representation issue, so
                 // check whether we are dealing with a semantic one
 
-                DECLARE_QUERY_INTERFACE_OBJREF(cellmlSemanticValidityError, cellmlValidityIssue,
-                                               cellml_services::CellMLSemanticValidityError);
+                ObjRef<iface::cellml_services::CellMLSemanticValidityError> cellmlSemanticValidityError = QueryInterface(cellmlValidityIssue);
 
                 if (cellmlSemanticValidityError) {
                     // We are dealing with a CellML semantic issue, so determine
                     // its line and column
 
                     ObjRef<iface::cellml_api::CellMLElement> cellmlElement = cellmlSemanticValidityError->errorElement();
-
-                    DECLARE_QUERY_INTERFACE_OBJREF(cellmlDomElement, cellmlElement,
-                                                   cellml_api::CellMLDOMElement);
+                    ObjRef<iface::cellml_api::CellMLDOMElement> cellmlDomElement = QueryInterface(cellmlElement);
 
                     ObjRef<iface::dom::Element> domElement = cellmlDomElement->domElement();
 
@@ -495,11 +494,10 @@ bool CellmlFile::isValid()
 
                         // Check whether the parent is an imported file
 
-                        DECLARE_QUERY_INTERFACE_OBJREF(importedCellmlFile, cellmlElementParent,
-                                                       cellml_api::Model);
+                        ObjRef<iface::cellml_api::Model> importedCellmlFile = QueryInterface(cellmlElementParent);
 
                         if (!importedCellmlFile)
-                            continue;
+                            break;
 
                         // Retrieve the imported CellML element
 
@@ -511,8 +509,7 @@ bool CellmlFile::isValid()
                         // Check whether the imported CellML element is an
                         // import CellML element
 
-                        DECLARE_QUERY_INTERFACE_OBJREF(importCellmlElement, importedCellmlElement,
-                                                       cellml_api::CellMLImport);
+                        ObjRef<iface::cellml_api::CellMLImport> importCellmlElement = QueryInterface(importedCellmlElement);
 
                         if (!importCellmlElement)
                             break;

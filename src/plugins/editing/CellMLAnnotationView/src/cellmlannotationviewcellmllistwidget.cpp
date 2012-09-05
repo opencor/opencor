@@ -194,12 +194,18 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 {
     // Make sure that the CellML file was properly loaded
 
-    if (mCellmlFile->issues().count()) {
-        // Something went wrong while trying to load the CellML file, so report
-        // it and leave
+    CellMLSupport::CellmlFileIssues issues = mCellmlFile->issues();
+    int issuesCount = issues.count();
 
-        mDataModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(mCellmlFile->issues().first().type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                                             mCellmlFile->issues().first().formattedMessage()));
+    if (issuesCount) {
+        // Something went wrong while trying to load the CellML file, so report
+        // the issue(s) and leave
+
+        for (int i = 0; i < issuesCount; ++i)
+            mDataModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i].type() == CellMLSupport::CellmlFileIssue::Error,
+                                                                                                 QString("[%1:%2] %3").arg(QString::number(issues[i].line()),
+                                                                                                                           QString::number(issues[i].column()),
+                                                                                                                           issues[i].formattedMessage())));
 
         return;
     }
